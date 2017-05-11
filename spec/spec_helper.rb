@@ -176,6 +176,8 @@ RSpec.configure do |config|
     Group::Base.delete_all
     Broker::Base.delete_all
     Meter::Base.delete_all
+    Billing.delete_all
+    BillingCycle.delete_all
   end
 
   def clean_database

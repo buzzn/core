@@ -26,6 +26,10 @@ class LocalpoolRoda < BaseRoda
       r.get! 'meteing-point-operator-contract' do
         localpool.metering_point_operator_contract!
       end
+
+      r.on 'billing-cycles' do
+        r.run BillingCycleRoda
+      end
     end
   end
 end

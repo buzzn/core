@@ -31,5 +31,13 @@ module Group
     def billing_cycles
       object.billing_cycles.readable_by(@current_user).collect { |bc| BillingCycleResource.new(bc) }
     end
+
+    def billing_cycle(id)
+      BillingCycleResource.retrieve(current_user, id)
+    end
+
+    def price(id)
+      PriceResource.retrieve(current_user, id)
+    end
   end
 end

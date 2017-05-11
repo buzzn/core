@@ -3,6 +3,8 @@ require_relative 'helpers/error_handler'
 require_relative 'plugins/doorkeeper'
 require_relative 'plugins/current_user'
 require_relative 'plugins/terminal_verbs'
+require_relative 'plugins/created_deleted'
+require_relative 'plugins/aggregation'
 
 class BaseRoda < Roda
 

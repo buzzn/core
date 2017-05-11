@@ -24,8 +24,10 @@ module Buzzn
               end
             end
             errors = "{\"errors\":[#{errs.join(',')}]}"
-          else
+          when Buzzn::PermissionDenied, Buzzn::RecordNotFound 
             errors = "{\"errors\":[{\"detail\":\"#{e.message}\"}]}"
+          else
+            errors = "{\"errors\":[{\"detail\":\"internal server error\"}]}"
           end
           response.write(errors)
         end

@@ -1,18 +1,29 @@
 class PriceRoda < BaseRoda
   plugin :shared_vars
+  plugin :created_deleted
 
-  include Import.args[:env, 'transaction.create_price']
+  include Import.args[:env,
+                      'transaction.create_price',
+                      'transaction.update_price']
 
   route do |r|
 
+    localpool = shared[:localpool]
+
     r.get! do
-      shared[:localpool].prices
+      localpool.prices
     end
 
     r.post! do
-      response.status = 201
-      create_price.call(r.params,
-                        resource: [shared[:localpool].method(:create_price)])
+      created do
+        create_price.call(r.params,
+                          resource: [localpool.method(:create_price)])
+      end
+    end
+
+    r.patch! :id do |id|
+      price = localpool.price(id)
+      update_price.call(r.params, resource: [price])
     end
   end
 end
