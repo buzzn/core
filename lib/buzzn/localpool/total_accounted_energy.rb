@@ -27,7 +27,7 @@ module Buzzn::Localpool
 
     def get_single_by_label(label)
       accounted_energies_hash = get_by_label(label)
-      if accounted_energies_hash[label].size != 1
+      if accounted_energies_hash[label].size > 1
         raise ArgumentError.new("Label #{label} may only occur once in the list.")
       end
       return accounted_energies_hash[label].first
@@ -48,41 +48,97 @@ module Buzzn::Localpool
     end
 
     def grid_feeding_chp
-
+      result = 0
+      case demarcation_type
+      when :demarcation_chp
+        result = get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value
+      when :demarcation_pv
+        result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value
+      else
+        generator_type = Group::Localpool.find(localpool_id).energy_generator_type
+        if generator_type == Group::Base::CHP
+          result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
+        end
+        result = 0
+      end
+      return result > 0 ? result / 1000 : 0
     end
 
     def grid_feeding_pv
-
+      result = 0
+      case demarcation_type
+      when :demarcation_pv
+        result = get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value
+      when :demarcation_chp
+        result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value
+      else
+        generator_type = Group::Localpool.find(localpool_id).energy_generator_type
+        if generator_type == Group::Base::PV
+          result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
+        end
+        result = 0
+      end
+      return result > 0 ? result / 1000 : 0
     end
 
     def consumption_through_chp
-
+      result = 0
+      case demarcation_type
+      when :demarcation_chp
+        result = production_chp - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value
+      when :demarcation_pv
+        result = production_chp - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value + get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value
+      else
+        result = production_chp - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
+      end
+      return result > 0 ? result / 1000 : 0
     end
 
     def consumption_through_pv
+      result = 0
+      case demarcation_type
+      when :demarcation_pv
+        result = production_pv - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value
+      when :demarcation_chp
+        result = production_pv - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value + get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value
+      else
+        result = production_pv - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
+      end
+      return result > 0 ? result / 1000 : 0
+    end
 
+    def demarcation_type
+      demarcation_chp = get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP)
+      demarcation_pv = get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV)
+      if demarcation_chp.nil?
+        if demarcation_pv.nil?
+          return :none
+        end
+        return :demarcation_pv
+      end
+      return :demarcation_chp
     end
 
     def own_consumption
-      total_production - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
+      total_production - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000
     end
 
     def total_production
-      result = 0
-      get_by_label(Buzzn::AccountedEnergy::PRODUCTION_PV, Buzzn::AccountedEnergy::PRODUCTION_CHP).collect{|energy| result += energy.value}
-      result
+      sums = sum_and_group_by_label
+      (sums[Buzzn::AccountedEnergy::PRODUCTION_PV] + sums[Buzzn::AccountedEnergy::PRODUCTION_CHP]) / 1000
     end
 
     def production_pv
-      result = 0
-      @total_accounted_energy.get_by_label(Buzzn::AccountedEnergy::PRODUCTION_PV).collect{|energy| result += energy.value}
-      result
+      sum_and_group_by_label[Buzzn::AccountedEnergy::PRODUCTION_PV]  / 1000
     end
 
     def production_chp
-      result = 0
-      @total_accounted_energy.get_by_label(Buzzn::AccountedEnergy::PRODUCTION_CHP).collect{|energy| result += energy.value}
-      result
+      sum_and_group_by_label[Buzzn::AccountedEnergy::PRODUCTION_CHP]  / 1000
+    end
+
+    def total_consumption_by_lsn
+      sums = sum_and_group_by_label
+      (sums[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG] + sums[Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG]) / 1000
     end
   end
 end

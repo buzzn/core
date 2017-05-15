@@ -29,15 +29,15 @@ html
 
     h1 LCP Report
       <br>
-      Localpool #{power_taker.localpool.name} von #{begin_date} bis #{end_date}
+      Localpool #{localpool.name} von #{begin_date} bis #{end_date}
 
     table.block
       tr
         td Vertragsnummner:
-        td #{localpool.localpool_processing_contract.full_contract_number}
+        td = localpool.localpool_processing_contract.full_contract_number
       tr
         td Bezugsstelle:
-        td = localpool.address.street_with_number_and_extra
+        td = localpool.main_address.street_with_number_and_extra
 
     div.alwaysbreak
 
@@ -46,11 +46,12 @@ html
     table
       tr.grey
         td Zeitraum
-        td = 12 # TODO: use lib method when PR merged
+        td = 12
         td Monate
       tr
-      tr
         td Strommengen
+        td
+        td
       tr
         td Eigenstromproduktion gesamt
         td = total_production
@@ -69,7 +70,7 @@ html
         td kWh
       tr
         td Nutzungsgrad
-        td = own_consumption * 100 / total_production
+        td #{'%.2f' % (own_consumption * 100.0 / total_production)}
         td %
       tr.grey
         td ins Netz eingespeist (Überschussstrom)
@@ -77,66 +78,67 @@ html
         td kWh
       tr
         td davon aus BHKW
-        td = power_taker.old_supplier_name
+        td = grid_feeding_chp
         td kWh
       tr.grey
         td davon aus PVA
-        td = power_taker.old_customer_number
+        td = grid_feeding_pv
         td kWh
       tr
         td Verbrauch gesamt
-        td = power_taker.old_account_number
+        td = total_accounted_energy.total_consumption_by_lsn
         td kWh
       tr.grey
         td durch Verbrauchstellen (volle EEG-Umlage)
-        td #{power_taker.forecast_kwh_pa} kWh
+        td = consumption_lsn_full_eeg
         td kWh
       tr
         td Anzahl Verbrauchstellen
-        td #{power_taker.payment_now} €
+        td = count_lsn_full_eeg
         td Stück
       tr.grey
         td Mittelwert
-        td = power_taker.register.uid
+        td = consumption_lsn_full_eeg / count_lsn_full_eeg
         td kWh
       tr
         td durch Verbrauchstellen (reduzierte EEG-Umlage)
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = consumption_lsn_reduced_eeg
         td kWh
       tr.grey
         td Anzahl Verbrauchstellen
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = count_lsn_reduced_eeg
         td Stück
       tr
         td Mittelwert
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = consumption_lsn_reduced_eeg / count_lsn_reduced_eeg
         td kWh
       tr.grey
         td gedeckt durch
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td
+        td
       tr
         td Eigenstrom (eigene Produktion)
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = own_consumption
         td kWh
       tr.grey
         td Reststrombezug (aus dem Netz)
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = grid_consumption_corrected
         td kWh
       tr
         td Deckungsgrad
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = own_consumption / total_accounted_energy.total_consumption_by_lsn
         td %
       tr.grey
         td Verbrauch Drittbelieferte gesamt
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = consumption_third_party
         td kWh
       tr
         td Anzahl Verbrauchstellen
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = count_third_party
         td Stück
       tr.grey
         td Mittelwert
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = count_third_party / consumption_third_party
         td kWh
 
 
@@ -145,81 +147,87 @@ html
   table
     tr.grey
       td Localpool intern
-      td #{power_taker.base_price_euro} €/Monat
+      td
+      td
     tr
       td Grundpreis
-      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
+      td = baseprice
       td €/Jahr
-    tr
-      td Arbeitspreis
-      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
-      td Ct/kWh
     tr.grey
+      td Arbeitspreis
+      td = energyprice
+      td Ct/kWh
+    tr
       td Reststrom
-      td = power_taker.customer_bank_account.holder
-    tr
+      td
+      td
+    tr.grey
       td Lieferant, Tarif
-      td = power_taker.customer_bank_account.iban
-    tr.grey
+      td buzzn.net, New Metering
+      td
+    tr
       td Grundpreis
-      td = power_taker.customer_bank_account.bic
+      td = baseprice_grid_consumption_per_year
       td €/Jahr
-    tr
-      td Arbeitspreis
-      td = power_taker.customer_bank_account.bank_name
-      td Ct/kWh
     tr.grey
-      td Überschussstrom
-      td #{power_taker.base_price_euro} €/Monat
+      td Arbeitspreis
+      td = energyprice_grid_consumption
+      td Ct/kWh
     tr
+      td Überschussstrom
+      td
+      td
+    tr.grey
       td Grundpreis (für Abrechnung)
-      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
+      td = baseprice_grid_feeding_per_year
       td €/Jahr
     tr
       td KWK Vergütung Einspeisung (EEX + KWK Bonus)
-      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
+      td = reward_chp_grid_feeding
       td Ct/kWh
     tr.grey
       td KWK Vergütung Eigenverbrauch (KWK Bonus)
-      td = power_taker.customer_bank_account.holder
+      td = reward_chp_own_consumption
       td Ct/kWh
     tr
       td Einspeisevergütung PV
-      td = power_taker.customer_bank_account.iban
+      td = reward_pv_grid_feeding
       td Ct/kWh
     tr.grey
       td EEG-Umlage
-      td = power_taker.customer_bank_account.bic
+      td
+      td
     tr
       td auf Verbrauchstellen (EEG-Umlage behaftet)
-      td = power_taker.customer_bank_account.bank_name
+      td = full_renewable_energy_law_taxation
       td Ct/kWh
     tr.grey
       td auf Verbrauchstellen (EEG-Umlage reduziert)
-      td #{power_taker.base_price_euro} €/Monat
+      td = reduced_renewable_energy_law_taxation
       td Ct/kWh
     tr
       td Dienstleistung Localpool.de
-      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
-    tr
+      td
+      td
+    tr.grey
       td Anzahl Messstellen gesamt
-      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
+      td = count_one_way_meter + count_two_way_meter
       td Stück
-    tr.grey
+    tr
       td davon mit Einrichtungszähler
-      td = power_taker.customer_bank_account.holder
+      td = count_one_way_meter
       td Stück
-    tr
-      td laufende Vergütung
-      td = power_taker.customer_bank_account.iban
-      td €/Jahr
     tr.grey
-      td davon mit Zweirichtungszähler
-      td = power_taker.customer_bank_account.bic
-      td Stück
-    tr
       td laufende Vergütung
-      td = power_taker.customer_bank_account.bank_name
+      td = one_way_meter_cost_per_year
+      td €/Jahr
+    tr
+      td davon mit Zweirichtungszähler
+      td = count_two_way_meter
+      td Stück
+    tr.grey
+      td laufende Vergütung
+      td = two_way_meter_cost_per_year
       td €/Jahr
 
 
@@ -228,43 +236,43 @@ html
   table
     tr.grey
       td Erlöse gesamt
-      td #{power_taker.base_price_euro} €/Monat
+      td = total_revenue
       td €
     tr
       td durch Stromverkauf an die Verbrauchstellen
-      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
+      td = revenue_energy_business
       td €
-    tr
+    tr.grey
       td durch Arbeitsmenge
-      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
+      td = revenue_per_kwh
       td €
-    tr.grey
+    tr
       td durch Grundpreis
-      td = power_taker.customer_bank_account.holder
+      td = revenue_through_baseprice
       td €
-    tr
+    tr.grey
       td durch Netzbetreiber
-      td = power_taker.customer_bank_account.iban
+      td = revenue_through_dso
       td €
-    tr.grey
+    tr
       td Kosten gesamt
-      td = power_taker.customer_bank_account.bic
-      td €
-    tr
-      td EEG-Umlage
-      td = power_taker.customer_bank_account.bank_name
+      td = total_costs
       td €
     tr.grey
-      td Reststromlieferung
-      td #{power_taker.base_price_euro} €/Monat
+      td EEG-Umlage
+      td = total_renewable_energy_law_taxation * (-1)
       td €
     tr
+      td Reststromlieferung
+      td = total_cost_grid_consumption * (-1)
+      td €
+    tr.grey
       td Dienstleistung Localpool.de laufend
-      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
+      td = localpool_service_cost * (-1)
       td €
     tr
       td Saldo
-      td #{power_taker.tariff_now.energyprice_cents_per_kwh} Cent/kWh
+      td = balance
       td €
 
 

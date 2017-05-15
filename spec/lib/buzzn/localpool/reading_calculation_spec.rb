@@ -437,6 +437,7 @@ describe Buzzn::Localpool::ReadingCalculation do
     localpool = Fabricate(:localpool_sulz_with_registers_and_readings)
     begin_date = Time.new(2016, 8, 4)
     all_energies = Buzzn::Localpool::ReadingCalculation.get_all_energy_in_localpool(localpool, begin_date, nil, 2016)
+    puts all_energies.inspect
     result = all_energies.sum_and_group_by_label
 
     expect(result[Buzzn::AccountedEnergy::GRID_CONSUMPTION]).to eq 3631626 # this includes third party supplied!

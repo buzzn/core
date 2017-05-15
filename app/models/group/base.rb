@@ -14,6 +14,10 @@ module Group
     include Buzzn::ManagerRole
     include Buzzn::GuardedCrud
 
+    HYBRID = 'hybrid'
+    CHP = 'chp'
+    PV = 'pv'
+
     before_destroy :destroy_content
 
     include PublicActivity::Model
@@ -281,8 +285,16 @@ module Group
 
 
 
-
-
+    def energy_generator_type
+      all_labels = output_registers.collect(&:label).uniq
+      if all_labels.include?(Register::Base::PRODUCTION_CHP) && all_labels.include?(Register::Base::PRODUCTION_PV)
+        return HYBRID
+      elsif all_labels.include?(Register::Base::PRODUCTION_CHP)
+        return CHP
+      elsif all_labels.include?(Register::Base::PRODUCTION_PV)
+        return PV
+      end
+    end
 
     def self.score_interval(resolution_format, containing_timestamp)
       if resolution_format == 'year_to_minutes' || resolution_format == 'year'

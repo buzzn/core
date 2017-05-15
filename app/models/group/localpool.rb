@@ -20,6 +20,28 @@ module Group
 
     after_create :create_corrected_grid_registers
 
+    # TODO: maybe implement this as scope within meter model
+    def one_way_meters
+      sql = "SELECT m.id FROM meters m, registers r, groups g WHERE r.meter_id = m.id AND r.group_id = g.id AND g.id = '#{self.id}' GROUP BY m.id HAVING COUNT(*) = 1"
+      Meter::Base.find_by_sql("SELECT * FROM meters WHERE id IN(#{sql})")
+      # registers = Register::Base.arel_table
+      # meters = Meter::Base.arel_table
+      # groups = Group::Base.arel_table
+      # sql = meters.join(registers).join(groups).where(groups[:id].eq(self.id)).group(meters[:id]).having("COUNT(*) = 1")
+      # Meter::Base.where(sql)
+      #Meter::Base.where(meters[:register_id].eq(registers[:id]).and(registers[:group_id].eq(groups[:id]))).group(meters[:id]).having("COUNT(*) = 1")
+    end
+
+    # TODO: maybe implement this as scope within meter model
+    def two_way_meters
+      sql = "SELECT m.id FROM meters m, registers r, groups g WHERE r.meter_id = m.id AND r.group_id = g.id AND g.id = '#{self.id}' GROUP BY m.id HAVING COUNT(*) > 1"
+      Meter::Base.find_by_sql("SELECT * FROM meters WHERE id IN(#{sql})")
+      # registers = Register::Base.arel_table
+      # meters = Meter::Base.arel_table
+      # groups = Group::Base.arel_table
+      # Meter::Base.where(meters[:register_id].eq(registers[:id]).and(registers[:group_id].eq(groups[:id]))).group(meters[:id]).having("COUNT(*) > 1")
+    end
+
     # use first address as main address
     # TODO: maybe improve this so that the user can select between all addresses
     def main_address
