@@ -67,7 +67,7 @@ module Buzzn::Pdfs
     end
 
     def grid_feeding_corrected
-      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value  / 1000
+      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value  / 1000000
     end
 
     def consumption_through_pv
@@ -79,11 +79,11 @@ module Buzzn::Pdfs
     end
 
     def consumption_lsn_full_eeg
-      @total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG] / 1000
+      @total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG] / 1000000
     end
 
     def consumption_lsn_reduced_eeg
-      @total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG] / 1000
+      @total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG] / 1000000
     end
 
     def count_lsn_full_eeg
@@ -105,11 +105,11 @@ module Buzzn::Pdfs
     end
 
     def grid_consumption_corrected
-      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED).value / 1000
+      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED).value / 1000000
     end
 
     def consumption_third_party
-      @total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY] / 1000
+      @total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY] / 1000000
     end
 
     def count_third_party
@@ -122,7 +122,7 @@ module Buzzn::Pdfs
     end
 
     def baseprice
-      @localpool.prices.valid_at(begin_date).first.baseprice_cents_per_month  / 100.0
+      12 * @localpool.prices.valid_at(begin_date).first.baseprice_cents_per_month  / 100.0
     end
 
     def energyprice
@@ -130,30 +130,29 @@ module Buzzn::Pdfs
     end
 
     def count_one_way_meter
-      @localpool.one_way_meters.uniq.size - 2 # subtract virtual ÜGZ
+      @localpool.one_way_meters.uniq.size
     end
 
     def count_two_way_meter
       @localpool.two_way_meters.uniq.size
     end
 
-    def revenue_per_kwh
-      (consumption_lsn_full_eeg + consumption_lsn_reduced_eeg) * energyprice
+    def revenue_through_energy_selling
+      ((consumption_lsn_full_eeg + consumption_lsn_reduced_eeg) * energyprice / 100.0).round(2)
     end
 
     def revenue_through_baseprice
-      # TODO: use lib method for "timespan in months" when PR merged
-      12 * baseprice / 12 * (count_lsn_full_eeg + count_lsn_reduced_eeg)
+      # TODO: maybe check each contract for its begin and end date to get the correct timespan with respect to full or reduced EEG
+      (timespan_in_months * baseprice / 12 * (@localpool.registers.by_label(Register::Base::CONSUMPTION).size)).round(2)
     end
 
     def revenue_through_dso #Netzbetreiber
-      # TODO: use timespan in months instead of 12
-      grid_feeding_chp * reward_chp_grid_feeding + grid_feeding_pv * reward_pv_grid_feeding + (production_chp - grid_feeding_chp) * reward_chp_own_consumption - baseprice_grid_feeding_per_year * 12 / 12
+      (grid_feeding_chp * reward_chp_grid_feeding / 100.0 + grid_feeding_pv * reward_pv_grid_feeding / 100.0 + (production_chp - grid_feeding_chp) * reward_chp_own_consumption / 100.0 - baseprice_grid_feeding_per_year * timespan_in_months / 12).round(2)
     end
 
     def reward_chp_grid_feeding
       # TODO: think about storing those values or getting them via some service
-      0.00
+      4.50
     end
 
     def reward_pv_grid_feeding
@@ -173,12 +172,12 @@ module Buzzn::Pdfs
 
     def full_renewable_energy_law_taxation
       # TODO: think about storing those values or getting them via some service
-      6.354
+      6.24
     end
 
     def reduced_renewable_energy_law_taxation
       # TODO: think about storing those values or getting them via some service
-      0.00
+      2.50
     end
 
     def energyprice_grid_consumption
@@ -188,7 +187,7 @@ module Buzzn::Pdfs
 
     def baseprice_grid_consumption_per_year
       # TODO: think about storing those values or getting them via some service
-      70.59
+      84.00
     end
 
     def one_way_meter_cost_per_year
@@ -202,34 +201,40 @@ module Buzzn::Pdfs
     end
 
     def revenue_energy_business
-      revenue_per_kwh + revenue_through_baseprice
+      (revenue_through_energy_selling + revenue_through_baseprice).round(2)
     end
 
     def total_renewable_energy_law_taxation
-      ((consumption_lsn_full_eeg - grid_consumption_corrected) * consumption_lsn_full_eeg / (consumption_lsn_full_eeg + consumption_lsn_reduced_eeg)) * full_renewable_energy_law_taxation / 100 +
-        ((consumption_lsn_reduced_eeg - grid_consumption_corrected) * consumption_lsn_reduced_eeg / (consumption_lsn_full_eeg + consumption_lsn_reduced_eeg)) * reduced_renewable_energy_law_taxation / 100
+      byebug
+      # (consumption_lsn_full_egg - grid_consumpion_corrected * part_of_full_eeg_from_grid_consumption) * full_renewable_eeg +
+      #   (consumption_lsn_reduced_egg - grid_consumpion_corrected * part_of_reduced_eeg_from_grid_consumption) * reduced_renewable_eeg
+      ((consumption_lsn_full_eeg - grid_consumption_corrected * (consumption_lsn_full_eeg * 1.0 / (consumption_lsn_full_eeg + consumption_lsn_reduced_eeg))) * full_renewable_energy_law_taxation / 100 + (consumption_lsn_reduced_eeg - grid_consumption_corrected * (consumption_lsn_reduced_eeg * 1.0 / (consumption_lsn_full_eeg + consumption_lsn_reduced_eeg))) * reduced_renewable_energy_law_taxation / 100).round(2)
     end
 
     def total_cost_grid_consumption
-      # TODO: use timespan in months instead of 12
-      grid_consumption_corrected * energyprice_grid_consumption / 100 + 12 * baseprice_grid_consumption_per_year / 12
+      (grid_consumption_corrected * energyprice_grid_consumption / 100 + timespan_in_months * baseprice_grid_consumption_per_year / 12).round(2)
     end
 
     def localpool_service_cost
-      # TODO: use timespan in months instead of 12
-      count_one_way_meter * one_way_meter_cost_per_year / 12 * 12 + count_two_way_meter * two_way_meter_cost_per_year / 12 * 12
+      (count_one_way_meter * one_way_meter_cost_per_year / 12 * timespan_in_months + count_two_way_meter * two_way_meter_cost_per_year / 12 * timespan_in_months).round(2)
     end
 
     def total_revenue
-      revenue_energy_business + revenue_through_dso
+      (revenue_energy_business + revenue_through_dso).round(2)
     end
 
     def total_costs
-      total_renewable_energy_law_taxation + total_cost_grid_consumption + localpool_service_cost
+      (total_renewable_energy_law_taxation + total_cost_grid_consumption + localpool_service_cost).round(2)
     end
 
     def balance
-      total_revenue - total_costs
+      (total_revenue - total_costs).round(2)
+    end
+
+    def timespan_in_months
+      Buzzn::Localpool::ReadingCalculation.timespan_in_months(
+        @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).first_reading.timestamp,
+        @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp)
     end
   end
 end

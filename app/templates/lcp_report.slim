@@ -22,6 +22,8 @@ html
       div.ps {margin-top: 30pt}
       div.ps div {width: 95%; display: inline-block}
       div.ps span { vertical-align: top}
+      td.single_space { padding-left: 15px; }
+      td.double_space {padding-left: 30px; }
 
   body
 
@@ -39,37 +41,34 @@ html
         td Bezugsstelle:
         td = localpool.main_address.street_with_number_and_extra
 
-    div.alwaysbreak
-
     h2 Überblick Energiedaten
 
-    table
-      tr.grey
-        td Zeitraum
-        td = 12
-        td Monate
+    table.block
       tr
-        td Strommengen
-        td
-        td
+        td Zeitraum
+        td #{timespan_in_months} Monate
+
+    h3 Strommengen
+
+    table
       tr
         td Eigenstromproduktion gesamt
         td = total_production
         td kWh
       tr.grey
-        td davon aus Blockheizkraftwerk (BHKW)
+        td.single_space davon aus Blockheizkraftwerk (BHKW)
         td = production_chp
         td kWh
       tr
-        td davon aus Photovoltaikanlage (PVA)
+        td.single_space davon aus Photovoltaikanlage (PVA)
         td = production_pv
         td kWh
       tr.grey
-        td Localpool intern verbraucht
+        td.single_space Localpool intern verbraucht
         td = own_consumption
         td kWh
       tr
-        td Nutzungsgrad
+        td.single_space Nutzungsgrad
         td #{'%.2f' % (own_consumption * 100.0 / total_production)}
         td %
       tr.grey
@@ -77,11 +76,11 @@ html
         td = grid_feeding_corrected
         td kWh
       tr
-        td davon aus BHKW
+        td.single_space davon aus BHKW
         td = grid_feeding_chp
         td kWh
       tr.grey
-        td davon aus PVA
+        td.single_space davon aus PVA
         td = grid_feeding_pv
         td kWh
       tr
@@ -89,191 +88,191 @@ html
         td = total_accounted_energy.total_consumption_by_lsn
         td kWh
       tr.grey
-        td durch Verbrauchstellen (volle EEG-Umlage)
+        td.single_space durch Verbrauchstellen (volle EEG-Umlage)
         td = consumption_lsn_full_eeg
         td kWh
       tr
-        td Anzahl Verbrauchstellen
+        td.double_space Anzahl Verbrauchstellen
         td = count_lsn_full_eeg
         td Stück
       tr.grey
-        td Mittelwert
+        td.double_space Mittelwert
         td = consumption_lsn_full_eeg / count_lsn_full_eeg
         td kWh
       tr
-        td durch Verbrauchstellen (reduzierte EEG-Umlage)
+        td.single_space durch Verbrauchstellen (reduzierte EEG-Umlage)
         td = consumption_lsn_reduced_eeg
         td kWh
       tr.grey
-        td Anzahl Verbrauchstellen
+        td.double_space Anzahl Verbrauchstellen
         td = count_lsn_reduced_eeg
         td Stück
       tr
-        td Mittelwert
+        td.double_space Mittelwert
         td = consumption_lsn_reduced_eeg / count_lsn_reduced_eeg
         td kWh
       tr.grey
-        td gedeckt durch
+        td.single_space gedeckt durch
         td
         td
       tr
-        td Eigenstrom (eigene Produktion)
+        td.double_space Eigenstrom (eigene Produktion)
         td = own_consumption
         td kWh
       tr.grey
-        td Reststrombezug (aus dem Netz)
+        td.double_space Reststrombezug (aus dem Netz)
         td = grid_consumption_corrected
         td kWh
       tr
-        td Deckungsgrad
-        td = own_consumption / total_accounted_energy.total_consumption_by_lsn
+        td.double_space Deckungsgrad
+        td #{'%.2f' % (own_consumption * 100.0 / total_accounted_energy.total_consumption_by_lsn)}
         td %
       tr.grey
         td Verbrauch Drittbelieferte gesamt
         td = consumption_third_party
         td kWh
       tr
-        td Anzahl Verbrauchstellen
+        td.single_space Anzahl Verbrauchstellen
         td = count_third_party
         td Stück
       tr.grey
-        td Mittelwert
-        td = count_third_party / consumption_third_party
+        td.single_space Mittelwert
+        td = consumption_third_party / count_third_party
         td kWh
 
 
-  h2 Preise (alle Angaben ohne USt.)
+    h2 Preise (alle Angaben ohne USt.)
 
-  table
-    tr.grey
-      td Localpool intern
-      td
-      td
-    tr
-      td Grundpreis
-      td = baseprice
-      td €/Jahr
-    tr.grey
-      td Arbeitspreis
-      td = energyprice
-      td Ct/kWh
-    tr
-      td Reststrom
-      td
-      td
-    tr.grey
-      td Lieferant, Tarif
-      td buzzn.net, New Metering
-      td
-    tr
-      td Grundpreis
-      td = baseprice_grid_consumption_per_year
-      td €/Jahr
-    tr.grey
-      td Arbeitspreis
-      td = energyprice_grid_consumption
-      td Ct/kWh
-    tr
-      td Überschussstrom
-      td
-      td
-    tr.grey
-      td Grundpreis (für Abrechnung)
-      td = baseprice_grid_feeding_per_year
-      td €/Jahr
-    tr
-      td KWK Vergütung Einspeisung (EEX + KWK Bonus)
-      td = reward_chp_grid_feeding
-      td Ct/kWh
-    tr.grey
-      td KWK Vergütung Eigenverbrauch (KWK Bonus)
-      td = reward_chp_own_consumption
-      td Ct/kWh
-    tr
-      td Einspeisevergütung PV
-      td = reward_pv_grid_feeding
-      td Ct/kWh
-    tr.grey
-      td EEG-Umlage
-      td
-      td
-    tr
-      td auf Verbrauchstellen (EEG-Umlage behaftet)
-      td = full_renewable_energy_law_taxation
-      td Ct/kWh
-    tr.grey
-      td auf Verbrauchstellen (EEG-Umlage reduziert)
-      td = reduced_renewable_energy_law_taxation
-      td Ct/kWh
-    tr
-      td Dienstleistung Localpool.de
-      td
-      td
-    tr.grey
-      td Anzahl Messstellen gesamt
-      td = count_one_way_meter + count_two_way_meter
-      td Stück
-    tr
-      td davon mit Einrichtungszähler
-      td = count_one_way_meter
-      td Stück
-    tr.grey
-      td laufende Vergütung
-      td = one_way_meter_cost_per_year
-      td €/Jahr
-    tr
-      td davon mit Zweirichtungszähler
-      td = count_two_way_meter
-      td Stück
-    tr.grey
-      td laufende Vergütung
-      td = two_way_meter_cost_per_year
-      td €/Jahr
+    table
+      tr.grey
+        td Localpool intern
+        td
+        td
+      tr
+        td.single_space Grundpreis
+        td #{'%.2f' % baseprice}
+        td €/Jahr
+      tr.grey
+        td.single_space Arbeitspreis
+        td #{'%.3f' % energyprice}
+        td Ct/kWh
+      tr
+        td Reststrom
+        td
+        td
+      tr.grey
+        td.single_space Lieferant, Tarif
+        td buzzn.net, New Metering
+        td
+      tr
+        td.single_space Grundpreis
+        td #{'%.2f' % baseprice_grid_consumption_per_year}
+        td €/Jahr
+      tr.grey
+        td.single_space Arbeitspreis
+        td #{'%.3f' % energyprice_grid_consumption}
+        td Ct/kWh
+      tr
+        td Überschussstrom
+        td
+        td
+      tr.grey
+        td.single_space Grundpreis (für Abrechnung)
+        td #{'%.2f' % baseprice_grid_feeding_per_year}
+        td €/Jahr
+      tr
+        td.single_space KWK Vergütung Einspeisung (EEX + KWK Bonus)
+        td #{'%.3f' % reward_chp_grid_feeding}
+        td Ct/kWh
+      tr.grey
+        td.single_space KWK Vergütung Eigenverbrauch (KWK Bonus)
+        td #{'%.3f' % reward_chp_own_consumption}
+        td Ct/kWh
+      tr
+        td.single_space Einspeisevergütung PV
+        td #{'%.3f' % reward_pv_grid_feeding}
+        td Ct/kWh
+      tr.grey
+        td EEG-Umlage
+        td
+        td
+      tr
+        td.single_space auf Verbrauchstellen (EEG-Umlage behaftet)
+        td #{'%.2f' % full_renewable_energy_law_taxation}
+        td Ct/kWh
+      tr.grey
+        td.single_space auf Verbrauchstellen (EEG-Umlage reduziert)
+        td #{'%.2f' % reduced_renewable_energy_law_taxation}
+        td Ct/kWh
+      tr
+        td Dienstleistung Localpool.de
+        td
+        td
+      tr.grey
+        td.single_space Anzahl Messstellen gesamt
+        td = count_one_way_meter + count_two_way_meter
+        td Stück
+      tr
+        td.double_space davon mit Einrichtungszähler
+        td = count_one_way_meter
+        td Stück
+      tr.grey
+        td.double_space laufende Vergütung (pro Stück)
+        td #{'%.2f' % one_way_meter_cost_per_year}
+        td €/Jahr
+      tr
+        td.double_space davon mit Zweirichtungszähler
+        td = count_two_way_meter
+        td Stück
+      tr.grey
+        td.double_space laufende Vergütung (pro Stück)
+        td #{'%.2f' % two_way_meter_cost_per_year}
+        td €/Jahr
 
 
-  h2 Einnahmen / Ausgaben
+    h2 Einnahmen / Ausgaben
 
-  table
-    tr.grey
-      td Erlöse gesamt
-      td = total_revenue
-      td €
-    tr
-      td durch Stromverkauf an die Verbrauchstellen
-      td = revenue_energy_business
-      td €
-    tr.grey
-      td durch Arbeitsmenge
-      td = revenue_per_kwh
-      td €
-    tr
-      td durch Grundpreis
-      td = revenue_through_baseprice
-      td €
-    tr.grey
-      td durch Netzbetreiber
-      td = revenue_through_dso
-      td €
-    tr
-      td Kosten gesamt
-      td = total_costs
-      td €
-    tr.grey
-      td EEG-Umlage
-      td = total_renewable_energy_law_taxation * (-1)
-      td €
-    tr
-      td Reststromlieferung
-      td = total_cost_grid_consumption * (-1)
-      td €
-    tr.grey
-      td Dienstleistung Localpool.de laufend
-      td = localpool_service_cost * (-1)
-      td €
-    tr
-      td Saldo
-      td = balance
-      td €
+    table
+      tr.grey
+        td Erlöse gesamt
+        td #{'%.2f' % total_revenue}
+        td €
+      tr
+        td.single_space durch Stromverkauf an die Verbrauchstellen
+        td #{'%.2f' % revenue_energy_business}
+        td €
+      tr.grey
+        td.single_space durch Arbeitsmenge
+        td #{'%.2f' % revenue_through_energy_selling}
+        td €
+      tr
+        td.single_space durch Grundpreis
+        td #{'%.2f' % revenue_through_baseprice}
+        td €
+      tr.grey
+        td.single_space durch Netzbetreiber
+        td #{'%.2f' % revenue_through_dso}
+        td €
+      tr
+        td Kosten gesamt
+        td #{'%.2f' % total_costs}
+        td €
+      tr.grey
+        td.single_space EEG-Umlage
+        td #{'%.2f' % (total_renewable_energy_law_taxation * (-1))}
+        td €
+      tr
+        td.single_space Reststromlieferung
+        td #{'%.2f' % (total_cost_grid_consumption * (-1))}
+        td €
+      tr.grey
+        td.single_space Dienstleistung Localpool.de laufend
+        td #{'%.2f' % (localpool_service_cost * (-1))}
+        td €
+      tr
+        td Saldo
+        td #{'%.2f' % balance}
+        td €
 
 
 

@@ -51,60 +51,60 @@ module Buzzn::Localpool
       result = 0
       case demarcation_type
       when :demarcation_chp
-        result = get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value
+        result = get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value / 1000000
       when :demarcation_pv
-        result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value
+        result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000 - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value / 1000000
       else
         generator_type = Group::Localpool.find(localpool_id).energy_generator_type
         if generator_type == Group::Base::CHP
-          result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
+          result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000
         end
         result = 0
       end
-      return result > 0 ? result / 1000 : 0
+      return result > 0 ? result : 0
     end
 
     def grid_feeding_pv
       result = 0
       case demarcation_type
       when :demarcation_pv
-        result = get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value
+        result = get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value / 1000000
       when :demarcation_chp
-        result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value
+        result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000 - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value / 1000000
       else
         generator_type = Group::Localpool.find(localpool_id).energy_generator_type
         if generator_type == Group::Base::PV
-          result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
+          result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000
         end
         result = 0
       end
-      return result > 0 ? result / 1000 : 0
+      return result > 0 ? result : 0
     end
 
     def consumption_through_chp
       result = 0
       case demarcation_type
       when :demarcation_chp
-        result = production_chp - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value
+        result = production_chp - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value / 1000000
       when :demarcation_pv
-        result = production_chp - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value + get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value
+        result = production_chp - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000 + get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value / 1000000
       else
-        result = production_chp - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
+        result = production_chp - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000
       end
-      return result > 0 ? result / 1000 : 0
+      return result > 0 ? result : 0
     end
 
     def consumption_through_pv
       result = 0
       case demarcation_type
       when :demarcation_pv
-        result = production_pv - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value
+        result = production_pv - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value / 1000000
       when :demarcation_chp
-        result = production_pv - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value + get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value
+        result = production_pv - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000 + get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value / 1000000
       else
-        result = production_pv - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
+        result = production_pv - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000
       end
-      return result > 0 ? result / 1000 : 0
+      return result > 0 ? result : 0
     end
 
     def demarcation_type
@@ -120,25 +120,25 @@ module Buzzn::Localpool
     end
 
     def own_consumption
-      total_production - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000
+      total_production - get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).value / 1000000
     end
 
     def total_production
       sums = sum_and_group_by_label
-      (sums[Buzzn::AccountedEnergy::PRODUCTION_PV] + sums[Buzzn::AccountedEnergy::PRODUCTION_CHP]) / 1000
+      sums[Buzzn::AccountedEnergy::PRODUCTION_PV] / 1000000 + sums[Buzzn::AccountedEnergy::PRODUCTION_CHP] / 1000000
     end
 
     def production_pv
-      sum_and_group_by_label[Buzzn::AccountedEnergy::PRODUCTION_PV]  / 1000
+      sum_and_group_by_label[Buzzn::AccountedEnergy::PRODUCTION_PV]  / 1000000
     end
 
     def production_chp
-      sum_and_group_by_label[Buzzn::AccountedEnergy::PRODUCTION_CHP]  / 1000
+      sum_and_group_by_label[Buzzn::AccountedEnergy::PRODUCTION_CHP]  / 1000000
     end
 
     def total_consumption_by_lsn
       sums = sum_and_group_by_label
-      (sums[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG] + sums[Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG]) / 1000
+      sums[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG] / 1000000 + sums[Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG] / 1000000
     end
   end
 end

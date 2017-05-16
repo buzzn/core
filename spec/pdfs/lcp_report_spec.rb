@@ -1,4 +1,5 @@
-describe Buzzn::Pdfs::LSN_A01 do
+require 'lcp_report'
+describe Buzzn::Pdfs::LCP_Report do
 
   entity!(:localpool) { Fabricate(:localpool_sulz_with_registers_and_readings) }
 
@@ -11,7 +12,7 @@ describe Buzzn::Pdfs::LSN_A01 do
 
   it 'renders html' do
     html = subject.to_html
-    byebug
+    #byebug
     print_html(Buzzn::Pdfs::LCP_Report::TEMPLATE, html)
     # TODO create final version of report and compare it as html
     #expect(html).to eq File.read(__FILE__.sub(/rb$/, 'html'))

@@ -18,4 +18,14 @@ module ApplicationHelper
     link_to(truncate(link, length: 24, separator: ' '), link, html_options)
   end
 
+  # brutto
+  def pre_taxes(value)
+    value * 1.19
+  end
+
+  # netto
+  def after_taxes(value)
+    value / 1.19
+  end
+
 end
