@@ -8,36 +8,24 @@ describe "registers" do
 
   entity(:user) { Fabricate(:user_token) }
 
-  let(:anonymous_denied_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"retrieve Register::Base: permission denied for User: --anonymous--"
-        }
-      ]
-    }
-  end
-
   let(:denied_json) do
-    json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
-    json
-  end
-
-  let(:anonymous_not_found_json) do
     {
       "errors" => [
         {
-          "detail"=>"Register::Base: bla-blub not found"
+          "detail"=>"retrieve Register::Base: permission denied for User: #{user.resource_owner_id}"
         }
       ]
     }
   end
 
   let(:not_found_json) do
-    json = anonymous_not_found_json.dup
-    json['errors'][0]['detail'] = "Register::Base: bla-blub not found by User: #{admin.resource_owner_id}"
-    json
+    {
+      "errors" => [
+        {
+          "detail"=>"Register::BaseResource: bla-blub not found by User: #{admin.resource_owner_id}"
+        }
+      ]
+    }
   end
 
   entity(:real_register) { Fabricate(:real_meter).registers.first }
@@ -92,20 +80,12 @@ describe "registers" do
     end
 
     it '403' do
-      GET "/api/v1/registers/#{register.id}"
-      expect(response).to have_http_status(403)
-      expect(json).to eq anonymous_denied_json
-
       GET "/api/v1/registers/#{register.id}", user
       expect(response).to have_http_status(403)
       expect(json).to eq denied_json
     end
 
     it '404' do
-      GET "/api/v1/registers/bla-blub"
-      expect(response).to have_http_status(404)
-      expect(json).to eq anonymous_not_found_json
-
       GET "/api/v1/registers/bla-blub", admin
       expect(response).to have_http_status(404)
       expect(json).to eq not_found_json
@@ -136,20 +116,12 @@ describe "registers" do
       end
 
       it '403' do
-        GET "/api/v1/registers/#{register.id}/readings"
-        expect(response).to have_http_status(403)
-        expect(json).to eq anonymous_denied_json
-
         GET "/api/v1/registers/#{register.id}/readings", user
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
       end
 
       it '404' do
-        GET "/api/v1/registers/bla-blub/readings"
-        expect(response).to have_http_status(404)
-        expect(json).to eq anonymous_not_found_json
-
         GET "/api/v1/registers/bla-blub/readings", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json

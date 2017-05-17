@@ -19,10 +19,21 @@ module Group
     end
 
     def users
-      User.where(contracts
-                  .where('contracts.signing_user_id = users.id or contracts.customer_id = users.id or contracts.contractor_id = users.id')
-                  .select(1)
-                  .exists)
+      roles           = Role.arel_table
+      users_roles     = Role.users_roles_arel_table
+      users           = User.arel_table
+      localpool_users = users_roles
+                        .join(roles)
+                        .on(roles[:id].eq(users_roles[:role_id])
+                             .and(roles[:resource_id].eq(self.id)))
+                        .where(users_roles[:user_id].eq(users[:id]))
+                        .project(1)
+                        .exists
+      contract_users = contracts
+                       .where('contracts.signing_user_id = users.id or contracts.customer_id = users.id or contracts.contractor_id = users.id')
+                       .select(1)
+                       .exists
+      User.where(localpool_users.or(contract_users))
     end
 
     def organizations

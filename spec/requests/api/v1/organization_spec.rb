@@ -9,34 +9,22 @@ describe "organizations" do
 
   entity(:user) { Fabricate(:user_token) }
 
-  let(:anonymous_denied_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"retrieve Organization: permission denied for User: --anonymous--" }
-      ]
-    }
-  end
-
   let(:denied_json) do
-    json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
-    json
-  end
-
-  let(:anonymous_not_found_json) do
     {
       "errors" => [
         {
-          "detail"=>"Organization: bla-blub not found" }
+          "detail"=>"retrieve Organization: permission denied for User: #{user.resource_owner_id}" }
       ]
     }
   end
 
   let(:not_found_json) do
-    json = anonymous_not_found_json.dup
-    json['errors'][0]['detail'] = "Organization: bla-blub not found by User: #{admin.resource_owner_id}"
-    json
+    {
+      "errors" => [
+        {
+          "detail"=>"Organization: bla-blub not found by User: #{admin.resource_owner_id}" }
+      ]
+    }
   end
 
   entity(:organization) do
@@ -79,10 +67,6 @@ describe "organizations" do
     end
 
     it '404' do
-      GET "/api/v1/organizations/bla-blub"
-      expect(response).to have_http_status(404)
-      expect(json).to eq anonymous_not_found_json
-
       GET "/api/v1/organizations/bla-blub", admin
       expect(response).to have_http_status(404)
       expect(json).to eq not_found_json
@@ -109,8 +93,7 @@ describe "organizations" do
       {
         "errors" => [
           {
-            # TODO fix bad error response
-            "detail"=>"Buzzn::RecordNotFound" }
+            "detail"=>"OrganizationResource: address not found by User: #{admin.resource_owner_id}" }
         ]
       }
     end
@@ -142,10 +125,6 @@ describe "organizations" do
       end
 
       it '404' do
-        GET "/api/v1/organizations/bla-blub/address", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
-
         GET "/api/v1/organizations/#{organization.id}/address", admin
         expect(response).to have_http_status(404)
         expect(json).to eq address_not_found_json

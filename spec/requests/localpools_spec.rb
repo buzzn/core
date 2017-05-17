@@ -24,16 +24,7 @@ describe "localpools" do
     {
       "errors" => [
         {
-          "detail"=>"Group::Localpool: bla-blub not found by User: #{admin.resource_owner_id}" }
-      ]
-    }
-  end
-
-  let(:nested_not_found_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"Buzzn::RecordNotFound" }
+          "detail"=>"Group::LocalpoolResource: bla-blub not found by User: #{admin.resource_owner_id}" }
       ]
     }
   end
@@ -49,6 +40,7 @@ describe "localpools" do
     end
     Fabricate(:localpool_processing_contract, localpool: localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
+    User.find(user.resource_owner_id).add_role(:localpool_member, localpool)
     localpool
   end
 
@@ -63,7 +55,7 @@ describe "localpools" do
         "type"=>"group_localpool",
         "name"=>localpool.name,
         "description"=>localpool.description,
-        "readable"=>"member",
+        "readable"=>"world",
         "updatable"=>true,
         "deletable"=>true
       }
@@ -108,8 +100,7 @@ describe "localpools" do
 
   context 'GET' do
     it '404 permission denied' do
-      localpool.update(readable: :member)
-      GET "/#{localpool.id}", user
+      GET "/#{localpool.id}", other
       expect(response).to have_http_status(404)
       expect(json).to eq denied_json
     end
@@ -120,16 +111,13 @@ describe "localpools" do
       expect(json).to eq not_found_json
     end
 
-    # TODO: this test is randomly failing as it sometimes keeps the readable attribute at 'member'
-    xit '200' do
-      localpool_no_contracts.update(readable: :world)
+    it '200' do
       GET "/#{localpool_no_contracts.id}", admin
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq localpool_json.to_yaml
     end
 
     it '200 all' do
-      Group::Localpool.update_all(readable: :member)
       GET ""
       expect(response).to have_http_status(200)
       expect(json).to eq empty_json
@@ -154,7 +142,7 @@ describe "localpools" do
         "cancellation_date"=>nil,
         "end_date"=>nil,
         "updatable"=>true,
-        "deletable"=>true,
+        "deletable"=>false,
         "first_master_uid"=>contract.first_master_uid,
         "second_master_uid"=>nil,
         "begin_date"=>contract.begin_date.to_s,
@@ -191,7 +179,7 @@ describe "localpools" do
           "description"=>contract.contractor.description,
           "mode"=>contract.contractor.mode,
           "updatable"=>true,
-          "deletable"=>true
+          "deletable"=>false
         },
         "customer"=>{
           "id"=>contract.customer.id,
@@ -204,7 +192,7 @@ describe "localpools" do
           "phone"=>contract.customer.profile.phone,
           "email"=>contract.customer.email,
           "updatable"=>true,
-          "deletable"=>true
+          "deletable"=>false
         },
         "signing_user"=>{
           "id"=>contract.signing_user.id,
@@ -217,7 +205,7 @@ describe "localpools" do
           "phone"=>contract.signing_user.profile.phone,
           "email"=>contract.signing_user.email,
           "updatable"=>true,
-          "deletable"=>true
+          "deletable"=>false
         },
         "customer_bank_account"=>{
           "id"=>contract.customer_bank_account.id,
@@ -244,15 +232,24 @@ describe "localpools" do
       {
         "errors" => [
           {
-            "detail"=>"retrieve Contract::LocalpoolProcessing: #{localpool.localpool_processing_contract.id} permission denied for User: #{user.resource_owner_id}"
+            "detail"=>"retrieve Contract::LocalpoolProcessingResource: permission denied for User: #{user.resource_owner_id}"
           }
         ]
       }
     end
 
     context 'GET' do
-      xit '403' do
-        localpool.update(readable: :world)
+      
+      let(:nested_not_found_json) do
+        {
+          "errors" => [
+            {
+              "detail"=>"Group::LocalpoolResource: localpool_processing_contract not found by User: #{admin.resource_owner_id}" }
+          ]
+        }
+      end
+
+      it '403' do
         GET "/#{localpool.id}/localpool-processing-contract", user
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
@@ -266,7 +263,6 @@ describe "localpools" do
 
       it '200' do
         GET "/#{localpool.id}/localpool-processing-contract", admin
-
         expect(json.to_yaml).to eq processing_json.to_yaml
         expect(response).to have_http_status(200)
 
@@ -289,7 +285,7 @@ describe "localpools" do
         "cancellation_date"=>nil,
         "end_date"=>nil,
         "updatable"=>true,
-        "deletable"=>true,
+        "deletable"=>false,
         "begin_date"=>contract.begin_date.to_s,
         "metering_point_operator_name"=>contract.metering_point_operator_name,
         "tariffs"=>[],
@@ -305,7 +301,7 @@ describe "localpools" do
           "description"=>contract.contractor.description,
           "mode"=>contract.contractor.mode,
           "updatable"=>true,
-          "deletable"=>true
+          "deletable"=>false
         },
         "customer"=>{
           "id"=>contract.customer.id,
@@ -318,7 +314,7 @@ describe "localpools" do
           "phone"=>contract.customer.profile.phone,
           "email"=>contract.customer.email,
           "updatable"=>true,
-          "deletable"=>true
+          "deletable"=>false
         },
         "signing_user"=>{
           "id"=>contract.signing_user.id,
@@ -331,7 +327,7 @@ describe "localpools" do
           "phone"=>contract.signing_user.profile.phone,
           "email"=>contract.signing_user.email,
           "updatable"=>true,
-          "deletable"=>true
+          "deletable"=>false
         },
         "customer_bank_account"=>{
           "id"=>contract.customer_bank_account.id,
@@ -358,15 +354,24 @@ describe "localpools" do
       {
         "errors" => [
           {
-            "detail"=>"retrieve Contract::MeteringPointOperator: #{localpool.metering_point_operator_contract.id} permission denied for User: #{user.resource_owner_id}"
+            "detail"=>"retrieve Contract::MeteringPointOperatorResource: permission denied for User: #{user.resource_owner_id}"
           }
         ]
       }
     end
 
     context 'GET' do
-      xit '403' do
-        localpool.update(readable: :world)
+      
+      let(:nested_not_found_json) do
+        {
+          "errors" => [
+            {
+              "detail"=>"Group::LocalpoolResource: metering_point_operator_contract not found by User: #{admin.resource_owner_id}" }
+          ]
+        }
+      end
+
+      it '403' do
         GET "/#{localpool.id}/metering-point-operator-contract", user
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
@@ -405,7 +410,7 @@ describe "localpools" do
           "cancellation_date"=>nil,
           "end_date"=>nil,
           "updatable"=>true,
-          "deletable"=>true,
+          "deletable"=>false,
           "tariffs"=>contract.tariffs.collect do |t|
             {
               "id"=>t.id,
@@ -432,19 +437,19 @@ describe "localpools" do
             "id"=>contract.contractor.id,
             "type"=>"user",
             "updatable"=>true,
-            "deletable"=>true
+            "deletable"=>false
           },
           "customer"=>{
             "id"=>contract.customer.id,
             "type"=>"user",
             "updatable"=>true,
-            "deletable"=>true
+            "deletable"=>false
           },
           "signing_user"=>{
             "id"=>contract.signing_user.id,
             "type"=>"user",
             "updatable"=>true,
-            "deletable"=>true
+            "deletable"=>false
           },
           "customer_bank_account"=>{
             "id"=>contract.customer_bank_account.id,
@@ -470,8 +475,6 @@ describe "localpools" do
 
     context 'GET' do
       it '200' do
-        localpool.update(readable: :world)
-
         GET "/#{localpool.id}/power-taker-contracts", user
         expect(json.to_yaml).to eq empty_json.to_yaml
         expect(response).to have_http_status(200)

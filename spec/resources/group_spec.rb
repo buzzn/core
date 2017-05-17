@@ -204,8 +204,7 @@ describe Group::BaseResource do
 
       result = Group::LocalpoolResource.retrieve(user, group.id).billing_cycles
       expect(result.size).to eq size + 2
-      first = BillingCycleResource.send(:new, result.first)
-      expect(first.to_hash.keys).to match_array attributes
+      expect(result.first.to_hash.keys).to match_array attributes
     end
   end
 end

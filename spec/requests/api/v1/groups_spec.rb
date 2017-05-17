@@ -4,32 +4,26 @@ describe "groups" do
     CoreRoda # this defines the active application for this test
   end
 
-  entity(:admin) { Fabricate(:admin_token) }
+  entity!(:admin) { Fabricate(:admin_token) }
 
-  entity(:user) { Fabricate(:user_token) }
+  entity!(:user) { Fabricate(:user_token) }
 
-  entity(:other) { Fabricate(:user_token) }
+  entity!(:other) { Fabricate(:user_token) }
 
-  let(:anonymous_denied_json) do
+  let(:denied_json) do
     {
       "errors" => [
         {
-          "detail"=>"retrieve Group::Base: permission denied for User: --anonymous--" }
+          "detail"=>"retrieve Group::Base: permission denied for User: #{user.resource_owner_id}" }
       ]
     }
-  end
-
-  let(:denied_json) do
-    json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
-    json
   end
 
   let(:not_found_json) do
     {
       "errors" => [
         {
-          "detail"=>"Group::Base: bla-blub not found by User: #{admin.resource_owner_id}"
+          "detail"=>"Group::BaseResource: bla-blub not found by User: #{admin.resource_owner_id}"
         }
       ]
     }
@@ -41,6 +35,7 @@ describe "groups" do
 
   entity!(:group) do
     group = Fabricate(:localpool)
+    User.find(user.resource_owner_id).add_role(:localpool_manager, group)
     User.find(user.resource_owner_id).add_role(:manager, group)
     group
   end
@@ -55,7 +50,7 @@ describe "groups" do
         "description"=>group.description,
         "readable"=>group.readable,
         "updatable"=>true,
-        "deletable"=>true,
+        "deletable"=>false,
         "meters"=>group.meters.collect do |meter|
           json = {
             "id"=>meter.id,
@@ -103,9 +98,9 @@ describe "groups" do
       json = group_json.dup
       json['updatable']=true
       json['deletable']=true
-      json['meters'].each do |meter|
-        meter['updatable'] = true
-        meter['deletable'] = true
+      (json['managers'] + json['meters']).each do |m|
+        m['updatable'] = true
+        m['deletable'] = true
       end
       json
     end
@@ -173,15 +168,15 @@ describe "groups" do
             {
               "id"=>manager.id,
               "type"=>"user",
-            "user_name"=>manager.user_name,
-            "title"=>manager.profile.title,
-            "first_name"=>manager.first_name,
-            "last_name"=>manager.last_name,
-            "gender"=>manager.profile.gender,
-            "phone"=>manager.profile.phone,
-            "email"=>manager.email,
-            "updatable"=>true,
-            "deletable"=>true
+              "user_name"=>manager.user_name,
+              "title"=>manager.profile.title,
+              "first_name"=>manager.first_name,
+              "last_name"=>manager.last_name,
+              "gender"=>manager.profile.gender,
+              "phone"=>manager.profile.phone,
+              "email"=>manager.email,
+              "updatable"=>true,
+              "deletable"=>true,
             }
           end,
         }.merge(rel)
@@ -190,17 +185,11 @@ describe "groups" do
 
     xit '403' do
       begin
-        localpool.update(readable: :member)
-        GET "/api/v1/groups/#{localpool.id}"
-        expect(response).to have_http_status(403)
-        expect(json).to eq anonymous_denied_json
-
         tribe.update(readable: :member)
         GET "/api/v1/groups/#{tribe.id}", user
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
       ensure
-        localpool.update(readable: :world)
         tribe.update(readable: :world)
       end
     end
@@ -337,17 +326,11 @@ describe "groups" do
     context 'GET' do
       xit '403' do
         begin
-          localpool.update(readable: :member)
-          GET "/api/v1/groups/#{localpool.id}/meters"
-          expect(response).to have_http_status(403)
-          expect(json).to eq anonymous_denied_json
-
           tribe.update(readable: :member)
           GET "/api/v1/groups/#{tribe.id}/meters", user
           expect(response).to have_http_status(403)
           expect(json).to eq denied_json
         ensure
-          localpool.update(readable: :world)
           tribe.update(readable: :world)
         end
       end

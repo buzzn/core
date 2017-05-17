@@ -12,7 +12,7 @@ class BaseRoda < Roda
 
   plugin :json,
          :include_request=>true,
-         :classes=>[Dry::Monads::Either::Right, Dry::Monads::Either::Left, NilClass, Array, Hash, Buzzn::DataResultSet, Buzzn::DataResultArray, Buzzn::DataResult, Buzzn::BaseResource, ActiveRecord::Relation, Buzzn::BaseResource::GuardedCollection],
+         :classes=>[Dry::Monads::Either::Right, Dry::Monads::Either::Left, NilClass, Array, Hash, Buzzn::DataResultSet, Buzzn::DataResultArray, Buzzn::DataResult, Buzzn::BaseResource, ActiveRecord::Relation, Buzzn::ResourceCollection],
          :serializer=> Buzzn::Roda::Serializer.new
 
   plugin :terminal_verbs

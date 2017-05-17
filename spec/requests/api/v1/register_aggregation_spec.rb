@@ -52,7 +52,7 @@ describe "registers" do
     {
       "errors" => [
         {
-          "detail"=>"Register::Base: bla-bla-bla not found"
+          "detail"=>"Register::BaseResource: bla-bla-bla not found"
         }
       ]
     }
