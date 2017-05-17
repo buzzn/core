@@ -67,7 +67,7 @@ module Buzzn::Pdfs
     end
 
     def grid_feeding_corrected
-      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value  / 1000000
+      @total_accounted_energy.grid_feeding_corrected
     end
 
     def consumption_through_pv
@@ -79,46 +79,31 @@ module Buzzn::Pdfs
     end
 
     def consumption_lsn_full_eeg
-      @total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG] / 1000000
+      @total_accounted_energy.consumption_lsn_full_eeg
     end
 
     def consumption_lsn_reduced_eeg
-      @total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG] / 1000000
+      @total_accounted_energy.consumption_lsn_reduced_eeg
     end
 
     def count_lsn_full_eeg
-      # TODO: this only counts the accounted energies but NOT the number of registers. Display this information in the report
-      result = 0
-      @total_accounted_energy.accounted_energies.each do |accounted_energy|
-        accounted_energy.label == Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG ? result += 1 : nil
-      end
-      result
+      @total_accounted_energy.count_lsn_full_eeg
     end
 
     def count_lsn_reduced_eeg
-      # TODO: this only counts the accounted energies but NOT the number of registers. Display this information in the report
-      result = 0
-      @total_accounted_energy.accounted_energies.each do |accounted_energy|
-        accounted_energy.label == Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG ? result += 1 : nil
-      end
-      result
+      @total_accounted_energy.count_lsn_reduced_eeg
     end
 
     def grid_consumption_corrected
-      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED).value / 1000000
+      @total_accounted_energy.grid_consumption_corrected
     end
 
     def consumption_third_party
-      @total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY] / 1000000
+      @total_accounted_energy.consumption_third_party
     end
 
     def count_third_party
-      # TODO: this only counts the accounted energies but NOT the number of registers. Display this information in the report
-      result = 0
-      @total_accounted_energy.accounted_energies.each do |accounted_energy|
-        accounted_energy.label == Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY ? result += 1 : nil
-      end
-      result
+      @total_accounted_energy.count_third_party
     end
 
     def baseprice
@@ -205,7 +190,6 @@ module Buzzn::Pdfs
     end
 
     def total_renewable_energy_law_taxation
-      byebug
       # (consumption_lsn_full_egg - grid_consumpion_corrected * part_of_full_eeg_from_grid_consumption) * full_renewable_eeg +
       #   (consumption_lsn_reduced_egg - grid_consumpion_corrected * part_of_reduced_eeg_from_grid_consumption) * reduced_renewable_eeg
       ((consumption_lsn_full_eeg - grid_consumption_corrected * (consumption_lsn_full_eeg * 1.0 / (consumption_lsn_full_eeg + consumption_lsn_reduced_eeg))) * full_renewable_energy_law_taxation / 100 + (consumption_lsn_reduced_eeg - grid_consumption_corrected * (consumption_lsn_reduced_eeg * 1.0 / (consumption_lsn_full_eeg + consumption_lsn_reduced_eeg))) * reduced_renewable_energy_law_taxation / 100).round(2)

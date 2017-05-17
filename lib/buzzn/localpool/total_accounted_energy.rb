@@ -140,5 +140,52 @@ module Buzzn::Localpool
       sums = sum_and_group_by_label
       sums[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG] / 1000000 + sums[Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG] / 1000000
     end
+
+    def consumption_lsn_full_eeg
+      sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG] / 1000000
+    end
+
+    def consumption_lsn_reduced_eeg
+      sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG] / 1000000
+    end
+
+    def count_lsn_full_eeg
+      # TODO: this only counts the accounted energies but NOT the number of registers. Display this information in the report
+      result = 0
+     accounted_energies.each do |accounted_energy|
+        accounted_energy.label == Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG ? result += 1 : nil
+      end
+      result
+    end
+
+    def count_lsn_reduced_eeg
+      # TODO: this only counts the accounted energies but NOT the number of registers. Display this information in the report
+      result = 0
+      accounted_energies.each do |accounted_energy|
+        accounted_energy.label == Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG ? result += 1 : nil
+      end
+      result
+    end
+
+    def grid_consumption_corrected
+      get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED).value / 1000000
+    end
+
+    def consumption_third_party
+      sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY] / 1000000
+    end
+
+    def count_third_party
+      # TODO: this only counts the accounted energies but NOT the number of registers. Display this information in the report
+      result = 0
+      accounted_energies.each do |accounted_energy|
+        accounted_energy.label == Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY ? result += 1 : nil
+      end
+      result
+    end
+
+    def grid_feeding_corrected
+      get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value  / 1000000
+    end
   end
 end
