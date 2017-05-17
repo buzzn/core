@@ -9,35 +9,23 @@ describe "meters" do
 
   entity(:user) { Fabricate(:user_token) }
 
-  let(:anonymous_denied_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"retrieve Meter::Base: permission denied for User: --anonymous--" }
-      ]
-    }
-  end
-
   let(:denied_json) do
-    json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
-    json
-  end
-
-  let(:anonymous_not_found_json) do
     {
       "errors" => [
         {
-          "detail"=>"Meter::Base: bla-blub not found"
-        }
+          "detail"=>"retrieve Meter::Base: permission denied for User: #{user.resource_owner_id}" }
       ]
     }
   end
 
   let(:not_found_json) do
-    json = anonymous_not_found_json.dup
-    json['errors'][0]['detail'] = "Meter::Base: bla-blub not found by User: #{admin.resource_owner_id}"
-    json
+    {
+      "errors" => [
+        {
+          "detail"=>"Meter::BaseResource: bla-blub not found by User: #{admin.resource_owner_id}"
+        }
+      ]
+    }
   end
 
   entity(:virtual_meter) { Fabricate(:virtual_meter) }
@@ -95,20 +83,12 @@ describe "meters" do
     end
 
     it '403' do
-      GET "/api/v1/meters/#{virtual_meter.id}"
-      expect(response).to have_http_status(403)
-      expect(json).to eq anonymous_denied_json
-
       GET "/api/v1/meters/#{real_meter.id}", user
       expect(response).to have_http_status(403)
       expect(json).to eq denied_json
     end
 
     it '404' do
-      GET "/api/v1/meters/bla-blub"
-      expect(response).to have_http_status(404)
-      expect(json).to eq anonymous_not_found_json
-
       GET "/api/v1/meters/bla-blub", admin
       expect(response).to have_http_status(404)
       expect(json).to eq not_found_json
@@ -135,12 +115,6 @@ describe "meters" do
       end
     end
 
-    let(:register_anonymous_denied_json) do
-      json = anonymous_denied_json.dup
-      json['errors'][0]['detail'].sub! 'Base', "Virtual"
-      json
-    end
-
     let(:register_denied_json) do
       json = denied_json.dup
       json['errors'][0]['detail'].sub! 'Base', "Virtual"
@@ -149,7 +123,7 @@ describe "meters" do
 
     let(:virtual_not_found_json) do
       json = not_found_json.dup
-      json['errors'][0]['detail'].sub! 'Base', 'Virtual'
+      json['errors'][0]['detail'].sub! 'BaseResource', 'Virtual'
       json
     end
 
@@ -171,10 +145,6 @@ describe "meters" do
 
     context 'GET' do
       it '403' do
-        GET "/api/v1/meters/virtual/#{meter.id}/register"
-        expect(response).to have_http_status(403)
-        expect(json).to eq register_anonymous_denied_json
-
         GET "/api/v1/meters/virtual/#{meter.id}/register", user
         expect(response).to have_http_status(403)
         expect(json).to eq register_denied_json
@@ -205,12 +175,6 @@ describe "meters" do
       end
     end
 
-    let(:registers_anonymous_denied_json) do
-      json = anonymous_denied_json.dup
-      json['errors'][0]['detail'].sub! 'Base', "Real"
-      json
-    end
-
     let(:registers_denied_json) do
       json = denied_json.dup
       json['errors'][0]['detail'].sub! 'Base', "Real"
@@ -219,7 +183,7 @@ describe "meters" do
 
     let(:real_not_found_json) do
       json = not_found_json.dup
-      json['errors'][0]['detail'].sub! 'Base', 'Real'
+      json['errors'][0]['detail'].sub! 'BaseResource', 'Real'
       json
     end
 
@@ -247,10 +211,6 @@ describe "meters" do
 
     context 'GET' do
       it '403' do
-        GET "/api/v1/meters/real/#{meter.id}/registers"
-        expect(response).to have_http_status(403)
-        expect(json).to eq registers_anonymous_denied_json
-
         GET "/api/v1/meters/real/#{meter.id}/registers", user
         expect(response).to have_http_status(403)
         expect(json).to eq registers_denied_json

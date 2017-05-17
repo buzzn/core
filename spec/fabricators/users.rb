@@ -7,6 +7,7 @@ Fabricator :user do
   profile           { Fabricate(:profile) }
   created_at        { (rand*10).days.ago }
   after_create { |user|
+    user.add_role(:self, user)
     user.confirm
   }
 end

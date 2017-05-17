@@ -56,7 +56,7 @@ describe "groups" do
     {
       "errors" => [
         {
-          "detail"=>"Group::Base: bla-bla-bla not found"
+          "detail"=>"Group::BaseResource: bla-bla-bla not found"
         }
       ]
     }

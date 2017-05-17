@@ -34,7 +34,7 @@ class BillingCycle < ActiveRecord::Base
   end
 
   def validate_invariants
-    if begin_date >= end_date
+    if begin_date && end_date && begin_date >= end_date
       errors.add(:end_date, "must be larger than begin_date" )
     end
   end

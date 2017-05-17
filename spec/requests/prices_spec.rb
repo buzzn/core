@@ -9,19 +9,13 @@ describe "prices" do
   entity(:localpool) { Fabricate(:localpool) }
   entity(:price) { Fabricate(:price, localpool: localpool)}
   
-  let(:anonymous_denied_json) do
+  let(:denied_json) do
     {
       "errors" => [
         {
-          "detail"=>"retrieve Price: permission denied for User: --anonymous--" }
+          "detail"=>"retrieve PriceResource: permission denied for User: #{user.resource_owner_id}" }
       ]
     }
-  end
-
-  let(:denied_json) do
-    json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
-    json
   end
 
   let(:not_found_json) do
@@ -82,8 +76,8 @@ describe "prices" do
         "begin_date"=>Date.new(2016, 2, 1).to_s,
         "energyprice_cents_per_kilowatt_hour"=>23.66,
         "baseprice_cents_per_month"=>500,
-        'updatable'=>false,
-        'deletable'=>false
+        'updatable'=>true,
+        'deletable'=>true
       }
     end
 
