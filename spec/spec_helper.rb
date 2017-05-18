@@ -184,7 +184,7 @@ RSpec.configure do |config|
   def clean_database
     DatabaseCleaner.clean
 
-    if Register::Base.count + Group::Base.count + Broker::Base.count + Meter::Base.count > 0
+    if Register::Base.count + Group::Base.count + Broker::Base.count + Meter::Base.count + Reading.count > 0
       warn '-' * 80
       warn 'DB cleaner failed - cleaning manually'
       warn '-' * 80

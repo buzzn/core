@@ -1,12 +1,13 @@
 # coding: utf-8
 
-['localpool', 'tribe'].each do |type|
-  klass = "Group::#{type.camelize}".constantize
-  Fabricator type, class_name: klass do
+['localpool', 'tribe'].each do |klass_type|
+  klass = "Group::#{klass_type.camelize}".constantize
+  Fabricator klass_type, class_name: klass do
     name        { FFaker::Company.name[0..39] }
     description { FFaker::Lorem.paragraphs.join('-') }
     readable    'world'
     created_at  { (rand*10).days.ago }
+    type        { "Group::#{klass_type.camelize}" }
   end
 end
 
@@ -101,7 +102,7 @@ end
 
 Fabricator :localpool_sulz, from: :localpool do
   name        'Localpool Sulz'
-  description { "Dies ist der Localpool Sulz in Perißenberg" }
+  description { "Dies ist der Localpool Sulz in Preißenberg" }
 end
 
 Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do

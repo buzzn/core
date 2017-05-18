@@ -12,6 +12,13 @@ module Register
 
     validates :direction, inclusion: { in: self.directions.map(&:to_sym) }
 
+    def self.new(*args)
+      a = super
+      # HACK to fix the problem that the type gets not set by AR
+      a.type ||= a.class.to_s
+      a
+    end
+
     def registers
       Register::Base.where(id: Register::FormulaPart.where(register_id: self.id).select(:operand_id))
     end

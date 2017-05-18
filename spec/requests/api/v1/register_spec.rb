@@ -57,7 +57,7 @@ describe "registers" do
         "decimal"=>2,
         "converter_constant"=>1,
         "low_power"=>false,
-        "last_reading"=>Reading.by_register_id(real_register.id).sort('timestamp': -1).first.energy_milliwatt_hour || 0,
+        "last_reading"=>Reading.by_register_id(real_register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(real_register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
         "uid"=>real_register.uid,
         "obis"=>real_register.obis,
         'group'=>nil,
@@ -76,7 +76,7 @@ describe "registers" do
         "decimal"=>2,
         "converter_constant"=>1,
         "low_power"=>false,
-        "last_reading"=>Buzzn::Localpool::Checks.find_object_or_error('register is missing some readings') { Reading.by_register_id(virtual_register.id).sort('timestamp': -1).first.energy_milliwatt_hour || 0 },
+        "last_reading"=>Reading.by_register_id(virtual_register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(virtual_register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
         'group'=>nil
       }
     end
@@ -159,6 +159,7 @@ describe "registers" do
 
           let(:register) { send "#{type}_register" }
           let!(:readings_json) do
+            Reading.all.delete_all
             readings = 5.times.collect { Fabricate(:reading, register_id: register.id) }
             readings.collect do |r|
               {
