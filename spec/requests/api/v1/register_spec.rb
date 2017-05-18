@@ -20,7 +20,7 @@ describe "registers" do
 
   let(:denied_json) do
     json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id 
+    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
     json
   end
 
@@ -57,7 +57,7 @@ describe "registers" do
         "decimal"=>2,
         "converter_constant"=>1,
         "low_power"=>false,
-        "last_reading"=>0,
+        "last_reading"=>Reading.by_register_id(real_register.id).sort('timestamp': -1).first.energy_milliwatt_hour || 0,
         "uid"=>real_register.uid,
         "obis"=>real_register.obis,
         'group'=>nil,
@@ -76,7 +76,7 @@ describe "registers" do
         "decimal"=>2,
         "converter_constant"=>1,
         "low_power"=>false,
-        "last_reading"=>0,
+        "last_reading"=>Buzzn::Localpool::Checks.find_object_or_error('register is missing some readings') { Reading.by_register_id(virtual_register.id).sort('timestamp': -1).first.energy_milliwatt_hour || 0 },
         'group'=>nil
       }
     end

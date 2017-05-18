@@ -169,7 +169,6 @@ RSpec.configure do |config|
   end
 
   def clean_manually
-    Mongoid.purge!
     BankAccount.delete_all
     Organization.delete_all
     User.delete_all
@@ -179,6 +178,7 @@ RSpec.configure do |config|
     Meter::Base.delete_all
     Billing.delete_all
     BillingCycle.delete_all
+    Mongoid.purge!
   end
 
   def clean_database
