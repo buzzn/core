@@ -1,12 +1,10 @@
-class OrganizationRoda < BaseRoda
+class OrganizationLegacyRoda < BaseRoda
   plugin :shared_vars
 
   route do |r|
 
-    organizations = shared[:localpool].organizations
-
     r.on :id do |id|
-      organization = organizations.retrieve(id)
+      organization = OrganizationResource.retrieve(current_user, id)
 
       r.get! do
         organization

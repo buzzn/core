@@ -9,7 +9,4 @@ module Contract
                 :cycle,
                 :source
   end
-
-  class PaymentSerializer < PaymentResource
-  end
 end

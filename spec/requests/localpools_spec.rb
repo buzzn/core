@@ -1,4 +1,8 @@
-describe "groups/localpools" do
+describe "localpools" do
+
+  def app
+    LocalpoolRoda # this defines the active application for this test
+  end
 
   entity(:admin) { Fabricate(:admin_token) }
 
@@ -6,27 +10,21 @@ describe "groups/localpools" do
 
   entity(:other) { Fabricate(:user_token) }
 
-  let(:anonymous_denied_json) do
+  let(:denied_json) do
     {
       "errors" => [
         {
-          "detail"=>"retrieve Group::Localpool: permission denied for User: --anonymous--"
+          "detail"=>"retrieve Group::Localpool: permission denied for User: #{user.resource_owner_id}"
         }
       ]
     }
   end
 
-  let(:denied_json) do
-    json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
-    json
-  end
-
-  let(:anonymous_not_found_json) do
+  let(:not_found_json) do
     {
       "errors" => [
         {
-          "detail"=>"Group::Localpool: bla-blub not found" }
+          "detail"=>"Group::Localpool: bla-blub not found by User: #{admin.resource_owner_id}" }
       ]
     }
   end
@@ -40,13 +38,7 @@ describe "groups/localpools" do
     }
   end
 
-  let(:not_found_json) do
-    json = anonymous_not_found_json.dup
-    json['errors'][0]['detail'] = "Group::Localpool: bla-blub not found by User: #{admin.resource_owner_id}"
-    json
-  end
-
-  entity(:localpool) do
+  entity!(:localpool) do
     localpool = Fabricate(:localpool)
     3.times.each do
       c = Fabricate(:localpool_power_taker_contract)
@@ -60,10 +52,89 @@ describe "groups/localpools" do
 
   entity(:localpool_no_contracts) { Fabricate(:localpool) }
 
-  let(:empty_json) do
+  let(:empty_json) { [] }
+
+  let(:localpools_json) do
+    Group::Localpool.all.collect do |localpool|
+      {
+        "id"=>localpool.id,
+        "type"=>"group_localpool",
+        "name"=>localpool.name,
+        "description"=>localpool.description,
+        "readable"=>"member",
+        "updatable"=>true,
+        "deletable"=>true
+      }
+    end
+  end
+
+  let(:localpool_json) do
     {
-      'data'=>[]
+      "id"=>localpool_no_contracts.id,
+      "type"=>"group_localpool",
+      "name"=>localpool_no_contracts.name,
+      "description"=>localpool_no_contracts.description,
+      "readable"=>"world",
+      "updatable"=>true,
+      "deletable"=>true,
+      "meters"=>localpool_no_contracts.meters.collect do |meter|
+        {
+          "id"=>meter.id,
+          "type"=>"meter_virtual",
+          "manufacturer_name"=>meter.manufacturer_name,
+          "manufacturer_product_name"=>meter.manufacturer_product_name,
+          "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+          "metering_type"=>meter.metering_type,
+          "meter_size"=>nil,
+          "ownership"=>nil,
+          "direction_label"=>meter.direction,
+          "build_year"=>nil,
+          "updatable"=>true,
+          "deletable"=>true,
+        }
+      end,
+      "managers"=>[],
+      "energy_producers"=>[],
+      "energy_consumers"=>[],
+      "localpool_processing_contract"=>nil,
+      "metering_point_operator_contract"=>nil,
+      "localpool_power_taker_contracts"=>[],
+      "prices"=>[],
+      "billing_cycles"=>[]
     }
+  end
+
+  context 'GET' do
+    it '403' do
+      localpool.update(readable: :member)
+      GET "/#{localpool.id}", user
+      expect(response).to have_http_status(403)
+      expect(json).to eq denied_json
+    end
+
+    it '404' do
+      GET "/bla-blub", admin
+      expect(response).to have_http_status(404)
+      expect(json).to eq not_found_json
+    end
+
+    it '200' do
+      localpool_no_contracts.update(readable: :world)
+      GET "/#{localpool_no_contracts.id}", admin
+      expect(response).to have_http_status(200)
+      expect(json.to_yaml).to eq localpool_json.to_yaml
+    end
+
+    it '200 all' do
+      Group::Localpool.update_all(readable: :member)
+      GET ""
+      expect(response).to have_http_status(200)
+      expect(json).to eq empty_json
+
+      GET "?include=", admin
+      expect(response).to have_http_status(200)
+      expect(sort(json)).to eq sort(localpools_json)
+    end
   end
 
   context 'localpool-processing-contract' do
@@ -122,12 +193,26 @@ describe "groups/localpools" do
         "customer"=>{
           "id"=>contract.customer.id,
           "type"=>"user",
+          "user_name"=>contract.customer.user_name,
+          "title"=>contract.customer.profile.title,
+          "first_name"=>contract.customer.first_name,
+          "last_name"=>contract.customer.last_name,
+          "gender"=>contract.customer.profile.gender,
+          "phone"=>contract.customer.profile.phone,
+          "email"=>contract.customer.email,
           "updatable"=>true,
           "deletable"=>true
         },
         "signing_user"=>{
           "id"=>contract.signing_user.id,
           "type"=>"user",
+          "user_name"=>contract.signing_user.user_name,
+          "title"=>contract.signing_user.profile.title,
+          "first_name"=>contract.signing_user.first_name,
+          "last_name"=>contract.signing_user.last_name,
+          "gender"=>contract.signing_user.profile.gender,
+          "phone"=>contract.signing_user.profile.phone,
+          "email"=>contract.signing_user.email,
           "updatable"=>true,
           "deletable"=>true
         },
@@ -152,31 +237,32 @@ describe "groups/localpools" do
       }
     end
 
+    let(:denied_json) do
+      {
+        "errors" => [
+          {
+            "detail"=>"retrieve Contract::LocalpoolProcessing: #{localpool.localpool_processing_contract.id} permission denied for User: #{user.resource_owner_id}"
+          }
+        ]
+      }
+    end
+
     context 'GET' do
       it '403' do
-        localpool.update(readable: :member)
-        GET "/api/v1/groups/localpools/#{localpool.id}/localpool-processing-contract"
-        expect(response).to have_http_status(403)
-        expect(json).to eq anonymous_denied_json
-
-        localpool.update(readable: :member)
-        GET "/api/v1/groups/localpools/#{localpool.id}/localpool-processing-contract", user
+        localpool.update(readable: :world)
+        GET "/#{localpool.id}/localpool-processing-contract", user
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
       end
 
       it '404' do
-        GET "/api/v1/groups/localpools/bla-blub/localpool-processing-contract", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
-
-        GET "/api/v1/groups/localpools/#{localpool_no_contracts.id}/localpool-processing-contract", admin
+        GET "/#{localpool_no_contracts.id}/localpool-processing-contract", admin
         expect(response).to have_http_status(404)
         expect(json).to eq nested_not_found_json
       end
 
       it '200' do
-        GET "/api/v1/groups/localpools/#{localpool.id}/localpool-processing-contract", admin
+        GET "/#{localpool.id}/localpool-processing-contract", admin
 
         expect(json.to_yaml).to eq processing_json.to_yaml
         expect(response).to have_http_status(200)
@@ -221,12 +307,26 @@ describe "groups/localpools" do
         "customer"=>{
           "id"=>contract.customer.id,
           "type"=>"user",
+          "user_name"=>contract.customer.user_name,
+          "title"=>contract.customer.profile.title,
+          "first_name"=>contract.customer.first_name,
+          "last_name"=>contract.customer.last_name,
+          "gender"=>contract.customer.profile.gender,
+          "phone"=>contract.customer.profile.phone,
+          "email"=>contract.customer.email,
           "updatable"=>true,
           "deletable"=>true
         },
         "signing_user"=>{
           "id"=>contract.signing_user.id,
           "type"=>"user",
+          "user_name"=>contract.signing_user.user_name,
+          "title"=>contract.signing_user.profile.title,
+          "first_name"=>contract.signing_user.first_name,
+          "last_name"=>contract.signing_user.last_name,
+          "gender"=>contract.signing_user.profile.gender,
+          "phone"=>contract.signing_user.profile.phone,
+          "email"=>contract.signing_user.email,
           "updatable"=>true,
           "deletable"=>true
         },
@@ -251,31 +351,36 @@ describe "groups/localpools" do
       }
     end
 
+    let(:denied_json) do
+      {
+        "errors" => [
+          {
+            "detail"=>"retrieve Contract::MeteringPointOperator: #{localpool.metering_point_operator_contract.id} permission denied for User: #{user.resource_owner_id}"
+          }
+        ]
+      }
+    end
+
     context 'GET' do
       it '403' do
-        localpool.update(readable: :member)
-        GET "/api/v1/groups/localpools/#{localpool.id}/metering-point-operator-contract"
-        expect(response).to have_http_status(403)
-        expect(json).to eq anonymous_denied_json
-
-        localpool.update(readable: :member)
-        GET "/api/v1/groups/localpools/#{localpool.id}/metering-point-operator-contract", user
+        localpool.update(readable: :world)
+        GET "/#{localpool.id}/metering-point-operator-contract", user
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
       end
 
       it '404' do
-        GET "/api/v1/groups/localpools/bla-blub/metering-point-operator-contract", admin
+        GET "/bla-blub/metering-point-operator-contract", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
 
-        GET "/api/v1/groups/localpools/#{localpool_no_contracts.id}/metering-point-operator-contract", admin
+        GET "/#{localpool_no_contracts.id}/metering-point-operator-contract", admin
         expect(response).to have_http_status(404)
         expect(json).to eq nested_not_found_json
       end
 
       it '200' do
-        GET "/api/v1/groups/localpools/#{localpool.id}/metering-point-operator-contract", admin
+        GET "/#{localpool.id}/metering-point-operator-contract", admin
 
         expect(json.to_yaml).to eq metering_point_json.to_yaml
         expect(response).to have_http_status(200)
@@ -361,27 +466,14 @@ describe "groups/localpools" do
     end
 
     context 'GET' do
-      it '403' do
-        localpool.update(readable: :member)
-        GET "/api/v1/groups/localpools/#{localpool.id}/power-taker-contracts"
-        expect(response).to have_http_status(403)
-        expect(json).to eq anonymous_denied_json
-
-        localpool.update(readable: :member)
-        GET "/api/v1/groups/localpools/#{localpool.id}/power-taker-contracts", user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
-      end
-
-      it '404' do
-        GET "/api/v1/groups/localpools/bla-blub/power-taker-contracts", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
-      end
-
       it '200' do
-        GET "/api/v1/groups/localpools/#{localpool.id}/power-taker-contracts", admin
+        localpool.update(readable: :world)
 
+        GET "/#{localpool.id}/power-taker-contracts", user
+        expect(json.to_yaml).to eq empty_json.to_yaml
+        expect(response).to have_http_status(200)
+
+        GET "/#{localpool.id}/power-taker-contracts", admin
         expect(json.to_yaml).to eq power_taker_contracts_json.to_yaml
         expect(response).to have_http_status(200)
       end

@@ -25,19 +25,14 @@ describe "groups" do
     json
   end
 
-  let(:anonymous_not_found_json) do
+  let(:not_found_json) do
     {
       "errors" => [
         {
-          "detail"=>"Group::Base: bla-blub not found" }
+          "detail"=>"Group::Base: bla-blub not found by User: #{admin.resource_owner_id}"
+        }
       ]
     }
-  end
-
-  let(:not_found_json) do
-    json = anonymous_not_found_json.dup
-    json['errors'][0]['detail'] = "Group::Base: bla-blub not found by User: #{admin.resource_owner_id}"
-    json
   end
 
   entity!(:tribe) { Fabricate(:tribe) }
@@ -83,14 +78,25 @@ describe "groups" do
           {
             "id"=>manager.id,
             "type"=>"user",
+            "user_name"=>manager.user_name,
+            "title"=>manager.profile.title,
+            "first_name"=>manager.first_name,
+            "last_name"=>manager.last_name,
+            "gender"=>manager.profile.gender,
+            "phone"=>manager.profile.phone,
+            "email"=>manager.email,
             "updatable"=>true,
             "deletable"=>true,
+            "bank_accounts"=>[]
           }
         end,
         "energy_producers"=>[],
         "energy_consumers"=>[],
         "localpool_processing_contract"=>nil,
-        "metering_point_operator_contract"=>nil
+        "metering_point_operator_contract"=>nil,
+        "localpool_power_taker_contracts"=>[],
+        "prices"=>[],
+        "billing_cycles"=>[]
       }
     end
 
@@ -134,6 +140,9 @@ describe "groups" do
           type = :localpool
           rel["localpool_processing_contract"] = nil
           rel["metering_point_operator_contract"] = nil
+          rel["localpool_power_taker_contracts"] = []
+          rel["prices"] = []
+          rel["billing_cycles"] = []
         end
         json = {
           "id"=>group.id,
@@ -165,8 +174,16 @@ describe "groups" do
             {
               "id"=>manager.id,
               "type"=>"user",
-              "updatable"=>true,
-              "deletable"=>true,
+            "user_name"=>manager.user_name,
+            "title"=>manager.profile.title,
+            "first_name"=>manager.first_name,
+            "last_name"=>manager.last_name,
+            "gender"=>manager.profile.gender,
+            "phone"=>manager.profile.phone,
+            "email"=>manager.email,
+            "updatable"=>true,
+            "deletable"=>true,
+            "bank_accounts"=>[]
             }
           end,
           "energy_producers"=>[],
@@ -193,10 +210,6 @@ describe "groups" do
     end
 
     it '404' do
-      GET "/api/v1/groups/bla-blub"
-      expect(response).to have_http_status(404)
-      expect(json).to eq anonymous_not_found_json
-
       GET "/api/v1/groups/bla-blub", admin
       expect(response).to have_http_status(404)
       expect(json).to eq not_found_json
@@ -363,7 +376,17 @@ describe "groups" do
                     "low_power"=>register.low_load_ability,
                     "last_reading"=>0,
                     "uid"=>register.uid,
-                    "obis"=>register.obis
+                    "obis"=>register.obis,
+                    "group"=> {
+                      "id"=>group.id,
+                      "type"=>"group_#{group.is_a?(Group::Tribe)?'tribe':'localpool'}",
+                      "name"=>group.name,
+                      "description"=>group.description,
+                      "readable"=>group.readable,
+                      'updatable'=>true,
+                      'deletable'=>true
+                    },
+                    "devices"=>[]
                   }
                 end
               else

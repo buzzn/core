@@ -11,7 +11,29 @@ module Group
     end
 
     def localpool_power_taker_contracts
-      Contract::LocalpoolPowerTaker.joins(:register).where('registers.group_id': self)
+      Contract::LocalpoolPowerTaker.where(localpool_id: self)
+    end
+
+    def contracts
+      Contract::Localpool.joins(:localpool).where(localpool: self)
+    end
+
+    def users
+      User.where(contracts
+                  .where('contracts.signing_user_id = users.id or contracts.customer_id = users.id or contracts.contractor_id = users.id')
+                  .select(1)
+                  .exists)
+    end
+
+    def organizations
+      Organization.where(contracts
+                          .where('contracts.customer_id = organizations.id or contracts.contractor_id = organizations.id')
+                  .select(1)
+                  .exists)
+    end
+
+    def meters      
+      Meter::Base.where(id: registers.select(:meter_id))
     end
 
     has_many :addresses, as: :addressable, dependent: :destroy

@@ -63,8 +63,7 @@ RSpec.configure do |config|
 
   # Include helpers
   config.include RequestsHelper, type: :request
-  config.include PdfsHelper
-
+  config.include PdfsHelper#, type: :pdfs
 
   def last_email
     ActionMailer::Base.deliveries.last

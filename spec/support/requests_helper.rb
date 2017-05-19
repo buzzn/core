@@ -14,6 +14,7 @@ module RequestsHelper
       puts json.to_yaml rescue response.body
     end
   end
+  private :do_it
 
   def GET(path, token = nil, params = {})
     do_it :get, path, params, token

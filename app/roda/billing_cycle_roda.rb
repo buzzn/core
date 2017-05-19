@@ -10,10 +10,6 @@ class BillingCycleRoda < BaseRoda
 
     localpool = shared[:localpool]
 
-    r.get! do
-      localpool.billing_cycles
-    end
-
     r.post! do
       created do
         create_billing_cycle.call(r.params,
@@ -21,8 +17,13 @@ class BillingCycleRoda < BaseRoda
       end
     end
 
+    billing_cycles = localpool.billing_cycles
+    r.get! do
+      billing_cycles
+    end
+
     r.on :id do |id|
-      billing_cycle = localpool.billing_cycle(id)
+      billing_cycle = billing_cycles.retrieve(id)
       
       r.patch! do
         update_billing_cycle.call(r.params, resource: [billing_cycle])
