@@ -15,6 +15,8 @@ class Price < ActiveRecord::Base
 
   scope :valid_at, ->  (timestamp) do
     timestamp = case timestamp
+                when DateTime
+                  timestamp.to_date
                 when Time
                   timestamp.to_date
                 when Date

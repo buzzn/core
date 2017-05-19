@@ -31,6 +31,8 @@ module Contract
                                   .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
     scope :at, -> (timestamp) do
       timestamp = case timestamp
+                  when DateTime
+                    timestamp.to_time
                   when Time
                     timestamp
                   when Date

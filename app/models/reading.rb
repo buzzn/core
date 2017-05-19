@@ -81,6 +81,8 @@ class Reading
   scope :in_year, -> (year) { where(:timestamp.gte => Time.new(year, 1, 1)).where(:timestamp.lte => Time.new(year, 12, 31, 23, 59, 59)) }
   scope :at, -> (timestamp) do
     timestamp = case timestamp
+                when DateTime
+                  timestamp.to_time
                 when Time
                   timestamp
                 when Date

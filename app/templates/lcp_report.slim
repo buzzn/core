@@ -27,11 +27,11 @@ html
 
   body
 
-    div id='place_date' = date
+    div id='place_date' = date.strftime("%d.%m.%Y")
 
     h1 LCP Report
       <br>
-      Localpool #{localpool.name} von #{begin_date} bis #{end_date}
+      Localpool #{localpool.name} von #{begin_date.strftime("%d.%m.%Y")} bis #{end_date.strftime("%d.%m.%Y")}
 
     table.block
       tr

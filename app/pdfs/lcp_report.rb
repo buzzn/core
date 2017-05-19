@@ -31,15 +31,15 @@ module Buzzn::Pdfs
     end
 
     def date
-      Date.current.strftime("%d.%m.%Y")
+      Date.current
     end
 
     def begin_date
-      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).first_reading.timestamp.strftime("%d.%m.%Y")
+      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).first_reading.timestamp
     end
 
     def end_date
-      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp.strftime("%d.%m.%Y")
+      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp
     end
 
     def total_production
