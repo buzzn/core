@@ -12,8 +12,20 @@ module Contract
 
     scope :in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                   .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
-    scope :at, -> (timestamp) { where('begin_date <= ?', timestamp)
-                                  .where('end_date > ? OR end_date IS NULL', timestamp + 1.second) }
+    scope :at, -> (timestamp) do
+      timestamp = case timestamp
+                  when Time
+                    timestamp
+                  when Date
+                    timestamp.to_time
+                  when Fixnum
+                    Time.at(timestamp)
+                  else
+                    raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")
+                  end
+      where('begin_date <= ?', timestamp)
+        .where('end_date > ? OR end_date IS NULL', timestamp + 1.second)
+    end
     scope :current, ->(now = Time.current) {where("begin_date < ? AND (end_date > ? OR end_date IS NULL)", now, now)}
 
     def self.readable_by(*args)

@@ -13,7 +13,19 @@ class Price < ActiveRecord::Base
 
   validates_uniqueness_of :begin_date, scope: [:localpool_id], message: 'already available for given localpool'
 
-  scope :valid_at, ->  (date) { where('begin_date >= ?', date).order('begin_date ASC').limit(1) }
+  scope :valid_at, ->  (timestamp) do
+    timestamp = case timestamp
+                when Time
+                  timestamp.to_date
+                when Date
+                  timestamp
+                when Fixnum
+                  Time.at(timestamp).to_date
+                else
+                  raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")
+                end
+    where('begin_date <= ?', timestamp).order('begin_date DESC').limit(1)
+  end
 
   def self.readable_by_query(user)
     price = Price.arel_table
