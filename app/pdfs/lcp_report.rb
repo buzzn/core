@@ -115,11 +115,11 @@ module Buzzn::Pdfs
     end
 
     def count_one_way_meter
-      @localpool.one_way_meters.uniq.size
+      @localpool.one_way_meters.size
     end
 
     def count_two_way_meter
-      @localpool.two_way_meters.uniq.size
+      @localpool.two_way_meters.size
     end
 
     def revenue_through_energy_selling

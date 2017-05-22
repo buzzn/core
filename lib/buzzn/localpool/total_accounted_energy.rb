@@ -150,7 +150,7 @@ module Buzzn::Localpool
     end
 
     def count_lsn_full_eeg
-      # TODO: this only counts the accounted energies but NOT the number of registers. Display this information in the report
+      # this only counts the accounted energies but NOT the number of registers!
       result = 0
      accounted_energies.each do |accounted_energy|
         accounted_energy.label == Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG ? result += 1 : nil
@@ -159,7 +159,7 @@ module Buzzn::Localpool
     end
 
     def count_lsn_reduced_eeg
-      # TODO: this only counts the accounted energies but NOT the number of registers. Display this information in the report
+      # this only counts the accounted energies but NOT the number of registers!
       result = 0
       accounted_energies.each do |accounted_energy|
         accounted_energy.label == Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG ? result += 1 : nil
