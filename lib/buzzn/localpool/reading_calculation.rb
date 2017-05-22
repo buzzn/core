@@ -138,14 +138,19 @@ module Buzzn::Localpool
       def create_corrected_reading(register_id, label, corrected_value, timestamp)
         # TODO: (nice-to-have) validate that all corrected registers must have an initial reading with energy_milliwatt_hour = 0
         last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).first
-        new_reading_value = last_corrected_reading.nil? ? corrected_value : corrected_value + last_corrected_reading.energy_milliwatt_hour
-        new_reading = Reading.create!(register_id: register_id,
-                                      timestamp: timestamp,
-                                      energy_milliwatt_hour: new_reading_value,
-                                      reason: Reading::REGULAR_READING,
-                                      source: Reading::BUZZN_SYSTEMS,
-                                      quality: Reading::ENERGY_QUANTITY_SUMMARIZED,
-                                      meter_serialnumber: Register::Base.find(register_id).meter.manufacturer_product_serialnumber)
+        if last_corrected_reading.timestamp != timestamp
+          new_reading_value = last_corrected_reading.nil? ? corrected_value : corrected_value + last_corrected_reading.energy_milliwatt_hour
+          new_reading = Reading.create!(register_id: register_id,
+                                        timestamp: timestamp,
+                                        energy_milliwatt_hour: new_reading_value,
+                                        reason: Reading::REGULAR_READING,
+                                        source: Reading::BUZZN_SYSTEMS,
+                                        quality: Reading::ENERGY_QUANTITY_SUMMARIZED,
+                                        meter_serialnumber: Register::Base.find(register_id).meter.manufacturer_product_serialnumber)
+        else
+          new_reading = last_corrected_reading
+          last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).to_a[1]
+        end
         accounted_energy = Buzzn::AccountedEnergy.new(corrected_value, last_corrected_reading, new_reading, new_reading)
         accounted_energy.label = label
         return accounted_energy

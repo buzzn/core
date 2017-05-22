@@ -177,12 +177,13 @@ RSpec.configure do |config|
     Meter::Base.delete_all
     Billing.delete_all
     BillingCycle.delete_all
+    Mongoid.purge!
   end
 
   def clean_database
     DatabaseCleaner.clean
 
-    if Register::Base.count + Group::Base.count + Broker::Base.count + Meter::Base.count > 0
+    if Register::Base.count + Group::Base.count + Broker::Base.count + Meter::Base.count + Reading.count > 0
       warn '-' * 80
       warn 'DB cleaner failed - cleaning manually'
       warn '-' * 80
@@ -204,7 +205,6 @@ RSpec.configure do |config|
 
   config.append_after(:each) do |spec|
     Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) # HACK https://github.com/buzzn/buzzn/blob/master/config/environments/test.rb#L43-L44 is not working
-    Mongoid.purge!
     Redis.current.flushall
     Rails.cache.clear
     if needs_cleaning?(spec)

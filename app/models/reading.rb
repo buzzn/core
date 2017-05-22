@@ -79,7 +79,22 @@ class Reading
   validates_uniqueness_of :timestamp, scope: [:register_id, :reason], message: 'already available for given register and reason'
 
   scope :in_year, -> (year) { where(:timestamp.gte => Time.new(year, 1, 1)).where(:timestamp.lte => Time.new(year, 12, 31, 23, 59, 59)) }
-  scope :at, -> (timestamp) { where(:timestamp.gte => timestamp).where(:timestamp.lt => timestamp + 1.second) }
+  scope :at, -> (timestamp) do
+    timestamp = case timestamp
+                when DateTime
+                  timestamp.to_time
+                when Time
+                  timestamp
+                when Date
+                  timestamp.to_time
+                when Fixnum
+                  Time.at(timestamp)
+                else
+                  raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")
+                end
+    where(:timestamp.gte => timestamp).where(:timestamp.lt => timestamp + 1.second)
+  end
+
   scope :by_register_id, -> (register_id) { where(register_id: register_id) }
 
   scope :by_reason, lambda {|*reasons|

@@ -159,6 +159,7 @@ describe "registers" do
       end
 
       it '200 standard profile' do
+        Reading.all.delete_all
         timestamp = Time.find_zone('Berlin').local(2016, 2, 1)
         40.times do |i|
           Fabricate(:reading,
@@ -474,6 +475,7 @@ describe "registers" do
       end
 
       it '200 standard profile' do
+        Reading.all.delete_all
         setup_readings
         begin
           Timecop.freeze(time)
