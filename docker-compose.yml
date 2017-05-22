@@ -11,6 +11,7 @@ volumes:
 services:
 
   core:
+    command: "rails server -b 0.0.0.0 -e production"
     build: .
     volumes:
       - .:/app
@@ -24,6 +25,8 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       MONGO_HOST: mongo
+      AWS_SECRET_ACCESS_KEY: BlfeZ7ZE4lG5l5RoMSekBV4r14zz+f9mWFto3jyU
+
   postgres:
     image: postgres:9.4
     ports:
