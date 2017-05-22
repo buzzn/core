@@ -80,16 +80,9 @@ module Buzzn
     config.x.templates_path = Rails.root.join('app', 'templates')
 
     config.after_initialize do
-      # setup service components, transactions and log to stderr
-      logger = ::Logger.new(STDERR)
-      if Rails.env == 'development'
-        logger.formatter = proc { |_, _, _, msg| "#{msg}\n" }
-      else
-        logger.formatter = proc { |l, _, _, msg| "#{msg}\n" if l != 'DEBUG' }
-      end
-      Buzzn::Logger.root = logger
-      Buzzn::Boot::Init.run
+      # setup service components, transactions
       Buzzn::Logger.root = Rails.logger
+      Buzzn::Boot::Init.run
     end
   end
 end
