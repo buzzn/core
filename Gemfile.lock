@@ -173,6 +173,10 @@ GEM
     diff-lcs (1.2.5)
     doorkeeper (3.1.0)
       railties (>= 3.2)
+    dotenv (2.2.1)
+    dotenv-rails (2.2.1)
+      dotenv (= 2.2.1)
+      railties (>= 3.2, < 5.2)
     dry-auto_inject (0.4.2)
       dry-container (>= 0.3.4)
     dry-configurable (0.7.0)
@@ -775,6 +779,7 @@ DEPENDENCIES
   devise-i18n-views
   devise_invitable
   doorkeeper
+  dotenv-rails
   dry-auto_inject
   dry-monads
   dry-transaction

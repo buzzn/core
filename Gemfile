@@ -92,6 +92,7 @@ gem 'oj'
 gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
+gem 'dotenv-rails'
 
 group :production, :staging do
   gem 'newrelic_rpm'
