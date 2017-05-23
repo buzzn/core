@@ -1,15 +1,15 @@
-describe Buzzn::Services::PdfGenerator do
+describe Buzzn::Services::PdfHtmlGenerator do
 
   let(:this) { File.expand_path("..", __FILE__) }
-  subject { Buzzn::Services::PdfGenerator.new(this) }
+  subject { Buzzn::Services::PdfHtmlGenerator.new(this) }
 
   it 'fails on wrong templates path' do
-    expect { Buzzn::Services::PdfGenerator.new('something') }.to raise_error ArgumentError
-    expect { Buzzn::Services::PdfGenerator.new(__FILE__) }.to raise_error ArgumentError
+    expect { Buzzn::Services::PdfHtmlGenerator.new('something') }.to raise_error ArgumentError
+    expect { Buzzn::Services::PdfHtmlGenerator.new(__FILE__) }.to raise_error ArgumentError
     expect do
       Dir.chdir(this) do
         # passing in nil means the auto_inject does its job
-        Buzzn::Services::PdfGenerator.new('app/templates')
+        Buzzn::Services::PdfHtmlGenerator.new('app/templates')
       end
     end.to raise_error ArgumentError
   end
@@ -29,8 +29,8 @@ describe Buzzn::Services::PdfGenerator do
     expect(html).to eq "<!DOCTYPE html>\n<html>\n  <head>\n    <title>be happy forever</title>\n  </head>\n  <body>\n    <h1>\n      #{Date.today}\n    </h1>\n  </body>\n</html>"
   end
 
-  class With < Buzzn::Services::PdfGenerator::Html
-    include Import.args['service.pdf_generator']
+  class With < Buzzn::Services::PdfHtmlGenerator::Html
+    include Import.args['service.pdf_html_generator']
 
     def initialize(pdf)
       super(nil)

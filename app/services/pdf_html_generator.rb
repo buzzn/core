@@ -1,4 +1,4 @@
-class Buzzn::Services::PdfGenerator
+class Buzzn::Services::PdfHtmlGenerator
   include Import.args[path: 'config.templates_path']
 
   class Missing
