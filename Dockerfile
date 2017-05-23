@@ -1,4 +1,4 @@
-FROM ruby:2.2
+FROM ruby:2.3.1
 MAINTAINER admin@buzzn.net
 
 # Install apt based dependencies required to run Rails as
@@ -19,10 +19,17 @@ WORKDIR /app
 # will be cached unless changes to one of those two files
 # are made.
 COPY Gemfile Gemfile.lock ./
-RUN gem install bundler && bundle install --jobs 20 --retry 5
+RUN gem install bundler && bundle install --jobs 20 --retry 5 --without development test
+
+# Set Rails to run in production
+ENV RAILS_ENV production
+ENV RACK_ENV production
 
 # Copy the main application.
 COPY . ./
+
+# Precompile Rails assets
+# RUN bundle exec rake assets:precompile
 
 # Expose port 3000 to the Docker host, so we can access it
 # from the outside.
@@ -32,7 +39,8 @@ EXPOSE 3000
 # "bundle exec" for each of our commands.
 ENTRYPOINT ["bundle", "exec"]
 
+
 # The main command to run when the container starts. Also
 # tell the Rails dev server to bind to all interfaces by
 # default.
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["puma", "-C", "config/puma.rb"]
