@@ -133,27 +133,43 @@ module Buzzn::Localpool
       #   register_id: The Register::Base.id for which the reading should be created
       #   label: The label for the accounted energy, may be Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED or Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED
       #   corrected_value: the energy in milliwatt_hour that is used for the new reading
+      #   timestamp: The timestamp for the new reading
       # returns:
       #   accounted_energy: Object, that contains all information about accounted readings
       def create_corrected_reading(register_id, label, corrected_value, timestamp)
         # TODO: (nice-to-have) validate that all corrected registers must have an initial reading with energy_milliwatt_hour = 0
         last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).first
-        if last_corrected_reading.timestamp != timestamp
-          new_reading_value = last_corrected_reading.nil? ? corrected_value : corrected_value + last_corrected_reading.energy_milliwatt_hour
-          new_reading = Reading.create!(register_id: register_id,
-                                        timestamp: timestamp,
-                                        energy_milliwatt_hour: new_reading_value,
-                                        reason: Reading::REGULAR_READING,
-                                        source: Reading::BUZZN_SYSTEMS,
-                                        quality: Reading::ENERGY_QUANTITY_SUMMARIZED,
-                                        meter_serialnumber: Register::Base.find(register_id).meter.manufacturer_product_serialnumber)
+        if last_corrected_reading.nil?
+          new_reading = save_corrected_reading(register_id, corrected_value, timestamp)
         else
-          new_reading = last_corrected_reading
-          last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).to_a[1]
+          if last_corrected_reading.timestamp != timestamp
+            new_reading = save_corrected_reading(register_id, corrected_value + last_corrected_reading.energy_milliwatt_hour, timestamp)
+          else
+            # TODO: maybe think about overwriting an existing reading instead of using it
+            new_reading = last_corrected_reading
+            last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).to_a[1]
+          end
         end
         accounted_energy = Buzzn::AccountedEnergy.new(corrected_value, last_corrected_reading, new_reading, new_reading)
         accounted_energy.label = label
         return accounted_energy
+      end
+
+      # This method saves the new reading for a corrected register
+      # input params:
+      #   register_id: The Register::Base.id for which the reading should be saved
+      #   corrected_value: the energy in milliwatt_hour that is used for the new reading
+      #   timestamp: The timestamp for the new reading
+      # returns:
+      #   new_reading: The new Reading
+      def save_corrected_reading(register_id, new_reading_value, timestamp)
+        Reading.create!(register_id: register_id,
+                        timestamp: timestamp,
+                        energy_milliwatt_hour: new_reading_value,
+                        reason: Reading::REGULAR_READING,
+                        source: Reading::BUZZN_SYSTEMS,
+                        quality: Reading::ENERGY_QUANTITY_SUMMARIZED,
+                        meter_serialnumber: Register::Base.find(register_id).meter.manufacturer_product_serialnumber)
       end
 
       # This method returns the energy measured in a specific period of time
@@ -169,12 +185,10 @@ module Buzzn::Localpool
         last_reading_original = get_last_reading(register, end_date, accounting_year)
         last_reading = last_reading_original.clone
         device_change_readings = get_readings_at_device_change(register, begin_date, end_date, accounting_year)
-
         if end_date.nil?
           last_reading.timestamp = adjust_end_date(last_reading.timestamp, accounting_year)
           last_reading.energy_milliwatt_hour = adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
         end
-
         if device_change_readings.empty?
           accounted_energy = last_reading.energy_milliwatt_hour - first_reading.energy_milliwatt_hour
           return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
@@ -389,7 +403,7 @@ module Buzzn::Localpool
         unless register.meter.broker.is_a?(Broker::Discovergy)
           raise ArgumentError.new("register #{register.id} is not a discovergy register")
         end
-        result = Buzzn::Services::MainContainer['service.charts'].for_register(register, Buzzn::Interval.second(date.to_time))
+        result = Buzzn::Boot::MainContainer['service.charts'].for_register(register, Buzzn::Interval.second(date.to_time))
         if register.input?
           timestamp = result.in.first.timestamp
           value = result.in.first.value

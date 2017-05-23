@@ -1,23 +1,23 @@
 
 describe Buzzn::StandardProfile::DataSource do
-  let(:data_source) { Buzzn::StandardProfile::DataSource.new }
-  let(:utc) { Time.find_zone('UTC') }
-  let(:berlin) { Time.find_zone('Berlin') }
-  let(:greenland) { Time.find_zone('Greenland') }
-  let(:sep_bhkw_register) do
+  entity(:data_source) { Buzzn::StandardProfile::DataSource.new }
+  entity(:utc) { Time.find_zone('UTC') }
+  entity(:berlin) { Time.find_zone('Berlin') }
+  entity(:greenland) { Time.find_zone('Greenland') }
+  entity(:sep_bhkw_register) do
     meter = Fabricate(:output_meter)
     meter.output_register
   end
-  let(:slp_register) do
+  entity(:slp_register) do
     meter = Fabricate(:input_meter)
     meter.input_register
   end
-  let(:sep_pv_register) do
+  entity(:sep_pv_register) do
     meter = Fabricate(:output_meter)
     meter.output_register.devices << Fabricate(:dach_pv_justus)
     meter.output_register
   end
-  let(:group) do
+  entity(:group) do
     group = Fabricate(:tribe)
     group.registers << Fabricate(:input_meter).input_register
     group.registers << slp_register
@@ -26,7 +26,7 @@ describe Buzzn::StandardProfile::DataSource do
     group
   end
 
-  let(:virtual_register) do
+  entity(:virtual_register) do
     register = Fabricate(:virtual_meter).register
     Fabricate(:fp_plus, operand_id: Fabricate(:input_meter).input_register.id, register_id: register.id)
     Fabricate(:fp_minus, operand_id: slp_register.id, register_id: register.id)
