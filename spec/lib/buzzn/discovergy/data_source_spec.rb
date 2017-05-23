@@ -9,15 +9,14 @@ describe Buzzn::Discovergy::DataSource do
 
   subject { Buzzn::Discovergy::DataSource.new }
 
-  let(:cache_time) { 1 }
-  let(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
-  let(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.mode.sub('put', ''), resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
-  let(:small_group) do
+  entity(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
+  entity(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.mode.sub('put', ''), resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
+  entity(:small_group) do
     Fabricate(:tribe, registers: [
                 Fabricate(:easymeter_60009484).output_register,
                 Fabricate(:easymeter_60009386).input_register])
   end
-  let(:group) do
+  entity(:group) do
     Fabricate(:tribe, registers: [
       Fabricate(:easymeter_60118470).output_register, #out
       Fabricate(:easymeter_60138947).output_register, #out
@@ -26,18 +25,18 @@ describe Buzzn::Discovergy::DataSource do
       Fabricate(:easymeter_60009405).input_register  #in
     ])
   end
-  let(:empty_group) { Fabricate(:tribe) }
-  let(:register_with_broker) do
+  entity(:empty_group) { Fabricate(:tribe) }
+  entity!(:register_with_broker) do
     meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, group: empty_group)])
     Fabricate(:discovergy_broker, mode: 'in', resource: meter, external_id: 'easy_123')
     meter.input_register
   end
-  let(:register_with_group_broker) do
+  entity!(:register_with_group_broker) do
     register = register_with_broker
     Fabricate(:discovergy_broker, resource: register.group, external_id: 'virtual_123')
     register
   end
-  let(:virtual_register) do
+  entity(:virtual_register) do
     register = Fabricate(:virtual_meter).register
     Fabricate(:fp_plus, operand: Fabricate(:input_meter).input_register,
               register: register)
@@ -45,15 +44,21 @@ describe Buzzn::Discovergy::DataSource do
     Fabricate(:discovergy_broker, resource: register.formula_parts.first.operand.meter, external_id: 'easy_123')
     register
   end
-  let(:single_meter_live_response) { "{\"time\":1480606450088,\"values\":{\"power\":1100640}}" }
-  let(:single_meter_second_response) { "[{\"time\":1480604400205,\"values\":{\"energy\":22968322444644}}]" }
-  let(:single_meter_hour_response) { "[{\"time\":1480604400205,\"values\":{\"power\":1760140}},{\"time\":1480604402205,\"values\":{\"power\":1750440}}]" }
-  let(:single_meter_day_response) { "[{\"time\":1480606200000,\"values\":{\"energy\":22968322444644}},{\"time\":1480607100000,\"values\":{\"energy\":22970988922089}},{\"time\":1480608000000,\"values\":{\"energy\":22973229616478}}]" }
-  let(:single_meter_month_response) { "[{\"time\":1477954800000,\"values\":{\"energy\":22202408932539}},{\"time\":1478041200000,\"values\":{\"energy\":22202747771000}},{\"time\":1478127600000,\"values\":{\"energy\":22202747771000}}]" }
-  let(:single_meter_year_response) { "[{\"time\":1451602800000,\"values\":{\"energy\":14386541983000}},{\"time\":1454281200000,\"values\":{\"energy\":15127308929000}},{\"time\":1456786800000,\"values\":{\"energy\":15997907091031}}]" }
-  let(:virtual_meter_live_response) { "{\"EASYMETER_60009425\":{\"time\":1480614249341,\"values\":{\"power\":150950}},\"EASYMETER_60009404\":{\"time\":1480614254195,\"values\":{\"power\":161590}},\"EASYMETER_60009415\":{\"time\":1480614254563,\"values\":{\"power\":152190}}}"}
-  let(:virtual_meter_creation_response) { "{\"serialNumber\":\"00000065\",\"location\":{\"street\":\"Virtual\",\"streetNumber\":\"0\",\"zip\":\"00000\",\"city\":\"Virtual\",\"country\":\"DE\"},\"administrationNumber\":null,\"type\":\"VIRTUAL\",\"measurementType\":\"ELECTRICITY\",\"scalingFactor\":1,\"currentScalingFactor\":1,\"voltageScalingFactor\":1,\"internalMeters\":1,\"firstMeasurementTime\":-1,\"lastMeasurementTime\":-1}" }
-  let(:empty_response) { "[]" }
+  entity(:some_group) do
+    some_group = Fabricate(:localpool)
+    some_group.brokers << Fabricate(:discovergy_broker, mode: 'in', resource: some_group, external_id: "EASYMETER_12345678")
+    some_group.registers << Fabricate(:input_meter).input_register
+    some_group
+  end
+  entity(:single_meter_live_response) { "{\"time\":1480606450088,\"values\":{\"power\":1100640}}" }
+  entity(:single_meter_second_response) { "[{\"time\":1480604400205,\"values\":{\"energy\":22968322444644}}]" }
+  entity(:single_meter_hour_response) { "[{\"time\":1480604400205,\"values\":{\"power\":1760140}},{\"time\":1480604402205,\"values\":{\"power\":1750440}}]" }
+  entity(:single_meter_day_response) { "[{\"time\":1480606200000,\"values\":{\"energy\":22968322444644}},{\"time\":1480607100000,\"values\":{\"energy\":22970988922089}},{\"time\":1480608000000,\"values\":{\"energy\":22973229616478}}]" }
+  entity(:single_meter_month_response) { "[{\"time\":1477954800000,\"values\":{\"energy\":22202408932539}},{\"time\":1478041200000,\"values\":{\"energy\":22202747771000}},{\"time\":1478127600000,\"values\":{\"energy\":22202747771000}}]" }
+  entity(:single_meter_year_response) { "[{\"time\":1451602800000,\"values\":{\"energy\":14386541983000}},{\"time\":1454281200000,\"values\":{\"energy\":15127308929000}},{\"time\":1456786800000,\"values\":{\"energy\":15997907091031}}]" }
+  entity(:virtual_meter_live_response) { "{\"EASYMETER_60009425\":{\"time\":1480614249341,\"values\":{\"power\":150950}},\"EASYMETER_60009404\":{\"time\":1480614254195,\"values\":{\"power\":161590}},\"EASYMETER_60009415\":{\"time\":1480614254563,\"values\":{\"power\":152190}}}"}
+  entity(:virtual_meter_creation_response) { "{\"serialNumber\":\"00000065\",\"location\":{\"street\":\"Virtual\",\"streetNumber\":\"0\",\"zip\":\"00000\",\"city\":\"Virtual\",\"country\":\"DE\"},\"administrationNumber\":null,\"type\":\"VIRTUAL\",\"measurementType\":\"ELECTRICITY\",\"scalingFactor\":1,\"currentScalingFactor\":1,\"voltageScalingFactor\":1,\"internalMeters\":1,\"firstMeasurementTime\":-1,\"lastMeasurementTime\":-1}" }
+  entity(:empty_response) { "[]" }
 
   it 'parses single meter live response' do
     response = single_meter_live_response
@@ -151,6 +156,7 @@ describe Buzzn::Discovergy::DataSource do
     response = virtual_meter_creation_response
     mode = ['in', 'out'].sample
     resource = group
+    resource.brokers.by_data_source(subject).each { |broker| broker.destroy }
     result = subject.send(:parse_virtual_meter_creation, response, mode, resource)
     expect(group.brokers.by_data_source(subject).size).to eq 1
   end
@@ -162,6 +168,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'creates virtual meter for group' do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
+      group.brokers.each{ |broker| broker.destroy }
       existing_broker = broker
       brokers = subject.create_virtual_meters_for_group(group)
       expect(brokers).not_to eq []
@@ -170,11 +177,17 @@ describe Buzzn::Discovergy::DataSource do
   end
 
   it 'maps the external id to register ids of group' do
+    empty_group.registers.each do |register|
+      register.group = nil if register != register_with_broker
+    end
     map = subject.send(:to_map, register_with_group_broker.group)
     expect(map).to eq('easy_123' => register_with_broker.id)
   end
 
   it 'maps the external id to register ids' do
+    group.registers.each do |register|
+      register.group = nil if register != register_with_broker
+    end
     map = subject.send(:to_map, virtual_register)
     expect(map).to eq('easy_123' => virtual_register.formula_parts.first.operand.id)
   end
@@ -187,12 +200,12 @@ describe Buzzn::Discovergy::DataSource do
     end
   end
 
-  let(:facade) { FacadeMock.new }
+  entity(:facade) { FacadeMock.new }
 
   it 'collects data from each register without group broker' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
     facade.result = single_meter_live_response
+    empty_group.brokers.each{ |broker| broker.destroy }
 
     in_result = data_source.collection(register_with_broker.group, :in)
     out_result = data_source.collection(register_with_broker.group, :out)
@@ -209,11 +222,10 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'collects data from each register with group broker' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
     facade.result = virtual_meter_live_response
 
-    in_result = data_source.collection(register_with_group_broker.group, :in)
-    out_result = data_source.collection(register_with_group_broker.group, :out)
+    in_result = data_source.collection(some_group, :in)
+    out_result = data_source.collection(some_group, :out)
 
     expect(in_result.size).to eq 3
     expect(out_result.size).to eq 3
@@ -227,18 +239,17 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'data ranges from a group' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
     facade.result = single_meter_year_response
 
-    in_result = data_source.aggregated(register_with_group_broker.group, :in, Buzzn::Interval.year)
-    out_result = data_source.aggregated(register_with_group_broker.group, :out, Buzzn::Interval.year)
+    in_result = data_source.aggregated(some_group, :in, Buzzn::Interval.year)
+    out_result = data_source.aggregated(some_group, :out, Buzzn::Interval.year)
 
     expect(in_result.in.size).to eq 2
     expect(in_result.out.size).to eq 0
     #expect(out_result.in.size).to eq 0
     #expect(out_result.out.size).to eq 2
 
-    expect(in_result.resource_id).to eq register_with_group_broker.group.id
+    expect(in_result.resource_id).to eq some_group.id
     #expect(out_result.resource_id).to eq register_with_group_broker.group.id
 
     expect(in_result.units).to eq :milliwatt_hour
@@ -247,7 +258,6 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'data ranges from a register' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    Fabricate(:meter, registers: [Fabricate.build(:input_register, group: empty_group)])
     facade.result = single_meter_hour_response
 
     in_result = data_source.aggregated(register_with_broker, :in, Buzzn::Interval.hour)
@@ -263,89 +273,5 @@ describe Buzzn::Discovergy::DataSource do
 
     expect(in_result.units).to eq :milliwatt
     expect(out_result.units).to eq :milliwatt
-  end
-
-  # 'threaded' in description triggers a different DatabaseCleanet strategy
-  # see spec_helper.rb
-  it 'caches single results single threaded' do
-    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
-    facade.result = single_meter_live_response
-
-    result = data_source.single_aggregated(register_with_broker, :in)
-    other = data_source.single_aggregated(register_with_broker, :in)
-
-    expect(result.expires_at).to eq other.expires_at
-    sleep(cache_time + 0.2)
-    other = data_source.single_aggregated(register_with_broker, :in)
-    expect(result.expires_at).not_to eq other.expires_at
-  end
-
-  # 'threaded' in description triggers a different DatabaseCleanet strategy
-  # see spec_helper.rb
-  it 'caches collection result single threaded' do
-    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
-    Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
-    facade.result = virtual_meter_live_response
-
-    result = data_source.collection(register_with_group_broker.group, :out)
-    other = data_source.collection(register_with_group_broker.group, :out)
-
-    expect(result.expires_at).to eq other.expires_at
-    sleep(cache_time + 0.2)
-    other = data_source.collection(register_with_group_broker.group, :out)
-    expect(result.expires_at).not_to eq other.expires_at
-  end
-
-  # 'threaded' in description triggers a different DatabaseCleanet strategy
-  # see spec_helper.rb
-  it 'caches single results multi threaded', retry: 2 do
-    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
-    facade.result = single_meter_live_response
-
-    result = data_source.single_aggregated(register_with_broker, :in)
-    16.times.collect do
-      Thread.new do
-        other = data_source.single_aggregated(register_with_broker, :in)
-        expect(result.expires_at).to eq other.expires_at
-      end
-    end.each { |t| t.join }
-    all = []
-    16.times.collect do
-      Thread.new do
-        sleep(cache_time + 0.2)
-        all << data_source.single_aggregated(register_with_broker, :in).expires_at
-        self
-      end
-    end.each { |t| t.join }
-    all.uniq!
-    expect(all.size).to eq 1
-    expect(result.expires_at).not_to eq all.first
-  end
-
-  # 'threaded' in description triggers a different DatabaseCleanet strategy
-  # see spec_helper.rb
-  it 'caches collection result multi threaded', retry: 2 do
-    data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade, cache_time)
-    Fabricate(:meter, registers: [Fabricate.build(:output_register, group: empty_group)])
-    facade.result = virtual_meter_live_response
-
-    result = data_source.collection(register_with_group_broker.group, :out)
-    16.times.collect do
-      Thread.new do
-        other = data_source.collection(register_with_group_broker.group, :out)
-        expect(result.expires_at).to eq other.expires_at
-      end
-    end.each { |t| t.join }
-    all = []
-    16.times.collect do
-      Thread.new do
-        sleep(cache_time + 0.2)
-        all << data_source.collection(register_with_group_broker.group, :out).expires_at
-        self
-      end
-    end.each { |t| t.join }
-    all.uniq!
-    expect(all.size).to eq 1
-    expect(result.expires_at).not_to eq all.first
   end
 end

@@ -127,9 +127,8 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     localpool.registers << register
 
     register = Fabricate(:easymeter_60009498).registers.first
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100000, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    # TODO: look up this reading in the beehive DB!!!
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 4531000000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100000*20, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 248000000*20, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
     localpool.registers << register
 
     register = Fabricate(:easymeter_60404855).registers.first
