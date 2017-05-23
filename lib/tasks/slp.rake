@@ -16,6 +16,7 @@ namespace :slp do
     infile.close
     watt_hour = 0.0
     watts = 0.0
+    berlin = ActiveSupport::TimeZone["Berlin"]
     while true do
       posOfSeperator = all_lines.index("'")
       if posOfSeperator == nil
@@ -25,12 +26,13 @@ namespace :slp do
         all_lines = all_lines[(posOfSeperator + 1)..all_lines.length]
         if parseString.include? "DTM+163"
           remString = parseString[8..parseString.length]
-          dateString = remString[0..3] + "-" + remString[4..5] + "-" + remString[6..7] + " " + remString[8..9] + ":" + remString[10..11]
-          if Reading.where(source: 'slp').where(timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString)).size == 1
-            puts "Data at " + ActiveSupport::TimeZone["Berlin"].parse(dateString).to_s + " already available, trying next."
+          dateString = "#{remString[0..3]}-#{remString[4..5]}-#{remString[6..7]} #{remString[8..9]}:#{remString[10..11]}"
+          date = berlin.parse(dateString)
+          if Reading.where(source: 'slp', timestamp: date).size == 1
+            puts "Data at #{date} already available, trying next."
           else
             Reading.create(
-              timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
+              timestamp: date,
               energy_milliwatt_hour: watt_hour,
               power_milliwatt: watts,
               source: "slp",
