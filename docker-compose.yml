@@ -1,5 +1,6 @@
 version: '3.1'
 
+
 volumes:
   postgresdb:
     driver: local
@@ -8,13 +9,12 @@ volumes:
   mongodb:
     driver: local
 
+
 services:
 
   core:
-    command: "rails server -b 0.0.0.0 -e production"
     build: .
-    volumes:
-      - .:/app
+    command: bundle exec puma -C config/puma.rb
     ports:
       - "3000:3000"
     depends_on:
@@ -22,10 +22,16 @@ services:
       - redis
       - mongo
     environment:
+      RAILS_ENV: development
+      RACK_ENV: development
+      SECRET_KEY_BASE: 4302a93016c91a2074f05c247570bd12a604c3368d711861df1cbab4b967d81796562097aad566f12016a721a6f461a1cd376a94f826721ab6fb8b483c5b8b81
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       MONGO_HOST: mongo
-      AWS_SECRET_ACCESS_KEY: BlfeZ7ZE4lG5l5RoMSekBV4r14zz+f9mWFto3jyU
+      HOSTNAME: http://localhost:3000
+      ASSET_HOST: http://localhost:3000
+      ATTR_ENCRYPTED_KEY: This is a salt for your soup
+      REDIS_HOST: redis
 
   postgres:
     image: postgres:9.4
