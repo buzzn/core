@@ -84,11 +84,8 @@ gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
 
-
-
 group :production, :staging do
   gem 'newrelic_rpm'
-  gem 'asset_sync'
 end
 
 group :development, :test do
