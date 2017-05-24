@@ -31,8 +31,14 @@ class GroupRoda < BaseRoda
         aggregated(current_power.for_each_register_in_group(group))
       end
 
+      # deprecated
+
       r.get! 'meters' do
         group.meters
+      end
+
+      r.get! 'managers' do
+        group.managers
       end
     end
   end

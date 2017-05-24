@@ -278,6 +278,71 @@ describe "groups" do
     end
   end
 
+  context 'managers' do
+
+    context 'GET' do
+      it '403' do
+        begin
+          localpool.update(readable: :member)
+          GET "/api/v1/groups/#{localpool.id}/managers"
+          expect(response).to have_http_status(403)
+          expect(json).to eq anonymous_denied_json
+
+          tribe.update(readable: :member)
+          GET "/api/v1/groups/#{tribe.id}/managers", user
+          expect(response).to have_http_status(403)
+          expect(json).to eq denied_json
+        ensure
+          localpool.update(readable: :world)
+          tribe.update(readable: :world)
+        end
+      end
+
+      it '404' do
+        GET "/api/v1/groups/bla-blub/managers", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
+
+      [:tribe, :localpool].each do |type|
+        entity(:manager) { Fabricate(:user) }
+        let(:group) do
+          group = send type
+          manager.add_role(:manager, group)
+          group
+        end
+
+        let(:managers_json) do
+          [
+            {
+              "id"=>manager.id,
+              "type"=>"user",
+              "user_name"=>manager.user_name,
+              "title"=>nil,
+              "first_name"=>manager.profile.first_name,
+              "last_name"=>manager.profile.last_name,
+              "gender"=>nil,
+              "phone"=>manager.profile.phone,
+              "email"=>manager.email,
+              "updatable"=>true,
+              "deletable"=>true,
+              "bank_accounts"=>[]
+            }
+          ]
+        end
+
+        context "as #{type}" do
+          it "200 as #{type}" do
+            GET "/api/v1/groups/#{group.id}/managers", admin
+          
+            expect(response).to have_http_status(200)
+            expect(json.to_yaml).to eq(managers_json.to_yaml)
+          end
+        end
+      end
+    end
+  end
+
   context 'meters' do
 
     context 'GET' do

@@ -214,9 +214,10 @@ module API
           requires :id, type: String, desc: "ID of the group"
         end
         get ':id/managers' do
+          binding.pry
           Group::BaseResource
             .retrieve(current_user, permitted_params)
-            .managers
+            .managers.collect {|m| UserResource.new(m) }
         end
 
         desc "Return the related members for Group"
