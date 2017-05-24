@@ -38,8 +38,10 @@ describe "localpools" do
     }
   end
 
+  entity(:manager) { Fabricate(:user) }
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
+    manager.add_role(:manager, localpool)
     3.times.each do
       c = Fabricate(:localpool_power_taker_contract)
       c.register.group = localpool
@@ -74,7 +76,7 @@ describe "localpools" do
       "type"=>"group_localpool",
       "name"=>localpool_no_contracts.name,
       "description"=>localpool_no_contracts.description,
-      "readable"=>"world",
+      "readable"=>localpool_no_contracts.readable,
       "updatable"=>true,
       "deletable"=>true,
       "meters"=>localpool_no_contracts.meters.collect do |meter|
@@ -119,7 +121,7 @@ describe "localpools" do
     end
 
     it '200' do
-      localpool_no_contracts.update(readable: :world)
+      localpool_no_contracts
       GET "/#{localpool_no_contracts.id}", admin
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq localpool_json.to_yaml
@@ -479,4 +481,43 @@ describe "localpools" do
       end
     end
   end
+
+  context 'managers' do
+
+    context 'GET' do
+      it '403' do
+        localpool.update(readable: :member)
+        GET "/#{localpool.id}/managers", user
+        expect(response).to have_http_status(403)
+        expect(json).to eq denied_json
+      end
+
+      let(:managers_json) do
+        [
+          {
+            "id"=>manager.id,
+            "type"=>"user",
+            "user_name"=>manager.user_name,
+            "title"=>nil,
+            "first_name"=>manager.profile.first_name,
+            "last_name"=>manager.profile.last_name,
+            "gender"=>nil,
+            "phone"=>manager.profile.phone,
+            "email"=>manager.email,
+            "updatable"=>true,
+            "deletable"=>true,
+            "bank_accounts"=>[]
+          }
+        ]
+      end
+      
+      it "200" do
+        GET "/#{localpool.id}/managers", admin
+          
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq(managers_json.to_yaml)
+      end
+    end
+  end
+
 end

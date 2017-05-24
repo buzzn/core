@@ -54,6 +54,10 @@ class LocalpoolRoda < BaseRoda
       r.get! 'power-taker-contracts' do
         localpool.localpool_power_taker_contracts
       end
+
+      r.get! 'managers' do
+        localpool.managers
+      end
     end
   end
 end
