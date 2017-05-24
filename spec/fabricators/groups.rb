@@ -214,10 +214,12 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:osc_saba, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
     Fabricate(:lptc_saba, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
 
-    Fabricate(:lpc_sulz, localpool: self, contractor: Organization.find_by_name(Organization::BUZZN_SYSTEMS), customer: Organization.where(name: 'HaFi').first)
+    Fabricate(:lpc_sulz, localpool: self, contractor: Organization.buzzn_systems || Fabricate(:buzzn_systems), customer: Organization.where(name: 'HaFi').first)
 
     Fabricate(:price_sulz, localpool: self)
 
     addresses << Fabricate(:address)
+
+    Fabricate(:osc_sulz, signing_user: Fabricate(:user), register: self.registers.by_label(Register::Base::GRID_CONSUMPTION_CORRECTED).first, customer: Organization.where(name: 'HaFi').first)
   end
 end

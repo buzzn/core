@@ -25,6 +25,7 @@ puts '-- seed development database --'
 puts '  organizations'
 Fabricate(:buzzn_energy)
 Fabricate(:dummy_energy)
+Fabricate(:germany)
 Fabricate(:electricity_supplier, name: 'E.ON')
 Fabricate(:electricity_supplier, name: 'RWE')
 Fabricate(:electricity_supplier, name: 'EnBW')
@@ -46,6 +47,10 @@ Fabricate(:buzzn_reader)
 Fabricate(:dummy)
 Fabricate(:discovergy)
 Fabricate(:mysmartgrid)
+
+# Stromkennzeichnungen
+Fabricate(:energy_mix_germany)
+Fabricate(:energy_mix_buzzn)
 
 
 buzzn_team_names = %w[ felix justus danusch thomas stefan philipp christian kristian pavel eva ralf ]
