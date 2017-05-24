@@ -18,8 +18,8 @@ module Buzzn
           @logger = Buzzn::Logger.new(self)
           # setup services, redo require until no more errors
           # or no more changes in which case there will be an error raised
-          Buzzn::Application.config.paths['app'].dup.tap do |app|
-            app.glob = "services/*.rb"
+          Buzzn::Application.config.paths['lib'].dup.tap do |app|
+            app.glob = "buzzn/services/*.rb"
             remaining = -1
             errors = init(*app.to_a)
             while errors.size > 0
