@@ -2,6 +2,7 @@
 
 #
 # deprecated and needs to ported to the new systematic for endpoint tests
+# and it needs to be in /requests and not in /lib/buzzn
 #
 
 
