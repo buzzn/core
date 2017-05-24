@@ -37,8 +37,10 @@ class GroupRoda < BaseRoda
         group.meters
       end
 
-      r.get! 'managers' do
-        group.managers
+      r.get! 'mentors' do
+        group.object.managers.collect do |m|
+          MentorResource.new(m)
+        end
       end
     end
   end

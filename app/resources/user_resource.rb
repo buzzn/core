@@ -27,6 +27,19 @@ class UserResource < Buzzn::EntityResource
   end
 end
 
+class MentorResource < Buzzn::EntityResource
+
+  model User
+
+  attributes  :first_name,
+              :last_name,
+              :image
+
+  def image
+    object.image.md.url
+  end
+end
+
 class ContractingPartyUserResource < UserResource
   include BankAccountResource::Create
 
