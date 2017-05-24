@@ -834,3 +834,16 @@ Fabricator :mpoc_sulz, from: :metering_point_operator_contract do
                                     cycle: Contract::Payment::MONTHLY,
                                     source: Contract::Payment::TRANSFERRED)] }
 end
+
+Fabricator :osc_sulz, from: :other_supplier_contract do
+  begindate = Date.new(2016, 8, 4)
+  signingdate = Date.new(2016, 7, 1)
+  contract_number                 89776779
+  contract_number_addition        345
+  begin_date                      begindate
+  signing_date                    signingdate
+  forecast_kwh_pa                 5000
+  renewable_energy_law_taxation   'full'
+  status                          :running
+  contractor                      { Organization.gemeindewerke_peissenberg || Fabricate(:gemeindewerke_peissenberg) }
+end

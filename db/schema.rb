@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170505151515) do
+ActiveRecord::Schema.define(version: 20170524090229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -300,6 +300,24 @@ ActiveRecord::Schema.define(version: 20170505151515) do
   end
 
   add_index "documents", ["path"], name: "index_documents_on_path", unique: true, using: :btree
+
+  create_table "energy_classifications", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.string   "tariff_name"
+    t.float    "nuclear_ratio",                   null: false
+    t.float    "coal_ratio",                      null: false
+    t.float    "gas_ratio",                       null: false
+    t.float    "other_fossiles_ratio",            null: false
+    t.float    "renewables_eeg_ratio",            null: false
+    t.float    "other_renewables_ratio",          null: false
+    t.float    "co2_emission_gramm_per_kWh",      null: false
+    t.float    "nuclear_waste_miligramm_per_kWh", null: false
+    t.date     "end_date"
+    t.uuid     "organization_id"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  add_index "energy_classifications", ["organization_id"], name: "index_energy_classifications_on_organization_id", using: :btree
 
   create_table "equipment", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"

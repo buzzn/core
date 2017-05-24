@@ -78,6 +78,14 @@ Fabricator :dummy_energy, from: :electricity_supplier do
   name Organization::DUMMY_ENERGY
 end
 
+Fabricator :germany, from: :electricity_supplier do
+  name Organization::GERMANY
+end
+
+Fabricator :gemeindewerke_peissenberg, from: :electricity_supplier do
+  name "Gemeindewerke Peißenberg"
+end
+
 Fabricator :dummy, from: :other_organization do
   name Organization::DUMMY
 end
