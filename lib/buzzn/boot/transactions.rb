@@ -24,10 +24,18 @@ module Buzzn
 
       def define(name, &block)
         container.register(name, Dry.Transaction(container: steps, &block))
+      rescue => e
+        # just print out the error as db:init does autoload those files
+        # in the second run or so
+        warn e.message
       end
 
       def register_validation(name, &block)
         steps.register(name, Dry::Validation.Form(Validation::Form, &block))
+      rescue => e
+        # just print out the error as db:init does autoload those files
+        # in the second run or so
+        warn e.message
       end
 
       def register_step(name, operation = nil, &block)
