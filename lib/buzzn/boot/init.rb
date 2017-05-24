@@ -33,8 +33,8 @@ module Buzzn
           end
 
           # load transactions
-          Application.config.paths['app'].dup.tap do |app|
-            app.glob = "transactions/*.rb"
+          Application.config.paths['lib'].dup.tap do |app|
+            app.glob = "buzzn/transactions/*.rb"
             app.to_a.each { |path| require path }
           end
         end
