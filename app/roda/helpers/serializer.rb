@@ -5,7 +5,8 @@ module Buzzn
       def call(object, request)
         options = {}
         if include = request.params['include']
-          options[:include] = eval("{#{include.gsub(/ /, '').gsub(':', ': :').gsub('{', ':{')}}")
+          #binding.pry
+          options[:include] = include.empty? ? '' : eval("{#{include.gsub(/(,|$)/, ':{}\1')}}")
         end
         case object
         when Dry::Monads::Either::Right

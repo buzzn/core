@@ -7,6 +7,7 @@ describe Register::BaseResource do
 
   let(:base_keys) { [:id,
                      :type,
+                     :label,
                      :converter_constant,
                      :decimal,
                      :direction,

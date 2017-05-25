@@ -3,13 +3,15 @@ class LocalpoolRoda < BaseRoda
 
   route do |r|
 
+    localpools = Group::LocalpoolResource.all(current_user)
+
     r.root do
-      Group::LocalpoolResource.all(current_user)
+      localpools
     end
 
     r.on :id do |id|
 
-      shared[:localpool] = localpool = Group::LocalpoolResource.retrieve(current_user, id)
+      shared[:localpool] = localpool = Group::LocalpoolResource.retrieve(current_user, id) # TODO use: localpools.retrieve(id)
 
       r.on 'contracts' do
         r.run ContractRoda

@@ -57,6 +57,7 @@ describe "registers" do
         "decimal"=>2,
         "converter_constant"=>1,
         "low_power"=>false,
+        "label"=>real_register.label,
         "last_reading"=>Reading.by_register_id(real_register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(real_register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
         "uid"=>real_register.uid,
         "obis"=>real_register.obis,
@@ -76,6 +77,7 @@ describe "registers" do
         "decimal"=>2,
         "converter_constant"=>1,
         "low_power"=>false,
+        "label"=>virtual_register.label,
         "last_reading"=>Reading.by_register_id(virtual_register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(virtual_register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
         'group'=>nil
       }

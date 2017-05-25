@@ -28,4 +28,6 @@ class BaseRoda < Roda
   plugin :error_handler, &Buzzn::Roda::ErrorHandler.new
 
   plugin :drop_body
+
+  plugin :empty_root
 end

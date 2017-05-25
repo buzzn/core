@@ -11,6 +11,7 @@ module Register
                 :decimal,
                 :converter_constant,
                 :low_power,
+                :label,
                 :last_reading
 
     #has_one :address

@@ -178,7 +178,7 @@ module API
         get ":id/registers" do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
-            .registers
+            .registers_old
         end
 
 

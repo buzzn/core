@@ -11,14 +11,16 @@ class GroupRoda < BaseRoda
       r.run LocalpoolRoda
     end
 
-    r.get! do
+    groups = Group::BaseResource.all(current_user)
+    r.root do
+      # TODO use: groups.filter(r.params['filter'])
       Group::BaseResource.all(current_user, r.params['filter'])
     end
 
     r.on :id do |id|
 
+      # TODO use: group = groups.retrieve(id)
       group = Group::BaseResource.retrieve(current_user, id)
-
       r.get! do
         group
       end
@@ -31,16 +33,20 @@ class GroupRoda < BaseRoda
         aggregated(current_power.for_each_register_in_group(group))
       end
 
+      r.get! 'mentors' do
+        group.object.managers[0..1].collect do |m|
+          MentorResource.new(m)
+        end
+      end
+
+      r.get! 'registers' do
+        group.registers
+      end
+
       # deprecated
 
       r.get! 'meters' do
         group.meters
-      end
-
-      r.get! 'mentors' do
-        group.object.managers.collect do |m|
-          MentorResource.new(m)
-        end
       end
     end
   end

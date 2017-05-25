@@ -12,6 +12,7 @@ describe Group::BaseResource do
                            :managers,
                            :energy_producers,
                            :energy_consumers,
+                           :registers,
                            :updatable,
                            :deletable ] }
 

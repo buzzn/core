@@ -78,6 +78,7 @@ describe "meters" do
             "decimal"=>2,
             "converter_constant"=>1,
             "low_power"=>false,
+            "label"=>meter.input_register.label,
             "last_reading"=>0,
             "uid"=>meter.input_register.uid,
             "obis"=>meter.input_register.obis,
@@ -164,6 +165,7 @@ describe "meters" do
         "decimal"=>2,
         "converter_constant"=>1,
         "low_power"=>false,
+        "label"=>register.label,
         "last_reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
         "group"=>nil
       }
@@ -235,6 +237,7 @@ describe "meters" do
           "decimal"=>2,
           "converter_constant"=>1,
           "low_power"=>false,
+          "label"=>register.label,
           "last_reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
           "uid"=>register.uid,
           "obis"=>register.obis,

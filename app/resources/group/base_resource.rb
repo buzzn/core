@@ -11,7 +11,7 @@ module Group
 
     attributes :updatable, :deletable
 
-    #has_many :registers
+    has_many :registers
     has_many :meters
     has_many :managers
     has_many :energy_producers
@@ -22,7 +22,7 @@ module Group
       object.meters.collect { |m| Meter::BaseResource.new(m, current_user: @current_user) }
     end
 
-    def registers
+    def registers_old
       # note that anonymized_readable_by does inherit the readable
       # settings of the group
       object.registers

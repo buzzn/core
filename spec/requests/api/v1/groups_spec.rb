@@ -90,13 +90,13 @@ describe "groups" do
             "bank_accounts"=>[]
           }
         end,
-        "energy_producers"=>[],
-        "energy_consumers"=>[],
-        "localpool_processing_contract"=>nil,
-        "metering_point_operator_contract"=>nil,
-        "localpool_power_taker_contracts"=>[],
-        "prices"=>[],
-        "billing_cycles"=>[]
+#        "energy_producers"=>[],
+#        "energy_consumers"=>[],
+#        "localpool_processing_contract"=>nil,
+#        "metering_point_operator_contract"=>nil,
+#        "localpool_power_taker_contracts"=>[],
+#        "prices"=>[],
+#        "billing_cycles"=>[]
       }
     end
 
@@ -138,11 +138,11 @@ describe "groups" do
           type = :tribe
         else
           type = :localpool
-          rel["localpool_processing_contract"] = nil
-          rel["metering_point_operator_contract"] = nil
-          rel["localpool_power_taker_contracts"] = []
-          rel["prices"] = []
-          rel["billing_cycles"] = []
+#          rel["localpool_processing_contract"] = nil
+#          rel["metering_point_operator_contract"] = nil
+#          rel["localpool_power_taker_contracts"] = []
+#          rel["prices"] = []
+#          rel["billing_cycles"] = []
         end
         json = {
           "id"=>group.id,
@@ -186,8 +186,8 @@ describe "groups" do
             "bank_accounts"=>[]
             }
           end,
-          "energy_producers"=>[],
-          "energy_consumers"=>[]
+#          "energy_producers"=>[],
+#          "energy_consumers"=>[]
         }.merge(rel)
       end
     end
@@ -216,11 +216,11 @@ describe "groups" do
     end
 
     it '200' do
-      GET "/api/v1/groups/#{group.id}", user
+      GET "/api/v1/groups/#{group.id}?include=meters,managers", user
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq group_json.to_yaml
 
-      GET "/api/v1/groups/#{group.id}", admin
+      GET "/api/v1/groups/#{group.id}?include=meters,managers", admin
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq admin_group_json.to_yaml
     end
@@ -233,11 +233,11 @@ describe "groups" do
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq empty_json.to_yaml
 
-        GET "/api/v1/groups", user
+        GET "/api/v1/groups?include=meters,managers", user
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq groups_json.to_yaml
 
-        GET "/api/v1/groups", admin
+        GET "/api/v1/groups?include=meters,managers", admin
         expect(response).to have_http_status(200)
         expect(json.sort {|n,m| n['id'] <=> m['id']}.to_yaml).to eq admin_groups_json.sort {|n,m| n['id'] <=> m['id']}.to_yaml
       ensure
@@ -261,7 +261,7 @@ describe "groups" do
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq empty_json.to_yaml
 
-        GET "/api/v1/groups", user, filter: group.name
+        GET "/api/v1/groups?include=meters,managers", user, filter: group.name
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq groups_json.to_yaml
 
@@ -269,7 +269,7 @@ describe "groups" do
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq empty_json.to_yaml
 
-        GET "/api/v1/groups", admin, filter: group.name
+        GET "/api/v1/groups?include=meters,managers", admin, filter: group.name
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq filtered_admin_groups_json.to_yaml
       ensure
@@ -432,6 +432,7 @@ describe "groups" do
                     "decimal"=>register.decimal_digits,
                     "converter_constant"=>1,
                     "low_power"=>register.low_load_ability,
+                    "label"=>register.label,
                     "last_reading"=>0,
                     "uid"=>register.uid,
                     "obis"=>register.obis,
@@ -457,6 +458,7 @@ describe "groups" do
                   "decimal"=>nil,
                   "converter_constant"=>1,
                   "low_power"=>nil,
+                  "label"=>meter.register.label,
                   "last_reading"=>0
                 }
               end
