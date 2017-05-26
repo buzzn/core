@@ -100,32 +100,11 @@ module Buzzn::Localpool
         end
         consumption_third_party = total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY]
         grid_consumption = total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).value
-        grid_consumption_corrected = correct_grid_value(grid_consumption,
-                                                        grid_consumption,
-                                                        consumption_third_party,
-                                                        register_id_grid_consumption_corrected,
-                                                        Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED,
-                                                        total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp)
-        grid_feeding_corrected = correct_grid_value(total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).value,
-                                                    grid_consumption,
-                                                    consumption_third_party,
-                                                    register_id_grid_feeding_corrected,
-                                                    Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED,
-                                                    total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).last_reading.timestamp)
-        return grid_consumption_corrected, grid_feeding_corrected
-      end
-
-      # This method calculates the accounted energy for an energy value (both grid consumption and feeding) in dependency of the energy consumed by third party supplied
-      # input params:
-      #   value: The energy value in milliwatt_hour, that has to be corrected
-      #   consumption_third_party: The energy in milliwatt_hour, that has been consumed by all third party supplied in a LCP
-      #   label: The label for the accounted energy, may be Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED or Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED
-      #   corrected_value: the energy in milliwatt_hour that is used for the new reading
-      # returns:
-      #   accounted_energy: Object, that contains all information about accounted readings
-      def correct_grid_value(value, grid_consumption, consumption_third_party, register_id, label, timestamp)
-        corrected_value = grid_consumption - consumption_third_party > 0 ? value - consumption_third_party : 0
-        return create_corrected_reading(register_id, label, corrected_value, timestamp)
+        grid_consumption_corrected = grid_consumption - consumption_third_party > 0 ? grid_consumption - consumption_third_party : 0
+        grid_consumption_corrected_result = create_corrected_reading(register_id_grid_consumption_corrected, Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED, grid_consumption_corrected, total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp)
+        grid_feeding_corrected = grid_consumption - consumption_third_party > 0 ? total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).value : total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).value - grid_consumption + consumption_third_party
+        grid_feeding_corrected_result = create_corrected_reading(register_id_grid_feeding_corrected, Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED, grid_feeding_corrected, total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).last_reading.timestamp)
+        return grid_consumption_corrected_result, grid_feeding_corrected_result
       end
 
       # This method creates the new reading for a corrected register and returns the accounted energy for it
