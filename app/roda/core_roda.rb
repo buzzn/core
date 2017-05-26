@@ -1,8 +1,8 @@
 class CoreRoda < Roda
 
-  use Rack::Cors, debug: ENV['RACK_ENV'] != 'production'  do
+  use Rack::Cors, debug: ENV['RAILS_ENV'] != 'production'  do
     allow do
-      domains = case ENV['RACK_ENV']
+      domains = case ENV['RAILS_ENV']
                 when 'development', 'test'
                   %r(http://(localhost:[0-9]*|127.0.0.1:[0-9]*))
                 when 'staging'
@@ -10,7 +10,7 @@ class CoreRoda < Roda
                 when 'production'
                   %r(https://[a-z0-9]*.buzzn.io)
                 else
-                  raise "unknown rails environment: #{ENV['RACK_ENV']}"
+                  raise "unknown rails environment: #{ENV['RAILS_ENV']}"
                 end
       origins *domains
       ['/api/*'].each do |path|
