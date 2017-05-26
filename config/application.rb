@@ -26,9 +26,9 @@ module Buzzn
                 when 'production'
                   %r(https://[a-z0-9]*.buzzn.io)
                 else
-                  raisewarn 'unknown rails environment'
+                  raise 'unknown rails environment'
                 end
-      config.middleware.insert_before 0, 'Rack::Cors' do
+      config.middleware.insert_before 0, 'Rack::Cors', debug: Rails.env != 'production'  do
         allow do
           origins *domains
           ['/api/*', '/oauth/*'].each do |path|
