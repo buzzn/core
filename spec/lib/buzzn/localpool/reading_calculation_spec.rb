@@ -452,7 +452,7 @@ describe Buzzn::Localpool::ReadingCalculation do
     expect(result[Buzzn::AccountedEnergy::PRODUCTION_CHP]).to eq 10698696666
     expect(result[Buzzn::AccountedEnergy::DEMARCATION_CHP]).to eq 4905080000
     expect(result[Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED]).to eq 3631626666 - 410073913
-    expect(result[Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED]).to eq 10116106666 - 410073913
+    expect(result[Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED]).to eq 10116106666
     [Buzzn::AccountedEnergy::DEMARCATION_PV,
      Buzzn::AccountedEnergy::OTHER].each do |label|
       expect(result[label]).to eq 0
@@ -494,45 +494,6 @@ describe Buzzn::Localpool::ReadingCalculation do
     end
   end
 
-  it 'corrects grid value' do
-    meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
-                                          Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
-
-    # both grid_consumption and grid_feeding are greater than consumption_third_party_supplied
-    [Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED,
-     Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED].each do |label|
-      register_id = label == Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED ? meter.output_register.id : meter.input_register.id
-      size = Reading.all.by_register_id(register_id).size
-      result = Buzzn::Localpool::ReadingCalculation.correct_grid_value(10000000000, 10000000000, 3000000000, register_id, label, Time.new(2015, 12, 31).utc)
-      expect(Reading.all.by_register_id(register_id).size).to eq size + 1
-      expect(result.value).to eq 7000000000
-      expect(result.last_reading.energy_milliwatt_hour).to eq 7000000000
-      expect(result.label).to eq label
-      Reading.all.by_register_id(register_id).each { |reading| reading.delete }
-    end
-
-    # consumption_third_party_supplied is 0
-    [Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED,
-     Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED].each do |label|
-      register_id = label == Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED ? meter.output_register.id : meter.input_register.id
-      result = Buzzn::Localpool::ReadingCalculation.correct_grid_value(10000000000, 10000000000, 0, register_id, label, Time.new(2015, 12, 31).utc)
-      expect(result.value).to eq 10000000000
-      expect(result.last_reading.energy_milliwatt_hour).to eq 10000000000
-      expect(result.label).to eq label
-      Reading.all.by_register_id(register_id).each { |reading| reading.delete }
-    end
-
-    # consumption_third_party_supplied is greater than grid_consumption
-    [Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED,
-     Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED].each do |label|
-      register_id = label == Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED ? meter.output_register.id : meter.input_register.id
-      result = Buzzn::Localpool::ReadingCalculation.correct_grid_value(10000000000, 7000000000, 10000000000, register_id, label, Time.new(2015, 12, 31).utc)
-      expect(result.value).to eq 0
-      expect(result.last_reading.energy_milliwatt_hour).to eq 0
-      expect(result.label).to eq label
-    end
-  end
-
   it 'calculates the corrected grid values' do
     meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
                                           Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
@@ -547,13 +508,29 @@ describe Buzzn::Localpool::ReadingCalculation do
     total_accounted_energy.add(accounted_energy_grid_feeding)
     total_accounted_energy.add(accounted_energy_consumption_third_party)
 
+    # with more lsn than third party supplied
     size = Reading.all.size
     consumption_corrected, feeding_corrected = Buzzn::Localpool::ReadingCalculation.calculate_corrected_grid_values(total_accounted_energy, meter.input_register.id, meter.output_register.id)
     expect(Reading.all.size).to eq size + 2
     expect(consumption_corrected.value).to eq 7000000000
     expect(consumption_corrected.last_reading.energy_milliwatt_hour).to eq 7000000000
-    expect(feeding_corrected.value).to eq 7000000000
-    expect(feeding_corrected.last_reading.energy_milliwatt_hour).to eq 7000000000
+    expect(feeding_corrected.value).to eq 10000000000
+    expect(feeding_corrected.last_reading.energy_milliwatt_hour).to eq 10000000000
+
+    # with more third party supplied than lsn
+    accounted_energy_consumption_third_party_2 = Buzzn::AccountedEnergy.new(10000000000, Fabricate(:reading), Fabricate(:reading), Fabricate(:reading))
+    accounted_energy_consumption_third_party_2.label = Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY
+    total_accounted_energy.add(accounted_energy_consumption_third_party_2)
+    Reading.by_register_id(meter.input_register.id).each { |reading| reading.destroy }
+    Reading.by_register_id(meter.output_register.id).each { |reading| reading.destroy }
+
+    size = Reading.all.size
+    consumption_corrected, feeding_corrected = Buzzn::Localpool::ReadingCalculation.calculate_corrected_grid_values(total_accounted_energy, meter.input_register.id, meter.output_register.id)
+    expect(Reading.all.size).to eq size + 2
+    expect(consumption_corrected.value).to eq 0
+    expect(consumption_corrected.last_reading.energy_milliwatt_hour).to eq 0
+    expect(feeding_corrected.value).to eq 13000000000
+    expect(feeding_corrected.last_reading.energy_milliwatt_hour).to eq 13000000000
 
     # does not calculate corrected grid values
     expect{ Buzzn::Localpool::ReadingCalculation.calculate_corrected_grid_values(total_accounted_energy, nil, nil) }.to raise_error ArgumentError
@@ -561,7 +538,6 @@ describe Buzzn::Localpool::ReadingCalculation do
     expect{ Buzzn::Localpool::ReadingCalculation.calculate_corrected_grid_values(total_accounted_energy, nil, "some-register-id") }.to raise_error ArgumentError
   end
 
-  # TODO: broken test!
   it 'gets missing reading' do |spec|
     meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
                                           Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
