@@ -34,7 +34,7 @@ Fabricator :energy_mix_buzzn, from: :energy_classification do
   other_renewables_ratio { 0.1 }
   co2_emission_gramm_per_kWh { 131.0 }
   nuclear_waste_miligramm_per_kWh { 0.03 }
-  organization { Organization.buzzn_gmbh }
+  organization { Organization.buzzn_energy }
 end
 
 Fabricator :sulz_supplier_mix, from: :energy_classification do
