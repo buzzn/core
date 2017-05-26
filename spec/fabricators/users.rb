@@ -52,6 +52,11 @@ Fabricator :felix, from: :user do
   profile             { Fabricate(:profile_felix) }
 end
 
+Fabricator :ralf, from: :user do
+  email               'ralf@buzzn.net'
+  profile             { Fabricate(:profile_ralf) }
+end
+
 Fabricator :justus, from: :user do
   email       'justus@buzzn.net'
   profile     { Fabricate(:profile_justus) }

@@ -48,7 +48,7 @@ Fabricate(:discovergy)
 Fabricate(:mysmartgrid)
 
 
-buzzn_team_names = %w[ felix justus danusch thomas stefan philipp christian kristian pavel eva ]
+buzzn_team_names = %w[ felix justus danusch thomas stefan philipp christian kristian pavel eva ralf ]
 buzzn_team = []
 buzzn_team_names.each do |user_name|
   puts "  #{user_name}"
@@ -139,6 +139,8 @@ buzzn_team_names.each do |user_name|
     meter = Fabricate(:easymeter_60232499)
     root_register = meter.input_register
     user.add_role :admin # thomas is admin
+  when 'ralf'
+    user.add_role :admin
   when 'kristian'
     root_register = Fabricate(:input_meter).input_register
     user.add_role :admin # kristian is admin
