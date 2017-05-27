@@ -18,6 +18,7 @@ class LocalpoolRoda < BaseRoda
       end
 
       r.on 'registers' do
+        shared[:registers] = localpool.registers
         r.run RegisterRoda
       end
 

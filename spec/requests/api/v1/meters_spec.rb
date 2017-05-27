@@ -81,9 +81,7 @@ describe "meters" do
             "label"=>meter.input_register.label,
             "last_reading"=>0,
             "uid"=>meter.input_register.uid,
-            "obis"=>meter.input_register.obis,
-            "group"=>nil,
-            "devices"=>[]
+            "obis"=>meter.input_register.obis
           }
         ]
       }

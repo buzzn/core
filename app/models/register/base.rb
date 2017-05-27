@@ -106,6 +106,12 @@ module Register
     scope :inputs, -> { where(type: Register::Input) }
     scope :outputs, -> { where(type: Register::Output) }
 
+    scope :consumption_production, -> do
+      by_label(Register::Base::CONSUMPTION,
+               Register::Base::PRODUCTION_PV,
+               Register::Base::PRODUCTION_CHP)
+    end
+
     scope :non_privates, -> { where("readable in (?)", ["world", "community", "friends"]) }
     scope :privates, -> { where("readable in (?)", ["members"]) }
 

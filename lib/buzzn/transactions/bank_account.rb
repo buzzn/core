@@ -14,7 +14,7 @@ Buzzn::Transaction.define do |t|
 
   t.define(:create_bank_account) do
     validate :create_bank_account_schema
-    step :resource, with: :create_nested_resource
+    step :resource, with: :nested_resource
   end
 
   t.define(:update_bank_account) do

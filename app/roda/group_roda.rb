@@ -1,9 +1,13 @@
 require_relative 'plugins/aggregation'
 class GroupRoda < BaseRoda
 
-  include Import.args[:env, 'transaction.group_charts', 'service.current_power']
+  include Import.args[:env,
+                      'transaction.scores',
+                      'transaction.group_charts',
+                      'service.current_power']
 
   plugin :aggregation
+  plugin :shared_vars
 
   route do |r|
     
@@ -40,13 +44,22 @@ class GroupRoda < BaseRoda
       end
 
       r.get! 'registers' do
-        group.registers
+        shared[:registers] = group.registers.consumption_production
+        r.run RegisterRoda
+      end
+
+      r.get! 'scores' do
+        scores.call(r.params, resource: [group.method(:scores)])
       end
 
       # deprecated
 
       r.get! 'meters' do
         group.meters
+      end
+
+      r.get! 'managers' do
+        group.managers
       end
     end
   end

@@ -35,10 +35,8 @@ module Group
 
     # API methods for endpoints
 
-    def scores(params)
-      interval = params[:interval]
-      timestamp = params[:timestamp] || Time.current
-      mode = params[:mode]
+    def scores(interval:, mode: nil, timestamp: Time.current)
+      #binding.pry
       if timestamp > Time.current.beginning_of_day
         timestamp = timestamp - 1.day
       end
@@ -48,7 +46,7 @@ module Group
       if mode
         result = result.send(mode.to_s.pluralize.to_sym)
       end
-      result.readable_by(@current_user)
+      result.readable_by(@current_user).collect { |s| ScoreResource.new(s) }
     end
 
     def members

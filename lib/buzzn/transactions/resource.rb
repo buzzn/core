@@ -13,7 +13,7 @@ Buzzn::Transaction.define do |t|
     end
   end
 
-  t.register_step(:create_nested_resource) do |input, method|
+  t.register_step(:nested_resource) do |input, method|
     Dry::Monads.Right(method.call(input))
   end
 end

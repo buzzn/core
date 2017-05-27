@@ -86,8 +86,7 @@ describe "groups" do
             "phone"=>manager.profile.phone,
             "email"=>manager.email,
             "updatable"=>true,
-            "deletable"=>true,
-            "bank_accounts"=>[]
+            "deletable"=>true
           }
         end,
 #        "energy_producers"=>[],
@@ -182,12 +181,9 @@ describe "groups" do
             "phone"=>manager.profile.phone,
             "email"=>manager.email,
             "updatable"=>true,
-            "deletable"=>true,
-            "bank_accounts"=>[]
+            "deletable"=>true
             }
           end,
-#          "energy_producers"=>[],
-#          "energy_consumers"=>[]
         }.merge(rel)
       end
     end
@@ -435,17 +431,7 @@ describe "groups" do
                     "label"=>register.label,
                     "last_reading"=>0,
                     "uid"=>register.uid,
-                    "obis"=>register.obis,
-                    "group"=> {
-                      "id"=>group.id,
-                      "type"=>"group_#{group.is_a?(Group::Tribe)?'tribe':'localpool'}",
-                      "name"=>group.name,
-                      "description"=>group.description,
-                      "readable"=>group.readable,
-                      'updatable'=>true,
-                      'deletable'=>true
-                    },
-                    "devices"=>[]
+                    "obis"=>register.obis
                   }
                 end
               else

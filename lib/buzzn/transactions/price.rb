@@ -16,7 +16,7 @@ Buzzn::Transaction.define do |t|
 
   t.define(:create_price) do
     validate :create_price_schema
-    step :resource, with: :create_nested_resource
+    step :resource, with: :nested_resource
   end
 
   t.define(:update_price) do

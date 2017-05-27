@@ -14,7 +14,7 @@ Buzzn::Transaction.define do |t|
 
   t.define(:create_billing_cycle) do
     validate :create_billing_cycle_schema
-    step :resource, with: :create_nested_resource
+    step :resource, with: :nested_resource
   end
 
   t.define(:update_billing_cycle) do

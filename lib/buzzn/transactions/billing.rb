@@ -12,7 +12,7 @@ Buzzn::Transaction.define do |t|
 
   t.define(:create_regular_billings) do
     validate :create_regular_billings_schema
-    step :resource, with: :create_nested_resource
+    step :resource, with: :nested_resource
   end
 
   t.define(:update_billing) do

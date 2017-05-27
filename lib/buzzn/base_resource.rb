@@ -32,6 +32,18 @@ module Buzzn
       def size
         @enum.size
       end
+
+      def method_missing(method, *args)
+        if @enum.respond_to?(method)
+          @enum = @enum.send(method, *args)
+        else
+          super
+        end
+      end
+
+      def respond_to?(method)
+        @enum.respond_to?(method) || super
+      end
     end
 
     attr_reader :current_user
