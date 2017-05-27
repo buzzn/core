@@ -4,8 +4,10 @@ MAINTAINER admin@buzzn.net
 # Install apt based dependencies required to run Rails as
 # well as RubyGems. As the Ruby image itself is based on a
 # Debian image, we use apt-get to install those.
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && \
+  apt-get install -y \
   build-essential \
+  imagemagick \
   nodejs
 
 # Configure the main working directory. This is the base
@@ -19,7 +21,8 @@ WORKDIR /app
 # will be cached unless changes to one of those two files
 # are made.
 COPY Gemfile Gemfile.lock ./
-RUN gem install bundler && bundle install --jobs 20 --retry 5 --without development test
+RUN gem install bundler && \
+    bundle install --jobs 20 --retry 5
 
 # Set Rails to run in production
 ENV RAILS_ENV production
@@ -28,12 +31,12 @@ ENV RACK_ENV production
 # Copy the main application.
 COPY . ./
 
-# Precompile Rails assets
-# RUN bundle exec rake assets:precompile
-
 # Expose port 3000 to the Docker host, so we can access it
 # from the outside.
 EXPOSE 3000
+
+# Precompile Rails assets NOT WORKING
+RUN bundle exec rake assets:precompile
 
 # Configure an entry point, so we don't need to specify
 # "bundle exec" for each of our commands.
