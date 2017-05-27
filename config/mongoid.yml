@@ -1,30 +1,21 @@
-development:
+default: &default
   clients:
     default:
-      database: buzzn_development
+      database: buzzn
       hosts:
         - <%= ENV['MONGO_HOST'] %>:27017
       options:
   options:
     preload_models: true
 
-production:
-  clients:
-    default:
-      database: buzzn_production
-      hosts:
-        - <%= ENV['MONGO_HOST'] %>:27017
-      options:
-  options:
-    preload_models: true
+development:
+  <<: *default
 
 test:
-  clients:
-    default:
-      database: buzzn_test
-      hosts:
-        - <%= ENV['MONGO_HOST'] %>:27017
-      options:
-        read:
-          mode: :primary
-        max_pool_size: 1
+  <<: *default
+
+staging:
+  <<: *default
+
+production:
+  <<: *default

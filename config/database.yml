@@ -4,6 +4,9 @@ default: &default
   pool: 15
   checkout_timeout: 1
   reaping_frequency: 60
+  username: postgres
+  host: <%= ENV['POSTGRES_HOST'] || 'localhost' %>
+  port: <%= ENV['POSTGRES_PORT'] || '5432' %>
 
 development:
   <<: *default
@@ -13,9 +16,10 @@ test:
   <<: *default
   database: buzzn_test
 
+staging:
+  <<: *default
+  database: buzzn_staging
+
 production:
   <<: *default
   database: buzzn_production
-  username: postgres
-  host: <%= ENV['POSTGRES_HOST'] %>
-  port: <%= ENV['POSTGRES_PORT'] %>
