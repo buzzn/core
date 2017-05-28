@@ -8,8 +8,6 @@ volumes:
     driver: local
   mongodb:
     driver: local
-  core_logs:
-    driver: local
 
 services:
 
@@ -22,9 +20,6 @@ services:
       - redis
       - mongo
     environment:
-      RAILS_ENV: production
-      RACK_ENV: production
-      SECRET_KEY_BASE: 4302a93016c91a2074f05c247570bd12a604c3368d711861df1cbab4b967d81796562097aad566f12016a721a6f461a1cd376a94f826721ab6fb8b483c5b8b81
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       MONGO_HOST: mongo
@@ -32,9 +27,6 @@ services:
       ASSET_HOST: http://localhost:3000
       ATTR_ENCRYPTED_KEY: This is a salt for your soup
       REDIS_HOST: redis
-    volumes:
-      - .:/app
-      - core_logs:/app/log
 
   postgres:
     image: postgres:9.4.12-alpine
