@@ -1,12 +1,12 @@
 default: &default
-  adapter: postgresql
+  adapter: <%= ENV['DB_ADAPTER'] ||= 'postgresql' %>
+  host: <%= ENV['DB_HOST'] ||= 'localhost' %>
+  port: <%= ENV['DB_PORT'] ||= '5432' %>
+  username: <%= ENV['DB_USER'] %>
   encoding: unicode
   pool: 15
   checkout_timeout: 1
   reaping_frequency: 60
-  username: postgres
-  host: <%= ENV['POSTGRES_HOST'] || 'localhost' %>
-  port: <%= ENV['POSTGRES_PORT'] || '5432' %>
 
 development:
   <<: *default
