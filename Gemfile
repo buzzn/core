@@ -34,6 +34,7 @@ gem 'therubyracer'
 gem 'uglifier'
 gem 'money-rails'
 gem 'pg'
+gem 'activerecord-nulldb-adapter'
 gem 'sinatra'
 gem 'mongoid'
 gem 'moped'
@@ -93,6 +94,7 @@ gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
 gem 'dotenv-rails'
+
 
 group :production, :staging do
   gem 'newrelic_rpm'
