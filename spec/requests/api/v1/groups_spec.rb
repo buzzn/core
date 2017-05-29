@@ -188,7 +188,7 @@ describe "groups" do
       end
     end
 
-    it '403' do
+    xit '403' do
       begin
         localpool.update(readable: :member)
         GET "/api/v1/groups/#{localpool.id}"
@@ -277,7 +277,7 @@ describe "groups" do
   context 'mentors' do
 
     context 'GET' do
-      it '403' do
+      xit '403' do
         begin
           localpool.update(readable: :member)
           GET "/api/v1/groups/#{localpool.id}/mentors"
@@ -335,7 +335,7 @@ describe "groups" do
   context 'meters' do
 
     context 'GET' do
-      it '403' do
+      xit '403' do
         begin
           localpool.update(readable: :member)
           GET "/api/v1/groups/#{localpool.id}/meters"

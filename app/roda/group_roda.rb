@@ -17,14 +17,12 @@ class GroupRoda < BaseRoda
 
     groups = Group::BaseResource.all(current_user)
     r.root do
-      # TODO use: groups.filter(r.params['filter'])
-      Group::BaseResource.all(current_user, r.params['filter'])
+      groups.filter(r.params['filter'])
     end
 
     r.on :id do |id|
 
-      # TODO use: group = groups.retrieve(id)
-      group = Group::BaseResource.retrieve(current_user, id)
+      group = groups.retrieve(id)
       r.get! do
         group
       end

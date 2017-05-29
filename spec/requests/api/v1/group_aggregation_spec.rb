@@ -47,7 +47,7 @@ describe "groups" do
     {
       "errors" => [
         {
-          "detail"=>"retrieve Group::Base: permission denied for User: --anonymous--"
+          "detail"=>"Group::Base: #{group.id} not found"
         }
       ]
     }
@@ -111,11 +111,11 @@ describe "groups" do
 
     context 'GET' do
 
-      it '403' do
+      it '404 permission denied' do
         begin
           group.update(readable: :members)
           GET "/api/v1/groups/#{group.id}/bubbles"
-          expect(response).to have_http_status(403)
+          expect(response).to have_http_status(404)
           expect(json).to eq denied_json
         ensure
           group.update(readable: :world)
@@ -320,11 +320,11 @@ describe "groups" do
         expect(json).to eq invalid_json
       end
 
-      it '403' do
+      it '404 permission denied' do
         begin
           group.update(readable: :members)
           GET "/api/v1/groups/#{group.id}/charts", nil, duration: :day
-          expect(response).to have_http_status(403)
+          expect(response).to have_http_status(404)
           expect(json).to eq denied_json
         ensure
           group.update(readable: :world)
