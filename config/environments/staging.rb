@@ -86,7 +86,4 @@ Buzzn::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   # config.log_formatter = ::Logger::Formatter.new
-  config.lograge.enabled = true
-  config.lograge.formatter = Lograge::Formatters::KeyValue.new
-
 end
