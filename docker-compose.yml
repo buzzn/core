@@ -13,7 +13,7 @@ services:
 
   core_web:
     build: .
-    # command: rake db:init # this is a service for initilizing the seeds
+    # command: bundle exec rake db:init # this is a service for initilizing the seeds
     ports:
       - "3000:3000"
     depends_on:
