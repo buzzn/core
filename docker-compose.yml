@@ -11,22 +11,25 @@ volumes:
 
 services:
 
-  core:
+  core_web:
     build: .
+    # command: rake db:init # this is a service for initilizing the seeds
     ports:
       - "3000:3000"
     depends_on:
       - postgres
       - redis
       - mongo
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
-      MONGO_HOST: mongo
-      HOSTNAME: http://localhost:3000
-      ASSET_HOST: http://localhost:3000
-      ATTR_ENCRYPTED_KEY: This is a salt for your soup
-      REDIS_HOST: redis
+    env_file: .env.docker
+
+  core_worker:
+    build: .
+    command: bash -c "bundle exec rake db:migrate && bundle exec whenever --update-crontab && bundle exec sidekiq"
+    depends_on:
+      - postgres
+      - redis
+      - mongo
+    env_file: .env.docker
 
   postgres:
     image: postgres:9.4.12-alpine
