@@ -14,6 +14,7 @@ RUN apt-get update && \
   apt-get install -y \
   build-essential \
   imagemagick \
+  cron \
   nodejs
 
 # Configure the main working directory. This is the base
@@ -42,14 +43,7 @@ RUN bundle exec rake assets:precompile -t
 # from the outside.
 EXPOSE 3000
 
-
-
-# Configure an entry point, so we don't need to specify
-# "bundle exec" for each of our commands.
-ENTRYPOINT ["bundle", "exec"]
-
-
 # The main command to run when the container starts. Also
 # tell the Rails dev server to bind to all interfaces by
 # default.
-CMD ["puma", "-C", "config/puma.rb"]
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
