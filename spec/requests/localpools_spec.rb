@@ -14,7 +14,7 @@ describe "localpools" do
     {
       "errors" => [
         {
-          "detail"=>"Group::Localpool: #{localpool.id} not found by User: #{user.resource_owner_id}"
+          "detail"=>"Group::Localpool: #{localpool.id} not found by User: #{other.resource_owner_id}"
         }
       ]
     }
@@ -24,7 +24,7 @@ describe "localpools" do
     {
       "errors" => [
         {
-          "detail"=>"Group::LocalpoolResource: bla-blub not found by User: #{admin.resource_owner_id}" }
+          "detail"=>"Group::Localpool: bla-blub not found by User: #{admin.resource_owner_id}" }
       ]
     }
   end
@@ -86,15 +86,7 @@ describe "localpools" do
           "updatable"=>true,
           "deletable"=>true,
         }
-      end,
-      "managers"=>[],
-      "energy_producers"=>[],
-      "energy_consumers"=>[],
-      "localpool_processing_contract"=>nil,
-      "metering_point_operator_contract"=>nil,
-      "localpool_power_taker_contracts"=>[],
-      "prices"=>[],
-      "billing_cycles"=>[]
+      end
     }
   end
 
@@ -112,7 +104,7 @@ describe "localpools" do
     end
 
     it '200' do
-      GET "/#{localpool_no_contracts.id}", admin
+      GET "/#{localpool_no_contracts.id}", admin, include: :meters
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq localpool_json.to_yaml
     end
@@ -262,7 +254,7 @@ describe "localpools" do
       end
 
       it '200' do
-        GET "/#{localpool.id}/localpool-processing-contract", admin
+        GET "/#{localpool.id}/localpool-processing-contract", admin, include: 'tariffs,payments,contractor,customer,signing_user,customer_bank_account,contractor_bank_account'
         expect(json.to_yaml).to eq processing_json.to_yaml
         expect(response).to have_http_status(200)
 
@@ -388,7 +380,7 @@ describe "localpools" do
       end
 
       it '200' do
-        GET "/#{localpool.id}/metering-point-operator-contract", admin
+        GET "/#{localpool.id}/metering-point-operator-contract", admin, include: 'tariffs,payments,contractor,customer,signing_user,customer_bank_account,contractor_bank_account'
 
         expect(json.to_yaml).to eq metering_point_json.to_yaml
         expect(response).to have_http_status(200)
@@ -516,7 +508,7 @@ describe "localpools" do
       end
       
       it "200" do
-        GET "/#{localpool.id}/managers", admin
+        GET "/#{localpool.id}/managers", admin, include: :bank_accounts
           
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(managers_json.to_yaml)

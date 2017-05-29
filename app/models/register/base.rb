@@ -51,8 +51,17 @@ module Register
 
     has_many :scores, as: :scoreable
 
-    # TODO ???
-    accepts_nested_attributes_for :contracts
+    # permissions helpers
+
+    scope :restricted, ->(uuids) { joins(:contracts).where('contracts.id': uuids) }
+
+    scope :input,->() { where(mode: 'in') }
+
+    scope :output,->() { where(mode: 'out') }
+
+    scope :real,->() { where(type: [Register::Input, Register::Output]) }
+
+    scope :virtual,->() { where(type: Register::Virtual) }
 
     def data_source
       Buzzn::MissingDataSource.name

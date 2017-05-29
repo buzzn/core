@@ -146,7 +146,7 @@ describe "contracts" do
 
       context "as #{type}" do
         it '200' do
-          GET "/api/v1/contracts/#{contract.id}", admin
+          GET "/api/v1/contracts/#{contract.id}", admin, include: 'tariffs,payments,contractor,customer,signing_user,customer_bank_account,contractor_bank_account'
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq contract_json.to_yaml
         end
@@ -217,7 +217,7 @@ describe "contracts" do
 
           it '200' do
             contract = send "#{type}_contract"
-            GET "/api/v1/contracts/#{contract.id}/customer", admin
+            GET "/api/v1/contracts/#{contract.id}/customer", admin, include: :bank_accounts
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq(send("#{type}_customer_json").to_yaml)
           end
@@ -291,7 +291,7 @@ describe "contracts" do
           it '200' do
             contract = send "#{type}_contract"
 
-            GET "/api/v1/contracts/#{contract.id}/contractor", admin
+            GET "/api/v1/contracts/#{contract.id}/contractor", admin, include: 'address,bank_accounts'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq(send("#{type}_contractor_json").to_yaml)
           end

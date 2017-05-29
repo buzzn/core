@@ -26,16 +26,14 @@ module Buzzn
         super
         define_method method do
           if permissions
-            Buzzn::ResourceCollection.new(object.send(method),
-                                          self.class.method(:to_resource),
-                                          current_user,
-                                          { '*' => current_roles },
-                                          permissions)
+            perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
+            all_allowed(perms, object.send(method))
           else
+            # TOOO remove deprecated
             Buzzn::ResourceCollection.new(object.send(method)
                                            .readable_by(current_user),
                                           self.class.method(:to_resource),
-                                          current_user, {}, permissions)
+                                          current_user, [], permissions)
           end
         end
       end
@@ -45,7 +43,7 @@ module Buzzn
         # raise PermissionsDenied or RecordNotFound when not found
         define_method "#{method}!" do
           if permissions
-            perms = permissions.send(method)
+            perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
             if allowed?(perms.retrieve)
               if result = object.send(method)
                 self.class.to_resource(current_user, current_roles, perms,
@@ -75,7 +73,9 @@ module Buzzn
         # deliver result if permissions allow otherwise nil
         define_method method do
           if permissions
-            perms = permissions.send(method)
+            puts method
+
+            perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
             if allowed?(perms.retrieve) && (result = object.send(method))
               self.class.to_resource(current_user, current_roles, perms,
                                      result)
@@ -121,13 +121,13 @@ module Buzzn
           perms = permissions
         end
         if perms
-          result ||= get(user, id)
-          roles = roles(user, id)
-          if allowed?(roles, perms.retrieve)
+          if roles = allowed_roles(user, perms.retrieve, id)
+            result ||= get(user, id)
             to_resource(user, roles, perms, result,
                         abstract? ? nil : self)
           else
-            raise Buzzn::PermissionDenied.new(self, :retrieve, user)
+            result ||= (get(user, id) rescue self)
+            raise Buzzn::PermissionDenied.new(result, :retrieve, user)
           end
         else
           # TODO remove legacy
@@ -136,37 +136,34 @@ module Buzzn
         end
       end
 
-      def bound_resources(user, perms)
-        # use uuid as they are globally unique
-        user.roles.where('resource_type IS NOT NULL and name IN (?)', perms).select(:resource_id)
-      end
-
-      def unbound_roles(user, perms)
-        user.roles.where('resource_id IS NULL and name IN (?)', perms).select(1)
-      end
-
-      def all_allowed(user, perms, enum, id_field = 'id')
-        enum = enum.where("#{id_field} IN (?) or EXISTS (?)",
-                          bound_resources(user, perms),
-                          unbound_roles(user, perms))
+      def all_allowed(user, roles, perms, enum)
+        if user.nil?
+          if allowed?([:anonymous], perms)
+            enum
+          else
+            enum.where('1=2') # deliver an empty AR relation
+          end
+        elsif allowed?([:anonymous] | roles | user.unbound_rolenames, perms)
+          enum
+        else
+          enum.restricted(user.uuids_for(perms))
+        end
       end
 
       def all(user, filter = nil)
         if permissions
-          if user
-            enum = all_allowed(user, permissions.retrieve, model.filter(filter))
-          end
-          Buzzn::ResourceCollection.new(enum || [],
+          raise 'filter not allowed' if filter
+          enum = all_allowed(user, [], permissions.retrieve, model.all)
+          unbound = [:anonymous]
+          unbound += user.unbound_rolenames if user
+          Buzzn::ResourceCollection.new(enum,
                                         method(:to_resource),
                                         user,
-                                        roles_map(user),
+                                        unbound,
                                         permissions)
         else
           # TODO remove deprecated code
-          result = model.readable_by(user)
-          if filter
-            result = result.filter(filter)
-          end
+          result = model.readable_by(user).filter(filter)
           result.collect do |r|
             # highly inefficient but needed to pass in permissions
             # is deprecated any ways
@@ -184,6 +181,16 @@ module Buzzn
       end
 
       private
+
+      def allowed_roles(user, perms, id = nil)
+        return false unless user
+        roles = id ? user.rolenames_for(id) : user.unbound_rolenames
+        if (roles & perms).empty?
+          false
+        else
+          roles
+        end
+      end
 
       def allowed?(roles, perms)
         (roles & perms).size > 0
@@ -204,6 +211,7 @@ module Buzzn
         @permissions
       end
 
+      ANONYMOUS = { '*' => :* }.freeze
       def roles_map(user)
         result = {}
         if user
@@ -212,22 +220,10 @@ module Buzzn
             .each do |r|
             (result[r.resource_id || '*'] ||= []) << r.name.to_sym
           end
+        else
+          result = ANONYMOUS
         end
         result
-      end
-
-      def roles(user, id = nil)
-        if user
-          roles =
-            if id
-              user.roles.where('resource_id = ? or resource_id IS NULL', id)
-            else
-              user.roles.where('resource_id IS NULL')
-            end
-          roles.select(:name).collect { |r| r.name.to_sym }
-        else
-          []
-        end
       end
 
       def find_resource_class(clazz)
@@ -252,7 +248,7 @@ module Buzzn
       Buzzn::ResourceCollection.new(enum,
                                     self.class.method(:to_resource),
                                     current_user,
-                                    { '*' => current_roles },
+                                    current_roles,
                                     perms)
     end
 
@@ -260,16 +256,14 @@ module Buzzn
       self.class.to_resource(current_user, current_roles, perms, instance)
     end
 
-    def allowed?(perms)
-      self.class.send(:allowed?, current_roles, perms)
+    def allowed?(perms, roles = current_roles)
+      self.class.send(:allowed?, roles, perms)
     end
 
-    def all_allowed(perms, enum, id_field = 'id')
-      self.class.all_allowed(current_user, perms, enum, id_field)
-    end
-
-    def unbound_roles(perms)
-      self.class.unbound_roles(current_user, perms)
+    def all_allowed(perms, enum)
+      result = self.class.all_allowed(current_user, current_roles,
+                                      perms.retrieve, enum)
+      to_collection(result, perms)
     end
 
     alias :to_h :serializable_hash

@@ -137,6 +137,8 @@ describe Group::BaseResource do
                     :metering_point_operator_contract,
                     :localpool_power_taker_contracts,
                     :prices,
+                    :users,
+                    :contracts,
                     :billing_cycles]
       json = Group::BaseResource.retrieve(user, localpool.id).to_h
       expect(json.keys & attributes).to match_array attributes

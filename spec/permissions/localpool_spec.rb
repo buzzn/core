@@ -17,6 +17,7 @@ describe Group::LocalpoolPermissions do
   entity(:localpool_member) { Fabricate(:user) }
   entity(:localpool_member2) { Fabricate(:user) }
   entity(:localpool_member3) { Fabricate(:user) }
+  entity(:localpool_member4) { Fabricate(:user) }
   entity(:user) { Fabricate(:user) }
   let(:anonymous) { nil }
 
@@ -33,8 +34,19 @@ describe Group::LocalpoolPermissions do
     localpool_owner.add_role(:localpool_owner, pool)
     localpool_manager.add_role(:localpool_manager, pool)
     localpool_member3.add_role(:localpool_member, pool)
+    localpool_member4.add_role(:localpool_member, pool)
+    meter = Fabricate(:input_meter)
+    # HACK as meter.input_register.group = pool does not work
+    meter.input_register.update(group_id: pool.id)
+    Fabricate(:localpool_power_taker_contract,
+              localpool: pool,
+              customer: localpool_member3,
+              register: meter.input_register)
     pool
   end
+  let(:contract) { localpool2.localpool_power_taker_contracts.first }
+  let(:register) { localpool2.registers.real.input.first }
+
   entity!(:mpoc) { Fabricate(:metering_point_operator_contract,
                              localpool: localpool2) }
   entity!(:lpc) { Fabricate(:localpool_processing_contract,
@@ -133,8 +145,9 @@ describe Group::LocalpoolPermissions do
 
       expect(prices(localpool_owner, localpool2.id)).to match_array localpool2.prices.reload
       expect(prices(localpool_manager, localpool2.id)).to match_array localpool2.prices.reload
+      expect(prices(localpool_member, localpool1.id)).to match_array []
 
-      expect{ prices(localpool_member, localpool1.id) }.to raise_error Buzzn::PermissionDenied
+      expect{ prices(localpool_member, localpool2.id) }.to raise_error Buzzn::PermissionDenied
     end
 
     it 'create' do
@@ -341,5 +354,93 @@ describe Group::LocalpoolPermissions do
 
       expect{ Group::LocalpoolResource.retrieve(localpool_manager, localpool2.id).localpool_processing_contract.delete }.to raise_error Buzzn::PermissionDenied
     end
+  end
+
+  context 'registers' do
+
+    def registers(user, id)
+      Group::LocalpoolResource.retrieve(user, id).registers.collect do |l|
+        l.object
+      end
+    end
+
+    it 'all' do
+      expect(registers(buzzn_operator, localpool1.id)).to match_array localpool1.registers.reload
+      expect(registers(buzzn_operator, localpool2.id)).to match_array localpool2.registers.reload
+
+      expect(registers(localpool_owner, localpool2.id)).to match_array localpool2.registers.reload
+      expect(registers(localpool_manager, localpool2.id)).to match_array localpool2.registers.reload
+      expect(registers(localpool_member, localpool1.id)).to match_array []
+
+      expect(registers(localpool_member3, localpool2.id)).to match_array localpool2.registers.input.real
+      
+      expect(registers(localpool_member4, localpool2.id)).to match_array []
+
+      expect{ registers(localpool_member, localpool2.id) }.to raise_error Buzzn::PermissionDenied
+    end
+
+    it 'update' do
+      expect{ registers(buzzn_operator, localpool2.id).first.update({}) }.not_to raise_error
+    
+      expect{ registers(localpool_owner, localpool2.id).first.update({}) }.not_to raise_error
+
+      expect{ registers(localpool_manager, localpool2.id).first.update({}) }.not_to raise_error
+    end
+
+    it 'retrieve' do
+      expect(Group::LocalpoolResource.retrieve(buzzn_operator, localpool2.id).registers.retrieve(register.id).object).to eq register
+
+      expect(Group::LocalpoolResource.retrieve(localpool_owner, localpool2.id).registers.retrieve(register.id).object).to eq register
+
+      expect(Group::LocalpoolResource.retrieve(localpool_manager, localpool2.id).registers.retrieve(register.id).object).to eq register
+
+      expect(Group::LocalpoolResource.retrieve(localpool_member3, localpool2.id).registers.retrieve(register.id).object).to eq register
+
+      expect{ Group::LocalpoolResource.retrieve(localpool_member4, localpool2.id).registers.retrieve(register.id) }.to raise_error Buzzn::PermissionDenied
+    end  
+  end
+
+  context 'localpool_power_taker_contracts' do
+
+    def localpool_power_taker_contracts(user, id)
+      Group::LocalpoolResource.retrieve(user, id).localpool_power_taker_contracts.collect do |l|
+        l.object
+      end
+    end
+
+    it 'all' do
+      expect(localpool_power_taker_contracts(buzzn_operator, localpool1.id)).to match_array localpool1.localpool_power_taker_contracts.reload
+      expect(localpool_power_taker_contracts(buzzn_operator, localpool2.id)).to match_array localpool2.localpool_power_taker_contracts.reload
+
+      expect(localpool_power_taker_contracts(localpool_owner, localpool2.id)).to match_array localpool2.localpool_power_taker_contracts.reload
+      expect(localpool_power_taker_contracts(localpool_manager, localpool2.id)).to match_array localpool2.localpool_power_taker_contracts.reload
+      expect(localpool_power_taker_contracts(localpool_member, localpool1.id)).to match_array []
+
+      expect(localpool_power_taker_contracts(localpool_member3, localpool2.id)).to match_array localpool2.localpool_power_taker_contracts
+      
+      expect(localpool_power_taker_contracts(localpool_member4, localpool2.id)).to match_array []
+
+      expect{ localpool_power_taker_contracts(localpool_member, localpool2.id) }.to raise_error Buzzn::PermissionDenied
+    end
+
+    it 'update' do
+      expect{ localpool_power_taker_contracts(buzzn_operator, localpool2.id).first.update({}) }.not_to raise_error
+    
+      expect{ localpool_power_taker_contracts(localpool_owner, localpool2.id).first.update({}) }.not_to raise_error
+
+      expect{ localpool_power_taker_contracts(localpool_manager, localpool2.id).first.update({}) }.not_to raise_error
+    end
+
+    it 'retrieve' do
+      expect(Group::LocalpoolResource.retrieve(buzzn_operator, localpool2.id).localpool_power_taker_contracts.retrieve(contract.id).object).to eq contract
+
+      expect(Group::LocalpoolResource.retrieve(localpool_owner, localpool2.id).localpool_power_taker_contracts.retrieve(contract.id).object).to eq contract
+
+      expect(Group::LocalpoolResource.retrieve(localpool_manager, localpool2.id).localpool_power_taker_contracts.retrieve(contract.id).object).to eq contract
+
+      expect(Group::LocalpoolResource.retrieve(localpool_member3, localpool2.id).localpool_power_taker_contracts.retrieve(contract.id).object).to eq contract
+
+      expect{ Group::LocalpoolResource.retrieve(localpool_member4, localpool2.id).localpool_power_taker_contracts.retrieve(contract.id) }.to raise_error Buzzn::PermissionDenied
+    end  
   end
 end

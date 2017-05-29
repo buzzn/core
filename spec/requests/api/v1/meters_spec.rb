@@ -95,11 +95,11 @@ describe "meters" do
     end
 
     it '200' do
-      GET "/api/v1/meters/#{meter.id}", user
+      GET "/api/v1/meters/#{meter.id}?include=registers", user
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq meter_json.to_yaml
 
-      GET "/api/v1/meters/#{meter.id}", admin
+      GET "/api/v1/meters/#{meter.id}?include=registers", admin
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq admin_meter_json.to_yaml
     end
@@ -158,7 +158,7 @@ describe "meters" do
 
       it '200' do
         register # setup
-        GET "/api/v1/meters/virtual/#{meter.id}/register", admin
+        GET "/api/v1/meters/virtual/#{meter.id}/register?include=group", admin
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(register_json.to_yaml)
       end
@@ -224,7 +224,7 @@ describe "meters" do
 
       it '200' do
         registers # setup
-        GET "/api/v1/meters/real/#{meter.id}/registers", admin
+        GET "/api/v1/meters/real/#{meter.id}/registers?include=group,devices", admin
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(registers_json.to_yaml)
       end

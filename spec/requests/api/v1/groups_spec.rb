@@ -23,7 +23,7 @@ describe "groups" do
     {
       "errors" => [
         {
-          "detail"=>"Group::BaseResource: bla-blub not found by User: #{admin.resource_owner_id}"
+          "detail"=>"Group::Base: bla-blub not found by User: #{admin.resource_owner_id}"
         }
       ]
     }
@@ -49,7 +49,7 @@ describe "groups" do
         "name"=>group.name,
         "description"=>group.description,
         "readable"=>group.readable,
-        "updatable"=>true,
+        "updatable"=>false,
         "deletable"=>false,
         "meters"=>group.meters.collect do |meter|
           json = {
@@ -83,21 +83,14 @@ describe "groups" do
             "updatable"=>true,
             "deletable"=>true
           }
-        end,
-#        "energy_producers"=>[],
-#        "energy_consumers"=>[],
-#        "localpool_processing_contract"=>nil,
-#        "metering_point_operator_contract"=>nil,
-#        "localpool_power_taker_contracts"=>[],
-#        "prices"=>[],
-#        "billing_cycles"=>[]
+        end
       }
     end
 
     let(:admin_group_json) do
       json = group_json.dup
-      json['updatable']=true
-      json['deletable']=true
+      #json['updatable']=true
+      #json['deletable']=true
       (json['managers'] + json['meters']).each do |m|
         m['updatable'] = true
         m['deletable'] = true
@@ -144,8 +137,8 @@ describe "groups" do
           "name"=>group.name,
           "description"=>group.description,
           "readable"=>group.readable,
-          "updatable"=>true,
-          "deletable"=>true,
+          "updatable"=>false,
+          "deletable"=>false,
           "meters"=>group.meters.collect do |meter|
             json = {
               "id"=>meter.id,
@@ -436,7 +429,7 @@ describe "groups" do
           end
 
           it '200' do
-            GET "/api/v1/groups/#{group.id}/meters", admin
+            GET "/api/v1/groups/#{group.id}/meters", admin, include: 'registers,register'
 
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq(meter_json.to_yaml)

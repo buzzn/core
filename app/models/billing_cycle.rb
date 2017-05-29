@@ -13,6 +13,10 @@ class BillingCycle < ActiveRecord::Base
 
   validate :validate_invariants
 
+  # permissions helpers
+
+  scope :restricted, ->(uuids) { where(localpool_id: uuids) }
+
   def self.readable_by_query(user)
     billing_cycle = BillingCycle.arel_table
     localpool = Group::Base.arel_table

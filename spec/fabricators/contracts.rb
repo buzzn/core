@@ -167,6 +167,9 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   payments                 { [Fabricate.build(:payment)] }
   contractor_bank_account  { Fabricate(:bank_account) }
   customer_bank_account    { Fabricate(:bank_account) }
+  after_create do |contract|
+    contract.customer.add_role(:contract, contract) if contract.customer.is_a? User
+  end
 end
 
 Fabricator :localpool_power_taker_contract_for_organization, from: :localpool_power_taker_contract do
