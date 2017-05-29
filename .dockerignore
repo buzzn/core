@@ -1,5 +1,10 @@
 .git*
 log/*
 docs/*
+specs/*
+db/seed_assets/*
+db/banks/*
+db/seeds.rb
 tmp/*
+public/uploads/*
 Dockerfile
