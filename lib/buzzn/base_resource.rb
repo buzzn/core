@@ -20,7 +20,7 @@ module Buzzn
         if result = @enum.where(id: id).first
           @to_resource.call(@current_user, result)
         else
-          clazz = @enum.class.to_s.sub(/::.*/,'').constantize
+          clazz = @enum.class.to_s.sub(/::ActiveRecord_.*/,'').constantize
           if clazz.exists?(id)
             raise Buzzn::PermissionDenied.create(clazz, :retrieve, @current_user)
           else
@@ -36,6 +36,7 @@ module Buzzn
       def method_missing(method, *args)
         if @enum.respond_to?(method)
           @enum = @enum.send(method, *args)
+          self
         else
           super
         end

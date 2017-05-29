@@ -43,7 +43,7 @@ class GroupRoda < BaseRoda
         end
       end
 
-      r.get! 'registers' do
+      r.on 'registers' do
         shared[:registers] = group.registers.consumption_production
         r.run RegisterRoda
       end

@@ -22,6 +22,12 @@ module Group
       object.meters.collect { |m| Meter::BaseResource.new(m, current_user: @current_user) }
     end
 
+    def registers
+      Buzzn::BaseResource::GuardedCollection.new(object.registers,
+                                                  Register::BaseResource.method(:to_resource),
+                                                  current_user)
+    end
+
     def registers_old
       # note that anonymized_readable_by does inherit the readable
       # settings of the group
