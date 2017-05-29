@@ -17,7 +17,8 @@ class GroupRoda < BaseRoda
 
     groups = Group::BaseResource.all(current_user)
     r.root do
-      groups.filter(r.params['filter'])
+      # TODO remove old permissions via readable_by
+      groups.filter(r.params['filter']).readable_by(current_user)
     end
 
     r.on :id do |id|

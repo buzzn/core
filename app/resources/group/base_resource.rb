@@ -17,21 +17,13 @@ module Group
     has_many :energy_producers
     has_many :energy_consumers
 
-    def self.all(current_user)
-      Buzzn::BaseResource::GuardedCollection.new(model.readable_by(current_user),
-                                                 Register::BaseResource.method(:to_resource),
-                                                 current_user)
+    def managers
+      object.managers.readable_by(current_user).collect { |m| UserResource.new(m, current_user: current_user) }
     end
 
     def meters
       # FIXME broken permissions
       object.meters.collect { |m| Meter::BaseResource.new(m, current_user: @current_user) }
-    end
-
-    def registers
-      Buzzn::BaseResource::GuardedCollection.new(object.registers,
-                                                  Register::BaseResource.method(:to_resource),
-                                                  current_user)
     end
 
     def registers_old
@@ -48,7 +40,6 @@ module Group
     # API methods for endpoints
 
     def scores(interval:, mode: nil, timestamp: Time.current)
-      #binding.pry
       if timestamp > Time.current.beginning_of_day
         timestamp = timestamp - 1.day
       end

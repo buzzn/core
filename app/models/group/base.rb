@@ -55,6 +55,8 @@ module Group
 
     normalize_attributes :description, :website
 
+    scope :restricted, ->(uuids) { where(id: uuids) }
+
     scope :editable_by_user, lambda {|user|
       self.with_role(:manager, user)
     }

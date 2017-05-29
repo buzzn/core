@@ -3,7 +3,7 @@ module Buzzn
     class Serializer
 
       def call(object, request)
-        options = {}
+        options = {include: ''}
         if include = request.params['include']
           #binding.pry
           options[:include] = include.empty? ? '' : eval("{#{include.gsub(/(,|$)/, ':{}\1')}}")

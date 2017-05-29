@@ -98,7 +98,7 @@ describe "registers" do
           register = send "#{type}_register"
           register_json = send "#{type}_register_json"
 
-          GET "/api/v1/registers/#{register.id}", admin
+          GET "/api/v1/registers/#{register.id}?include=group,devices", admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq register_json.to_yaml
         end

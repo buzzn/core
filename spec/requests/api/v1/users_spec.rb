@@ -197,11 +197,11 @@ describe "users" do
     end
 
     it '200' do
-      GET "/api/v1/users/#{user.id}", user_token
+      GET "/api/v1/users/#{user.id}", user_token, include: :bank_accounts
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq user_json.to_yaml
 
-      GET "/api/v1/users/#{user.id}", admin
+      GET "/api/v1/users/#{user.id}", admin, include: :bank_accounts
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq admin_user_json.to_yaml
     end
@@ -209,11 +209,11 @@ describe "users" do
     it '200 all' do
       user.reload
 
-      GET "/api/v1/users", user_token
+      GET "/api/v1/users", user_token, include: :bank_accounts
       expect(response).to have_http_status(200)
       expect(json).to eq users_json
 
-      GET "/api/v1/users", admin
+      GET "/api/v1/users", admin, include: :bank_accounts
       expect(response).to have_http_status(200)
       expect(sort(json).to_yaml).to eq sort(admin_users_json).to_yaml
     end
@@ -221,11 +221,11 @@ describe "users" do
     it '200 all filtered' do
       admin_user = User.find(admin.resource_owner_id)
 
-      GET "/api/v1/users", user_token, filter: admin_user.first_name
+      GET "/api/v1/users", user_token, include: :bank_accounts, filter: admin_user.first_name
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq empty_json.to_yaml
 
-      GET "/api/v1/users", admin, filter: admin_user.first_name
+      GET "/api/v1/users", admin, include: :bank_accounts, filter: admin_user.first_name
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq filtered_admin_users_json.to_yaml
     end
@@ -239,11 +239,12 @@ describe "users" do
       json['sales_tax_number']=nil
       json['tax_rate']=nil
       json['tax_number']=nil
-      json['bank_accounts'] = if user.bank_accounts.reload.size > 0
-                                banks
-                              else
-                                []
-                              end
+      json['bank_accounts'] =
+        if user.bank_accounts.reload.size > 0
+          banks
+        else
+          []
+        end
       json
     end
 
@@ -256,7 +257,7 @@ describe "users" do
     it '200' do
       user.reload
 
-      GET "/api/v1/users/me", user_token
+      GET "/api/v1/users/me", user_token, include: :bank_accounts
       expect(json.to_yaml).to eq me_json.to_yaml
       expect(response).to have_http_status(200)
     end

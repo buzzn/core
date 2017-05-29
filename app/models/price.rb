@@ -29,6 +29,10 @@ class Price < ActiveRecord::Base
     where('begin_date <= ?', timestamp).order('begin_date DESC').limit(1)
   end
 
+  # permissions helpers
+
+  scope :restricted, ->(uuids) { where(localpool_id: uuids) }
+
   def self.readable_by_query(user)
     price = Price.arel_table
     localpool = Group::Base.arel_table

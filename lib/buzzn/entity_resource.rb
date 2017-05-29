@@ -7,15 +7,15 @@ module Buzzn
 
       def create(user, params)
         raise 'is abstract can not create' if @abstract
-        roles = roles(user)
         perms = permissions
         if perms
-          if allowed?(roles, perms.create)
+          if roles = allowed_roles(user, perms.create)
             to_resource(user, roles, perms, model.create!(params), self)
           else
             raise Buzzn::PermissionDenied.new(model, :create, user)
           end
         else
+          # TODO remove deprecated
           new(model.guarded_create(current_user, params),
               current_user: current_user)
         end

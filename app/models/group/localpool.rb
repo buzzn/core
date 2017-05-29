@@ -2,6 +2,10 @@
 module Group
   class Localpool < Base
 
+    # permissions helpers
+
+    scope :restricted, ->(uuids) { where(id: uuids) }
+
     def metering_point_operator_contract
       Contract::MeteringPointOperator.where(localpool_id: self).first
     end

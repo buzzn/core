@@ -41,8 +41,8 @@ describe "groups" do
         "name"=>group.name,
         "description"=>group.description,
         "readable"=>group.readable,
-        "updatable"=>true,
-        "deletable"=>true,
+        "updatable"=>false,
+        "deletable"=>false,
         "meters"=>group.meters.collect do |meter|
           json = {
             "id"=>meter.id,
@@ -81,8 +81,8 @@ describe "groups" do
 
     let(:admin_group_json) do
       json = group_json.dup
-      json['updatable']=true
-      json['deletable']=true
+      json['updatable']=false
+      json['deletable']=false
       json['meters'].each do |meter|
         meter['updatable'] = true
         meter['deletable'] = true
@@ -120,8 +120,8 @@ describe "groups" do
           "name"=>group.name,
           "description"=>group.description,
           "readable"=>group.readable,
-          "updatable"=>true,
-          "deletable"=>true,
+          "updatable"=>false,
+          "deletable"=>false,
           "meters"=>group.meters.collect do |meter|
             json = {
               "id"=>meter.id,

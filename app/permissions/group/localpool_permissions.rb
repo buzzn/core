@@ -12,25 +12,70 @@ class Group::LocalpoolPermissions
   setting :update, MANAGERS, reader: true
   setting :delete, OPERATORS, reader: true
 
+  setting :energy_producers, reader: true do
+    setting :retrieve, MANAGERS
+  end
+
+  setting :energy_consumers, reader: true do
+    setting :retrieve, MANAGERS
+  end
+
   setting :contracts, reader: true do
-    setting :create, MANAGERS
-    setting :retrieve, ALL
+    #setting :create, MANAGERS
+    setting :retrieve, MANAGERS + [:contract]
     setting :update, MANAGERS
     setting :delete, NONE
+
+    setting :tariffs do
+      setting :retrieve, MANAGERS + [:contract]
+    end
+
+    setting :payments do
+      setting :retrieve, MANAGERS + [:contract]
+    end
   end
 
   setting :localpool_power_taker_contracts, reader: true do
     setting :create, MANAGERS
-    setting :retrieve, ALL
+    setting :retrieve, MANAGERS + [:contract]
     setting :update, MANAGERS
     setting :delete, NONE
+
+    setting :tariffs do
+      setting :retrieve, MANAGERS + [:contract]
+    end
+
+    setting :payments do
+      setting :retrieve, MANAGERS + [:contract]
+    end
+  end
+
+  setting :registers, reader: true do
+    setting :retrieve, MANAGERS + [:contract]
+    setting :update, MANAGERS
+    setting :delete, NONE
+
+    setting :group do
+      setting :create, OPERATORS, reader: true
+      setting :retrieve, ALL, reader: true
+      setting :update, MANAGERS, reader: true
+      setting :delete, OPERATORS, reader: true
+    end
   end
 
   setting :localpool_processing_contract, reader: true do
-    setting :create, MANAGERS
+    setting :create, OPERATORS
     setting :retrieve, MANAGERS
     setting :update, MANAGERS
     setting :delete, NONE
+
+    setting :tariffs do
+      setting :retrieve, MANAGERS + [:contract]
+    end
+
+    setting :payments do
+      setting :retrieve, MANAGERS + [:contract]
+    end
 
     setting :contractor do
       setting :create, NONE
@@ -73,6 +118,14 @@ class Group::LocalpoolPermissions
     setting :retrieve, MANAGERS
     setting :update, MANAGERS
     setting :delete, NONE
+
+    setting :tariffs do
+      setting :retrieve, MANAGERS + [:contract]
+    end
+
+    setting :payments do
+      setting :retrieve, MANAGERS + [:contract]
+    end
 
     setting :contractor do
       setting :create, NONE
@@ -135,6 +188,17 @@ class Group::LocalpoolPermissions
       setting :retrieve, MANAGERS + [:organization_contact]
       setting :update, MANAGERS + [:organization_contact]
       setting :delete, MANAGERS + [:organization_contact]
+    end
+  end
+
+  setting :managers, reader: true do
+    setting :create, MANAGERS
+    setting :retrieve, MANAGERS
+    setting :update, MANAGERS
+    setting :delete, OPERATORS
+
+    setting :bank_accounts do
+      setting :retrieve, NONE
     end
   end
 

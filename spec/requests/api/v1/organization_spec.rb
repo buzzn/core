@@ -73,7 +73,7 @@ describe "organizations" do
     end
 
     it '200' do
-      GET "/api/v1/organizations/#{organization.id}"
+      GET "/api/v1/organizations/#{organization.id}?include=address,bank_accounts"
       expect(response).to have_http_status(200)
       expect(json).to eq organization_json
 
