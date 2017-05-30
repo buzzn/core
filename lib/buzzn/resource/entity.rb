@@ -1,5 +1,5 @@
-module Buzzn
-  class EntityResource < BaseResource
+module Buzzn::Resource
+  class Entity < Base
 
     class << self
 
@@ -26,7 +26,7 @@ module Buzzn
 
     def update(params)
       if permissions
-        if allowed?(permissions.update)
+        if permissions.respond_to?(:update) && allowed?(permissions.update)
           object.update(params)
           self
         else
@@ -41,7 +41,7 @@ module Buzzn
 
     def delete
       if permissions
-        if allowed?(permissions.delete)
+        if permissions.respond_to?(:delete) && allowed?(permissions.delete)
           object.delete
           self
         else
@@ -86,15 +86,15 @@ module Buzzn
       raise Buzzn::CascadingValidationError.new(nil, e)
     end
 
-    def all(perms)
+    def aaaall(perms)
       if allowed?(perms)
         yield
       else
-        Buzzn::ResourceCollection.new([],
-                                      nil,
-                                      current_user,
-                                      {},
-                                      nil)
+        Collection.new([],
+                       nil,
+                       current_user,
+                       {},
+                       nil)
       end
     end
 

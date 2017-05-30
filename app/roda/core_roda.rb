@@ -32,6 +32,16 @@ class CoreRoda < Roda
 
   route do |r|
 
+    r.on 'display' do
+      r.run Display::BaseRoda
+    end
+
+    r.on 'admin' do
+      r.run Admin::BaseRoda
+    end
+
+    # TODO remove thos deprecated paths
+
     r.on 'api/v1' do
 
       r.on 'aggregates' do

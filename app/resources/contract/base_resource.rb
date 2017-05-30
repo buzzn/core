@@ -1,5 +1,5 @@
 module Contract
-  class BaseResource < Buzzn::EntityResource
+  class BaseResource < Buzzn::Resource::Entity
 
     abstract
 

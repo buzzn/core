@@ -1,4 +1,3 @@
-require_relative 'plugins/aggregation'
 class RegisterRoda < BaseRoda
 
   include Import.args[:env,

@@ -43,5 +43,10 @@ class Buzzn::Transaction
       step :interval
       step :register_charts
     end
+    
+    t.define(:group_charts_ng) do
+      validate :charts_schema
+      step :resource, with: :nested_resource
+    end
   end
 end
