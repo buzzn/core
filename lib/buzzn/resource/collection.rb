@@ -1,5 +1,5 @@
-module Buzzn
-  class ResourceCollection
+module Buzzn::Resource
+  class Collection
     include Enumerable
 
     def initialize(enum, to_resource_method, current_user, unbound_roles, permissions)
@@ -27,6 +27,7 @@ module Buzzn
                           @permissions, result)
       else
         clazz = @enum.class.to_s.sub(/::ActiveRecord_.*/,'').safe_constantize
+        clazz ||= @enum.first.class.to_s if @enum.first
         if clazz && clazz.exists?(id)
           raise Buzzn::PermissionDenied.new(clazz, :retrieve, @current_user)
         else

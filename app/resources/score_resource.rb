@@ -1,4 +1,4 @@
-class ScoreResource < Buzzn::BaseResource
+class ScoreResource < Buzzn::Resource::Base
 
   model Score
 

@@ -1,4 +1,4 @@
-class BillingCycleResource < Buzzn::EntityResource
+class BillingCycleResource < Buzzn::Resource::Entity
 
   model BillingCycle
 
