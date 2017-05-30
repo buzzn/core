@@ -2,18 +2,25 @@
 please install docker.
 https://docs.docker.com/docker-for-mac/install/
 
-- build core(aka buzzn) image `docker-compose build`
-- init database for development `docker-compose run core rake db:init`
-- start cluster `docker-compose up` stop CLI Output control-c.
-- Stop cluster `docker-compose down`
-- run specs from outside `docker-compose run core rake specs`
+#### setup
+the `docker-compose.yml` describes the stack.
+the default stack is running the staging environment.
+but you can also uncomment the core_test service for running your tests.
 
+- start cluster `docker-compose up` stop control-c.
 
+#### Create Release Image
 - login to dockerhub `docker login -u=buzzn -p=xxxxxx`
-- build production image `docker build -t buzzn/core .`
-- build production image `docker tag buzzn/core buzzn/core:2`
-- push image `docker push buzzn/core:2`
+- build image `docker build -t buzzn/core .`
+- tag image `docker tag buzzn/core buzzn/core:6`
+- push image `docker push buzzn/core:6`
 
+#### troubleshoot
+- stop the stack `docker-compose down`
+- remove all volumes  `docker volume prune`
+- remove all containers `docker rm -f $(docker ps -a -q)`
+- remove all image `docker rmi -f $(docker images -q)`
+- rebuild image `docker-compose build core_staging`
 
 #### More infos about:
 - production: https://blog.codeship.com/deploying-docker-rails-app/
