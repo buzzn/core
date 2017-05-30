@@ -49,6 +49,7 @@ services:
       - ./db/seed_assets:/core/db/seed_assets
       - ./db/banks:/core/db/banks
       - ./db/seeds.rb:/core/db/seeds.rb
+      - ./public/uploads:/core/public/uploads
 
   core_staging_worker:
     build:
