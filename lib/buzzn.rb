@@ -22,7 +22,7 @@ module Buzzn
   class RecordNotFound < StandardError
     class << self
       def new(clazz, id, user = nil)
-        super("#{clazz}: #{id} not found#{user ? ' by User: ' + user.id : ''}")
+        super("#{clazz || 'UNKNOWN-CLASS'}: #{id} not found#{user ? ' by User: ' + user.id : ''}")
       end
       alias :create :new
     end
