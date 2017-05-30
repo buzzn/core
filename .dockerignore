@@ -1,7 +1,7 @@
-.git*
-log/*
-docs/*
-specs/*
+.git
+log
+docs
+spec
 db/seed_assets/*
 db/banks/*
 db/seeds.rb
