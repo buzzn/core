@@ -1,4 +1,4 @@
-class ReadingResource < Buzzn::EntityResource
+class ReadingResource < Buzzn::Resource::Entity
 
   model Reading
 

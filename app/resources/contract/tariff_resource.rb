@@ -1,5 +1,5 @@
 module Contract
-  class TariffResource < Buzzn::EntityResource
+  class TariffResource < Buzzn::Resource::Entity
 
     model Tariff
 

@@ -1,3 +1,4 @@
+# TODO get rid of the whole thing as it is deprecated and not used anymore
 class ProfileSerializer < ActiveModel::Serializer
 
   attributes  :slug,

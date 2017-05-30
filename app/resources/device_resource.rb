@@ -1,4 +1,4 @@
-class DeviceResource < Buzzn::EntityResource
+class DeviceResource < Buzzn::Resource::Entity
 
   model Device
 

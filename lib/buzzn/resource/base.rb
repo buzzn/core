@@ -1,5 +1,5 @@
-module Buzzn
-  class BaseResource < ActiveModel::Serializer
+module Buzzn::Resource
+  class Base < ActiveModel::Serializer
 
     attr_reader :current_user, :current_roles, :permissions
 
@@ -30,10 +30,10 @@ module Buzzn
             all_allowed(perms, object.send(method))
           else
             # TOOO remove deprecated
-            Buzzn::ResourceCollection.new(object.send(method)
-                                           .readable_by(current_user),
-                                          self.class.method(:to_resource),
-                                          current_user, [], permissions)
+            Buzzn::Resource::Collection.new(object.send(method)
+                                             .readable_by(current_user),
+                                            self.class.method(:to_resource),
+                                            current_user, [], permissions)
           end
         end
       end
@@ -49,23 +49,23 @@ module Buzzn
                 self.class.to_resource(current_user, current_roles, perms,
                                        result)
               else
-                raise RecordNotFound.new(self.class, method, current_user)
+                raise Buzzn::RecordNotFound.new(self.class, method, current_user)
               end
             else
               clazz = self.class.send(:find_resource_class,
                                       object.send(method).class)
-              raise PermissionDenied.new(clazz, :retrieve, current_user)
+              raise Buzzn::PermissionDenied.new(clazz, :retrieve, current_user)
             end
           else
             # TODO remove this deprecated clause
             result = object.send(method)
             if result.nil?
-              raise RecordNotFound.new(self.class, method, current_user)
+              raise Buzzn::RecordNotFound.new(self.class, method, current_user)
             elsif result.readable_by?(current_user)
               self.class.to_resource(current_user, nil, nil, result)
             else
               clazz = self.class.send(:find_resource_class, result.class)
-              raise PermissionDenied.create(clazz, :retrieve, current_user)
+              raise Buzzn::PermissionDenied.create(clazz, :retrieve, current_user)
             end
           end
         end
@@ -156,11 +156,11 @@ module Buzzn
           enum = all_allowed(user, [], permissions.retrieve, model.all)
           unbound = [:anonymous]
           unbound += user.unbound_rolenames if user
-          Buzzn::ResourceCollection.new(enum,
-                                        method(:to_resource),
-                                        user,
-                                        unbound,
-                                        permissions)
+          Buzzn::Resource::Collection.new(enum,
+                                          method(:to_resource),
+                                          user,
+                                          unbound,
+                                          permissions)
         else
           # TODO remove deprecated code
           result = model.readable_by(user).filter(filter)
@@ -244,12 +244,13 @@ module Buzzn
       super
     end
 
-    def to_collection(enum, perms = nil)
-      Buzzn::ResourceCollection.new(enum,
-                                    self.class.method(:to_resource),
-                                    current_user,
-                                    current_roles,
-                                    perms)
+    def to_collection(enum, perms = nil, clazz = nil)
+      clazz ||= self.class
+      Buzzn::Resource::Collection.new(enum,
+                                      clazz.method(:to_resource),
+                                      current_user,
+                                      current_roles,
+                                      perms)
     end
 
     def to_resource(instance, perms)
@@ -260,11 +261,12 @@ module Buzzn
       self.class.send(:allowed?, roles, perms)
     end
 
-    def all_allowed(perms, enum)
+    def all_allowed(perms, enum, clazz = nil)
       result = self.class.all_allowed(current_user, current_roles,
                                       perms.retrieve, enum)
-      to_collection(result, perms)
+      to_collection(result, perms, clazz)
     end
+    alias :all :all_allowed
 
     alias :to_h :serializable_hash
     alias :to_hash :serializable_hash

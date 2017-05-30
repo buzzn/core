@@ -1,5 +1,5 @@
 module Contract
-  class PaymentResource < Buzzn::EntityResource
+  class PaymentResource < Buzzn::Resource::Entity
 
     model Payment
 
