@@ -34,6 +34,10 @@ class CoreRoda < Roda
 
     r.on 'api/v1' do
 
+      r.on 'aggregate' do
+        r.run AggregateRoda
+      end
+
       r.on 'me' do
         r.run MeRoda
       end
