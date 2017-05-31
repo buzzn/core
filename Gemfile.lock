@@ -73,6 +73,8 @@ GEM
       activemodel (= 4.2.7.1)
       activesupport (= 4.2.7.1)
       arel (~> 6.0)
+    activerecord-nulldb-adapter (0.3.6)
+      activerecord (>= 2.0.0)
     activesupport (4.2.7.1)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -173,6 +175,10 @@ GEM
     diff-lcs (1.2.5)
     doorkeeper (3.1.0)
       railties (>= 3.2)
+    dotenv (2.2.1)
+    dotenv-rails (2.2.1)
+      dotenv (= 2.2.1)
+      railties (>= 3.2, < 5.2)
     dry-auto_inject (0.4.2)
       dry-container (>= 0.3.4)
     dry-configurable (0.7.0)
@@ -478,10 +484,6 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
-    lograge (0.3.6)
-      actionpack (>= 3)
-      activesupport (>= 3)
-      railties (>= 3)
     lol_dba (2.0.3)
       actionpack (>= 3.0, < 5.0)
       activerecord (>= 3.0, < 5.0)
@@ -563,7 +565,7 @@ GEM
       activerecord (>= 3.0)
       i18n (>= 0.5.0)
       railties (>= 3.0.0)
-    puma (3.4.0)
+    puma (3.8.2)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.5)
@@ -749,6 +751,7 @@ DEPENDENCIES
   active_model_serializers
   activeadmin
   activeadmin-select2!
+  activerecord-nulldb-adapter
   acts-as-taggable-on
   acts_as_commentable_with_threading
   acts_as_list
@@ -775,6 +778,7 @@ DEPENDENCIES
   devise-i18n-views
   devise_invitable
   doorkeeper
+  dotenv-rails
   dry-auto_inject
   dry-monads
   dry-transaction
@@ -805,7 +809,6 @@ DEPENDENCIES
   jquery-rails
   launchy
   listen
-  lograge
   lol_dba
   mail_view
   mini_magick
@@ -854,4 +857,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.15.0.pre.3
+   1.15.0

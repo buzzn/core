@@ -6,17 +6,6 @@
 :concurrency: 20
 :timeout: 30
 
-development:
-  :pidfile: tmp/pids/sidekiq.pid
-
-staging:
-  :pidfile: ../../shared/pids/sidekiq.pid
-
-production:
-  :pidfile: ../../shared/pids/sidekiq.pid
-
-:logfile: log/sidekiq.log
-
 :queues:
   - [high, 20]
   - [default, 10]
@@ -24,4 +13,3 @@ production:
 
 :limits:
   low: 5
-

@@ -1,8 +1,6 @@
 Buzzn::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # config.middleware.use Rack::SslEnforcer
-
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -22,7 +20,7 @@ Buzzn::Application.configure do
   # config.action_dispatch.rack_cache = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this).
-  config.serve_static_files = false
+  config.serve_static_files = true
 
   # Compress JavaScripts and CSS.
   config.assets.compress = true
@@ -43,7 +41,7 @@ Buzzn::Application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  config.force_ssl = false
 
   # Set to :debug to see everything in the log.
   config.log_level = :info
@@ -88,7 +86,4 @@ Buzzn::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   # config.log_formatter = ::Logger::Formatter.new
-  config.lograge.enabled = true
-  config.lograge.formatter = Lograge::Formatters::KeyValue.new
-
 end

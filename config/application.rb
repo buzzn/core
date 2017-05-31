@@ -54,9 +54,6 @@ module Buzzn
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation]
 
-    config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
-
-
     config.generators do |g|
       g.orm :active_record
       g.test_framework :rspec, spec: true, fixture: false
@@ -78,6 +75,9 @@ module Buzzn
     end
 
     config.x.templates_path = Rails.root.join('app', 'templates')
+
+    config.logger = Logger.new(STDOUT)
+    config.log_level = ENV['LOG_LEVEL'] || 'debug'
 
     config.after_initialize do
       # setup service components, transactions
