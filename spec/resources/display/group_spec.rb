@@ -17,7 +17,19 @@ describe Display::GroupResource do
     group
   end
 
+  entity(:tribe_resource) do
+    Display::GroupResource.all(user).retrieve(tribe.id)
+  end
+
+  entity(:localpool_resource) do
+    Display::GroupResource.all(user).retrieve(localpool.id)
+  end
+
   entity(:group) { [tribe, localpool].sample }
+
+  entity(:resource) do
+    Display::GroupResource.all(user).retrieve(group.id)
+  end
 
   let(:attributes) { [:id,
                       :type,
@@ -26,7 +38,6 @@ describe Display::GroupResource do
                       :mentors,
                       :registers ] }
 
-  entity(:resource) { Display::GroupResource.all(user).retrieve(group.id) }
 
   it 'retrieve' do
     [tribe, localpool].each do |grp|
@@ -51,15 +62,24 @@ describe Display::GroupResource do
                         :name,
                         :label] }
     it 'retrieve' do
-      expect(resource.registers.retrieve(group.registers.first.id).object).to eq group.registers.first
+      [:tribe, :localpool].each do |type|
+        group = send(type)
+        resource = send("#{type}_resource")
+        first = group.registers.consumption_production.first
+        expect(resource.registers.retrieve(first.id).object).to eq first
+      end
     end
 
     it 'retrieve - all' do
-      expect(resource.registers.size).to eq 1
-      resource.registers.each do |reg|
-        expect(reg.class).to eq Display::RegisterResource
-        expect(reg.type).to eq (reg.object.is_a?(Register::Real) ? 'register_real' : 'register_virtual')
-        expect(reg.to_h.keys).to eq attributes
+      [:tribe, :localpool].each do |type|
+        group = send(type)
+        resource = send("#{type}_resource")
+        expect(resource.registers.size).to eq 1
+        resource.registers.each do |reg|
+          expect(reg.class).to eq Display::RegisterResource
+          expect(reg.type).to eq (reg.object.is_a?(Register::Real) ? 'register_real' : 'register_virtual')
+          expect(reg.to_h.keys).to eq attributes
+        end
       end
     end
 

@@ -86,18 +86,6 @@ module Buzzn::Resource
       raise Buzzn::CascadingValidationError.new(nil, e)
     end
 
-    def aaaall(perms)
-      if allowed?(perms)
-        yield
-      else
-        Collection.new([],
-                       nil,
-                       current_user,
-                       {},
-                       nil)
-      end
-    end
-
     def persisted?
       object.persisted?
     end
