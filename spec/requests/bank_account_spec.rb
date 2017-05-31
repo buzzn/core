@@ -28,15 +28,6 @@ describe "bank-accounts" do
 
   entity(:user) { Fabricate(:user_token) }
 
-  let(:denied_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"retrieve BankAccount: permission denied for User: #{user.resource_owner_id}" }
-      ]
-    }
-  end
-
   let(:not_found_json) do
     {
       "errors" => [
@@ -60,6 +51,15 @@ describe "bank-accounts" do
           "bic"=>bank_account.bic,
           "iban"=>bank_account.iban,
           "direct_debit"=>bank_account.direct_debit
+        }
+      end
+
+      let(:denied_json) do
+        {
+          "errors" => [
+            {
+              "detail"=>"retrieve BankAccount: #{bank_account.id} permission denied for User: #{user.resource_owner_id}" }
+          ]
         }
       end
 
