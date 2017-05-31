@@ -20,7 +20,7 @@ but you can also uncomment the core_test service for running your tests.
 - remove all volumes  `docker volume prune`
 - remove all containers `docker rm -f $(docker ps -a -q)`
 - remove all image `docker rmi -f $(docker images -q)`
-- rebuild image `docker-compose build core_staging`
+- rebuild image `docker-compose build`
 
 #### More infos about:
 - production: https://blog.codeship.com/deploying-docker-rails-app/
