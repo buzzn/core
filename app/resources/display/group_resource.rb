@@ -55,9 +55,5 @@ module Display
         raise 'unknown group type'
       end
     end
-
-    def self.to_resource(user, roles, permissions, instance, clazz = nil)
-      super(user, roles, permissions, instance, clazz || self)
-    end
   end
 end
