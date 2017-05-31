@@ -15,9 +15,5 @@ module Display
     def image
       object.image.md.url
     end
-
-    def self.to_resource(user, roles, permissions, instance, clazz = nil)
-      super(user, roles, permissions, instance, clazz || self)
-    end
   end
 end

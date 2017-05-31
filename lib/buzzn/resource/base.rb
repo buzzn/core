@@ -27,7 +27,7 @@ module Buzzn::Resource
         define_method method do
           if permissions
             perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
-            all_allowed(perms, object.send(method))
+            all(perms, object.send(method))
           else
             # TOOO remove deprecated
             Buzzn::Resource::Collection.new(object.send(method)
@@ -160,7 +160,8 @@ module Buzzn::Resource
                                           method(:to_resource),
                                           user,
                                           unbound,
-                                          permissions)
+                                          permissions,
+                                          self)
         else
           # TODO remove deprecated code
           result = model.readable_by(user).filter(filter)
@@ -245,12 +246,12 @@ module Buzzn::Resource
     end
 
     def to_collection(enum, perms = nil, clazz = nil)
-      clazz ||= self.class
       Buzzn::Resource::Collection.new(enum,
-                                      clazz.method(:to_resource),
+                                      (clazz || self.class).method(:to_resource),
                                       current_user,
                                       current_roles,
-                                      perms)
+                                      perms,
+                                      clazz)
     end
 
     def to_resource(instance, perms)
@@ -261,14 +262,17 @@ module Buzzn::Resource
       self.class.send(:allowed?, roles, perms)
     end
 
-    def all_allowed(perms, enum, clazz = nil)
+    def all(perms, enum, clazz = nil)
       result = self.class.all_allowed(current_user, current_roles,
                                       perms.retrieve, enum)
       to_collection(result, perms, clazz)
     end
-    alias :all :all_allowed
 
     alias :to_h :serializable_hash
     alias :to_hash :serializable_hash
+
+    def to_yaml
+      to_h.to_yaml
+    end
   end
 end
