@@ -41,6 +41,7 @@ module Buzzn::Resource
     def to_a
       collect { |i| i }
     end
+    alias :to_ary :to_a
 
     def size
       @enum.size
