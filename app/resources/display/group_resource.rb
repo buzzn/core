@@ -1,6 +1,7 @@
 module Display
   class GroupResource < Buzzn::Resource::Entity
     include Import.reader['service.current_power']
+    include Import.reader['service.charts']
 
     model Group::Base
 
@@ -38,11 +39,11 @@ module Display
     end
 
     def bubbles
-      current_power.for_each_register_in_group(object)
+      current_power.for_each_register_in_group(self)
     end
 
-    def charts(duration:, timestamp:)
-      charts.for_group(object, Buzzn::Interval.create(duration, timestamp))
+    def charts(duration:, timestamp: nil)
+      @charts.for_group(self, Buzzn::Interval.create(duration, timestamp))
     end
 
     def type

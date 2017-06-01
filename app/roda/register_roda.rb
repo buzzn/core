@@ -32,7 +32,7 @@ class RegisterRoda < BaseRoda
       end
 
       r.get! 'readings' do
-        register.readings
+        register.readings rescue nil
       end
     end
   end

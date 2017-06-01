@@ -16,8 +16,8 @@ module Buzzn::Services
     end
 
     def for_each_register_in_group(resource)
-      raise ArgumentError.new("not a #{Group::BaseResource}") unless resource.is_a?(Group::BaseResource)
       group = resource.object
+      raise ArgumentError.new("not a #{Group::Base}") unless group.is_a?(Group::Base)
       result = Buzzn::DataResultArray.new(0)
       registry.each do |data_source|
         result += data_source.collection(group, :in)
