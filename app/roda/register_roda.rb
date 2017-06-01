@@ -1,4 +1,3 @@
-require_relative 'plugins/aggregation'
 class RegisterRoda < BaseRoda
 
   include Import.args[:env,
@@ -33,7 +32,7 @@ class RegisterRoda < BaseRoda
       end
 
       r.get! 'readings' do
-        register.readings
+        register.readings rescue nil
       end
     end
   end

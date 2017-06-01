@@ -1,4 +1,4 @@
-class UserResource < Buzzn::EntityResource
+class UserResource < Buzzn::Resource::Entity
 
   model User
 
@@ -27,7 +27,7 @@ class UserResource < Buzzn::EntityResource
   end
 end
 
-class MentorResource < Buzzn::EntityResource
+class MentorResource < Buzzn::Resource::Entity
 
   model User
 

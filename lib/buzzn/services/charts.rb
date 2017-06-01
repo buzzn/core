@@ -32,6 +32,7 @@ module Buzzn::Services
     end
 
     def for_group(group, interval)
+      group = group.object if group.respond_to? :object
       raise ArgumentError.new("not a #{Group::Base}") unless group.is_a?(Group::Base)
       raise ArgumentError.new("not a #{Buzzn::Interval}") unless interval.is_a?(Buzzn::Interval)
       units = interval.hour? || interval.day? ? :milliwatt : :milliwatt_hour

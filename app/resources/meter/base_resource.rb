@@ -1,5 +1,5 @@
 module Meter
-  class BaseResource < Buzzn::EntityResource
+  class BaseResource < Buzzn::Resource::Entity
 
     abstract
 

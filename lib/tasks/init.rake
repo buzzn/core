@@ -1,6 +1,6 @@
 namespace :db do
-  desc 'This rebuilds development db'
-  task :init => [
+  desc 'This rebuilds development db without any data'
+  task :prepare => [
                   'log:clear',
                   'tmp:clear',
                   'assets:clean',
@@ -13,8 +13,18 @@ namespace :db do
                   'db:mongoid:create_indexes',
                   'db:drop',
                   'db:create',
-                  'db:migrate',
-                  'db:seed',
+                  'db:migrate'
+                ]
+
+  desc 'This rebuilds development db without slp/sep'
+  task :setup => [
+                  'db:prepare',
+                  'db:seed'
+                ]
+
+  desc 'This rebuilds development db'
+  task :init => [
+                  'db:setup',
                   'slp:import_h0',
                   'sep:import_pv_bhkw',
                   'banks:import'

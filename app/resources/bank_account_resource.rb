@@ -1,4 +1,4 @@
-class BankAccountResource < Buzzn::EntityResource
+class BankAccountResource < Buzzn::Resource::Entity
 
   module Create
     def create_bank_account(holder:, iban:, direct_debit: false)
