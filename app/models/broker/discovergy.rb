@@ -73,7 +73,10 @@ class Broker::Discovergy < Broker::Base
   end
 
   def two_way_meter?
-    two_way_meter = self.resource.is_a?(Meter::Real) && self.resource.input_register != nil && self.resource.output_register != nil
+    # produce a ternary result: group is nil, register will use true or false
+    if self.resource.is_a?(Meter::Real)
+      self.resource.input_register != nil && self.resource.output_register != nil
+    end
   end
 
   private
