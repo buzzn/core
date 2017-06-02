@@ -35,7 +35,9 @@ class AggregateRoda < BaseRoda
       if current_user.nil? && !(register.group && register.group.readable_by_world?) && !register.readable_by_world?
         raise Buzzn::PermissionDenied.new
       end
-      timestamp = r.params['timestamp'] || Time.current
+      ts = r.params['timestamp']
+      timestamp = Time.parse(ts) if ts
+      timestamp ||= Time.current
       case r.params['resolution']
       when 'day_to_minutes'
         interval = Buzzn::Interval.day(timestamp)
