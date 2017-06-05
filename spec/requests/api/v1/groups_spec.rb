@@ -80,6 +80,7 @@ describe "groups" do
             "gender"=>manager.profile.gender,
             "phone"=>manager.profile.phone,
             "email"=>manager.email,
+            "image"=>manager.profile.image.md.url,
             "updatable"=>true,
             "deletable"=>true
           }
@@ -168,6 +169,7 @@ describe "groups" do
               "gender"=>manager.profile.gender,
               "phone"=>manager.profile.phone,
               "email"=>manager.email,
+              "image"=>manager.profile.image.md.url,
               "updatable"=>true,
               "deletable"=>true,
             }
