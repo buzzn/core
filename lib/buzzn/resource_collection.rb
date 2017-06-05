@@ -26,7 +26,6 @@ module Buzzn
         @to_resource.call(@current_user, current_roles(id),
                           @permissions, result)
       else
-        p @enum.class.to_s
         clazz = @enum.class.to_s.sub(/::ActiveRecord_.*/,'').safe_constantize
         if clazz && clazz.exists?(id)
           raise Buzzn::PermissionDenied.new(clazz, :retrieve, @current_user)

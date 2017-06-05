@@ -73,8 +73,6 @@ module Buzzn
         # deliver result if permissions allow otherwise nil
         define_method method do
           if permissions
-            puts method
-
             perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
             if allowed?(perms.retrieve) && (result = object.send(method))
               self.class.to_resource(current_user, current_roles, perms,
