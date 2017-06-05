@@ -183,6 +183,7 @@ describe "localpools" do
           "gender"=>contract.customer.profile.gender,
           "phone"=>contract.customer.profile.phone,
           "email"=>contract.customer.email,
+          "image"=>contract.customer.profile.image.md.url,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -196,6 +197,7 @@ describe "localpools" do
           "gender"=>contract.signing_user.profile.gender,
           "phone"=>contract.signing_user.profile.phone,
           "email"=>contract.signing_user.email,
+          "image"=>contract.signing_user.profile.image.md.url,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -305,6 +307,7 @@ describe "localpools" do
           "gender"=>contract.customer.profile.gender,
           "phone"=>contract.customer.profile.phone,
           "email"=>contract.customer.email,
+          "image"=>contract.customer.profile.image.md.url,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -318,6 +321,7 @@ describe "localpools" do
           "gender"=>contract.signing_user.profile.gender,
           "phone"=>contract.signing_user.profile.phone,
           "email"=>contract.signing_user.email,
+          "image"=>contract.signing_user.profile.image.md.url,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -500,6 +504,7 @@ describe "localpools" do
             "gender"=>nil,
             "phone"=>manager.profile.phone,
             "email"=>manager.email,
+            "image"=>manager.profile.image.md.url,
             "updatable"=>true,
             "deletable"=>true,
             "bank_accounts"=>[]

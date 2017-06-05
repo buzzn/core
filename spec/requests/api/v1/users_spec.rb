@@ -63,6 +63,7 @@ describe "users" do
       "gender"=>user.profile.gender,
       "phone"=>user.profile.phone,
       "email"=>user.email,
+      "image"=>user.profile.image.md.url,
       "updatable"=>true,
       # TODO feels wrong that any user can delete her/him-self
       "deletable"=>true,
@@ -92,6 +93,7 @@ describe "users" do
         "gender"=>user.profile.gender,
         "phone"=>user.profile.phone,
         "email"=>user.email,
+        "image"=>user.profile.image.md.url,
         "updatable"=>true,
         "deletable"=>true,
         "bank_accounts"=> user.bank_accounts.reload.collect do |bank_account|
@@ -121,6 +123,7 @@ describe "users" do
         "gender"=>user.profile.gender,
         "phone"=>user.profile.phone,
         "email"=>user.email,
+        "image"=>user.profile.image.md.url,
         "updatable"=>true,
         "deletable"=>true,
         "bank_accounts"=> user.bank_accounts.reload.collect do |bank_account|
@@ -151,6 +154,7 @@ describe "users" do
         "gender"=>user.profile.gender,
         "phone"=>user.profile.phone,
         "email"=>user.email,
+        "image"=>user.profile.image.md.url,
         "updatable"=>true,
         "deletable"=>true,
         "bank_accounts"=> user.bank_accounts.reload.collect do |bank_account|

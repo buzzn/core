@@ -8,7 +8,8 @@ class UserResource < Buzzn::EntityResource
               :last_name,
               :gender,
               :phone,
-              :email
+              :email,
+              :image
 
   attributes :updatable, :deletable
 
@@ -24,6 +25,10 @@ class UserResource < Buzzn::EntityResource
 
   def phone
     object.profile.phone
+  end
+
+  def image
+    object.image.md.url
   end
 end
 

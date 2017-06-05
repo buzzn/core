@@ -93,6 +93,7 @@ describe "contracts" do
           "gender"=>contract.customer.profile.gender,
           "phone"=>contract.customer.profile.phone,
           "email"=>contract.customer.email,
+          "image"=>contract.customer.profile.image.md.url,
           "updatable"=>true,
           "deletable"=>true
         },
@@ -106,6 +107,7 @@ describe "contracts" do
           "gender"=>contract.signing_user.profile.gender,
           "phone"=>contract.signing_user.profile.phone,
           "email"=>contract.signing_user.email,
+          "image"=>contract.signing_user.profile.image.md.url,
           "updatable"=>true,
           "deletable"=>true
         },
@@ -206,6 +208,7 @@ describe "contracts" do
               "gender"=>nil,
               "phone"=>customer.profile.phone,
               "email"=>customer.profile.email,
+              "image"=>customer.profile.image.md.url,
               "updatable"=>false,
               "deletable"=>false,
               "sales_tax_number"=>nil,

@@ -72,6 +72,7 @@ describe "groups" do
             "gender"=>manager.profile.gender,
             "phone"=>manager.profile.phone,
             "email"=>manager.email,
+            "image"=>manager.profile.image.md.url,
             "updatable"=>true,
             "deletable"=>true
           }
@@ -144,15 +145,16 @@ describe "groups" do
             {
               "id"=>manager.id,
               "type"=>"user",
-            "user_name"=>manager.user_name,
-            "title"=>manager.profile.title,
-            "first_name"=>manager.first_name,
-            "last_name"=>manager.last_name,
-            "gender"=>manager.profile.gender,
-            "phone"=>manager.profile.phone,
-            "email"=>manager.email,
-            "updatable"=>true,
-            "deletable"=>true
+              "user_name"=>manager.user_name,
+              "title"=>manager.profile.title,
+              "first_name"=>manager.first_name,
+              "last_name"=>manager.last_name,
+              "gender"=>manager.profile.gender,
+              "phone"=>manager.profile.phone,
+              "email"=>manager.email,
+              "image"=>manager.profile.image.md.url,
+              "updatable"=>true,
+              "deletable"=>true
             }
           end,
         }.merge(rel)
