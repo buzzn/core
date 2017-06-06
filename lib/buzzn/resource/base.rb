@@ -5,6 +5,18 @@ module Buzzn::Resource
 
     class << self
 
+      def attribute_names
+        @attribute_names ||=
+          begin
+            a = []
+            if superclass.respond_to?(:attribute_names)
+              a += superclass.attribute_names
+            end
+            a += @attrs if @attrs
+            a
+          end
+      end
+
       def new(resource, options = {})
         @abstract = false if @abstract.nil?
         options ||= {}
@@ -21,6 +33,12 @@ module Buzzn::Resource
       end
 
       # DSL methods
+
+      def attribute(*attr)
+        super
+        @attrs ||= []
+        @attrs += attr
+      end
 
       def has_many(method, *args)
         super
@@ -271,6 +289,40 @@ module Buzzn::Resource
 
     def to_yaml
       to_h.to_yaml
+    end
+
+    def json(json, includes)
+      first = true
+      self.class.attribute_names.flatten.each do |attr|
+        obj = self.respond_to?(attr) ? self.send(attr) : object.send(attr)
+        if first
+          first = false
+          json << '{'
+        else
+          json << ','
+        end
+        json << '"' << attr.to_s << '":' << obj.to_json
+      end
+      includes.each do |k,v|
+        if self.respond_to?(k)
+          if first
+            first = false
+          else
+            json << ','
+          end
+          json << '"' << k.to_s << '":'
+          obj = self.send(k)
+          case
+          when Array
+            json << obj.to_json(include: v)
+          when NilClass
+            json << 'null'
+          else
+            obj.json(json, v)
+          end
+        end
+      end if includes.is_a? Hash
+      json << '}'
     end
   end
 end

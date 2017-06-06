@@ -9,6 +9,7 @@ module Buzzn::Resource
       @enum = enum
       @to_resource = to_resource_method
       @class = clazz
+      @meta = {}
     end
 
     def current_roles(id)
@@ -58,6 +59,53 @@ module Buzzn::Resource
 
     def respond_to?(method)
       @enum.respond_to?(method) || super
+    end
+
+    def []=(k, v)
+      @meta[k] = v
+    end
+
+    def to_json(options = {})
+      cache = {}
+      first = true
+      json = String.new
+      @meta.each do |k, v|
+        if first
+          first = false
+        else
+          json << ','
+        end
+        # TODO case v.is_a? Hash
+        json << '{"' << k.to_s << '":' << v.to_json
+      end
+      # json <<
+      #   if first
+      #     first = false
+      #     '{"array":['
+      #   else
+      #     '},"array":['
+      #   end
+      json << '['
+      @enum.each do |model|
+        if m = cache[model.class]
+          m.instance_variable_set(:@object, model)
+          m.instance_variable_set(:@current_roles, current_roles(model.id))
+        else
+          m = @to_resource.call(@current_user, current_roles(model.id),
+                                @permissions, model, @class)
+          cache[model.class] = m
+        end
+        if first
+          first = false
+        else
+          json << ','
+        end
+        m.json(json, options.fetch(:include, {}))
+#        json << m.to_json(options)
+      end
+      #json << ']}'
+      json << ']'
+      json
     end
   end
 end
