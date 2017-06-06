@@ -25,7 +25,13 @@ module Buzzn
         when ActiveRecord::Relation
           Buzzn::SerializableResource.new(object).to_json(options)
         else
-          object.to_json(options)
+          result = nil
+          time = Time.now.to_f
+          10.times{ result = object.to_json(options) }
+          ended = Time.now.to_f
+          clazz = object.is_a?(Buzzn::Resource::Collection)? "Collection[#{object.first.class}].#{object.size}" : object.class
+          STDOUT.puts "#{clazz} json: #{ended - time}"
+          result
         end
       end
     end
