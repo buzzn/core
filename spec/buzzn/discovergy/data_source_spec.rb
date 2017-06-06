@@ -56,6 +56,7 @@ describe Buzzn::Discovergy::DataSource do
   entity(:single_meter_day_response) { "[{\"time\":1480606200000,\"values\":{\"energy\":22968322444644}},{\"time\":1480607100000,\"values\":{\"energy\":22970988922089}},{\"time\":1480608000000,\"values\":{\"energy\":22973229616478}}]" }
   entity(:single_meter_month_response) { "[{\"time\":1477954800000,\"values\":{\"energy\":22202408932539}},{\"time\":1478041200000,\"values\":{\"energy\":22202747771000}},{\"time\":1478127600000,\"values\":{\"energy\":22202747771000}}]" }
   entity(:single_meter_year_response) { "[{\"time\":1451602800000,\"values\":{\"energy\":14386541983000}},{\"time\":1454281200000,\"values\":{\"energy\":15127308929000}},{\"time\":1456786800000,\"values\":{\"energy\":15997907091031}}]" }
+  entity(:single_meter_year_response2) { "[{\"time\":1451602800000,\"values\":{\"energyOut\":14386541983000}},{\"time\":1454281200000,\"values\":{\"energyOut\":15127308929000}},{\"time\":1456786800000,\"values\":{\"energyOut\":15997907091031}}]" }
   entity(:virtual_meter_live_response) { "{\"EASYMETER_60009425\":{\"time\":1480614249341,\"values\":{\"power\":150950}},\"EASYMETER_60009404\":{\"time\":1480614254195,\"values\":{\"power\":161590}},\"EASYMETER_60009415\":{\"time\":1480614254563,\"values\":{\"power\":152190}}}"}
   entity(:virtual_meter_creation_response) { "{\"serialNumber\":\"00000065\",\"location\":{\"street\":\"Virtual\",\"streetNumber\":\"0\",\"zip\":\"00000\",\"city\":\"Virtual\",\"country\":\"DE\"},\"administrationNumber\":null,\"type\":\"VIRTUAL\",\"measurementType\":\"ELECTRICITY\",\"scalingFactor\":1,\"currentScalingFactor\":1,\"voltageScalingFactor\":1,\"internalMeters\":1,\"firstMeasurementTime\":-1,\"lastMeasurementTime\":-1}" }
   entity(:empty_response) { "[]" }
@@ -196,7 +197,8 @@ describe Buzzn::Discovergy::DataSource do
     attr_accessor :result
 
     def readings(*args)
-      @result
+      @results = @result.dup if @results.nil? || @results.empty?
+      @results.shift
     end
   end
 
@@ -204,7 +206,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'collects data from each register without group broker' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    facade.result = single_meter_live_response
+    facade.result = [single_meter_live_response]
     empty_group.brokers.each{ |broker| broker.destroy }
 
     in_result = data_source.collection(register_with_broker.group, :in)
@@ -222,7 +224,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'collects data from each register with group broker' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    facade.result = virtual_meter_live_response
+    facade.result = [virtual_meter_live_response]
 
     in_result = data_source.collection(some_group, :in)
     out_result = data_source.collection(some_group, :out)
@@ -239,18 +241,18 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'data ranges from a group' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    facade.result = single_meter_year_response
+    facade.result = [single_meter_year_response, single_meter_year_response2]
 
     in_result = data_source.aggregated(some_group, :in, Buzzn::Interval.year)
     out_result = data_source.aggregated(some_group, :out, Buzzn::Interval.year)
 
     expect(in_result.in.size).to eq 2
     expect(in_result.out.size).to eq 0
-    #expect(out_result.in.size).to eq 0
-    #expect(out_result.out.size).to eq 2
+    expect(out_result.in.size).to eq 0
+    expect(out_result.out.size).to eq 2
 
     expect(in_result.resource_id).to eq some_group.id
-    #expect(out_result.resource_id).to eq register_with_group_broker.group.id
+    expect(out_result.resource_id).to eq some_group.id
 
     expect(in_result.units).to eq :milliwatt_hour
     expect(out_result.units).to eq :milliwatt_hour
@@ -258,7 +260,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'data ranges from a register' do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
-    facade.result = single_meter_hour_response
+    facade.result = [single_meter_hour_response]
 
     in_result = data_source.aggregated(register_with_broker, :in, Buzzn::Interval.hour)
     out_result = data_source.aggregated(register_with_broker, :out, Buzzn::Interval.hour)
