@@ -30,6 +30,10 @@ describe Display do
     schema 'scores_schema'
   end
 
+  get '/groups/{group.id}/mentors' do
+    description 'returns the mentors of the group'
+  end
+
   get '/groups/{group.id}/bubbles' do
     description 'returns the bubbles of the group'
   end
