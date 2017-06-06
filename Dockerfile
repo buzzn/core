@@ -47,3 +47,7 @@ EXPOSE 3000
 # tell the Rails dev server to bind to all interfaces by
 # default.
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+
+
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD curl -f http://localhost:3000/ || exit 1
