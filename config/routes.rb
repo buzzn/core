@@ -8,7 +8,6 @@ Buzzn::Application.routes.draw do
   ActiveAdmin.routes(self)
 
   mount API::Base, at: "/"
-  mount GrapeSwaggerRails::Engine, at: "/"
 
   require 'sidekiq/web'
   authenticate :user, lambda { |user| user.has_role?(:admin) } do
