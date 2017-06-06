@@ -21,6 +21,9 @@ gem 'activeadmin'
 gem 'select2-rails'
 gem 'activeadmin-select2', github: 'mfairburn/activeadmin-select2'
 
+# swagger
+gem 'ruby-swagger'
+
 # Backend
 gem 'roda'
 gem 'rails'
