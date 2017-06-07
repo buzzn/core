@@ -21,7 +21,7 @@ Buzzn::Application.configure do
   config.action_mailer.raise_delivery_errors  = false
   #config.action_mailer.perform_deliveries     = true
 
-
+  config.log_level = :debug
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -37,4 +37,6 @@ Buzzn::Application.configure do
 
   # display error page instead of stack trace
   # config.consider_all_requests_local = false
+
+  config.log_level = ENV['LOG_LEVEL'] || 'debug'
 end
