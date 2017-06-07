@@ -22,7 +22,8 @@ class Display::GroupRoda < ::BaseRoda
       end
 
       r.get! 'charts' do
-        aggregated(group_charts_ng.call(r.params, resource: [group.method(:charts)]))
+        aggregated(group_charts_ng.call(r.params,
+                                        resource: [group.method(:charts)]))
       end
 
       r.get! 'bubbles' do

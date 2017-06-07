@@ -1,5 +1,12 @@
+require_relative 'plugins/aggregation'
 class LocalpoolRoda < BaseRoda
+
+  include Import.args[:env,
+                      'transaction.group_charts_ng',
+                      'service.current_power']
+
   plugin :shared_vars
+  plugin :aggregation
 
   route do |r|
 
@@ -63,11 +70,12 @@ class LocalpoolRoda < BaseRoda
       end
 
       r.get! 'charts' do
-        aggregated(group_charts.call(r.params, group_charts: [localpool]))
+        aggregated(group_charts_ng.call(r.params,
+                                        resource: [localpool.method(:charts)]))
       end
 
       r.get! 'bubbles' do
-        aggregated(current_power.for_each_register_in_group(localpool))
+        aggregated(localpool.bubbles)
       end
 
     end

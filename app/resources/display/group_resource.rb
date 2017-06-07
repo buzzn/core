@@ -1,7 +1,7 @@
 module Display
   class GroupResource < Buzzn::Resource::Entity
-    include Import.reader['service.current_power']
-    include Import.reader['service.charts']
+    include Import.reader['service.current_power',
+                          'service.charts']
 
     model Group::Base
 

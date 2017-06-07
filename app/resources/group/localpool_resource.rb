@@ -1,6 +1,9 @@
 module Group
   class LocalpoolResource < BaseResource
 
+    include Import.reader['service.current_power',
+                          'service.charts']
+
     model Localpool
 
     has_one :localpool_processing_contract
@@ -16,6 +19,8 @@ module Group
     has_many :prices
     has_many :billing_cycles
 
+    # API methods for endpoints
+
     def create_price(params = {})
       create(permissions.prices.create) do
         params[:localpool] = object
@@ -29,5 +34,14 @@ module Group
         to_resource(BillingCycle.create!(params), permissions.billing_cycles)
       end
     end
+
+    def bubbles
+      current_power.for_each_register_in_group(self)
+    end
+
+    def charts(duration:, timestamp: nil)
+      @charts.for_group(self, Buzzn::Interval.create(duration, timestamp))
+    end
+
   end
 end
