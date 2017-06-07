@@ -47,7 +47,7 @@ module Buzzn
     end
 
     def to_s
-      "[#{from_as_utc_time}, #{to_as_utc_time})"
+      "#{@duration}[#{from_as_utc_time}, #{to_as_utc_time})"
     end
 
     private

@@ -77,7 +77,8 @@ module Buzzn
     config.x.templates_path = Rails.root.join('app', 'templates')
 
     config.logger = Logger.new(STDOUT)
-    config.log_level = ENV['LOG_LEVEL'] || 'debug'
+    config.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
+    config.log_level = ENV['LOG_LEVEL'] || 'info'
 
     config.after_initialize do
       # setup service components, transactions

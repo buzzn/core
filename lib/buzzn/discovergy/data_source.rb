@@ -178,12 +178,17 @@ module Buzzn::Discovergy
       map
     end
 
+    def log(response, interval, mode, two_way_meter, resource_id)
+      @logger.debug{"id: #{resource_id} #{interval} mode: #{mode} twoway: #{two_way_meter} response: #{response}"}
+    end
+    private :log
+
     ##############
     ### PARSER ###
     ##############
 
     def parse_aggregated_data(response, interval, mode, two_way_meter, resource_id)
-      @logger.debug{"#{resource_id} #{interval} #{mode} twoway: #{two_way_meter} response: #{response}"}
+      log(response, interval, mode, two_way_meter, resource_id)
       json = MultiJson.load(response)
       if json.empty?
         return nil
@@ -202,7 +207,7 @@ module Buzzn::Discovergy
     end
 
     def parse_aggregated_live(response, mode, two_way_meter, resource_id)
-      @logger.debug{"#{resource_id} #{mode} twoway: #{two_way_meter} response: #{response}"}
+      log(response, nil, mode, two_way_meter, resource_id)
       json = MultiJson.load(response)
       if json.empty?
         return nil
