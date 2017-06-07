@@ -49,5 +49,5 @@ EXPOSE 3000
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
 
 
-HEALTHCHECK --interval=5m --timeout=3s \
+HEALTHCHECK --interval=1m --timeout=3s \
   CMD curl -f http://localhost:3000/healthcheck || exit 1
