@@ -1,5 +1,11 @@
 describe Buzzn::Localpool::Checks do
 
+  entity(:register) do
+    register = Fabricate(:input_meter).input_register
+    Fabricate(:localpool).registers << register
+    register
+  end
+
   it 'finds object or error' do
     reading = Fabricate(:reading)
     date_of_first_reading = Buzzn::Localpool::Checks.find_object_or_error("no reading found for register") do
@@ -15,9 +21,6 @@ describe Buzzn::Localpool::Checks do
   end
 
   it 'checks last contract' do
-    register = Fabricate(:input_meter).input_register
-    localpool = Fabricate(:localpool)
-    localpool.registers << register
     lptc = Fabricate(:localpool_power_taker_contract,
                       register: register,
                       begin_date: Date.new(2015, 1, 1),
@@ -53,9 +56,6 @@ describe Buzzn::Localpool::Checks do
   end
 
   it 'checks middle contract' do
-    register = Fabricate(:input_meter).input_register
-    localpool = Fabricate(:localpool)
-    localpool.registers << register
     lptc = Fabricate(:localpool_power_taker_contract,
                       register: register,
                       begin_date: Date.new(2015, 1, 1),
@@ -107,9 +107,6 @@ describe Buzzn::Localpool::Checks do
   end
 
   it 'checks first contract' do
-    register = Fabricate(:input_meter).input_register
-    localpool = Fabricate(:localpool)
-    localpool.registers << register
     lptc = Fabricate(:localpool_power_taker_contract,
                       register: register,
                       begin_date: Date.new(2015, 2, 1),

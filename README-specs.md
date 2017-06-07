@@ -70,6 +70,33 @@ As the roda enpoint actually wraps http around some business logic method the te
 
 It can happen that the output depends on the users permissions, so all cases needs to be tested. Also endpoints which are 'polymorphic', for example deliver `Meter::Real` or `Meter::Virtual` needs to interate over these types.
 
+As we test the http side of things here each test should look at on status code of one endpoint:
+
+    * GET 200 : retrieve resource as admin and verify json
+	* GET 200 all : retrieve collection of resources as admin and verify json
+	* POST 201 : create single resource as admin and verify its json
+	* POST 201 all : create collection of resources as admin and verify json
+	* PATCH 200 : update a resource as admin and verify json
+	* DELETE 204 : delete a resource as admin and verify json
+	* GET 404 : retrieve resource with unknown ID as admin and as anonymous-user and verify json
+	* GET 403 : retrieve resource without permissions as user and as anonymous-user and verify json
+	* POST 403 : create resource permissions as user and as anonymous-user and verify json
+	* PATCH 404 : update resource with unknown ID as admin and verify json
+	* DELETE 404 : delete resource with unknown ID as admin and verify json
+	* POST 422 missing : create resource without any params and verify json
+	* POST 422 wrong : create resource with all wrong params and verify json
+	* PATCH 422 wrong : update resource with all wrong params and verify json
+
+NOTES:
+
+    * admin is easy as s/he always has permissions but any user with enough permissions will do
+	* on public resource 403 is not possible
+	* some resources do not have such fine grained permissions, i.e. can read parent (localpool but can not create billings). if such user exists then it woule make sense to use this user. otherwise skip the tests as we check the retrieval of the parent resource and its permission already in the test of the parent roda
+	* small tests vs longer ones: whenever a tests does too much and fails early the rest of the test gets skipped. this hides the further problems. as we share resources splitting a long test into two usually means two line of code: ```end
+	it 'next test' do```
+	* ideally the roda tree should have one roda-class per resource which works nice with crud
+	* roda-classes can be polymorphic in the sense one roda-class can be mounted at more then one parent. example: ReadingRoda can be mouted under 'register/real/readings' as well under `register/virtual/readings' or under 'registers/reading'. the ReadingRoda needs to be tested against both real and virtual registers but mounting is the responsibility of the parent. dito with bank_accounts, addresses
+
 ### spec/transactions
 
 As transactions provide some business logic as single object (with a `call` method). A typical transaction consists of two steps:

@@ -1,5 +1,5 @@
 module Group
-  class MinimalBaseResource < Buzzn::EntityResource
+  class BaseResource < Buzzn::Resource::Entity
 
     abstract
 
@@ -17,28 +17,9 @@ module Group
     has_many :energy_producers
     has_many :energy_consumers
 
-    def meters
-      # FIXME broken permissions
-      object.meters.collect { |m| Meter::BaseResource.new(m, @current_user) }
-    end
-
-    def registers
-      # note that anonymized_readable_by does inherit the readable
-      # settings of the group
-      object.registers
-        .anonymized_readable_by(@current_user)
-        .by_label(Register::Base::CONSUMPTION,
-                  Register::Base::PRODUCTION_PV,
-                  Register::Base::PRODUCTION_CHP)
-        .collect { |r| Register::BaseResource.new(r, current_user: @current_user) }
-    end
-
     # API methods for endpoints
 
-    def scores(params)
-      interval = params[:interval]
-      timestamp = params[:timestamp] || Time.current
-      mode = params[:mode]
+    def scores(interval:, mode: nil, timestamp: Time.current)
       if timestamp > Time.current.beginning_of_day
         timestamp = timestamp - 1.day
       end
@@ -48,37 +29,7 @@ module Group
       if mode
         result = result.send(mode.to_s.pluralize.to_sym)
       end
-      result.readable_by(@current_user)
+      result.readable_by(@current_user).collect { |s| ScoreResource.new(s) }
     end
-
-    def members
-      object.members.readable_by(@current_user)
-    end
-
-    def comments
-      object.comment_threads.readable_by(@current_user)
-    end
-  end
-
-  # we do not want all infos in collections
-  class BaseResource < MinimalBaseResource
-
-    abstract
-
-    attributes   :big_tumb,
-                 :md_img
-
-    def md_img
-      object.image.md.url
-    end
-
-    def big_tumb
-      object.image.big_tumb.url
-    end
-
-  end
-
-  # TODO get rid of the need of having a Serializer class
-  class BaseSerializer < MinimalBaseResource
   end
 end

@@ -1,37 +1,29 @@
 describe "contracts" do
 
+  def app
+    CoreRoda # this defines the active application for this test
+  end
+
   entity(:admin) { Fabricate(:admin_token) }
 
   entity(:user) { Fabricate(:user_token) }
 
-  let(:anonymous_denied_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"retrieve Contract::Base: permission denied for User: --anonymous--" }
-      ]
-    }
-  end
-
   let(:denied_json) do
-    json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
-    json
-  end
-
-  let(:anonymous_not_found_json) do
     {
       "errors" => [
         {
-          "detail"=>"Contract::Base: bla-blub not found" }
+          "detail"=>"retrieve Contract::Base: permission denied for User: #{user.resource_owner_id}" }
       ]
     }
   end
 
   let(:not_found_json) do
-    json = anonymous_not_found_json.dup
-    json['errors'][0]['detail'] = "Contract::Base: bla-blub not found by User: #{admin.resource_owner_id}"
-    json
+    {
+      "errors" => [
+        {
+          "detail"=>"Contract::BaseResource: bla-blub not found by User: #{admin.resource_owner_id}" }
+      ]
+    }
   end
 
   entity(:metering_point_operator_contract) do
@@ -56,28 +48,32 @@ describe "contracts" do
         "deletable"=>true,
         "begin_date"=>"2014-12-01",
         "metering_point_operator_name"=>"buzzn systems UG",
-        "tariffs"=>[
-          {
-            "id"=>contract.tariffs[0].id,
-            "type"=>'contract_tariff',
-            "name"=>"metering_standard",
-            "begin_date"=>"2014-12-01",
-            "end_date"=>nil,
-            "energyprice_cents_per_kwh"=>0,
-            "baseprice_cents_per_month"=>30000,
-          }
-        ],
-        "payments"=>contract.payments.collect do |p|
-          {
-            "id"=>p.id,
-            "type"=>'contract_payment',
-            "begin_date"=>p.begin_date.to_s,
-            "end_date"=>p.end_date ? p.end_date.to_s : nil,
-            "price_cents"=>p.price_cents,
-            "cycle"=>p.cycle,
-            "source"=>p.source,
-          }
-        end,
+        "tariffs"=>{
+          'array'=>[
+            {
+              "id"=>contract.tariffs[0].id,
+              "type"=>'contract_tariff',
+              "name"=>"metering_standard",
+              "begin_date"=>"2014-12-01",
+              "end_date"=>nil,
+              "energyprice_cents_per_kwh"=>0,
+              "baseprice_cents_per_month"=>30000,
+            }
+          ]
+        },
+        "payments"=>{
+          'array'=> contract.payments.collect do |p|
+            {
+              "id"=>p.id,
+              "type"=>'contract_payment',
+              "begin_date"=>p.begin_date.to_s,
+              "end_date"=>p.end_date ? p.end_date.to_s : nil,
+              "price_cents"=>p.price_cents,
+              "cycle"=>p.cycle,
+              "source"=>p.source,
+            }
+          end
+        },
         "contractor"=>{
           "id"=>contract.contractor.id,
           "type"=>"organization",
@@ -94,12 +90,28 @@ describe "contracts" do
         "customer"=>{
           "id"=>contract.customer.id,
           "type"=>"user",
+          "user_name"=>contract.customer.user_name,
+          "title"=>contract.customer.profile.title,
+          "first_name"=>contract.customer.first_name,
+          "last_name"=>contract.customer.last_name,
+          "gender"=>contract.customer.profile.gender,
+          "phone"=>contract.customer.profile.phone,
+          "email"=>contract.customer.email,
+          "image"=>contract.customer.profile.image.md.url,
           "updatable"=>true,
           "deletable"=>true
         },
         "signing_user"=>{
           "id"=>contract.signing_user.id,
           "type"=>"user",
+          "user_name"=>contract.signing_user.user_name,
+          "title"=>contract.signing_user.profile.title,
+          "first_name"=>contract.signing_user.first_name,
+          "last_name"=>contract.signing_user.last_name,
+          "gender"=>contract.signing_user.profile.gender,
+          "phone"=>contract.signing_user.profile.phone,
+          "email"=>contract.signing_user.email,
+          "image"=>contract.signing_user.profile.image.md.url,
           "updatable"=>true,
           "deletable"=>true
         },
@@ -121,20 +133,12 @@ describe "contracts" do
     let(:contract) { metering_point_operator_contract }
 
     it '403' do
-      GET "/api/v1/contracts/#{contract.id}"
-      expect(response).to have_http_status(403)
-      expect(json).to eq anonymous_denied_json
-
       GET "/api/v1/contracts/#{contract.id}", user
       expect(response).to have_http_status(403)
       expect(json).to eq denied_json
     end
 
     it '404' do
-      GET "/api/v1/contracts/bla-blub"
-      expect(response).to have_http_status(404)
-      expect(json).to eq anonymous_not_found_json
-
       GET "/api/v1/contracts/bla-blub", admin
       expect(response).to have_http_status(404)
       expect(json).to eq not_found_json
@@ -148,7 +152,7 @@ describe "contracts" do
 
       context "as #{type}" do
         it '200' do
-          GET "/api/v1/contracts/#{contract.id}", admin
+          GET "/api/v1/contracts/#{contract.id}", admin, include: 'tariffs,payments,contractor,customer,signing_user,customer_bank_account,contractor_bank_account'
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq contract_json.to_yaml
         end
@@ -175,10 +179,6 @@ describe "contracts" do
     context 'GET' do
 
       it '403' do
-        GET "/api/v1/contracts/#{metering_point_operator_contract.id}/customer"
-        expect(response).to have_http_status(403)
-        expect(json).to eq anonymous_denied_json
-
         GET "/api/v1/contracts/#{metering_point_operator_contract.id}/customer", user
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
@@ -205,8 +205,6 @@ describe "contracts" do
             {
               "id"=>customer.id,
               "type"=>"user",
-              "updatable"=>false,
-              "deletable"=>false,
               "user_name"=>customer.user_name,
               "title"=>nil,
               "first_name"=>customer.first_name,
@@ -214,15 +212,19 @@ describe "contracts" do
               "gender"=>nil,
               "phone"=>customer.profile.phone,
               "email"=>customer.profile.email,
+              "image"=>customer.profile.image.md.url,
+              "updatable"=>false,
+              "deletable"=>false,
               "sales_tax_number"=>nil,
               "tax_rate"=>nil,
-              "tax_number"=>nil
+              "tax_number"=>nil,
+              "bank_accounts"=>{ 'array'=>[] }
             }
           end
 
           it '200' do
             contract = send "#{type}_contract"
-            GET "/api/v1/contracts/#{contract.id}/customer", admin
+            GET "/api/v1/contracts/#{contract.id}/customer", admin, include: :bank_accounts
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq(send("#{type}_customer_json").to_yaml)
           end
@@ -250,10 +252,6 @@ describe "contracts" do
     context 'GET' do
 
       it '403' do
-        GET "/api/v1/contracts/#{metering_point_operator_contract.id}/contractor"
-        expect(response).to have_http_status(403)
-        expect(json).to eq anonymous_denied_json
-
         GET "/api/v1/contracts/#{metering_point_operator_contract.id}/contractor", user
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
@@ -292,14 +290,15 @@ describe "contracts" do
               "sales_tax_number"=>nil,
               "tax_rate"=>nil,
               "tax_number"=>nil,
-              "address"=>nil
+              "address"=>nil,
+              "bank_accounts"=>{ 'array'=>[] }
             }
           end
 
           it '200' do
             contract = send "#{type}_contract"
 
-            GET "/api/v1/contracts/#{contract.id}/contractor", admin
+            GET "/api/v1/contracts/#{contract.id}/contractor", admin, include: 'address,bank_accounts'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq(send("#{type}_contractor_json").to_yaml)
           end

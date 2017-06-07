@@ -1,5 +1,5 @@
 module Buzzn::Pdfs
-  class LSN_A01 < PdfGenerator
+  class LSN_A01 < Buzzn::PdfGenerator
 
     TEMPLATE = 'lsn_a01.slim'
 

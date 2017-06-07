@@ -26,9 +26,9 @@ describe Meter::BaseResource do
   end
 
   it 'retrieve all - ids + types' do
-    expected = {Meter::Real => real.id, Meter::Virtual => virtual.id}
-    result = Meter::BaseResource.all(user).collect do |r|
-      [r.type.constantize, r.id]
+    expected = {'meter_real' => real.id, 'meter_virtual' => virtual.id}
+    result = Meter::BaseResource.all(user)['array'].collect do |r|
+      [r.type, r.id]
     end
     expect(Hash[result]).to eq expected
   end
@@ -36,10 +36,10 @@ describe Meter::BaseResource do
   describe Meter::Real do
 
     it 'retrieve all - ids + types' do
-      result = Meter::RealResource.all(user).collect do |r|
-        [r.type.constantize, r.id]
+      result = Meter::RealResource.all(user)['array'].collect do |r|
+        [r.type, r.id]
       end
-      expect(result).to eq [[Meter::Real, real.id]]
+      expect(result).to eq [['meter_real', real.id]]
     end
 
     it "retrieve - id + type" do
@@ -61,9 +61,9 @@ describe Meter::BaseResource do
   describe Meter::Virtual do
   
     it 'retrieve all - ids + types' do
-      expected = [Meter::Virtual, virtual.id]
-      result = Meter::VirtualResource.all(user).collect do |r|
-        [r.type.constantize, r.id]
+      expected = ['meter_virtual', virtual.id]
+      result = Meter::VirtualResource.all(user)['array'].collect do |r|
+        [r.type, r.id]
       end
       expect(result).to eq [expected]
     end

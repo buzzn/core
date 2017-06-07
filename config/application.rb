@@ -1,6 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
-require File.expand_path('../../lib/buzzn/services/boot', __FILE__)
+require File.expand_path('../../lib/buzzn/boot/init', __FILE__)
 require 'rails/all'
 
 ## https://docs.newrelic.com/docs/agents/ruby-agent/features/garbage-collection#gc_setup
@@ -22,13 +22,13 @@ module Buzzn
                 when 'development', 'test'
                   %r(http://(localhost:[0-9]*|127.0.0.1:[0-9]*))
                 when 'staging'
-                  %r(https://(staging|develop)-[a-z0-9]*.buzzn.io)
+                  %r((https://(staging|develop)-[a-z0-9]*.buzzn.io|http://(localhost:[0-9]*|127.0.0.1:[0-9]*)))
                 when 'production'
                   %r(https://[a-z0-9]*.buzzn.io)
                 else
-                  raisewarn 'unknown rails environment'
+                  raise 'unknown rails environment'
                 end
-      config.middleware.insert_before 0, 'Rack::Cors' do
+      config.middleware.insert_before 0, 'Rack::Cors', debug: Rails.env != 'production'  do
         allow do
           origins *domains
           ['/api/*', '/oauth/*'].each do |path|
@@ -54,9 +54,6 @@ module Buzzn
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation]
 
-    config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
-
-
     config.generators do |g|
       g.orm :active_record
       g.test_framework :rspec, spec: true, fixture: false
@@ -79,16 +76,13 @@ module Buzzn
 
     config.x.templates_path = Rails.root.join('app', 'templates')
 
-    config.before_initialize do
-      logger = ::Logger.new(STDERR)
-      if Rails.env == 'development'
-        logger.formatter = proc { |_, _, _, msg| "#{msg}\n" }
-      else
-        logger.formatter = proc { |l, _, _, msg| "#{msg}\n" if l != 'DEBUG' }
-      end
-      Buzzn::Logger.root = logger
-      Buzzn::Services::Boot.before_initialize
+    config.logger = Logger.new(STDOUT)
+    config.log_level = ENV['LOG_LEVEL'] || 'debug'
+
+    config.after_initialize do
+      # setup service components, transactions
       Buzzn::Logger.root = Rails.logger
+      Buzzn::Boot::Init.run
     end
   end
 end

@@ -1,30 +1,47 @@
 module Group
-  class LocalpoolResource < MinimalBaseResource
+  class LocalpoolResource < BaseResource
+
+    include Import.reader['service.current_power',
+                          'service.charts']
 
     model Localpool
 
     has_one :localpool_processing_contract
     has_one :metering_point_operator_contract
+    has_many :localpool_power_taker_contracts
+    has_many :prices
+    has_many :billing_cycles
+    has_many :localpool_power_taker_contracts
+    has_many :users
+    has_many :contracts
+    has_many :registers
+    has_many :users
+    has_many :prices
+    has_many :billing_cycles
 
-    def prices
-      object.prices.readable_by(@current_user).collect { |pr| PriceResource.new(pr) }
-    end
+    # API methods for endpoints
 
     def create_price(params = {})
-      params[:localpool] = object
-      PriceResource.new(Price.guarded_create(@current_user, params, object))
+      create(permissions.prices.create) do
+        params[:localpool] = object
+        to_resource(Price.create!(params), permissions.prices)
+      end
     end
 
-    # API methods
-
-    def power_taker_contracts
-      object.localpool_power_taker_contracts
-        .readable_by(@current_user)
-        .collect { |c| self.class.to_resource(@current_user, c) }
+    def create_billing_cycle(params = {})
+      create(permissions.billing_cycles.create) do
+        params[:localpool] = object
+        to_resource(BillingCycle.create!(params), permissions.billing_cycles)
+      end
     end
-  end
 
-  # TODO get rid of the need of having a Serializer class
-  class LocalpoolSerializer < LocalpoolResource
+    def bubbles
+      current_power.for_each_register_in_group(self)
+    end
+
+    def charts(duration:, timestamp: nil)
+      @charts.for_group(self, Buzzn::Interval.create(duration, timestamp))
+    end
+
   end
 end

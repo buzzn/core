@@ -1,4 +1,6 @@
 # coding: utf-8
+# need to load as we overwrite validate_credentials method
+require './app/models/broker/discovergy'
 describe "Register Model" do
 
   entity!(:group) { Fabricate(:tribe) }
@@ -310,11 +312,6 @@ describe "Register Model" do
           Register::Base.by_group(group).anonymized(u).collect{ |mp| mp.name }
         ).to match_array ['Wohnung', 'Windanlage', 'anonymous']
       end
-    end
-  end
-
-  class Broker::Discovergy
-    def validates_credentials
     end
   end
 

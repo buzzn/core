@@ -100,32 +100,11 @@ module Buzzn::Localpool
         end
         consumption_third_party = total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY]
         grid_consumption = total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).value
-        grid_consumption_corrected = correct_grid_value(grid_consumption,
-                                                        grid_consumption,
-                                                        consumption_third_party,
-                                                        register_id_grid_consumption_corrected,
-                                                        Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED,
-                                                        total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp)
-        grid_feeding_corrected = correct_grid_value(total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).value,
-                                                    grid_consumption,
-                                                    consumption_third_party,
-                                                    register_id_grid_feeding_corrected,
-                                                    Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED,
-                                                    total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).last_reading.timestamp)
-        return grid_consumption_corrected, grid_feeding_corrected
-      end
-
-      # This method calculates the accounted energy for an energy value (both grid consumption and feeding) in dependency of the energy consumed by third party supplied
-      # input params:
-      #   value: The energy value in milliwatt_hour, that has to be corrected
-      #   consumption_third_party: The energy in milliwatt_hour, that has been consumed by all third party supplied in a LCP
-      #   label: The label for the accounted energy, may be Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED or Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED
-      #   corrected_value: the energy in milliwatt_hour that is used for the new reading
-      # returns:
-      #   accounted_energy: Object, that contains all information about accounted readings
-      def correct_grid_value(value, grid_consumption, consumption_third_party, register_id, label, timestamp)
-        corrected_value = grid_consumption - consumption_third_party > 0 ? value - consumption_third_party : 0
-        return create_corrected_reading(register_id, label, corrected_value, timestamp)
+        grid_consumption_corrected = grid_consumption - consumption_third_party > 0 ? grid_consumption - consumption_third_party : 0
+        grid_consumption_corrected_result = create_corrected_reading(register_id_grid_consumption_corrected, Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED, grid_consumption_corrected, total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp)
+        grid_feeding_corrected = grid_consumption - consumption_third_party > 0 ? total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).value : total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).value - grid_consumption + consumption_third_party
+        grid_feeding_corrected_result = create_corrected_reading(register_id_grid_feeding_corrected, Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED, grid_feeding_corrected, total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).last_reading.timestamp)
+        return grid_consumption_corrected_result, grid_feeding_corrected_result
       end
 
       # This method creates the new reading for a corrected register and returns the accounted energy for it
@@ -133,22 +112,43 @@ module Buzzn::Localpool
       #   register_id: The Register::Base.id for which the reading should be created
       #   label: The label for the accounted energy, may be Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED or Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED
       #   corrected_value: the energy in milliwatt_hour that is used for the new reading
+      #   timestamp: The timestamp for the new reading
       # returns:
       #   accounted_energy: Object, that contains all information about accounted readings
       def create_corrected_reading(register_id, label, corrected_value, timestamp)
         # TODO: (nice-to-have) validate that all corrected registers must have an initial reading with energy_milliwatt_hour = 0
         last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).first
-        new_reading_value = last_corrected_reading.nil? ? corrected_value : corrected_value + last_corrected_reading.energy_milliwatt_hour
-        new_reading = Reading.create!(register_id: register_id,
-                                      timestamp: timestamp,
-                                      energy_milliwatt_hour: new_reading_value,
-                                      reason: Reading::REGULAR_READING,
-                                      source: Reading::BUZZN_SYSTEMS,
-                                      quality: Reading::ENERGY_QUANTITY_SUMMARIZED,
-                                      meter_serialnumber: Register::Base.find(register_id).meter.manufacturer_product_serialnumber)
+        if last_corrected_reading.nil?
+          new_reading = save_corrected_reading(register_id, corrected_value, timestamp)
+        else
+          if last_corrected_reading.timestamp != timestamp
+            new_reading = save_corrected_reading(register_id, corrected_value + last_corrected_reading.energy_milliwatt_hour, timestamp)
+          else
+            # TODO: maybe think about overwriting an existing reading instead of using it
+            new_reading = last_corrected_reading
+            last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).to_a[1]
+          end
+        end
         accounted_energy = Buzzn::AccountedEnergy.new(corrected_value, last_corrected_reading, new_reading, new_reading)
         accounted_energy.label = label
         return accounted_energy
+      end
+
+      # This method saves the new reading for a corrected register
+      # input params:
+      #   register_id: The Register::Base.id for which the reading should be saved
+      #   corrected_value: the energy in milliwatt_hour that is used for the new reading
+      #   timestamp: The timestamp for the new reading
+      # returns:
+      #   new_reading: The new Reading
+      def save_corrected_reading(register_id, new_reading_value, timestamp)
+        Reading.create!(register_id: register_id,
+                        timestamp: timestamp,
+                        energy_milliwatt_hour: new_reading_value,
+                        reason: Reading::REGULAR_READING,
+                        source: Reading::BUZZN_SYSTEMS,
+                        quality: Reading::ENERGY_QUANTITY_SUMMARIZED,
+                        meter_serialnumber: Register::Base.find(register_id).meter.manufacturer_product_serialnumber)
       end
 
       # This method returns the energy measured in a specific period of time
@@ -164,12 +164,10 @@ module Buzzn::Localpool
         last_reading_original = get_last_reading(register, end_date, accounting_year)
         last_reading = last_reading_original.clone
         device_change_readings = get_readings_at_device_change(register, begin_date, end_date, accounting_year)
-
         if end_date.nil?
           last_reading.timestamp = adjust_end_date(last_reading.timestamp, accounting_year)
           last_reading.energy_milliwatt_hour = adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
         end
-
         if device_change_readings.empty?
           accounted_energy = last_reading.energy_milliwatt_hour - first_reading.energy_milliwatt_hour
           return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
@@ -221,6 +219,10 @@ module Buzzn::Localpool
                                   .at(begin_date)
                                   .without_reason(Reading::DEVICE_CHANGE_1)
                                   .first
+          # try to request the missing reading from data provider
+          if first_reading.nil?
+            first_reading = get_missing_reading(register, begin_date)
+          end
           # if no reading was found at the specific date raise an error
           if first_reading.nil?
             raise RecordNotFoundError.new("no beginning reading found for register #{register.id}")
@@ -261,6 +263,10 @@ module Buzzn::Localpool
                                   .at(end_date)
                                   .without_reason(Reading::DEVICE_CHANGE_2)
                                   .first
+          # try to request the missing reading from data provider
+          if last_reading.nil?
+            last_reading = get_missing_reading(register, end_date)
+          end
           # if no reading was found at the specific date raise an error
           if last_reading.nil?
             raise ActiveRecord::RecordNotFound.new("no ending reading found for register #{register.id}")
@@ -364,6 +370,60 @@ module Buzzn::Localpool
           end
         end
         return last_reading.energy_milliwatt_hour
+      end
+
+      # This method gets missing readings from external services and stores them in DB
+      # input params:
+      #   register: The Register::Base for which the reading is requested
+      #   date: The Date for which the reading is missing
+      # returns:
+      #   reading: The missing reading
+      def get_missing_reading(register, date)
+        unless register.meter.broker.is_a?(Broker::Discovergy)
+          raise ArgumentError.new("register #{register.id} is not a discovergy register")
+        end
+        result = Buzzn::Boot::MainContainer['service.charts'].for_register(register, Buzzn::Interval.second(date.to_time))
+        if register.input?
+          timestamp = result.in.first.timestamp
+          value = result.in.first.value
+        else
+          timestamp = result.out.first.timestamp
+          value = result.out.first.value
+        end
+        Reading.create!(register_id: register.id,
+                        timestamp: timestamp,
+                        energy_milliwatt_hour: value,
+                        reason: Reading::REGULAR_READING,
+                        source: Reading::BUZZN_SYSTEMS,
+                        quality: Reading::READ_OUT,
+                        state: 'Z86',
+                        meter_serialnumber: register.meter.manufacturer_product_serialnumber)
+      end
+
+      # This method returns the timespan between two dates in months while considering half months
+      # input params:
+      #   date_1: The first Date to compare
+      #   date_2: The second Date to compare
+      # returns:
+      #   months between two dates, e.g. 11 or 11.5 or 12
+      def timespan_in_months(date_1, date_2)
+        if date_1 > date_2
+          date_2_temp = date_1.clone
+          date_1 = date_2.clone
+          date_2 = date_2_temp
+        end
+        days = date_2.day - date_1.day
+        months = date_2.month - date_1.month
+        years = date_2.year - date_1.year
+        half_rounded = 0
+        factor = days < 0 ? -1 : 1
+        days = factor * days
+        if days > 19
+          half_rounded = factor * 1
+        elsif days >= 9
+          half_rounded = factor * 0.5
+        end
+        return years * 12 + months + half_rounded
       end
     end
   end

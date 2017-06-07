@@ -1,31 +1,29 @@
 module Register
-  class BaseResource < Buzzn::EntityResource
+  class BaseResource < Buzzn::Resource::Entity
 
     abstract
 
     model Base
 
     attributes  :direction,
-                :name
+                :name,
+                :pre_decimal,
+                :decimal,
+                :converter_constant,
+                :low_power,
+                :label,
+                :last_reading
+
+    #has_one :address
+    has_one :group
 
     # API methods for the endpoints
 
     def readings
-      Reading.by_register_id(object.id).collect do |r|
-        ReadingResource.new(r, current_user: current_user)
-      end
+      all(permissions.readings, Reading.by_register_id(object.id))
     end
-  end
 
-  class CollectionResource < BaseResource
-  end
-
-  class SingleResource < BaseResource
-
-    attributes :pre_decimal,
-               :decimal,
-               :converter_constant,
-               :low_power
+    # attribute implementations
 
     def pre_decimal
       object.digits_before_comma
@@ -43,16 +41,6 @@ module Register
     def low_power
       object.low_load_ability
     end
-
-    # TODO needed ?
-    has_one  :address
-    has_one  :meter
-
-  end
-
-  class FullCollectionResource < SingleResource
-
-    attributes :last_reading
 
     def last_reading
       reading = Reading.by_register_id(object.id).sort('timestamp': -1).first

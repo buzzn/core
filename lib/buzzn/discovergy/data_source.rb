@@ -87,7 +87,7 @@ module Buzzn::Discovergy
       resource.brokers.by_data_source(self).each do |broker|
         two_way_meter = broker.two_way_meter?
         # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
-        response = @facade.readings(broker, interval, (!two_way_meter && mode == :out) ? :in : mode, false)
+        response = @facade.readings(broker, interval, (two_way_meter == false && mode == :out) ? :in : mode, false)
 
         result = add(result, parse_aggregated_data(response, interval, mode, two_way_meter, resource.id), interval)
       end
@@ -229,7 +229,7 @@ module Buzzn::Discovergy
 
     def parse_aggregated_second(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt_hour(resource_id)
-      if two_way_meter && mode == :out
+      if two_way_meter != false && mode == :out
         energy_out = 'Out'
       end
       result.add(json.first['time']/1000.0, json.first['values']["energy#{energy_out}"]/10000.0, mode)
@@ -239,7 +239,7 @@ module Buzzn::Discovergy
     def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt(resource_id)
       json.each do |item|
-        if two_way_meter
+        if two_way_meter != false
           if item['values']['power'] > 0 && mode == :in
             power = item['values']['power']
           elsif item['values']['power'] < 0 && mode == :out
@@ -258,7 +258,7 @@ module Buzzn::Discovergy
 
     def parse_aggregated_day(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt(resource_id)
-      if two_way_meter && mode == :out
+      if two_way_meter != false && mode == :out
         energy_out = 'Out'
       end
       first_reading = first_timestamp = nil
@@ -278,7 +278,7 @@ module Buzzn::Discovergy
     def parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt_hour(resource_id)
       old_value = new_value = timestamp = i = 0
-      if two_way_meter && mode == :out
+      if two_way_meter != false && mode == :out
         energy_out = 'Out'
       end
       json.each do |item|

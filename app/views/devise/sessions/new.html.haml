@@ -1,5 +1,3 @@
-- meta title: t('.sign_in')
-
 %h1= t('.sign_in')
 
 = simple_form_for resource, as: resource_name, url: session_path(resource_name) do |f|
@@ -10,4 +8,3 @@
   = f.input :remember_me, as: :boolean, input_html: {checked: true}
   = f.button :submit, t('.sign_in'), class: 'btn btn-lg btn-success btn-block'
   = render "devise/shared/links"
-

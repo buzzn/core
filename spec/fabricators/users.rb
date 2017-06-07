@@ -7,6 +7,7 @@ Fabricator :user do
   profile           { Fabricate(:profile) }
   created_at        { (rand*10).days.ago }
   after_create { |user|
+    user.add_role(:self, user)
     user.confirm
   }
 end
@@ -50,6 +51,11 @@ end
 Fabricator :felix, from: :user do
   email               'felix@buzzn.net'
   profile             { Fabricate(:profile_felix) }
+end
+
+Fabricator :ralf, from: :user do
+  email               'ralf@buzzn.net'
+  profile             { Fabricate(:profile_ralf) }
 end
 
 Fabricator :justus, from: :user do

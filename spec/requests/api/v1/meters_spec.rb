@@ -1,39 +1,31 @@
 # coding: utf-8
 describe "meters" do
 
+  def app
+    CoreRoda # this defines the active application for this test
+  end
+
   entity(:admin) { Fabricate(:admin_token) }
 
   entity(:user) { Fabricate(:user_token) }
 
-  let(:anonymous_denied_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"retrieve Meter::Base: permission denied for User: --anonymous--" }
-      ]
-    }
-  end
-
   let(:denied_json) do
-    json = anonymous_denied_json.dup
-    json['errors'][0]['detail'].sub! /--anonymous--/, user.resource_owner_id
-    json
-  end
-
-  let(:anonymous_not_found_json) do
     {
       "errors" => [
         {
-          "detail"=>"Meter::Base: bla-blub not found"
-        }
+          "detail"=>"retrieve Meter::Base: permission denied for User: #{user.resource_owner_id}" }
       ]
     }
   end
 
   let(:not_found_json) do
-    json = anonymous_not_found_json.dup
-    json['errors'][0]['detail'] = "Meter::Base: bla-blub not found by User: #{admin.resource_owner_id}"
-    json
+    {
+      "errors" => [
+        {
+          "detail"=>"Meter::BaseResource: bla-blub not found by User: #{admin.resource_owner_id}"
+        }
+      ]
+    }
   end
 
   entity(:virtual_meter) { Fabricate(:virtual_meter) }
@@ -64,21 +56,24 @@ describe "meters" do
         "updatable"=>true,
         "deletable"=>true,
         "smart"=>false,
-        "registers"=>[
-          {
-            "id"=>meter.input_register.id,
-            "type"=>"register_real",
-            "direction"=>meter.input_register.direction.to_s,
-            "name"=>meter.input_register.name,
-            "pre_decimal"=>6,
-            "decimal"=>2,
-            "converter_constant"=>1,
-            "low_power"=>false,
-            "last_reading"=>0,
-            "uid"=>meter.input_register.uid,
-            "obis"=>meter.input_register.obis
-          }
-        ]
+        "registers"=>{
+          'array'=>[
+            {
+              "id"=>meter.input_register.id,
+              "type"=>"register_real",
+              "direction"=>meter.input_register.direction.to_s,
+              "name"=>meter.input_register.name,
+              "pre_decimal"=>6,
+              "decimal"=>2,
+              "converter_constant"=>1,
+              "low_power"=>false,
+              "label"=>meter.input_register.label,
+              "last_reading"=>0,
+              "uid"=>meter.input_register.uid,
+              "obis"=>meter.input_register.obis
+            }
+          ]
+        }
       }
     end
 
@@ -90,33 +85,25 @@ describe "meters" do
     end
 
     it '403' do
-      GET "/api/v1/meters/#{virtual_meter.id}"
-      expect(response).to have_http_status(403)
-      expect(json).to eq anonymous_denied_json
-
       GET "/api/v1/meters/#{real_meter.id}", user
       expect(response).to have_http_status(403)
       expect(json).to eq denied_json
     end
 
     it '404' do
-      GET "/api/v1/meters/bla-blub"
-      expect(response).to have_http_status(404)
-      expect(json).to eq anonymous_not_found_json
-
       GET "/api/v1/meters/bla-blub", admin
       expect(response).to have_http_status(404)
       expect(json).to eq not_found_json
     end
 
     it '200' do
-      GET "/api/v1/meters/#{meter.id}", user
+      GET "/api/v1/meters/#{meter.id}?include=registers", user
       expect(response).to have_http_status(200)
-      expect(json).to eq meter_json
+      expect(json.to_yaml).to eq meter_json.to_yaml
 
-      GET "/api/v1/meters/#{meter.id}", admin
+      GET "/api/v1/meters/#{meter.id}?include=registers", admin
       expect(response).to have_http_status(200)
-      expect(json).to eq admin_meter_json
+      expect(json.to_yaml).to eq admin_meter_json.to_yaml
     end
   end
 
@@ -130,12 +117,6 @@ describe "meters" do
       end
     end
 
-    let(:register_anonymous_denied_json) do
-      json = anonymous_denied_json.dup
-      json['errors'][0]['detail'].sub! 'Base', "Virtual"
-      json
-    end
-
     let(:register_denied_json) do
       json = denied_json.dup
       json['errors'][0]['detail'].sub! 'Base', "Virtual"
@@ -144,7 +125,7 @@ describe "meters" do
 
     let(:virtual_not_found_json) do
       json = not_found_json.dup
-      json['errors'][0]['detail'].sub! 'Base', 'Virtual'
+      json['errors'][0]['detail'].sub! 'BaseResource', 'Virtual'
       json
     end
 
@@ -158,18 +139,14 @@ describe "meters" do
         "decimal"=>2,
         "converter_constant"=>1,
         "low_power"=>false,
+        "label"=>register.label,
         "last_reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
-        "address"=>nil,
-        "meter"=>nil
+        "group"=>nil
       }
     end
 
     context 'GET' do
       it '403' do
-        GET "/api/v1/meters/virtual/#{meter.id}/register"
-        expect(response).to have_http_status(403)
-        expect(json).to eq register_anonymous_denied_json
-
         GET "/api/v1/meters/virtual/#{meter.id}/register", user
         expect(response).to have_http_status(403)
         expect(json).to eq register_denied_json
@@ -183,7 +160,7 @@ describe "meters" do
 
       it '200' do
         register # setup
-        GET "/api/v1/meters/virtual/#{meter.id}/register", admin
+        GET "/api/v1/meters/virtual/#{meter.id}/register?include=group", admin
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(register_json.to_yaml)
       end
@@ -200,12 +177,6 @@ describe "meters" do
       end
     end
 
-    let(:registers_anonymous_denied_json) do
-      json = anonymous_denied_json.dup
-      json['errors'][0]['detail'].sub! 'Base', "Real"
-      json
-    end
-
     let(:registers_denied_json) do
       json = denied_json.dup
       json['errors'][0]['detail'].sub! 'Base', "Real"
@@ -214,7 +185,7 @@ describe "meters" do
 
     let(:real_not_found_json) do
       json = not_found_json.dup
-      json['errors'][0]['detail'].sub! 'Base', 'Real'
+      json['errors'][0]['detail'].sub! 'BaseResource', 'Real'
       json
     end
 
@@ -230,21 +201,18 @@ describe "meters" do
           "decimal"=>2,
           "converter_constant"=>1,
           "low_power"=>false,
+          "label"=>register.label,
           "last_reading"=>Reading.by_register_id(register.id).last.energy_milliwatt_hour,
           "uid"=>register.uid,
           "obis"=>register.obis,
-          "address"=>nil,
-          "meter"=>nil,
+          "group"=>nil,
+          "devices"=> { 'array'=>[] },
         }
       ]
     end
 
     context 'GET' do
       it '403' do
-        GET "/api/v1/meters/real/#{meter.id}/registers"
-        expect(response).to have_http_status(403)
-        expect(json).to eq registers_anonymous_denied_json
-
         GET "/api/v1/meters/real/#{meter.id}/registers", user
         expect(response).to have_http_status(403)
         expect(json).to eq registers_denied_json
@@ -258,9 +226,9 @@ describe "meters" do
 
       it '200' do
         registers # setup
-        GET "/api/v1/meters/real/#{meter.id}/registers", admin
+        GET "/api/v1/meters/real/#{meter.id}/registers?include=group,devices", admin
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq(registers_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(registers_json.to_yaml)
       end
     end
   end

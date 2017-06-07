@@ -1,4 +1,4 @@
-class ReadingResource < Buzzn::EntityResource
+class ReadingResource < Buzzn::Resource::Entity
 
   model Reading
 
@@ -14,10 +14,4 @@ class ReadingResource < Buzzn::EntityResource
   def id
     object.id.to_s
   end
-end
-
-class ReadingCollectionResource < ReadingResource
-end
-
-class ReadingSingleResource < ReadingResource
 end

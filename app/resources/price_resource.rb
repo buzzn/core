@@ -1,4 +1,4 @@
-class PriceResource < Buzzn::EntityResource
+class PriceResource < Buzzn::Resource::Entity
 
   model Price
 

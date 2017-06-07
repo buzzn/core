@@ -21,7 +21,8 @@ module Buzzn
             define_method method do |resource, mode|
               key = _cache_key(method, resource, mode)
               _with_lock(key) do
-                result = clazz.from_json(_cache_get(key))
+                # ignore corrupted cache entries
+                result = clazz.from_json(_cache_get(key)) rescue nil
                 if result.nil? || result.expires_at < Time.current.to_f
                   @logger.debug{"#{key} ====> stale"}
                   result = send("raw_#{method}".to_sym, resource, mode)

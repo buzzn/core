@@ -8,8 +8,4 @@ module Contract
                :begin_date
 
   end
-
-  # TODO get rid of the need of having a Serializer class
-  class LocalpoolProcessingSerializer < LocalpoolProcessingResource
-  end
 end

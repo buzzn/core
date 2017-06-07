@@ -2,6 +2,10 @@ source 'https://rubygems.org'
 
 # infrastructure
 gem 'dry-auto_inject'
+gem 'dry-validation'
+gem 'dry-monads'
+gem 'dry-transaction'
+gem 'active_model_serializers'
 
 # pdf
 gem 'slim'
@@ -12,15 +16,28 @@ gem 'wkhtmltopdf-binary'
 gem 'fog-aws', require: 'fog/aws'
 gem 'fog-local', require: 'fog/local'
 
+# activeadmin
+gem 'activeadmin'
+gem 'select2-rails'
+gem 'activeadmin-select2'
+
+# swagger
+gem 'ruby-swagger'
+
 # Backend
-gem 'active_model_serializers'
+gem 'roda'
 gem 'rails'
+gem 'sprockets-rails'
+gem 'simple_form'
+gem 'jquery-rails'
+gem 'haml-rails'
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'therubyracer'
 gem 'uglifier'
 gem 'money-rails'
 gem 'pg'
+gem 'activerecord-nulldb-adapter'
 gem 'sinatra'
 gem 'mongoid'
 gem 'moped'
@@ -38,7 +55,6 @@ gem 'devise-i18n-views'
 gem 'devise-async'
 gem 'grape'
 gem 'grape-swagger'
-gem 'grape-swagger-rails',     github: 'mkristian/grape-swagger-rails', branch: 'oauth'
 gem 'rack-cors',               require: 'rack/cors'
 gem 'hashie-forbidden_attributes'
 gem 'doorkeeper'
@@ -58,7 +74,7 @@ gem 'aws-sdk-rails'
 gem 'whenever', require: false
 gem 'sidekiq'
 gem 'faraday'
-gem 'attribute_normalizer',       github: 'mdeering/attribute_normalizer'
+gem 'attribute_normalizer'
 gem 'geocoder'
 gem 'jbuilder'
 gem 'paper_trail'
@@ -71,7 +87,6 @@ gem 'ancestry'
 gem 'attr_encrypted', '1.3.5'
 gem 'acts_as_list'
 gem 'iban-tools'
-gem 'lograge'
 gem 'byebug'
 gem 'acts_as_votable'
 gem 'multi_json'
@@ -79,12 +94,11 @@ gem 'oj'
 gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
-
+gem 'dotenv-rails'
 
 
 group :production, :staging do
   gem 'newrelic_rpm'
-  gem 'asset_sync'
 end
 
 group :development, :test do

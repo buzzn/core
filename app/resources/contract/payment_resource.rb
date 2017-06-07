@@ -1,5 +1,5 @@
 module Contract
-  class PaymentResource < Buzzn::EntityResource
+  class PaymentResource < Buzzn::Resource::Entity
 
     model Payment
 
@@ -8,8 +8,5 @@ module Contract
                 :price_cents,
                 :cycle,
                 :source
-  end
-
-  class PaymentSerializer < PaymentResource
   end
 end

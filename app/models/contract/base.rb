@@ -94,6 +94,22 @@ module Contract
 
     scope :running_in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                           .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
+    scope :at, -> (timestamp) do
+      timestamp = case timestamp
+                  when DateTime
+                    timestamp.to_date
+                  when Time
+                    timestamp.to_date
+                  when Date
+                    timestamp
+                  when Fixnum
+                    Time.at(timestamp).to_date
+                  else
+                    raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")
+                  end
+      where('begin_date <= ?', timestamp)
+        .where('end_date > ? OR end_date IS NULL', timestamp + 1.second)
+    end
 
     def self.readable_by_query(user)
       organization = Organization.arel_table

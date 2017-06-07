@@ -21,6 +21,11 @@ module Contract
       if !register.group.is_a?(Group::Localpool)
         errors.add(:register, MUST_BELONG_TO_LOCALPOOL)
       end
+      # TODO find a better place to set this
+      self.localpool ||= register.group      
+      if register.group != localpool
+        errors.add(:register, MUST_BELONG_TO_LOCALPOOL)
+      end
     end
   end
 end

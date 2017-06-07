@@ -13,7 +13,7 @@ module API
         get ":id/charts" do
           group = Group::Base.guarded_retrieve(current_user, permitted_params)
           interval = Buzzn::Interval.create(params[:duration], params[:timestamp])
-          result = Buzzn::Services::MainContainer['service.charts'].for_group(group, interval)
+          result = Buzzn::Boot::MainContainer['service.charts'].for_group(group, interval)
 
           # cache-control headers
           etag(Digest::SHA256.base64digest(result.to_json))
@@ -29,7 +29,7 @@ module API
         end
         get ":id/bubbles" do
           group = Group::BaseResource.retrieve(current_user, permitted_params)
-          result = Buzzn::Services::MainContainer['service.current_power'].for_each_register_in_group(group)
+          result = Buzzn::Boot::MainContainer['service.current_power'].for_each_register_in_group(group)
 
           # cache-control headers
           etag(Digest::SHA256.base64digest(result.to_json))
@@ -81,8 +81,54 @@ module API
             optional :energyprice_cents_per_kilowatt_hour, type: Float, desc: "The price per kilowatt_hour in cents"
             optional :baseprice_cents_per_month, type: Integer, desc: "The monthly base price in cents"
           end
-          post ":id/price"do
-            created_response(Group::LocalpoolResource.retrieve(current_user, permitted_params).create_price(permitted_params))
+          post ":id/prices"do
+            created_response(Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .create_price(permitted_params))
+          end
+
+          desc "Create a Billing Cycle."
+          params do
+            requires :name, type: String, desc: "Name of the Billing Cycle"
+            requires :begin_date, type: Date, desc: "Begin date of the Billing Cycle"
+            requires :end_date, type: Date, desc: "End date of the Billing Cycle"
+          end
+          post ':id/billing_cycles' do
+            created_response(BillingCycleResource
+              .retrieve(current_user, permitted_params)
+              .create_billing_cycle(permitted_params))
+          end
+
+          desc "Return all Billing Cycles for this localpool."
+          params do
+            requires :id, type: String, desc: "ID of the group"
+          end
+          post ":id/prices" do
+            created_response(Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .create_price(permitted_params))
+          end
+
+          desc "Create a Billing Cycle."
+          params do
+            optional :name, type: String, desc: "Name of the Billing Cycle"
+            optional :begin_date, type: Date, desc: "Begin date of the Billing Cycle"
+            optional :end_date, type: Date, desc: "End date of the Billing Cycle"
+          end
+          post ':id/billing_cycle' do
+            created_response(BillingCycleResource
+              .retrieve(current_user, permitted_params)
+              .create_billing_cycle(permitted_params))
+          end
+
+          desc "Return all Billing Cycles for this localpool."
+          params do
+            requires :id, type: String, desc: "ID of the group"
+          end
+          get ':id/billing_cycles' do
+            Group::LocalpoolResource
+              .retrieve(current_user, permitted_params)
+              .billing_cycles
           end
 
           desc "Return the related power-taker contracts for the Localpool"
@@ -132,7 +178,7 @@ module API
         get ":id/registers" do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
-            .registers
+            .registers_old
         end
 
 
@@ -170,7 +216,7 @@ module API
         get ':id/managers' do
           Group::BaseResource
             .retrieve(current_user, permitted_params)
-            .managers
+            .managers.collect {|m| UserResource.new(m) }
         end
 
         desc "Return the related members for Group"

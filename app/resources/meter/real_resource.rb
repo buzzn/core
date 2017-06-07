@@ -11,17 +11,12 @@ module Meter
 
     def create_input_register(params)
       params[:meter] = object
-      Register::Input.guarded_create(@current_user, params)
+      Register::Input.guarded_create(current_user, params)
     end
 
     def create_output_register(params)
       params[:meter] = object
-      Register::Output.guarded_create(@current_user, params)
-    end
-
-    alias :registers_raw :registers
-    def registers
-      registers_raw.collect { |r| Register::RealFullCollectionResource.new(r) }
+      Register::Output.guarded_create(current_user, params)
     end
   end
 end

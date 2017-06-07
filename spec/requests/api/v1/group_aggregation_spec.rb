@@ -1,4 +1,8 @@
 describe "groups" do
+  
+  def app
+    CoreRoda # this defines the active application for this test
+  end
 
   entity(:admin) { Fabricate(:admin_token) }
 
@@ -43,7 +47,7 @@ describe "groups" do
     {
       "errors" => [
         {
-          "detail"=>"retrieve Group::Base: permission denied for User: --anonymous--"
+          "detail"=>"Group::Base: #{group.id} not found"
         }
       ]
     }
@@ -107,11 +111,11 @@ describe "groups" do
 
     context 'GET' do
 
-      it '403' do
+      xit '404 permission denied' do
         begin
           group.update(readable: :members)
           GET "/api/v1/groups/#{group.id}/bubbles"
-          expect(response).to have_http_status(403)
+          expect(response).to have_http_status(404)
           expect(json).to eq denied_json
         ensure
           group.update(readable: :world)
@@ -291,14 +295,14 @@ describe "groups" do
     let(:missing_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "detail" => "duration is missing"}]
+                      "detail" => "is missing"}]
       }
     end
 
     let(:invalid_json) do
       {
         "errors" => [{"parameter" => "duration",
-                      "detail" => "duration does not have a valid value"}]
+                      "detail" => "must be one of: year, month, day, hour"}]
       }
     end
 
@@ -316,11 +320,11 @@ describe "groups" do
         expect(json).to eq invalid_json
       end
 
-      it '403' do
+      xit '404 permission denied' do
         begin
           group.update(readable: :members)
           GET "/api/v1/groups/#{group.id}/charts", nil, duration: :day
-          expect(response).to have_http_status(403)
+          expect(response).to have_http_status(404)
           expect(json).to eq denied_json
         ensure
           group.update(readable: :world)

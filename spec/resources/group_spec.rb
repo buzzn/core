@@ -8,11 +8,11 @@ describe Group::BaseResource do
   let(:base_attributes) { [:name,
                            :description,
                            :readable,
-                           :registers,
                            :meters,
                            :managers,
                            :energy_producers,
                            :energy_consumers,
+                           :registers,
                            :updatable,
                            :deletable ] }
 
@@ -24,9 +24,9 @@ describe Group::BaseResource do
   end
 
   it 'retrieve - ids + types' do
-    expected = {Group::Tribe => tribe.id, Group::Localpool => localpool.id}
+    expected = {'group_tribe' => tribe.id, 'group_localpool' => localpool.id}
     result = Group::BaseResource.all(user).collect do |r|
-      [r.type.constantize, r.id]
+      [r.type, r.id]
     end
     expect(Hash[result]).to eq expected
   end
@@ -41,7 +41,7 @@ describe Group::BaseResource do
         before { Score.delete_all }
 
         [:sufficiency, :closeness, :autarchy, :fitting].each do |type|
-        
+
           describe type do
 
             let!(:out_of_range) do
@@ -60,7 +60,7 @@ describe Group::BaseResource do
 
             let(:attributes) { [:mode, :interval, :interval_beginning, :interval_end, :value] }
             it 'now' do
-              result = Group::MinimalBaseResource
+              result = Group::BaseResource
                          .retrieve(user, group.id)
                          .scores(interval: interval, mode: type)
               expect(result.size).to eq 1
@@ -69,7 +69,7 @@ describe Group::BaseResource do
             end
 
             it 'yesterday' do
-              result = Group::MinimalBaseResource
+              result = Group::BaseResource
                          .retrieve(user, group.id)
                          .scores(interval: interval,
                                  mode: type,
@@ -89,10 +89,10 @@ describe Group::BaseResource do
   describe Group::Tribe do
 
     it 'retrieve all - ids + types' do
-      result = Group::TribeResource.all(user).collect do |r|
-        [r.type.constantize, r.id]
+      result = Group::TribeResource.all(user)['array'].collect do |r|
+        [r.type, r.id]
       end
-      expect(result).to eq [[Group::Tribe, tribe.id]]
+      expect(result).to eq [['group_tribe', tribe.id]]
     end
 
     it "retrieve - id + type" do
@@ -115,10 +115,10 @@ describe Group::BaseResource do
 
     it 'retrieve all - ids + types' do
       expected = Group::Localpool.all.collect do |l|
-        [Group::Localpool, l.id]
+        ['group_localpool', l.id]
       end
       result = Group::LocalpoolResource.all(user).collect do |r|
-        [r.type.constantize, r.id]
+        [r.type, r.id]
       end
       expect(result.sort).to eq expected.sort
     end
@@ -134,13 +134,19 @@ describe Group::BaseResource do
 
     it 'retrieve' do
       attributes = [:localpool_processing_contract,
-                    :metering_point_operator_contract]
+                    :metering_point_operator_contract,
+                    :localpool_power_taker_contracts,
+                    :prices,
+                    :users,
+                    :contracts,
+                    :billing_cycles]
       json = Group::BaseResource.retrieve(user, localpool.id).to_h
       expect(json.keys & attributes).to match_array attributes
       expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
     end
 
     it 'retrieve all prices' do
+      size = localpool.prices.size
       attributes = [:name,
                     :baseprice_cents_per_month,
                     :energyprice_cents_per_kilowatt_hour,
@@ -151,14 +157,13 @@ describe Group::BaseResource do
                     :deletable]
       Fabricate(:price, localpool: localpool)
       result = Group::LocalpoolResource.retrieve(user, localpool.id).prices
-      expect(result.size).to eq 1
+      expect(result.size).to eq size + 1
       first = PriceResource.send(:new, result.first)
       expect(first.to_hash.keys).to match_array attributes
     end
 
     it 'creates a new price' do
-      group = Fabricate(:localpool)
-      some_user = Fabricate(:user)
+      group = localpool
 
       request_params = {
         name: "special",
@@ -167,13 +172,41 @@ describe Group::BaseResource do
         baseprice_cents_per_month: 500
       }
 
-      expect{Group::LocalpoolResource.retrieve(some_user, group.id).create_price(request_params)}.to raise_error Buzzn::PermissionDenied
-      expect(group.prices.size).to eq 0
-
-      some_user.add_role(:manager, group)
-      result = Group::LocalpoolResource.retrieve(some_user, group.id).create_price(request_params)
+      result = Group::LocalpoolResource.retrieve(user, group.id).create_price(request_params)
       expect(result.is_a?(PriceResource)).to eq true
       expect(result.object.localpool).to eq group
+    end
+
+    it 'creates a new billing cycle' do
+      group = localpool
+
+      request_params = {
+        name: 'abcd',
+        begin_date: Date.new(2016, 1, 1),
+        end_date: Date.new(2016, 9, 1)
+      }
+
+      result = Group::LocalpoolResource.retrieve(user, group.id).create_billing_cycle(request_params)
+      expect(result.is_a?(BillingCycleResource)).to eq true
+      expect(result.object.localpool).to eq group
+    end
+
+    it 'retrieve all billing_cycles' do
+      group = localpool
+      size = group.billing_cycles.size
+      Fabricate(:billing_cycle, localpool: group)
+      Fabricate(:billing_cycle, localpool: group)
+
+      attributes = [:name,
+                    :billings,
+                    :begin_date,
+                    :end_date,
+                    :id,
+                    :type]
+
+      result = Group::LocalpoolResource.retrieve(user, group.id).billing_cycles
+      expect(result.size).to eq size + 2
+      expect(result.first.to_hash.keys).to match_array attributes
     end
   end
 end

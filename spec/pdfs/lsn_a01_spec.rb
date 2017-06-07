@@ -1,3 +1,4 @@
+require 'lsn_a01'
 describe Buzzn::Pdfs::LSN_A01 do
 
   entity(:contractor) { Fabricate(:hell_und_warm) }

@@ -2,25 +2,26 @@
 
 # ALL registers can only be used via Fabricate.build or with an extra meter: some_meter attribute, as a register can not exist without a meter
 
-['input', 'output', 'virtual'].each do |type|
-  klass = "Register::#{type.camelize}".constantize
+['input', 'output', 'virtual'].each do |klass_type|
+  klass = "Register::#{klass_type.camelize}".constantize
 
-  Fabricator "#{type}_register", class_name: klass do
-    name        { "#{type}_#{FFaker::Name.name[0..20]}" }
+  Fabricator "#{klass_type}_register", class_name: klass do
+    name        { "#{klass_type}_#{FFaker::Name.name[0..20]}" }
     uid         { "DE" + Random.new_seed.to_s.slice(0, 29) }
     readable    'friends'
-    direction   { type == 'virtual' ? ['in', 'out'].sample : type.sub('put','') }
+    direction   { klass_type == 'virtual' ? ['in', 'out'].sample : klass_type.sub('put','') }
     created_at  { (rand*10).days.ago }
-    if type == 'output'
+    if klass_type == 'output'
       label     Register::Base::PRODUCTION_PV
     else
       label     Register::Base::CONSUMPTION
     end
     forecast_kwh_pa 1000
-    obis { type == 'output' ? '1-0:2.8.0' : '1-0:1.8.0' }
+    obis { klass_type == 'output' ? '1-0:2.8.0' : '1-0:1.8.0' }
     low_load_ability false
     digits_before_comma 6
     decimal_digits 2
+    type        { "Register::#{klass_type.camelize}" }
   end
 end
 

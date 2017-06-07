@@ -1,0 +1,15 @@
+.git
+.env*
+log
+docs
+README-docker.md
+README-specs.md
+spec
+db/seed_assets/*
+db/banks/*
+db/seeds.rb
+tmp/*
+public/uploads/*
+docker-compose.yml
+Dockerfile
+Dockerfile.develop

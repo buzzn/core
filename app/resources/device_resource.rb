@@ -1,4 +1,4 @@
-class MinimalDeviceResource < Buzzn::EntityResource
+class DeviceResource < Buzzn::Resource::Entity
 
   model Device
 
@@ -19,19 +19,4 @@ class MinimalDeviceResource < Buzzn::EntityResource
 
   attributes :updatable, :deletable
 
-end
-
-# we do not want all infos in collections
-class DeviceResource < MinimalDeviceResource
-
-  attributes :big_tumb
-
-  def big_tumb
-    object.image.big_tumb.url
-  end
-
-end
-
-# TODO get rid of the need of having a Serializer class
-class DeviceSerializer < MinimalDeviceResource
 end

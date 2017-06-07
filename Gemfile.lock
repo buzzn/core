@@ -1,17 +1,3 @@
-GIT
-  remote: git://github.com/mdeering/attribute_normalizer.git
-  revision: 7e39313402a93bd6a8ab5bea70062f147e4dae6d
-  specs:
-    attribute_normalizer (1.2.0)
-
-GIT
-  remote: git://github.com/mkristian/grape-swagger-rails.git
-  revision: 94aecb2aa10cd675c06fc5b63b1cb5ad1a622c96
-  branch: oauth
-  specs:
-    grape-swagger-rails (0.2.2)
-      railties (>= 3.2.12)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -40,6 +26,24 @@ GEM
       activemodel (>= 4.1, < 6)
       case_transform (>= 0.2)
       jsonapi (= 0.1.1.beta6)
+    activeadmin (1.0.0)
+      arbre (>= 1.1.1)
+      bourbon
+      coffee-rails
+      formtastic (~> 3.1)
+      formtastic_i18n
+      inherited_resources (~> 1.7)
+      jquery-rails
+      jquery-ui-rails
+      kaminari (>= 0.15, < 2.0)
+      railties (>= 4.2, < 5.2)
+      ransack (~> 1.3)
+      sass-rails
+      sprockets (< 4.1)
+    activeadmin-select2 (0.1.8)
+      activeadmin
+      jquery-rails
+      select2-rails
     activejob (4.2.7.1)
       activesupport (= 4.2.7.1)
       globalid (>= 0.3.0)
@@ -50,6 +54,8 @@ GEM
       activemodel (= 4.2.7.1)
       activesupport (= 4.2.7.1)
       arel (~> 6.0)
+    activerecord-nulldb-adapter (0.3.6)
+      activerecord (>= 2.0.0)
     activesupport (4.2.7.1)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -71,14 +77,13 @@ GEM
     annotate (2.7.1)
       activerecord (>= 3.2, < 6.0)
       rake (>= 10.4, < 12.0)
+    arbre (1.1.1)
+      activesupport (>= 3.0.0)
     arel (6.0.3)
-    asset_sync (1.1.0)
-      activemodel
-      fog (>= 1.8.0)
-      unf
     attr_encrypted (1.3.5)
       encryptor (~> 1.3.0)
     attr_required (1.0.1)
+    attribute_normalizer (1.2.0)
     authority (3.1.0)
       activesupport (>= 3.0.0)
       rake (>= 0.8.7)
@@ -101,6 +106,9 @@ GEM
     bcrypt (3.1.11)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bourbon (4.3.4)
+      sass (~> 3.4)
+      thor (~> 0.19)
     brakeman (3.3.1)
     bson (3.2.6)
     builder (3.2.3)
@@ -124,7 +132,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.8.0)
-    concurrent-ruby (1.0.4)
+    concurrent-ruby (1.0.5)
     connection_pool (2.2.0)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
@@ -149,13 +157,48 @@ GEM
     diff-lcs (1.2.5)
     doorkeeper (3.1.0)
       railties (>= 3.2)
-    dry-auto_inject (0.4.1)
+    dotenv (2.2.1)
+    dotenv-rails (2.2.1)
+      dotenv (= 2.2.1)
+      railties (>= 3.2, < 5.2)
+    dry-auto_inject (0.4.2)
       dry-container (>= 0.3.4)
-    dry-configurable (0.1.7)
+    dry-configurable (0.7.0)
       concurrent-ruby (~> 1.0)
-    dry-container (0.4.0)
+    dry-container (0.6.0)
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 0.1, >= 0.1.3)
+    dry-core (0.3.0)
+      concurrent-ruby (~> 1.0)
+    dry-equalizer (0.2.0)
+    dry-logic (0.4.1)
+      dry-container (~> 0.2, >= 0.2.6)
+      dry-core (~> 0.2)
+      dry-equalizer (~> 0.2)
+    dry-matcher (0.6.0)
+    dry-monads (0.3.1)
+      dry-core
+      dry-equalizer
+    dry-transaction (0.9.0)
+      dry-container (>= 0.2.8)
+      dry-matcher (>= 0.5.0)
+      dry-monads (>= 0.0.1)
+      wisper (>= 1.6.0)
+    dry-types (0.10.3)
+      concurrent-ruby (~> 1.0)
+      dry-configurable (~> 0.1)
+      dry-container (~> 0.3)
+      dry-core (~> 0.2, >= 0.2.1)
+      dry-equalizer (~> 0.2)
+      dry-logic (~> 0.4, >= 0.4.0)
+      inflecto (~> 0.0.0, >= 0.0.2)
+    dry-validation (0.10.6)
+      concurrent-ruby (~> 1.0)
+      dry-configurable (~> 0.1, >= 0.1.3)
+      dry-core (~> 0.2, >= 0.2.1)
+      dry-equalizer (~> 0.2)
+      dry-logic (~> 0.4, >= 0.4.0)
+      dry-types (~> 0.9, >= 0.9.0)
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
@@ -304,6 +347,9 @@ GEM
       fog-core
       nokogiri (~> 1.5, >= 1.5.11)
     formatador (0.2.5)
+    formtastic (3.1.5)
+      actionpack (>= 3.2.13)
+    formtastic_i18n (0.6.0)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
     geocoder (1.3.6)
@@ -347,6 +393,14 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
+    haml (4.0.7)
+      tilt
+    haml-rails (0.9.0)
+      actionpack (>= 4.0.1)
+      activesupport (>= 4.0.1)
+      haml (>= 4.0.6, < 5.0)
+      html2haml (>= 1.0.1)
+      railties (>= 4.0.1)
     has_scope (0.6.0)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
@@ -354,6 +408,11 @@ GEM
     hashie (3.4.4)
     hashie-forbidden_attributes (0.1.1)
       hashie (>= 3.0)
+    html2haml (2.0.0)
+      erubis (~> 2.7.0)
+      haml (~> 4.0.0)
+      nokogiri (~> 1.6.0)
+      ruby_parser (~> 3.5)
     htmlentities (4.3.4)
     http_parser.rb (0.6.0)
     httpclient (2.8.0)
@@ -363,6 +422,11 @@ GEM
     immigrant (0.3.5)
       activerecord (>= 3.0)
     inflecto (0.0.2)
+    inherited_resources (1.7.2)
+      actionpack (>= 3.2, < 5.2.x)
+      has_scope (~> 0.6)
+      railties (>= 3.2, < 5.2.x)
+      responders
     interception (0.5)
     ipaddress (0.8.3)
     jbuilder (2.5.0)
@@ -370,6 +434,12 @@ GEM
       multi_json (~> 1.2)
     jmespath (1.2.4)
       json_pure (>= 1.8.1)
+    jquery-rails (4.3.1)
+      rails-dom-testing (>= 1, < 3)
+      railties (>= 4.2.0)
+      thor (>= 0.14, < 2.0)
+    jquery-ui-rails (6.0.1)
+      railties (>= 3.2.16)
     json (1.8.6)
     json_pure (1.8.3)
     jsonapi (0.1.1.beta6)
@@ -377,6 +447,18 @@ GEM
       jsonapi-renderer (= 0.1.1.beta1)
     jsonapi-parser (0.1.1.beta3)
     jsonapi-renderer (0.1.1.beta1)
+    kaminari (1.0.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.0.1)
+      kaminari-activerecord (= 1.0.1)
+      kaminari-core (= 1.0.1)
+    kaminari-actionview (1.0.1)
+      actionview
+      kaminari-core (= 1.0.1)
+    kaminari-activerecord (1.0.1)
+      activerecord
+      kaminari-core (= 1.0.1)
+    kaminari-core (1.0.1)
     launchy (2.4.3)
       addressable (~> 2.3)
     libv8 (3.16.14.15)
@@ -384,10 +466,6 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
-    lograge (0.3.6)
-      actionpack (>= 3)
-      activesupport (>= 3)
-      railties (>= 3)
     lol_dba (2.0.3)
       actionpack (>= 3.0, < 5.0)
       activerecord (>= 3.0, < 5.0)
@@ -450,6 +528,8 @@ GEM
       activesupport (>= 3.0, < 6.0)
       request_store (~> 1.1)
     pg (0.18.4)
+    polyamorous (1.3.1)
+      activerecord (>= 3.0)
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -467,7 +547,7 @@ GEM
       activerecord (>= 3.0)
       i18n (>= 0.5.0)
       railties (>= 3.0.0)
-    puma (3.4.0)
+    puma (3.8.2)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.5)
@@ -512,6 +592,12 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (11.3.0)
+    ransack (1.8.2)
+      actionpack (>= 3.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      i18n
+      polyamorous (~> 1.3)
     rb-fsevent (0.9.7)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
@@ -543,6 +629,8 @@ GEM
     request_store (1.3.1)
     responders (2.2.0)
       railties (>= 4.2.0, < 5.1)
+    roda (2.25.0)
+      rack
     rolify (5.1.0)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
@@ -567,7 +655,11 @@ GEM
     rspec-retry (0.5.3)
       rspec-core (> 3.3, < 3.6)
     rspec-support (3.4.1)
+    ruby-swagger (0.1.1)
+      addressable
     ruby_dep (1.3.1)
+    ruby_parser (3.8.2)
+      sexp_processor (~> 4.1)
     safe_yaml (1.0.4)
     sass (3.4.23)
     sass-rails (5.0.6)
@@ -576,11 +668,17 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
+    select2-rails (4.0.3)
+      thor (~> 0.14)
+    sexp_processor (4.7.0)
     shellany (0.0.1)
     sidekiq (4.1.2)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
       redis (~> 3.2, >= 3.2.1)
+    simple_form (3.2.1)
+      actionpack (> 4, < 5.1)
+      activemodel (> 4, < 5.1)
     sinatra (1.4.7)
       rack (~> 1.5)
       rack-protection (~> 1.4)
@@ -610,9 +708,6 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.0.1)
       execjs (>= 0.3.0, < 3)
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.7.2)
     vcr (3.0.3)
     virtus (1.0.5)
       axiom-types (~> 0.1)
@@ -628,6 +723,7 @@ GEM
     whenever (0.9.4)
       chronic (>= 0.6.3)
     wicked_pdf (1.1.0)
+    wisper (2.0.0)
     wkhtmltopdf-binary (0.12.3.1)
     xml-simple (1.1.5)
     yard (0.9.5)
@@ -637,15 +733,17 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  activeadmin
+  activeadmin-select2
+  activerecord-nulldb-adapter
   acts-as-taggable-on
   acts_as_commentable_with_threading
   acts_as_list
   acts_as_votable
   ancestry
   annotate
-  asset_sync
   attr_encrypted (= 1.3.5)
-  attribute_normalizer!
+  attribute_normalizer
   authority
   awesome_nested_set
   awesome_print
@@ -664,7 +762,11 @@ DEPENDENCIES
   devise-i18n-views
   devise_invitable
   doorkeeper
+  dotenv-rails
   dry-auto_inject
+  dry-monads
+  dry-transaction
+  dry-validation
   email_spec
   fabrication
   faraday
@@ -676,20 +778,20 @@ DEPENDENCIES
   geocoder
   grape
   grape-swagger
-  grape-swagger-rails!
   guard
   guard-brakeman
   guard-bundler
   guard-livereload
   guard-rspec
+  haml-rails
   has_scope
   hashie-forbidden_attributes
   iban-tools
   immigrant
   jbuilder
+  jquery-rails
   launchy
   listen
-  lograge
   lol_dba
   mail_view
   mini_magick
@@ -715,13 +817,18 @@ DEPENDENCIES
   redis-namespace
   redis-rails
   remote_lock
+  roda
   rolify
   rspec-rails
   rspec-retry
+  ruby-swagger
   sass-rails
+  select2-rails
   sidekiq
+  simple_form
   sinatra
   slim
+  sprockets-rails
   therubyracer
   timecop
   tzinfo
@@ -734,4 +841,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.14.3
+   1.15.0

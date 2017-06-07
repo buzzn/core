@@ -21,6 +21,8 @@ class Organization < ContractingParty
 
   has_one :iln
 
+  has_many :energy_classifications
+
 
   def self.modes
     %w{
@@ -57,7 +59,9 @@ class Organization < ContractingParty
     buzzn_energy: 'buzzn GmbH',
     buzzn_systems: 'buzzn systems UG',
     discovergy: 'Discovergy',
-    mysmartgrid: 'MySmartGrid' }.each do |key, name|
+    mysmartgrid: 'MySmartGrid',
+    germany: 'Germany Energy Mix',
+    gemeindewerke_peissenberg: 'Gemeindewerke Peißenberg' }.each do |key, name|
 
     const_set key.to_s.upcase, name
 

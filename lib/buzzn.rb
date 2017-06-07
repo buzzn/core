@@ -1,26 +1,30 @@
 module Buzzn
   class PermissionDenied < StandardError
     class << self
-      private :new
-      def create(resource, action, user)
+      def new(resource, action, user)
         case resource
         when Class
-          create_class(resource, action, user)
+          super(create_class(resource, action, user))
         else
-          create_instance(resource, action, user)
+          super(create_instance(resource, action, user))
         end
       end
+      alias :create :new
+
       def create_class(clazz, action, user)
-        new("#{action} #{clazz}: permission denied for User: #{user ? user.id : '--anonymous--'}")
+        "#{action} #{clazz}: permission denied for User: #{user ? user.id : '--anonymous--'}"
       end
       def create_instance(object, action, user)
-        new("#{action} #{object.class}: #{object.id} permission denied for User: #{user ? user.id : '--anonymous--'}")
+        "#{action} #{object.class}: #{object.id} permission denied for User: #{user ? user.id : '--anonymous--'}"
       end
     end
   end
   class RecordNotFound < StandardError
-    def self.create(clazz, id, user = nil)
-      new("#{clazz}: #{id} not found#{user ? ' by User: ' + user.id : ''}")
+    class << self
+      def new(clazz, id, user = nil)
+        super("#{clazz || 'UNKNOWN-CLASS'}: #{id} not found#{user ? ' by User: ' + user.id : ''}")
+      end
+      alias :create :new
     end
   end
   class ValidationError < StandardError

@@ -61,6 +61,9 @@ private
                                 register.id, mode,
                                 # only use expires on current time
                                 time ? nil : result.timestamp.to_time)
+        else
+          current = Time.current
+          Buzzn::DataResult.new(current, 0, register.id, mode, current)
         end
       end
     end

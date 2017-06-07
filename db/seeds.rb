@@ -25,6 +25,7 @@ puts '-- seed development database --'
 puts '  organizations'
 Fabricate(:buzzn_energy)
 Fabricate(:dummy_energy)
+Fabricate(:germany)
 Fabricate(:electricity_supplier, name: 'E.ON')
 Fabricate(:electricity_supplier, name: 'RWE')
 Fabricate(:electricity_supplier, name: 'EnBW')
@@ -47,8 +48,12 @@ Fabricate(:dummy)
 Fabricate(:discovergy)
 Fabricate(:mysmartgrid)
 
+# Stromkennzeichnungen
+Fabricate(:energy_mix_germany)
+Fabricate(:energy_mix_buzzn)
 
-buzzn_team_names = %w[ felix justus danusch thomas stefan philipp christian kristian pavel eva ]
+
+buzzn_team_names = %w[ felix justus danusch thomas stefan philipp christian kristian pavel eva ralf ]
 buzzn_team = []
 buzzn_team_names.each do |user_name|
   puts "  #{user_name}"
@@ -106,8 +111,9 @@ buzzn_team_names.each do |user_name|
       # HACK for seed. this is normaly don via after_filter in user
       Doorkeeper::AccessToken.create(application_id: application.id, resource_owner_id: user.id, scopes: 'simple full' )
     end
-
-    Fabricate(:application, owner: user, name: 'Buzzn Swagger UI', scopes: Doorkeeper.configuration.scopes, redirect_uri: Rails.application.secrets.hostname + '/api/o2c.html')
+    if Rails.application.secrets.hostname.include?('https')
+      Fabricate(:application, owner: user, name: 'Buzzn Swagger UI', scopes: Doorkeeper.configuration.scopes, redirect_uri: Rails.application.secrets.hostname + '/api/o2c.html')
+    end
   when 'christian'
     meter = Fabricate(:easymeter_60138988)
     root_register = meter.input_register
@@ -139,6 +145,8 @@ buzzn_team_names.each do |user_name|
     meter = Fabricate(:easymeter_60232499)
     root_register = meter.input_register
     user.add_role :admin # thomas is admin
+  when 'ralf'
+    user.add_role :admin
   when 'kristian'
     root_register = Fabricate(:input_meter).input_register
     user.add_role :admin # kristian is admin

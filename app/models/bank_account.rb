@@ -18,6 +18,10 @@ class BankAccount < ActiveRecord::Base
   validates :contracting_party_id,    presence: true
   validates :contracting_party_type,  presence: true
 
+  # permissions helpers
+
+  scope :restricted, ->(uuids) { where(id: uuids) }
+
   def self.readable_by_query(user)
     contract     = Contract::Base.arel_table
     bank_account = BankAccount.arel_table

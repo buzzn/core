@@ -1,15 +1,25 @@
-development:
-  adapter: postgresql
+default: &default
+  adapter: <%= ENV['DB_ADAPTER'] ||= 'postgresql' %>
+  host: <%= ENV['DB_HOST'] ||= 'localhost' %>
+  port: <%= ENV['DB_PORT'] ||= '5432' %>
+  username: <%= ENV['DB_USER'] %>
   encoding: unicode
-  database: buzzn_development
   pool: 15
   checkout_timeout: 1
   reaping_frequency: 60
 
+development:
+  <<: *default
+  database: buzzn_development
+
 test:
-  adapter: postgresql
-  encoding: unicode
+  <<: *default
   database: buzzn_test
-  pool: 15
-  checkout_timeout: 1
-  reaping_frequency: 60
+
+staging:
+  <<: *default
+  database: buzzn_staging
+
+production:
+  <<: *default
+  database: buzzn_production

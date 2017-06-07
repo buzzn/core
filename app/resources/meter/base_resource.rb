@@ -1,5 +1,5 @@
 module Meter
-  class BaseResource < Buzzn::EntityResource
+  class BaseResource < Buzzn::Resource::Entity
 
     abstract
 
@@ -18,14 +18,5 @@ module Meter
     attributes :updatable, :deletable
 
     def direction_label; object.direction; end
-
-    def self.new(instance, options = {})
-      options ||= {}
-      if @abstract
-        to_resource(options[:current_user], instance)
-      else
-        super
-      end
-    end
   end
 end
