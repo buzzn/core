@@ -1,4 +1,4 @@
-class PriceRoda < BaseRoda
+class Admin::PriceRoda < BaseRoda
   plugin :shared_vars
   plugin :created_deleted
 

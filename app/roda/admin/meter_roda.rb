@@ -1,4 +1,4 @@
-class MeterRoda < BaseRoda
+class Admin::MeterRoda < BaseRoda
   plugin :shared_vars
 
   route do |r|

@@ -1,4 +1,4 @@
-class UserRoda < BaseRoda
+class Admin::UserRoda < BaseRoda
   plugin :shared_vars
 
   route do |r|

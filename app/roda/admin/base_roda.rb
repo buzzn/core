@@ -4,7 +4,7 @@ module Admin
     route do |r|
 
       r.on 'localpools' do
-        r.run ::LocalpoolRoda
+        r.run LocalpoolRoda
       end
 
       r.on 'me' do

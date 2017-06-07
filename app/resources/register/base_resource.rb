@@ -1,6 +1,9 @@
 module Register
   class BaseResource < Buzzn::Resource::Entity
 
+    include Import.reader['service.current_power',
+                          'service.charts']
+
     abstract
 
     model Base
@@ -14,13 +17,20 @@ module Register
                 :label,
                 :last_reading
 
-    #has_one :address
     has_one :group
 
     # API methods for the endpoints
 
     def readings
       all(permissions.readings, Reading.by_register_id(object.id))
+    end
+
+    def ticker
+      current_power.for_register(self)
+    end
+
+    def charts(duration:, timestamp: nil)
+      @charts.for_register(self, Buzzn::Interval.create(duration, timestamp))
     end
 
     # attribute implementations

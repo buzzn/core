@@ -2,8 +2,7 @@ class Display::GroupRoda < ::BaseRoda
 
   include Import.args[:env,
                       'transaction.scores',
-                      'transaction.group_charts_ng',
-                      'service.current_power']
+                      'transaction.charts']
 
   plugin :aggregation
   plugin :shared_vars
@@ -22,8 +21,7 @@ class Display::GroupRoda < ::BaseRoda
       end
 
       r.get! 'charts' do
-        aggregated(group_charts_ng.call(r.params,
-                                        resource: [group.method(:charts)]))
+        aggregated(charts.call(r.params, resource: [group.method(:charts)]))
       end
 
       r.get! 'bubbles' do

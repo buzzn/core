@@ -1,7 +1,7 @@
-describe "groups" do
+describe Admin::LocalpoolRoda do
   
   def app
-    LocalpoolRoda # this defines the active application for this test
+    Admin::LocalpoolRoda # this defines the active application for this test
   end
 
   entity(:admin) { Fabricate(:admin_token) }
@@ -114,7 +114,7 @@ describe "groups" do
 
             expect(response).to have_http_status(200)
             expect(json['expires_at']).to eq(discovergy_json['expires_at'])
-            expect(json['array']).to match_array(discovergy_json['array'])
+            expect(sort(json['array'], 'resource_id')).to match_array(sort(discovergy_json['array'], 'resource_id'))
             expect(expires = response.headers['Expires']).not_to be_nil
             expect(response.headers['Cache-Control']).to eq "private, max-age=15"
             expect(etag = response.headers['ETag']).not_to be_nil
@@ -126,7 +126,7 @@ describe "groups" do
 
             expect(response).to have_http_status(200)
             expect(json['expires_at']).to eq(discovergy_json['expires_at'])
-            expect(json['array']).to match_array(discovergy_json['array'])
+            expect(sort(json['array'], 'resource_id')).to match_array(sort(discovergy_json['array'], 'resource_id'))
             expect(response.headers['Expires']).to eq expires
             expect(response.headers['ETag']).to eq etag
             expect(response.headers['Last-Modified']).to eq modified
@@ -137,7 +137,7 @@ describe "groups" do
 
             expect(response).to have_http_status(200)
             expect(json['expires_at']).to eq(second_discovergy_json['expires_at'])
-            expect(json['array']).to match_array(second_discovergy_json['array'])
+            expect(sort(json['array'], 'resource_id')).to match_array(sort(second_discovergy_json['array'], 'resource_id'))
             expect(response.headers['Expires']).not_to eq expires
             expect(response.headers['ETag']).not_to eq etag
             expect(response.headers['Last-Modified']).not_to eq modified

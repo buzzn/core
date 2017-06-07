@@ -1,8 +1,7 @@
 class RegisterRoda < BaseRoda
 
   include Import.args[:env,
-                      'transaction.register_charts',
-                      'service.current_power']
+                      'transaction.charts']
 
   plugin :aggregation
   plugin :shared_vars
@@ -24,11 +23,11 @@ class RegisterRoda < BaseRoda
       end
 
       r.get! 'charts' do
-        aggregated(register_charts.call(r.params, register_charts: [register]))
+        aggregated(charts.call(r.params, resource: [register.method(:charts)]))
       end
 
       r.get! 'ticker' do
-        aggregated(current_power.for_register(register))
+        aggregated(register.ticker)
       end
 
       r.get! 'readings' do

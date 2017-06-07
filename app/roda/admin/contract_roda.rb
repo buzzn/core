@@ -1,4 +1,4 @@
-class ContractRoda < BaseRoda
+class Admin::ContractRoda < BaseRoda
   plugin :shared_vars
 
   route do |r|

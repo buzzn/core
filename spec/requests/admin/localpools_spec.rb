@@ -1,7 +1,7 @@
-describe "localpools" do
+describe Admin::LocalpoolRoda do
 
   def app
-    LocalpoolRoda # this defines the active application for this test
+    Admin::LocalpoolRoda # this defines the active application for this test
   end
 
   entity(:admin) { Fabricate(:admin_token) }

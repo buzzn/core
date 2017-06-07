@@ -4,6 +4,7 @@ module Buzzn::Services
     include Import.args[registry: 'service.data_source_registry']
 
     def for_register(register, interval)
+      register = register.object if register.respond_to? :object
       raise ArgumentError.new("not a #{Register::Base}") unless register.is_a?(Register::Base)
       raise ArgumentError.new("not a #{Buzzn::Interval}") unless interval.is_a?(Buzzn::Interval)
       result = @registry.get(register.data_source).aggregated(register, register.direction, interval)

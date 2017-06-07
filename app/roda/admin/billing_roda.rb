@@ -1,4 +1,4 @@
-class BillingRoda < BaseRoda
+class Admin::BillingRoda < BaseRoda
   plugin :shared_vars
   plugin :created_deleted
 

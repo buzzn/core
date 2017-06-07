@@ -1,12 +1,12 @@
-describe "bank-accounts" do
+describe Admin::BankAccountRoda do
 
   class BankAccountParentRoda < BaseRoda
     plugin :shared_vars
     route do |r|
       r.on :id do |id|
         parent = User.where(id: id).first || Organization.where(id: id).first
-        shared[BankAccountRoda::PARENT] = ContractingPartyResource.new(parent, current_user: current_user)
-        r.run BankAccountRoda
+        shared[Admin::BankAccountRoda::PARENT] = ContractingPartyResource.new(parent, current_user: current_user)
+        r.run Admin::BankAccountRoda
       end
     end
   end
