@@ -61,6 +61,15 @@ class LocalpoolRoda < BaseRoda
       r.get! 'managers' do
         localpool.managers
       end
+
+      r.get! 'charts' do
+        aggregated(group_charts.call(r.params, group_charts: [localpool]))
+      end
+
+      r.get! 'bubbles' do
+        aggregated(current_power.for_each_register_in_group(localpool))
+      end
+
     end
   end
 end

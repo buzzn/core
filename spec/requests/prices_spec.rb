@@ -131,7 +131,7 @@ describe "prices" do
       GET "/#{localpool.id}/prices", admin
 
       expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq(prices_json.to_yaml)
+      expect(json['array'].to_yaml).to eq(prices_json.to_yaml)
     end
   end
 

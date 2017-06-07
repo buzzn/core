@@ -32,8 +32,8 @@ class RegisterRoda < BaseRoda
       end
 
       r.get! 'readings' do
-        # some mount pointss do not provide readings inside their register resources.
-        # returning nil means 404 response.
+        # some mount points do not provide readings inside their
+        # /registers/:id resource. returning nil means 404 response.
         register.readings rescue nil
       end
     end

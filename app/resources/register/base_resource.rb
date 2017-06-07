@@ -20,9 +20,7 @@ module Register
     # API methods for the endpoints
 
     def readings
-      Reading.by_register_id(object.id).collect do |r|
-        ReadingResource.new(r, current_user: current_user)
-      end
+      all(permissions.readings, Reading.by_register_id(object.id))
     end
 
     # attribute implementations

@@ -67,17 +67,19 @@ describe "users" do
       "updatable"=>true,
       # TODO feels wrong that any user can delete her/him-self
       "deletable"=>true,
-      "bank_accounts"=> user.bank_accounts.reload.collect do |bank_account|
-       {
-         "id"=>bank_account.id,
-         "type"=>"bank_account",
-         "holder"=>bank_account.holder,
-         "bank_name"=>bank_account.bank_name,
-           "bic"=>bank_account.bic,
-           "iban"=>bank_account.iban,
-           "direct_debit"=>bank_account.direct_debit
-       }
-      end
+      "bank_accounts"=>{
+        'array'=> user.bank_accounts.reload.collect do |bank_account|
+          {
+            "id"=>bank_account.id,
+            "type"=>"bank_account",
+            "holder"=>bank_account.holder,
+            "bank_name"=>bank_account.bank_name,
+            "bic"=>bank_account.bic,
+            "iban"=>bank_account.iban,
+            "direct_debit"=>bank_account.direct_debit
+          }
+        end
+      }
     }
   end
 
@@ -127,16 +129,17 @@ describe "users" do
         "updatable"=>true,
         "deletable"=>true,
         "bank_accounts"=> user.bank_accounts.reload.collect do |bank_account|
-          {
-            "id"=>bank_account.id,
-            "type"=>"bank_account",
-            "holder"=>bank_account.holder,
-            "bank_name"=>bank_account.bank_name,
-            "bic"=>bank_account.bic,
-            "iban"=>bank_account.iban,
-            "direct_debit"=>bank_account.direct_debit
-          }
-        end
+            {
+              "id"=>bank_account.id,
+              "type"=>"bank_account",
+              "holder"=>bank_account.holder,
+              "bank_name"=>bank_account.bank_name,
+              "bic"=>bank_account.bic,
+              "iban"=>bank_account.iban,
+              "direct_debit"=>bank_account.direct_debit
+            }
+          end
+        
       }
       end
   end
@@ -158,16 +161,17 @@ describe "users" do
         "updatable"=>true,
         "deletable"=>true,
         "bank_accounts"=> user.bank_accounts.reload.collect do |bank_account|
-          {
-            "id"=>bank_account.id,
-            "type"=>"bank_account",
-            "holder"=>bank_account.holder,
-            "bank_name"=>bank_account.bank_name,
-            "bic"=>bank_account.bic,
-            "iban"=>bank_account.iban,
-            "direct_debit"=>bank_account.direct_debit
-          }
-        end
+            {
+              "id"=>bank_account.id,
+              "type"=>"bank_account",
+              "holder"=>bank_account.holder,
+              "bank_name"=>bank_account.bank_name,
+              "bic"=>bank_account.bic,
+              "iban"=>bank_account.iban,
+              "direct_debit"=>bank_account.direct_debit
+            }
+          end
+
       }
     ]
   end
@@ -215,11 +219,11 @@ describe "users" do
 
       GET "/api/v1/users", user_token, include: :bank_accounts
       expect(response).to have_http_status(200)
-      expect(json).to eq users_json
+      expect(json['array']).to eq users_json
 
       GET "/api/v1/users", admin, include: :bank_accounts
       expect(response).to have_http_status(200)
-      expect(sort(json).to_yaml).to eq sort(admin_users_json).to_yaml
+      expect(sort(json['array']).to_yaml).to eq sort(admin_users_json).to_yaml
     end
 
     it '200 all filtered' do
@@ -227,11 +231,11 @@ describe "users" do
 
       GET "/api/v1/users", user_token, include: :bank_accounts, filter: admin_user.first_name
       expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq empty_json.to_yaml
+      expect(json['array'].to_yaml).to eq empty_json.to_yaml
 
       GET "/api/v1/users", admin, include: :bank_accounts, filter: admin_user.first_name
       expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq filtered_admin_users_json.to_yaml
+      expect(json['array'].to_yaml).to eq filtered_admin_users_json.to_yaml
     end
   end
 
@@ -264,86 +268,6 @@ describe "users" do
       GET "/api/v1/users/me", user_token, include: :bank_accounts
       expect(json.to_yaml).to eq me_json.to_yaml
       expect(response).to have_http_status(200)
-    end
-
-  end
-
-  context 'bank_account' do
-
-    let(:bank_account) { user.bank_accounts.first}
-
-    let(:bank_account_not_found_json) do
-      {
-        "errors" => [
-          {
-            # TODO fix bad error response
-            "detail"=>"Buzzn::RecordNotFound"
-          }
-        ]
-      }
-    end
-
-    let(:bank_account_anonymous_denied_json) do
-      json = anonymous_denied_json.dup
-      json['errors'][0]['detail'].sub! 'User:', "BankAccount: #{bank_account.id}"
-      json
-    end
-
-    let(:bank_account_json) do
-      [
-        {
-          "id"=>bank_account.id,
-          "type"=>"bank_account",
-          "holder"=>bank_account.holder,
-          "bank_name"=>bank_account.bank_name,
-          "bic"=>bank_account.bic,
-          "iban"=>bank_account.iban,
-          "direct_debit"=>bank_account.direct_debit
-        }
-      ]
-    end
-
-    let(:empty_bank_account_json) do
-      []
-    end
-
-    context 'GET' do
-      it '403' do
-        GET "/api/v1/users/#{user.id}/bank-accounts"
-        expect(response).to have_http_status(403)
-        expect(json).to eq anonymous_denied_json
-
-        GET "/api/v1/users/#{user.id}/bank-accounts", other
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
-
-        # TODO use an user which can see other user but not bank_account
-        #GET "/api/v1/users/#{user.id}/bank-account", user_token
-        #expect(response).to have_http_status(403)
-        #expect(json).to eq bank_account_denied_json
-      end
-
-      it '404' do
-        GET "/api/v1/users/bla-blub/bank-accounts", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
-      end
-
-      it '200' do
-        GET "/api/v1/users/#{user.id}/bank-accounts", user_token
-        expect(response).to have_http_status(200)
-        expect(json).to eq(bank_account_json)
-
-        GET "/api/v1/users/#{user.id}/bank-accounts", admin
-        expect(response).to have_http_status(200)
-        expect(json).to eq(bank_account_json)
-
-        user.bank_accounts.each{|bank_account| bank_account.delete}
-        GET "/api/v1/users/#{user.id}/bank-accounts", admin
-        expect(response).to have_http_status(200)
-        expect(json).to eq empty_bank_account_json
-      end
-
     end
   end
 end

@@ -71,22 +71,24 @@ describe "localpools" do
       "readable"=>localpool_no_contracts.readable,
       "updatable"=>true,
       "deletable"=>true,
-      "meters"=>localpool_no_contracts.meters.collect do |meter|
-        {
-          "id"=>meter.id,
-          "type"=>"meter_virtual",
-          "manufacturer_name"=>meter.manufacturer_name,
-          "manufacturer_product_name"=>meter.manufacturer_product_name,
-          "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
-          "metering_type"=>meter.metering_type,
-          "meter_size"=>nil,
-          "ownership"=>nil,
-          "direction_label"=>meter.direction,
-          "build_year"=>nil,
-          "updatable"=>true,
-          "deletable"=>true,
-        }
-      end
+      "meters"=>{
+        'array'=> localpool_no_contracts.meters.collect do |meter|
+          {
+            "id"=>meter.id,
+            "type"=>"meter_virtual",
+            "manufacturer_name"=>meter.manufacturer_name,
+            "manufacturer_product_name"=>meter.manufacturer_product_name,
+            "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+            "metering_type"=>meter.metering_type,
+            "meter_size"=>nil,
+            "ownership"=>nil,
+            "direction_label"=>meter.direction,
+            "build_year"=>nil,
+            "updatable"=>true,
+            "deletable"=>true,
+          }
+        end
+      }
     }
   end
 
@@ -112,11 +114,11 @@ describe "localpools" do
     it '200 all' do
       GET ""
       expect(response).to have_http_status(200)
-      expect(json).to eq empty_json
+      expect(json['array']).to eq empty_json
 
       GET "?include=", admin
       expect(response).to have_http_status(200)
-      expect(sort(json)).to eq sort(localpools_json)
+      expect(sort(json['array'])).to eq sort(localpools_json)
     end
   end
 
@@ -138,28 +140,32 @@ describe "localpools" do
         "first_master_uid"=>contract.first_master_uid,
         "second_master_uid"=>nil,
         "begin_date"=>contract.begin_date.to_s,
-        "tariffs"=>contract.tariffs.collect do |t|
-          {
-            "id"=>t.id,
-            "type"=>'contract_tariff',
-            "name"=>t.name,
-            "begin_date"=>t.begin_date.to_s,
-            "end_date"=>nil,
-            "energyprice_cents_per_kwh"=>t.energyprice_cents_per_kwh,
-            "baseprice_cents_per_month"=>t.baseprice_cents_per_month,
-          }
-        end,
-        "payments"=>contract.payments.collect do |p|
-          {
-            "id"=>p.id,
-            "type"=>'contract_payment',
-            "begin_date"=>p.begin_date.to_s,
-            "end_date"=>nil,
-            "price_cents"=>p.price_cents,
-            "cycle"=>p.cycle,
-            "source"=>p.source,
-          }
-        end,
+        "tariffs"=>{
+          'array'=> contract.tariffs.collect do |t|
+            {
+              "id"=>t.id,
+              "type"=>'contract_tariff',
+              "name"=>t.name,
+              "begin_date"=>t.begin_date.to_s,
+              "end_date"=>nil,
+              "energyprice_cents_per_kwh"=>t.energyprice_cents_per_kwh,
+              "baseprice_cents_per_month"=>t.baseprice_cents_per_month,
+            }
+          end
+        },                   
+        "payments"=>{
+          'array'=> contract.payments.collect do |p|
+            {
+              "id"=>p.id,
+              "type"=>'contract_payment',
+              "begin_date"=>p.begin_date.to_s,
+              "end_date"=>nil,
+              "price_cents"=>p.price_cents,
+              "cycle"=>p.cycle,
+              "source"=>p.source,
+            }
+          end
+        },
         "contractor"=>{
           "id"=>contract.contractor.id,
           "type"=>"organization",
@@ -282,8 +288,8 @@ describe "localpools" do
         "deletable"=>false,
         "begin_date"=>contract.begin_date.to_s,
         "metering_point_operator_name"=>contract.metering_point_operator_name,
-        "tariffs"=>[],
-        "payments"=>[],
+        "tariffs"=> { 'array'=>[] },
+        "payments"=> { 'array' => [] },
         "contractor"=>{
           "id"=>contract.contractor.id,
           "type"=>"organization",
@@ -407,28 +413,32 @@ describe "localpools" do
           "end_date"=>nil,
           "updatable"=>true,
           "deletable"=>false,
-          "tariffs"=>contract.tariffs.collect do |t|
-            {
-              "id"=>t.id,
-              "type"=>'contract_tariff',
-              "name"=>t.name,
-              "begin_date"=>t.begin_date.to_s,
-              "end_date"=>nil,
-              "energyprice_cents_per_kwh"=>t.energyprice_cents_per_kwh,
-              "baseprice_cents_per_month"=>t.baseprice_cents_per_month,
-            }
-          end,
-          "payments"=>contract.payments.collect do |p|
-            {
-              "id"=>p.id,
-              "type"=>'contract_payment',
-              "begin_date"=>p.begin_date.to_s,
-              "end_date"=>nil,
-              "price_cents"=>p.price_cents,
-              "cycle"=>p.cycle,
-              "source"=>p.source,
-            }
-          end,
+          "tariffs"=>{
+            'array' => contract.tariffs.collect do |t|
+              {
+                "id"=>t.id,
+                "type"=>'contract_tariff',
+                "name"=>t.name,
+                "begin_date"=>t.begin_date.to_s,
+                "end_date"=>nil,
+                "energyprice_cents_per_kwh"=>t.energyprice_cents_per_kwh,
+                "baseprice_cents_per_month"=>t.baseprice_cents_per_month,
+              }
+            end
+          },
+          "payments"=>{
+            'array'=>contract.payments.collect do |p|
+              {
+                "id"=>p.id,
+                "type"=>'contract_payment',
+                "begin_date"=>p.begin_date.to_s,
+                "end_date"=>nil,
+                "price_cents"=>p.price_cents,
+                "cycle"=>p.cycle,
+                "source"=>p.source,
+              }
+            end
+          },
           "contractor"=>{
             "id"=>contract.contractor.id,
             "type"=>"user",
@@ -472,11 +482,11 @@ describe "localpools" do
     context 'GET' do
       it '200' do
         GET "/#{localpool.id}/power-taker-contracts", user
-        expect(json.to_yaml).to eq empty_json.to_yaml
+        expect(json['array'].to_yaml).to eq empty_json.to_yaml
         expect(response).to have_http_status(200)
 
         GET "/#{localpool.id}/power-taker-contracts", admin
-        expect(json.to_yaml).to eq power_taker_contracts_json.to_yaml
+        expect(json['array'].to_yaml).to eq power_taker_contracts_json.to_yaml
         expect(response).to have_http_status(200)
       end
     end
@@ -507,7 +517,7 @@ describe "localpools" do
             "image"=>manager.profile.image.md.url,
             "updatable"=>true,
             "deletable"=>true,
-            "bank_accounts"=>[]
+            "bank_accounts"=> { 'array'=>[] }
           }
         ]
       end
@@ -516,7 +526,7 @@ describe "localpools" do
         GET "/#{localpool.id}/managers", admin, include: :bank_accounts
           
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq(managers_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(managers_json.to_yaml)
       end
     end
   end

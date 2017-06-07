@@ -79,7 +79,7 @@ describe "billings" do
     it '200 all' do
       GET "/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", admin
       expect(response).to have_http_status(200)
-      expect(sort(json).to_yaml).to eq sort(billings_json).to_yaml
+      expect(sort(json['array']).to_yaml).to eq sort(billings_json).to_yaml
     end
   end
 

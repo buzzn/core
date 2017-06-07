@@ -56,22 +56,24 @@ describe "meters" do
         "updatable"=>true,
         "deletable"=>true,
         "smart"=>false,
-        "registers"=>[
-          {
-            "id"=>meter.input_register.id,
-            "type"=>"register_real",
-            "direction"=>meter.input_register.direction.to_s,
-            "name"=>meter.input_register.name,
-            "pre_decimal"=>6,
-            "decimal"=>2,
-            "converter_constant"=>1,
-            "low_power"=>false,
-            "label"=>meter.input_register.label,
-            "last_reading"=>0,
-            "uid"=>meter.input_register.uid,
-            "obis"=>meter.input_register.obis
-          }
-        ]
+        "registers"=>{
+          'array'=>[
+            {
+              "id"=>meter.input_register.id,
+              "type"=>"register_real",
+              "direction"=>meter.input_register.direction.to_s,
+              "name"=>meter.input_register.name,
+              "pre_decimal"=>6,
+              "decimal"=>2,
+              "converter_constant"=>1,
+              "low_power"=>false,
+              "label"=>meter.input_register.label,
+              "last_reading"=>0,
+              "uid"=>meter.input_register.uid,
+              "obis"=>meter.input_register.obis
+            }
+          ]
+        }
       }
     end
 
@@ -204,7 +206,7 @@ describe "meters" do
           "uid"=>register.uid,
           "obis"=>register.obis,
           "group"=>nil,
-          "devices"=>[],
+          "devices"=> { 'array'=>[] },
         }
       ]
     end
@@ -226,7 +228,7 @@ describe "meters" do
         registers # setup
         GET "/api/v1/meters/real/#{meter.id}/registers?include=group,devices", admin
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq(registers_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(registers_json.to_yaml)
       end
     end
   end

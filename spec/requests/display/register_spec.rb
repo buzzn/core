@@ -91,7 +91,7 @@ describe Display::GroupRoda do
       it '200 all' do
         GET "/#{group.id}/registers?include=meter", admin
         expect(response).to have_http_status(200)
-        expect(sort(json).to_yaml).to eq sort(registers_json).to_yaml
+        expect(sort(json['array']).to_yaml).to eq sort(registers_json).to_yaml
       end
 
       [:real, :virtual].each do |type|

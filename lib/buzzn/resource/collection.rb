@@ -65,27 +65,32 @@ module Buzzn::Resource
       @meta[k] = v
     end
 
+
     def to_json(options = {})
+      json = ''
+      json(json, options.fetch(:include, {}))
+      json
+    end
+
+    def json(json, includes)
       cache = {}
-      first = true
-      json = String.new
+      meta = false
       @meta.each do |k, v|
-        if first
-          first = false
+        if ! meta
+          meta = true
         else
           json << ','
         end
         # TODO case v.is_a? Hash
         json << '{"' << k.to_s << '":' << v.to_json
       end
-      # json <<
-      #   if first
-      #     first = false
-      #     '{"array":['
-      #   else
-      #     '},"array":['
-      #   end
-      json << '['
+      json <<
+        if meta
+          ',"array":['
+        else
+          '{"array":['
+        end
+      first = true
       @enum.each do |model|
         if m = cache[model.class]
           m.instance_variable_set(:@object, model)
@@ -100,11 +105,9 @@ module Buzzn::Resource
         else
           json << ','
         end
-        m.json(json, options.fetch(:include, {}))
-#        json << m.to_json(options)
+        m.json(json, includes)
       end
-      #json << ']}'
-      json << ']'
+      json << ']}'
       json
     end
   end

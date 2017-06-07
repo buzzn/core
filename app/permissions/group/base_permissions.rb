@@ -15,6 +15,25 @@ class Group::BasePermissions
 
   setting :registers, reader: true do
     setting :retrieve, ALL
+    setting :readings do
+      setting :retrieve, ALL
+    end
+
+  end
+
+  setting :meters, reader: true do
+    setting :retrieve, ALL
+    setting :update, NONE
+    setting :delete, NONE
+    setting :registers, reader: true do
+      setting :retrieve, ALL
+    end
+  end
+
+  setting :managers, reader: true do
+    setting :retrieve, ALL
+    setting :update, NONE
+    setting :delete, NONE
   end
 
   setting :scores, reader: true do

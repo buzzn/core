@@ -40,16 +40,18 @@ describe Display::GroupRoda do
         "type"=>"group_localpool",
         "name"=>group.name,
         "description"=>group.description,
-        "mentors"=>group.managers.collect do |manager|
-          {
-            "id"=>manager.id,
-            "type"=>"user",
-            "title"=>manager.profile.title,
-            "first_name"=>manager.first_name,
-            "last_name"=>manager.last_name,
-            "image"=>manager.image.md.url
-          }
-        end
+        "mentors"=> {
+          "array" => group.managers.collect do |manager|
+            {
+              "id"=>manager.id,
+              "type"=>"user",
+              "title"=>manager.profile.title,
+              "first_name"=>manager.first_name,
+              "last_name"=>manager.last_name,
+              "image"=>manager.image.md.url
+            }
+          end
+        }
       }
     end
 
@@ -65,16 +67,18 @@ describe Display::GroupRoda do
           "type"=>"group_#{type}",
           "name"=>group.name,
           "description"=>group.description,
-          "mentors"=>group.managers.collect do |manager|
-            {
-              "id"=>manager.id,
-              "type"=>"user",
-              "title"=>manager.profile.title,
-              "first_name"=>manager.first_name,
-              "last_name"=>manager.last_name,
-              "image"=>manager.image.md.url
-            }
-          end
+          "mentors"=> {
+            'array' => group.managers.collect do |manager|
+              {
+                "id"=>manager.id,
+                "type"=>"user",
+                "title"=>manager.profile.title,
+                "first_name"=>manager.first_name,
+                "last_name"=>manager.last_name,
+                "image"=>manager.image.md.url
+              }
+            end
+          }
         }
       end
     end
@@ -85,7 +89,7 @@ describe Display::GroupRoda do
       expect(json).to eq not_found_json
     end
 
-    it '200' do
+    it '2006' do
       GET "/#{group.id}", nil, include: :mentors
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq group_json.to_yaml
@@ -102,15 +106,15 @@ describe Display::GroupRoda do
     it '200 all' do
       GET "", nil, include: :mentors
       expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq groups_json.to_yaml
+      expect(sort(json['array']).to_yaml).to eq sort(groups_json).to_yaml
 
       GET "", user, include: :mentors
       expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq groups_json.to_yaml
+      expect(sort(json['array']).to_yaml).to eq sort(groups_json).to_yaml
 
       GET "", admin, include: :mentors
       expect(response).to have_http_status(200)
-      expect(sort(json).to_yaml).to eq sort(groups_json).to_yaml
+      expect(sort(json['array']).to_yaml).to eq sort(groups_json).to_yaml
     end
   end
 
@@ -148,7 +152,7 @@ describe Display::GroupRoda do
         GET "/#{group.id}/mentors", admin
           
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq(mentors_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(mentors_json.to_yaml)
       end
     end
   end

@@ -101,7 +101,7 @@ describe "registers" do
     it '200 all' do
       GET "/#{group.id}/registers?include=meter", admin
       expect(response).to have_http_status(200)
-      expect(sort(json).to_yaml).to eq sort(registers_json).to_yaml
+      expect(sort(json['array']).to_yaml).to eq sort(registers_json).to_yaml
     end
 
     [:real, :virtual].each do |type|
@@ -147,7 +147,7 @@ describe "registers" do
           let(:register) { send "#{type}_register" }
           let!(:readings_json) do
             Reading.all.delete_all
-            readings = 5.times.collect { Fabricate(:reading, register_id: register.id) }
+            readings = 2.times.collect { Fabricate(:reading, register_id: register.id) }
             readings.collect do |r|
               {
                 "id"=>r.id.to_s,
@@ -167,7 +167,7 @@ describe "registers" do
             GET "/#{group.id}/registers/#{register.id}/readings", admin
 
             expect(response).to have_http_status(200)
-            expect(json.to_yaml).to eq readings_json.to_yaml
+            expect(json['array'].to_yaml).to eq readings_json.to_yaml
           end
         end
       end

@@ -181,11 +181,13 @@ module Buzzn::Resource
         else
           # TODO remove deprecated code
           result = model.readable_by(user).filter(filter)
-          result.collect do |r|
-            # highly inefficient but needed to pass in permissions
-            # is deprecated any ways
-            find_resource_class(r.class).retrieve(user, r.id)
-          end
+          {
+            'array' => result.collect do |r|
+              # highly inefficient but needed to pass in permissions
+              # is deprecated any ways
+              find_resource_class(r.class).retrieve(user, r.id)
+            end
+          }
         end
       end
 
@@ -291,6 +293,12 @@ module Buzzn::Resource
       to_h.to_yaml
     end
 
+    def to_json(options = {})
+      json = ''
+      json(json, options[:include])
+      json
+    end
+
     def json(json, includes)
       first = true
       self.class.attribute_names.flatten.each do |attr|
@@ -312,8 +320,11 @@ module Buzzn::Resource
           end
           json << '"' << k.to_s << '":'
           obj = self.send(k)
-          case
+          case obj
+          when Buzzn::Resource::Collection
+            obj.json(json, v)
           when Array
+            #  binding.pry
             json << obj.to_json(include: v)
           when NilClass
             json << 'null'

@@ -177,7 +177,7 @@ describe "bank-accounts" do
         it '200 all' do
           GET "/#{parent.id}", admin
           expect(response).to have_http_status(200)
-          expect(json.to_yaml).to eq bank_accounts_json.to_yaml
+          expect(json['array'].to_yaml).to eq bank_accounts_json.to_yaml
         end
       end
       

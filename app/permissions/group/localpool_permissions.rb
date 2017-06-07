@@ -41,6 +41,20 @@ class Group::LocalpoolPermissions
     setting :update, MANAGERS
     setting :delete, NONE
 
+    setting :contractor do
+      setting :create, NONE
+      setting :retrieve, MANAGERS + [:contract]
+      setting :update, MANAGERS
+      setting :delete, NONE
+    end
+
+    setting :customer do
+      setting :create, NONE
+      setting :retrieve, MANAGERS + [:contract]
+      setting :update, MANAGERS
+      setting :delete, NONE
+    end
+
     setting :tariffs do
       setting :retrieve, MANAGERS + [:contract]
     end
@@ -50,12 +64,22 @@ class Group::LocalpoolPermissions
     end
   end
 
+  setting :meters, reader: true do
+    setting :retrieve, MANAGERS + [:contract]
+    setting :update, MANAGERS
+    setting :delete, OPERATORS
+  end
+
   setting :registers, reader: true do
     setting :retrieve, MANAGERS + [:contract]
     setting :update, MANAGERS
     setting :delete, NONE
 
-    setting :group do
+    setting :readings do
+      setting :retrieve, MANAGERS + [:contract]
+    end
+
+    setting :groupp do
       setting :create, OPERATORS, reader: true
       setting :retrieve, ALL, reader: true
       setting :update, MANAGERS, reader: true

@@ -51,40 +51,44 @@ describe "groups" do
         "readable"=>group.readable,
         "updatable"=>false,
         "deletable"=>false,
-        "meters"=>group.meters.collect do |meter|
-          json = {
-            "id"=>meter.id,
-            'type'=>'meter_virtual',
-            "manufacturer_name"=>meter.manufacturer_name,
-            "manufacturer_product_name"=>meter.manufacturer_product_name,
-            "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
-            "metering_type"=>meter.metering_type,
-            "meter_size"=>meter.meter_size,
-            "ownership"=>meter.ownership,
-            "direction_label"=>meter.direction,
-            "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
-            "updatable"=>false,
-            "deletable"=>false,
-          }
-          json['smart'] = true if meter.is_a? Meter::Real
-          json
-        end,
-        "managers"=>group.managers.collect do |manager|
-          {
-            "id"=>manager.id,
-            "type"=>"user",
-            "user_name"=>manager.user_name,
-            "title"=>manager.profile.title,
-            "first_name"=>manager.first_name,
-            "last_name"=>manager.last_name,
-            "gender"=>manager.profile.gender,
-            "phone"=>manager.profile.phone,
-            "email"=>manager.email,
-            "image"=>manager.profile.image.md.url,
-            "updatable"=>true,
-            "deletable"=>true
-          }
-        end
+        "meters"=>{
+          'array'=>group.meters.collect do |meter|
+            json = {
+              "id"=>meter.id,
+              'type'=>'meter_virtual',
+              "manufacturer_name"=>meter.manufacturer_name,
+              "manufacturer_product_name"=>meter.manufacturer_product_name,
+              "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+              "metering_type"=>meter.metering_type,
+              "meter_size"=>meter.meter_size,
+              "ownership"=>meter.ownership,
+              "direction_label"=>meter.direction,
+              "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+              "updatable"=>false,
+              "deletable"=>false,
+            }
+            json['smart'] = true if meter.is_a? Meter::Real
+            json
+          end
+        },
+        "managers"=>{
+          'array'=>group.managers.collect do |manager|
+            {
+              "id"=>manager.id,
+              "type"=>"user",
+              "user_name"=>manager.user_name,
+              "title"=>manager.profile.title,
+              "first_name"=>manager.first_name,
+              "last_name"=>manager.last_name,
+              "gender"=>manager.profile.gender,
+              "phone"=>manager.profile.phone,
+              "email"=>manager.email,
+              "image"=>manager.profile.image.md.url,
+              "updatable"=>false,
+              "deletable"=>false
+            }
+          end
+        }
       }
     end
 
@@ -92,10 +96,10 @@ describe "groups" do
       json = group_json.dup
       #json['updatable']=true
       #json['deletable']=true
-      (json['managers'] + json['meters']).each do |m|
-        m['updatable'] = true
-        m['deletable'] = true
-      end
+      #(json['managers'] + json['meters']).each do |m|
+      #  m['updatable'] = true
+      #  m['deletable'] = true
+      #end
       json
     end
 
@@ -140,40 +144,44 @@ describe "groups" do
           "readable"=>group.readable,
           "updatable"=>false,
           "deletable"=>false,
-          "meters"=>group.meters.collect do |meter|
-            json = {
-              "id"=>meter.id,
-              'type'=>meter.class.to_s.downcase.sub('::', '_'),
-              "manufacturer_name"=>meter.manufacturer_name,
-              "manufacturer_product_name"=>meter.manufacturer_product_name,
-              "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
-              "metering_type"=>meter.metering_type,
-              "meter_size"=>meter.meter_size,
-              "ownership"=>meter.ownership,
-              "direction_label"=>meter.direction,
-              "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
-              "updatable"=>true,
-              "deletable"=>true,
-            }
-            json['smart'] = meter.smart if meter.is_a? Meter::Real
-            json
-          end,
-          "managers"=>group.managers.collect do |manager|
-            {
-              "id"=>manager.id,
-              "type"=>"user",
-              "user_name"=>manager.user_name,
-              "title"=>manager.profile.title,
-              "first_name"=>manager.first_name,
-              "last_name"=>manager.last_name,
-              "gender"=>manager.profile.gender,
-              "phone"=>manager.profile.phone,
-              "email"=>manager.email,
-              "image"=>manager.profile.image.md.url,
-              "updatable"=>true,
-              "deletable"=>true,
-            }
-          end,
+          "meters"=>{
+            'array'=>group.meters.collect do |meter|
+              json = {
+                "id"=>meter.id,
+                'type'=>meter.class.to_s.downcase.sub('::', '_'),
+                "manufacturer_name"=>meter.manufacturer_name,
+                "manufacturer_product_name"=>meter.manufacturer_product_name,
+                "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+                "metering_type"=>meter.metering_type,
+                "meter_size"=>meter.meter_size,
+                "ownership"=>meter.ownership,
+                "direction_label"=>meter.direction,
+                "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
+                "updatable"=>false,
+                "deletable"=>false,
+              }
+              json['smart'] = meter.smart if meter.is_a? Meter::Real
+              json
+            end
+          },
+          "managers"=>{
+            'array'=>group.managers.collect do |manager|
+              {
+                "id"=>manager.id,
+                "type"=>"user",
+                "user_name"=>manager.user_name,
+                "title"=>manager.profile.title,
+                "first_name"=>manager.first_name,
+                "last_name"=>manager.last_name,
+                "gender"=>manager.profile.gender,
+                "phone"=>manager.profile.phone,
+                "email"=>manager.email,
+                "image"=>manager.profile.image.md.url,
+                "updatable"=>false,
+                "deletable"=>false,
+              }
+            end
+          },
         }.merge(rel)
       end
     end
@@ -211,15 +219,15 @@ describe "groups" do
 
         GET "/api/v1/groups"
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq empty_json.to_yaml
+        expect(json['array'].to_yaml).to eq empty_json.to_yaml
 
         GET "/api/v1/groups?include=meters,managers", user
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq groups_json.to_yaml
+        expect(json['array'].to_yaml).to eq groups_json.to_yaml
 
         GET "/api/v1/groups?include=meters,managers", admin
         expect(response).to have_http_status(200)
-        expect(json.sort {|n,m| n['id'] <=> m['id']}.to_yaml).to eq admin_groups_json.sort {|n,m| n['id'] <=> m['id']}.to_yaml
+        expect(sort(json['array']).to_yaml).to eq sort(admin_groups_json).to_yaml
       ensure
         Group::Base.update_all(readable: :world)
       end
@@ -231,27 +239,27 @@ describe "groups" do
 
         GET "/api/v1/groups"
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq empty_json.to_yaml
+        expect(json['array'].to_yaml).to eq empty_json.to_yaml
 
         GET "/api/v1/groups", user, filter: 'blabla'
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq empty_json.to_yaml
+        expect(json['array'].to_yaml).to eq empty_json.to_yaml
 
         GET "/api/v1/groups", other, filter: group.name
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq empty_json.to_yaml
+        expect(json['array'].to_yaml).to eq empty_json.to_yaml
 
         GET "/api/v1/groups?include=meters,managers", user, filter: group.name
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq groups_json.to_yaml
+        expect(json['array'].to_yaml).to eq groups_json.to_yaml
 
         GET "/api/v1/groups", admin, filter: 'blabla'
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq empty_json.to_yaml
+        expect(json['array'].to_yaml).to eq empty_json.to_yaml
 
         GET "/api/v1/groups?include=meters,managers", admin, filter: group.name
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq filtered_admin_groups_json.to_yaml
+        expect(json['array'].to_yaml).to eq filtered_admin_groups_json.to_yaml
       ensure
         Group::Base.update_all(readable: :world)
       end
@@ -367,8 +375,8 @@ describe "groups" do
                   "ownership"=>meter.ownership,
                   "direction_label"=>meter.direction,
                   "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
-                  "updatable"=>true,
-                  "deletable"=>true
+                  "updatable"=>false,
+                  "deletable"=>false
                 }
               if meter.is_a? Meter::Real
                 json['smart'] = false
@@ -391,27 +399,29 @@ describe "groups" do
                   "ownership"=>meter.ownership,
                   "direction_label"=>meter.direction,
                   "build_year"=>meter.build_year ? meter.build_year.to_s : nil,
-                  "updatable"=>true,
-                  "deletable"=>true
+                  "updatable"=>false,
+                  "deletable"=>false
                 }
               if meter.is_a? Meter::Real
                 json['smart'] = false
-                json["registers"]=meter.registers.collect do |register|
-                  {
-                    "id"=>register.id,
-                    "type"=>'register_real',
-                    "direction"=>register.direction.to_s,
-                    "name"=>register.name,
-                    "pre_decimal"=>register.digits_before_comma,
-                    "decimal"=>register.decimal_digits,
-                    "converter_constant"=>1,
-                    "low_power"=>register.low_load_ability,
-                    "label"=>register.label,
-                    "last_reading"=>0,
-                    "uid"=>register.uid,
-                    "obis"=>register.obis
-                  }
-                end
+                json["registers"]={
+                  'array'=> meter.registers.collect do |register|
+                    {
+                      "id"=>register.id,
+                      "type"=>'register_real',
+                      "direction"=>register.direction.to_s,
+                      "name"=>register.name,
+                      "pre_decimal"=>register.digits_before_comma,
+                      "decimal"=>register.decimal_digits,
+                      "converter_constant"=>1,
+                      "low_power"=>register.low_load_ability,
+                        "label"=>register.label,
+                        "last_reading"=>0,
+                        "uid"=>register.uid,
+                        "obis"=>register.obis
+                    }
+                  end                  
+                }
               else
                 json["register"]={
                   "id"=>meter.register.id,
@@ -434,12 +444,12 @@ describe "groups" do
             GET "/api/v1/groups/#{group.id}/meters", admin, include: 'registers,register'
 
             expect(response).to have_http_status(200)
-            expect(json.to_yaml).to eq(meter_json.to_yaml)
+            expect(json['array'].to_yaml).to eq(meter_json.to_yaml)
 
             GET "/api/v1/groups/#{group.id}/meters?include=", admin
 
             expect(response).to have_http_status(200)
-            expect(json.to_yaml).to eq(minimal_meter_json.to_yaml)
+            expect(json['array'].to_yaml).to eq(minimal_meter_json.to_yaml)
           end
         end
       end

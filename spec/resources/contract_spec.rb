@@ -44,7 +44,7 @@ describe Contract::BaseResource do
 
     it 'retrieve all - ids + types' do
       expected = all.collect { |c| [c.class, c.id] }
-      result = Contract::BaseResource.all(user).collect do |r|
+      result = Contract::BaseResource.all(user)['array'].collect do |r|
         [r.object.class, r.id]
       end
       expect(result).to match_array expected
@@ -65,7 +65,7 @@ describe Contract::BaseResource do
   describe Contract::MeteringPointOperatorResource do
 
     it 'retrieve - ids + types' do
-      result = Contract::MeteringPointOperatorResource.all(user).collect do |r|
+      result = Contract::MeteringPointOperatorResource.all(user)['array'].collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [['contract_metering_point_operator', metering_point_operator.id]]
@@ -94,7 +94,7 @@ describe Contract::BaseResource do
   describe Contract::LocalpoolProcessingResource do
 
     it 'retrieve all - ids + types' do
-      result = Contract::LocalpoolProcessingResource.all(user).collect do |r|
+      result = Contract::LocalpoolProcessingResource.all(user)['array'].collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [['contract_localpool_processing', localpool_processing.id]]
@@ -123,7 +123,7 @@ describe Contract::BaseResource do
   describe Contract::LocalpoolPowerTakerResource do
 
     it 'retrieve - ids + types' do
-      result = Contract::LocalpoolPowerTakerResource.all(user).collect do |r|
+      result = Contract::LocalpoolPowerTakerResource.all(user)['array'].collect do |r|
         [r.object.class, r.id]
       end
       expect(result).to eq [[Contract::LocalpoolPowerTaker, localpool_power_taker.id]]
@@ -152,7 +152,7 @@ describe Contract::BaseResource do
   describe Contract::PowerTakerResource do
 
     it 'retrieve all - ids + types' do
-      result = Contract::PowerTakerResource.all(user).collect do |r|
+      result = Contract::PowerTakerResource.all(user)['array'].collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [['contract_power_taker', power_taker.id]]
@@ -181,7 +181,7 @@ describe Contract::BaseResource do
   describe Contract::PowerGiverResource do
 
     it 'retrieve all - ids + types' do
-      result = Contract::PowerGiverResource.all(user).collect do |r|
+      result = Contract::PowerGiverResource.all(user)['array'].collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [['contract_power_giver', power_giver.id]]

@@ -49,7 +49,7 @@ describe "organizations" do
         "updatable"=>false,
         "deletable"=>false,
         "address"=>nil,
-        "bank_accounts"=>[]
+        "bank_accounts"=>{ 'array'=>[] }
       }
     end
 

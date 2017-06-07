@@ -66,24 +66,26 @@ describe "billing-cycles" do
           "name"=>cycle.name,
           "begin_date"=>cycle.begin_date.iso8601(3),
           "end_date"=>cycle.end_date.iso8601(3),
-          "billings"=>cycle.billings.collect do |billing|
-            {
-              "id"=>billing.id,
-              "type"=>"billing",
-              "start_reading_id"=>billing.start_reading_id,
-              "end_reading_id"=>billing.end_reading_id,
-              "device_change_reading_1_id"=>nil,
-              "device_change_reading_2_id"=>nil,
-              "total_energy_consumption_kWh"=>1000,
-              "total_price_cents"=>30000,
-              "prepayments_cents"=>29000,
-              "receivables_cents"=>1000,
-              "invoice_number"=>billing.invoice_number,
-              "status"=>"open",
-              "updatable"=>true,
-              "deletable"=>true
-            }
-          end
+          "billings"=>{
+            'array'=> cycle.billings.collect do |billing|
+              {
+                "id"=>billing.id,
+                "type"=>"billing",
+                "start_reading_id"=>billing.start_reading_id,
+                "end_reading_id"=>billing.end_reading_id,
+                "device_change_reading_1_id"=>nil,
+                "device_change_reading_2_id"=>nil,
+                "total_energy_consumption_kWh"=>1000,
+                "total_price_cents"=>30000,
+                "prepayments_cents"=>29000,
+                "receivables_cents"=>1000,
+                "invoice_number"=>billing.invoice_number,
+                "status"=>"open",
+                "updatable"=>true,
+                "deletable"=>true
+              }
+            end
+          }
         }
       end
     end
@@ -104,7 +106,7 @@ describe "billing-cycles" do
     it '200 all' do
       GET "/#{group.id}/billing-cycles?include=billings", admin
       expect(response).to have_http_status(200)
-      expect(sort(json).to_yaml).to eq sort(cycles_json).to_yaml
+      expect(sort(json['array']).to_yaml).to eq sort(cycles_json).to_yaml
     end
   end
 

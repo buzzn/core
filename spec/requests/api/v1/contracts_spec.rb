@@ -48,28 +48,32 @@ describe "contracts" do
         "deletable"=>true,
         "begin_date"=>"2014-12-01",
         "metering_point_operator_name"=>"buzzn systems UG",
-        "tariffs"=>[
-          {
-            "id"=>contract.tariffs[0].id,
-            "type"=>'contract_tariff',
-            "name"=>"metering_standard",
-            "begin_date"=>"2014-12-01",
-            "end_date"=>nil,
-            "energyprice_cents_per_kwh"=>0,
-            "baseprice_cents_per_month"=>30000,
-          }
-        ],
-        "payments"=>contract.payments.collect do |p|
-          {
-            "id"=>p.id,
-            "type"=>'contract_payment',
-            "begin_date"=>p.begin_date.to_s,
-            "end_date"=>p.end_date ? p.end_date.to_s : nil,
-            "price_cents"=>p.price_cents,
-            "cycle"=>p.cycle,
-            "source"=>p.source,
-          }
-        end,
+        "tariffs"=>{
+          'array'=>[
+            {
+              "id"=>contract.tariffs[0].id,
+              "type"=>'contract_tariff',
+              "name"=>"metering_standard",
+              "begin_date"=>"2014-12-01",
+              "end_date"=>nil,
+              "energyprice_cents_per_kwh"=>0,
+              "baseprice_cents_per_month"=>30000,
+            }
+          ]
+        },
+        "payments"=>{
+          'array'=> contract.payments.collect do |p|
+            {
+              "id"=>p.id,
+              "type"=>'contract_payment',
+              "begin_date"=>p.begin_date.to_s,
+              "end_date"=>p.end_date ? p.end_date.to_s : nil,
+              "price_cents"=>p.price_cents,
+              "cycle"=>p.cycle,
+              "source"=>p.source,
+            }
+          end
+        },
         "contractor"=>{
           "id"=>contract.contractor.id,
           "type"=>"organization",
@@ -214,7 +218,7 @@ describe "contracts" do
               "sales_tax_number"=>nil,
               "tax_rate"=>nil,
               "tax_number"=>nil,
-              "bank_accounts"=>[]
+              "bank_accounts"=>{ 'array'=>[] }
             }
           end
 
@@ -287,7 +291,7 @@ describe "contracts" do
               "tax_rate"=>nil,
               "tax_number"=>nil,
               "address"=>nil,
-              "bank_accounts"=>[]
+              "bank_accounts"=>{ 'array'=>[] }
             }
           end
 

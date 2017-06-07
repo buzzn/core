@@ -89,7 +89,7 @@ describe Group::BaseResource do
   describe Group::Tribe do
 
     it 'retrieve all - ids + types' do
-      result = Group::TribeResource.all(user).collect do |r|
+      result = Group::TribeResource.all(user)['array'].collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [['group_tribe', tribe.id]]

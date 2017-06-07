@@ -27,7 +27,7 @@ describe Register::BaseResource do
 
   it 'retrieve all - ids + types' do
     expected = {'register_real' => real.id, 'register_virtual' => virtual.id}
-    result = Register::BaseResource.all(user).collect do |r|
+    result = Register::BaseResource.all(user)['array'].collect do |r|
       type = r.type
       [type, r.id]
     end
@@ -37,7 +37,7 @@ describe Register::BaseResource do
   describe Register::RealResource do
 
     it 'retrieve all - ids + types' do
-      result = Register::RealResource.all(user).collect do |r|
+      result = Register::RealResource.all(user)['array'].collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [['register_real', real.id]]
@@ -68,7 +68,7 @@ describe Register::BaseResource do
   
     it 'retrieve all - ids + types' do
       expected = ['register_virtual', virtual.id]
-      result = Register::VirtualResource.all(user).collect do |r|
+      result = Register::VirtualResource.all(user)['array'].collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [expected]
