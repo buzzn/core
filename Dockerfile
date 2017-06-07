@@ -50,4 +50,4 @@ CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
 
 
 HEALTHCHECK --interval=1m --timeout=3s \
-  CMD curl -f http://localhost:3000/healthcheck || exit 1
+  CMD curl -f http://localhost:3000/heartbeat || exit 1
