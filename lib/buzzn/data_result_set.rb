@@ -110,7 +110,7 @@ module Buzzn
     end
 
     def to_json(*args)
-      @json || "{\"units\":\"#{@units}\",\"resource_id\":\"#{@resource_id}\",\"in\":#{@in.to_json},\"out\":#{@out.to_json}}"
+      @json || '{"units":"' << @units.to_s << '","resource_id":"' << @resource_id << '","in":' << @in.to_json << ',"out":' << @out.to_json << '}'
     end
 
     def merge_lists(target, source, duration, operator)
