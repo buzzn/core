@@ -71,13 +71,9 @@ describe "groups" do
         "expires_at" => 1454286616.0,
         "array" => [
           {"timestamp" => 1467446702.088, "value" => 1100640.0,
-           "resource_id" => output_register.id, "mode" => "in"},
-          {"timestamp" => 1467446702.088, "value" => 0.0,
            "resource_id" => input_register.id, "mode" => "in"},
-          {"timestamp" => 1467446703.088, "value" => 1300640.0,
-           "resource_id" => output_register.id, "mode" => "out"},
           {"timestamp" => 1467446702.088, "value" => 1200640.0,
-           "resource_id" => input_register.id, "mode" => "out"}
+           "resource_id" => output_register.id, "mode" => "out"}
         ]
       }
     end
@@ -88,13 +84,9 @@ describe "groups" do
       {
         "array" => [
           {"timestamp" => 1467446702.188, "value" => 2100640.0,
-           "resource_id" => output_register.id, "mode" => "in"},
-          {"timestamp" => 1467446702.188, "value" => 0.0,
            "resource_id" => input_register.id, "mode" => "in"},
           {"timestamp" => 1467446702.188, "value" => 2200640.0,
-           "resource_id" => output_register.id, "mode" => "out"},
-          {"timestamp" => 1467446703.188, "value" => 2300640.0,
-           "resource_id" => input_register.id, "mode" => "out"}
+           "resource_id" => output_register.id, "mode" => "out"}
         ],
         "expires_at" => 1454286641.0
       }
@@ -237,7 +229,7 @@ describe "groups" do
     let(:hour_json) do
       { "units" => "milliwatt",
         "resource_id" => group.id,
-        "in"=>[{"timestamp"=>1467446702.088, "value"=>3302020.0},
+        "in"=>[{"timestamp"=>1467446702.088, "value"=>1100640.0},
                {"timestamp"=>1467446702.288, "value"=>1100740.0}],
         "out"=>[{"timestamp"=>1467446702.088, "value"=>0.0},
                 {"timestamp"=>1467446702.288, "value"=>0.0}]
@@ -247,14 +239,11 @@ describe "groups" do
     let(:day_json) do
       { "units" => "milliwatt",
         "resource_id" => group.id,
-        "in"=>[{"timestamp"=>1483138800.0, "value"=>882855.2836},
-               {"timestamp"=>1483139700.0, "value"=>305943.0632},
-               {"timestamp"=>1483140600.0, "value"=>896316.3292},
-               {"timestamp"=>1483141500.0, "value"=>894245.9292}],
-        "out"=>[{"timestamp"=>1483225200.0, "value"=>1023712.5864},
-                {"timestamp"=>1483226100.0, "value"=>1080270.0296},
-                {"timestamp"=>1483227000.0, "value"=>1228515.572},
-                {"timestamp"=>1483227900.0, "value"=>1076732.8432}]
+        "in"=>[],
+        "out"=>[{"timestamp"=>1483225200.0, "value"=>511856.2932},
+                {"timestamp"=>1483226100.0, "value"=>540135.0148},
+                {"timestamp"=>1483227000.0, "value"=>614257.786},
+                {"timestamp"=>1483227900.0, "value"=>538366.4216}]
       }
     end
 
@@ -265,29 +254,30 @@ describe "groups" do
                {"timestamp"=>1483139700.0, "value"=>305943.0632},
                {"timestamp"=>1483140600.0, "value"=>896316.3292},
                {"timestamp"=>1483141500.0, "value"=>894245.9292}],
-        "out"=>[{"timestamp"=>1483225200.0, "value"=>1023712.5864},
-                {"timestamp"=>1483226100.0, "value"=>1080270.0296},
-                {"timestamp"=>1483227000.0, "value"=>1228515.572},
-                {"timestamp"=>1483227900.0, "value"=>1076732.8432}]
+        "out"=>[{"timestamp"=>1483225200.0, "value"=>511856.2932},
+                {"timestamp"=>1483226100.0, "value"=>540135.0148},
+                {"timestamp"=>1483227000.0, "value"=>614257.786},
+                {"timestamp"=>1483227900.0, "value"=>538366.4216}]
       }
     end
 
     let(:month_json) do
       { "units" => "milliwatt_hour",
         "resource_id" => group.id,
-        "in"=>[{"timestamp"=>1483225200.0, "value"=>34619930.5348},
-               {"timestamp"=>1483311600.0, "value"=>52223658.0036}],
-        "out"=>[{"timestamp"=>1483225200.0, "value"=>34619930.5348},
-                {"timestamp"=>1483311600.0, "value"=>52223658.0036}]
+        "in"=>[{"timestamp"=>1483225200.0, "value"=>17309965.2674},
+               {"timestamp"=>1483311600.0, "value"=>26111829.0018}],
+        "out"=>[{"timestamp"=>1483225200.0, "value"=>17309965.2674},
+                {"timestamp"=>1483311600.0, "value"=>26111829.0018}]
       }
     end
 
     let(:year_json) do
       { "units" => "milliwatt_hour",
         "resource_id" => group.id,
-        "in"=>[{"timestamp"=>1483225200.0, "value"=>63591795.5281},
+        # the recorded discovergy response uses the same data for in and out
+        "in"=>[{"timestamp"=>1483225200.0, "value"=>21179442.0026},
                {"timestamp"=>1483311600.0, "value"=>21232911.5229}],
-        "out"=>[{"timestamp"=>1483225200.0, "value"=>63591795.5281},
+        "out"=>[{"timestamp"=>1483225200.0, "value"=>21179442.0026},
                 {"timestamp"=>1483311600.0, "value"=>21232911.5229}]
       }
     end
