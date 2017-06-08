@@ -20,7 +20,9 @@ module Buzzn::Discovergy
     def collection(group_or_virtual_register, mode)
       result = Buzzn::DataResultArray.new(expires_at)
       if group_or_virtual_register.brokers.by_data_source(self).empty?
-        group_or_virtual_register.registers.each do |register|
+        group_or_virtual_register.registers.select do |r|
+          r.direction == mode
+        end.each do |register|
           entry = single_aggregated(register, mode)
           result << entry if entry
         end
@@ -51,7 +53,7 @@ module Buzzn::Discovergy
         raise 'not implemented having more then one broker' if result
         two_way_meter = broker.two_way_meter?
 
-        response = @facade.readings(broker, nil, (!two_way_meter && mode == :out) ? :in : mode, false)
+        response = @facade.readings(broker, nil, (two_way_meter == false && mode == :out) ? :in : mode, false)
 
         # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
         result = parse_aggregated_live(response, mode, two_way_meter, register_or_group.id)
@@ -75,7 +77,9 @@ module Buzzn::Discovergy
     def aggregated_without_broker(resource, mode, interval)
       result = nil
       if resource.respond_to? :registers
-        resource.registers.each do |register|
+        resource.registers.select do |r|
+          r.direction == mode
+        end.each do |register|
           result = aggregated_with_broker(register, mode, interval, result)
         end
       end
@@ -88,7 +92,6 @@ module Buzzn::Discovergy
         two_way_meter = broker.two_way_meter?
         # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
         response = @facade.readings(broker, interval, (two_way_meter == false && mode == :out) ? :in : mode, false)
-
         result = add(result, parse_aggregated_data(response, interval, mode, two_way_meter, resource.id), interval)
       end
       result
