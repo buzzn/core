@@ -218,7 +218,11 @@ module Buzzn::Resource
       def get(user, id)
         instance = model.where(id: id).first
         if instance.nil?
-          raise Buzzn::RecordNotFound.new(self, id, user)
+          # use heavily patch find-method with friendly/slugged id 
+          instance = model.find(id) rescue nil
+          if instance.nil?
+            raise Buzzn::RecordNotFound.new(self, id, user)
+          end
         end
         instance
       end
