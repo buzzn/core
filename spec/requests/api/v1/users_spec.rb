@@ -244,6 +244,7 @@ describe "users" do
     let(:me_json) do
       json = user_json.dup
       banks = json.delete('bank_accounts')
+      json['deletable']=false
       json['sales_tax_number']=nil
       json['tax_rate']=nil
       json['tax_number']=nil

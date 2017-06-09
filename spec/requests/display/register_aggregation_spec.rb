@@ -127,8 +127,8 @@ describe Display::GroupRoda do
               GET "/#{group.id}/registers/#{output_register.id}/ticker"
 
               expect(response).to have_http_status(200)
-              expect(json).to eq({ "timestamp" => 1467446703.088,
-                                   "value" => 1300640.0,
+              expect(json).to eq({ "timestamp" => 1467446702.188,
+                                   "value" => 0.0,
                                    "resource_id" => output_register.id,
                                    "mode" => "out",
                                    "expires_at" => 1454286641.0 })

@@ -213,13 +213,8 @@ describe Buzzn::Discovergy::DataSource do
     out_result = data_source.collection(register_with_broker.group, :out)
 
     expect(in_result.size).to eq 1
-    expect(out_result.size).to eq 1
+    expect(out_result.size).to eq 0
     expect(in_result.first.resource_id).to eq register_with_broker.id
-    expect(out_result.first.resource_id).to eq register_with_broker.id
-
-    # as the facade delivers the same results back for each mode
-    expect(in_result.first.value).to eq out_result.first.value
-    expect(in_result.first.timestamp).to eq out_result.first.timestamp
   end
 
   it 'collects data from each register with group broker' do

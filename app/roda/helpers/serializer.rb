@@ -2,6 +2,10 @@ module Buzzn
   module Roda
     class Serializer
 
+      def logger
+        @logger ||= Buzzn::Logger.new(self)
+      end
+
       def call(object, request)
         options = {include: ''}
         if include = request.params['include']
@@ -25,12 +29,13 @@ module Buzzn
         when ActiveRecord::Relation
           Buzzn::SerializableResource.new(object).to_json(options)
         else
-          result = nil
           time = Time.now.to_f
-          10.times{ result = object.to_json(options) }
+          result = object.to_json(options)
           ended = Time.now.to_f
-          clazz = object.is_a?(Buzzn::Resource::Collection)? "Collection[#{object.first.class}].#{object.size}" : object.class
-          STDOUT.puts "#{clazz} json: #{ended - time}"
+          logger.info do
+            clazz = object.is_a?(Buzzn::Resource::Collection)? "Collection[#{object.first.class}] size: #{object.size}" : object.class
+            "#{clazz} bytes: #{result.size} time: #{ended - time}"
+          end
           result
         end
       end

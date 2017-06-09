@@ -7,6 +7,9 @@ module Admin
         r.run ::LocalpoolRoda
       end
 
+      r.on 'me' do
+        r.run ::MeRoda
+      end
     end
   end
 end

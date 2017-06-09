@@ -53,7 +53,7 @@ module Buzzn
     end
 
     def to_json(*args)
-      "{\"timestamp\":#{@timestamp},\"value\":#{@value}}"
+      '{"timestamp":' << @timestamp.to_s << ',"value":' << @value.to_s << '}'
     end
 
     def ==(other)

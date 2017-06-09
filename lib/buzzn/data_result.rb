@@ -40,7 +40,7 @@ module Buzzn
     end
 
     def to_json(*args)
-      @json || "{\"timestamp\":#{@timestamp},\"value\":#{@value},\"resource_id\":\"#{@resource_id}\",\"mode\":\"#{@mode}\",\"expires_at\":#{expires_at}}"
+      @json || '{"timestamp":' << @timestamp.to_s << ',"value":' << @value.to_s << ',"resource_id":"' << @resource_id << '","mode":"' << @mode.to_s << '","expires_at":' << expires_at.to_s << '}'
     end
   end
 end

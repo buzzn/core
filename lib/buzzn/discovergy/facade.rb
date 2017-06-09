@@ -25,7 +25,7 @@ module Buzzn::Discovergy
     #  Net::HTTPResponse with requested data
     def readings(broker, interval, mode, collection=false, retried=false)
       return "[]" if collection && !broker.mode.include?(mode.to_s)
-      @logger.debug{"readings for #{broker.external_id} #{broker.resource_type}:#{broker.resource_id} #{interval} #{mode} collection: #{collection}"}
+      @logger.debug{"#readings Broker[mode: #{broker.mode} external_id: #{broker.external_id} resource: #{broker.resource_type}:#{broker.resource_id}] #{interval} mode: #{mode} collection: #{collection}"}
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
       energy_out = ""
@@ -83,7 +83,7 @@ module Buzzn::Discovergy
     end
 
     def single_reading(broker, timestamp, mode, retried=false)
-      @logger.debug{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> single reading for #{broker.external_id} #{broker.resource_type}:#{broker.resource_id} #{timestamp} #{mode}"}
+      @logger.debug{"#single_reading Broker[mode: #{broker.mode} external_id: #{broker.external_id} resource: #{broker.resource_type}:#{broker.resource_id}] timestamp: #{timestamp} mode: #{mode}"}
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
       energy_out = ""
@@ -100,45 +100,13 @@ module Buzzn::Discovergy
         return response.body
       when 401
         if !retried
-          Rails.logger.error("***DiscovergyFacade: retry authentication #{broker.inspect}: " + response.body)
+          @logger.error("retry authentication #{broker.inspect}: " + response.body)
           register_application
           access_token = build_access_token_from_broker_or_new(broker, true)
           response = self.single_reading(broker, timestamp, mode, true)
           return response
         else
-          @logger.error{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> failed request (401 - unauthorized): #{query}"}
-          raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
-        end
-      else
-        raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + response.body)
-      end
-    end
-
-    def single_reading(broker, timestamp, mode, retried=false)
-      @logger.debug{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> single reading for #{broker.external_id} #{broker.resource_type}:#{broker.resource_id} #{timestamp} #{mode}"}
-      access_token = build_access_token_from_broker_or_new(broker)
-      meter_id = broker.external_id
-      energy_out = ""
-      if mode == :out
-        energy_out = "Out"
-      end
-
-      query = '/public/v1/readings?meterId=' + meter_id + '&from=' + timestamp.to_s + '&to=' + (timestamp + 2000).to_s + "&resolution=raw&fields=energy#{energy_out}"
-      access_token.get(query)
-      response = access_token.response
-
-      case response.code.to_i
-      when (200..299)
-        return response.body
-      when 401
-        if !retried
-          Rails.logger.error("***DiscovergyFacade: retry authentication #{broker.inspect}: " + response.body)
-          register_application
-          access_token = build_access_token_from_broker_or_new(broker, true)
-          response = self.single_reading(broker, timestamp, mode, true)
-          return response
-        else
-          @logger.error{"[buzzn.discovergy.facade]<#{Thread.current.object_id}> failed request (401 - unauthorized): #{query}"}
+          @logger.error{"failed request (401 - unauthorized): #{query}"}
           raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
         end
       else
