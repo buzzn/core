@@ -1,5 +1,6 @@
 ActiveAdmin.register Register::Base do
 
+  menu :parent => "System", :label => "Register"
 
   index do
     id_column

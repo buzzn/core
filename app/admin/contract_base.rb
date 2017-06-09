@@ -1,5 +1,7 @@
 ActiveAdmin.register Contract::Base do
 
+  menu :parent => "Contract"
+
   index do
     id_column
     column :name

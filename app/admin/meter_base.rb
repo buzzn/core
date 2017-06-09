@@ -1,5 +1,7 @@
 ActiveAdmin.register Meter::Base do
 
+  menu :parent => "System", :label => "Meter"
+
   index do
     id_column
     column :mode

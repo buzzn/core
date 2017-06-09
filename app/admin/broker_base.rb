@@ -1,5 +1,7 @@
 ActiveAdmin.register Broker::Base do
 
+  menu :parent => "System", :label => "Broker"
+
   index do
     id_column
     column :mode

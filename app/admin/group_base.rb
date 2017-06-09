@@ -1,5 +1,6 @@
 ActiveAdmin.register Group::Base do
 
+  menu :label => "Group"
 
   index do
     id_column
