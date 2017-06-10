@@ -1,3 +1,4 @@
+require_relative 'base_roda'
 class MeRoda < BaseRoda
 
   route do |r|

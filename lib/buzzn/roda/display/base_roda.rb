@@ -1,3 +1,4 @@
+require_relative '../base_roda'
 module Display
   class BaseRoda < ::BaseRoda
     

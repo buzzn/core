@@ -1,3 +1,4 @@
+require_relative '../base_roda'
 module Admin
   class BaseRoda < ::BaseRoda
     

@@ -1,3 +1,4 @@
+require_relative 'base_roda'
 class RegisterRoda < BaseRoda
 
   include Import.args[:env,

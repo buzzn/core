@@ -15,10 +15,10 @@ module Buzzn
       class << self
 
         def run
-          @logger = Buzzn::Logger.new(self)
+          @logger = Logger.new(self)
           # setup services, redo require until no more errors
           # or no more changes in which case there will be an error raised
-          Buzzn::Application.config.paths['lib'].dup.tap do |app|
+          Application.config.paths['lib'].dup.tap do |app|
             app.glob = "buzzn/services/*.rb"
             remaining = -1
             errors = init(*app.to_a)
@@ -35,6 +35,12 @@ module Buzzn
           # load transactions
           Application.config.paths['lib'].dup.tap do |app|
             app.glob = "buzzn/transactions/*.rb"
+            app.to_a.each { |path| require path }
+          end
+
+          # load rodas
+          Application.config.paths['lib'].dup.tap do |app|
+            app.glob = "buzzn/roda/**/*.rb"
             app.to_a.each { |path| require path }
           end
         end

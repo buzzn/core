@@ -1,3 +1,4 @@
+require_relative 'base_roda'
 class Admin::BankAccountRoda < BaseRoda
 
   PARENT = :bank_account_parent

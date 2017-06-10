@@ -1,3 +1,4 @@
+require_relative 'base_roda'
 class Display::GroupRoda < ::BaseRoda
 
   include Import.args[:env,

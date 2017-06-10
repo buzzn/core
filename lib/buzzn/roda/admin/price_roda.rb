@@ -1,3 +1,4 @@
+require_relative 'base_roda'
 class Admin::PriceRoda < BaseRoda
   plugin :shared_vars
   plugin :created_deleted
