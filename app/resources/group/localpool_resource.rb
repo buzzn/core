@@ -13,6 +13,7 @@ module Group
     has_many :billing_cycles
     has_many :localpool_power_taker_contracts
     has_many :users
+    has_many :organizations
     has_many :contracts
     has_many :registers
     has_many :users

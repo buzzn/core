@@ -26,8 +26,6 @@ module Buzzn
           "{\"errors\":#{errors.to_json}}"
         when NilClass
           # response with 404 unless otherwise set
-        when ActiveRecord::Relation
-          Buzzn::SerializableResource.new(object).to_json(options)
         else
           time = Time.now.to_f
           result = object.to_json(options)

@@ -61,7 +61,7 @@ describe Admin::LocalpoolRoda do
         "updatable"=>true,
         "deletable"=>false,
         "bank_accounts"=>{
-          'array'=> user.bank_accounts.reload.collect do |bank_account|
+          'array'=> user.bank_accounts.collect do |bank_account|
             {
               "id"=>bank_account.id,
               "type"=>"bank_account",
@@ -92,7 +92,7 @@ describe Admin::LocalpoolRoda do
           "updatable"=>true,
           "deletable"=>false,
           "bank_accounts"=> {
-            'array'=> user.bank_accounts.reload.collect do |bank_account|
+            'array'=> user.bank_accounts.collect do |bank_account|
               {
                 "id"=>bank_account.id,
                 "type"=>"bank_account",
@@ -124,7 +124,7 @@ describe Admin::LocalpoolRoda do
           "updatable"=>true,
           "deletable"=>true,
           "bank_accounts"=> {
-            'array'=> user.bank_accounts.reload.collect do |bank_account|
+            'array'=> user.bank_accounts.collect do |bank_account|
               {
                 "id"=>bank_account.id,
                 "type"=>"bank_account",
@@ -156,7 +156,7 @@ describe Admin::LocalpoolRoda do
           "updatable"=>true,
           "deletable"=>true,
           "bank_accounts"=>{
-            'array'=>user.bank_accounts.reload.collect do |bank_account|
+            'array'=>user.bank_accounts.collect do |bank_account|
               {
                 "id"=>bank_account.id,
                 "type"=>"bank_account",
@@ -203,8 +203,6 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200 all' do
-        user.reload
-
         GET "/#{group.id}/users", user_token, include: :bank_accounts
         expect(response).to have_http_status(200)
         expect(json['array']).to eq users_json

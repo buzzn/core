@@ -17,11 +17,3 @@ class OrganizationResource < Buzzn::Resource::Entity
   has_many :bank_accounts
 
 end
-
-class ContractingPartyOrganizationResource < OrganizationResource
-  include BankAccountResource::Create
-
-  attributes  :sales_tax_number,
-              :tax_rate,
-              :tax_number
-end

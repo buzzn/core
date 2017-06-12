@@ -5,16 +5,11 @@ describe Group::BaseResource do
   entity!(:tribe) { Fabricate(:tribe) }
   entity!(:localpool) { Fabricate(:localpool) }
 
-  let(:base_attributes) { [:name,
-                           :description,
-                           :readable,
-                           :meters,
-                           :managers,
-                           :energy_producers,
-                           :energy_consumers,
-                           :registers,
-                           :updatable,
-                           :deletable ] }
+  let(:base_attributes) { ['name',
+                           'description',
+                           'readable',
+                           'updatable',
+                           'deletable' ] }
 
   it 'retrieve' do
     [tribe, localpool].each do |group|
@@ -58,7 +53,7 @@ describe Group::BaseResource do
                 end
             end
 
-            let(:attributes) { [:mode, :interval, :interval_beginning, :interval_end, :value] }
+            let(:attributes) { ['mode', 'interval', 'interval_beginning', 'interval_end', 'value'] }
             it 'now' do
               result = Group::BaseResource
                          .retrieve(user, group.id)
@@ -98,8 +93,8 @@ describe Group::BaseResource do
     it "retrieve - id + type" do
       [Group::BaseResource, Group::TribeResource].each do |type|
         json = type.retrieve(user, tribe.id).to_h
-        expect(json[:id]).to eq tribe.id
-        expect(json[:type]).to eq 'group_tribe'
+        expect(json['id']).to eq tribe.id
+        expect(json['type']).to eq 'group_tribe'
       end
       expect{Group::TribeResource.retrieve(user, localpool.id)}.to raise_error Buzzn::RecordNotFound
     end
@@ -126,35 +121,35 @@ describe Group::BaseResource do
     it "retrieve - id + type" do
       [Group::BaseResource, Group::LocalpoolResource].each do |type|
         json = type.retrieve(user, localpool.id).to_h
-        expect(json[:id]).to eq localpool.id
-        expect(json[:type]).to eq 'group_localpool'
+        expect(json['id']).to eq localpool.id
+        expect(json['type']).to eq 'group_localpool'
       end
       expect{Group::LocalpoolResource.retrieve(user, tribe.id)}.to raise_error Buzzn::RecordNotFound
     end
 
     it 'retrieve' do
-      attributes = [:localpool_processing_contract,
-                    :metering_point_operator_contract,
-                    :localpool_power_taker_contracts,
-                    :prices,
-                    :users,
-                    :contracts,
-                    :billing_cycles]
+      attributes = ['localpool_processing_contract',
+                    'metering_point_operator_contract',
+                    'localpool_power_taker_contracts',
+                    'prices',
+                    'users',
+                    'contracts',
+                    'billing_cycles']
       json = Group::BaseResource.retrieve(user, localpool.id).to_h
-      expect(json.keys & attributes).to match_array attributes
-      expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
+      expect(json.keys & base_attributes).to match_array base_attributes
+      expect(json.keys.size).to eq (base_attributes.size + 2)
     end
 
     it 'retrieve all prices' do
       size = localpool.prices.size
-      attributes = [:name,
-                    :baseprice_cents_per_month,
-                    :energyprice_cents_per_kilowatt_hour,
-                    :begin_date,
-                    :id,
-                    :type,
-                    :updatable,
-                    :deletable]
+      attributes = ['name',
+                    'baseprice_cents_per_month',
+                    'energyprice_cents_per_kilowatt_hour',
+                    'begin_date',
+                    'id',
+                    'type',
+                    'updatable',
+                    'deletable']
       Fabricate(:price, localpool: localpool)
       result = Group::LocalpoolResource.retrieve(user, localpool.id).prices
       expect(result.size).to eq size + 1
@@ -197,12 +192,11 @@ describe Group::BaseResource do
       Fabricate(:billing_cycle, localpool: group)
       Fabricate(:billing_cycle, localpool: group)
 
-      attributes = [:name,
-                    :billings,
-                    :begin_date,
-                    :end_date,
-                    :id,
-                    :type]
+      attributes = ['name',
+                    'begin_date',
+                    'end_date',
+                    'id',
+                    'type']
 
       result = Group::LocalpoolResource.retrieve(user, group.id).billing_cycles
       expect(result.size).to eq size + 2

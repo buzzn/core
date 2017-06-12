@@ -31,12 +31,10 @@ describe Display::GroupResource do
     Display::GroupResource.all(user).retrieve(group.id)
   end
 
-  let(:attributes) { [:id,
-                      :type,
-                      :name,
-                      :description,
-                      :mentors,
-                      :registers ] }
+  let(:attributes) { ['id',
+                      'type',
+                      'name',
+                      'description'] }
 
 
   it 'retrieve' do
@@ -56,11 +54,11 @@ describe Display::GroupResource do
   end
 
   describe 'registers' do
-    let(:attributes) { [:id,
-                        :type,
-                        :direction,
-                        :name,
-                        :label] }
+    let(:attributes) { ['id',
+                        'type',
+                        'direction',
+                        'name',
+                        'label'] }
     it 'retrieve' do
       [:tribe, :localpool].each do |type|
         group = send(type)
@@ -93,12 +91,12 @@ describe Display::GroupResource do
   end
 
   describe 'mentors' do
-    let(:attributes) { [:id,
-                        :type,
-                        :title,
-                        :first_name,
-                        :last_name,
-                        :image] }
+    let(:attributes) { ['id',
+                        'type',
+                        'title',
+                        'first_name',
+                        'last_name',
+                        'image'] }
     
     it 'retrieve' do
       expect(resource.mentors.retrieve(user.id).object).to eq user
@@ -147,7 +145,7 @@ describe Display::GroupResource do
                 end
             end
 
-            let(:attributes) { [:mode, :interval, :interval_beginning, :interval_end, :value] }
+            let(:attributes) { ['mode', 'interval', 'interval_beginning', 'interval_end', 'value'] }
 
             it 'now' do
               result = Display::GroupResource
@@ -155,8 +153,7 @@ describe Display::GroupResource do
                          .retrieve(group.id)
                          .scores(interval: interval, mode: type)
               expect(result.size).to eq 1
-              first = ScoreResource.send(:new, result.first)
-              expect(first.to_hash.keys).to match_array attributes
+              expect(result.first.to_hash.keys).to match_array attributes
             end
 
             it 'yesterday' do
@@ -167,8 +164,7 @@ describe Display::GroupResource do
                                  mode: type,
                                  timestamp: Time.current.yesterday)
               expect(result.size).to eq 1
-              first = Display::ScoreResource.send(:new, result.first)
-              expect(first.to_hash.keys).to match_array attributes
+              expect(result.first.to_hash.keys).to match_array attributes
             end
           end
         end

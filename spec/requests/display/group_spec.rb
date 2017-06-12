@@ -230,7 +230,7 @@ describe Display::GroupRoda do
             interval: intervals.sample,
             timestamp: Time.current - 10.years
 
-        expect(json.to_yaml).to eq(empty_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(empty_json.to_yaml)
         expect(response).to have_http_status(200)
 
         GET "/#{group.id}/scores", admin,
@@ -238,7 +238,7 @@ describe Display::GroupRoda do
             timestamp: Time.current - 10.years,
             mode: modes.sample
 
-        expect(json.to_yaml).to eq(empty_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(empty_json.to_yaml)
         expect(response).to have_http_status(200)
 
         GET "/#{group.id}/scores", admin,
@@ -246,7 +246,7 @@ describe Display::GroupRoda do
             timestamp: now,
             mode: mode
 
-        expect(json.to_yaml).to eq(scores_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(scores_json.to_yaml)
         expect(response).to have_http_status(200)
       end
     end

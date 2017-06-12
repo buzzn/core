@@ -268,7 +268,12 @@ class Group::LocalpoolPermissions
     setting :retrieve, MANAGERS
     setting :update, MANAGERS
     setting :delete, MANAGERS
-    
+    setting :address do
+      setting :create, MANAGERS + [:organization_contact]
+      setting :retrieve, MANAGERS + [:organization_contact]
+      setting :update, MANAGERS + [:organization_contact]
+      setting :delete, MANAGERS + [:organization_contact]
+    end
     setting :bank_accounts do
       setting :create, MANAGERS + [:organization_contact]
       setting :retrieve, MANAGERS + [:organization_contact]
