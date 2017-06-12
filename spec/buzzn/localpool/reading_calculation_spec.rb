@@ -548,7 +548,7 @@ describe Buzzn::Localpool::ReadingCalculation do
       broker = Fabricate(:discovergy_broker, mode: meter.registers.first.mode.sub('put', ''), resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}")
       time = Time.find_zone('Berlin').local(2016, 7, 1, 0, 0, 0)
 
-      result = Buzzn::Localpool::ReadingCalculation.get_missing_reading(meter.registers.first, time.to_date)
+      result = Buzzn::Localpool::ReadingCalculation.get_missing_reading(meter.registers.first, time)
       expect(result.is_a?(Reading)).to eq true
       expect(result.timestamp).to eq time
     end
