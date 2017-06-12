@@ -132,7 +132,7 @@ describe Admin::LocalpoolRoda do
           "name"=>"mine",
           "begin_date"=>begin_date.iso8601(3),
           "end_date"=>end_date.iso8601(3),
-          "billings"=>[]
+          "billings"=>{'array'=>[]}
         }
       end
 
@@ -154,7 +154,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '201' do
-        POST "/#{group.id}/billing-cycles", admin, begin_date: begin_date, end_date: end_date, name: 'mine'
+        POST "/#{group.id}/billing-cycles", admin, begin_date: begin_date, end_date: end_date, name: 'mine', include: :billings
         expect(response).to have_http_status(201)
         result = json
         id = result.delete('id')
@@ -172,24 +172,26 @@ describe Admin::LocalpoolRoda do
           "name"=>"abcd",
           "begin_date"=>billing_cycle.begin_date.iso8601(3),
           "end_date"=>billing_cycle.end_date.iso8601(3),
-          "billings"=>billing_cycle.billings.collect do |billing|
-            {
-              "id"=>billing.id,
-              "type"=>"billing",
-              "start_reading_id"=>billing.start_reading_id,
-              "end_reading_id"=>billing.end_reading_id,
-              "device_change_reading_1_id"=>nil,
-              "device_change_reading_2_id"=>nil,
-              "total_energy_consumption_kWh"=>1000,
-              "total_price_cents"=>30000,
-              "prepayments_cents"=>29000,
-              "receivables_cents"=>1000,
-              "invoice_number"=>billing.invoice_number,
-              "status"=>"open",
-              "updatable"=>true,
-              "deletable"=>true
-            }
-          end
+          "billings"=>{
+            'array'=> billing_cycle.billings.collect do |billing|
+              {
+                "id"=>billing.id,
+                "type"=>"billing",
+                "start_reading_id"=>billing.start_reading_id,
+                "end_reading_id"=>billing.end_reading_id,
+                "device_change_reading_1_id"=>nil,
+                "device_change_reading_2_id"=>nil,
+                "total_energy_consumption_kWh"=>1000,
+                "total_price_cents"=>30000,
+                "prepayments_cents"=>29000,
+                "receivables_cents"=>1000,
+                "invoice_number"=>billing.invoice_number,
+                "status"=>"open",
+                "updatable"=>true,
+                "deletable"=>true
+              }
+            end
+          }
         }
       end
 
@@ -212,7 +214,7 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         old = billing_cycle.name
-        PATCH "/#{group.id}/billing-cycles/#{billing_cycle.id}", admin, name: 'abcd'
+        PATCH "/#{group.id}/billing-cycles/#{billing_cycle.id}", admin, name: 'abcd', include: :billings
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq update_json.to_yaml
         expect(billing_cycle.reload.name).to eq 'abcd'

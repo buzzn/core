@@ -1,3 +1,4 @@
+# coding: utf-8
 module Meter
   class Base < ActiveRecord::Base
     self.table_name = :meters
@@ -99,6 +100,9 @@ module Meter
     has_one :main_equipment, class_name: Meter::Equipment, foreign_key: 'meter_id'
     has_one :secondary_equipment, class_name: Meter::Equipment, foreign_key: 'meter_id'
 
+    # hack for restricted scope
+    has_many :registers, class_name: Register::Base, foreign_key: :meter_id
+
     # TODO ????, rename it to :direction
     validates :mode, presence: false
     validates :measurement_capture, presence: false
@@ -127,6 +131,8 @@ module Meter
     before_destroy do
       Meter::Equipment.where(meter_id: self.id).delete_all
     end
+
+    scope :restricted, ->(uuids) { joins(registers: :contracts).where('contracts.id': uuids) }
 
     # it differs from updatable_by as they do not have admins
     scope :editable_by_user, lambda {|user|

@@ -11,7 +11,7 @@ class Admin::UserRoda < BaseRoda
     end
 
     r.on :id do |id|
-      user = users.retrieve(current_user, id)
+      user = users.retrieve(id)
 
       r.get! do
         user

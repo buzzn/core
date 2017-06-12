@@ -124,6 +124,12 @@ class Group::LocalpoolPermissions
     setting :retrieve, MANAGERS + [:contract]
     setting :update, MANAGERS
     setting :delete, OPERATORS
+
+    setting :registers do
+      setting :retrieve, MANAGERS + [:contract]
+      setting :update, MANAGERS
+      setting :delete, NONE
+    end
   end
 
   setting :registers, reader: true do

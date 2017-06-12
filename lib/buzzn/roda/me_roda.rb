@@ -3,7 +3,7 @@ class MeRoda < BaseRoda
 
   route do |r|
 
-    r.get! do
+    r.root do
       if current_user.nil?
         raise Buzzn::PermissionDenied.create(User, :retrieve, nil)
       end

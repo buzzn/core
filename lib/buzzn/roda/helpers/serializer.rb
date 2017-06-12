@@ -14,7 +14,7 @@ module Buzzn
         end
         case object
         when Dry::Monads::Either::Right
-          Buzzn::SerializableResource.new(object.value).to_json(options)
+          object.value.to_json(options)
         when Dry::Monads::Either::Left
           errors = []
           object.value.errors.each do |name, messages|

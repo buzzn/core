@@ -1,5 +1,4 @@
-# TODO get rid of this Serializer
-class BankSerializer < ActiveModel::Serializer
+class BankSerializer < Buzzn::Resource::Base
   attributes  :blz,
               :bic,
               :description,

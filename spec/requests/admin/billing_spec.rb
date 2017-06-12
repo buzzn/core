@@ -133,7 +133,7 @@ describe Admin::LocalpoolRoda do
 
         POST "/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/regular", admin, accounting_year: 2016
         expect(response).to have_http_status(201)
-        expect(sort(json).to_yaml).to eq sort(billings_json).to_yaml
+        expect(sort(json['array']).to_yaml).to eq sort(billings_json).to_yaml
 
         # reload BillingCycle class definition to undo the method overwriting
         Object.send(:remove_const, :BillingCycleResource)
