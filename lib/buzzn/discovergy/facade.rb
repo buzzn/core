@@ -28,10 +28,6 @@ module Buzzn::Discovergy
       @logger.debug{"#readings Broker[mode: #{broker.mode} external_id: #{broker.external_id} resource: #{broker.resource_type}:#{broker.resource_id}] #{interval} mode: #{mode} collection: #{collection}"}
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
-      energy_out = ""
-      if mode == :out
-        energy_out = "Out"
-      end
 
       if interval.nil?
         # for dummies: from a technical point a two way meter is counting
@@ -40,6 +36,11 @@ module Buzzn::Discovergy
         # positive values are 'in'
         query = '/public/v1/last_reading?meterId=' + meter_id + '&fields=power&each=' + collection.to_s
       else
+        energy_out = ""
+        if mode == :out
+          energy_out = "Out"
+        end
+
         case interval.duration
         when :second
           query = '/public/v1/readings?meterId=' + meter_id + '&from=' + interval.from_as_millis.to_s + '&to=' +

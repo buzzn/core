@@ -17,14 +17,14 @@ namespace :db do
                 ]
 
   desc 'This rebuilds development db without slp/sep'
-  task :setup => [
-                  'db:prepare',
-                  'db:seed'
-                ]
+  task :data => [
+                   'db:prepare',
+                   'db:seed'              
+                 ]
 
   desc 'This rebuilds development db'
   task :init => [
-                  'db:setup',
+                  'db:data',
                   'slp:import_h0',
                   'sep:import_pv_bhkw',
                   'banks:import'

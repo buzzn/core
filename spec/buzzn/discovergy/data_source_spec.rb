@@ -243,14 +243,13 @@ describe Buzzn::Discovergy::DataSource do
 
     expect(in_result.in.size).to eq 2
     expect(in_result.out.size).to eq 0
-    expect(out_result.in.size).to eq 0
-    expect(out_result.out.size).to eq 2
+    # we have only one broker on the group,
+    # i.e. only either in-results or out-results
+    expect(out_result).to be_nil
 
     expect(in_result.resource_id).to eq some_group.id
-    expect(out_result.resource_id).to eq some_group.id
 
     expect(in_result.units).to eq :milliwatt_hour
-    expect(out_result.units).to eq :milliwatt_hour
   end
 
   it 'data ranges from a register' do
