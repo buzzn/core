@@ -570,6 +570,10 @@ localpool_forstenried.registers << register_1305004864_out
 lpc_forstenried = Fabricate(:lpc_forstenried, signing_user: pesc, localpool: localpool_forstenried, customer: hell_und_warm)
 mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: pesc, localpool: localpool_forstenried, customer: hell_und_warm)
 
+### create discovery-brokers from live system ###
+Fabricate(:discovergy_broker, resource: localpool_forstenried, mode: :in, external_id: 'VIRTUAL_00000077')
+Fabricate(:discovergy_broker, resource: localpool_forstenried, mode: :out, external_id: 'VIRTUAL_00000080')
+
 ### LSN ####
 
 mabe = Fabricate(:mabe)
