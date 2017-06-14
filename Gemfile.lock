@@ -21,11 +21,6 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    active_model_serializers (0.10.4)
-      actionpack (>= 4.1, < 6)
-      activemodel (>= 4.1, < 6)
-      case_transform (>= 0.2)
-      jsonapi (= 0.1.1.beta6)
     activeadmin (1.0.0)
       arbre (>= 1.1.1)
       bourbon
@@ -119,8 +114,6 @@ GEM
       json (>= 1.7)
       mime-types (>= 1.16)
       mimemagic (>= 0.3.0)
-    case_transform (0.2)
-      activesupport
     chronic (0.10.2)
     coderay (1.1.1)
     coercible (1.0.0)
@@ -442,11 +435,6 @@ GEM
       railties (>= 3.2.16)
     json (1.8.6)
     json_pure (1.8.3)
-    jsonapi (0.1.1.beta6)
-      jsonapi-parser (= 0.1.1.beta3)
-      jsonapi-renderer (= 0.1.1.beta1)
-    jsonapi-parser (0.1.1.beta3)
-    jsonapi-renderer (0.1.1.beta1)
     kaminari (1.0.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.0.1)
@@ -732,7 +720,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_model_serializers
   activeadmin
   activeadmin-select2
   activerecord-nulldb-adapter
@@ -841,4 +828,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.15.0
+   1.15.1

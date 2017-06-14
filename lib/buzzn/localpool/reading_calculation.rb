@@ -1,3 +1,4 @@
+# coding: utf-8
 module Buzzn::Localpool
   class ReadingCalculation
     class << self
@@ -382,7 +383,7 @@ module Buzzn::Localpool
         unless register.meter.broker.is_a?(Broker::Discovergy)
           raise ArgumentError.new("register #{register.id} is not a discovergy register")
         end
-        result = Buzzn::Boot::MainContainer['service.charts'].for_register(register, Buzzn::Interval.second(date.to_time))
+        result = Buzzn::Boot::MainContainer['service.charts'].for_register(register, Buzzn::Interval.second(date.beginning_of_day))
         if register.input?
           timestamp = result.in.first.timestamp
           value = result.in.first.value

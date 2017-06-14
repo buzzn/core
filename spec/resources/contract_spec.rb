@@ -16,51 +16,41 @@ describe Contract::BaseResource do
   entity(:power_taker) { Fabricate(:power_taker_contract_move_in) }
   entity(:power_giver) { Fabricate(:power_giver_contract) }
 
-  let(:base_attributes) { [:status,
-                           :full_contract_number,
-                           :customer_number,
-                           :signing_date,
-                           :cancellation_date,
-                           :end_date,
-                           :tariffs,
-                           :payments,
-                           :contractor,
-                           :customer,
-                           :signing_user,
-                           :customer_bank_account,
-                           :contractor_bank_account,
-                           :updatable,
-                           :deletable] }
+  let(:base_attributes) { ['status',
+                           'full_contract_number',
+                           'customer_number',
+                           'signing_date',
+                           'cancellation_date',
+                           'end_date',
+                           'updatable',
+                           'deletable'] }
   let!(:all) { [metering_point_operator, localpool_processing, localpool_power_taker, power_taker, power_giver] }
 
-  #describe Contract::BaseResource do
+  it 'retrieve' do
+    all.each do |contract|
+      json = Contract::BaseResource.retrieve(user, contract.id).to_h
+      expect(json.keys & base_attributes).to match_array base_attributes
+    end
+  end
 
-    it 'retrieve' do
-      all.each do |contract|
-        json = Contract::BaseResource.retrieve(user, contract.id).to_h
-        expect(json.keys & base_attributes).to match_array base_attributes
+  it 'retrieve all - ids + types' do
+    expected = all.collect { |c| [c.class, c.id] }
+    result = Contract::BaseResource.all(user)['array'].collect do |r|
+      [r.object.class, r.id]
+    end
+    expect(result).to match_array expected
+  end
+
+  it 'nested entities' do
+    all.each do |contract|
+      obj = Contract::BaseResource.retrieve(user, contract.id)
+      [:customer, :customer_bank_account, :contractor,
+       :contractor_bank_account, :signing_user].each do |name|
+        expect(obj.send(name)).to be_an Buzzn::Resource::Base
+        expect(obj.send("#{name}!")).to be_an Buzzn::Resource::Base
       end
     end
-
-    it 'retrieve all - ids + types' do
-      expected = all.collect { |c| [c.class, c.id] }
-      result = Contract::BaseResource.all(user)['array'].collect do |r|
-        [r.object.class, r.id]
-      end
-      expect(result).to match_array expected
-    end
-
-    it 'nested entities' do
-      all.each do |contract|
-        obj = Contract::BaseResource.retrieve(user, contract.id)
-        [:customer!, :contractor!].each do |name|
-          # TODO all the other nested as well: :signing_user!, :bank_account!
-          #      and the ones without shebang
-          expect(obj.send(name)).to be_an ActiveModel::Serializer
-        end
-      end
-    end
-  #end
+  end
 
   describe Contract::MeteringPointOperatorResource do
 
@@ -74,8 +64,8 @@ describe Contract::BaseResource do
     it "retrieve - id + type" do
       [Contract::BaseResource, Contract::MeteringPointOperatorResource].each do |type|
         json = type.retrieve(user, metering_point_operator.id).to_h
-        expect(json[:id]).to eq metering_point_operator.id
-        expect(json[:type]).to eq 'contract_metering_point_operator'
+        expect(json['id']).to eq metering_point_operator.id
+        expect(json['type']).to eq 'contract_metering_point_operator'
       end
       all.reject{ |c| c.is_a? Contract::MeteringPointOperator }
         .each do |contract|
@@ -84,7 +74,7 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = [:begin_date, :metering_point_operator_name]
+      attributes = ['begin_date', 'metering_point_operator_name']
       json = Contract::BaseResource.retrieve(user, metering_point_operator.id).to_h
       expect(json.keys & attributes).to match_array attributes
       expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
@@ -103,8 +93,8 @@ describe Contract::BaseResource do
     it "retrieve - id + type" do
       [Contract::BaseResource, Contract::LocalpoolProcessingResource].each do |type|
         json = type.retrieve(user, localpool_processing.id).to_h
-        expect(json[:id]).to eq localpool_processing.id
-        expect(json[:type]).to eq 'contract_localpool_processing'
+        expect(json['id']).to eq localpool_processing.id
+        expect(json['type']).to eq 'contract_localpool_processing'
       end
       all.reject{ |c| c.is_a? Contract::LocalpoolProcessing }
         .each do |contract|
@@ -113,7 +103,7 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = [:begin_date, :first_master_uid, :second_master_uid]
+      attributes = ['begin_date', 'first_master_uid', 'second_master_uid']
       json = Contract::BaseResource.retrieve(user, localpool_processing.id).to_h
       expect(json.keys & attributes).to match_array attributes
       expect(json.keys.size).to eq (attributes.size + base_attributes.size + 2)
@@ -132,8 +122,8 @@ describe Contract::BaseResource do
     it "retrieve - id + type" do
       [Contract::BaseResource, Contract::LocalpoolPowerTakerResource].each do |type|
         json = type.retrieve(user, localpool_power_taker.id).to_h
-        expect(json[:id]).to eq localpool_power_taker.id
-        expect(json[:type]).to eq 'contract_localpool_power_taker'
+        expect(json['id']).to eq localpool_power_taker.id
+        expect(json['type']).to eq 'contract_localpool_power_taker'
       end
       all.reject{ |c| c.is_a? Contract::LocalpoolPowerTaker }
         .each do |contract|
@@ -161,8 +151,8 @@ describe Contract::BaseResource do
     it "retrieve - id + type" do
       [Contract::BaseResource, Contract::PowerTakerResource].each do |type|
         json = type.retrieve(user, power_taker.id).to_h
-        expect(json[:id]).to eq power_taker.id
-        expect(json[:type]).to eq 'contract_power_taker'
+        expect(json['id']).to eq power_taker.id
+        expect(json['type']).to eq 'contract_power_taker'
       end
       all.reject{ |c| c.is_a? Contract::PowerTaker }
         .each do |contract|
@@ -190,8 +180,8 @@ describe Contract::BaseResource do
     it "retrieve - id + type" do
       [Contract::BaseResource, Contract::PowerGiverResource].each do |type|
         json = type.retrieve(user, power_giver.id).to_h
-        expect(json[:id]).to eq power_giver.id
-        expect(json[:type]).to eq 'contract_power_giver'
+        expect(json['id']).to eq power_giver.id
+        expect(json['type']).to eq 'contract_power_giver'
       end
       all.reject{ |c| c.is_a? Contract::PowerGiver }
         .each do |contract|

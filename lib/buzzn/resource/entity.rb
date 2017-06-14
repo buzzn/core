@@ -99,6 +99,6 @@ module Buzzn::Resource
       self.class.model.to_s.gsub(/::/, '').underscore
     end
 
-    attributes :id, :type
+    attribute :id, :type
   end
 end

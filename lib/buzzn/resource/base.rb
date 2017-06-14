@@ -1,7 +1,7 @@
 module Buzzn::Resource
-  class Base < ActiveModel::Serializer
+  class Base
 
-    attr_reader :current_user, :current_roles, :permissions
+    attr_reader :object, :current_user, :current_roles, :permissions
 
     class << self
 
@@ -35,13 +35,12 @@ module Buzzn::Resource
       # DSL methods
 
       def attribute(*attr)
-        super
         @attrs ||= []
         @attrs += attr
       end
+      alias :attributes :attribute
 
       def has_many(method, *args)
-        super
         define_method method do
           if permissions
             perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
@@ -104,8 +103,6 @@ module Buzzn::Resource
             end
           end
         end
-
-        super
       end
 
       def model(model = nil)
@@ -218,7 +215,11 @@ module Buzzn::Resource
       def get(user, id)
         instance = model.where(id: id).first
         if instance.nil?
-          raise Buzzn::RecordNotFound.new(self, id, user)
+          # use heavily patch find-method with friendly/slugged id 
+          instance = model.find(id) rescue nil
+          if instance.nil?
+            raise Buzzn::RecordNotFound.new(self, id, user)
+          end
         end
         instance
       end
@@ -260,7 +261,7 @@ module Buzzn::Resource
       @current_user = current_user
       @current_roles = current_roles
       @permissions = permissions
-      super
+      @object = resource
     end
 
     def to_collection(enum, perms = nil, clazz = nil)
@@ -286,8 +287,10 @@ module Buzzn::Resource
       to_collection(result, perms, clazz)
     end
 
-    alias :to_h :serializable_hash
-    alias :to_hash :serializable_hash
+    def to_h(options = {})
+      JSON.parse(to_json(options))
+    end
+    alias :to_hash :to_h
 
     def to_yaml
       to_h.to_yaml

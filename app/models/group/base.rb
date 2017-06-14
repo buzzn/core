@@ -18,14 +18,15 @@ module Group
     CHP = 'chp'
     PV = 'pv'
 
+    before_save do
+      self.slug = self.name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+    end
+
     before_destroy :destroy_content
 
     include PublicActivity::Model
     tracked  owner: Proc.new{ |controller, model| controller && controller.current_user }
     tracked  recipient: Proc.new{ |controller, model| controller && model }
-
-    extend FriendlyId
-    friendly_id :name, use: [:slugged, :history, :finders]
 
     def meters
       Meter::Base.where(
@@ -127,15 +128,6 @@ module Group
       do_filter(search, *search_attributes)
     end
 
-    # TODO remove this
-    def self.search(search)
-      if search
-        where('name ILIKE ? or slug ILIKE ?', "%#{search}%", "%#{search}%")
-      else
-        all
-      end
-    end
-
     def self.accessible_by_user(user)
       register       = Register::Base.arel_table
       group          = Group::Base.arel_table
@@ -145,10 +137,6 @@ module Group
       register_on   = group.create_on(group[:id].eq(register[:group_id]))
       register_join = group.create_join(register, register_on)
       joins(register_join).where(users.project(1).exists)
-    end
-
-    def should_generate_new_friendly_id?
-      slug.blank? || name_changed?
     end
 
     def register_users_query(type = nil)

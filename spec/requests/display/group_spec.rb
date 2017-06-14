@@ -39,6 +39,7 @@ describe Display::GroupRoda do
         "id"=>group.id,
         "type"=>"group_localpool",
         "name"=>group.name,
+        "slug"=>group.slug,
         "description"=>group.description,
         "mentors"=> {
           "array" => group.managers.collect do |manager|
@@ -66,6 +67,7 @@ describe Display::GroupRoda do
           "id"=>group.id,
           "type"=>"group_#{type}",
           "name"=>group.name,
+          "slug"=>group.slug,
           "description"=>group.description,
           "mentors"=> {
             'array' => group.managers.collect do |manager|
@@ -89,7 +91,7 @@ describe Display::GroupRoda do
       expect(json).to eq not_found_json
     end
 
-    it '2006' do
+    it '200' do
       GET "/#{group.id}", nil, include: :mentors
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq group_json.to_yaml
@@ -99,6 +101,10 @@ describe Display::GroupRoda do
       expect(json.to_yaml).to eq group_json.to_yaml
 
       GET "/#{group.id}", admin, include: :mentors
+      expect(response).to have_http_status(200)
+      expect(json.to_yaml).to eq group_json.to_yaml
+
+      GET "/#{group.slug}", admin, include: :mentors
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq group_json.to_yaml
     end
@@ -230,7 +236,7 @@ describe Display::GroupRoda do
             interval: intervals.sample,
             timestamp: Time.current - 10.years
 
-        expect(json.to_yaml).to eq(empty_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(empty_json.to_yaml)
         expect(response).to have_http_status(200)
 
         GET "/#{group.id}/scores", admin,
@@ -238,7 +244,7 @@ describe Display::GroupRoda do
             timestamp: Time.current - 10.years,
             mode: modes.sample
 
-        expect(json.to_yaml).to eq(empty_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(empty_json.to_yaml)
         expect(response).to have_http_status(200)
 
         GET "/#{group.id}/scores", admin,
@@ -246,7 +252,7 @@ describe Display::GroupRoda do
             timestamp: now,
             mode: mode
 
-        expect(json.to_yaml).to eq(scores_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(scores_json.to_yaml)
         expect(response).to have_http_status(200)
       end
     end

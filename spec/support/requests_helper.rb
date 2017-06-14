@@ -40,7 +40,7 @@ module RequestsHelper
     JSON.parse(response.body)
   end
 
-  def sort(hash)
-    hash.sort{|n,m| m['id'] <=> n['id']}
+  def sort(hash, id = 'id')
+    hash.sort{|n,m| m[id] <=> n[id]}
   end
 end

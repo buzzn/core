@@ -23,9 +23,9 @@ describe BillingCycleResource do
     user
   end
 
-  entity(:base_attributes) { [ :name,
-                            :begin_date,
-                            :end_date ] }
+  entity(:base_attributes) { [ 'name',
+                            'begin_date',
+                            'end_date' ] }
 
   it 'retrieve' do
     result = BillingCycleResource.retrieve(manager, billing_cycle.id).to_h

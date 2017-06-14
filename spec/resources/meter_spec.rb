@@ -5,18 +5,18 @@ describe Meter::BaseResource do
   entity!(:real) { Fabricate(:meter) }
   entity!(:virtual) { Fabricate(:virtual_meter) }
 
-  let(:base_keys) { [:id,
-                     :type,
-                     :manufacturer_name,
-                     :manufacturer_product_name,
-                     :manufacturer_product_serialnumber,
-                     :metering_type,
-                     :meter_size,
-                     :ownership,
-                     :direction_label,
-                     :build_year,
-                     :updatable,
-                     :deletable ] }
+  let(:base_keys) { ['id',
+                     'type',
+                     'manufacturer_name',
+                     'manufacturer_product_name',
+                     'manufacturer_product_serialnumber',
+                     'metering_type',
+                     'meter_size',
+                     'ownership',
+                     'direction_label',
+                     'build_year',
+                     'updatable',
+                     'deletable' ] }
 
   it 'retrieve' do
     [real, virtual].each do |meter|
@@ -45,15 +45,15 @@ describe Meter::BaseResource do
     it "retrieve - id + type" do
       [Meter::BaseResource, Meter::RealResource].each do |type|
         json = type.retrieve(user, real.id).to_h
-        expect(json[:id]).to eq real.id
-        expect(json[:type]).to eq 'meter_real'
+        expect(json['id']).to eq real.id
+        expect(json['type']).to eq 'meter_real'
       end
       expect{Meter::RealResource.retrieve(user, virtual.id)}.to raise_error Buzzn::RecordNotFound
     end
 
     it 'retrieve' do
       json = Meter::BaseResource.retrieve(user, real.id).to_h
-      expect(json.keys).to match_array base_keys + [:smart, :registers]
+      expect(json.keys).to match_array base_keys + ['smart']
     end
 
   end
@@ -71,15 +71,15 @@ describe Meter::BaseResource do
     it "retrieve - id + type" do
       [Meter::BaseResource, Meter::VirtualResource].each do |type|
         json = type.retrieve(user, virtual.id).to_h
-        expect(json[:id]).to eq virtual.id
-        expect(json[:type]).to eq 'meter_virtual'
+        expect(json['id']).to eq virtual.id
+        expect(json['type']).to eq 'meter_virtual'
       end
       expect{Meter::VirtualResource.retrieve(user, real.id)}.to raise_error Buzzn::RecordNotFound
     end
       
     it 'retrieve' do
       json = Meter::BaseResource.retrieve(user, virtual.id).to_h
-      expect(json.keys).to match_array ([:register] + base_keys)
+      expect(json.keys).to match_array base_keys
     end
   end
 end

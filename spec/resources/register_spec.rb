@@ -5,23 +5,21 @@ describe Register::BaseResource do
   entity!(:real) { Fabricate(:meter).registers.first }
   entity!(:virtual) { Fabricate(:virtual_meter).register }
 
-  let(:base_keys) { [:id,
-                     :type,
-                     :label,
-                     :converter_constant,
-                     :decimal,
-                     :direction,
-                     :last_reading,
-                     :low_power,
-                     :name,
-                     :pre_decimal ] }
-  let(:common_single_keys) { base_keys + [
-                               :group ] }
+  let(:base_keys) { ['id',
+                     'type',
+                     'label',
+                     'converter_constant',
+                     'decimal',
+                     'direction',
+                     'last_reading',
+                     'low_power',
+                     'name',
+                     'pre_decimal' ] }
 
   it 'retrieve' do
     [real, virtual].each do |register|
       json = Register::BaseResource.retrieve(user, register.id).to_h
-      expect(json.keys & common_single_keys).to match_array common_single_keys
+      expect(json.keys & base_keys).to match_array base_keys
     end
   end
 
@@ -46,21 +44,21 @@ describe Register::BaseResource do
     it "retrieve - id + type" do
       [Register::BaseResource, Register::RealResource].each do |type|
         json = type.retrieve(user, real.id).to_h
-        expect(json[:id]).to eq real.id
-        expect(json[:type]).to eq 'register_real'
+        expect(json['id']).to eq real.id
+        expect(json['type']).to eq 'register_real'
       end
       expect{Register::RealResource.retrieve(user, virtual.id)}.to raise_error Buzzn::RecordNotFound
     end
 
     it 'retrieve' do
-      keys = [:uid, :obis, :devices]
+      keys = ['uid', 'obis']
       json = Register::BaseResource.retrieve(user, real.id).to_h
-      expect(json.keys).to match_array (keys + common_single_keys)
+      expect(json.keys).to match_array (keys + base_keys)
     end
 
     it 'retrieve all' do
-      json = Register::RealResource.new(real).attributes
-      expect(json.keys).to match_array base_keys + [:uid, :obis]
+      json = Register::RealResource.new(real).to_h
+      expect(json.keys).to match_array base_keys + ['uid', 'obis']
     end
   end
 
@@ -77,19 +75,19 @@ describe Register::BaseResource do
     it "retrieve - id + type" do
       [Register::BaseResource, Register::VirtualResource].each do |type|
         json = type.retrieve(user, virtual.id).to_h
-        expect(json[:id]).to eq virtual.id
-        expect(json[:type]).to eq 'register_virtual'
+        expect(json['id']).to eq virtual.id
+        expect(json['type']).to eq 'register_virtual'
       end
       expect{Register::VirtualResource.retrieve(user, real.id)}.to raise_error Buzzn::RecordNotFound
     end
       
     it 'retreive' do
       json = Register::BaseResource.retrieve(user, virtual.id).to_h
-      expect(json.keys).to match_array common_single_keys
+      expect(json.keys).to match_array base_keys
     end
 
     it 'retrieve all' do
-      json = Register::VirtualResource.new(virtual).attributes
+      json = Register::VirtualResource.new(virtual).to_h
       expect(json.keys).to match_array base_keys
     end
   end

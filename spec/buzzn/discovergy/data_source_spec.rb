@@ -196,6 +196,11 @@ describe Buzzn::Discovergy::DataSource do
   class FacadeMock
     attr_accessor :result
 
+    def result= r
+      @result = r
+      @results = nil
+    end
+
     def readings(*args)
       @results = @result.dup if @results.nil? || @results.empty?
       @results.shift

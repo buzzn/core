@@ -23,16 +23,28 @@ module Buzzn::Resource
       end
     end
 
+    def retrieve_with_slug(id)
+      if id =~ /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/
+        do_retrieve(id, 'id=? or slug=?', id, id.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, ''))
+      else
+        do_retrieve(id, slug: id)
+      end
+    end
+
     def retrieve(id)
-      if result = @enum.where(id: id).first
+      do_retrieve(id, id: id)
+    end
+
+    def do_retrieve(id, *args)
+      if result = @enum.where(*args).first
         @to_resource.call(@current_user, current_roles(id),
                           @permissions, result, @class)
       else
         clazz = @enum.class.to_s.sub(/::ActiveRecord_.*/,'').safe_constantize
         clazz ||= @class && @class.model
         clazz ||= @enum.first.class if @enum.first
-        if clazz && clazz.exists?(id)
-          raise Buzzn::PermissionDenied.new(clazz.find(id), :retrieve, @current_user)
+        if clazz && clazz.where(*args).size > 0
+          raise Buzzn::PermissionDenied.new(clazz.where(*args).first, :retrieve, @current_user)
         else
           raise Buzzn::RecordNotFound.create(clazz, id, @current_user)
         end
