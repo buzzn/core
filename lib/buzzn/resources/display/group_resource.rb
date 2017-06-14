@@ -6,6 +6,7 @@ module Display
     model Group::Base
 
     attributes  :name,
+                :slug,
                 :description
 
     has_many :registers

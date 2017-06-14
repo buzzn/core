@@ -16,7 +16,7 @@ class Display::GroupRoda < BaseRoda
 
     r.on :id do |id|
 
-      group = groups.retrieve(id)
+      group = groups.retrieve_with_slug(id)
       r.get! do
         group
       end
