@@ -1,4 +1,4 @@
-require_relative 'base_roda'
+require_relative '../admin_roda'
 class Admin::OrganizationRoda < BaseRoda
   plugin :shared_vars
 

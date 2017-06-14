@@ -1,5 +1,5 @@
-require_relative 'base_roda'
-class Display::GroupRoda < ::BaseRoda
+require_relative '../display_roda'
+class Display::GroupRoda < BaseRoda
 
   include Import.args[:env,
                       'transaction.scores',

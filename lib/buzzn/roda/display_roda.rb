@@ -1,13 +1,12 @@
-require_relative '../base_roda'
+require_relative 'base_roda'
 module Display
-  class BaseRoda < ::BaseRoda
-    
+  class Roda < BaseRoda
+  
     route do |r|
 
       r.on 'groups' do
         r.run GroupRoda
       end
-
     end
   end
 end

@@ -1,6 +1,6 @@
-require_relative '../base_roda'
+require_relative 'base_roda'
 module Admin
-  class BaseRoda < ::BaseRoda
+  class Roda < ::BaseRoda
     
     route do |r|
 
@@ -9,7 +9,7 @@ module Admin
       end
 
       r.on 'me' do
-        r.run ::MeRoda
+        r.run MeRoda
       end
     end
   end

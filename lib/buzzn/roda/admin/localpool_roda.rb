@@ -1,4 +1,4 @@
-require_relative 'base_roda'
+require_relative '../admin_roda'
 require_relative '../plugins/aggregation'
 module Admin
   class LocalpoolRoda < BaseRoda

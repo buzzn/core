@@ -1,4 +1,4 @@
-require_relative 'base_roda'
+require_relative '../admin_roda'
 module Admin
   class BillingCycleRoda < BaseRoda
     plugin :shared_vars

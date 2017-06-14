@@ -34,11 +34,11 @@ class CoreRoda < Roda
 
     r.on 'api' do
       r.on 'display' do
-        r.run Display::BaseRoda
+        r.run Display::Roda
       end
 
       r.on 'admin' do
-        r.run Admin::BaseRoda
+        r.run Admin::Roda
       end
     end
 
