@@ -14,7 +14,7 @@ describe Admin::LocalpoolRoda do
     {
       "errors" => [
         {
-          "detail"=>"Group::Localpool: #{localpool.id} not found by User: #{other.resource_owner_id}"
+          "detail"=>"retrieve Group::Localpool: #{localpool.id} permission denied for User: #{other.resource_owner_id}"
         }
       ]
     }
@@ -93,9 +93,9 @@ describe Admin::LocalpoolRoda do
   end
 
   context 'GET' do
-    it '404 permission denied' do
+    it '403 permission denied' do
       GET "/#{localpool.id}", other
-      expect(response).to have_http_status(404)
+      expect(response).to have_http_status(403)
       expect(json).to eq denied_json
     end
 
