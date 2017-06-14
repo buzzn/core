@@ -39,6 +39,7 @@ describe Display::GroupRoda do
         "id"=>group.id,
         "type"=>"group_localpool",
         "name"=>group.name,
+        "slug"=>group.slug,
         "description"=>group.description,
         "mentors"=> {
           "array" => group.managers.collect do |manager|
@@ -66,6 +67,7 @@ describe Display::GroupRoda do
           "id"=>group.id,
           "type"=>"group_#{type}",
           "name"=>group.name,
+          "slug"=>group.slug,
           "description"=>group.description,
           "mentors"=> {
             'array' => group.managers.collect do |manager|

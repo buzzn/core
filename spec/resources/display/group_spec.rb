@@ -34,6 +34,7 @@ describe Display::GroupResource do
   let(:attributes) { ['id',
                       'type',
                       'name',
+                      'slug',
                       'description'] }
 
 
