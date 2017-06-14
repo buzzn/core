@@ -137,7 +137,7 @@ describe Admin::LocalpoolRoda do
 
         # reload BillingCycle class definition to undo the method overwriting
         Object.send(:remove_const, :BillingCycleResource)
-        load 'app/resources/billing_cycle_resource.rb'
+        load 'lib/buzzn/resources/billing_cycle_resource.rb'
       end
     end
 

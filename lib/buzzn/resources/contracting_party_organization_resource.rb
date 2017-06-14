@@ -1,3 +1,4 @@
+require_relative 'organization_resource'
 class ContractingPartyOrganizationResource < OrganizationResource
   include BankAccountResource::Create
 

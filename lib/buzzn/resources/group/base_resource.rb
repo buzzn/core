@@ -1,3 +1,4 @@
+require_relative '../billing_cycle_resource'
 module Group
   class BaseResource < Buzzn::Resource::Entity
 

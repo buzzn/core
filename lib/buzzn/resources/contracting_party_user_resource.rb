@@ -1,3 +1,4 @@
+require_relative 'user_resource'
 class ContractingPartyUserResource < UserResource
   include BankAccountResource::Create
 
