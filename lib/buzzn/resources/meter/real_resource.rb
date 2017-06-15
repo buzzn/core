@@ -7,8 +7,7 @@ module Meter
 
     model Real
 
-    attributes  :manufacturer_name,
-                :smart
+    attributes  :manufacturer_name
 
     has_many :registers
 

@@ -74,7 +74,6 @@ describe Admin::LocalpoolRoda do
           'build_year'=>'key?(:build_year) THEN key[build_year](filled?) AND key[build_year](int?)'
         },
         "manufacturer_name"=>meter.manufacturer_name,
-        "smart"=>false,
         "registers"=>{
           'array'=>[
             {
@@ -151,7 +150,6 @@ describe Admin::LocalpoolRoda do
         json['id'] = virtual_meter.id
         json['manufacturer_product_serialnumber'] = virtual_meter.manufacturer_product_serialnumber
         json.delete('manufacturer_name')
-        json.delete('smart')
         json.delete('registers')
         json['rules'].shift
         json

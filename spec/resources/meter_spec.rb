@@ -53,7 +53,7 @@ describe Meter::BaseResource do
 
     it 'retrieve' do
       json = Meter::BaseResource.retrieve(user, real.id).to_h
-      expect(json.keys).to match_array base_keys + ['smart', 'manufacturer_name']
+      expect(json.keys).to match_array base_keys + ['manufacturer_name']
     end
 
   end

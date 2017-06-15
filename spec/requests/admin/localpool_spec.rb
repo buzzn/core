@@ -76,7 +76,6 @@ describe Admin::LocalpoolRoda do
           {
             "id"=>meter.id,
             "type"=>"meter_virtual",
-            "manufacturer_name"=>meter.manufacturer_name,
             "manufacturer_product_name"=>meter.manufacturer_product_name,
             "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
             "metering_type"=>meter.metering_type,

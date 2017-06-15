@@ -8,13 +8,13 @@ Fabricator :meter, class_name: Meter::Real do
   ownership                           Meter::Base::BUZZN_SYSTEMS
   metering_type                       Meter::Base::SMART_METER
   meter_size                          Meter::Base::EDL40
-  mode                                'one-way'
+  #mode                                'one-way'
   measurement_capture                 'some-capture'
   mounting_method                     Meter::Base::THREE_POINT_HANGING
   build_year                          { 5.years.ago }
   calibrated_till                     { 5.years.from_now }
   section                             'electricity'
-  metering_point_type                 'metering_point'
+  #metering_point_type                 'metering_point'
   voltage_level                       Meter::Base::LOW_LEVEL
   cycle_interval                      Meter::Base::YEARLY
   send_data_dso                       false
@@ -47,7 +47,6 @@ end
 Fabricator :easy_meter_q3d, from: :meter  do
   manufacturer_name            'easy_meter'
   manufacturer_product_name    'Q3D'
-  smart true
 end
 
 # Justus Übergabe
