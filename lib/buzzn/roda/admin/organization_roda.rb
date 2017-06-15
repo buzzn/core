@@ -1,25 +1,27 @@
 require_relative '../admin_roda'
-class Admin::OrganizationRoda < BaseRoda
-  plugin :shared_vars
+module Admin
+  class OrganizationRoda < BaseRoda
+    plugin :shared_vars
 
-  route do |r|
+    route do |r|
 
-    organizations = shared[:localpool].organizations
+      organizations = shared[:localpool].organizations
 
-    r.on :id do |id|
-      organization = organizations.retrieve(id)
+      r.on :id do |id|
+        organization = organizations.retrieve(id)
 
-      r.get! do
-        organization
-      end
+        r.get! do
+          organization
+        end
 
-      r.get! 'address' do
-        organization.address!
-      end
+        r.get! 'address' do
+          organization.address!
+        end
 
-      r.on 'bank-accounts' do
-        shared[:bank_account_parent] = organization
-        r.run BankAccountRoda
+        r.on 'bank-accounts' do
+          shared[:bank_account_parent] = organization
+          r.run BankAccountRoda
+        end
       end
     end
   end
