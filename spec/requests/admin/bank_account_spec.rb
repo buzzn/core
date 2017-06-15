@@ -132,7 +132,6 @@ describe Admin::BankAccountRoda do
         end
 
         it '422 wrong' do
-          # TODO add all possible validation errors, i.e. iban
           PATCH "/#{parent.id}/#{bank_account.id}", admin,
                 holder: 'Max Mueller' * 10,
                 bank_name: 'Bundesbank' * 10,

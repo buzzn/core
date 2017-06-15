@@ -1,9 +1,14 @@
 module Meter
   class RealResource < BaseResource
 
+    include Import.reader['schema.update_real_meter']
+
+    rules :update_real_meter
+
     model Real
 
-    attributes  :smart
+    attributes  :manufacturer_name,
+                :smart
 
     has_many :registers
 

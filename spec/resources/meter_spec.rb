@@ -7,7 +7,6 @@ describe Meter::BaseResource do
 
   let(:base_keys) { ['id',
                      'type',
-                     'manufacturer_name',
                      'manufacturer_product_name',
                      'manufacturer_product_serialnumber',
                      'metering_type',
@@ -16,7 +15,8 @@ describe Meter::BaseResource do
                      'direction_label',
                      'build_year',
                      'updatable',
-                     'deletable' ] }
+                     'deletable',
+                     'rules'] }
 
   it 'retrieve' do
     [real, virtual].each do |meter|
@@ -53,7 +53,7 @@ describe Meter::BaseResource do
 
     it 'retrieve' do
       json = Meter::BaseResource.retrieve(user, real.id).to_h
-      expect(json.keys).to match_array base_keys + ['smart']
+      expect(json.keys).to match_array base_keys + ['smart', 'manufacturer_name']
     end
 
   end

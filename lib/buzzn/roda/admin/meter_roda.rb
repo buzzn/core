@@ -2,6 +2,10 @@ require_relative '../admin_roda'
 class Admin::MeterRoda < BaseRoda
   plugin :shared_vars
 
+  include Import.args[:env,
+                      'transaction.update_real_meter',
+                      'transaction.update_virtual_meter']
+
   route do |r|
 
     meters = shared[:localpool].meters
@@ -10,8 +14,23 @@ class Admin::MeterRoda < BaseRoda
       meters.filter(r.params['filter'])
     end
 
-    r.get! :id do |id|
-      meters.retrieve(id)
+    r.on :id do |id|
+      meter = meters.retrieve(id)
+
+      r.get! do
+        meter
+      end
+
+      r.patch! do
+        case meter.object
+        when Meter::Real
+          update_real_meter.call(r.params, resource: [meter])
+        when Meter::Virtual
+          update_virtual_meter.call(r.params, resource: [meter])
+        else
+          raise "unknown model: #{meter.class.model}"
+        end
+      end
     end
   end
 end

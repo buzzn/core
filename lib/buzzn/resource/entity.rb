@@ -27,7 +27,7 @@ module Buzzn::Resource
     def update(params)
       if permissions
         if permissions.respond_to?(:update) && allowed?(permissions.update)
-          object.update(params)
+          object.update!(params)
           self
         else
           raise Buzzn::PermissionDenied.new(self, :update, current_user)

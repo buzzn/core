@@ -26,7 +26,7 @@ Fabricator :meter, class_name: Meter::Real do
 end
 
 Fabricator :real_meter, from: :meter do
-  manufacturer_name           { Meter::Real.manufacturer_names.sample }
+  manufacturer_name           { Meter::Real.all_manufacturer_names.sample }
   manufacturer_product_name    { FFaker::Name.name }
 end
 
@@ -38,7 +38,7 @@ end
 [:input, :output].each do |mode|
   Fabricator "#{mode}_meter", class_name: Meter::Real do
     registers                   { [Fabricate.build("#{mode}_register")] }
-    manufacturer_name           { Meter::Real.manufacturer_names.sample }
+    manufacturer_name           { Meter::Real.all_manufacturer_names.sample }
     manufacturer_product_name    { FFaker::Name.name }
     manufacturer_product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
   end

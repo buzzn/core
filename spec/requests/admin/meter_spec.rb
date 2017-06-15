@@ -37,54 +37,66 @@ describe Admin::LocalpoolRoda do
       }
     end
 
-    entity(:virtual_meter) { Fabricate(:virtual_meter) }
-
-    entity(:real_meter) { Fabricate(:meter) }
-
+    entity(:virtual_meter) do
+      meter = Fabricate(:virtual_meter)
+      meter.register.update(group: group)
+      meter
+    end
+    
     entity(:meter) do
       meter = Fabricate(:input_meter)
       meter.input_register.update(group: group)
       meter
     end
 
+    let(:real_meter) { meter }
+
+    let(:meter_json) do
+      {
+        "id"=>meter.id,
+        "type"=>"meter_real",
+        "manufacturer_product_name"=>meter.manufacturer_product_name,
+        "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
+        "metering_type"=>meter.metering_type,
+        "meter_size"=>nil,
+        "ownership"=>nil,
+        "direction_label"=>meter.direction,
+        "build_year"=>nil,
+        "updatable"=>true,
+        "deletable"=>true,
+        "rules"=> {
+          "manufacturer_name"=>'key?(:manufacturer_name) THEN key[manufacturer_name](included_in?(["easy_meter", "amperix", "ferraris", "other"]))',
+          "manufacturer_product_name"=>"key?(:manufacturer_product_name) THEN key[manufacturer_product_name](filled?) AND key[manufacturer_product_name](str?) AND key[manufacturer_product_name](max_size?(63))",
+          'manufacturer_product_serialnumber'=>'key?(:manufacturer_product_serialnumber) THEN key[manufacturer_product_serialnumber](filled?) AND key[manufacturer_product_serialnumber](str?) AND key[manufacturer_product_serialnumber](max_size?(63))',
+          'metering_type'=>'key?(:metering_type) THEN key[metering_type](included_in?(["analog_household_meter", "smart_meter", "load_meter", "analog_ac_meter", "digital_household_meter", "maximum_meter", "individual_adjustment"]))',
+          'metering_size'=>'key?(:metering_size) THEN key[metering_size](included_in?(["edl40", "edl21", "other_ehz"]))',
+          'ownership'=>'key?(:ownership) THEN key[ownership](included_in?(["buzzn_systems", "foreign_ownership", "customer", "leased", "bought"]))',
+          'build_year'=>'key?(:build_year) THEN key[build_year](filled?) AND key[build_year](int?)'
+        },
+        "manufacturer_name"=>meter.manufacturer_name,
+        "smart"=>false,
+        "registers"=>{
+          'array'=>[
+            {
+              "id"=>meter.input_register.id,
+              "type"=>"register_real",
+              "direction"=>meter.input_register.direction.to_s,
+              "name"=>meter.input_register.name,
+              "pre_decimal"=>6,
+              "decimal"=>2,
+              "converter_constant"=>1,
+              "low_power"=>false,
+              "label"=>meter.input_register.label,
+              "last_reading"=>0,
+              "uid"=>meter.input_register.uid,
+              "obis"=>meter.input_register.obis
+            }
+          ]
+        }
+      }
+    end
 
     context 'GET' do
-
-      let(:meter_json) do
-        {
-          "id"=>meter.id,
-          "type"=>"meter_real",
-          "manufacturer_name"=>meter.manufacturer_name,
-          "manufacturer_product_name"=>meter.manufacturer_product_name,
-          "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
-          "metering_type"=>meter.metering_type,
-          "meter_size"=>nil,
-          "ownership"=>nil,
-          "direction_label"=>meter.direction,
-          "build_year"=>nil,
-          "updatable"=>true,
-          "deletable"=>true,
-          "smart"=>false,
-          "registers"=>{
-            'array'=>[
-              {
-                "id"=>meter.input_register.id,
-                "type"=>"register_real",
-                "direction"=>meter.input_register.direction.to_s,
-                "name"=>meter.input_register.name,
-                "pre_decimal"=>6,
-                "decimal"=>2,
-                "converter_constant"=>1,
-                "low_power"=>false,
-                "label"=>meter.input_register.label,
-                "last_reading"=>0,
-                "uid"=>meter.input_register.uid,
-                "obis"=>meter.input_register.obis
-              }
-            ]
-          }
-        }
-      end
 
       it '403' do
         GET "/#{group.id}/meters/#{real_meter.id}", user
@@ -102,6 +114,98 @@ describe Admin::LocalpoolRoda do
         GET "/#{group.id}/meters/#{meter.id}", admin, include: :registers
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq meter_json.to_yaml
+      end
+    end
+
+    context 'PATCH' do
+
+      let(:wrong_json) do
+        {
+          "errors"=>[
+            {"parameter"=>"manufacturer_name",
+             "detail"=>"must be one of: easy_meter, amperix, ferraris, other"},
+            {"parameter"=>"manufacturer_product_name",
+             "detail"=>"size cannot be greater than 63"},
+            {"parameter"=>"manufacturer_product_serialnumber",
+             "detail"=>"size cannot be greater than 63"},
+            {"parameter"=>"metering_type",
+             "detail"=>"must be one of: analog_household_meter, smart_meter, load_meter, analog_ac_meter, digital_household_meter, maximum_meter, individual_adjustment"},
+            {"parameter"=>"metering_size",
+             "detail"=>"must be one of: edl40, edl21, other_ehz"},
+            {"parameter"=>"build_year",
+             "detail"=>"must be an integer"}
+          ]
+        }
+      end
+
+      let(:real_updated_json) do
+        json = meter_json.dup
+        json['manufacturer_product_name'] = 'Smarty Super Meter'
+        json.delete('registers')
+        json
+      end
+
+      let(:virtual_meter_json) do
+        json = meter_json.dup
+        json['type'] = 'meter_virtual'
+        json['id'] = virtual_meter.id
+        json['manufacturer_product_serialnumber'] = virtual_meter.manufacturer_product_serialnumber
+        json.delete('manufacturer_name')
+        json.delete('smart')
+        json.delete('registers')
+        json['rules'].shift
+        json
+      end
+      let(:virtual_updated_json) do
+        json = virtual_meter_json.dup
+        json['manufacturer_product_name'] = 'Smarty Super Meter'
+        json
+      end
+
+      let(:real_wrong_json) { wrong_json }
+      let(:virtual_wrong_json) do
+        json = wrong_json.dup
+        json['errors'].shift
+        json
+      end
+
+      it '403' do
+        PATCH "/#{group.id}/meters/#{real_meter.id}", user
+        expect(response).to have_http_status(403)
+        expect(json).to eq denied_json
+      end
+
+      it '404' do
+        PATCH "/#{group.id}/meters/bla-blub", admin
+        expect(response).to have_http_status(404)
+        expect(json).to eq not_found_json
+      end
+
+      [:real, :virtual].each do |type|
+        context type do
+          it '422 wrong' do
+            meter = send "#{type}_meter"
+            PATCH "/#{group.id}/meters/#{meter.id}", admin,
+                  manufacturer_name: 'Maxima' * 20,
+                  manufacturer_product_name: 'SmartyMeter' * 10,
+                  manufacturer_product_serialnumber: '12341234' * 10,
+                  metering_type: 'sometype',
+                  metering_size: 'somesize',
+                  onwership: 'me',
+                  build_year: 'this-year'
+        
+            expect(response).to have_http_status(422)
+            expect(json.to_yaml).to eq send("#{type}_wrong_json").to_yaml
+          end
+
+          it '200' do
+            meter = send "#{type}_meter"
+            PATCH "/#{group.id}/meters/#{meter.id}", admin, manufacturer_product_name: 'Smarty Super Meter'
+            expect(response).to have_http_status(200)
+            expect(meter.reload.manufacturer_product_name).to eq 'Smarty Super Meter'
+            expect(json.to_yaml).to eq send("#{type}_updated_json").to_yaml
+          end
+        end
       end
     end
 
