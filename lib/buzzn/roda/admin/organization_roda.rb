@@ -7,6 +7,10 @@ module Admin
 
       organizations = shared[:localpool].organizations
 
+      r.get! do
+        organizations
+      end
+
       r.on :id do |id|
         organization = organizations.retrieve(id)
 

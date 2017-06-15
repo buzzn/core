@@ -8,6 +8,7 @@ module SwaggerHelper
       paths.instance_variable_set(:@paths, sorted)
       file = swagger.basePath.sub(/.api/, 'lib/buzzn/roda') + '/swagger.json'
       File.write(file, swagger.to_json)
+      puts swagger.to_yaml
     end
   end
 
@@ -52,14 +53,12 @@ module SwaggerHelper
       sparam.required = required
       type = type_predicate(rules)
       case type[0]
-      when ''
-        asd
       when 'enum'
         sparam.type = 'string'
         sparam.enum = type[1..-1]
       else
         sparam.type = type[0]
-        sparam.format = type[1]
+        sparam.format = type[1] if type[1]
       end
       ops.add_parameter(sparam)
     end
@@ -84,8 +83,12 @@ module SwaggerHelper
           ['string', '']
         when 'time'
           ['string', 'date-time']
-        else
+        when 'included_in'
           ['enum', rule.options[:args].flatten]
+        when 'max_size'
+          [nil, nil] # ignored for the time being
+        else
+          ['string', rule.to_s.sub('?', '')]
         end
       else
         binding.pry
@@ -118,37 +121,35 @@ module SwaggerHelper
       @paths ||= Swagger::Data::Paths.new
     end
 
-    def post(path)
-      self.it path do
-        yield self
-        POST path, admin, {}
-      end
-    end
-    
-    def get(path, &block)
-      it path do
+    def generic(path, method, &block)
+      it "#{method.to_s.upcase} #{path}" do
         spath = Swagger::Data::Path.new
-        ops = spath.get = Swagger::Data::Operation.new
+        ops = spath.send("#{method}=", Swagger::Data::Operation.new)
         ops.produces = ['application/json']
         path.scan(/\{[^{}]*\}/).each do |param|
           sparam = Swagger::Data::Parameter.new
-          sparam.name = param[1..-2].gsub('.', '_')
+          sparam.name = param[1..-2].sub(/_[1-9]/, '').gsub('.', '_')
           sparam.in = 'path'
           sparam.required = true
           sparam.type = 'string'
           ops.add_parameter(sparam)
         end
-        paths.add_path(path.gsub('.', '_'), spath)
+        paths.add_path(path.sub(/_[1-9]/, '').gsub('.', '_'), spath)
         self.current = ops
         real_path = eval "\"#{swagger.basePath}#{path.gsub(/\{/, '#{')}\""
-        GET real_path, admin
-        expect([200, 201, 422]).to include response.status
+        send(method.to_s.upcase, real_path, admin)
+        expect([200, 201, 204, 422]).to include response.status
         instance_eval &block
-        if response.status == 422
+        if [:post, :patch, :put].include?(method) || response.status == 422
           expect_missing(ops)
         end
       end
     end
 
+    [:post, :get, :patch, :delete].each do |method|
+      define_method(method) do |path, &block|
+        generic(path, method, &block) if path
+      end
+    end
   end
 end
