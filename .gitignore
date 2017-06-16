@@ -22,6 +22,9 @@
 # Ignore OSX Metadata
 .DS_Store
 
+# ignore resilio data
+.sync
+
 # Ignore compiled CSS
 /public/assets/*
 
