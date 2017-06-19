@@ -23,9 +23,16 @@ class Admin::PriceRoda < BaseRoda
       prices
     end
 
-    r.patch! :id do |id|
+    r.on :id do |id|
       price = prices.retrieve(id)
-      update_price.call(r.params, resource: [price])
+
+      r.get! do
+        price
+      end
+
+      r.patch! do
+        update_price.call(r.params, resource: [price])
+      end
     end
   end
 end

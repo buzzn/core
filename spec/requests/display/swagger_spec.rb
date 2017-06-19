@@ -59,4 +59,10 @@ describe Display do
     description 'returns the charts of the group'
     schema 'charts_schema'
   end
+
+  it '/swagger' do
+    GET swagger.basePath + '/swagger', admin
+    expect(response).to have_http_status(200)
+    expect(json).not_to be_nil
+  end
 end

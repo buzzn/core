@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170524090229) do
+ActiveRecord::Schema.define(version: 20170615163547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -434,25 +434,21 @@ ActiveRecord::Schema.define(version: 20170524090229) do
   add_index "groups", ["slug"], name: "index_groups_on_slug", unique: true, using: :btree
 
   create_table "meters", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "slug"
     t.string   "manufacturer_name"
     t.string   "manufacturer_product_name"
     t.string   "manufacturer_product_serialnumber"
     t.string   "ownership"
     t.string   "metering_type"
     t.string   "meter_size"
-    t.string   "mode"
     t.string   "image"
     t.string   "measurement_capture"
     t.string   "mounting_method"
     t.date     "build_year"
     t.date     "calibrated_till"
-    t.boolean  "smart",                             default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "type",                                              null: false
+    t.string   "type",                              null: false
     t.string   "section"
-    t.string   "metering_point_type"
     t.string   "voltage_level"
     t.string   "cycle_interval"
     t.boolean  "send_data_dso"
@@ -463,8 +459,6 @@ ActiveRecord::Schema.define(version: 20170524090229) do
     t.integer  "converter_constant"
     t.string   "data_provider_name"
   end
-
-  add_index "meters", ["slug"], name: "index_meters_on_slug", unique: true, using: :btree
 
   create_table "notification_unsubscribers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "notification_key"

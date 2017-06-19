@@ -15,6 +15,8 @@ module Buzzn
             get_rails_secrets(key.to_s[8..-1])
           elsif key.to_s.starts_with?('transaction.')
             Buzzn::Transaction.transactions.container[key.to_s[12..-1]]
+          elsif key.to_s.starts_with?('schema.')
+            Buzzn::Transaction.transactions.steps["#{key.to_s[7..-1]}_schema"]
           else
             super
           end
