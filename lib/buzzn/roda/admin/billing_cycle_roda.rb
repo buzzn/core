@@ -26,7 +26,11 @@ module Admin
 
       r.on :id do |id|
         billing_cycle = billing_cycles.retrieve(id)
-        
+
+        r.get! do
+          billing_cycle
+        end
+
         r.patch! do
           update_billing_cycle.call(r.params, resource: [billing_cycle])
         end

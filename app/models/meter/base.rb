@@ -103,13 +103,9 @@ module Meter
     # hack for restricted scope
     has_many :registers, class_name: Register::Base, foreign_key: :meter_id
 
-    # TODO ????, rename it to :direction
-    validates :mode, presence: false
     validates :measurement_capture, presence: false
     validates :build_year, presence: false
     validates :calibrated_till, presence: false
-    # TODO makes no sense for virtual meters
-    validates :smart, presence: false
     validates :init_first_reading, presence: false
     validates :init_reading, presence: false
     validates :voltage_level, inclusion: {in: all_voltage_levels}, if: 'voltage_level.present?'
@@ -133,16 +129,6 @@ module Meter
     end
 
     scope :restricted, ->(uuids) { joins(registers: :contracts).where('contracts.id': uuids) }
-
-    # it differs from updatable_by as they do not have admins
-    scope :editable_by_user, lambda {|user|
-      readable_by(user, false)
-    }
-
-    # this has no admins !
-    def self.accessible_by_user(user)
-      readable_by(user, false)
-    end
 
     scope :readable_by, ->(user, admin = true) do
       if user.nil?
@@ -171,27 +157,12 @@ module Meter
       "#{manufacturer_name} #{manufacturer_product_serialnumber}"
     end
 
-    # TODO seems to be not used
-    def self.send_notification_meter_offline(meter)
-      meter.registers.each do |register|
-        register.managers.each do |user|
-          user.send_notification("warning", I18n.t("register_offline"), I18n.t("your_register_is_offline_now", register_name: register.name))
-          Notifier.send_email_notification_meter_offline(user, register).deliver_now if user.profile.email_notification_meter_offline
-        end
-      end
-    end
-
     def self.search_attributes
       [:manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber]
     end
 
     def self.filter(value)
       do_filter(value, *search_attributes)
-    end
-
-    # for railsview
-    def class_name
-      self.class.name.downcase.sub!("::", "_")
     end
 
     def create_main_equipment

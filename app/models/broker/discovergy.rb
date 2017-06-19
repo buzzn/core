@@ -24,8 +24,6 @@ class Broker::Discovergy < Broker::Base
 
   validate :validates_invariants
 
-  after_commit :validates_credentials
-
   def validates_invariants
     if provider_token_key || provider_token_secret
       errors.add(:provider_token_key, IS_MISSING) unless provider_token_key
@@ -76,22 +74,6 @@ class Broker::Discovergy < Broker::Base
     # produce a ternary result: group is nil, register will use true or false
     if self.resource.is_a?(Meter::Real)
       self.resource.input_register != nil && self.resource.output_register != nil
-    end
-  end
-
-  private
-
-  # TODO: Move this into parent class
-  def validates_credentials
-    if self.resource.is_a?(Meter::Real) && self.resource.registers.any?
-      data_result = current_power.for_register(self.resource.registers.first)
-      if data_result
-        self.resource.update_columns(smart: true)
-        self.resource.reload
-      else
-        self.resource.update_columns(smart: false)
-        self.resource.reload
-      end
     end
   end
 end

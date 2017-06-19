@@ -1,6 +1,10 @@
 module Meter
   class VirtualResource < BaseResource
 
+    include Import.reader['schema.update_virtual_meter']
+
+    rules :update_virtual_meter
+
     model Virtual
 
     has_one :register

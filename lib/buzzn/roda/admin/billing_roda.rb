@@ -25,12 +25,16 @@ class Admin::BillingRoda < BaseRoda
 
     r.on :id do |id|
       billing = billings.retrieve(id)
-      
-      r.patch! do |id|
+
+      r.get! do
+        billing
+      end
+
+      r.patch! do
         update_billing.call(r.params, resource: [billing])
       end
 
-      r.delete! do |id|
+      r.delete! do
         deleted do
           billing.delete
         end

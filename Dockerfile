@@ -13,6 +13,7 @@ ENV SECRET_KEY_BASE 4302a93016c91a2074f05c247570bd12a604c3368d711861df1cbab4b967
 RUN apt-get update && \
   apt-get install -y \
   build-essential \
+  vim \
   imagemagick \
   cron \
   nodejs

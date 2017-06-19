@@ -18,11 +18,11 @@ module Meter
     has_many :registers, class_name: Register::Real, foreign_key: :meter_id
     validates_associated :registers
 
-    def self.manufacturer_names
+    def self.all_manufacturer_names
       ['easy_meter', 'amperix', 'ferraris', 'other']
     end
 
-    validates :manufacturer_name, inclusion: {in: manufacturer_names}
+    validates :manufacturer_name, inclusion: {in: all_manufacturer_names}
     validates :manufacturer_product_name, presence: true
     validates :manufacturer_product_serialnumber, presence: true, uniqueness: true, length: { in: 2..128 }
     validates :image, presence: false
