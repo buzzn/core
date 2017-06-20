@@ -21,13 +21,13 @@ describe Display::GroupRoda do
     end
 
     let(:input_register) do
-      input = discovergy_meter.registers.input.first
+      input = discovergy_meter.registers.inputs.first
       input.update(label: Register::Base::PRODUCTION_PV)
       input
     end
 
     let(:output_register) do
-      output = discovergy_meter.registers.output.first
+      output = discovergy_meter.registers.outputs.first
       output.update(label: Register::Base::CONSUMPTION)
       output
     end

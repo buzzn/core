@@ -114,8 +114,6 @@ Doorkeeper.configure do
   # realm "Doorkeeper"
 end
 
-Doorkeeper::Application.send(:include, Authority::Abilities)
-
 module Doorkeeper
   module OAuth
     class Token

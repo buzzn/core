@@ -4,8 +4,9 @@ describe Admin::BankAccountRoda do
     plugin :shared_vars
     route do |r|
       r.on :id do |id|
-        parent = User.where(id: id).first || Organization.where(id: id).first
-        shared[Admin::BankAccountRoda::PARENT] = ContractingPartyResource.new(parent, current_user: current_user)
+        localpool = Admin::LocalpoolResource.all(current_user).first
+        parent = localpool.users.where(id: id).first || localpool.organizations.where(id: id).first
+        shared[Admin::BankAccountRoda::PARENT] = parent
         r.run Admin::BankAccountRoda
       end
     end
@@ -15,18 +16,28 @@ describe Admin::BankAccountRoda do
     BankAccountParentRoda # this defines the active application for this test
   end
 
-  entity!(:user_account) do
-    Fabricate(:bank_account)
-  end
-
-  entity!(:organization_account) do
-    orga = Fabricate(:other_organization)
-    Fabricate(:bank_account, contracting_party: orga)
-  end
-
   entity(:admin) { Fabricate(:admin_token) }
 
   entity(:user) { Fabricate(:user_token) }
+
+  entity!(:localpool) do
+    localpool = Fabricate(:localpool)
+    User.find(user.resource_owner_id).add_role(:localpool_member, localpool)
+    localpool
+  end
+
+  entity!(:contract) { Fabricate(:metering_point_operator_contract,
+                                 localpool: localpool,
+                                 contractor: Fabricate(:other_organization)) }
+
+  entity!(:user_account) do
+    BankAccount.delete_all
+    Fabricate(:bank_account, contracting_party: contract.customer)
+  end
+
+  entity!(:organization_account) do
+    Fabricate(:bank_account, contracting_party: contract.contractor)
+  end
 
   let(:not_found_json) do
     {
@@ -75,6 +86,15 @@ describe Admin::BankAccountRoda do
 
       context 'POST' do
 
+        let(:create_denied_json) do
+          {
+            "errors" => [
+              {
+                "detail"=>"create_bank_account OrganizationResource: #{parent.id} permission denied for User: #{user.resource_owner_id}" }
+            ]
+          }
+        end
+
         let(:missing_json) do
           {
             "errors"=>[
@@ -85,12 +105,13 @@ describe Admin::BankAccountRoda do
           }
         end
 
-        it '403' do
-          # TODO permissions checks needed
-
-          #          POST "/#{parent.id}", user
-#          expect(response).to have_http_status(403)
-#          expect(json).to eq denied_json
+        # can not construct users to see parent but not bank_account
+        if name == :organization_account
+          it '403' do
+            POST "/#{parent.id}", user, holder: 'someone', iban: 'DE23100000001234567890', bank_name: 'Limitless Limited', bic: '123123123XXX'
+            expect(response).to have_http_status(403)
+            expect(json).to eq create_denied_json
+          end
         end
 
         it '422 missing' do
@@ -119,10 +140,13 @@ describe Admin::BankAccountRoda do
           json
         end
 
-        it '403' do
-          PATCH "/#{parent.id}/#{bank_account.id}", user
-          expect(response).to have_http_status(403)
-          expect(json).to eq denied_json
+        # can not construct users to see parent but not bank_account
+        if name == :organization_account
+          it '403' do
+            PATCH "/#{parent.id}/#{bank_account.id}", user
+            expect(response).to have_http_status(403)
+            expect(json).to eq denied_json
+          end
         end
 
         it '404' do
@@ -155,10 +179,14 @@ describe Admin::BankAccountRoda do
           [ bank_account_json ]
         end
 
-        it '403' do
-          GET "/#{parent.id}/#{bank_account.id}", user
-          expect(response).to have_http_status(403)
-          expect(json).to eq denied_json
+
+        # can not construct users to see parent but not bank_account
+        if name == :organization_account
+          it '403' do
+            GET "/#{parent.id}/#{bank_account.id}", user
+            expect(response).to have_http_status(403)
+            expect(json).to eq denied_json
+          end
         end
 
         it '404' do
@@ -182,10 +210,13 @@ describe Admin::BankAccountRoda do
       
       context 'DELETE' do
 
-        it '403' do
-          DELETE "/#{parent.id}/#{bank_account.id}", user
-          expect(response).to have_http_status(403)
-          expect(json).to eq denied_json
+        # can not construct users to see parent but not bank_account
+        if name == :organization_account
+          it '403' do
+            DELETE "/#{parent.id}/#{bank_account.id}", user
+            expect(response).to have_http_status(403)
+            expect(json).to eq denied_json
+          end
         end
 
         it '404' do

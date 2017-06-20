@@ -17,11 +17,6 @@ module Broker
       where(type: "Broker::#{data_source.class::NAME.to_s.camelize}")
     end
 
-    # for railsview
-    def class_name
-      self.class.name.downcase.sub!("::", "_")
-    end
-
     private
 
     def self.do_get(mode, resource)

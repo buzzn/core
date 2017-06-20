@@ -8,7 +8,7 @@ module SwaggerHelper
       paths.instance_variable_set(:@paths, sorted)
       file = swagger.basePath.sub(/.api/, 'lib/buzzn/roda') + '/swagger.json'
       File.write(file, swagger.to_json)
-      puts swagger.to_yaml
+      puts "dumped swagger json #{file}"
     end
   end
 

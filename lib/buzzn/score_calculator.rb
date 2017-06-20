@@ -144,7 +144,7 @@ module Buzzn
     end
 
     def calculate_sufficiency_scores
-      count_sn_in_group = @group.energy_consumers.size
+      count_sn_in_group = @group.registers.reals.inputs.size
       data_in
       if count_sn_in_group != 0
         sufficiency = @group.extrapolate_kwh_pa(sum_in/4000000.0, 'day', @containing_timestamp) / count_sn_in_group

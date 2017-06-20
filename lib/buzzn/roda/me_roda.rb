@@ -7,8 +7,8 @@ class MeRoda < BaseRoda
       if current_user.nil?
         raise Buzzn::PermissionDenied.create(User, :retrieve, nil)
       end
-      # use the normal loading semantic to produce consistent results
-      ContractingPartyUserResource.retrieve(current_user, current_user.id)
+      UserResource.all(current_user, ContractingPartyUserResource)
+        .retrieve(current_user.id)
     end
   end
 end

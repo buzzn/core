@@ -14,7 +14,7 @@ module Buzzn::Pdfs
         when User
           contractor
         when Organization
-          contractor.managers.first
+          contractor.contact
         end
       end
 

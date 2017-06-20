@@ -1,3 +1,4 @@
+require 'doorkeeper/grape/authorization_decorator'
 class Roda
   module RodaPlugins
     module Doorkeeper

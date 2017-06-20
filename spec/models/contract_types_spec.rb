@@ -1,10 +1,5 @@
 # coding: utf-8
 describe "Contract Sub Models" do
-
-  let(:csv_dir) { 'db/csv' }
-  let(:zip_vnb) { File.read(File.join(csv_dir, "plz_vnb_test.csv")) }
-  let(:zip_ka) { File.read(File.join(csv_dir, "plz_ka_test.csv")) }
-  let(:nne_vnb) { File.read(File.join(csv_dir, "nne_vnb.csv")) }
   
   let(:power_taker_contract_move_in) do
     Fabricate(:power_taker_contract_move_in)

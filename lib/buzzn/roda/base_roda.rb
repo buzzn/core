@@ -21,7 +21,7 @@ class BaseRoda < Roda
 
   plugin :current_user do |app|
     if app.doorkeeper_token
-      User.unguarded_retrieve(app.doorkeeper_token.resource_owner_id)
+      User.where(id: app.doorkeeper_token.resource_owner_id).first
     end
   end
 

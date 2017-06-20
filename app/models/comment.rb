@@ -1,9 +1,5 @@
-require 'buzzn/guarded_crud'
 class Comment < ActiveRecord::Base
-  include Authority::Abilities
   include Filterable
-  include PublicActivity::Model
-  include Buzzn::GuardedCrud
 
   acts_as_nested_set :scope => [:commentable_id, :commentable_type]
 
@@ -29,17 +25,6 @@ class Comment < ActiveRecord::Base
     errors.add(:commentable, "must have superclass ActiveRecord::Base: #{self.commentable_type}") unless self.commentable_type.constantize.superclass == ActiveRecord::Base
   end
 
-  # Helper class method that allows you to build a comment
-  # by passing a commentable object, a user_id, and comment text
-  # example in readme
-  def self.build_from(obj, user_id, comment, parent_id)
-    new \
-      :commentable => obj,
-      :body        => comment,
-      :user_id     => user_id,
-      :parent_id   => parent_id
-  end
-
   def self.filter(search)
     do_filter(search, :title, :subject, :body)
   end
@@ -47,10 +32,6 @@ class Comment < ActiveRecord::Base
   #helper method to check if a comment has children
   def has_children?
     self.children.any?
-  end
-
-  scope :readable_by, ->(user) do
-    where(nil) # all
   end
 
   # Helper class method to lookup all comments assigned

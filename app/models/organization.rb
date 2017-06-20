@@ -1,18 +1,8 @@
-require 'buzzn/managed_roles'
+# coding: utf-8
 class Organization < ContractingParty
   self.table_name = :organizations
-  include Buzzn::GuardedCrud
-  extend FriendlyId
 
-  friendly_id :name, use: [:slugged, :finders]
-
-  include Authority::Abilities
   include Filterable
-  include Buzzn::ManagerRole
-  include Buzzn::MemberRole
-
-  # TODO what is this used for ?
-  acts_as_taggable_on :contract_types
 
   mount_uploader :image, PictureUploader
 
@@ -42,18 +32,19 @@ class Organization < ContractingParty
   validates :phone, presence: true
   validates :mode, presence: true, inclusion: {in: modes}
 
+  scope :restricted, ->(uuids) { where(nil) }
+
+  def contact
+    User.users_of(self, :contact).first
+  end
+
   self.modes.each do |mode|
     scope mode + "s", -> { where(mode: mode) }
   end
 
-  scope :readable_by,                   -> (user) { where(nil) }
-
-
   # define some predefined organziation with cache
   { dummy: 'dummy organization',
     dummy_energy: 'dummy energy supplier',
-    #TODO what is the buzzn-reader organization ???
-    buzzn_reader: 'buzzn Reader',
     buzzn_energy: 'buzzn GmbH',
     buzzn_systems: 'buzzn systems UG',
     discovergy: 'Discovergy',

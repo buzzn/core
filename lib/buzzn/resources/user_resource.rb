@@ -1,4 +1,5 @@
 class UserResource < Buzzn::Resource::Entity
+  include BankAccountResource::Create
 
   model User
 

@@ -43,7 +43,6 @@ Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 
 # Messdienstleistung (Ablesung und Messung)
 Fabricate(:buzzn_metering)
-Fabricate(:buzzn_reader)
 Fabricate(:dummy)
 Fabricate(:discovergy)
 Fabricate(:mysmartgrid)
@@ -116,7 +115,7 @@ buzzn_team_names.each do |user_name|
     end
   when 'christian'
     meter = Fabricate(:easymeter_60138988)
-    root_register = meter.input_register
+    @christian_register = root_register = meter.input_register
     meter.broker = Fabricate(:discovergy_broker,
       mode: 'in',
       external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
@@ -127,7 +126,7 @@ buzzn_team_names.each do |user_name|
     user.add_role :admin # christian is admin
   when 'philipp'
     meter = Fabricate(:easymeter_60009269)
-    root_register = meter.input_register
+    @philip_register = root_register = meter.input_register
     meter.broker = Fabricate(:discovergy_broker,
       mode: 'in',
       external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
@@ -143,7 +142,7 @@ buzzn_team_names.each do |user_name|
     user.add_role :manager, bhkw_stefan
   when 'thomas'
     meter = Fabricate(:easymeter_60232499)
-    root_register = meter.input_register
+    @thomas_register = root_register = meter.input_register
     user.add_role :admin # thomas is admin
   when 'ralf'
     user.add_role :admin
@@ -158,13 +157,6 @@ buzzn_team_names.each do |user_name|
     user.add_role(:member, root_register)
   end
 
-end
-
-puts 'friendships for buzzn team ...'
-buzzn_team.each do |user|
-  buzzn_team.each do |friend|
-    user.friendships.create(friend: friend) if user != friend
-  end
 end
 
 uxtest_user = Fabricate(:uxtest_user)
@@ -193,11 +185,6 @@ meter.broker = Fabricate(:discovergy_broker,
   provider_password: '19200buzzn'
 )
 
-buzzn_team.each do |buzzn_user|
-  karin.friendships.create(friend: buzzn_user) # alle von buzzn sind freund von karin
-  buzzn_user.friendships.create(friend: karin)
-end
-
 #Dieser User wird allen Kommentaren von gelöschten Benutzern zugewiesen
 geloeschter_benutzer = Fabricate(:geloeschter_benutzer)
 
@@ -210,9 +197,6 @@ geloeschter_benutzer = Fabricate(:geloeschter_benutzer)
 # puts '20 more users with location'
 # 20.times do
 #   user, location, register = user_with_location
-#   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
-#   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
-#   FriendshipRequest.create(sender: buzzn_team[Random.rand(buzzn_team.size)], receiver: user)
 #   puts "  #{user.email}"
 # end
 
@@ -221,9 +205,9 @@ geloeschter_benutzer = Fabricate(:geloeschter_benutzer)
 puts 'group karin strom'
 karins_pv_group = Fabricate(:tribe_karins_pv_strom, registers: [register_pv_karin])
 karin.add_role :manager, karins_pv_group
-karins_pv_group.registers << User.where(email: 'christian@buzzn.net').first.accessible_registers.first
-karins_pv_group.registers << User.where(email: 'philipp@buzzn.net').first.accessible_registers.first
-karins_pv_group.registers << User.where(email: 'thomas@buzzn.net').first.accessible_registers.first
+karins_pv_group.registers << @christian_register
+karins_pv_group.registers << @philip_register
+karins_pv_group.registers << @thomas_register
 
 
 
@@ -584,7 +568,6 @@ mabe.add_role(:manager, register_60051595)
 mabe.add_role(:member, register_60051595)
 localpool_forstenried.registers << register_60051595
 lptc = Fabricate(:lptc_mabe, signing_user: mabe, register: register_60051595, customer: mabe, contractor: hell_und_warm)
-#mabe.friends << pesc
 
 inbr = Fabricate(:inbr)
 meter = Fabricate(:easymeter_60051547)
@@ -594,7 +577,6 @@ inbr.add_role(:manager, register_60051547)
 inbr.add_role(:member, register_60051547)
 localpool_forstenried.registers << register_60051547
 lptc = Fabricate(:lptc_inbr, signing_user: inbr, register: register_60051547, customer: inbr, contractor: hell_und_warm)
-#inbr.friends << pesc
 
 pebr = Fabricate(:pebr)
 meter = Fabricate(:easymeter_60051620)
@@ -604,7 +586,6 @@ pebr.add_role(:manager, register_60051620)
 pebr.add_role(:member, register_60051620)
 localpool_forstenried.registers << register_60051620
 lptc = Fabricate(:lptc_pebr, signing_user: pebr, register: register_60051620, customer: pebr, contractor: hell_und_warm)
-#pebr.friends << pesc
 
 anbr = Fabricate(:anbr)
 meter = Fabricate(:easymeter_60051602)
@@ -614,7 +595,6 @@ anbr.add_role(:manager, register_60051602)
 anbr.add_role(:member, register_60051602)
 localpool_forstenried.registers << register_60051602
 lptc = Fabricate(:lptc_anbr, signing_user: anbr, register: register_60051602, customer: anbr, contractor: hell_und_warm)
-#anbr.friends << pesc
 
 gubr = Fabricate(:gubr)
 meter = Fabricate(:easymeter_60051618)
@@ -624,7 +604,6 @@ gubr.add_role(:manager, register_60051618)
 gubr.add_role(:member, register_60051618)
 localpool_forstenried.registers << register_60051618
 lptc = Fabricate(:lptc_gubr, signing_user: gubr, register: register_60051618, customer: gubr, contractor: hell_und_warm)
-#gubr.friends << pesc
 
 mabr = Fabricate(:mabr)
 meter = Fabricate(:easymeter_60051557)
@@ -634,7 +613,6 @@ mabr.add_role(:manager, register_60051557)
 mabr.add_role(:member, register_60051557)
 localpool_forstenried.registers << register_60051557
 lptc = Fabricate(:lptc_mabr, signing_user: mabr, register: register_60051557, customer: mabr, contractor: hell_und_warm)
-#mabr.friends << pesc
 
 dabr = Fabricate(:dabr)
 meter = Fabricate(:easymeter_60051596)
@@ -644,7 +622,6 @@ dabr.add_role(:manager, register_60051596)
 dabr.add_role(:member, register_60051596)
 localpool_forstenried.registers << register_60051596
 lptc = Fabricate(:lptc_dabr, signing_user: dabr, register: register_60051596, customer: dabr, contractor: hell_und_warm)
-#dabr.friends << pesc
 
 zubu = Fabricate(:zubu)
 meter = Fabricate(:easymeter_60051558)
@@ -654,7 +631,6 @@ zubu.add_role(:manager, register_60051558)
 zubu.add_role(:member, register_60051558)
 localpool_forstenried.registers << register_60051558
 lptc = Fabricate(:lptc_zubu, signing_user: zubu, register: register_60051558, customer: zubu, contractor: hell_und_warm)
-#zubu.friends << pesc
 
 mace = Fabricate(:mace)
 meter = Fabricate(:easymeter_60051551)
@@ -664,7 +640,6 @@ mace.add_role(:manager, register_60051551)
 mace.add_role(:member, register_60051551)
 localpool_forstenried.registers << register_60051551
 lptc = Fabricate(:lptc_mace, signing_user: mace, register: register_60051551, customer: mace, contractor: hell_und_warm)
-#mace.friends << pesc
 
 stcs = Fabricate(:stcs)
 meter = Fabricate(:easymeter_60051619)
@@ -674,7 +649,6 @@ stcs.add_role(:manager, register_60051619)
 stcs.add_role(:member, register_60051619)
 localpool_forstenried.registers << register_60051619
 lptc = Fabricate(:lptc_stcs, signing_user: stcs, register: register_60051619, customer: stcs, contractor: hell_und_warm)
-#stcs.friends << pesc
 
 pafi = Fabricate(:pafi)
 meter = Fabricate(:easymeter_60051556)
@@ -682,7 +656,6 @@ register_60051556 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051556
 lptc = Fabricate(:lptc_pafi, signing_user: pafi, register: register_60051556, customer: pafi, contractor: hell_und_warm)
-#pafi.friends << pesc
 
 #this is the user that lives in S 33 after partick_fierley moved out
 raja = Fabricate(:raja)
@@ -696,7 +669,6 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
 # mafr.add_role(:manager, register_60051617)
 # mafr.add_role(:member, register_60051617)
-# #mafr.friends << pesc
 
 # evga = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051555)
@@ -1471,13 +1443,3 @@ meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER
 sulz_manager.add_role(:manager, register)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
 
-
-
-
-
-
-puts 'send friendships requests for buzzn team'
-like_to_friend = Fabricate(:user)
-buzzn_team.each do |user|
-  FriendshipRequest.create(sender: like_to_friend, receiver: user)
-end

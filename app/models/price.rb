@@ -1,6 +1,4 @@
 class Price < ActiveRecord::Base
-  include Authority::Abilities
-  include Buzzn::GuardedCrud
 
   belongs_to :localpool, class_name: 'Group::Localpool'
 
@@ -32,23 +30,4 @@ class Price < ActiveRecord::Base
   # permissions helpers
 
   scope :restricted, ->(uuids) { where(localpool_id: uuids) }
-
-  def self.readable_by_query(user)
-    price = Price.arel_table
-    localpool = Group::Base.arel_table
-
-    # workaround to produce false always
-    return price[:id].eq(price[:id]).not if user.nil?
-
-    # assume all IDs are globally unique
-    sqls = [
-      User.roles_query(user, admin: nil, manager: price[:localpool_id])
-    ]
-    sqls = sqls.collect{|s| s.project(1).exists}
-    sqls[0]
-  end
-
-  scope :readable_by, -> (user) do
-    where(readable_by_query(user))
-  end
 end

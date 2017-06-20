@@ -6,7 +6,6 @@ Fabricator :organization do
   email       { FFaker::Internet.email }
   description { FFaker::Company.catch_phrase }
   website     { "http://www.#{FFaker::Internet.domain_name}" }
-  created_at  { (rand*10).days.ago }
 end
 
 
@@ -88,9 +87,4 @@ end
 
 Fabricator :dummy, from: :other_organization do
   name Organization::DUMMY
-end
-
-# TODO what is this for ?
-Fabricator :buzzn_reader, from: :metering_point_operator do
-  name Organization::BUZZN_READER
 end

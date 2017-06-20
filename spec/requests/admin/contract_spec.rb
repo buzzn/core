@@ -221,14 +221,26 @@ describe Admin::LocalpoolRoda do
                 "last_name"=>customer.last_name,
                 "gender"=>nil,
                 "phone"=>customer.profile.phone,
-                "email"=>customer.profile.email,
+                "email"=>customer.email,
                 "image"=>customer.profile.image.md.url,
-                "updatable"=>false,
+                "updatable"=>true,
                 "deletable"=>false,
                 "sales_tax_number"=>nil,
                 "tax_rate"=>nil,
                 "tax_number"=>nil,
-                "bank_accounts"=>{ 'array'=>[] }
+                "bank_accounts"=>{
+                  'array'=> customer.bank_accounts.collect do |bank_account|
+                    {
+                      "id"=>bank_account.id,
+                      "type"=>"bank_account",
+                      "holder"=>bank_account.holder,
+                      "bank_name"=>bank_account.bank_name,
+                      "bic"=>bank_account.bic,
+                      "iban"=>bank_account.iban,
+                      "direct_debit"=>bank_account.direct_debit
+                    }
+                  end
+                }
               }
             end
 
@@ -280,13 +292,25 @@ describe Admin::LocalpoolRoda do
                 "email"=>contractor.email,
                 "description"=>contractor.description,
                 "mode"=>"metering_point_operator",
-                "updatable"=>false,
+                "updatable"=>true,
                 "deletable"=>false,
                 "sales_tax_number"=>nil,
                 "tax_rate"=>nil,
                 "tax_number"=>nil,
                 "address"=>nil,
-                "bank_accounts"=>{ 'array'=>[] }
+                "bank_accounts"=>{
+                  'array'=> contractor.bank_accounts.collect do |bank_account|
+                    {
+                      "id"=>bank_account.id,
+                      "type"=>"bank_account",
+                      "holder"=>bank_account.holder,
+                      "bank_name"=>bank_account.bank_name,
+                      "bic"=>bank_account.bic,
+                      "iban"=>bank_account.iban,
+                      "direct_debit"=>bank_account.direct_debit
+                    }
+                  end
+                }
               }
             end
 

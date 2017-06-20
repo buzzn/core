@@ -1,6 +1,5 @@
 class Reading
   include Mongoid::Document
-  include Authority::Abilities
 
   # reason constants
   DEVICE_SETUP = 'device_setup'
@@ -110,15 +109,6 @@ class Reading
     end
     self.where(:reason.nin => reasons)
   }
-
-  # methods from Buzzn:GuardedCrud
-  def self.guarded_retrieve(user, id)
-    result = find(id)
-    unless result.readable_by?(user)
-      raise Buzzn::PermissionDenied.create(Reading, :retrieve, user)
-    end
-    result
-  end
 
   def register
     Register::Base.find(self.register_id) if self.register_id

@@ -1,13 +1,6 @@
 class User < ContractingParty
   rolify
-  include Authority::Abilities
-  include Authority::UserAbilities
-  include PublicActivity::Model
   include Filterable
-  include Buzzn::GuardedCrud
-  # TODO remove this tracker and make it explicit. it already excludes all
-  # three major actions
-  tracked except: [:create, :update, :destroy], owner: Proc.new{ |controller, model| controller && controller.current_user }
 
   devise :database_authenticatable, :async, :registerable,
          :recoverable, :rememberable, :trackable,
@@ -18,11 +11,8 @@ class User < ContractingParty
 
   acts_as_voter
 
-  has_one :dashboard
   has_one :profile, :dependent => :destroy
   accepts_nested_attributes_for :profile
-  has_many :friendships
-  has_many :friends, :through => :friendships, after_add: :create_complement_friendship
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
   has_many :access_tokens, class_name: 'Doorkeeper::AccessToken', dependent: :destroy, :foreign_key => :resource_owner_id
   has_many :notification_unsubscribers
@@ -37,12 +27,10 @@ class User < ContractingParty
   delegate :image, to: :profile
   delegate :phone, to: :profile
 
+  # needed to be uniform with organiztion via contracting-party
   def fax; ''; end
 
   before_destroy :delete_content
-
-  after_create :create_dashboard
-  after_create :create_rails_view_access_token
 
   after_invitation_accepted :invoke_invitation_accepted_activity
 
@@ -147,28 +135,6 @@ class User < ContractingParty
     !!user && ActiveRecord::Base.connection.exec_query(count_roles(user, roles_map).to_sql).first['count'].to_i > 0
   end
 
-  scope :readable_by, -> (user) do
-    if User.admin?(user)
-      User.all
-    else
-      users               = User.arel_table
-      profiles            = Profile.arel_table
-      users_profiles_on   = users.create_on(users[:id].eq(profiles[:user_id]))
-      users_profiles_join = users.create_join(profiles, users_profiles_on)
-
-      if user
-        friendships        = Friendship.arel_table
-        users_friends_on   = friendships.create_on(users[:id].eq(friendships.alias[:user_id]))
-        users_friends_join = users.create_join(friendships.alias, users_friends_on,
-                                               Arel::Nodes::OuterJoin)
-
-        distinct.joins(users_profiles_join, users_friends_join).where("profiles.readable in (?) or users.id = ? or friendships_2.friend_id = ? or 0 < (#{User.count_admins(user).to_sql})", ['world', 'community'], user.id, user.id)
-      else
-        distinct.joins(users_profiles_join).where('profiles.readable = ?', 'world')
-      end
-    end
-  end
-
   scope :exclude_user, lambda {|user|
     # TODO make this just 'user_id != ?' and verify implementation
     where('user_id NOT IN (?)', [user.id])
@@ -193,102 +159,6 @@ class User < ContractingParty
     self.where(email: 'sys@buzzn.net').first
   end
 
-  def friend?(user)
-    self.friendships.where(friend: user).empty? ? false : true
-  end
-
-
-  # TODO why are those not scopes ?
-  def received_friendship_requests
-    FriendshipRequest.where(receiver: self)
-  end
-
-  def sent_friendship_requests
-    FriendshipRequest.where(sender: self)
-  end
-
-  def sent_group_register_requests
-    GroupRegisterRequest.where(user: self).requests
-  end
-
-  def received_group_register_requests
-    GroupRegisterRequest.where(user: self).invitations
-  end
-
-  def received_register_user_requests
-    RegisterUserRequest.where(user: self).invitations
-  end
-
-  def old_badge_notifications
-    BadgeNotification.where(user: self).read
-  end
-
-  def new_badge_notifications
-    BadgeNotification.where(user: self).unread
-  end
-
-
-
-  def editable_registers
-    Register::Base.editable_by_user(self)
-  end
-
-  def editable_meters
-    Meter.editable_by_user(self)
-  end
-
-  def editable_groups
-    Group::Base.editable_by_user(self)
-  end
-
-  def editable_devices
-    Device.editable_by_user(self)
-  end
-
-  def editable_addresses
-    self.editable_registers.compact.uniq{|address| address.longitude && address.latitude}
-  end
-
-  def non_private_editable_registers
-    Register::Base.editable_by_user(self).non_privates
-  end
-
-  def registers_as_member
-    Register::Base.with_role(:member, self)
-  end
-
-  def accessible_registers
-    Register::Base.accessible_by_user(self)
-  end
-
-  def self.unsubscribed_from_notification(key, resource)
-    result = []
-    result << NotificationUnsubscriber.by_resource(resource).by_key(key).collect(&:user)
-    if resource.is_a?(Group) || resource.is_a?(Register::Base)
-      result << NotificationUnsubscriber.within_users(resource.involved).by_key(key).collect(&:user)
-    end
-    return result.flatten.uniq
-  end
-
-  def wants_to_get_notified_by_email?(key, resource)
-    NotificationUnsubscriber.by_user(self).by_resource(resource).by_key(key).empty?
-  end
-
-  def accessible_groups
-    result = []
-    result << Group::Base.editable_by_user(self)
-    result << self.accessible_registers.collect(&:group).compact
-    return result.flatten.uniq
-  end
-
-  def usable_registers
-    result = self.editable_registers
-    self.friends.each do |friend|
-      result << friend.non_private_editable_registers
-    end
-    return result.flatten.uniq.sort! { |a,b| a.name.downcase <=> b.name.downcase }
-  end
-
   def invitable_users(register)
     result = self.friends.collect(&:profile).compact.collect(&:user)
     not_invitable = []
@@ -299,40 +169,6 @@ class User < ContractingParty
     return result - not_invitable
   end
 
-  def accessible_registers_by_address
-    result = []
-    without_address = []
-    all_registers = Register::Base.accessible_by_user(self)
-    all_addresses = all_registers.collect(&:address).compact.uniq{|address| address.longitude && address.latitude}
-    result << {:address => nil, :registers => all_registers} if all_addresses.empty?
-
-    all_addresses.each do |address|
-      registers_for_one_address = []
-      all_registers.each do |register|
-        register_address = register.address
-        if register_address == nil
-          if !without_address.include?(register)
-            without_address << register
-          end
-          next
-        elsif register_address.longitude == address.longitude && register_address.latitude == address.latitude
-          registers_for_one_address << register
-        end
-      end
-      result << {:address => address, :registers => registers_for_one_address}
-    end
-    result << {:address => nil, :registers => without_address} if without_address.any?
-    #coordinates = all_addresses.compact.collect{|address| [address.longitude, address.latitude]}.uniq
-    #coordinates.each do |coordinate|
-    #  addresses = Address.where(longitude: coordinate[0]).where(latitude: coordinate[1])
-    #  result << {:address => addresses.first, :registers => addresses.collect(&:register)}
-    #end
-    #without_address = all_registers.collect{|register| register if register.address.nil?}.compact
-    #result << {:address => nil, :registers => without_address} if without_address.any?
-    return result
-  end
-
-  #defined types: primary, info, success, warning, danger, mint, purple, pink, dark
   def send_notification(type, header, message, duration, url)
     if url
       ActionView::Base.send(:include, Rails.application.routes.url_helpers)
@@ -363,54 +199,17 @@ class User < ContractingParty
 
 
 private
-  def create_complement_friendship(friend)
-    friend.friends << self unless friend.friends.include?(self)
-  end
-
-  def create_dashboard
-    self.dashboard = Dashboard.create(user_id: self.id)
-  end
-
-  def create_rails_view_access_token
-    application = Doorkeeper::Application.where(name: 'Buzzn RailsView')
-    if application.any?
-      Doorkeeper::AccessToken.create(application_id: application.first.id, resource_owner_id: self.id, scopes: 'simple full' )
-    end
-  end
 
   def invoke_invitation_accepted_activity
-    self.create_activity(key: 'user.accept_platform_invitation', owner: self, recipient: self.invited_by)
     self.update_attributes(:data_protection_guidelines => I18n.t('data_protection_guidelines_html'), :terms_of_use => I18n.t('terms_of_use_html'))
   end
 
   def delete_content
-    self.editable_groups.each do |group|
-      if (group.managers.count == 1 && !group.input_registers.collect{|register| self.can_update?(register)}.include?(false))
-        group.destroy
-      end
-    end
-    self.editable_registers.each do |register|
-      if register.managers.count == 1 && (register.users.count <= 1 && (register.users.include?(self) || register.users.empty?))
-        register.destroy
-      end
-    end
-    RegisterUserRequest.where(user: self).each{|request| request.destroy}
-    FriendshipRequest.where(sender: self).each{|request| request.destroy}
-    FriendshipRequest.where(receiver: self).each{|request| request.destroy}
     dummy_user = User.dummy
     Comment.where(user: self).each do |comment|
       comment.user_id = dummy_user.id
       comment.save
     end
-    PublicActivity::Activity.where(owner: self).each do |activity|
-      activity.owner_id = dummy_user.id
-      activity.save
-    end
-    PublicActivity::Activity.where(recipient: self).each do |activity|
-      activity.recipient_id = dummy_user.id
-      activity.save
-    end
-
 
     self.roles.each{|role| role.destroy}
   end

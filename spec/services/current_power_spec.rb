@@ -5,7 +5,7 @@ describe Buzzn::Services::CurrentPower do
     NAME = :dummy
 
     def single_aggregated(resource, mode)
-      unless resource.is_a? Group::BaseResource
+      if resource.is_a? Register::Base
         result = [:single_aggregated, resource, mode]
         def result.expires_at=(*a); end
         def result.value; 0; end
@@ -48,7 +48,8 @@ describe Buzzn::Services::CurrentPower do
   end
 
   entity(:group) do
-    Group::BaseResource.send(:new, Fabricate(:tribe), Fabricate(:admin))
+    Fabricate(:tribe)
+    Display::GroupResource.all(Fabricate(:admin)).first
   end
   entity(:register) { Fabricate(:output_meter).output_register }
   entity(:dummy_register) do

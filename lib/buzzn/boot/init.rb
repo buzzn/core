@@ -1,3 +1,4 @@
+require_relative '../../buzzn'
 require_relative 'reader'
 require_relative 'active_record'
 require_relative 'main_container'

@@ -1,35 +1,37 @@
 # coding: utf-8
 describe Display::GroupResource do
 
-  entity(:user) { Fabricate(:admin) }
+  entity(:admin) { Fabricate(:admin) }
 
   entity!(:tribe) do
     group = Fabricate(:tribe)
     Fabricate(:real_meter).registers.first.update(group: group)
-    user.add_role(:manager, group)
+    admin.add_role(:manager, group)
     group
   end
 
   entity!(:localpool)  do
     group = Fabricate(:localpool)
     Fabricate(:virtual_meter).register.update(group: group)
-    user.add_role(:manager, group)
+    admin.add_role(:manager, group)
     group
   end
 
   entity(:tribe_resource) do
-    Display::GroupResource.all(user).retrieve(tribe.id)
+    Display::GroupResource.all(admin).retrieve(tribe.id)
   end
 
   entity(:localpool_resource) do
-    Display::GroupResource.all(user).retrieve(localpool.id)
+    Display::GroupResource.all(admin).retrieve(localpool.id)
   end
 
   entity(:group) { [tribe, localpool].sample }
 
   entity(:resource) do
-    Display::GroupResource.all(user).retrieve(group.id)
+    Display::GroupResource.all(admin).retrieve(group.id)
   end
+
+  let(:resources) { Display::GroupResource.all(admin) }
 
   let(:attributes) { ['id',
                       'type',
@@ -40,14 +42,14 @@ describe Display::GroupResource do
 
   it 'retrieve' do
     [tribe, localpool].each do |grp|
-      attrs = Display::GroupResource.all(user).retrieve(grp.id).to_h
+      attrs = resources.retrieve(grp.id).to_h
       expect(attrs.keys).to match_array attributes
     end
   end
 
   it 'retrieve - all' do
     expected = {'group_tribe' => tribe.id, 'group_localpool' => localpool.id}
-    result = Display::GroupResource.all(user).collect do |r|
+    result = resources.collect do |r|
       expect(r.class).to eq Display::GroupResource
       [r.type, r.id]
     end
@@ -100,7 +102,7 @@ describe Display::GroupResource do
                         'image'] }
     
     it 'retrieve' do
-      expect(resource.mentors.retrieve(user.id).object).to eq user
+      expect(resource.mentors.retrieve(admin.id).object).to eq admin
     end
 
     it 'retrieve - all' do
@@ -150,7 +152,7 @@ describe Display::GroupResource do
 
             it 'now' do
               result = Display::GroupResource
-                         .all(user)
+                         .all(admin)
                          .retrieve(group.id)
                          .scores(interval: interval, mode: type)
               expect(result.size).to eq 1
@@ -159,7 +161,7 @@ describe Display::GroupResource do
 
             it 'yesterday' do
               result = Display::GroupResource
-                         .all(user)
+                         .all(admin)
                          .retrieve(group.id)
                          .scores(interval: interval,
                                  mode: type,
