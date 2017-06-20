@@ -123,7 +123,15 @@ describe Admin::LocalpoolRoda do
             "updatable"=>true,
             "deletable"=>false
           },
-          "customer_bank_account"=>nil,
+          "customer_bank_account"=>{
+            "id"=>contract.customer_bank_account.id,
+            "type"=>"bank_account",
+            "holder"=>contract.customer_bank_account.holder,
+            "bank_name"=>contract.customer_bank_account.bank_name,
+            "bic"=>contract.customer_bank_account.bic,
+            "iban"=>contract.customer_bank_account.iban,
+            "direct_debit"=>contract.customer_bank_account.direct_debit
+          },
           "contractor_bank_account"=>{
             "id"=>contract.contractor_bank_account.id,
             "type"=>"bank_account",

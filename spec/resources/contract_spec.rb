@@ -41,11 +41,11 @@ describe Contract::BaseResource do
     expect(result).to match_array expected
   end
 
-  it 'nested entities' do
-    all.each do |contract|
-      obj = Contract::BaseResource.retrieve(user, contract.id)
-      [:customer, :customer_bank_account, :contractor,
-       :contractor_bank_account, :signing_user].each do |name|
+  [:customer, :customer_bank_account, :contractor,
+   :contractor_bank_account, :signing_user].each do |name|
+    it "nested #{name}" do
+      all.each do |contract|
+        obj = Contract::BaseResource.retrieve(user, contract.id)
         expect(obj.send(name)).to be_an Buzzn::Resource::Base
         expect(obj.send("#{name}!")).to be_an Buzzn::Resource::Base
       end
