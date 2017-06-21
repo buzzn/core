@@ -1,4 +1,7 @@
-ActiveAdmin.register User do
+ActiveAdmin.register ContractingParty::User do
+
+  menu :parent => "ContractingParty", :label => "User"
+
   permit_params :email, :password, :password_confirmation
 
   index do
@@ -19,8 +22,7 @@ ActiveAdmin.register User do
         s.join(', ')
       end
     end
-
-
+    
     column :current_sign_in_at
     column :sign_in_count
     column :created_at

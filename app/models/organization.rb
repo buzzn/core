@@ -19,8 +19,6 @@ class Organization < ContractingParty
   has_one :address, as: :addressable, dependent: :destroy
   accepts_nested_attributes_for :address, reject_if: :all_blank
 
-  has_one :iln
-
   has_many :energy_classifications
 
 
