@@ -71,7 +71,7 @@ gem 'fog'
 gem 'aws-sdk'
 gem 'aws-sdk-rails'
 gem 'whenever', require: false
-gem 'clockwork', github: 'rykian/clockwork'
+gem 'clockwork', github: 'rykian/clockwork', tag: 'v2.0.2'
 gem 'sidekiq'
 gem 'faraday'
 gem 'attribute_normalizer'
