@@ -15,7 +15,6 @@ RUN apt-get update && \
   build-essential \
   vim \
   imagemagick \
-  cron \
   nodejs
 
 # Configure the main working directory. This is the base

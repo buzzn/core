@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/rykian/clockwork.git
+  revision: 6167bd579f02596c8490d11a295f05bb2d945ca5
+  specs:
+    clockwork (2.0.2)
+      activesupport
+      tzinfo
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -741,6 +749,7 @@ DEPENDENCIES
   bson
   byebug
   carrierwave
+  clockwork!
   coffee-rails
   database_cleaner
   devise
