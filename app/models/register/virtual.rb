@@ -23,16 +23,6 @@ module Register
       Register::Base.where(id: Register::FormulaPart.where(register_id: self.id).select(:operand_id))
     end
 
-    def smart?
-      self.formula_parts.any? do |formula_part|
-        formula_part.operand.smart?
-      end
-    end
-
-    def smart=(*args)
-      raise 'not available'
-    end
-
     def formula
       result = ""
       self.formula_parts.each do |formula_part|
@@ -42,15 +32,12 @@ module Register
     end
 
     def get_operands_from_formula
-      #TODO empty array possible, i.e. remove the 'unless'
-      unless self.formula_parts.empty?
-        self.formula_parts.collect(&:operand)
-      end
+      self.formula_parts.collect(&:operand)
     end
 
     def data_source
       # give preference to discovergy
-      if self.discovergy?
+      if self.brokers.detect { |b| b.is_a? Broker::Discovergy }
         Buzzn::Discovergy::DataSource::NAME
       else
         Buzzn::Virtual::DataSource::NAME

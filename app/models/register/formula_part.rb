@@ -10,10 +10,5 @@ module Register
     validates :operator, inclusion: { in: ['-', '+'] }
     validates :operand, presence: true
     validates :register, presence: true
-
-    # for railsview
-    def class_name
-      self.class.name.downcase.sub!("::", "_")
-    end
   end
 end

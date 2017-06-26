@@ -1,6 +1,4 @@
 class Billing < ActiveRecord::Base
-  include Authority::Abilities
-  include Buzzn::GuardedCrud
 
   OPEN = 'open'
   CALCULATED = 'calculated'
@@ -34,30 +32,6 @@ class Billing < ActiveRecord::Base
   validates :localpool_power_taker_contract_id, presence: true
 
   validate :validate_invariants
-
-  def self.readable_by_query(user)
-    billing = Billing.arel_table
-    billing_cycle = BillingCycle.arel_table
-    contract = Contract::Base.arel_table
-
-    # workaround to produce false always
-    return billing[:id].eq(billing[:id]).not if user.nil?
-
-    # assume all IDs are globally unique
-    sqls = [
-      billing_cycle.where(BillingCycle.readable_by_query(user)
-                      .and(billing_cycle[:id].eq(billing[:billing_cycle_id]))),
-      contract.where(Contract::Base.readable_by_query(user)
-                      .and(contract[:id].eq(billing[:localpool_power_taker_contract_id]))),
-      User.roles_query(user, admin: nil)
-    ]
-    sqls = sqls.collect{|s| s.project(1).exists}
-    sqls[0].or(sqls[1]).or(sqls[2])
-  end
-
-  scope :readable_by, -> (user) do
-    where(readable_by_query(user))
-  end
 
   def validate_invariants
     # check lifecycle changes

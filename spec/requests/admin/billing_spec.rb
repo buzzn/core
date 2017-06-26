@@ -10,53 +10,38 @@ describe Admin::LocalpoolRoda do
     entity(:admin) { Fabricate(:admin_token) }
     entity(:group) { Fabricate(:localpool, registers: [Fabricate(:input_meter).input_register, Fabricate(:input_meter).input_register]) }
     entity(:billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
-    entity!(:billing) { Fabricate(:billing,
-                                  billing_cycle: billing_cycle,
-                                  localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
-                                                                            register: group.registers.by_label(Register::Base::CONSUMPTION).first)) }
+    entity!(:billing) do
+      Fabricate(:billing,
+                billing_cycle: billing_cycle,
+                localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
+                                                          register: group.registers.by_label(Register::Base::CONSUMPTION).first))
+    end
     entity!(:other_billing) { Fabricate(:billing,
                                         billing_cycle: billing_cycle,
                                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                                                   register: group.registers.by_label(Register::Base::CONSUMPTION)[1])) }
 
-    let(:billings_json) do
-      [
-        {
-          "id"=>other_billing.id,
-          "type"=>"billing",
-          "start_reading_id"=>other_billing.start_reading_id,
-          "end_reading_id"=>other_billing.end_reading_id,
-          "device_change_reading_1_id"=>nil,
-          "device_change_reading_2_id"=>nil,
-          "total_energy_consumption_kWh"=>1000,
-          "total_price_cents"=>30000,
-          "prepayments_cents"=>29000,
-          "receivables_cents"=>1000,
-          "invoice_number"=>other_billing.invoice_number,
-          "status"=>"open",
-          "updatable"=>true,
-          "deletable"=>true
-        },
-        {
-          "id"=>billing.id,
-          "type"=>"billing",
-          "start_reading_id"=>billing.start_reading_id,
-          "end_reading_id"=>billing.end_reading_id,
-          "device_change_reading_1_id"=>nil,
-          "device_change_reading_2_id"=>nil,
-          "total_energy_consumption_kWh"=>1000,
-          "total_price_cents"=>30000,
-          "prepayments_cents"=>29000,
-          "receivables_cents"=>1000,
-          "invoice_number"=>billing.invoice_number,
-          "status"=>"open",
-          "updatable"=>true,
-          "deletable"=>true
-        }
-      ] 
-    end
-
     context 'GET' do
+      let(:billings_json) do
+        Billing.all.reload.collect do |billing|
+          {
+            "id"=>billing.id,
+            "type"=>"billing",
+            "start_reading_id"=>billing.start_reading_id,
+            "end_reading_id"=>billing.end_reading_id,
+            "device_change_reading_1_id"=>nil,
+            "device_change_reading_2_id"=>nil,
+            "total_energy_consumption_kWh"=>1000,
+            "total_price_cents"=>30000,
+            "prepayments_cents"=>29000,
+            "receivables_cents"=>1000,
+            "invoice_number"=>billing.invoice_number,
+            "status"=>"open",
+            "updatable"=>true,
+            "deletable"=>true
+          }
+        end
+      end
 
       let(:not_found_json) do
         {
@@ -107,6 +92,27 @@ describe Admin::LocalpoolRoda do
         }
       end
 
+      let(:billings_json) do
+        Billing.all.reload.collect do |billing|
+          {
+            "id"=>billing.id,
+            "type"=>"billing",
+            "start_reading_id"=>billing.start_reading_id,
+            "end_reading_id"=>billing.end_reading_id,
+            "device_change_reading_1_id"=>nil,
+            "device_change_reading_2_id"=>nil,
+            "total_energy_consumption_kWh"=>1000,
+            "total_price_cents"=>30000,
+            "prepayments_cents"=>29000,
+            "receivables_cents"=>1000,
+            "invoice_number"=>billing.invoice_number,
+            "status"=>"open",
+            "updatable"=>true,
+            "deletable"=>true
+          }
+        end
+      end
+
       it '403' do
         # TODO needs read perms on billing-cycles but no create perms on billings
       end
@@ -124,20 +130,16 @@ describe Admin::LocalpoolRoda do
       end
 
       it '201 all' do
-        # overwrite BillingCycle.create_regular_billings
-        BillingCycleResource.class_eval do
-          def create_regular_billings(params = {})
-            to_collection(Billing.all)
-          end
+        begin
+          BillingCycle.billings(Billing.all)
+
+          POST "/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/regular", admin, accounting_year: 2016
+          expect(response).to have_http_status(201)
+          expect(sort(json['array']).to_yaml).to eq sort(billings_json).to_yaml
+
+        ensure
+          BillingCycle.billings(nil)
         end
-
-        POST "/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/regular", admin, accounting_year: 2016
-        expect(response).to have_http_status(201)
-        expect(sort(json['array']).to_yaml).to eq sort(billings_json).to_yaml
-
-        # reload BillingCycle class definition to undo the method overwriting
-        Object.send(:remove_const, :BillingCycleResource)
-        load 'lib/buzzn/resources/billing_cycle_resource.rb'
       end
     end
 

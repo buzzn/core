@@ -3,9 +3,7 @@ module Meter
   class Base < ActiveRecord::Base
     self.table_name = :meters
     resourcify
-    include Authority::Abilities
     include Filterable
-    include Buzzn::GuardedCrud
 
     # VoltageLevel
     LOW_LEVEL = 'low_level'
@@ -128,30 +126,9 @@ module Meter
       Meter::Equipment.where(meter_id: self.id).delete_all
     end
 
+    scope :reals,      -> {where(type: Real)}
+    scope :virtuals,   -> {where(type: Virtual)}    
     scope :restricted, ->(uuids) { joins(registers: :contracts).where('contracts.id': uuids) }
-
-    scope :readable_by, ->(user, admin = true) do
-      if user.nil?
-        where('1=0')
-      else
-        # admin or manager query
-        meter            = Meter::Base.arel_table
-        register         = Register::Base.arel_table
-        users_roles      = Arel::Table.new(:users_roles)
-        roles = { manager: register[:id] }
-        roles[:admin] = nil if admin
-        admin_or_manager = User.roles_query(user, roles)
-
-        # with AR5 you can use left_outer_joins directly
-        # `left_outer_joins(:registers)` instead of this register_on and register_join
-        register_on   = meter.create_on(meter[:id].eq(register[:meter_id]))
-        register_join = meter.create_join(register, register_on, Arel::Nodes::OuterJoin)
-
-        # need left outer join to get all meters without register as well
-        # sql fragment 'exists select 1 where .....'
-        joins(register_join).where(admin_or_manager.project(1).exists).distinct
-      end
-    end
 
     def name
       "#{manufacturer_name} #{manufacturer_product_serialnumber}"

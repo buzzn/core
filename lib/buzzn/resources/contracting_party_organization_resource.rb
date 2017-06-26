@@ -1,6 +1,5 @@
 require_relative 'organization_resource'
 class ContractingPartyOrganizationResource < OrganizationResource
-  include BankAccountResource::Create
 
   attributes  :sales_tax_number,
               :tax_rate,

@@ -24,6 +24,7 @@ module Contract
     validates :end_date, presence: false
     # assume all money-data is without taxes!
     validates :price_cents, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+    # TODO is cycle a required attribute ?
     validates :cycle, presence: true, inclusion: {in: all_cycles}
     validates :source, presence: true, inclusion: {in: all_sources}
 
@@ -53,13 +54,7 @@ module Contract
       self.where("source in (?)", sources)
     }
 
-    # TODO cycle enum ? is cycle a required attribute ?
-    # TODO source enum ?
-
     scope :current, ->(now = Time.current) {where("begin_date < ? AND (end_date > ? OR end_date IS NULL)", now, now)}
 
-    def self.readable_by(*args)
-      where(Contract::Base.readable_by(*args).where("payments.contract_id = contracts.id").select(1).limit(1).exists)
-    end
   end
 end

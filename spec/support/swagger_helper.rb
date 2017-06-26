@@ -8,7 +8,7 @@ module SwaggerHelper
       paths.instance_variable_set(:@paths, sorted)
       file = swagger.basePath.sub(/.api/, 'lib/buzzn/roda') + '/swagger.json'
       File.write(file, swagger.to_json)
-      puts swagger.to_yaml
+      puts "dumped swagger json #{file}"
     end
   end
 
@@ -61,6 +61,7 @@ module SwaggerHelper
         sparam.format = type[1] if type[1]
       end
       ops.add_parameter(sparam)
+      ops.consumes = ['application/x-www-form-urlencoded']
     end
     expect(expected).to match_array json['errors']
   end
@@ -110,7 +111,7 @@ module SwaggerHelper
           name = self.to_s.sub(/.*:/, '')
           s.info.description = "Swagger for #{name} Internal API"
           s.info.title = "#{name} API"
-          s.info.version = nil
+          s.info.version = '1'
           s.basePath = "/api/#{name.downcase}"
           block.call(s) if block
           s
@@ -135,6 +136,25 @@ module SwaggerHelper
           ops.add_parameter(sparam)
         end
         paths.add_path(path.sub(/_[1-9]/, '').gsub('.', '_'), spath)
+        responses = Swagger::Data::Responses.new
+        resp = Swagger::Data::Response.new
+        case method
+        when :get
+          resp.description = 'success'
+          responses.add_response(200, resp)
+        when :post
+          resp.description = 'created'
+          responses.add_response(201, resp)
+        when :patch
+          resp.description = 'patched'
+          responses.add_response(200, resp)
+        when :delete
+          resp.description = 'deleted'
+          responses.add_response(204, resp)
+        else
+          raise "unknown method #{method}"
+        end
+        ops.responses = responses
         self.current = ops
         real_path = eval "\"#{swagger.basePath}#{path.gsub(/\{/, '#{')}\""
         send(method.to_s.upcase, real_path, admin)

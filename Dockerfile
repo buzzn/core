@@ -15,7 +15,6 @@ RUN apt-get update && \
   build-essential \
   vim \
   imagemagick \
-  cron \
   nodejs
 
 # Configure the main working directory. This is the base
@@ -50,5 +49,5 @@ EXPOSE 3000
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
 
 
-HEALTHCHECK --interval=10s --timeout=3s \
+HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:3000/api/display/groups || exit 1

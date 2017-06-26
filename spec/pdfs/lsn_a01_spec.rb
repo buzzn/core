@@ -10,7 +10,7 @@ describe Buzzn::Pdfs::LSN_A01 do
     contract.customer_bank_account = Fabricate(:bank_account_mustermann)
     contract.contractor = contractor
     contract.contractor.update(phone: '030-1237089432', fax: '030-1237089433')
-    Fabricate(:justus).add_role(:manager, contract.contractor)
+    Fabricate(:justus).add_role(:contact, contract.contractor)
     contract.contractor.address = Fabricate(:address)
     contract.customer.address = Fabricate(:address)
     contract.register = Fabricate(:easymeter_60404849).registers.first

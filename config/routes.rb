@@ -7,12 +7,10 @@ Buzzn::Application.routes.draw do
 
   ActiveAdmin.routes(self)
 
-  mount API::Base, at: "/"
-
-  require 'sidekiq/web'
-  authenticate :user, lambda { |user| user.has_role?(:admin) } do
-    mount Sidekiq::Web => '/sidekiq'
-  end
+  #require 'sidekiq/web'
+  #authenticate :user, lambda { |user| user.has_role?(:admin) } do
+  #  mount Sidekiq::Web => '/sidekiq'
+  #end
 
   devise_for :users, controllers: {
     registrations:      'users/registrations',

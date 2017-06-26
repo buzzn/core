@@ -198,7 +198,7 @@ describe Buzzn::ScoreCalculator do
         subject.calculate_sufficiency_scores
         expect(Score.count).to eq 3
         Score.all.each do |score|
-          expect(score.value).to eq 0.0
+          expect(score.value).to eq 5.0
           expect(score.mode).to eq 'sufficiency'
         end
       end

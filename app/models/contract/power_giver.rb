@@ -14,8 +14,6 @@ module Contract
 
     def validate_invariants
       super
-      if register
-      end
       errors.add(:confirm_pricing_model, MUST_BE_TRUE) unless confirm_pricing_model
     end
   end

@@ -1,13 +1,8 @@
+# coding: utf-8
 require 'file_size_validator'
-require 'buzzn/guarded_crud'
 class Device < ActiveRecord::Base
   resourcify
-  include Authority::Abilities
   include Filterable
-  include PublicActivity::Model
-  include Buzzn::GuardedCrud
-  #tracked owner: Proc.new{ |controller, model| controller && controller.current_user }
-  #tracked recipient: Proc.new{ |controller, model| controller && model }
 
   BIO_MASS = 'bio_mass'
   BIO_GAS = 'bio_gas'
@@ -40,46 +35,6 @@ class Device < ActiveRecord::Base
     :maximum => 2.megabytes.to_i
   }
   validates :primary_energy, inclusion: {in: self.all_primary_energies}, if: 'primary_energy.present?'
-
-  scope :editable_by_user, lambda {|user|
-    self.with_role(:manager, user)
-  }
-
-  def self.outer_join
-    'LEFT OUTER JOIN registers ON registers.id = devices.register_id'
-  end
-
-  def self.outer_join_where
-    "registers.id = devices.register_id AND " +
-      "devices.mode = 'out' AND " +
-      "registers.group_id IS NOT NULL"
-  end
-
-  scope :readable_by, -> (user) do
-    # TODO user AREL instead of activerecord DSL
-    #      and EXISTS SELECT 1 WHERE ...
-    if user
-      joins("LEFT OUTER JOIN roles ON roles.resource_id = devices.id OR roles.resource_id IS NULL")
-        .joins("LEFT OUTER JOIN users_roles ON users_roles.role_id = roles.id")
-        .joins(outer_join)
-        .where("#{outer_join_where} OR " +
-               "(users_roles.user_id = ? OR users_roles.user_id in (?)) AND " +
-               # manager role
-               "(roles.resource_id = devices.id AND " +
-               "roles.resource_type = '#{Device}' AND " +
-               "roles.name = 'manager' OR " +
-               # or admin role (with out associated resource)
-               "roles.name = 'admin' AND roles.resource_id IS NULL)", user.id, user.friends.select('id'))
-    else
-      joins(outer_join).where(outer_join_where)
-    end
-  end
-
-  def self.accessible_by_user(user)
-    device  = Device.arel_table
-    manager = User.roles_query(user, manager: device[:id])
-    where(manager.project(1).exists)
-  end
 
   def self.search_attributes
     [:manufacturer_name, :manufacturer_product_name, :mode, :category,

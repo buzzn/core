@@ -33,14 +33,6 @@ describe Meter::Real do
     expect(meters.size).to eq Meter::Real.count
   end
 
-  it 'is restricting readable_by' do
-    expect(Meter::Real.all.readable_by(nil)).to eq []
-    expect(Meter::Real.all.readable_by(user)).to eq []
-    expect(Meter::Real.all.readable_by(manager)).to eq [meter]
-    count = Meter::Base.count
-    expect(Meter::Real.all.readable_by(admin).count).to eq count
-  end
-
   it 'deletes a single meter including its register' do
     rcount = Register::Base.count
     count = Meter::Base.count

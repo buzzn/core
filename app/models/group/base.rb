@@ -1,32 +1,21 @@
-require 'buzzn/guarded_crud'
 require 'buzzn/score_calculator'
-require 'buzzn/managed_roles'
 
 module Group
   class Base < ActiveRecord::Base
     self.table_name = :groups
     resourcify
     acts_as_commentable
-    include Authority::Abilities
-    include CalcVirtualRegister
-    include ChartFunctions
     include Filterable
-    include Buzzn::ManagerRole
-    include Buzzn::GuardedCrud
 
     HYBRID = 'hybrid'
     CHP = 'chp'
     PV = 'pv'
 
     before_save do
-      self.slug = self.name.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+      self.slug = Buzzn::Slug.new(self.name)
     end
 
     before_destroy :destroy_content
-
-    include PublicActivity::Model
-    tracked  owner: Proc.new{ |controller, model| controller && controller.current_user }
-    tracked  recipient: Proc.new{ |controller, model| controller && model }
 
     def meters
       Meter::Base.where(
@@ -38,17 +27,17 @@ module Group
 
     validates :name, presence: true, uniqueness: true, length: { in: 4..40 }
 
-    normalize_attribute :name, with: [:strip]
-
     mount_uploader :logo, PictureUploader
     #mount_uploader :image, PictureUploader
 
-    has_one  :area
     has_many :registers, class_name: Register::Base, foreign_key: :group_id
 
     has_many :brokers, class_name: Broker::Base, as: :resource, :dependent => :destroy
 
-    has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
+    #has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
+    def managers
+      User.users_of(self, :manager)
+    end
 
     has_many :scores, as: :scoreable
 
@@ -58,67 +47,6 @@ module Group
 
     scope :restricted, ->(uuids) { where(id: uuids) }
 
-    scope :editable_by_user, lambda {|user|
-      self.with_role(:manager, user)
-    }
-
-    scope :members_of_group, ->(group) do
-      mp = Register::Base.arel_table
-      roles = Role.arel_table
-      users_roles = Arel::Table.new(:users_roles)
-      users = User.arel_table
-
-      users_on = users.create_on(users_roles[:user_id].eq(users[:id]))
-      users_join = users.create_join(users_roles, users_on)
-
-      users_roles_on = users_roles.create_on(roles[:id].eq(users_roles[:role_id]))
-      users_roles_join = users_roles.create_join(roles, users_roles_on)
-
-      roles_register_on = roles.create_on(roles[:resource_id].eq(mp[:id]).and(roles[:name].eq(:member)))
-      roles_register_join = roles.create_join(mp, roles_register_on)
-
-
-      User.distinct
-        .joins(users_join, users_roles_join, roles_register_join)
-        .where('registers.group_id': group)
-    end
-
-    # keeps this notation so it can be chained with Arel table where clauses
-    scope :readable_by_world, -> { where("groups.readable = 'world'") }
-
-    scope :readable_by, ->(user) do
-      if user.nil?
-        readable_by_world
-      else
-        # world or community query
-        group = Group::Base.arel_table
-        world_or_community = group[:readable].in(['world','community'])
-
-        # admin or manager or member query
-        register = Register::Base.arel_table
-        admin_or_manager_or_member = User.roles_query(user, manager: group[:id], member: register.alias[:id], admin: nil).project(1).exists
-
-        # friends of manager and member of register
-        register_friends = Friendship.friend_of_roles_query(user, register.alias, :member, :manager).and(group[:readable].eq('friends'))
-
-        # friends of manager of group
-        manager_friends = Friendship.friend_of_roles_query(user, group, :manager).and(group[:readable].eq('friends'))
-
-        sqls = [
-          world_or_community,
-          admin_or_manager_or_member,
-          register_friends,
-          manager_friends
-        ]
-
-        # with AR5 you can use left_outer_joins directly
-        # `left_outer_joins(:registers)` instead of
-        # this register_on and register_join
-        register_on   = register.create_on(group[:id].eq(register.alias[:group_id]))
-        register_join = register.create_join(register.alias, register_on, Arel::Nodes::OuterJoin)
-        joins(register_join).where('(' + sqls.map(&:to_sql).join(' OR ') + ')').distinct
-      end
-    end
 
     def self.search_attributes
       [:name, :description]
@@ -126,17 +54,6 @@ module Group
 
     def self.filter(search)
       do_filter(search, *search_attributes)
-    end
-
-    def self.accessible_by_user(user)
-      register       = Register::Base.arel_table
-      group          = Group::Base.arel_table
-      users          = User.roles_query(user, manager: [group[:id], register[:id]], member: register[:id])
-
-      # need to make join manually to get the reference name right
-      register_on   = group.create_on(group[:id].eq(register[:group_id]))
-      register_join = group.create_join(register, register_on)
-      joins(register_join).where(users.project(1).exists)
     end
 
     def register_users_query(type = nil)
@@ -162,20 +79,6 @@ module Group
 
     def energy_consumers
       User.where(register_users_query(Register::Input).project(1).exists.to_sql)
-    end
-
-    def member?(register)
-      self.registers.include?(register) ? true : false
-    end
-
-    def involved
-      managers = User.roles_query(nil, manager: self).project(1).exists.to_sql
-      register_users = register_users_query.project(1).exists.to_sql
-      User.where([managers, register_users].join(' OR '))
-    end
-
-    def members
-      self.class.members_of_group(self)
     end
 
     def input_registers

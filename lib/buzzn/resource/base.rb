@@ -49,67 +49,38 @@ module Buzzn::Resource
       end
       alias :attributes :attribute
 
-      def has_many(method, *args)
+      def has_many(method, clazz = nil)
         define_method method do
-          if permissions
-            perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
-            all(perms, object.send(method))
-          else
-            # TOOO remove deprecated
-            Buzzn::Resource::Collection.new(object.send(method)
-                                             .readable_by(current_user),
-                                            self.class.method(:to_resource),
-                                            current_user, [], permissions)
-          end
+          perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
+          all(perms, object.send(method), clazz)
         end
       end
 
-      def has_one(method, *args)
+      def has_one(method, clazz = nil)
         # deliver nested resource if permissions allow otherwise
         # raise PermissionsDenied or RecordNotFound when not found
         define_method "#{method}!" do
-          if permissions
-            perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
-            if allowed?(perms.retrieve)
-              if result = object.send(method)
-                self.class.to_resource(current_user, current_roles, perms,
-                                       result)
-              else
-                raise Buzzn::RecordNotFound.new(self.class, method, current_user)
-              end
+          perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
+          if allowed?(perms.retrieve)
+            if result = object.send(method)
+              self.class.to_resource(current_user, current_roles, perms,
+                                     result, clazz)
             else
-              clazz = self.class.send(:find_resource_class,
-                                      object.send(method).class)
-              raise Buzzn::PermissionDenied.new(clazz, :retrieve, current_user)
+              raise Buzzn::RecordNotFound.new(self.class, method, current_user)
             end
           else
-            # TODO remove this deprecated clause
-            result = object.send(method)
-            if result.nil?
-              raise Buzzn::RecordNotFound.new(self.class, method, current_user)
-            elsif result.readable_by?(current_user)
-              self.class.to_resource(current_user, nil, nil, result)
-            else
-              clazz = self.class.send(:find_resource_class, result.class)
-              raise Buzzn::PermissionDenied.create(clazz, :retrieve, current_user)
-            end
+            clazz = self.class.send(:find_resource_class,
+                                    object.send(method).class)
+            raise Buzzn::PermissionDenied.new(clazz, :retrieve, current_user)
           end
         end
 
         # deliver result if permissions allow otherwise nil
         define_method method do
-          if permissions
-            perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
-            if allowed?(perms.retrieve) && (result = object.send(method))
-              self.class.to_resource(current_user, current_roles, perms,
-                                     result)
-            end
-          else
-            # TODO remove deprecated
-            result = object.send(method)
-            if result && result.readable_by?(current_user)
-              self.class.to_resource(current_user, nil, nil, result)
-            end
+          perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
+          if allowed?(perms.retrieve) && (result = object.send(method))
+            self.class.to_resource(current_user, current_roles, perms,
+                                   result)
           end
         end
       end
@@ -133,31 +104,6 @@ module Buzzn::Resource
         @abstract == true
       end
 
-      # the 'R' from the crud API
-
-      def retrieve(user, id)
-        if abstract?
-          result = get(user, id)
-          perms = find_resource_class(result.class).send :permissions
-        else
-          perms = permissions
-        end
-        if perms
-          if roles = allowed_roles(user, perms.retrieve, id)
-            result ||= get(user, id)
-            to_resource(user, roles, perms, result,
-                        abstract? ? nil : self)
-          else
-            result ||= (get(user, id) rescue self)
-            raise Buzzn::PermissionDenied.new(result, :retrieve, user)
-          end
-        else
-          # TODO remove legacy
-          instance = model.guarded_retrieve(user, id)
-          to_resource(user, nil, nil, instance, @abstract ? nil : self)
-        end
-      end
-
       def all_allowed(user, roles, perms, enum)
         if user.nil?
           if allowed?([:anonymous], perms)
@@ -172,29 +118,16 @@ module Buzzn::Resource
         end
       end
 
-      def all(user, filter = nil)
-        if permissions
-          raise 'filter not allowed' if filter
-          enum = all_allowed(user, [], permissions.retrieve, model.all)
-          unbound = [:anonymous]
-          unbound += user.unbound_rolenames if user
-          Buzzn::Resource::Collection.new(enum,
-                                          method(:to_resource),
-                                          user,
-                                          unbound,
-                                          permissions,
-                                          self)
-        else
-          # TODO remove deprecated code
-          result = model.readable_by(user).filter(filter)
-          {
-            'array' => result.collect do |r|
-              # highly inefficient but needed to pass in permissions
-              # is deprecated any ways
-              find_resource_class(r.class).retrieve(user, r.id)
-            end
-          }
-        end
+      def all(user, clazz = nil)
+        enum = all_allowed(user, [], permissions.retrieve, model.all)
+        unbound = [:anonymous]
+        unbound += user.unbound_rolenames if user
+        Buzzn::Resource::Collection.new(enum,
+                                        (clazz || self).method(:to_resource),
+                                        user,
+                                        unbound,
+                                        permissions,
+                                        clazz || self)
       end
 
       def to_resource(user, roles, permissions, instance, clazz = nil)
@@ -221,21 +154,9 @@ module Buzzn::Resource
         (roles & perms).size > 0
       end
 
-      def get(user, id)
-        instance = model.where(id: id).first
-        if instance.nil?
-          # use heavily patch find-method with friendly/slugged id 
-          instance = model.find(id) rescue nil
-          if instance.nil?
-            raise Buzzn::RecordNotFound.new(self, id, user)
-          end
-        end
-        instance
-      end
-
       def permissions
         if @permissions.nil?
-          @permissions = "#{model}Permissions".safe_constantize || false
+          @permissions = "#{self.to_s.sub(/Resource$/, '')}Permissions".safe_constantize || NoPermissions
         end
         @permissions
       end
@@ -273,7 +194,7 @@ module Buzzn::Resource
       @object = resource
     end
 
-    def to_collection(enum, perms = nil, clazz = nil)
+    def to_collection(enum, perms, clazz = nil)
       Buzzn::Resource::Collection.new(enum,
                                       (clazz || self.class).method(:to_resource),
                                       current_user,
@@ -282,8 +203,9 @@ module Buzzn::Resource
                                       clazz)
     end
 
-    def to_resource(instance, perms)
-      self.class.to_resource(current_user, current_roles, perms, instance)
+    def to_resource(instance, perms, clazz = nil)
+      self.class.to_resource(current_user, current_roles,
+                                        perms, instance, clazz)
     end
 
     def allowed?(perms, roles = current_roles)

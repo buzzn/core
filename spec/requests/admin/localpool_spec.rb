@@ -55,7 +55,7 @@ describe Admin::LocalpoolRoda do
         "type"=>"group_localpool",
         "name"=>localpool.name,
         "description"=>localpool.description,
-        "readable"=>"world",
+        "slug"=>localpool.slug,
         "updatable"=>true,
         "deletable"=>true
       }
@@ -67,8 +67,8 @@ describe Admin::LocalpoolRoda do
       "id"=>localpool_no_contracts.id,
       "type"=>"group_localpool",
       "name"=>localpool_no_contracts.name,
+      "slug"=>localpool_no_contracts.slug,
       "description"=>localpool_no_contracts.description,
-      "readable"=>localpool_no_contracts.readable,
       "updatable"=>true,
       "deletable"=>true,
       "meters"=>{
@@ -251,7 +251,7 @@ describe Admin::LocalpoolRoda do
         {
           "errors" => [
             {
-              "detail"=>"Group::LocalpoolResource: localpool_processing_contract not found by User: #{admin.resource_owner_id}" }
+              "detail"=>"Admin::LocalpoolResource: localpool_processing_contract not found by User: #{admin.resource_owner_id}" }
           ]
         }
       end
@@ -375,7 +375,7 @@ describe Admin::LocalpoolRoda do
         {
           "errors" => [
             {
-              "detail"=>"Group::LocalpoolResource: metering_point_operator_contract not found by User: #{admin.resource_owner_id}" }
+              "detail"=>"Admin::LocalpoolResource: metering_point_operator_contract not found by User: #{admin.resource_owner_id}" }
           ]
         }
       end
@@ -502,12 +502,6 @@ describe Admin::LocalpoolRoda do
   context 'managers' do
 
     context 'GET' do
-      xit '403' do
-        localpool.update(readable: :member)
-        GET "/#{localpool.id}/managers", user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
-      end
 
       let(:managers_json) do
         [

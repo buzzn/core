@@ -16,9 +16,9 @@ module Register
     end
 
     def data_source
-      if self.discovergy?
+      if self.brokers.detect { |b| b.is_a? Broker::Discovergy }
         Buzzn::Discovergy::DataSource::NAME
-      elsif self.mysmartgrid?
+      elsif self.brokers.detect { |b| b.is_a? Broker::MySmartGrid }
         Buzzn::MySmartGrid::DataSource::NAME
       else
         Buzzn::StandardProfile::DataSource::NAME

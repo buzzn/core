@@ -1,5 +1,4 @@
 class Score < ActiveRecord::Base
-  include Authority::Abilities
   belongs_to :scoreable, polymorphic: true
 
   scope :sufficiencies,  -> { where(mode: 'sufficiency') }
@@ -23,17 +22,6 @@ class Score < ActiveRecord::Base
   scope :containing, lambda {|time|
     self.where(["interval_beginning <= ?", time]).where(["interval_end >= ?", time])
   }
-
-  scope :readable_by, ->(user) do
-    # TODO remove hack with correcting sql, i.e. replace Group::Base.readable_by(user)
-    # with Group::Base.readable_by_query(user)
-    # i.e. with Register
-    sqls = [
-      Group::Base.readable_by(user).where("groups.id=scores.scoreable_id").project(1).exists.to_sql.sub('"groups".*,', ''),
-      Register::Base.readable_by(user).where("registers.id=scores.scoreable_id").project(1).exists.to_sql.sub('"registers".*,', '')
-    ]
-    where(sqls.join(' OR '))
-  end
 
   validate :validate_invariants
 

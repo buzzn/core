@@ -17,7 +17,7 @@ module Display
       when Register::Virtual
         'register_virtual'
       else
-        raise 'unknown group type'
+        raise "unknown group type: #{object.class}"
       end
     end
     

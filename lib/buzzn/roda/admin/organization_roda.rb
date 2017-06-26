@@ -1,4 +1,5 @@
 require_relative '../admin_roda'
+require_relative 'bank_account_roda'
 module Admin
   class OrganizationRoda < BaseRoda
     plugin :shared_vars

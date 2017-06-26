@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170615163547) do
+ActiveRecord::Schema.define(version: 20170622163547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,22 +72,6 @@ ActiveRecord::Schema.define(version: 20170615163547) do
   add_index "addresses", ["addressable_id", "addressable_type"], name: "index_addressable", using: :btree
   add_index "addresses", ["readable"], name: "index_addresses_on_readable", using: :btree
   add_index "addresses", ["slug"], name: "index_addresses_on_slug", unique: true, using: :btree
-
-  create_table "areas", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "zoom",           default: 16
-    t.string   "address"
-    t.text     "polygons"
-    t.string   "polygon_encode"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.boolean  "gmaps"
-    t.uuid     "group_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "areas", ["group_id"], name: "index_areas_on_group_id", using: :btree
 
   create_table "badge_notifications", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.boolean  "read_by_user", default: false
@@ -261,27 +245,6 @@ ActiveRecord::Schema.define(version: 20170615163547) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "dashboard_registers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.boolean  "displayed",    default: false
-    t.uuid     "dashboard_id"
-    t.uuid     "register_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-  end
-
-  add_index "dashboard_registers", ["dashboard_id"], name: "index_dashboard_registers_on_dashboard_id", using: :btree
-  add_index "dashboard_registers", ["register_id"], name: "index_dashboard_registers_on_register_id", using: :btree
-
-  create_table "dashboards", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "name"
-    t.string   "slug"
-    t.uuid     "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "dashboards", ["user_id"], name: "index_dashboards_on_user_id", using: :btree
-
   create_table "devices", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "manufacturer_name"
@@ -378,45 +341,6 @@ ActiveRecord::Schema.define(version: 20170615163547) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
-  create_table "friendship_requests", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.uuid     "sender_id"
-    t.uuid     "receiver_id"
-    t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "friendship_requests", ["receiver_id", "sender_id"], name: "index_friendship_requests_on_receiver_id_and_sender_id", using: :btree
-  add_index "friendship_requests", ["receiver_id"], name: "index_friendship_requests_on_receiver_id", using: :btree
-  add_index "friendship_requests", ["sender_id"], name: "index_friendship_requests_on_sender_id", using: :btree
-
-  create_table "friendships", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.uuid     "user_id",    null: false
-    t.uuid     "friend_id",  null: false
-    t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "friendships", ["friend_id", "user_id"], name: "index_friendships_on_friend_id_and_user_id", using: :btree
-  add_index "friendships", ["friend_id"], name: "index_friendships_on_friend_id", using: :btree
-  add_index "friendships", ["user_id"], name: "index_friendships_on_user_id", using: :btree
-
-  create_table "group_register_requests", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.uuid     "user_id"
-    t.uuid     "group_id"
-    t.uuid     "register_id"
-    t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "mode"
-  end
-
-  add_index "group_register_requests", ["group_id", "user_id"], name: "index_group_register_requests_on_group_id_and_user_id", using: :btree
-  add_index "group_register_requests", ["group_id"], name: "index_group_register_requests_on_group_id", using: :btree
-  add_index "group_register_requests", ["register_id"], name: "index_group_register_requests_on_register_id", using: :btree
-  add_index "group_register_requests", ["user_id"], name: "index_group_register_requests_on_user_id", using: :btree
-
   create_table "groups", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "name"
@@ -459,22 +383,6 @@ ActiveRecord::Schema.define(version: 20170615163547) do
     t.integer  "converter_constant"
     t.string   "data_provider_name"
   end
-
-  create_table "notification_unsubscribers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "notification_key"
-    t.string   "channel"
-    t.uuid     "user_id"
-    t.uuid     "trackable_id"
-    t.string   "trackable_type"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-  end
-
-  add_index "notification_unsubscribers", ["trackable_id", "trackable_type", "notification_key"], name: "index_noti_unsub_trackable_and_key", using: :btree
-  add_index "notification_unsubscribers", ["trackable_id", "trackable_type"], name: "index_noti_unsub_trackable", using: :btree
-  add_index "notification_unsubscribers", ["user_id", "trackable_id", "trackable_type", "notification_key"], name: "index_noti_unsub_full", using: :btree
-  add_index "notification_unsubscribers", ["user_id", "trackable_id", "trackable_type"], name: "index_noti_unsub_user_and_trackable", using: :btree
-  add_index "notification_unsubscribers", ["user_id"], name: "index_notification_unsubscribers_on_user_id", using: :btree
 
   create_table "oauth_access_grants", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "token",                                            null: false
@@ -595,19 +503,6 @@ ActiveRecord::Schema.define(version: 20170615163547) do
   add_index "profiles", ["slug"], name: "index_profiles_on_slug", unique: true, using: :btree
   add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
   add_index "profiles", ["user_name"], name: "index_profiles_on_user_name", unique: true, using: :btree
-
-  create_table "register_user_requests", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.uuid     "user_id"
-    t.uuid     "register_id"
-    t.string   "mode"
-    t.string   "status"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  add_index "register_user_requests", ["mode"], name: "index_register_user_requests_on_mode", using: :btree
-  add_index "register_user_requests", ["register_id"], name: "index_register_user_requests_on_register_id", using: :btree
-  add_index "register_user_requests", ["user_id"], name: "index_register_user_requests_on_user_id", using: :btree
 
   create_table "registers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "uid"

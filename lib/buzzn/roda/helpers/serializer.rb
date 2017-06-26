@@ -30,7 +30,7 @@ module Buzzn
           time = Time.now.to_f
           result = object.to_json(options)
           ended = Time.now.to_f
-          logger.info do
+          logger.debug do
             clazz = object.is_a?(Buzzn::Resource::Collection)? "Collection[#{object.first.class}] size: #{object.size}" : object.class
             "#{clazz} bytes: #{result.size} time: #{ended - time}"
           end

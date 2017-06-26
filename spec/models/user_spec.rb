@@ -8,17 +8,17 @@ describe "User Model" do
     group
   end
 
+  entity(:user) { Fabricate(:user) }
+  entity!(:admin) { Fabricate(:admin) }
+  entity(:manager_register) { Fabricate(:user) }
+  entity(:manager_group) { Fabricate(:user) }
+
   entity(:register) do
     register = Fabricate(:output_register, meter: Fabricate(:meter))
     manager_register.add_role(:manager, register)
     register.update! group: tribe
     register
   end
-
-  entity(:user) { Fabricate(:user) }
-  entity!(:admin) { Fabricate(:admin) }
-  entity(:manager_register) { Fabricate(:user) }
-  entity(:manager_group) { Fabricate(:user) }
 
   before { 2.times { Fabricate(:user) } }
 
@@ -65,43 +65,6 @@ describe "User Model" do
   it 'filters user with no params' do
     users = User.filter(nil)
     expect(users.size).to eq User.count 
-  end
-
-  it 'is restriciting readable_by' do
-    profile = user.profile
-    expect(User.readable_by(nil)).to eq []
-    expect(User.readable_by(user)).to include user
-    profile.update!(readable: 'world')
-    expect(User.readable_by(nil)).to eq [user]
-    profile.update!(readable: 'community')
-    other = Fabricate(:user)
-     expect(User.readable_by(other)).to match_array [user, other]
-    profile.update!(readable: nil)
-    expect(User.readable_by(other)).to match_array [other]
-    other.friends << user
-    expect(User.readable_by(other)).to match_array [user, other]
-    expect(User.readable_by(admin)).to match_array User.all
-  end
-
-  it 'gives no unsubscribed from notification users' do
-    [organization, tribe, register].each do |resource|
-      expect(User.unsubscribed_from_notification('any.key', resource)).to eq []
-    end
-  end
-
-  it 'gives unsubscribed from notification users' do
-    [organization, tribe, register].each do |resource|
-      NotificationUnsubscriber.create(trackable: resource, user: user, notification_key: 'some.key', channel: 'email')
-      expect(User.unsubscribed_from_notification('some.key', resource)).to eq [user]
-    end
-
-    [tribe, register].each do |resource|
-      NotificationUnsubscriber.create(trackable: resource, user: resource.managers.first, notification_key: 'other.key', channel: 'email')
-    end
-
-    expect(User.unsubscribed_from_notification('other.key', tribe)).to eq [manager_group]
-    expect(User.unsubscribed_from_notification('other.key', register)).to eq [manager_register]
-    expect(User.unsubscribed_from_notification('other.key', organization)).to eq []
   end
 
   it 'validates roles and profile' do

@@ -4,9 +4,7 @@ module Contract
     self.abstract_class = true
 
     resourcify
-    include Authority::Abilities
     include Filterable
-    include Buzzn::GuardedCrud
 
     # status consts
     WAITING   = 'waiting_for_approval'
@@ -23,6 +21,7 @@ module Contract
     MUST_BE_BUZZN_SYSTEMS        = 'must be buzzn-systems'
     MUST_BE_BUZZN                = 'must be buzzn'
     MUST_BELONG_TO_LOCALPOOL     = 'must belong to a localpool'
+    MUST_MATCH                   = 'must match'
     IS_MISSING                   = 'is missing'
     CAN_NOT_BE_PRESENT           = 'can not be present when there is a '
     NOT_ALLOWED_FOR_OLD_CONTRACT = 'not allowed for old contract'
@@ -111,35 +110,11 @@ module Contract
         .where('end_date > ? OR end_date IS NULL', timestamp + 1.second)
     end
 
-    def self.readable_by_query(user)
-      organization = Organization.arel_table
-      user_table = User.arel_table
-      contract = Contract::Base.arel_table
-
-      # workaround to produce false always
-      return contract[:id].eq(contract[:id]).not if user.nil?
-
-      sqls = [
-        User.roles_query(user, manager: [contract[:register_id], contract[:localpool_id]]),
-        # if contracting party is a user
-        user_table.where((contract[:contractor_id].eq(user.id))
-                          .or(contract[:customer_id].eq(user.id))),
-        # if contracting party is an organization
-        User.roles_query(user, manager: [contract[:contractor_id], contract[:customer_id]]),
-        User.roles_query(user, admin: nil)
-      ]
-      sqls = sqls.collect{|s| s.project(1).exists}
-      sqls[0].or(sqls[1]).or(sqls[2]).or(sqls[3])
-    end
-
-    def self.readable_by(user) # scope does not work here !
-      where(readable_by_query(user))
-    end
-
     def validate_invariants
       errors.add(:terms_accepted, MUST_BE_TRUE ) unless terms_accepted
       errors.add(:power_of_attorney, MUST_BE_TRUE ) unless power_of_attorney
       if contractor
+        errors.add(:contractor_bank_account, MUST_MATCH) if contractor_bank_account && ! contractor.bank_accounts.include?(contractor_bank_account)
         if contractor == Organization.buzzn_energy ||
            contractor == Organization.buzzn_systems
           errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.size == 0

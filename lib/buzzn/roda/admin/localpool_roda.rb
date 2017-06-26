@@ -11,7 +11,7 @@ module Admin
 
     route do |r|
 
-      localpools = Group::LocalpoolResource.all(current_user)
+      localpools = LocalpoolResource.all(current_user)
 
       r.root do
         localpools

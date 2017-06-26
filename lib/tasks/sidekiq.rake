@@ -1,3 +1,4 @@
+require 'sidekiq/api'
 namespace :sidekiq do
 
   task start: :environment do

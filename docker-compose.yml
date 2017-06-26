@@ -31,7 +31,7 @@ services:
   #     - ./db/seed_assets:/core/db/seed_assets
   #     - ./db/banks:/core/db/banks
 
-  core_staging:
+  core_staging_web:
     build:
       context: .
       dockerfile: Dockerfile
@@ -39,6 +39,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
+      - core_staging_worker
       - postgres
       - redis
       - mongo
@@ -53,17 +54,29 @@ services:
       - ./db/seeds.rb:/core/db/seeds.rb
       - core_staging_public:/core/public
 
-  core_staging_worker:
+  core_staging_clockwork:
     build:
       context: .
       dockerfile: Dockerfile
-    command: bash -c "bundle exec rake db:migrate && bundle exec whenever --update-crontab && bundle exec sidekiq"
+    command: bundle exec clockwork config/clock.rb
     depends_on:
-      - core_staging
+      - core_staging_worker
       - postgres
       - redis
       - mongo
     env_file: .env.docker
+
+  core_staging_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "bundle exec rake db:migrate && bundle exec sidekiq"
+    depends_on:
+      - postgres
+      - redis
+      - mongo
+    env_file: .env.docker
+
 
   postgres:
     image: postgres:9.4.12-alpine
