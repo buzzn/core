@@ -9,6 +9,7 @@ module Register
       a = super
       # HACK to fix the problem that the type gets not set by AR
       a.type ||= a.class.to_s
+      a.direction = 'out'
       a
     end
 

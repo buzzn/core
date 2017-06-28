@@ -41,7 +41,7 @@ module Register
                               source: Reading::BUZZN_SYSTEMS,
                               quality: Reading::READ_OUT,
                               state: 'Z86',
-                              meter_serialnumber: self.meter.manufacturer_product_serialnumber)
+                              meter_serialnumber: self.meter.product_serialnumber)
         reading.save # updates errors as reading must be invalid now
         invalid = reading.errors.messages.keys.include? :timestamp
         if invalid

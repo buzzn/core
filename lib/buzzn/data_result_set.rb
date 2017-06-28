@@ -34,7 +34,15 @@ module Buzzn
     end
 
     def add(timestamp, value, mode)
-      array = mode == :in ? @in : @out
+      array =
+        case mode
+        when 'in'
+          @in
+        when 'out'
+          @out
+        else
+          raise "unknown mode #{mode.inspect}"
+        end
       array.push(Buzzn::DataPoint.new(timestamp, value))
     end
 
@@ -85,12 +93,15 @@ module Buzzn
     # this method returns the data combined in either the @in array or the @out array
     # need for virtual registers
     def combine(direction, duration)
-      if direction == :in
+      case direction
+      when 'in'
         _add(@in, @out, duration)
         @out.replace([])
-      elsif direction == :out
+      when 'out'
         _add(@out, @in, duration)
         @in.replace([])
+      else
+        raise "unknown direction #{direction.inspect}"
       end
     end
 

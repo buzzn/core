@@ -19,13 +19,16 @@ describe Register::BaseResource do
   let(:base_keys) { ['id',
                      'type',
                      'label',
-                     'converter_constant',
-                     'decimal',
+                     'name',
                      'direction',
                      'last_reading',
-                     'low_power',
-                     'name',
-                     'pre_decimal' ] }
+                     'low_load_ability',
+                     'observer_enabled',
+                     'observer_max_threshold',
+                     'observer_min_threshold',
+                     'observer_offline_monitoring',
+                     'post_decimal_position',
+                     'pre_decimal_position' ] }
 
   it 'retrieve' do
     [real, virtual].each do |register|
@@ -58,7 +61,8 @@ describe Register::BaseResource do
       attrs = resources.retrieve(real.id).to_h
       expect(attrs['id']).to eq real.id
       expect(attrs['type']).to eq 'register_real'
-      expect(attrs.keys).to match_array base_keys + ['uid', 'obis']
+      expect(attrs.keys).to match_array base_keys +
+                                        ['obis', 'metering_point_id']
       expect{resources.reals.retrieve(virtual.id)}.to raise_error Buzzn::PermissionDenied
     end
   end

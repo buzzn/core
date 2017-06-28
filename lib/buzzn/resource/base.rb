@@ -34,15 +34,6 @@ module Buzzn::Resource
 
       # DSL methods
 
-      def rules(schema_name)
-        attribute :rules
-        define_method :rules do
-          send(schema_name).rules.each_with_object({}) do |item, obj|
-            obj[item[0]] = item[1].to_s
-          end
-        end
-      end
-
       def attribute(*attr)
         @attrs ||= []
         @attrs += attr

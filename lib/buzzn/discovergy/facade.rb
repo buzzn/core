@@ -37,7 +37,7 @@ module Buzzn::Discovergy
         query = '/public/v1/last_reading?meterId=' + meter_id + '&fields=power&each=' + collection.to_s
       else
         energy_out = ""
-        if mode == :out
+        if mode == 'out'
           energy_out = "Out"
         end
 
@@ -88,7 +88,7 @@ module Buzzn::Discovergy
       access_token = build_access_token_from_broker_or_new(broker)
       meter_id = broker.external_id
       energy_out = ""
-      if mode == :out
+      if mode == 'out'
         energy_out = "Out"
       end
 

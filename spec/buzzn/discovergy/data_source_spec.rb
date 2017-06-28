@@ -9,8 +9,8 @@ describe Buzzn::Discovergy::DataSource do
 
   subject { Buzzn::Discovergy::DataSource.new }
 
-  entity(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: 60009485) }
-  entity(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.mode.sub('put', ''), resource: meter, external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}") }
+  entity(:meter) { Fabricate(:meter, product_serialnumber: 60009485) }
+  entity(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.direction, resource: meter, external_id: "EASYMETER_#{meter.product_serialnumber}") }
   entity(:small_group) do
     Fabricate(:tribe, registers: [
                 Fabricate(:easymeter_60009484).output_register,
@@ -63,7 +63,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'parses single meter live response' do
     response = single_meter_live_response
-    mode = :in
+    mode = 'in'
     two_way_meter = false
     result = subject.send(:parse_aggregated_live, response, mode, two_way_meter, 'u-i-d')
     expect(result.timestamp).to eq 1480606450.088
@@ -73,7 +73,7 @@ describe Buzzn::Discovergy::DataSource do
   it 'parses single meter second response' do
     response = single_meter_second_response
     interval = Buzzn::Interval.second(Time.at(1480604400.205))
-    mode = :in
+    mode = 'in'
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
     expect(result.in[0].timestamp).to eq 1480604400.205
@@ -83,7 +83,7 @@ describe Buzzn::Discovergy::DataSource do
   it 'parses single meter hour response' do
     response = single_meter_hour_response
     interval = Buzzn::Interval.hour
-    mode = :in
+    mode = 'in'
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
     expect(result.in[0].timestamp).to eq 1480604400.205
@@ -95,7 +95,7 @@ describe Buzzn::Discovergy::DataSource do
   it 'parses single meter day response' do
     response = single_meter_day_response
     interval = Buzzn::Interval.day
-    mode = :in
+    mode = 'in'
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
     expect(result.in[0].timestamp).to eq 1480606200
@@ -107,7 +107,7 @@ describe Buzzn::Discovergy::DataSource do
   it 'parses single meter month response' do
     response = single_meter_month_response
     interval = Buzzn::Interval.month
-    mode = :in
+    mode = 'in'
     two_way_meter = false
     result = subject.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
     expect(result.in[0].timestamp).to eq 1477954800
@@ -120,7 +120,7 @@ describe Buzzn::Discovergy::DataSource do
     data_source = Buzzn::Discovergy::DataSource.new
     response = single_meter_year_response
     interval = Buzzn::Interval.year
-    mode = :in
+    mode = 'in'
     two_way_meter = false
     result = data_source.send(:parse_aggregated_data, response, interval, mode, two_way_meter, 'u-i-d')
     expect(result.in[0].timestamp).to eq 1451602800
@@ -140,7 +140,7 @@ describe Buzzn::Discovergy::DataSource do
 
   it 'parses virtual meter live response for each meter' do
     response = virtual_meter_live_response
-    mode = :in
+    mode = 'in'
     two_way_meter = false
     result = subject.send(:parse_collected_data, response, mode, 'EASYMETER_60009425' => 'some-uid', 'EASYMETER_60009404' => 'other-uid', 'EASYMETER_60009415' => 'last-uid')
     expect(result[0].timestamp).to eq 1480614249.341
@@ -214,8 +214,8 @@ describe Buzzn::Discovergy::DataSource do
     facade.result = [single_meter_live_response]
     empty_group.brokers.each{ |broker| broker.destroy }
 
-    in_result = data_source.collection(register_with_broker.group, :in)
-    out_result = data_source.collection(register_with_broker.group, :out)
+    in_result = data_source.collection(register_with_broker.group, 'in')
+    out_result = data_source.collection(register_with_broker.group, 'out')
 
     expect(in_result.size).to eq 1
     expect(out_result.size).to eq 0
@@ -226,8 +226,8 @@ describe Buzzn::Discovergy::DataSource do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
     facade.result = [virtual_meter_live_response]
 
-    in_result = data_source.collection(some_group, :in)
-    out_result = data_source.collection(some_group, :out)
+    in_result = data_source.collection(some_group, 'in')
+    out_result = data_source.collection(some_group, 'out')
 
     expect(in_result.size).to eq 3
     expect(out_result.size).to eq 3
@@ -243,8 +243,8 @@ describe Buzzn::Discovergy::DataSource do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
     facade.result = [single_meter_year_response, single_meter_year_response2]
 
-    in_result = data_source.aggregated(some_group, :in, Buzzn::Interval.year)
-    out_result = data_source.aggregated(some_group, :out, Buzzn::Interval.year)
+    in_result = data_source.aggregated(some_group, 'in', Buzzn::Interval.year)
+    out_result = data_source.aggregated(some_group, 'out', Buzzn::Interval.year)
 
     expect(in_result.in.size).to eq 2
     expect(in_result.out.size).to eq 0
@@ -261,8 +261,8 @@ describe Buzzn::Discovergy::DataSource do
     data_source = Buzzn::Discovergy::DataSource.new(Redis.current, facade)
     facade.result = [single_meter_hour_response]
 
-    in_result = data_source.aggregated(register_with_broker, :in, Buzzn::Interval.hour)
-    out_result = data_source.aggregated(register_with_broker, :out, Buzzn::Interval.hour)
+    in_result = data_source.aggregated(register_with_broker, 'in', Buzzn::Interval.hour)
+    out_result = data_source.aggregated(register_with_broker, 'out', Buzzn::Interval.hour)
 
     expect(in_result.in.size).to eq 2
     expect(in_result.out.size).to eq 0

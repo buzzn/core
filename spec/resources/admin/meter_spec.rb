@@ -18,16 +18,21 @@ describe Meter::BaseResource do
 
   let(:base_keys) { ['id',
                      'type',
-                     'manufacturer_product_name',
-                     'manufacturer_product_serialnumber',
-                     'metering_type',
-                     'meter_size',
+                     'product_name',
+                     'product_serialnumber',
+                     'edifact_metering_type',
+                     'edifact_meter_size',
+                     'edifact_section',
+                     'edifact_tariff',
+                     'edifact_measurement_method',
+                     'edifact_mounting_method',
+                     'edifact_voltage_level',
+                     'calibrated_until',
+                     'edifact_cycle_interval',
                      'ownership',
-                     'direction_label',
                      'build_year',
                      'updatable',
-                     'deletable',
-                     'rules'] }
+                     'deletable'] }
 
   it 'retrieve' do
     [real, virtual].each do |meter|
@@ -59,7 +64,9 @@ describe Meter::BaseResource do
       attrs = resources.retrieve(real.id).to_h
       expect(attrs['id']).to eq real.id
       expect(attrs['type']).to eq 'meter_real'
-      expect(attrs.keys).to match_array base_keys + ['manufacturer_name']
+      expect(attrs.keys).to match_array base_keys + ['manufacturer_name',
+                                                     'converter_constant',
+                                                     'direction_number']
       expect{resources.virtuals.retrieve(real.id)}.to raise_error Buzzn::PermissionDenied
     end
 

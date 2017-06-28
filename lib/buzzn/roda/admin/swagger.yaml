@@ -28,10 +28,8 @@ paths:
         200:
           description: success
   "/localpools/{localpool_id}/billing-cycles":
-    post:
-      description: creates a billing-cycles for the localpool
-      consumes:
-      - application/x-www-form-urlencoded
+    get:
+      description: returns all the billing-cycles of the localpool
       produces:
       - application/json
       parameters:
@@ -39,29 +37,12 @@ paths:
         in: path
         required: true
         type: string
-      - name: name
-        in: formData
-        required: true
-        type: string
-        format: ''
-      - name: begin_date
-        in: formData
-        required: true
-        type: string
-        format: date
-      - name: end_date
-        in: formData
-        required: true
-        type: string
-        format: date
       responses:
-        201:
-          description: created
+        200:
+          description: success
   "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}":
-    patch:
-      description: updates the billing-cycles of the localpool
-      consumes:
-      - application/x-www-form-urlencoded
+    delete:
+      description: deletes the billing-cycles of the localpool
       produces:
       - application/json
       parameters:
@@ -73,24 +54,9 @@ paths:
         in: path
         required: true
         type: string
-      - name: name
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: begin_date
-        in: formData
-        required: false
-        type: string
-        format: date
-      - name: end_date
-        in: formData
-        required: false
-        type: string
-        format: date
       responses:
-        200:
-          description: patched
+        204:
+          description: deleted
   "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}/billings":
     get:
       description: returns all billings of the billing-cycles for the given IDs
@@ -133,10 +99,8 @@ paths:
         201:
           description: created
   "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}/billings/{billing_1_id}":
-    patch:
-      description: updates the billing of the billing-cycles for the given IDs
-      consumes:
-      - application/x-www-form-urlencoded
+    get:
+      description: returns the billing of the billing-cycle for the given IDs
       produces:
       - application/json
       parameters:
@@ -152,29 +116,9 @@ paths:
         in: path
         required: true
         type: string
-      - name: receivables_cents
-        in: formData
-        required: false
-        type: integer
-        format: int64
-      - name: invoice_number
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: status
-        in: formData
-        required: false
-        type: string
-        enum:
-        - open
-        - calculated
-        - delivered
-        - settled
-        - closed
       responses:
         200:
-          description: patched
+          description: success
   "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}/billings/{billing_2_id}":
     delete:
       description: deletes the billing of the billing-cycles for the given IDs
@@ -396,51 +340,107 @@ paths:
         - amperix
         - ferraris
         - other
-      - name: manufacturer_product_name
+      - name: product_name
         in: formData
         required: false
         type: string
         format: ''
-      - name: manufacturer_product_serialnumber
+      - name: product_serialnumber
         in: formData
         required: false
         type: string
         format: ''
-      - name: metering_type
-        in: formData
-        required: false
-        type: string
-        enum:
-        - analog_household_meter
-        - smart_meter
-        - load_meter
-        - analog_ac_meter
-        - digital_household_meter
-        - maximum_meter
-        - individual_adjustment
-      - name: meter_size
-        in: formData
-        required: false
-        type: string
-        enum:
-        - edl40
-        - edl21
-        - other_ehz
       - name: ownership
         in: formData
         required: false
         type: string
         enum:
-        - buzzn_systems
-        - foreign_ownership
-        - customer
-        - leased
-        - bought
+        - 'BUZZN_SYSTEMS '
+        - FOREIGN_OWNERSHIP
+        - CUSTOMER
+        - LEASED
+        - BOUGHT
       - name: build_year
         in: formData
         required: false
         type: integer
         format: int64
+      - name: calibrated_until
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: edifact_metering_type
+        in: formData
+        required: false
+        type: string
+        enum:
+        - AHZ
+        - smart_meter
+        - LAZ
+        - WSZ
+        - EHZ
+        - MAZ
+        - IVA
+      - name: edifact_meter_size
+        in: formData
+        required: false
+        type: string
+        enum:
+        - Z01
+        - Z02
+        - Z03
+      - name: edifact_section
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: edifact_measurement_method
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: edifact_tariff
+        in: formData
+        required: false
+        type: string
+        enum:
+        - ETZ
+        - ZTZ
+        - NTZ
+      - name: edifact_mounting_method
+        in: formData
+        required: false
+        type: string
+        enum:
+        - BKE
+        - DPA
+        - HS
+      - name: edifact_voltage_level
+        in: formData
+        required: false
+        type: string
+        enum:
+        - E06
+        - E05
+        - E04
+        - E03
+      - name: edifact_cycle_interval
+        in: formData
+        required: false
+        type: string
+        enum:
+        - MONTHLY
+        - YEARLY
+        - QUARTERLY
+        - HALF_YEARLY
+      - name: edifact_data_logging
+        in: formData
+        required: false
+        type: string
+        enum:
+        - AMR
+        - MMR
       responses:
         200:
           description: patched
@@ -460,51 +460,107 @@ paths:
         in: path
         required: true
         type: string
-      - name: manufacturer_product_name
+      - name: product_name
         in: formData
         required: false
         type: string
         format: ''
-      - name: manufacturer_product_serialnumber
+      - name: product_serialnumber
         in: formData
         required: false
         type: string
         format: ''
-      - name: metering_type
-        in: formData
-        required: false
-        type: string
-        enum:
-        - analog_household_meter
-        - smart_meter
-        - load_meter
-        - analog_ac_meter
-        - digital_household_meter
-        - maximum_meter
-        - individual_adjustment
-      - name: meter_size
-        in: formData
-        required: false
-        type: string
-        enum:
-        - edl40
-        - edl21
-        - other_ehz
       - name: ownership
         in: formData
         required: false
         type: string
         enum:
-        - buzzn_systems
-        - foreign_ownership
-        - customer
-        - leased
-        - bought
+        - 'BUZZN_SYSTEMS '
+        - FOREIGN_OWNERSHIP
+        - CUSTOMER
+        - LEASED
+        - BOUGHT
       - name: build_year
         in: formData
         required: false
         type: integer
         format: int64
+      - name: calibrated_until
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: edifact_metering_type
+        in: formData
+        required: false
+        type: string
+        enum:
+        - AHZ
+        - smart_meter
+        - LAZ
+        - WSZ
+        - EHZ
+        - MAZ
+        - IVA
+      - name: edifact_meter_size
+        in: formData
+        required: false
+        type: string
+        enum:
+        - Z01
+        - Z02
+        - Z03
+      - name: edifact_section
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: edifact_measurement_method
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: edifact_tariff
+        in: formData
+        required: false
+        type: string
+        enum:
+        - ETZ
+        - ZTZ
+        - NTZ
+      - name: edifact_mounting_method
+        in: formData
+        required: false
+        type: string
+        enum:
+        - BKE
+        - DPA
+        - HS
+      - name: edifact_voltage_level
+        in: formData
+        required: false
+        type: string
+        enum:
+        - E06
+        - E05
+        - E04
+        - E03
+      - name: edifact_cycle_interval
+        in: formData
+        required: false
+        type: string
+        enum:
+        - MONTHLY
+        - YEARLY
+        - QUARTERLY
+        - HALF_YEARLY
+      - name: edifact_data_logging
+        in: formData
+        required: false
+        type: string
+        enum:
+        - AMR
+        - MMR
       responses:
         200:
           description: patched
@@ -590,10 +646,8 @@ paths:
         200:
           description: success
   "/localpools/{localpool_id}/prices":
-    post:
-      description: create price for the localpool
-      consumes:
-      - application/x-www-form-urlencoded
+    get:
+      description: returns all the prices of the localpool
       produces:
       - application/json
       parameters:
@@ -601,34 +655,12 @@ paths:
         in: path
         required: true
         type: string
-      - name: name
-        in: formData
-        required: true
-        type: string
-        format: ''
-      - name: begin_date
-        in: formData
-        required: true
-        type: string
-        format: date
-      - name: energyprice_cents_per_kilowatt_hour
-        in: formData
-        required: true
-        type: string
-        format: float
-      - name: baseprice_cents_per_month
-        in: formData
-        required: true
-        type: integer
-        format: int64
       responses:
-        201:
-          description: created
+        200:
+          description: success
   "/localpools/{localpool_id}/prices/{price_id}":
-    patch:
-      description: updates the price of the localpool for the given IDs
-      consumes:
-      - application/x-www-form-urlencoded
+    get:
+      description: returns the price of the localpool for the given IDs
       produces:
       - application/json
       parameters:
@@ -640,29 +672,9 @@ paths:
         in: path
         required: true
         type: string
-      - name: name
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: begin_date
-        in: formData
-        required: false
-        type: string
-        format: date
-      - name: energyprice_cents_per_kilowatt_hour
-        in: formData
-        required: false
-        type: string
-        format: float
-      - name: baseprice_cents_per_month
-        in: formData
-        required: false
-        type: integer
-        format: int64
       responses:
         200:
-          description: patched
+          description: success
   "/localpools/{localpool_id}/registers":
     get:
       description: returns all registers

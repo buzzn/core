@@ -55,9 +55,8 @@ private
       profile_type = get_profile_type(register)
       if profile_type && register.direction == mode
         if result = @facade.query_value(profile_type, time || Time.current)
-          factor = factor_from_register(register)
           Buzzn::DataResult.new(result.timestamp.to_time,
-                                factor * result.power_milliwatt,
+                                result.power_milliwatt,
                                 register.id, mode,
                                 # only use expires on current time
                                 time ? nil : result.timestamp.to_time)
@@ -121,18 +120,18 @@ private
     end
 
     def get_profile_types(mode)
-      if mode == :in
+      if mode == 'in'
         profiles = IN_PROFILES
-      elsif mode == :out
+      elsif mode == 'out'
         profiles = OUT_PROFILES
       else
-        raie ArgumentError.new "unknown mode: #{mode}"
+        raise ArgumentError.new "unknown mode: #{mode}"
       end
     end
 
     def get_profile_type(register)
       if register.data_source == :standard_profile
-        if register.direction == :in
+        if register.direction == 'in'
           :slp
         else
           if register.devices.any? && register.devices.first.primary_energy == 'sun'
@@ -147,17 +146,12 @@ private
     def to_data_result_set(register, query_range_result, mode)
       unit = query_range_result.first['sumEnergyMilliwattHour'] ? :milliwatt_hour : :milliwatt
       data_result_set = Buzzn::DataResultSet.send(unit, register.id)
-      factor = factor_from_register(register)
       query_range_result.each do |document|
         timestamp = document['firstTimestamp']
-        value     = (document['sumEnergyMilliwattHour'] || document['avgPowerMilliwatt']) * factor
+        value     = (document['sumEnergyMilliwattHour'] || document['avgPowerMilliwatt'])
         data_result_set.add(timestamp, value, mode)
       end
       data_result_set
-    end
-
-    def factor_from_register(register)
-       register.forecast_kwh_pa ? (register.forecast_kwh_pa/1000.0) : 1.0
     end
   end
 end

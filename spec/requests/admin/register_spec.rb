@@ -54,13 +54,16 @@ describe Admin::LocalpoolRoda do
           "type"=>"register_real",
           "direction"=>real_register.direction.to_s,
           "name"=>real_register.name,
-          "pre_decimal"=>6,
-          "decimal"=>2,
-          "converter_constant"=>1,
-          "low_power"=>false,
+          "pre_decimal_position"=>6,
+          "post_decimal_position"=>2,
+          "low_load_ability"=>false,
           "label"=>real_register.label,
           "last_reading"=>Reading.by_register_id(real_register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(real_register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
-          "uid"=>real_register.uid,
+          "observer_min_threshold"=>100,
+          "observer_max_threshold"=>5000,
+          "observer_enabled"=>false,
+          "observer_offline_monitoring"=>false,
+          "metering_point_id"=>real_register.metering_point_id,
           "obis"=>real_register.obis,
         }
       end
@@ -72,12 +75,15 @@ describe Admin::LocalpoolRoda do
           "type"=>"register_virtual",
           "direction"=>virtual_register.direction.to_s,
           "name"=>virtual_register.name,
-          "pre_decimal"=>6,
-          "decimal"=>2,
-          "converter_constant"=>1,
-          "low_power"=>false,
+          "pre_decimal_position"=>6,
+          "post_decimal_position"=>2,
+          "low_load_ability"=>false,
           "label"=>virtual_register.label,
           "last_reading"=>Reading.by_register_id(virtual_register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(virtual_register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
+          "observer_min_threshold"=>100,
+          "observer_max_threshold"=>5000,
+          "observer_enabled"=>false,
+          "observer_offline_monitoring"=>false
         }
       end
 
@@ -88,13 +94,16 @@ describe Admin::LocalpoolRoda do
             "type"=>"register_virtual",
             "direction"=>register.direction.to_s,
             "name"=>register.name,
-            "pre_decimal"=>register.digits_before_comma,
-            "decimal"=>register.decimal_digits,
-            "converter_constant"=>1,
-            "low_power"=>register.low_load_ability,
+            "pre_decimal_position"=>register.pre_decimal_position,
+            "post_decimal_position"=>register.post_decimal_position,
+            "low_load_ability"=>register.low_load_ability,
             "label"=>register.label,
             "last_reading"=>Reading.by_register_id(register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
-          }
+            "observer_min_threshold"=>100,
+            "observer_max_threshold"=>5000,
+            "observer_enabled"=>false,
+            "observer_offline_monitoring"=>false,
+         }
         end
       end
       
@@ -113,7 +122,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200 all' do
-        GET "/#{group.id}/registers?include=meter", admin
+        GET "/#{group.id}/registers", admin
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq sort(registers_json).to_yaml
       end
@@ -125,7 +134,7 @@ describe Admin::LocalpoolRoda do
             register = send "#{type}_register"
             register_json = send "#{type}_register_json"
 
-            GET "/#{group.id}/registers/#{register.id}?include=meter", admin
+            GET "/#{group.id}/registers/#{register.id}", admin
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
           end

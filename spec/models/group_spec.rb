@@ -1,16 +1,11 @@
 # coding: utf-8
 describe "Group Model" do
 
-  entity(:wagnis4) { Fabricate(:localpool_wagnis4) }
-  entity(:butenland) { Fabricate(:tribe_hof_butenland) }
-  entity(:karin) { Fabricate(:tribe_karins_pv_strom) }
-  entity(:home_of_the_brave) {Fabricate(:localpool_home_of_the_brave) }
-  entity(:localpool) { Fabricate(:localpool) }
-  entity(:user) { Fabricate(:user) }
-  entity(:admin) { Fabricate(:admin) }
+  entity!(:localpool) { Fabricate(:localpool) }
+  entity!(:tribe) { Fabricate(:tribe) }
 
-  it 'filters group', retry: 3 do
-    group = home_of_the_brave
+  it 'filters group' do
+    group = [tribe, localpool].sample
 
     [group.name, group.description].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
@@ -19,7 +14,6 @@ describe "Group Model" do
       end
     end
   end
-
 
   it 'can not find anything' do
     groups = Group::Base.filter('Der Clown ist müde und geht nach Hause.')
@@ -32,22 +26,10 @@ describe "Group Model" do
     expect(groups.size).to eq Group::Base.count
   end
 
-  it 'calculates its scores on given group' do
-    tribe = Fabricate(:tribe)
+  it 'calculates scores' do
     tribe.calculate_scores(Time.find_zone('Berlin').local(2016,2,2, 1,30,1))
 
     expect(Score.count).to eq 12
-  end
-
-
-  it 'get a metering_point_operator_contract from localpool' do
-    localpool  = Fabricate(:metering_point_operator_contract_of_localpool).localpool
-    expect(localpool.metering_point_operator_contract).to be_a Contract::MeteringPointOperator
-  end
-
-  it 'get a localpool_processing_contract from localpool' do
-    localpool  = Fabricate(:localpool_processing_contract).localpool
-    expect(localpool.localpool_processing_contract).to be_a Contract::LocalpoolProcessing
   end
 
   it 'calculates scores of all groups via sidekiq' do
@@ -56,23 +38,32 @@ describe "Group Model" do
     }.to change(CalculateGroupScoresWorker.jobs, :size).by(1)
   end
 
-  it 'adds multiple addresses to localpool' do
-    group = wagnis4
-    main_address = Fabricate(:address, city: 'Berlin', created_at: Time.now - 1.year)
-    group.addresses << main_address
-    secondary_address = Fabricate(:address, city: 'München')
-    group.addresses << secondary_address
-
-    expect(group.main_address.city).to eq main_address.city
-
-    secondary_address.update_column(:created_at, Time.now - 2.years)
-
-    expect(group.main_address.city).to eq secondary_address.city
-  end
-
   describe Group::Localpool do
+
+    it 'adds multiple addresses to localpool' do
+      main_address = Fabricate(:address, city: 'Berlin', created_at: Time.now - 1.year)
+      localpool.addresses << main_address
+      secondary_address = Fabricate(:address, city: 'München')
+      localpool.addresses << secondary_address
+
+      expect(localpool.main_address.city).to eq main_address.city
+
+      secondary_address.update_column(:created_at, Time.now - 2.years)
+
+      expect(localpool.main_address.city).to eq secondary_address.city
+    end
+
+    it 'get a metering_point_operator_contract from localpool' do
+      Fabricate(:metering_point_operator_contract, localpool: localpool)
+      expect(localpool.metering_point_operator_contract).to be_a Contract::MeteringPointOperator
+    end
+
+    it 'get a localpool_processing_contract from localpool' do
+      Fabricate(:localpool_processing_contract, localpool: localpool)
+      expect(localpool.localpool_processing_contract).to be_a Contract::LocalpoolProcessing
+    end
+
     it 'creates corrected ÜGZ registers' do
-      localpool = Fabricate(:localpool)
       expect(localpool.registers.by_label(Register::Base::GRID_CONSUMPTION_CORRECTED).size).to eq 1
       expect(localpool.registers.by_label(Register::Base::GRID_FEEDING_CORRECTED).size).to eq 1
     end

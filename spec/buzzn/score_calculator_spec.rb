@@ -112,15 +112,15 @@ describe Buzzn::ScoreCalculator do
       Timecop.freeze(now)
 
       result_out = Buzzn::DataResultSet.milliwatt("no-id-needed")
-      result_out.add(Time.at(Time.now.beginning_of_day.to_i), 1000000, :out)
-      result_out.add(Time.at((Time.now.beginning_of_day + 15.minutes).to_i), 1200000, :out)
-      result_out.add(Time.at((Time.now.beginning_of_day + 30.minutes).to_i), 900000, :out)
-      result_out.add(Time.at((Time.now.beginning_of_day + 45.minutes).to_i), 0, :out)
+      result_out.add(Time.at(Time.now.beginning_of_day.to_i), 1000000, 'out')
+      result_out.add(Time.at((Time.now.beginning_of_day + 15.minutes).to_i), 1200000, 'out')
+      result_out.add(Time.at((Time.now.beginning_of_day + 30.minutes).to_i), 900000, 'out')
+      result_out.add(Time.at((Time.now.beginning_of_day + 45.minutes).to_i), 0, 'out')
 
       result_in = Buzzn::DataResultSet.milliwatt("no-id-needed")
-      result_in.add(Time.at(Time.now.beginning_of_day.to_i), 800000, :in)
-      result_in.add(Time.at((Time.now.beginning_of_day + 15.minutes).to_i), 1300000, :in)
-      result_in.add(Time.at((Time.now.beginning_of_day + 30.minutes).to_i), 1000000, :in)
+      result_in.add(Time.at(Time.now.beginning_of_day.to_i), 800000, 'in')
+      result_in.add(Time.at((Time.now.beginning_of_day + 15.minutes).to_i), 1300000, 'in')
+      result_in.add(Time.at((Time.now.beginning_of_day + 30.minutes).to_i), 1000000, 'in')
 
       subject.instance_variable_set(:@data_out, result_out.out)
       subject.instance_variable_set(:@data_in, result_in.in)

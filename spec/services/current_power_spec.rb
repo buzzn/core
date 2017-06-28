@@ -27,7 +27,7 @@ describe Buzzn::Services::CurrentPower do
     attr_accessor :input, :output
 
     def single_aggregated(resource, mode)
-      mode == :in ? @input : @output
+      mode == 'in' ? @input : @output
     end
 
     def collection(*args)
@@ -71,7 +71,7 @@ describe Buzzn::Services::CurrentPower do
 
   it 'delivers the right result for a register' do
     result = subject.for_register(dummy_register)
-    expect(result).to eq [:single_aggregated, dummy_register, :in]
+    expect(result).to eq [:single_aggregated, dummy_register, 'in']
 
     expect { subject.for_register(register, 'a') }.to raise_error ArgumentError
     expect { subject.for_register(Object.new) }.to raise_error ArgumentError
@@ -79,15 +79,15 @@ describe Buzzn::Services::CurrentPower do
 
   it 'delivers the right result for each register in a group' do
     result = subject.for_each_register_in_group(group)
-    expect(result).to eq [:collection, group.object, :in, :collection, group.object, :out]
+    expect(result).to eq [:collection, group.object, 'in', :collection, group.object, 'out']
 
     expect { subject.for_each_register_in_group(group, 'a') }.to raise_error ArgumentError
     expect { subject.for_each_register_in_group(Object.new) }.to raise_error ArgumentError
   end
 
   it 'delivers the right result for a group' do
-    mock.input = Buzzn::DataResult.new(Time.current,123, nil, :in)
-    mock.output = Buzzn::DataResult.new(Time.current,321, nil, :out)
+    mock.input = Buzzn::DataResult.new(Time.current,123, nil, 'in')
+    mock.output = Buzzn::DataResult.new(Time.current,321, nil, 'out')
     result = subject.for_group(group)
     expect(result.resource_id).to eq group.id
     expect(result.in).to eq 123

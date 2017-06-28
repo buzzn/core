@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170622163547) do
+ActiveRecord::Schema.define(version: 20170626163547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -297,26 +297,6 @@ ActiveRecord::Schema.define(version: 20170622163547) do
 
   add_index "energy_classifications", ["organization_id"], name: "index_energy_classifications_on_organization_id", using: :btree
 
-  create_table "equipment", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "slug"
-    t.string   "manufacturer_name"
-    t.string   "manufacturer_product_name"
-    t.string   "manufacturer_product_serialnumber"
-    t.string   "device_kind"
-    t.string   "device_type"
-    t.string   "ownership"
-    t.date     "build"
-    t.date     "calibrated_till"
-    t.integer  "converter_constant"
-    t.uuid     "meter_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "manufacturer_number"
-  end
-
-  add_index "equipment", ["meter_id"], name: "index_equipment_on_meter_id", using: :btree
-  add_index "equipment", ["slug"], name: "index_equipment_on_slug", unique: true, using: :btree
-
   create_table "formula_parts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "operator"
     t.uuid     "register_id"
@@ -359,29 +339,26 @@ ActiveRecord::Schema.define(version: 20170622163547) do
 
   create_table "meters", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "manufacturer_name"
-    t.string   "manufacturer_product_name"
-    t.string   "manufacturer_product_serialnumber"
+    t.string   "product_name"
+    t.string   "product_serialnumber"
     t.string   "ownership"
-    t.string   "metering_type"
-    t.string   "meter_size"
-    t.string   "image"
-    t.string   "measurement_capture"
-    t.string   "mounting_method"
-    t.date     "build_year"
-    t.date     "calibrated_till"
+    t.string   "edifact_metering_type"
+    t.string   "edifact_meter_size"
+    t.string   "edifact_measurement_method"
+    t.string   "edifact_mounting_method"
+    t.date     "calibrated_until"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "type",                              null: false
-    t.string   "section"
-    t.string   "voltage_level"
-    t.string   "cycle_interval"
-    t.boolean  "send_data_dso"
-    t.boolean  "remote_readout"
-    t.string   "tariff"
-    t.string   "data_logging"
-    t.string   "manufacturer_number"
+    t.string   "type",                       null: false
+    t.string   "edifact_section"
+    t.string   "edifact_voltage_level"
+    t.string   "edifact_cycle_interval"
+    t.string   "edifact_tariff"
+    t.string   "edifact_data_logging"
     t.integer  "converter_constant"
-    t.string   "data_provider_name"
+    t.string   "direction_number"
+    t.integer  "build_year"
+    t.date     "sent_data_dso"
   end
 
   create_table "oauth_access_grants", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
@@ -505,33 +482,29 @@ ActiveRecord::Schema.define(version: 20170622163547) do
   add_index "profiles", ["user_name"], name: "index_profiles_on_user_name", unique: true, using: :btree
 
   create_table "registers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "uid"
-    t.string   "mode"
+    t.string   "metering_point_id"
+    t.string   "direction"
     t.string   "name"
     t.string   "image"
-    t.boolean  "is_dashboard_register",   default: false
-    t.string   "readable"
     t.uuid     "meter_id"
     t.uuid     "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "forecast_kwh_pa"
-    t.boolean  "observe",                 default: false
-    t.integer  "min_watt",                default: 100
-    t.integer  "max_watt",                default: 5000
-    t.datetime "last_observed_timestamp"
-    t.boolean  "observe_offline",         default: false
-    t.string   "type",                                    null: false
+    t.boolean  "observer_enabled",            default: false
+    t.integer  "observer_min_threshold",      default: 100
+    t.integer  "observer_max_threshold",      default: 5000
+    t.datetime "last_observed"
+    t.boolean  "observer_offline_monitoring", default: false
+    t.string   "type",                                        null: false
     t.string   "obis"
     t.string   "label"
-    t.integer  "digits_before_comma"
-    t.integer  "decimal_digits"
+    t.integer  "pre_decimal_position"
+    t.integer  "post_decimal_position"
     t.boolean  "low_load_ability"
   end
 
   add_index "registers", ["group_id"], name: "index_registers_on_group_id", using: :btree
   add_index "registers", ["meter_id"], name: "index_registers_on_meter_id", using: :btree
-  add_index "registers", ["readable"], name: "index_registers_on_readable", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"

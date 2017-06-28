@@ -62,7 +62,7 @@ html
         td = power_taker.register.address.street_with_number_and_extra
       tr
         td Zählernummer
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = power_taker.register.meter.product_serialnumber
       tr
         td Jahresverbrauch (kWh):
         td = power_taker.forecast_kwh_pa
@@ -132,10 +132,10 @@ html
         td #{power_taker.payment_now} €
       tr.grey
         td Zählpunktbezeichnung
-        td = power_taker.register.uid
+        td = power_taker.register.metering_point_id
       tr
         td Zählernummer
-        td = power_taker.register.meter.manufacturer_product_serialnumber
+        td = power_taker.register.meter.product_serialnumber
 
   h2 Preise, Abrechnung & Bezahlung
 

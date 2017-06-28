@@ -10,7 +10,7 @@ module Register
     has_many :formula_parts, dependent: :destroy, foreign_key: 'register_id'
     accepts_nested_attributes_for :formula_parts, reject_if: :all_blank, :allow_destroy => true
 
-    validates :direction, inclusion: { in: self.directions.map(&:to_sym) }
+    validates :direction, inclusion: { in: self.directions }
 
     def self.new(*args)
       a = super

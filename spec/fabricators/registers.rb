@@ -7,8 +7,7 @@
 
   Fabricator "#{klass_type}_register", class_name: klass do
     name        { "#{klass_type}_#{FFaker::Name.name[0..20]}" }
-    uid         { "DE" + Random.new_seed.to_s.slice(0, 29) }
-    readable    'friends'
+    metering_point_id { "DE" + Random.new_seed.to_s.slice(0, 29) }
     direction   { klass_type == 'virtual' ? ['in', 'out'].sample : klass_type.sub('put','') }
     created_at  { (rand*10).days.ago }
     if klass_type == 'output'
@@ -16,11 +15,10 @@
     else
       label     Register::Base::CONSUMPTION
     end
-    forecast_kwh_pa 1000
     obis { klass_type == 'output' ? '1-0:2.8.0' : '1-0:1.8.0' }
     low_load_ability false
-    digits_before_comma 6
-    decimal_digits 2
+    pre_decimal_position 6
+    post_decimal_position 2
     type        { "Register::#{klass_type.camelize}" }
   end
 end
@@ -44,20 +42,17 @@ end
 
 Fabricator :register_z2, from: :output_register do
   name  'PV'
-  readable    'world'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
 
 Fabricator :register_z3, from: :input_register do
   name  'Ladestation'
-  readable    'world'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
 end
 
 Fabricator :register_z4, from: :output_register do
   name  'BHKW'
-  readable    'world'
   address   { Fabricate(:address, street_name: 'Lützowplatz', street_number: '123', zip: 81667, city: 'Berlin', state: 'Berlin') }
   label     Register::Base::PRODUCTION_CHP
 end
@@ -95,7 +90,6 @@ end
 Fabricator :register_stefans_bhkw, from: :output_register do
   address { Fabricate(:address, street_name: 'Forstenrieder Weg', street_number: '51', zip: 82065, city: 'Baierbrunn', state: 'Bayern') }
   name  'BHKW'
-  readable    'world'
   label     Register::Base::PRODUCTION_CHP
 end
 
@@ -106,7 +100,6 @@ end
 Fabricator :register_hof_butenland_wind, from: :output_register do
   address  { Fabricate(:address, street_name: 'Niensweg', street_number: '1', zip: 26969, city: 'Butjadingen', state: 'Niedersachsen') }
   name  'Windanlage'
-  readable    'world'
 end
 
 
@@ -128,7 +121,6 @@ end
 #Nr. 60232612 ist eigentlich Cohaus WA10 - N36 aber zu Testzwecken für kristian
 Fabricator :register_kristian, from: :input_register do
   name  'Wohnung'
-  readable    'friends'
 end
 
 # Nr. 60009269 für Philipp Oßwald (Einrichtungszähler Bezug)
@@ -238,7 +230,6 @@ end
 
 Fabricator :register_60009390, from: :input_register do
   name  'Laden EG'
-  readable    'world'
 end
 
 Fabricator :register_60009387, from: :input_register do
@@ -300,7 +291,6 @@ end
 
 Fabricator :register_60051562, from: :input_register do
   name  'Wasserkraft'
-  readable    'world'
 end
 
 
@@ -749,7 +739,7 @@ Fabricator :register_60300856, from: :input_register do
   address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern') }
   name  'Netzanschluss Bezug'
   label Register::Base::GRID_CONSUMPTION
-  uid  'DE0005128238000552109002001011500'
+  metering_point_id  'DE0005128238000552109002001011500'
 end
 
 #übergabe out
@@ -757,7 +747,7 @@ Fabricator :register_60300856_out, from: :output_register do
   address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern') }
   name  'Netzanschluss Einspeisung'
   label Register::Base::GRID_FEEDING
-  uid  'DE0005128238000552109002001011500'
+  metering_point_id  'DE0005128238000552109002001011500'
 end
 
 #Abgrenzung bhkw
@@ -765,7 +755,7 @@ Fabricator :register_60009498, from: :output_register do
   address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern') }
   name  'Abgrenzung BHKW'
   label Register::Base::DEMARCATION_CHP
-  uid  'DE0005128238000552109002001011400'
+  metering_point_id  'DE0005128238000552109002001011400'
 end
 
 #Produktion bhkw
@@ -773,7 +763,7 @@ Fabricator :register_60404855, from: :output_register do
   address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern') }
   name  'Produktion BHKW'
   label Register::Base::PRODUCTION_CHP
-  uid  'DE0005128238000552109002001011200'
+  metering_point_id  'DE0005128238000552109002001011200'
 end
 
 #Produktion pv
@@ -781,7 +771,7 @@ Fabricator :register_60404845, from: :output_register do
   address        { Fabricate(:address, street_name: 'Sulz', street_number: '2', zip: 82380, city: 'Peißenberg', state: 'Bayern') }
   name  'Produktion PV'
   label Register::Base::PRODUCTION_PV
-  uid  'DE0005128238000552109002001011100'
+  metering_point_id  'DE0005128238000552109002001011100'
 end
 
 Fabricator :register_60404846, from: :input_register do

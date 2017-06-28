@@ -76,23 +76,21 @@ describe Admin::LocalpoolRoda do
           {
             "id"=>meter.id,
             "type"=>"meter_virtual",
-            "manufacturer_product_name"=>meter.manufacturer_product_name,
-            "manufacturer_product_serialnumber"=>meter.manufacturer_product_serialnumber,
-            "metering_type"=>meter.metering_type,
-            "meter_size"=>nil,
+            "product_name"=>meter.product_name,
+            "product_serialnumber"=>meter.product_serialnumber,
             "ownership"=>nil,
-            "direction_label"=>meter.direction,
             "build_year"=>nil,
+            'calibrated_until'=>nil,
+            "edifact_metering_type"=>meter.edifact_metering_type,
+            "edifact_meter_size"=>nil,
+            'edifact_section'=>nil,
+            'edifact_tariff'=>nil,
+            'edifact_measurement_method'=>nil,
+            'edifact_mounting_method'=>nil,
+            'edifact_voltage_level'=>nil,
+            'edifact_cycle_interval'=>nil,
             "updatable"=>true,
-            "deletable"=>true,
-            "rules"=> {
-              "manufacturer_product_name"=>"key?(:manufacturer_product_name) THEN key[manufacturer_product_name](filled?) AND key[manufacturer_product_name](str?) AND key[manufacturer_product_name](max_size?(63))",
-              'manufacturer_product_serialnumber'=>'key?(:manufacturer_product_serialnumber) THEN key[manufacturer_product_serialnumber](filled?) AND key[manufacturer_product_serialnumber](str?) AND key[manufacturer_product_serialnumber](max_size?(63))',
-              'metering_type'=>'key?(:metering_type) THEN key[metering_type](included_in?(["analog_household_meter", "smart_meter", "load_meter", "analog_ac_meter", "digital_household_meter", "maximum_meter", "individual_adjustment"]))',
-              'meter_size'=>'key?(:meter_size) THEN key[meter_size](included_in?(["edl40", "edl21", "other_ehz"]))',
-              'ownership'=>'key?(:ownership) THEN key[ownership](included_in?(["buzzn_systems", "foreign_ownership", "customer", "leased", "bought"]))',
-              'build_year'=>'key?(:build_year) THEN key[build_year](filled?) AND key[build_year](int?)'
-            }
+            "deletable"=>true
           }
         end
       }

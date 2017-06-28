@@ -8,14 +8,17 @@ module Register
 
     model Base
 
-    attributes  :direction,
-                :name,
-                :pre_decimal,
-                :decimal,
-                :converter_constant,
-                :low_power,
-                :label,
-                :last_reading
+    attributes :direction,
+               :name,
+               :pre_decimal_position,
+               :post_decimal_position,
+               :low_load_ability,
+               :label,
+               :last_reading,
+               :observer_min_threshold,
+               :observer_max_threshold,
+               :observer_enabled,
+               :observer_offline_monitoring
 
     has_one :group
 
@@ -34,23 +37,6 @@ module Register
     end
 
     # attribute implementations
-
-    def pre_decimal
-      object.digits_before_comma
-    end
-
-    def decimal
-      object.decimal_digits
-    end
-
-    def converter_constant
-      main = object.meter.main_equipment
-      main ? main.converter_constant : nil
-    end
-
-    def low_power
-      object.low_load_ability
-    end
 
     def last_reading
       reading = Reading.by_register_id(object.id).sort('timestamp': -1).first

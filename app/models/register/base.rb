@@ -43,32 +43,20 @@ module Register
       Broker::Base.where(resource_id: self.meter.id, resource_type: Meter::Base)
     end
 
-    def self.readables
-      %w{
-      world
-      community
-      friends
-      members
-    }
-    end
-
     def self.directions; %w(in out); end
 
     validates :meter, presence: true
-    validates :uid, uniqueness: false, length: { in: 4..34 }, allow_blank: true
+    validates :metering_point_id, uniqueness: false, length: { in: 4..34 }, allow_blank: true
     validates :name, presence: true, length: { in: 2..40 }
     # TODO virtual register ?
     validates :image, presence: false
     validates :regular_reeding, presence: false
-    validates :is_dashboard_register, presence: false
-    validates :readable, inclusion: { in: self.readables }
-    validates :forecast_kwh_pa, presence: false, numericality: true, allow_nil: true
-    validates :observe, presence: false
-    validates :min_watt, presence: false
-    validates :max_watt, presence: false
-    validates :last_observed_timestamp, presence: false
+    validates :observer_enabled, presence: false
+    validates :observer_min_threshold, presence: false
+    validates :observer_max_threshold, presence: false
+    validates :last_observed, presence: false
     # TODO virtual register ?
-    validates :observe_offline, presence: false
+    validates :observer_offline_monitoring, presence: false
     validates :label, inclusion: { in: labels }
 
     validate :validate_invariants
@@ -81,8 +69,8 @@ module Register
 
     scope :restricted, ->(uuids) { joins(:contracts).where('contracts.id': uuids) }
 
-    scope :inputs,   -> { where(mode: 'in') }
-    scope :outputs,  -> { where(mode: 'out') }
+    scope :inputs,   -> { where(direction: 'in') }
+    scope :outputs,  -> { where(direction: 'out') }
     scope :reals,    -> { where(type: [Register::Input, Register::Output]) }
     scope :virtuals, -> { where(type: Register::Virtual) }
 
@@ -115,20 +103,9 @@ module Register
       if contracts.size > 0 && address.nil?
         errors.add(:address, 'missing Address when having contracts')
       end
-      if max_watt < min_watt
-        errors.add(:max_watt, 'must be greater or equal min_watt')
-        errors.add(:min_watt, 'must be smaller or equal max_watt')
-      end
-    end
-
-    def direction
-      case self
-      when Register::Input
-        :in
-      when Register::Output
-        :out
-      else
-        self.mode.to_sym if self.mode
+      if observer_max_threshold < observer_min_threshold
+        errors.add(:observer_max_threshold, 'must be greater or equal min_watt')
+        errors.add(:observer_min_threshold, 'must be smaller or equal max_watt')
       end
     end
 
@@ -137,11 +114,11 @@ module Register
     end
 
     def output?
-      self.direction == :out
+      self.direction == 'out'
     end
 
     def input?
-      self.direction == :in
+      self.direction == 'in'
     end
 
     def calculate_forecast
@@ -188,7 +165,7 @@ module Register
 
 
     def self.calculate_scores
-      Register::Base.all.select(:id, :mode).each.each do |register|
+      Register::Base.all.select(:id, :direction).each.each do |register|
         if register.input?
           Sidekiq::Client.push({
            'class' => CalculateRegisterScoreSufficiencyWorker,
@@ -206,45 +183,45 @@ module Register
     end
 
     def self.create_all_observer_activities
-      where("observe = ? OR observe_offline = ?", true, true).each do |register|
+      where("observer_enabled = ? OR observer_offline_monitoring = ?", true, true).each do |register|
         register.create_observer_activities rescue nil
       end
     end
 
+    UNDERSHOOTS = :undershoots
+    EXCEEDS     = :exceeds
+    OFFLINE     = :offline
+    NONE        = :none
+
     def create_observer_activities
-      last_reading    = current_power.for_register(self)
-      if !last_reading
-        return
+      if (last_reading = current_power.for_register(self)).nil?
+        return NONE
       end
 
       # last readings are in milliwatt
       power = last_reading.value / 1000.0
 
       if Time.current.utc.to_i - last_reading.timestamp.to_i >= 5.minutes
-        if observe_offline
+        if observer_offline_monitoring
+          puts 'here'
           if Time.current.utc.to_i - last_reading.timestamp.to_i < 10.minutes
-            return# create_activity(key: 'register.offline', owner: self)
+            OFFLINE
+          else
+            NONE
           end
         end
-      else
-        update(last_observed_timestamp: Time.at(last_reading.timestamp/1000.0).utc)
-        if power < min_watt && power >= 0
-          mode = 'undershoots'
-        elsif power >= max_watt
-          mode = 'exceeds'
+      elsif observer_enabled
+        update(last_observed: Time.at(last_reading.timestamp/1000.0).utc)
+        if power < observer_min_threshold && power >= 0
+          UNDERSHOOTS
+        elsif power >= observer_max_threshold
+          EXCEEDS
         else
-          mode = nil
+          NONE
         end
+      else
+        NONE
       end
-
-      if observe && mode
-        #return create_activity(key: "register.#{mode}", owner: self)
-      end
-    end
-
-    # backward compatibility
-    def direction=(val)
-      self.mode = val
     end
 
     private

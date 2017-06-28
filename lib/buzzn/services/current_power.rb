@@ -24,8 +24,8 @@ module Buzzn::Services
       raise ArgumentError.new("not a #{Group::Base}") unless group.is_a?(Group::Base)
       result = Buzzn::DataResultArray.new(0)
       registry.each do |data_source|
-        result += data_source.collection(group, :in)
-        result += data_source.collection(group, :out)
+        result += data_source.collection(group, 'in')
+        result += data_source.collection(group, 'out')
       end
       result.freeze unless result.frozen?
       result
@@ -40,9 +40,9 @@ module Buzzn::Services
       raise ArgumentError.new("not a #{Group::Base}") unless group.is_a?(Group::Base)
       sum_in, sum_out = 0, 0
       registry.each do |data_source|
-        result =  data_source.single_aggregated(group, :in)
+        result =  data_source.single_aggregated(group, 'in')
         sum_in += result.value if result
-        result = data_source.single_aggregated(group, :out)
+        result = data_source.single_aggregated(group, 'out')
         sum_out += result.value if result
       end
       result = Buzzn::InOutDataResults.new(Time.current, sum_in, sum_out, group.id)

@@ -151,7 +151,7 @@ module Buzzn
                         reason: Reading::REGULAR_READING,
                         source: Reading::BUZZN_SYSTEMS,
                         quality: Reading::ENERGY_QUANTITY_SUMMARIZED,
-                        meter_serialnumber: Register::Base.find(register_id).meter.manufacturer_product_serialnumber)
+                        meter_serialnumber: Register::Base.find(register_id).meter.product_serialnumber)
       end
 
       # This method returns the energy measured in a specific period of time
@@ -400,7 +400,7 @@ module Buzzn
                         source: Reading::BUZZN_SYSTEMS,
                         quality: Reading::READ_OUT,
                         state: 'Z86',
-                        meter_serialnumber: register.meter.manufacturer_product_serialnumber)
+                        meter_serialnumber: register.meter.product_serialnumber)
       end
 
       # This method returns the timespan between two dates in months while considering half months

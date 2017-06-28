@@ -41,8 +41,6 @@ module Group
 
     has_many :scores, as: :scoreable
 
-    # validates :registers, presence: true
-
     normalize_attributes :description, :website
 
     scope :restricted, ->(uuids) { where(id: uuids) }
@@ -57,94 +55,12 @@ module Group
     end
 
     def input_registers
-      registers = Register::Base.arel_table
-      Register::Base.where(
-        registers[:group_id].eq(self.id).and(
-          registers[:type].eq("Register::Input").or(
-            registers[:type].eq("Register::Virtual").and(registers[:mode].eq('in')))
-        )
-      )
+      registers.where(direction: 'in')
     end
 
 
     def output_registers
-      registers = Register::Base.arel_table
-      Register::Base.where(
-        registers[:group_id].eq(self.id).and(
-          registers[:type].eq("Register::Output").or(
-            registers[:type].eq("Register::Virtual").and(registers[:mode].eq('out')))
-        )
-      )
-    end
-
-
-    def received_group_register_requests
-      GroupRegisterRequest.where(group: self).requests
-    end
-
-    def keywords
-      %w(buzzn people power) << self.name
-    end
-
-    def self.readables
-      %w{
-        world
-        community
-        friends
-        members
-      }
-    end
-
-    def self.modes
-      %w(localpool tribe)
-    end
-
-    def readable_by_members?
-      self.readable == 'members'
-    end
-
-    def readable_by_friends?
-      self.readable == 'friends'
-    end
-
-    def readable_by_community?
-      self.readable == 'community'
-    end
-
-    def readable_by_world?
-      self.readable == 'world'
-    end
-
-    def readable_icon
-      if readable_by_friends?
-        "user-plus"
-      elsif readable_by_world?
-        "globe"
-      elsif readable_by_members?
-        "key"
-      elsif readable_by_community?
-        "users"
-      end
-    end
-
-    def self.readable_group_ids_by_user(user)
-      group_ids = Group::Base.all.readable_by_world.ids
-      if user.nil?
-        return group_ids
-      else
-        group_ids << Group::Base.where(readable: 'community').collect(&:id)
-        group_ids << Group::Base.with_role(:manager, user).collect(&:id)
-        group_ids << user.accessible_registers.collect(&:group).compact.collect(&:id)
-
-        user.friends.each do |friend|
-          if friend
-            Group::Base.where(readable: 'friends').with_role(:manager, friend).each do |friend_group|
-              group_ids << friend_group.id
-            end
-          end
-        end
-        return group_ids.compact.flatten.uniq
-      end
+      registers.where(direction: 'out')
     end
 
     def calculate_total_energy_data(data, operators, resolution)
@@ -230,12 +146,6 @@ module Group
       return false
     end
 
-    # for railsview
-    def class_name
-      self.class.name.downcase.sub!("::", "_")
-    end
-
-
     private
 
       def destroy_content
@@ -243,7 +153,6 @@ module Group
           register.group = nil
           register.save
         end
-        GroupRegisterRequest.where(group: self).each{|request| request.destroy}
         self.root_comments.each{|comment| comment.destroy}
       end
   end

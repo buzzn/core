@@ -109,36 +109,36 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
   before_create do |localpool|
     meter = Fabricate(:easymeter_60300856)
     register = meter.input_register
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100000*20, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 183900000*20, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100000*20, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 183900000*20, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
     register = meter.output_register
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1000000*20, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 510200000*20, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1000000*20, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 510200000*20, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
 
     meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
                                           Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
     register = meter.input_register
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::ENERGY_QUANTITY_SUMMARIZED, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::ENERGY_QUANTITY_SUMMARIZED, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
     register = meter.output_register
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::ENERGY_QUANTITY_SUMMARIZED, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::ENERGY_QUANTITY_SUMMARIZED, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
 
     register = Fabricate(:easymeter_60009498).registers.first
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100000*20, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 248000000*20, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100000*20, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 248000000*20, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
 
     register = Fabricate(:easymeter_60404855).registers.first
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 10770500000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 10770500000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
 
     register = Fabricate(:easymeter_60404845).registers.first
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 7060800000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 7060800000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
   end
 
@@ -146,60 +146,60 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:organization, mode: 'other', name: 'HaFi', address: Fabricate(:address))
     register = Fabricate(:easymeter_60404846).registers.first
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 13855000000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 77134105, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 241100000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 239000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 241100000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 239000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
     Fabricate(:lptc_hafi, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404850).registers.first
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 27489000000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 77134118, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 864100000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 858000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 864100000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 858000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
     Fabricate(:lptc_hubv, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404851).registers.first
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 24124000000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 49350039, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1892400000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1879000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1892400000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1879000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
     Fabricate(:lptc_mape, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404853).registers.first
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 23790000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 4789917, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 10, 31), energy_milliwatt_hour: 191000000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 11, 1), energy_milliwatt_hour: 191000000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 808200000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 798000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 10, 31), energy_milliwatt_hour: 191000000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 11, 1), energy_milliwatt_hour: 191000000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 808200000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 798000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
     Fabricate(:lptc_hafi2, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
     Fabricate(:lptc_pewi, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404847).registers.first
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 8024000000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 5640077, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 456300000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 4529000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 456300000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 4529000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
     Fabricate(:lptc_musc, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404854).registers.first
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 19442000000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 77134120, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 809700000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 805000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 809700000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 805000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
     Fabricate(:lptc_viwe, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404852).registers.first
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 9597000000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 5000705, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1523000000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1513000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1523000000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1513000000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
     Fabricate(:lptc_reho, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
 
@@ -208,8 +208,8 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 16), energy_milliwatt_hour: 9341900000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 4939588, state: 'Z86')
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 12), energy_milliwatt_hour: 9521100000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 4939588, state: 'Z86')
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 2, 28), energy_milliwatt_hour: 9801400000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: 4939588, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 2, 28), energy_milliwatt_hour: 733500000, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
-    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 3, 1), energy_milliwatt_hour: 733500000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: register.meter.manufacturer_product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 2, 28), energy_milliwatt_hour: 733500000, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
+    Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 3, 1), energy_milliwatt_hour: 733500000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: register.meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
     Fabricate(:osc_saba, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)
     Fabricate(:lptc_saba, signing_user: Fabricate(:user), register: register, customer: Fabricate(:user), contractor: Organization.where(name: 'HaFi').first)

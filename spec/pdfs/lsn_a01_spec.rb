@@ -14,7 +14,7 @@ describe Buzzn::Pdfs::LSN_A01 do
     contract.contractor.address = Fabricate(:address)
     contract.customer.address = Fabricate(:address)
     contract.register = Fabricate(:easymeter_60404849).registers.first
-    contract.register.update(uid: 'DE17995926438168678487098331001') 
+    contract.register.update(metering_point_id: 'DE17995926438168678487098331001') 
     contract.register.group = Fabricate(:localpool_sulz)
     contract
   end

@@ -52,8 +52,7 @@ module Buzzn::Discovergy
       brokers.each do |broker|
         raise 'not implemented having more then one broker' if result
         two_way_meter = broker.two_way_meter?
-
-        response = @facade.readings(broker, nil, (two_way_meter == false && mode == :out) ? :in : mode, false)
+        response = @facade.readings(broker, nil, (two_way_meter == false && mode == 'out') ? 'in' : mode, false)
 
         # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
         result = parse_aggregated_live(response, mode, two_way_meter, register_or_group.id)
@@ -96,9 +95,9 @@ module Buzzn::Discovergy
 
     def aggregated_for_group(group, mode, interval, result = nil)
       group.brokers.by_data_source(self).select do |broker|
-        broker.mode.to_sym == mode.to_sym
+        broker.mode.to_s == mode
       end.each do |broker|
-        response = @facade.readings(broker, interval, :in, false)
+        response = @facade.readings(broker, interval, 'in', false)
         result = add(result, parse_aggregated_data(response, interval, mode, nil, group.id), interval)
       end
       result
@@ -109,7 +108,7 @@ module Buzzn::Discovergy
       register.brokers.by_data_source(self).each do |broker|
         two_way_meter = broker.two_way_meter?
         # this is because out meters (one_way) at discovergy reveal their energy data within the field 'energy' instead of 'energyOut'
-        response = @facade.readings(broker, interval, (two_way_meter == false && mode == :out) ? :in : mode, false)
+        response = @facade.readings(broker, interval, (two_way_meter == false && mode == 'out') ? 'in' : mode, false)
         result = add(result, parse_aggregated_data(response, interval, mode, two_way_meter, register.id), interval)
       end
       result
@@ -132,8 +131,8 @@ module Buzzn::Discovergy
       end
       meter = register.meter
       # TODO: make this SQL faster
-      meter_ids_plus = register.formula_parts.additive.collect(&:operand).collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
-      meter_ids_minus = register.formula_parts.subtractive.collect(&:operand).collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
+      meter_ids_plus = register.formula_parts.additive.collect(&:operand).collect(&:meter).uniq.compact.collect(&:product_serialnumber).map{|s| 'EASYMETER_' + s}
+      meter_ids_minus = register.formula_parts.subtractive.collect(&:operand).collect(&:meter).uniq.compact.collect(&:product_serialnumber).map{|s| 'EASYMETER_' + s}
       if meter_ids_plus.size + meter_ids_minus.size < 2
         raise Buzzn::DataSourceError.new('Formula has to contain more than one meter.')
       end
@@ -146,8 +145,8 @@ module Buzzn::Discovergy
 
     def create_virtual_meters_for_group(group)
       # TODO: make this SQL faster
-      in_meter_ids = group.registers.inputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
-      out_meter_ids = group.registers.outputs.collect(&:meter).uniq.compact.collect(&:manufacturer_product_serialnumber).map{|s| 'EASYMETER_' + s}
+      in_meter_ids = group.registers.inputs.collect(&:meter).uniq.compact.collect(&:product_serialnumber).map{|s| 'EASYMETER_' + s}
+      out_meter_ids = group.registers.outputs.collect(&:meter).uniq.compact.collect(&:product_serialnumber).map{|s| 'EASYMETER_' + s}
       existing_random_broker = Broker::Discovergy.where(provider_login: 'team@localpool.de').first
       if in_meter_ids.size > 1
         response = @facade.create_virtual_meter(existing_random_broker, in_meter_ids)
@@ -239,9 +238,9 @@ module Buzzn::Discovergy
       if two_way_meter
         # for dummies: from a technical point a two way meter is counting
         # either 'in' or 'out' never both at the same time
-        if value > 0 && mode == :in
+        if value > 0 && mode == 'in'
           power = value
-        elsif value < 0 && mode == :out
+        elsif value < 0 && mode == 'out'
           power = value.abs
         else
           power = 0
@@ -255,7 +254,7 @@ module Buzzn::Discovergy
 
     def parse_aggregated_second(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt_hour(resource_id)
-      if two_way_meter == true && mode == :out
+      if two_way_meter == true && mode == 'out'
         energy_out = 'Out'
       end
       result.add(json.first['time']/1000.0, json.first['values']["energy#{energy_out}"]/10000.0, mode)
@@ -266,9 +265,9 @@ module Buzzn::Discovergy
       result = Buzzn::DataResultSet.milliwatt(resource_id)
       json.each do |item|
         if two_way_meter != false
-          if item['values']['power'] > 0 && mode == :in
+          if item['values']['power'] > 0 && mode == 'in'
             power = item['values']['power']
-          elsif item['values']['power'] < 0 && mode == :out
+          elsif item['values']['power'] < 0 && mode == 'out'
             power = item['values']['power'].abs
           else
             power = 0
@@ -284,7 +283,7 @@ module Buzzn::Discovergy
 
     def parse_aggregated_day(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt(resource_id)
-      if two_way_meter == true && mode == :out
+      if two_way_meter == true && mode == 'out'
         energy_out = 'Out'
       end
       first_reading = first_timestamp = nil
@@ -304,7 +303,7 @@ module Buzzn::Discovergy
     def parse_aggregated_month_year(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt_hour(resource_id)
       old_value = new_value = timestamp = i = 0
-      if two_way_meter == true && mode == :out
+      if two_way_meter == true && mode == 'out'
         energy_out = 'Out'
       end
       json.each do |item|

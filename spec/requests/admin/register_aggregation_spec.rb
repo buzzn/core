@@ -6,7 +6,6 @@ describe Admin::LocalpoolRoda do
 
   entity(:discovergy_meter) do
     meter = Fabricate(:easymeter_60139082) # in_out meter
-    meter.registers.each { |r| r.update(readable: :world) }
     # TODO what to do with the in-out fact ?
     Fabricate(:discovergy_broker, resource: meter, external_id: "EASYMETER_60139082", mode: :in_out)
     meter

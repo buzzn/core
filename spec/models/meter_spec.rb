@@ -2,20 +2,13 @@
 describe Meter::Real do
 
   entity!(:easymeter) { Fabricate(:easy_meter_q3d) }
-  entity!(:meter) { Fabricate(:meter, manufacturer_product_serialnumber: '123432345', manufacturer_product_name: 'SomethingComplicated' ) }
+  entity!(:meter) { Fabricate(:meter, product_serialnumber: '123432345', product_name: 'SomethingComplicated' ) }
   entity(:second) {  Fabricate(:input_meter) }
   entity(:register) { meter.registers.first }
-  entity(:user) { Fabricate(:user) }
-  entity(:admin) { Fabricate(:admin) }
-  entity(:manager) do
-    manager = Fabricate(:user)
-    manager.add_role(:manager, register)
-    manager
-  end
   entity!(:input_meter) { Fabricate(:input_meter) }
 
   it 'filters meter' do
-    [meter.manufacturer_name, meter.manufacturer_product_name].each do |val|
+    [meter.manufacturer_name, meter.product_name].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
         meters = Meter::Real.filter(value)
         expect(meters.detect{|m| m == meter}).to eq meter
@@ -65,12 +58,5 @@ describe Meter::Real do
 
   it 'does not delete register or meter' do
     expect { meter.registers.first.destroy }.to raise_error Buzzn::NestedValidationError
-  end
-
-  it 'does create main equipment after initialization' do
-    meter = Meter::Base.first
-    expect(meter.main_equipment.nil?).to eq false
-    expect(meter.main_equipment.converter_constant).to eq 1
-    expect{meter.main_equipment.destroy}.to raise_error Buzzn::NestedValidationError
   end
 end

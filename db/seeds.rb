@@ -118,7 +118,7 @@ buzzn_team_names.each do |user_name|
     @christian_register = root_register = meter.input_register
     meter.broker = Fabricate(:discovergy_broker,
       mode: 'in',
-      external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
+      external_id: "EASYMETER_#{meter.product_serialnumber}",
       resource: meter,
       provider_login: 'christian@buzzn.net',
       provider_password: 'Roentgen11smartmeter'
@@ -129,7 +129,7 @@ buzzn_team_names.each do |user_name|
     @philip_register = root_register = meter.input_register
     meter.broker = Fabricate(:discovergy_broker,
       mode: 'in',
-      external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
+      external_id: "EASYMETER_#{meter.product_serialnumber}",
       resource: meter,
       provider_login: 'info@philipp-osswald.de',
       provider_password: 'Null8fünfzehn'
@@ -181,7 +181,7 @@ register_pv_karin = meter.output_register
 karin = Fabricate(:karin)
 meter.broker = Fabricate(:discovergy_broker,
   mode: 'out',
-  external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}",
+  external_id: "EASYMETER_#{meter.product_serialnumber}",
   resource: meter,
   provider_login: 'karin.smith@solfux.de',
   provider_password: '19200buzzn'
@@ -221,22 +221,22 @@ thoho = Fabricate(:user)
 register_60118470 = Fabricate(:easymeter_60118470).output_register
 hdh.add_role :manager, register_60118470
 meter = register_60118470.meter
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 register_60009316 = Fabricate(:easymeter_60009316).output_register
 hdh.add_role :manager, register_60009316
 meter = register_60009316.meter
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 register_60009272 = Fabricate(:easymeter_60009272).input_register
 thoho.add_role :manager, register_60009272
 meter = register_60009272.meter
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 register_60009348 = Fabricate(:easymeter_60009348).input_register
 maba.add_role :manager, register_60009348
 meter = register_60009348.meter
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 register_hdh = Fabricate(:virtual_meter_hopf).register
 hdh.add_role :manager, register_hdh
@@ -270,7 +270,7 @@ localpool_hopf.registers << register_hdh
 
 meter = Fabricate(:easymeter_1124001747)
 @fichtenweg10 = register_cs_1 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 
@@ -299,7 +299,7 @@ meter = Fabricate(:easymeter_60009416)
 register_60009416 = meter.input_register
 dimi.add_role(:manager, register_60009416)
 dimi.add_role(:member, register_60009416)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 madm = Fabricate(:user)
@@ -307,7 +307,7 @@ meter = Fabricate(:easymeter_60009419)
 register_60009419 = meter.input_register
 madm.add_role(:manager, register_60009419)
 madm.add_role(:member, register_60009419)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 siah = Fabricate(:user)
@@ -315,7 +315,7 @@ meter = Fabricate(:easymeter_60009415)
 register_60009415 = meter.input_register
 siah.add_role(:manager, register_60009415)
 siah.add_role(:member, register_60009415)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 nisa = Fabricate(:user)
@@ -323,7 +323,7 @@ meter = Fabricate(:easymeter_60009418)
 register_60009418 = meter.input_register
 nisa.add_role(:manager, register_60009418)
 nisa.add_role(:member, register_60009418)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 jone = Fabricate(:user)
@@ -331,7 +331,7 @@ meter = Fabricate(:easymeter_60009411)
 register_60009411 = meter.input_register
 jone.add_role(:manager, register_60009411)
 jone.add_role(:member, register_60009411)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 elch = Fabricate(:user)
@@ -339,7 +339,7 @@ meter = Fabricate(:easymeter_60009410)
 register_60009410 = meter.input_register
 elch.add_role(:manager, register_60009410)
 elch.add_role(:member, register_60009410)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 flbu = Fabricate(:user)
@@ -347,7 +347,7 @@ meter = Fabricate(:easymeter_60009407)
 register_60009407 = meter.input_register
 flbu.add_role(:manager, register_60009407)
 flbu.add_role(:member, register_60009407)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 ulbe = Fabricate(:user)
@@ -355,7 +355,7 @@ meter = Fabricate(:easymeter_60009409)
 register_60009409 = meter.input_register
 ulbe.add_role(:manager, register_60009409)
 ulbe.add_role(:member, register_60009409)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 ruha = Fabricate(:user)
@@ -363,18 +363,18 @@ meter = Fabricate(:easymeter_60009435)
 register_60009435 = meter.input_register
 ruha.add_role(:manager, register_60009435)
 ruha.add_role(:member, register_60009435)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 mamu = Fabricate(:user)
 meter = Fabricate(:easymeter_60009402)
 register_60009402 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 meter = Fabricate(:easymeter_60009390)
 register_60009390 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 mamu.add_role(:manager, register_60009402)
 mamu.add_role(:manager, register_60009390)
 mamu.add_role(:member, register_60009402)
@@ -386,7 +386,7 @@ meter = Fabricate(:easymeter_60009387)
 register_60009387 = meter.input_register
 ansc.add_role(:manager, register_60009387)
 ansc.add_role(:member, register_60009387)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 luwo = Fabricate(:user)
@@ -394,7 +394,7 @@ meter = Fabricate(:easymeter_60009438)
 register_60009438 = meter.input_register
 luwo.add_role(:manager, register_60009438)
 luwo.add_role(:member, register_60009438)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 pewa = Fabricate(:user)
@@ -402,7 +402,7 @@ meter = Fabricate(:easymeter_60009440)
 register_60009440 = meter.input_register
 pewa.add_role(:manager, register_60009440)
 pewa.add_role(:member, register_60009440)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 sicy = Fabricate(:user)
@@ -410,7 +410,7 @@ meter = Fabricate(:easymeter_60009404)
 register_60009404 = meter.input_register
 sicy.add_role(:manager, register_60009404)
 sicy.add_role(:member, register_60009404)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 dikl = Fabricate(:user)
@@ -418,7 +418,7 @@ meter = Fabricate(:easymeter_60009405)
 register_60009405 = meter.input_register
 dikl.add_role(:manager, register_60009405)
 dikl.add_role(:member, register_60009405)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 wiwa = Fabricate(:user)
@@ -426,7 +426,7 @@ meter = Fabricate(:easymeter_60009422)
 register_60009422 = meter.input_register
 wiwa.add_role(:manager, register_60009422)
 wiwa.add_role(:member, register_60009422)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 vole = Fabricate(:user)
@@ -434,7 +434,7 @@ meter = Fabricate(:easymeter_60009425)
 register_60009425 = meter.input_register
 vole.add_role(:manager, register_60009425)
 vole.add_role(:member, register_60009425)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 evpf = Fabricate(:user)
@@ -442,7 +442,7 @@ meter = Fabricate(:easymeter_60009429)
 register_60009429 = meter.input_register
 evpf.add_role(:manager, register_60009429)
 evpf.add_role(:member, register_60009429)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 dast = Fabricate(:user)
@@ -450,7 +450,7 @@ meter = Fabricate(:easymeter_60009393)
 register_60009393 = meter.input_register
 dast.add_role(:manager, register_60009393)
 dast.add_role(:member, register_60009393)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 dokn = Fabricate(:user)
@@ -458,7 +458,7 @@ meter = Fabricate(:easymeter_60009442)
 register_60009442 = meter.input_register
 dokn.add_role(:manager, register_60009442)
 dokn.add_role(:member, register_60009442)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 sadu = Fabricate(:user)
@@ -466,18 +466,18 @@ meter = Fabricate(:easymeter_60009441)
 register_60009441 = meter.input_register
 sadu.add_role(:manager, register_60009441)
 sadu.add_role(:member, register_60009441)
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 meter = Fabricate(:easymeter_60009420)
 register_60009420 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 madm.add_role(:manager, register_60009420)
 
 meter = Fabricate(:easymeter_60118460)
 register_60118460 = meter.output_register
 madm.add_role(:manager, register_60118460)
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 
 
 localpool_wagnis4 = Fabricate(:localpool_wagnis4, registers: [register_60118460])
@@ -518,32 +518,32 @@ pesc.add_role(:manager, hell_und_warm)
 meter = Fabricate(:easymeter_1305004864)
 register_1305004864_out = meter.output_register
 register_1305004864 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in_out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in_out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 pesc.add_role(:manager, register_1305004864)
 pesc.add_role(:manager, register_1305004864_out)
 
 # Abgrenzung PV
 meter = Fabricate(:easymeter_60009484)
 register_60009484 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 pesc.add_role(:manager, register_60009484)
 
 # BHKW 1
 meter = Fabricate(:easymeter_60138947)
 register_60138947 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 pesc.add_role(:manager, register_60138947)
 
 # BHKW 2
 meter = Fabricate(:easymeter_60138943)
 register_60138943 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 pesc.add_role(:manager, register_60138943)
 
 # PV
 meter = Fabricate(:easymeter_1338000816)
 register_1338000816 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 pesc.add_role(:manager, register_1338000816)
 
 ### Localpool ###
@@ -565,7 +565,7 @@ Fabricate(:discovergy_broker, resource: localpool_forstenried, mode: :out, exter
 mabe = Fabricate(:mabe)
 meter = Fabricate(:easymeter_60051595)
 register_60051595 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 mabe.add_role(:manager, register_60051595)
 mabe.add_role(:member, register_60051595)
 localpool_forstenried.registers << register_60051595
@@ -574,7 +574,7 @@ lptc = Fabricate(:lptc_mabe, signing_user: mabe, register: register_60051595, cu
 inbr = Fabricate(:inbr)
 meter = Fabricate(:easymeter_60051547)
 register_60051547 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 inbr.add_role(:manager, register_60051547)
 inbr.add_role(:member, register_60051547)
 localpool_forstenried.registers << register_60051547
@@ -583,7 +583,7 @@ lptc = Fabricate(:lptc_inbr, signing_user: inbr, register: register_60051547, cu
 pebr = Fabricate(:pebr)
 meter = Fabricate(:easymeter_60051620)
 register_60051620 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 pebr.add_role(:manager, register_60051620)
 pebr.add_role(:member, register_60051620)
 localpool_forstenried.registers << register_60051620
@@ -592,7 +592,7 @@ lptc = Fabricate(:lptc_pebr, signing_user: pebr, register: register_60051620, cu
 anbr = Fabricate(:anbr)
 meter = Fabricate(:easymeter_60051602)
 register_60051602 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 anbr.add_role(:manager, register_60051602)
 anbr.add_role(:member, register_60051602)
 localpool_forstenried.registers << register_60051602
@@ -601,7 +601,7 @@ lptc = Fabricate(:lptc_anbr, signing_user: anbr, register: register_60051602, cu
 gubr = Fabricate(:gubr)
 meter = Fabricate(:easymeter_60051618)
 register_60051618 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 gubr.add_role(:manager, register_60051618)
 gubr.add_role(:member, register_60051618)
 localpool_forstenried.registers << register_60051618
@@ -610,7 +610,7 @@ lptc = Fabricate(:lptc_gubr, signing_user: gubr, register: register_60051618, cu
 mabr = Fabricate(:mabr)
 meter = Fabricate(:easymeter_60051557)
 register_60051557 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 mabr.add_role(:manager, register_60051557)
 mabr.add_role(:member, register_60051557)
 localpool_forstenried.registers << register_60051557
@@ -619,7 +619,7 @@ lptc = Fabricate(:lptc_mabr, signing_user: mabr, register: register_60051557, cu
 dabr = Fabricate(:dabr)
 meter = Fabricate(:easymeter_60051596)
 register_60051596 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 dabr.add_role(:manager, register_60051596)
 dabr.add_role(:member, register_60051596)
 localpool_forstenried.registers << register_60051596
@@ -628,7 +628,7 @@ lptc = Fabricate(:lptc_dabr, signing_user: dabr, register: register_60051596, cu
 zubu = Fabricate(:zubu)
 meter = Fabricate(:easymeter_60051558)
 register_60051558 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 zubu.add_role(:manager, register_60051558)
 zubu.add_role(:member, register_60051558)
 localpool_forstenried.registers << register_60051558
@@ -637,7 +637,7 @@ lptc = Fabricate(:lptc_zubu, signing_user: zubu, register: register_60051558, cu
 mace = Fabricate(:mace)
 meter = Fabricate(:easymeter_60051551)
 register_60051551 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 mace.add_role(:manager, register_60051551)
 mace.add_role(:member, register_60051551)
 localpool_forstenried.registers << register_60051551
@@ -646,7 +646,7 @@ lptc = Fabricate(:lptc_mace, signing_user: mace, register: register_60051551, cu
 stcs = Fabricate(:stcs)
 meter = Fabricate(:easymeter_60051619)
 register_60051619 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 stcs.add_role(:manager, register_60051619)
 stcs.add_role(:member, register_60051619)
 localpool_forstenried.registers << register_60051619
@@ -655,7 +655,7 @@ lptc = Fabricate(:lptc_stcs, signing_user: stcs, register: register_60051619, cu
 pafi = Fabricate(:pafi)
 meter = Fabricate(:easymeter_60051556)
 register_60051556 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051556
 lptc = Fabricate(:lptc_pafi, signing_user: pafi, register: register_60051556, customer: pafi, contractor: hell_und_warm)
 
@@ -668,14 +668,14 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # mafr = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051617)
 # register_60051617 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # mafr.add_role(:manager, register_60051617)
 # mafr.add_role(:member, register_60051617)
 
 # evga = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051555)
 # register_60051555 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # evga.add_role(:manager, register_60051555)
 # evga.add_role(:member, register_60051555)
 # #evga.friends << pesc
@@ -683,7 +683,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # chgu = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051616)
 # register_60051616 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # chgu.add_role(:manager, register_60051616)
 # chgu.add_role(:member, register_60051616)
 # #chgu.friends << pesc
@@ -691,7 +691,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # gihe = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051615)
 # register_60051615 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # gihe.add_role(:manager, register_60051615)
 # gihe.add_role(:member, register_60051615)
 # #gihe.friends << pesc
@@ -699,7 +699,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # uwhe = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051546)
 # register_60051546 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # uwhe.add_role(:manager, register_60051546)
 # uwhe.add_role(:member, register_60051546)
 # #uwhe.friends << pesc
@@ -707,7 +707,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # anka = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051553)
 # register_60051553 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # anka.add_role(:manager, register_60051553)
 # anka.add_role(:member, register_60051553)
 # #anka.friends << pesc
@@ -715,7 +715,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # reko = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051601)
 # register_60051601 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # reko.add_role(:manager, register_60051601)
 # reko.add_role(:member, register_60051601)
 # #reko.friends << pesc
@@ -723,7 +723,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # thlo = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051568)
 # register_60051568 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # thlo.add_role(:manager, register_60051568)
 # thlo.add_role(:member, register_60051568)
 # #thlo.friends << pesc
@@ -731,7 +731,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # luma = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051610)
 # register_60051610 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # luma.add_role(:manager, register_60051610)
 # luma.add_role(:member, register_60051610)
 # #luma.friends << pesc
@@ -739,7 +739,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # frpe = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051537)
 # register_60051537 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # frpe.add_role(:manager, register_60051537)
 # frpe.add_role(:member, register_60051537)
 # #frpe.friends << pesc
@@ -747,7 +747,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # anpf = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051564)
 # register_60051564 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # anpf.add_role(:manager, register_60051564)
 # anpf.add_role(:member, register_60051564)
 # #anpf.friends << pesc
@@ -755,7 +755,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # coro = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051572)
 # register_60051572 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # coro.add_role(:manager, register_60051572)
 # coro.add_role(:member, register_60051572)
 # #coro.friends << pesc
@@ -763,7 +763,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # chvo = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051552)
 # register_60051552 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # chvo.add_role(:manager, register_60051552)
 # chvo.add_role(:member, register_60051552)
 # #chvo.friends << pesc
@@ -771,7 +771,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # clwe = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051567)
 # register_60051567 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # clwe.add_role(:manager, register_60051567)
 # clwe.add_role(:member, register_60051567)
 # #clwe.friends << pesc
@@ -779,7 +779,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # siba = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051586)
 # register_60051586 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # siba.add_role(:manager, register_60051586)
 # siba.add_role(:member, register_60051586)
 # #siba.friends << pesc
@@ -787,7 +787,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # laura_häusler = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051540)
 # register_60051540 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # laura_häusler.add_role(:manager, register_60051540)
 # laura_häusler.add_role(:member, register_60051540)
 # #laura_häusler.friends << pesc
@@ -795,7 +795,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # bahe = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051578)
 # register_60051578 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # bahe.add_role(:manager, register_60051578)
 # bahe.add_role(:member, register_60051578)
 # #bahe.friends << pesc
@@ -803,7 +803,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # daho = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051597)
 # register_60051597 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # daho.add_role(:manager, register_60051597)
 # daho.add_role(:member, register_60051597)
 # #daho.friends << pesc
@@ -811,7 +811,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # ahma = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051541)
 # register_60051541 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # ahma.add_role(:manager, register_60051541)
 # ahma.add_role(:member, register_60051541)
 # #ahma.friends << pesc
@@ -819,7 +819,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # mame = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051570)
 # register_60051570 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # mame.add_role(:manager, register_60051570)
 # mame.add_role(:member, register_60051570)
 # #mame.friends << pesc
@@ -827,7 +827,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # wopf = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051548)
 # register_60051548 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # wopf.add_role(:manager, register_60051548)
 # wopf.add_role(:member, register_60051548)
 # #wopf.friends << pesc
@@ -835,7 +835,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # math = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051612)
 # register_60051612 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # math.add_role(:manager, register_60051612)
 # math.add_role(:member, register_60051612)
 # #math.friends << pesc
@@ -843,7 +843,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # kaka = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051549)
 # register_60051549 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # kaka.add_role(:manager, register_60051549)
 # kaka.add_role(:member, register_60051549)
 # #kaka.friends << pesc
@@ -851,7 +851,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # chwi = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051587)
 # register_60051587 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # chwi.add_role(:manager, register_60051587)
 # chwi.add_role(:member, register_60051587)
 # #chwi.friends << pesc
@@ -859,7 +859,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # dowo = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051566)
 # register_60051566 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # dowo.add_role(:manager, register_60051566)
 # dowo.add_role(:member, register_60051566)
 # #dowo.friends << pesc
@@ -867,7 +867,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # eskw = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051592)
 # register_60051592 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # eskw.add_role(:manager, register_60051592)
 # eskw.add_role(:member, register_60051592)
 # #eskw.friends << pesc
@@ -875,7 +875,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # fepf = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051580)
 # register_60051580 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # fepf.add_role(:manager, register_60051580)
 # fepf.add_role(:member, register_60051580)
 # #fepf.friends << pesc
@@ -883,7 +883,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # jona = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051538)
 # register_60051538 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # jona.add_role(:manager, register_60051538)
 # jona.add_role(:member, register_60051538)
 # #jona.friends << pesc
@@ -891,7 +891,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # ruth_jürgensen = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051590)
 # register_60051590 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # ruth_jürgensen.add_role(:manager, register_60051590)
 # ruth_jürgensen.add_role(:member, register_60051590)
 # #ruth_jürgensen.friends << pesc
@@ -899,7 +899,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # raja = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051588)
 # register_60051588 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # raja.add_role(:manager, register_60051588)
 # raja.add_role(:member, register_60051588)
 # #raja.friends << pesc
@@ -907,7 +907,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # elgr = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051543)
 # register_60051543 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # elgr.add_role(:manager, register_60051543)
 # elgr.add_role(:member, register_60051543)
 # #elgr.friends << pesc
@@ -915,7 +915,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # mafl = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051582)
 # register_60051582 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # mafl.add_role(:manager, register_60051582)
 # mafl.add_role(:member, register_60051582)
 # #mafl.friends << pesc
@@ -923,7 +923,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # michael_göbl = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051539)
 # register_60051539 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # michael_göbl.add_role(:manager, register_60051539)
 # michael_göbl.add_role(:member, register_60051539)
 # #michael_göbl.friends << pesc
@@ -931,7 +931,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # jogo = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051545)
 # register_60051545 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # jogo.add_role(:manager, register_60051545)
 # jogo.add_role(:member, register_60051545)
 # #jogo.friends << pesc
@@ -939,7 +939,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # paha = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051614)
 # register_60051614 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # paha.add_role(:manager, register_60051614)
 # paha.add_role(:member, register_60051614)
 # #paha.friends << pesc
@@ -947,7 +947,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # guhe = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051550)
 # register_60051550 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # guhe.add_role(:manager, register_60051550)
 # guhe.add_role(:member, register_60051550)
 # #guhe.friends << pesc
@@ -955,7 +955,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # dominik_sölch = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051573)
 # register_60051573 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # dominik_sölch.add_role(:manager, register_60051573)
 # dominik_sölch.add_role(:member, register_60051573)
 # #dominik_sölch.friends << pesc
@@ -963,7 +963,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # jere = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051571)
 # register_60051571 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # jere.add_role(:manager, register_60051571)
 # jere.add_role(:member, register_60051571)
 # #jere.friends << pesc
@@ -971,7 +971,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # ulha = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051544)
 # register_60051544 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # ulha.add_role(:manager, register_60051544)
 # ulha.add_role(:member, register_60051544)
 # #ulha.friends << pesc
@@ -979,7 +979,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # anme = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051594)
 # register_60051594 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # anme.add_role(:manager, register_60051594)
 # anme.add_role(:member, register_60051594)
 # #anme.friends << pesc
@@ -987,7 +987,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # aler = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051583)
 # register_60051583 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # aler.add_role(:manager, register_60051583)
 # aler.add_role(:member, register_60051583)
 # #aler.friends << pesc
@@ -995,7 +995,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # kafr = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051604)
 # register_60051604 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # kafr.add_role(:manager, register_60051604)
 # kafr.add_role(:member, register_60051604)
 # #kafr.friends << pesc
@@ -1003,7 +1003,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # clkr = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051593)
 # register_60051593 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # clkr.add_role(:manager, register_60051593)
 # clkr.add_role(:member, register_60051593)
 # #clkr.friends << pesc
@@ -1011,7 +1011,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # raab = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051613)
 # register_60051613 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # raab.add_role(:manager, register_60051613)
 # raab.add_role(:member, register_60051613)
 # #raab.friends << pesc
@@ -1019,7 +1019,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # mofe = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051611)
 # register_60051611 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # mofe.add_role(:manager, register_60051611)
 # mofe.add_role(:member, register_60051611)
 # #mofe.friends << pesc
@@ -1027,7 +1027,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # irlo = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051609)
 # register_60051609 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # irlo.add_role(:manager, register_60051609)
 # irlo.add_role(:member, register_60051609)
 # #irlo.friends << pesc
@@ -1035,7 +1035,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # eusc = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051554)
 # register_60051554 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # eusc.add_role(:manager, register_60051554)
 # eusc.add_role(:member, register_60051554)
 # #eusc.friends << pesc
@@ -1043,7 +1043,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # sast = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051585)
 # register_60051585 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # sast.add_role(:manager, register_60051585)
 # sast.add_role(:member, register_60051585)
 # #sast.friends << pesc
@@ -1051,7 +1051,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # havo = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051621)
 # register_60051621 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # havo.add_role(:manager, register_60051621)
 # havo.add_role(:member, register_60051621)
 # #havo.friends << pesc
@@ -1059,7 +1059,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # rowe = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051565)
 # register_60051565 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # rowe.add_role(:manager, register_60051565)
 # rowe.add_role(:member, register_60051565)
 # #rowe.friends << pesc
@@ -1068,7 +1068,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # albr = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051595)
 # register_60051595 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # register_60051595 = Fabricate(:register_60051595)
 # albr.add_role(:manager, register_60051595)
 # albr.add_role(:member, register_60051595)
@@ -1077,7 +1077,7 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # swgg = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051579)
 # register_60051579 = meter.input_register
-# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+# meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 # swgg.add_role(:manager, register_60051579)
 # swgg.add_role(:member, register_60051579)
 # #swgg.friends << pesc
@@ -1085,21 +1085,21 @@ lptc = Fabricate(:lptc_raja, signing_user: raja, register: register_60051556, cu
 # thirdparty supplied N 42
 meter = Fabricate(:easymeter_60051575)
 register_60051575 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 pesc.add_role(:manager, register_60051575)
 localpool_forstenried.registers << register_60051575
 
 # Waldorfschule
 meter = Fabricate(:easymeter_60009485)
 register_60009485 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 pesc.add_role(:manager, register_60009485)
 localpool_forstenried.registers << register_60009485
 
 # Hausstrom Mitte
 meter = Fabricate(:easymeter_1338000818)
 register_1338000818 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 pesc.add_role(:manager, register_1338000818)
 localpool_forstenried.registers << register_1338000818
 
@@ -1270,37 +1270,37 @@ sulz_manager.add_role(:manager, sulz_contractor)
 meter = Fabricate(:easymeter_60300856)
 register_60300856_out = meter.output_register
 register_60300856 = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in_out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in_out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register_60300856)
 sulz_manager.add_role(:manager, register_60300856_out)
-Fabricate(:reading, register_id: register_60300856.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register_60300856.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 183900, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register_60300856_out.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1000, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register_60300856_out.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 510200, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register_60300856.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register_60300856.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 183900, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register_60300856_out.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1000, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register_60300856_out.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 510200, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 
 # Abgrenzung bhkw
 meter = Fabricate(:easymeter_60009498)
 register_60009498 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register_60009498)
-Fabricate(:reading, register_id: register_60009498.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register_60009498.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 248000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register_60009498.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 1100, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register_60009498.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 248000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 
 # Produktion bhkw
 meter = Fabricate(:easymeter_60404855)
 register_60404855 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register_60404855)
-Fabricate(:reading, register_id: register_60404855.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register_60404855.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 10770500, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register_60404855.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register_60404855.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 10770500, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 
 # Produktion pv
 meter = Fabricate(:easymeter_60404845)
 register_60404845 = meter.output_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register_60404845)
-Fabricate(:reading, register_id: register_60404845.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register_60404845.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 7060800, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register_60404845.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register_60404845.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 7060800, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 
 localpool_sulz = Fabricate(:localpool_sulz, registers: [register_60404855, register_60404845])
 sulz_manager.add_role(:manager, localpool_sulz)
@@ -1311,7 +1311,7 @@ Fabricate(:price_sulz, localpool: localpool_sulz)
 
 meter = Fabricate(:easymeter_60404846)
 register = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register)
 localpool_sulz.registers << register
 user = Fabricate(:user)
@@ -1320,28 +1320,28 @@ orga = Fabricate(:organization, mode: 'other')
 user.add_role(:manager, orga)
 lptc = Fabricate(:lptc_hafi, signing_user: user, register: register, customer: orga, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 13855000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 77134105, state: 'Z86')
-reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 241100, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 239000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 241100, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 239000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404850)
 register = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register)
 localpool_sulz.registers << register
 user = Fabricate(:user)
 user.add_role(:member, register)
 lptc = Fabricate(:lptc_hubv, signing_user: user, register: register, customer: user, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 27489000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 77134118, state: 'Z86')
-reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 864100, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 858000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 864100, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 858000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404851)
 register = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register)
 localpool_sulz.registers << register
 user = Fabricate(:user)
@@ -1350,14 +1350,14 @@ orga = Fabricate(:organization, mode: 'other')
 user.add_role(:manager, orga)
 lptc = Fabricate(:lptc_mape, signing_user: user, register: register, customer: orga, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 24124000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 49350039, state: 'Z86')
-reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1892400, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1879000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1892400, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1879000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404853)
 register = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register)
 localpool_sulz.registers << register
 user = Fabricate(:user)
@@ -1370,58 +1370,58 @@ user = Fabricate(:user)
 user.add_role(:member, register)
 lptc = Fabricate(:lptc_pewi, signing_user: user, register: register, customer: user, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 23790, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 4789917, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 10, 31), energy_milliwatt_hour: 191000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 11, 1), energy_milliwatt_hour: 191000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 808200, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 798000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 10, 31), energy_milliwatt_hour: 191000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 11, 1), energy_milliwatt_hour: 191000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 808200, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 798000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404847)
 register = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register)
 localpool_sulz.registers << register
 user = Fabricate(:user)
 user.add_role(:member, register)
 lptc = Fabricate(:lptc_musc, signing_user: user, register: register, customer: user, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 8024000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 5640077, state: 'Z86')
-reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 456300, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 4529000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 456300, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 4529000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404854)
 register = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register)
 localpool_sulz.registers << register
 user = Fabricate(:user)
 user.add_role(:member, register)
 lptc = Fabricate(:lptc_viwe, signing_user: user, register: register, customer: user, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 19442000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 77134120, state: 'Z86')
-reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 809700, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 805000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 809700, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 805000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60404852)
 register = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register)
 localpool_sulz.registers << register
 user = Fabricate(:user)
 user.add_role(:member, register)
 lptc = Fabricate(:lptc_reho, signing_user: user, register: register, customer: user, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 9597000, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 5000705, state: 'Z86')
-reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1523000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1513000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1523000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+reading_2 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 31), energy_milliwatt_hour: 1513000, reason: Reading::REGULAR_READING, quality: Reading::FORECAST_VALUE, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 billing = Fabricate(:billing, status: Billing::CLOSED, start_reading_id: reading_1.id, end_reading_id: reading_2.id, localpool_power_taker_contract: lptc, billing_cycle: billing_cycle_sulz)
 
 meter = Fabricate(:easymeter_60327350)
 register = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register)
 localpool_sulz.registers << register
 user = Fabricate(:user)
@@ -1435,13 +1435,13 @@ Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), e
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 16), energy_milliwatt_hour: 9341900, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 4939588, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 12), energy_milliwatt_hour: 9521100, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: 4939588, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 2, 28), energy_milliwatt_hour: 9801400, reason: Reading::DEVICE_CHANGE_1, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: 4939588, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 2, 28), energy_milliwatt_hour: 733500, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 3, 1), energy_milliwatt_hour: 733500, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 2, 28), energy_milliwatt_hour: 733500, reason: Reading::DEVICE_CHANGE_2, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 3, 1), energy_milliwatt_hour: 733500, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::CUSTOMER_LSG, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 
 # zwischenzähler!
 meter = Fabricate(:easymeter_60404849)
 register = meter.input_register
-meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.manufacturer_product_serialnumber}", resource: meter )
+meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 sulz_manager.add_role(:manager, register)
-Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.manufacturer_product_serialnumber, state: 'Z86')
+Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::DEVICE_SETUP, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 

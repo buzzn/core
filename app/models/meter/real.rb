@@ -3,30 +3,20 @@ module Meter
 
     MUST_HAVE_AT_LEAST_ONE = 'must have at least one register'
 
-    def after_create_callback(user, obj)
-      register = obj.registers.first
-      register.class.after_create_callback(user, register)
-    end
-
-    def after_destroy_callback(user, obj)
-      register = obj.registers.first
-      register.class.after_destroy_callback(user, register)
-    end
-
-    mount_uploader :image, PictureUploader
-
     has_many :registers, class_name: Register::Real, foreign_key: :meter_id
     validates_associated :registers
 
-    def self.all_manufacturer_names
-      ['easy_meter', 'amperix', 'ferraris', 'other']
-    end
+    EASY_METER = 'easy_meter'
+    AMPERIX = 'amperix'
+    FERRARIS = 'ferraris'
+    OTHER = 'other'
+    MANUFACTURER_NAMES = [EASY_METER, AMPERIX, FERRARIS, OTHER]
 
-    validates :manufacturer_name, inclusion: {in: all_manufacturer_names}
-    validates :manufacturer_product_name, presence: true
-    validates :manufacturer_product_serialnumber, presence: true, uniqueness: true, length: { in: 2..128 }
-    validates :image, presence: false
-
+    validates :manufacturer_name, inclusion: {in: MANUFACTURER_NAMES}
+    validates :product_name, presence: true
+    validates :product_serialnumber, presence: true, uniqueness: true, length: { in: 2..128 }
+    validates :direction_number, inclusion: {in: DIRECTION_NUMBERS}
+    
     before_destroy do
       # we can't use registers.delete_all here because ActiveRecord translates this into a wrong SQL query.
       Register::Real.where(meter_id: self.id).delete_all
@@ -41,13 +31,13 @@ module Meter
     def validate_invariants
       if registers.size == 0
         errors.add(:registers, MUST_HAVE_AT_LEAST_ONE)
-      else
-        errors.add(:registers, 'must be all none virtual') if registers.detect { |r| r.is_a? Register::Virtual }
       end
+      errors.add(:registers, 'must be all none virtual') if registers.detect { |r| r.is_a? Register::Virtual }
     end
 
     def initialize(attr = {})
       super
+      # TODO really needed ? too hacky !
       attr[:registers].each {|r| r.meter = self} if attr.key?(:registers)
     end
 
@@ -59,7 +49,7 @@ module Meter
       registers << Register::Output.new(attr.merge(meter: self))
     end
 
-    def direction
+    def direction_number
       if registers.size == 1
         Meter::Base::ONE_WAY_METER
       else

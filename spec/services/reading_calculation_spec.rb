@@ -544,8 +544,9 @@ describe Buzzn::Services::ReadingCalculation do
     expect{ subject.get_missing_reading(meter.input_register, Date.new(2016, 1, 1)) }.to raise_error ArgumentError
 
     VCR.use_cassette("lib/buzzn/discovergy/gets_single_reading") do
-      meter = Fabricate(:meter, product_serialnumber: 60009485)
-      broker = Fabricate(:discovergy_broker, mode: meter.registers.first.direction.sub('put', ''), resource: meter, external_id: "EASYMETER_#{meter.product_serialnumber}")
+      meter = Fabricate(:input_meter, product_serialnumber: 60009485)
+      broker = Fabricate(:discovergy_broker, mode: 'in',
+                         resource: meter, external_id: "EASYMETER_#{meter.product_serialnumber}")
       time = Time.find_zone('Berlin').local(2016, 7, 1, 0, 0, 0)
 
       result = subject.get_missing_reading(meter.registers.first, time)

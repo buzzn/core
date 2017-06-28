@@ -3,8 +3,7 @@ module Register
 
     model Real
 
-    attributes  :uid,
-                :obis
+    attributes :metering_point_id, :obis
 
     has_many :devices
 

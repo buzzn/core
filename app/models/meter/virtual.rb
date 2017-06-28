@@ -1,36 +1,24 @@
 module Meter
   class Virtual < Base
 
-    def after_create_callback(user, obj)
-      obj.register.class.after_create_callback(user, obj.register)
-    end
-
-    def after_destroy_callback(user, obj)
-      obj.register.class.after_destroy_callback(user, obj.register)
-    end
-
     has_one :register, class_name: Register::Virtual, dependent: :destroy, foreign_key: :meter_id
     validates_associated :register
 
     validates :register, presence: true
-    validates :manufacturer_product_name, presence: false
-    validates :manufacturer_product_serialnumber, presence: false, uniqueness: true, allow_nil: true, length: { in: 2..128 }
+    validates :product_name, presence: false
+    validates :product_serialnumber, presence: false, uniqueness: true, allow_nil: true, length: { in: 2..128 }
 
 
     def validate_invariants
-      [:manufacturer_name, :image].each do |name|
-        errors.add(name, 'not allowed') unless send(name).nil?
-      end
+      errors.add(:manufacturer_name, 'not allowed') unless manufacturer_name.nil?
+      errors.add(:direction_number, 'not allowed') unless direction_number = ONE_WAY_METER
     end
 
     def initialize(attr = {})
       attr[:register] = Register::Virtual.new(attr[:register] || {}) if attr && attr[:register].is_a?(Hash)
+      attr[:direction_number] = ONE_WAY_METER
       super
       register.meter = self if register
-    end
-
-    def direction
-      Meter::Base::ONE_WAY_METER
     end
 
     # work around AR short-comings

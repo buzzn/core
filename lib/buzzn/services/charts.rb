@@ -39,8 +39,8 @@ module Buzzn::Services
       units = interval.hour? || interval.day? ? :milliwatt : :milliwatt_hour
       result = Buzzn::DataResultSet.send(units, group.id)
       @registry.each do |data_source|
-        result.add_all(data_source.aggregated(group, :in, interval), interval.duration)
-        result.add_all(data_source.aggregated(group, :out, interval), interval.duration)
+        result.add_all(data_source.aggregated(group, 'in', interval), interval.duration)
+        result.add_all(data_source.aggregated(group, 'out', interval), interval.duration)
       end
       finalize(result, interval)
     end

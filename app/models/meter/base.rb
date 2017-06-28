@@ -5,125 +5,103 @@ module Meter
     resourcify
     include Filterable
 
-    # VoltageLevel
-    LOW_LEVEL = 'low_level'
-    MID_LEVEL = 'mid_level'
-    HIGH_LEVEL = 'high_level'
-    HIGHEST_LEVEL = 'highest_level'
+    # TODO
+    # TODO need to figure which attributes belongs to real
+    # TODO and which attributes belong to virtual and
+    # TODO adjust it, i.e. move the constants and add 'validates'
+    # TODO declarations
+    # TODO
 
-    # CycleInterval
-    MONTHLY = 'monthly'
-    YEARLY = 'yearly'
-    QUARTERLY = 'quarterly'
-    HALF_YEARLY = 'half_yearly'
+    # voltage levels
+    LOW_LEVEL = 'E06' # low_level
+    MID_LEVEL = 'E05' # mid_level
+    HIGH_LEVEL = 'E04' # high_level
+    HIGHEST_LEVEL = 'E03' # highest_level
+    VOLTAGE_LEVELS = [LOW_LEVEL, MID_LEVEL, HIGH_LEVEL, HIGHEST_LEVEL]
 
-    # MeteringType
-    ANALOG_HOUSEHOLD_METER = 'analog_household_meter'
-    SMART_METER = 'smart_meter'
-    LOAD_METER = 'load_meter' # Lastgangzähler
-    ANALOG_AC_METER = 'analog_ac_meter' # Wechselstromzähler
-    DIGITAL_HOUSEHOLD_METER = 'digital_household_meter'
-    MAXIMUM_METER = 'maximum_meter'
-    INDIVIDUAL_ADJUSTMENT = 'individual_adjustment'
+    # cycle intervals
+    MONTHLY = 'MONTHLY'
+    YEARLY = 'YEARLY'
+    QUARTERLY = 'QUARTERLY'
+    HALF_YEARLY = 'HALF_YEARLY'
+    CYCLE_INTERVALS = [MONTHLY, YEARLY, QUARTERLY, HALF_YEARLY]
 
-    # MeterSize
-    EDL40 = 'edl40'
-    EDL21 = 'edl21'
-    OTHER_EHZ = 'other_ehz'
+    # metering type
+    ANALOG_HOUSEHOLD_METER = 'AHZ' # analog_household_meter
+    LOAD_METER = 'LAZ' # load_meter - Lastgangzähler
+    ANALOG_AC_METER = 'WSZ' # analog_ac_meter - Wechselstromzähler
+    DIGITAL_HOUSEHOLD_METER = 'EHZ' # digital_household_meter
+    MAXIMUM_METER = 'MAZ' # maximum_meter
+    INDIVIDUAL_ADJUSTMENT = 'IVA' # individual_adjustment
+    METERING_TYPES = [ANALOG_HOUSEHOLD_METER, LOAD_METER,
+                      ANALOG_AC_METER, DIGITAL_HOUSEHOLD_METER, MAXIMUM_METER,
+                      INDIVIDUAL_ADJUSTMENT]
 
-    # Tariff
-    ONE_TARIFF = 'one_tariff'
-    TWO_TARIFFS = 'two_tariffs'
-    MULTIPLE_TARIFFS = 'multiple_tariffs'
+    # meter sizes
+    EDL40 = 'Z01' # edl40
+    EDL21 = 'Z02' # edl21
+    OTHER_EHZ = 'Z03' # other_ehz
+    METER_SIZES = [EDL40, EDL21, OTHER_EHZ]
 
-    # DataLogging
-    REMOTE = 'remote'
-    MANUAL = 'manual'
+    # tariffs
+    ONE_TARIFF = 'ETZ' # single tariff
+    TWO_TARIFFS = 'ZTZ' # dual tariffs
+    MULTIPLE_TARIFFS = 'NTZ' # multi tariffs
+    TARIFFS = [ONE_TARIFF, TWO_TARIFFS, MULTIPLE_TARIFFS]
 
-    # MountingMethod
-    PLUG_TECHNIQUE = 'plug_technique'
-    THREE_POINT_HANGING = 'three_point_hanging'
-    CAP_RAIL = 'cap_rail' # Hutschiene
+    # data loggings
+    REMOTE = 'AMR' # remote
+    MANUAL = 'MMR' # manual
+    DATA_LOGGINGS = [REMOTE, MANUAL]
+    MEASUREMENT_METHODS = [REMOTE, MANUAL]
 
-    # ownership
-    BUZZN_SYSTEMS = 'buzzn_systems'
-    FOREIGN_OWNERSHIP = 'foreign_ownership'
-    CUSTOMER = 'customer'
-    LEASED = 'leased'
-    BOUGHT = 'bought'
+    # mounting methods
+    PLUG_TECHNIQUE = 'BKE' # plug_technique
+    THREE_POINT_HANGING = 'DPA' # three point mounting
+    CAP_RAIL = 'HS' # cap_rail - Hutschiene
+    MOUNTING_METHODS = [PLUG_TECHNIQUE, THREE_POINT_HANGING, CAP_RAIL]
 
-    # direction
-    ONE_WAY_METER = 'one_way_meter'
-    TWO_WAY_METER = 'two_way_meter'
+    # ownerships
+    BUZZN_SYSTEMS = 'BUZZN_SYSTEMS'
+    FOREIGN_OWNERSHIP = 'FOREIGN_OWNERSHIP'
+    CUSTOMER = 'CUSTOMER'
+    LEASED = 'LEASED'
+    BOUGHT = 'BOUGHT'
+    OWNERSHIPS = [BUZZN_SYSTEMS, FOREIGN_OWNERSHIP, CUSTOMER, LEASED, BOUGHT]
 
+    # direction numbers
+    ONE_WAY_METER = 'ERZ' # one_way_meter
+    TWO_WAY_METER = 'ZRZ' # two_way_meter
+    DIRECTION_NUMBERS = [ONE_WAY_METER, TWO_WAY_METER]
 
-    class << self
-      def all_voltage_levels
-        @voltage_level ||= [LOW_LEVEL, MID_LEVEL, HIGH_LEVEL, HIGHEST_LEVEL]
-      end
-
-      def all_cycle_intervals
-        @cycle_interval ||= [MONTHLY, YEARLY, QUARTERLY, HALF_YEARLY]
-      end
-
-      def all_metering_types
-        @metering_type ||= [ANALOG_HOUSEHOLD_METER, SMART_METER, LOAD_METER, ANALOG_AC_METER,
-                            DIGITAL_HOUSEHOLD_METER, MAXIMUM_METER, INDIVIDUAL_ADJUSTMENT]
-      end
-
-      def all_meter_sizes
-        @meter_size ||= [EDL40, EDL21, OTHER_EHZ]
-      end
-
-      def all_tariffs
-        @tariff ||= [ONE_TARIFF, TWO_TARIFFS, MULTIPLE_TARIFFS]
-      end
-
-      def all_data_loggings
-        @data_logging ||= [REMOTE, MANUAL]
-      end
-
-      def all_mounting_methods
-        @mounting_method ||= [PLUG_TECHNIQUE, THREE_POINT_HANGING, CAP_RAIL]
-      end
-
-      def all_ownerships
-        @ownership ||= [BUZZN_SYSTEMS, FOREIGN_OWNERSHIP, CUSTOMER, LEASED, BOUGHT]
-      end
-    end
+    # sections
+    ELECTRICITY = 'S'
+    GAS = 'G'
+    SECTIONS = [ELECTRICITY, GAS]
 
     has_one :broker, as: :resource, dependent: :destroy, foreign_key: :resource_id, class_name: 'Broker::Base'
     validates_associated :broker
 
-    has_one :main_equipment, class_name: Meter::Equipment, foreign_key: 'meter_id'
-    has_one :secondary_equipment, class_name: Meter::Equipment, foreign_key: 'meter_id'
-
     # hack for restricted scope
     has_many :registers, class_name: Register::Base, foreign_key: :meter_id
 
-    validates :measurement_capture, presence: false
     validates :build_year, presence: false
-    validates :calibrated_till, presence: false
-    validates :init_first_reading, presence: false
-    validates :init_reading, presence: false
-    validates :voltage_level, inclusion: {in: all_voltage_levels}, if: 'voltage_level.present?'
-    validates :cycle_interval, inclusion: {in: all_cycle_intervals}, if: 'cycle_interval.present?'
-    validates :metering_type, inclusion: {in: all_metering_types}, if: 'metering_type.present?'
-    validates :meter_size, inclusion: {in: all_meter_sizes}, if: 'meter_size.present?'
-    validates :tariff, inclusion: {in: all_tariffs}, if: 'tariff.present?'
-    validates :data_logging, inclusion: {in: all_data_loggings}, if: 'data_logging.present?'
-    validates :mounting_method, inclusion: {in: all_mounting_methods}, if: 'mounting_method.present?'
-    validates :ownership, inclusion: {in: all_ownerships}, if: 'ownership.present?'
+    validates :calibrated_until, presence: false
+    validates :edifact_measurement_method, presence: false
+    validates :edifact_voltage_level, inclusion: {in: VOLTAGE_LEVELS}, if: 'edifact_voltage_level.present?'
+    validates :edifact_cycle_interval, inclusion: {in: CYCLE_INTERVALS}, if: 'edifact_cycle_interval.present?'
+    validates :edifact_metering_type, inclusion: {in: METERING_TYPES}, if: 'edifact_metering_type.present?'
+    validates :edifact_meter_size, inclusion: {in: METER_SIZES}, if: 'edifact_meter_size.present?'
+    validates :edifact_tariff, inclusion: {in: TARIFFS}, if: 'edifact_tariff.present?'
+    validates :edifact_data_logging, inclusion: {in: DATA_LOGGINGS}, if: 'edifact_data_logging.present?'
+    validates :edifact_measurement_method, inclusion: {in: MEASUREMENT_METHODS}, if: 'edifact_measurement_method.present?'
+    validates :edifact_mounting_method, inclusion: {in: MOUNTING_METHODS}, if: 'edifact_mounting_method.present?'
+    validates :ownership, inclusion: {in: OWNERSHIPS}, if: 'ownership.present?'
+    validates :edifact_section, inclusion: {in: SECTIONS}, if: 'edifact_section.present?'
 
     validate :validate_invariants
 
-    after_create :create_main_equipment
-
     def validate_invariants
-    end
-
-    before_destroy do
-      Meter::Equipment.where(meter_id: self.id).delete_all
     end
 
     scope :reals,      -> {where(type: Real)}
@@ -131,21 +109,15 @@ module Meter
     scope :restricted, ->(uuids) { joins(registers: :contracts).where('contracts.id': uuids) }
 
     def name
-      "#{manufacturer_name} #{manufacturer_product_serialnumber}"
+      "#{manufacturer_name} #{product_serialnumber}"
     end
 
     def self.search_attributes
-      [:manufacturer_name, :manufacturer_product_name, :manufacturer_product_serialnumber]
+      [:manufacturer_name, :product_name, :product_serialnumber]
     end
 
     def self.filter(value)
       do_filter(value, *search_attributes)
-    end
-
-    def create_main_equipment
-      if main_equipment.nil?
-        Meter::Equipment.create!(converter_constant: 1, meter: self, ownership: Meter::Equipment::BUZZN_SYSTEMS)
-      end
     end
   end
 end

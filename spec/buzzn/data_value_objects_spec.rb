@@ -42,7 +42,7 @@ describe Buzzn::DataResult do
 
   it 'loads it hash representation' do
     reference = subject.new(Time.new(123456789), 987654331,
-                            'u-i-d',[:in, :out].sample,
+                            'u-i-d',['in', 'out'].sample,
                             Time.current.to_f)
     other = subject.from_hash(reference.to_hash)
     expect(reference.resource_id).to eq other.resource_id
@@ -53,7 +53,7 @@ describe Buzzn::DataResult do
 
   it 'round-trip via json' do
     reference = subject.new(Time.new(123456789), 987654331,
-                            'u-i-d',[:in, :out].sample,
+                            'u-i-d',['in', 'out'].sample,
                             Time.current.to_f)
     other = subject.from_json(reference.to_json)
     expect(reference.resource_id).to eq other.resource_id
@@ -97,7 +97,7 @@ describe Buzzn::DataResultSet do
       reference = subject.send(units, 'u-i-d')
       4.times.each do
         reference.add(Time.new(rand(12789)), rand(987654331),
-                      [:in, :out].sample)
+                      ['in', 'out'].sample)
       end
       other = subject.from_hash(reference.to_hash)
       expect(reference.resource_id).to eq other.resource_id
@@ -110,7 +110,7 @@ describe Buzzn::DataResultSet do
       reference = subject.send(units, 'u-i-d')
       4.times.each do
         reference.add(Time.new(rand(16789)), rand(987654331),
-                      [:in, :out].sample)
+                      ['in', 'out'].sample)
       end
       other = subject.from_hash(reference.to_hash)
       expect(reference.resource_id).to eq other.resource_id
@@ -123,14 +123,14 @@ describe Buzzn::DataResultSet do
       reference = subject.send(units, 'u-i-d')
       4.times.each do
         reference.add(Time.new(rand(16789)), rand(987654331),
-                      [:in, :out].sample)
+                      ['in', 'out'].sample)
       end
       other = subject.send(units, 'u-i-d')
       reference.in.each do |i|
-        other.add(i.timestamp, 987654331 - i.value, :in)
+        other.add(i.timestamp, 987654331 - i.value, 'in')
       end
       reference.out.each do |i|
-        other.add(i.timestamp, 987654331 - i.value, :out)
+        other.add(i.timestamp, 987654331 - i.value, 'out')
       end
       reference.add_all(other, :day)
       expect(reference.in.size).to eq other.in.size
@@ -150,8 +150,8 @@ describe Buzzn::DataResultSet do
         reference = subject.milliwatt('u-i-d')
         other = subject.milliwatt('u-i-d')
         4.times.each do |i|
-          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'in')
+          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'in')
         end
         reference.merge_lists(reference.in, other.in, duration, operator)
         expect(reference.in.size).to eq 4
@@ -165,8 +165,8 @@ describe Buzzn::DataResultSet do
         reference = subject.milliwatt('u-i-d')
         other = subject.milliwatt('u-i-d')
         4.times.each do |i|
-          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-          other.add(Time.at(1482251172 + (granularity(duration) / 2 - 1) + i * granularity(duration)), 100 + i * 100, :in)
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'in')
+          other.add(Time.at(1482251172 + (granularity(duration) / 2 - 1) + i * granularity(duration)), 100 + i * 100, 'in')
         end
         reference.merge_lists(reference.in, other.in, duration, operator)
         expect(reference.in.size).to eq 4
@@ -180,8 +180,8 @@ describe Buzzn::DataResultSet do
         reference = subject.milliwatt('u-i-d')
         other = subject.milliwatt('u-i-d')
         4.times.each do |i|
-          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'in')
+          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'in')
         end
         other.in.pop
         reference.merge_lists(reference.in, other.in, duration, operator)
@@ -198,10 +198,10 @@ describe Buzzn::DataResultSet do
         reference = subject.milliwatt('u-i-d')
         other = subject.milliwatt('u-i-d')
         4.times.each do |i|
-          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'in')
+          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'in')
         end
-        other.add(Time.at(1482251172 + 4 * granularity(duration)), 100 + 4 * 100, :in)
+        other.add(Time.at(1482251172 + 4 * granularity(duration)), 100 + 4 * 100, 'in')
         reference.merge_lists(reference.in, other.in, duration, operator)
         expect(reference.in.size).to eq 5
         4.times.each do |i|
@@ -216,8 +216,8 @@ describe Buzzn::DataResultSet do
         reference = subject.milliwatt('u-i-d')
         other = subject.milliwatt('u-i-d')
         4.times.each do |i|
-          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-          other.add(Time.at(1482251172 + i * granularity(duration) + 4 * granularity(duration)), 100 + i * 100, :in)
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'in')
+          other.add(Time.at(1482251172 + i * granularity(duration) + 4 * granularity(duration)), 100 + i * 100, 'in')
         end
         reference.merge_lists(reference.in, other.in, duration, operator)
         expect(reference.in.size).to eq 8
@@ -232,10 +232,10 @@ describe Buzzn::DataResultSet do
       it "merges lists for a #{duration}" do
         reference = subject.milliwatt('u-i-d')
         4.times.each do |i|
-          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
-          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :out)
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'in')
+          reference.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'out')
         end
-        reference.combine(:in, duration)
+        reference.combine('in', duration)
         4.times.each do |i|
           expect(reference.in[i].timestamp).to eq (1482251172 + i * granularity(duration))
           expect(reference.in[i].value).to eq (2 * (100 + i * 100))
@@ -247,7 +247,7 @@ describe Buzzn::DataResultSet do
         reference = subject.milliwatt('u-i-d')
         other = subject.milliwatt('u-i-d')
         4.times.each do |i|
-          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, :in)
+          other.add(Time.at(1482251172 + i * granularity(duration)), 100 + i * 100, 'in')
         end
         reference.subtract_all(other, duration)
         4.times.each do |i|
@@ -289,7 +289,7 @@ describe Buzzn::DataResultArray do
     4.times do
       reference << Buzzn::DataResult.new(Time.new(rand(123456789)),
                                          rand(987654331),
-                                         'u-i-d',[:in, :out].sample,
+                                         'u-i-d',['in', 'out'].sample,
                                          Time.current.to_f)
     end
     other = subject.from_hash(reference.to_hash)
@@ -302,7 +302,7 @@ describe Buzzn::DataResultArray do
     4.times do
       reference << Buzzn::DataResult.new(Time.new(rand(123456789)),
                                          rand(987654331),
-                                         'u-i-d',[:in, :out].sample,
+                                         'u-i-d',['in', 'out'].sample,
                                          Time.current.to_f)
     end
     other = subject.from_json(reference.to_json)

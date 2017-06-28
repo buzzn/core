@@ -32,17 +32,9 @@ describe Display::GroupRoda do
       output
     end
 
-    entity(:slp_register) do
-      register = Fabricate(:input_meter).input_register
-      register.update(readable: :world)
-      register
-    end
+    entity(:slp_register) { Fabricate(:input_meter).input_register }
 
-    entity(:sep_register) do
-      register = Fabricate(:output_meter).output_register
-      register.update(readable: :world)
-      register
-    end
+    entity(:sep_register) { Fabricate(:output_meter).output_register }
 
     entity(:admin) { Fabricate(:admin_token) }
 

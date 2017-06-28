@@ -15,8 +15,8 @@ module Buzzn
 
     def initialize(timestamp, value, resource_id, mode, expires_at = nil, json =nil)
       super(timestamp, value)
-      mode = (mode || '').to_sym
-      raise "unkown mode '#{mode}'" unless [:in, :out].include?(mode)
+      mode = mode.to_s
+      raise "unkown mode #{mode.inspect}" unless ['in', 'out'].include?(mode)
       @mode = mode
       @resource_id = resource_id
       @expires_at = expires_at.to_f
@@ -40,7 +40,7 @@ module Buzzn
     end
 
     def to_json(*args)
-      @json || '{"timestamp":' << @timestamp.to_s << ',"value":' << @value.to_s << ',"resource_id":"' << @resource_id << '","mode":"' << @mode.to_s << '","expires_at":' << expires_at.to_s << '}'
+      @json || '{"timestamp":' << @timestamp.to_s << ',"value":' << @value.to_s << ',"resource_id":"' << @resource_id << '","mode":"' << @mode << '","expires_at":' << expires_at.to_s << '}'
     end
   end
 end
