@@ -69,7 +69,7 @@ describe Admin::LocalpoolRoda do
           "manufacturer_product_name"=>"key?(:manufacturer_product_name) THEN key[manufacturer_product_name](filled?) AND key[manufacturer_product_name](str?) AND key[manufacturer_product_name](max_size?(63))",
           'manufacturer_product_serialnumber'=>'key?(:manufacturer_product_serialnumber) THEN key[manufacturer_product_serialnumber](filled?) AND key[manufacturer_product_serialnumber](str?) AND key[manufacturer_product_serialnumber](max_size?(63))',
           'metering_type'=>'key?(:metering_type) THEN key[metering_type](included_in?(["analog_household_meter", "smart_meter", "load_meter", "analog_ac_meter", "digital_household_meter", "maximum_meter", "individual_adjustment"]))',
-          'metering_size'=>'key?(:metering_size) THEN key[metering_size](included_in?(["edl40", "edl21", "other_ehz"]))',
+          'meter_size'=>'key?(:meter_size) THEN key[meter_size](included_in?(["edl40", "edl21", "other_ehz"]))',
           'ownership'=>'key?(:ownership) THEN key[ownership](included_in?(["buzzn_systems", "foreign_ownership", "customer", "leased", "bought"]))',
           'build_year'=>'key?(:build_year) THEN key[build_year](filled?) AND key[build_year](int?)'
         },
@@ -129,7 +129,7 @@ describe Admin::LocalpoolRoda do
              "detail"=>"size cannot be greater than 63"},
             {"parameter"=>"metering_type",
              "detail"=>"must be one of: analog_household_meter, smart_meter, load_meter, analog_ac_meter, digital_household_meter, maximum_meter, individual_adjustment"},
-            {"parameter"=>"metering_size",
+            {"parameter"=>"meter_size",
              "detail"=>"must be one of: edl40, edl21, other_ehz"},
             {"parameter"=>"build_year",
              "detail"=>"must be an integer"}
@@ -188,7 +188,7 @@ describe Admin::LocalpoolRoda do
                   manufacturer_product_name: 'SmartyMeter' * 10,
                   manufacturer_product_serialnumber: '12341234' * 10,
                   metering_type: 'sometype',
-                  metering_size: 'somesize',
+                  meter_size: 'somesize',
                   onwership: 'me',
                   build_year: 'this-year'
         
