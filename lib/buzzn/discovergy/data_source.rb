@@ -331,6 +331,10 @@ module Buzzn::Discovergy
         resource_id = map[item.first]
         timestamp = item[1]['time']
         value = item[1]['values']['power']
+        if value < 0
+          @logger.error("negative value from discovergy: #{value}")
+          value = 0
+        end
         result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value, resource_id, mode, expires_at)
         result << result_item
       end

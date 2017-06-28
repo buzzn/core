@@ -6,7 +6,7 @@ Buzzn::Transaction.define do |t|
     optional(:manufacturer_product_name).filled(:str?, max_size?: 63)
     optional(:manufacturer_product_serialnumber).filled(:str?, max_size?: 63)
     optional(:metering_type).value(included_in?: Meter::Base.all_metering_types)
-    optional(:metering_size).value(included_in?: Meter::Base.all_meter_sizes)
+    optional(:meter_size).value(included_in?: Meter::Base.all_meter_sizes)
     optional(:ownership).value(included_in?: Meter::Base.all_ownerships)
     optional(:build_year).filled(:int?) # TODO rough lower and upper bound
   end
@@ -15,7 +15,7 @@ Buzzn::Transaction.define do |t|
     optional(:manufacturer_product_name).filled(:str?, max_size?: 63)
     optional(:manufacturer_product_serialnumber).filled(:str?, max_size?: 63)
     optional(:metering_type).value(included_in?: Meter::Base.all_metering_types)
-    optional(:metering_size).value(included_in?: Meter::Base.all_meter_sizes)
+    optional(:meter_size).value(included_in?: Meter::Base.all_meter_sizes)
     optional(:ownership).value(included_in?: Meter::Base.all_ownerships)
     optional(:build_year).filled(:int?) # TODO rough lower and upper bound
   end
