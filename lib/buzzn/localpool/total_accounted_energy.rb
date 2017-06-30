@@ -1,9 +1,9 @@
 module Buzzn::Localpool
   class TotalAccountedEnergy
-    attr_reader :localpool_id, :accounted_energies
+    attr_reader :localpool, :accounted_energies
 
-    def initialize(localpool_id)
-      @localpool_id = localpool_id
+    def initialize(localpool)
+      @localpool = localpool
       @accounted_energies = []
     end
 
@@ -55,7 +55,7 @@ module Buzzn::Localpool
       when :demarcation_pv
         result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000 - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_PV).value / 1000000
       else
-        generator_type = Group::Localpool.find(localpool_id).energy_generator_type
+        generator_type = localpool.energy_generator_type
         if generator_type == Group::Base::CHP
           result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000
         end
@@ -72,7 +72,7 @@ module Buzzn::Localpool
       when :demarcation_chp
         result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000 - get_single_by_label(Buzzn::AccountedEnergy::DEMARCATION_CHP).value / 1000000
       else
-        generator_type = Group::Localpool.find(localpool_id).energy_generator_type
+        generator_type = localpool.energy_generator_type
         if generator_type == Group::Base::PV
           result = get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value / 1000000
         end

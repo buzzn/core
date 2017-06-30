@@ -1,7 +1,9 @@
 # coding: utf-8
-module Buzzn::Localpool
-  class ReadingCalculation
-    class << self
+module Buzzn
+  module Services
+    class ReadingCalculation
+
+      include Import['service.charts']
 
       # This method returns the energy measured for each register in the localpool in a specific period of time
       # input params:
@@ -12,7 +14,7 @@ module Buzzn::Localpool
       # returns:
       #   result: TotalAccountedEnergy with details about each single register
       def get_all_energy_in_localpool(localpool, begin_date, end_date, accounting_year=Time.current.year - 1)
-        result = Buzzn::Localpool::TotalAccountedEnergy.new(localpool.id)
+        result = Buzzn::Localpool::TotalAccountedEnergy.new(localpool)
         register_id_grid_consumption_corrected = nil
         register_id_grid_feeding_corrected = nil
 
@@ -383,7 +385,7 @@ module Buzzn::Localpool
         unless register.meter.broker.is_a?(Broker::Discovergy)
           raise ArgumentError.new("register #{register.id} is not a discovergy register")
         end
-        result = Buzzn::Boot::MainContainer['service.charts'].for_register(register, Buzzn::Interval.second(date.beginning_of_day))
+        result = charts.for_register(register, Buzzn::Interval.second(date.beginning_of_day))
         if register.input?
           timestamp = result.in.first.timestamp
           value = result.in.first.value

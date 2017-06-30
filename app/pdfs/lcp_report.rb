@@ -1,20 +1,20 @@
 module Buzzn::Pdfs
   class LCP_Report < Buzzn::PdfGenerator
+    include Import.kwargs['service.reading_calculation']
 
     TEMPLATE = 'lcp_report.slim'
 
-    def initialize(total_accounted_energy)
-      super({})
+    def initialize(total_accounted_energy:, **)
+      super
       @total_accounted_energy = total_accounted_energy
-      @localpool = Group::Localpool.find(total_accounted_energy.localpool_id)
     end
 
     def localpool
-      @localpool
+      @total_accounted_energy.localpool
     end
 
     def lsg # Localpool Strom Geber = Localpool Power Giver
-      @localpool.localpool_processing_contract.customer # may be user or organization
+      localpool.localpool_processing_contract.customer # may be user or organization
     end
 
     def total_accounted_energy
@@ -107,19 +107,19 @@ module Buzzn::Pdfs
     end
 
     def baseprice
-      12 * @localpool.prices.valid_at(begin_date).first.baseprice_cents_per_month  / 100.0
+      12 * localpool.prices.valid_at(begin_date).first.baseprice_cents_per_month  / 100.0
     end
 
     def energyprice
-      @localpool.prices.valid_at(begin_date).first.energyprice_cents_per_kilowatt_hour
+      localpool.prices.valid_at(begin_date).first.energyprice_cents_per_kilowatt_hour
     end
 
     def count_one_way_meter
-      @localpool.one_way_meters.size
+      localpool.one_way_meters.size
     end
 
     def count_two_way_meter
-      @localpool.two_way_meters.size
+      localpool.two_way_meters.size
     end
 
     def revenue_through_energy_selling
@@ -128,7 +128,7 @@ module Buzzn::Pdfs
 
     def revenue_through_baseprice
       # TODO: maybe check each contract for its begin and end date to get the correct timespan with respect to full or reduced EEG
-      (timespan_in_months * baseprice / 12 * (@localpool.registers.by_label(Register::Base::CONSUMPTION).size)).round(2)
+      (timespan_in_months * baseprice / 12 * (localpool.registers.by_label(Register::Base::CONSUMPTION).size)).round(2)
     end
 
     def revenue_through_dso #Netzbetreiber
@@ -216,7 +216,7 @@ module Buzzn::Pdfs
     end
 
     def timespan_in_months
-      Buzzn::Localpool::ReadingCalculation.timespan_in_months(
+      reading_calculation.timespan_in_months(
         @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).first_reading.timestamp,
         @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp)
     end

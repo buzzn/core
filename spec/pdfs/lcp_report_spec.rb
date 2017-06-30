@@ -5,10 +5,10 @@ describe Buzzn::Pdfs::LCP_Report do
 
   let(:total_accounted_energy) do
     begin_date = Time.new(2016, 8, 4)
-    Buzzn::Localpool::ReadingCalculation.get_all_energy_in_localpool(localpool, begin_date, nil, 2016)
+    Buzzn::Services::ReadingCalculation.new.get_all_energy_in_localpool(localpool, begin_date, nil, 2016)
   end
 
-  subject { Buzzn::Pdfs::LCP_Report.new(total_accounted_energy) }
+  subject { Buzzn::Pdfs::LCP_Report.new(total_accounted_energy: total_accounted_energy) }
 
   it 'renders html' do
     html = subject.to_html
