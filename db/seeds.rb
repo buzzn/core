@@ -146,6 +146,8 @@ buzzn_team_names.each do |user_name|
     user.add_role :admin # thomas is admin
   when 'ralf'
     user.add_role :admin
+  when 'pavel'
+    user.add_role :admin
   when 'kristian'
     root_register = Fabricate(:input_meter).input_register
     user.add_role :admin # kristian is admin
@@ -286,8 +288,8 @@ Fabricate(:fp_minus, operand: @register_z1b, register: @fichtenweg8)
 puts 'Localpool home_of_the_brave'
 localpool_home_of_the_brave = Fabricate(:localpool_home_of_the_brave, registers: [@register_z2, @register_z4, @fichtenweg10, @fichtenweg8])
 justus = User.where(email: 'justus@buzzn.net').first
-justus.add_role :manager, localpool_home_of_the_brave
 justus.add_role :manager, @fichtenweg8
+buzzn_team.each { |m| m.add_role(:manager, localpool_home_of_the_brave) }
 
 
 
