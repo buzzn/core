@@ -1,7 +1,7 @@
 # coding: utf-8
 describe 'Buzzn::Discovergy::DataSource caching' do
 
-  class FacadeMock
+  class FacadeMock4Caching
     attr_accessor :result
 
     def readings(*args)
@@ -9,7 +9,7 @@ describe 'Buzzn::Discovergy::DataSource caching' do
     end
   end
 
-  entity(:facade) { FacadeMock.new }
+  entity(:facade) { FacadeMock4Caching.new }
 
   entity(:single_meter_live_response) { "{\"time\":1480606450088,\"values\":{\"power\":1100640}}" }
   entity(:virtual_meter_live_response) { "{\"EASYMETER_60009425\":{\"time\":1480614249341,\"values\":{\"power\":150950}},\"EASYMETER_60009404\":{\"time\":1480614254195,\"values\":{\"power\":161590}},\"EASYMETER_60009415\":{\"time\":1480614254563,\"values\":{\"power\":152190}}}"}
