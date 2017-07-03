@@ -115,7 +115,7 @@ module Buzzn
 
     def calculate_closeness_scores
       if day_interval[1] <= @now && day_interval[2] >= @now
-        closeness = @group.calculate_current_closeness
+        closeness = calculate_current_closeness
       else
         closeness = 0
       end
@@ -197,6 +197,36 @@ module Buzzn
 
     private
 
+    def calculate_current_closeness
+      addresses_out = @group.registers.outputs.collect(&:address).compact
+      addresses_in = @group.registers.inputs.collect(&:address).compact
+      sum_distances = -1
+      addresses_in.each do |address_in|
+        addresses_out.each do |address_out|
+          sum_distances += address_in.distance_to(address_out) if address_in.longitude && address_out.longitude
+        end
+      end
+      if addresses_out.count * addresses_in.count != 0
+        average_distance = sum_distances / (addresses_out.count * addresses_in.count)
+        if average_distance < 0
+          -1
+        elsif average_distance < 5
+          5
+        elsif average_distance < 10
+          4
+        elsif average_distance < 20
+          3
+        elsif average_distance < 50
+          2
+        elsif average_distance < 200
+          1
+        else #average_distance >= 200
+          0
+        end
+      else
+        -1
+      end
+    end
     def in_year?(score)
       score.interval_beginning >= @containing.beginning_of_year && score.interval_end <= @containing.end_of_year
     end

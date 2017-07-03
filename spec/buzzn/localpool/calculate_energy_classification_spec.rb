@@ -7,7 +7,7 @@ describe Buzzn::Localpool::CalculateEnergyClassification do
   entity!(:sulz_supplier_mix) { Fabricate(:sulz_supplier_mix) }
 
   it 'calculates the right energy classification' do
-    total_accounted_energy = Buzzn::Services::ReadingCalculation..new.get_all_energy_in_localpool(localpool, Time.new(2016, 8, 4), nil, 2016)
+    total_accounted_energy = Buzzn::Services::ReadingCalculation.new.get_all_energy_in_localpool(localpool, Time.new(2016, 8, 4), nil, 2016)
     result = Buzzn::Localpool::CalculateEnergyClassification.do_calculation(localpool, total_accounted_energy, 6.354, 0.4*6.354, 7.381)
 
     expect(result.tariff_name).to eq localpool.name

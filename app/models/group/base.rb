@@ -56,31 +56,6 @@ module Group
       do_filter(search, *search_attributes)
     end
 
-    def register_users_query(type = nil)
-      mp             = Register::Base.arel_table
-      roles          = Role.arel_table
-      users_roles    = Arel::Table.new(:users_roles)
-      users          = User.arel_table
-      role_names     = [:manager, :member]
-
-      register_on = mp[:group_id].eq(self.id)
-      register_on = register_on.and(mp[:type].eq(type)) if type
-      users_roles.join(mp)
-        .on(register_on)
-        .join(roles)
-        .on(roles[:id].eq(users_roles[:role_id])
-             .and(roles[:name].in(role_names).and(roles[:resource_id].eq(mp[:id]))))
-        .where(users_roles[:user_id].eq(users[:id]))
-    end
-
-    def energy_producers
-      User.where(register_users_query(Register::Output).project(1).exists.to_sql)
-    end
-
-    def energy_consumers
-      User.where(register_users_query(Register::Input).project(1).exists.to_sql)
-    end
-
     def input_registers
       registers = Register::Base.arel_table
       Register::Base.where(
@@ -239,69 +214,6 @@ module Group
 
     def calculate_scores(containing_timestamp)
       Buzzn::ScoreCalculator.new(self, containing_timestamp).calculate_all_scores
-    end
-
-    def calculate_current_closeness
-      addresses_out = self.registers.outputs.collect(&:address).compact
-      addresses_in = self.registers.inputs.collect(&:address).compact
-      sum_distances = -1
-      addresses_in.each do |address_in|
-        addresses_out.each do |address_out|
-          sum_distances += address_in.distance_to(address_out) if address_in.longitude && address_out.longitude
-        end
-      end
-      closeness = -1
-      if addresses_out.count * addresses_in.count != 0
-        average_distance = sum_distances / (addresses_out.count * addresses_in.count)
-        if average_distance < 0
-          closeness = -1
-        elsif average_distance < 5
-          closeness = 5
-        elsif average_distance < 10
-          closeness = 4
-        elsif average_distance < 20
-          closeness = 3
-        elsif average_distance < 50
-          closeness = 2
-        elsif average_distance < 200
-          closeness = 1
-        elsif average_distance >= 200
-          closeness = 0
-        end
-      end
-      return closeness
-    end
-
-    # only used in railsview controller
-    def get_scores(resolution, containing_timestamp)
-      if resolution.nil?
-        resolution = "year_to_months"
-      end
-      if containing_timestamp.nil?
-        containing_timestamp = Time.current.to_i * 1000
-      end
-
-      if resolution == 'day_to_minutes'
-        sufficiency = self.scores.sufficiencies.dayly.at(containing_timestamp).first
-        autarchy = self.scores.autarchies.dayly.at(containing_timestamp).first
-        fitting = self.scores.fittings.dayly.at(containing_timestamp).first
-        closeness = self.scores.closenesses.dayly.at(containing_timestamp).first
-      elsif resolution == 'month_to_days'
-        sufficiency = self.scores.sufficiencies.monthly.at(containing_timestamp).first
-        autarchy = self.scores.autarchies.monthly.at(containing_timestamp).first
-        fitting = self.scores.fittings.monthly.at(containing_timestamp).first
-        closeness = self.scores.closenesses.monthly.at(containing_timestamp).first
-      elsif resolution == 'year_to_months'
-        sufficiency = self.scores.sufficiencies.yearly.at(containing_timestamp).first
-        autarchy = self.scores.autarchies.yearly.at(containing_timestamp).first
-        fitting = self.scores.fittings.yearly.at(containing_timestamp).first
-        closeness = self.scores.closenesses.yearly.at(containing_timestamp).first
-      end
-      sufficiency.nil? ? sufficiency_value = -1 : sufficiency_value = sufficiency.value
-      autarchy.nil? ? autarchy_value = -1 : autarchy_value = autarchy.value
-      fitting.nil? ? fitting_value = -1 : fitting_value = fitting.value
-      closeness.nil? ? closeness_value = -1 : closeness_value = closeness.value
-      return { sufficiency: sufficiency_value, closeness: closeness_value, autarchy: autarchy_value, fitting: fitting_value }
     end
 
     def finalize_registers
