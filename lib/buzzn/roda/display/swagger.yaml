@@ -1,0 +1,201 @@
+---
+swagger: '2.0'
+info:
+  title: Display API
+  description: Swagger for Display Internal API
+  version: '1'
+basePath: "/api/display"
+paths:
+  "/groups":
+    get:
+      description: return all public groups
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}":
+    get:
+      description: returns the group
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/bubbles":
+    get:
+      description: returns the bubbles of the group
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/charts":
+    get:
+      description: returns the charts of the group
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      - name: duration
+        in: formData
+        required: true
+        type: string
+        enum:
+        - year
+        - month
+        - day
+        - hour
+      - name: timestamp
+        in: formData
+        required: false
+        type: string
+        format: date-time
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/mentors":
+    get:
+      description: returns the mentors of the group
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/registers":
+    get:
+      description: returns all registers
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/registers/{register_id}":
+    get:
+      description: returns the register
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/registers/{register_id}/charts":
+    get:
+      description: returns the charts of the group
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: duration
+        in: formData
+        required: true
+        type: string
+        enum:
+        - year
+        - month
+        - day
+        - hour
+      - name: timestamp
+        in: formData
+        required: false
+        type: string
+        format: date-time
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/registers/{register_id}/ticker":
+    get:
+      description: returns the power ticker of the register
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/scores":
+    get:
+      description: returns the score(s) of the group
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      - name: interval
+        in: formData
+        required: true
+        type: string
+        enum:
+        - year
+        - month
+        - day
+      - name: timestamp
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: mode
+        in: formData
+        required: false
+        type: string
+        enum:
+        - sufficiency
+        - closeness
+        - autarchy
+        - fitting
+      responses:
+        200:
+          description: success

@@ -297,8 +297,8 @@ describe Admin do
 
   # swagger
 
-  it 'GET /swagger' do
-    GET swagger.basePath + '/swagger', admin
+  it 'GET /swagger.json' do
+    GET swagger.basePath + '/swagger.json', admin
     expect(response).to have_http_status(200)
     expect(json).not_to be_nil
   end
