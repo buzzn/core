@@ -6,9 +6,10 @@ module SwaggerHelper
       # want to sort the paths
       sorted = paths.instance_variable_get(:@paths).sort { |m,n| m <=> n }
       paths.instance_variable_set(:@paths, sorted)
-      file = swagger.basePath.sub(/.api/, 'lib/buzzn/roda') + '/swagger.json'
-      File.write(file, swagger.to_json)
-      puts "dumped swagger json #{file}"
+      # dump inot yaml file as it tracks diffs better than json
+      file = swagger.basePath.sub(/.api/, 'lib/buzzn/roda') + '/swagger.yaml'
+      File.write(file, swagger.to_yaml)
+      puts "dumped swagger yaml #{file}"
     end
   end
 
