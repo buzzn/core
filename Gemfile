@@ -23,8 +23,11 @@ gem 'activeadmin-select2'
 # swagger
 gem 'ruby-swagger'
 
-# Backend
+# roda
 gem 'roda'
+gem 'newrelic-roda'
+
+# Backend
 gem 'rails'
 gem 'sprockets-rails'
 gem 'simple_form'
