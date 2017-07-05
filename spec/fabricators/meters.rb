@@ -1,12 +1,12 @@
 # coding: utf-8
 Fabricator :meter, class_name: Meter::Real do
   registers                           { [Fabricate.build([:input_register, :output_register].sample)] }
-  manufacturer_name                    Meter::Real::FERRORIS
+  manufacturer_name                    Meter::Real::FERRARIS
   product_name                        'AS 1440'
   product_serialnumber                { Random.new_seed.to_s.slice(0, 7) }
   created_at                          { (rand*10).days.ago }
   ownership                           Meter::Base::BUZZN_SYSTEMS
-  edifact_metering_type                       Meter::Base::SMART_METER
+  edifact_metering_type                      nil
   edifact_meter_size                          Meter::Base::EDL40
   direction_number                            Meter::Base::ONE_WAY_METER
   edifact_measurement_method                 Meter::Base::REMOTE
@@ -14,7 +14,6 @@ Fabricator :meter, class_name: Meter::Real do
   build_year                          { 5.years.ago }
   calibrated_until                     { 5.years.from_now }
   edifact_section                             Meter::Base::ELECTRICITY
-  metering_point_type                 nil
   edifact_voltage_level                       Meter::Base::LOW_LEVEL
   edifact_cycle_interval                      Meter::Base::YEARLY
   sent_data_dso                       nil

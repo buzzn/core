@@ -3,8 +3,23 @@ module SwaggerHelper
   def self.included(spec)
     spec.extend(ClassMethods)
     spec.after(:all) do
-      # want to sort the paths
-      sorted = paths.instance_variable_get(:@paths).sort { |m,n| m <=> n }
+      # want to sort the paths - swagger json should not depend on order of
+      # test run
+      signature = Proc.new do |m|
+        [m.get.nil?, m.post.nil?, m.patch.nil?, m.put.nil?, m.delete.nil?]
+      end
+      sorted = paths.instance_variable_get(:@paths).sort do |m,n|
+        p result = m[0] <=> n[0]
+        if result == 0
+          binding.pry
+          signature.call(m[1]) <=> signature.call(n[1])
+        else
+          result
+        end
+      end
+      puts paths.instance_variable_get(:@paths).collect{ |m| m[0] + ' ' + signature.call(m[1]).inspect }.join("\n")
+      p sorted.size
+      p paths.instance_variable_get(:@paths).size
       paths.instance_variable_set(:@paths, sorted)
       # dump inot yaml file as it tracks diffs better than json
       file = swagger.basePath.sub(/.api/, 'lib/buzzn/roda') + '/swagger.yaml'
@@ -136,7 +151,7 @@ module SwaggerHelper
           sparam.type = 'string'
           ops.add_parameter(sparam)
         end
-        paths.add_path(path.sub(/_[1-9]/, '').gsub('.', '_'), spath)
+        paths.add_path(path.gsub(/_[1-9]/, '').gsub('.', '_'), spath)
         responses = Swagger::Data::Responses.new
         resp = Swagger::Data::Response.new
         case method

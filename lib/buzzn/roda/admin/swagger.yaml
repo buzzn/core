@@ -28,8 +28,10 @@ paths:
         200:
           description: success
   "/localpools/{localpool_id}/billing-cycles":
-    get:
-      description: returns all the billing-cycles of the localpool
+    post:
+      description: creates a billing-cycles for the localpool
+      consumes:
+      - application/x-www-form-urlencoded
       produces:
       - application/json
       parameters:
@@ -37,9 +39,24 @@ paths:
         in: path
         required: true
         type: string
+      - name: name
+        in: formData
+        required: true
+        type: string
+        format: ''
+      - name: begin_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: end_date
+        in: formData
+        required: true
+        type: string
+        format: date
       responses:
-        200:
-          description: success
+        201:
+          description: created
   "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}":
     delete:
       description: deletes the billing-cycles of the localpool
@@ -98,7 +115,7 @@ paths:
       responses:
         201:
           description: created
-  "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}/billings/{billing_1_id}":
+  "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}/billings/{billing_id}":
     get:
       description: returns the billing of the billing-cycle for the given IDs
       produces:
@@ -119,27 +136,6 @@ paths:
       responses:
         200:
           description: success
-  "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}/billings/{billing_2_id}":
-    delete:
-      description: deletes the billing of the billing-cycles for the given IDs
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: billing_cycle_id
-        in: path
-        required: true
-        type: string
-      - name: billing_id
-        in: path
-        required: true
-        type: string
-      responses:
-        204:
-          description: deleted
   "/localpools/{localpool_id}/bubbles":
     get:
       description: returns the bubbles of the localpool
@@ -355,7 +351,7 @@ paths:
         required: false
         type: string
         enum:
-        - 'BUZZN_SYSTEMS '
+        - BUZZN_SYSTEMS
         - FOREIGN_OWNERSHIP
         - CUSTOMER
         - LEASED
@@ -376,7 +372,6 @@ paths:
         type: string
         enum:
         - AHZ
-        - smart_meter
         - LAZ
         - WSZ
         - EHZ
@@ -475,7 +470,7 @@ paths:
         required: false
         type: string
         enum:
-        - 'BUZZN_SYSTEMS '
+        - BUZZN_SYSTEMS
         - FOREIGN_OWNERSHIP
         - CUSTOMER
         - LEASED
@@ -496,7 +491,6 @@ paths:
         type: string
         enum:
         - AHZ
-        - smart_meter
         - LAZ
         - WSZ
         - EHZ
@@ -612,8 +606,10 @@ paths:
         200:
           description: success
   "/localpools/{localpool_id}/organizations/{organization_id}/bank-accounts/{bank_account_id}":
-    get:
-      description: returns the bank-accounts of the organization for the given IDs
+    patch:
+      description: updates the bank-accounts of the organization for the given IDs
+      consumes:
+      - application/x-www-form-urlencoded
       produces:
       - application/json
       parameters:
@@ -629,9 +625,24 @@ paths:
         in: path
         required: true
         type: string
+      - name: bank_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: holder
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: iban
+        in: formData
+        required: false
+        type: string
+        format: iban
       responses:
         200:
-          description: success
+          description: patched
   "/localpools/{localpool_id}/power-taker-contracts":
     get:
       description: returns all the power-taker-contracts of the localpool
@@ -659,8 +670,10 @@ paths:
         200:
           description: success
   "/localpools/{localpool_id}/prices/{price_id}":
-    get:
-      description: returns the price of the localpool for the given IDs
+    patch:
+      description: updates the price of the localpool for the given IDs
+      consumes:
+      - application/x-www-form-urlencoded
       produces:
       - application/json
       parameters:
@@ -672,9 +685,29 @@ paths:
         in: path
         required: true
         type: string
+      - name: name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: energyprice_cents_per_kilowatt_hour
+        in: formData
+        required: false
+        type: string
+        format: float
+      - name: baseprice_cents_per_month
+        in: formData
+        required: false
+        type: integer
+        format: int64
       responses:
         200:
-          description: success
+          description: patched
   "/localpools/{localpool_id}/registers":
     get:
       description: returns all registers
@@ -803,10 +836,8 @@ paths:
         200:
           description: success
   "/localpools/{localpool_id}/users/{user_id}/bank-accounts/{bank_account_id}":
-    patch:
-      description: updates the bank-accounts of the user for the given IDs
-      consumes:
-      - application/x-www-form-urlencoded
+    delete:
+      description: delete the bank-accounts of the user for the given IDs
       produces:
       - application/json
       parameters:
@@ -822,21 +853,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: bank_name
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: holder
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: iban
-        in: formData
-        required: false
-        type: string
-        format: iban
       responses:
-        200:
-          description: patched
+        204:
+          description: deleted
