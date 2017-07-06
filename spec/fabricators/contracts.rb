@@ -38,7 +38,11 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
   power_of_attorney        true
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
-  customer                 { Fabricate(:user) }
+  customer                 {
+    user = Fabricate(:user)
+    user.address = Fabricate(:address)
+    user
+  }
   contractor               { Organization.discovergy }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
