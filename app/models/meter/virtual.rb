@@ -11,12 +11,11 @@ module Meter
 
     def validate_invariants
       errors.add(:manufacturer_name, 'not allowed') unless manufacturer_name.nil?
-      errors.add(:direction_number, 'not allowed') unless direction_number = ONE_WAY_METER
+      errors.add(:direction_number, 'not allowed') unless direction_number.nil?
     end
 
     def initialize(attr = {})
       attr[:register] = Register::Virtual.new(attr[:register] || {}) if attr && attr[:register].is_a?(Hash)
-      attr[:direction_number] = ONE_WAY_METER
       super
       register.meter = self if register
     end

@@ -8,7 +8,7 @@ describe Meter::Real do
   entity!(:input_meter) { Fabricate(:input_meter) }
 
   it 'filters meter' do
-    [meter.manufacturer_name, meter.product_name].each do |val|
+    [meter.product_serialnumber, meter.product_name].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
         meters = Meter::Real.filter(value)
         expect(meters.detect{|m| m == meter}).to eq meter

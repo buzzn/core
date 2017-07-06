@@ -227,7 +227,7 @@ module Buzzn::Resource
     def json(json, includes)
       first = true
       self.class.attribute_names.flatten.each do |attr|
-        obj = self.respond_to?(attr) ? self.send(attr) : object.send(attr)
+        obj = self.respond_to?(attr) ? self.send(attr) : (object.attributes[attr.to_s] || object.send(attr))
         if first
           first = false
           json << '{'

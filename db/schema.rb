@@ -17,6 +17,19 @@ ActiveRecord::Schema.define(version: 20170626163547) do
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
+
+  create_enum "direction_number", "ERZ", "ZRZ"
+  create_enum "edifact_cycle_interval", "MONTHLY", "YEARLY", "QUARTERLY", "HALF_YEARLY"
+  create_enum "edifact_data_logging", "Z04", "Z05"
+  create_enum "edifact_measurement_method", "AMR", "MMR"
+  create_enum "edifact_meter_size", "Z01", "Z02", "Z03"
+  create_enum "edifact_metering_type", "AHZ", "LAZ", "WSZ", "EHZ", "MAZ", "IVA"
+  create_enum "edifact_mounting_method", "BKE", "DPA", "HS"
+  create_enum "edifact_tariff", "ETZ", "ZTZ", "NTZ"
+  create_enum "edifact_voltage_level", "E06", "E05", "E04", "E03"
+  create_enum "manufacturer_name", "easy_meter", "amperix", "ferraris", "other"
+  create_enum "ownership", "BUZZN_SYSTEMS", "FOREIGN_OWNERSHIP", "CUSTOMER", "LEASED", "BOUGHT"
+  create_enum "section", "S", "G"
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
     t.text     "body"
@@ -24,13 +37,12 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.string   "resource_type"
     t.integer  "author_id"
     t.string   "author_type"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",    :null=>false
+    t.datetime "updated_at",    :null=>false
   end
-
-  add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
-  add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
-  add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
+  add_index "active_admin_comments", ["author_type", "author_id"], :name=>"index_active_admin_comments_on_author_type_and_author_id", :using=>:btree
+  add_index "active_admin_comments", ["namespace"], :name=>"index_active_admin_comments_on_namespace", :using=>:btree
+  add_index "active_admin_comments", ["resource_type", "resource_id"], :name=>"index_active_admin_comments_on_resource_type_and_resource_id", :using=>:btree
 
   create_table "activities", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid     "trackable_id"
@@ -44,10 +56,9 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
-  add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
-  add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
+  add_index "activities", ["owner_id", "owner_type"], :name=>"index_activities_on_owner_id_and_owner_type", :using=>:btree
+  add_index "activities", ["recipient_id", "recipient_type"], :name=>"index_activities_on_recipient_id_and_recipient_type", :using=>:btree
+  add_index "activities", ["trackable_id", "trackable_type"], :name=>"index_activities_on_trackable_id_and_trackable_type", :using=>:btree
 
   create_table "addresses", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
@@ -68,22 +79,20 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.datetime "updated_at"
     t.string   "addition"
   end
-
-  add_index "addresses", ["addressable_id", "addressable_type"], name: "index_addressable", using: :btree
-  add_index "addresses", ["readable"], name: "index_addresses_on_readable", using: :btree
-  add_index "addresses", ["slug"], name: "index_addresses_on_slug", unique: true, using: :btree
+  add_index "addresses", ["addressable_id", "addressable_type"], :name=>"index_addressable", :using=>:btree
+  add_index "addresses", ["readable"], :name=>"index_addresses_on_readable", :using=>:btree
+  add_index "addresses", ["slug"], :name=>"index_addresses_on_slug", :unique=>true, :using=>:btree
 
   create_table "badge_notifications", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.boolean  "read_by_user", default: false
+    t.boolean  "read_by_user", :default=>false
     t.uuid     "user_id"
     t.uuid     "activity_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",   :null=>false
+    t.datetime "updated_at",   :null=>false
   end
-
-  add_index "badge_notifications", ["activity_id"], name: "index_badge_notifications_on_activity_id", using: :btree
-  add_index "badge_notifications", ["read_by_user"], name: "index_badge_notifications_on_read_by_user", using: :btree
-  add_index "badge_notifications", ["user_id"], name: "index_badge_notifications_on_user_id", using: :btree
+  add_index "badge_notifications", ["activity_id"], :name=>"index_badge_notifications_on_activity_id", :using=>:btree
+  add_index "badge_notifications", ["read_by_user"], :name=>"index_badge_notifications_on_read_by_user", :using=>:btree
+  add_index "badge_notifications", ["user_id"], :name=>"index_badge_notifications_on_user_id", :using=>:btree
 
   create_table "bank_accounts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
@@ -97,8 +106,7 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.uuid     "contracting_party_id"
     t.string   "contracting_party_type"
   end
-
-  add_index "bank_accounts", ["slug"], name: "index_bank_accounts_on_slug", unique: true, using: :btree
+  add_index "bank_accounts", ["slug"], :name=>"index_bank_accounts_on_slug", :unique=>true, :using=>:btree
 
   create_table "banks", force: :cascade do |t|
     t.string "blz"
@@ -108,30 +116,28 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.string "name"
     t.string "bic"
   end
-
-  add_index "banks", ["bic"], name: "index_banks_on_bic", using: :btree
-  add_index "banks", ["blz"], name: "index_banks_on_blz", unique: true, using: :btree
+  add_index "banks", ["bic"], :name=>"index_banks_on_bic", :using=>:btree
+  add_index "banks", ["blz"], :name=>"index_banks_on_blz", :unique=>true, :using=>:btree
 
   create_table "billing_cycles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.datetime "begin_date",   null: false
-    t.datetime "end_date",     null: false
-    t.string   "name",         null: false
+    t.datetime "begin_date",   :null=>false
+    t.datetime "end_date",     :null=>false
+    t.string   "name",         :null=>false
     t.uuid     "localpool_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "billing_cycles", ["begin_date", "end_date"], name: "index_billing_cycles_dates", using: :btree
+  add_index "billing_cycles", ["begin_date", "end_date"], :name=>"index_billing_cycles_dates", :using=>:btree
 
   create_table "billings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "status",                            null: false
-    t.integer  "total_energy_consumption_kWh",      null: false
-    t.integer  "total_price_cents",                 null: false
-    t.integer  "prepayments_cents",                 null: false
-    t.integer  "receivables_cents",                 null: false
+    t.string   "status",                            :null=>false
+    t.integer  "total_energy_consumption_kWh",      :null=>false
+    t.integer  "total_price_cents",                 :null=>false
+    t.integer  "prepayments_cents",                 :null=>false
+    t.integer  "receivables_cents",                 :null=>false
     t.string   "invoice_number"
-    t.string   "start_reading_id",                  null: false
-    t.string   "end_reading_id",                    null: false
+    t.string   "start_reading_id",                  :null=>false
+    t.string   "end_reading_id",                    :null=>false
     t.string   "device_change_reading_1_id"
     t.string   "device_change_reading_2_id"
     t.uuid     "billing_cycle_id"
@@ -139,30 +145,28 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "billings", ["billing_cycle_id", "status"], name: "index_billings_on_billing_cycle_id_and_status", using: :btree
-  add_index "billings", ["billing_cycle_id"], name: "index_billings_on_billing_cycle_id", using: :btree
-  add_index "billings", ["localpool_power_taker_contract_id"], name: "index_billings_on_localpool_power_taker_contract_id", using: :btree
-  add_index "billings", ["status"], name: "index_billings_on_status", using: :btree
+  add_index "billings", ["billing_cycle_id", "status"], :name=>"index_billings_on_billing_cycle_id_and_status", :using=>:btree
+  add_index "billings", ["billing_cycle_id"], :name=>"index_billings_on_billing_cycle_id", :using=>:btree
+  add_index "billings", ["localpool_power_taker_contract_id"], :name=>"index_billings_on_localpool_power_taker_contract_id", :using=>:btree
+  add_index "billings", ["status"], :name=>"index_billings_on_status", :using=>:btree
 
   create_table "brokers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "mode",                            null: false
+    t.string   "mode",                            :null=>false
     t.string   "external_id"
-    t.string   "provider_login",                  null: false
-    t.string   "encrypted_provider_password",     null: false
+    t.string   "provider_login",                  :null=>false
+    t.string   "encrypted_provider_password",     :null=>false
     t.string   "encrypted_provider_token_key"
     t.string   "encrypted_provider_token_secret"
-    t.uuid     "resource_id",                     null: false
-    t.string   "resource_type",                   null: false
+    t.uuid     "resource_id",                     :null=>false
+    t.string   "resource_type",                   :null=>false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "type",                            null: false
+    t.string   "type",                            :null=>false
     t.string   "consumer_key"
     t.string   "consumer_secret"
   end
-
-  add_index "brokers", ["mode", "resource_id", "resource_type"], name: "index_brokers", unique: true, using: :btree
-  add_index "brokers", ["resource_type", "resource_id"], name: "index_brokers_resources", using: :btree
+  add_index "brokers", ["mode", "resource_id", "resource_type"], :name=>"index_brokers", :unique=>true, :using=>:btree
+  add_index "brokers", ["resource_type", "resource_id"], :name=>"index_brokers_resources", :using=>:btree
 
   create_table "comments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid     "commentable_id"
@@ -170,25 +174,24 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.string   "title"
     t.text     "body"
     t.string   "subject"
-    t.uuid     "user_id",                      null: false
+    t.uuid     "user_id",          :null=>false
     t.integer  "lft"
     t.integer  "rgt"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "likes",            default: 0
+    t.integer  "likes",            :default=>0
     t.uuid     "parent_id"
     t.string   "image"
     t.string   "chart_resolution"
     t.datetime "chart_timestamp"
   end
-
-  add_index "comments", ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type", using: :btree
-  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
+  add_index "comments", ["commentable_id", "commentable_type"], :name=>"index_comments_on_commentable_id_and_commentable_type", :using=>:btree
+  add_index "comments", ["user_id"], :name=>"index_comments_on_user_id", :using=>:btree
 
   create_table "contracts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
     t.string   "status"
-    t.integer  "forecast_kwh_pa",                     limit: 8
+    t.integer  "forecast_kwh_pa",                     :limit=>8
     t.date     "signing_date"
     t.date     "end_date"
     t.boolean  "terms_accepted"
@@ -198,8 +201,8 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.uuid     "register_id"
     t.uuid     "organization_id"
     t.uuid     "localpool_id"
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
+    t.datetime "created_at",                          :null=>false
+    t.datetime "updated_at",                          :null=>false
     t.boolean  "other_contract"
     t.boolean  "move_in"
     t.date     "begin_date"
@@ -213,7 +216,7 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.string   "second_master_uid"
     t.string   "metering_point_operator_name"
     t.string   "old_supplier_name"
-    t.string   "type",                                          null: false
+    t.string   "type",                                :null=>false
     t.date     "cancellation_date"
     t.string   "old_customer_number"
     t.string   "old_account_number"
@@ -229,20 +232,19 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.uuid     "customer_bank_account_id"
     t.uuid     "contractor_bank_account_id"
   end
-
-  add_index "contracts", ["contract_number", "contract_number_addition"], name: "index_contract_number_and_its_addition", unique: true, using: :btree
-  add_index "contracts", ["contract_number"], name: "index_contracts_on_contract_number", using: :btree
-  add_index "contracts", ["contractor_type", "contractor_id"], name: "index_contracts_on_contractor_type_and_contractor_id", using: :btree
-  add_index "contracts", ["customer_type", "customer_id"], name: "index_contracts_on_customer_type_and_customer_id", using: :btree
-  add_index "contracts", ["localpool_id"], name: "index_contracts_on_localpool_id", using: :btree
-  add_index "contracts", ["organization_id"], name: "index_contracts_on_organization_id", using: :btree
-  add_index "contracts", ["register_id"], name: "index_contracts_on_register_id", using: :btree
-  add_index "contracts", ["signing_user_id"], name: "index_contracts_on_signing_user_id", using: :btree
-  add_index "contracts", ["slug"], name: "index_contracts_on_slug", unique: true, using: :btree
+  add_index "contracts", ["contract_number", "contract_number_addition"], :name=>"index_contract_number_and_its_addition", :unique=>true, :using=>:btree
+  add_index "contracts", ["contract_number"], :name=>"index_contracts_on_contract_number", :using=>:btree
+  add_index "contracts", ["contractor_type", "contractor_id"], :name=>"index_contracts_on_contractor_type_and_contractor_id", :using=>:btree
+  add_index "contracts", ["customer_type", "customer_id"], :name=>"index_contracts_on_customer_type_and_customer_id", :using=>:btree
+  add_index "contracts", ["localpool_id"], :name=>"index_contracts_on_localpool_id", :using=>:btree
+  add_index "contracts", ["organization_id"], :name=>"index_contracts_on_organization_id", :using=>:btree
+  add_index "contracts", ["register_id"], :name=>"index_contracts_on_register_id", :using=>:btree
+  add_index "contracts", ["signing_user_id"], :name=>"index_contracts_on_signing_user_id", :using=>:btree
+  add_index "contracts", ["slug"], :name=>"index_contracts_on_slug", :unique=>true, :using=>:btree
 
   create_table "conversations", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", :null=>false
+    t.datetime "updated_at", :null=>false
   end
 
   create_table "devices", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
@@ -259,67 +261,62 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.integer  "watt_peak"
     t.integer  "watt_hour_pa"
     t.date     "commissioning"
-    t.boolean  "mobile",                            default: false
+    t.boolean  "mobile",                            :default=>false
     t.string   "readable"
     t.uuid     "register_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "devices", ["readable"], name: "index_devices_on_readable", using: :btree
-  add_index "devices", ["register_id"], name: "index_devices_on_register_id", using: :btree
-  add_index "devices", ["slug"], name: "index_devices_on_slug", unique: true, using: :btree
+  add_index "devices", ["readable"], :name=>"index_devices_on_readable", :using=>:btree
+  add_index "devices", ["register_id"], :name=>"index_devices_on_register_id", :using=>:btree
+  add_index "devices", ["slug"], :name=>"index_devices_on_slug", :unique=>true, :using=>:btree
 
   create_table "documents", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "path",               null: false
-    t.string   "encryption_details", null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.string   "path",               :null=>false
+    t.string   "encryption_details", :null=>false
+    t.datetime "created_at",         :null=>false
+    t.datetime "updated_at",         :null=>false
   end
-
-  add_index "documents", ["path"], name: "index_documents_on_path", unique: true, using: :btree
+  add_index "documents", ["path"], :name=>"index_documents_on_path", :unique=>true, :using=>:btree
 
   create_table "energy_classifications", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "tariff_name"
-    t.float    "nuclear_ratio",                   null: false
-    t.float    "coal_ratio",                      null: false
-    t.float    "gas_ratio",                       null: false
-    t.float    "other_fossiles_ratio",            null: false
-    t.float    "renewables_eeg_ratio",            null: false
-    t.float    "other_renewables_ratio",          null: false
-    t.float    "co2_emission_gramm_per_kWh",      null: false
-    t.float    "nuclear_waste_miligramm_per_kWh", null: false
+    t.float    "nuclear_ratio",                   :null=>false
+    t.float    "coal_ratio",                      :null=>false
+    t.float    "gas_ratio",                       :null=>false
+    t.float    "other_fossiles_ratio",            :null=>false
+    t.float    "renewables_eeg_ratio",            :null=>false
+    t.float    "other_renewables_ratio",          :null=>false
+    t.float    "co2_emission_gramm_per_kWh",      :null=>false
+    t.float    "nuclear_waste_miligramm_per_kWh", :null=>false
     t.date     "end_date"
     t.uuid     "organization_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                      :null=>false
+    t.datetime "updated_at",                      :null=>false
   end
-
-  add_index "energy_classifications", ["organization_id"], name: "index_energy_classifications_on_organization_id", using: :btree
+  add_index "energy_classifications", ["organization_id"], :name=>"index_energy_classifications_on_organization_id", :using=>:btree
 
   create_table "formula_parts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "operator"
     t.uuid     "register_id"
     t.uuid     "operand_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",  :null=>false
+    t.datetime "updated_at",  :null=>false
   end
-
-  add_index "formula_parts", ["operand_id"], name: "index_formula_parts_on_operand_id", using: :btree
-  add_index "formula_parts", ["register_id"], name: "index_formula_parts_on_register_id", using: :btree
+  add_index "formula_parts", ["operand_id"], :name=>"index_formula_parts_on_operand_id", :using=>:btree
+  add_index "formula_parts", ["register_id"], :name=>"index_formula_parts_on_register_id", :using=>:btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
-    t.string   "slug",                      null: false
-    t.uuid     "sluggable_id",              null: false
-    t.string   "sluggable_type", limit: 50
+    t.string   "slug",           :null=>false
+    t.uuid     "sluggable_id",   :null=>false
+    t.string   "sluggable_type", :limit=>50
     t.string   "scope"
     t.datetime "created_at"
   end
-
-  add_index "friendly_id_slugs", ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true, using: :btree
-  add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
-  add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
-  add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
+  add_index "friendly_id_slugs", ["slug", "sluggable_type", "scope"], :name=>"index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", :unique=>true, :using=>:btree
+  add_index "friendly_id_slugs", ["slug", "sluggable_type"], :name=>"index_friendly_id_slugs_on_slug_and_sluggable_type", :using=>:btree
+  add_index "friendly_id_slugs", ["sluggable_id"], :name=>"index_friendly_id_slugs_on_sluggable_id", :using=>:btree
+  add_index "friendly_id_slugs", ["sluggable_type"], :name=>"index_friendly_id_slugs_on_sluggable_type", :using=>:btree
 
   create_table "groups", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
@@ -331,77 +328,53 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "type",        null: false
+    t.string   "type",        :null=>false
   end
+  add_index "groups", ["readable"], :name=>"index_groups_on_readable", :using=>:btree
+  add_index "groups", ["slug"], :name=>"index_groups_on_slug", :unique=>true, :using=>:btree
 
-  add_index "groups", ["readable"], name: "index_groups_on_readable", using: :btree
-  add_index "groups", ["slug"], name: "index_groups_on_slug", unique: true, using: :btree
+# Could not dump table "meters" because of following StandardError
+#   Unknown type 'edifact_voltage_level' for column 'edifact_voltage_level'
 
-  create_table "meters", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "manufacturer_name"
-    t.string   "product_name"
-    t.string   "product_serialnumber"
-    t.string   "ownership"
-    t.string   "edifact_metering_type"
-    t.string   "edifact_meter_size"
-    t.string   "edifact_measurement_method"
-    t.string   "edifact_mounting_method"
-    t.date     "calibrated_until"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "type",                       null: false
-    t.string   "edifact_section"
-    t.string   "edifact_voltage_level"
-    t.string   "edifact_cycle_interval"
-    t.string   "edifact_tariff"
-    t.string   "edifact_data_logging"
-    t.integer  "converter_constant"
-    t.string   "direction_number"
-    t.integer  "build_year"
-    t.date     "sent_data_dso"
-  end
 
   create_table "oauth_access_grants", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "token",                                            null: false
-    t.integer  "expires_in",                                       null: false
-    t.text     "redirect_uri",                                     null: false
-    t.datetime "created_at",                                       null: false
+    t.string   "token",             :null=>false
+    t.integer  "expires_in",        :null=>false
+    t.text     "redirect_uri",      :null=>false
+    t.datetime "created_at",        :null=>false
     t.datetime "revoked_at"
     t.string   "scopes"
-    t.uuid     "resource_owner_id", default: "uuid_generate_v4()"
-    t.uuid     "application_id",    default: "uuid_generate_v4()"
+    t.uuid     "resource_owner_id", :default=>"uuid_generate_v4()"
+    t.uuid     "application_id",    :default=>"uuid_generate_v4()"
   end
-
-  add_index "oauth_access_grants", ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
+  add_index "oauth_access_grants", ["token"], :name=>"index_oauth_access_grants_on_token", :unique=>true, :using=>:btree
 
   create_table "oauth_access_tokens", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "token",                                            null: false
+    t.string   "token",             :null=>false
     t.string   "refresh_token"
     t.integer  "expires_in"
     t.datetime "revoked_at"
-    t.datetime "created_at",                                       null: false
+    t.datetime "created_at",        :null=>false
     t.string   "scopes"
-    t.uuid     "resource_owner_id", default: "uuid_generate_v4()"
-    t.uuid     "application_id",    default: "uuid_generate_v4()"
+    t.uuid     "resource_owner_id", :default=>"uuid_generate_v4()"
+    t.uuid     "application_id",    :default=>"uuid_generate_v4()"
   end
-
-  add_index "oauth_access_tokens", ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
-  add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
+  add_index "oauth_access_tokens", ["refresh_token"], :name=>"index_oauth_access_tokens_on_refresh_token", :unique=>true, :using=>:btree
+  add_index "oauth_access_tokens", ["token"], :name=>"index_oauth_access_tokens_on_token", :unique=>true, :using=>:btree
 
   create_table "oauth_applications", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "name",                      null: false
-    t.string   "uid",                       null: false
-    t.string   "secret",                    null: false
-    t.text     "redirect_uri",              null: false
-    t.string   "scopes",       default: "", null: false
+    t.string   "name",         :null=>false
+    t.string   "uid",          :null=>false
+    t.string   "secret",       :null=>false
+    t.text     "redirect_uri", :null=>false
+    t.string   "scopes",       :default=>"", :null=>false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.uuid     "owner_id"
     t.string   "owner_type"
   end
-
-  add_index "oauth_applications", ["owner_id", "owner_type"], name: "index_oauth_applications_on_owner_id_and_owner_type", using: :btree
-  add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
+  add_index "oauth_applications", ["owner_id", "owner_type"], :name=>"index_oauth_applications_on_owner_id_and_owner_type", :using=>:btree
+  add_index "oauth_applications", ["uid"], :name=>"index_oauth_applications_on_uid", :unique=>true, :using=>:btree
 
   create_table "organizations", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "slug"
@@ -428,31 +401,28 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.string   "creditor_id"
     t.string   "account_number"
   end
-
-  add_index "organizations", ["slug"], name: "index_organizations_on_slug", unique: true, using: :btree
+  add_index "organizations", ["slug"], :name=>"index_organizations_on_slug", :unique=>true, :using=>:btree
 
   create_table "payments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.date    "begin_date",  null: false
+    t.date    "begin_date",  :null=>false
     t.date    "end_date"
-    t.integer "price_cents", null: false
+    t.integer "price_cents", :null=>false
     t.string  "cycle"
     t.string  "source"
-    t.uuid    "contract_id", null: false
+    t.uuid    "contract_id", :null=>false
   end
-
-  add_index "payments", ["contract_id"], name: "index_payments_on_contract_id", using: :btree
+  add_index "payments", ["contract_id"], :name=>"index_payments_on_contract_id", :using=>:btree
 
   create_table "prices", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "name",                                null: false
-    t.integer  "baseprice_cents_per_month",           null: false
-    t.float    "energyprice_cents_per_kilowatt_hour", null: false
-    t.date     "begin_date",                          null: false
+    t.string   "name",                                :null=>false
+    t.integer  "baseprice_cents_per_month",           :null=>false
+    t.float    "energyprice_cents_per_kilowatt_hour", :null=>false
+    t.date     "begin_date",                          :null=>false
     t.uuid     "localpool_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                          :null=>false
+    t.datetime "updated_at",                          :null=>false
   end
-
-  add_index "prices", ["begin_date", "localpool_id"], name: "index_prices_on_begin_date_and_localpool_id", unique: true, using: :btree
+  add_index "prices", ["begin_date", "localpool_id"], :name=>"index_prices_on_begin_date_and_localpool_id", :unique=>true, :using=>:btree
 
   create_table "profiles", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "user_name"
@@ -472,14 +442,13 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.uuid     "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "email_notification_meter_offline", default: false
+    t.boolean  "email_notification_meter_offline", :default=>false
     t.string   "address"
   end
-
-  add_index "profiles", ["readable"], name: "index_profiles_on_readable", using: :btree
-  add_index "profiles", ["slug"], name: "index_profiles_on_slug", unique: true, using: :btree
-  add_index "profiles", ["user_id"], name: "index_profiles_on_user_id", using: :btree
-  add_index "profiles", ["user_name"], name: "index_profiles_on_user_name", unique: true, using: :btree
+  add_index "profiles", ["readable"], :name=>"index_profiles_on_readable", :using=>:btree
+  add_index "profiles", ["slug"], :name=>"index_profiles_on_slug", :unique=>true, :using=>:btree
+  add_index "profiles", ["user_id"], :name=>"index_profiles_on_user_id", :using=>:btree
+  add_index "profiles", ["user_name"], :name=>"index_profiles_on_user_name", :unique=>true, :using=>:btree
 
   create_table "registers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "metering_point_id"
@@ -490,21 +459,20 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.uuid     "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "observer_enabled",            default: false
-    t.integer  "observer_min_threshold",      default: 100
-    t.integer  "observer_max_threshold",      default: 5000
+    t.boolean  "observer_enabled",            :default=>false
+    t.integer  "observer_min_threshold",      :default=>100
+    t.integer  "observer_max_threshold",      :default=>5000
     t.datetime "last_observed"
-    t.boolean  "observer_offline_monitoring", default: false
-    t.string   "type",                                        null: false
+    t.boolean  "observer_offline_monitoring", :default=>false
+    t.string   "type",                        :null=>false
     t.string   "obis"
     t.string   "label"
     t.integer  "pre_decimal_position"
     t.integer  "post_decimal_position"
     t.boolean  "low_load_ability"
   end
-
-  add_index "registers", ["group_id"], name: "index_registers_on_group_id", using: :btree
-  add_index "registers", ["meter_id"], name: "index_registers_on_meter_id", using: :btree
+  add_index "registers", ["group_id"], :name=>"index_registers_on_group_id", :using=>:btree
+  add_index "registers", ["meter_id"], :name=>"index_registers_on_meter_id", :using=>:btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
@@ -513,9 +481,8 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
-  add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
+  add_index "roles", ["name", "resource_type", "resource_id"], :name=>"index_roles_on_name_and_resource_type_and_resource_id", :using=>:btree
+  add_index "roles", ["name"], :name=>"index_roles_on_name", :using=>:btree
 
   create_table "scores", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string   "mode"
@@ -528,9 +495,8 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "scores", ["scoreable_id", "scoreable_type"], name: "index_scores_on_scoreable_id_and_scoreable_type", using: :btree
-  add_index "scores", ["scoreable_id"], name: "index_scores_on_scoreable_id", using: :btree
+  add_index "scores", ["scoreable_id", "scoreable_type"], :name=>"index_scores_on_scoreable_id_and_scoreable_type", :using=>:btree
+  add_index "scores", ["scoreable_id"], :name=>"index_scores_on_scoreable_id", :using=>:btree
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
@@ -538,38 +504,35 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.string   "taggable_type"
     t.uuid     "tagger_id"
     t.string   "tagger_type"
-    t.string   "context",       limit: 128
+    t.string   "context",       :limit=>128
     t.datetime "created_at"
   end
-
-  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], :name=>"taggings_idx", :unique=>true, :using=>:btree
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name=>"index_taggings_on_taggable_id_and_taggable_type_and_context", :using=>:btree
 
   create_table "tags", force: :cascade do |t|
     t.string  "name"
-    t.integer "taggings_count", default: 0
+    t.integer "taggings_count", :default=>0
   end
-
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+  add_index "tags", ["name"], :name=>"index_tags_on_name", :unique=>true, :using=>:btree
 
   create_table "tariffs", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string  "name",                      null: false
-    t.date    "begin_date",                null: false
+    t.string  "name",                      :null=>false
+    t.date    "begin_date",                :null=>false
     t.date    "end_date"
-    t.integer "energyprice_cents_per_kwh", null: false
-    t.integer "baseprice_cents_per_month", null: false
-    t.uuid    "contract_id",               null: false
+    t.integer "energyprice_cents_per_kwh", :null=>false
+    t.integer "baseprice_cents_per_month", :null=>false
+    t.uuid    "contract_id",               :null=>false
   end
-
-  add_index "tariffs", ["contract_id"], name: "index_tariffs_on_contract_id", using: :btree
+  add_index "tariffs", ["contract_id"], :name=>"index_tariffs_on_contract_id", :using=>:btree
 
   create_table "users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "email",                      default: "", null: false
-    t.string   "encrypted_password",         default: "", null: false
+    t.string   "email",                      :default=>"", :null=>false
+    t.string   "encrypted_password",         :default=>"", :null=>false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",              default: 0,  null: false
+    t.integer  "sign_in_count",              :default=>0, :null=>false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -578,7 +541,7 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.integer  "failed_attempts",            default: 0,  null: false
+    t.integer  "failed_attempts",            :default=>0, :null=>false
     t.string   "unlock_token"
     t.datetime "locked_at"
     t.string   "invitation_token"
@@ -587,7 +550,7 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
     t.string   "invited_by_type"
-    t.integer  "invitations_count",          default: 0
+    t.integer  "invitations_count",          :default=>0
     t.uuid     "group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -607,33 +570,30 @@ ActiveRecord::Schema.define(version: 20170626163547) do
     t.string   "creditor_id"
     t.string   "account_number"
   end
-
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["group_id"], name: "index_users_on_group_id", using: :btree
-  add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
-  add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
-  add_index "users", ["invited_by_type"], name: "index_users_on_invited_by_type", using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
+  add_index "users", ["confirmation_token"], :name=>"index_users_on_confirmation_token", :unique=>true, :using=>:btree
+  add_index "users", ["email"], :name=>"index_users_on_email", :unique=>true, :using=>:btree
+  add_index "users", ["group_id"], :name=>"index_users_on_group_id", :using=>:btree
+  add_index "users", ["invitation_token"], :name=>"index_users_on_invitation_token", :unique=>true, :using=>:btree
+  add_index "users", ["invitations_count"], :name=>"index_users_on_invitations_count", :using=>:btree
+  add_index "users", ["invited_by_type"], :name=>"index_users_on_invited_by_type", :using=>:btree
+  add_index "users", ["reset_password_token"], :name=>"index_users_on_reset_password_token", :unique=>true, :using=>:btree
+  add_index "users", ["unlock_token"], :name=>"index_users_on_unlock_token", :unique=>true, :using=>:btree
 
   create_table "users_roles", id: false, force: :cascade do |t|
     t.uuid    "user_id"
     t.integer "role_id"
   end
-
-  add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
+  add_index "users_roles", ["user_id", "role_id"], :name=>"index_users_roles_on_user_id_and_role_id", :using=>:btree
 
   create_table "versions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "item_type",  null: false
-    t.uuid     "item_id",    null: false
-    t.string   "event",      null: false
+    t.string   "item_type",  :null=>false
+    t.uuid     "item_id",    :null=>false
+    t.string   "event",      :null=>false
     t.string   "whodunnit"
     t.text     "object"
     t.datetime "created_at"
   end
-
-  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
+  add_index "versions", ["item_type", "item_id"], :name=>"index_versions_on_item_type_and_item_id", :using=>:btree
 
   create_table "votes", force: :cascade do |t|
     t.string   "votable_type"

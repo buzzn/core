@@ -177,7 +177,7 @@ describe Admin::LocalpoolRoda do
                   "type"=>"reading",
                   "energy_milliwatt_hour"=>r.energy_milliwatt_hour,
                   "power_milliwatt"=>r.power_milliwatt,
-                  "timestamp"=>r.timestamp.to_s.sub('+01','.000+01'),
+                  "timestamp"=>r.timestamp.utc.to_s.sub('+00:00','.000Z'),
                   "reason"=>"regular_reading",
                   "source"=>"buzzn_systems",
                   "quality"=>"read_out",

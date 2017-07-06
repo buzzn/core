@@ -27,6 +27,14 @@ gem 'ruby-swagger'
 gem 'roda'
 gem 'newrelic-roda'
 
+# postgres
+gem 'schema_plus_enums'
+gem 'pg'
+
+# json
+gem 'multi_json'
+gem 'oj'
+
 # Backend
 gem 'rails'
 gem 'sprockets-rails'
@@ -38,7 +46,6 @@ gem 'coffee-rails'
 gem 'therubyracer'
 gem 'uglifier'
 gem 'money-rails'
-gem 'pg'
 gem 'activerecord-nulldb-adapter'
 gem 'mongoid'
 gem 'moped'
@@ -74,8 +81,6 @@ gem 'attr_encrypted', '1.3.5'
 gem 'iban-tools'
 gem 'byebug'
 gem 'acts_as_votable'
-gem 'multi_json'
-gem 'oj'
 gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'

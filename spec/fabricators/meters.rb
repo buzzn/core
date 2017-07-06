@@ -8,17 +8,17 @@ Fabricator :meter, class_name: Meter::Real do
   ownership                           Meter::Base::BUZZN_SYSTEMS
   edifact_metering_type                      nil
   edifact_meter_size                          Meter::Base::EDL40
-  direction_number                            Meter::Base::ONE_WAY_METER
+  direction_number                            Meter::Real::ONE_WAY_METER
   edifact_measurement_method                 Meter::Base::REMOTE
-  edifact_mounting_method                     Meter::Base::THREE_POINT_HANGING
+  edifact_mounting_method                     Meter::Base::THREE_POINT_MOUNTING
   build_year                          { 5.years.ago }
   calibrated_until                     { 5.years.from_now }
-  edifact_section                             Meter::Base::ELECTRICITY
+  section                             Meter::Base::ELECTRICITY
   edifact_voltage_level                       Meter::Base::LOW_LEVEL
   edifact_cycle_interval                      Meter::Base::YEARLY
   sent_data_dso                       nil
-  edifact_tariff                              Meter::Base::ONE_TARIFF
-  edifact_data_logging                        Meter::Base::REMOTE
+  edifact_tariff                              Meter::Base::SINGLE_TARIFF
+  edifact_data_logging                        Meter::Base::ELECTRONIC
 end
 
 Fabricator :real_meter, from: :meter do

@@ -479,6 +479,13 @@ paths:
         - CUSTOMER
         - LEASED
         - BOUGHT
+      - name: section
+        in: formData
+        required: false
+        type: string
+        enum:
+        - S
+        - G
       - name: build_year
         in: formData
         required: false
@@ -508,11 +515,6 @@ paths:
         - Z01
         - Z02
         - Z03
-      - name: edifact_section
-        in: formData
-        required: false
-        type: string
-        format: ''
       - name: edifact_measurement_method
         in: formData
         required: false
@@ -557,8 +559,8 @@ paths:
         required: false
         type: string
         enum:
-        - AMR
-        - MMR
+        - Z04
+        - Z05
       responses:
         200:
           description: patched
@@ -598,6 +600,13 @@ paths:
         - CUSTOMER
         - LEASED
         - BOUGHT
+      - name: section
+        in: formData
+        required: false
+        type: string
+        enum:
+        - S
+        - G
       - name: build_year
         in: formData
         required: false
@@ -627,11 +636,6 @@ paths:
         - Z01
         - Z02
         - Z03
-      - name: edifact_section
-        in: formData
-        required: false
-        type: string
-        format: ''
       - name: edifact_measurement_method
         in: formData
         required: false
@@ -676,8 +680,8 @@ paths:
         required: false
         type: string
         enum:
-        - AMR
-        - MMR
+        - Z04
+        - Z05
       responses:
         200:
           description: patched

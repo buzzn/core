@@ -6,16 +6,30 @@ module Meter
     has_many :registers, class_name: Register::Real, foreign_key: :meter_id
     validates_associated :registers
 
+    # manufacturer names
     EASY_METER = 'easy_meter'
     AMPERIX = 'amperix'
     FERRARIS = 'ferraris'
     OTHER = 'other'
+    enum manufacturer_name: {
+           easy_meter: EASY_METER,
+           amperix: AMPERIX,
+           ferraris: FERRARIS,
+           other: OTHER
+         }
     MANUFACTURER_NAMES = [EASY_METER, AMPERIX, FERRARIS, OTHER]
 
-    validates :manufacturer_name, inclusion: {in: MANUFACTURER_NAMES}
+    # direction numbers
+    ONE_WAY_METER = 'ERZ' # one_way_meter
+    TWO_WAY_METER = 'ZRZ' # two_way_meter
+    enum direction_number: {
+           one_way_meter: ONE_WAY_METER,
+           two_way_meter: TWO_WAY_METER,
+         }
+    DIRECTION_NUMBERS = [ONE_WAY_METER, TWO_WAY_METER]
+
     validates :product_name, presence: true
     validates :product_serialnumber, presence: true, uniqueness: true, length: { in: 2..128 }
-    validates :direction_number, inclusion: {in: DIRECTION_NUMBERS}
     
     before_destroy do
       # we can't use registers.delete_all here because ActiveRecord translates this into a wrong SQL query.
@@ -47,14 +61,6 @@ module Meter
 
     def output_register=(attr)
       registers << Register::Output.new(attr.merge(meter: self))
-    end
-
-    def direction_number
-      if registers.size == 1
-        Meter::Base::ONE_WAY_METER
-      else
-        Meter::Base::TWO_WAY_METER
-      end
     end
 
     # work around AR short-comings

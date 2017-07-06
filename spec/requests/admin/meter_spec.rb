@@ -57,20 +57,21 @@ describe Admin::LocalpoolRoda do
         "product_name"=>meter.product_name,
         "product_serialnumber"=>meter.product_serialnumber,
         "ownership"=>meter.ownership,
+        "section"=>meter.attributes['section'],
         "build_year"=>meter.build_year,
         "calibrated_until"=>meter.calibrated_until ? meter.calibrated_until.to_s : nil,
-        "edifact_metering_type"=>meter.edifact_metering_type,
-        "edifact_meter_size"=>meter.edifact_meter_size,
-        "edifact_section"=>meter.edifact_section,
-        "edifact_tariff"=>meter.edifact_tariff,
-        "edifact_measurement_method"=>meter.edifact_measurement_method,
-        "edifact_mounting_method"=>meter.edifact_mounting_method,
-        "edifact_voltage_level"=>meter.edifact_voltage_level,
-        "edifact_cycle_interval"=>meter.edifact_cycle_interval,
+        "edifact_metering_type"=>meter.attributes['edifact_metering_type'],
+        "edifact_meter_size"=>meter.attributes['edifact_meter_size'],
+        "edifact_tariff"=>meter.attributes['edifact_tariff'],
+        "edifact_measurement_method"=>meter.attributes['edifact_measurement_method'],
+        "edifact_mounting_method"=>meter.attributes['edifact_mounting_method'],
+        "edifact_voltage_level"=>meter.attributes['edifact_voltage_level'],
+        "edifact_cycle_interval"=>meter.attributes['edifact_cycle_interval'],
+        "edifact_data_logging"=>meter.attributes['edifact_data_logging'],
         "updatable"=>true,
         "deletable"=>true,
-        "manufacturer_name"=>meter.manufacturer_name,
-        "direction_number"=>meter.direction_number,
+        "manufacturer_name"=>meter.attributes['manufacturer_name'],
+        "direction_number"=>meter.attributes['direction_number'],
         "converter_constant"=>meter.converter_constant,
         "registers"=>{
           'array'=>[
@@ -128,6 +129,8 @@ describe Admin::LocalpoolRoda do
              "detail"=>"size cannot be greater than 63"},
             {"parameter"=>"product_serialnumber",
              "detail"=>"size cannot be greater than 63"},
+            {"parameter"=>"section",
+             "detail"=>"must be one of: S, G"},
             {"parameter"=>"build_year",
              "detail"=>"must be an integer"},
             {"parameter"=>"calibrated_until",
@@ -136,8 +139,6 @@ describe Admin::LocalpoolRoda do
              "detail"=>"must be one of: AHZ, LAZ, WSZ, EHZ, MAZ, IVA"},
             {"parameter"=>"edifact_meter_size",
              "detail"=>"must be one of: Z01, Z02, Z03"},
-            {"parameter"=>"edifact_section",
-             "detail"=>"size cannot be greater than 63"},
             {"parameter"=>"edifact_measurement_method",
              "detail"=>"size cannot be greater than 63"},
             {"parameter"=>"edifact_tariff",
@@ -149,7 +150,7 @@ describe Admin::LocalpoolRoda do
             {"parameter"=>"edifact_cycle_interval",
              "detail"=>"must be one of: MONTHLY, YEARLY, QUARTERLY, HALF_YEARLY"},
             {"parameter"=>"edifact_data_logging",
-             "detail"=>"must be one of: AMR, MMR"}
+             "detail"=>"must be one of: Z04, Z05"}
           ]
         }
       end
@@ -160,13 +161,14 @@ describe Admin::LocalpoolRoda do
         json['build_year'] = 2017
         json['calibrated_until'] = Date.today.to_s
         json['edifact_meter_size'] = 'Z02'
-        json['edifact_section'] = 'G'
+        json['section'] = 'G'
         json['edifact_tariff'] = 'ZTZ'
         json['edifact_measurement_method'] = 'MMR'
         json['edifact_mounting_method'] = 'HS'
         json['edifact_metering_type'] = 'EHZ'
         json['edifact_voltage_level'] = 'E04'
         json['edifact_cycle_interval'] = 'QUARTERLY'
+        json['edifact_data_logging'] = 'Z04'
         json.delete('registers')
         json
       end
@@ -185,16 +187,17 @@ describe Admin::LocalpoolRoda do
       let(:virtual_updated_json) do
         json = virtual_meter_json.dup
         json['product_name'] = 'Smarty Super Meter'
+        json['section'] = 'G'
         json['build_year'] = 2017
         json['calibrated_until'] = Date.today.to_s
         json['edifact_meter_size'] = 'Z02'
-        json['edifact_section'] = 'G'
         json['edifact_tariff'] = 'ZTZ'
         json['edifact_measurement_method'] = 'MMR'
         json['edifact_mounting_method'] = 'HS'
         json['edifact_metering_type'] = 'EHZ'
         json['edifact_voltage_level'] = 'E04'
         json['edifact_cycle_interval'] = 'QUARTERLY'
+        json['edifact_data_logging'] = 'Z04'
         json
       end
 
@@ -226,12 +229,12 @@ describe Admin::LocalpoolRoda do
                   product_name: 'SmartyMeter' * 10,
                   product_serialnumber: '12341234' * 10,
                   onwership: 'me',
+                  section: 'some' * 60,
                   build_year: 'this-year',
                   converter_constant: 'convert-it',
                   calibrated_until: 'today',
                   edifact_metering_type: 'sometype',
                   edifact_meter_size: 'somesize',
-                  edifact_section: 'some' * 60,
                   edifact_measurement_method: 'some' * 60,
                   edifact_tariff: 'something',
                   edifact_mounting_method: 'something',
@@ -250,18 +253,18 @@ describe Admin::LocalpoolRoda do
                   product_name: 'Smarty Super Meter',
                   product_serialnumber: '12341234',
                   onwership: Meter::Base::CUSTOMER,
+                  section: Meter::Base::GAS,
                   build_year: 2017,
                   converter_constant: 20,
                   calibrated_until: Date.today,
                   edifact_metering_type: Meter::Base::DIGITAL_HOUSEHOLD_METER,
                   edifact_meter_size: Meter::Base::EDL21,
-                  edifact_section: Meter::Base::GAS,
                   edifact_measurement_method: Meter::Base::MANUAL,
-                  edifact_tariff: Meter::Base::TWO_TARIFFS,
+                  edifact_tariff: Meter::Base::DUAL_TARIFF,
                   edifact_mounting_method: Meter::Base::CAP_RAIL,
                   edifact_voltage_level: Meter::Base::HIGH_LEVEL,
                   edifact_cycle_interval: Meter::Base::QUARTERLY,
-                  edifact_data_logging: Meter::Base::REMOTE
+                  edifact_data_logging: Meter::Base::ANALOG
 
             expect(response).to have_http_status(200)
             expect(meter.reload.product_name).to eq 'Smarty Super Meter'

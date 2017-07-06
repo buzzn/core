@@ -4,7 +4,7 @@ ActiveAdmin.register Register::Base do
 
   index do
     id_column
-    column :mode
+    column :direction
     column :name
     column :label
     column :obis
