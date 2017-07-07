@@ -25,7 +25,6 @@ gem 'ruby-swagger'
 
 # roda
 gem 'roda'
-gem 'newrelic-roda'
 
 # postgres
 gem 'schema_plus_enums'
