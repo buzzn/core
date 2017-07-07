@@ -7,7 +7,7 @@ module Register
       raise 'not implemented'
     end
 
-    before_destroy :change_broker
+    before_destroy :update_broker
     after_destroy :validate_meter
     def validate_meter
       unless meter.valid?
@@ -25,9 +25,17 @@ module Register
       end
     end
 
-    def change_broker
+    # TODO untested code
+    def update_broker
       if meter.registers.size == 2 && !meter.broker.nil?
-        meter.broker.mode = (meter.registers - [self]).first.input? ? :in : :out
+        register = (meter.registers - [self]).first
+        if register.input?
+          meter.broker.update(mode: :in)
+        elsif register.output?
+          meter.broker.update(mode: :out)
+        else
+          raise 'unknown direction'
+        end
       end
     end
 
@@ -52,7 +60,14 @@ module Register
         if data.nil?
           raise StandardError.new('cannot retrieve reading for register ' + self.id + ' at given time')
         end
-        value = data.send(self.direction).first.value
+        value = case attributes['direction']
+                when IN
+                  data.in
+                when OUT
+                  data.out
+                else
+                  raise "unknown direction #{direction}"
+                end.first.value
         reading.energy_milliwatt_hour = value
         reading.save!
       else

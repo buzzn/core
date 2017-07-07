@@ -12,7 +12,7 @@ module Buzzn::Localpool
         localpool_start_date = find_object_or_error('localpool is missing a processing_contract') do
           localpool.localpool_processing_contract.begin_date
         end
-        localpool.registers.by_label(Register::Base::CONSUMPTION).each do |register|
+        localpool.registers.consumption.each do |register|
           date_of_first_reading = find_object_or_error("no reading found for register #{register.name}") do
             Reading.by_register_id(register.id).sort('timestamp': 1).first.timestamp.to_date
           end

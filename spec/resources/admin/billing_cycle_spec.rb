@@ -12,7 +12,7 @@ describe Admin::BillingCycleResource do
                                   end_date: Date.new(2015, 12, 31)) }
   entity!(:billing) { Fabricate(:billing,
                             billing_cycle: billing_cycle,
-                            localpool_power_taker_contract: localpool.registers.by_label(Register::Base::CONSUMPTION).first.contracts.localpool_power_takers.first) }
+                            localpool_power_taker_contract: localpool.registers.consumption.first.contracts.localpool_power_takers.first) }
   entity(:other_billing) { Fabricate(:billing,
                             billing_cycle: billing_cycle,
                             localpool_power_taker_contract: localpool.registers.by_label(Register::Base::CONSUMPTION)[1].contracts.localpool_power_takers.first) }
@@ -46,7 +46,7 @@ describe Admin::BillingCycleResource do
       3.times do |i|
         expected << Fabricate(:billing,
                               billing_cycle: billing_cycle,
-                              localpool_power_taker_contract: localpool.registers.by_label(Register::Base::CONSUMPTION)[i].contracts.localpool_power_takers.first)
+                              localpool_power_taker_contract: localpool.registers.consumption[i].contracts.localpool_power_takers.first)
       end
       BillingCycle.billings(expected)
 

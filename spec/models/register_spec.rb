@@ -37,19 +37,19 @@ describe "Register Model" do
   end
 
   it 'returns registers by label' do
-    consumption = Register::Base.all.by_label(Register::Base::CONSUMPTION).size
-    production = Register::Base.all.by_label(Register::Base::PRODUCTION_PV).size
+    consumption = Register::Base.all.consumption.size
+    production = Register::Base.all.production_pv.size
     3.times do
       Fabricate(:input_meter)
     end
     3.times do
       Fabricate(:output_meter)
     end
-    expect(Register::Base.all.by_label(Register::Base::CONSUMPTION).size).to eq consumption + 3
-    expect(Register::Base.all.by_label(Register::Base::PRODUCTION_PV).size).to eq production + 3
-    expect(Register::Base.all.by_label(Register::Base::CONSUMPTION, Register::Base::PRODUCTION_PV).size).to eq consumption + production + 6
-    expect(Register::Base.all.by_label(Register::Base::GRID_FEEDING, Register::Base::DEMARCATION_PV).size).to eq 0
-    expect {Register::Base.all.by_label('not_working') }.to raise_error ArgumentError
+    expect(Register::Base.all.consumption.size).to eq consumption + 3
+    expect(Register::Base.all.production_pv.size).to eq production + 3
+    expect(Register::Base.all.by_labels(Register::Base::CONSUMPTION, Register::Base::PRODUCTION_PV).size).to eq consumption + production + 6
+    expect(Register::Base.all.by_labels(Register::Base::GRID_FEEDING, Register::Base::DEMARCATION_PV).size).to eq 0
+    expect{ Register::Base.all.by_labels('something') }.to raise_error ArgumentError
   end
 
 

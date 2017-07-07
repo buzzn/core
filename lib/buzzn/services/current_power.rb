@@ -10,7 +10,7 @@ module Buzzn::Services
         register = resource
       end
       raise ArgumentError.new("not a #{Register::Base}") if !register.is_a?(Register::Base)
-      result = registry.get(register.data_source).single_aggregated(register, register.direction)
+      result = registry.get(register.data_source).single_aggregated(register, register.direction.sub(/put/, ''))
       result.freeze unless result.frozen?
       result
     end

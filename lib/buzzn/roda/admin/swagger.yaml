@@ -491,6 +491,11 @@ paths:
         required: false
         type: integer
         format: int64
+      - name: converter_constant
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: calibrated_until
         in: formData
         required: false
@@ -608,6 +613,11 @@ paths:
         - S
         - G
       - name: build_year
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: converter_constant
         in: formData
         required: false
         type: integer

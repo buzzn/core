@@ -64,8 +64,8 @@ describe "Group Model" do
     end
 
     it 'creates corrected ÜGZ registers' do
-      expect(localpool.registers.by_label(Register::Base::GRID_CONSUMPTION_CORRECTED).size).to eq 1
-      expect(localpool.registers.by_label(Register::Base::GRID_FEEDING_CORRECTED).size).to eq 1
+      expect(localpool.registers.grid_consumption_corrected.size).to eq 1
+      expect(localpool.registers.grid_feeding_corrected.size).to eq 1
     end
   end
 end

@@ -147,8 +147,8 @@ module Meter
     def validate_invariants
     end
 
-    scope :reals,      -> {where(type: Real)}
-    scope :virtuals,   -> {where(type: Virtual)}    
+    scope :real,      -> {where(type: Real)}
+    scope :virtual,   -> {where(type: Virtual)}    
     scope :restricted, ->(uuids) { joins(registers: :contracts).where('contracts.id': uuids) }
 
     def name

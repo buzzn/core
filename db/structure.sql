@@ -44,6 +44,16 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 SET search_path = public, pg_catalog;
 
 --
+-- Name: direction; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE direction AS ENUM (
+    'in',
+    'out'
+);
+
+
+--
 -- Name: direction_number; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -141,6 +151,24 @@ CREATE TYPE edifact_voltage_level AS ENUM (
     'E05',
     'E04',
     'E03'
+);
+
+
+--
+-- Name: label; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE label AS ENUM (
+    'CONSUMPTION',
+    'DEMARCATION_PV',
+    'DEMARCATION_CHP',
+    'PRODUCTION_PV',
+    'PRODUCTION_CHP',
+    'GRID_CONSUMPTION',
+    'GRID_FEEDING',
+    'GRID_CONSUMPTION_CORRECTED',
+    'GRID_FEEDING_CORRECTED',
+    'OTHER'
 );
 
 
@@ -793,7 +821,6 @@ CREATE TABLE profiles (
 CREATE TABLE registers (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     metering_point_id character varying,
-    direction character varying,
     name character varying,
     image character varying,
     meter_id uuid,
@@ -807,10 +834,11 @@ CREATE TABLE registers (
     observer_offline_monitoring boolean DEFAULT false,
     type character varying NOT NULL,
     obis character varying,
-    label character varying,
     pre_decimal_position integer,
     post_decimal_position integer,
-    low_load_ability boolean
+    low_load_ability boolean,
+    direction direction,
+    label label
 );
 
 
@@ -2272,4 +2300,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170622163547');
 INSERT INTO schema_migrations (version) VALUES ('20170626103547');
 
 INSERT INTO schema_migrations (version) VALUES ('20170626163547');
+
+INSERT INTO schema_migrations (version) VALUES ('20170707103547');
 

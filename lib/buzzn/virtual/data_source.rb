@@ -19,7 +19,7 @@ module Buzzn::Virtual
       sum = 0
       timestamp = 0
       resource.formula_parts.each do |formula_part|
-        mode = formula_part.operand.direction
+        mode = to_mode(formula_part.operand)
         data = @registry.get(formula_part.operand.data_source).single_aggregated(formula_part.operand, mode)
         # be a bit more lenient with the offset as we do have network latencies 
         if timestamp == 0 || (timestamp - data.timestamp).abs < 6
@@ -29,7 +29,7 @@ module Buzzn::Virtual
           raise Buzzn::DataSourceError.new('Timestamp mismatch at virtual register power calculation')
         end
       end
-      Buzzn::DataResult.new(timestamp || Time.current, sum >= 0 ? sum : 0, resource.id, resource.direction)
+      Buzzn::DataResult.new(timestamp || Time.current, sum >= 0 ? sum : 0, resource.id, to_mode(resource))
     end
 
     def aggregated(resource, mode, interval)
@@ -37,12 +37,17 @@ module Buzzn::Virtual
       units = interval.hour? || interval.day? ? :milliwatt : :milliwatt_hour
       result = Buzzn::DataResultSet.send(units, resource.id)
       resource.formula_parts.each do |formula_part|
-        mode = formula_part.operand.direction
+        mode = to_mode(formula_part.operand)
         data = @registry.get(formula_part.operand.data_source).aggregated(formula_part.operand, mode, interval)
         formula_part.operator == '+' ? result.add_all(data, interval.duration) : result.subtract_all(data, interval.duration)
       end
-      result.combine(resource.direction, interval.duration)
+      result.combine(to_mode(resource), interval.duration)
       return result
+    end
+
+    private
+    def to_mode(resource)
+      resource.direction.sub(/put/, '')
     end
   end
 end

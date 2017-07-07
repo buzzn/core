@@ -53,9 +53,9 @@ describe Display::GroupRoda do
         {
           "id"=>real_register.id,
           "type"=>"register_real",
-          "direction"=>real_register.direction.to_s,
+          "direction"=>real_register.attributes['direction'],
           "name"=>real_register.name,
-          "label"=>real_register.label,
+          "label"=>real_register.attributes['label'],
         }
       end
 
@@ -64,9 +64,9 @@ describe Display::GroupRoda do
         {
           "id"=>virtual_register.id,
           "type"=>"register_virtual",
-          "direction"=>virtual_register.direction.to_s,
+          "direction"=>virtual_register.attributes['direction'],
           "name"=>virtual_register.name,
-          "label"=>virtual_register.label,
+          "label"=>virtual_register.attributes['label'],
         }
       end
 

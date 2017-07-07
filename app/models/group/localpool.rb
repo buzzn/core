@@ -77,14 +77,14 @@ module Group
 
     def create_corrected_grid_registers
       # TODO: maybe add obis attribute and formula parts if it makes sense
-      if registers.by_label(Register::Base::GRID_CONSUMPTION_CORRECTED).size == 0
-        meter = Meter::Virtual.create!(register: Register::Virtual.new( direction: 'in',
+      if registers.grid_consumption_corrected.empty?
+        meter = Meter::Virtual.create!(register: Register::Virtual.new( direction: Register::Base::IN,
                                                                         name: 'ÜGZ Bezug korr.',
                                                                         label: Register::Base::GRID_CONSUMPTION_CORRECTED))
         registers << meter.register
       end
-      if registers.by_label(Register::Base::GRID_FEEDING_CORRECTED).size == 0
-        meter = Meter::Virtual.create!(register: Register::Virtual.new( direction: 'out',
+      if registers.grid_feeding_corrected.empty?
+        meter = Meter::Virtual.create!(register: Register::Virtual.new( direction: Register::Base::OUT,
                                                                         name: 'ÜGZ Einspeisung korr.',
                                                                         label: Register::Base::GRID_FEEDING_CORRECTED))
         registers << meter.register

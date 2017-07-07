@@ -6,7 +6,7 @@ module Buzzn::Localpool
 
         # TODO: don't take the first object, look for the appropriate object to that specific time.
         # TODO: create a contract that connects with the organization of the "grid_consumption contract"
-        energy_classification_grid_consumption = localpool.registers.by_label(Register::Base::GRID_CONSUMPTION_CORRECTED).first.contracts.other_suppliers.first.contractor.energy_classifications.first
+        energy_classification_grid_consumption = localpool.registers.grid_consumption_corrected.first.contracts.other_suppliers.first.contractor.energy_classifications.first
         # TODO: don't take the first object, look for the appropriate object to that specific time.
         energy_classification_germany = Organization.germany.energy_classifications.first
         # D119

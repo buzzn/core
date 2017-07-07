@@ -19,7 +19,7 @@ module Buzzn
         register_id_grid_feeding_corrected = nil
 
         localpool.registers.each do |register|
-          if register.label == Register::Base::CONSUMPTION
+          if register.consumption?
             energy_by_contract = get_register_energy_by_contract(register, begin_date, end_date, accounting_year)
             [Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG,
              Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG,
@@ -29,9 +29,9 @@ module Buzzn
                 result.add(accounted_energy)
               end
             end
-          elsif register.label == Register::Base::GRID_CONSUMPTION_CORRECTED
+          elsif register.grid_consumption_corrected?
             register_id_grid_consumption_corrected = register.id
-          elsif register.label == Register::Base::GRID_FEEDING_CORRECTED
+          elsif register.grid_feeding_corrected?
             register_id_grid_feeding_corrected = register.id
           else
             accounted_energy = get_register_energy_for_period(register, begin_date, end_date, accounting_year)

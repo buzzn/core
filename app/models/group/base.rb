@@ -55,12 +55,12 @@ module Group
     end
 
     def input_registers
-      registers.where(direction: 'in')
+      registers.input
     end
 
 
     def output_registers
-      registers.where(direction: 'out')
+      registers.output
     end
 
     def calculate_total_energy_data(data, operators, resolution)

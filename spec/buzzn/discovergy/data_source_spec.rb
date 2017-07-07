@@ -10,7 +10,7 @@ describe Buzzn::Discovergy::DataSource do
   subject { Buzzn::Discovergy::DataSource.new }
 
   entity(:meter) { Fabricate(:meter, product_serialnumber: 60009485) }
-  entity(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.direction, resource: meter, external_id: "EASYMETER_#{meter.product_serialnumber}") }
+  entity(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.direction.sub(/put/, ''), resource: meter, external_id: "EASYMETER_#{meter.product_serialnumber}") }
   entity(:small_group) do
     Fabricate(:tribe, registers: [
                 Fabricate(:easymeter_60009484).output_register,

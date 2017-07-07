@@ -53,7 +53,7 @@ module Buzzn::StandardProfile
 private
     def single_aggregated_register(register, mode, time = nil)
       profile_type = get_profile_type(register)
-      if profile_type && register.direction == mode
+      if profile_type && register.direction?(mode)
         if result = @facade.query_value(profile_type, time || Time.current)
           Buzzn::DataResult.new(result.timestamp.to_time,
                                 result.power_milliwatt,
@@ -131,9 +131,11 @@ private
 
     def get_profile_type(register)
       if register.data_source == :standard_profile
-        if register.direction == 'in'
+        if register.input?
           :slp
         else
+          # what makes the first device different ? is the order in devices list
+          # well defined ?
           if register.devices.any? && register.devices.first.primary_energy == 'sun'
             :sep_pv
           else

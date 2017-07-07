@@ -220,6 +220,6 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
 
     addresses << Fabricate(:address)
 
-    Fabricate(:osc_sulz, signing_user: Fabricate(:user), register: self.registers.by_label(Register::Base::GRID_CONSUMPTION_CORRECTED).first, customer: Organization.where(name: 'HaFi').first, localpool: self)
+    Fabricate(:osc_sulz, signing_user: Fabricate(:user), register: self.registers.grid_consumption_corrected.first, customer: Organization.where(name: 'HaFi').first, localpool: self)
   end
 end

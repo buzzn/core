@@ -55,7 +55,7 @@ describe Meter::BaseResource do
   describe Meter::Real do
 
     it 'retrieve all - ids + types' do
-      result = resources.reals.collect do |r|
+      result = resources.real.collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [['meter_real', real.id]]
@@ -68,7 +68,7 @@ describe Meter::BaseResource do
       expect(attrs.keys).to match_array base_keys + ['manufacturer_name',
                                                      'converter_constant',
                                                      'direction_number']
-      expect{resources.virtuals.retrieve(real.id)}.to raise_error Buzzn::PermissionDenied
+      expect{resources.virtual.retrieve(real.id)}.to raise_error Buzzn::PermissionDenied
     end
 
   end
@@ -79,7 +79,7 @@ describe Meter::BaseResource do
       expected = Meter::Virtual.all.collect do |v|
         ['meter_virtual', v.id]
       end
-      result = resources.virtuals.collect do |r|
+      result = resources.virtual.collect do |r|
         [r.type, r.id]
       end
       expect(result).to match_array expected
@@ -90,7 +90,7 @@ describe Meter::BaseResource do
       expect(attrs['id']).to eq virtual.id
       expect(attrs['type']).to eq 'meter_virtual'
       expect(attrs.keys).to match_array base_keys
-      expect{resources.reals.retrieve(virtual.id)}.to raise_error Buzzn::PermissionDenied
+      expect{resources.real.retrieve(virtual.id)}.to raise_error Buzzn::PermissionDenied
     end
   end
 end

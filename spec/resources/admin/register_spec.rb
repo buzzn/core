@@ -51,7 +51,7 @@ describe Register::BaseResource do
   describe Register::RealResource do
 
     it 'retrieve all - ids + types' do
-      result = resources.reals.collect do |r|
+      result = resources.real.collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [['register_real', real.id]]
@@ -63,7 +63,7 @@ describe Register::BaseResource do
       expect(attrs['type']).to eq 'register_real'
       expect(attrs.keys).to match_array base_keys +
                                         ['obis', 'metering_point_id']
-      expect{resources.reals.retrieve(virtual.id)}.to raise_error Buzzn::PermissionDenied
+      expect{resources.real.retrieve(virtual.id)}.to raise_error Buzzn::PermissionDenied
     end
   end
 
@@ -73,7 +73,7 @@ describe Register::BaseResource do
       expected = Register::Virtual.all.collect do |v|
         ['register_virtual', v.id]
       end
-      result = resources.virtuals.collect do |r|
+      result = resources.virtual.collect do |r|
         [r.type, r.id]
       end
       expect(result).to match_array expected
@@ -84,7 +84,7 @@ describe Register::BaseResource do
       expect(attrs['id']).to eq virtual.id
       expect(attrs['type']).to eq 'register_virtual'
       expect(attrs.keys).to match_array base_keys
-      expect{resources.virtuals.retrieve(real.id)}.to raise_error Buzzn::PermissionDenied
+      expect{resources.virtual.retrieve(real.id)}.to raise_error Buzzn::PermissionDenied
     end
   end
 end

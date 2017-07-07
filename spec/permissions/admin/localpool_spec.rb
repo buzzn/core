@@ -45,7 +45,7 @@ describe Admin::LocalpoolPermissions do
     pool
   end
   let(:contract) { localpool2.localpool_power_taker_contracts.first }
-  let(:register) { localpool2.registers.reals.inputs.first }
+  let(:register) { localpool2.registers.real.input.first }
 
   entity!(:mpoc) { Fabricate(:metering_point_operator_contract,
                              localpool: localpool2) }
@@ -372,7 +372,7 @@ describe Admin::LocalpoolPermissions do
       expect(registers(localpool_manager, localpool2.id)).to match_array localpool2.registers.reload
       expect(registers(localpool_member, localpool1.id)).to match_array []
 
-      expect(registers(localpool_member3, localpool2.id)).to match_array localpool2.registers.inputs.reals
+      expect(registers(localpool_member3, localpool2.id)).to match_array localpool2.registers.input.real
       
       expect(registers(localpool_member4, localpool2.id)).to match_array []
 

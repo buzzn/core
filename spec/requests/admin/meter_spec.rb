@@ -56,7 +56,7 @@ describe Admin::LocalpoolRoda do
         "type"=>"meter_real",
         "product_name"=>meter.product_name,
         "product_serialnumber"=>meter.product_serialnumber,
-        "ownership"=>meter.ownership,
+        "ownership"=>meter.attributes['ownership'],
         "section"=>meter.attributes['section'],
         "build_year"=>meter.build_year,
         "calibrated_until"=>meter.calibrated_until ? meter.calibrated_until.to_s : nil,
@@ -78,12 +78,12 @@ describe Admin::LocalpoolRoda do
             {
               "id"=>meter.input_register.id,
               "type"=>"register_real",
-              "direction"=>meter.input_register.direction.to_s,
+              "direction"=>meter.input_register.attributes['direction'],
               "name"=>meter.input_register.name,
               "pre_decimal_position"=>6,
               "post_decimal_position"=>2,
               "low_load_ability"=>false,
-              "label"=>meter.input_register.label,
+              "label"=>meter.input_register.attributes['label'],
               "last_reading"=>0,
               'observer_min_threshold'=> 100,
               'observer_max_threshold'=> 5000,
@@ -132,6 +132,8 @@ describe Admin::LocalpoolRoda do
             {"parameter"=>"section",
              "detail"=>"must be one of: S, G"},
             {"parameter"=>"build_year",
+             "detail"=>"must be an integer"},
+            {"parameter"=>"converter_constant",
              "detail"=>"must be an integer"},
             {"parameter"=>"calibrated_until",
              "detail"=>"must be a date"},
@@ -188,6 +190,7 @@ describe Admin::LocalpoolRoda do
         json = virtual_meter_json.dup
         json['product_name'] = 'Smarty Super Meter'
         json['section'] = 'G'
+        json['ownership'] = 'CUSTOMER'
         json['build_year'] = 2017
         json['calibrated_until'] = Date.today.to_s
         json['edifact_meter_size'] = 'Z02'
@@ -252,7 +255,7 @@ describe Admin::LocalpoolRoda do
                   manufacturer_name:  Meter::Real::OTHER,
                   product_name: 'Smarty Super Meter',
                   product_serialnumber: '12341234',
-                  onwership: Meter::Base::CUSTOMER,
+                  ownership: Meter::Base::CUSTOMER,
                   section: Meter::Base::GAS,
                   build_year: 2017,
                   converter_constant: 20,
@@ -267,7 +270,26 @@ describe Admin::LocalpoolRoda do
                   edifact_data_logging: Meter::Base::ANALOG
 
             expect(response).to have_http_status(200)
-            expect(meter.reload.product_name).to eq 'Smarty Super Meter'
+            meter.reload
+            if meter.is_a? Meter::Real
+              expect(meter.manufacturer_name).to eq 'other'
+            end
+            expect(meter.product_serialnumber).to eq '12341234'
+            expect(meter.product_name).to eq 'Smarty Super Meter'
+            expect(meter.product_serialnumber).to eq '12341234'
+            expect(meter.ownership).to eq 'customer'
+            expect(meter.section).to eq 'gas'
+            expect(meter.build_year).to eq 2017
+            expect(meter.converter_constant).to eq 20
+            expect(meter.calibrated_until).to eq Date.today
+            expect(meter.edifact_metering_type).to eq 'digital_household_meter'
+            expect(meter.edifact_meter_size).to eq 'edl21'
+            expect(meter.edifact_measurement_method).to eq 'manual'
+            expect(meter.edifact_tariff).to eq 'dual_tariff'
+            expect(meter.edifact_mounting_method).to eq 'cap_rail'
+            expect(meter.edifact_voltage_level).to eq 'high_level'
+            expect(meter.edifact_cycle_interval).to eq 'quarterly'
+            expect(meter.edifact_data_logging).to eq 'analog'
             expect(json.to_yaml).to eq send("#{type}_updated_json").to_yaml
           end
         end

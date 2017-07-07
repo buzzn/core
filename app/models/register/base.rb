@@ -8,23 +8,39 @@ module Register
     include Filterable
 
     #label constants
-    CONSUMPTION = 'consumption'
-    DEMARCATION_PV = 'demarcation_pv'
-    DEMARCATION_CHP = 'demarcation_chp'
-    PRODUCTION_PV = 'production_pv'
-    PRODUCTION_CHP = 'production_chp'
-    GRID_CONSUMPTION = 'grid_consumption'
-    GRID_FEEDING = 'grid_feeding'
-    GRID_CONSUMPTION_CORRECTED = 'grid_consumption_corrected'
-    GRID_FEEDING_CORRECTED = 'grid_feeding_corrected'
-    OTHER = 'other'
+    CONSUMPTION = 'CONSUMPTION'
+    DEMARCATION_PV = 'DEMARCATION_PV'
+    DEMARCATION_CHP = 'DEMARCATION_CHP'
+    PRODUCTION_PV = 'PRODUCTION_PV'
+    PRODUCTION_CHP = 'PRODUCTION_CHP'
+    GRID_CONSUMPTION = 'GRID_CONSUMPTION'
+    GRID_FEEDING = 'GRID_FEEDING'
+    GRID_CONSUMPTION_CORRECTED = 'GRID_CONSUMPTION_CORRECTED'
+    GRID_FEEDING_CORRECTED = 'GRID_FEEDING_CORRECTED'
+    OTHER = 'OTHER'
+    enum label: {
+           consumption: CONSUMPTION,
+           demarcation_pv: DEMARCATION_PV,
+           demarcation_chp: DEMARCATION_CHP,
+           production_pv: PRODUCTION_PV,
+           production_chp: PRODUCTION_CHP,
+           grid_consumption: GRID_CONSUMPTION,
+           grid_feeding: GRID_FEEDING,
+           grid_consumption_corrected: GRID_CONSUMPTION_CORRECTED,
+           grid_feeding_corrected: GRID_FEEDING_CORRECTED,
+           other: OTHER
+         }
+    LABELS = [CONSUMPTION, DEMARCATION_PV, DEMARCATION_CHP, PRODUCTION_PV,
+              PRODUCTION_CHP, GRID_CONSUMPTION, GRID_FEEDING,
+              GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER]
 
-    class << self
-      def labels
-        @label ||= [CONSUMPTION, DEMARCATION_PV, DEMARCATION_CHP, PRODUCTION_PV, PRODUCTION_CHP,
-                    GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER]
-      end
-    end
+    IN = 'in'
+    OUT = 'out'
+    enum direction: {
+           input: IN,
+           output: OUT
+         }
+    DIRECTIONS = [IN, OUT]
 
     belongs_to :group, class_name: Group::Base, foreign_key: :group_id
 
@@ -42,9 +58,6 @@ module Register
     def brokers
       Broker::Base.where(resource_id: self.meter.id, resource_type: Meter::Base)
     end
-
-    def self.directions; %w(in out); end
-
     validates :meter, presence: true
     validates :metering_point_id, uniqueness: false, length: { in: 4..34 }, allow_blank: true
     validates :name, presence: true, length: { in: 2..40 }
@@ -57,7 +70,6 @@ module Register
     validates :last_observed, presence: false
     # TODO virtual register ?
     validates :observer_offline_monitoring, presence: false
-    validates :label, inclusion: { in: labels }
 
     validate :validate_invariants
 
@@ -69,27 +81,25 @@ module Register
 
     scope :restricted, ->(uuids) { joins(:contracts).where('contracts.id': uuids) }
 
-    scope :inputs,   -> { where(direction: 'in') }
-    scope :outputs,  -> { where(direction: 'out') }
-    scope :reals,    -> { where(type: [Register::Input, Register::Output]) }
-    scope :virtuals, -> { where(type: Register::Virtual) }
+    scope :real,    -> { where(type: [Register::Input, Register::Output]) }
+    scope :virtual, -> { where(type: Register::Virtual) }
 
     scope :consumption_production, -> do
-      by_label(Register::Base::CONSUMPTION,
-               Register::Base::PRODUCTION_PV,
-               Register::Base::PRODUCTION_CHP)
+      by_labels(Register::Base::CONSUMPTION,
+                Register::Base::PRODUCTION_PV,
+                Register::Base::PRODUCTION_CHP)
     end
 
-    scope :by_group, lambda {|group|
+    scope :by_group, -> (group) do
       group ? self.where(group: group.id) : self.where(group: nil)
-    }
+    end
 
-    scope :by_label, lambda {|*labels|
-      labels.each do |label|
-        raise ArgumentError.new('Undefined constant "' + label + '". Only use constants defined by Register::Base.labels.') unless self.labels.include?(label)
+    scope :by_labels, -> (*labels) do
+      if (Register::Base::LABELS & labels).sort != labels.sort
+        raise ArgumentError.new("#{labels.inspect} needs to be subset of #{LABELS}")
       end
       self.where("label in (?)", labels)
-    }
+    end
 
     def self.search_attributes
       [:name, address: [:city, :state, :street_name]]
@@ -111,14 +121,6 @@ module Register
 
     def readings
       @_readings ||= Reading.all_by_register_id(self.id)
-    end
-
-    def output?
-      self.direction == 'out'
-    end
-
-    def input?
-      self.direction == 'in'
     end
 
     def calculate_forecast
@@ -155,31 +157,13 @@ module Register
 
 
 
+    # TODO move me into clockwork
     def self.observe
       Sidekiq::Client.push({
          'class' => RegisterObserveWorker,
          'queue' => :default,
          'args' => []
         })
-    end
-
-
-    def self.calculate_scores
-      Register::Base.all.select(:id, :direction).each.each do |register|
-        if register.input?
-          Sidekiq::Client.push({
-           'class' => CalculateRegisterScoreSufficiencyWorker,
-           'queue' => :default,
-           'args' => [ register.id, 'day', Time.current.to_i*1000]
-          })
-
-          Sidekiq::Client.push({
-           'class' => CalculateRegisterScoreFittingWorker,
-           'queue' => :default,
-           'args' => [ register.id, 'day', Time.current.to_i*1000]
-          })
-        end
-      end
     end
 
     def self.create_all_observer_activities
@@ -221,6 +205,17 @@ module Register
         end
       else
         NONE
+      end
+    end
+
+    def direction?(val)
+      case val.to_s.downcase.sub(/put/, '').to_sym
+      when :in
+        input?
+      when :out
+        output?
+      else
+        raise "unknown direction #{val}"
       end
     end
 

@@ -27,7 +27,7 @@ Fabricator :real_meter, from: :meter do
 end
 
 Fabricator :virtual_meter, class_name: Meter::Virtual do
-  register                    { Fabricate.build(:virtual_register, direction: [:in, :out].sample).attributes }
+  register                    { Fabricate.build(:virtual_register, direction: ['in', 'out'].sample).attributes }
   product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
 end
 

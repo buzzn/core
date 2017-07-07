@@ -128,7 +128,7 @@ module Buzzn::Pdfs
 
     def revenue_through_baseprice
       # TODO: maybe check each contract for its begin and end date to get the correct timespan with respect to full or reduced EEG
-      (timespan_in_months * baseprice / 12 * (localpool.registers.by_label(Register::Base::CONSUMPTION).size)).round(2)
+      (timespan_in_months * baseprice / 12 * (localpool.registers.consumption.size)).round(2)
     end
 
     def revenue_through_dso #Netzbetreiber

@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170626163547) do
+ActiveRecord::Schema.define(version: 20170707103547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
 
+  create_enum "direction", "in", "out"
   create_enum "direction_number", "ERZ", "ZRZ"
   create_enum "edifact_cycle_interval", "MONTHLY", "YEARLY", "QUARTERLY", "HALF_YEARLY"
   create_enum "edifact_data_logging", "Z04", "Z05"
@@ -27,6 +28,7 @@ ActiveRecord::Schema.define(version: 20170626163547) do
   create_enum "edifact_mounting_method", "BKE", "DPA", "HS"
   create_enum "edifact_tariff", "ETZ", "ZTZ", "NTZ"
   create_enum "edifact_voltage_level", "E06", "E05", "E04", "E03"
+  create_enum "label", "CONSUMPTION", "DEMARCATION_PV", "DEMARCATION_CHP", "PRODUCTION_PV", "PRODUCTION_CHP", "GRID_CONSUMPTION", "GRID_FEEDING", "GRID_CONSUMPTION_CORRECTED", "GRID_FEEDING_CORRECTED", "OTHER"
   create_enum "manufacturer_name", "easy_meter", "amperix", "ferraris", "other"
   create_enum "ownership", "BUZZN_SYSTEMS", "FOREIGN_OWNERSHIP", "CUSTOMER", "LEASED", "BOUGHT"
   create_enum "section", "S", "G"
@@ -450,29 +452,9 @@ ActiveRecord::Schema.define(version: 20170626163547) do
   add_index "profiles", ["user_id"], :name=>"index_profiles_on_user_id", :using=>:btree
   add_index "profiles", ["user_name"], :name=>"index_profiles_on_user_name", :unique=>true, :using=>:btree
 
-  create_table "registers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.string   "metering_point_id"
-    t.string   "direction"
-    t.string   "name"
-    t.string   "image"
-    t.uuid     "meter_id"
-    t.uuid     "group_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "observer_enabled",            :default=>false
-    t.integer  "observer_min_threshold",      :default=>100
-    t.integer  "observer_max_threshold",      :default=>5000
-    t.datetime "last_observed"
-    t.boolean  "observer_offline_monitoring", :default=>false
-    t.string   "type",                        :null=>false
-    t.string   "obis"
-    t.string   "label"
-    t.integer  "pre_decimal_position"
-    t.integer  "post_decimal_position"
-    t.boolean  "low_load_ability"
-  end
-  add_index "registers", ["group_id"], :name=>"index_registers_on_group_id", :using=>:btree
-  add_index "registers", ["meter_id"], :name=>"index_registers_on_meter_id", :using=>:btree
+# Could not dump table "registers" because of following StandardError
+#   Unknown type 'direction' for column 'direction'
+
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"

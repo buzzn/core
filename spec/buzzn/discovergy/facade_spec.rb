@@ -13,10 +13,10 @@ describe Buzzn::Discovergy::Facade do
 
   entity(:meter) { Fabricate(:meter, product_serialnumber: 60009485) }
   entity(:meter_2) { Fabricate(:meter, product_serialnumber: 60009272) }
-  entity(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.direction, resource: meter, external_id: "EASYMETER_#{meter.product_serialnumber}") }
-  entity(:broker_with_wrong_token) { Fabricate(:discovergy_broker_with_wrong_token,  mode: meter_2.registers.first.direction, resource: meter_2, external_id: "EASYMETER_#{meter.product_serialnumber}") }
+  entity(:broker) { Fabricate(:discovergy_broker, mode: meter.registers.first.direction.sub(/put/, ''), resource: meter, external_id: "EASYMETER_#{meter.product_serialnumber}") }
+  entity(:broker_with_wrong_token) { Fabricate(:discovergy_broker_with_wrong_token,  mode: meter_2.registers.first.direction.sub(/put/, ''), resource: meter_2, external_id: "EASYMETER_#{meter.product_serialnumber}") }
   entity(:meter_3) { Fabricate(:easymeter_60118460) }
-  entity(:broker_virtual) { Fabricate(:discovergy_broker, mode: meter_3.registers.first.direction, resource: meter_3, external_id: "VIRTUAL_00000065") }
+  entity(:broker_virtual) { Fabricate(:discovergy_broker, mode: meter_3.registers.first.direction.sub(/put/, ''), resource: meter_3, external_id: "VIRTUAL_00000065") }
   entity(:group) do
     Fabricate(:tribe, registers: [
       meter_3.registers.first,
@@ -148,7 +148,7 @@ describe Buzzn::Discovergy::Facade do
   it 'creates virtual meter for group', retry: 3 do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       facade = Buzzn::Discovergy::Facade.new
-      meter_ids_plus = group.registers.inputs.collect(&:meter).uniq.compact.collect(&:product_serialnumber).map{|s| 'EASYMETER_' + s}
+      meter_ids_plus = group.registers.input.collect(&:meter).uniq.compact.collect(&:product_serialnumber).map{|s| 'EASYMETER_' + s}
       response = facade.create_virtual_meter(broker, meter_ids_plus)
       expect(response.code).to eq '200'
       expect(response.body).not_to eq nil
