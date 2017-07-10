@@ -16,12 +16,13 @@ module Meter
                :edifact_tariff,
                :edifact_measurement_method,
                :edifact_mounting_method,
-               :edifact_meter_size,
                :edifact_voltage_level,
                :edifact_cycle_interval,
-               :edifact_data_logging
+               :edifact_data_logging,
+               :sent_data_dso
 
     attributes :updatable, :deletable
 
   end
 end
+

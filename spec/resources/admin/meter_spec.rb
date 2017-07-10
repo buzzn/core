@@ -27,6 +27,7 @@ describe Meter::BaseResource do
                      'edifact_mounting_method',
                      'edifact_voltage_level',
                      'calibrated_until',
+                     'sent_data_dso',
                      'edifact_cycle_interval',
                      'edifact_data_logging',
                      'ownership',

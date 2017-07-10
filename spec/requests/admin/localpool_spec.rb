@@ -90,6 +90,7 @@ describe Admin::LocalpoolRoda do
             'edifact_voltage_level'=>nil,
             'edifact_cycle_interval'=>nil,
             'edifact_data_logging'=>nil,
+            'sent_data_dso'=>nil,
             "updatable"=>true,
             "deletable"=>true
           }

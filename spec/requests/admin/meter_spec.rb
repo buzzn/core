@@ -38,12 +38,14 @@ describe Admin::LocalpoolRoda do
 
     entity(:virtual_meter) do
       meter = Fabricate(:virtual_meter)
+      meter.update(sent_data_dso: Date.today)
       meter.register.update(group: group)
       meter
     end
     
     entity(:meter) do
       meter = Fabricate(:input_meter)
+      meter.update(sent_data_dso: Date.today)
       meter.input_register.update(group: group)
       meter
     end
@@ -68,6 +70,7 @@ describe Admin::LocalpoolRoda do
         "edifact_voltage_level"=>meter.attributes['edifact_voltage_level'],
         "edifact_cycle_interval"=>meter.attributes['edifact_cycle_interval'],
         "edifact_data_logging"=>meter.attributes['edifact_data_logging'],
+        "sent_data_dso"=>Date.today.to_s,
         "updatable"=>true,
         "deletable"=>true,
         "manufacturer_name"=>meter.attributes['manufacturer_name'],
@@ -133,6 +136,8 @@ describe Admin::LocalpoolRoda do
              "detail"=>"must be one of: S, G"},
             {"parameter"=>"build_year",
              "detail"=>"must be an integer"},
+            {"parameter"=>"sent_data_dso",
+             "detail"=>"must be a date"},
             {"parameter"=>"converter_constant",
              "detail"=>"must be an integer"},
             {"parameter"=>"calibrated_until",
@@ -161,6 +166,7 @@ describe Admin::LocalpoolRoda do
         json = meter_json.dup
         json['product_name'] = 'Smarty Super Meter'
         json['build_year'] = 2017
+        json['sent_data_dso'] = '2010-01-01'
         json['calibrated_until'] = Date.today.to_s
         json['edifact_meter_size'] = 'Z02'
         json['section'] = 'G'
@@ -192,6 +198,7 @@ describe Admin::LocalpoolRoda do
         json['section'] = 'G'
         json['ownership'] = 'CUSTOMER'
         json['build_year'] = 2017
+        json['sent_data_dso'] = '2010-01-01'
         json['calibrated_until'] = Date.today.to_s
         json['edifact_meter_size'] = 'Z02'
         json['edifact_tariff'] = 'ZTZ'
@@ -234,6 +241,7 @@ describe Admin::LocalpoolRoda do
                   onwership: 'me',
                   section: 'some' * 60,
                   build_year: 'this-year',
+                  sent_data_dso: 'some-years-ago',
                   converter_constant: 'convert-it',
                   calibrated_until: 'today',
                   edifact_metering_type: 'sometype',
@@ -258,6 +266,7 @@ describe Admin::LocalpoolRoda do
                   ownership: Meter::Base::CUSTOMER,
                   section: Meter::Base::GAS,
                   build_year: 2017,
+                  sent_data_dso: '2010-01-01',
                   converter_constant: 20,
                   calibrated_until: Date.today,
                   edifact_metering_type: Meter::Base::DIGITAL_HOUSEHOLD_METER,
@@ -280,6 +289,7 @@ describe Admin::LocalpoolRoda do
             expect(meter.ownership).to eq 'customer'
             expect(meter.section).to eq 'gas'
             expect(meter.build_year).to eq 2017
+            expect(meter.sent_data_dso).to eq Date.new(2010)
             expect(meter.converter_constant).to eq 20
             expect(meter.calibrated_until).to eq Date.today
             expect(meter.edifact_metering_type).to eq 'digital_household_meter'
