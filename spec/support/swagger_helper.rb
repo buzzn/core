@@ -41,61 +41,46 @@ module SwaggerHelper
     expect(@schema).not_to be_nil
     schema = Buzzn::Transaction.transactions.steps[@schema]
     expected = []
-    schema.rules.each do |name, rule|
-      required = rule.is_a? Dry::Logic::Operations::And
+    process_rule = ->(name: nil, required: nil, type: nil, options: {}) do
       if required
         expected << { 'parameter' => "#{name}", 'detail' => 'is missing' }
       end
-      rules = rule.rules[1..-1]
-      
+
       sparam = Swagger::Data::Parameter.new
       sparam.name = name.to_s
       sparam.in = 'formData'
       sparam.required = required
-      type = type_predicate(rules)
-      case type[0]
-      when 'enum'
+      case type
+      when :string
         sparam.type = 'string'
-        sparam.enum = type[1..-1]
+        sparam.format = ''
+      when :enum
+        sparam.type = 'string'
+        sparam.enum = options[:values]
+      when :integer
+        sparam.type = 'integer'
+        sparam.format = 'int64'
+      when :date
+        sparam.type = 'string'
+        sparam.format = 'date'
+      when :datetime
+        sparam.type = 'string'
+        sparam.format = 'date-time'
+      when :float
+        sparam.type = 'float'
+      when :boolean
+        sparam.type = 'boolean'
       else
-        sparam.type = type[0]
-        sparam.format = type[1] if type[1]
+        sparam.type = 'string'
+        sparam.format = type.to_s
       end
       ops.add_parameter(sparam)
       ops.consumes = ['application/x-www-form-urlencoded']
-    end
-    expect(expected).to match_array json['errors']
-  end
 
-  def type_predicate(rules)
-    rules.collect do |rule|
-      case rule
-      when Dry::Logic::Operations::And
-        type_predicate(rule.rules)
-      when Dry::Logic::Operations::Key
-        type_predicate(rule.rules)
-      when Dry::Logic::Rule::Predicate
-        type = rule.predicate.to_s.gsub(/.*#|\?>$/, '')
-        case type
-        when 'filled'
-          [nil, nil]
-        when 'int'
-          ['integer', 'int64']
-        when 'str'
-          ['string', '']
-        when 'time'
-          ['string', 'date-time']
-        when 'included_in'
-          ['enum', rule.options[:args].flatten]
-        when 'max_size'
-          [nil, nil] # ignored for the time being
-        else
-          ['string', rule.to_s.sub('?', '')]
-        end
-      else
-        binding.pry
-      end   
-    end.compact.flatten.compact
+    end
+    
+    Buzzn::Validation::SchemaVisitor.visit(schema, &process_rule)
+    expect(expected).to match_array json['errors']
   end
 
   module ClassMethods
