@@ -491,6 +491,11 @@ paths:
         required: false
         type: integer
         format: int64
+      - name: sent_data_dso
+        in: formData
+        required: false
+        type: string
+        format: date
       - name: converter_constant
         in: formData
         required: false
@@ -617,6 +622,11 @@ paths:
         required: false
         type: integer
         format: int64
+      - name: sent_data_dso
+        in: formData
+        required: false
+        type: string
+        format: date
       - name: converter_constant
         in: formData
         required: false
