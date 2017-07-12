@@ -187,20 +187,6 @@ meter.broker = Fabricate(:discovergy_broker,
   provider_password: '19200buzzn'
 )
 
-#Dieser User wird allen Kommentaren von gelöschten Benutzern zugewiesen
-geloeschter_benutzer = Fabricate(:geloeschter_benutzer)
-
-
-
-
-
-
-
-# puts '20 more users with location'
-# 20.times do
-#   user, location, register = user_with_location
-#   puts "  #{user.email}"
-# end
 
 
 

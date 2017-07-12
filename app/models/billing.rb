@@ -22,7 +22,7 @@ class Billing < ActiveRecord::Base
   validates :end_reading_id, presence: true
   validates :device_change_reading_1_id, presence: false
   validates :device_change_reading_2_id, presence: false
-  validates :total_energy_consumption_kWh, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :total_energy_consumption_kwh, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :total_price_cents, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :prepayments_cents, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :receivables_cents, presence: true, numericality: { only_integer: true } #may be negative if LSG has to pay back money

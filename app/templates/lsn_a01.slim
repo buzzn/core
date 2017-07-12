@@ -40,7 +40,7 @@ html
       #{power_taker.contractor_contact.name} #{power_taker.contractor.address.street_with_number} #{power_taker.contractor.address.zip_with_place}
 
     div id="to"
-      div = 'power_taker.customer.profile.address'
+      div = 'TODO power_taker.customer.prefix'
       div = power_taker.customer.name
       div = power_taker.customer.address.street_with_number
       div = power_taker.customer.address.zip_with_place
@@ -92,7 +92,7 @@ html
     table
       tr.grey
         td Anrede
-        td = power_taker.customer.profile.address
+        td = power_taker.customer.prefix
       tr
         td Name
         td = power_taker.customer.name

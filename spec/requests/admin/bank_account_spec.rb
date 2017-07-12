@@ -5,7 +5,8 @@ describe Admin::BankAccountRoda do
     route do |r|
       r.on :id do |id|
         localpool = Admin::LocalpoolResource.all(current_user).first
-        parent = localpool.users.where(id: id).first || localpool.organizations.where(id: id).first
+        localpool.object.people
+        parent = localpool.organizations.where(id: id).first || localpool.people.where(id: id).first
         shared[Admin::BankAccountRoda::PARENT] = parent
         r.run Admin::BankAccountRoda
       end
@@ -30,7 +31,7 @@ describe Admin::BankAccountRoda do
                                  localpool: localpool,
                                  contractor: Fabricate(:other_organization)) }
 
-  entity!(:user_account) do
+  entity!(:person_account) do
     BankAccount.delete_all
     Fabricate(:bank_account, contracting_party: contract.customer)
   end
@@ -48,7 +49,7 @@ describe Admin::BankAccountRoda do
     }
   end
 
-  [:user_account, :organization_account].each do |name|
+  [:person_account, :organization_account].each do |name|
     context "#{name.to_s.sub(/_.*/,'')} parent" do
 
       let(:bank_account) { send(name) }
@@ -77,9 +78,9 @@ describe Admin::BankAccountRoda do
       let(:wrong_json) do
         {
           "errors"=>[
-            {"parameter"=>"bank_name", "detail"=>"size cannot be greater than 63"},
-            {"parameter"=>"holder", "detail"=>"size cannot be greater than 63"},
-            {"parameter"=>"iban", "detail"=>"must be a valid iban"}
+            {"parameter"=>"bank_name", "detail"=>"size cannot be greater than 64"},
+            {"parameter"=>"holder", "detail"=>"size cannot be greater than 64"},
+            {"parameter"=>"iban", "detail"=>"must be a string"}
           ]
         }
       end

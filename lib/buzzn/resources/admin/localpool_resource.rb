@@ -17,7 +17,7 @@ module Admin
     has_many :organizations
     has_many :contracts
     has_many :registers
-    has_many :users
+    has_many :people
     has_many :prices, PriceResource
     has_many :billing_cycles, BillingCycleResource
 

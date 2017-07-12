@@ -34,8 +34,8 @@ module Admin
           r.run MeterRoda
         end
 
-        r.on 'users' do
-          r.run UserRoda
+        r.on 'people' do
+          r.run PersonRoda
         end
 
         r.on 'organizations' do

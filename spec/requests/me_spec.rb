@@ -10,44 +10,31 @@ describe MeRoda do
 
   entity!(:other) { Fabricate(:user_token) }
 
-  entity(:user) { User.find(user_token.resource_owner_id)}
+  entity(:person) { User.find(user_token.resource_owner_id).person }
 
   let(:denied_json) do
     {
       "errors" => [
         {
-          "detail"=>"retrieve User: permission denied for User: --anonymous--"
+          "detail"=>"retrieve Person: permission denied for User: --anonymous--"
         }
       ]
     }
   end
 
-  let(:anonymous_not_found_json) do
+  let(:person_json) do
     {
-      "errors" => [
-        {
-          "detail"=>"User: bla-blub not found by User: #{admin.resource_owner_id}"
-        }
-      ]
-    }
-  end
-
-  let(:empty_json) do
-    []
-  end
-
-  let(:user_json) do
-    {
-      "id"=>user.id,
-      "type"=>"user",
-      "user_name"=>user.user_name,
-      "title"=>user.profile.title,
-      "first_name"=>user.first_name,
-      "last_name"=>user.last_name,
-      "gender"=>user.profile.gender,
-      "phone"=>user.profile.phone,
-      "email"=>user.email,
-      "image"=>user.profile.image.md.url,
+      "id"=>person.id,
+      "type"=>"person",
+      "prefix"=>person.attributes['prefix'],
+      "title"=>person.title,
+      "first_name"=>person.first_name,
+      "last_name"=>person.last_name,
+      "phone"=>person.phone,
+      "fax"=>person.fax,
+      "email"=>person.email,
+      'preferred_language'=>person.attributes['preferred_language'],
+      "image"=>User.where(person: person).first.image.md.url,
       "updatable"=>true,
       "deletable"=>false,
       'sales_tax_number'=>nil,
@@ -58,12 +45,6 @@ describe MeRoda do
 
   context 'GET' do
 
-    let(:admin_user_json) do
-      json = user_json.dup
-      json['deletable']=true
-      json
-    end
-
     it '403' do
       GET ''
       expect(response).to have_http_status(403)
@@ -73,7 +54,7 @@ describe MeRoda do
     it '200' do
       GET '', user_token
       expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq user_json.to_yaml
+      expect(json.to_yaml).to eq person_json.to_yaml
     end
   end
 end

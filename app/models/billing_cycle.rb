@@ -47,7 +47,7 @@ class BillingCycle < ActiveRecord::Base
            Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG].include?(accounted_energy.label)
         next
       end
-      energy_consumption_kWh = accounted_energy.value / 1000000.0
+      energy_consumption_kwh = accounted_energy.value / 1000000.0
       contract = accounted_energy.first_reading.register.contracts.at(accounted_energy.first_reading.timestamp.to_date).first
       tariff = contract.tariffs.at(accounted_energy.first_reading.timestamp.to_date).first
       count_months = reading_calculation.timespan_in_months(accounted_energy.first_reading.timestamp, accounted_energy.last_reading.timestamp)
@@ -64,7 +64,7 @@ class BillingCycle < ActiveRecord::Base
                                 end_reading_id: accounted_energy.last_reading.id,
                                 device_change_reading_1_id: accounted_energy.device_change_reading_1.nil? ? nil : accounted_energy.device_change_reading_1.id,
                                 device_change_reading_2_id: accounted_energy.device_change_reading_2.nil? ? nil : accounted_energy.device_change_reading_2.id,
-                                total_energy_consumption_kWh: energy_consumption_kWh.to_i,
+                                total_energy_consumption_kwh: energy_consumption_kwh.to_i,
                                 total_price_cents: total_price_cents,
                                 prepayments_cents: prepayments_cents,
                                 receivables_cents: total_price_cents - prepayments_cents)

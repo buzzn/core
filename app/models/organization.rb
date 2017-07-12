@@ -11,6 +11,7 @@ class Organization < ContractingParty
 
   has_many :energy_classifications
 
+  belongs_to :contact, class_name: Person
 
   def self.modes
     %w{
@@ -33,10 +34,6 @@ class Organization < ContractingParty
   validates :mode, presence: true, inclusion: {in: modes}
 
   scope :restricted, ->(uuids) { where(nil) }
-
-  def contact
-    User.users_of(self, :contact).first
-  end
 
   self.modes.each do |mode|
     scope mode + "s", -> { where(mode: mode) }

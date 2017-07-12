@@ -1,7 +1,7 @@
 module Buzzn::Localpool
   class CalculateEnergyClassification
     class << self
-      def do_calculation(localpool, total_accounted_energy, full_renewable_energy_law_taxation, reduced_renewable_energy_law_taxation, eeg_ratio_kWh_per_euro)
+      def do_calculation(localpool, total_accounted_energy, full_renewable_energy_law_taxation, reduced_renewable_energy_law_taxation, eeg_ratio_kwh_per_euro)
         # NOTE: The commented strings are references to the Excel Sheet called "Stromkennzeichnung_LCP_berechnen"
 
         # TODO: don't take the first object, look for the appropriate object to that specific time.
@@ -30,9 +30,9 @@ module Buzzn::Localpool
         # I138
         known_origin_other_renewables_energy = (total_accounted_energy.grid_consumption_corrected * energy_classification_grid_consumption.other_renewables_ratio / sum_ratios_from_grid_consumption)
         # I145
-        known_origin_co2_emissions = (energy_classification_grid_consumption.co2_emission_gramm_per_kWh * total_accounted_energy.grid_consumption_corrected + 202 * total_accounted_energy.consumption_through_chp)
+        known_origin_co2_emissions = (energy_classification_grid_consumption.co2_emission_gramm_per_kwh * total_accounted_energy.grid_consumption_corrected + 202 * total_accounted_energy.consumption_through_chp)
         # I146
-        known_origin_nuclear_waste = (energy_classification_grid_consumption.nuclear_waste_miligramm_per_kWh / 1000 * total_accounted_energy.grid_consumption_corrected)
+        known_origin_nuclear_waste = (energy_classification_grid_consumption.nuclear_waste_miligramm_per_kwh / 1000 * total_accounted_energy.grid_consumption_corrected)
         # I143
         known_origin_sum_energy = (known_origin_nuclear_energy + known_origin_coal_energy + known_origin_gas_energy + known_origin_other_fossiles_energy + known_origin_other_renewables_energy)
         known_origin_sum_energy_without_renewables = (known_origin_sum_energy - known_origin_other_renewables_energy).round(2)
@@ -43,7 +43,7 @@ module Buzzn::Localpool
         # F45 and J152
         eeg_tax_payd = (full_renewable_energy_law_taxation / 100.0 * energy_full_eeg_debt + full_renewable_energy_law_taxation / 100.0 * reduced_renewable_energy_law_taxation / 100.0 * energy_reduced_eeg_debt + full_renewable_energy_law_taxation/100.0 * total_accounted_energy.grid_consumption_corrected)
         # J156
-        ratio_renewables_with_eeg = ((eeg_tax_payd * eeg_ratio_kWh_per_euro) / total_consumption_by_lsn)
+        ratio_renewables_with_eeg = ((eeg_tax_payd * eeg_ratio_kwh_per_euro) / total_consumption_by_lsn)
         # J159
         energy_renewables_with_eeg = (total_consumption_by_lsn * ratio_renewables_with_eeg)
 
@@ -60,9 +60,9 @@ module Buzzn::Localpool
         # D156
         germany_total_ratio = (germany_nuclear_ratio + germany_coal_ratio + germany_gas_ratio + germany_other_fossiles_ratio + germany_other_renewables_ratio)
         # D157
-        germany_co2_emissions = (energy_classification_germany.co2_emission_gramm_per_kWh * (100 / (100 - energy_classification_germany.renewables_eeg_ratio)))
+        germany_co2_emissions = (energy_classification_germany.co2_emission_gramm_per_kwh * (100 / (100 - energy_classification_germany.renewables_eeg_ratio)))
         # D158
-        germany_nuclear_waste = (energy_classification_germany.nuclear_waste_miligramm_per_kWh * (100 / (100 - energy_classification_germany.renewables_eeg_ratio)))
+        germany_nuclear_waste = (energy_classification_germany.nuclear_waste_miligramm_per_kwh * (100 / (100 - energy_classification_germany.renewables_eeg_ratio)))
 
         # L126
         unknown_origin_nuclear_energy = (unknown_origin * germany_nuclear_ratio / 100.0)
@@ -142,8 +142,8 @@ module Buzzn::Localpool
                                         other_fossiles_ratio: (final_other_fossiles_ratio * 100).round(2),
                                         renewables_eeg_ratio: (eeg_rewarded_ratio * 100).round(2),
                                         other_renewables_ratio: (final_other_renewables_ratio * 100).round(2),
-                                        co2_emission_gramm_per_kWh: final_co2_emissions.round,
-                                        nuclear_waste_miligramm_per_kWh: (final_nuclear_waste * 1000.0).round(6))
+                                        co2_emission_gramm_per_kwh: final_co2_emissions.round,
+                                        nuclear_waste_miligramm_per_kwh: (final_nuclear_waste * 1000.0).round(6))
       end
     end
   end

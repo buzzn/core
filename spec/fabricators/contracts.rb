@@ -39,7 +39,7 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
   customer                 {
-    user = Fabricate(:user)
+    user = Fabricate(:person)
     user.address = Fabricate(:address)
     user
   }
@@ -78,7 +78,7 @@ Fabricator :other_supplier_contract, class_name: Contract::OtherSupplier do
   power_of_attorney        true
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
-  customer                 { Fabricate(:user) }
+  customer                 { Fabricate(:person) }
   register                 { Fabricate(:input_register,
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }
@@ -96,7 +96,7 @@ Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
   power_of_attorney        true
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
-  customer                 { Fabricate(:user) }
+  customer                 { Fabricate(:person) }
   register                 { Fabricate(:input_register,
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }
@@ -143,7 +143,7 @@ Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
   register                 { Fabricate(:output_register,
                                        meter: Fabricate.build(:meter),
                                        address: Fabricate.build(:address) ) }
-  customer                 { Fabricate(:user) }
+  customer                 { Fabricate(:person) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
@@ -169,8 +169,8 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
-  customer                 { Fabricate(:user) }
-  contractor               { Fabricate(:user) }
+  customer                 { Fabricate(:user).person }
+  contractor               { Fabricate(:user).person }
   register                 { Fabricate(:input_register,
                                        group: Fabricate(:localpool),
                                        meter: Fabricate.build(:meter),
@@ -183,7 +183,7 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
     c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer)
   end
   after_create do |contract|
-    contract.customer.add_role(:contract, contract) if contract.customer.is_a? User
+    User.where(person: contract.customer).first.add_role(:contract, contract) if contract.customer.is_a? Person
     contract.save
   end
 end
@@ -205,7 +205,7 @@ Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProces
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
-  customer                 { Fabricate(:user) }
+  customer                 { Fabricate(:person) }
   localpool                { Fabricate(:localpool) }
   first_master_uid         { sequence(:uid, 90688251510000000000002677114) }
   tariffs                  { [Fabricate.build(:tariff)] }

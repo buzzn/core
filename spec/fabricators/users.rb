@@ -5,47 +5,20 @@ Fabricator :user do
   email             { "user#{i+=1}@gmail.de" }
   password          '12345678'
   profile           { Fabricate(:profile) }
+  person            { Fabricate(:person) }
   created_at        { (rand*10).days.ago }
   after_create { |user|
     user.add_role(:self, user)
+    user.add_role(:self, user.person)
+    user.person.update(email: user.email, first_name: user.profile.first_name,
+                       last_name: user.profile.last_name,
+                       prefix: user.profile.gender.to_s.upcase)
     user.confirm
   }
 end
 
-
-['input_register', 'output_register'].each do |register|
-  Fabricator "user_with_friend_and_#{register}", from: :user do
-    after_create { |user |
-      friend = Fabricate("user_with_#{register}")
-      user.friendships.create(friend: friend)
-      friend.friendships.create(friend: user)
-    }
-  end
-
-  Fabricator "user_with_#{register}", from: :user do
-    after_create { |user|
-      user.add_role(:manager, Fabricate(register, meter: Fabricate(:meter)))
-    }
-  end
-end
-
 Fabricator :admin, from: :user do
   after_create { |user| user.add_role(:admin) }
-end
-
-Fabricator :user_received_friendship_request, from: :user do
-  after_create do |user|
-    user2 = Fabricate(:user)
-    Fabricate(:friendship_request, { sender: user2, receiver: user })
-  end
-end
-
-Fabricator :user_with_friend, from: :user do
-  after_create { |user |
-    friend = Fabricate(:user)
-    user.friendships.create(friend: friend)
-    friend.friendships.create(friend: user)
-  }
 end
 
 Fabricator :felix, from: :user do

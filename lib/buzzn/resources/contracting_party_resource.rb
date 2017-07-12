@@ -4,8 +4,8 @@ class ContractingPartyResource
     case object
     when Organization
       ContractingPartyOrganizationResource.new(object, *args)
-    when User
-      ContractingPartyUserResource.new(object, *args)
+    when Person
+      ContractingPartyPersonResource.new(object, *args)
     else
       raise "can not handle type: #{object.class}"
     end

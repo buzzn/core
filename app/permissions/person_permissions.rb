@@ -1,4 +1,4 @@
-class UserPermissions
+class PersonPermissions
   extend Dry::Configurable
 
   SELF = [:self].freeze

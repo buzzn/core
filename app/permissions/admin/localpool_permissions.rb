@@ -270,11 +270,11 @@ class Admin::LocalpoolPermissions
     end
   end
   
-  setting :users, reader: true do
+  setting :people, reader: true do
     setting :create, MANAGERS
     setting :retrieve, MANAGERS + [:self]
     setting :update, MANAGERS + [:self]
-    setting :delete, OPERATORS
+    setting :delete, NONE
 
     setting :bank_accounts do
       setting :create, MANAGERS + [:self]

@@ -36,7 +36,7 @@ describe Admin::LocalpoolRoda do
     end
 
     entity(:metering_point_operator_contract) do
-      mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:user))
+      mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:person))
       group.metering_point_operator_contract
     end
 
@@ -97,15 +97,16 @@ describe Admin::LocalpoolRoda do
           },
           "customer"=>{
             "id"=>contract.customer.id,
-            "type"=>"user",
-            "user_name"=>contract.customer.user_name,
-            "title"=>contract.customer.profile.title,
+            "type"=>"person",
+            "prefix"=>contract.customer.attributes['prefix'],
+            "title"=>contract.customer.title,
             "first_name"=>contract.customer.first_name,
             "last_name"=>contract.customer.last_name,
-            "gender"=>contract.customer.profile.gender,
-            "phone"=>contract.customer.profile.phone,
+            "phone"=>contract.customer.phone,
+            "fax"=>contract.customer.fax,
             "email"=>contract.customer.email,
-            "image"=>contract.customer.profile.image.md.url,
+            "preferred_language"=>contract.customer.attributes['preferred_language'],
+            "image"=>nil,
             "updatable"=>true,
             "deletable"=>false
           },
@@ -203,7 +204,7 @@ describe Admin::LocalpoolRoda do
 
       context 'GET' do
 
-        [:user, :organization].each do |type|
+        [:person, :organization].each do |type|
 
           context "as #{type}" do
 
@@ -214,15 +215,16 @@ describe Admin::LocalpoolRoda do
               customer =  send("#{type}_customer")
               {
                 "id"=>customer.id,
-                "type"=>"user",
-                "user_name"=>customer.user_name,
+                "type"=>"person",
+                "prefix"=>customer.attributes['prefix'],
                 "title"=>nil,
                 "first_name"=>customer.first_name,
                 "last_name"=>customer.last_name,
-                "gender"=>nil,
-                "phone"=>customer.profile.phone,
+                "phone"=>customer.phone,
+                "fax"=>customer.fax,
                 "email"=>customer.email,
-                "image"=>customer.profile.image.md.url,
+                "preferred_language"=>customer.attributes['preferred_language'],
+                "image"=>nil,
                 "updatable"=>true,
                 "deletable"=>false,
                 "sales_tax_number"=>nil,
@@ -273,7 +275,7 @@ describe Admin::LocalpoolRoda do
 
       context 'GET' do
 
-        [:user, :organization].each do |type|
+        [:person, :organization].each do |type|
 
           context "as #{type}" do
 

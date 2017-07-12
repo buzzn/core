@@ -3,10 +3,16 @@ module Buzzn
     class SchemaVisitor
 
       def self.visit(schema, &block)
-        new.visit(schema, &block)
+        new(schema).visit(&block)
       end
 
-      def visit(schema, &block)
+      attr_reader :schema
+
+      def initialize(schema)
+        @schema = Buzzn::Transaction.transactions.steps[schema]
+      end
+
+      def visit(&block)
         schema.rules.each do |name, rule|
           required =
             case rule
@@ -42,6 +48,8 @@ module Buzzn
               result[:type] = :string
             when 'time'
               result[:type] = :datetime
+            when 'format'
+              result[:format] = rule.options[:args].first
             when 'included_in'
               result[:type] = :enum
               result[:values] = rule.options[:args].flatten
@@ -50,7 +58,7 @@ module Buzzn
             when 'min_size'
               result[:min_size] = rule.options[:args].first
             else
-              result[:type] = rule.to_s.sub('?', '')
+              result[:type] = rule.to_s.sub('?', '') unless result[:type]
             end
           else
             raise "do not know what to do with #{rule.class}"

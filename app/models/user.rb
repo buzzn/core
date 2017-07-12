@@ -17,6 +17,8 @@ class User < ContractingParty
   has_many :access_tokens, class_name: 'Doorkeeper::AccessToken', dependent: :destroy, :foreign_key => :resource_owner_id
   has_many :notification_unsubscribers
 
+  belongs_to :person
+
   # TODO remove delegates
   delegate :slug, to: :profile
   delegate :name, to: :profile
@@ -156,7 +158,7 @@ class User < ContractingParty
     #   @dummy ||= self.where(email: 'sys@buzzn.net').first
     # and share the hardocded string as constant and the Fabricator and/or
     # db/seeds.rb
-    self.where(email: 'sys@buzzn.net').first
+    raise 'TODO'
   end
 
   def invitable_users(register)
@@ -205,13 +207,14 @@ private
   end
 
   def delete_content
+    raise 'TODO'
     dummy_user = User.dummy
     Comment.where(user: self).each do |comment|
       comment.user_id = dummy_user.id
       comment.save
     end
 
-    self.roles.each{|role| role.destroy}
+    self.roles.delete_all
   end
 
 end

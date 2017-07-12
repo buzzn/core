@@ -506,6 +506,13 @@ paths:
         required: false
         type: string
         format: date
+      - name: direction_number
+        in: formData
+        required: false
+        type: string
+        enum:
+        - ERZ
+        - ZRZ
       - name: edifact_metering_type
         in: formData
         required: false
@@ -529,7 +536,9 @@ paths:
         in: formData
         required: false
         type: string
-        format: ''
+        enum:
+        - AMR
+        - MMR
       - name: edifact_tariff
         in: formData
         required: false
@@ -660,7 +669,9 @@ paths:
         in: formData
         required: false
         type: string
-        format: ''
+        enum:
+        - AMR
+        - MMR
       - name: edifact_tariff
         in: formData
         required: false
@@ -826,7 +837,132 @@ paths:
         in: formData
         required: false
         type: string
-        format: iban
+        format: ''
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/people":
+    get:
+      description: returns all the people of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/people/{person_id}":
+    get:
+      description: returns the person of the localpool for the given ID
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/people/{person_id}/bank-accounts":
+    get:
+      description: returns all bank-accounts of the person for the given ID
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/people/{person_id}/bank-accounts/{bank_account_id}":
+    get:
+      description: returns the bank-accounts of the person for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: delete the bank-accounts of the person for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: updates the bank-accounts of the person for the given IDs
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      - name: bank_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: holder
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: iban
+        in: formData
+        required: false
+        type: string
+        format: ''
       responses:
         200:
           description: patched
@@ -1025,128 +1161,3 @@ paths:
       responses:
         200:
           description: success
-  "/localpools/{localpool_id}/users":
-    get:
-      description: returns all the users of the localpool
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/localpools/{localpool_id}/users/{user_id}":
-    get:
-      description: returns the user of the localpool for the given ID
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: user_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/localpools/{localpool_id}/users/{user_id}/bank-accounts":
-    get:
-      description: returns all bank-accounts of the user for the given ID
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: user_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/localpools/{localpool_id}/users/{user_id}/bank-accounts/{bank_account_id}":
-    get:
-      description: returns the bank-accounts of the user for the given IDs
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: user_id
-        in: path
-        required: true
-        type: string
-      - name: bank_account_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-    delete:
-      description: delete the bank-accounts of the user for the given IDs
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: user_id
-        in: path
-        required: true
-        type: string
-      - name: bank_account_id
-        in: path
-        required: true
-        type: string
-      responses:
-        204:
-          description: deleted
-    patch:
-      description: updates the bank-accounts of the user for the given IDs
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: user_id
-        in: path
-        required: true
-        type: string
-      - name: bank_account_id
-        in: path
-        required: true
-        type: string
-      - name: bank_name
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: holder
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: iban
-        in: formData
-        required: false
-        type: string
-        format: iban
-      responses:
-        200:
-          description: patched

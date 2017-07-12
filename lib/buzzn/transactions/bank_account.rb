@@ -1,15 +1,15 @@
 require_relative 'resource'
 Buzzn::Transaction.define do |t|
   t.register_validation(:create_bank_account_schema) do
-    required(:bank_name).filled(:str?, max_size?: 63)
-    required(:holder).filled(:str?, max_size?: 63)
-    required(:iban).filled(:iban?)
+    required(:bank_name).filled(:str?, max_size?: 64)
+    required(:holder).filled(:str?, max_size?: 64)
+    required(:iban).filled(:str?, :iban?, max_size?: 32)
   end
 
   t.register_validation(:update_bank_account_schema) do
-    optional(:bank_name).filled(:str?, max_size?: 63)
-    optional(:holder).filled(:str?, max_size?: 63)
-    optional(:iban).filled(:iban?)
+    optional(:bank_name).filled(:str?, max_size?: 64)
+    optional(:holder).filled(:str?, max_size?: 64)
+    optional(:iban).filled(:str?, :iban?, max_size?: 32)
   end
 
   t.define(:create_bank_account) do

@@ -50,7 +50,6 @@ Fabricator :bhkw_justus, from: :out_device do
   watt_peak                     1000
   commissioning                 Date.new(2012,10,1)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'justus', 'bhkw.jpg' )) }
-  readable    'world'
 end
 
 Fabricator :dach_pv_justus, from: :out_device do
@@ -62,7 +61,6 @@ Fabricator :dach_pv_justus, from: :out_device do
   watt_peak                     8510
   commissioning                 Date.new(2012,3,31)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'justus', 'pv.jpg' )) }
-  readable    'world'
 end
 
 Fabricator :carport_pv_justus, from: :device do
@@ -75,7 +73,6 @@ Fabricator :carport_pv_justus, from: :device do
   watt_peak                     5300
   commissioning                 Date.new(2012,1,1)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'justus', 'carport-pv.jpg' )) }
-  readable    'world'
 end
 
 
@@ -114,7 +111,6 @@ Fabricator :hof_butenland_wind, from: :out_device do
   watt_peak                     55000
   commissioning                 Date.new(1989,12,1)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'butenland', 'wind.jpg' )) }
-  readable    'world'
 end
 
 
@@ -128,5 +124,4 @@ Fabricator :gocycle, from: :in_device do
   watt_peak                     250
   commissioning                 Date.new(2014,6,1)
   image { File.new(Rails.root.join('db', 'seed_assets', 'devices', 'felix', 'gocycle.jpg' )) }
-  readable    'world'
 end

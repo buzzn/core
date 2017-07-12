@@ -7,9 +7,11 @@ describe Admin do
 
   entity!(:user) { Fabricate(:user) }
 
-  entity!(:bank_account_1) { Fabricate(:bank_account, contracting_party: user) }
+  entity!(:person) { user.person }
 
-  entity!(:bank_account_2) { Fabricate(:bank_account, contracting_party: user) }
+  entity!(:bank_account_1) { Fabricate(:bank_account, contracting_party: person) }
+
+  entity!(:bank_account_2) { Fabricate(:bank_account, contracting_party: person) }
 
   entity!(:organization) { Fabricate(:other_organization) }
 
@@ -145,33 +147,33 @@ describe Admin do
     schema 'update_virtual_meter_schema'
   end
 
-  # users
+  # people
   
-  get '/localpools/{localpool.id}/users' do
-    description 'returns all the users of the localpool'
+  get '/localpools/{localpool.id}/people' do
+    description 'returns all the people of the localpool'
   end
 
-  get '/localpools/{localpool.id}/users/{user.id}' do
-    description 'returns the user of the localpool for the given ID'
+  get '/localpools/{localpool.id}/people/{person.id}' do
+    description 'returns the person of the localpool for the given ID'
   end
 
-  # users > bank-accounts
+  # people > bank-accounts
 
-  get '/localpools/{localpool.id}/users/{user.id}/bank-accounts' do
-    description 'returns all bank-accounts of the user for the given ID'
+  get '/localpools/{localpool.id}/people/{person.id}/bank-accounts' do
+    description 'returns all bank-accounts of the person for the given ID'
   end
 
-  get '/localpools/{localpool.id}/users/{user.id}/bank-accounts/{bank_account_1.id}' do
-    description 'returns the bank-accounts of the user for the given IDs'
+  get '/localpools/{localpool.id}/people/{person.id}/bank-accounts/{bank_account_1.id}' do
+    description 'returns the bank-accounts of the person for the given IDs'
   end
 
-  patch '/localpools/{localpool.id}/users/{user.id}/bank-accounts/{bank_account_1.id}' do
-    description 'updates the bank-accounts of the user for the given IDs'
+  patch '/localpools/{localpool.id}/people/{person.id}/bank-accounts/{bank_account_1.id}' do
+    description 'updates the bank-accounts of the person for the given IDs'
     schema 'update_bank_account_schema'
   end
 
-  delete '/localpools/{localpool.id}/users/{user.id}/bank-accounts/{bank_account_2.id}' do
-    description 'delete the bank-accounts of the user for the given IDs'
+  delete '/localpools/{localpool.id}/people/{person.id}/bank-accounts/{bank_account_2.id}' do
+    description 'delete the bank-accounts of the person for the given IDs'
   end
 
   # organizations

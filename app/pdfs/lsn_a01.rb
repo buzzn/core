@@ -11,10 +11,12 @@ module Buzzn::Pdfs
 
       def contractor_contact
         case contractor
-        when User
+        when Person
           contractor
         when Organization
           contractor.contact
+        else
+          raise "unknown type #{contractor.class}"
         end
       end
 
@@ -58,8 +60,8 @@ module Buzzn::Pdfs
 
     def addressing
       case user = @contract.contractor
-      when User
-        prefix = case user.profile.gender
+      when Person
+        prefix = case user.prefix
                  when 'female'
                    "Sehr geehrte Frau"
                  when 'male'
@@ -67,11 +69,11 @@ module Buzzn::Pdfs
                  else
                    "Hallo"
                  end
-        "#{prefix} #{user.profile.title} #{power_taker.contractor.name}"
+        "#{prefix} #{user.title} #{power_taker.contractor.name}"
       when Organization
         "Sehr geehrte Damen und Herren"
       else
-        raise ArgumentError.new("unknown type of contractor: #{contract}")
+        raise ArgumentError.new("unknown type of contractor: #{user}")
       end
     end
   end

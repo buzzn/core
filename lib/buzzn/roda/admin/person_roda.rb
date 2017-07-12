@@ -1,26 +1,26 @@
 require_relative '../admin_roda'
 require_relative 'bank_account_roda'
 module Admin
-  class UserRoda < BaseRoda
+  class PersonRoda < BaseRoda
     plugin :shared_vars
 
     route do |r|
 
-      users = shared[:localpool].users
+      people = shared[:localpool].people
 
       r.get! do
-        users.filter(r.params['filter'])
+        people.filter(r.params['filter'])
       end
 
       r.on :id do |id|
-        user = users.retrieve(id)
+        person = people.retrieve(id)
 
         r.get! do
-          user
+          person
         end
 
         r.on 'bank-accounts' do |id|
-          shared[:bank_account_parent] = user
+          shared[:bank_account_parent] = person
           r.run BankAccountRoda
         end
       end

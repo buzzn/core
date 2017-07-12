@@ -14,18 +14,6 @@ Fabricator :profile do
 end
 
 
-Fabricator :world_readable_profile, from: :profile do
-  readable    'world'
-end
-
-Fabricator :community_readable_profile, from: :profile do
-  readable    'community'
-end
-
-Fabricator :friends_readable_profile, from: :profile do
-  readable    'friends'
-end
-
 Fabricator :profile_felix, from: :profile do
   user_name   'ffaerber'
   first_name  'Felix'
@@ -93,11 +81,6 @@ Fabricator :profile_christian, from: :profile do
   first_name  'Christian'
   last_name   'Widmann'
   image       { File.new(Rails.root.join('db', 'seed_assets', 'profiles', 'christian.jpg')) }
-end
-
-Fabricator :profile_geloeschter_benutzer, from: :profile do
-  first_name  'Gelöschter'
-  last_name   'Benutzer'
 end
 
 Fabricator :profile_mustafa, from: :profile do

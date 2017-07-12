@@ -40,7 +40,7 @@ describe Admin::LocalpoolPermissions do
     meter.input_register.update(group_id: pool.id)
     Fabricate(:localpool_power_taker_contract,
               localpool: pool,
-              customer: localpool_member3,
+              customer: localpool_member3.person,
               register: meter.input_register)
     pool
   end
@@ -252,45 +252,44 @@ describe Admin::LocalpoolPermissions do
     end  
   end
   
-  context 'users' do
+  context 'people' do
 
-    def users(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).users.collect do |l|
+    def people(user, id)
+      Admin::LocalpoolResource.all(user).retrieve(id).people.collect do |l|
         l.object
       end
     end
 
     it 'all' do
-      expect(users(buzzn_operator, localpool1.id)).to match_array localpool1.users.reload
-      expect(users(buzzn_operator, localpool2.id)).to match_array localpool2.users.reload
+      expect(people(buzzn_operator, localpool1.id)).to match_array localpool1.people.reload
+      expect(people(buzzn_operator, localpool2.id)).to match_array localpool2.people.reload
 
-      expect(users(localpool_owner, localpool2.id)).to match_array localpool2.users
+      expect(people(localpool_owner, localpool2.id)).to match_array localpool2.people
 
-      expect(users(localpool_manager, localpool2.id)).to match_array localpool2.users
+      expect(people(localpool_manager, localpool2.id)).to match_array localpool2.people
       
-      expect(users(localpool_member, localpool1.id)).to match_array [localpool_member]
+      expect(people(localpool_member, localpool1.id)).to match_array [localpool_member.person]
     end
 
     it 'update' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).users.first.update({}) }.not_to raise_error
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).users.first.update({}) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).people.first.update({}) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).people.first.update({}) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).users.first.update({}) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).people.first.update({}) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).users.first.update({}) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).people.first.update({}) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).users.first.update({}) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).people.first.update({}) }.not_to raise_error
     end
 
     it 'delete' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).users.retrieve(localpool_member2.id).delete }.not_to raise_error
-      expect(localpool1.users.reload).to eq [localpool_member]
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).people.retrieve(localpool_member2.person.id).delete }.to raise_error Buzzn::PermissionDenied
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).users.first.delete }.to raise_error Buzzn::PermissionDenied
+      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).people.first.delete }.to raise_error Buzzn::PermissionDenied
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).users.first.delete }.to raise_error Buzzn::PermissionDenied
+      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).people.first.delete }.to raise_error Buzzn::PermissionDenied
 
-      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).users.first.delete }.to raise_error Buzzn::PermissionDenied
+      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).people.first.delete }.to raise_error Buzzn::PermissionDenied
     end
   end
   

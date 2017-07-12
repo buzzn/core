@@ -5,10 +5,10 @@ class MeRoda < BaseRoda
 
     r.root do
       if current_user.nil?
-        raise Buzzn::PermissionDenied.create(User, :retrieve, nil)
+        raise Buzzn::PermissionDenied.create(Person, :retrieve, nil)
       end
-      UserResource.all(current_user, ContractingPartyUserResource)
-        .retrieve(current_user.id)
+      PersonResource.all(current_user, ContractingPartyPersonResource)
+        .retrieve(current_user.person.id)
     end
   end
 end

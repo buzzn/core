@@ -2,15 +2,15 @@ require 'lsn_a01'
 describe Buzzn::Pdfs::LSN_A01 do
 
   entity(:contractor) { Fabricate(:hell_und_warm) }
-  entity(:user) { Fabricate(:user) }
+  entity(:person) { Fabricate(:person) }
   entity(:contract) do
     contract = Fabricate(:lptc_mabe)
-    contract.customer = Fabricate(:mustafa)
-    contract.customer.profile.update(phone: '089-234432')
+    contract.customer = Fabricate(:mustafa).person
+    contract.customer.update(phone: '089-234432')
     contract.customer_bank_account = Fabricate(:bank_account_mustermann)
     contract.contractor = contractor
-    contract.contractor.update(phone: '030-1237089432', fax: '030-1237089433')
-    Fabricate(:justus).add_role(:contact, contract.contractor)
+    contract.contractor.update(phone: '030-1237089432', fax: '030-1237089433',
+                               contact: Fabricate(:justus).person)
     contract.contractor.address = Fabricate(:address)
     contract.customer.address = Fabricate(:address)
     contract.register = Fabricate(:easymeter_60404849).registers.first
@@ -49,13 +49,13 @@ describe Buzzn::Pdfs::LSN_A01 do
       expect(subject.addressing).to eq 'Sehr geehrte Damen und Herren'
     end
 
-    it 'addressing person (no gender)' do
+    it 'addressing person (no prefix)' do
       begin
-        user.profile.update(gender: nil, title: nil)
-        contract.contractor = user
-        expect(subject.addressing).to eq "Hallo  #{user.name}"
-        contract.contractor.profile.title = 'Dr'
-        expect(subject.addressing).to eq "Hallo Dr #{user.name}"
+        person.update(prefix: nil, title: nil)
+        contract.contractor = person
+        expect(subject.addressing).to eq "Hallo  #{person.name}"
+        contract.contractor.title = 'Dr'
+        expect(subject.addressing).to eq "Hallo Dr #{person.name}"
       ensure
         contract.contractor = contractor
       end
@@ -63,11 +63,11 @@ describe Buzzn::Pdfs::LSN_A01 do
 
     it 'addressing woman' do
       begin
-        user.profile.update(gender: 'female', title: nil)
-        contract.contractor = user
-        expect(subject.addressing).to eq "Sehr geehrte Frau  #{user.name}"
-        contract.contractor.profile.title = 'Dr'
-        expect(subject.addressing).to eq "Sehr geehrte Frau Dr #{user.name}"
+        person.update(prefix: 'female', title: nil)
+        contract.contractor = person
+        expect(subject.addressing).to eq "Sehr geehrte Frau  #{person.name}"
+        contract.contractor.title = 'Dr'
+        expect(subject.addressing).to eq "Sehr geehrte Frau Dr #{person.name}"
       ensure
         contract.contractor = contractor
       end
@@ -75,11 +75,11 @@ describe Buzzn::Pdfs::LSN_A01 do
 
     it 'addressing man' do
       begin
-        user.profile.update(gender: 'male', title: nil)
-        contract.contractor = user
-        expect(subject.addressing).to eq "Sehr geehrter Herr  #{user.name}"
-        contract.contractor.profile.title = 'Dr'
-        expect(subject.addressing).to eq "Sehr geehrter Herr Dr #{user.name}"
+        person.update(prefix: 'male', title: nil)
+        contract.contractor = person
+        expect(subject.addressing).to eq "Sehr geehrter Herr  #{person.name}"
+        contract.contractor.title = 'Dr'
+        expect(subject.addressing).to eq "Sehr geehrter Herr Dr #{person.name}"
       ensure
         contract.contractor = contractor
       end

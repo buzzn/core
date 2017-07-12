@@ -198,6 +198,26 @@ CREATE TYPE ownership AS ENUM (
 
 
 --
+-- Name: preferred_language; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE preferred_language AS ENUM (
+    'de',
+    'en'
+);
+
+
+--
+-- Name: prefix; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE prefix AS ENUM (
+    'F',
+    'M'
+);
+
+
+--
 -- Name: section; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -248,31 +268,11 @@ ALTER SEQUENCE active_admin_comments_id_seq OWNED BY active_admin_comments.id;
 
 
 --
--- Name: activities; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE activities (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    trackable_id uuid,
-    trackable_type character varying,
-    owner_id uuid,
-    owner_type character varying,
-    key character varying,
-    parameters text,
-    recipient_id uuid,
-    recipient_type character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
 -- Name: addresses; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE addresses (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    slug character varying,
     address character varying,
     street_name character varying,
     street_number character varying,
@@ -283,26 +283,11 @@ CREATE TABLE addresses (
     longitude double precision,
     latitude double precision,
     time_zone character varying,
-    readable character varying,
     addressable_id uuid,
     addressable_type character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     addition character varying
-);
-
-
---
--- Name: badge_notifications; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE badge_notifications (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    read_by_user boolean DEFAULT false,
-    user_id uuid,
-    activity_id uuid,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -381,7 +366,7 @@ CREATE TABLE billing_cycles (
 CREATE TABLE billings (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     status character varying NOT NULL,
-    "total_energy_consumption_kWh" integer NOT NULL,
+    total_energy_consumption_kwh integer NOT NULL,
     total_price_cents integer NOT NULL,
     prepayments_cents integer NOT NULL,
     receivables_cents integer NOT NULL,
@@ -495,23 +480,11 @@ CREATE TABLE contracts (
 
 
 --
--- Name: conversations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE conversations (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
 -- Name: devices; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE devices (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    slug character varying,
     manufacturer_name character varying,
     manufacturer_product_name character varying,
     manufacturer_product_serialnumber character varying,
@@ -525,7 +498,6 @@ CREATE TABLE devices (
     watt_hour_pa integer,
     commissioning date,
     mobile boolean DEFAULT false,
-    readable character varying,
     register_id uuid,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -558,8 +530,8 @@ CREATE TABLE energy_classifications (
     other_fossiles_ratio double precision NOT NULL,
     renewables_eeg_ratio double precision NOT NULL,
     other_renewables_ratio double precision NOT NULL,
-    "co2_emission_gramm_per_kWh" double precision NOT NULL,
-    "nuclear_waste_miligramm_per_kWh" double precision NOT NULL,
+    co2_emission_gramm_per_kwh double precision NOT NULL,
+    nuclear_waste_miligramm_per_kwh double precision NOT NULL,
     end_date date,
     organization_id uuid,
     created_at timestamp without time zone NOT NULL,
@@ -579,39 +551,6 @@ CREATE TABLE formula_parts (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
-
-
---
--- Name: friendly_id_slugs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE friendly_id_slugs (
-    id integer NOT NULL,
-    slug character varying NOT NULL,
-    sluggable_id uuid NOT NULL,
-    sluggable_type character varying(50),
-    scope character varying,
-    created_at timestamp without time zone
-);
-
-
---
--- Name: friendly_id_slugs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE friendly_id_slugs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: friendly_id_slugs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE friendly_id_slugs_id_seq OWNED BY friendly_id_slugs.id;
 
 
 --
@@ -751,7 +690,8 @@ CREATE TABLE organizations (
     subject_to_tax boolean,
     mandate_reference character varying,
     creditor_id character varying,
-    account_number character varying
+    account_number character varying,
+    contact_id uuid
 );
 
 
@@ -767,6 +707,33 @@ CREATE TABLE payments (
     cycle character varying,
     source character varying,
     contract_id uuid NOT NULL
+);
+
+
+--
+-- Name: people; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE people (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    title character varying(64),
+    first_name character varying(64) NOT NULL,
+    last_name character varying(64) NOT NULL,
+    email character varying(64) NOT NULL,
+    phone character varying(64),
+    fax character varying(64),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    prefix prefix,
+    preferred_language preferred_language,
+    sales_tax_number integer,
+    tax_rate double precision,
+    tax_number integer,
+    retailer boolean,
+    provider_permission boolean,
+    subject_to_tax boolean,
+    mandate_reference character varying,
+    creditor_id character varying
 );
 
 
@@ -903,71 +870,6 @@ CREATE TABLE scores (
 
 
 --
--- Name: taggings; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE taggings (
-    id integer NOT NULL,
-    tag_id integer,
-    taggable_id uuid,
-    taggable_type character varying,
-    tagger_id uuid,
-    tagger_type character varying,
-    context character varying(128),
-    created_at timestamp without time zone
-);
-
-
---
--- Name: taggings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE taggings_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: taggings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE taggings_id_seq OWNED BY taggings.id;
-
-
---
--- Name: tags; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE tags (
-    id integer NOT NULL,
-    name character varying,
-    taggings_count integer DEFAULT 0
-);
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE tags_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE tags_id_seq OWNED BY tags.id;
-
-
---
 -- Name: tariffs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1029,7 +931,8 @@ CREATE TABLE users (
     subject_to_tax boolean,
     mandate_reference character varying,
     creditor_id character varying,
-    account_number character varying
+    account_number character varying,
+    person_id uuid
 );
 
 
@@ -1041,58 +944,6 @@ CREATE TABLE users_roles (
     user_id uuid,
     role_id integer
 );
-
-
---
--- Name: versions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE versions (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    item_type character varying NOT NULL,
-    item_id uuid NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object text,
-    created_at timestamp without time zone
-);
-
-
---
--- Name: votes; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE votes (
-    id integer NOT NULL,
-    votable_type character varying,
-    voter_type character varying,
-    vote_flag boolean,
-    vote_scope character varying,
-    vote_weight integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    votable_id uuid,
-    voter_id uuid
-);
-
-
---
--- Name: votes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE votes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE votes_id_seq OWNED BY votes.id;
 
 
 --
@@ -1113,35 +964,7 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY friendly_id_slugs ALTER COLUMN id SET DEFAULT nextval('friendly_id_slugs_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY taggings ALTER COLUMN id SET DEFAULT nextval('taggings_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY tags ALTER COLUMN id SET DEFAULT nextval('tags_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY votes ALTER COLUMN id SET DEFAULT nextval('votes_id_seq'::regclass);
 
 
 --
@@ -1153,27 +976,11 @@ ALTER TABLE ONLY active_admin_comments
 
 
 --
--- Name: activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY activities
-    ADD CONSTRAINT activities_pkey PRIMARY KEY (id);
-
-
---
 -- Name: addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY addresses
     ADD CONSTRAINT addresses_pkey PRIMARY KEY (id);
-
-
---
--- Name: badge_notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY badge_notifications
-    ADD CONSTRAINT badge_notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -1225,14 +1032,6 @@ ALTER TABLE ONLY contracts
 
 
 --
--- Name: conversations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY conversations
-    ADD CONSTRAINT conversations_pkey PRIMARY KEY (id);
-
-
---
 -- Name: devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1270,14 +1069,6 @@ ALTER TABLE ONLY energy_classifications
 
 ALTER TABLE ONLY formula_parts
     ADD CONSTRAINT formula_parts_pkey PRIMARY KEY (id);
-
-
---
--- Name: friendly_id_slugs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY friendly_id_slugs
-    ADD CONSTRAINT friendly_id_slugs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1345,6 +1136,14 @@ ALTER TABLE ONLY payments
 
 
 --
+-- Name: people_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY people
+    ADD CONSTRAINT people_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1377,22 +1176,6 @@ ALTER TABLE ONLY scores
 
 
 --
--- Name: taggings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY taggings
-    ADD CONSTRAINT taggings_pkey PRIMARY KEY (id);
-
-
---
--- Name: tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY tags
-    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
-
-
---
 -- Name: tariffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1406,22 +1189,6 @@ ALTER TABLE ONLY tariffs
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
---
--- Name: versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY versions
-    ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
-
-
---
--- Name: votes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY votes
-    ADD CONSTRAINT votes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1446,66 +1213,10 @@ CREATE INDEX index_active_admin_comments_on_resource_type_and_resource_id ON act
 
 
 --
--- Name: index_activities_on_owner_id_and_owner_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_activities_on_owner_id_and_owner_type ON activities USING btree (owner_id, owner_type);
-
-
---
--- Name: index_activities_on_recipient_id_and_recipient_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_activities_on_recipient_id_and_recipient_type ON activities USING btree (recipient_id, recipient_type);
-
-
---
--- Name: index_activities_on_trackable_id_and_trackable_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_activities_on_trackable_id_and_trackable_type ON activities USING btree (trackable_id, trackable_type);
-
-
---
 -- Name: index_addressable; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_addressable ON addresses USING btree (addressable_id, addressable_type);
-
-
---
--- Name: index_addresses_on_readable; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_addresses_on_readable ON addresses USING btree (readable);
-
-
---
--- Name: index_addresses_on_slug; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_addresses_on_slug ON addresses USING btree (slug);
-
-
---
--- Name: index_badge_notifications_on_activity_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_badge_notifications_on_activity_id ON badge_notifications USING btree (activity_id);
-
-
---
--- Name: index_badge_notifications_on_read_by_user; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_badge_notifications_on_read_by_user ON badge_notifications USING btree (read_by_user);
-
-
---
--- Name: index_badge_notifications_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_badge_notifications_on_user_id ON badge_notifications USING btree (user_id);
 
 
 --
@@ -1656,24 +1367,10 @@ CREATE UNIQUE INDEX index_contracts_on_slug ON contracts USING btree (slug);
 
 
 --
--- Name: index_devices_on_readable; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_devices_on_readable ON devices USING btree (readable);
-
-
---
 -- Name: index_devices_on_register_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_devices_on_register_id ON devices USING btree (register_id);
-
-
---
--- Name: index_devices_on_slug; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_devices_on_slug ON devices USING btree (slug);
 
 
 --
@@ -1702,34 +1399,6 @@ CREATE INDEX index_formula_parts_on_operand_id ON formula_parts USING btree (ope
 --
 
 CREATE INDEX index_formula_parts_on_register_id ON formula_parts USING btree (register_id);
-
-
---
--- Name: index_friendly_id_slugs_on_slug_and_sluggable_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_friendly_id_slugs_on_slug_and_sluggable_type ON friendly_id_slugs USING btree (slug, sluggable_type);
-
-
---
--- Name: index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope ON friendly_id_slugs USING btree (slug, sluggable_type, scope);
-
-
---
--- Name: index_friendly_id_slugs_on_sluggable_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_friendly_id_slugs_on_sluggable_id ON friendly_id_slugs USING btree (sluggable_id);
-
-
---
--- Name: index_friendly_id_slugs_on_sluggable_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_friendly_id_slugs_on_sluggable_type ON friendly_id_slugs USING btree (sluggable_type);
 
 
 --
@@ -1782,6 +1451,13 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON oauth_applications USING 
 
 
 --
+-- Name: index_organizations_on_contact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organizations_on_contact_id ON organizations USING btree (contact_id);
+
+
+--
 -- Name: index_organizations_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1793,6 +1469,13 @@ CREATE UNIQUE INDEX index_organizations_on_slug ON organizations USING btree (sl
 --
 
 CREATE INDEX index_payments_on_contract_id ON payments USING btree (contract_id);
+
+
+--
+-- Name: index_people_on_first_name_and_last_name_and_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_people_on_first_name_and_last_name_and_email ON people USING btree (first_name, last_name, email);
 
 
 --
@@ -1873,20 +1556,6 @@ CREATE INDEX index_scores_on_scoreable_id_and_scoreable_type ON scores USING btr
 
 
 --
--- Name: index_taggings_on_taggable_id_and_taggable_type_and_context; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_taggings_on_taggable_id_and_taggable_type_and_context ON taggings USING btree (taggable_id, taggable_type, context);
-
-
---
--- Name: index_tags_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_tags_on_name ON tags USING btree (name);
-
-
---
 -- Name: index_tariffs_on_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1936,6 +1605,13 @@ CREATE INDEX index_users_on_invited_by_type ON users USING btree (invited_by_typ
 
 
 --
+-- Name: index_users_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_person_id ON users USING btree (person_id);
+
+
+--
 -- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1957,20 +1633,6 @@ CREATE INDEX index_users_roles_on_user_id_and_role_id ON users_roles USING btree
 
 
 --
--- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_versions_on_item_type_and_item_id ON versions USING btree (item_type, item_id);
-
-
---
--- Name: taggings_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX taggings_idx ON taggings USING btree (tag_id, taggable_id, taggable_type, context, tagger_id, tagger_type);
-
-
---
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1983,6 +1645,14 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 ALTER TABLE ONLY contracts
     ADD CONSTRAINT fk_rails_39d9c96a30 FOREIGN KEY (signing_user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_rails_6b54950e91; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organizations
+    ADD CONSTRAINT fk_rails_6b54950e91 FOREIGN KEY (contact_id) REFERENCES people(id);
 
 
 --
@@ -2007,6 +1677,14 @@ ALTER TABLE ONLY payments
 
 ALTER TABLE ONLY tariffs
     ADD CONSTRAINT fk_rails_e863d6119e FOREIGN KEY (contract_id) REFERENCES contracts(id);
+
+
+--
+-- Name: fk_rails_fa67535741; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT fk_rails_fa67535741 FOREIGN KEY (person_id) REFERENCES people(id);
 
 
 --
@@ -2302,4 +1980,20 @@ INSERT INTO schema_migrations (version) VALUES ('20170626103547');
 INSERT INTO schema_migrations (version) VALUES ('20170626163547');
 
 INSERT INTO schema_migrations (version) VALUES ('20170707103547');
+
+INSERT INTO schema_migrations (version) VALUES ('20170711103547');
+
+INSERT INTO schema_migrations (version) VALUES ('20170711153547');
+
+INSERT INTO schema_migrations (version) VALUES ('20170711201405');
+
+INSERT INTO schema_migrations (version) VALUES ('20170711223547');
+
+INSERT INTO schema_migrations (version) VALUES ('20170711323547');
+
+INSERT INTO schema_migrations (version) VALUES ('20170711423547');
+
+INSERT INTO schema_migrations (version) VALUES ('20170711523547');
+
+INSERT INTO schema_migrations (version) VALUES ('20170712163547');
 

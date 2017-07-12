@@ -39,7 +39,6 @@ module SwaggerHelper
 
   def expect_missing(ops)
     expect(@schema).not_to be_nil
-    schema = Buzzn::Transaction.transactions.steps[@schema]
     expected = []
     process_rule = ->(name: nil, required: nil, type: nil, options: {}) do
       if required
@@ -53,7 +52,7 @@ module SwaggerHelper
       case type
       when :string
         sparam.type = 'string'
-        sparam.format = ''
+        sparam.format = options[:format] || ''
       when :enum
         sparam.type = 'string'
         sparam.enum = options[:values]
@@ -76,10 +75,9 @@ module SwaggerHelper
       end
       ops.add_parameter(sparam)
       ops.consumes = ['application/x-www-form-urlencoded']
-
     end
     
-    Buzzn::Validation::SchemaVisitor.visit(schema, &process_rule)
+    Buzzn::Validation::SchemaVisitor.visit(@schema, &process_rule)
     expect(expected).to match_array json['errors']
   end
 

@@ -13,6 +13,8 @@ Bundler.require(:default, Rails.env)
 module Buzzn
   class Application < Rails::Application
 
+    config.active_record.schema_format = :sql
+
     config.exceptions_app = self.routes
 
     config.active_record.raise_in_transactional_callbacks = true # TODO: remove
