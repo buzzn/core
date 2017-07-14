@@ -35,7 +35,7 @@ module Group
                         .project(1)
                         .exists
       contract_users = contracts
-                       .where('contracts.signing_user_id = people.id or contracts.customer_id = people.id or contracts.contractor_id = people.id')
+                       .where('contracts.customer_id = people.id or contracts.contractor_id = people.id')
                        .select(1)
                        .exists
       Person.where(User.where(localpool_users).where("users.person_id = people.id").project(1).exists.or(contract_users))

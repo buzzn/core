@@ -19,6 +19,7 @@ describe Contract::BaseResource do
   let(:base_attributes) { ['status',
                            'full_contract_number',
                            'customer_number',
+                           'signing_user',
                            'signing_date',
                            'cancellation_date',
                            'end_date',
@@ -44,7 +45,7 @@ describe Contract::BaseResource do
   end
 
   [:customer, :customer_bank_account, :contractor,
-   :contractor_bank_account, :signing_user].each do |name|
+   :contractor_bank_account].each do |name|
     it "nested #{name}" do
       all.each do |contract|
         obj = resources.retrieve(contract.id)

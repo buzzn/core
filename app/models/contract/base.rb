@@ -44,7 +44,6 @@ module Contract
 
     belongs_to :contractor, polymorphic: true
     belongs_to :customer, polymorphic: true
-    belongs_to :signing_user, class_name: 'User'
 
     has_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id, dependent: :destroy
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy

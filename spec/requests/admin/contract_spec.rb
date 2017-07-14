@@ -36,7 +36,7 @@ describe Admin::LocalpoolRoda do
     end
 
     entity(:metering_point_operator_contract) do
-      mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user), localpool: group, customer: Fabricate(:person))
+      mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user).name, localpool: group, customer: Fabricate(:person))
       group.metering_point_operator_contract
     end
 
@@ -49,6 +49,7 @@ describe Admin::LocalpoolRoda do
           "status"=>"waiting_for_approval",
           "full_contract_number"=>"90041/0",
           "customer_number"=>"40021/1",
+          "signing_user"=>contract.signing_user,
           "signing_date"=>"2014-10-01",
           "cancellation_date"=>nil,
           "end_date"=>nil,
@@ -110,20 +111,6 @@ describe Admin::LocalpoolRoda do
             "updatable"=>true,
             "deletable"=>false
           },
-          "signing_user"=>{
-            "id"=>contract.signing_user.id,
-            "type"=>"user",
-            "user_name"=>contract.signing_user.user_name,
-            "title"=>contract.signing_user.profile.title,
-            "first_name"=>contract.signing_user.first_name,
-            "last_name"=>contract.signing_user.last_name,
-            "gender"=>contract.signing_user.profile.gender,
-            "phone"=>contract.signing_user.profile.phone,
-            "email"=>contract.signing_user.email,
-            "image"=>contract.signing_user.profile.image.md.url,
-            "updatable"=>true,
-            "deletable"=>false
-          },
           "customer_bank_account"=>{
             "id"=>contract.customer_bank_account.id,
             "type"=>"bank_account",
@@ -178,7 +165,7 @@ describe Admin::LocalpoolRoda do
 
         context "as #{type}" do
           it '200' do
-            GET "/#{group.id}/contracts/#{contract.id}", admin, include: 'tariffs,payments,contractor,customer,signing_user,customer_bank_account,contractor_bank_account'
+            GET "/#{group.id}/contracts/#{contract.id}", admin, include: 'tariffs,payments,contractor,customer,customer_bank_account,contractor_bank_account'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end

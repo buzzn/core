@@ -139,6 +139,7 @@ describe Admin::LocalpoolRoda do
         "status"=>"waiting_for_approval",
         "full_contract_number"=>"#{contract.contract_number}/#{contract.contract_number_addition}",
         "customer_number"=>contract.customer_number,
+        "signing_user"=>contract.signing_user,
         "signing_date"=>contract.signing_date.to_s,
         "cancellation_date"=>nil,
         "end_date"=>nil,
@@ -201,20 +202,6 @@ describe Admin::LocalpoolRoda do
           "updatable"=>true,
           "deletable"=>false
         },
-        "signing_user"=>{
-          "id"=>contract.signing_user.id,
-          "type"=>"user",
-          "user_name"=>contract.signing_user.user_name,
-          "title"=>contract.signing_user.profile.title,
-          "first_name"=>contract.signing_user.first_name,
-          "last_name"=>contract.signing_user.last_name,
-          "gender"=>contract.signing_user.profile.gender,
-          "phone"=>contract.signing_user.profile.phone,
-          "email"=>contract.signing_user.email,
-          "image"=>contract.signing_user.profile.image.md.url,
-          "updatable"=>true,
-          "deletable"=>false
-        },
         "customer_bank_account"=>{
           "id"=>contract.customer_bank_account.id,
           "type"=>"bank_account",
@@ -270,7 +257,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200' do
-        GET "/#{localpool.id}/localpool-processing-contract", admin, include: 'tariffs,payments,contractor,customer,signing_user,customer_bank_account,contractor_bank_account'
+        GET "/#{localpool.id}/localpool-processing-contract", admin, include: 'tariffs,payments,contractor,customer,customer_bank_account,contractor_bank_account'
         expect(json.to_yaml).to eq processing_json.to_yaml
         expect(response).to have_http_status(200)
 
@@ -289,6 +276,7 @@ describe Admin::LocalpoolRoda do
         "status"=>"waiting_for_approval",
         "full_contract_number"=>"#{contract.contract_number}/#{contract.contract_number_addition}",
         "customer_number"=>contract.customer_number,
+        "signing_user"=>contract.signing_user,
         "signing_date"=>contract.signing_date.to_s,
         "cancellation_date"=>nil,
         "end_date"=>nil,
@@ -323,20 +311,6 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>nil,
-          "updatable"=>true,
-          "deletable"=>false
-        },
-        "signing_user"=>{
-          "id"=>contract.signing_user.id,
-          "type"=>"user",
-          "user_name"=>contract.signing_user.user_name,
-          "title"=>contract.signing_user.profile.title,
-          "first_name"=>contract.signing_user.first_name,
-          "last_name"=>contract.signing_user.last_name,
-          "gender"=>contract.signing_user.profile.gender,
-          "phone"=>contract.signing_user.profile.phone,
-          "email"=>contract.signing_user.email,
-          "image"=>contract.signing_user.profile.image.md.url,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -399,7 +373,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200' do
-        GET "/#{localpool.id}/metering-point-operator-contract", admin, include: 'tariffs,payments,contractor,customer,signing_user,customer_bank_account,contractor_bank_account'
+        GET "/#{localpool.id}/metering-point-operator-contract", admin, include: 'tariffs,payments,contractor,customer,customer_bank_account,contractor_bank_account'
 
         expect(json.to_yaml).to eq metering_point_json.to_yaml
         expect(response).to have_http_status(200)
@@ -417,6 +391,7 @@ describe Admin::LocalpoolRoda do
           "status"=>"waiting_for_approval",
           "full_contract_number"=>"#{contract.contract_number}/#{contract.contract_number_addition}",
           "customer_number"=>contract.customer_number,
+          "signing_user"=>contract.signing_user,
           "signing_date"=>contract.signing_date.to_s,
           "cancellation_date"=>nil,
           "end_date"=>nil,
@@ -456,12 +431,6 @@ describe Admin::LocalpoolRoda do
           },
           "customer"=>{
             "id"=>contract.customer.id,
-            "type"=>"user",
-            "updatable"=>true,
-            "deletable"=>false
-          },
-          "signing_user"=>{
-            "id"=>contract.signing_user.id,
             "type"=>"user",
             "updatable"=>true,
             "deletable"=>false

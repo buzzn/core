@@ -465,7 +465,6 @@ CREATE TABLE contracts (
     cancellation_date date,
     old_customer_number character varying,
     old_account_number character varying,
-    signing_user_id uuid,
     customer_id uuid,
     customer_type character varying,
     contractor_id uuid,
@@ -475,7 +474,8 @@ CREATE TABLE contracts (
     contract_number integer,
     contract_number_addition integer,
     customer_bank_account_id uuid,
-    contractor_bank_account_id uuid
+    contractor_bank_account_id uuid,
+    signing_user character varying
 );
 
 
@@ -1353,13 +1353,6 @@ CREATE INDEX index_contracts_on_register_id ON contracts USING btree (register_i
 
 
 --
--- Name: index_contracts_on_signing_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_contracts_on_signing_user_id ON contracts USING btree (signing_user_id);
-
-
---
 -- Name: index_contracts_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1637,14 +1630,6 @@ CREATE INDEX index_users_roles_on_user_id_and_role_id ON users_roles USING btree
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
-
-
---
--- Name: fk_rails_39d9c96a30; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY contracts
-    ADD CONSTRAINT fk_rails_39d9c96a30 FOREIGN KEY (signing_user_id) REFERENCES users(id);
 
 
 --
@@ -1996,4 +1981,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170711423547');
 INSERT INTO schema_migrations (version) VALUES ('20170711523547');
 
 INSERT INTO schema_migrations (version) VALUES ('20170712163547');
+
+INSERT INTO schema_migrations (version) VALUES ('20170714163547');
 

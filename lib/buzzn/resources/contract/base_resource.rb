@@ -9,6 +9,7 @@ module Contract
     attributes  :status,
                 :full_contract_number,
                 :customer_number,
+                :signing_user,
                 :signing_date,
                 :cancellation_date,
                 :end_date
@@ -19,7 +20,6 @@ module Contract
     has_many :payments
     has_one :contractor, ContractingPartyResource
     has_one :customer, ContractingPartyResource
-    has_one :signing_user
     has_one :customer_bank_account
     has_one :contractor_bank_account
   end
