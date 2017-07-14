@@ -42,7 +42,6 @@ module Buzzn::Pdfs
     end
 
     def initialize(localpool_power_taker_contract)
-      super({})
       @contract = ContractDecorator.new(localpool_power_taker_contract)
     end
 

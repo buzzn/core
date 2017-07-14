@@ -16,28 +16,19 @@ class Buzzn::Services::PdfHtmlGenerator
     end
   end
 
-  class Html < OpenStruct
-
-    def initialize(attributes = nil)
-      super(attributes || {})
-    end
+  class Html
 
     def render(file)
       Slim::Template.new(file).render(self)
     end
 
     def method_missing(method, *args)
-      # use internal OpenStruct @table
-      if @table.key?(method)
-        @table[method]
-      else
-        Missing.new(method)
-      end
+      Missing.new(method)
     end
   end
 
   def initialize(templates = nil)
-    @path = File.expand_path(templates || 'app/templates')
+    @path = File.expand_path(templates || 'app/pdfs')
     
     unless File.exists?(@path)
       raise ArgumentError.new("#{@path} does not exist")
@@ -55,22 +46,13 @@ class Buzzn::Services::PdfHtmlGenerator
     file
   end
 
-  def generate_html(name, attributes)
-    file = resolve_template(name)
-    Html.new(attributes).render(file)
-  end
-
-  def generate(name, attributes)
-    WickedPdf.new.pdf_from_string(generate_html(name, attributes),
+  def generate_pdf(name, html)
+    WickedPdf.new.pdf_from_string(render_html(name, html),
                                   footer: { left: 'Seite [page] von [topage]' })
   end
 
   def render_html(name, html)  
     file = resolve_template(name)
     html.render(file)
-  end
-
-  def generate_from_html(name, html)
-    WickedPdf.new.pdf_from_string(render_html(name, html))
   end
 end

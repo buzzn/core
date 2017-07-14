@@ -14,7 +14,7 @@ module Buzzn
     end
 
     def to_pdf
-      pdf_html_generator.generate_from_html(template, self)
+      pdf_html_generator.generate_pdf(template, self)
     end
   end
 end

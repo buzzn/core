@@ -76,7 +76,7 @@ module Buzzn
       config.x.fog.directory_opts = { key: 'files' }
     end
 
-    config.x.templates_path = Rails.root.join('app', 'templates')
+    config.x.templates_path = Rails.root.join('app', 'pdfs')
 
     config.logger = Logger.new(STDOUT)
     config.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }

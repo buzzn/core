@@ -4,8 +4,8 @@ module Buzzn::Pdfs
 
     TEMPLATE = 'lcp_report.slim'
 
-    def initialize(total_accounted_energy:, **)
-      super
+    def initialize(total_accounted_energy:, **kwargs)
+      super(**kwargs)
       @total_accounted_energy = total_accounted_energy
     end
 
