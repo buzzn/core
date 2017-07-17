@@ -14,9 +14,15 @@ Buzzn::Transaction.define do |t|
   end
 
   t.register_validation(:update_person_schema) do
-    optional(:name).filled(:str?)
-    optional(:begin_date).filled(:date?)
-    optional(:end_date).filled(:date?)
+    optional(:title).filled(:str?, max_size?: 64)
+    optional(:prefix).value(included_in?: Person::PREFIXES)
+    optional(:first_name).filled(:str?, max_size?: 64)
+    optional(:last_name).filled(:str?, max_size?: 64)
+    optional(:phone).filled(:str?, :phone_number?, max_size?: 64)
+    optional(:fax).filled(:str?, :phone_number?, max_size?: 64)
+    optional(:share_with_group).filled(:bool?)
+    optional(:share_publicly).filled(:bool?)
+    optional(:preferred_language).value(included_in?: Person::PREFERRED_LANGUAGES)   
   end
 
   t.define(:update_person) do
