@@ -30,11 +30,22 @@ describe Admin::LocalpoolRoda do
 
   entity(:group) { Fabricate(:localpool) }
 
+  entity(:meter) { Fabricate(:real_meter) }
+
   entity!(:real_register) do
-    reg = Fabricate(:real_meter).registers.first
-    reg.group = group
-    reg.save
-    reg
+    Fabricate(meter.registers.is_a?(Register::Input) ? :output_register : :input_register,
+              group: group,
+              meter: meter)
+    meter.registers.each do |reg|
+      reg.group = group
+      reg.save
+    end
+    meter.registers.reload
+    meter.registers.first
+  end
+
+  entity!(:register) do
+    meter.registers.second
   end
 
   entity!(:virtual_register) do
@@ -42,6 +53,119 @@ describe Admin::LocalpoolRoda do
     reg.group = group
     reg.save
     reg
+  end
+
+  context 'meters' do
+   context 'registers' do
+     context 'PATCH' do
+
+       let(:not_found_json) do
+         {
+           "errors" => [
+             {
+               "detail"=>"Register::Real: bla-blub not found by User: #{admin.resource_owner_id}"
+             }
+           ]
+         }
+       end
+
+       let(:updated_json) do
+         {
+           "id"=>register.id,
+           "type"=>"register_real",
+           "direction"=>register.direction == 'in' ? 'out' : 'in',
+           "name"=>'Smarty',
+           "pre_decimal_position"=>4,
+           "post_decimal_position"=>3,
+           "low_load_ability"=>true,
+           "label"=>'DEMARCATION_PV',
+           "last_reading"=>Reading.by_register_id(real_register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(real_register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
+           "observer_min_threshold"=>10,
+           "observer_max_threshold"=>100,
+           "observer_enabled"=>true,
+           "observer_offline_monitoring"=>true,
+           "metering_point_id"=>'123456',
+           "obis"=>register.direction == 'in' ? '1-0:2.8.0' : '1-0:1.8.0',
+         }
+       end
+
+       let(:wrong_json) do
+         {
+           "errors"=>[
+             {"parameter"=>"metering_point_id",
+              "detail"=>"size cannot be greater than 32"},
+             {"parameter"=>"name",
+              "detail"=>"size cannot be greater than 64"},
+             {"parameter"=>"label",
+              "detail"=>"must be one of: CONSUMPTION, DEMARCATION_PV, DEMARCATION_CHP, PRODUCTION_PV, PRODUCTION_CHP, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER"},
+             {"parameter"=>"pre_decimal_position",
+              "detail"=>"must be an integer"},
+             {"parameter"=>"post_decimal_position",
+              "detail"=>"must be an integer"},
+             {"parameter"=>"low_load_ability",
+              "detail"=>"must be boolean"},
+             {"parameter"=>"observer_enabled",
+              "detail"=>"must be boolean"},
+             {"parameter"=>"observer_min_threshold",
+              "detail"=>"must be an integer"},
+             {"parameter"=>"observer_max_threshold",
+              "detail"=>"must be an integer"},
+             {"parameter"=>"observer_offline_monitoring",
+              "detail"=>"must be boolean"}
+           ]
+         }
+       end
+
+       it '404' do
+         PATCH "/#{group.id}/meters/#{meter.id}/registers/bla-blub", admin
+         expect(response).to have_http_status(404)
+         expect(json).to eq not_found_json
+       end
+
+       it '422 wrong' do
+         PATCH "/#{group.id}/meters/#{meter.id}/registers/#{register.id}", admin,
+               metering_point_id: '123321' * 20,
+               name: 'Smarty' * 20,
+               label: 'grid',
+               pre_decimal_position: 'pre',
+               post_decimal_position: 'post',
+               low_load_ability: 'dunno',
+               observer_enabled: 'dunno',
+               observer_min_threshold: 'nothing',
+               observer_max_threshold: 'nothing',
+               observer_offline_monitoring: 'dunno'
+         expect(response).to have_http_status(422)
+         expect(json.to_yaml).to eq wrong_json.to_yaml
+       end
+
+       it '200' do
+         PATCH "/#{group.id}/meters/#{meter.id}/registers/#{register.id}", admin,
+               metering_point_id: '123456',
+               name: 'Smarty',
+               label: Register::Real::DEMARCATION_PV,
+               pre_decimal_position: 4,
+               post_decimal_position: 3,
+               low_load_ability: true,
+               observer_enabled: true,
+               observer_min_threshold: 10,
+               observer_max_threshold: 100,
+               observer_offline_monitoring: true
+         expect(response).to have_http_status(200)
+         expect(json.to_yaml).to eq updated_json.to_yaml
+         register.reload
+         expect(register.metering_point_id).to eq'123456'
+         expect(register.name).to eq 'Smarty'
+         expect(register.label).to eq 'demarcation_pv'
+         expect(register.pre_decimal_position).to eq 4
+         expect(register.post_decimal_position).to eq 3
+         expect(register.low_load_ability).to eq true
+         expect(register.observer_enabled).to eq true
+         expect(register.observer_min_threshold).to eq 10
+         expect(register.observer_max_threshold).to eq 100
+         expect(register.observer_offline_monitoring).to eq true
+       end
+     end
+   end
   end
 
   context 'registers' do
@@ -88,10 +212,10 @@ describe Admin::LocalpoolRoda do
       end
 
       let(:registers_json) do
-        [real_register_json] + Register::Virtual.all.collect do |register|
-          {
+        Register::Base.all.reload.collect do |register|
+          json = {
             "id"=>register.id,
-            "type"=>"register_virtual",
+            "type"=>"register_#{register.is_a?(Register::Real) ? 'real': 'virtual'}",
             "direction"=>register.attributes['direction'],
             "name"=>register.name,
             "pre_decimal_position"=>register.pre_decimal_position,
@@ -99,11 +223,16 @@ describe Admin::LocalpoolRoda do
             "low_load_ability"=>register.low_load_ability,
             "label"=>register.attributes['label'],
             "last_reading"=>Reading.by_register_id(register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
-            "observer_min_threshold"=>100,
-            "observer_max_threshold"=>5000,
-            "observer_enabled"=>false,
-            "observer_offline_monitoring"=>false,
-         }
+            "observer_min_threshold"=>register.observer_min_threshold,
+            "observer_max_threshold"=>register.observer_max_threshold,
+            "observer_enabled"=>register.observer_enabled,
+            "observer_offline_monitoring"=>register.observer_offline_monitoring,
+          }
+          if register.is_a? Register::Real
+            json["metering_point_id"] = register.metering_point_id
+            json["obis"] = register.obis
+          end
+          json
         end
       end
       
@@ -130,11 +259,47 @@ describe Admin::LocalpoolRoda do
       [:real, :virtual].each do |type|
 
         context "as #{type}" do
+          let(:virtual_registers_json) { [ virtual_register_json ] }
+          let(:real_registers_json) do
+            Register::Real.all.collect do |register|
+              {
+                "id"=>register.id,
+                "type"=>"register_real",
+                "direction"=>register.attributes['direction'],
+                "name"=>register.name,
+                "pre_decimal_position"=>register.pre_decimal_position,
+                "post_decimal_position"=>register.post_decimal_position,
+                "low_load_ability"=>register.low_load_ability,
+                "label"=>register.attributes['label'],
+                "last_reading"=>Reading.by_register_id(register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
+                "observer_min_threshold"=>register.observer_min_threshold,
+                "observer_max_threshold"=>register.observer_max_threshold,
+                "observer_enabled"=>register.observer_enabled,
+                "observer_offline_monitoring"=>register.observer_offline_monitoring,
+                "metering_point_id"=>register.metering_point_id,
+                "obis"=>register.obis
+              }
+            end
+          end
+
+          it '200 all' do
+            register = send "#{type}_register"
+            registers_json = send("#{type}_registers_json")
+
+            GET "/#{group.id}/meters/#{register.meter.id}/registers", admin
+            expect(response).to have_http_status(200)
+            expect(sort(json['array']).to_yaml).to eq sort(registers_json).to_yaml
+          end
+
           it '200' do
             register = send "#{type}_register"
             register_json = send "#{type}_register_json"
 
             GET "/#{group.id}/registers/#{register.id}", admin
+            expect(response).to have_http_status(200)
+            expect(json.to_yaml).to eq register_json.to_yaml
+
+            GET "/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", admin
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
           end

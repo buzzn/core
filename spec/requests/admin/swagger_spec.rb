@@ -39,11 +39,15 @@ describe Admin do
 
   entity!(:real_meter) { meter }
 
+  entity!(:real_register) { real_meter.registers.first }
+
   entity!(:virtual_meter) do
     meter = Fabricate(:virtual_meter)
     meter.register.update(group: localpool)
     meter
   end
+
+  entity!(:virtual_register) { virtual_meter.register }
 
   entity!(:register) do
     register = meter.registers.first
@@ -138,17 +142,36 @@ describe Admin do
   end
 
   patch '/localpools/{localpool.id}/meters/{real_meter.id}' do
-    description 'updates the real meter for the given ID'
+    description 'updates the real meter for the given IDs'
     schema 'update_real_meter_schema'
   end
 
   patch '/localpools/{localpool.id}/meters/{virtual_meter.id}' do
-    description 'updates the virtual meter for the given ID'
+    description 'updates the virtual meter for the given IDs'
     schema 'update_virtual_meter_schema'
   end
 
-  # persons
+  # meters > registers
   
+  get '/localpools/{localpool.id}/meters/{meter.id}/registers' do
+    description 'returns all registers of a meter for the given IDs'
+  end
+
+  get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}' do
+    description 'returns the register of a meter for the given IDs'
+  end
+
+  patch '/localpools/{localpool.id}/meters/{real_meter.id}/registers/{real_register.id}' do
+    description 'update the real register of a meter for the given IDs'
+    schema 'update_real_register_schema'
+  end
+
+  patch '/localpools/{localpool.id}/meters/{virtual_meter.id}/registers/{virtual_register.id}' do
+    description 'update the virtual register of a meter for the given IDs'
+    schema 'update_virtual_register_schema'
+  end
+
+  # persons
   get '/localpools/{localpool.id}/persons' do
     description 'returns all the persons of the localpool'
   end

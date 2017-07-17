@@ -133,9 +133,9 @@ describe Admin::LocalpoolRoda do
             {"parameter"=>"manufacturer_name",
              "detail"=>"must be one of: easy_meter, amperix, ferraris, other"},
             {"parameter"=>"product_name",
-             "detail"=>"size cannot be greater than 63"},
+             "detail"=>"size cannot be greater than 64"},
             {"parameter"=>"product_serialnumber",
-             "detail"=>"size cannot be greater than 63"},
+             "detail"=>"size cannot be greater than 64"},
             {"parameter"=>"section",
              "detail"=>"must be one of: S, G"},
             {"parameter"=>"build_year",
@@ -207,6 +207,7 @@ describe Admin::LocalpoolRoda do
         json.delete('converter_constant')
         json
       end
+
       let(:virtual_updated_json) do
         json = virtual_meter_json.dup
         json['product_name'] = 'Smarty Super Meter'

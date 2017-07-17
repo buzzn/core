@@ -57,6 +57,18 @@ module Buzzn
               result[:max_size] = rule.options[:args].first
             when 'min_size'
               result[:min_size] = rule.options[:args].first
+            when 'gteq'
+              result[:min] = rule.options[:args].first
+              result[:exclusive_min] = false
+            when 'gt'
+              result[:min] = rule.options[:args].first
+              result[:exclusive_min] = true
+            when 'lteq'
+              result[:max] = rule.options[:args].first
+              result[:exclusive_max] = false
+            when 'lt'
+              result[:max] = rule.options[:args].first
+              result[:exclusive_max] = true
             else
               result[:type] = rule.to_s.sub('?', '') unless result[:type]
             end

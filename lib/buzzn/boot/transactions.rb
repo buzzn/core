@@ -18,24 +18,19 @@ module Buzzn
       attr_reader :container, :steps
 
       def initialize
+        @logger = Logger.new(self)
         @container = Dry::Container.new
         @steps = Dry::Container.new
       end
 
       def define(name, &block)
         container.register(name, Dry.Transaction(container: steps, &block))
-      rescue => e
-        # just print out the error as db:init does autoload those files
-        # in the second run or so
-        warn e.message
+        @logger.debug { "defined transaction #{name}" }
       end
 
       def register_validation(name, &block)
         steps.register(name, Dry::Validation.Form(Validation::Form, &block))
-      rescue => e
-        # just print out the error as db:init does autoload those files
-        # in the second run or so
-        warn e.message
+        @logger.debug { "registered validation #{name}" }
       end
 
       def register_step(name, operation = nil, &block)
@@ -44,10 +39,7 @@ module Buzzn
         else
           steps.register(name, block)
         end
-      rescue => e
-        # just print out the error as db:init does autoload those files
-        # in the second run or so
-        warn e.message
+        @logger.debug { "registered step #{name}" }
       end
     end
   end

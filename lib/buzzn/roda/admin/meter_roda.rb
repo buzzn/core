@@ -31,6 +31,11 @@ class Admin::MeterRoda < BaseRoda
           raise "unknown model: #{meter.class.model}"
         end
       end
+
+      r.on 'registers' do
+        shared[:registers] = meter.registers
+        r.run Admin::RegisterRoda
+      end
     end
   end
 end

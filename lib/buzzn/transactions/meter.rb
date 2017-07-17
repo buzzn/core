@@ -3,11 +3,11 @@ Buzzn::Transaction.define do |t|
   t.register_validation(:update_real_meter_schema) do
     optional(:manufacturer_name)
       .value(included_in?: Meter::Real::MANUFACTURER_NAMES)
-    optional(:product_name).filled(:str?, max_size?: 63)
-    optional(:product_serialnumber).filled(:str?, max_size?: 63)
+    optional(:product_name).filled(:str?, max_size?: 64)
+    optional(:product_serialnumber).filled(:str?, max_size?: 64)
     optional(:ownership).value(included_in?: Meter::Base::OWNERSHIPS)
     optional(:section).value(included_in?: Meter::Base::SECTIONS)
-    optional(:build_year).filled(:int?)
+    optional(:build_year).filled(:int?, gt?: 1950, lt?: 2050)
     optional(:sent_data_dso).filled(:date?)
     optional(:converter_constant).filled(:int?)
     optional(:calibrated_until).filled(:date?)
@@ -23,11 +23,11 @@ Buzzn::Transaction.define do |t|
   end
 
   t.register_validation(:update_virtual_meter_schema) do
-    optional(:product_name).filled(:str?, max_size?: 63)
-    optional(:product_serialnumber).filled(:str?, max_size?: 63)
+    optional(:product_name).filled(:str?, max_size?: 64)
+    optional(:product_serialnumber).filled(:str?, max_size?: 64)
     optional(:ownership).value(included_in?: Meter::Base::OWNERSHIPS)
     optional(:section).value(included_in?: Meter::Base::SECTIONS)
-    optional(:build_year).filled(:int?)
+    optional(:build_year).filled(:int?, gt?: 1950, lt?: 2050)
     optional(:sent_data_dso).filled(:date?)
     optional(:converter_constant).filled(:int?)
     optional(:calibrated_until).filled(:date?)

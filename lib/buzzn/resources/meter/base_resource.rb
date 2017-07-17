@@ -23,6 +23,10 @@ module Meter
 
     attributes :updatable, :deletable
 
+    # even the virtual meter has only one it helps to simplify the API
+    # to expose this array of registers
+    has_many :registers
+
   end
 end
 

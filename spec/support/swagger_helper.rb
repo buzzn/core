@@ -53,12 +53,17 @@ module SwaggerHelper
       when :string
         sparam.type = 'string'
         sparam.format = options[:format] || ''
+        sparam.maxLength = options[:max_size] if options[:max_size]
       when :enum
         sparam.type = 'string'
         sparam.enum = options[:values]
       when :integer
         sparam.type = 'integer'
         sparam.format = 'int64'
+        sparam.maximum = options[:max] if options[:max]
+        sparam.exclusiveMaximum = options[:exclusive_max] if options[:exclusive_max]
+        sparam.minimum = options[:min] if options[:min]
+        sparam.exclusiveMinimum = options[:exclusive_min] if options[:exclusive_min]
       when :date
         sparam.type = 'string'
         sparam.format = 'date'
@@ -67,6 +72,10 @@ module SwaggerHelper
         sparam.format = 'date-time'
       when :float
         sparam.type = 'float'
+        sparam.maximum = options[:max] if options[:max]
+        sparam.exclusiveMaximum = options[:exclusive_max] if options[:exclusive_max]
+        sparam.minimum = options[:min] if options[:min]
+        sparam.exclusiveMinimum = options[:exclusive_min] if options[:exclusive_min]
       when :boolean
         sparam.type = 'boolean'
       else
