@@ -252,44 +252,44 @@ describe Admin::LocalpoolPermissions do
     end  
   end
   
-  context 'people' do
+  context 'persons' do
 
-    def people(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).people.collect do |l|
+    def persons(user, id)
+      Admin::LocalpoolResource.all(user).retrieve(id).persons.collect do |l|
         l.object
       end
     end
 
     it 'all' do
-      expect(people(buzzn_operator, localpool1.id)).to match_array localpool1.people.reload
-      expect(people(buzzn_operator, localpool2.id)).to match_array localpool2.people.reload
+      expect(persons(buzzn_operator, localpool1.id)).to match_array localpool1.persons.reload
+      expect(persons(buzzn_operator, localpool2.id)).to match_array localpool2.persons.reload
 
-      expect(people(localpool_owner, localpool2.id)).to match_array localpool2.people
+      expect(persons(localpool_owner, localpool2.id)).to match_array localpool2.persons
 
-      expect(people(localpool_manager, localpool2.id)).to match_array localpool2.people
+      expect(persons(localpool_manager, localpool2.id)).to match_array localpool2.persons
       
-      expect(people(localpool_member, localpool1.id)).to match_array [localpool_member.person]
+      expect(persons(localpool_member, localpool1.id)).to match_array [localpool_member.person]
     end
 
     it 'update' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).people.first.update({}) }.not_to raise_error
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).people.first.update({}) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).persons.first.update({}) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).persons.first.update({}) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).people.first.update({}) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).persons.first.update({}) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).people.first.update({}) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).persons.first.update({}) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).people.first.update({}) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).persons.first.update({}) }.not_to raise_error
     end
 
     it 'delete' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).people.retrieve(localpool_member2.person.id).delete }.to raise_error Buzzn::PermissionDenied
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).persons.retrieve(localpool_member2.person.id).delete }.to raise_error Buzzn::PermissionDenied
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).people.first.delete }.to raise_error Buzzn::PermissionDenied
+      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).persons.first.delete }.to raise_error Buzzn::PermissionDenied
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).people.first.delete }.to raise_error Buzzn::PermissionDenied
+      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).persons.first.delete }.to raise_error Buzzn::PermissionDenied
 
-      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).people.first.delete }.to raise_error Buzzn::PermissionDenied
+      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).persons.first.delete }.to raise_error Buzzn::PermissionDenied
     end
   end
   

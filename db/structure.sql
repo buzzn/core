@@ -711,10 +711,10 @@ CREATE TABLE payments (
 
 
 --
--- Name: people; Type: TABLE; Schema: public; Owner: -
+-- Name: persons; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE people (
+CREATE TABLE persons (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     title character varying(64),
     first_name character varying(64) NOT NULL,
@@ -1136,11 +1136,11 @@ ALTER TABLE ONLY payments
 
 
 --
--- Name: people_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: persons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY people
-    ADD CONSTRAINT people_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY persons
+    ADD CONSTRAINT persons_pkey PRIMARY KEY (id);
 
 
 --
@@ -1465,10 +1465,10 @@ CREATE INDEX index_payments_on_contract_id ON payments USING btree (contract_id)
 
 
 --
--- Name: index_people_on_first_name_and_last_name_and_email; Type: INDEX; Schema: public; Owner: -
+-- Name: index_persons_on_first_name_and_last_name_and_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_people_on_first_name_and_last_name_and_email ON people USING btree (first_name, last_name, email);
+CREATE INDEX index_persons_on_first_name_and_last_name_and_email ON persons USING btree (first_name, last_name, email);
 
 
 --
@@ -1598,13 +1598,6 @@ CREATE INDEX index_users_on_invited_by_type ON users USING btree (invited_by_typ
 
 
 --
--- Name: index_users_on_person_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_users_on_person_id ON users USING btree (person_id);
-
-
---
 -- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1637,7 +1630,7 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 --
 
 ALTER TABLE ONLY organizations
-    ADD CONSTRAINT fk_rails_6b54950e91 FOREIGN KEY (contact_id) REFERENCES people(id);
+    ADD CONSTRAINT fk_rails_6b54950e91 FOREIGN KEY (contact_id) REFERENCES persons(id);
 
 
 --
@@ -1669,7 +1662,7 @@ ALTER TABLE ONLY tariffs
 --
 
 ALTER TABLE ONLY users
-    ADD CONSTRAINT fk_rails_fa67535741 FOREIGN KEY (person_id) REFERENCES people(id);
+    ADD CONSTRAINT fk_rails_fa67535741 FOREIGN KEY (person_id) REFERENCES persons(id);
 
 
 --

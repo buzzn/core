@@ -4,7 +4,7 @@ describe Admin::LocalpoolRoda do
     Admin::LocalpoolRoda # this defines the active application for this test
   end
 
-  context 'people' do
+  context 'persons' do
 
     entity!(:admin) { Fabricate(:admin_token) }
 
@@ -77,8 +77,8 @@ describe Admin::LocalpoolRoda do
       }
     end
 
-    let(:people_json) do
-      group.people.collect do |person|
+    let(:persons_json) do
+      group.persons.collect do |person|
         {
           "id"=>person.id,
           "type"=>"person",
@@ -110,8 +110,8 @@ describe Admin::LocalpoolRoda do
       end
     end
 
-    let(:admin_people_json) do
-      group.people.collect do |person|
+    let(:admin_persons_json) do
+      group.persons.collect do |person|
         {
           "id"=>person.id,
           "type"=>"person",
@@ -143,7 +143,7 @@ describe Admin::LocalpoolRoda do
       end
     end
 
-    let(:filtered_admin_people_json) do
+    let(:filtered_admin_persons_json) do
       [
         {
           "id"=>person.id,
@@ -185,47 +185,47 @@ describe Admin::LocalpoolRoda do
       end
 
       it '403' do
-        GET "/#{group.id}/people/#{person.id}", other
+        GET "/#{group.id}/persons/#{person.id}", other
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
       end
 
       it '404' do
-        GET "/#{group.id}/people/bla-blub", admin
+        GET "/#{group.id}/persons/bla-blub", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
       it '200' do
-        GET "/#{group.id}/people/#{person.id}", user_token, include: :bank_accounts
+        GET "/#{group.id}/persons/#{person.id}", user_token, include: :bank_accounts
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq person_json.to_yaml
 
-        GET "/#{group.id}/people/#{person.id}", admin, include: :bank_accounts
+        GET "/#{group.id}/persons/#{person.id}", admin, include: :bank_accounts
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq admin_person_json.to_yaml
       end
 
       it '200 all' do
-        GET "/#{group.id}/people", user_token, include: :bank_accounts
+        GET "/#{group.id}/persons", user_token, include: :bank_accounts
         expect(response).to have_http_status(200)
-        expect(json['array']).to eq people_json
+        expect(json['array']).to eq persons_json
 
-        GET "/#{group.id}/people", admin, include: :bank_accounts
+        GET "/#{group.id}/persons", admin, include: :bank_accounts
         expect(response).to have_http_status(200)
-        expect(sort(json['array']).to_yaml).to eq sort(admin_people_json).to_yaml
+        expect(sort(json['array']).to_yaml).to eq sort(admin_persons_json).to_yaml
       end
 
       it '200 all filtered' do
         admin_user = User.find(admin.resource_owner_id)
 
-        GET "/#{group.id}/people", user_token, include: :bank_accounts, filter: admin_user.first_name
+        GET "/#{group.id}/persons", user_token, include: :bank_accounts, filter: admin_user.first_name
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq empty_json.to_yaml
 
-        GET "/#{group.id}/people", admin, include: :bank_accounts, filter: person.first_name
+        GET "/#{group.id}/persons", admin, include: :bank_accounts, filter: person.first_name
         expect(response).to have_http_status(200)
-        expect(json['array'].to_yaml).to eq filtered_admin_people_json.to_yaml
+        expect(json['array'].to_yaml).to eq filtered_admin_persons_json.to_yaml
       end
     end
   end

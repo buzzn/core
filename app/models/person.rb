@@ -1,5 +1,7 @@
 # coding: utf-8
 class Person < ContractingParty
+  self.table_name = :persons
+
   include Filterable
 
   # prefixes

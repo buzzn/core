@@ -22,11 +22,11 @@ module Group
       Contract::Localpool.joins(:localpool).where(localpool: self)
     end
 
-    def people
+    def persons
       roles           = Role.arel_table
       users_roles     = Role.users_roles_arel_table
       users           = User.arel_table
-      people          = Person.arel_table
+      persons         = Person.arel_table
       localpool_users = users_roles
                         .join(roles)
                         .on(roles[:id].eq(users_roles[:role_id])
@@ -35,10 +35,10 @@ module Group
                         .project(1)
                         .exists
       contract_users = contracts
-                       .where('contracts.customer_id = people.id or contracts.contractor_id = people.id')
+                       .where('contracts.customer_id = persons.id or contracts.contractor_id = persons.id')
                        .select(1)
                        .exists
-      Person.where(User.where(localpool_users).where("users.person_id = people.id").project(1).exists.or(contract_users))
+      Person.where(User.where(localpool_users).where("users.person_id = persons.id").project(1).exists.or(contract_users))
     end
 
     def organizations

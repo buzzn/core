@@ -147,32 +147,32 @@ describe Admin do
     schema 'update_virtual_meter_schema'
   end
 
-  # people
+  # persons
   
-  get '/localpools/{localpool.id}/people' do
-    description 'returns all the people of the localpool'
+  get '/localpools/{localpool.id}/persons' do
+    description 'returns all the persons of the localpool'
   end
 
-  get '/localpools/{localpool.id}/people/{person.id}' do
+  get '/localpools/{localpool.id}/persons/{person.id}' do
     description 'returns the person of the localpool for the given ID'
   end
 
-  # people > bank-accounts
+  # persons > bank-accounts
 
-  get '/localpools/{localpool.id}/people/{person.id}/bank-accounts' do
+  get '/localpools/{localpool.id}/persons/{person.id}/bank-accounts' do
     description 'returns all bank-accounts of the person for the given ID'
   end
 
-  get '/localpools/{localpool.id}/people/{person.id}/bank-accounts/{bank_account_1.id}' do
+  get '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_1.id}' do
     description 'returns the bank-accounts of the person for the given IDs'
   end
 
-  patch '/localpools/{localpool.id}/people/{person.id}/bank-accounts/{bank_account_1.id}' do
+  patch '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_1.id}' do
     description 'updates the bank-accounts of the person for the given IDs'
     schema 'update_bank_account_schema'
   end
 
-  delete '/localpools/{localpool.id}/people/{person.id}/bank-accounts/{bank_account_2.id}' do
+  delete '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_2.id}' do
     description 'delete the bank-accounts of the person for the given IDs'
   end
 

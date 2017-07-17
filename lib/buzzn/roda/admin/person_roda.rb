@@ -6,14 +6,14 @@ module Admin
 
     route do |r|
 
-      people = shared[:localpool].people
+      persons = shared[:localpool].persons
 
       r.get! do
-        people.filter(r.params['filter'])
+        persons.filter(r.params['filter'])
       end
 
       r.on :id do |id|
-        person = people.retrieve(id)
+        person = persons.retrieve(id)
 
         r.get! do
           person

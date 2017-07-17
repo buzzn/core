@@ -3,12 +3,12 @@ class CreatePersonTable < ActiveRecord::Migration
   SCHEMA = Buzzn::Validation::MigrationSchemaVisitor.new(:create_person_schema)
 
   def up
-    SCHEMA.up(:people, self)
-    add_index :people, [:first_name, :last_name, :email]
+    SCHEMA.up(:persons, self)
+    add_index :persons, [:first_name, :last_name, :email]
   end
 
   def down
-    remove_index :people, [:first_name, :last_name, :email]
-    SCHEMA.down(:people, self)
+    remove_index :persons, [:first_name, :last_name, :email]
+    SCHEMA.down(:persons, self)
   end
 end

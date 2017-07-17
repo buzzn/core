@@ -5,8 +5,8 @@ describe Admin::BankAccountRoda do
     route do |r|
       r.on :id do |id|
         localpool = Admin::LocalpoolResource.all(current_user).first
-        localpool.object.people
-        parent = localpool.organizations.where(id: id).first || localpool.people.where(id: id).first
+        localpool.object.persons
+        parent = localpool.organizations.where(id: id).first || localpool.persons.where(id: id).first
         shared[Admin::BankAccountRoda::PARENT] = parent
         r.run Admin::BankAccountRoda
       end

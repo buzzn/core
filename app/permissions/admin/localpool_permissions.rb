@@ -270,7 +270,7 @@ class Admin::LocalpoolPermissions
     end
   end
   
-  setting :people, reader: true do
+  setting :persons, reader: true do
     setting :create, MANAGERS
     setting :retrieve, MANAGERS + [:self]
     setting :update, MANAGERS + [:self]
