@@ -33,11 +33,11 @@ describe Admin::LocalpoolRoda do
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
     manager.add_role(:manager, localpool)
-    3.times.each do
-      c = Fabricate(:localpool_power_taker_contract)
-      c.register.group = localpool
-      c.register.save
-    end
+    c = Fabricate(:localpool_power_taker_contract)
+    c.localpool = localpool
+    c.register.group = localpool
+    c.register.save
+    c.save
     Fabricate(:localpool_processing_contract, localpool: localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
     User.find(user.resource_owner_id).add_role(:localpool_member, localpool)
@@ -197,6 +197,8 @@ describe Admin::LocalpoolRoda do
           "phone"=>contract.customer.phone,
           "fax"=>contract.customer.fax,
           "email"=>contract.customer.email,
+          "share_with_group"=>true,
+          "share_publicly"=>false,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>nil,
           "updatable"=>true,
@@ -309,6 +311,8 @@ describe Admin::LocalpoolRoda do
           "phone"=>contract.customer.phone,
           "fax"=>contract.customer.fax,
           "email"=>contract.customer.email,
+          "share_with_group"=>true,
+          "share_publicly"=>false,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>nil,
           "updatable"=>true,
@@ -397,62 +401,6 @@ describe Admin::LocalpoolRoda do
           "end_date"=>nil,
           "updatable"=>true,
           "deletable"=>false,
-          "tariffs"=>{
-            'array' => contract.tariffs.collect do |t|
-              {
-                "id"=>t.id,
-                "type"=>'contract_tariff',
-                "name"=>t.name,
-                "begin_date"=>t.begin_date.to_s,
-                "end_date"=>nil,
-                "energyprice_cents_per_kwh"=>t.energyprice_cents_per_kwh,
-                "baseprice_cents_per_month"=>t.baseprice_cents_per_month,
-              }
-            end
-          },
-          "payments"=>{
-            'array'=>contract.payments.collect do |p|
-              {
-                "id"=>p.id,
-                "type"=>'contract_payment',
-                "begin_date"=>p.begin_date.to_s,
-                "end_date"=>nil,
-                "price_cents"=>p.price_cents,
-                "cycle"=>p.cycle,
-                "source"=>p.source,
-              }
-            end
-          },
-          "contractor"=>{
-            "id"=>contract.contractor.id,
-            "type"=>"user",
-            "updatable"=>true,
-            "deletable"=>false
-          },
-          "customer"=>{
-            "id"=>contract.customer.id,
-            "type"=>"user",
-            "updatable"=>true,
-            "deletable"=>false
-          },
-          "customer_bank_account"=>{
-            "id"=>contract.customer_bank_account.id,
-            "type"=>"bank_account",
-            "holder"=>contract.customer_bank_account.holder,
-            "bank_name"=>contract.customer_bank_account.bank_name,
-            "bic"=>contract.customer_bank_account.bic,
-            "iban"=>contract.customer_bank_account.iban,
-            "direct_debit"=>contract.customer_bank_account.direct_debit
-          },
-          "contractor_bank_account"=>{
-            "id"=>contract.contractor_bank_account.id,
-            "type"=>"bank_account",
-            "holder"=>contract.contractor_bank_account.holder,
-            "bank_name"=>contract.contractor_bank_account.bank_name,
-            "bic"=>contract.contractor_bank_account.bic,
-            "iban"=>contract.contractor_bank_account.iban,
-            "direct_debit"=>contract.contractor_bank_account.direct_debit
-          }
         }
       end
     end
@@ -464,7 +412,7 @@ describe Admin::LocalpoolRoda do
         expect(response).to have_http_status(200)
 
         GET "/#{localpool.id}/power-taker-contracts", admin
-        expect(json['array'].to_yaml).to eq power_taker_contracts_json.to_yaml
+        expect(sort(json['array']).to_yaml).to eq sort(power_taker_contracts_json).to_yaml 
         expect(response).to have_http_status(200)
       end
     end

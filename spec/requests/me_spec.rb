@@ -33,6 +33,8 @@ describe MeRoda do
       "phone"=>person.phone,
       "fax"=>person.fax,
       "email"=>person.email,
+      "share_with_group"=>true,
+      "share_publicly"=>false,
       'preferred_language'=>person.attributes['preferred_language'],
       "image"=>User.where(person: person).first.image.md.url,
       "updatable"=>true,
