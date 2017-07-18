@@ -5,8 +5,9 @@ Buzzn::Transaction.define do |t|
   end
 
   t.register_validation(:update_billing_schema) do
+    required(:updated_at).filled(:date_time?)
     optional(:receivables_cents).filled(:int?)
-    optional(:invoice_number).filled(:str?)
+    optional(:invoice_number).filled(:str?, max_size?: 64)
     optional(:status).value(included_in?: Billing.all_stati)
   end
 

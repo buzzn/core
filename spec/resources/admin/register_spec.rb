@@ -18,6 +18,7 @@ describe Register::BaseResource do
 
   let(:base_keys) { ['id',
                      'type',
+                     'updated_at',
                      'label',
                      'name',
                      'direction',

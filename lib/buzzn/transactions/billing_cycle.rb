@@ -1,13 +1,14 @@
 require_relative 'resource'
 Buzzn::Transaction.define do |t|
   t.register_validation(:create_billing_cycle_schema) do
-    required(:name).filled(:str?)
+    required(:name).filled(:str?, max_size?: 64)
     required(:begin_date).filled(:date?)
     required(:end_date).filled(:date?)
   end
 
   t.register_validation(:update_billing_cycle_schema) do
-    optional(:name).filled(:str?)
+    required(:updated_at).filled(:date_time?)
+    optional(:name).filled(:str?, max_size?: 64)
     optional(:begin_date).filled(:date?)
     optional(:end_date).filled(:date?)
   end

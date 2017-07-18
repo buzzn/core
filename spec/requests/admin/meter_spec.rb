@@ -60,6 +60,7 @@ describe Admin::LocalpoolRoda do
       {
         "id"=>meter.id,
         "type"=>"meter_real",
+        'updated_at'=> meter.updated_at.as_json,
         "product_name"=>meter.product_name,
         "product_serialnumber"=>meter.product_serialnumber,
         "ownership"=>meter.attributes['ownership'],
@@ -85,6 +86,7 @@ describe Admin::LocalpoolRoda do
             {
               "id"=>meter.input_register.id,
               "type"=>"register_real",
+              'updated_at'=> meter.input_register.updated_at.as_json,
               "direction"=>meter.input_register.attributes['direction'],
               "name"=>meter.input_register.name,
               "pre_decimal_position"=>6,
@@ -130,6 +132,8 @@ describe Admin::LocalpoolRoda do
       let(:wrong_json) do
         {
           "errors"=>[
+            {"parameter"=>"updated_at",
+             "detail"=>"is missing"},
             {"parameter"=>"manufacturer_name",
              "detail"=>"must be one of: easy_meter, amperix, ferraris, other"},
             {"parameter"=>"product_name",
@@ -200,6 +204,7 @@ describe Admin::LocalpoolRoda do
         json = meter_json.dup
         json['type'] = 'meter_virtual'
         json['id'] = virtual_meter.id
+        json['updated_at'] = virtual_meter.updated_at.as_json
         json['product_serialnumber'] = virtual_meter.product_serialnumber
         json.delete('manufacturer_name')
         json.delete('registers')
@@ -224,14 +229,15 @@ describe Admin::LocalpoolRoda do
         json['edifact_voltage_level'] = 'E04'
         json['edifact_cycle_interval'] = 'QUARTERLY'
         json['edifact_data_logging'] = 'Z04'
+        json.delete('updated_at')
         json
       end
 
       let(:real_wrong_json) { wrong_json }
       let(:virtual_wrong_json) do
         json = wrong_json.dup
-        json['errors'].shift
-        json['errors'].delete_at(7) # direction_number
+        json['errors'].delete_at(1)# manufacturer name
+        json['errors'].delete_at(8) # direction_number
         json
       end
 
@@ -249,6 +255,29 @@ describe Admin::LocalpoolRoda do
 
       [:real, :virtual].each do |type|
         context type do
+
+          let(:real_stale_json) do
+            {
+              "errors" => [
+                {"detail"=>"Meter::Real: #{real_meter.id} was updated at: #{real_meter.updated_at}"}]
+            }
+          end
+
+          let(:virtual_stale_json) do
+            {
+              "errors" => [
+                {"detail"=>"Meter::Virtual: #{virtual_meter.id} was updated at: #{virtual_meter.updated_at}"}]
+            }
+          end
+
+          it '409' do
+            meter = send "#{type}_meter"
+            PATCH "/#{group.id}/meters/#{meter.id}", admin,
+                  updated_at: DateTime.now
+            expect(response).to have_http_status(409)
+            expect(json).to eq send("#{type}_stale_json")
+          end
+
           it '422 wrong' do
             meter = send "#{type}_meter"
             PATCH "/#{group.id}/meters/#{meter.id}", admin,
@@ -278,7 +307,9 @@ describe Admin::LocalpoolRoda do
           it '200' do
             meter = send "#{type}_meter"
             sent = meter.sent_data_dso
+            old = meter.updated_at
             PATCH "/#{group.id}/meters/#{meter.id}", admin,
+                  updated_at: meter.updated_at,
                   manufacturer_name: Meter::Real::OTHER,
                   product_name: 'Smarty Super Meter',
                   product_serialnumber: '12341234',
@@ -321,7 +352,12 @@ describe Admin::LocalpoolRoda do
             expect(meter.edifact_voltage_level).to eq 'high_level'
             expect(meter.edifact_cycle_interval).to eq 'quarterly'
             expect(meter.edifact_data_logging).to eq 'analog'
-            expect(json.to_yaml).to eq send("#{type}_updated_json").to_yaml
+
+            result = json
+            # TODO fix it: our time setup does not allow
+            #expect(result.delete('updated_at')).to be > old.as_json
+            expect(result.delete('updated_at')).not_to eq old.as_json
+            expect(result.to_yaml).to eq send("#{type}_updated_json").to_yaml
           end
         end
       end

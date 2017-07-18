@@ -8,6 +8,7 @@ Buzzn::Transaction.define do |t|
   end
 
   t.register_validation(:update_price_schema) do
+    required(:updated_at).filled(:date_time?)
     optional(:name).filled(:str?)
     optional(:begin_date).filled(:date?)
     optional(:energyprice_cents_per_kilowatt_hour).filled(:float?)

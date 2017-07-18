@@ -7,9 +7,10 @@ Buzzn::Transaction.define do |t|
   end
 
   t.register_validation(:update_bank_account_schema) do
+    required(:updated_at).filled(:date_time?)
     optional(:bank_name).filled(:str?, max_size?: 64)
     optional(:holder).filled(:str?, max_size?: 64)
-    optional(:iban).filled(:str?, :iban?, max_size?: 32)
+    optional(:iban).filled(:iban?, max_size?: 32)
   end
 
   t.define(:create_bank_account) do

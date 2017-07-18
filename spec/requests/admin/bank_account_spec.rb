@@ -58,6 +58,7 @@ describe Admin::BankAccountRoda do
         {
           "id"=>bank_account.id,
           "type"=>"bank_account",
+          'updated_at'=>bank_account.updated_at.as_json,
           "holder"=>bank_account.holder,
           "bank_name"=>bank_account.bank_name,
           "bic"=>bank_account.bic,
@@ -78,9 +79,12 @@ describe Admin::BankAccountRoda do
       let(:wrong_json) do
         {
           "errors"=>[
-            {"parameter"=>"bank_name", "detail"=>"size cannot be greater than 64"},
-            {"parameter"=>"holder", "detail"=>"size cannot be greater than 64"},
-            {"parameter"=>"iban", "detail"=>"must be a string"}
+            {"parameter"=>"bank_name",
+             "detail"=>"size cannot be greater than 64"},
+            {"parameter"=>"holder",
+             "detail"=>"size cannot be greater than 64"},
+            {"parameter"=>"iban",
+             "detail"=>"must be a string"}
           ]
         }
       end
@@ -129,16 +133,37 @@ describe Admin::BankAccountRoda do
           expect(response).to have_http_status(422)
           expect(json.to_yaml).to eq wrong_json.to_yaml
         end
-
-        it '201' do
-        end
       end
 
       context 'PATCH' do
         let(:updated_json) do
           json = bank_account_json.dup
           json['holder'] = 'Max Mueller'
+          json['bank_name'] = 'Bundesbank'
+          json.delete('updated_at')
           json
+        end
+
+        let(:stale_json) do
+          {
+            "errors" => [
+              {"detail"=>"BankAccount: #{bank_account.id} was updated at: #{bank_account.updated_at}"}]
+          }
+        end
+
+        let(:wrong_json) do
+          {
+            "errors"=>[
+              {"parameter"=>"updated_at",
+               "detail"=>"is missing"},
+              {"parameter"=>"bank_name",
+               "detail"=>"size cannot be greater than 64"},
+              {"parameter"=>"holder",
+               "detail"=>"size cannot be greater than 64"},
+              {"parameter"=>"iban",
+               "detail"=>"must be a valid iban"}
+            ]
+          }
         end
 
         # can not construct users to see parent but not bank_account
@@ -156,21 +181,43 @@ describe Admin::BankAccountRoda do
           expect(json).to eq not_found_json
         end
 
-        it '422 wrong' do
+        it '409' do
+          PATCH "/#{parent.id}/#{bank_account.id}", admin,
+                updated_at: DateTime.now
+          
+          expect(response).to have_http_status(409)
+          expect(json).to eq stale_json
+        end
+
+        it '422' do
           PATCH "/#{parent.id}/#{bank_account.id}", admin,
                 holder: 'Max Mueller' * 10,
                 bank_name: 'Bundesbank' * 10,
-                iban: 12341234
+                iban: '12341234' * 20
           
           expect(response).to have_http_status(422)
           expect(json).to eq wrong_json
         end
 
         it '200' do
-          PATCH "/#{parent.id}/#{bank_account.id}", admin, holder: 'Max Mueller'
+          old = bank_account.updated_at
+          PATCH "/#{parent.id}/#{bank_account.id}", admin,
+                updated_at: bank_account.updated_at,
+                bank_name: 'Bundesbank',
+                holder: 'Max Mueller',
+                iban: 'DE89 3704 0044 0532 0130 00'
+
           expect(response).to have_http_status(200)
-          expect(bank_account.reload.holder).to eq 'Max Mueller'
-          expect(json.to_yaml).to eq updated_json.to_yaml
+          bank_account.reload
+          expect(bank_account.holder).to eq 'Max Mueller'
+          expect(bank_account.bank_name).to eq 'Bundesbank'
+          expect(bank_account.iban).to eq 'DE89 3704 0044 0532 0130 00'
+
+          result = json
+          # TODO fix it: our time setup does not allow
+          #expect(result.delete('updated_at')).to be > old.as_json
+          expect(result.delete('updated_at')).not_to eq old.as_json
+          expect(result.to_yaml).to eq updated_json.to_yaml
         end
       end
 

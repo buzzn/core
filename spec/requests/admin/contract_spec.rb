@@ -46,6 +46,7 @@ describe Admin::LocalpoolRoda do
         {
           "id"=>contract.id,
           "type"=>"contract_metering_point_operator",
+          'updated_at'=>contract.updated_at.as_json,
           "status"=>"waiting_for_approval",
           "full_contract_number"=>"90041/0",
           "customer_number"=>"40021/1",
@@ -62,6 +63,7 @@ describe Admin::LocalpoolRoda do
               {
                 "id"=>contract.tariffs[0].id,
                 "type"=>'contract_tariff',
+                'updated_at'=>nil,
                 "name"=>"metering_standard",
                 "begin_date"=>"2014-12-01",
                 "end_date"=>nil,
@@ -75,6 +77,7 @@ describe Admin::LocalpoolRoda do
               {
                 "id"=>p.id,
                 "type"=>'contract_payment',
+                'updated_at'=>nil,
                 "begin_date"=>p.begin_date.to_s,
                 "end_date"=>p.end_date ? p.end_date.to_s : nil,
                 "price_cents"=>p.price_cents,
@@ -86,6 +89,7 @@ describe Admin::LocalpoolRoda do
           "contractor"=>{
             "id"=>contract.contractor.id,
             "type"=>"organization",
+            'updated_at'=>contract.contractor.updated_at.as_json,
             "name"=>contract.contractor.name,
             "phone"=>contract.contractor.phone,
             "fax"=>contract.contractor.fax,
@@ -99,6 +103,7 @@ describe Admin::LocalpoolRoda do
           "customer"=>{
             "id"=>contract.customer.id,
             "type"=>"person",
+            'updated_at'=>contract.customer.updated_at.as_json,
             "prefix"=>contract.customer.attributes['prefix'],
             "title"=>contract.customer.title,
             "first_name"=>contract.customer.first_name,
@@ -116,6 +121,7 @@ describe Admin::LocalpoolRoda do
           "customer_bank_account"=>{
             "id"=>contract.customer_bank_account.id,
             "type"=>"bank_account",
+            'updated_at'=>contract.customer_bank_account.updated_at.as_json,
             "holder"=>contract.customer_bank_account.holder,
             "bank_name"=>contract.customer_bank_account.bank_name,
             "bic"=>contract.customer_bank_account.bic,
@@ -125,6 +131,7 @@ describe Admin::LocalpoolRoda do
           "contractor_bank_account"=>{
             "id"=>contract.contractor_bank_account.id,
             "type"=>"bank_account",
+            'updated_at'=>contract.contractor_bank_account.updated_at.as_json,
             "holder"=>contract.contractor_bank_account.holder,
             "bank_name"=>contract.contractor_bank_account.bank_name,
             "bic"=>contract.contractor_bank_account.bic,
@@ -205,6 +212,7 @@ describe Admin::LocalpoolRoda do
               {
                 "id"=>customer.id,
                 "type"=>"person",
+                'updated_at'=>customer.updated_at.as_json,
                 "prefix"=>customer.attributes['prefix'],
                 "title"=>nil,
                 "first_name"=>customer.first_name,
@@ -226,6 +234,7 @@ describe Admin::LocalpoolRoda do
                     {
                       "id"=>bank_account.id,
                       "type"=>"bank_account",
+                      'updated_at'=>bank_account.updated_at.as_json,
                       "holder"=>bank_account.holder,
                       "bank_name"=>bank_account.bank_name,
                       "bic"=>bank_account.bic,
@@ -278,6 +287,7 @@ describe Admin::LocalpoolRoda do
               {
                 "id"=>contractor.id,
                 "type"=>"organization",
+                'updated_at'=>contractor.updated_at.as_json,
                 "name"=>contractor.name,
                 "phone"=>contractor.phone,
                 "fax"=>contractor.fax,
@@ -296,6 +306,7 @@ describe Admin::LocalpoolRoda do
                     {
                       "id"=>bank_account.id,
                       "type"=>"bank_account",
+                      'updated_at'=>bank_account.updated_at.as_json,
                       "holder"=>bank_account.holder,
                       "bank_name"=>bank_account.bank_name,
                       "bic"=>bank_account.bic,

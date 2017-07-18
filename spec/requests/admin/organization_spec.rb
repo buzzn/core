@@ -47,6 +47,7 @@ describe Admin::LocalpoolRoda do
         {
           "id"=>organization.id,
           "type"=>"organization",
+          'updated_at'=>organization.updated_at.as_json,
           "name"=>organization.name,
           "phone"=>organization.phone,
           "fax"=>organization.fax,
@@ -62,6 +63,7 @@ describe Admin::LocalpoolRoda do
               {
                 "id"=>bank_account.id,
                 "type"=>"bank_account",
+                'updated_at'=>bank_account.updated_at.as_json,
                 "holder"=>bank_account.holder,
                 "bank_name"=>bank_account.bank_name,
                 "bic"=>bank_account.bic,
@@ -107,6 +109,7 @@ describe Admin::LocalpoolRoda do
         {
           "id"=>address.id,
           "type"=>"address",
+          'updated_at'=>address.updated_at.as_json,
           "address"=>nil,
           "street_name"=>"Aberlestraße",
           "street_number"=>"16",

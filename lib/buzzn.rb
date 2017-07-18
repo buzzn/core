@@ -9,7 +9,6 @@ module Buzzn
           super(create_instance(resource, action, user))
         end
       end
-      alias :create :new
 
       def create_class(clazz, action, user)
         "#{action} #{clazz}: permission denied for User: #{user ? user.id : '--anonymous--'}"
@@ -24,7 +23,13 @@ module Buzzn
       def new(clazz, id, user = nil)
         super("#{clazz || 'UNKNOWN-CLASS'}: #{id} not found#{user ? ' by User: ' + user.id : ''}")
       end
-      alias :create :new
+    end
+  end
+  class StaleEntity < StandardError
+    class << self
+      def new(entity)
+        super("#{entity.class}: #{entity.id} was updated at: #{entity.updated_at}")
+      end
     end
   end
   class ValidationError < StandardError

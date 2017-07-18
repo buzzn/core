@@ -45,7 +45,7 @@ describe Admin::LocalpoolRoda do
   end
 
   entity!(:register) do
-    meter.registers.second
+    meter.registers.detect{ |r| r != real_register }
   end
 
   entity!(:virtual_register) do
@@ -69,29 +69,38 @@ describe Admin::LocalpoolRoda do
          }
        end
 
+       let(:stale_json) do
+         {
+           "errors" => [
+             {"detail"=>"#{register.class.name}: #{register.id} was updated at: #{register.updated_at}"}]
+         }
+       end
+
        let(:updated_json) do
          {
            "id"=>register.id,
            "type"=>"register_real",
-           "direction"=>register.direction == 'in' ? 'out' : 'in',
+           "direction"=>register.attributes['direction'],
            "name"=>'Smarty',
            "pre_decimal_position"=>4,
            "post_decimal_position"=>3,
            "low_load_ability"=>true,
            "label"=>'DEMARCATION_PV',
-           "last_reading"=>Reading.by_register_id(real_register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(real_register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
+           "last_reading"=>Reading.by_register_id(register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
            "observer_min_threshold"=>10,
            "observer_max_threshold"=>100,
            "observer_enabled"=>true,
            "observer_offline_monitoring"=>true,
            "metering_point_id"=>'123456',
-           "obis"=>register.direction == 'in' ? '1-0:2.8.0' : '1-0:1.8.0',
+           "obis"=>register.obis,
          }
        end
 
        let(:wrong_json) do
          {
            "errors"=>[
+             {"parameter"=>"updated_at",
+              "detail"=>"is missing"},
              {"parameter"=>"metering_point_id",
               "detail"=>"size cannot be greater than 32"},
              {"parameter"=>"name",
@@ -122,6 +131,13 @@ describe Admin::LocalpoolRoda do
          expect(json).to eq not_found_json
        end
 
+       it '409' do
+         PATCH "/#{group.id}/meters/#{meter.id}/registers/#{register.id}", admin,
+               updated_at: DateTime.now
+         expect(response).to have_http_status(409)
+         expect(json).to eq stale_json
+       end
+
        it '422 wrong' do
          PATCH "/#{group.id}/meters/#{meter.id}/registers/#{register.id}", admin,
                metering_point_id: '123321' * 20,
@@ -139,7 +155,9 @@ describe Admin::LocalpoolRoda do
        end
 
        it '200' do
+         old = register.updated_at
          PATCH "/#{group.id}/meters/#{meter.id}/registers/#{register.id}", admin,
+               updated_at: register.updated_at,
                metering_point_id: '123456',
                name: 'Smarty',
                label: Register::Real::DEMARCATION_PV,
@@ -151,7 +169,6 @@ describe Admin::LocalpoolRoda do
                observer_max_threshold: 100,
                observer_offline_monitoring: true
          expect(response).to have_http_status(200)
-         expect(json.to_yaml).to eq updated_json.to_yaml
          register.reload
          expect(register.metering_point_id).to eq'123456'
          expect(register.name).to eq 'Smarty'
@@ -163,6 +180,12 @@ describe Admin::LocalpoolRoda do
          expect(register.observer_min_threshold).to eq 10
          expect(register.observer_max_threshold).to eq 100
          expect(register.observer_offline_monitoring).to eq true
+
+         result = json
+         # TODO fix it: our time setup does not allow
+         #expect(result.delete('updated_at')).to be > old.as_json
+         expect(result.delete('updated_at')).not_to eq old.as_json
+         expect(result.to_yaml).to eq updated_json.to_yaml
        end
      end
    end
@@ -172,10 +195,10 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
 
       let(:real_register_json) do
-        meter = real_register.meter
         {
           "id"=>real_register.id,
           "type"=>"register_real",
+          'updated_at'=>real_register.updated_at.as_json,
           "direction"=>real_register.attributes['direction'],
           "name"=>real_register.name,
           "pre_decimal_position"=>6,
@@ -197,6 +220,7 @@ describe Admin::LocalpoolRoda do
         {
           "id"=>virtual_register.id,
           "type"=>"register_virtual",
+          'updated_at'=>virtual_register.updated_at.as_json,
           "direction"=>virtual_register.attributes['direction'],
           "name"=>virtual_register.name,
           "pre_decimal_position"=>6,
@@ -216,6 +240,7 @@ describe Admin::LocalpoolRoda do
           json = {
             "id"=>register.id,
             "type"=>"register_#{register.is_a?(Register::Real) ? 'real': 'virtual'}",
+            'updated_at'=>register.updated_at.as_json,
             "direction"=>register.attributes['direction'],
             "name"=>register.name,
             "pre_decimal_position"=>register.pre_decimal_position,
@@ -265,6 +290,7 @@ describe Admin::LocalpoolRoda do
               {
                 "id"=>register.id,
                 "type"=>"register_real",
+                'updated_at'=>register.updated_at.as_json,
                 "direction"=>register.attributes['direction'],
                 "name"=>register.name,
                 "pre_decimal_position"=>register.pre_decimal_position,

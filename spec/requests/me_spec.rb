@@ -26,6 +26,7 @@ describe MeRoda do
     {
       "id"=>person.id,
       "type"=>"person",
+      'updated_at'=>person.updated_at.as_json,
       "prefix"=>person.attributes['prefix'],
       "title"=>person.title,
       "first_name"=>person.first_name,
@@ -65,6 +66,8 @@ describe MeRoda do
     let(:wrong_json) do
       {
         "errors"=>[
+          {"parameter"=>"updated_at",
+           "detail"=>"is missing"},
           {"parameter"=>"title",
            "detail"=>"size cannot be greater than 64"},
           {"parameter"=>"prefix",
@@ -105,10 +108,23 @@ describe MeRoda do
       }
     end
 
+    let(:stale_json) do
+      {
+        "errors" => [
+          {"detail"=>"Person: #{person.id} was updated at: #{person.updated_at}"}]
+      }
+    end
+
     it '403' do
       PATCH ''
       expect(response).to have_http_status(403)
       expect(json).to eq denied_json
+    end
+
+    it '409' do
+      PATCH '', user_token, updated_at: DateTime.now
+      expect(response).to have_http_status(409)
+      expect(json).to eq stale_json
     end
 
     it '422 wrong' do
@@ -128,7 +144,9 @@ describe MeRoda do
     end
 
     it '200' do
+      old = person.updated_at
       PATCH '', user_token,
+            updated_at: person.updated_at,
             title: 'Master',
             prefix: 'M',
             first_name: 'Maxima',
@@ -151,7 +169,11 @@ describe MeRoda do
       expect(person.share_publicly).to eq true
       expect(person.preferred_language).to eq 'german'
 
-      expect(json.to_yaml).to eq updated_json.to_yaml
+      result = json
+      # TODO fix it: our time setup does not allow
+      #expect(result.delete('updated_at')).to be > old.as_json
+      expect(result.delete('updated_at')).not_to eq old.as_json
+      expect(result.to_yaml).to eq updated_json.to_yaml
     end
   end
 end

@@ -293,7 +293,7 @@ describe Admin::LocalpoolRoda do
         end
 
         let(:setup_readings) do
-          timestamp = Time.find_zone('Berlin').local(2016, 2, 1)
+          timestamp = Time.find_zone('UTC').local(2016, 2, 1)
           energy = 0
           40.times do |i|
             Fabricate(:reading,
@@ -353,8 +353,8 @@ describe Admin::LocalpoolRoda do
           {
             "units"=>"milliwatt",
             "resource_id"=> slp_register.id,
-            "in"=>[{"timestamp"=>1454284800.0, "value"=>930004.0},
-                   {"timestamp"=>1454286600.0, "value"=>930006.0}],
+            "in"=>[{"timestamp"=>1454288400.0, "value"=>930004.0},
+                   {"timestamp"=>1454290200.0, "value"=>930006.0}],
             "out"=>[]
           }
         end
@@ -362,9 +362,9 @@ describe Admin::LocalpoolRoda do
           {
             "units"=>"milliwatt",
             "resource_id"=> sep_register.id,
-            "out"=>[{"timestamp"=>1454282100.0, "value"=>930001.0},
-                    {"timestamp"=>1454283900.0, "value"=>930003.0},
-                    {"timestamp"=>1454285700.0, "value"=>930005.0}],
+            "out"=>[{"timestamp"=>1454285700.0, "value"=>930001.0},
+                    {"timestamp"=>1454287500.0, "value"=>930003.0},
+                    {"timestamp"=>1454289300.0, "value"=>930005.0}],
             "in"=>[]
           }
         end
@@ -372,30 +372,30 @@ describe Admin::LocalpoolRoda do
           {
             "units"=>"milliwatt",
             "resource_id"=> slp_register.id,
-            "in"=>[{"timestamp"=>1454281200.0, "value"=>930000.0},
-                   {"timestamp"=>1454283000.0, "value"=>930002.0},
-                   {"timestamp"=>1454284800.0, "value"=>930004.0},
-                   {"timestamp"=>1454286600.0, "value"=>930006.0},
-                   {"timestamp"=>1454288400.0, "value"=>930008.0},
-                   {"timestamp"=>1454290200.0, "value"=>930010.0},
-                   {"timestamp"=>1454292000.0, "value"=>930012.0},
-                   {"timestamp"=>1454293800.0, "value"=>930014.0},
-                   {"timestamp"=>1454295600.0, "value"=>930016.0},
-                   {"timestamp"=>1454297400.0, "value"=>930018.0},
-                   {"timestamp"=>1454299200.0, "value"=>930020.0},
-                   {"timestamp"=>1454301000.0, "value"=>930022.0},
-                   {"timestamp"=>1454302800.0, "value"=>930024.0},
-                   {"timestamp"=>1454304600.0, "value"=>930026.0},
-                   {"timestamp"=>1454306400.0, "value"=>930028.0},
-                   {"timestamp"=>1454308200.0, "value"=>930030.0},
-                   {"timestamp"=>1454310000.0, "value"=>930032.0},
-                   {"timestamp"=>1454311800.0, "value"=>930034.0},
-                   {"timestamp"=>1454313600.0, "value"=>930036.0},
-                   {"timestamp"=>1454315400.0, "value"=>930038.0},
-                   {"timestamp"=>1454317200.0, "value"=>930000.0},
-                   {"timestamp"=>1454324400.0, "value"=>930002.0},
-                   {"timestamp"=>1454331600.0, "value"=>930004.0},
-                   {"timestamp"=>1454335200.0, "value"=>930000.0}],
+            "in"=>[{"timestamp"=>1454284800.0, "value"=>930000.0},
+                   {"timestamp"=>1454286600.0, "value"=>930002.0},
+                   {"timestamp"=>1454288400.0, "value"=>930004.0},
+                   {"timestamp"=>1454290200.0, "value"=>930006.0},
+                   {"timestamp"=>1454292000.0, "value"=>930008.0},
+                   {"timestamp"=>1454293800.0, "value"=>930010.0},
+                   {"timestamp"=>1454295600.0, "value"=>930012.0},
+                   {"timestamp"=>1454297400.0, "value"=>930014.0},
+                   {"timestamp"=>1454299200.0, "value"=>930016.0},
+                   {"timestamp"=>1454301000.0, "value"=>930018.0},
+                   {"timestamp"=>1454302800.0, "value"=>930020.0},
+                   {"timestamp"=>1454304600.0, "value"=>930022.0},
+                   {"timestamp"=>1454306400.0, "value"=>930024.0},
+                   {"timestamp"=>1454308200.0, "value"=>930026.0},
+                   {"timestamp"=>1454310000.0, "value"=>930028.0},
+                   {"timestamp"=>1454311800.0, "value"=>930030.0},
+                   {"timestamp"=>1454313600.0, "value"=>930032.0},
+                   {"timestamp"=>1454315400.0, "value"=>930034.0},
+                   {"timestamp"=>1454317200.0, "value"=>930036.0},
+                   {"timestamp"=>1454319000.0, "value"=>930038.0},
+                   {"timestamp"=>1454320800.0, "value"=>930000.0},
+                   {"timestamp"=>1454328000.0, "value"=>930002.0},
+                   {"timestamp"=>1454335200.0, "value"=>930004.0},
+                   {"timestamp"=>1454338800.0, "value"=>930000.0}],
             "out"=>[]
           }
         end
@@ -403,7 +403,7 @@ describe Admin::LocalpoolRoda do
           {
             "units"=>"milliwatt_hour",
             "resource_id"=> sep_register.id,
-            "out"=>[{"timestamp"=>1454282100.0, "value"=>4800000.0}],
+            "out"=>[{"timestamp"=>1454285700.0, "value"=>4800000.0}],
             "in"=>[]
           }
         end
@@ -411,7 +411,7 @@ describe Admin::LocalpoolRoda do
           {
             "units"=>"milliwatt_hour",
             "resource_id"=> slp_register.id,
-            "in"=>[{"timestamp"=>1454281200.0, "value"=>7200000.0}],
+            "in"=>[{"timestamp"=>1454284800.0, "value"=>7200000.0}],
             "out"=>[]
           }
         end
@@ -419,6 +419,7 @@ describe Admin::LocalpoolRoda do
         it '200 standard profile' do
           Reading.all.delete_all
           setup_readings
+          time = Time.find_zone('UTC').local(2016, 2, 1, 1, 30, 1)
           begin
             Timecop.freeze(time)
 

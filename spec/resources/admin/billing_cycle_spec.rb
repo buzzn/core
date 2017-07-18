@@ -20,8 +20,8 @@ describe Admin::BillingCycleResource do
   entity(:admin) { Fabricate(:admin) }
 
   entity(:base_attributes) { [ 'name',
-                            'begin_date',
-                            'end_date' ] }
+                               'begin_date',
+                               'end_date' ] }
 
   let(:billing_cycles) do
     Admin::LocalpoolResource.all(admin).retrieve(localpool.id).billing_cycles

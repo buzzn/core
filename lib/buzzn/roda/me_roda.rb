@@ -7,7 +7,7 @@ class MeRoda < BaseRoda
   route do |r|
 
     if current_user.nil?
-      raise Buzzn::PermissionDenied.create(Person, :retrieve, nil)
+      raise Buzzn::PermissionDenied.new(Person, :retrieve, nil)
     end
 
     person = PersonResource.all(current_user, ContractingPartyPersonResource)

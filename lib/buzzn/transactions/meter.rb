@@ -1,6 +1,7 @@
 require_relative 'resource'
 Buzzn::Transaction.define do |t|
   t.register_validation(:update_real_meter_schema) do
+    required(:updated_at).filled(:date_time?)
     optional(:manufacturer_name)
       .value(included_in?: Meter::Real::MANUFACTURER_NAMES)
     optional(:product_name).filled(:str?, max_size?: 64)
@@ -23,6 +24,7 @@ Buzzn::Transaction.define do |t|
   end
 
   t.register_validation(:update_virtual_meter_schema) do
+    required(:updated_at).filled(:date_time?)
     optional(:product_name).filled(:str?, max_size?: 64)
     optional(:product_serialnumber).filled(:str?, max_size?: 64)
     optional(:ownership).value(included_in?: Meter::Base::OWNERSHIPS)

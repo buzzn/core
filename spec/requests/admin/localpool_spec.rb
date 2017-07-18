@@ -53,6 +53,7 @@ describe Admin::LocalpoolRoda do
       {
         "id"=>localpool.id,
         "type"=>"group_localpool",
+        'updated_at'=>localpool.updated_at.as_json,
         "name"=>localpool.name,
         "description"=>localpool.description,
         "slug"=>localpool.slug,
@@ -66,6 +67,7 @@ describe Admin::LocalpoolRoda do
     {
       "id"=>localpool_no_contracts.id,
       "type"=>"group_localpool",
+      'updated_at'=>localpool_no_contracts.updated_at.as_json,
       "name"=>localpool_no_contracts.name,
       "slug"=>localpool_no_contracts.slug,
       "description"=>localpool_no_contracts.description,
@@ -76,6 +78,7 @@ describe Admin::LocalpoolRoda do
           {
             "id"=>meter.id,
             "type"=>"meter_virtual",
+            'updated_at'=>meter.updated_at.as_json,
             "product_name"=>meter.product_name,
             "product_serialnumber"=>meter.product_serialnumber,
             'ownership'=>nil,
@@ -136,6 +139,7 @@ describe Admin::LocalpoolRoda do
       {
         "id"=>contract.id,
         "type"=>"contract_localpool_processing",
+        'updated_at'=>contract.updated_at.as_json,
         "status"=>"waiting_for_approval",
         "full_contract_number"=>"#{contract.contract_number}/#{contract.contract_number_addition}",
         "customer_number"=>contract.customer_number,
@@ -153,6 +157,7 @@ describe Admin::LocalpoolRoda do
             {
               "id"=>t.id,
               "type"=>'contract_tariff',
+              'updated_at'=>nil,
               "name"=>t.name,
               "begin_date"=>t.begin_date.to_s,
               "end_date"=>nil,
@@ -166,6 +171,7 @@ describe Admin::LocalpoolRoda do
             {
               "id"=>p.id,
               "type"=>'contract_payment',
+              'updated_at'=>nil,
               "begin_date"=>p.begin_date.to_s,
               "end_date"=>nil,
               "price_cents"=>p.price_cents,
@@ -177,6 +183,7 @@ describe Admin::LocalpoolRoda do
         "contractor"=>{
           "id"=>contract.contractor.id,
           "type"=>"organization",
+          'updated_at'=>contract.contractor.updated_at.as_json,
           "name"=>contract.contractor.name,
           "phone"=>contract.contractor.phone,
           "fax"=>contract.contractor.fax,
@@ -190,6 +197,7 @@ describe Admin::LocalpoolRoda do
         "customer"=>{
           "id"=>contract.customer.id,
           "type"=>"person",
+          'updated_at'=>contract.customer.updated_at.as_json,
           "prefix"=>contract.customer.attributes['prefix'],
           "title"=>contract.customer.title,
           "first_name"=>contract.customer.first_name,
@@ -207,6 +215,7 @@ describe Admin::LocalpoolRoda do
         "customer_bank_account"=>{
           "id"=>contract.customer_bank_account.id,
           "type"=>"bank_account",
+          'updated_at'=>contract.customer_bank_account.updated_at.as_json,
           "holder"=>contract.customer_bank_account.holder,
           "bank_name"=>contract.customer_bank_account.bank_name,
           "bic"=>contract.customer_bank_account.bic,
@@ -216,6 +225,7 @@ describe Admin::LocalpoolRoda do
         "contractor_bank_account"=>{
           "id"=>contract.contractor_bank_account.id,
           "type"=>"bank_account",
+          'updated_at'=>contract.contractor_bank_account.updated_at.as_json,
           "holder"=>contract.contractor_bank_account.holder,
           "bank_name"=>contract.contractor_bank_account.bank_name,
           "bic"=>contract.contractor_bank_account.bic,
@@ -275,6 +285,7 @@ describe Admin::LocalpoolRoda do
       {
         "id"=>contract.id,
         "type"=>"contract_metering_point_operator",
+        'updated_at'=>contract.updated_at.as_json,
         "status"=>"waiting_for_approval",
         "full_contract_number"=>"#{contract.contract_number}/#{contract.contract_number_addition}",
         "customer_number"=>contract.customer_number,
@@ -291,6 +302,7 @@ describe Admin::LocalpoolRoda do
         "contractor"=>{
           "id"=>contract.contractor.id,
           "type"=>"organization",
+          'updated_at'=>contract.contractor.updated_at.as_json,
           "name"=>contract.contractor.name,
           "phone"=>contract.contractor.phone,
           "fax"=>contract.contractor.fax,
@@ -304,6 +316,7 @@ describe Admin::LocalpoolRoda do
         "customer"=>{
           "id"=>contract.customer.id,
           "type"=>"person",
+          'updated_at'=>contract.customer.updated_at.as_json,
           "prefix"=>contract.customer.attributes['prefix'],
           "title"=>contract.customer.title,
           "first_name"=>contract.customer.first_name,
@@ -321,6 +334,7 @@ describe Admin::LocalpoolRoda do
         "customer_bank_account"=>{
           "id"=>contract.customer_bank_account.id,
           "type"=>"bank_account",
+          'updated_at'=>contract.customer_bank_account.updated_at.as_json,
           "holder"=>contract.customer_bank_account.holder,
           "bank_name"=>contract.customer_bank_account.bank_name,
           "bic"=>contract.customer_bank_account.bic,
@@ -330,6 +344,7 @@ describe Admin::LocalpoolRoda do
         "contractor_bank_account"=>{
           "id"=>contract.contractor_bank_account.id,
           "type"=>"bank_account",
+          'updated_at'=>contract.contractor_bank_account.updated_at.as_json,
           "holder"=>contract.contractor_bank_account.holder,
           "bank_name"=>contract.contractor_bank_account.bank_name,
           "bic"=>contract.contractor_bank_account.bic,
@@ -392,6 +407,7 @@ describe Admin::LocalpoolRoda do
         {
           "id"=>contract.id,
           "type"=>"contract_localpool_power_taker",
+          'updated_at'=>contract.updated_at.as_json,
           "status"=>"waiting_for_approval",
           "full_contract_number"=>"#{contract.contract_number}/#{contract.contract_number_addition}",
           "customer_number"=>contract.customer_number,
@@ -427,6 +443,7 @@ describe Admin::LocalpoolRoda do
           {
             "id"=>manager.id,
             "type"=>"user",
+            'updated_at'=>manager.updated_at.as_json,
             "user_name"=>manager.user_name,
             "title"=>nil,
             "first_name"=>manager.profile.first_name,

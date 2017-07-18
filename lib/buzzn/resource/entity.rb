@@ -18,8 +18,16 @@ module Buzzn::Resource
       end
     end
 
+    def check_staleness(params)
+      # we deliver only millis to client and have to nil the nanos
+      if (object.updated_at.to_f * 1000).to_i != params.delete(:updated_at).to_f * 1000
+        raise Buzzn::StaleEntity.new(object)
+      end
+    end
+
     def update(params)
       if permissions.respond_to?(:update) && allowed?(permissions.update)
+        check_staleness(params)
         object.update!(params)
         self
       else
@@ -71,6 +79,6 @@ module Buzzn::Resource
       self.class.model.to_s.gsub(/::/, '').underscore
     end
 
-    attribute :id, :type
+    attribute :id, :type, :updated_at
   end
 end

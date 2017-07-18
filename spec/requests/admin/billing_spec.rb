@@ -27,6 +27,7 @@ describe Admin::LocalpoolRoda do
           {
             "id"=>billing.id,
             "type"=>"billing",
+            'updated_at'=>billing.updated_at.as_json,
             "start_reading_id"=>billing.start_reading_id,
             "end_reading_id"=>billing.end_reading_id,
             "device_change_reading_1_id"=>nil,
@@ -72,22 +73,10 @@ describe Admin::LocalpoolRoda do
 
     context 'POST' do
 
-      let(:missing_json) do
-        {
-          "errors"=>[
-            {
-              "parameter"=>"accounting_year", "detail"=>"is missing"
-            }
-          ]
-        }
-      end
-
       let(:wrong_json) do
         {
           "errors"=>[
-            {
-              "parameter"=>"accounting_year", "detail"=>"must be an integer"
-            }
+            {"parameter"=>"accounting_year", "detail"=>"must be an integer"}
           ]
         }
       end
@@ -97,6 +86,7 @@ describe Admin::LocalpoolRoda do
           {
             "id"=>billing.id,
             "type"=>"billing",
+            'updated_at'=>billing.updated_at.as_json,
             "start_reading_id"=>billing.start_reading_id,
             "end_reading_id"=>billing.end_reading_id,
             "device_change_reading_1_id"=>nil,
@@ -115,12 +105,6 @@ describe Admin::LocalpoolRoda do
 
       it '403' do
         # TODO needs read perms on billing-cycles but no create perms on billings
-      end
-
-      it '422 missing' do
-        POST "/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/regular", admin
-        expect(response).to have_http_status(422)
-        expect(json.to_yaml).to eq missing_json.to_yaml
       end
 
       it '422 wrong' do
@@ -145,7 +129,7 @@ describe Admin::LocalpoolRoda do
 
     context 'PATCH' do
       
-      entity :update_json do
+      entity :updated_json do
         {
           "id"=>billing.id,
           "type"=>"billing",
@@ -167,30 +151,49 @@ describe Admin::LocalpoolRoda do
       let(:wrong_json) do
         {
           "errors"=>[
-            {"parameter"=>"receivables_cents", "detail"=>"must be an integer"},
-            {"parameter"=>"status", "detail"=>"must be one of: open, calculated, delivered, settled, closed"}
+            {"parameter"=>"updated_at",
+             "detail"=>"is missing"},
+            {"parameter"=>"receivables_cents",
+             "detail"=>"must be an integer"},
+            {"parameter"=>"invoice_number",
+             "detail"=>"size cannot be greater than 64"},
+            {"parameter"=>"status",
+             "detail"=>"must be one of: open, calculated, delivered, settled, closed"}
           ]
         }
       end
 
-      it '403' do
-        # TODO needs read perms on billing-cycles but no delete perms on billings
+      let(:stale_json) do
+        {
+          "errors" => [
+            {"detail"=>"Billing: #{billing.id} was updated at: #{billing.updated_at}"}]
+        }
+      end
+
+      it '409' do
+        PATCH "/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", admin, updated_at: DateTime.now
+        expect(response).to have_http_status(409)
+        expect(json).to eq stale_json
       end
 
       it '422 wrong' do
-        # TODO missing length constraints on invoice_number
         PATCH "/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", admin, status: 'bla', receivables_cents: 'something', invoice_number: 'the-number-of-the-???' * 20
         expect(response).to have_http_status(422)
-        expect(json).to eq wrong_json
+        expect(json.to_yaml).to eq wrong_json.to_yaml
       end
 
       it '200' do
-        old = billing.invoice_number
-        PATCH "/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", admin, invoice_number: '123-abc'
+        old = billing_cycle.updated_at
+        PATCH "/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", admin, updated_at: billing.updated_at, invoice_number: '123-abc'
         expect(response).to have_http_status(200)
-        expect(json).to eq update_json
-        expect(billing.reload.invoice_number).to eq '123-abc'
-        billing.update(invoice_number: old)
+        billing.reload
+        expect(billing.invoice_number).to eq '123-abc'
+
+        result = json
+        # TODO fix it: our time setup does not allow
+        #expect(result.delete('updated_at')).to be > old.as_json
+        expect(result.delete('updated_at')).not_to eq old.as_json
+        expect(result.to_yaml).to eq updated_json.to_yaml
       end
 
     end

@@ -50,6 +50,7 @@ describe Admin::LocalpoolRoda do
       {
         "id"=>person.id,
         "type"=>"person",
+        'updated_at'=>person.updated_at.as_json,
         "prefix"=>person.attributes['prefix'],
         "title"=>person.title,
         "first_name"=>person.first_name,
@@ -68,6 +69,7 @@ describe Admin::LocalpoolRoda do
             {
               "id"=>bank_account.id,
               "type"=>"bank_account",
+              'updated_at'=>bank_account.updated_at.as_json,
               "holder"=>bank_account.holder,
               "bank_name"=>bank_account.bank_name,
               "bic"=>bank_account.bic,
@@ -84,6 +86,7 @@ describe Admin::LocalpoolRoda do
         {
           "id"=>person.id,
           "type"=>"person",
+          'updated_at'=>person.updated_at.as_json,
           "prefix"=>person.attributes['prefix'],
           "title"=>person.title,
           "first_name"=>person.first_name,
@@ -102,6 +105,7 @@ describe Admin::LocalpoolRoda do
               {
                 "id"=>bank_account.id,
                 "type"=>"bank_account",
+                'updated_at'=>bank_account.updated_at.as_json,
                 "holder"=>bank_account.holder,
                 "bank_name"=>bank_account.bank_name,
                 "bic"=>bank_account.bic,
@@ -119,6 +123,7 @@ describe Admin::LocalpoolRoda do
         {
           "id"=>person.id,
           "type"=>"person",
+          'updated_at'=>person.updated_at.as_json,
           "prefix"=>person.attributes['prefix'],
           "title"=>person.title,
           "first_name"=>person.first_name,
@@ -137,6 +142,7 @@ describe Admin::LocalpoolRoda do
               {
                 "id"=>bank_account.id,
                 "type"=>"bank_account",
+                'updated_at'=>bank_account.updated_at.as_json,
                 "holder"=>bank_account.holder,
                 "bank_name"=>bank_account.bank_name,
                 "bic"=>bank_account.bic,
@@ -154,6 +160,7 @@ describe Admin::LocalpoolRoda do
         {
           "id"=>person.id,
           "type"=>"person",
+          'updated_at'=>person.updated_at.as_json,
           "prefix"=>person.attributes['prefix'],
           "title"=>person.title,
           "first_name"=>person.first_name,
@@ -172,6 +179,7 @@ describe Admin::LocalpoolRoda do
               {
                 "id"=>bank_account.id,
                 "type"=>"bank_account",
+                'updated_at'=>bank_account.updated_at.as_json,
                 "holder"=>bank_account.holder,
                 "bank_name"=>bank_account.bank_name,
                 "bic"=>bank_account.bic,

@@ -14,6 +14,7 @@ Buzzn::Transaction.define do |t|
   end
 
   t.register_validation(:update_person_schema) do
+    required(:updated_at).filled(:date_time?)
     optional(:title).filled(:str?, max_size?: 64)
     optional(:prefix).value(included_in?: Person::PREFIXES)
     optional(:first_name).filled(:str?, max_size?: 64)

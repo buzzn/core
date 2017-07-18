@@ -8,5 +8,7 @@ module Contract
                 :price_cents,
                 :cycle,
                 :source
+
+    def updated_at; nil; end
   end
 end

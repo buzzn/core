@@ -38,6 +38,7 @@ describe Display::GroupRoda do
       {
         "id"=>group.id,
         "type"=>"group_localpool",
+        'updated_at'=>group.updated_at.as_json,
         "name"=>group.name,
         "slug"=>group.slug,
         "description"=>group.description,
@@ -46,6 +47,7 @@ describe Display::GroupRoda do
             {
               "id"=>manager.id,
               "type"=>"user",
+              'updated_at'=>manager.updated_at.as_json,
               "title"=>manager.profile.title,
               "first_name"=>manager.first_name,
               "last_name"=>manager.last_name,
@@ -66,6 +68,7 @@ describe Display::GroupRoda do
         json = {
           "id"=>group.id,
           "type"=>"group_#{type}",
+          'updated_at'=>group.updated_at.as_json,
           "name"=>group.name,
           "slug"=>group.slug,
           "description"=>group.description,
@@ -74,6 +77,7 @@ describe Display::GroupRoda do
               {
                 "id"=>manager.id,
                 "type"=>"user",
+                'updated_at'=>manager.updated_at.as_json,
                 "title"=>manager.profile.title,
                 "first_name"=>manager.first_name,
                 "last_name"=>manager.last_name,
@@ -146,6 +150,7 @@ describe Display::GroupRoda do
           {
             "id"=>mentor.id,
             "type"=>"user",
+            'updated_at'=>mentor.updated_at.as_json,
             "title"=>nil,
             "first_name"=>mentor.profile.first_name,
             "last_name"=>mentor.profile.last_name,

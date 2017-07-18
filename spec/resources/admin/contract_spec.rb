@@ -23,6 +23,7 @@ describe Contract::BaseResource do
                            'signing_date',
                            'cancellation_date',
                            'end_date',
+                           'updated_at',
                            'updatable',
                            'deletable'] }
   let!(:all) { [metering_point_operator, localpool_processing, localpool_power_taker] }

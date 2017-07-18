@@ -53,6 +53,7 @@ describe Display::GroupRoda do
         {
           "id"=>real_register.id,
           "type"=>"register_real",
+          'updated_at'=>real_register.updated_at.as_json,
           "direction"=>real_register.attributes['direction'],
           "name"=>real_register.name,
           "label"=>real_register.attributes['label'],
@@ -64,6 +65,7 @@ describe Display::GroupRoda do
         {
           "id"=>virtual_register.id,
           "type"=>"register_virtual",
+          'updated_at'=>virtual_register.updated_at.as_json,
           "direction"=>virtual_register.attributes['direction'],
           "name"=>virtual_register.name,
           "label"=>virtual_register.attributes['label'],

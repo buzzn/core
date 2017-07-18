@@ -86,7 +86,7 @@ describe Admin::LocalpoolResource do
     expect(attrs['id']).to eq localpool.id
     expect(attrs['type']).to eq 'group_localpool'
     expect(attrs.keys & base_attributes).to match_array base_attributes
-    expect(attrs.keys.size).to eq (base_attributes.size + 2)
+    expect(attrs.keys.size).to eq (base_attributes.size + 3)
   end
 
   context 'prices' do
@@ -98,6 +98,7 @@ describe Admin::LocalpoolResource do
                     'begin_date',
                     'id',
                     'type',
+                    'updated_at',
                     'updatable',
                     'deletable']
       Fabricate(:price, localpool: localpool)
@@ -142,7 +143,8 @@ describe Admin::LocalpoolResource do
                     'begin_date',
                     'end_date',
                     'id',
-                    'type']
+                    'type',
+                    'updated_at']
 
       result = resources.retrieve(localpool.id).billing_cycles
       expect(result.size).to eq size + 2

@@ -5,6 +5,7 @@ module Buzzn
       ERRORS = {
         Buzzn::RecordNotFound => 404,
         Buzzn::PermissionDenied => 403,
+        Buzzn::StaleEntity => 409,
         Buzzn::ValidationError => 422
       }
 
@@ -24,7 +25,7 @@ module Buzzn
               end
             end
             errors = "{\"errors\":[#{errs.join(',')}]}"
-          when Buzzn::PermissionDenied, Buzzn::RecordNotFound 
+          when Buzzn::PermissionDenied, Buzzn::RecordNotFound, Buzzn::StaleEntity
             errors = "{\"errors\":[{\"detail\":\"#{e.message}\"}]}"
           else
             errors = "{\"errors\":[{\"detail\":\"internal server error\"}]}"

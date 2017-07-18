@@ -1,9 +1,10 @@
 require_relative 'resource'
 Buzzn::Transaction.define do |t|
   t.register_validation(:update_real_register_schema) do
+    required(:updated_at).filled(:date_time?)
     optional(:metering_point_id).filled(:str?, max_size?: 32)
     optional(:name).filled(:str?, max_size?: 64)
-    required(:label).value(included_in?: Register::Base::LABELS)
+    optional(:label).value(included_in?: Register::Base::LABELS)
     optional(:pre_decimal_position).filled(:int?, gteq?: 0)
     optional(:post_decimal_position).filled(:int?, gteq?: 0)
     optional(:low_load_ability).filled(:bool?)
@@ -21,6 +22,7 @@ Buzzn::Transaction.define do |t|
   end
 
   t.register_validation(:update_virtual_register_schema) do
+    required(:updated_at).filled(:date_time?)
   end
 
   t.define(:update_real_register) do

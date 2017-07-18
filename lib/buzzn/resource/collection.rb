@@ -46,7 +46,7 @@ module Buzzn::Resource
         if clazz && clazz.where(*args).size > 0
           raise Buzzn::PermissionDenied.new(clazz.where(*args).first, :retrieve, @current_user)
         else
-          raise Buzzn::RecordNotFound.create(clazz, id, @current_user)
+          raise Buzzn::RecordNotFound.new(clazz, id, @current_user)
         end
       end
     end

@@ -56,6 +56,7 @@ paths:
         required: true
         type: string
         format: ''
+        maxLength: 64
       - name: begin_date
         in: formData
         required: true
@@ -117,11 +118,17 @@ paths:
         in: path
         required: true
         type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
       - name: name
         in: formData
         required: false
         type: string
         format: ''
+        maxLength: 64
       - name: begin_date
         in: formData
         required: false
@@ -236,6 +243,11 @@ paths:
         in: path
         required: true
         type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
       - name: receivables_cents
         in: formData
         required: false
@@ -246,6 +258,7 @@ paths:
         required: false
         type: string
         format: ''
+        maxLength: 64
       - name: status
         in: formData
         required: false
@@ -488,6 +501,11 @@ paths:
         in: path
         required: true
         type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
       - name: manufacturer_name
         in: formData
         required: false
@@ -647,6 +665,11 @@ paths:
         in: path
         required: true
         type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
       - name: metering_point_id
         in: formData
         required: false
@@ -661,7 +684,7 @@ paths:
         maxLength: 64
       - name: label
         in: formData
-        required: true
+        required: false
         type: string
         enum:
         - CONSUMPTION
@@ -729,6 +752,11 @@ paths:
         in: path
         required: true
         type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
       - name: product_name
         in: formData
         required: false
@@ -855,6 +883,8 @@ paths:
   "/localpools/{localpool_id}/meters/{virtual_meter_id}/registers/{virtual_register_id}":
     patch:
       description: update the virtual register of a meter for the given IDs
+      consumes:
+      - application/x-www-form-urlencoded
       produces:
       - application/json
       parameters:
@@ -870,6 +900,11 @@ paths:
         in: path
         required: true
         type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
       responses:
         200:
           description: patched
@@ -980,6 +1015,11 @@ paths:
         in: path
         required: true
         type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
       - name: bank_name
         in: formData
         required: false
@@ -996,8 +1036,7 @@ paths:
         in: formData
         required: false
         type: string
-        format: ''
-        maxLength: 32
+        format: iban
       responses:
         200:
           description: patched
@@ -1108,6 +1147,11 @@ paths:
         in: path
         required: true
         type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
       - name: bank_name
         in: formData
         required: false
@@ -1124,8 +1168,7 @@ paths:
         in: formData
         required: false
         type: string
-        format: ''
-        maxLength: 32
+        format: iban
       responses:
         200:
           description: patched
@@ -1221,6 +1264,11 @@ paths:
         in: path
         required: true
         type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
       - name: name
         in: formData
         required: false

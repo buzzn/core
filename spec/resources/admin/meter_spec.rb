@@ -18,6 +18,7 @@ describe Meter::BaseResource do
 
   let(:base_keys) { ['id',
                      'type',
+                     'updated_at',
                      'product_name',
                      'product_serialnumber',
                      'edifact_metering_type',
