@@ -10,8 +10,6 @@ class PersonResource < Buzzn::Resource::Entity
               :phone,
               :fax,
               :email,
-              :share_with_group,
-              :share_publicly,
               :preferred_language,
               :image
 
@@ -20,7 +18,6 @@ class PersonResource < Buzzn::Resource::Entity
   has_many :bank_accounts
 
   def image
-    # TODO move image to person
     user = User.where(person: object).first
     user.image.md.url if user
   end

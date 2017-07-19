@@ -8,8 +8,6 @@ Buzzn::Transaction.define do |t|
     required(:email).filled(:str?, :email?, max_size?: 64)
     optional(:phone).filled(:str?, :phone_number?, max_size?: 64)
     optional(:fax).filled(:str?, :phone_number?, max_size?: 64)
-    required(:share_with_group).filled(:bool?)
-    required(:share_publicly).filled(:bool?)
     required(:preferred_language).value(included_in?: Person::PREFERRED_LANGUAGES)   
   end
 
@@ -21,8 +19,6 @@ Buzzn::Transaction.define do |t|
     optional(:last_name).filled(:str?, max_size?: 64)
     optional(:phone).filled(:str?, :phone_number?, max_size?: 64)
     optional(:fax).filled(:str?, :phone_number?, max_size?: 64)
-    optional(:share_with_group).filled(:bool?)
-    optional(:share_publicly).filled(:bool?)
     optional(:preferred_language).value(included_in?: Person::PREFERRED_LANGUAGES)   
   end
 

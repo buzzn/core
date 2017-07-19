@@ -34,8 +34,6 @@ describe MeRoda do
       "phone"=>person.phone,
       "fax"=>person.fax,
       "email"=>person.email,
-      "share_with_group"=>person.share_with_group,
-      "share_publicly"=>person.share_publicly,
       'preferred_language'=>person.attributes['preferred_language'],
       "image"=>User.where(person: person).first.image.md.url,
       "updatable"=>true,
@@ -78,8 +76,6 @@ describe MeRoda do
            "detail"=>"size cannot be greater than 64"},
           {"parameter"=>"phone", "detail"=>"size cannot be greater than 64"},
           {"parameter"=>"fax", "detail"=>"size cannot be greater than 64"},
-          {"parameter"=>"share_with_group", "detail"=>"must be boolean"},
-          {"parameter"=>"share_publicly", "detail"=>"must be boolean"},
           {"parameter"=>"preferred_language", "detail"=>"must be one of: de, en"}
         ]
       }
@@ -96,8 +92,6 @@ describe MeRoda do
         "phone"=>"080 123312",
         "fax"=>"08191 123312",
         "email"=>person.email,
-        "share_with_group"=>false,
-        "share_publicly"=>true,
         "preferred_language"=>"de",
         "image"=>User.where(person: person).first.image.md.url,
         "updatable"=>true,
@@ -135,8 +129,6 @@ describe MeRoda do
             last_name: 'Toll' * 40,
             phone: '123312' * 40,
             fax: '123312' * 40,
-            share_with_group: 'dunno',
-            share_publicly: 'dunno',
             preferred_language: 'none'
 
       expect(response).to have_http_status(422)
@@ -153,8 +145,6 @@ describe MeRoda do
             last_name: 'Toll',
             phone: '080 123312',
             fax: '08191 123312',
-            share_with_group: false,
-            share_publicly: true,
             preferred_language: 'de'
 
       expect(response).to have_http_status(200)
@@ -165,8 +155,6 @@ describe MeRoda do
       expect(person.last_name).to eq 'Toll'
       expect(person.phone).to eq '080 123312'
       expect(person.fax).to eq '08191 123312'
-      expect(person.share_with_group).to eq false
-      expect(person.share_publicly).to eq true
       expect(person.preferred_language).to eq 'german'
 
       result = json
