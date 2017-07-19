@@ -3,10 +3,10 @@ module Buzzn
   class ScoreCalculator
     include Import.reader['service.charts']
 
-    def initialize(group, containing_timestamp)
+    def initialize(group, containing)
       @group                = group
-      @containing_timestamp = containing_timestamp
-      @containing           = Time.at(containing_timestamp).in_time_zone
+      @containing_timestamp = containing.to_i
+      @containing           = containing
       @now                  = Time.current
     end
 
@@ -143,11 +143,38 @@ module Buzzn
       create_closeness_score(year_interval, yearly_score / count_yearly)
     end
 
+    def extrapolate_kwh_pa(kwh_ago, resolution)
+      days_ago = 0.0
+      case resolution
+      when 'year'
+        if @containing.end_of_year < Time.current
+          days_ago = 365.0
+        else
+          days_ago = ((Time.current - Time.current.beginning_of_year)/(3600*24.0)).to_i
+        end
+      when 'month'
+        if @containing.end_of_month < Time.current
+          days_ago = @containing.days_in_month
+        else
+          days_ago = Time.current.day
+        end
+      when 'day'
+        if @containing.end_of_day < Time.current
+          days_ago = 1.0
+        else
+          days_ago = (Time.current - Time.current.beginning_of_day)/(3600*24.0)
+        end
+      else
+        raise "unknown resolution #{resolution}"
+      end
+      return kwh_ago / (days_ago) * 365.0
+    end
+
     def calculate_sufficiency_scores
       count_sn_in_group = @group.registers.real.input.size
       data_in
       if count_sn_in_group != 0
-        sufficiency = @group.extrapolate_kwh_pa(sum_in/4000000.0, 'day', @containing_timestamp) / count_sn_in_group
+        sufficiency = extrapolate_kwh_pa(sum_in/4000000.0, 'day') / count_sn_in_group
       else
         sufficiency = 0
       end
@@ -294,19 +321,28 @@ module Buzzn
     end
 
     def interval(resolution)
-      @group.get_score_interval(resolution, @containing_timestamp)
+      case resolution
+      when :year
+        ['year', @containing.beginning_of_year, @containing.end_of_year]
+      when :month
+        ['month', @containing.beginning_of_month, @containing.end_of_month]
+      when :day
+        ['day', @containing.beginning_of_day, @containing.end_of_day]
+      else
+        raise "unknown resolution #{resolution}"
+      end
     end
 
     def day_interval
-      @day_interval ||= interval('day')
+      @day_interval ||= interval(:day)
     end
 
     def month_interval
-      @month_interval ||= interval('month')
+      @month_interval ||= interval(:month)
     end
 
     def year_interval
-      @year_interval ||= interval('year')
+      @year_interval ||= interval(:year)
     end
 
     def create_score(mode, interval_information, value)

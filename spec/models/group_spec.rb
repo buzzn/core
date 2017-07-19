@@ -26,12 +26,6 @@ describe "Group Model" do
     expect(groups.size).to eq Group::Base.count
   end
 
-  it 'calculates scores' do
-    tribe.calculate_scores(Time.find_zone('Berlin').local(2016,2,2, 1,30,1))
-
-    expect(Score.count).to eq 12
-  end
-
   it 'calculates scores of all groups via sidekiq' do
     expect {
       Group::Base.calculate_scores

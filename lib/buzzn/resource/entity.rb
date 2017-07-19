@@ -20,7 +20,7 @@ module Buzzn::Resource
 
     def check_staleness(params)
       # we deliver only millis to client and have to nil the nanos
-      if (object.updated_at.to_f * 1000).to_i != params.delete(:updated_at).to_f * 1000
+      if (object.updated_at.to_f * 1000).to_i != (params.delete(:updated_at).to_f * 1000).to_i
         raise Buzzn::StaleEntity.new(object)
       end
     end

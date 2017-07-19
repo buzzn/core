@@ -34,7 +34,8 @@ describe PersonPermissions do
 
       it 'update' do
         if user != :anonymous
-          expect { all.retrieve(send(user).person.id).update({}) }.not_to raise_error
+          person = all.retrieve(send(user).person.id)
+          expect { person.update(updated_at: person.object.updated_at) }.not_to raise_error
         end
       end
     

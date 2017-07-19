@@ -185,10 +185,10 @@ module Register
       # last readings are in milliwatt
       power = last_reading.value / 1000.0
 
-      if Time.current.utc.to_i - last_reading.timestamp.to_i >= 5.minutes
+      if Time.new.to_i - last_reading.timestamp.to_i >= 5.minutes
         if observer_offline_monitoring
           puts 'here'
-          if Time.current.utc.to_i - last_reading.timestamp.to_i < 10.minutes
+          if Time.new.to_i - last_reading.timestamp.to_i < 10.minutes
             OFFLINE
           else
             NONE

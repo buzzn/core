@@ -4,7 +4,7 @@ describe Buzzn::ScoreCalculator do
   let(:now) { Time.find_zone('Berlin').local(2016,2,2, 1,30,1) }
 
   subject do
-    Buzzn::ScoreCalculator.new(group, now.to_i)
+    Buzzn::ScoreCalculator.new(group, now)
   end
 
   before do
@@ -105,7 +105,7 @@ describe Buzzn::ScoreCalculator do
     end
 
     subject do
-      Buzzn::ScoreCalculator.new(group2, now.to_i)
+      Buzzn::ScoreCalculator.new(group2, now)
     end
 
     before do
@@ -180,7 +180,7 @@ describe Buzzn::ScoreCalculator do
     end
 
     subject do
-      Buzzn::ScoreCalculator.new(group3, now.to_i)
+      Buzzn::ScoreCalculator.new(group3, now)
     end
     it 'calculates autarchy' do |spec|
       VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do

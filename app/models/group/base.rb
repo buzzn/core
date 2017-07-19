@@ -63,12 +63,6 @@ module Group
       registers.output
     end
 
-    def calculate_total_energy_data(data, operators, resolution)
-      calculate_virtual_register(data, operators, resolution)
-    end
-
-
-
     def energy_generator_type
       all_labels = output_registers.collect(&:label).uniq
       if all_labels.include?(Register::Base::PRODUCTION_CHP) && all_labels.include?(Register::Base::PRODUCTION_PV)
@@ -80,56 +74,12 @@ module Group
       end
     end
 
-    def self.score_interval(resolution_format, containing_timestamp)
-      if resolution_format == 'year_to_minutes' || resolution_format == 'year'
-        return ['year', Time.at(containing_timestamp).in_time_zone.beginning_of_year, Time.at(containing_timestamp).in_time_zone.end_of_year]
-      elsif resolution_format == 'month_to_minutes' || resolution_format == 'month'
-        return ['month', Time.at(containing_timestamp).in_time_zone.beginning_of_month, Time.at(containing_timestamp).in_time_zone.end_of_month]
-      elsif resolution_format == 'day_to_minutes' || resolution_format == 'day'
-        return ['day', Time.at(containing_timestamp).in_time_zone.beginning_of_day, Time.at(containing_timestamp).in_time_zone.end_of_day]
-      end
-    end
-
-    def set_score_interval(resolution_format, containing_timestamp)
-      self.class.score_interval(resolution_format, containing_timestamp)
-    end
-    alias :get_score_interval :set_score_interval
-    alias :score_interval :set_score_interval
-
-    def extrapolate_kwh_pa(kwh_ago, resolution_format, containing_timestamp)
-      days_ago = 0
-      if resolution_format == 'year'
-        if Time.at(containing_timestamp).end_of_year < Time.current
-          days_ago = 365
-        else
-          days_ago = ((Time.current - Time.current.beginning_of_year)/(3600*24.0)).to_i
-        end
-      elsif resolution_format == 'month'
-        if Time.at(containing_timestamp).end_of_month < Time.current
-          days_ago = Time.at(containing_timestamp).days_in_month
-        else
-          days_ago = Time.current.day
-        end
-      elsif resolution_format == 'day'
-        if Time.at(containing_timestamp).in_time_zone.end_of_day < Time.current
-          days_ago = 1
-        else
-          days_ago = (Time.current - Time.current.beginning_of_day)/(3600*24.0)
-        end
-      end
-      return kwh_ago / (days_ago*1.0) * 365
-    end
-
     def self.calculate_scores
       Sidekiq::Client.push({
        'class' => CalculateGroupScoresWorker,
        'queue' => :default,
-       'args' => [ (Time.current - 1.day).to_i ]
+       'args' => [ (Time.current.in_time_zone('Berlin') - 1.day).to_s ]
       })
-    end
-
-    def calculate_scores(containing_timestamp)
-      Buzzn::ScoreCalculator.new(self, containing_timestamp).calculate_all_scores
     end
 
     def finalize_registers

@@ -99,7 +99,7 @@ describe Buzzn::Discovergy::Facade do
   it 'gets readings', retry: 3 do |spec|
     VCR.use_cassette("lib/buzzn/discovergy/#{spec.metadata[:description].downcase}") do
       facade = Buzzn::Discovergy::Facade.new
-      interval = Buzzn::Interval.day
+      interval = Buzzn::Interval.day(Time.current.in_time_zone('Berlin'))
       response = facade.readings(broker, interval, 'in')
       expect(response).not_to eq nil
       json = MultiJson.load(response)

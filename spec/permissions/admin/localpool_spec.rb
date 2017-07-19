@@ -1,6 +1,10 @@
 # coding: utf-8
 describe Admin::LocalpoolPermissions do
 
+  def update(object)
+    object.update(updated_at: object.object.updated_at)
+  end
+
   def all(user)
     Admin::LocalpoolResource.all(user).collect do |l|
       l.object
@@ -42,6 +46,9 @@ describe Admin::LocalpoolPermissions do
               localpool: pool,
               customer: localpool_member3.person,
               register: meter.input_register)
+    pool.registers.each do |r|
+      r.update(address: Fabricate(:address)) unless r.valid?
+    end
     pool
   end
   let(:contract) { localpool2.localpool_power_taker_contracts.first }
@@ -99,14 +106,14 @@ describe Admin::LocalpoolPermissions do
   end
   
   it 'update' do
-    expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).update({}) }.not_to raise_error
-    expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).update({}) }.not_to raise_error
+    expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id)) }.not_to raise_error
+    expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id)) }.not_to raise_error
     
-    expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).update({}) }.not_to raise_error
+    expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id)) }.not_to raise_error
 
-    expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).update({}) }.not_to raise_error
+    expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id)) }.not_to raise_error
 
-    expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).update({}) }.to raise_error Buzzn::PermissionDenied
+    expect{ update(Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id)) }.to raise_error Buzzn::PermissionDenied
   end
   
   it 'delete' do
@@ -161,11 +168,11 @@ describe Admin::LocalpoolPermissions do
     end
 
     it 'update' do
-      expect{ prices(buzzn_operator, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).prices.first) }.not_to raise_error
     
-      expect{ prices(localpool_owner, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).prices.first)  }.not_to raise_error
 
-      expect{ prices(localpool_manager, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).prices.first)  }.not_to raise_error
     end
 
     it 'delete' do
@@ -221,11 +228,11 @@ describe Admin::LocalpoolPermissions do
     end
 
     it 'update' do
-      expect{ billing_cycles(buzzn_operator, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).billing_cycles.first) }.not_to raise_error
     
-      expect{ billing_cycles(localpool_owner, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).billing_cycles.first) }.not_to raise_error
 
-      expect{ billing_cycles(localpool_manager, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).billing_cycles.first) }.not_to raise_error
     end
 
     it 'delete' do
@@ -272,14 +279,14 @@ describe Admin::LocalpoolPermissions do
     end
 
     it 'update' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).persons.first.update({}) }.not_to raise_error
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).persons.first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).persons.first) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).persons.first) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).persons.first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).persons.first) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).persons.first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).persons.first) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).persons.first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).persons.first) }.not_to raise_error
     end
 
     it 'delete' do
@@ -308,11 +315,11 @@ describe Admin::LocalpoolPermissions do
     end
 
     it 'update' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).metering_point_operator_contract.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).metering_point_operator_contract) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).metering_point_operator_contract.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).metering_point_operator_contract) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).metering_point_operator_contract.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).metering_point_operator_contract) }.not_to raise_error
     end
 
     it 'delete' do
@@ -339,11 +346,11 @@ describe Admin::LocalpoolPermissions do
     end
 
     it 'update' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_processing_contract.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_processing_contract) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contract.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contract) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contract.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contract) }.not_to raise_error
     end
 
     it 'delete' do
@@ -379,11 +386,11 @@ describe Admin::LocalpoolPermissions do
     end
 
     it 'update' do
-      expect{ registers(buzzn_operator, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).registers.first) }.not_to raise_error
     
-      expect{ registers(localpool_owner, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).registers.first) }.not_to raise_error
 
-      expect{ registers(localpool_manager, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).registers.first) }.not_to raise_error
     end
 
     it 'retrieve' do
@@ -423,11 +430,11 @@ describe Admin::LocalpoolPermissions do
     end
 
     it 'update' do
-      expect{ localpool_power_taker_contracts(buzzn_operator, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_power_taker_contracts.first) }.not_to raise_error
     
-      expect{ localpool_power_taker_contracts(localpool_owner, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_power_taker_contracts.first) }.not_to raise_error
 
-      expect{ localpool_power_taker_contracts(localpool_manager, localpool2.id).first.update({}) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_power_taker_contracts.first) }.not_to raise_error
     end
 
     it 'retrieve' do

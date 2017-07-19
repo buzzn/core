@@ -197,13 +197,13 @@ describe Display::GroupRoda do
       entity(:mode) { modes.sample }
       entity(:now) { Time.current - 2.days }
       entity(:intervals) { [:day, :month, :year] }
-      entity(:interval) { intervals.sample.to_s }
+      entity(:interval) { intervals.sample }
       entity!(:scores) do
-        interval_information = Group::Base.score_interval(interval, now.to_i)
+        interval_information = Buzzn::ScoreCalculator.new(nil, now).send(:interval, interval)
         5.times do
           Score.create(mode: mode, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: 10, scoreable_type: 'Group::Base', scoreable_id: group.id)
         end
-        interval_information = Group::Base.score_interval(interval, 0)
+        interval_information = Buzzn::ScoreCalculator.new(nil, Time.new(0)).send(:interval, interval)
         Score.create(mode: mode, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: 3, scoreable_type: 'Group::Base', scoreable_id: group.id)
       end
 

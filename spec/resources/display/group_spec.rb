@@ -139,14 +139,14 @@ describe Display::GroupResource do
 
             let!(:out_of_range) do
                 begin
-                  interval_information  = Group::Base.score_interval(interval.to_s, 123123)
+                  interval_information = Buzzn::ScoreCalculator.new(nil, Time.new(123123)).send(:interval, interval)
                   Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
                 end
             end
 
             let!(:in_range) do
                 begin
-                  interval_information  = Group::Base.score_interval(interval.to_s, Time.current.yesterday.to_i)
+                  interval_information = Buzzn::ScoreCalculator.new(nil, Time.current.yesterday).send(:interval, interval)
                   Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
                 end
             end
