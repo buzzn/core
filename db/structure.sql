@@ -1033,6 +1033,8 @@ CREATE TABLE persons (
     email character varying(64) NOT NULL,
     phone character varying(64),
     fax character varying(64),
+    share_with_group boolean NOT NULL,
+    share_publicly boolean NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     prefix prefix,
