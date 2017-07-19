@@ -30,7 +30,7 @@ module Meter
 
     validates :product_name, presence: true
     validates :product_serialnumber, presence: true, uniqueness: true, length: { in: 2..128 }
-    
+
     before_destroy do
       # we can't use registers.delete_all here because ActiveRecord translates this into a wrong SQL query.
       Register::Real.where(meter_id: self.id).delete_all

@@ -722,6 +722,8 @@ CREATE TABLE persons (
     email character varying(64) NOT NULL,
     phone character varying(64),
     fax character varying(64),
+    share_with_group boolean NOT NULL,
+    share_publicly boolean NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     prefix prefix,
@@ -805,7 +807,9 @@ CREATE TABLE registers (
     post_decimal_position integer,
     low_load_ability boolean,
     direction direction,
-    label label
+    label label,
+    share_with_group boolean DEFAULT true NOT NULL,
+    share_publicly boolean DEFAULT false NOT NULL
 );
 
 
@@ -1976,4 +1980,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170711523547');
 INSERT INTO schema_migrations (version) VALUES ('20170712163547');
 
 INSERT INTO schema_migrations (version) VALUES ('20170714163547');
+
+INSERT INTO schema_migrations (version) VALUES ('20170719124713');
 
