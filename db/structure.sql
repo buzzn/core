@@ -917,7 +917,9 @@ CREATE TABLE meters (
     section section,
     manufacturer_name manufacturer_name,
     build_year integer,
-    sent_data_dso date
+    sent_data_dso date,
+    "position" integer,
+    group_id uuid
 );
 
 
@@ -1033,8 +1035,6 @@ CREATE TABLE persons (
     email character varying(64) NOT NULL,
     phone character varying(64),
     fax character varying(64),
-    share_with_group boolean NOT NULL,
-    share_publicly boolean NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     prefix prefix,
@@ -1725,6 +1725,13 @@ CREATE UNIQUE INDEX index_groups_on_slug ON groups USING btree (slug);
 
 
 --
+-- Name: index_meters_on_group_id_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_meters_on_group_id_and_position ON meters USING btree (group_id, "position");
+
+
+--
 -- Name: index_oauth_access_grants_on_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1939,6 +1946,14 @@ CREATE INDEX index_users_roles_on_user_id_and_role_id ON users_roles USING btree
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: meters fk_rails_276fdd6a78; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY meters
+    ADD CONSTRAINT fk_rails_276fdd6a78 FOREIGN KEY (group_id) REFERENCES groups(id);
 
 
 --
@@ -2294,6 +2309,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170712163547');
 INSERT INTO schema_migrations (version) VALUES ('20170714163547');
 
 INSERT INTO schema_migrations (version) VALUES ('20170719124713');
+
+INSERT INTO schema_migrations (version) VALUES ('20170721074915');
 
 INSERT INTO schema_migrations (version) VALUES ('20170724150100');
 

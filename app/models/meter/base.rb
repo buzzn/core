@@ -135,8 +135,23 @@ module Meter
     has_one :broker, as: :resource, dependent: :destroy, foreign_key: :resource_id, class_name: 'Broker::Base'
     validates_associated :broker
 
+    belongs_to :group, class_name: Group::Localpool
+
     # hack for restricted scope
     has_many :registers, class_name: Register::Base, foreign_key: :meter_id
+
+    before_save do
+      if group_id_changed?
+        raise ArgumentError.new('can not change group') unless group_id_was.nil?
+        max = Meter::Base.where(group: group).size
+        self.position = max
+      end
+    end
+
+    before_destroy do
+      # TODO need to figure out the position thingy
+      raise 'can not delete meter with group' if group
+    end
 
     validates :build_year, presence: false
     validates :calibrated_until, presence: false

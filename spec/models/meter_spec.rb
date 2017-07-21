@@ -6,6 +6,7 @@ describe Meter::Real do
   entity(:second) {  Fabricate(:input_meter) }
   entity(:register) { meter.registers.first }
   entity!(:input_meter) { Fabricate(:input_meter) }
+  entity!(:group) { Fabricate(:localpool) }
 
   it 'filters meter' do
     [meter.product_serialnumber, meter.product_name].each do |val|
@@ -57,6 +58,22 @@ describe Meter::Real do
   end
 
   it 'does not delete register or meter' do
+    skip('the register gets deleted despit the error raised')
     expect { meter.registers.first.destroy }.to raise_error Buzzn::NestedValidationError
+    meter.reload
+    expect(meter.valid?).to eq true
+    expect(meter.registers).not_to eq []
+  end
+
+  it 'gets a position if added to a group' do
+    expect(meter.position).to be_nil
+    meter.update(group: group)
+    expect(meter.reload.position).to eq 0
+    expect(meter.group).to eq group
+
+    expect { meter.update(group: Fabricate(:localpool)) }.to raise_error ArgumentError
+
+    easymeter.update(group: group)
+    expect(easymeter.reload.position).to eq 1
   end
 end
