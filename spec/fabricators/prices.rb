@@ -6,3 +6,10 @@ Fabricator :price do
   baseprice_cents_per_month           { 200 }
   localpool                           { Fabricate(:localpool) }
 end
+
+Fabricator :price_sulz, from: :price do
+  name                                'Standard'
+  begin_date                          Date.new(2016, 8, 4)
+  energyprice_cents_per_kilowatt_hour 23.8 # assume all money-data is without taxes!
+  baseprice_cents_per_month           500
+end

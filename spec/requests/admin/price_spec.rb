@@ -91,7 +91,7 @@ describe Admin::LocalpoolRoda do
       end
 
       let(:prices_json) do
-        Price.all.collect do |price|
+        localpool.prices.collect do |price|
           {
             "id"=>price.id,
             "type"=>"price",

@@ -1,24 +1,8 @@
 # coding: utf-8
 describe "User Model" do
 
-  entity(:organization) { Fabricate(:organization, mode: :electricity_supplier) }
-  entity(:tribe) do
-    group = Fabricate(:tribe)
-    manager_group.add_role(:manager, group)
-    group
-  end
-
   entity(:user) { Fabricate(:user) }
   entity!(:admin) { Fabricate(:admin) }
-  entity(:manager_register) { Fabricate(:user) }
-  entity(:manager_group) { Fabricate(:user) }
-
-  entity(:register) do
-    register = Fabricate(:output_register, meter: Fabricate(:meter))
-    manager_register.add_role(:manager, register)
-    register.update! group: tribe
-    register
-  end
 
   before { 2.times { Fabricate(:user) } }
 

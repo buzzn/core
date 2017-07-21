@@ -78,7 +78,7 @@ module Group
       Sidekiq::Client.push({
        'class' => CalculateGroupScoresWorker,
        'queue' => :default,
-       'args' => [ (Time.current.in_time_zone('Berlin') - 1.day).to_s ]
+       'args' => [ (Time.now.utc - 1.day).to_s ]
       })
     end
 

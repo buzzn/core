@@ -187,7 +187,6 @@ module Register
 
       if Time.new.to_i - last_reading.timestamp.to_i >= 5.minutes
         if observer_offline_monitoring
-          puts 'here'
           if Time.new.to_i - last_reading.timestamp.to_i < 10.minutes
             OFFLINE
           else

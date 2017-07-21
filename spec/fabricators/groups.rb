@@ -216,10 +216,12 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
 
     Fabricate(:lpc_sulz, localpool: self, contractor: Organization.buzzn_systems || Fabricate(:buzzn_systems), customer: Organization.where(name: 'HaFi').first)
 
+    # TODO use Fabricate(:price_sulz) - as it breaks the lcp_report when using
+    #      Fabricate(:price_sulz) 
     Fabricate(:price,
               localpool: self,
               name: 'Standard',
-              # TODO fix me and use Date.new(2016, 8, 4)}
+
               begin_date: Time.new(2016, 8, 4).utc,
               energyprice_cents_per_kilowatt_hour: 23.8, # assume all money-data is without taxes!
               baseprice_cents_per_month: 500)

@@ -57,6 +57,7 @@ describe Admin do
 
   entity!(:localpool_power_taker_contract) do
     register = Fabricate(:input_meter).input_register
+    register.update(address: Fabricate(:address))
     register.update(group: localpool)    
     Fabricate(:localpool_power_taker_contract,
               localpool: localpool,
