@@ -6,7 +6,7 @@ Fabricator :billing_cycle do
 end
 
 Fabricator :billing_cycle_sulz, from: :billing_cycle do
-  begin_date  { Time.new(2016, 8, 4) }
-  end_date    { Time.new(2016, 12, 31) }
+  begin_date  { Date.new(2016, 8, 4) }
+  end_date    { Date.new(2016, 12, 31) }
   name        'Year 2016'
 end
