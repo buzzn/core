@@ -321,6 +321,16 @@ describe Admin do
     description 'returns all the managers of the localpool'
   end
 
+  # me (person)
+  get '/me' do
+    description 'returns me (person) of the current logged in user'
+  end
+
+  patch '/me' do
+    description 'updates me (person) of the current logged in user'
+    schema 'update_person_schema'
+  end
+
   # swagger
 
   it 'GET /swagger.json' do

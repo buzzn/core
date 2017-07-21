@@ -1372,3 +1372,70 @@ paths:
       responses:
         200:
           description: success
+  "/me":
+    get:
+      description: returns me (person) of the current logged in user
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success
+    patch:
+      description: updates me (person) of the current logged in user
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
+      - name: title
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: prefix
+        in: formData
+        required: false
+        type: string
+        enum:
+        - F
+        - M
+      - name: first_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: last_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: phone
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: fax
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: preferred_language
+        in: formData
+        required: false
+        type: string
+        enum:
+        - de
+        - en
+      responses:
+        200:
+          description: patched

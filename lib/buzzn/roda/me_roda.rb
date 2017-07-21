@@ -11,15 +11,13 @@ class MeRoda < BaseRoda
     end
 
     person = PersonResource.all(current_user, ContractingPartyPersonResource)
-        .retrieve(current_user.person.id)
+               .retrieve(current_user.person.id)
 
-    # need empty string to work consistently with root paths
-    r.get! '' do
+    r.get! do
       person
     end
 
-    # need empty string to work consistently with root paths
-    r.patch! '' do
+    r.patch! do
       update_person.call(r.params, resource: [person])
     end
   end
