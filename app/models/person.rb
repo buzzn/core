@@ -4,6 +4,9 @@ class Person < ContractingParty
 
   include Filterable
 
+  # TODO remove this when decided on how to make the attachments (Document)
+  mount_uploader :image, PictureUploader
+
   # prefixes
   FEMALE = 'F'
   MALE = 'M'

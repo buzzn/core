@@ -206,7 +206,7 @@ describe Admin::LocalpoolRoda do
           "fax"=>contract.customer.fax,
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
-          "image"=>nil,
+          "image"=>contract.customer.image.md.url,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -323,7 +323,7 @@ describe Admin::LocalpoolRoda do
           "fax"=>contract.customer.fax,
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
-          "image"=>nil,
+          "image"=>contract.customer.image.md.url,
           "updatable"=>true,
           "deletable"=>false
         },

@@ -20,6 +20,11 @@ class PersonResource < Buzzn::Resource::Entity
 
   def image
     user = User.where(person: object).first
-    user.image.md.url if user
+    if user
+      user.image.md.url
+    elsif object.image
+      object.image.md.url
+    else
+    end
   end
 end

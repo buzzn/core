@@ -733,7 +733,8 @@ CREATE TABLE persons (
     provider_permission boolean,
     subject_to_tax boolean,
     mandate_reference character varying,
-    creditor_id character varying
+    creditor_id character varying,
+    image character varying
 );
 
 
@@ -1980,4 +1981,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170712163547');
 INSERT INTO schema_migrations (version) VALUES ('20170714163547');
 
 INSERT INTO schema_migrations (version) VALUES ('20170719124713');
+
+INSERT INTO schema_migrations (version) VALUES ('20170724150100');
 
