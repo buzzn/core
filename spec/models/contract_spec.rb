@@ -16,7 +16,7 @@ describe "Contract Model" do
   entity(:member_group) { Fabricate(:localpool)}
 
   entity!(:contracts) do
-    c1 = Fabricate(:metering_point_operator_contract, customer: user_with_register, localpool: member_group)
+    c1 = Fabricate(:metering_point_operator_contract, customer: user_with_register.person, localpool: member_group)
     c2 = Fabricate(:power_giver_contract, register: register)
     manager_group.registers << c2.register
     [c1, c2]

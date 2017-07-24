@@ -5,7 +5,7 @@ Fabricator :bank_account do
   bank_name         { FFaker::Company.name.slice(0...63) }
   direct_debit      { FFaker::Boolean.maybe }
   created_at        { (rand*10).days.ago }
-  contracting_party { Fabricate(:user) }
+  contracting_party { Fabricate(:person) }
 end
 
 Fabricator :bank_account_mustermann, from: :bank_account do

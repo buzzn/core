@@ -36,7 +36,7 @@ module Group
 
     #has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
     def managers
-      User.users_of(self, :manager)
+      Person.where(id: User.users_of(self, :manager).select(:person_id))
     end
 
     has_many :scores, as: :scoreable

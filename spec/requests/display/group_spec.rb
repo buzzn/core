@@ -46,12 +46,12 @@ describe Display::GroupRoda do
           "array" => group.managers.collect do |manager|
             {
               "id"=>manager.id,
-              "type"=>"user",
+              "type"=>"person",
               'updated_at'=>manager.updated_at.as_json,
-              "title"=>manager.profile.title,
+              "title"=>manager.title,
               "first_name"=>manager.first_name,
               "last_name"=>manager.last_name,
-              "image"=>manager.image.md.url
+              "image"=>User.where(person: manager).first.image.md.url
             }
           end
         }
@@ -76,12 +76,12 @@ describe Display::GroupRoda do
             'array' => group.managers.collect do |manager|
               {
                 "id"=>manager.id,
-                "type"=>"user",
+                "type"=>"person",
                 'updated_at'=>manager.updated_at.as_json,
-                "title"=>manager.profile.title,
+                "title"=>manager.title,
                 "first_name"=>manager.first_name,
                 "last_name"=>manager.last_name,
-                "image"=>manager.image.md.url
+                "image"=>User.where(person: manager).first.image.md.url
               }
             end
           }
@@ -138,10 +138,10 @@ describe Display::GroupRoda do
         expect(json).to eq not_found_json
       end
 
-      entity(:mentor) { Fabricate(:user) }
+      entity(:mentor) { Fabricate(:user).person }
       let(:group) do
         group = send [:tribe, :localpool].sample
-        mentor.add_role(:manager, group)
+        User.where(person: mentor).first.add_role(:manager, group)
         group
       end
 
@@ -149,12 +149,12 @@ describe Display::GroupRoda do
         [
           {
             "id"=>mentor.id,
-            "type"=>"user",
+            "type"=>"person",
             'updated_at'=>mentor.updated_at.as_json,
             "title"=>nil,
-            "first_name"=>mentor.profile.first_name,
-            "last_name"=>mentor.profile.last_name,
-            "image"=>mentor.image.md.url,
+            "first_name"=>mentor.first_name,
+            "last_name"=>mentor.last_name,
+            "image"=>User.where(person: mentor).first.image.md.url,
           }
         ]
       end

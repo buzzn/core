@@ -33,7 +33,7 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(90000) + 1 }
   contract_number_addition { rand(10000) + 1 }
-  signing_user             { Fabricate(:user).name }
+  signing_user             { FFaker::Name.name }
   terms_accepted           true
   power_of_attorney        true
   begin_date               { FFaker::Time.date }
@@ -73,7 +73,7 @@ Fabricator :other_supplier_contract, class_name: Contract::OtherSupplier do
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition { rand(10000) + 1 }
-  signing_user             { Fabricate(:user).name }
+  signing_user             { FFaker::Name.name }
   terms_accepted           true
   power_of_attorney        true
   signing_date             { FFaker::Time.date }
@@ -91,7 +91,7 @@ Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(20000) + 1 }
   contract_number_addition { rand(10000) + 1 }
-  signing_user             { Fabricate(:user).name }
+  signing_user             { FFaker::Name.name }
   terms_accepted           true
   power_of_attorney        true
   signing_date             { FFaker::Time.date }
@@ -133,7 +133,7 @@ Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(40000) + 1 }
   contract_number_addition { rand(10000) - 1 }
-  signing_user             { Fabricate(:user).name }
+  signing_user             { FFaker::Name.name }
   terms_accepted           true
   power_of_attorney        true
   confirm_pricing_model    true
@@ -163,14 +163,14 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition { rand(10000) + 1 }
-  signing_user             { Fabricate(:user).name }
+  signing_user             { FFaker::Name.name }
   terms_accepted           true
   power_of_attorney        true
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
-  customer                 { Fabricate(:user).person }
-  contractor               { Fabricate(:user).person }
+  customer                 { Fabricate(:person) }
+  contractor               { Fabricate(:person) }
   register                 { Fabricate(:input_register,
                                        group: Fabricate(:localpool),
                                        meter: Fabricate.build(:meter),
@@ -179,11 +179,15 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
+    if user = User.where(person: c.customer).first
+      user.add_role(:contract, c)
+    end
     c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
     c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer)
   end
   after_create do |contract|
-    User.where(person: contract.customer).first.add_role(:contract, contract) if contract.customer.is_a? Person
+    customer = User.where(person: contract.customer).first
+    customer.add_role(:contract, contract) if customer.is_a? Person
     contract.save
   end
 end
@@ -199,7 +203,7 @@ Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProces
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition 0
-  signing_user             { Fabricate(:user).name }
+  signing_user             { FFaker::Name.name }
   terms_accepted           true
   power_of_attorney        true
   begin_date               { FFaker::Time.date }

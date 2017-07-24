@@ -53,6 +53,8 @@ module Contract
 
     validates :contractor, presence: true
     validates :customer, presence: true
+    validates :contractor_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'contractor_type'
+    validates :customer_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'customer_type'
 
     validates :status, inclusion: {in: status}
 

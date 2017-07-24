@@ -42,7 +42,7 @@ describe Admin::LocalpoolPermissions do
     meter = Fabricate(:input_meter)
     # HACK as meter.input_register.group = pool does not work
     meter.input_register.update(group_id: pool.id)
-    Fabricate(:localpool_power_taker_contract,
+    c = Fabricate(:localpool_power_taker_contract,
               localpool: pool,
               customer: localpool_member3.person,
               register: meter.input_register)

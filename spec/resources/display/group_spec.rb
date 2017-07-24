@@ -105,14 +105,14 @@ describe Display::GroupResource do
                         'image'] }
     
     it 'retrieve' do
-      expect(resource.mentors.retrieve(admin.id).object).to eq admin
+      expect(resource.mentors.retrieve(admin.person.id).object).to eq admin.person
     end
 
     it 'retrieve - all' do
       expect(resource.mentors.size).to eq 1
       resource.mentors.each do |reg|
         expect(reg.class).to eq Display::MentorResource
-        expect(reg.type).to eq 'user'
+        expect(reg.type).to eq 'person'
         expect(reg.to_h.keys).to eq attributes
       end
     end

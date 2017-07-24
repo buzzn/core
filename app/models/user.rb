@@ -28,6 +28,7 @@ class User < ContractingParty
   delegate :about_me, to: :profile
   delegate :image, to: :profile
   delegate :phone, to: :profile
+  delegate :title, to: :profile
 
   # needed to be uniform with organiztion via contracting-party
   def fax; ''; end

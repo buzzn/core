@@ -372,9 +372,10 @@ describe Buzzn::Services::ReadingCalculation do
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 8, 1), energy_milliwatt_hour: 567000000, reason: Reading::CONTRACT_CHANGE, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
     Fabricate(:reading, register_id: register.id, timestamp: Time.new(2015, 12, 31), energy_milliwatt_hour: 890000000, reason: Reading::REGULAR_READING, quality: Reading::READ_OUT, source: Reading::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
     localpool.registers << register
-    c1 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
-    c2 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
-    c3 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 8, 1), end_date: nil)
+    someone = Fabricate(:person)
+    c1 = Fabricate(:localpool_power_taker_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
+    c2 = Fabricate(:localpool_power_taker_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
+    c3 = Fabricate(:localpool_power_taker_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 8, 1), end_date: nil)
 
     # 3 lsn, 0 third party
     result = subject.get_register_energy_by_contract(register, nil, nil, 2015)
@@ -386,7 +387,7 @@ describe Buzzn::Services::ReadingCalculation do
 
     # 2 lsn, 1 third party at beginning
     c1.destroy
-    c1 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
+    c1 = Fabricate(:other_supplier_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
     result = subject.get_register_energy_by_contract(register, nil, nil, 2015)
     expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG].size).to eq 2
     expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].size).to eq 1
@@ -398,8 +399,8 @@ describe Buzzn::Services::ReadingCalculation do
     # 2 lsn, 1 third party in the middle
     c1.destroy
     c2.destroy
-    c1 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
-    c2 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
+    c1 = Fabricate(:localpool_power_taker_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
+    c2 = Fabricate(:other_supplier_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
     result = subject.get_register_energy_by_contract(register, nil, nil, 2015)
     expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG].size).to eq 2
     expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].size).to eq 1
@@ -411,8 +412,8 @@ describe Buzzn::Services::ReadingCalculation do
     # 2 lsn, 1 third party it the end
     c2.destroy
     c3.destroy
-    c2 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
-    c3 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 8, 1), end_date: Date.new(2015, 12, 31))
+    c2 = Fabricate(:localpool_power_taker_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
+    c3 = Fabricate(:other_supplier_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 8, 1), end_date: Date.new(2015, 12, 31))
     result = subject.get_register_energy_by_contract(register, nil, nil, 2015)
     expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG].size).to eq 2
     expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].size).to eq 1
@@ -425,9 +426,9 @@ describe Buzzn::Services::ReadingCalculation do
     c1.destroy
     c2.destroy
     c3.destroy
-    c1 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
-    c2 = Fabricate(:localpool_power_taker_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
-    c3 = Fabricate(:other_supplier_contract, signing_user: Fabricate(:user), contractor: Fabricate(:user), customer: Fabricate(:user), register: register, begin_date: Date.new(2015, 8, 1), end_date: Date.new(2015, 12, 31))
+    c1 = Fabricate(:other_supplier_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 2, 1), end_date: Date.new(2015, 3, 31))
+    c2 = Fabricate(:localpool_power_taker_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 4, 1), end_date: Date.new(2015, 7, 31))
+    c3 = Fabricate(:other_supplier_contract, signing_user: FFaker::Name.name, contractor: someone, customer: someone, register: register, begin_date: Date.new(2015, 8, 1), end_date: Date.new(2015, 12, 31))
     result = subject.get_register_energy_by_contract(register, nil, nil, 2015)
     expect(result[Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG].size).to eq 1
     expect(result[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY].size).to eq 2

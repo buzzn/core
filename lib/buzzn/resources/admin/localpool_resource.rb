@@ -1,8 +1,9 @@
 require_relative '../group_resource'
+require_relative '../person_resource'
 require_relative 'price_resource'
 require_relative 'billing_cycle_resource'
 module Admin
-  class LocalpoolResource < ::GroupResource
+  class LocalpoolResource < GroupResource
 
     model Group::Localpool
 
@@ -11,7 +12,7 @@ module Admin
     has_one :localpool_processing_contract
     has_one :metering_point_operator_contract
     has_many :meters
-    has_many :managers
+    has_many :managers, PersonResource
     has_many :localpool_power_taker_contracts
     has_many :users
     has_many :organizations

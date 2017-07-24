@@ -1,3 +1,4 @@
+require_relative 'bank_account_resource'
 class PersonResource < Buzzn::Resource::Entity
   include BankAccountResource::Create
 
