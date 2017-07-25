@@ -264,7 +264,15 @@ module Buzzn::Discovergy
     def parse_aggregated_hour(json, mode, two_way_meter, resource_id)
       result = Buzzn::DataResultSet.milliwatt(resource_id)
       json.each do |item|
-        if two_way_meter != false
+        case two_way_meter
+        when NilClass # two_way_meter is nil when the resource is a Group
+          if item['values']['power'] >= 0
+            power = item['values']['power']
+          else
+            @logger.error { "negative value from discovergy: #{item['values']['power']}" }
+            power = 0
+          end
+        when true
           if item['values']['power'] > 0 && mode == 'in'
             power = item['values']['power']
           elsif item['values']['power'] < 0 && mode == 'out'
@@ -331,7 +339,6 @@ module Buzzn::Discovergy
         timestamp = item[1]['time']
         value = item[1]['values']['power']
         if value < 0
-          @logger.error("negative value from discovergy: #{value}")
           value = 0
         end
         result_item = Buzzn::DataResult.new(Time.at(timestamp/1000.0), value, resource_id, mode, expires_at)
