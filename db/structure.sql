@@ -28,6 +28,20 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: citext; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
+
+
+--
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -227,9 +241,295 @@ CREATE TYPE section AS ENUM (
 );
 
 
+--
+-- Name: rodauth_get_previous_salt(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO public, pg_temp
+    AS $$
+DECLARE salt text;
+BEGIN
+SELECT substr(password_hash, 0, 30) INTO salt 
+FROM account_previous_password_hashes
+WHERE acct_id = id;
+RETURN salt;
+END;
+$$;
+
+
+--
+-- Name: rodauth_get_salt(bigint); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO public, pg_temp
+    AS $$
+DECLARE salt text;
+BEGIN
+SELECT substr(password_hash, 0, 30) INTO salt 
+FROM account_password_hashes
+WHERE acct_id = id;
+RETURN salt;
+END;
+$$;
+
+
+--
+-- Name: rodauth_previous_password_hash_match(bigint, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) RETURNS boolean
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO public, pg_temp
+    AS $$
+DECLARE valid boolean;
+BEGIN
+SELECT password_hash = hash INTO valid 
+FROM account_previous_password_hashes
+WHERE acct_id = id;
+RETURN valid;
+END;
+$$;
+
+
+--
+-- Name: rodauth_valid_password_hash(bigint, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS boolean
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO public, pg_temp
+    AS $$
+DECLARE valid boolean;
+BEGIN
+SELECT password_hash = hash INTO valid 
+FROM account_password_hashes
+WHERE acct_id = id;
+RETURN valid;
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: account_activity_times; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_activity_times (
+    id bigint NOT NULL,
+    last_activity_at timestamp without time zone NOT NULL,
+    last_login_at timestamp without time zone NOT NULL,
+    expired_at timestamp without time zone
+);
+
+
+--
+-- Name: account_lockouts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_lockouts (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    deadline timestamp without time zone DEFAULT ((now())::timestamp without time zone + '1 day'::interval) NOT NULL
+);
+
+
+--
+-- Name: account_login_change_keys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_login_change_keys (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    login text NOT NULL,
+    deadline timestamp without time zone DEFAULT ((now())::timestamp without time zone + '1 day'::interval) NOT NULL
+);
+
+
+--
+-- Name: account_login_failures; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_login_failures (
+    id bigint NOT NULL,
+    number integer DEFAULT 1 NOT NULL
+);
+
+
+--
+-- Name: account_otp_keys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_otp_keys (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    num_failures integer DEFAULT 0 NOT NULL,
+    last_use timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: account_password_change_times; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_password_change_times (
+    id bigint NOT NULL,
+    changed_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: account_password_hashes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_password_hashes (
+    id bigint NOT NULL,
+    password_hash text NOT NULL
+);
+
+
+--
+-- Name: account_password_reset_keys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_password_reset_keys (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    deadline timestamp without time zone DEFAULT ((now())::timestamp without time zone + '1 day'::interval) NOT NULL
+);
+
+
+--
+-- Name: account_previous_password_hashes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_previous_password_hashes (
+    id bigint NOT NULL,
+    account_id bigint,
+    password_hash text NOT NULL
+);
+
+
+--
+-- Name: account_previous_password_hashes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE account_previous_password_hashes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: account_previous_password_hashes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE account_previous_password_hashes_id_seq OWNED BY account_previous_password_hashes.id;
+
+
+--
+-- Name: account_recovery_codes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_recovery_codes (
+    id bigint NOT NULL,
+    code text NOT NULL
+);
+
+
+--
+-- Name: account_remember_keys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_remember_keys (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    deadline timestamp without time zone DEFAULT ((now())::timestamp without time zone + '14 days'::interval) NOT NULL
+);
+
+
+--
+-- Name: account_session_keys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_session_keys (
+    id bigint NOT NULL,
+    key text NOT NULL
+);
+
+
+--
+-- Name: account_sms_codes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_sms_codes (
+    id bigint NOT NULL,
+    phone_number text NOT NULL,
+    num_failures integer,
+    code text,
+    code_issued_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: account_statuses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_statuses (
+    id integer NOT NULL,
+    name text NOT NULL
+);
+
+
+--
+-- Name: account_verification_keys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE account_verification_keys (
+    id bigint NOT NULL,
+    key text NOT NULL,
+    requested_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE accounts (
+    id bigint NOT NULL,
+    status_id integer DEFAULT 1 NOT NULL,
+    email citext NOT NULL,
+    CONSTRAINT valid_email CHECK ((email ~ '^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$'::citext))
+);
+
+
+--
+-- Name: accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE accounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
+
 
 --
 -- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
@@ -846,6 +1146,24 @@ ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
 
 
 --
+-- Name: schema_info_buzzn; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE schema_info_buzzn (
+    version integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: schema_info_password; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE schema_info_password (
+    version integer DEFAULT 0 NOT NULL
+);
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -953,6 +1271,20 @@ CREATE TABLE users_roles (
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY account_previous_password_hashes ALTER COLUMN id SET DEFAULT nextval('account_previous_password_hashes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY active_admin_comments ALTER COLUMN id SET DEFAULT nextval('active_admin_comments_id_seq'::regclass);
 
 
@@ -968,6 +1300,142 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 --
 
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+
+
+--
+-- Name: account_activity_times_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_activity_times
+    ADD CONSTRAINT account_activity_times_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_lockouts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_lockouts
+    ADD CONSTRAINT account_lockouts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_login_change_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_login_change_keys
+    ADD CONSTRAINT account_login_change_keys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_login_failures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_login_failures
+    ADD CONSTRAINT account_login_failures_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_otp_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_otp_keys
+    ADD CONSTRAINT account_otp_keys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_password_change_times_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_password_change_times
+    ADD CONSTRAINT account_password_change_times_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_password_hashes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_password_hashes
+    ADD CONSTRAINT account_password_hashes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_password_reset_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_password_reset_keys
+    ADD CONSTRAINT account_password_reset_keys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_previous_password_hashes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_previous_password_hashes
+    ADD CONSTRAINT account_previous_password_hashes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_recovery_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_recovery_codes
+    ADD CONSTRAINT account_recovery_codes_pkey PRIMARY KEY (id, code);
+
+
+--
+-- Name: account_remember_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_remember_keys
+    ADD CONSTRAINT account_remember_keys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_session_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_session_keys
+    ADD CONSTRAINT account_session_keys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_sms_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_sms_codes
+    ADD CONSTRAINT account_sms_codes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_statuses_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_statuses
+    ADD CONSTRAINT account_statuses_name_key UNIQUE (name);
+
+
+--
+-- Name: account_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_statuses
+    ADD CONSTRAINT account_statuses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_verification_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_verification_keys
+    ADD CONSTRAINT account_verification_keys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY accounts
+    ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
 
 
 --
@@ -1192,6 +1660,13 @@ ALTER TABLE ONLY tariffs
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: accounts_email_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX accounts_email_index ON accounts USING btree (email) WHERE (status_id = ANY (ARRAY[1, 2]));
 
 
 --
@@ -1626,6 +2101,126 @@ CREATE INDEX index_users_roles_on_user_id_and_role_id ON users_roles USING btree
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: account_activity_times_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_activity_times
+    ADD CONSTRAINT account_activity_times_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_lockouts_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_lockouts
+    ADD CONSTRAINT account_lockouts_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_login_change_keys_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_login_change_keys
+    ADD CONSTRAINT account_login_change_keys_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_login_failures_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_login_failures
+    ADD CONSTRAINT account_login_failures_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_otp_keys_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_otp_keys
+    ADD CONSTRAINT account_otp_keys_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_password_change_times_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_password_change_times
+    ADD CONSTRAINT account_password_change_times_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_password_hashes_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_password_hashes
+    ADD CONSTRAINT account_password_hashes_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_password_reset_keys_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_password_reset_keys
+    ADD CONSTRAINT account_password_reset_keys_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_previous_password_hashes_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_previous_password_hashes
+    ADD CONSTRAINT account_previous_password_hashes_account_id_fkey FOREIGN KEY (account_id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_recovery_codes_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_recovery_codes
+    ADD CONSTRAINT account_recovery_codes_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_remember_keys_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_remember_keys
+    ADD CONSTRAINT account_remember_keys_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_session_keys_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_session_keys
+    ADD CONSTRAINT account_session_keys_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_sms_codes_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_sms_codes
+    ADD CONSTRAINT account_sms_codes_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: account_verification_keys_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_verification_keys
+    ADD CONSTRAINT account_verification_keys_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+
+
+--
+-- Name: accounts_status_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY accounts
+    ADD CONSTRAINT accounts_status_id_fkey FOREIGN KEY (status_id) REFERENCES account_statuses(id);
 
 
 --

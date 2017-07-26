@@ -16,6 +16,8 @@ class PersonResource < Buzzn::Resource::Entity
 
   attributes :updatable, :deletable
 
+  has_one :address
+
   has_many :bank_accounts
 
   def image

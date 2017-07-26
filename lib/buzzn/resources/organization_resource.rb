@@ -14,6 +14,7 @@ class OrganizationResource < Buzzn::Resource::Entity
   attributes :updatable, :deletable
 
   has_one :address
+  has_one :contact
 
   has_many :bank_accounts
 
