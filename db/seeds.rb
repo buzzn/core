@@ -858,7 +858,6 @@ localpool_forstenried.registers << register_1338000818
 
 
 
-#localpool_forstenried.brokers << Fabricate(:discovergy_broker, mode: 'in', external_id: "VIRTUAL_00000077", resource: localpool_forstenried )
 #
 # register_virtual_forstenried_bezug = Fabricate(:register_forstenried_bezug)
 # register_virtual_forstenried_bezug.formula_parts << Fabricate(:fp_plus, operand_id: register_60051595.id)
