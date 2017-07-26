@@ -8,6 +8,8 @@ require_relative 'plugins/aggregation'
 
 class BaseRoda < Roda
 
+  use Rack::Session::Cookie, :secret => ENV['SECRET'] || 'my secret', :key => '_buzzn_session'
+
   plugin :json_parser, parser: MultiJson.method(:load)
 
   plugin :json,
@@ -21,7 +23,9 @@ class BaseRoda < Roda
 
   plugin :current_user do |app|
     if app.doorkeeper_token
-      User.where(id: app.doorkeeper_token.resource_owner_id).first
+      Account::Base.where(id: app.doorkeeper_token.resource_owner_id).first
+    else
+      Account::Base.where(id: app.session['account_id']).first
     end
   end
 
@@ -30,4 +34,5 @@ class BaseRoda < Roda
   plugin :drop_body
 
   plugin :empty_root
+
 end

@@ -5,9 +5,9 @@ describe Admin do
     CoreRoda
   end
 
-  entity!(:user) { Fabricate(:user) }
+  entity!(:account) { Fabricate(:user) }
 
-  entity!(:person) { user.person }
+  entity!(:person) { account.person }
 
   entity!(:bank_account_1) { Fabricate(:bank_account, contracting_party: person) }
 
@@ -21,7 +21,7 @@ describe Admin do
 
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
-    user.add_role(:localpool_owner, localpool)
+    person.add_role(:localpool_owner, localpool)
     Fabricate(:localpool_processing_contract, localpool: localpool, customer: organization)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
     localpool

@@ -9,8 +9,8 @@ module Display
                 :image
 
     def image
-      user = User.where(person: object).first
-      user.image.md.url if user
+      #user = User.where(person: object).first
+      object.image.md.url #if user
     end
   end
 end

@@ -24,21 +24,20 @@ module Group
 
     def persons
       roles           = Role.arel_table
-      users_roles     = Role.users_roles_arel_table
-      users           = User.arel_table
+      persons_roles     = Arel::Table.new(:persons_roles)
       persons         = Person.arel_table
-      localpool_users = users_roles
+      localpool_users = persons_roles
                         .join(roles)
-                        .on(roles[:id].eq(users_roles[:role_id])
+                        .on(roles[:id].eq(persons_roles[:role_id])
                              .and(roles[:resource_id].eq(self.id)))
-                        .where(users_roles[:user_id].eq(users[:id]))
+                        .where(persons_roles[:person_id].eq(persons[:id]))
                         .project(1)
                         .exists
       contract_users = contracts
                        .where('contracts.customer_id = persons.id or contracts.contractor_id = persons.id')
                        .select(1)
                        .exists
-      Person.where(User.where(localpool_users).where("users.person_id = persons.id").project(1).exists.or(contract_users))
+      Person.where(localpool_users.or(contract_users))
     end
 
     def organizations

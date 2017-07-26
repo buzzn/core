@@ -23,6 +23,12 @@ gem 'ruby-swagger'
 # roda
 gem 'roda'
 
+# authentication
+gem 'rodauth'
+gem 'tilt'
+gem 'rack_csrf'
+gem 'bcrypt'
+
 # postgres
 gem 'schema_plus_enums'
 gem 'pg'

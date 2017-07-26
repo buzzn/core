@@ -16,8 +16,8 @@ describe Admin::LocalpoolRoda do
     end
     entity(:manager_token) do
       token = Fabricate(:user_token)
-      user = User.find(token.resource_owner_id)
-      user.add_role(:manager, group)
+      Account::Base.find(token.resource_owner_id)
+        .person.add_role(:manager, group)
       token
     end
     entity!(:billing) { Fabricate(:billing,

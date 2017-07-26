@@ -1,4 +1,7 @@
+require 'sequel'
 class CoreRoda < Roda
+
+  use Rack::Session::Cookie, :secret => ENV['SECRET'] || 'my secret', :key => '_buzzn_session'
 
   use Rack::Cors, debug: Rails.env != 'production'  do
     allow do
@@ -21,7 +24,26 @@ class CoreRoda < Roda
   # adds /heartbeat endpoint
   plugin :heartbeat
 
+  plugin :rodauth, csrf: false do
+  
+    enable :session_expiration
+
+    session_expiration_redirect nil
+    session_inactivity_timeout 9#00 # 15 minutes
+    max_session_lifetime 86400 # 1 day
+
+    db Buzzn::DB
+  end
+
   route do |r|
+    r.on 'session' do
+      r.on 'admin' do
+        r.run Session::LogoutRoda
+      end
+
+      r.run Session::AccountRoda
+    end
+
 
     r.on 'api' do
       r.on 'display' do
@@ -29,6 +51,8 @@ class CoreRoda < Roda
       end
 
       r.on 'admin' do
+        rodauth.check_session_expiration
+
         r.run Admin::Roda
       end
     end

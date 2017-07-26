@@ -1,5 +1,5 @@
 describe MeRoda do
-
+  
   def app
     MeRoda # this defines the active application for this test
   end
@@ -10,7 +10,7 @@ describe MeRoda do
 
   entity!(:other) { Fabricate(:user_token) }
 
-  entity(:person) { User.find(user_token.resource_owner_id).person }
+  entity(:person) { Account::Base.find(user_token.resource_owner_id).person }
 
   let(:denied_json) do
     {
@@ -35,7 +35,7 @@ describe MeRoda do
       "fax"=>person.fax,
       "email"=>person.email,
       'preferred_language'=>person.attributes['preferred_language'],
-      "image"=>User.where(person: person).first.image.md.url,
+      "image"=>person.image.md.url,
       "updatable"=>true,
       "deletable"=>false,
       'sales_tax_number'=>nil,
@@ -93,7 +93,7 @@ describe MeRoda do
         "fax"=>"08191 123312",
         "email"=>person.email,
         "preferred_language"=>"de",
-        "image"=>User.where(person: person).first.image.md.url,
+        "image"=>person.image.md.url,
         "updatable"=>true,
         "deletable"=>false,
         "sales_tax_number"=>nil,

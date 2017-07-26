@@ -28,8 +28,8 @@ describe Admin::LocalpoolRoda do
 
     entity(:user) do
       token = Fabricate(:user_token)
-      user = User.find(token.resource_owner_id)
-      user.add_role(:localpool_member, localpool)
+      account = Account::Base.find(token.resource_owner_id)
+      account.person.add_role(:localpool_member, localpool)
       token
     end
 

@@ -2,7 +2,7 @@
 
 Fabricator :person do
   i = 0
-  email       { "user#{i+=1}@gmail.de" }
+  email       { "user.#{i+=1}@buzzn.net" }
   prefix      { Person::PREFIXES.sample }
   title       { ([nil] + Person::TITLES).sample }
   preferred_language { Person::PREFERRED_LANGUAGES.sample}
@@ -14,7 +14,6 @@ end
 
 
 Fabricator :person_felix, from: :person do
-  user_name   'ffaerber'
   first_name  'Felix'
   last_name   'Faerber'
   title       nil
@@ -23,7 +22,6 @@ end
 
 
 Fabricator :person_ralf, from: :person do
-  user_name   'rschroeder'
   first_name  'Ralf'
   last_name   'Schroeder'
   title       nil

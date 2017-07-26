@@ -2,11 +2,6 @@ class User < ContractingParty
   rolify
   include Filterable
 
-  devise :database_authenticatable, :async, :registerable,
-         :recoverable, :rememberable, :trackable,
-         :validatable, :lockable, :timeoutable,
-         :confirmable, :invitable
-
   validates :legal_notes, acceptance: true
 
   acts_as_voter
@@ -34,8 +29,6 @@ class User < ContractingParty
   def fax; ''; end
 
   before_destroy :delete_content
-
-  after_invitation_accepted :invoke_invitation_accepted_activity
 
   validate :nil_profile
   def nil_profile

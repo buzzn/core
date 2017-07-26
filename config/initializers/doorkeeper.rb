@@ -9,9 +9,10 @@ Doorkeeper.configure do
 
   # needed for password grant flow
   resource_owner_from_credentials do |routes|
-    user = User.find_for_database_authentication(:email => params[:username])
-    if user && user.valid_for_authentication? { user.valid_password?(params[:password]) }
-      user
+    account = Account::Base.where(email: params[:username]).first
+
+    if account && (hash = Account::PasswordHash.where(id: account.id).first) && BCrypt::Password.new(hash.password_hash) == params[:password]
+      account
     end
   end
 

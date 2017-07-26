@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
 
 
   before_filter :http_basic_authenticate
-  before_filter :set_paper_trail_whodunnit
   before_filter :authenticate_user!
 
   def http_basic_authenticate
@@ -23,50 +22,22 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   #protect_from_forgery with: :null_session
 
-  #serialization_scope :current_user
 
-  # protect_from_forgery
-
-  # after_filter :set_csrf_cookie_for_ng
-
-  # def set_csrf_cookie_for_ng
-  #   cookies['XSRF-TOKEN'] = form_authenticity_token if protect_against_forgery?
-  # end
-
-
-  def after_sign_in_path_for(resource)
-
-    # sign_in_url = url_for(:action => 'new', :controller => 'sessions', :only_path => false)
-
-    # if request.referer == sign_in_url
-    #   super
-    # else
-    #   stored_location_for(resource) || request.referer || root_path
-    # end
-
-    redirect = stored_location_for(resource) || request.referer || profile_path(resource.profile)
-    if redirect =~ /\/users\/sign_in/
-      redirect = profile_path(resource.profile)
-    end
-    redirect
+  def authenticate_user!
+    @current_user = Account::Base.where(id: session['account_id']).first
+    redirect_to '/session/login?redirect=/admin' unless @current_user
   end
 
   rescue_from SecurityError do |exception|
     redirect_to "/"
   end
 
-  # used for authority to make it possible to deal with logged out users
-  def current_or_null_user
-    if current_user == nil
-      User.new
-    else
-      current_user
+  def authenticate_admin_user!
+    unless current_user.person.has_role?(:admin)
+      @current_user = nil
+      session['account_id']=nil
+      redirect_to '/session/login?recirect=/admin'
     end
-  end
-
-
-  def authority_forbidden(error)
-    render "errors/403"
   end
 
   def new_session_path(scope)

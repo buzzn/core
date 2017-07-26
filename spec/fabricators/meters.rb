@@ -83,8 +83,6 @@ Fabricator :easymeter_1124001747, from: :easy_meter_q3d do
   after_create do |meter|
     register = meter.input_register
     christian_schuetze = Fabricate(:christian_schuetze)
-    christian_schuetze.add_role(:manager, register)
-    christian_schuetze.add_role(:member, register)
   end
 end
 

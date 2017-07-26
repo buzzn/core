@@ -351,6 +351,8 @@ GEM
     rack-cors (0.4.0)
     rack-test (0.6.3)
       rack (>= 1.0)
+    rack_csrf (2.5.0)
+      rack (>= 1.1.0)
     rails (4.2.7.1)
       actionmailer (= 4.2.7.1)
       actionpack (= 4.2.7.1)
@@ -507,6 +509,7 @@ DEPENDENCIES
   awesome_print
   aws-sdk
   aws-sdk-rails
+  bcrypt
   brakeman
   byebug
   carrierwave
@@ -562,6 +565,7 @@ DEPENDENCIES
   puma
   quiet_assets
   rack-cors
+  rack_csrf
   rails
   redis
   redis-namespace
@@ -580,6 +584,7 @@ DEPENDENCIES
   slim
   sprockets-rails
   therubyracer
+  tilt
   timecop
   uglifier
   validates_zipcode

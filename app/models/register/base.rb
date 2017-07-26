@@ -77,10 +77,6 @@ module Register
 
     before_destroy :destroy_content
 
-    # permissions helpers
-
-    scope :restricted, ->(uuids) { joins(:contracts).where('contracts.id': uuids) }
-
     scope :real,    -> { where(type: [Register::Input, Register::Output]) }
     scope :virtual, -> { where(type: Register::Virtual) }
 
@@ -100,6 +96,10 @@ module Register
       end
       self.where("label in (?)", labels)
     end
+
+    # permissions helpers
+
+    scope :permitted, ->(uuids) { joins(:contracts).where('contracts.id': uuids) }
 
     def self.search_attributes
       [:name, address: [:city, :zip, :street]]

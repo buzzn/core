@@ -105,7 +105,7 @@ module Buzzn::Resource
         elsif allowed?([:anonymous] | roles | user.unbound_rolenames, perms)
           enum
         else
-          enum.restricted(user.uuids_for(perms))
+          enum.permitted(user.uuids_for(perms)) rescue enum.restricted(user.uuids_for(perms))
         end
       end
 

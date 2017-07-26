@@ -41,19 +41,6 @@ Fabricator :tribe_with_two_comments_readable_by_world, from: :tribe do
   }
 end
 
-Fabricator :tribe_with_members_readable_by_world, from: :tribe do
-  transient members: 1
-  registers do |attrs|
-    register  = Fabricate(:input_meter).input_register
-    register.update(readable: :world)
-    attrs[:members].times do
-      user          = Fabricate(:user).person
-      user.add_role(:member, register)
-    end
-    [register]
-  end
-end
-
 
 Fabricator :tribe_hof_butenland, from: :tribe do
   name  'Hof Butenland'

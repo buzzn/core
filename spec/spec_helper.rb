@@ -33,7 +33,7 @@ end
 RSpec.configure do |config|
 
   config.nested_transaction do |example_or_group, run|
-    (run[]; next) if example_or_group.class != Class || example_or_group.superclass != RSpec::Core::ExampleGroup
+    (run[]; next) if example_or_group.class != Class || example_or_group.superclass != RSpec::Core::ExampleGroup || example_or_group.metadata[:skip_nested]
 
     # With ActiveRecord:
     ActiveRecord::Base.transaction(requires_new: true) do
@@ -81,14 +81,25 @@ RSpec.configure do |config|
 
   config.before(:context) do
     #Mongoid.purge!
-    models = [Register::Base,  Group::Base, User, Broker::Base,  Meter::Base, Contract::Base, Reading::Single, Contract::Tariff, Contract::Payment, BankAccount, Billing, BillingCycle, Comment, Device, Document, EnergyClassification, Organization, Price, Role, Score, Profile, Person]
-    if models.detect { |m| m.count > 0 }
-      warn '-' * 80
-      warn 'DB cleaning failed'
-      models.each do |m|
-        warn "#{m}: #{m.count}"
+    first = true
+    ActiveRecord::Base.connection.tables.each do |table|
+      next if table.match(/\Aschema_migrations\Z/)
+      klass = table.singularize.camelize.safe_constantize
+      if klass
+        if klass.class == Module
+          klass = klass.const_get 'Base'
+        end
+        if klass          
+          if klass.count > 0
+            if first
+              first = false
+              warn '-' * 80
+              warn 'DB cleaning failed'
+            end
+            warn "#{klass}: #{klass.count}"
+          end
+        end
       end
-      warn '-' * 80
     end
     Organization.constants.each do |c|
       name = c.to_s.downcase.to_sym

@@ -184,16 +184,10 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
-    if user = User.where(person: c.customer).first
-      user.add_role(:contract, c)
-    end
+    c.customer.add_role(:contract, c) if c.customer.is_a? Person
     c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor) unless c.contractor_bank_account
     c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer) unless c.customer_bank_account
-  end
-  after_create do |contract|
-    customer = User.where(person: contract.customer).first
-    customer.add_role(:contract, contract) if customer.is_a? Person
-    contract.save
+    c.save
   end
 end
 
@@ -249,11 +243,6 @@ Fabricator :mpoc_karin, from: :metering_point_operator_contract do
   customer      { Fabricate(:karin) }
   register      { Fabricate(:easymeter_60051431).output_register }
   status        Contract::Base::ACTIVE
-  after_create do |c|
-    karin = c.customer
-    karin.add_role :member, c.register
-    karin.add_role :manager, c.register
-  end
 end
 
 # == Localpool Contracts for Mehrgenerationenplatz Forstenried ==

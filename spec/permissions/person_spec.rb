@@ -9,7 +9,7 @@ describe PersonPermissions do
   end
 
   entity!(:bank_account) { Fabricate(:bank_account,
-                                    contracting_party: me.person) }
+                                     contracting_party: me.person) }
 
   let(:anonymous) { nil }
 

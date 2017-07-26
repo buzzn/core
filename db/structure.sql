@@ -1035,8 +1035,8 @@ CREATE TABLE oauth_access_tokens (
     created_at timestamp without time zone NOT NULL,
     scopes character varying,
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    resource_owner_id uuid DEFAULT uuid_generate_v4(),
-    application_id uuid DEFAULT uuid_generate_v4()
+    application_id uuid DEFAULT uuid_generate_v4(),
+    resource_owner_id integer
 );
 
 
@@ -1131,6 +1131,16 @@ CREATE TABLE persons (
     mandate_reference character varying,
     creditor_id character varying,
     image character varying
+);
+
+
+--
+-- Name: persons_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE persons_roles (
+    person_id uuid NOT NULL,
+    role_id integer NOT NULL
 );
 
 
@@ -2022,6 +2032,20 @@ CREATE INDEX index_persons_on_first_name_and_last_name_and_email ON persons USIN
 
 
 --
+-- Name: index_persons_roles_on_person_id_and_role_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_persons_roles_on_person_id_and_role_id ON persons_roles USING btree (person_id, role_id);
+
+
+--
+-- Name: index_persons_roles_on_role_id_and_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_persons_roles_on_role_id_and_person_id ON persons_roles USING btree (role_id, person_id);
+
+
+--
 -- Name: index_prices_on_begin_date_and_localpool_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2588,7 +2612,11 @@ INSERT INTO schema_migrations (version) VALUES ('20170801073138');
 
 INSERT INTO schema_migrations (version) VALUES ('20170802094212');
 
-INSERT INTO schema_migrations (version) VALUES ('20170817032303');
+INSERT INTO schema_migrations (version) VALUES ('20170804070447');
+
+INSERT INTO schema_migrations (version) VALUES ('20170812012646');
+
+INSERT INTO schema_migrations (version) VALUES ('20170812013443');
 
 INSERT INTO schema_migrations (version) VALUES ('20170906020031');
 

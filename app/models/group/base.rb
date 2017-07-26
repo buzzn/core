@@ -32,15 +32,13 @@ module Group
 
     has_many :brokers, class_name: Broker::Base, as: :resource, :dependent => :destroy
 
-    #has_many :managers, -> { where roles:  { name: 'manager'} }, through: :roles, source: :users
     def managers
-      Person.where(id: User.users_of(self, :manager).select(:person_id))
+      Person.with_roles(self, :manager)
     end
 
     has_many :scores, as: :scoreable
 
-    scope :restricted, ->(uuids) { where(id: uuids) }
-
+    scope :permitted, ->(uuids) { where(id: uuids) }
 
     def self.search_attributes
       [:name, :description]

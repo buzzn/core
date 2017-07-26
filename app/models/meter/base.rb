@@ -2,7 +2,6 @@
 module Meter
   class Base < ActiveRecord::Base
     self.table_name = :meters
-    resourcify
     include Filterable
 
     # TODO

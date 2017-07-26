@@ -4,7 +4,7 @@ module Contract
 
     # permissions helpers
 
-    scope :restricted, ->(uuids) { where(id: uuids) }
+    scope :permitted, ->(uuids) { where(id: uuids) }
 
   end
 end

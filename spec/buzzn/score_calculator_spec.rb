@@ -92,14 +92,10 @@ describe Buzzn::ScoreCalculator do
 
     entity(:group2) do
       group         = Fabricate(:tribe)
-      user          = Fabricate(:user)
-      consumer      = Fabricate(:user)
-      producer      = Fabricate(:user)
       register_in   = Fabricate(:input_meter).input_register
       register_out  = Fabricate(:output_meter).output_register
 
       group.registers += [register_in, register_out]
-      consumer.add_role(:member, register_in)
 
       group
     end
@@ -174,8 +170,6 @@ describe Buzzn::ScoreCalculator do
       easymeter_60051560.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051560", resource: easymeter_60051560)
       register_z4 = easymeter_60051560.registers.first
       group = Fabricate(:localpool_home_of_the_brave, registers: [register_z2, register_z3, register_z4])
-      consumer = Fabricate(:user)
-      consumer.add_role(:member, register_z2)
       group
     end
 
@@ -198,7 +192,7 @@ describe Buzzn::ScoreCalculator do
         subject.calculate_sufficiency_scores
         expect(Score.count).to eq 3
         Score.all.each do |score|
-          expect(score.value).to eq 5.0
+          expect(score.value).to eq 4.0
           expect(score.mode).to eq 'sufficiency'
         end
       end

@@ -30,7 +30,7 @@ class Organization < ContractingParty
   validates :phone, presence: true
   validates :mode, presence: true, inclusion: {in: modes}
 
-  scope :restricted, ->(uuids) { where(nil) }
+  scope :permitted, ->(uuids) { where(nil) } # organizations are public
 
   self.modes.each do |mode|
     scope mode + "s", -> { where(mode: mode) }

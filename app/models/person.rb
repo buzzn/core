@@ -3,6 +3,10 @@
 class Person < ContractingParty
   self.table_name = :persons
 
+  # roles stuff
+  resourcify
+  rolify role_join_table_name: :persons_roles
+
   include Filterable
 
   has_one :address, as: :addressable, dependent: :destroy
@@ -59,4 +63,19 @@ class Person < ContractingParty
   def name
     "#{first_name} #{last_name}"
   end
+
+  scope :with_roles, ->(resource = nil, *names) {
+    rel = joins('INNER JOIN persons_roles ON persons_roles.person_id = persons.id').joins('INNER JOIN roles ON persons_roles.role_id = roles.id')
+    if resource
+      rel = rel.where('roles.resource_id=?', resource.id)
+    end
+    if !names.empty?
+      rel = rel.where('roles.name in (?)', names)
+    end
+    rel
+  }
+
+  # permissions helpers
+
+  scope :permitted, ->(uuids) { where(id: uuids) }
 end

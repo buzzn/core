@@ -26,7 +26,7 @@ describe Display::GroupRoda do
 
   entity!(:group) do
     group = Fabricate(:localpool)
-    User.find(user.resource_owner_id).add_role(:manager, group)
+    Account::Base.find(user.resource_owner_id).person.add_role(:manager, group)
     group
   end
 
@@ -51,7 +51,7 @@ describe Display::GroupRoda do
               "title"=>manager.attributes['title'],
               "first_name"=>manager.first_name,
               "last_name"=>manager.last_name,
-              "image"=>User.where(person: manager).first.image.md.url
+              "image"=>manager.image.md.url
             }
           end
         }
@@ -81,7 +81,7 @@ describe Display::GroupRoda do
                 "title"=>manager.attributes['title'],
                 "first_name"=>manager.first_name,
                 "last_name"=>manager.last_name,
-                "image"=>User.where(person: manager).first.image.md.url
+                "image"=>manager.image.md.url
               }
             end
           }
@@ -141,7 +141,7 @@ describe Display::GroupRoda do
       entity(:mentor) { Fabricate(:user).person }
       let(:group) do
         group = send [:tribe, :localpool].sample
-        User.where(person: mentor).first.add_role(:manager, group)
+        mentor.add_role(:manager, group)
         group
       end
 
@@ -154,7 +154,7 @@ describe Display::GroupRoda do
             "title"=>mentor.attributes['title'],
             "first_name"=>mentor.first_name,
             "last_name"=>mentor.last_name,
-            "image"=>User.where(person: mentor).first.image.md.url,
+            "image"=>mentor.image.md.url,
           }
         ]
       end

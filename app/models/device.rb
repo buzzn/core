@@ -1,7 +1,6 @@
 # coding: utf-8
 require 'file_size_validator'
 class Device < ActiveRecord::Base
-  resourcify
   include Filterable
 
   BIO_MASS = 'bio_mass'

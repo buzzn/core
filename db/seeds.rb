@@ -84,7 +84,6 @@ buzzn_team_names.each do |user_name|
     @register_z3.devices << auto_justus
 
   when 'felix'
-    user.add_role :admin # felix is admin
     #Fabricate(:register_urbanstr88).devices << Fabricate(:gocycle)
   when 'christian'
     meter = Fabricate(:easymeter_60138988)
@@ -96,7 +95,6 @@ buzzn_team_names.each do |user_name|
       provider_login: 'christian@buzzn.net',
       provider_password: 'Roentgen11smartmeter'
     )
-    user.add_role :admin # christian is admin
   when 'philipp'
     meter = Fabricate(:easymeter_60009269)
     @philip_register = root_register = meter.input_register
@@ -114,13 +112,6 @@ buzzn_team_names.each do |user_name|
   when 'thomas'
     meter = Fabricate(:easymeter_60232499)
     @thomas_register = root_register = meter.input_register
-    user.add_role :admin # thomas is admin
-  when 'ralf'
-    user.add_role :admin
-  when 'pavel'
-    user.add_role :admin
-  when 'kristian'
-    user.add_role :admin # kristian is admin
   else
     Fabricate(:input_meter)
   end
@@ -156,7 +147,7 @@ meter.broker = Fabricate(:discovergy_broker,
 
 puts 'group karin strom'
 karins_pv_group = Fabricate(:tribe_karins_pv_strom, registers: [register_pv_karin])
-karin.add_role :manager, karins_pv_group
+karin.person.add_role :manager, karins_pv_group
 karins_pv_group.registers << @christian_register
 karins_pv_group.registers << @philip_register
 karins_pv_group.registers << @thomas_register
@@ -227,7 +218,7 @@ Fabricate(:fp_minus, operand: @register_z1b, register: @fichtenweg8)
 puts 'Localpool home_of_the_brave'
 localpool_home_of_the_brave = Fabricate(:localpool_home_of_the_brave, registers: [@register_z2, @register_z4, @fichtenweg10, @fichtenweg8])
 justus = User.where(email: 'justus@buzzn.net').first
-buzzn_team.each { |m| m.add_role(:manager, localpool_home_of_the_brave) }
+buzzn_team.each { |m| m.person.add_role(:manager, localpool_home_of_the_brave) }
 
 
 
@@ -432,35 +423,35 @@ meter = Fabricate(:easymeter_60051595)
 register_60051595 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051595
-lptc = Fabricate(:lptc_mabe, signing_user: mabe.name, register: register_60051595, customer: mabe.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_mabe, signing_user: mabe.person.name, register: register_60051595, customer: mabe.person, contractor: hell_und_warm)
 
 inbr = Fabricate(:inbr)
 meter = Fabricate(:easymeter_60051547)
 register_60051547 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051547
-lptc = Fabricate(:lptc_inbr, signing_user: inbr.name, register: register_60051547, customer: inbr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_inbr, signing_user: inbr.person.name, register: register_60051547, customer: inbr.person, contractor: hell_und_warm)
 
 pebr = Fabricate(:pebr)
 meter = Fabricate(:easymeter_60051620)
 register_60051620 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051620
-lptc = Fabricate(:lptc_pebr, signing_user: pebr.name, register: register_60051620, customer: pebr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_pebr, signing_user: pebr.person.name, register: register_60051620, customer: pebr.person, contractor: hell_und_warm)
 
 anbr = Fabricate(:anbr)
 meter = Fabricate(:easymeter_60051602)
 register_60051602 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051602
-lptc = Fabricate(:lptc_anbr, signing_user: anbr.name, register: register_60051602, customer: anbr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_anbr, signing_user: anbr.person.name, register: register_60051602, customer: anbr.person, contractor: hell_und_warm)
 
 gubr = Fabricate(:gubr)
 meter = Fabricate(:easymeter_60051618)
 register_60051618 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051618
-lptc = Fabricate(:lptc_gubr, signing_user: gubr.name, register: register_60051618, customer: gubr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_gubr, signing_user: gubr.person.name, register: register_60051618, customer: gubr.person, contractor: hell_und_warm)
 
 mabr = Fabricate(:mabr)
 meter = Fabricate(:easymeter_60051557)
@@ -474,28 +465,28 @@ meter = Fabricate(:easymeter_60051596)
 register_60051596 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051596
-lptc = Fabricate(:lptc_dabr, signing_user: dabr.name, register: register_60051596, customer: dabr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_dabr, signing_user: dabr.person.name, register: register_60051596, customer: dabr.person, contractor: hell_und_warm)
 
 zubu = Fabricate(:zubu)
 meter = Fabricate(:easymeter_60051558)
 register_60051558 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051558
-lptc = Fabricate(:lptc_zubu, signing_user: zubu.name, register: register_60051558, customer: zubu.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_zubu, signing_user: zubu.person.name, register: register_60051558, customer: zubu.person, contractor: hell_und_warm)
 
 mace = Fabricate(:mace)
 meter = Fabricate(:easymeter_60051551)
 register_60051551 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051551
-lptc = Fabricate(:lptc_mace, signing_user: mace.name, register: register_60051551, customer: mace.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_mace, signing_user: mace.person.name, register: register_60051551, customer: mace.person, contractor: hell_und_warm)
 
 stcs = Fabricate(:stcs)
 meter = Fabricate(:easymeter_60051619)
 register_60051619 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051619
-lptc = Fabricate(:lptc_stcs, signing_user: stcs.name, register: register_60051619, customer: stcs.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_stcs, signing_user: stcs.person.name, register: register_60051619, customer: stcs.person, contractor: hell_und_warm)
 
 pafi = Fabricate(:pafi)
 meter = Fabricate(:easymeter_60051556)
@@ -506,7 +497,7 @@ lptc = Fabricate(:lptc_pafi, signing_user: pafi, register: register_60051556, cu
 
 #this is the user that lives in S 33 after partick_fierley moved out
 raja = Fabricate(:raja)
-lptc = Fabricate(:lptc_raja, signing_user: raja.name, register: register_60051556, customer: raja.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_raja, signing_user: raja.person.name, register: register_60051556, customer: raja.person, contractor: hell_und_warm)
 
 # mafr = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051617)

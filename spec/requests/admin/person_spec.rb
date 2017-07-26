@@ -15,12 +15,13 @@ describe Admin::LocalpoolRoda do
     entity!(:group) { Fabricate(:localpool) }
 
     entity!(:person) do
-      User.find(other.resource_owner_id).add_role(:localpool_member, group)
-      user = User.find(user_token.resource_owner_id)
+      Account::Base.find(other.resource_owner_id)
+        .person.add_role(:localpool_member, group)
+      user = Account::Base.find(user_token.resource_owner_id).person
       user.add_role(:localpool_owner, group)
-      Fabricate(:bank_account, contracting_party: user.person)
-      Fabricate(:address, addressable: user.person)
-      user.person
+      Fabricate(:bank_account, contracting_party: user)
+      Fabricate(:address, addressable: user)
+      user
     end
 
     let(:denied_json) do
@@ -60,7 +61,7 @@ describe Admin::LocalpoolRoda do
         "fax"=>person.fax,
         "email"=>person.email,
         "preferred_language"=>person.attributes['preferred_language'],
-        "image"=>User.where(person: person).first.image.md.url,
+        "image"=>person.image.md.url,
         "updatable"=>true,
         "deletable"=>false,
         "bank_accounts"=>{
@@ -108,7 +109,7 @@ describe Admin::LocalpoolRoda do
           "fax"=>person.fax,
           "email"=>person.email,
           "preferred_language"=>person.attributes['preferred_language'],
-          "image"=>User.where(person: person).first.image.md.url,
+          "image"=>person.image.md.url,
           "updatable"=>true,
           "deletable"=>false,
           "bank_accounts"=> {
@@ -145,7 +146,7 @@ describe Admin::LocalpoolRoda do
           "fax"=>person.fax,
           "email"=>person.email,
           "preferred_language"=>person.attributes['preferred_language'],
-          "image"=>User.where(person: person).first.image.md.url,
+          "image"=>person.image.md.url,
           "updatable"=>true,
           "deletable"=>false,
           "bank_accounts"=> {
@@ -182,7 +183,7 @@ describe Admin::LocalpoolRoda do
           "fax"=>person.fax,
           "email"=>person.email,
           "preferred_language"=>person.attributes['preferred_language'],
-          "image"=>User.where(person: person).first.image.md.url,
+          "image"=>person.image.md.url,
           "updatable"=>true,
           "deletable"=>false,
           "bank_accounts"=>{
@@ -247,7 +248,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200 all filtered' do
-        admin_user = User.find(admin.resource_owner_id)
+        admin_user = Account::Base.find(admin.resource_owner_id).person
 
         GET "/#{group.id}/persons", user_token, include: :bank_accounts, filter: admin_user.first_name
         expect(response).to have_http_status(200)

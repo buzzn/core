@@ -32,7 +32,7 @@ describe Admin::LocalpoolRoda do
   entity(:manager) { Fabricate(:user).person }
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
-    User.where(person: manager).first.add_role(:manager, localpool)
+    manager.add_role(:manager, localpool)
     3.times.each do
       c = Fabricate(:localpool_power_taker_contract)
       c.register.group = localpool
@@ -40,7 +40,8 @@ describe Admin::LocalpoolRoda do
     end
     Fabricate(:localpool_processing_contract, localpool: localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
-    User.find(user.resource_owner_id).add_role(:localpool_member, localpool)
+    Account::Base.find(user.resource_owner_id)
+      .person.add_role(:localpool_member, localpool)
     localpool
   end
 
@@ -534,7 +535,7 @@ describe Admin::LocalpoolRoda do
             "id"=>manager.id,
             "type"=>"person",
             'updated_at'=>manager.updated_at.as_json,
-            "prefix"=>manager.prefix,
+            "prefix"=>manager.attributes['prefix'],
             "title"=>manager.title,
             "first_name"=>manager.first_name,
             "last_name"=>manager.last_name,
@@ -542,7 +543,7 @@ describe Admin::LocalpoolRoda do
             "fax"=>manager.fax,
             "email"=>manager.email,
             "preferred_language"=>manager.attributes['preferred_language'],
-            "image"=>User.where(person: manager).first.image.md.url,
+            "image"=>manager.image.md.url,
             "updatable"=>true,
             "deletable"=>true,
             "bank_accounts"=> { 'array'=>[] }
