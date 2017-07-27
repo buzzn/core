@@ -44,6 +44,8 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
     user
   }
   contractor               { Organization.discovergy }
+  tariffs                  { [Fabricate.build(:tariff)] }
+  payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
     c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer)
@@ -182,8 +184,8 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
     if user = User.where(person: c.customer).first
       user.add_role(:contract, c)
     end
-    c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
-    c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor) unless c.contractor_bank_account
+    c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer) unless c.customer_bank_account
   end
   after_create do |contract|
     customer = User.where(person: contract.customer).first

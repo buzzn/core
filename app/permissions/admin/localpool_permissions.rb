@@ -25,6 +25,13 @@ class Admin::LocalpoolPermissions
     setting :update, MANAGERS
     setting :delete, NONE
 
+    setting :register do
+      setting :create, NONE
+      setting :retrieve, MANAGERS + [:contract]
+      setting :update, MANAGERS
+      setting :delete, NONE
+    end
+
     setting :contractor do
       setting :create, NONE
       setting :retrieve, MANAGERS + [:contract]
@@ -35,6 +42,11 @@ class Admin::LocalpoolPermissions
         setting :retrieve, MANAGERS + [:self, :organization_contact]
         setting :update, MANAGERS + [:self, :organization_contact]
         setting :delete, NONE
+        setting :address do
+          setting :retrieve, MANAGERS + [:self, :organization_contact]
+          setting :update, MANAGERS + [:self, :organization_contact]
+          setting :delete, NONE
+        end
       end
 
       setting :address do
@@ -60,6 +72,11 @@ class Admin::LocalpoolPermissions
         setting :retrieve, MANAGERS + [:self, :organization_contact]
         setting :update, MANAGERS + [:self, :organization_contact]
         setting :delete, NONE
+        setting :address do
+          setting :retrieve, MANAGERS + [:self, :organization_contact]
+          setting :update, MANAGERS + [:self, :organization_contact]
+          setting :delete, NONE
+        end
       end
 
       setting :address do
@@ -111,6 +128,13 @@ class Admin::LocalpoolPermissions
     setting :update, MANAGERS
     setting :delete, NONE
 
+    setting :register do
+      setting :create, NONE
+      setting :retrieve, MANAGERS + [:contract]
+      setting :update, MANAGERS
+      setting :delete, NONE
+    end
+
     setting :contractor do
       setting :create, NONE
       setting :retrieve, MANAGERS + [:contract]
@@ -121,6 +145,11 @@ class Admin::LocalpoolPermissions
         setting :retrieve, MANAGERS + [:self, :organization_contact]
         setting :update, MANAGERS + [:self, :organization_contact]
         setting :delete, NONE
+        setting :address do
+          setting :retrieve, MANAGERS + [:self, :organization_contact]
+          setting :update, MANAGERS + [:self, :organization_contact]
+          setting :delete, NONE
+        end
       end
 
       setting :address do
@@ -146,6 +175,11 @@ class Admin::LocalpoolPermissions
         setting :retrieve, MANAGERS + [:self, :organization_contact]
         setting :update, MANAGERS + [:self, :organization_contact]
         setting :delete, NONE
+        setting :address do
+          setting :retrieve, MANAGERS + [:self, :organization_contact]
+          setting :update, MANAGERS + [:self, :organization_contact]
+          setting :delete, NONE
+        end
       end
 
       setting :address do
@@ -227,6 +261,13 @@ class Admin::LocalpoolPermissions
       setting :retrieve, MANAGERS + [:contract]
     end
 
+    setting :register do
+      setting :create, NONE
+      setting :retrieve, MANAGERS + [:contract]
+      setting :update, MANAGERS
+      setting :delete, NONE
+    end
+
     setting :contractor do
       setting :create, NONE
       setting :retrieve, MANAGERS
@@ -237,6 +278,11 @@ class Admin::LocalpoolPermissions
         setting :retrieve, MANAGERS + [:self, :organization_contact]
         setting :update, MANAGERS + [:self, :organization_contact]
         setting :delete, NONE
+        setting :address do
+          setting :retrieve, MANAGERS + [:self, :organization_contact]
+          setting :update, MANAGERS + [:self, :organization_contact]
+          setting :delete, NONE
+        end
       end
 
       setting :address do
@@ -262,6 +308,11 @@ class Admin::LocalpoolPermissions
         setting :retrieve, MANAGERS + [:self, :organization_contact]
         setting :update, MANAGERS + [:self, :organization_contact]
         setting :delete, NONE
+        setting :address do
+          setting :retrieve, MANAGERS + [:self, :organization_contact]
+          setting :update, MANAGERS + [:self, :organization_contact]
+          setting :delete, NONE
+        end
       end
 
       setting :address do
@@ -311,6 +362,13 @@ class Admin::LocalpoolPermissions
 
     setting :payments do
       setting :retrieve, MANAGERS + [:contract]
+    end
+
+    setting :register do
+      setting :create, NONE
+      setting :retrieve, MANAGERS + [:contract]
+      setting :update, MANAGERS
+      setting :delete, NONE
     end
 
     setting :contractor do
@@ -380,6 +438,11 @@ class Admin::LocalpoolPermissions
       setting :retrieve, MANAGERS + [:self, :organization_contact]
       setting :update, MANAGERS + [:self, :organization_contact]
       setting :delete, NONE
+      setting :address do
+        setting :retrieve, MANAGERS + [:self, :organization_contact]
+        setting :update, MANAGERS + [:self, :organization_contact]
+        setting :delete, NONE
+      end
     end
 
     setting :address do

@@ -8,12 +8,28 @@ describe Admin::LocalpoolRoda do
 
     entity(:admin) { Fabricate(:admin_token) }
 
-    entity(:group) { Fabricate(:localpool_forstenried) }
+    entity(:localpool) { Fabricate(:localpool) }
+
+    entity(:person) do
+      person = Fabricate(:person)
+      Fabricate(:bank_account, contracting_party: person)
+      Fabricate(:address, addressable: person)
+      person.reload
+      person
+    end
+
+    entity(:organization) do
+      orga = Fabricate(:metering_point_operator, contact: person)
+      Fabricate(:bank_account, contracting_party: orga)
+      Fabricate(:address, addressable: orga)
+      orga.reload
+      orga
+    end
 
     entity(:user) do
       token = Fabricate(:user_token)
       user = User.find(token.resource_owner_id)
-      user.add_role(:localpool_member, group)
+      user.add_role(:localpool_member, localpool)
       token
     end
 
@@ -36,39 +52,135 @@ describe Admin::LocalpoolRoda do
     end
 
     entity(:metering_point_operator_contract) do
-      mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: Fabricate(:user).name, localpool: group, customer: Fabricate(:person))
-      group.metering_point_operator_contract
+      Fabricate(:metering_point_operator_contract,
+                localpool: localpool,
+                contractor: organization,
+                customer: person)
+    end
+
+    entity(:localpool_power_taker_contract) do
+      Fabricate(:localpool_power_taker_contract,
+                customer: person,
+                contractor: organization,
+                register: Fabricate(:input_register,
+                                    group: localpool,
+                                    meter: Fabricate.build(:meter)))
+    end
+
+    let(:person_json) do
+      person_json = {
+        "id"=>person.id,
+        "type"=>"person",
+        'updated_at'=>person.updated_at.as_json,
+        "prefix"=>person.attributes['prefix'],
+        "title"=>person.attributes['title'],
+        "first_name"=>person.first_name,
+        "last_name"=>person.last_name,
+        "phone"=>person.phone,
+        "fax"=>person.fax,
+        "email"=>person.email,
+        "preferred_language"=>person.attributes['preferred_language'],
+        "image"=>person.image.md.url,
+        "updatable"=>true,
+        "deletable"=>false,
+        'address'=>{
+          "id"=>person.address.id,
+          "type"=>"address",
+          'updated_at'=>person.address.updated_at.as_json,
+          "address"=>nil,
+          "street_name"=>person.address.street_name,
+          "street_number"=>person.address.street_number,
+          "city"=>person.address.city,
+          "state"=>person.address.state,
+          "zip"=>person.address.zip,
+          "country"=>person.address.country,
+          "longitude"=>nil,
+          "latitude"=>nil,
+          "addition"=>person.address.addition,
+          "time_zone"=>"Berlin",
+          "updatable"=>true,
+          "deletable"=>false
+        }
+      }
+      def person_json.dup
+        json = super
+        json['address'] = json['address'].dup
+        json
+      end
+      person_json
+    end
+
+    let(:organization_json) do
+      orga_json = {
+        "id"=>organization.id,
+        "type"=>"organization",
+        'updated_at'=>organization.updated_at.as_json,
+        "name"=>organization.name,
+        "phone"=>organization.phone,
+        "fax"=>organization.fax,
+        "website"=>organization.website,
+        "email"=>organization.email,
+        "description"=>organization.description,
+        "mode"=>"metering_point_operator",
+        "updatable"=>true,
+        "deletable"=>false,
+        'address'=>{
+          "id"=>organization.address.id,
+          "type"=>"address",
+          'updated_at'=>organization.address.updated_at.as_json,
+          "address"=>nil,
+          "street_name"=>organization.address.street_name,
+          "street_number"=>organization.address.street_number,
+          "city"=>organization.address.city,
+          "state"=>organization.address.state,
+          "zip"=>organization.address.zip,
+          "country"=>organization.address.country,
+          "longitude"=>nil,
+          "latitude"=>nil,
+          "addition"=>organization.address.addition,
+          "time_zone"=>"Berlin",
+          "updatable"=>true,
+          "deletable"=>false
+        },
+        'contact'=>person_json
+      }
+      def orga_json.dup
+        json = super
+        json['address'] = json['address'].dup
+        json['contact'] = json['contact'].dup
+        json
+      end
+      orga_json
     end
 
     context 'GET' do
-
-      let(:metering_point_operator_contract_json) do
+      let(:localpool_power_taker_contract_json) do
+        contract = localpool_power_taker_contract
         {
           "id"=>contract.id,
-          "type"=>"contract_metering_point_operator",
+          "type"=>"contract_localpool_power_taker",
           'updated_at'=>contract.updated_at.as_json,
           "status"=>"waiting_for_approval",
-          "full_contract_number"=>"90041/0",
-          "customer_number"=>"40021/1",
+          "full_contract_number"=>contract.full_contract_number,
+          "customer_number"=>contract.customer_number,
           "signing_user"=>contract.signing_user,
-          "signing_date"=>"2014-10-01",
+          "signing_date"=>contract.signing_date.to_s,
           "cancellation_date"=>nil,
           "end_date"=>nil,
           "updatable"=>true,
           "deletable"=>false,
-          "begin_date"=>"2014-12-01",
-          "metering_point_operator_name"=>"buzzn systems UG",
+          "begin_date"=>contract.begin_date.to_s,
           "tariffs"=>{
             'array'=>[
               {
                 "id"=>contract.tariffs[0].id,
                 "type"=>'contract_tariff',
                 'updated_at'=>nil,
-                "name"=>"metering_standard",
-                "begin_date"=>"2014-12-01",
+                "name"=>contract.tariffs[0].name,
+                "begin_date"=>contract.tariffs[0].begin_date.to_s,
                 "end_date"=>nil,
-                "energyprice_cents_per_kwh"=>0,
-                "baseprice_cents_per_month"=>30000,
+                "energyprice_cents_per_kwh"=>contract.tariffs[0].energyprice_cents_per_kwh,
+                "baseprice_cents_per_month"=>contract.tariffs[0].baseprice_cents_per_month,
               }
             ]
           },
@@ -86,36 +198,96 @@ describe Admin::LocalpoolRoda do
               }
             end
           },
-          "contractor"=>{
-            "id"=>contract.contractor.id,
-            "type"=>"organization",
-            'updated_at'=>contract.contractor.updated_at.as_json,
-            "name"=>contract.contractor.name,
-            "phone"=>contract.contractor.phone,
-            "fax"=>contract.contractor.fax,
-            "website"=>contract.contractor.website,
-            "email"=>contract.contractor.email,
-            "description"=>contract.contractor.description,
-            "mode"=>"metering_point_operator",
-            "updatable"=>true,
-            "deletable"=>false
+          "contractor"=>organization_json.dup,
+          "customer"=>person_json.dup,
+          "customer_bank_account"=>{
+            "id"=>contract.customer_bank_account.id,
+            "type"=>"bank_account",
+            'updated_at'=>contract.customer_bank_account.updated_at.as_json,
+            "holder"=>contract.customer_bank_account.holder,
+            "bank_name"=>contract.customer_bank_account.bank_name,
+            "bic"=>contract.customer_bank_account.bic,
+            "iban"=>contract.customer_bank_account.iban,
+            "direct_debit"=>contract.customer_bank_account.direct_debit
           },
-          "customer"=>{
-            "id"=>contract.customer.id,
-            "type"=>"person",
-            'updated_at'=>contract.customer.updated_at.as_json,
-            "prefix"=>contract.customer.attributes['prefix'],
-            "title"=>contract.customer.attributes['title'],
-            "first_name"=>contract.customer.first_name,
-            "last_name"=>contract.customer.last_name,
-            "phone"=>contract.customer.phone,
-            "fax"=>contract.customer.fax,
-            "email"=>contract.customer.email,
-            "preferred_language"=>contract.customer.attributes['preferred_language'],
-            "image"=>contract.customer.image.md.url,
-            "updatable"=>true,
-            "deletable"=>false
+          "contractor_bank_account"=>{
+            "id"=>contract.contractor_bank_account.id,
+            "type"=>"bank_account",
+            'updated_at'=>contract.contractor_bank_account.updated_at.as_json,
+            "holder"=>contract.contractor_bank_account.holder,
+            "bank_name"=>contract.contractor_bank_account.bank_name,
+            "bic"=>contract.contractor_bank_account.bic,
+            "iban"=>contract.contractor_bank_account.iban,
+            "direct_debit"=>contract.contractor_bank_account.direct_debit
           },
+          'register'=> {
+            "id"=>contract.register.id,
+            "type"=>"register_real",
+            'updated_at'=>contract.register.updated_at.as_json,
+            "direction"=>'in',
+            "name"=>contract.register.name,
+            "pre_decimal_position"=>6,
+            "post_decimal_position"=>2,
+            "low_load_ability"=>false,
+            "label"=>'CONSUMPTION',
+            "last_reading"=>0,
+            "observer_min_threshold"=>100,
+            "observer_max_threshold"=>5000,
+            "observer_enabled"=>false,
+            "observer_offline_monitoring"=>false,
+            "metering_point_id"=>contract.register.metering_point_id,
+            "obis"=>contract.register.obis,
+          }
+        }
+      end
+
+      let(:metering_point_operator_contract_json) do
+        contract = metering_point_operator_contract
+        {
+          "id"=>contract.id,
+          "type"=>"contract_metering_point_operator",
+          'updated_at'=>contract.updated_at.as_json,
+          "status"=>"waiting_for_approval",
+          "full_contract_number"=>contract.full_contract_number,
+          "customer_number"=>contract.customer_number,
+          "signing_user"=>contract.signing_user,
+          "signing_date"=>contract.signing_date.as_json,
+          "cancellation_date"=>nil,
+          "end_date"=>nil,
+          "updatable"=>true,
+          "deletable"=>false,
+          "begin_date"=>contract.begin_date.to_s,
+          "metering_point_operator_name"=>contract.metering_point_operator_name,
+          "tariffs"=>{
+            'array'=>[
+              {
+                "id"=>contract.tariffs[0].id,
+                "type"=>'contract_tariff',
+                'updated_at'=>nil,
+                "name"=>contract.tariffs[0].name,
+                "begin_date"=>contract.tariffs[0].begin_date.to_s,
+                "end_date"=>nil,
+                "energyprice_cents_per_kwh"=>contract.tariffs[0].energyprice_cents_per_kwh,
+                "baseprice_cents_per_month"=>contract.tariffs[0].baseprice_cents_per_month,
+              }
+            ]
+          },
+          "payments"=>{
+            'array'=> contract.payments.collect do |p|
+              {
+                "id"=>p.id,
+                "type"=>'contract_payment',
+                'updated_at'=>nil,
+                "begin_date"=>p.begin_date.to_s,
+                "end_date"=>p.end_date ? p.end_date.to_s : nil,
+                "price_cents"=>p.price_cents,
+                "cycle"=>p.cycle,
+                "source"=>p.source,
+              }
+            end
+          },
+          "contractor"=>organization_json.dup,
+          "customer"=>person_json.dup,
           "customer_bank_account"=>{
             "id"=>contract.customer_bank_account.id,
             "type"=>"bank_account",
@@ -141,38 +313,37 @@ describe Admin::LocalpoolRoda do
 
       # NOTE picking a sample contract is enough for the 404 and 403 tests
 
-      let(:contract) { metering_point_operator_contract }
-
       let(:denied_json) do
         {
           "errors" => [
             {
-              "detail"=>"retrieve Contract::MeteringPointOperator: #{contract.id} permission denied for User: #{user.resource_owner_id}" }
+              "detail"=>"retrieve Contract::MeteringPointOperator: #{metering_point_operator_contract.id} permission denied for User: #{user.resource_owner_id}" }
           ]
         }
       end
 
       it '403' do
-        GET "/#{group.id}/contracts/#{contract.id}", user
+        GET "/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", user
         expect(json).to eq denied_json
         expect(response).to have_http_status(403)
       end
 
       it '404' do
-        GET "/#{group.id}/contracts/bla-blub", admin
+        GET "/#{localpool.id}/contracts/bla-blub", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
-      [:metering_point_operator].each do |type|
-
-        let(:contract) { send "#{type}_contract" }
-
-        let(:contract_json) { send "#{type}_contract_json" }
+      [:metering_point_operator, :localpool_power_taker].each do |type|
 
         context "as #{type}" do
+
+          let(:contract) { send "#{type}_contract" }
+
+          let(:contract_json) { send "#{type}_contract_json" }
+
           it '200' do
-            GET "/#{group.id}/contracts/#{contract.id}", admin, include: 'tariffs,payments,contractor,customer,customer_bank_account,contractor_bank_account'
+            GET "/#{localpool.id}/contracts/#{contract.id}", admin, include: 'tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end
@@ -194,61 +365,23 @@ describe Admin::LocalpoolRoda do
         }
       end
 
-      #TODO flesh out the organization which is currently an user
-
       context 'GET' do
 
-        [:person, :organization].each do |type|
+        let("contract") { [metering_point_operator_contract, localpool_power_taker_contract].sample }
 
-          context "as #{type}" do
+        let("customer_json") do
+          json = person_json.dup
+          json.delete('address')
+          json['sales_tax_number']=nil
+          json['tax_rate']=nil
+          json['tax_number']=nil
+          json
+        end
 
-            let("#{type}_contract") { metering_point_operator_contract }
-            let("#{type}_customer") { send("#{type}_contract").customer}
-
-            let("#{type}_customer_json") do
-              customer =  send("#{type}_customer")
-              {
-                "id"=>customer.id,
-                "type"=>"person",
-                'updated_at'=>customer.updated_at.as_json,
-                "prefix"=>customer.attributes['prefix'],
-                "title"=>customer.attributes['title'],
-                "first_name"=>customer.first_name,
-                "last_name"=>customer.last_name,
-                "phone"=>customer.phone,
-                "fax"=>customer.fax,
-                "email"=>customer.email,
-                "preferred_language"=>customer.attributes['preferred_language'],
-                "image"=>customer.image.md.url,
-                "updatable"=>true,
-                "deletable"=>false,
-                "sales_tax_number"=>nil,
-                "tax_rate"=>nil,
-                "tax_number"=>nil,
-                "bank_accounts"=>{
-                  'array'=> customer.bank_accounts.collect do |bank_account|
-                    {
-                      "id"=>bank_account.id,
-                      "type"=>"bank_account",
-                      'updated_at'=>bank_account.updated_at.as_json,
-                      "holder"=>bank_account.holder,
-                      "bank_name"=>bank_account.bank_name,
-                      "bic"=>bank_account.bic,
-                      "iban"=>bank_account.iban,
-                      "direct_debit"=>bank_account.direct_debit
-                    }
-                  end
-                }
-              }
-            end
-
-            it '200' do
-              contract = send "#{type}_contract"
-              GET "/#{group.id}/contracts/#{contract.id}/customer", admin, include: :bank_accounts
-              expect(response).to have_http_status(200)
-              expect(json.to_yaml).to eq(send("#{type}_customer_json").to_yaml)
-            end
-          end
+        it '200' do
+          GET "/#{localpool.id}/contracts/#{contract.id}/customer", admin
+          expect(response).to have_http_status(200)
+          expect(json.to_yaml).to eq(customer_json.to_yaml)
         end
       end
     end
@@ -267,61 +400,24 @@ describe Admin::LocalpoolRoda do
         }
       end
 
-      #TODO flesh out the user which is currently an organization
-
       context 'GET' do
 
-        [:person, :organization].each do |type|
+        let("contract") { [metering_point_operator_contract, localpool_power_taker_contract].sample }
 
-          context "as #{type}" do
+        let("contractor_json") do
+          json = organization_json.dup
+          json.delete('address')
+          json.delete('contact')
+          json['sales_tax_number']=nil
+          json['tax_rate']=nil
+          json['tax_number']=nil
+          json
+        end
 
-            let("#{type}_contract") { metering_point_operator_contract }
-            let("#{type}_contractor") { send("#{type}_contract").contractor}
-
-            let("#{type}_contractor_json") do
-              contractor =  send("#{type}_contractor")
-              {
-                "id"=>contractor.id,
-                "type"=>"organization",
-                'updated_at'=>contractor.updated_at.as_json,
-                "name"=>contractor.name,
-                "phone"=>contractor.phone,
-                "fax"=>contractor.fax,
-                "website"=>contractor.website,
-                "email"=>contractor.email,
-                "description"=>contractor.description,
-                "mode"=>"metering_point_operator",
-                "updatable"=>true,
-                "deletable"=>false,
-                "sales_tax_number"=>nil,
-                "tax_rate"=>nil,
-                "tax_number"=>nil,
-                "address"=>nil,
-                "bank_accounts"=>{
-                  'array'=> contractor.bank_accounts.collect do |bank_account|
-                    {
-                      "id"=>bank_account.id,
-                      "type"=>"bank_account",
-                      'updated_at'=>bank_account.updated_at.as_json,
-                      "holder"=>bank_account.holder,
-                      "bank_name"=>bank_account.bank_name,
-                      "bic"=>bank_account.bic,
-                      "iban"=>bank_account.iban,
-                      "direct_debit"=>bank_account.direct_debit
-                    }
-                  end
-                }
-              }
-            end
-
-            it '200' do
-              contract = send "#{type}_contract"
-
-              GET "/#{group.id}/contracts/#{contract.id}/contractor", admin, include: 'address,bank_accounts'
-              expect(response).to have_http_status(200)
-              expect(json.to_yaml).to eq(send("#{type}_contractor_json").to_yaml)
-            end
-          end
+        it '200' do
+          GET "/#{localpool.id}/contracts/#{contract.id}/contractor", admin
+          expect(response).to have_http_status(200)
+          expect(json.to_yaml).to eq(contractor_json.to_yaml)
         end
       end
     end

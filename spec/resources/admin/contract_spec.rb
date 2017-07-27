@@ -109,7 +109,7 @@ describe Contract::BaseResource do
       expect(attrs['id']).to eq localpool_power_taker.id
       expect(attrs['type']).to eq 'contract_localpool_power_taker'
       expect(attrs.keys & attributes).to match_array attributes
-      expect(attrs.keys.size).to eq (attributes.size + base_attributes.size + 2)
+      expect(attrs.keys.size).to eq (attributes.size + base_attributes.size + 3)
     end
   end
 end
