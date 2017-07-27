@@ -3,5 +3,6 @@ module Contract
 
     model LocalpoolPowerTaker
 
+    has_one :register
   end
 end
