@@ -7,11 +7,7 @@ module Buzzn
       end
 
       def call(object, request)
-        options = {include: ''}
-        if include = request.params['include']
-          #binding.pry
-          options[:include] = include.empty? ? '' : eval("{#{include.gsub(/(,|$)/, ':{}\1')}}")
-        end
+        options = {include: Buzzn::IncludeParser.parse(request.params['include'])}
         case object
         when Dry::Monads::Either::Right
           object.value.to_json(options)
