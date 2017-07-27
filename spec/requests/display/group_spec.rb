@@ -48,7 +48,7 @@ describe Display::GroupRoda do
               "id"=>manager.id,
               "type"=>"person",
               'updated_at'=>manager.updated_at.as_json,
-              "title"=>manager.title,
+              "title"=>manager.attributes['title'],
               "first_name"=>manager.first_name,
               "last_name"=>manager.last_name,
               "image"=>User.where(person: manager).first.image.md.url
@@ -78,7 +78,7 @@ describe Display::GroupRoda do
                 "id"=>manager.id,
                 "type"=>"person",
                 'updated_at'=>manager.updated_at.as_json,
-                "title"=>manager.title,
+                "title"=>manager.attributes['title'],
                 "first_name"=>manager.first_name,
                 "last_name"=>manager.last_name,
                 "image"=>User.where(person: manager).first.image.md.url
@@ -151,7 +151,7 @@ describe Display::GroupRoda do
             "id"=>mentor.id,
             "type"=>"person",
             'updated_at'=>mentor.updated_at.as_json,
-            "title"=>nil,
+            "title"=>mentor.attributes['title'],
             "first_name"=>mentor.first_name,
             "last_name"=>mentor.last_name,
             "image"=>User.where(person: mentor).first.image.md.url,

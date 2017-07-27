@@ -19,6 +19,7 @@ describe Admin::LocalpoolRoda do
       user = User.find(user_token.resource_owner_id)
       user.add_role(:localpool_owner, group)
       Fabricate(:bank_account, contracting_party: user.person)
+      Fabricate(:address, addressable: user.person)
       user.person
     end
 
@@ -75,6 +76,24 @@ describe Admin::LocalpoolRoda do
               "direct_debit"=>bank_account.direct_debit
             }
           end
+        },
+        'address'=>{
+          "id"=>person.address.id,
+          "type"=>"address",
+          'updated_at'=>person.address.updated_at.as_json,
+          "address"=>nil,
+          "street_name"=>person.address.street_name,
+          "street_number"=>person.address.street_number,
+          "city"=>person.address.city,
+          "state"=>person.address.state,
+          "zip"=>person.address.zip,
+          "country"=>person.address.country,
+          "longitude"=>nil,
+          "latitude"=>nil,
+          "addition"=>person.address.addition,
+          "time_zone"=>"Berlin",
+          "updatable"=>true,
+          "deletable"=>true
         }
       }
     end
@@ -189,6 +208,7 @@ describe Admin::LocalpoolRoda do
       let(:admin_person_json) do
         json = person_json.dup
         json['deletable']=false
+        json.delete('address')
         json
       end
 
@@ -205,7 +225,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200' do
-        GET "/#{group.id}/persons/#{person.id}", user_token, include: :bank_accounts
+        GET "/#{group.id}/persons/#{person.id}", user_token, include: 'bank_accounts, address'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq person_json.to_yaml
 

@@ -4,6 +4,8 @@ class Person < ContractingParty
 
   include Filterable
 
+  has_one :address, as: :addressable, dependent: :destroy
+
   # TODO remove this when decided on how to make the attachments (Document)
   mount_uploader :image, PictureUploader
 
@@ -15,6 +17,17 @@ class Person < ContractingParty
          male:   MALE
        }
   PREFIXES = [FEMALE, MALE]
+
+  # titles
+  DR = 'Dr.'
+  PROF = 'Prof.'
+  PROF_DR = 'Prof. Dr.'
+  enum titles: {
+         prof: PROF,
+         dr: DR,
+         prof_dr: PROF_DR
+       }
+  TITLES = [DR, PROF, PROF_DR]
 
   # preferred languages
   GERMAN = 'de'

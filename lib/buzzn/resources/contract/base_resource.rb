@@ -22,6 +22,5 @@ module Contract
     has_one :customer, ContractingPartyResource
     has_one :customer_bank_account
     has_one :contractor_bank_account
-    has_one :contact
   end
 end
