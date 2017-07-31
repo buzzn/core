@@ -16,14 +16,14 @@ describe Contract::BaseResource do
   entity(:power_taker) { Fabricate(:power_taker_contract_move_in) }
   entity(:power_giver) { Fabricate(:power_giver_contract) }
 
-  let(:base_attributes) { ['status',
+  let(:base_attributes) { ['id', 'type', 'updated_at',
+                           'status',
                            'full_contract_number',
                            'customer_number',
                            'signing_user',
                            'signing_date',
                            'cancellation_date',
                            'end_date',
-                           'updated_at',
                            'updatable',
                            'deletable'] }
   let!(:all) { [metering_point_operator, localpool_processing, localpool_power_taker] }
@@ -66,12 +66,11 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = ['begin_date', 'metering_point_operator_name']
+      attributes = ['begin_date', 'metering_point_operator_name'] + base_attributes
       attrs = resources.retrieve(metering_point_operator.id).to_h
       expect(attrs['id']).to eq metering_point_operator.id
       expect(attrs['type']).to eq 'contract_metering_point_operator'
-      expect(attrs.keys & attributes).to match_array attributes
-      expect(attrs.keys.size).to eq (attributes.size + base_attributes.size + 2)
+      expect(attrs.keys).to match_array attributes
     end
   end
 
@@ -85,12 +84,11 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = ['begin_date', 'first_master_uid', 'second_master_uid']
+      attributes = ['begin_date', 'first_master_uid', 'second_master_uid'] + base_attributes
       attrs = resources.retrieve(localpool_processing.id).to_h
       expect(attrs['id']).to eq localpool_processing.id
       expect(attrs['type']).to eq 'contract_localpool_processing'
-      expect(attrs.keys & attributes).to match_array attributes
-      expect(attrs.keys.size).to eq (attributes.size + base_attributes.size + 2)
+      expect(attrs.keys).to match_array attributes
     end
   end
 
@@ -104,12 +102,18 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = []
+      attributes = ['begin_date',
+                    'forecast_kwh_pa',
+                    'renewable_energy_law_taxation',
+                    'third_party_billing_number',
+                    'third_party_renter_number',
+                    'old_supplier_name',
+                    'old_customer_number',
+                    'old_account_number'] + base_attributes
       attrs = resources.retrieve(localpool_power_taker.id).to_h
       expect(attrs['id']).to eq localpool_power_taker.id
       expect(attrs['type']).to eq 'contract_localpool_power_taker'
-      expect(attrs.keys & attributes).to match_array attributes
-      expect(attrs.keys.size).to eq (attributes.size + base_attributes.size + 3)
+      expect(attrs.keys).to match_array attributes
     end
   end
 end

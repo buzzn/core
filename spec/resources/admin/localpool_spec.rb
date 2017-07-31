@@ -4,13 +4,15 @@ describe Admin::LocalpoolResource do
   entity(:admin) { Fabricate(:admin) }
   entity!(:localpool) { Fabricate(:localpool) }
 
-  let(:base_attributes) { ['name',
+  let(:base_attributes) { ['id', 'type', 'updated_at',
+                           'name',
                            'description',
                            'slug',
                            'updatable',
                            'deletable' ] }
 
   let(:resources) { Admin::LocalpoolResource.all(admin) }
+
   describe 'scores' do
 
     entity(:group) { localpool }
@@ -85,8 +87,7 @@ describe Admin::LocalpoolResource do
     attrs = resources.retrieve(localpool.id).to_h
     expect(attrs['id']).to eq localpool.id
     expect(attrs['type']).to eq 'group_localpool'
-    expect(attrs.keys & base_attributes).to match_array base_attributes
-    expect(attrs.keys.size).to eq (base_attributes.size + 3)
+    expect(attrs.keys).to match_array base_attributes
   end
 
   context 'prices' do

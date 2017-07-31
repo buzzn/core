@@ -19,7 +19,8 @@ describe Admin::BillingCycleResource do
 
   entity(:admin) { Fabricate(:admin) }
 
-  entity(:base_attributes) { [ 'name',
+  entity(:base_attributes) { [ 'id', 'type', 'updated_at',
+                               'name',
                                'begin_date',
                                'end_date' ] }
 
@@ -29,7 +30,7 @@ describe Admin::BillingCycleResource do
 
   it 'retrieve' do
     result = billing_cycles.retrieve(billing_cycle.id).to_h
-    expect(result.keys & base_attributes).to match_array base_attributes
+    expect(result.keys).to match_array base_attributes
   end
 
   it 'gets all billings from billing_cycle' do

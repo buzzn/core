@@ -170,6 +170,13 @@ describe Admin::LocalpoolRoda do
           "updatable"=>true,
           "deletable"=>false,
           "begin_date"=>contract.begin_date.to_s,
+          'forecast_kwh_pa'=>contract.forecast_kwh_pa,
+          'renewable_energy_law_taxation'=>contract.renewable_energy_law_taxation,
+          'third_party_billing_number'=>contract.third_party_billing_number,
+          'third_party_renter_number'=>contract.third_party_renter_number,
+          'old_supplier_name'=>contract.old_supplier_name,
+          'old_customer_number'=>contract.old_customer_number,
+          'old_account_number'=>contract.old_account_number,
           "tariffs"=>{
             'array'=>[
               {

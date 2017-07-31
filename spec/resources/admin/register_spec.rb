@@ -16,9 +16,7 @@ describe Register::BaseResource do
 
   let(:resources) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).registers }
 
-  let(:base_keys) { ['id',
-                     'type',
-                     'updated_at',
+  let(:base_keys) { ['id', 'type', 'updated_at',
                      'label',
                      'name',
                      'direction',

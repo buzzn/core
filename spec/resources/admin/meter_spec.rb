@@ -16,9 +16,7 @@ describe Meter::BaseResource do
 
   let(:resources) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).meters }
 
-  let(:base_keys) { ['id',
-                     'type',
-                     'updated_at',
+  let(:base_keys) { ['id', 'type', 'updated_at',
                      'product_name',
                      'product_serialnumber',
                      'edifact_metering_type',
