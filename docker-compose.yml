@@ -35,7 +35,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    #command: bash -c "bundle exec rake db:create && bundle exec rake db:init && bundle exec puma -C config/puma.rb" #you can comment out this after the first `docker-compose up` run
+    #command: bash -c "bundle exec rake db:create && bundle exec rake db:migrate && bundle exec rake db:seed && bundle exec rake slp:import_h0 && bundle exec rake sep:import_pv_bhkw && bundle exec rake banks:import"
     ports:
       - "3000:3000"
     depends_on:
