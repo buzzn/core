@@ -18,8 +18,8 @@ but you can also uncomment the core_test service for running your tests.
 #### troubleshoot
 - stop the stack `docker-compose down`
 - remove all volumes  `docker volume prune`
-- remove all containers `docker rm -f $(docker ps -a -q)`
-- remove all image `docker rmi -f $(docker images -q)`
+- remove all buzzn containers `docker rm -f $(docker ps -a -q -f name=buzzn)`
+- remove all buzzn image `docker rmi -f $(docker images buzzn* -q)`
 - rebuild image `docker-compose build`
 
 #### More infos about:
