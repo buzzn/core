@@ -77,7 +77,7 @@ module Buzzn
           if contract.is_a?(Contract::OtherSupplier)
             consumption_third_party << accounted_energy
           else
-            if contract.renewable_energy_law_taxation == Contract::RenewableEnergyLawTaxation::FULL
+            if contract.full?
               consumption_lsn_full_eeg << accounted_energy
             else
               consumption_lsn_reduced_eeg << accounted_energy

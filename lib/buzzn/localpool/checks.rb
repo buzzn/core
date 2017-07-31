@@ -103,7 +103,7 @@ module Buzzn::Localpool
                                                 contract_number_addition: Contract::LocalpoolPowerTaker.where(contract_number: contract_number).maximum(:contract_number_addition) + 1,
                                                 register: register,
                                                 localpool_id: register.group.id, # TODO: this is optional. make it mandatory?
-                                                renewable_energy_law_taxation: Contract::RenewableEnergyLawTaxation::REDUCED,
+                                                renewable_energy_law_taxation: Contract::Base::REDUCED,
                                                 signing_user: register.group.managers.first, # TODO: this must be the owner of the LCP in the future
                                                 signing_date: begin_date,
                                                 customer: customer,

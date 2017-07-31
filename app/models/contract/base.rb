@@ -7,12 +7,25 @@ module Contract
     include Filterable
 
     # status consts
-    WAITING   = 'waiting_for_approval'
-    APPROVED  = 'approved'
-    RUNNING   = 'running'
-    CANCELLED = 'cancelled'
-    EXPIRED   = 'expired'
-    EXCHANGE_PROCESS_PAUSED = 'exchange_process_paused'
+    ONBOARDING = 'onboarding'
+    ACTIVE     = 'approvedactive'
+    TERMINATED = 'terminated'
+    ENDED      = 'ended'
+    enum status: {
+           onboarding: ONBOARDING,
+           active: ACTIVE,
+           terminated: TERMINATED,
+           ended: ENDED
+         }
+    STATUS = [ONBOARDING, ACTIVE, TERMINATED, ENDED]
+
+    FULL = 'F'
+    REDUCED = 'R'
+    enum renewable_energy_law_taxation: {
+           full: FULL,
+           reduced: REDUCED
+         }
+    TAXATIONS = [FULL, REDUCED]
 
     # error messages
     MUST_BE_TRUE                 = 'must be true'
@@ -33,10 +46,6 @@ module Contract
 
     class << self
       private :new
-
-      def status
-        @status ||= [WAITING, APPROVED, RUNNING, CANCELLED, EXPIRED, EXCHANGE_PROCESS_PAUSED]
-      end
     end
 
     # TODO to be removed
@@ -56,8 +65,6 @@ module Contract
     validates :contractor_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'contractor_type'
     validates :customer_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'customer_type'
 
-    validates :status, inclusion: {in: status}
-
     validates :contract_number, presence: false
     validates :customer_number, presence: false
     validates :origianl_signing_user, presence: false
@@ -75,14 +82,7 @@ module Contract
 
     def initialize(*args)
       super
-      self.status = WAITING
     end
-
-    scope :approved,  -> { where(status: APPROVED) }
-    scope :running,   -> { where(status: RUNNING) }
-    scope :queued,    -> { where(status: WAITING) }
-    scope :cancelled, -> { where(status: CANCELLED) }
-    scope :expired,   -> { where(status: EXPIRED) }
 
     scope :power_givers,             -> {where(type: PowerGiver)}
     scope :power_takers,             -> {where(type: PowerTaker)}
@@ -125,7 +125,7 @@ module Contract
 
       # check lifecycle changes
       if change = changes['status']
-        errors.add(:status, WAS_ALREADY_CANCELLED) if change[0] == CANCELLED
+        errors.add(:status, WAS_ALREADY_CANCELLED) if [ENDED, TERMINATED].member?(change[0])
       end
     end
 
@@ -148,18 +148,6 @@ module Contract
 
     def login_required?
       self.organization == Organization.discovergy || self.organization == Organization.mysmartgrid
-    end
-  end
-
-
-  class RenewableEnergyLawTaxation
-    FULL    = 'full'
-    REDUCED = 'reduced'
-
-    class << self
-      def all
-        @renewable_energy_law_taxation ||= [FULL, REDUCED]
-      end
     end
   end
 end

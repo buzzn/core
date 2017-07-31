@@ -27,11 +27,9 @@ module Contract
         errors.add(:old_supplier_name, IS_MISSING) unless old_supplier_name
         errors.add(:old_customer_number, IS_MISSING) unless old_customer_number
         errors.add(:old_account_number, IS_MISSING) unless old_account_number
-      elsif ! persisted?
-        errors.add(:begin_date, NOT_ALLOWED_FOR_OLD_CONTRACT) if begin_date
       end
 
-      if status != WAITING
+      if onboarding?
         errors.add(:begin_date, IS_MISSING) unless begin_date
       end
 
