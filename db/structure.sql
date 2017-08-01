@@ -2,11 +2,12 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.3
--- Dumped by pg_dump version 9.5.3
+-- Dumped from database version 9.6.3
+-- Dumped by pg_dump version 9.6.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -1250,28 +1251,28 @@ CREATE TABLE users_roles (
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: active_admin_comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY active_admin_comments ALTER COLUMN id SET DEFAULT nextval('active_admin_comments_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: banks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
 
 
 --
--- Name: active_admin_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: active_admin_comments active_admin_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY active_admin_comments
@@ -1279,7 +1280,7 @@ ALTER TABLE ONLY active_admin_comments
 
 
 --
--- Name: addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: addresses addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY addresses
@@ -1287,7 +1288,7 @@ ALTER TABLE ONLY addresses
 
 
 --
--- Name: bank_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: bank_accounts bank_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY bank_accounts
@@ -1295,7 +1296,7 @@ ALTER TABLE ONLY bank_accounts
 
 
 --
--- Name: banks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: banks banks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY banks
@@ -1303,7 +1304,7 @@ ALTER TABLE ONLY banks
 
 
 --
--- Name: billing_cycles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: billing_cycles billing_cycles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY billing_cycles
@@ -1311,7 +1312,7 @@ ALTER TABLE ONLY billing_cycles
 
 
 --
--- Name: billings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: billings billings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY billings
@@ -1319,7 +1320,7 @@ ALTER TABLE ONLY billings
 
 
 --
--- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY comments
@@ -1327,7 +1328,7 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: contracts contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY contracts
@@ -1335,7 +1336,7 @@ ALTER TABLE ONLY contracts
 
 
 --
--- Name: devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: devices devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY devices
@@ -1343,7 +1344,7 @@ ALTER TABLE ONLY devices
 
 
 --
--- Name: discovergy_brokers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: brokers discovergy_brokers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY brokers
@@ -1351,7 +1352,7 @@ ALTER TABLE ONLY brokers
 
 
 --
--- Name: documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: documents documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY documents
@@ -1359,7 +1360,7 @@ ALTER TABLE ONLY documents
 
 
 --
--- Name: energy_classifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: energy_classifications energy_classifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY energy_classifications
@@ -1367,7 +1368,7 @@ ALTER TABLE ONLY energy_classifications
 
 
 --
--- Name: formula_parts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: formula_parts formula_parts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY formula_parts
@@ -1375,7 +1376,7 @@ ALTER TABLE ONLY formula_parts
 
 
 --
--- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: groups groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY groups
@@ -1383,7 +1384,7 @@ ALTER TABLE ONLY groups
 
 
 --
--- Name: metering_points_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: registers metering_points_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY registers
@@ -1391,7 +1392,7 @@ ALTER TABLE ONLY registers
 
 
 --
--- Name: meters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: meters meters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY meters
@@ -1399,7 +1400,7 @@ ALTER TABLE ONLY meters
 
 
 --
--- Name: oauth_access_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: oauth_access_grants oauth_access_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY oauth_access_grants
@@ -1407,7 +1408,7 @@ ALTER TABLE ONLY oauth_access_grants
 
 
 --
--- Name: oauth_access_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: oauth_access_tokens oauth_access_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY oauth_access_tokens
@@ -1415,7 +1416,7 @@ ALTER TABLE ONLY oauth_access_tokens
 
 
 --
--- Name: oauth_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: oauth_applications oauth_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY oauth_applications
@@ -1423,7 +1424,7 @@ ALTER TABLE ONLY oauth_applications
 
 
 --
--- Name: organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: organizations organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY organizations
@@ -1431,7 +1432,7 @@ ALTER TABLE ONLY organizations
 
 
 --
--- Name: payments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: payments payments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY payments
@@ -1439,7 +1440,7 @@ ALTER TABLE ONLY payments
 
 
 --
--- Name: persons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: persons persons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY persons
@@ -1447,7 +1448,7 @@ ALTER TABLE ONLY persons
 
 
 --
--- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: prices prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY prices
@@ -1455,7 +1456,7 @@ ALTER TABLE ONLY prices
 
 
 --
--- Name: profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: profiles profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY profiles
@@ -1463,7 +1464,7 @@ ALTER TABLE ONLY profiles
 
 
 --
--- Name: roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY roles
@@ -1471,7 +1472,7 @@ ALTER TABLE ONLY roles
 
 
 --
--- Name: scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: scores scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY scores
@@ -1479,7 +1480,7 @@ ALTER TABLE ONLY scores
 
 
 --
--- Name: tariffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: tariffs tariffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY tariffs
@@ -1487,7 +1488,7 @@ ALTER TABLE ONLY tariffs
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -1929,7 +1930,7 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
--- Name: fk_rails_6b54950e91; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: organizations fk_rails_6b54950e91; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY organizations
@@ -1937,7 +1938,7 @@ ALTER TABLE ONLY organizations
 
 
 --
--- Name: fk_rails_88c9092860; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: registers fk_rails_88c9092860; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY registers
@@ -1945,7 +1946,7 @@ ALTER TABLE ONLY registers
 
 
 --
--- Name: fk_rails_9215ad6069; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: payments fk_rails_9215ad6069; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY payments
@@ -1953,7 +1954,7 @@ ALTER TABLE ONLY payments
 
 
 --
--- Name: fk_rails_e863d6119e; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: tariffs fk_rails_e863d6119e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY tariffs
@@ -1961,7 +1962,7 @@ ALTER TABLE ONLY tariffs
 
 
 --
--- Name: fk_rails_fa67535741; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: users fk_rails_fa67535741; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
