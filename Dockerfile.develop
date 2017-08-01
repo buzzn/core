@@ -6,16 +6,25 @@ ENV RAILS_ENV development
 ENV RACK_ENV development
 ENV SECRET_KEY_BASE 053ac4b0bb8bfd1e67bb3c2949c30447b79fe4f94b01d2acd5662009ab3ae4f984236423b6f2ec6a70b1698ba3aab423b2b52578c5b0442bb8a19ed491bfaade
 
+
 # Install apt based dependencies required to run Rails as
 # well as RubyGems. As the Ruby image itself is based on a
 # Debian image, we use apt-get to install those.
+
 RUN apt-get update && \
   apt-get install -y \
   build-essential \
   vim \
-  postgresql-client \
+  wget \
   imagemagick \
   nodejs
+
+# install postgresql-9.6(pg_dump) needet for migrations
+RUN touch /etc/apt/sources.list
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' >> /etc/apt/sources.list
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN apt-get update -y
+RUN apt-get install postgresql-9.6 -y
 
 # Configure the main working directory. This is the base
 # directory used in any further RUN, COPY, and ENTRYPOINT
