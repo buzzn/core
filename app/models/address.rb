@@ -3,66 +3,51 @@ class Address < ActiveRecord::Base
 
   belongs_to :addressable, polymorphic: true
 
-  validates :street_name,     presence: true, length: { in: 2..128 }
-  validates :street_number,   presence: true, length: { in: 1..32 }
-  validates :city,            presence: true, length: { in: 2..128 }
-  validates :state,           presence: false
-  validates :zip,             presence: true, numericality: { only_integer: true }
-
-
-  after_validation :geocode if Rails.env == "production" || Rails.env == "staging"
-  geocoded_by :full_name
-
-  def full_name
-    [ street_name, street_number, city, zip, state, country].compact.join(', ')
+  # example:
+  #   germany: 'DE'
+  #   austria: 'AT'
+  #   switzerland: 'CH'
+  #   ...
+  COUNTRIES = []
+  ISO3166::Country.all.each_with_object({}) do |c, o|
+    o[c.name.gsub(/[().,]/,'').gsub(/ /, '_').downcase] = c.alpha2
+    COUNTRIES << c.alpha2
+  end.tap do |map|
+    enum country: map
   end
+  # ['DE', 'AT', 'GB', ...]
+  COUNTRIES.freeze
 
-  def long_name
-    "#{street_name} #{street_number}, #{city}"
+  # DE_BB: Brandenburg
+  # DE_BE: Berlin
+  # DE_BW: Baden-Württemberg
+  # DE_BY: Bayern
+  # DE_HB: Bremen
+  # DE_HE: Hessen
+  # DE_HH: Hamburg
+  # DE_MV: Mecklenburg-Vorpommern
+  # DE_NI: Niedersachsen
+  # DE_NW: Nordrhein-Westfalen
+  # DE_RP: Rheinland-Pfalz
+  # DE_SH: Schleswig-Holstein
+  # DE_SL: Saarland
+  # DE_SN: Sachsen
+  # DE_ST: Sachsen-Anhalt
+  # DE_TH: Thüringen
+  STATES = []
+  ['DE'].each_with_object({}) do |country, o|
+    ISO3166::Country.new(country).subdivisions.keys.each do |c|
+      val = "#{country}_#{c}"
+      o[val] = val
+      STATES << val
+    end
+  end.tap do |states|
+    enum state: states
   end
-
-  def short_name
-    "#{street_name} #{city}"
-  end
-
-  def self.states
-    %w{
-      Baden-Würrtemberg
-      Bayern
-      Berlin
-      Brandenburg
-      Bremen
-      Hamburg
-      Hessen
-      Niedersachsen
-      Nordrhein-Westfalen
-      Mecklemburg-Vorpommern
-      Rheinland-Pfalz
-      Saarland
-      Sachsen
-      Sachsen-Anhalt
-      Schleswig-Holstein
-      Thüringen
-    }
-  end
+  # DE_BB, DE_BE, DE_BW, DE_BY, ...
+  STATES.freeze
 
   def self.filter(value)
-    do_filter(value, :city, :street_name)
-  end
-
-  def street_with_number
-    "#{street_name} #{street_number}"
-  end
-
-  def street_with_number_and_extra
-    "#{street_name} #{street_number} #{address}"
-  end
-
-  def zip_with_place
-    "#{zip} #{city}"
-  end
-
-  def street_number_zip_place
-    "#{street_name} #{street_number}, #{zip} #{city}"
+    do_filter(value, :city, :street, :zip)
   end
 end

@@ -62,7 +62,7 @@ class Organization < ContractingParty
   end
 
   def self.search_attributes
-    [:name, :mode, :email, :website, :description, address: [:city, :state, :street_name]]
+    [:name, :mode, :email, :website, :description, address: [:city, :zip, :street]]
   end
 
   def self.filter(value)

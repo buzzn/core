@@ -22,9 +22,7 @@ describe "Contract Model" do
     [c1, c2]
   end
 
-  entity(:address) { Fabricate(:address, street_name: 'Limmatstraße',
-                               street_number: '5', zip: 81476,
-                               city: 'München', state: 'Bayern') }
+  entity(:address) { Fabricate(:address_limmat_5) }
 
   entity!(:contract) do
     c = Fabricate(:mpoc_stefan)

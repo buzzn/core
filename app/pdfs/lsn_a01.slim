@@ -29,21 +29,21 @@ html
       div Localpool #{power_taker.localpool.name}
       div = power_taker.contractor_contact.name 
       div could be manager of organization
-      div = power_taker.contractor.address.street_with_number
-      div = power_taker.contractor.address.zip_with_place
+      div = power_taker.contractor.address.street
+      div #{power_taker.contractor.address.zip} #{power_taker.contractor.address.city}
       div &nbsp;
       div T: #{power_taker.contractor.phone}
       div F: #{power_taker.contractor.fax}
       div Email: #{power_taker.contractor.email}
 
     div id="from_small"
-      #{power_taker.contractor_contact.name} #{power_taker.contractor.address.street_with_number} #{power_taker.contractor.address.zip_with_place}
+      #{power_taker.contractor_contact.name} #{power_taker.contractor.address.street} #{power_taker.contractor.address.zip} #{power_taker.contractor.address.city}
 
     div id="to"
       div = 'TODO power_taker.customer.prefix'
       div = power_taker.customer.name
-      div = power_taker.customer.address.street_with_number
-      div = power_taker.customer.address.zip_with_place
+      div = power_taker.customer.address.street
+      div #{power_taker.customer.address.zip} #{power_taker.customer.address.city}
       div &nbsp;
       div = power_taker.customer.email
 
@@ -59,7 +59,7 @@ html
         td #{power_taker.full_contract_number}
       tr
         td Bezugsstelle:
-        td = power_taker.register.address.street_with_number_and_extra
+        td = power_taker.register.address.street
       tr
         td Zählernummer
         td = power_taker.register.meter.product_serialnumber
@@ -108,7 +108,7 @@ html
     table
       tr.grey
         td Adresse
-        td = power_taker.register.address.street_number_zip_place
+        td #{power_taker.register.address.street}, #{power_taker.register.address.zip} #{power_taker.register.address.city}
       tr
         td Adresszusatz
         td = power_taker.register.address.addition
@@ -163,7 +163,7 @@ html
 
   p.law Der LSN kann seine Vertragserklärung innerhalb von 14 Tagen ohne Angabe von Gründen in Textform (z. B. Brief, Telefax, E- Mail) widerrufen. Die Frist beginnt nach Erhalt der Widerrufsbelehrung in Textform, jedoch nicht vor Eingang der ersten Stromlieferung und auch nicht vor Erfüllung der Informationspflichten des LSG gemäß Artikel 246 § 2 in Verbindung mit § 1 Abs. 1 und 2 EGBGB sowie – bei Vertragsschluss im elektronischen Rechtsverkehr – der Pflichten des LSG gemäß § 312g Abs. 1 Satz 1 BGB in Verbindung mit Artikel 246 § 3 EGBGB. Zur Wahrung der Widerrufsfrist genügt die rechtzeitige Absendung des Widerrufs.
 
-  p.law Der Widerruf ist zu richten an #{power_taker.contractor.name}, - Localpool #{power_taker.localpool.name}- #{power_taker.contractor.address.street_number_zip_place}, Telefon: #{power_taker.contractor.phone}, Fax: #{power_taker.contractor.fax}, E Mail: #{power_taker.contractor.email}.
+  p.law Der Widerruf ist zu richten an #{power_taker.contractor.name}, - Localpool #{power_taker.localpool.name} - #{power_taker.contractor.address.street}, #{power_taker.contractor.address.zip} #{power_taker.contractor.address.city}, Telefon: #{power_taker.contractor.phone}, Fax: #{power_taker.contractor.fax}, E Mail: #{power_taker.contractor.email}.
 
   h2 Widerrufsfolgen
 

@@ -10,13 +10,13 @@ describe "Organization Model" do
     
   it 'filters organization' do
     [organization.name, organization.mode, organization.email,
-     organization.description, organization.website, organization.address.state,
-     organization.address.city, organization.address.street_name].each do |val|
+     organization.description, organization.website, organization.address.zip,
+     organization.address.city, organization.address.street].each do |val|
 
       len = (val.size * 3)/4
       [val, val.upcase, val.downcase, val[0..len], val[-(len+1)..-1]].each do |value|
         organizations = Organization.filter(value)
-        expect(organizations.detect{|o| o == organization}).to eq organization
+        expect(organizations).to include organization
       end
     end
   end

@@ -118,62 +118,62 @@ end
 #Ab hier: Hell & Warm (Forstenried)
 Fabricator :mabe, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 43')}
+  address             { Fabricate(:address_limmat_5, addition: 'S 43')}
 end
 
 Fabricator :inbr, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 21')}
+  address             { Fabricate(:address_limmat_5, addition: 'M 21')}
 end
 
 Fabricator :pebr, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 25')}
+  address             { Fabricate(:address_limmat_5, addition: 'M 25')}
 end
 
 Fabricator :anbr, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 25')}
+  address             { Fabricate(:address_limmat_7, addition: 'S 25')}
 end
 
 Fabricator :gubr, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 14')}
+  address             { Fabricate(:address_limmat_5, addition: 'M 14')}
 end
 
 Fabricator :mabr, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 42')}
+  address             { Fabricate(:address_limmat_7, addition: 'S 42')}
 end
 
 Fabricator :dabr, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 22')}
+  address             { Fabricate(:address_limmat_7, addition: 'S 22')}
 end
 
 Fabricator :zubu, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 41')}
+  address             { Fabricate(:address_limmat_7, addition: 'S 41')}
 end
 
 Fabricator :mace, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 32')}
+  address             { Fabricate(:address_limmat_5, addition: 'M 32')}
 end
 
 Fabricator :stcs, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 5, addition: 'M 13')}
+  address             { Fabricate(:address_limmat_5, addition: 'M 13')}
 end
 
 Fabricator :pafi, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 33')}
+  address             { Fabricate(:address_limmat_7, addition: 'S 33')}
 end
 
 Fabricator :raja, from: :user do
   profile             { Fabricate(:profile) }
-  address             { Fabricate(:address_limmat, street_number: 7, addition: 'S 33')}
+  address             { Fabricate(:address_limmat_7, addition: 'S 33')}
 end
 
 

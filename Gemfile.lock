@@ -113,6 +113,11 @@ GEM
     coffee-script-source (1.8.0)
     concurrent-ruby (1.0.5)
     connection_pool (2.2.0)
+    countries (2.0.8)
+      i18n_data (~> 0.7.0)
+      money (~> 6.7)
+      sixarm_ruby_unaccent (~> 1.1)
+      unicode_utils (~> 1.4)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     debug_inspector (0.0.2)
@@ -262,6 +267,7 @@ GEM
     htmlentities (4.3.4)
     http_parser.rb (0.6.0)
     i18n (0.7.0)
+    i18n_data (0.7.0)
     iban-tools (1.1.0)
     inflecto (0.0.2)
     inherited_resources (1.7.2)
@@ -532,6 +538,9 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.0.1)
       execjs (>= 0.3.0, < 3)
+    unicode_utils (1.4.0)
+    validates_zipcode (0.0.17)
+      activemodel (>= 3.2.0)
     vcr (3.0.3)
     warden (1.2.6)
       rack (>= 1.0)
@@ -567,6 +576,7 @@ DEPENDENCIES
   carrierwave
   clockwork
   coffee-rails
+  countries
   devise
   devise-async
   devise-i18n
@@ -634,6 +644,7 @@ DEPENDENCIES
   therubyracer
   timecop
   uglifier
+  validates_zipcode
   vcr
   webmock
   whenever

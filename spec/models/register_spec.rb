@@ -15,8 +15,8 @@ describe "Register Model" do
     register = urbanstr
 
     [register.name, register.address.city,
-     register.address.state,
-     register.address.street_name].each do |val|
+     register.address.zip,
+     register.address.street].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
         registers = Register::Base.filter(value)
         expect(registers).to include register

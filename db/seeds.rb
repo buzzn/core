@@ -935,11 +935,7 @@ localpool_forstenried.registers << register_1338000818
 ### LCP Sulz ###
 puts 'Localpool Sulz'
 
-sulz_contractor = Fabricate(:organization, mode: 'other', name: 'HaFi', address: Fabricate(:address,
-                                                                                          street_name: 'Sulz',
-                                                                                          street_number: '2',
-                                                                                          zip: 82380,
-                                                                                          city: 'Peißenberg'))
+sulz_contractor = Fabricate(:organization, mode: 'other', name: 'HaFi', address: Fabricate(:address_sulz))
 
 
 # Übergabe in out

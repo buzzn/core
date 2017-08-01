@@ -2,18 +2,12 @@ class AddressResource < Buzzn::Resource::Entity
 
   model Address
 
-  attributes  :address,
-              :street_name,
-              :street_number,
+  attributes  :street,
               :city,
               :state,
               :zip,
-              :country,
-              :longitude,
-              :latitude,
-              :addition,
-              :time_zone
-  
+              :country
+
   attributes :updatable, :deletable
 end
 

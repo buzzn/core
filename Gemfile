@@ -34,6 +34,11 @@ gem 'pg'
 gem 'multi_json'
 gem 'oj'
 
+# iso-3166, etc
+gem 'validates_zipcode'
+gem 'countries'
+gem 'iban-tools'
+
 # Backend
 gem 'rails'
 gem 'sprockets-rails'
@@ -77,7 +82,6 @@ gem 'paper_trail'
 gem 'acts_as_commentable_with_threading'
 gem 'awesome_nested_set'
 gem 'attr_encrypted', '1.3.5'
-gem 'iban-tools'
 gem 'byebug'
 gem 'acts_as_votable'
 gem 'oauth'

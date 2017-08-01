@@ -102,7 +102,7 @@ module Register
     end
 
     def self.search_attributes
-      [:name, address: [:city, :state, :street_name]]
+      [:name, address: [:city, :zip, :street]]
     end
 
     def self.filter(value)
