@@ -10,13 +10,21 @@ ENV SECRET_KEY_BASE 4302a93016c91a2074f05c247570bd12a604c3368d711861df1cbab4b967
 # Install apt based dependencies required to run Rails as
 # well as RubyGems. As the Ruby image itself is based on a
 # Debian image, we use apt-get to install those.
+
 RUN apt-get update && \
   apt-get install -y \
   build-essential \
   vim \
-  postgresql-client \
+  wget \
   imagemagick \
   nodejs
+
+# install postgresql-9.6(pg_dump) needet for migrations
+RUN touch /etc/apt/sources.list
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' >> /etc/apt/sources.list
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN apt-get update -y
+RUN apt-get install postgresql-9.6 -y
 
 # Configure the main working directory. This is the base
 # directory used in any further RUN, COPY, and ENTRYPOINT
