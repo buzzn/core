@@ -63,6 +63,11 @@ describe Admin::LocalpoolRoda do
         'updated_at'=> meter.updated_at.as_json,
         "product_name"=>meter.product_name,
         "product_serialnumber"=>meter.product_serialnumber,
+        "updatable"=>true,
+        "deletable"=>true,
+        "manufacturer_name"=>meter.attributes['manufacturer_name'],
+        "direction_number"=>meter.attributes['direction_number'],
+        "converter_constant"=>meter.converter_constant,
         "ownership"=>meter.attributes['ownership'],
         "section"=>meter.attributes['section'],
         "build_year"=>meter.build_year,
@@ -76,11 +81,6 @@ describe Admin::LocalpoolRoda do
         "edifact_cycle_interval"=>meter.attributes['edifact_cycle_interval'],
         "edifact_data_logging"=>meter.attributes['edifact_data_logging'],
         "sent_data_dso"=>Date.today.to_s,
-        "updatable"=>true,
-        "deletable"=>true,
-        "manufacturer_name"=>meter.attributes['manufacturer_name'],
-        "direction_number"=>meter.attributes['direction_number'],
-        "converter_constant"=>meter.converter_constant,
         "registers"=>{
           'array'=>[
             {
@@ -129,7 +129,7 @@ describe Admin::LocalpoolRoda do
 
     context 'PATCH' do
 
-      let(:wrong_json) do
+      let(:real_wrong_json) do
         {
           "errors"=>[
             {"parameter"=>"updated_at",
@@ -172,6 +172,19 @@ describe Admin::LocalpoolRoda do
         }
       end
 
+      let(:virtual_wrong_json) do
+        {
+          "errors"=>[
+            {"parameter"=>"updated_at",
+             "detail"=>"is missing"},
+            {"parameter"=>"product_name",
+             "detail"=>"size cannot be greater than 64"},
+            {"parameter"=>"product_serialnumber",
+             "detail"=>"size cannot be greater than 64"},
+          ]
+        }
+      end
+
       let(:real_updated_json) do
         meter = real_meter
         {
@@ -179,6 +192,11 @@ describe Admin::LocalpoolRoda do
           "type"=>"meter_real",
           "product_name"=>'Smarty Super Meter',
           "product_serialnumber"=>'12341234',
+          "updatable"=>true,
+          "deletable"=>true,
+          "manufacturer_name"=>'other',
+          "direction_number"=>'ZRZ',
+          "converter_constant"=>20,
           "ownership"=>'CUSTOMER',
           "section"=>'G',
           "build_year"=>2017,
@@ -192,52 +210,25 @@ describe Admin::LocalpoolRoda do
           "edifact_cycle_interval"=>'QUARTERLY',
           "edifact_data_logging"=>'Z04',
           "sent_data_dso"=>'2010-01-01',
-          "updatable"=>true,
-          "deletable"=>true,
-          "manufacturer_name"=>'other',
-          "direction_number"=>'ZRZ',
-          "converter_constant"=>20
         }
       end
 
       let(:virtual_meter_json) do
-        json = meter_json.dup
-        json['type'] = 'meter_virtual'
-        json['id'] = virtual_meter.id
-        json['updated_at'] = virtual_meter.updated_at.as_json
-        json['product_serialnumber'] = virtual_meter.product_serialnumber
-        json.delete('manufacturer_name')
-        json.delete('registers')
-        json.delete('direction_number')
-        json.delete('converter_constant')
-        json
+        meter = virtual_meter
+        {
+          "id"=>meter.id,
+          "type"=>"meter_virtual",
+          "product_name"=>'Smarty Super Meter',
+          "product_serialnumber"=>'12341234',
+          "updatable"=>true,
+          "deletable"=>true,
+        }
       end
 
       let(:virtual_updated_json) do
         json = virtual_meter_json.dup
         json['product_name'] = 'Smarty Super Meter'
-        json['section'] = 'G'
-        json['ownership'] = 'CUSTOMER'
-        json['build_year'] = 2017
-        json['sent_data_dso'] = '2010-01-01'
-        json['calibrated_until'] = Date.today.to_s
-        json['edifact_meter_size'] = 'Z02'
-        json['edifact_tariff'] = 'ZTZ'
-        json['edifact_measurement_method'] = 'MMR'
-        json['edifact_mounting_method'] = 'HS'
-        json['edifact_metering_type'] = 'EHZ'
-        json['edifact_voltage_level'] = 'E04'
-        json['edifact_cycle_interval'] = 'QUARTERLY'
-        json['edifact_data_logging'] = 'Z04'
-        json.delete('updated_at')
-        json
-      end
-
-      let(:real_wrong_json) { wrong_json }
-      let(:virtual_wrong_json) do
-        json = wrong_json.dup
-        json['errors'].delete_at(1)# manufacturer name
-        json['errors'].delete_at(8) # direction_number
+        json['product_serialnumber'] = '12341234'
         json
       end
 
@@ -251,6 +242,12 @@ describe Admin::LocalpoolRoda do
         PATCH "/#{group.id}/meters/bla-blub", admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
+      end
+
+      context 'virtual' do
+        it '404' do
+          skip('asd')
+        end
       end
 
       [:real, :virtual].each do |type|
@@ -278,7 +275,7 @@ describe Admin::LocalpoolRoda do
             expect(json).to eq send("#{type}_stale_json")
           end
 
-          it '422 wrong' do
+          it '422' do
             meter = send "#{type}_meter"
             PATCH "/#{group.id}/meters/#{meter.id}", admin,
                   manufacturer_name: 'Maxima' * 20,
@@ -334,24 +331,23 @@ describe Admin::LocalpoolRoda do
             if meter.is_a? Meter::Real
               expect(meter.manufacturer_name).to eq 'other'
               expect(meter.direction_number).to eq 'two_way_meter'
+              expect(meter.ownership).to eq 'customer'
+              expect(meter.section).to eq 'gas'
+              expect(meter.build_year).to eq 2017
+              expect(meter.sent_data_dso).to eq Date.new(2010)
+              expect(meter.converter_constant).to eq 20
+              expect(meter.calibrated_until).to eq Date.today
+              expect(meter.edifact_metering_type).to eq 'digital_household_meter'
+              expect(meter.edifact_meter_size).to eq 'edl21'
+              expect(meter.edifact_measurement_method).to eq 'manual'
+              expect(meter.edifact_tariff).to eq 'dual_tariff'
+              expect(meter.edifact_mounting_method).to eq 'cap_rail'
+              expect(meter.edifact_voltage_level).to eq 'high_level'
+              expect(meter.edifact_cycle_interval).to eq 'quarterly'
+              expect(meter.edifact_data_logging).to eq 'analog'
             end
-            expect(meter.product_serialnumber).to eq '12341234'
             expect(meter.product_name).to eq 'Smarty Super Meter'
             expect(meter.product_serialnumber).to eq '12341234'
-            expect(meter.ownership).to eq 'customer'
-            expect(meter.section).to eq 'gas'
-            expect(meter.build_year).to eq 2017
-            expect(meter.sent_data_dso).to eq Date.new(2010)
-            expect(meter.converter_constant).to eq 20
-            expect(meter.calibrated_until).to eq Date.today
-            expect(meter.edifact_metering_type).to eq 'digital_household_meter'
-            expect(meter.edifact_meter_size).to eq 'edl21'
-            expect(meter.edifact_measurement_method).to eq 'manual'
-            expect(meter.edifact_tariff).to eq 'dual_tariff'
-            expect(meter.edifact_mounting_method).to eq 'cap_rail'
-            expect(meter.edifact_voltage_level).to eq 'high_level'
-            expect(meter.edifact_cycle_interval).to eq 'quarterly'
-            expect(meter.edifact_data_logging).to eq 'analog'
 
             result = json
             # TODO fix it: our time setup does not allow

@@ -10,7 +10,7 @@ module Admin
 
     route do |r|
 
-      localpool = shared[:localpool]
+      localpool = shared[LocalpoolRoda::PARENT]
 
       r.post! do
         created do

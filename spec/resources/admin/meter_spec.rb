@@ -19,19 +19,6 @@ describe Meter::BaseResource do
   let(:base_keys) { ['id', 'type', 'updated_at',
                      'product_name',
                      'product_serialnumber',
-                     'edifact_metering_type',
-                     'edifact_meter_size',
-                     'edifact_tariff',
-                     'edifact_measurement_method',
-                     'edifact_mounting_method',
-                     'edifact_voltage_level',
-                     'calibrated_until',
-                     'sent_data_dso',
-                     'edifact_cycle_interval',
-                     'edifact_data_logging',
-                     'ownership',
-                     'section',
-                     'build_year',
                      'updatable',
                      'deletable'] }
 
@@ -65,9 +52,23 @@ describe Meter::BaseResource do
       attrs = resources.retrieve(real.id).to_h
       expect(attrs['id']).to eq real.id
       expect(attrs['type']).to eq 'meter_real'
-      expect(attrs.keys).to match_array base_keys + ['manufacturer_name',
-                                                     'converter_constant',
-                                                     'direction_number']
+      expect(attrs.keys).to match_array base_keys + [
+                                          'edifact_metering_type',
+                                          'edifact_meter_size',
+                                          'edifact_tariff',
+                                          'edifact_measurement_method',
+                                          'edifact_mounting_method',
+                                          'edifact_voltage_level',
+                                          'calibrated_until',
+                                          'sent_data_dso',
+                                          'edifact_cycle_interval',
+                                          'edifact_data_logging',
+                                          'ownership',
+                                          'section',
+                                          'build_year',
+                                          'manufacturer_name',
+                                          'converter_constant',
+                                          'direction_number']
       expect{resources.virtual.retrieve(real.id)}.to raise_error Buzzn::PermissionDenied
     end
 

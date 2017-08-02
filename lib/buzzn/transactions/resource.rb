@@ -1,7 +1,7 @@
 Buzzn::Transaction.define do |t|
-  t.register_step(:update_resource) do |input, resource|
+  t.register_step(:update_resource) do |input, resource, extras = {}|
     begin
-      Dry::Monads.Right(resource.update(input))
+      Dry::Monads.Right(resource.update(input.merge(extras)))
     rescue ActiveRecord::RecordInvalid => e
       errors = {}
       e.record.errors.messages.each do |name, messages|

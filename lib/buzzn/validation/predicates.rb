@@ -11,6 +11,10 @@ module Buzzn::Validation
       ! URI::MailTo::EMAIL_REGEXP.match(value).nil?
     end
 
+    predicate(:uuid?) do |value|
+      ! URI::MailTo::EMAIL_REGEXP.match(value).nil?
+    end
+
     predicate(:phone_number?) do |value|
       ! /^[()+\s0-9]*$/.match(value).nil?
     end

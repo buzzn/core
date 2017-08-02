@@ -1,5 +1,7 @@
 require_relative '../admin_roda'
 class Admin::RegisterRoda < BaseRoda
+  CHILDREN = :registers
+
   plugin :shared_vars
 
   include Import.args[:env,
@@ -8,7 +10,7 @@ class Admin::RegisterRoda < BaseRoda
 
   route do |r|
 
-    registers = shared[:registers]
+    registers = shared[CHILDREN]
 
     r.get! do
       registers

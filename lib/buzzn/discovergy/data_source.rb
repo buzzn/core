@@ -130,9 +130,8 @@ module Buzzn::Discovergy
         raise Buzzn::DataSourceError.new('ERROR - no virtual meters for non-virtual registers')
       end
       meter = register.meter
-      # TODO: make this SQL faster
-      meter_ids_plus = register.formula_parts.additive.collect(&:operand).collect(&:meter).uniq.compact.collect(&:product_serialnumber).map{|s| 'EASYMETER_' + s}
-      meter_ids_minus = register.formula_parts.subtractive.collect(&:operand).collect(&:meter).uniq.compact.collect(&:product_serialnumber).map{|s| 'EASYMETER_' + s}
+      meter_ids_plus = register.formula_parts.plus.operand_meters.select(:product_serialnumber).collect{|m| "EASYMETER_#{m.product_serialnumber}"}
+      meter_ids_minus = register.formula_parts.minus.operand_meters.select(:product_serialnumber).collect{|m| "EASYMETER_#{m.product_serialnumber}"}
       if meter_ids_plus.size + meter_ids_minus.size < 2
         raise Buzzn::DataSourceError.new('Formula has to contain more than one meter.')
       end

@@ -4,11 +4,16 @@ module Register
     belongs_to :register, class_name: Register::Base, foreign_key: :register_id
     belongs_to :operand, class_name: Register::Base
 
-    scope :additive, -> {where(operator: '+')}
-    scope :subtractive, -> {where(operator: '-')}
+    PLUS='+'.freeze
+    MINUS='-'.freeze
+    enum operator: {
+           plus: PLUS,
+           minus: MINUS
+         }
+    OPERATORS = [PLUS, MINUS].freeze
 
-    validates :operator, inclusion: { in: ['-', '+'] }
-    validates :operand, presence: true
-    validates :register, presence: true
+    scope :operand_meters, -> {
+      Meter::Base.where(id: Register::Base.where(id: select(:operand_id)).select(:meter_id))
+    }
   end
 end

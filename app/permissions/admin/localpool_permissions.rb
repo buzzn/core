@@ -226,14 +226,27 @@ class Admin::LocalpoolPermissions
   end
 
   setting :meters, reader: true do
-    setting :retrieve, MANAGERS + [:contract]
+    setting :retrieve, MANAGERS
     setting :update, MANAGERS
     setting :delete, OPERATORS
 
     setting :registers do
-      setting :retrieve, MANAGERS + [:contract]
+      setting :retrieve, MANAGERS
       setting :update, MANAGERS
       setting :delete, NONE
+    end
+
+    setting :formula_parts do
+      setting :create, MANAGERS
+      setting :retrieve, MANAGERS
+      setting :update, MANAGERS
+      setting :delete, NONE
+
+      setting :register do
+        setting :retrieve, MANAGERS
+        setting :update, MANAGERS
+        setting :delete, NONE
+      end
     end
   end
 

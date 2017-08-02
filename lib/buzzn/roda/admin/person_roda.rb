@@ -6,7 +6,7 @@ module Admin
 
     route do |r|
 
-      persons = shared[:localpool].persons
+      persons = shared[LocalpoolRoda::PARENT].persons
 
       r.get! do
         persons.filter(r.params['filter'])
