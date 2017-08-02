@@ -24,7 +24,7 @@ module Buzzn::Virtual
         # be a bit more lenient with the offset as we do have network latencies 
         if timestamp == 0 || (timestamp - data.timestamp).abs < 6
           timestamp = data.timestamp
-          formula_part.operator == '+' ? sum += data.value : sum -= data.value
+          formula_part.plus? ? sum += data.value : sum -= data.value
         else
           raise Buzzn::DataSourceError.new('Timestamp mismatch at virtual register power calculation')
         end
@@ -39,7 +39,7 @@ module Buzzn::Virtual
       resource.formula_parts.each do |formula_part|
         mode = to_mode(formula_part.operand)
         data = @registry.get(formula_part.operand.data_source).aggregated(formula_part.operand, mode, interval)
-        formula_part.operator == '+' ? result.add_all(data, interval.duration) : result.subtract_all(data, interval.duration)
+        formula_part.plus? ? result.add_all(data, interval.duration) : result.subtract_all(data, interval.duration)
       end
       result.combine(to_mode(resource), interval.duration)
       return result

@@ -455,6 +455,16 @@ CREATE TYPE manufacturer_name AS ENUM (
 
 
 --
+-- Name: operator; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE operator AS ENUM (
+    '+',
+    '-'
+);
+
+
+--
 -- Name: ownership; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -846,11 +856,11 @@ CREATE TABLE energy_classifications (
 
 CREATE TABLE formula_parts (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    operator character varying,
     register_id uuid,
     operand_id uuid,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    operator operator NOT NULL
 );
 
 
@@ -2288,4 +2298,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170724150100');
 INSERT INTO schema_migrations (version) VALUES ('20170731104218');
 
 INSERT INTO schema_migrations (version) VALUES ('20170801073138');
+
+INSERT INTO schema_migrations (version) VALUES ('20170802094212');
 

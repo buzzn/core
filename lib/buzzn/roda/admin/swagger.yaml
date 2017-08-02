@@ -769,120 +769,49 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: ownership
-        in: formData
-        required: false
-        type: string
-        enum:
-        - BUZZN_SYSTEMS
-        - FOREIGN_OWNERSHIP
-        - CUSTOMER
-        - LEASED
-        - BOUGHT
-      - name: section
-        in: formData
-        required: false
-        type: string
-        enum:
-        - S
-        - G
-      - name: build_year
-        in: formData
-        required: false
-        type: integer
-        format: int64
-        maximum: 2050
-        exclusiveMaximum: true
-        minimum: 1950
-        exclusiveMinimum: true
-      - name: sent_data_dso
-        in: formData
-        required: false
-        type: string
-        format: date
-      - name: converter_constant
-        in: formData
-        required: false
-        type: integer
-        format: int64
-      - name: calibrated_until
-        in: formData
-        required: false
-        type: string
-        format: date
-      - name: edifact_metering_type
-        in: formData
-        required: false
-        type: string
-        enum:
-        - AHZ
-        - LAZ
-        - WSZ
-        - EHZ
-        - MAZ
-        - IVA
-      - name: edifact_meter_size
-        in: formData
-        required: false
-        type: string
-        enum:
-        - Z01
-        - Z02
-        - Z03
-      - name: edifact_measurement_method
-        in: formData
-        required: false
-        type: string
-        enum:
-        - AMR
-        - MMR
-      - name: edifact_tariff
-        in: formData
-        required: false
-        type: string
-        enum:
-        - ETZ
-        - ZTZ
-        - NTZ
-      - name: edifact_mounting_method
-        in: formData
-        required: false
-        type: string
-        enum:
-        - BKE
-        - DPA
-        - HS
-      - name: edifact_voltage_level
-        in: formData
-        required: false
-        type: string
-        enum:
-        - E06
-        - E05
-        - E04
-        - E03
-      - name: edifact_cycle_interval
-        in: formData
-        required: false
-        type: string
-        enum:
-        - MONTHLY
-        - YEARLY
-        - QUARTERLY
-        - HALF_YEARLY
-      - name: edifact_data_logging
-        in: formData
-        required: false
-        type: string
-        enum:
-        - Z04
-        - Z05
       responses:
         200:
           description: patched
-  "/localpools/{localpool_id}/meters/{virtual_meter_id}/registers/{virtual_register_id}":
+  "/localpools/{localpool_id}/meters/{virtual_meter_id}/formula-parts":
+    get:
+      description: get formula-parts of virtual meter for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: virtual_meter_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/meters/{virtual_meter_id}/formula-parts/{formula_part_id}":
+    get:
+      description: get formula-part of virtual meter for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: virtual_meter_id
+        in: path
+        required: true
+        type: string
+      - name: formula_part_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
     patch:
-      description: update the virtual register of a meter for the given IDs
+      description: update formula-part of virtual meter for the given IDs
       consumes:
       - application/x-www-form-urlencoded
       produces:
@@ -896,7 +825,7 @@ paths:
         in: path
         required: true
         type: string
-      - name: virtual_register_id
+      - name: formula_part_id
         in: path
         required: true
         type: string
@@ -905,6 +834,13 @@ paths:
         required: true
         type: string
         format: date_time
+      - name: operator
+        in: formData
+        required: false
+        type: string
+        enum:
+        - "+"
+        - "-"
       responses:
         200:
           description: patched

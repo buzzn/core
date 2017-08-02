@@ -6,7 +6,7 @@ module Admin
 
     route do |r|
 
-      organizations = shared[:localpool].organizations
+      organizations = shared[LocalpoolRoda::PARENT].organizations
 
       r.get! do
         organizations

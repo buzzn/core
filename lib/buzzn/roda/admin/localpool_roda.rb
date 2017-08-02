@@ -2,6 +2,7 @@ require_relative '../admin_roda'
 require_relative '../plugins/aggregation'
 module Admin
   class LocalpoolRoda < BaseRoda
+    PARENT = :localpool
 
     include Import.args[:env,
                         'transaction.charts']
@@ -19,7 +20,7 @@ module Admin
 
       r.on :id do |id|
 
-        shared[:localpool] = localpool = localpools.retrieve(id)
+        shared[PARENT] = localpool = localpools.retrieve(id)
 
         r.on 'contracts' do
           r.run ContractRoda
