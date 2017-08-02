@@ -27,20 +27,6 @@ Buzzn::Transaction.define do |t|
     required(:updated_at).filled(:date_time?)
     optional(:product_name).filled(:str?, max_size?: 64)
     optional(:product_serialnumber).filled(:str?, max_size?: 64)
-    optional(:ownership).value(included_in?: Meter::Base::OWNERSHIPS)
-    optional(:section).value(included_in?: Meter::Base::SECTIONS)
-    optional(:build_year).filled(:int?, gt?: 1950, lt?: 2050)
-    optional(:sent_data_dso).filled(:date?)
-    optional(:converter_constant).filled(:int?)
-    optional(:calibrated_until).filled(:date?)
-    optional(:edifact_metering_type).value(included_in?: Meter::Base::METERING_TYPES)
-    optional(:edifact_meter_size).value(included_in?: Meter::Base::METER_SIZES)
-    optional(:edifact_measurement_method).value(included_in?: Meter::Base::MEASUREMENT_METHODS)
-    optional(:edifact_tariff).value(included_in?: Meter::Base::TARIFFS)
-    optional(:edifact_mounting_method).value(included_in?: Meter::Base::MOUNTING_METHODS)
-    optional(:edifact_voltage_level).value(included_in?: Meter::Base::VOLTAGE_LEVELS)
-    optional(:edifact_cycle_interval).value(included_in?: Meter::Base::CYCLE_INTERVALS)
-    optional(:edifact_data_logging).value(included_in?: Meter::Base::DATA_LOGGINGS)
   end
 
   t.define(:update_real_meter) do

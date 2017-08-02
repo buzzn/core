@@ -1,28 +1,30 @@
 require_relative '../admin_roda'
-class Admin::ContractRoda < BaseRoda
-  plugin :shared_vars
+module Admin
+  class ContractRoda < BaseRoda
+    plugin :shared_vars
 
-  route do |r|
+    route do |r|
 
-    contracts = shared[:localpool].contracts
-
-    r.get! do
-      contracts
-    end
-
-    r.on :id do |id|
-      contract = contracts.retrieve(id)
+      contracts = shared[LocalpoolRoda::PARENT].contracts
 
       r.get! do
-        contract
+        contracts
       end
 
-      r.get! 'contractor' do
-        contract.contractor!
-      end
+      r.on :id do |id|
+        contract = contracts.retrieve(id)
 
-      r.get! 'customer' do
-        contract.customer!
+        r.get! do
+          contract
+        end
+
+        r.get! 'contractor' do
+          contract.contractor!
+        end
+
+        r.get! 'customer' do
+          contract.customer!
+        end
       end
     end
   end
