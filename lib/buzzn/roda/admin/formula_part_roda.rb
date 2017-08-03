@@ -24,10 +24,9 @@ module Admin
         end
 
         r.patch! do
-          extras = {}
-          extras['operand'] = shared[LocalpoolRoda::PARENT].registers.retrieve(r.params.delete('operand_id')).object if r.params['operand_id'] 
-
-          update_formula_part.call(r.params, resource: [part, extras])
+          update_formula_part.call(r.params,
+                                   registers: [shared[LocalpoolRoda::PARENT].registers],
+                                   resource: [part])
         end
       end
     end

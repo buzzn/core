@@ -841,6 +841,11 @@ paths:
         enum:
         - "+"
         - "-"
+      - name: register_id
+        in: formData
+        required: false
+        type: string
+        format: ''
       responses:
         200:
           description: patched
