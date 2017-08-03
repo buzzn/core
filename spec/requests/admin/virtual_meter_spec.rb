@@ -252,6 +252,7 @@ describe Admin::LocalpoolRoda do
             ]
           }
         end
+
         let(:register_denied_json) do
           {
             "errors" => [
@@ -291,7 +292,10 @@ describe Admin::LocalpoolRoda do
           expect(response).to have_http_status(404)
           expect(json).to eq not_found_json
 
-          PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", admin, operand_id: 'something'
+          PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
+                admin,
+                updated_at: DateTime.now,
+                register_id: 'something'
           expect(response).to have_http_status(404)
           expect(json).to eq register_not_found_json
         end
@@ -303,7 +307,10 @@ describe Admin::LocalpoolRoda do
 
           register2.update(group: nil)
           begin
-            PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", admin, operand_id: register2.id
+            PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
+                  admin,
+                  updated_at: DateTime.now,
+                  register_id: register2.id
             expect(response).to have_http_status(403)
             expect(json).to eq register_denied_json
           ensure
@@ -331,7 +338,7 @@ describe Admin::LocalpoolRoda do
           PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", admin,
                 updated_at: formula_part.updated_at,
                 operator: '-',
-                operand_id: register2.id
+                register_id: register2.id
 
           expect(response).to have_http_status(200)
           formula_part.reload
