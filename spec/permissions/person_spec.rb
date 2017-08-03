@@ -2,7 +2,15 @@
 describe PersonPermissions do
 
   entity(:admin) { Fabricate(:admin) }
-  entity(:me) { Fabricate(:user) }
+  entity!(:me) do
+    me = Fabricate(:user)
+    me.person.address = Fabricate(:address)
+    me
+  end
+
+  entity!(:bank_account) { Fabricate(:bank_account,
+                                    contracting_party: me.person) }
+
   let(:anonymous) { nil }
 
   [:admin, :me, :anonymous].each do |user|
@@ -32,16 +40,42 @@ describe PersonPermissions do
         end
       end
 
-      it 'update' do
-        if user != :anonymous
+      if user != :anonymous
+        it 'update' do
           person = all.retrieve(send(user).person.id)
           expect { person.update(updated_at: person.object.updated_at) }.not_to raise_error
         end
-      end
-    
-      it 'delete' do
-        if user != :anonymous
+
+        it 'delete' do
           expect { all.retrieve(me.person.id).delete }.to raise_error Buzzn::PermissionDenied
+        end
+      end
+
+      if user == :me
+        let(:person) { all.retrieve(me.person.id) }
+        context 'address' do
+          it 'R-U-D' do
+            address = person.address
+            expect(address).not_to be_nil
+
+            expect { address.update({updated_at: address.object.updated_at}) }.not_to raise_error
+
+            address.delete
+            expect(person.object.reload.address).to be_nil
+          end
+        end
+
+        context 'bank_accounts' do
+          it 'R-U-D' do
+            bank_accounts = person.bank_accounts
+            expect(bank_accounts.collect{|b| b.object}).to eq [bank_account]
+
+            bank_account = bank_accounts.first
+            expect { bank_account .update({updated_at: bank_account .object.updated_at}) }.not_to raise_error
+
+            bank_account.delete
+            expect(person.object.reload.bank_accounts.size).to eq 0
+          end
         end
       end
     end
