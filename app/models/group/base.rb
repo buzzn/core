@@ -3,8 +3,6 @@ require 'buzzn/score_calculator'
 module Group
   class Base < ActiveRecord::Base
     self.table_name = :groups
-    resourcify
-    acts_as_commentable
     include Filterable
 
     HYBRID = 'hybrid'
