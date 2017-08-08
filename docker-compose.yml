@@ -79,7 +79,7 @@ services:
 
 
   postgres:
-    image: postgres:9.6.3-alpine
+    image: postgres:9.4.12-alpine
     ports:
       - "5432"
     environment:
