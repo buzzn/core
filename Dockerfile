@@ -19,12 +19,12 @@ RUN apt-get update && \
   imagemagick \
   nodejs
 
-# install postgresql-9.6(pg_dump) needet for migrations
+# install postgresql(pg_dump) needet for migrations
 RUN touch /etc/apt/sources.list
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' >> /etc/apt/sources.list
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RUN apt-get update -y
-RUN apt-get install postgresql-9.6 -y
+RUN apt-get install postgresql-9.4 -y
 
 # Configure the main working directory. This is the base
 # directory used in any further RUN, COPY, and ENTRYPOINT
