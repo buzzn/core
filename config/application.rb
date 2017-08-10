@@ -20,16 +20,7 @@ module Buzzn
     config.active_record.raise_in_transactional_callbacks = true # TODO: remove
 
     tap do |config|
-      domains = case Rails.env
-                when 'development', 'test'
-                  %r(http://(localhost:[0-9]*|127.0.0.1:[0-9]*))
-                when 'staging'
-                  %r((https://(staging|develop)-[a-z0-9]*.buzzn.io|http://(localhost:[0-9]*|127.0.0.1:[0-9]*)))
-                when 'production'
-                  %r(https://[a-z0-9]*.buzzn.io)
-                else
-                  raise 'unknown rails environment'
-                end
+      domains = %r(#{ENV['CORS']})
       config.middleware.insert_before 0, 'Rack::Cors', debug: Rails.env != 'production'  do
         allow do
           origins *domains
