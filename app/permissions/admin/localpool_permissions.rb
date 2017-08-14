@@ -92,13 +92,6 @@ class Admin::LocalpoolPermissions
       end
     end
 
-    setting :signing_user do
-      setting :create, NONE
-      setting :retrieve, MANAGERS + [:contract]
-      setting :update, MANAGERS
-      setting :delete, NONE
-    end
-
     setting :customer_bank_account do
       setting :create, NONE
       setting :retrieve, MANAGERS + [:contract]
@@ -193,13 +186,6 @@ class Admin::LocalpoolPermissions
         setting :update, MANAGERS + [:self, :organization_contact]
         setting :delete, NONE
       end
-    end
-
-    setting :signing_user do
-      setting :create, NONE
-      setting :retrieve, MANAGERS + [:contract]
-      setting :update, MANAGERS
-      setting :delete, NONE
     end
 
     setting :customer_bank_account do
@@ -341,13 +327,6 @@ class Admin::LocalpoolPermissions
       end
     end
 
-    setting :signing_user do
-      setting :create, NONE
-      setting :retrieve, MANAGERS
-      setting :update, MANAGERS
-      setting :delete, NONE
-    end
-
     setting :customer_bank_account do
       setting :create, NONE
       setting :retrieve, MANAGERS
@@ -441,13 +420,6 @@ class Admin::LocalpoolPermissions
         setting :update, MANAGERS + [:self, :organization_contact]
         setting :delete, NONE
       end
-    end
-
-    setting :signing_user do
-      setting :create, NONE
-      setting :retrieve, MANAGERS
-      setting :update, MANAGERS
-      setting :delete, NONE
     end
 
     setting :customer_bank_account do
