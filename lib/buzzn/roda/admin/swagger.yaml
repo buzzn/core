@@ -1337,8 +1337,10 @@ paths:
         in: formData
         required: false
         type: string
-        format: ''
-        maxLength: 64
+        enum:
+        - Dr.
+        - Prof.
+        - Prof. Dr.
       - name: prefix
         in: formData
         required: false
