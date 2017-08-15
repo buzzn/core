@@ -2,16 +2,7 @@ class CoreRoda < Roda
 
   use Rack::Cors, debug: Rails.env != 'production'  do
     allow do
-      domains = case Rails.env
-                when 'development', 'test'
-                  %r(http://(localhost:[0-9]*|127.0.0.1:[0-9]*))
-                when 'staging'
-                  %r((https://(staging|develop)-[a-z0-9]*.buzzn.io|http://(localhost:[0-9]*|127.0.0.1:[0-9]*)))
-                when 'production'
-                  %r(https://[a-z0-9]*.buzzn.io)
-                else
-                  raise "unknown rails environment: #{Rails.env}"
-                end
+      domains = %r(#{ENV['CORS']})
       origins *domains
       ['/api/*'].each do |path|
         resource path, headers: :any, methods: [:get, :post, :patch, :put, :delete, :options]
