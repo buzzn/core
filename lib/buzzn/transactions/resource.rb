@@ -1,4 +1,5 @@
 Buzzn::Transaction.define do |t|
+
   t.register_step(:update_resource) do |input, resource|
     begin
       Dry::Monads.Right(resource.update(input))

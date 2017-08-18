@@ -39,6 +39,7 @@ module Register
       end
     end
 
+    # tested but unused
     def store_reading_at(time, reason)
       if time.is_a?(Time) && time.beginning_of_day == time
         timestamp = time.to_i

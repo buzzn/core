@@ -4,8 +4,6 @@ class Organization < ContractingParty
 
   include Filterable
 
-  mount_uploader :image, PictureUploader
-
   has_one :address, as: :addressable, dependent: :destroy
 
   has_many :energy_classifications

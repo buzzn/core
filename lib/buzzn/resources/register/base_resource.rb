@@ -21,11 +21,16 @@ module Register
                :observer_offline_monitoring
 
     has_one :group
+    has_many :readings, ReadingResource
 
     # API methods for the endpoints
-
-    def readings
-      all(permissions.readings, Reading.by_register_id(object.id))
+    
+    def create_reading(params = {})
+      create(permissions.readings.create) do
+        to_resource(object.readings.create!(params),
+                    permissions.readings,
+                    ReadingResource)
+      end
     end
 
     def ticker
@@ -39,8 +44,8 @@ module Register
     # attribute implementations
 
     def last_reading
-      reading = Reading.by_register_id(object.id).sort('timestamp': -1).first
-      reading ? reading.energy_milliwatt_hour : 0 
+      reading = object.readings.order('date').last
+      reading ? reading.corrected_value.value : 0 
     end
   end
 end

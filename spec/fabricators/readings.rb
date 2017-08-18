@@ -8,3 +8,15 @@ Fabricator :reading do
   meter_serialnumber { '12346578' }
   register_id { sequence(:register_id, 54321654987) }
 end
+
+Fabricator :single_reading do
+  i = Kernel.rand(2000)
+  date { i += 1; Date.today - i.days }
+  raw_value { rand(2173123)  }
+  value { sequence(:value, 27100) }
+  unit { 'Wh' }
+  quality { SingleReading::READ_OUT }
+  source { SingleReading::BUZZN_SYSTEMS }
+  reason { SingleReading::REGULAR_READING }
+  register { Fabricate(:meter).registers.first }
+end

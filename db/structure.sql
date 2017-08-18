@@ -498,12 +498,71 @@ CREATE TYPE prefix AS ENUM (
 
 
 --
+-- Name: quality; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE quality AS ENUM (
+    'unusable',
+    'substitue_value',
+    'energy_quantity_summarized',
+    'forecast_value',
+    'read_out',
+    'proposed_value'
+);
+
+
+--
+-- Name: read_by; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE read_by AS ENUM (
+    'value'
+);
+
+
+--
+-- Name: reason; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE reason AS ENUM (
+    'device_setup',
+    'device_change_1',
+    'device_change_2',
+    'device_removal',
+    'regular_reading',
+    'midway_reading',
+    'contract_change',
+    'device_parameter_change',
+    'balancing_zone_change',
+    'other'
+);
+
+
+--
 -- Name: section; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE section AS ENUM (
     'S',
     'G'
+);
+
+
+--
+-- Name: source; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE source AS ENUM (
+    'buzzn_systems',
+    'customer_lsg',
+    'lsn',
+    'vnb',
+    'third_party_msb_mdl',
+    'user_input',
+    'slp',
+    'sep_pv',
+    'sep_bhkw',
+    'other'
 );
 
 
@@ -532,12 +591,32 @@ CREATE TYPE state AS ENUM (
 
 
 --
+-- Name: status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE status AS ENUM (
+    'Z86'
+);
+
+
+--
 -- Name: taxation; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE taxation AS ENUM (
     'F',
     'R'
+);
+
+
+--
+-- Name: unit; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE unit AS ENUM (
+    'Wh',
+    'W',
+    'm^3'
 );
 
 
@@ -1186,6 +1265,28 @@ CREATE TABLE scores (
 
 
 --
+-- Name: single_readings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE single_readings (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    date date,
+    raw_value double precision NOT NULL,
+    value double precision NOT NULL,
+    comment character varying(256),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    unit unit,
+    reason reason,
+    read_by read_by,
+    quality quality,
+    source source,
+    status status,
+    register_id uuid NOT NULL
+);
+
+
+--
 -- Name: tariffs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1489,6 +1590,14 @@ ALTER TABLE ONLY roles
 
 ALTER TABLE ONLY scores
     ADD CONSTRAINT scores_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: single_readings single_readings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY single_readings
+    ADD CONSTRAINT single_readings_pkey PRIMARY KEY (id);
 
 
 --
@@ -1872,6 +1981,20 @@ CREATE INDEX index_scores_on_scoreable_id_and_scoreable_type ON scores USING btr
 
 
 --
+-- Name: index_single_readings_on_register_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_single_readings_on_register_id ON single_readings USING btree (register_id);
+
+
+--
+-- Name: index_single_readings_on_register_id_and_date_and_reason; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_single_readings_on_register_id_and_date_and_reason ON single_readings USING btree (register_id, date, reason);
+
+
+--
 -- Name: index_tariffs_on_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1978,6 +2101,14 @@ ALTER TABLE ONLY registers
 
 ALTER TABLE ONLY payments
     ADD CONSTRAINT fk_rails_9215ad6069 FOREIGN KEY (contract_id) REFERENCES contracts(id);
+
+
+--
+-- Name: single_readings fk_rails_afddc09d52; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY single_readings
+    ADD CONSTRAINT fk_rails_afddc09d52 FOREIGN KEY (register_id) REFERENCES registers(id);
 
 
 --
@@ -2318,5 +2449,5 @@ INSERT INTO schema_migrations (version) VALUES ('20170731104218');
 
 INSERT INTO schema_migrations (version) VALUES ('20170801073138');
 
-INSERT INTO schema_migrations (version) VALUES ('20170802094212');
+INSERT INTO schema_migrations (version) VALUES ('20170817032303');
 

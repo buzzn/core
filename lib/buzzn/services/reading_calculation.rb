@@ -199,18 +199,18 @@ module Buzzn
       def get_first_reading(register, begin_date, accounting_year)
         if begin_date.nil?
           # try to get the last reading one year before of the accounting_year (mostly at 31st December)
-          first_reading_before = Reading.by_register_id(register.id)
+          first_reading_before = register.readings
                                   .in_year(accounting_year - 1)
-                                  .without_reason(Reading::DEVICE_CHANGE_1)
+                                  .without_reason(SingleReading::DEVICE_CHANGE_1)
                                   .sort('timestamp': -1)
                                   .first
 
           # try to get the first reading in the accounting_year
-          first_reading_behind = Reading.by_register_id(register.id)
-                                  .in_year(accounting_year)
-                                  .without_reason(Reading::DEVICE_CHANGE_1) # TODO: in the BK code is without device_change_2 but it seems wrong
-                                  .sort('timestamp': 1)
-                                  .first
+          first_reading_behind = register.readings
+                                   .in_year(accounting_year)
+                                   .without_reason(Reading::DEVICE_CHANGE_1) # TODO: in the BK code is without device_change_2 but it seems wrong
+                                   .sort('timestamp': 1)
+                                   .first
           first_reading = select_closest_reading(Date.new(accounting_year, 1, 1), first_reading_before, first_reading_behind)
           # if no reading was found in the accounting year or one year before raise an error
           if first_reading.nil?
@@ -218,10 +218,10 @@ module Buzzn
           end
         else
           # try to get the the reading exactly at the begin_date
-          first_reading = Reading.by_register_id(register.id)
-                                  .at(begin_date)
-                                  .without_reason(Reading::DEVICE_CHANGE_1)
-                                  .first
+          first_reading = register.readings
+                            .at(begin_date)
+                            .without_reason(Reading::DEVICE_CHANGE_1)
+                            .first
           # try to request the missing reading from data provider
           if first_reading.nil?
             first_reading = get_missing_reading(register, begin_date)
@@ -244,14 +244,14 @@ module Buzzn
       def get_last_reading(register, end_date, accounting_year)
         if end_date.nil?
           # try to get the first reading one year after the accounting_year (mostly beginning of January)
-          last_reading_behind = Reading.by_register_id(register.id)
+          last_reading_behind = register.readings
                                   .in_year(accounting_year + 1)
                                   .without_reason(Reading::DEVICE_CHANGE_2)
                                   .sort('timestamp': 1)
                                   .first
 
           # try to get the last reading in the accounting_year
-          last_reading_before = Reading.by_register_id(register.id)
+          last_reading_before = register.readings
                                   .in_year(accounting_year)
                                   .without_reason(Reading::DEVICE_CHANGE_2)
                                   .sort('timestamp': -1)
@@ -262,10 +262,10 @@ module Buzzn
           end
         else
           # try to get the the reading exactly at the end_date
-          last_reading = Reading.by_register_id(register.id)
-                                  .at(end_date)
-                                  .without_reason(Reading::DEVICE_CHANGE_2)
-                                  .first
+          last_reading = regsiyer.readings
+                                 .at(end_date)
+                                 .without_reason(Reading::DEVICE_CHANGE_2)
+                                 .first
           # try to request the missing reading from data provider
           if last_reading.nil?
             last_reading = get_missing_reading(register, end_date)
@@ -286,14 +286,14 @@ module Buzzn
       # returns:
       #   reading: the reading, that is closer to the desired_date than the other one. If the distance is equal, reading_before is returned.
       def select_closest_reading(desired_date, reading_before, reading_behind)
-        if reading_before.nil? && !reading_behind.nil?
-          return reading_behind
-        elsif !reading_before.nil? && reading_behind.nil?
-          return reading_before
-        elsif !reading_before.nil? && !reading_behind.nil?
-          return (reading_before.timestamp.in_time_zone.to_date - desired_date).round.abs > (desired_date - reading_behind.timestamp.in_time_zone.to_date).round.abs ? reading_behind : reading_before
+        if reading_before && reading_behind
+          if (reading_before.timestamp  - desired_date).abs > (desired_date - reading_behind.timestamp).abs
+            reading_behind
+          else
+            reading_before
+          end
         else
-          return nil
+          reading_before || reading_behind
         end
       end
 
@@ -328,7 +328,7 @@ module Buzzn
       def get_readings_at_device_change(register, begin_date, end_date, accounting_year)
         begin_date_query = begin_date || Time.new(accounting_year - 1, 12, 31, 23, 59, 59).utc
         end_date_query = end_date || Time.new(accounting_year, 12, 31, 23, 59, 59).utc
-        device_change_readings = Reading.by_register_id(register.id)
+        device_change_readings = register.readings
                                 .where(:timestamp.gt => begin_date_query)
                                 .where(:timestamp.lt => end_date_query)
                                 .by_reason(Reading::DEVICE_CHANGE_1, Reading::DEVICE_CHANGE_2)
@@ -393,14 +393,13 @@ module Buzzn
           timestamp = result.out.first.timestamp
           value = result.out.first.value
         end
-        Reading.create!(register_id: register.id,
-                        timestamp: timestamp,
-                        energy_milliwatt_hour: value,
-                        reason: Reading::REGULAR_READING,
-                        source: Reading::BUZZN_SYSTEMS,
-                        quality: Reading::READ_OUT,
-                        state: 'Z86',
-                        meter_serialnumber: register.meter.product_serialnumber)
+        register.readings.create!(timestamp: timestamp,
+                                  value: value * 1000,
+                                  unit: :watt_hour,
+                                  reason: SingleReading::REGULAR_READING,
+                                  source: SingleReading::BUZZN_SYSTEMS,
+                                  quality: SingleReading::READ_OUT,
+                                  state: SingleReading::Z86)
       end
 
       # This method returns the timespan between two dates in months while considering half months

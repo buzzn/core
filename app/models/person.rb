@@ -1,4 +1,5 @@
 # coding: utf-8
+# frozen-string-literal: true
 class Person < ContractingParty
   self.table_name = :persons
 
@@ -16,7 +17,7 @@ class Person < ContractingParty
          female: FEMALE,
          male:   MALE
        }
-  PREFIXES = [FEMALE, MALE]
+  PREFIXES = [FEMALE, MALE].freeze
 
   # titles
   DR = 'Dr.'
@@ -27,7 +28,7 @@ class Person < ContractingParty
          dr: DR,
          prof_dr: PROF_DR
        }
-  TITLES = [DR, PROF, PROF_DR]
+  TITLES = [DR, PROF, PROF_DR].freeze
 
   # preferred languages
   GERMAN = 'de'
@@ -36,7 +37,7 @@ class Person < ContractingParty
          german:  GERMAN,
          english: ENGLISH
        }
-  PREFERRED_LANGUAGES = [GERMAN, ENGLISH]
+  PREFERRED_LANGUAGES = [GERMAN, ENGLISH].freeze
 
   validate :validate_invariants
 
