@@ -107,19 +107,23 @@ class SingleReading < ActiveRecord::Base
   #validates_uniqueness_of :timestamp, scope: [:register_id, :reason], message: 'already available for given register and reason'
 
   scope :in_year, -> (year) {
-    where(:timestamp.gte => Time.new(year, 1, 1)).where(:timestamp.lt => Time.new(year + 1, 1, 1))
+    where('date >= ? AND date < ?', Date.new(year), Date.new(year + 1))
   }
 
-  # scope :at, -> (timestamp) do
+  scope :between, ->(begin_date, end_date) {
+    where('date >= ? AND date < ?', begin_date, end_date)
+  }
+  
+  #scope :at, -> (date) do
   #   where(:timestamp.gte => timestamp).where(:timestamp.lt => timestamp + 1.second)
   # end
 
   scope :by_reason, lambda {|*reasons|
-    self.where(:reason.in => reasons)
+    where(reason: reasons)
   }
 
   scope :without_reason, lambda {|*reasons|
-    self.where(:reason.nin => reasons)
+    where('reason NOT IN (?)', reasons)
   }
 
   validate :validate_invariants
@@ -144,5 +148,10 @@ class SingleReading < ActiveRecord::Base
 
   def corrected_value
     Buzzn::Math::Number.send(unit, value)
+  end
+
+  def corrected_value=(val)
+    self.unit = val.unit
+    self.value = val.value
   end
 end

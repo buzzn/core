@@ -1,6 +1,8 @@
 module Register
   class Real < Base
 
+    include Import.active_record['service.charts']
+
     belongs_to :meter, class_name: Meter::Real, foreign_key: :meter_id
 
     def obis

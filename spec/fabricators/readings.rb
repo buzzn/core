@@ -14,9 +14,10 @@ Fabricator :single_reading do
   date { i += 1; Date.today - i.days }
   raw_value { rand(2173123)  }
   value { sequence(:value, 27100) }
-  unit { 'Wh' }
+  unit { SingleReading::WH }
   quality { SingleReading::READ_OUT }
   source { SingleReading::BUZZN_SYSTEMS }
   reason { SingleReading::REGULAR_READING }
   register { Fabricate(:meter).registers.first }
+  status { SingleReading::Z86 }
 end
