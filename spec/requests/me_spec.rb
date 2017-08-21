@@ -74,7 +74,7 @@ describe MeRoda do
            "detail"=>"size cannot be greater than 64"},
           {"parameter"=>"last_name",
            "detail"=>"size cannot be greater than 64"},
-          {"parameter"=>"phone", "detail"=>"size cannot be greater than 64"},
+          {"parameter"=>"phone", "detail"=>"must be a valid phone-number"},
           {"parameter"=>"fax", "detail"=>"size cannot be greater than 64"},
           {"parameter"=>"preferred_language", "detail"=>"must be one of: de, en"}
         ]
@@ -127,7 +127,7 @@ describe MeRoda do
             prefix: 'Both',
             first_name: 'Maxima' * 20,
             last_name: 'Toll' * 40,
-            phone: '123312' * 40,
+            phone: 'asddasd',
             fax: '123312' * 40,
             preferred_language: 'none'
 
