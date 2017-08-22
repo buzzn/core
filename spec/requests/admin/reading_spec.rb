@@ -42,11 +42,11 @@ describe Admin::LocalpoolRoda do
           {"parameter"=>"raw_value", "detail"=>"must be a float"},
           {"parameter"=>"value", "detail"=>"must be a float"},
           {"parameter"=>"unit", "detail"=>"must be one of: Wh, W, m^3"},
-          {"parameter"=>"reason", "detail"=>"must be one of: device_setup, device_change_1, device_change_2, device_removal, regular_reading, midway_reading, contract_change, device_parameter_change, balancing_zone_change, other"},
-          {"parameter"=>"read_by", "detail"=>"must be one of: value"},
-          {"parameter"=>"quality", "detail"=>"must be one of: unusable, substitue_value, energy_quantity_summarized, forecast_value, read_out, proposed_value"},
-          {"parameter"=>"source", "detail"=>"must be one of: buzzn_systems, customer_lsg, lsn, vnb, third_party_msb_mdl, user_input, slp, sep_pv, sep_bhkw, other"},
-          {"parameter"=>"status", "detail"=>"must be one of: Z86"}
+          {"parameter"=>"reason", "detail"=>"must be one of: IOM, COM1, COM2, ROM, PMR, COT, COS, CMP, COB"},
+          {"parameter"=>"read_by", "detail"=>"must be one of: BN, SN, SG, VNB"},
+          {"parameter"=>"quality", "detail"=>"must be one of: 20, 67, 79, 187, 220, 201"},
+          {"parameter"=>"source", "detail"=>"must be one of: SM, MAN"},
+          {"parameter"=>"status", "detail"=>"must be one of: Z83, Z84, Z86"}
         ]
       }
     end
@@ -77,10 +77,10 @@ describe Admin::LocalpoolRoda do
           "raw_value"=>23.66,
           "value"=>500.0,
           "unit"=>'m^3',
-          'reason'=>'device_setup',
-          'read_by'=>'value',
-          'source'=>'user_input',
-          'quality'=>'forecast_value',
+          'reason'=>'IOM',
+          'read_by'=>'BN',
+          'source'=>'MAN',
+          'quality'=>'201',
           'status'=>'Z86',
           'comment'=>'yellow is the new green',
           'updatable'=>false,

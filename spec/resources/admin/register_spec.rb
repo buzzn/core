@@ -27,7 +27,8 @@ describe Register::BaseResource do
                      'observer_min_threshold',
                      'observer_offline_monitoring',
                      'post_decimal_position',
-                     'pre_decimal_position' ] }
+                     'pre_decimal_position',
+                     'createables'] }
 
   it 'retrieve' do
     [real, virtual].each do |register|

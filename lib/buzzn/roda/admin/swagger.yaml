@@ -553,53 +553,49 @@ paths:
         required: true
         type: string
         enum:
-        - device_setup
-        - device_change_1
-        - device_change_2
-        - device_removal
-        - regular_reading
-        - midway_reading
-        - contract_change
-        - device_parameter_change
-        - balancing_zone_change
-        - other
+        - IOM
+        - COM1
+        - COM2
+        - ROM
+        - PMR
+        - COT
+        - COS
+        - CMP
+        - COB
       - name: read_by
         in: formData
         required: true
         type: string
         enum:
-        - value
+        - BN
+        - SN
+        - SG
+        - VNB
       - name: quality
         in: formData
         required: true
         type: string
         enum:
-        - unusable
-        - substitue_value
-        - energy_quantity_summarized
-        - forecast_value
-        - read_out
-        - proposed_value
+        - '20'
+        - '67'
+        - '79'
+        - '187'
+        - '220'
+        - '201'
       - name: source
         in: formData
         required: true
         type: string
         enum:
-        - buzzn_systems
-        - customer_lsg
-        - lsn
-        - vnb
-        - third_party_msb_mdl
-        - user_input
-        - slp
-        - sep_pv
-        - sep_bhkw
-        - other
+        - SM
+        - MAN
       - name: status
         in: formData
         required: true
         type: string
         enum:
+        - Z83
+        - Z84
         - Z86
       - name: comment
         in: formData

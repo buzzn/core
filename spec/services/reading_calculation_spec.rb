@@ -63,7 +63,7 @@ describe Buzzn::Services::ReadingCalculation do
         register = send(scenario)
         first_reading = subject.get_first_reading(register, time, 2015)
         if scenario == :register_with_device_change_at_beginning && !time.nil?
-          expect(first_reading).to eq SingleReading.by_register_id(register.id).by_reason(SingleReading::DEVICE_CHANGE_2).first
+          expect(first_reading).to eq SingleReading.by_register_id(register.id).with_reason(SingleReading::DEVICE_CHANGE_2).first
         else
           expect(first_reading).to eq SingleReading.by_register_id(register.id).sort('timestamp': 1).sort('reason': 1).first
         end
@@ -81,7 +81,7 @@ describe Buzzn::Services::ReadingCalculation do
         if scenario != :register_with_irregular_readings || time.nil?
           last_reading = subject.get_last_reading(register, time, 2015)
           if scenario == :register_with_device_change_at_ending && !time.nil?
-            expect(last_reading).to eq SingleReading.by_register_id(register.id).by_reason(SingleReading::DEVICE_CHANGE_1).first
+            expect(last_reading).to eq SingleReading.by_register_id(register.id).with_reason(SingleReading::DEVICE_CHANGE_1).first
           else
             expect(last_reading).to eq SingleReading.by_register_id(register.id).in_year(2015).sort('timestamp': -1).sort('reason': 1).first
           end

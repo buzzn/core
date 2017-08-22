@@ -16,7 +16,8 @@ Fabricator :single_reading do
   value { sequence(:value, 27100) }
   unit { SingleReading::WH }
   quality { SingleReading::READ_OUT }
-  source { SingleReading::BUZZN_SYSTEMS }
+  source { SingleReading::MANUAL }
+  read_by { SingleReading::BUZZN }
   reason { SingleReading::REGULAR_READING }
   register { Fabricate(:meter).registers.first }
   status { SingleReading::Z86 }

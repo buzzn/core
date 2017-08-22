@@ -328,8 +328,8 @@ module Buzzn
         register.readings
           .between(begin_date || Date.new(accounting_year),
                    end_date || Date.new(accounting_year + 1))
-          .by_reason(SingleReading::DEVICE_CHANGE_1,
-                     SingleReading::DEVICE_CHANGE_2)
+          .with_reason(SingleReading::DEVICE_CHANGE_1,
+                       SingleReading::DEVICE_CHANGE_2)
       end
 
       # This method inter- or extrapolates the last_reading's energy value

@@ -249,7 +249,10 @@ class Admin::LocalpoolPermissions
     setting :delete, NONE
 
     setting :readings do
+      setting :create, MANAGERS
       setting :retrieve, MANAGERS + [:contract]
+      setting :update, NONE
+      setting :delete, MANAGERS
     end
   end
 

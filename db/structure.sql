@@ -502,12 +502,12 @@ CREATE TYPE prefix AS ENUM (
 --
 
 CREATE TYPE quality AS ENUM (
-    'unusable',
-    'substitue_value',
-    'energy_quantity_summarized',
-    'forecast_value',
-    'read_out',
-    'proposed_value'
+    '20',
+    '67',
+    '79',
+    '187',
+    '220',
+    '201'
 );
 
 
@@ -516,7 +516,10 @@ CREATE TYPE quality AS ENUM (
 --
 
 CREATE TYPE read_by AS ENUM (
-    'value'
+    'BN',
+    'SN',
+    'SG',
+    'VNB'
 );
 
 
@@ -525,16 +528,15 @@ CREATE TYPE read_by AS ENUM (
 --
 
 CREATE TYPE reason AS ENUM (
-    'device_setup',
-    'device_change_1',
-    'device_change_2',
-    'device_removal',
-    'regular_reading',
-    'midway_reading',
-    'contract_change',
-    'device_parameter_change',
-    'balancing_zone_change',
-    'other'
+    'IOM',
+    'COM1',
+    'COM2',
+    'ROM',
+    'PMR',
+    'COT',
+    'COS',
+    'CMP',
+    'COB'
 );
 
 
@@ -553,16 +555,8 @@ CREATE TYPE section AS ENUM (
 --
 
 CREATE TYPE source AS ENUM (
-    'buzzn_systems',
-    'customer_lsg',
-    'lsn',
-    'vnb',
-    'third_party_msb_mdl',
-    'user_input',
-    'slp',
-    'sep_pv',
-    'sep_bhkw',
-    'other'
+    'SM',
+    'MAN'
 );
 
 
@@ -595,6 +589,8 @@ CREATE TYPE state AS ENUM (
 --
 
 CREATE TYPE status AS ENUM (
+    'Z83',
+    'Z84',
     'Z86'
 );
 

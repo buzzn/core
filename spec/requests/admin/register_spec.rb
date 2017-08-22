@@ -374,16 +374,19 @@ describe Admin::LocalpoolRoda do
                 {
                   "id"=>r.id.to_s,
                   "type"=>"reading",
+                  "updated_at"=> r.updated_at.as_json,
                   "date"=>r.date.as_json,
                   "raw_value"=>r.raw_value,
                   "value"=>r.value,
-                  "unit"=>r.unit,
-                  "reason"=>"regular_reading",
-                  "read_by"=>nil,
-                  "source"=>"buzzn_systems",
-                  "quality"=>"read_out",
+                  "unit"=>r.attributes['unit'],
+                  "reason"=>r.attributes['reason'],
+                  "read_by"=>r.attributes['read_by'],
+                  "source"=>r.attributes['source'],
+                  "quality"=>r.attributes['quality'],
                   "status"=>r.attributes['status'],
-                  "comment"=>nil
+                  "comment"=>nil,
+                  'updatable'=>false,
+                  'deletable'=>true
                 }
               end
             end
