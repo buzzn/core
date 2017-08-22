@@ -92,6 +92,7 @@ describe Admin::LocalpoolRoda do
            "observer_max_threshold"=>100,
            "observer_enabled"=>true,
            "observer_offline_monitoring"=>true,
+           "createables"=>["readings"],
            "metering_point_id"=>'123456',
            "obis"=>register.obis,
          }
@@ -212,6 +213,7 @@ describe Admin::LocalpoolRoda do
           "observer_max_threshold"=>5000,
           "observer_enabled"=>false,
           "observer_offline_monitoring"=>false,
+          "createables"=>["readings"],
           "metering_point_id"=>real_register.metering_point_id,
           "obis"=>real_register.obis,
         }
@@ -233,7 +235,8 @@ describe Admin::LocalpoolRoda do
           "observer_min_threshold"=>100,
           "observer_max_threshold"=>5000,
           "observer_enabled"=>false,
-          "observer_offline_monitoring"=>false
+          "observer_offline_monitoring"=>false,
+          "createables"=>["readings"],
         }
       end
 
@@ -255,6 +258,7 @@ describe Admin::LocalpoolRoda do
             "observer_max_threshold"=>register.observer_max_threshold,
             "observer_enabled"=>register.observer_enabled,
             "observer_offline_monitoring"=>register.observer_offline_monitoring,
+            "createables"=>["readings"]
           }
           if register.is_a? Register::Real
             json["metering_point_id"] = register.metering_point_id
@@ -307,6 +311,7 @@ describe Admin::LocalpoolRoda do
                 "observer_max_threshold"=>register.observer_max_threshold,
                 "observer_enabled"=>register.observer_enabled,
                 "observer_offline_monitoring"=>register.observer_offline_monitoring,
+                "createables"=>["readings"],
                 "metering_point_id"=>register.metering_point_id,
                 "obis"=>register.obis
               }
@@ -377,7 +382,7 @@ describe Admin::LocalpoolRoda do
                   "read_by"=>nil,
                   "source"=>"buzzn_systems",
                   "quality"=>"read_out",
-                  "status"=>r.status,
+                  "status"=>r.attributes['status'],
                   "comment"=>nil
                 }
               end

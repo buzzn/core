@@ -1,4 +1,4 @@
-class ReadingResource < Buzzn::Resource::Base
+class ReadingResource < Buzzn::Resource::Entity
 
   model SingleReading
 
@@ -14,13 +14,12 @@ class ReadingResource < Buzzn::Resource::Base
              :status,
              :comment
 
+  attributes :updatable, :deletable
+
   def type; 'reading'; end
 
   def value
-    object.corrected_value.normal.value
+    object.corrected_value.value
   end
 
-  def unit
-    object.corrected_value.unit
-  end
 end

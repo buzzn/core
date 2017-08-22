@@ -485,6 +485,180 @@ paths:
       responses:
         200:
           description: success
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings":
+    get:
+      description: returns all readings of a register for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: create reading for the register
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: raw_value
+        in: formData
+        required: true
+        type: string
+        format: float
+      - name: value
+        in: formData
+        required: true
+        type: string
+        format: float
+      - name: unit
+        in: formData
+        required: true
+        type: string
+        enum:
+        - Wh
+        - W
+        - m^3
+      - name: reason
+        in: formData
+        required: true
+        type: string
+        enum:
+        - device_setup
+        - device_change_1
+        - device_change_2
+        - device_removal
+        - regular_reading
+        - midway_reading
+        - contract_change
+        - device_parameter_change
+        - balancing_zone_change
+        - other
+      - name: read_by
+        in: formData
+        required: true
+        type: string
+        enum:
+        - value
+      - name: quality
+        in: formData
+        required: true
+        type: string
+        enum:
+        - unusable
+        - substitue_value
+        - energy_quantity_summarized
+        - forecast_value
+        - read_out
+        - proposed_value
+      - name: source
+        in: formData
+        required: true
+        type: string
+        enum:
+        - buzzn_systems
+        - customer_lsg
+        - lsn
+        - vnb
+        - third_party_msb_mdl
+        - user_input
+        - slp
+        - sep_pv
+        - sep_bhkw
+        - other
+      - name: status
+        in: formData
+        required: true
+        type: string
+        enum:
+        - Z86
+      - name: comment
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/{reading_id}":
+    get:
+      description: returns the reading of a register for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: reading_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: deletes the reading of a register for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: reading_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
   "/localpools/{localpool_id}/meters/{real_meter_id}":
     patch:
       description: updates the real meter for the given IDs

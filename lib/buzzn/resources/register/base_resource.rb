@@ -18,14 +18,15 @@ module Register
                :observer_min_threshold,
                :observer_max_threshold,
                :observer_enabled,
-               :observer_offline_monitoring
+               :observer_offline_monitoring,
+               :createables
 
     has_one :group
-    has_many :readings, ReadingResource
+    has_many! :readings, ReadingResource
 
     # API methods for the endpoints
     
-    def create_reading(params = {})
+    def cccreate_reading(params = {})
       create(permissions.readings.create) do
         to_resource(object.readings.create!(params),
                     permissions.readings,

@@ -36,8 +36,8 @@ class Admin::RegisterRoda < BaseRoda
       end
 
       r.on 'readings' do
-        shared[ReadingRoda::REGISTER] = register
-        ReadingRoda.run
+        shared[Admin::ReadingRoda::REGISTER] = register
+        r.run Admin::ReadingRoda
       end
     end
   end

@@ -61,6 +61,9 @@ describe Admin do
     register
   end
 
+  entity!(:reading) { Fabricate(:single_reading, register: register) }
+  entity!(:reading_2) { Fabricate(:single_reading, register: register) }
+  
   entity!(:localpool_power_taker_contract) do
     register = Fabricate(:input_meter).input_register
     register.update(address: Fabricate(:address))
@@ -186,6 +189,30 @@ describe Admin do
   patch '/localpools/{localpool.id}/meters/{real_meter.id}/registers/{real_register.id}' do
     description 'update the real register of a meter for the given IDs'
     schema 'update_real_register_schema'
+  end
+
+  patch '/localpools/{localpool.id}/meters/{virtual_meter.id}/registers/{virtual_register.id}' do
+    description 'update the virtual register of a meter for the given IDs'
+    schema 'update_virtual_register_schema'
+  end
+
+  # meters > registers > readings
+
+  post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
+    description 'create reading for the register'
+    schema 'create_reading_schema'
+  end
+
+  get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
+    description 'returns all readings of a register for the given IDs'
+  end
+
+  get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings/{reading.id}' do
+    description 'returns the reading of a register for the given IDs'
+  end
+
+  delete '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings/{reading_2.id}' do
+    description 'deletes the reading of a register for the given IDs'
   end
 
   # persons
