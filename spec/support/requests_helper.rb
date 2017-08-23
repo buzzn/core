@@ -1,34 +1,31 @@
 module RequestsHelper
 
-  def login_cookie(account, path = '/login')
-    $cookies ||= {}
+  def authorize(account, path = '/login')
+    $authorizations ||= {}
     pwd = account.respond_to?(:password) ? account.password : 'Example123'
-    cookie = account ? $cookies[account.id] : nil
-    if account && cookie.nil?
-      post '/login', {login: account.email, password: pwd}, {}
-      cookie = response.headers['Set-Cookie']
-      $cookies[account.id] = cookie
+    token = account ? $authorizations[account.id] : nil
+    if account && token.nil?
+      post '/login', {login: account.email, password: pwd}.to_json, {'Content-Type': 'application/json'}
+      token = response.headers['Authorization']
+      $authorizations[account.id] = token
     end
-    cookie
+    token
   end
 
-  def do_it(action, path, params, token )
+  def do_it(action, path, params, account )
     headers = {
       "Accept"              => "application/json",
       "Content-Type"        => "application/json",
     }
-    #session = Rack::Session::Cookie.new({}, secret: 'my secret')
-    #value = session.send(:set_session, {}, {account_id: token.resource_owner_id}, {}, {}) if token
-    #headers['HTTP_COOKIE'] = value
 
-    case token
+    case account
     when Doorkeeper::AccessToken
-      headers["HTTP_AUTHORIZATION"]  = "Bearer #{token.token}"
+      headers["HTTP_AUTHORIZATION"]  = "Bearer #{account.token}"
     when Account::Base
-      headers['HTTP_COOKIE'] = login_cookie(token)
+      headers['Authorization'] = authorize(account)
     when NilClass
     else
-      raise "can not handle #{token.class}"
+      raise "can not handle #{account.class}"
     end
 
     send action, path, params, headers

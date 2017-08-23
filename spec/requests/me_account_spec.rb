@@ -51,21 +51,21 @@ describe MeRoda, :skip_nested do
       }
     end
 
-    it '205' do
-      expect(login_cookie(user)).to start_with('_buzzn_session')
+    it '200' do
+      expect(authorize(user)).not_to be_nil
 
       GET '', user
       expect(response).to have_http_status(200)
       expect(json['id']).to eq user.person.id
     end
 
-    it '401' do
+    it '422' do
       POST '/login', nil
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(422)
       expect(json).to eq no_matching_login_json
 
       POST '/login', nil, login: user.email
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(422)
       expect(json).to eq invalid_password_json
     end
   end
@@ -88,12 +88,12 @@ describe MeRoda, :skip_nested do
       }
     end
 
-    it '205' do
+    it '200' do
       POST '/change-password', user,
            password: user.password,
            'new-password': 'NewExample123',
            'password-confirm': 'NewExample123'
-      expect(response).to have_http_status(205)
+      expect(response).to have_http_status(200)
       hash = Account::PasswordHash.where(id: user.id).first
       expect(BCrypt::Password.new(hash.password_hash)).to eq 'NewExample123'
 
@@ -106,15 +106,15 @@ describe MeRoda, :skip_nested do
            'new-password': 'something',
            'password-confirm': 'something'
       expect(response).to have_http_status(401)
+    end
 
+    it '422' do
       POST '/change-password', user,
            'new-password': 'something',
            'password-confirm': 'something'
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(422)
       expect(json).to eq invalid_password_json
-    end
-    
-    it '422' do
+
       POST '/change-password', user,
            password: user.password,
            'password-confirm': 'NewExample123'
@@ -154,32 +154,31 @@ describe MeRoda, :skip_nested do
       }
     end
 
-    it '205' do
+    it '200' do
       POST '/change-login', user,
            password: user.password,
            login: 'someone@buzzn.net',
            'login-confirm': 'someone@buzzn.net'
-      expect(response).to have_http_status(205)
+      expect(response).to have_http_status(200)
       expect(user.reload.email).not_to eq 'someone@buzzn.net'
       key = Account::LoginChangeKey.where(id: user.id).first
       expect(key.login).to eq 'someone@buzzn.net'
     end
 
-    it '401' do
+    it '422' do
       POST '/change-login', user,
            password: 'some.password',
            login: 'someone@buzzn.net',
            'login-confirm': 'someone@buzzn.net'
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(422)
+      expect(json).to eq invalid_password_json
 
       POST '/change-login', user,
            login: 'someone@buzzn.net',
            'login-confirm': 'someone@buzzn.net'
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(422)
       expect(json).to eq invalid_password_json
-    end
 
-    it '422' do
       POST '/change-login', user,
            password: user.password,
            'login-confirm': 'someone@buzzn.net'
@@ -206,10 +205,10 @@ describe MeRoda, :skip_nested do
     let(:login) { "next.#{user.email}" }
     let(:key) { Account::LoginChangeKey.where(id: user.id).first.key }
 
-    it '205' do
+    it '200' do
       POST '/verify-login-change', nil,
            key: "#{user.id}_#{key}"
-      expect(response).to have_http_status(205)
+      expect(response).to have_http_status(200)
       expect(user.reload.email).to eq login
     end
 
@@ -229,10 +228,10 @@ describe MeRoda, :skip_nested do
 
   context 'reset-password-request' do
 
-    it '205' do
+    it '200' do
       POST '/reset-password-request', nil,
            login: user.email
-      expect(response).to have_http_status(205)
+      expect(response).to have_http_status(200)
     end
 
     it '401' do
@@ -256,12 +255,12 @@ describe MeRoda, :skip_nested do
       Account::PasswordResetKey.where(id: user.id).first.key
     end
 
-    it '205' do
+    it '200' do
       POST '/reset-password', nil,
            key: "#{user.id}_#{key}",
            password: 'AnotherExample123',
            'password-confirm': 'AnotherExample123'
-      expect(response).to have_http_status(205)
+      expect(response).to have_http_status(200)
 
       def user.password; 'AnotherExample123'; end
     end
@@ -332,14 +331,14 @@ describe MeRoda, :skip_nested do
 
   context 'logout' do
 
-    it '205' do
+    it '200' do
       POST '/logout', user
-      expect(response).to have_http_status(205)
-      $cookies[user.id] = response['Set-Cookie']
+      expect(response).to have_http_status(200)
+      $authorizations[user.id] = response['Authorization']
       
       GET '', user
       expect(response).to have_http_status(403)
-      $cookies.delete(user.id)
+      $authorizations.delete(user.id)
     end
   end
 end

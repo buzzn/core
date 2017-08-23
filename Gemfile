@@ -28,6 +28,7 @@ gem 'rodauth'
 gem 'tilt'
 gem 'rack_csrf'
 gem 'bcrypt'
+gem 'jwt'
 
 # postgres
 gem 'schema_plus_enums'

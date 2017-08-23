@@ -21,7 +21,7 @@ module Buzzn
   class RecordNotFound < StandardError
     class << self
       def new(clazz, id, user = nil)
-        super("#{clazz || 'UNKNOWN-CLASS'}: #{id} not found#{user ? ' by User: ' + user.id : ''}")
+        super("#{clazz || 'UNKNOWN-CLASS'}: #{id} not found#{user ? ' by User: ' + user.id.to_s : ''}")
       end
     end
   end

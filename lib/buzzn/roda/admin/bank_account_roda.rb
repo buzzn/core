@@ -11,7 +11,7 @@ class Admin::BankAccountRoda < BaseRoda
                       'transaction.update_bank_account']
 
   route do |r|
-
+    
     parent = shared[PARENT]
 
     r.post! do

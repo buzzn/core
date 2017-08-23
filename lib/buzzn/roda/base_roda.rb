@@ -25,7 +25,9 @@ class BaseRoda < Roda
     if app.doorkeeper_token
       Account::Base.where(id: app.doorkeeper_token.resource_owner_id).first
     else
-      Account::Base.where(id: app.session['account_id']).first
+      if (app.rodauth.valid_jwt? rescue false)
+        Account::Base.where(id: app.rodauth.session[:account_id]).first
+      end
     end
   end
 
@@ -35,4 +37,14 @@ class BaseRoda < Roda
 
   plugin :empty_root
 
+  plugin :rodauth, csrf: false do
+  
+    enable :session_expiration
+
+    session_expiration_redirect nil
+    session_inactivity_timeout 9#00 # 15 minutes
+    max_session_lifetime 86400 # 1 day
+
+    db Buzzn::DB
+  end
 end

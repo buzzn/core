@@ -15,6 +15,7 @@ module Admin
       localpools = LocalpoolResource.all(current_user)
 
       r.root do
+        rodauth.check_session_expiration
         localpools
       end
 
@@ -22,13 +23,16 @@ module Admin
 
         shared[PARENT] = localpool = localpools.retrieve(id)
 
-        r.on 'contracts' do
-          r.run ContractRoda
-        end
-
         r.on 'registers' do
           shared[:registers] = localpool.registers
           r.run ::RegisterRoda
+        end
+
+        rodauth.check_session_expiration
+
+        r.on 'contracts' do
+          rodauth.check_session_expiration
+          r.run ContractRoda
         end
 
         r.on 'meters' do

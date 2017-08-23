@@ -51,8 +51,6 @@ class CoreRoda < Roda
       end
 
       r.on 'admin' do
-        rodauth.check_session_expiration
-
         r.run Admin::Roda
       end
     end

@@ -6,40 +6,21 @@ class MeRoda < BaseRoda
 
   plugin :rodauth, csrf: false, json: :only do
   
-    enable :login, :logout, :change_password, :change_login, :session_expiration, :reset_password, :verify_login_change
+    enable :login, :logout, :change_password, :change_login, :session_expiration, :reset_password, :verify_login_change, :jwt
     
     db Buzzn::DB
-
-    [:after_login,
-     :after_logout,
-     :after_change_password,
-     :after_change_login,
-     :after_verify_login_change,
-     :after_reset_password_request,
-     :after_reset_password].each do |method|
-      send method do
-        request.halt [205, {}, []]
-      end
-    end
 
     change_login_requires_password? true
     session_expiration_redirect nil
     session_inactivity_timeout 15 # minutes
     max_session_lifetime 86400 # 1 day
-
-    login_required do
-      request.halt [401, {}, []]
-    end
-
-    set_redirect_error_flash do |message|
-      # coming from reset-password-request with unknown login param
-      request.halt [401, {}, []]
-    end
+    jwt_secret 'testmenow'
+    json_response_error_status 401
 
     set_error_flash do |message|
-      errors = @field_errors.collect do |k, v|
-        {parameter: k, detail: v}
-      end
+      k, v = json_response[json_response_field_error_key]
+      errors = [{parameter: k, detail: v}]
+      response.status = 422
       request.halt [response.status, {'Content-Type': 'application/json'},
                     [{errors: errors}.to_json]]
     end
@@ -68,6 +49,9 @@ class MeRoda < BaseRoda
     if current_user.nil?
       raise Buzzn::PermissionDenied.new(Person, :retrieve, nil)
     end
+
+    # TODO remove `if rodauth.valid_jwt?` once doorkeeper is gone
+    rodauth.check_session_expiration if rodauth.valid_jwt?
 
     person = PersonResource.all(current_user, ContractingPartyPersonResource)
                .retrieve(current_user.person.id)
