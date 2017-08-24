@@ -9,7 +9,7 @@ module Buzzn
       attr_reader :schema
 
       def initialize(schema)
-        @schema = Buzzn::Transaction.transactions.steps[schema]
+        @schema = Buzzn::Transaction.transactions.steps["#{schema}_schema"]
       end
 
       def visit(&block)

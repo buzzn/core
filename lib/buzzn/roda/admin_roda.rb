@@ -18,7 +18,7 @@ module Admin
       end
 
       r.on 'me' do
-        r.run MeRoda
+        r.run Me::Roda
       end
     end
   end

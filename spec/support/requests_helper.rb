@@ -1,11 +1,28 @@
 module RequestsHelper
 
-  def authorize(account, path = '/login')
+  def self.included(spec)
+    spec.extend(ClassMethods)
+  end
+
+  module ClassMethods
+    def login_path(path = nil)
+      (@login_path ||= path) ||
+        (superclass.respond_to?(:login_path) ? superclass.login_path : nil)
+    rescue
+      binding.pry
+    end
+  end
+
+  def login_path
+    self.class.login_path || raise('login path not set')
+  end
+
+  def authorize(account)
     $authorizations ||= {}
     pwd = account.respond_to?(:password) ? account.password : 'Example123'
     token = account ? $authorizations[account.id] : nil
     if account && token.nil?
-      post '/login', {login: account.email, password: pwd}.to_json, {'Content-Type': 'application/json'}
+      post login_path, {login: account.email, password: pwd}.to_json, {'Content-Type': 'application/json'}
       token = response.headers['Authorization']
       $authorizations[account.id] = token
     end
@@ -17,7 +34,7 @@ module RequestsHelper
       "Accept"              => "application/json",
       "Content-Type"        => "application/json",
     }
-
+    account = account.call if account.is_a? Proc
     case account
     when Doorkeeper::AccessToken
       headers["HTTP_AUTHORIZATION"]  = "Bearer #{account.token}"
@@ -27,7 +44,6 @@ module RequestsHelper
     else
       raise "can not handle #{account.class}"
     end
-
     send action, path, params, headers
 
     if response.status == 500

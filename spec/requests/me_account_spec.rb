@@ -1,10 +1,12 @@
 # we can not have nested transactions on AR connection and use Sequel at the
 # same time as it does not see the entities from AR connection
-describe MeRoda, :skip_nested do
+describe Me::Roda, :skip_nested do
   
   def app
-    MeRoda # this defines the active application for this test
+    Me::Roda # this defines the active application for this test
   end
+
+  login_path '/login'
 
   entity!(:user) do
     user = Fabricate(:user)

@@ -33,15 +33,16 @@ module SwaggerHelper
     @current.description = text
   end
 
-  def schema(key)
+  def schema(key, expected = nil)
     @schema = key
+    @expected = expected
   end
 
   def expect_missing(ops)
     expect(@schema).not_to be_nil
-    expected = []
+    expected = @expected || []
     process_rule = ->(name: nil, required: nil, type: nil, options: {}) do
-      if required
+      if required && @expected.nil?
         expected << { 'parameter' => "#{name}", 'detail' => 'is missing' }
       end
 
@@ -97,7 +98,8 @@ module SwaggerHelper
   module ClassMethods
 
     def admin
-      @admin ||= Fabricate(:admin_token)
+      #binding.pry
+      @admin ||= Proc.new { @a ||= Fabricate(:admin_token) }
     end
 
     def swagger(&block)
@@ -109,8 +111,8 @@ module SwaggerHelper
           s.info.description = "Swagger for #{name} Internal API"
           s.info.title = "#{name} API"
           s.info.version = '1'
-          s.basePath = "/api/#{name.downcase}"
           block.call(s) if block
+          s.basePath = "/api/#{name.downcase}"
           s
         end
     end
@@ -119,7 +121,7 @@ module SwaggerHelper
       @paths ||= Swagger::Data::Paths.new
     end
 
-    def generic(path, method, &block)
+    def generic(path, method, user, options, &block)
       it "#{method.to_s.upcase} #{path}" do
         normalized = path.gsub(/_[1-9]/, '').gsub('.', '_')
         unless spath = paths[normalized]
@@ -143,8 +145,8 @@ module SwaggerHelper
           resp.description = 'success'
           responses.add_response(200, resp)
         when :post
-          resp.description = 'created'
-          responses.add_response(201, resp)
+          resp.description = options[:description] || 'created'
+          responses.add_response(options[:status] || 201, resp)
         when :patch
           resp.description = 'patched'
           responses.add_response(200, resp)
@@ -156,9 +158,9 @@ module SwaggerHelper
         end
         ops.responses = responses
         self.current = ops
-        real_path = eval "\"#{swagger.basePath}#{path.gsub(/\{/, '#{')}\""
-        send(method.to_s.upcase, real_path, admin)
-        expect([200, 201, 204, 422]).to include response.status
+        real_path = eval "\"#{swagger.basePath}#{path.gsub(/\{/, '#{').sub(/\/$/, '')}\""
+        send(method.to_s.upcase, real_path, user)
+        expect([200, 201, 204, 422, 401]).to include response.status
         instance_eval &block
         if [:post, :patch, :put].include?(method) || response.status == 422
           expect_missing(ops)
@@ -167,8 +169,8 @@ module SwaggerHelper
     end
 
     [:post, :get, :patch, :delete].each do |method|
-      define_method(method) do |path, &block|
-        generic(path, method, &block) if path
+      define_method(method) do |path, user = admin, options = {}, &block|
+        generic(path, method, user, options, &block) if path
       end
     end
   end

@@ -1,0 +1,198 @@
+---
+swagger: '2.0'
+info:
+  title: Me API
+  description: Swagger for Me Internal API
+  version: '1'
+basePath: "/api/me"
+paths:
+  "/":
+    get:
+      description: returns me (person) of the current logged in user
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success
+    patch:
+      description: updates me (person) of the current logged in user
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date_time
+      - name: title
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: prefix
+        in: formData
+        required: false
+        type: string
+        enum:
+        - F
+        - M
+      - name: first_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: last_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: phone
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: fax
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: preferred_language
+        in: formData
+        required: false
+        type: string
+        enum:
+        - de
+        - en
+      responses:
+        200:
+          description: patched
+  "/change-login":
+    post:
+      description: change login and verify with key
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: password
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: login
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: login-confirm
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        200:
+          description: change login key sent via email
+  "/login":
+    post:
+      description: login
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: login
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: password
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        200:
+          description: logged in
+  "/logout":
+    post:
+      description: logout
+      produces:
+      - application/json
+      responses:
+        200:
+          description: logged out
+  "/reset-password":
+    post:
+      description: reset password with given key
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: login
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        200:
+          description: new password set
+  "/reset-password-request":
+    post:
+      description: request key for resetting password
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: key
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: password
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: password-confirm
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        200:
+          description: key sent via email
+  "/verify-login-change":
+    post:
+      description: verify login change with key
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: key
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        200:
+          description: login verfied and changed

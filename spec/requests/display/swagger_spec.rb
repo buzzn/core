@@ -5,6 +5,8 @@ describe Display do
     CoreRoda
   end
 
+  login_path '/api/me/login'
+
   entity!(:group) { Fabricate([:localpool, :tribe].sample) }
 
   entity!(:register) do
@@ -27,7 +29,7 @@ describe Display do
 
   get '/groups/{group.id}/scores' do
     description 'returns the score(s) of the group'
-    schema 'scores_schema'
+    schema 'scores'
   end
 
   get '/groups/{group.id}/mentors' do
@@ -40,7 +42,7 @@ describe Display do
 
   get '/groups/{group.id}/charts' do
     description 'returns the charts of the group'
-    schema 'charts_schema'
+    schema 'charts'
   end
 
   get '/groups/{group.id}/registers' do
@@ -57,7 +59,7 @@ describe Display do
 
   get '/groups/{group.id}/registers/{register.id}/charts' do
     description 'returns the charts of the group'
-    schema 'charts_schema'
+    schema 'charts'
   end
 
   it 'GET /swagger.json' do

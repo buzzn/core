@@ -3,7 +3,7 @@ module Account
     self.table_name = :accounts
 
     belongs_to :person
-    
+
     def unbound_rolenames
       person.roles.where(resource_id: nil).collect{ |r| r.name.to_sym }
     end

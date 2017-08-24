@@ -24,18 +24,8 @@ class CoreRoda < Roda
   # adds /heartbeat endpoint
   plugin :heartbeat
 
-  plugin :rodauth, csrf: false do
-  
-    enable :session_expiration
-
-    session_expiration_redirect nil
-    session_inactivity_timeout 9#00 # 15 minutes
-    max_session_lifetime 86400 # 1 day
-
-    db Buzzn::DB
-  end
-
   route do |r|
+    # for the active admin
     r.on 'session' do
       r.on 'admin' do
         r.run Session::LogoutRoda
@@ -44,7 +34,6 @@ class CoreRoda < Roda
       r.run Session::AccountRoda
     end
 
-
     r.on 'api' do
       r.on 'display' do
         r.run Display::Roda
@@ -52,6 +41,10 @@ class CoreRoda < Roda
 
       r.on 'admin' do
         r.run Admin::Roda
+      end
+      
+      r.on 'me' do
+        r.run Me::Roda
       end
     end
 

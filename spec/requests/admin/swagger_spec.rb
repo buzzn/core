@@ -5,6 +5,8 @@ describe Admin do
     CoreRoda
   end
 
+  login_path '/api/me/login'
+
   entity!(:account) { Fabricate(:user) }
 
   entity!(:person) { account.person }
@@ -101,7 +103,7 @@ describe Admin do
 
   get '/localpools/{localpool.id}/charts' do
     description 'returns the charts of the localpool'
-    schema 'charts_schema'
+    schema 'charts'
   end
 
   # contracts
@@ -138,7 +140,7 @@ describe Admin do
 
   get '/localpools/{localpool.id}/registers/{register.id}/charts' do
     description 'returns the charts of the localpool'
-    schema 'charts_schema'
+    schema 'charts'
   end
 
   # meters
@@ -153,12 +155,12 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/meters/{real_meter.id}' do
     description 'updates the real meter for the given IDs'
-    schema 'update_real_meter_schema'
+    schema 'update_real_meter'
   end
 
   patch '/localpools/{localpool.id}/meters/{virtual_meter.id}' do
     description 'updates the virtual meter for the given IDs'
-    schema 'update_virtual_meter_schema'
+    schema 'update_virtual_meter'
   end
 
   # virtual_meters > formula_parts
@@ -173,7 +175,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/meters/{virtual_meter.id}/formula-parts/{formula_part.id}' do
     description 'update formula-part of virtual meter for the given IDs'
-    schema 'update_formula_part_schema'
+    schema 'update_formula_part'
   end
 
   # meters > registers
@@ -188,7 +190,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/meters/{real_meter.id}/registers/{real_register.id}' do
     description 'update the real register of a meter for the given IDs'
-    schema 'update_real_register_schema'
+    schema 'update_real_register'
   end
 
   # meters > registers > readings
@@ -231,7 +233,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_1.id}' do
     description 'updates the bank-accounts of the person for the given IDs'
-    schema 'update_bank_account_schema'
+    schema 'update_bank_account'
   end
 
   delete '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_2.id}' do
@@ -260,7 +262,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/organizations/{organization.id}/bank-accounts/{bank_account_3.id}' do
     description 'updates the bank-accounts of the organization for the given IDs'
-    schema 'update_bank_account_schema'
+    schema 'update_bank_account'
   end
 
   delete '/localpools/{localpool.id}/organizations/{organization.id}/bank-accounts/{bank_account_4.id}' do
@@ -275,7 +277,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/prices' do
     description 'create price for the localpool'
-    schema 'create_price_schema'
+    schema 'create_price'
   end
 
   get '/localpools/{localpool.id}/prices/{price.id}' do
@@ -284,7 +286,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/prices/{price.id}' do
     description 'updates the price of the localpool for the given IDs'
-    schema 'update_price_schema'
+    schema 'update_price'
   end
 
   # billing-cycles
@@ -295,7 +297,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/billing-cycles' do
     description 'creates a billing-cycles for the localpool'
-    schema 'create_billing_cycle_schema'
+    schema 'create_billing_cycle'
   end
 
   get '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}' do
@@ -304,7 +306,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}' do
     description 'updates the billing-cycles of the localpool'
-    schema 'update_billing_cycle_schema'
+    schema 'update_billing_cycle'
   end
 
   delete '/localpools/{localpool.id}/billing-cycles/{billing_cycle_2.id}' do
@@ -319,7 +321,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/regular' do
     description 'creates a regular billings for billing-cycles'
-    schema 'create_regular_billings_schema'
+    schema 'create_regular_billings'
   end
 
   get '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_1.id}' do
@@ -328,7 +330,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_1.id}' do
     description 'updates the billing of the billing-cycles for the given IDs'
-    schema 'update_billing_schema'
+    schema 'update_billing'
   end
 
   delete '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_2.id}' do
@@ -366,7 +368,7 @@ describe Admin do
 
   patch '/me' do
     description 'updates me (person) of the current logged in user'
-    schema 'update_person_schema'
+    schema 'update_person'
   end
 
   # swagger

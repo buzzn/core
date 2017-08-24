@@ -1,8 +1,10 @@
-describe MeRoda do
+describe Me::Roda do
   
   def app
-    MeRoda # this defines the active application for this test
+    Me::Roda # this defines the active application for this test
   end
+
+  login_path '/login'
 
   entity!(:admin) { Fabricate(:admin_token) }
 
