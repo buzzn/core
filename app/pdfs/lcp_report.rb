@@ -35,11 +35,11 @@ module Buzzn::Pdfs
     end
 
     def begin_date
-      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).first_reading.timestamp
+      @total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].first_reading.date
     end
 
     def end_date
-      @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp
+      @total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].last_reading.date
     end
 
     def total_production
@@ -78,20 +78,20 @@ module Buzzn::Pdfs
       @total_accounted_energy.consumption_through_chp
     end
 
-    def consumption_lsn_full_eeg
-      @total_accounted_energy.consumption_lsn_full_eeg
+    def consumption_power_taker_full_eeg
+      @total_accounted_energy.consumption_power_taker_full_eeg
     end
 
-    def consumption_lsn_reduced_eeg
-      @total_accounted_energy.consumption_lsn_reduced_eeg
+    def consumption_power_taker_reduced_eeg
+      @total_accounted_energy.consumption_power_taker_reduced_eeg
     end
 
-    def count_lsn_full_eeg
-      @total_accounted_energy.count_lsn_full_eeg
+    def count_power_taker_full_eeg
+      @total_accounted_energy.count_power_taker_full_eeg
     end
 
-    def count_lsn_reduced_eeg
-      @total_accounted_energy.count_lsn_reduced_eeg
+    def count_power_taker_reduced_eeg
+      @total_accounted_energy.count_power_taker_reduced_eeg
     end
 
     def grid_consumption_corrected
@@ -123,7 +123,7 @@ module Buzzn::Pdfs
     end
 
     def revenue_through_energy_selling
-      ((consumption_lsn_full_eeg + consumption_lsn_reduced_eeg) * energyprice / 100.0).round(2)
+      ((consumption_power_taker_full_eeg + consumption_power_taker_reduced_eeg).value * energyprice / 100.0).round(2)
     end
 
     def revenue_through_baseprice
@@ -132,7 +132,7 @@ module Buzzn::Pdfs
     end
 
     def revenue_through_dso #Netzbetreiber
-      (grid_feeding_chp * reward_chp_grid_feeding / 100.0 + grid_feeding_pv * reward_pv_grid_feeding / 100.0 + (production_chp - grid_feeding_chp) * reward_chp_own_consumption / 100.0 - baseprice_grid_feeding_per_year * timespan_in_months / 12).round(2)
+      ((grid_feeding_chp * reward_chp_grid_feeding / 100.0 + grid_feeding_pv * reward_pv_grid_feeding / 100.0 + (production_chp - grid_feeding_chp) * reward_chp_own_consumption / 100.0).value - baseprice_grid_feeding_per_year * timespan_in_months / 12).round(2)
     end
 
     def reward_chp_grid_feeding
@@ -190,13 +190,14 @@ module Buzzn::Pdfs
     end
 
     def total_renewable_energy_law_taxation
-      # (consumption_lsn_full_egg - grid_consumpion_corrected * part_of_full_eeg_from_grid_consumption) * full_renewable_eeg +
-      #   (consumption_lsn_reduced_egg - grid_consumpion_corrected * part_of_reduced_eeg_from_grid_consumption) * reduced_renewable_eeg
-      ((consumption_lsn_full_eeg - grid_consumption_corrected * (consumption_lsn_full_eeg * 1.0 / (consumption_lsn_full_eeg + consumption_lsn_reduced_eeg))) * full_renewable_energy_law_taxation / 100 + (consumption_lsn_reduced_eeg - grid_consumption_corrected * (consumption_lsn_reduced_eeg * 1.0 / (consumption_lsn_full_eeg + consumption_lsn_reduced_eeg))) * reduced_renewable_energy_law_taxation / 100).round(2)
+      # (consumption_power_taker_full_egg - grid_consumpion_corrected * part_of_full_eeg_from_grid_consumption) * full_renewable_eeg +
+      #   (consumption_power_taker_reduced_egg - grid_consumpion_corrected * part_of_reduced_eeg_from_grid_consumption) * reduced_renewable_eeg
+      ((consumption_power_taker_full_eeg - grid_consumption_corrected * (consumption_power_taker_full_eeg / (consumption_power_taker_full_eeg + consumption_power_taker_reduced_eeg))) * full_renewable_energy_law_taxation / 100 + (consumption_power_taker_reduced_eeg - grid_consumption_corrected * (consumption_power_taker_reduced_eeg / (consumption_power_taker_full_eeg + consumption_power_taker_reduced_eeg))) * reduced_renewable_energy_law_taxation / 100).round(2).value
+      # TODO why is this a value from an energy ?
     end
 
     def total_cost_grid_consumption
-      (grid_consumption_corrected * energyprice_grid_consumption / 100 + timespan_in_months * baseprice_grid_consumption_per_year / 12).round(2)
+      (grid_consumption_corrected.value * energyprice_grid_consumption / 100 + timespan_in_months * baseprice_grid_consumption_per_year / 12).round(2)
     end
 
     def localpool_service_cost
@@ -217,8 +218,8 @@ module Buzzn::Pdfs
 
     def timespan_in_months
       reading_calculation.timespan_in_months(
-        @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).first_reading.timestamp,
-        @total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp)
+        @total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].first_reading.date,
+        @total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].last_reading.date)
     end
   end
 end

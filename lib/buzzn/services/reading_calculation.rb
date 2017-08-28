@@ -15,8 +15,8 @@ module Buzzn
       #   result: TotalAccountedEnergy with details about each single register
       def get_all_energy_in_localpool(localpool, begin_date, end_date, accounting_year=Time.current.year - 1)
         result = Buzzn::Localpool::TotalAccountedEnergy.new(localpool)
-        register_id_grid_consumption_corrected = nil
-        register_id_grid_feeding_corrected = nil
+        register_grid_consumption_corrected = nil
+        register_grid_feeding_corrected = nil
 
         localpool.registers.each do |register|
           if register.consumption?
@@ -30,19 +30,19 @@ module Buzzn
               end
             end
           elsif register.grid_consumption_corrected?
-            register_id_grid_consumption_corrected = register.id
+            register_grid_consumption_corrected = register
           elsif register.grid_feeding_corrected?
-            register_id_grid_feeding_corrected = register.id
+            register_grid_feeding_corrected = register
           else
             accounted_energy = get_register_energy_for_period(register, begin_date, end_date, accounting_year)
             accounted_energy.label = accounted_energy.first_reading.register.label
             result.add(accounted_energy)
           end
         end
-        grid_consumption_corrected, grid_feeding_corrected = calculate_corrected_grid_values(result, register_id_grid_consumption_corrected, register_id_grid_feeding_corrected)
+        grid_consumption_corrected, grid_feeding_corrected = calculate_corrected_grid_values(result, register_grid_consumption_corrected, register_grid_feeding_corrected)
         result.add(grid_consumption_corrected)
         result.add(grid_feeding_corrected)
-        return result
+        result
       end
 
       # This method returns the energy measured in a specific period of time for all contracts attached to the register
@@ -97,16 +97,27 @@ module Buzzn
       #   register_id_grid_feeding_corrected: The register.id of the LCP's register with label Register::Base::GRID_FEEDING_CORRECTED
       # returns:
       #   2x accounted_energy: Object, that contains all information about accounted readings
-      def calculate_corrected_grid_values(total_accounted_energy, register_id_grid_consumption_corrected, register_id_grid_feeding_corrected)
-        if register_id_grid_consumption_corrected.nil? || register_id_grid_feeding_corrected.nil?
-          raise ArgumentError.new("No corrected ÜGZ registers can be found.")
-        end
-        consumption_third_party = total_accounted_energy.sum_and_group_by_label[Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY]
-        grid_consumption = total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).value
-        grid_consumption_corrected = grid_consumption - consumption_third_party > 0 ? grid_consumption - consumption_third_party : 0
-        grid_consumption_corrected_result = create_corrected_reading(register_id_grid_consumption_corrected, Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED, grid_consumption_corrected, total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION).last_reading.timestamp)
-        grid_feeding_corrected = grid_consumption - consumption_third_party > 0 ? total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).value : total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).value - grid_consumption + consumption_third_party
-        grid_feeding_corrected_result = create_corrected_reading(register_id_grid_feeding_corrected, Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED, grid_feeding_corrected, total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_FEEDING).last_reading.timestamp)
+      def calculate_corrected_grid_values(total_accounted_energy, register_grid_consumption_corrected, register_grid_feeding_corrected)
+        consumption_third_party = total_accounted_energy.sum(Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY)
+        grid_consumption = total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].value
+        grid_consumption_corrected =
+          if grid_consumption - consumption_third_party > Buzzn::Math::Energy.zero
+            grid_consumption - consumption_third_party
+          else
+            Buzzn::Math::Energy.zero
+          end
+        grid_consumption_corrected_result =
+          create_corrected_reading(register_grid_consumption_corrected,
+                                   Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED,
+                                   grid_consumption_corrected,
+                                   total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].last_reading.date)
+        grid_feeding_corrected =
+          if grid_consumption - consumption_third_party > Buzzn::Math::Energy::ZERO
+            total_accounted_energy[Buzzn::AccountedEnergy::GRID_FEEDING].value
+          else
+            total_accounted_energy[Buzzn::AccountedEnergy::GRID_FEEDING].value - grid_consumption + consumption_third_party
+          end
+        grid_feeding_corrected_result = create_corrected_reading(register_grid_feeding_corrected, Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED, grid_feeding_corrected, total_accounted_energy[Buzzn::AccountedEnergy::GRID_FEEDING].last_reading.date)
         return grid_consumption_corrected_result, grid_feeding_corrected_result
       end
 
@@ -118,18 +129,18 @@ module Buzzn
       #   timestamp: The timestamp for the new reading
       # returns:
       #   accounted_energy: Object, that contains all information about accounted readings
-      def create_corrected_reading(register_id, label, corrected_value, timestamp)
+      def create_corrected_reading(register, label, corrected_value, date)
         # TODO: (nice-to-have) validate that all corrected registers must have an initial reading with energy_milliwatt_hour = 0
-        last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).first
+        last_corrected_reading = register.readings.order(:date).last
         if last_corrected_reading.nil?
-          new_reading = save_corrected_reading(register_id, corrected_value, timestamp)
+          new_reading = save_corrected_reading(register, corrected_value, date)
         else
-          if last_corrected_reading.timestamp != timestamp
-            new_reading = save_corrected_reading(register_id, corrected_value + last_corrected_reading.energy_milliwatt_hour, timestamp)
+          if last_corrected_reading.date != date
+            new_reading = save_corrected_reading(register, corrected_value + last_corrected_reading.corrected_value, date)
           else
             # TODO: maybe think about overwriting an existing reading instead of using it
             new_reading = last_corrected_reading
-            last_corrected_reading = Reading.by_register_id(register_id).sort('timestamp': -1).to_a[1]
+            last_corrected_reading = register.readings.order(:date)[-2]
           end
         end
         accounted_energy = Buzzn::AccountedEnergy.new(corrected_value, last_corrected_reading, new_reading, new_reading)
@@ -144,13 +155,15 @@ module Buzzn
       #   timestamp: The timestamp for the new reading
       # returns:
       #   new_reading: The new Reading
-      def save_corrected_reading(register_id, new_reading_value, timestamp)
-        Reading.create!(register_id: register_id,
-                        timestamp: timestamp,
-                        energy_milliwatt_hour: new_reading_value,
-                        reason: Reading::REGULAR_READING,
-                        source: Reading::BUZZN_SYSTEMS,
-                        quality: Reading::ENERGY_QUANTITY_SUMMARIZED)
+      def save_corrected_reading(register, value, date)
+        register.readings.create(date: date,
+                                 raw_value: value.value,
+                                 corrected_value: value,
+                                 reason: SingleReading::REGULAR_READING,
+                                 # TODO need an internal ID for such cases
+                                 source: SingleReading::MANUAL,
+                                 read_by: SingleReading::BUZZN,
+                                 quality: SingleReading::ENERGY_QUANTITY_SUMMARIZED)
       end
 
       # This method returns the energy measured in a specific period of time
@@ -165,7 +178,12 @@ module Buzzn
         first_reading = get_first_reading(register, begin_date, accounting_year)
         last_reading_original = get_last_reading(register, end_date, accounting_year)
         last_reading = SingleReading.new(last_reading_original.attributes)
+        p first_reading.value
+        p last_reading.value
         device_change_readings = get_readings_at_device_change(register, begin_date, end_date, accounting_year)
+        p device_change_readings.size
+        #p device_change_readings.first.value
+        #p device_change_readings.last.value
         if end_date.nil?
           last_reading.date = adjust_end_date(last_reading.date, accounting_year)
           last_reading.corrected_value = adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
@@ -174,6 +192,7 @@ module Buzzn
           accounted_energy = last_reading.corrected_value - first_reading.corrected_value
           return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
         else
+          #binding.pry
           device_change_reading_1 = device_change_readings.first
           device_change_reading_2 = device_change_readings.last
           # if the device change happend exactly on the begin_date or end date just ignore it
@@ -182,6 +201,7 @@ module Buzzn
             accounted_energy = last_reading.corrected_value - first_reading.corrected_value
             return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
           else
+            #binding.pry
             accounted_energy = last_reading.corrected_value - device_change_reading_2.corrected_value + device_change_reading_1.corrected_value - first_reading.corrected_value
             return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original, true, device_change_reading_1, device_change_reading_2)
           end
@@ -207,7 +227,7 @@ module Buzzn
           # try to get the first reading in the accounting_year
           first_reading_behind = register.readings
                                    .in_year(accounting_year)
-                                   .without_reason(Reading::DEVICE_CHANGE_1) # TODO: in the BK code is without device_change_2 but it seems wrong
+                                   .without_reason(SingleReading::DEVICE_CHANGE_1) # TODO: in the BK code is without device_change_2 but it seems wrong
                                    .order(:date)
                                    .first
           first_reading = select_closest_reading(Date.new(accounting_year, 1, 1), first_reading_before, first_reading_behind)
@@ -219,7 +239,7 @@ module Buzzn
           # try to get the the reading exactly at the begin_date
           first_reading = register.readings
                             .where(date: begin_date)
-                            .without_reason(Reading::DEVICE_CHANGE_1)
+                            .without_reason(SingleReading::DEVICE_CHANGE_1)
                             .first
           # try to request the missing reading from data provider
           if first_reading.nil?
@@ -245,14 +265,14 @@ module Buzzn
           # try to get the first reading one year after the accounting_year (mostly beginning of January)
           last_reading_behind = register.readings
                                   .in_year(accounting_year + 1)
-                                  .without_reason(Reading::DEVICE_CHANGE_2)
+                                  .without_reason(SingleReading::DEVICE_CHANGE_2)
                                   .order(:date)
                                   .first
 
           # try to get the last reading in the accounting_year
           last_reading_before = register.readings
                                   .in_year(accounting_year)
-                                  .without_reason(Reading::DEVICE_CHANGE_2)
+                                  .without_reason(SingleReading::DEVICE_CHANGE_2)
                                   .order(:date)
                                   .last
           last_reading = select_closest_reading(Date.new(accounting_year, 12, 31), last_reading_before, last_reading_behind)
@@ -263,7 +283,7 @@ module Buzzn
           # try to get the the reading exactly at the end_date
           last_reading = register.readings
                                  .where(date: end_date)
-                                 .without_reason(Reading::DEVICE_CHANGE_2)
+                                 .without_reason(SingleReading::DEVICE_CHANGE_2)
                                  .first
           # try to request the missing reading from data provider
           if last_reading.nil?
@@ -316,6 +336,19 @@ module Buzzn
         end
       end
 
+      # This method returns a Time at the end of the year in a desired year
+      # input params:
+      #   end_date: The Date of the period's ending that has to be adjusted. Can be nil if the ending is not definite.
+      #   accounting_year: The year for which the energy should be accounted to
+      # returns:
+      #   time: the adjusted time
+      def adjust_end_date2(end_date, accounting_year)
+        if end_date.year < accounting_year
+          raise ArgumentError.new("unable to adjust the end_date #{end_date}.")
+        end
+        Date.new(accounting_year + 1, 1, 1)
+      end
+
       # This method returns the readings if a device change was in the accounting_year
       # input params:
       #   register: The Register::Base for which the readings are requested
@@ -330,6 +363,7 @@ module Buzzn
                    end_date || Date.new(accounting_year + 1))
           .with_reason(SingleReading::DEVICE_CHANGE_1,
                        SingleReading::DEVICE_CHANGE_2)
+          .order(:reason)
       end
 
       # This method inter- or extrapolates the last_reading's energy value

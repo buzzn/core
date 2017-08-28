@@ -1,8 +1,8 @@
 require_relative 'number'
 module Buzzn
   module Math
-    class Energy < Number
+    class Power < Number
     end
-    Number.create(Energy, :watt_hour, 'Wh')
+    Number.create(Power, :watt, 'W')
   end
 end

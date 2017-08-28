@@ -4,6 +4,9 @@ require_relative 'active_record'
 require_relative 'main_container'
 require 'dry/auto_inject'
 
+# core extensions
+require_relative '../core/number'
+
 Import = Dry::AutoInject(Buzzn::Boot::MainContainer)
 
 module Buzzn

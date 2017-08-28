@@ -36,6 +36,7 @@ module Buzzn
     def initialize(value, first_reading, last_reading, last_reading_original,
                    device_change=false, device_change_reading_1=nil,
                    device_change_reading_2=nil)
+      raise "not a #{Buzzn::Math::Energy}: #{value.inspect}" unless value.is_a? Buzzn::Math::Energy
       @value = value
       @first_reading = first_reading
       @last_reading = last_reading

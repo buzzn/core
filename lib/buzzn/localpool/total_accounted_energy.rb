@@ -7,6 +7,8 @@ module Buzzn::Localpool
     PV = :pv
     CHP = :chp
 
+    INTERNAL_ZERO = Buzzn::AccountedEnergy.new(Buzzn::Math::Energy.zero, nil, nil, nil)
+
     def initialize(localpool)
       @localpool = localpool
       @map = {}
@@ -17,6 +19,7 @@ module Buzzn::Localpool
     end
 
     def add(accounted_energy)
+      raise "not an #{Buzzn::AccountedEnergy}: #{accounted_energy.inspect}" unless accounted_energy.is_a? Buzzn::AccountedEnergy
       case accounted_energy.label
       when *Buzzn::AccountedEnergy::SINGLE_LABELS
         if @map[accounted_energy.label]
@@ -35,7 +38,10 @@ module Buzzn::Localpool
     def [](label)
       @map[label]
     end
-    alias :get :[]
+
+    def get(label)
+      self[label] || INTERNAL_ZERO
+    end
 
     def sum(label)
       result = Buzzn::Math::Energy.zero
@@ -173,8 +179,8 @@ module Buzzn::Localpool
     private
     
     def demarcation_type
-      demarcation_chp = get(Buzzn::AccountedEnergy::DEMARCATION_CHP)
-      demarcation_pv = get(Buzzn::AccountedEnergy::DEMARCATION_PV)
+      demarcation_chp = self[Buzzn::AccountedEnergy::DEMARCATION_CHP]
+      demarcation_pv = self[Buzzn::AccountedEnergy::DEMARCATION_PV]
       if demarcation_chp && demarcation_pv
         raise ArgumentError.new('can not determine demarcation type')
       end

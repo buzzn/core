@@ -72,7 +72,7 @@ module Buzzn
         power_out = _out.value / sumout
         sum_variation += (power_in - power_out) ** 2
       end
-      fitting = Math.sqrt(sum_variation)
+      fitting = ::Math.sqrt(sum_variation)
       if data_size == 0
         fitting = -1
       end
