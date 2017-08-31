@@ -28,7 +28,7 @@ describe MeRoda do
       "type"=>"person",
       'updated_at'=>person.updated_at.as_json,
       "prefix"=>person.attributes['prefix'],
-      "title"=>person.title,
+      "title"=>person.attributes['title'],
       "first_name"=>person.first_name,
       "last_name"=>person.last_name,
       "phone"=>person.phone,
@@ -67,14 +67,14 @@ describe MeRoda do
           {"parameter"=>"updated_at",
            "detail"=>"is missing"},
           {"parameter"=>"title",
-           "detail"=>"size cannot be greater than 64"},
+           "detail"=>"must be one of: Dr., Prof., Prof. Dr."},
           {"parameter"=>"prefix",
            "detail"=>"must be one of: F, M"},
           {"parameter"=>"first_name",
            "detail"=>"size cannot be greater than 64"},
           {"parameter"=>"last_name",
            "detail"=>"size cannot be greater than 64"},
-          {"parameter"=>"phone", "detail"=>"size cannot be greater than 64"},
+          {"parameter"=>"phone", "detail"=>"must be a valid phone-number"},
           {"parameter"=>"fax", "detail"=>"size cannot be greater than 64"},
           {"parameter"=>"preferred_language", "detail"=>"must be one of: de, en"}
         ]
@@ -86,7 +86,7 @@ describe MeRoda do
         "id"=>person.id,
         "type"=>"person",
         "prefix"=>"M",
-        "title"=>"Master",
+        "title"=>"Prof.",
         "first_name"=>"Maxima",
         "last_name"=>"Toll",
         "phone"=>"080 123312",
@@ -127,7 +127,7 @@ describe MeRoda do
             prefix: 'Both',
             first_name: 'Maxima' * 20,
             last_name: 'Toll' * 40,
-            phone: '123312' * 40,
+            phone: 'asddasd',
             fax: '123312' * 40,
             preferred_language: 'none'
 
@@ -139,7 +139,7 @@ describe MeRoda do
       old = person.updated_at
       PATCH '', user_token,
             updated_at: person.updated_at,
-            title: 'Master',
+            title: 'Prof.',
             prefix: 'M',
             first_name: 'Maxima',
             last_name: 'Toll',
@@ -149,7 +149,7 @@ describe MeRoda do
 
       expect(response).to have_http_status(200)
       person.reload
-      expect(person.title).to eq 'Master'
+      expect(person.title).to eq 'Prof.'
       expect(person.prefix).to eq 'male'
       expect(person.first_name).to eq 'Maxima'
       expect(person.last_name).to eq 'Toll'

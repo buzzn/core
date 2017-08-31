@@ -322,7 +322,8 @@ describe Admin::LocalpoolRoda do
           "description"=>contract.contractor.description,
           "mode"=>contract.contractor.mode,
           "updatable"=>true,
-          "deletable"=>false
+          "deletable"=>false,
+          "address" => nil
         },
         "customer"=>{
           "id"=>contract.customer.id,
@@ -338,7 +339,19 @@ describe Admin::LocalpoolRoda do
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>contract.customer.image.md.url,
           "updatable"=>true,
-          "deletable"=>false
+          "deletable"=>false,
+          'address'=>{
+            "id"=>contract.customer.address.id,
+            "type"=>"address",
+            'updated_at'=>contract.customer.address.updated_at.as_json,
+            "street"=>contract.customer.address.street,
+            "city"=>contract.customer.address.city,
+            "state"=>contract.customer.address.attributes['state'],
+            "zip"=>contract.customer.address.zip,
+            "country"=>contract.customer.address.attributes['country'],
+            "updatable"=>true,
+            "deletable"=>false
+          }
         },
         "customer_bank_account"=>{
           "id"=>contract.customer_bank_account.id,
@@ -401,7 +414,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200' do
-        GET "/#{localpool.id}/metering-point-operator-contract", admin, include: 'tariffs,payments,contractor,customer,customer_bank_account,contractor_bank_account'
+        GET "/#{localpool.id}/metering-point-operator-contract", admin, include: 'tariffs,payments,contractor:address,customer:address,customer_bank_account,contractor_bank_account'
 
         expect(json.to_yaml).to eq metering_point_json.to_yaml
         expect(response).to have_http_status(200)

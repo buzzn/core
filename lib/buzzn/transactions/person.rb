@@ -1,7 +1,7 @@
 require_relative 'resource'
 Buzzn::Transaction.define do |t|
   t.register_validation(:create_person_schema) do
-    optional(:title).filled(:str?, max_size?: 64)
+    optional(:title).value(included_in?: Person::TITLES)
     required(:prefix).value(included_in?: Person::PREFIXES)
     required(:first_name).filled(:str?, max_size?: 64)
     required(:last_name).filled(:str?, max_size?: 64)
@@ -13,7 +13,7 @@ Buzzn::Transaction.define do |t|
 
   t.register_validation(:update_person_schema) do
     required(:updated_at).filled(:date_time?)
-    optional(:title).filled(:str?, max_size?: 64)
+    optional(:title).value(included_in?: Person::TITLES)
     optional(:prefix).value(included_in?: Person::PREFIXES)
     optional(:first_name).filled(:str?, max_size?: 64)
     optional(:last_name).filled(:str?, max_size?: 64)

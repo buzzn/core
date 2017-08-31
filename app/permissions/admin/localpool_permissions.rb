@@ -92,13 +92,6 @@ class Admin::LocalpoolPermissions
       end
     end
 
-    setting :signing_user do
-      setting :create, NONE
-      setting :retrieve, MANAGERS + [:contract]
-      setting :update, MANAGERS
-      setting :delete, NONE
-    end
-
     setting :customer_bank_account do
       setting :create, NONE
       setting :retrieve, MANAGERS + [:contract]
@@ -193,13 +186,6 @@ class Admin::LocalpoolPermissions
         setting :update, MANAGERS + [:self, :organization_contact]
         setting :delete, NONE
       end
-    end
-
-    setting :signing_user do
-      setting :create, NONE
-      setting :retrieve, MANAGERS + [:contract]
-      setting :update, MANAGERS
-      setting :delete, NONE
     end
 
     setting :customer_bank_account do
@@ -341,13 +327,6 @@ class Admin::LocalpoolPermissions
       end
     end
 
-    setting :signing_user do
-      setting :create, NONE
-      setting :retrieve, MANAGERS
-      setting :update, MANAGERS
-      setting :delete, NONE
-    end
-
     setting :customer_bank_account do
       setting :create, NONE
       setting :retrieve, MANAGERS
@@ -383,12 +362,34 @@ class Admin::LocalpoolPermissions
       setting :update, MANAGERS
       setting :delete, NONE
     end
-
     setting :contractor do
       setting :create, NONE
       setting :retrieve, MANAGERS
       setting :update, MANAGERS
       setting :delete, NONE
+
+      setting :contact do
+        setting :retrieve, MANAGERS + [:self, :organization_contact]
+        setting :update, MANAGERS + [:self, :organization_contact]
+        setting :delete, NONE
+        setting :address do
+          setting :retrieve, MANAGERS + [:self, :organization_contact]
+          setting :update, MANAGERS + [:self, :organization_contact]
+          setting :delete, NONE
+        end
+      end
+
+      setting :address do
+        setting :retrieve, MANAGERS + [:self, :organization_contact]
+        setting :update, MANAGERS + [:self, :organization_contact]
+        setting :delete, NONE
+      end
+
+      setting :bank_accounts do
+        setting :retrieve, MANAGERS + [:self, :organization_contact]
+        setting :update, MANAGERS + [:self, :organization_contact]
+        setting :delete, NONE
+      end
     end
 
     setting :customer do
@@ -396,13 +397,29 @@ class Admin::LocalpoolPermissions
       setting :retrieve, MANAGERS
       setting :update, MANAGERS
       setting :delete, NONE
-    end
 
-    setting :signing_user do
-      setting :create, NONE
-      setting :retrieve, MANAGERS
-      setting :update, MANAGERS
-      setting :delete, NONE
+      setting :contact do
+        setting :retrieve, MANAGERS + [:self, :organization_contact]
+        setting :update, MANAGERS + [:self, :organization_contact]
+        setting :delete, NONE
+        setting :address do
+          setting :retrieve, MANAGERS + [:self, :organization_contact]
+          setting :update, MANAGERS + [:self, :organization_contact]
+          setting :delete, NONE
+        end
+      end
+
+      setting :address do
+        setting :retrieve, MANAGERS + [:self, :organization_contact]
+        setting :update, MANAGERS + [:self, :organization_contact]
+        setting :delete, NONE
+      end
+
+      setting :bank_accounts do
+        setting :retrieve, MANAGERS + [:self, :organization_contact]
+        setting :update, MANAGERS + [:self, :organization_contact]
+        setting :delete, NONE
+      end
     end
 
     setting :customer_bank_account do
@@ -419,7 +436,7 @@ class Admin::LocalpoolPermissions
       setting :delete, NONE
     end
   end
-  
+
   setting :persons, reader: true do
     setting :create, MANAGERS
     setting :retrieve, MANAGERS + [:self]
