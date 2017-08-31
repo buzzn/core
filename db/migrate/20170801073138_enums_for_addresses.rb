@@ -11,6 +11,8 @@ class EnumsForAddresses < ActiveRecord::Migration
     add_column :addresses, :state, :state, null: true
     add_column :addresses, :country, :country, null: false, default: 'DE'
 
+    Address.reset_column_information
+
     Address.all.each do |a|
       a.update(street: a.street_name + ' ' + a.street_number)
     end

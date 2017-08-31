@@ -3,6 +3,7 @@ default: &default
   host: <%= ENV['DB_HOST'] ||= 'localhost' %>
   port: <%= ENV['DB_PORT'] ||= '5432' %>
   username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
   encoding: unicode
   pool: 15
   checkout_timeout: 1
