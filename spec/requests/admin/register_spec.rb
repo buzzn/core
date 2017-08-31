@@ -372,7 +372,7 @@ describe Admin::LocalpoolRoda do
                            .sort{|n,m| n.date <=> m.date}
               readings.collect do |r|
                 {
-                  "id"=>r.id.to_s,
+                  "id"=>r.id,
                   "type"=>"reading",
                   "updated_at"=> r.updated_at.as_json,
                   "date"=>r.date.as_json,
@@ -395,7 +395,7 @@ describe Admin::LocalpoolRoda do
               GET "/#{group.id}/registers/#{register.id}/readings", admin
 
               expect(response).to have_http_status(200)
-              expect(json['array'].to_yaml).to eq readings_json.to_yaml
+              expect(sort(json['array']).to_yaml).to eq sort(readings_json).to_yaml
             end
           end
         end
