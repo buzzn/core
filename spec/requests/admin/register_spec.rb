@@ -369,7 +369,6 @@ describe Admin::LocalpoolRoda do
             let!(:readings_json) do
               readings = 2.times
                            .collect { Fabricate(:single_reading, register: register) }
-                           .sort{|n,m| n.date <=> m.date}
               readings.collect do |r|
                 {
                   "id"=>r.id,
