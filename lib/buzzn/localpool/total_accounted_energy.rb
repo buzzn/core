@@ -7,7 +7,7 @@ module Buzzn::Localpool
     PV = :pv
     CHP = :chp
 
-    INTERNAL_ZERO = Buzzn::AccountedEnergy.new(Buzzn::Math::Energy.zero, nil, nil, nil)
+    INTERNAL_ZERO = Buzzn::AccountedEnergy.new(Buzzn::Utils::Energy.zero, nil, nil, nil)
 
     def initialize(localpool)
       @localpool = localpool
@@ -44,7 +44,7 @@ module Buzzn::Localpool
     end
 
     def sum(label)
-      result = Buzzn::Math::Energy.zero
+      result = Buzzn::Utils::Energy.zero
       get(label).each do |item|
         result += item.value
       end
@@ -63,12 +63,12 @@ module Buzzn::Localpool
           if generator_type == Group::Base::CHP
             get(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
           else
-            Buzzn::Math::Energy.zero
+            Buzzn::Utils::Energy.zero
           end
         else
           raise 'bug'
         end
-      result > Buzzn::Math::Energy.zero ? result : Buzzn::Math::Energy.zero
+      result > Buzzn::Utils::Energy.zero ? result : Buzzn::Utils::Energy.zero
     end
 
     def grid_feeding_pv
@@ -83,12 +83,12 @@ module Buzzn::Localpool
           if generator_type == Group::Base::PV
             get(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value
           else
-            Buzzn::Math::Energy.zero
+            Buzzn::Utils::Energy.zero
           end
         else
           raise 'bug'
         end
-      result > Buzzn::Math::Energy.zero ? result : Buzzn::Math::Energy.zero
+      result > Buzzn::Utils::Energy.zero ? result : Buzzn::Utils::Energy.zero
     end
 
     def consumption_through_chp
@@ -103,7 +103,7 @@ module Buzzn::Localpool
         else
           raise 'bug'
         end
-      result > Buzzn::Math::Energy.zero ? result : Buzzn::Math::Energy.zero
+      result > Buzzn::Utils::Energy.zero ? result : Buzzn::Utils::Energy.zero
     end
 
     def consumption_through_pv
@@ -118,7 +118,7 @@ module Buzzn::Localpool
         else
           raise 'bug'
         end
-      result > Buzzn::Math::Energy.zero ? result : Buzzn::Math::Energy.zero
+      result > Buzzn::Utils::Energy.zero ? result : Buzzn::Utils::Energy.zero
     end
 
     def own_consumption

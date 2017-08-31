@@ -1,7 +1,7 @@
 # coding: utf-8
 require_relative 'number'
 module Buzzn
-  module Math
+  module Utils
     class CubicMeter < Number
     end
     Number.create(CubicMeter, :cubic_meter, 'm³')

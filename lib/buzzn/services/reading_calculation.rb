@@ -101,10 +101,10 @@ module Buzzn
         consumption_third_party = total_accounted_energy.sum(Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY)
         grid_consumption = total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].value
         grid_consumption_corrected =
-          if grid_consumption - consumption_third_party > Buzzn::Math::Energy.zero
+          if grid_consumption - consumption_third_party > Buzzn::Utils::Energy.zero
             grid_consumption - consumption_third_party
           else
-            Buzzn::Math::Energy.zero
+            Buzzn::Utils::Energy.zero
           end
         grid_consumption_corrected_result =
           create_corrected_reading(register_grid_consumption_corrected,
@@ -112,7 +112,7 @@ module Buzzn
                                    grid_consumption_corrected,
                                    total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].last_reading.date)
         grid_feeding_corrected =
-          if grid_consumption - consumption_third_party > Buzzn::Math::Energy::ZERO
+          if grid_consumption - consumption_third_party > Buzzn::Utils::Energy::ZERO
             total_accounted_energy[Buzzn::AccountedEnergy::GRID_FEEDING].value
           else
             total_accounted_energy[Buzzn::AccountedEnergy::GRID_FEEDING].value - grid_consumption + consumption_third_party

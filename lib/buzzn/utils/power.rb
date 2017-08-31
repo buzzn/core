@@ -1,6 +1,6 @@
 require_relative 'number'
 module Buzzn
-  module Math
+  module Utils
     class Power < Number
     end
     Number.create(Power, :watt, 'W')

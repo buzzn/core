@@ -1,9 +1,9 @@
-require_relative '../math/energy'
-require_relative '../math/power'
-require_relative '../math/cubic_meter'
+require_relative '../utils/energy'
+require_relative '../utils/power'
+require_relative '../utils/cubic_meter'
 
-Buzzn::Math::Number::UNITS.each do |unit, _|
+Buzzn::Utils::Number::UNITS.each do |unit, _|
   define_method "#{unit}" do |val|
-    Buzzn::Math::Number.send unit, val
+    Buzzn::Utils::Number.send unit, val
   end
 end

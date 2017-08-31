@@ -1,6 +1,6 @@
 # coding: utf-8
 module Buzzn
-  module Math
+  module Utils
     class Number
 
       ORDERS = { micro: 'μ', milli: 'm', nil => '', kilo: 'k', mega: 'M'}

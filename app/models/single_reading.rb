@@ -129,7 +129,7 @@ class SingleReading < ActiveRecord::Base
   end
 
   def corrected_value
-    Buzzn::Math::Number.send(unit, value)
+    Buzzn::Utils::Number.send(unit, value)
   end
 
   def corrected_value=(val)

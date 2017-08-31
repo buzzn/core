@@ -1,6 +1,6 @@
 require_relative 'number'
 module Buzzn
-  module Math
+  module Utils
     class Energy < Number
     end
     Number.create(Energy, :watt_hour, 'Wh')
