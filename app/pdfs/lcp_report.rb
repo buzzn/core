@@ -217,7 +217,7 @@ module Buzzn::Pdfs
     end
 
     def timespan_in_months
-      reading_calculation.timespan_in_months(
+      @timespan ||= Buzzn::Utils::Chronos.timespan_in_months(
         @total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].first_reading.date,
         @total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].last_reading.date)
     end

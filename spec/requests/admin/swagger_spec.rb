@@ -191,11 +191,6 @@ describe Admin do
     schema 'update_real_register_schema'
   end
 
-  patch '/localpools/{localpool.id}/meters/{virtual_meter.id}/registers/{virtual_register.id}' do
-    description 'update the virtual register of a meter for the given IDs'
-    schema 'update_virtual_register_schema'
-  end
-
   # meters > registers > readings
 
   post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do

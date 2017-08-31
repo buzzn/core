@@ -547,7 +547,7 @@ paths:
         enum:
         - Wh
         - W
-        - m^3
+        - m³
       - name: reason
         in: formData
         required: true
@@ -1003,7 +1003,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: operator
         in: formData
         required: false

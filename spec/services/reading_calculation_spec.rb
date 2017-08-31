@@ -1,4 +1,3 @@
-#require 'buzzn/core/energy'
 describe Buzzn::Services::ReadingCalculation do
 
   entity :register_with_regular_readings do
@@ -190,7 +189,7 @@ describe Buzzn::Services::ReadingCalculation do
       it 'extrapolates' do
         device_change_readings = []
         value = subject.adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
-        expect(value).to eq energy(last_reading_original.value * 2)
+        expect(value).to eq watt_hour(last_reading_original.value * 2)
       end
 
       it 'intrapolates' do
@@ -198,7 +197,7 @@ describe Buzzn::Services::ReadingCalculation do
         last_reading_original.update(date: Date.new(2016, 1, 31), value: 93000000)
         last_reading.update(date: Date.new(2015, 12, 31), value: 93000000)
         value = subject.adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
-        expect(value).to eq energy(last_reading_original.value * 2.0 / 3.0)
+        expect(value).to eq watt_hour(last_reading_original.value * 2.0 / 3.0)
       end
     end
 
@@ -224,12 +223,12 @@ describe Buzzn::Services::ReadingCalculation do
         last_reading.update(date: Date.new(2015, 12, 31), value: 15000000)
 
         value = subject.adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
-        expect(value).to eq energy(46000000)
+        expect(value).to eq watt_hour(46000000)
 
         reading_2.update(date: last_reading_original.date)
         value = subject.adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
         # FIXME double check value with Stefon + Phlipp
-        expect(value).to eq energy(33066666.666666668)
+        expect(value).to eq watt_hour(33066666.666666668)
       end
     
       it 'intrapolates' do
@@ -239,13 +238,13 @@ describe Buzzn::Services::ReadingCalculation do
         last_reading.update(date: Date.new(2015, 12, 31), value: 77000000)
 
         value = subject.adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
-        expect(value).to eq energy(46000000)
+        expect(value).to eq watt_hour(46000000)
 
         reading_2.update(date: last_reading_original.date)
         value = subject.adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
 
         # FIXME negative enegy values !?
-        expect(value).to eq energy(-6441558.441558441)
+        expect(value).to eq watt_hour(-6441558.441558441)
       end
     end
   end
@@ -267,7 +266,7 @@ describe Buzzn::Services::ReadingCalculation do
 
       it 'with begin_date and without ending_date' do
         result = subject.get_register_energy_for_period(register, begin_date, nil, 2015)
-        expect(result.value).to eq energy(364000000)
+        expect(result.value).to eq watt_hour(364000000)
         expect(result.first_reading).to eq first_reading
         expect(result.last_reading_original).to eq last_reading_original
         expect(result.last_reading.date).to eq Date.new(2015, 12, 31)
@@ -275,7 +274,7 @@ describe Buzzn::Services::ReadingCalculation do
 
       it 'with begin_date and with ending_date' do
         result = subject.get_register_energy_for_period(register, begin_date, end_date, 2015)
-        expect(result.value).to eq energy(333000000)
+        expect(result.value).to eq watt_hour(333000000)
         expect(result.first_reading).to eq first_reading
         expect(result.last_reading_original).to eq last_reading_original
         expect(result.last_reading.date).to eq Date.new(2015, 11, 30)
@@ -283,7 +282,7 @@ describe Buzzn::Services::ReadingCalculation do
 
       it 'without begin_date and with ending_date' do
         result = subject.get_register_energy_for_period(register, nil, end_date, 2015)
-        expect(result.value).to eq energy(333000000)
+        expect(result.value).to eq watt_hour(333000000)
         expect(result.first_reading).to eq first_reading
         expect(result.last_reading_original).to eq last_reading_original
         expect(result.last_reading.date).to eq Date.new(2015, 11, 30)
@@ -312,7 +311,7 @@ describe Buzzn::Services::ReadingCalculation do
 
       it 'with begin_date and without ending_date' do
         result = subject.get_register_energy_for_period(register, begin_date, nil, 2015)
-        expect(result.value).to eq energy(364000000)
+        expect(result.value).to eq watt_hour(364000000)
         expect(result.first_reading).to eq first_reading
         expect(result.last_reading_original).to eq last_reading_original
         expect(result.last_reading.date).to eq Date.new(2015, 12, 31)
@@ -323,7 +322,7 @@ describe Buzzn::Services::ReadingCalculation do
 
       it 'with begin_date and with ending_date' do
         result = subject.get_register_energy_for_period(register, begin_date, end_date, 2015)
-        expect(result.value).to eq energy(333000000)
+        expect(result.value).to eq watt_hour(333000000)
         expect(result.first_reading).to eq first_reading
         expect(result.last_reading_original).to eq last_reading_original
         expect(result.last_reading.date).to eq Date.new(2015, 11, 30)
@@ -334,7 +333,7 @@ describe Buzzn::Services::ReadingCalculation do
 
       it 'without begin_date and with ending_date' do
         result = subject.get_register_energy_for_period(register, nil, end_date, 2015)
-        expect(result.value).to eq energy(333000000)
+        expect(result.value).to eq watt_hour(333000000)
         expect(result.first_reading).to eq first_reading
         expect(result.last_reading_original).to eq last_reading_original
         expect(result.last_reading.date).to eq Date.new(2015, 11, 30)
@@ -366,7 +365,7 @@ describe Buzzn::Services::ReadingCalculation do
 
       it 'with begin_date and without ending_date' do
         result = subject.get_register_energy_for_period(register, begin_date, nil, 2015)
-        #expect(result.value).to eq energy(364000000)
+        #expect(result.value).to eq watt_hour(364000000)
         #expect(result.first_reading).to eq reading_2
         expect(result.last_reading_original).to eq last_reading_original
         expect(result.last_reading.date).to eq Date.new(2015, 12, 31)
@@ -377,7 +376,7 @@ describe Buzzn::Services::ReadingCalculation do
 
       it 'with begin_date and with ending_date' do
         result = subject.get_register_energy_for_period(register, begin_date, end_date, 2015)
-        #expect(result.value).to eq energy(333000000)
+        #expect(result.value).to eq watt_hour(333000000)
         #expect(result.first_reading).to eq reading_2
         expect(result.last_reading_original).to eq last_reading_original
         expect(result.last_reading.date).to eq Date.new(2015, 11, 30)
@@ -388,7 +387,7 @@ describe Buzzn::Services::ReadingCalculation do
 
       it 'without begin_date and with ending_date' do
         result = subject.get_register_energy_for_period(register, nil, end_date, 2015)
-        expect(result.value).to eq energy(333000000)
+        expect(result.value).to eq watt_hour(333000000)
         #expect(result.first_reading).to eq reading_2
         expect(result.last_reading_original).to eq last_reading_original
         expect(result.last_reading.date).to eq Date.new(2015, 11, 30)
@@ -538,17 +537,17 @@ describe Buzzn::Services::ReadingCalculation do
     begin_date = Date.new(2016, 8, 4)
     result = subject.get_all_energy_in_localpool(localpool, begin_date, nil, 2016)
 
-    expect(result.get(Buzzn::AccountedEnergy::GRID_CONSUMPTION).value).to eq energy(3631626666.6666665) # this includes third party supplied!
-    expect(result.get(Buzzn::AccountedEnergy::GRID_FEEDING).value).to eq energy(10116106666.666666) # this includes third party supplied!
+    expect(result.get(Buzzn::AccountedEnergy::GRID_CONSUMPTION).value).to eq watt_hour(3631626666.6666665) # this includes third party supplied!
+    expect(result.get(Buzzn::AccountedEnergy::GRID_FEEDING).value).to eq watt_hour(10116106666.666666) # this includes third party supplied!
     # FIXME
-    #expect(result.sum(Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG)).to eq energy(10191000000)
-    #expect(result.sum(Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG)).to eq energy(430000000)
-    expect(result.sum(Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY)).to eq energy(410073913.043478)
-    expect(result.sum(Buzzn::AccountedEnergy::PRODUCTION_PV)).to eq energy(7013728000)
-    expect(result.sum(Buzzn::AccountedEnergy::PRODUCTION_CHP)).to eq energy(10698696666.666666)
-    expect(result.get(Buzzn::AccountedEnergy::DEMARCATION_CHP).value).to eq energy(4905080000)
-    expect(result.get(Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED).value).to eq energy(3221552753.6231885)
-    expect(result.get(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value).to eq energy(10116106666.666666)
+    #expect(result.sum(Buzzn::AccountedEnergy::CONSUMPTION_LSN_FULL_EEG)).to eq watt_hour(10191000000)
+    #expect(result.sum(Buzzn::AccountedEnergy::CONSUMPTION_LSN_REDUCED_EEG)).to eq watt_hour(430000000)
+    expect(result.sum(Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY)).to eq watt_hour(410073913.043478)
+    expect(result.sum(Buzzn::AccountedEnergy::PRODUCTION_PV)).to eq watt_hour(7013728000)
+    expect(result.sum(Buzzn::AccountedEnergy::PRODUCTION_CHP)).to eq watt_hour(10698696666.666666)
+    expect(result.get(Buzzn::AccountedEnergy::DEMARCATION_CHP).value).to eq watt_hour(4905080000)
+    expect(result.get(Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED).value).to eq watt_hour(3221552753.6231885)
+    expect(result.get(Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED).value).to eq watt_hour(10116106666.666666)
     expect(result[Buzzn::AccountedEnergy::DEMARCATION_PV]).to be_nil
     expect(result[Buzzn::AccountedEnergy::OTHER]).to be_nil
   end
@@ -589,11 +588,11 @@ describe Buzzn::Services::ReadingCalculation do
   end
 
   context 'calculates the corrected grid values' do
-    let(:ten) { energy(10000000000) }
-    let(:three) { energy(3000000000) }
-    let(:seven) { energy(7000000000) }
-    let(:twelfe) { energy(12000000000) }
-    let(:thirteen) { energy(13000000000) }
+    let(:ten) { watt_hour(10000000000) }
+    let(:three) { watt_hour(3000000000) }
+    let(:seven) { watt_hour(7000000000) }
+    let(:twelfe) { watt_hour(12000000000) }
+    let(:thirteen) { watt_hour(13000000000) }
     entity(:sample_reading) { Fabricate(:single_reading) }
     entity(:grid_meter) do
       Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
@@ -671,58 +670,5 @@ describe Buzzn::Services::ReadingCalculation do
       expect(result.timestamp).to eq time
     end
   end
-
-  it 'calculates the right timespan in months' do
-    date_1 = Date.new(2016, 1, 1)
-    date_2 = Date.new(2016, 12, 31)
-    result = subject.timespan_in_months(date_1, date_2)
-    expect(result).to eq 12
-
-    (1..12).each do |i|
-      date_2 = Date.new(2016, i, 1).end_of_month
-      result = subject.timespan_in_months(date_1, date_2)
-      result_swapped = subject.timespan_in_months(date_2, date_1)
-      expect(result).to eq i
-      expect(result).to eq result_swapped
-    end
-
-    (1..31).each do |i|
-      date_2 = Date.new(2016, 12, i)
-      result = subject.timespan_in_months(date_1, date_2)
-      result_swapped = subject.timespan_in_months(date_2, date_1)
-      expect(result).to eq i >= 21 ? 12 : (i >=10 ? 11.5 : 11)
-      expect(result).to eq result_swapped
-    end
-  end
-
-  # describe Buzzn::Localpool::TotalAccountedEnergy do
-  #   it 'creates total accounted energy and adds an accounted energy to it' do
-  #     result = Buzzn::Localpool::TotalAccountedEnergy.new("some-localpool-id")
-  #     expect(result.accounted_energies).to eq []
-
-  #     reading_1 = Fabricate(:single_reading)
-  #     reading_2 = Fabricate(:single_reading)
-  #     result = Buzzn::Localpool::TotalAccountedEnergy.new("some-localpool-id")
-  #     accounted_energy = Buzzn::AccountedEnergy.new(20000, reading_1, reading_2, reading_2)
-  #     result.add(accounted_energy)
-  #     expect(result.accounted_energies).to eq [accounted_energy]
-  #   end
-
-  #   it 'gets single accounted_energy by label' do
-  #     accounted_energy_grid_consumption = Buzzn::AccountedEnergy.new(10000000000, Fabricate(:single_reading), Fabricate(:single_reading), Fabricate(:single_reading))
-  #     accounted_energy_grid_consumption.label = Buzzn::AccountedEnergy::GRID_CONSUMPTION
-  #     accounted_energy_consumption_third_party_1 = Buzzn::AccountedEnergy.new(3000000000, Fabricate(:single_reading), Fabricate(:single_reading), Fabricate(:single_reading))
-  #     accounted_energy_consumption_third_party_1.label = Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY
-  #     accounted_energy_consumption_third_party_2 = Buzzn::AccountedEnergy.new(2000000000, Fabricate(:single_reading), Fabricate(:single_reading), Fabricate(:single_reading))
-  #     accounted_energy_consumption_third_party_2.label = Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY
-  #     total_accounted_energy = Buzzn::Localpool::TotalAccountedEnergy.new("some-localpool-id")
-  #     total_accounted_energy.add(accounted_energy_grid_consumption)
-  #     total_accounted_energy.add(accounted_energy_consumption_third_party_1)
-  #     total_accounted_energy.add(accounted_energy_consumption_third_party_2)
-
-  #     expect(total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::GRID_CONSUMPTION)).to eq accounted_energy_grid_consumption
-  #     expect{ total_accounted_energy.get_single_by_label(Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY)}.to raise_error ArgumentError
-  #   end
-  # end
 end
 
