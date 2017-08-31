@@ -220,6 +220,13 @@ class Admin::LocalpoolPermissions
       setting :retrieve, MANAGERS
       setting :update, MANAGERS
       setting :delete, NONE
+      
+      setting :readings do
+        setting :create, MANAGERS
+        setting :retrieve, MANAGERS + [:contract]
+        setting :update, NONE
+        setting :delete, MANAGERS
+      end
     end
 
     setting :formula_parts do
@@ -242,7 +249,10 @@ class Admin::LocalpoolPermissions
     setting :delete, NONE
 
     setting :readings do
+      setting :create, MANAGERS
       setting :retrieve, MANAGERS + [:contract]
+      setting :update, NONE
+      setting :delete, MANAGERS
     end
   end
 

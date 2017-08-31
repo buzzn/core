@@ -69,7 +69,7 @@ html
         td kWh
       tr
         td.single_space Nutzungsgrad
-        td #{'%.2f' % (own_consumption * 100.0 / total_production)}
+        td #{'%.2f' % (own_consumption.value * 100.0 / total_production.value)}
         td %
       tr.grey
         td ins Netz eingespeist (Überschussstrom)
@@ -85,31 +85,31 @@ html
         td kWh
       tr
         td Verbrauch gesamt
-        td = total_accounted_energy.total_consumption_by_lsn
+        td = total_accounted_energy.total_consumption_power_taker
         td kWh
       tr.grey
         td.single_space durch Verbrauchstellen (volle EEG-Umlage)
-        td = consumption_lsn_full_eeg
+        td = consumption_power_taker_full_eeg
         td kWh
       tr
         td.double_space Anzahl Verbrauchstellen
-        td = count_lsn_full_eeg
+        td = count_power_taker_full_eeg
         td Stück
       tr.grey
         td.double_space Mittelwert
-        td = consumption_lsn_full_eeg / count_lsn_full_eeg
+        td = consumption_power_taker_full_eeg / count_power_taker_full_eeg
         td kWh
       tr
         td.single_space durch Verbrauchstellen (reduzierte EEG-Umlage)
-        td = consumption_lsn_reduced_eeg
+        td = consumption_power_taker_reduced_eeg
         td kWh
       tr.grey
         td.double_space Anzahl Verbrauchstellen
-        td = count_lsn_reduced_eeg
+        td = count_power_taker_reduced_eeg
         td Stück
       tr
         td.double_space Mittelwert
-        td = consumption_lsn_reduced_eeg / count_lsn_reduced_eeg
+        td = consumption_power_taker_reduced_eeg / count_power_taker_reduced_eeg
         td kWh
       tr.grey
         td.single_space gedeckt durch
@@ -125,7 +125,7 @@ html
         td kWh
       tr
         td.double_space Deckungsgrad
-        td #{'%.2f' % (own_consumption * 100.0 / total_accounted_energy.total_consumption_by_lsn)}
+        td #{'%.2f' % (own_consumption.value * 100.0 / total_accounted_energy.total_consumption_power_taker.value)}
         td %
       tr.grey
         td Verbrauch Drittbelieferte gesamt

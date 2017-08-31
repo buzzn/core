@@ -1,6 +1,6 @@
 class Price < ActiveRecord::Base
 
-  belongs_to :localpool, class_name: 'Group::Localpool'
+  belongs_to :localpool, class_name: Group::Localpool
 
   validates :begin_date, presence: true
   validates :name, presence: true, length: { in: 2..40 }

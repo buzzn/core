@@ -34,6 +34,11 @@ class Admin::RegisterRoda < BaseRoda
           raise "unknown model: #{register.class.model}"
         end
       end
+
+      r.on 'readings' do
+        shared[Admin::ReadingRoda::REGISTER] = register
+        r.run Admin::ReadingRoda
+      end
     end
   end
 end

@@ -14,7 +14,7 @@ module Buzzn::Localpool
         end
         localpool.registers.consumption.each do |register|
           date_of_first_reading = find_object_or_error("no reading found for register #{register.name}") do
-            Reading.by_register_id(register.id).sort('timestamp': 1).first.timestamp.to_date
+            Reading::Continuous.by_register_id(register.id).sort('timestamp': 1).first.timestamp.to_date
           end
           all_contracts_on_register = register.contracts.localpool_power_takers_and_other_suppliers.order('begin_date ASC')
           if all_contracts_on_register.size > 0

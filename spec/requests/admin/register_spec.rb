@@ -77,6 +77,7 @@ describe Admin::LocalpoolRoda do
        end
 
        let(:updated_json) do
+         last = register.readings.order('date').last
          {
            "id"=>register.id,
            "type"=>"register_real",
@@ -86,11 +87,12 @@ describe Admin::LocalpoolRoda do
            "post_decimal_position"=>3,
            "low_load_ability"=>true,
            "label"=>'DEMARCATION_PV',
-           "last_reading"=>Reading.by_register_id(register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
+           "last_reading"=>last ? last.value : 0,
            "observer_min_threshold"=>10,
            "observer_max_threshold"=>100,
            "observer_enabled"=>true,
            "observer_offline_monitoring"=>true,
+           "createables"=>["readings"],
            "metering_point_id"=>'123456',
            "obis"=>register.obis,
          }
@@ -195,6 +197,7 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
 
       let(:real_register_json) do
+        last = real_register.readings.order('date').last
         {
           "id"=>real_register.id,
           "type"=>"register_real",
@@ -205,18 +208,19 @@ describe Admin::LocalpoolRoda do
           "post_decimal_position"=>2,
           "low_load_ability"=>false,
           "label"=>real_register.attributes['label'],
-          "last_reading"=>Reading.by_register_id(real_register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(real_register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
+          "last_reading"=>last ? last.value : 0,
           "observer_min_threshold"=>100,
           "observer_max_threshold"=>5000,
           "observer_enabled"=>false,
           "observer_offline_monitoring"=>false,
+          "createables"=>["readings"],
           "metering_point_id"=>real_register.metering_point_id,
           "obis"=>real_register.obis,
         }
       end
 
       let(:virtual_register_json) do
-        meter = virtual_register.meter
+        last = virtual_register.readings.order('date').last
         {
           "id"=>virtual_register.id,
           "type"=>"register_virtual",
@@ -227,16 +231,18 @@ describe Admin::LocalpoolRoda do
           "post_decimal_position"=>2,
           "low_load_ability"=>false,
           "label"=>virtual_register.attributes['label'],
-          "last_reading"=>Reading.by_register_id(virtual_register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(virtual_register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
+          "last_reading"=>last ? last.value : 0,
           "observer_min_threshold"=>100,
           "observer_max_threshold"=>5000,
           "observer_enabled"=>false,
-          "observer_offline_monitoring"=>false
+          "observer_offline_monitoring"=>false,
+          "createables"=>["readings"],
         }
       end
 
       let(:registers_json) do
         Register::Base.all.reload.collect do |register|
+          last = register.readings.order('date').last
           json = {
             "id"=>register.id,
             "type"=>"register_#{register.is_a?(Register::Real) ? 'real': 'virtual'}",
@@ -247,11 +253,12 @@ describe Admin::LocalpoolRoda do
             "post_decimal_position"=>register.post_decimal_position,
             "low_load_ability"=>register.low_load_ability,
             "label"=>register.attributes['label'],
-            "last_reading"=>Reading.by_register_id(register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
+            "last_reading"=>last ? last.value : 0,
             "observer_min_threshold"=>register.observer_min_threshold,
             "observer_max_threshold"=>register.observer_max_threshold,
             "observer_enabled"=>register.observer_enabled,
             "observer_offline_monitoring"=>register.observer_offline_monitoring,
+            "createables"=>["readings"]
           }
           if register.is_a? Register::Real
             json["metering_point_id"] = register.metering_point_id
@@ -288,6 +295,7 @@ describe Admin::LocalpoolRoda do
           let(:virtual_registers_json) { [ virtual_register_json ] }
           let(:real_registers_json) do
             Register::Real.all.collect do |register|
+              last = register.readings.order('date').last
               {
                 "id"=>register.id,
                 "type"=>"register_real",
@@ -298,11 +306,12 @@ describe Admin::LocalpoolRoda do
                 "post_decimal_position"=>register.post_decimal_position,
                 "low_load_ability"=>register.low_load_ability,
                 "label"=>register.attributes['label'],
-                "last_reading"=>Reading.by_register_id(register.id).sort('timestamp': -1).first.nil? ? 0 : Reading.by_register_id(register.id).sort('timestamp': -1).first.energy_milliwatt_hour,
+                "last_reading"=> last ? last.value : 0,
                 "observer_min_threshold"=>register.observer_min_threshold,
                 "observer_max_threshold"=>register.observer_max_threshold,
                 "observer_enabled"=>register.observer_enabled,
                 "observer_offline_monitoring"=>register.observer_offline_monitoring,
+                "createables"=>["readings"],
                 "metering_point_id"=>register.metering_point_id,
                 "obis"=>register.obis
               }
@@ -358,19 +367,26 @@ describe Admin::LocalpoolRoda do
 
             let(:register) { send "#{type}_register" }
             let!(:readings_json) do
-              Reading.all.delete_all
-              readings = 2.times.collect { Fabricate(:reading, register_id: register.id) }
+              readings = 2.times
+                           .collect { Fabricate(:single_reading, register: register) }
+                           .sort{|n,m| n.date <=> m.date}
               readings.collect do |r|
                 {
                   "id"=>r.id.to_s,
                   "type"=>"reading",
-                  "energy_milliwatt_hour"=>r.energy_milliwatt_hour,
-                  "power_milliwatt"=>r.power_milliwatt,
-                  "timestamp"=>r.timestamp.utc.to_s.sub('+00:00','.000Z'),
-                  "reason"=>"regular_reading",
-                  "source"=>"buzzn_systems",
-                  "quality"=>"read_out",
-                  "meter_serialnumber"=>'12346578'
+                  "updated_at"=> r.updated_at.as_json,
+                  "date"=>r.date.as_json,
+                  "raw_value"=>r.raw_value,
+                  "value"=>r.value,
+                  "unit"=>r.attributes['unit'],
+                  "reason"=>r.attributes['reason'],
+                  "read_by"=>r.attributes['read_by'],
+                  "source"=>r.attributes['source'],
+                  "quality"=>r.attributes['quality'],
+                  "status"=>r.attributes['status'],
+                  "comment"=>nil,
+                  'updatable'=>false,
+                  'deletable'=>true
                 }
               end
             end

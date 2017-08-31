@@ -18,5 +18,4 @@ describe Buzzn::Interval do
       end
     end
   end
-
 end

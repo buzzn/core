@@ -70,7 +70,7 @@ module Buzzn
               result[:max] = rule.options[:args].first
               result[:exclusive_max] = true
             else
-              result[:type] = rule.to_s.sub('?', '') unless result[:type]
+              result[:type] = rule.to_s.sub('?', '').to_sym unless result[:type]
             end
           else
             raise "do not know what to do with #{rule.class}"

@@ -17,17 +17,26 @@ module Buzzn
     CONSUMPTION_LSN_REDUCED_EEG = "consumption_lsn_reduced_eeg"
     CONSUMPTION_THIRD_PARTY = "consumption_third_party"
 
-    class << self
-      def labels
-        @label ||= [DEMARCATION_PV, DEMARCATION_CHP, PRODUCTION_PV, PRODUCTION_CHP, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED,
-                    GRID_FEEDING_CORRECTED, OTHER, CONSUMPTION_LSN_FULL_EEG, CONSUMPTION_LSN_REDUCED_EEG, CONSUMPTION_THIRD_PARTY]
-      end
-    end
+    SINGLE_LABELS = [DEMARCATION_PV,
+                     DEMARCATION_CHP, 
+                     GRID_CONSUMPTION,
+                     GRID_FEEDING,
+                     GRID_CONSUMPTION_CORRECTED,
+                     GRID_FEEDING_CORRECTED].freeze
 
-    def initialize(value, first_reading, last_reading, last_reading_original, device_change=false, device_change_reading_1=nil, device_change_reading_2=nil)
-      unless value >= 0
-        raise ArgumentError.new("AccountedEnergy value must be greater than or equal to 0.")
-      end
+    MULTI_LABELS = [PRODUCTION_PV,
+                    PRODUCTION_CHP,
+                    OTHER,
+                    CONSUMPTION_LSN_FULL_EEG,
+                    CONSUMPTION_LSN_REDUCED_EEG,
+                    CONSUMPTION_THIRD_PARTY].freeze
+
+    LABELS = (SINGLE_LABELS + MULTI_LABELS).freeze
+
+    def initialize(value, first_reading, last_reading, last_reading_original,
+                   device_change=false, device_change_reading_1=nil,
+                   device_change_reading_2=nil)
+      raise "not a #{Buzzn::Utils::Energy}: #{value.inspect}" unless value.is_a? Buzzn::Utils::Energy
       @value = value
       @first_reading = first_reading
       @last_reading = last_reading
@@ -36,5 +45,12 @@ module Buzzn
       @device_change_reading_2 = device_change_reading_2
       @device_change = device_change
     end
+  end
+
+  def ==(o)
+    binding.pry
+  end
+  def eql?(o)
+    binding.pry
   end
 end

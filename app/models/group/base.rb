@@ -41,8 +41,6 @@ module Group
 
     has_many :scores, as: :scoreable
 
-    normalize_attributes :description, :website
-
     scope :restricted, ->(uuids) { where(id: uuids) }
 
 

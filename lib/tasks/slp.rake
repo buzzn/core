@@ -28,16 +28,16 @@ namespace :slp do
           remString = parseString[8..parseString.length]
           dateString = "#{remString[0..3]}-#{remString[4..5]}-#{remString[6..7]} #{remString[8..9]}:#{remString[10..11]}"
           date = berlin.parse(dateString)
-          if Reading.where(source: 'slp', timestamp: date).size == 1
+          if Reading::Continuous.where(source: 'slp', timestamp: date).size == 1
             puts "Data at #{date} already available, trying next."
           else
-            Reading.create(
+            Reading::Continuous.create(
               timestamp: date,
               energy_milliwatt_hour: watt_hour,
               power_milliwatt: watts,
               source: "slp",
-              quality: Reading::SUBSTITUE_VALUE,
-              reason: Reading::OTHER
+              quality: Reading::Continuous::SUBSTITUE_VALUE,
+              reason: Reading::Continuous::OTHER
             )
           end
         elsif parseString.include? "QTY"

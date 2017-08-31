@@ -50,7 +50,7 @@ class BillingCycle < ActiveRecord::Base
       energy_consumption_kwh = accounted_energy.value / 1000000.0
       contract = accounted_energy.first_reading.register.contracts.at(accounted_energy.first_reading.timestamp.to_date).first
       tariff = contract.tariffs.at(accounted_energy.first_reading.timestamp.to_date).first
-      count_months = reading_calculation.timespan_in_months(accounted_energy.first_reading.timestamp, accounted_energy.last_reading.timestamp)
+      count_months = Buzzn::Utils::Chronos.timespan_in_months(accounted_energy.first_reading.timestamp, accounted_energy.last_reading.timestamp)
       total_price_cents = tariff.baseprice_cents_per_month * count_months
       prepayments = contract.payments.in_year(accounting_year).by_source(Contract::Payment::TRANSFERRED)
       prepayments_cents = 0

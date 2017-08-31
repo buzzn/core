@@ -3,7 +3,6 @@ module Contract
     self.table_name = :contracts
     self.abstract_class = true
 
-    resourcify
     include Filterable
 
     # status consts
@@ -47,9 +46,6 @@ module Contract
     class << self
       private :new
     end
-
-    # TODO to be removed
-    attr_encrypted :password, :charset => 'UTF-8', :key => Rails.application.secrets.attr_encrypted_key
 
     belongs_to :contractor, polymorphic: true
     belongs_to :customer, polymorphic: true
@@ -144,10 +140,6 @@ module Contract
 
     def self.filter(search)
       do_filter(search, *search_attributes)
-    end
-
-    def login_required?
-      self.organization == Organization.discovergy || self.organization == Organization.mysmartgrid
     end
   end
 end

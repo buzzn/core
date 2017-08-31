@@ -1,9 +1,9 @@
+# frozen-string-literal: true
 module Register
   class Base < ActiveRecord::Base
     self.table_name = :registers
-    resourcify
 
-    include Import.active_record['service.current_power', 'service.charts']
+    include Import.active_record['service.current_power']
 
     include Filterable
 
@@ -32,7 +32,7 @@ module Register
          }
     LABELS = [CONSUMPTION, DEMARCATION_PV, DEMARCATION_CHP, PRODUCTION_PV,
               PRODUCTION_CHP, GRID_CONSUMPTION, GRID_FEEDING,
-              GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER]
+              GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER].freeze
 
     IN = 'in'
     OUT = 'out'
@@ -40,7 +40,7 @@ module Register
            input: IN,
            output: OUT
          }
-    DIRECTIONS = [IN, OUT]
+    DIRECTIONS = [IN, OUT].freeze
 
     belongs_to :group, class_name: Group::Base, foreign_key: :group_id
 
@@ -48,7 +48,7 @@ module Register
     has_many :contracts, class_name: Contract::Base, dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
     has_one :address, as: :addressable, dependent: :destroy
-
+    has_many :readings, class_name: Reading::Single, foreign_key: 'register_id'
     has_many :scores, as: :scoreable
 
     def data_source
@@ -119,15 +119,9 @@ module Register
       end
     end
 
-    def readings
-      @_readings ||= Reading.all_by_register_id(self.id)
-    end
-
+    # not used anymore
     def calculate_forecast
-      if smart?
-        return
-      end
-      readings = Reading.all_by_register_id_and_source(self.id, 'user_input')
+      readings = readings.user_input
       if readings.size > 1
         last_timestamp = readings.last[:timestamp].to_i
         last_value = readings.last[:energy_milliwatt_hour]/1000000.0

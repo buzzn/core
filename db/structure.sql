@@ -498,12 +498,65 @@ CREATE TYPE prefix AS ENUM (
 
 
 --
+-- Name: quality; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE quality AS ENUM (
+    '20',
+    '67',
+    '79',
+    '187',
+    '220',
+    '201'
+);
+
+
+--
+-- Name: read_by; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE read_by AS ENUM (
+    'BN',
+    'SN',
+    'SG',
+    'VNB'
+);
+
+
+--
+-- Name: reason; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE reason AS ENUM (
+    'IOM',
+    'COM1',
+    'COM2',
+    'ROM',
+    'PMR',
+    'COT',
+    'COS',
+    'CMP',
+    'COB'
+);
+
+
+--
 -- Name: section; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE section AS ENUM (
     'S',
     'G'
+);
+
+
+--
+-- Name: source; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE source AS ENUM (
+    'SM',
+    'MAN'
 );
 
 
@@ -532,12 +585,45 @@ CREATE TYPE state AS ENUM (
 
 
 --
+-- Name: status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE status AS ENUM (
+    'Z83',
+    'Z84',
+    'Z86'
+);
+
+
+--
 -- Name: taxation; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE taxation AS ENUM (
     'F',
     'R'
+);
+
+
+--
+-- Name: title; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE title AS ENUM (
+    'Dr.',
+    'Prof.',
+    'Prof. Dr.'
+);
+
+
+--
+-- Name: unit; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE unit AS ENUM (
+    'Wh',
+    'W',
+    'm³'
 );
 
 
@@ -1029,7 +1115,6 @@ CREATE TABLE payments (
 
 CREATE TABLE persons (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    title character varying(64),
     first_name character varying(64) NOT NULL,
     last_name character varying(64) NOT NULL,
     email character varying(64) NOT NULL,
@@ -1037,6 +1122,7 @@ CREATE TABLE persons (
     fax character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
+    title title,
     prefix prefix,
     preferred_language preferred_language,
     sales_tax_number integer,
@@ -1092,6 +1178,28 @@ CREATE TABLE profiles (
     updated_at timestamp without time zone,
     email_notification_meter_offline boolean DEFAULT false,
     address character varying
+);
+
+
+--
+-- Name: readings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE readings (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    date date,
+    raw_value double precision NOT NULL,
+    value double precision NOT NULL,
+    comment character varying(256),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    unit unit,
+    reason reason,
+    read_by read_by,
+    quality quality,
+    source source,
+    status status,
+    register_id uuid NOT NULL
 );
 
 
@@ -1476,6 +1584,14 @@ ALTER TABLE ONLY profiles
 
 
 --
+-- Name: readings readings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY readings
+    ADD CONSTRAINT readings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1830,6 +1946,20 @@ CREATE UNIQUE INDEX index_profiles_on_user_name ON profiles USING btree (user_na
 
 
 --
+-- Name: index_readings_on_register_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_readings_on_register_id ON readings USING btree (register_id);
+
+
+--
+-- Name: index_readings_on_register_id_and_date_and_reason; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_readings_on_register_id_and_date_and_reason ON readings USING btree (register_id, date, reason);
+
+
+--
 -- Name: index_registers_on_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1978,6 +2108,14 @@ ALTER TABLE ONLY registers
 
 ALTER TABLE ONLY payments
     ADD CONSTRAINT fk_rails_9215ad6069 FOREIGN KEY (contract_id) REFERENCES contracts(id);
+
+
+--
+-- Name: readings fk_rails_9a330278de; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY readings
+    ADD CONSTRAINT fk_rails_9a330278de FOREIGN KEY (register_id) REFERENCES registers(id);
 
 
 --
@@ -2319,4 +2457,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170731104218');
 INSERT INTO schema_migrations (version) VALUES ('20170801073138');
 
 INSERT INTO schema_migrations (version) VALUES ('20170802094212');
+
+INSERT INTO schema_migrations (version) VALUES ('20170817032303');
 

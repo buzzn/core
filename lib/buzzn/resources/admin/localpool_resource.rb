@@ -26,15 +26,16 @@ module Admin
 
     def create_price(params = {})
       create(permissions.prices.create) do
-        params[:localpool] = object
-        to_resource(Price.create!(params), permissions.prices, PriceResource)
+        to_resource(object.prices.create!(params),
+                    permissions.prices,
+                    PriceResource)
       end
     end
 
     def create_billing_cycle(params = {})
       create(permissions.billing_cycles.create) do
-        params[:localpool] = object
-        to_resource(BillingCycle.create!(params), permissions.billing_cycles,
+        to_resource(object.billing_cycles.create!(params),
+                    permissions.billing_cycles,
                     BillingCycleResource)
       end
     end

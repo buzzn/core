@@ -122,7 +122,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: name
         in: formData
         required: false
@@ -247,7 +247,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: receivables_cents
         in: formData
         required: false
@@ -485,6 +485,176 @@ paths:
       responses:
         200:
           description: success
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings":
+    get:
+      description: returns all readings of a register for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: create reading for the register
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: raw_value
+        in: formData
+        required: true
+        type: number
+        format: float
+      - name: value
+        in: formData
+        required: true
+        type: number
+        format: float
+      - name: unit
+        in: formData
+        required: true
+        type: string
+        enum:
+        - Wh
+        - W
+        - m³
+      - name: reason
+        in: formData
+        required: true
+        type: string
+        enum:
+        - IOM
+        - COM1
+        - COM2
+        - ROM
+        - PMR
+        - COT
+        - COS
+        - CMP
+        - COB
+      - name: read_by
+        in: formData
+        required: true
+        type: string
+        enum:
+        - BN
+        - SN
+        - SG
+        - VNB
+      - name: quality
+        in: formData
+        required: true
+        type: string
+        enum:
+        - '20'
+        - '67'
+        - '79'
+        - '187'
+        - '220'
+        - '201'
+      - name: source
+        in: formData
+        required: true
+        type: string
+        enum:
+        - SM
+        - MAN
+      - name: status
+        in: formData
+        required: true
+        type: string
+        enum:
+        - Z83
+        - Z84
+        - Z86
+      - name: comment
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/{reading_id}":
+    get:
+      description: returns the reading of a register for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: reading_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: deletes the reading of a register for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: reading_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
   "/localpools/{localpool_id}/meters/{real_meter_id}":
     patch:
       description: updates the real meter for the given IDs
@@ -505,7 +675,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: manufacturer_name
         in: formData
         required: false
@@ -669,7 +839,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: metering_point_id
         in: formData
         required: false
@@ -756,7 +926,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: product_name
         in: formData
         required: false
@@ -833,7 +1003,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: operator
         in: formData
         required: false
@@ -960,7 +1130,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: bank_name
         in: formData
         required: false
@@ -1092,7 +1262,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: bank_name
         in: formData
         required: false
@@ -1163,7 +1333,7 @@ paths:
       - name: energyprice_cents_per_kilowatt_hour
         in: formData
         required: true
-        type: string
+        type: number
         format: float
       - name: baseprice_cents_per_month
         in: formData
@@ -1209,7 +1379,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: name
         in: formData
         required: false
@@ -1223,7 +1393,7 @@ paths:
       - name: energyprice_cents_per_kilowatt_hour
         in: formData
         required: false
-        type: string
+        type: number
         format: float
       - name: baseprice_cents_per_month
         in: formData
@@ -1332,7 +1502,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: title
         in: formData
         required: false

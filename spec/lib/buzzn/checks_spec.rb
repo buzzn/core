@@ -9,13 +9,13 @@ describe Buzzn::Localpool::Checks do
   it 'finds object or error' do
     reading = Fabricate(:reading)
     date_of_first_reading = Buzzn::Localpool::Checks.find_object_or_error("no reading found for register") do
-      Reading.by_register_id(reading.register_id).sort('timestamp': 1).first.timestamp
+      Reading::Continuous.by_register_id(reading.register_id).sort('timestamp': 1).first.timestamp
     end
     expect(date_of_first_reading).to eq reading.timestamp
 
     expect{
       date_of_first_reading = Buzzn::Localpool::Checks.find_object_or_error("no reading found for register") do
-        Reading.by_register_id('blabla').sort('timestamp': 1).first.timestamp
+        Reading::Continuous.by_register_id('blabla').sort('timestamp': 1).first.timestamp
       end
     }.to raise_error Buzzn::Localpool::CheckError
   end

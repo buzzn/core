@@ -1,6 +1,8 @@
 module Register
   class Real < Base
 
+    include Import.active_record['service.charts']
+
     belongs_to :meter, class_name: Meter::Real, foreign_key: :meter_id
 
     def obis
@@ -39,15 +41,16 @@ module Register
       end
     end
 
+    # tested but unused
     def store_reading_at(time, reason)
       if time.is_a?(Time) && time.beginning_of_day == time
         timestamp = time.to_i
-        reading = Reading.new(register_id: self.id,
+        reading = Reading::Continuous.new(register_id: self.id,
                               timestamp: timestamp,
                               power_milliwatt: nil,
                               reason: reason,
-                              source: Reading::BUZZN_SYSTEMS,
-                              quality: Reading::READ_OUT,
+                              source: Reading::Continuous::BUZZN_SYSTEMS,
+                              quality: Reading::Continuous::READ_OUT,
                               state: 'Z86',
                               meter_serialnumber: self.meter.product_serialnumber)
         reading.save # updates errors as reading must be invalid now

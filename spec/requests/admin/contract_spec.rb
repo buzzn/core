@@ -230,6 +230,7 @@ describe Admin::LocalpoolRoda do
             "observer_max_threshold"=>5000,
             "observer_enabled"=>false,
             "observer_offline_monitoring"=>false,
+            "createables"=>["readings"],
             "metering_point_id"=>contract.register.metering_point_id,
             "obis"=>contract.register.obis,
           }

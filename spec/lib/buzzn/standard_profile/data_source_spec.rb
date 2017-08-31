@@ -37,7 +37,7 @@ describe Buzzn::StandardProfile::DataSource do
 
   describe 'single_aggregated' do
 
-    [Reading::SLP, Reading::SEP_BHKW, Reading::SEP_PV].each do |type|
+    [Reading::Continuous::SLP, Reading::Continuous::SEP_BHKW, Reading::Continuous::SEP_PV].each do |type|
 
       it "#{type} register" do
         register = send("#{type}_register".to_sym)
@@ -53,7 +53,7 @@ describe Buzzn::StandardProfile::DataSource do
 
         Timecop.freeze(utc.local(2015,4,6))
         begin
-          direction = type == Reading::SLP ? :in : :out
+          direction = type == Reading::Continuous::SLP ? :in : :out
           single_aggregated = data_source.single_aggregated(register, direction)
           expect(single_aggregated.mode).to eq direction
           expect(single_aggregated.resource_id).to eq register.id

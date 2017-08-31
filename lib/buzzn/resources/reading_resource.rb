@@ -1,21 +1,25 @@
-class ReadingResource < Buzzn::Resource::Base
+class ReadingResource < Buzzn::Resource::Entity
 
-  model Reading
+  model Reading::Single
 
   attributes :id, :type
-  attributes :energy_milliwatt_hour,
-             :power_milliwatt,
-             :timestamp,
+  attributes :date,
+             :raw_value,
+             :value,
+             :unit,
              :reason,
+             :read_by,
              :source,
              :quality,
-             :meter_serialnumber
+             :status,
+             :comment
+
+  attributes :updatable, :deletable
 
   def type; 'reading'; end
 
-  # use nice id format
-  def id
-    object.id.to_s
+  def value
+    object.corrected_value.value
   end
 
 end
