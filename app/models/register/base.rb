@@ -48,7 +48,7 @@ module Register
     has_many :contracts, class_name: Contract::Base, dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
     has_one :address, as: :addressable, dependent: :destroy
-    has_many :readings, class_name: SingleReading, foreign_key: 'register_id'
+    has_many :readings, class_name: Reading::Single, foreign_key: 'register_id'
     has_many :scores, as: :scoreable
 
     def data_source

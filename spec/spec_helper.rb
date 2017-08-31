@@ -81,7 +81,7 @@ RSpec.configure do |config|
 
   config.before(:context) do
     #Mongoid.purge!
-    models = [Register::Base,  Group::Base, User, Broker::Base,  Meter::Base, Contract::Base, Reading, Contract::Tariff, Contract::Payment, BankAccount, Billing, BillingCycle, Comment, Device, Document, EnergyClassification, Organization, Price, Role, Score, Profile]
+    models = [Register::Base,  Group::Base, User, Broker::Base,  Meter::Base, Contract::Base, Reading::Single, Contract::Tariff, Contract::Payment, BankAccount, Billing, BillingCycle, Comment, Device, Document, EnergyClassification, Organization, Price, Role, Score, Profile, Person]
     if models.detect { |m| m.count > 0 }
       warn '-' * 80
       warn 'DB cleaning failed'

@@ -1,6 +1,6 @@
 class ReadingResource < Buzzn::Resource::Entity
 
-  model SingleReading
+  model Reading::Single
 
   attributes :id, :type
   attributes :date,

@@ -72,7 +72,7 @@ module Buzzn::StandardProfile
              end
 
     def query_value(profile, timestamp)
-      Reading.where(:timestamp.gte => timestamp, source: profile).only('timestamp', 'source', POWER).order_by(timestamp: 1).limit(1).first
+      Reading::Continuous.where(:timestamp.gte => timestamp, source: profile).only('timestamp', 'source', POWER).order_by(timestamp: 1).limit(1).first
     end
 
     def query_range(profile, interval)
@@ -191,7 +191,7 @@ module Buzzn::StandardProfile
       # sort
       pipe << FINAL_SORT
 
-      Reading.collection.aggregate(pipe)
+      Reading::Continuous.collection.aggregate(pipe)
     end
 
 

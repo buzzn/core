@@ -128,11 +128,11 @@ describe "Register Model" do
     meter = Fabricate(:easymeter_60009405)
     register = meter.registers.first
     register.instance_variable_set('@charts', Buzzn::Services::ChartsDummy.new)
-    register.store_reading_at(Time.current.beginning_of_day, Reading::REGULAR_READING)
-    expect(Reading.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
-    expect{register.store_reading_at(Time.current.beginning_of_day, Reading::REGULAR_READING)}.to raise_error Mongoid::Errors::Validations
-    expect(Reading.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
-    expect{register.store_reading_at(Time.current, Reading::REGULAR_READING)}.to raise_error ArgumentError
-    expect(Reading.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
+    register.store_reading_at(Time.current.beginning_of_day, Reading::Continuous::REGULAR_READING)
+    expect(Reading::Continuous.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
+    expect{register.store_reading_at(Time.current.beginning_of_day, Reading::Continuous::REGULAR_READING)}.to raise_error Mongoid::Errors::Validations
+    expect(Reading::Continuous.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
+    expect{register.store_reading_at(Time.current, Reading::Continuous::REGULAR_READING)}.to raise_error ArgumentError
+    expect(Reading::Continuous.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
   end
 end

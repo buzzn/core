@@ -606,6 +606,17 @@ CREATE TYPE taxation AS ENUM (
 
 
 --
+-- Name: title; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE title AS ENUM (
+    'Dr.',
+    'Prof.',
+    'Prof. Dr.'
+);
+
+
+--
 -- Name: unit; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1104,7 +1115,6 @@ CREATE TABLE payments (
 
 CREATE TABLE persons (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    title character varying(64),
     first_name character varying(64) NOT NULL,
     last_name character varying(64) NOT NULL,
     email character varying(64) NOT NULL,
@@ -1112,6 +1122,7 @@ CREATE TABLE persons (
     fax character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
+    title title,
     prefix prefix,
     preferred_language preferred_language,
     sales_tax_number integer,
@@ -1167,6 +1178,28 @@ CREATE TABLE profiles (
     updated_at timestamp without time zone,
     email_notification_meter_offline boolean DEFAULT false,
     address character varying
+);
+
+
+--
+-- Name: readings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE readings (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    date date,
+    raw_value double precision NOT NULL,
+    value double precision NOT NULL,
+    comment character varying(256),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    unit unit,
+    reason reason,
+    read_by read_by,
+    quality quality,
+    source source,
+    status status,
+    register_id uuid NOT NULL
 );
 
 
@@ -1257,28 +1290,6 @@ CREATE TABLE scores (
     scoreable_type character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
-);
-
-
---
--- Name: single_readings; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE single_readings (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    date date,
-    raw_value double precision NOT NULL,
-    value double precision NOT NULL,
-    comment character varying(256),
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    unit unit,
-    reason reason,
-    read_by read_by,
-    quality quality,
-    source source,
-    status status,
-    register_id uuid NOT NULL
 );
 
 
@@ -1573,6 +1584,14 @@ ALTER TABLE ONLY profiles
 
 
 --
+-- Name: readings readings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY readings
+    ADD CONSTRAINT readings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1586,14 +1605,6 @@ ALTER TABLE ONLY roles
 
 ALTER TABLE ONLY scores
     ADD CONSTRAINT scores_pkey PRIMARY KEY (id);
-
-
---
--- Name: single_readings single_readings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY single_readings
-    ADD CONSTRAINT single_readings_pkey PRIMARY KEY (id);
 
 
 --
@@ -1935,6 +1946,20 @@ CREATE UNIQUE INDEX index_profiles_on_user_name ON profiles USING btree (user_na
 
 
 --
+-- Name: index_readings_on_register_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_readings_on_register_id ON readings USING btree (register_id);
+
+
+--
+-- Name: index_readings_on_register_id_and_date_and_reason; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_readings_on_register_id_and_date_and_reason ON readings USING btree (register_id, date, reason);
+
+
+--
 -- Name: index_registers_on_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1974,20 +1999,6 @@ CREATE INDEX index_scores_on_scoreable_id ON scores USING btree (scoreable_id);
 --
 
 CREATE INDEX index_scores_on_scoreable_id_and_scoreable_type ON scores USING btree (scoreable_id, scoreable_type);
-
-
---
--- Name: index_single_readings_on_register_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_single_readings_on_register_id ON single_readings USING btree (register_id);
-
-
---
--- Name: index_single_readings_on_register_id_and_date_and_reason; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_single_readings_on_register_id_and_date_and_reason ON single_readings USING btree (register_id, date, reason);
 
 
 --
@@ -2100,11 +2111,11 @@ ALTER TABLE ONLY payments
 
 
 --
--- Name: single_readings fk_rails_afddc09d52; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: readings fk_rails_9a330278de; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY single_readings
-    ADD CONSTRAINT fk_rails_afddc09d52 FOREIGN KEY (register_id) REFERENCES registers(id);
+ALTER TABLE ONLY readings
+    ADD CONSTRAINT fk_rails_9a330278de FOREIGN KEY (register_id) REFERENCES registers(id);
 
 
 --

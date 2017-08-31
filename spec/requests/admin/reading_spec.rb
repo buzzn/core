@@ -31,7 +31,7 @@ describe Admin::LocalpoolRoda do
       {
         "errors" => [
           {
-            "detail"=>"SingleReading: bla-bla-blub not found by User: #{admin.resource_owner_id}" }
+            "detail"=>"Reading::Single: bla-bla-blub not found by User: #{admin.resource_owner_id}" }
         ]
       }
     end
@@ -104,7 +104,7 @@ describe Admin::LocalpoolRoda do
         result = json
         id = result.delete('id')
         expect(result.delete('updated_at')).not_to be_nil
-        expect(SingleReading.find(id)).not_to be_nil
+        expect(Reading::Single.find(id)).not_to be_nil
         expect(result.to_yaml).to eq created_json.to_yaml
       end
     end
@@ -190,14 +190,14 @@ describe Admin::LocalpoolRoda do
       end
 
       it '205' do
-        count = SingleReading.count
+        count = Reading::Single.count
         reading = Fabricate(:single_reading, register: register)
-        expect(SingleReading.count).to eq count + 1
+        expect(Reading::Single.count).to eq count + 1
         
         DELETE "/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", admin
 
         expect(response).to have_http_status(200)
-        expect(SingleReading.count).to eq count
+        expect(Reading::Single.count).to eq count
       end
     end
   end

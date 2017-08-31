@@ -134,15 +134,15 @@ describe Display::GroupRoda do
         end
 
         it '200 standard profile' do
-          Reading.all.delete_all
+          Reading::Continuous.all.delete_all
           timestamp = Time.find_zone('Berlin').local(2016, 2, 1)
           40.times do |i|
             Fabricate(:reading,
-                      source: Reading::SLP,
+                      source: Reading::Continuous::SLP,
                       timestamp: timestamp,
                       power_milliwatt: 930000 + i,
-                      reason: Reading::REGULAR_READING,
-                      quality: Reading::READ_OUT,
+                      reason: Reading::Continuous::REGULAR_READING,
+                      quality: Reading::Continuous::READ_OUT,
                       energy_milliwatt_hour: (1 + i)*10000,
                       meter_serialnumber: '12346578'
                      )
@@ -319,12 +319,12 @@ describe Display::GroupRoda do
           energy = 0
           40.times do |i|
             Fabricate(:reading,
-                      source: [Reading::SLP, Reading::SEP_BHKW][i % 2],
+                      source: [Reading::Continuous::SLP, Reading::Continuous::SEP_BHKW][i % 2],
                       timestamp: timestamp,
                       energy_milliwatt_hour: energy,
                       power_milliwatt: 930000 + i,
-                      reason: Reading::REGULAR_READING,
-                      quality: Reading::READ_OUT,
+                      reason: Reading::Continuous::REGULAR_READING,
+                      quality: Reading::Continuous::READ_OUT,
                       meter_serialnumber: '12346578'
                      )
             energy += 1200000
@@ -332,12 +332,12 @@ describe Display::GroupRoda do
           end
           5.times do |i|
             Fabricate(:reading,
-                      source: [Reading::SLP, Reading::SEP_BHKW][i % 2],
+                      source: [Reading::Continuous::SLP, Reading::Continuous::SEP_BHKW][i % 2],
                       timestamp: timestamp,
                       energy_milliwatt_hour: energy,
                       power_milliwatt: 930000 + i,
-                      reason: Reading::REGULAR_READING,
-                      quality: Reading::READ_OUT,
+                      reason: Reading::Continuous::REGULAR_READING,
+                      quality: Reading::Continuous::READ_OUT,
                       meter_serialnumber: '12346578'
                      )
             energy += 1200000
@@ -345,12 +345,12 @@ describe Display::GroupRoda do
           end
           5.times do |i|
             Fabricate(:reading,
-                      source: [Reading::SLP, Reading::SEP_BHKW][i % 2],
+                      source: [Reading::Continuous::SLP, Reading::Continuous::SEP_BHKW][i % 2],
                       timestamp: timestamp,
                       energy_milliwatt_hour: energy,
                       power_milliwatt: 930000 + i,
-                      reason: Reading::REGULAR_READING,
-                      quality: Reading::READ_OUT,
+                      reason: Reading::Continuous::REGULAR_READING,
+                      quality: Reading::Continuous::READ_OUT,
                       meter_serialnumber: '12346578'
                      )
             energy += 1200000
@@ -358,12 +358,12 @@ describe Display::GroupRoda do
           end
           5.times do |i|
             Fabricate(:reading,
-                      source: [Reading::SLP, Reading::SEP_BHKW][i % 2],
+                      source: [Reading::Continuous::SLP, Reading::Continuous::SEP_BHKW][i % 2],
                       timestamp: timestamp,
                       energy_milliwatt_hour: energy,
                       power_milliwatt: 930000 + i,
-                      reason: Reading::REGULAR_READING,
-                      quality: Reading::READ_OUT,
+                      reason: Reading::Continuous::REGULAR_READING,
+                      quality: Reading::Continuous::READ_OUT,
                       meter_serialnumber: '12346578'
                      )
             energy += 1200000
@@ -439,7 +439,7 @@ describe Display::GroupRoda do
         end
 
         it '200 standard profile' do
-          Reading.all.delete_all
+          Reading::Continuous.all.delete_all
           setup_readings
           time = Time.find_zone('UTC').local(2016, 2, 1, 1, 30, 1)
           begin

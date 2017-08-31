@@ -149,19 +149,19 @@ describe Admin::LocalpoolRoda do
         timestamp = Time.find_zone('Berlin').local(2016, 2, 1)
         40.times do |i|
           Fabricate(:reading,
-                    source: Reading::SLP,
+                    source: Reading::Continuous::SLP,
                     timestamp: timestamp,
                     power_milliwatt: 930000 + i,
-                    reason: Reading::REGULAR_READING,
-                    quality: Reading::READ_OUT
+                    reason: Reading::Continuous::REGULAR_READING,
+                    quality: Reading::Continuous::READ_OUT
                    )
           Fabricate(:reading,
-                    source: Reading::SEP_BHKW,
+                    source: Reading::Continuous::SEP_BHKW,
                     # distort the timestamp a bit
                     timestamp: timestamp + 1.minute,
                     power_milliwatt: 123000 + i,
-                    reason: Reading::REGULAR_READING,
-                    quality: Reading::READ_OUT
+                    reason: Reading::Continuous::REGULAR_READING,
+                    quality: Reading::Continuous::READ_OUT
                    )
           timestamp += 15.minutes
         end
@@ -319,48 +319,48 @@ describe Admin::LocalpoolRoda do
         energy = 0
         40.times do |i|
           Fabricate(:reading,
-                    source: [Reading::SLP, Reading::SEP_BHKW][i % 2],
+                    source: [Reading::Continuous::SLP, Reading::Continuous::SEP_BHKW][i % 2],
                     timestamp: timestamp,
                     energy_milliwatt_hour: energy,
                     power_milliwatt: 930000 + i,
-                    reason: Reading::REGULAR_READING,
-                    quality: Reading::READ_OUT
+                    reason: Reading::Continuous::REGULAR_READING,
+                    quality: Reading::Continuous::READ_OUT
                    )
           energy += 1200000
           timestamp += 15.minutes
         end
         5.times do |i|
           Fabricate(:reading,
-                    source: [Reading::SLP, Reading::SEP_BHKW][i % 2],
+                    source: [Reading::Continuous::SLP, Reading::Continuous::SEP_BHKW][i % 2],
                     timestamp: timestamp,
                     energy_milliwatt_hour: energy,
                     power_milliwatt: 930000 + i,
-                    reason: Reading::REGULAR_READING,
-                    quality: Reading::READ_OUT
+                    reason: Reading::Continuous::REGULAR_READING,
+                    quality: Reading::Continuous::READ_OUT
                    )
           energy += 1200000
           timestamp += 1.hour
         end
         5.times do |i|
           Fabricate(:reading,
-                    source: [Reading::SLP, Reading::SEP_BHKW][i % 2],
+                    source: [Reading::Continuous::SLP, Reading::Continuous::SEP_BHKW][i % 2],
                     timestamp: timestamp,
                     energy_milliwatt_hour: energy,
                     power_milliwatt: 930000 + i,
-                    reason: Reading::REGULAR_READING,
-                    quality: Reading::READ_OUT
+                    reason: Reading::Continuous::REGULAR_READING,
+                    quality: Reading::Continuous::READ_OUT
                    )
           energy += 1200000
           timestamp += 1.day
         end
         5.times do |i|
           Fabricate(:reading,
-                    source: [Reading::SLP, Reading::SEP_BHKW][i % 2],
+                    source: [Reading::Continuous::SLP, Reading::Continuous::SEP_BHKW][i % 2],
                     timestamp: timestamp,
                     energy_milliwatt_hour: energy,
                     power_milliwatt: 930000 + i,
-                    reason: Reading::REGULAR_READING,
-                    quality: Reading::READ_OUT
+                    reason: Reading::Continuous::REGULAR_READING,
+                    quality: Reading::Continuous::READ_OUT
                    )
           energy += 1200000
           timestamp += 1.month

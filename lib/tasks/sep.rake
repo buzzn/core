@@ -25,7 +25,7 @@ namespace :sep do
 
       dateString = (date + " " + time).delete("\"")
 
-      if Reading.where(source: Reading::SEP_PV).where(timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString)).size == 1
+      if Reading::Continuous.where(source: Reading::Continuous::SEP_PV).where(timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString)).size == 1
         puts "Data at " + ActiveSupport::TimeZone["Berlin"].parse(dateString).to_s + " already available, trying next."
         next
       end
@@ -36,25 +36,25 @@ namespace :sep do
       new_pv_watt_hour = pv_watt_hour + add_pv_watt_hour
       pv_watts = (new_pv_watt_hour - pv_watt_hour)*4
       pv_watt_hour += add_pv_watt_hour
-      Reading.create(
+      Reading::Continuous.create(
         timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
         energy_milliwatt_hour: pv_watt_hour,
         power_milliwatt: pv_watts,
-        source: Reading::SEP_PV,
-        quality: Reading::SUBSTITUE_VALUE,
-        reason: Reading::OTHER
+        source: Reading::Continuous::SEP_PV,
+        quality: Reading::Continuous::SUBSTITUE_VALUE,
+        reason: Reading::Continuous::OTHER
       )
 
       new_bhkw_watt_hour = bhkw_watt_hour + add_bhkw_watt_hour
       bhkw_watts = (new_bhkw_watt_hour - bhkw_watt_hour)*4
       bhkw_watt_hour += add_bhkw_watt_hour
-      Reading.create(
+      Reading::Continuous.create(
         timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
         energy_milliwatt_hour: bhkw_watt_hour,
         power_milliwatt: bhkw_watts,
-        source: Reading::SEP_BHKW,
-        quality: Reading::SUBSTITUE_VALUE,
-        reason: Reading::OTHER
+        source: Reading::Continuous::SEP_BHKW,
+        quality: Reading::Continuous::SUBSTITUE_VALUE,
+        reason: Reading::Continuous::OTHER
       )
 
 
@@ -64,7 +64,7 @@ namespace :sep do
       #   if parseString.include? "DTM+163"
       #     remString = parseString[8..parseString.length]
       #     dateString = remString[0..3] + "-" + remString[4..5] + "-" + remString[6..7] + " " + remString[8..9] + ":" + remString[10..11]
-      #     Reading.create(
+      #     Reading::Continuous.create(
       #       timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
       #       watt_hour: watt_hour*10000000.0, #convert from Wh to 10^-10 kWh
       #       power: watts,

@@ -159,11 +159,11 @@ module Buzzn
         register.readings.create(date: date,
                                  raw_value: value.value,
                                  corrected_value: value,
-                                 reason: SingleReading::REGULAR_READING,
+                                 reason: Reading::Single::REGULAR_READING,
                                  # TODO need an internal ID for such cases
-                                 source: SingleReading::MANUAL,
-                                 read_by: SingleReading::BUZZN,
-                                 quality: SingleReading::ENERGY_QUANTITY_SUMMARIZED)
+                                 source: Reading::Single::MANUAL,
+                                 read_by: Reading::Single::BUZZN,
+                                 quality: Reading::Single::ENERGY_QUANTITY_SUMMARIZED)
       end
 
       # This method returns the energy measured in a specific period of time
@@ -177,13 +177,8 @@ module Buzzn
       def get_register_energy_for_period(register, begin_date, end_date, accounting_year = Date.year - 1)
         first_reading = get_first_reading(register, begin_date, accounting_year)
         last_reading_original = get_last_reading(register, end_date, accounting_year)
-        last_reading = SingleReading.new(last_reading_original.attributes)
-        p first_reading.value
-        p last_reading.value
+        last_reading = Reading::Single.new(last_reading_original.attributes)
         device_change_readings = get_readings_at_device_change(register, begin_date, end_date, accounting_year)
-        p device_change_readings.size
-        #p device_change_readings.first.value
-        #p device_change_readings.last.value
         if end_date.nil?
           last_reading.date = adjust_end_date(last_reading.date, accounting_year)
           last_reading.corrected_value = adjust_reading_value(first_reading, last_reading, last_reading_original, device_change_readings)
@@ -220,14 +215,14 @@ module Buzzn
           # try to get the last reading one year before of the accounting_year (mostly at 31st December)
           first_reading_before = register.readings
                                   .in_year(accounting_year - 1)
-                                  .without_reason(SingleReading::DEVICE_CHANGE_1)
+                                  .without_reason(Reading::Single::DEVICE_CHANGE_1)
                                   .order(:date)
                                   .last
 
           # try to get the first reading in the accounting_year
           first_reading_behind = register.readings
                                    .in_year(accounting_year)
-                                   .without_reason(SingleReading::DEVICE_CHANGE_1) # TODO: in the BK code is without device_change_2 but it seems wrong
+                                   .without_reason(Reading::Single::DEVICE_CHANGE_1) # TODO: in the BK code is without device_change_2 but it seems wrong
                                    .order(:date)
                                    .first
           first_reading = select_closest_reading(Date.new(accounting_year, 1, 1), first_reading_before, first_reading_behind)
@@ -239,7 +234,7 @@ module Buzzn
           # try to get the the reading exactly at the begin_date
           first_reading = register.readings
                             .where(date: begin_date)
-                            .without_reason(SingleReading::DEVICE_CHANGE_1)
+                            .without_reason(Reading::Single::DEVICE_CHANGE_1)
                             .first
           # try to request the missing reading from data provider
           if first_reading.nil?
@@ -265,14 +260,14 @@ module Buzzn
           # try to get the first reading one year after the accounting_year (mostly beginning of January)
           last_reading_behind = register.readings
                                   .in_year(accounting_year + 1)
-                                  .without_reason(SingleReading::DEVICE_CHANGE_2)
+                                  .without_reason(Reading::Single::DEVICE_CHANGE_2)
                                   .order(:date)
                                   .first
 
           # try to get the last reading in the accounting_year
           last_reading_before = register.readings
                                   .in_year(accounting_year)
-                                  .without_reason(SingleReading::DEVICE_CHANGE_2)
+                                  .without_reason(Reading::Single::DEVICE_CHANGE_2)
                                   .order(:date)
                                   .last
           last_reading = select_closest_reading(Date.new(accounting_year, 12, 31), last_reading_before, last_reading_behind)
@@ -283,7 +278,7 @@ module Buzzn
           # try to get the the reading exactly at the end_date
           last_reading = register.readings
                                  .where(date: end_date)
-                                 .without_reason(SingleReading::DEVICE_CHANGE_2)
+                                 .without_reason(Reading::Single::DEVICE_CHANGE_2)
                                  .first
           # try to request the missing reading from data provider
           if last_reading.nil?
@@ -361,8 +356,8 @@ module Buzzn
         register.readings
           .between(begin_date || Date.new(accounting_year),
                    end_date || Date.new(accounting_year + 1))
-          .with_reason(SingleReading::DEVICE_CHANGE_1,
-                       SingleReading::DEVICE_CHANGE_2)
+          .with_reason(Reading::Single::DEVICE_CHANGE_1,
+                       Reading::Single::DEVICE_CHANGE_2)
           .order(:reason)
       end
 
@@ -416,10 +411,10 @@ module Buzzn
         register.readings.create!(timestamp: timestamp,
                                   value: value * 1000,
                                   unit: :watt_hour,
-                                  reason: SingleReading::REGULAR_READING,
-                                  source: SingleReading::BUZZN_SYSTEMS,
-                                  quality: SingleReading::READ_OUT,
-                                  state: SingleReading::Z86)
+                                  reason: Reading::Single::REGULAR_READING,
+                                  source: Reading::Single::BUZZN_SYSTEMS,
+                                  quality: Reading::Single::READ_OUT,
+                                  state: Reading::Single::Z86)
       end
     end
   end

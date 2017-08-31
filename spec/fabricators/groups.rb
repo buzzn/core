@@ -109,107 +109,107 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
   before_create do |localpool|
     meter = Fabricate(:easymeter_60300856)
     register = meter.input_register
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 1100000*20, reason: SingleReading::DEVICE_SETUP, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 183900000*20, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 1100000*20, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 183900000*20, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
     register = meter.output_register
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 1000000*20, reason: SingleReading::DEVICE_SETUP, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 510200000*20, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 1000000*20, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 510200000*20, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
 
     meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
                                           Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
     register = meter.input_register
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_SETUP, quality: SingleReading::ENERGY_QUANTITY_SUMMARIZED, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::ENERGY_QUANTITY_SUMMARIZED, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
     register = meter.output_register
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_SETUP, quality: SingleReading::ENERGY_QUANTITY_SUMMARIZED, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::ENERGY_QUANTITY_SUMMARIZED, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
 
     register = Fabricate(:easymeter_60009498).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 1100000*20, reason: SingleReading::DEVICE_SETUP, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 248000000*20, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 1100000*20, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 248000000*20, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
 
     register = Fabricate(:easymeter_60404855).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_SETUP, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 10770500000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 10770500000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
 
     register = Fabricate(:easymeter_60404845).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_SETUP, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 7060800000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 7060800000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
   end
 
   after_create do |localpool|
     Fabricate(:organization, mode: 'other', name: 'HaFi', address: Fabricate(:address))
     register = Fabricate(:easymeter_60404846).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 13855000000, reason: SingleReading::DEVICE_CHANGE_1, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_CHANGE_2, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 241100000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 239000000, reason: SingleReading::REGULAR_READING, quality: SingleReading::FORECAST_VALUE, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 13855000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 241100000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 239000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
     Fabricate(:lptc_hafi, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404850).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 27489000000, reason: SingleReading::DEVICE_CHANGE_1, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_CHANGE_2, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 864100000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 858000000, reason: SingleReading::REGULAR_READING, quality: SingleReading::FORECAST_VALUE, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 27489000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 864100000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 858000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
     Fabricate(:lptc_hubv, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404851).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 24124000000, reason: SingleReading::DEVICE_CHANGE_1, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_CHANGE_2, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 1892400000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 1879000000, reason: SingleReading::REGULAR_READING, quality: SingleReading::FORECAST_VALUE, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 24124000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 1892400000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 1879000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
     Fabricate(:lptc_mape, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404853).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 23790000, reason: SingleReading::DEVICE_CHANGE_1, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_CHANGE_2, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 10, 31), value: 191000000, reason: SingleReading::CONTRACT_CHANGE, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::POWER_GIVER, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 11, 1), value: 191000000, reason: SingleReading::CONTRACT_CHANGE, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::POWER_GIVER, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 808200000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 798000000, reason: SingleReading::REGULAR_READING, quality: SingleReading::FORECAST_VALUE, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 23790000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 10, 31), value: 191000000, reason: Reading::Single::CONTRACT_CHANGE, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::POWER_GIVER, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 11, 1), value: 191000000, reason: Reading::Single::CONTRACT_CHANGE, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::POWER_GIVER, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 808200000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 798000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
     Fabricate(:lptc_hafi2, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
     Fabricate(:lptc_pewi, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404847).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 8024000000, reason: SingleReading::DEVICE_CHANGE_1, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_CHANGE_2, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 456300000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 4529000000, reason: SingleReading::REGULAR_READING, quality: SingleReading::FORECAST_VALUE, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 8024000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 456300000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 4529000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
     Fabricate(:lptc_musc, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404854).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 19442000000, reason: SingleReading::DEVICE_CHANGE_1, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_CHANGE_2, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 809700000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 805000000, reason: SingleReading::REGULAR_READING, quality: SingleReading::FORECAST_VALUE, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 19442000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 809700000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 805000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
     Fabricate(:lptc_viwe, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404852).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 9597000000, reason: SingleReading::DEVICE_CHANGE_1, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: SingleReading::DEVICE_CHANGE_2, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 1523000000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 1513000000, reason: SingleReading::REGULAR_READING, quality: SingleReading::FORECAST_VALUE, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 9597000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 1523000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 1513000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
     Fabricate(:lptc_reho, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60327350).registers.first
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 9078000000, reason: SingleReading::DEVICE_REMOVAL, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 16), value: 9341900000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 12), value: 9521100000, reason: SingleReading::REGULAR_READING, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::BUZZN, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 2, 28), value: 9801400000, reason: SingleReading::DEVICE_CHANGE_1, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::POWER_GIVER, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 2, 28), value: 733500000, reason: SingleReading::DEVICE_CHANGE_2, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::POWER_GIVER, status: SingleReading::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2017, 3, 1), value: 733500000, reason: SingleReading::CONTRACT_CHANGE, quality: SingleReading::READ_OUT, source: SingleReading::MANUAL, read_by: SingleReading::POWER_GIVER, status: SingleReading::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 9078000000, reason: Reading::Single::DEVICE_REMOVAL, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 16), value: 9341900000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 12), value: 9521100000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 2, 28), value: 9801400000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::POWER_GIVER, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 2, 28), value: 733500000, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::POWER_GIVER, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2017, 3, 1), value: 733500000, reason: Reading::Single::CONTRACT_CHANGE, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::POWER_GIVER, status: Reading::Single::Z86)
     localpool.registers << register
     Fabricate(:osc_saba, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
     Fabricate(:lptc_saba, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
