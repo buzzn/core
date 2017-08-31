@@ -70,8 +70,12 @@ module SwaggerHelper
       when :datetime
         sparam.type = 'string'
         sparam.format = 'date-time'
+      when :date_time
+        sparam.type = 'string'
+        sparam.format = 'date-time'
       when :float
-        sparam.type = 'float'
+        sparam.type = 'number'
+        sparam.format = 'float'
         sparam.maximum = options[:max] if options[:max]
         sparam.exclusiveMaximum = options[:exclusive_max] if options[:exclusive_max]
         sparam.minimum = options[:min] if options[:min]

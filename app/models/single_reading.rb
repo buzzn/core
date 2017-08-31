@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen-string-literal: true
 class SingleReading < ActiveRecord::Base
 
@@ -80,7 +81,7 @@ class SingleReading < ActiveRecord::Base
   # units
   WH = 'Wh'
   W = 'W'
-  M3 = 'm^3'
+  M3 = 'm³'
   enum unit: {
          watt_hour: WH,
          watt: W,

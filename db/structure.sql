@@ -612,7 +612,7 @@ CREATE TYPE taxation AS ENUM (
 CREATE TYPE unit AS ENUM (
     'Wh',
     'W',
-    'm^3'
+    'm³'
 );
 
 

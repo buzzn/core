@@ -122,7 +122,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: name
         in: formData
         required: false
@@ -247,7 +247,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: receivables_cents
         in: formData
         required: false
@@ -533,12 +533,12 @@ paths:
       - name: raw_value
         in: formData
         required: true
-        type: string
+        type: number
         format: float
       - name: value
         in: formData
         required: true
-        type: string
+        type: number
         format: float
       - name: unit
         in: formData
@@ -675,7 +675,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: manufacturer_name
         in: formData
         required: false
@@ -839,7 +839,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: metering_point_id
         in: formData
         required: false
@@ -926,7 +926,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: product_name
         in: formData
         required: false
@@ -1130,7 +1130,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: bank_name
         in: formData
         required: false
@@ -1262,7 +1262,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: bank_name
         in: formData
         required: false
@@ -1333,7 +1333,7 @@ paths:
       - name: energyprice_cents_per_kilowatt_hour
         in: formData
         required: true
-        type: string
+        type: number
         format: float
       - name: baseprice_cents_per_month
         in: formData
@@ -1379,7 +1379,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: name
         in: formData
         required: false
@@ -1393,7 +1393,7 @@ paths:
       - name: energyprice_cents_per_kilowatt_hour
         in: formData
         required: false
-        type: string
+        type: number
         format: float
       - name: baseprice_cents_per_month
         in: formData
@@ -1502,7 +1502,7 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: title
         in: formData
         required: false

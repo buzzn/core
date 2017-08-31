@@ -1,3 +1,4 @@
+# coding: utf-8
 describe Admin::LocalpoolRoda do
 
   def app
@@ -41,7 +42,7 @@ describe Admin::LocalpoolRoda do
           {"parameter"=>"date", "detail"=>"must be a date"},
           {"parameter"=>"raw_value", "detail"=>"must be a float"},
           {"parameter"=>"value", "detail"=>"must be a float"},
-          {"parameter"=>"unit", "detail"=>"must be one of: Wh, W, m^3"},
+          {"parameter"=>"unit", "detail"=>"must be one of: Wh, W, m³"},
           {"parameter"=>"reason", "detail"=>"must be one of: IOM, COM1, COM2, ROM, PMR, COT, COS, CMP, COB"},
           {"parameter"=>"read_by", "detail"=>"must be one of: BN, SN, SG, VNB"},
           {"parameter"=>"quality", "detail"=>"must be one of: 20, 67, 79, 187, 220, 201"},
@@ -76,7 +77,7 @@ describe Admin::LocalpoolRoda do
           "date"=>Date.new(2016, 2, 1).to_s,
           "raw_value"=>23.66,
           "value"=>500.0,
-          "unit"=>'m^3',
+          "unit"=>'m³',
           'reason'=>'IOM',
           'read_by'=>'BN',
           'source'=>'MAN',
