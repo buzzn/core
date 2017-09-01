@@ -197,7 +197,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
     description 'create reading for the register'
-    schema 'create_reading_schema'
+    schema 'create_reading'
   end
 
   get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do

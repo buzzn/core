@@ -120,8 +120,9 @@ Sequel.migration do
 
     case database_type
     when :postgres
-      user = get{Sequel.lit('current_user')} + '_password'
-      run "GRANT REFERENCES ON accounts TO #{user}"
+      # NOTE the PG_USER is for codeship
+      user = ENV['PG_USER'] || get{Sequel.lit('current_user')} + '_password'
+      run "GRANT REFERENCES ON accounts TO #{user}" rescue raise("execute: createuser -U postgres #{user}")
     when :mysql, :mssql
       user = if database_type == :mysql
         get{Sequel.lit('current_user')}.sub(/_password@/, '@')

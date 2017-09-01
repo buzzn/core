@@ -610,8 +610,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-<<<<<<< HEAD
    1.15.4
-=======
-   1.15.3
->>>>>>> switch from session to token authentication

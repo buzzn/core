@@ -2618,11 +2618,11 @@ INSERT INTO schema_migrations (version) VALUES ('20170812012646');
 
 INSERT INTO schema_migrations (version) VALUES ('20170812013443');
 
+INSERT INTO schema_migrations (version) VALUES ('20170817032303');
+
 INSERT INTO schema_migrations (version) VALUES ('20170906020031');
 
 INSERT INTO schema_migrations (version) VALUES ('20170907190442');
 
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
-
-INSERT INTO schema_migrations (version) VALUES ('20170817032303');
 

@@ -25,13 +25,15 @@ paths:
         in: formData
         required: true
         type: string
-        format: date_time
+        format: date-time
       - name: title
         in: formData
         required: false
         type: string
-        format: ''
-        maxLength: 64
+        enum:
+        - Dr.
+        - Prof.
+        - Prof. Dr.
       - name: prefix
         in: formData
         required: false

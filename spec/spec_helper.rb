@@ -37,8 +37,11 @@ RSpec.configure do |config|
 
     # With ActiveRecord:
     ActiveRecord::Base.transaction(requires_new: true) do
-      run[]
-      raise ActiveRecord::Rollback
+      begin
+        run[]
+      ensure
+        raise ActiveRecord::Rollback
+      end
     end
   end
 
