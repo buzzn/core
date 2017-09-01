@@ -9,14 +9,14 @@ describe Bank do
     Bank.update_from_file(first_file)
   end
 
-  it 'updates data idempotent' do
+  it 'updates data idempotent', slow: true do
     first = Bank.all.each { |b| b.attributes.to_json }
     Bank.update_from_file(first_file)
     second = Bank.all.each { |b| b.attributes.to_json }
     expect(second).to eq first
   end
   
-  it 'updates data same as fresh import' do
+  it 'updates data same as fresh import', slow: true do
     Bank.update_from_file(second_file)
     first = Bank.all.each { |b| b.attributes.to_json }
     Bank.delete_all
