@@ -87,7 +87,7 @@ RSpec.configure do |config|
       klass = table.singularize.camelize.safe_constantize
       if klass
         if klass.class == Module
-          klass = klass.const_get 'Base'
+          klass = (klass.const_get 'Base' rescue nil)
         end
         if klass          
           if klass.count > 0
