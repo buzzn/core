@@ -8,6 +8,9 @@ require 'dry/auto_inject'
 require_relative '../core/number'
 
 Import = Dry::AutoInject(Buzzn::Boot::MainContainer)
+def Import.instance(key)
+  container[key]
+end
 
 module Buzzn
   module Services

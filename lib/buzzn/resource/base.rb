@@ -42,7 +42,7 @@ module Buzzn::Resource
 
       def has_many(method, clazz = nil)
         define_method method do
-          perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
+          perms = permissions.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
           all(perms, object.send(method), clazz)
         end
       end
@@ -51,7 +51,7 @@ module Buzzn::Resource
         # deliver nested resource if permissions allow otherwise
         # raise PermissionsDenied or RecordNotFound when not found
         define_method "#{method}!" do
-          perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}")
+          perms = permissions.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
           if allowed?(perms.retrieve)
             if result = object.send(method)
               self.class.to_resource(current_user, current_roles, perms,
@@ -68,7 +68,7 @@ module Buzzn::Resource
 
         # deliver result if permissions allow otherwise nil
         define_method method do
-          perms = permissions.send(method) rescue raise("missing permission #{method} on #{self}. having #{permissions.to_h.keys}")
+          perms = permissions.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
           if allowed?(perms.retrieve) && (result = object.send(method))
             self.class.to_resource(current_user, current_roles, perms,
                                    result)
@@ -131,6 +131,8 @@ module Buzzn::Resource
 
       private
 
+      PermissionContainer = Import.instance('service.permissions')
+
       def allowed_roles(user, perms, id = nil)
         return false unless user
         roles = id ? user.rolenames_for(id) : user.unbound_rolenames
@@ -147,7 +149,7 @@ module Buzzn::Resource
 
       def permissions
         if @permissions.nil?
-          @permissions = "#{self.to_s.sub(/Resource$/, '')}Permissions".safe_constantize || NoPermissions
+          @permissions = PermissionContainer[self]
         end
         @permissions
       end
