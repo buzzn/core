@@ -1,8 +1,11 @@
 Buzzn::Permission.new(Admin::LocalpoolResource) do
-  
+
+  # define groups of roles
   group(:none)
   group(:operators, :admin, :buzzn_operator)
+  # get the roles from the 'operators' group and add :localpool_owner
   group(:owners, *(get(:operators) + [:localpool_owner]))
+  # get the roles from the 'owners' group and add :localpool_manager
   group(:managers,*(get(:owners) + [:localpool_manager]))
   group(:managers_contract, *(get(:managers) + [:contract]))
   group(:managers_organization, *(get(:managers) + [:organization]))
@@ -10,11 +13,13 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
   group(:managers_self, *(get(:managers) + [:self]))
   group(:all, *(get(:managers) + [:localpool_member]))
 
+  # top level CRUD permissions
   create :operators
   retrieve :all
   update :managers
   delete :operators
 
+  # nested method and its CRUD permissions, missing ones means no permissions
   energy_producers do
     retrieve :managers
   end
@@ -77,6 +82,7 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
       update :managers
       delete :none
 
+      # reuse permissions from 'organizations' -> 'contact'
       contact '/organizations/contact'
  
       address do
@@ -99,8 +105,10 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
       delete :none
     end
 
+    # reuse permissions from sibling 'contractor_bank_account'
     customer_bank_account :contractor_bank_account
 
+    # reuse permissions from sibling 'contractor'
     customer :contractor
 
     tariffs do
@@ -109,11 +117,14 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
 
     payments :tariffs
   end
-  
+
+  # reuse permissions from 'contracts'
   localpool_power_taker_contracts '/contracts'
 
+  # reuse permissions from 'contracts'
   localpool_processing_contract '/contracts'
 
+  # reuse permissions from 'contracts'
   metering_point_operator_contract '/contracts'
 
   meters do
@@ -121,6 +132,7 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
     update :managers
     delete :operators
 
+    # reuse permissions from 'registers'
     registers '/registers'
 
     formula_parts do
@@ -129,6 +141,7 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
       update :managers
       delete :none
 
+      # reuse permissions from 'registers'
       register '/registers'
     end
   end
