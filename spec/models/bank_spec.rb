@@ -2,8 +2,8 @@
 describe "Bank Model" do
 
   let(:dir) { 'db/banks' }
-  let(:first_file) { File.read(File.join(dir, "BLZ_20160606.txt")) }
-  let(:second_file) { File.read(File.join(dir, "BLZ_20160905.txt")) }
+  let(:first_file) { File.join(dir, "BLZ_20160606.txt") }
+  let(:second_file) { File.join(dir, "BLZ_20160905.txt") }
 
   before do
     Bank.update_from(first_file)
