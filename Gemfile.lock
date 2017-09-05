@@ -152,6 +152,7 @@ GEM
     dry-core (0.3.0)
       concurrent-ruby (~> 1.0)
     dry-equalizer (0.2.0)
+    dry-initializer (1.4.1)
     dry-logic (0.4.1)
       dry-container (~> 0.2, >= 0.2.6)
       dry-core (~> 0.2)
@@ -160,6 +161,12 @@ GEM
     dry-monads (0.3.1)
       dry-core
       dry-equalizer
+    dry-struct (0.3.1)
+      dry-configurable (~> 0.1)
+      dry-core (~> 0.3)
+      dry-equalizer (~> 0.2)
+      dry-types (~> 0.9, >= 0.9.0)
+      ice_nine (~> 0.11)
     dry-transaction (0.9.0)
       dry-container (>= 0.2.8)
       dry-matcher (>= 0.5.0)
@@ -269,6 +276,7 @@ GEM
     i18n (0.7.0)
     i18n_data (0.7.0)
     iban-tools (1.1.0)
+    ice_nine (0.11.2)
     inflecto (0.0.2)
     inherited_resources (1.7.2)
       actionpack (>= 3.2, < 5.2.x)
@@ -585,7 +593,9 @@ DEPENDENCIES
   doorkeeper
   dotenv-rails
   dry-auto_inject
+  dry-initializer
   dry-monads
+  dry-struct
   dry-transaction
   dry-validation
   email_spec
@@ -653,4 +663,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.15.1
+   1.15.4
