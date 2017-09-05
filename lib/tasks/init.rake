@@ -27,6 +27,7 @@ namespace :db do
                   'db:data',
                   'slp:import_h0',
                   'sep:import_pv_bhkw',
+                  'zip2price:all',
                   'banks:import'
                 ]
 end
