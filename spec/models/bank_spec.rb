@@ -1,26 +1,26 @@
 # coding: utf-8
-describe "Bank Model" do
+describe Bank do
 
   let(:dir) { 'db/banks' }
   let(:first_file) { File.join(dir, "BLZ_20160606.txt") }
   let(:second_file) { File.join(dir, "BLZ_20160905.txt") }
 
   before do
-    Bank.update_from(first_file)
+    Bank.update_from_file(first_file)
   end
 
   it 'updates data idempotent' do
     first = Bank.all.each { |b| b.attributes.to_json }
-    Bank.update_from(first_file)
+    Bank.update_from_file(first_file)
     second = Bank.all.each { |b| b.attributes.to_json }
     expect(second).to eq first
   end
   
   it 'updates data same as fresh import' do
-    Bank.update_from(second_file)
+    Bank.update_from_file(second_file)
     first = Bank.all.each { |b| b.attributes.to_json }
     Bank.delete_all
-    Bank.update_from(second_file)
+    Bank.update_from_file(second_file)
     second = Bank.all.each { |b| b.attributes.to_json }
     expect(second).to match_array first
   end

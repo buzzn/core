@@ -44,7 +44,7 @@ class Bank < ActiveRecord::Base
   end
 
   def self.update_from_file(file)
-    data = Buzzn::Util::File.read(file)
+    data = Buzzn::Utils::File.read(file)
     data.split(/\r?\n/).each do |line|
       params = as_params(line)
       if params[:service_type] != '2' && params[:bic] != ''
