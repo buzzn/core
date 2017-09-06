@@ -1,0 +1,4 @@
+- name: test
+  command: docker-compose up
+- name: cleanup
+  command: docker-compose down

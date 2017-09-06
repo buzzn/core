@@ -13,46 +13,46 @@ volumes:
 
 services:
 
-  # core_test:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.develop
-  #   command: bash -c "bundle exec rake db:create && bundle exec rake db:schema:load && bundle exec rspec --tag ~slow:false spec/requests spec/models"
-  #   depends_on:
-  #     - postgres
-  #     - redis
-  #     - mongo
-  #   env_file:
-  #     - .env.docker
-  #     - .env.test
-  #   volumes:
-  #     - ./spec:/core/spec
-  #     - ./tmp:/core/tmp
-  #     - ./db/seed_assets:/core/db/seed_assets
-  #     - ./db/banks:/core/db/banks
-
-  core_staging_web:
+  core_test:
     build:
       context: .
-      dockerfile: Dockerfile
-    #command: bash -c "bundle exec rake db:create db:migrate && bundle exec rake db:init"
-    ports:
-      - "3000:3000"
+      dockerfile: Dockerfile.develop
+    command: bash -c "bundle exec rake db:create && bundle exec rake db:schema:load && bundle exec rspec --tag ~slow:false spec/requests spec/models"
     depends_on:
-      - core_staging_worker
       - postgres
       - redis
       - mongo
     env_file:
       - .env.docker
-      - .env.staging
+      - .env.test
     volumes:
       - ./spec:/core/spec
       - ./tmp:/core/tmp
       - ./db/seed_assets:/core/db/seed_assets
       - ./db/banks:/core/db/banks
-      - ./db/seeds.rb:/core/db/seeds.rb
-      - core_staging_public:/core/public
+
+  # core_staging_web:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   #command: bash -c "bundle exec rake db:create db:migrate && bundle exec rake db:init"
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - core_staging_worker
+  #     - postgres
+  #     - redis
+  #     - mongo
+  #   env_file:
+  #     - .env.docker
+  #     - .env.staging
+  #   volumes:
+  #     - ./spec:/core/spec
+  #     - ./tmp:/core/tmp
+  #     - ./db/seed_assets:/core/db/seed_assets
+  #     - ./db/banks:/core/db/banks
+  #     - ./db/seeds.rb:/core/db/seeds.rb
+  #     - core_staging_public:/core/public
 
   core_staging_clockwork:
     build:
