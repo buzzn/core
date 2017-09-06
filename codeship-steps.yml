@@ -1,4 +1,2 @@
-- name: test
-  command: docker-compose up
-- name: cleanup
-  command: docker-compose down
+- service: core_test
+  command: bash -c "bundle exec rake db:create && bundle exec rake db:schema:load && bundle exec rspec --tag ~slow:false spec/requests spec/models"
