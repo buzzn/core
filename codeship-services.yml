@@ -2,18 +2,6 @@ version: '2'
 
 services:
 
-  core_test:
-    build:
-      context: .
-      dockerfile: Dockerfile.develop
-    depends_on:
-      - postgres
-      - redis
-      - mongo
-    env_file:
-      - .env.docker
-      - .env.test
-
   postgres:
     image: postgres:9.4.12-alpine
     ports:
@@ -32,3 +20,15 @@ services:
     image: mongo:3.4.4
     ports:
       - "27017"
+
+  core_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.develop
+    depends_on:
+      - postgres
+      - redis
+      - mongo
+    env_file:
+      - .env.docker
+      - .env.test
