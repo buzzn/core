@@ -17,7 +17,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    #command: bash -c "bundle exec rake db:create db:migrate && bundle exec rake db:init"
+    command: bash -c "bundle exec rake db:create db:schema:load && bundle exec rake db:init"
     ports:
       - "3000:3000"
     depends_on:

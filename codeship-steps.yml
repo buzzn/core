@@ -1,8 +1,6 @@
 - type: serial
   steps:
     - service: app
-      command: bundle exec rake db:create
-    - service: app
-      command: bundle exec rake db:schema:load
+      command: bundle exec rake db:create db:schema:load
     - service: app
       command: bundle exec rspec --tag ~slow:false spec/requests spec/models
