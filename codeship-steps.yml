@@ -1,2 +1,8 @@
-- service: core_test
-  command: bash -c "bundle exec rake db:create && bundle exec rake db:schema:load && bundle exec rspec --tag ~slow:false spec/requests spec/models"
+- type: serial
+  steps:
+    - service: core_test
+      command: bundle exec rake db:create
+    - service: core_test
+      command: bundle exec rake db:schema:load
+    - service: core_test
+      command: bundle exec rspec --tag ~slow:false spec/requests spec/models
