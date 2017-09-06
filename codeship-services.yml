@@ -3,7 +3,7 @@ version: '2'
 
 services:
 
-  core_test:
+  app:
     build:
       context: .
       dockerfile: Dockerfile.test
