@@ -3,13 +3,17 @@ version: '2'
 
 services:
 
-  # core_test:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.test
-  #   env_file:
-  #     - .env.docker
-  #     - .env.test
+  core_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    env_file:
+      - .env.docker
+      - .env.test
+    links:
+      - redis
+      - postgres
+      - mongo
 
   postgres:
     image: postgres:9.4.12-alpine
@@ -19,6 +23,7 @@ services:
 
   redis:
     image: redis:3.2.9-alpine
+    command: redis-server --appendonly yes
 
   mongo:
     image: mongo:3.4.4

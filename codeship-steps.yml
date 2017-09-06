@@ -1,4 +1,8 @@
 - type: serial
   steps:
-    - service: redis
-      command: redis-server --appendonly yes
+    - service: core_test
+      command: bundle exec rake db:create
+    - service: core_test
+      command: bundle exec rake db:schema:load
+    - service: core_test
+      command: bundle exec rspec --tag ~slow:false spec/requests spec/models
