@@ -5,8 +5,6 @@ Buzzn::Application.routes.draw do
     controllers :applications => 'oauth/applications'
   end
 
-  ActiveAdmin.routes(self)
-
   #require 'sidekiq/web'
   #authenticate :user, lambda { |user| user.has_role?(:admin) } do
   #  mount Sidekiq::Web => '/sidekiq'

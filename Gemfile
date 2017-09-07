@@ -17,11 +17,6 @@ gem 'wkhtmltopdf-binary'
 gem 'fog-aws', require: 'fog/aws'
 gem 'fog-local', require: 'fog/local'
 
-# activeadmin
-gem 'activeadmin'
-gem 'select2-rails'
-gem 'activeadmin-select2'
-
 # swagger
 gem 'ruby-swagger'
 
