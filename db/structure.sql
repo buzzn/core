@@ -632,42 +632,6 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE active_admin_comments (
-    id integer NOT NULL,
-    namespace character varying,
-    body text,
-    resource_id integer,
-    resource_type character varying,
-    author_id integer,
-    author_type character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: active_admin_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE active_admin_comments_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: active_admin_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE active_admin_comments_id_seq OWNED BY active_admin_comments.id;
-
-
---
 -- Name: addresses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1501,13 +1465,6 @@ ALTER SEQUENCE zip_vnbs_id_seq OWNED BY zip_vnbs.id;
 
 
 --
--- Name: active_admin_comments id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY active_admin_comments ALTER COLUMN id SET DEFAULT nextval('active_admin_comments_id_seq'::regclass);
-
-
---
 -- Name: banks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1533,14 +1490,6 @@ ALTER TABLE ONLY used_zip_sns ALTER COLUMN id SET DEFAULT nextval('used_zip_sns_
 --
 
 ALTER TABLE ONLY zip_vnbs ALTER COLUMN id SET DEFAULT nextval('zip_vnbs_id_seq'::regclass);
-
-
---
--- Name: active_admin_comments active_admin_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY active_admin_comments
-    ADD CONSTRAINT active_admin_comments_pkey PRIMARY KEY (id);
 
 
 --
@@ -1797,27 +1746,6 @@ ALTER TABLE ONLY zip_to_prices
 
 ALTER TABLE ONLY zip_vnbs
     ADD CONSTRAINT zip_vnbs_pkey PRIMARY KEY (id);
-
-
---
--- Name: index_active_admin_comments_on_author_type_and_author_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_active_admin_comments_on_author_type_and_author_id ON active_admin_comments USING btree (author_type, author_id);
-
-
---
--- Name: index_active_admin_comments_on_namespace; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_active_admin_comments_on_namespace ON active_admin_comments USING btree (namespace);
-
-
---
--- Name: index_active_admin_comments_on_resource_type_and_resource_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_active_admin_comments_on_resource_type_and_resource_id ON active_admin_comments USING btree (resource_type, resource_id);
 
 
 --
@@ -2663,6 +2591,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170802094212');
 INSERT INTO schema_migrations (version) VALUES ('20170817032303');
 
 INSERT INTO schema_migrations (version) VALUES ('20170906020031');
+
+INSERT INTO schema_migrations (version) VALUES ('20170907190442');
 
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
 
