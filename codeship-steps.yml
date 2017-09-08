@@ -1,6 +1,6 @@
-- name: model specs
-  service: core
-  command: bash -c "bundle exec rake db:create db:structure:load && bundle exec rspec --tag ~slow:false spec/models"
-- name: request specs
-  service: core
-  command: bash -c "bundle exec rake db:create db:structure:load && bundle exec rspec --tag ~slow:false spec/requests"
+- type: parallel
+  steps:
+  - service: core
+    command: bash -c "bundle exec rake db:create db:structure:load && bundle exec rspec --tag ~slow:false spec/models"
+  - service: core
+    command: bash -c "bundle exec rake db:create db:structure:load && bundle exec rspec --tag ~slow:false spec/requests"
