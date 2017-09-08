@@ -1,4 +1,7 @@
 - type: serial
+  name: 01
   steps:
-    - service: app
-      command: bundle exec rake db:create db:structure:load && bundle exec rspec spec/models
+  - service: app
+    command: bundle exec rake db:create
+  - service: app
+    command: bundle exec db:structure:load
