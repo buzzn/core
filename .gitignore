@@ -19,7 +19,7 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
-/tmp/cache/*
+/tmp/cache
 /tmp/files/*
 
 # Ignore OSX Metadata
