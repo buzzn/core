@@ -2,6 +2,4 @@
   name: 01
   steps:
   - service: app
-    command: bundle exec rake db:create db:structure:load
-  - service: app
-    command: bundle exec rspec
+    command: bash -c "bundle exec rake db:create db:structure:load && bundle exec rspec --tag ~slow:false spec/requests spec/models"
