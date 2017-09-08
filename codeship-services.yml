@@ -12,10 +12,7 @@ services:
       - .env.docker
       - .env.test
     volumes:
-      - ./spec:/core/spec
-      - ./tmp:/core/tmp
-      - ./db/seed_assets:/core/db/seed_assets
-      - ./db/banks:/core/db/banks
+      - ./:/core
     links:
       - redis
       - postgres
