@@ -1,6 +1,6 @@
 .git
-.env*
-log
+# .env*
+# log
 docs
 README-docker.md
 README-specs.md
@@ -8,8 +8,8 @@ README-specs.md
 # db/seed_assets/*
 # db/banks/*
 # db/seeds.rb
-tmp/*
-public/uploads/*
+# tmp/*
+# public/uploads/*
 docker-compose.yml
-Dockerfile
-Dockerfile.develop
+# Dockerfile
+# Dockerfile.develop
