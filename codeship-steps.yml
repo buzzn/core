@@ -2,6 +2,6 @@
   name: 01
   steps:
   - service: app
-    command: bundle exec rake db:create
+    command: bundle exec rake db:create db:structure:load
   - service: app
-    command: bundle exec db:structure:load
+    command: bundle exec rspec
