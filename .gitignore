@@ -19,7 +19,7 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
-
+/tmp
 
 # Ignore OSX Metadata
 .DS_Store
