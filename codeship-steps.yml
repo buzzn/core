@@ -1,5 +1,6 @@
-- type: serial
-  name: 01
+- type: parallel
   steps:
   - service: app
-    command: bash -c "bundle exec rake db:create db:structure:load && bundle exec rspec --tag ~slow:false spec/requests spec/models"
+    command: bash -c "bundle exec rake db:create db:structure:load && bundle exec rspec --tag ~slow:false spec/models"
+  - service: app
+    command: bash -c "bundle exec rake db:create db:structure:load && bundle exec rspec --tag ~slow:false spec/requests"
