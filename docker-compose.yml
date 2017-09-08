@@ -44,12 +44,9 @@ services:
   #     - .env.docker
   #     - .env.staging
   #   volumes:
-  #     - ./spec:/core/spec
-  #     - ./tmp:/core/tmp
-  #     - ./db/seed_assets:/core/db/seed_assets
-  #     - ./db/banks:/core/db/banks
-  #     - ./db/seeds.rb:/core/db/seeds.rb
+  #     - ./:/core
   #     - core_staging_public:/core/public
+  #
   # core_staging_clockwork:
   #   build:
   #     context: .
