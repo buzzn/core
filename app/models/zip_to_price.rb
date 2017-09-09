@@ -6,13 +6,13 @@ class ZipToPrice < ActiveRecord::Base
               average_price_cents_kwh_dt: 'Durchschnittspreis ct/kWh DT',
               baseprice_euro_year_dt: 'Grundpreis Euro/Jahr DT',
               unitprice_cents_kwh_dt: 'Arbeitspreis ct/kWh DT',
-              mesurement_euro_year_dt: 'MSB Euro/Jahr DT',
+              measurement_euro_year_dt: 'MSB Euro/Jahr DT',
               baseprice_euro_year_et: 'Grundpreis Euro/Jahr ET',
               unitprice_cents_kwh_et: 'Arbeitspreis ct/kWh ET',
-              mesurement_euro_year_et: 'MSB Euro/Jahr ET',
+              measurement_euro_year_et: 'MSB Euro/Jahr ET',
               ka: 'KA',
               state: 'Bundesland',
-              comunity: 'Gemeinde',
+              community: 'Gemeinde',
               vdewid: 'VDEWID',
               dso: 'Netzbetreiber'}
 
@@ -35,7 +35,7 @@ class ZipToPrice < ActiveRecord::Base
 
   def self.to_csv(io)
     io << COLUMNS.values.join(';') << "\n"
-    ZipToPrice.all.each do |i|
+    ZipToPrice.all.order(:zip, :state, :community, :dso).each do |i|
       row = i.attributes.values[1..-2].join(';')
       io << row << "\n"
     end

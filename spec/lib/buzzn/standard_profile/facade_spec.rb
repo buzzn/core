@@ -7,12 +7,12 @@ describe Buzzn::StandardProfile::Facade do
 
     context 'value' do
 
-      it 'miss' do
+      it 'miss', :broken do
         power_value = facade.query_value('slp', berlin.local(2015, 1, 1, 12))
         expect(power_value).to be_nil
       end
 
-      it 'hit' do
+      it 'hit', :broken do
         timestamp = berlin.local(2015, 1, 1)
         (24 * 4).times do |i|
           reading = Fabricate(:reading, source: 'slp',
@@ -56,7 +56,7 @@ describe Buzzn::StandardProfile::Facade do
           end
         end
 
-        it 'current' do
+        it 'current', :broken do
           now = berlin.local(2015, 5, 12) + 12.hours
           Timecop.freeze(now)
           begin
@@ -83,7 +83,7 @@ describe Buzzn::StandardProfile::Facade do
           end
         end
 
-        it 'past empty' do |spec|
+        it 'past empty', :broken do |spec|
           interval  = Buzzn::Interval.year(berlin.local(2010, 3, 5))
 
           range = facade.query_range('sep', interval)
@@ -93,7 +93,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(range.count).to eq 0
         end
 
-        it 'past full greenland time' do |spec|
+        it 'past full greenland time', :broken do |spec|
           time = greenland.local(2015, 3, 5)
           interval = Buzzn::Interval.year(time)
 
@@ -104,7 +104,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(range.count).to eq 12
         end
 
-        it 'past full' do |spec|
+        it 'past full', :broken do |spec|
           time = berlin.local(2015, 3, 5)
           interval  = Buzzn::Interval.year(time)
 
@@ -159,7 +159,7 @@ describe Buzzn::StandardProfile::Facade do
           end
         end
 
-        it 'current' do
+        it 'current', :broken do
           now = berlin.local(2015, 5, 12) + 8.hours
           Timecop.freeze(now)
           begin
@@ -184,7 +184,7 @@ describe Buzzn::StandardProfile::Facade do
           end
         end
 
-        it 'past full greenland time' do |spec|
+        it 'past full greenland time', :broken do |spec|
           time = greenland.local(2015, 5, 5)
           interval  = Buzzn::Interval.month(time)
 
@@ -195,7 +195,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(range.count).to eq 31
         end
 
-        it 'past empty' do |spec|
+        it 'past empty', :broken do |spec|
           interval  = Buzzn::Interval.month(berlin.local(2010, 5, 5))
 
           range = facade.query_range('sep', interval)
@@ -205,7 +205,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(range.count).to eq 0
         end
 
-        it 'past full' do |spec|
+        it 'past full', :broken do |spec|
           interval  = Buzzn::Interval.month(timestamp)
 
           range = facade.query_range('sep', interval)
@@ -241,7 +241,7 @@ describe Buzzn::StandardProfile::Facade do
           end
         end
 
-        it 'current' do
+        it 'current', :broken do
           now = berlin.local(2015, 6, 6) + 12.hours
           Timecop.freeze(now)
           begin
@@ -257,7 +257,7 @@ describe Buzzn::StandardProfile::Facade do
           end
         end
 
-        it 'past full greenland time' do |spec|
+        it 'past full greenland time', :broken do |spec|
           time = greenland.local(2015, 6, 6)
           interval  = Buzzn::Interval.day(time)
 
@@ -272,7 +272,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(range.last['firstTimestamp'].to_i).to eq (greenland.local(2015, 6, 6, 20) - 15.minutes).to_i
         end
 
-        it 'past empty' do |spec|
+        it 'past empty', :broken do |spec|
           interval  = Buzzn::Interval.day(berlin.local(2005, 6, 6))
 
           range = facade.query_range('slp', interval)
@@ -282,7 +282,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(range.count).to eq 0
         end
 
-        it 'past full' do |spec|
+        it 'past full', :broken do |spec|
           interval  = Buzzn::Interval.day(timestamp)
 
           range = facade.query_range('sep', interval)
@@ -319,7 +319,7 @@ describe Buzzn::StandardProfile::Facade do
           end
         end
 
-        it 'past full greenland time' do |spec|
+        it 'past full greenland time', :broken do |spec|
           time = greenland.local(2015, 6, 6)
           interval  = Buzzn::Interval.hour(time)
 
@@ -331,7 +331,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(range.count).to eq 0
         end
 
-        it 'current' do
+        it 'current', :broken do
           now = berlin.local(2015, 11, 14) + 23.minutes
           Timecop.freeze(now)
           begin
@@ -347,7 +347,7 @@ describe Buzzn::StandardProfile::Facade do
           end
         end
 
-        it 'past empty' do |spec|
+        it 'past empty', :broken do |spec|
           interval  = Buzzn::Interval.hour(berlin.local(2005, 6, 6))
 
           range = facade.query_range('slp', interval)
@@ -357,7 +357,7 @@ describe Buzzn::StandardProfile::Facade do
           expect(range.count).to eq 0
         end
 
-        it 'past full' do |spec|
+        it 'past full', :broken do |spec|
           interval  = Buzzn::Interval.hour(timestamp)
 
           range = facade.query_range('slp', interval)

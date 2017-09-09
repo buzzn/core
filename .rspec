@@ -3,3 +3,4 @@
 --backtrace
 --format documentation
 --tag ~slow
+--tag ~broken

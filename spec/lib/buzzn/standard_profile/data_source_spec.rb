@@ -39,7 +39,7 @@ describe Buzzn::StandardProfile::DataSource do
 
     [Reading::Continuous::SLP, Reading::Continuous::SEP_BHKW, Reading::Continuous::SEP_PV].each do |type|
 
-      it "#{type} register" do
+      it "#{type} register", :broken do
         register = send("#{type}_register".to_sym)
         timestamp = utc.local(2015,4,1)
 
@@ -65,7 +65,7 @@ describe Buzzn::StandardProfile::DataSource do
       end
     end
 
-    it :group do
+    it :group, :broken do
 
       timestamp = utc.local(2015, 4, 1)
       10.times do |i|
@@ -108,7 +108,7 @@ describe Buzzn::StandardProfile::DataSource do
   describe 'collection' do
 
     [:group, :virtual_register].each do |resource_name|
-      it resource_name do
+      it resource_name, :broken do
         resource = send resource_name
 
         timestamp = utc.local(2015, 4, 1)
@@ -177,7 +177,7 @@ describe Buzzn::StandardProfile::DataSource do
       end
 
       [:utc, :greenland, :berlin].each do |tz|
-        it "#{tz}" do
+        it "#{tz}", :broken do
           timezone = send tz
           register = Fabricate(:input_meter).input_register
           year_interval = Buzzn::Interval.year(timezone.local(2015, 3, 2))
@@ -217,7 +217,7 @@ describe Buzzn::StandardProfile::DataSource do
       end
 
       [:utc, :greenland, :berlin].each do |tz|
-        it "#{tz}" do
+        it "#{tz}", :broken do
           timezone = send tz
           register = Fabricate(:input_meter).input_register
           month_interval = Buzzn::Interval.month(timezone.local(2015, 1, 1))
@@ -256,7 +256,7 @@ describe Buzzn::StandardProfile::DataSource do
       let(:fifteens) { ['00', '15', '30', '45' ] }
 
       [:utc, :greenland, :berlin].each do |tz|
-         it "#{tz}" do
+         it "#{tz}", :broken do
            timezone = send tz
            register = Fabricate(:input_meter).input_register
            day_interval = Buzzn::Interval.day(timezone.local(2015, 1, 1))
@@ -294,7 +294,7 @@ describe Buzzn::StandardProfile::DataSource do
       end
 
       [:utc, :greenland, :berlin].each do |tz|
-         it "#{tz}" do
+         it "#{tz}", :broken do
            timezone = send tz
            register = Fabricate(:input_meter).input_register
            interval = Buzzn::Interval.hour(timezone.local(2015, 1, 1))

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.4
--- Dumped by pg_dump version 9.6.4
+-- Dumped from database version 9.6.5
+-- Dumped by pg_dump version 9.6.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -826,18 +826,6 @@ CREATE TABLE comments (
 
 
 --
--- Name: configs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE configs (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    namespace character varying NOT NULL,
-    key character varying NOT NULL,
-    value character varying NOT NULL
-);
-
-
---
 -- Name: contracts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -885,6 +873,18 @@ CREATE TABLE contracts (
     signing_user character varying,
     status contract_status DEFAULT 'onboarding'::contract_status,
     renewable_energy_law_taxation taxation
+);
+
+
+--
+-- Name: core_configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE core_configs (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    namespace character varying NOT NULL,
+    key character varying NOT NULL,
+    value character varying NOT NULL
 );
 
 
@@ -1456,13 +1456,13 @@ CREATE TABLE zip_to_prices (
     average_price_cents_kwh_dt double precision NOT NULL,
     baseprice_euro_year_dt double precision NOT NULL,
     unitprice_cents_kwh_dt double precision NOT NULL,
-    mesurement_euro_year_dt double precision NOT NULL,
+    measurement_euro_year_dt double precision NOT NULL,
     baseprice_euro_year_et double precision NOT NULL,
     unitprice_cents_kwh_et double precision NOT NULL,
-    mesurement_euro_year_et double precision NOT NULL,
+    measurement_euro_year_et double precision NOT NULL,
     ka double precision NOT NULL,
     state character varying NOT NULL,
-    comunity character varying NOT NULL,
+    community character varying NOT NULL,
     vdewid bigint NOT NULL,
     dso character varying NOT NULL,
     updated boolean NOT NULL
@@ -1592,19 +1592,19 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: configs configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY configs
-    ADD CONSTRAINT configs_pkey PRIMARY KEY (id);
-
-
---
 -- Name: contracts contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY contracts
     ADD CONSTRAINT contracts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_configs core_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY core_configs
+    ADD CONSTRAINT core_configs_pkey PRIMARY KEY (id);
 
 
 --

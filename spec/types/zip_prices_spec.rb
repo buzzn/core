@@ -4,7 +4,7 @@ describe Buzzn::Types::ZipPrices do
     file = File.join('db', 'csv', "TEST_MINIMAL_GET_AG_2017ET_DTdot.csv")
     ZipToPrice.from_csv(file)
 
-    Config.store Buzzn::Types::ZipPriceConfig.new(
+    CoreConfig.store Buzzn::Types::ZipPriceConfig.new(
         kwkg_aufschlag: 1.0,
         ab_la_v: 1.0,
         strom_nev: 1.0,

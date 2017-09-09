@@ -1,5 +1,5 @@
 # coding: utf-8
-describe Config do
+describe CoreConfig do
 
 
   let(:config) do
@@ -18,15 +18,15 @@ describe Config do
   end
 
   it 'stores and loads config' do
-    Config.store(config)
-    c = Config.load(Buzzn::Types::ZipPriceConfig)
+    CoreConfig.store(config)
+    c = CoreConfig.load(Buzzn::Types::ZipPriceConfig)
     expect(c).to eq config
     
-    expect(Config.count).to eq 10
+    expect(CoreConfig.count).to eq 10
   end
 
   it 'updates and loads config' do
-    Config.store(config)
+    CoreConfig.store(config)
 
     conf = Buzzn::Types::ZipPriceConfig.new(
       kwkg_aufschlag: 1.0,
@@ -40,11 +40,11 @@ describe Config do
       vat: 12.0,
       yearly_euro_intern: 0.0
     )
-    Config.store(conf)
+    CoreConfig.store(conf)
 
-    c = Config.load(Buzzn::Types::ZipPriceConfig)
+    c = CoreConfig.load(Buzzn::Types::ZipPriceConfig)
     expect(c).to eq conf
 
-    expect(Config.count).to eq 10
+    expect(CoreConfig.count).to eq 10
   end
 end
