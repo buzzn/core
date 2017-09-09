@@ -3,9 +3,7 @@ module Buzzn
     class File
       def self.read(filename)
         data = ::File.read(filename)
-        if !data.valid_encoding?
-          data = data.unpack('C*').pack('U*')
-        end
+        data = data.unpack('C*').pack('U*') unless data.valid_encoding?
         data
       end
     end

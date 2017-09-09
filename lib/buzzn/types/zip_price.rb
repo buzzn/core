@@ -6,9 +6,12 @@ module Buzzn
       extend Dry::Initializer
 
       option :price
-      option :config
       option :type, type: Types::MeterTypes
       option :annual_kwh, Types::Strict::Int
+
+      def config
+        @config ||= Config.load(Buzzn::Types::ZipPriceConfig)
+      end
 
       def raw_unit_cents_netto
         case type
