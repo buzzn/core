@@ -32,7 +32,8 @@ module Buzzn
       end
     end
   end
-  class ValidationError < StandardError
+
+  class GeneralError < StandardError
 
     attr_reader :errors
 
@@ -44,6 +45,7 @@ module Buzzn
       @errors.values.inspect
     end
   end
+  class ValidationError < GeneralError; end
 
   class NestedValidationError < ValidationError
     def initialize(key, errors)

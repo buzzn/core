@@ -20,21 +20,19 @@ class Buzzn::Transaction
       optional(:annual_kwh).filled(:int?)
     end
 
-    t.register_step(:zip_to_price_service) do |input|
-      prices = ZipPrices.new(zip: zip, type: type, annual_kwh: annual_kwh,
-                            config: config)
+    t.register_step(:zip_to_price_step) do |input|
+      input[:config] = DEFAULT_CONFIG
+      prices = Buzzn::Types::ZipPrices.new(input)
       if result = prices.max_price
         Dry::Monads.Right(result)
       else
-        errors = { zip: 'no price for zip found' }
-        def errors.value; self; end
-        Dry::Monads.Left(errors)
+        Dry::Monads.Left(Buzzn::GeneralError.new(zip: ['no price for zip found']))
       end
     end
 
     t.define(:zip_to_price) do
       validate :zip_to_price_schema
-      step :zip_to_price_service
+      step :zip_to_price_step
     end
   end
 end

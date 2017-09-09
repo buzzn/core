@@ -6,7 +6,8 @@ module Buzzn
         Buzzn::RecordNotFound => 404,
         Buzzn::PermissionDenied => 403,
         Buzzn::StaleEntity => 409,
-        Buzzn::ValidationError => 422
+        Buzzn::ValidationError => 422,
+        Buzzn::GeneralError => 404
       }
 
       def self.new

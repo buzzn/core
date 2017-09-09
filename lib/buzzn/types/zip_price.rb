@@ -12,11 +12,11 @@ module Buzzn
 
       def raw_unit_cents_netto
         case type
-        when :single
+        when 'single'
           price.unitprice_cents_kwh_et
-        when :smart
+        when 'smart'
           price.unitprice_cents_kwh_et
-        when :double
+        when 'double'
           price.unitprice_cents_kwh_dt
         else
           raise "can not handle #{type}"
@@ -44,20 +44,16 @@ module Buzzn
 
       def yearly_euro_netto
         case type
-        when :single
+        when 'single'
           yearly_euro_netto_single
-        when :double
+        when 'double'
           yearly_euro_netto_double
-        when :smart
+        when 'smart'
           yearly_euro_netto_smart
         else
           raise "can not handle #{type}"
         end
       end
-
-      #def total_price_cents
-      #  @total ||= (yearly_euro_netto * config.vat / 0.12 + annual_kwh * unit_cents_netto * config.vat / 12.0).to_i
-      #end
 
       def baseprice_cents_per_month
         @baseprice ||= (yearly_euro_netto * config.vat / 0.12).round.to_i
@@ -71,8 +67,8 @@ module Buzzn
         @total ||= baseprice_cents_per_month + (annual_kwh * energyprice_cents_per_kilowatt_hour / 12.0).round.to_i
       end
 
-      def to_json
-        @json ||= '{"baseprice_cents_per_month":' << baseprice_cents_per_month << ',"energyprice_cents_per_kilowatt_hour":' << energyprice_cents_per_kilowatt_hour << ',"total_cents_per_month":' << total_cents_per_month << '}'
+      def to_json(*)
+        @json ||= '{"baseprice_cents_per_month":' << baseprice_cents_per_month.to_s << ',"energyprice_cents_per_kilowatt_hour":' << energyprice_cents_per_kilowatt_hour.to_s << ',"total_cents_per_month":' << total_cents_per_month.to_s << '}'
       end
     end
   end

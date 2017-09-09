@@ -4,6 +4,9 @@ require 'dry-types'
 module Buzzn
   module Types
     class ZipPriceConfig < Dry::Struct
+      
+      constructor_type :strict
+
       attribute :kwkg_aufschlag, Buzzn::Types::Strict::Float
       attribute :ab_la_v, Buzzn::Types::Strict::Float
       attribute :strom_nev, Buzzn::Types::Strict::Float
