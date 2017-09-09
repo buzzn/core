@@ -826,6 +826,18 @@ CREATE TABLE comments (
 
 
 --
+-- Name: configs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE configs (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    namespace character varying NOT NULL,
+    key character varying NOT NULL,
+    value character varying NOT NULL
+);
+
+
+--
 -- Name: contracts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1577,6 +1589,14 @@ ALTER TABLE ONLY billings
 
 ALTER TABLE ONLY comments
     ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: configs configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY configs
+    ADD CONSTRAINT configs_pkey PRIMARY KEY (id);
 
 
 --
@@ -2643,4 +2663,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170802094212');
 INSERT INTO schema_migrations (version) VALUES ('20170817032303');
 
 INSERT INTO schema_migrations (version) VALUES ('20170906020031');
+
+INSERT INTO schema_migrations (version) VALUES ('20170909015357');
 

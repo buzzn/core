@@ -3,10 +3,8 @@ describe Buzzn::Types::ZipPrice do
   before :all do
     file = File.join('db', 'csv', "TEST_MINIMAL_GET_AG_2017ET_DTdot.csv")
     ZipToPrice.from_csv(file)
-  end
 
-  let(:config) do
-    Buzzn::Types::ZipPriceConfig.new(
+    Config.store Buzzn::Types::ZipPriceConfig.new(
         kwkg_aufschlag: 1.0,
         ab_la_v: 1.0,
         strom_nev: 1.0,
@@ -23,7 +21,7 @@ describe Buzzn::Types::ZipPrice do
   let(:price) { ZipToPrice.first }
 
   it 'calculates prices for type: single' do
-    zip_price = Buzzn::Types::ZipPrice.new price: price, config: config, type: :single, annual_kwh: 1
+    zip_price = Buzzn::Types::ZipPrice.new price: price, type: 'single', annual_kwh: 1
 
     expect(zip_price.raw_unit_cents_netto).to eq price.unitprice_cents_kwh_et
     unit_price = price.unitprice_cents_kwh_et + 8 + price.ka
@@ -36,7 +34,7 @@ describe Buzzn::Types::ZipPrice do
   end
 
   it 'calculates prices for type: double' do
-    zip_price = Buzzn::Types::ZipPrice.new price: price, config: config, type: :double, annual_kwh: 1
+    zip_price = Buzzn::Types::ZipPrice.new price: price, type: 'double', annual_kwh: 1
 
     expect(zip_price.raw_unit_cents_netto).to eq price.unitprice_cents_kwh_dt
     unit_price = price.unitprice_cents_kwh_dt + 8 + price.ka
@@ -49,7 +47,7 @@ describe Buzzn::Types::ZipPrice do
   end
 
   it 'calculates prices for type: smart' do
-    zip_price = Buzzn::Types::ZipPrice.new price: price, config: config, type: :smart, annual_kwh: 1
+    zip_price = Buzzn::Types::ZipPrice.new price: price, type: 'smart', annual_kwh: 1
 
     expect(zip_price.raw_unit_cents_netto).to eq price.unitprice_cents_kwh_et
     unit_price = price.unitprice_cents_kwh_et + 8 + price.ka
