@@ -24,7 +24,7 @@ describe ZipToPrice do
     
     expect(csv1.string).to eq csv2.string
     content = Buzzn::Utils::File.read(file1).gsub(/\r\n?/, "\n")
-    expect(content.gsub(/[.]0;/, ';')).to eq csv1.string.gsub(/[.]0;/, ';')
+    expect(content.gsub(/[.]0;/, ';').split("\n")).to match_array csv1.string.gsub(/[.]0;/, ';').split("\n")
   end
 
   it 'imports replaces' do

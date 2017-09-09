@@ -4,7 +4,7 @@ describe Buzzn::Types::ZipPrice do
     file = File.join('db', 'csv', "TEST_MINIMAL_GET_AG_2017ET_DTdot.csv")
     ZipToPrice.from_csv(file)
 
-    Config.store Buzzn::Types::ZipPriceConfig.new(
+    CoreConfig.store Buzzn::Types::ZipPriceConfig.new(
         kwkg_aufschlag: 1.0,
         ab_la_v: 1.0,
         strom_nev: 1.0,
@@ -26,11 +26,11 @@ describe Buzzn::Types::ZipPrice do
     expect(zip_price.raw_unit_cents_netto).to eq price.unitprice_cents_kwh_et
     unit_price = price.unitprice_cents_kwh_et + 8 + price.ka
     expect(zip_price.unit_cents_netto).to eq unit_price
-    expect(zip_price.yearly_euro_netto).to eq price.mesurement_euro_year_et + price.baseprice_euro_year_et
+    expect(zip_price.yearly_euro_netto).to eq price.measurement_euro_year_et + price.baseprice_euro_year_et
 
-    expect(zip_price.baseprice_cents_per_month).to eq ((price.mesurement_euro_year_et + price.baseprice_euro_year_et) * 100).to_i
+    expect(zip_price.baseprice_cents_per_month).to eq ((price.measurement_euro_year_et + price.baseprice_euro_year_et) * 100).to_i
     expect(zip_price.energyprice_cents_per_kilowatt_hour).to eq (unit_price * 12).to_i
-    expect(zip_price.total_cents_per_month).to eq ((price.mesurement_euro_year_et + price.baseprice_euro_year_et) * 100 + unit_price).to_i
+    expect(zip_price.total_cents_per_month).to eq ((price.measurement_euro_year_et + price.baseprice_euro_year_et) * 100 + unit_price).to_i
   end
 
   it 'calculates prices for type: double' do
@@ -39,11 +39,11 @@ describe Buzzn::Types::ZipPrice do
     expect(zip_price.raw_unit_cents_netto).to eq price.unitprice_cents_kwh_dt
     unit_price = price.unitprice_cents_kwh_dt + 8 + price.ka
     expect(zip_price.unit_cents_netto).to eq unit_price
-    expect(zip_price.yearly_euro_netto).to eq price.mesurement_euro_year_dt + price.baseprice_euro_year_dt
+    expect(zip_price.yearly_euro_netto).to eq price.measurement_euro_year_dt + price.baseprice_euro_year_dt
 
-    expect(zip_price.baseprice_cents_per_month).to eq ((price.mesurement_euro_year_dt + price.baseprice_euro_year_dt) * 100).to_i
+    expect(zip_price.baseprice_cents_per_month).to eq ((price.measurement_euro_year_dt + price.baseprice_euro_year_dt) * 100).to_i
     expect(zip_price.energyprice_cents_per_kilowatt_hour).to eq (unit_price * 12).to_i
-    expect(zip_price.total_cents_per_month).to eq ((price.mesurement_euro_year_dt + price.baseprice_euro_year_dt) * 100 + unit_price).to_i
+    expect(zip_price.total_cents_per_month).to eq ((price.measurement_euro_year_dt + price.baseprice_euro_year_dt) * 100 + unit_price).to_i
   end
 
   it 'calculates prices for type: smart' do

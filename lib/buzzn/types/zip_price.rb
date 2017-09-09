@@ -10,7 +10,7 @@ module Buzzn
       option :annual_kwh, Types::Strict::Int
 
       def config
-        @config ||= Config.load(Buzzn::Types::ZipPriceConfig)
+        @config ||= CoreConfig.load(Buzzn::Types::ZipPriceConfig)
       end
 
       def raw_unit_cents_netto
@@ -34,11 +34,11 @@ module Buzzn
       end
 
       def yearly_euro_netto_double
-        price.mesurement_euro_year_dt +  price.baseprice_euro_year_dt + config.yearly_euro_intern
+        price.measurement_euro_year_dt +  price.baseprice_euro_year_dt + config.yearly_euro_intern
       end
         
       def yearly_euro_netto_single
-        price.mesurement_euro_year_et +  price.baseprice_euro_year_et + config.yearly_euro_intern
+        price.measurement_euro_year_et +  price.baseprice_euro_year_et + config.yearly_euro_intern
       end
 
       def yearly_euro_netto_smart

@@ -43,10 +43,10 @@ module Contract
       if register && forecast_kwh_pa && register.address &&
          register.meter
         # TODO some validation or errors or something
-        prices = Buzzn::Zip2Price.new(forecast_kwh_pa,
-                                      register.address.zip,
-                                      register.meter.metering_type)
-        if price = prices.to_price
+        prices = Buzzn::Types::ZipPrices.new(annual_kwh: forecast_kwh_pa,
+                                             zip: register.address.zip.to_i,
+                                             type: 'single')#register.meter.metering_type)
+        if price = prices.max_price
           self.tariffs << Contract::Tariff.new(name: 'TODO Tariff',
                                                begin_date: begin_date || Time.current,
                                                energyprice_cents_per_kwh: price.energyprice_cents_per_kilowatt_hour,

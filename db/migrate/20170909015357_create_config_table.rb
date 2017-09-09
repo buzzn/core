@@ -1,6 +1,6 @@
 class CreateConfigTable < ActiveRecord::Migration
   def change
-    create_table :configs, id: :uuid do |t|
+    create_table :core_configs, id: :uuid do |t|
       t.string :namespace, null: false, size: 64
       t.string :key, null: false, size: 64
       t.string :value, null: false, size: 256      
