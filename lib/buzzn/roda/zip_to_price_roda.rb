@@ -1,5 +1,5 @@
 require_relative 'base_roda'
-class MeRoda < BaseRoda
+class ZipToPriceRoda < BaseRoda
 
   include Import.args[:env,
                       'transaction.zip_to_price']

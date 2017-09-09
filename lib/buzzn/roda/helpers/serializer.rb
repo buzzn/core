@@ -19,6 +19,7 @@ module Buzzn
                           detail: message }
             end
           end
+          request.response.status = ErrorHandler::ERRORS[object.value.class] || 500
           "{\"errors\":#{errors.to_json}}"
         when NilClass
           # response with 404 unless otherwise set
