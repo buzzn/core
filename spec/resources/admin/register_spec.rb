@@ -28,6 +28,8 @@ describe Register::BaseResource do
                      'observer_offline_monitoring',
                      'post_decimal_position',
                      'pre_decimal_position',
+                     'updatable',
+                     'deletable',
                      'createables'] }
 
   it 'retrieve' do

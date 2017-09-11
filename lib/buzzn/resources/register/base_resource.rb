@@ -19,7 +19,7 @@ module Register
                :observer_max_threshold,
                :observer_enabled,
                :observer_offline_monitoring,
-               :createables
+               :updatable, :deletable, :createables
 
     has_one :group
     has_many! :readings, ReadingResource

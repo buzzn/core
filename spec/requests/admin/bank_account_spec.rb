@@ -63,7 +63,9 @@ describe Admin::BankAccountRoda do
           "bank_name"=>bank_account.bank_name,
           "bic"=>bank_account.bic,
           "iban"=>bank_account.iban,
-          "direct_debit"=>bank_account.direct_debit
+          "direct_debit"=>bank_account.direct_debit,
+          'updatable' => true,
+          'deletable' => true
         }
       end
 

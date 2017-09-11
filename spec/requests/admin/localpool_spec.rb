@@ -205,7 +205,9 @@ describe Admin::LocalpoolRoda do
           "bank_name"=>contract.customer_bank_account.bank_name,
           "bic"=>contract.customer_bank_account.bic,
           "iban"=>contract.customer_bank_account.iban,
-          "direct_debit"=>contract.customer_bank_account.direct_debit
+          "direct_debit"=>contract.customer_bank_account.direct_debit,
+          'updatable'=> true,
+          'deletable'=> false
         },
         "contractor_bank_account"=>{
           "id"=>contract.contractor_bank_account.id,
@@ -215,7 +217,9 @@ describe Admin::LocalpoolRoda do
           "bank_name"=>contract.contractor_bank_account.bank_name,
           "bic"=>contract.contractor_bank_account.bic,
           "iban"=>contract.contractor_bank_account.iban,
-          "direct_debit"=>contract.contractor_bank_account.direct_debit
+          "direct_debit"=>contract.contractor_bank_account.direct_debit,
+          'updatable'=> true,
+          'deletable'=> false
         }
       }
     end
@@ -361,7 +365,9 @@ describe Admin::LocalpoolRoda do
           "bank_name"=>contract.customer_bank_account.bank_name,
           "bic"=>contract.customer_bank_account.bic,
           "iban"=>contract.customer_bank_account.iban,
-          "direct_debit"=>contract.customer_bank_account.direct_debit
+          "direct_debit"=>contract.customer_bank_account.direct_debit,
+          'updatable'=> true,
+          'deletable'=> false
         },
         "contractor_bank_account"=>{
           "id"=>contract.contractor_bank_account.id,
@@ -371,7 +377,9 @@ describe Admin::LocalpoolRoda do
           "bank_name"=>contract.contractor_bank_account.bank_name,
           "bic"=>contract.contractor_bank_account.bic,
           "iban"=>contract.contractor_bank_account.iban,
-          "direct_debit"=>contract.contractor_bank_account.direct_debit
+          "direct_debit"=>contract.contractor_bank_account.direct_debit,
+          'updatable'=> true,
+          'deletable'=> false
         }
       }
     end
@@ -484,7 +492,9 @@ describe Admin::LocalpoolRoda do
             "bank_name"=>contract.customer_bank_account.bank_name,
             "bic"=>contract.customer_bank_account.bic,
             "iban"=>contract.customer_bank_account.iban,
-            "direct_debit"=>contract.customer_bank_account.direct_debit
+            "direct_debit"=>contract.customer_bank_account.direct_debit,
+            'updatable'=> true,
+            'deletable'=> false
           },
           "contractor_bank_account"=>{
             "id"=>contract.contractor_bank_account.id,
@@ -493,7 +503,9 @@ describe Admin::LocalpoolRoda do
             "bank_name"=>contract.contractor_bank_account.bank_name,
             "bic"=>contract.contractor_bank_account.bic,
             "iban"=>contract.contractor_bank_account.iban,
-            "direct_debit"=>contract.contractor_bank_account.direct_debit
+            "direct_debit"=>contract.contractor_bank_account.direct_debit,
+            'updatable'=> true,
+            'deletable'=> false
           }
         }
       end
