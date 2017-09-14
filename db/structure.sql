@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.5
--- Dumped by pg_dump version 9.6.5
+-- Dumped from database version 9.6.4
+-- Dumped by pg_dump version 9.6.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -650,6 +650,7 @@ CREATE TABLE addresses (
     state state,
     country country DEFAULT 'DE'::country NOT NULL
 );
+
 
 --
 -- Name: bank_accounts; Type: TABLE; Schema: public; Owner: -
@@ -2388,4 +2389,3 @@ INSERT INTO schema_migrations (version) VALUES ('20170802094212');
 INSERT INTO schema_migrations (version) VALUES ('20170817032303');
 
 INSERT INTO schema_migrations (version) VALUES ('20170907190442');
-
