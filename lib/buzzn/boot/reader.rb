@@ -8,8 +8,8 @@ module Buzzn
 
       def define_new
         class_mod.class_exec(container, dependency_map) do |container, dependency_map|
-          define_method :new do |*args|
-            result = super(*args)
+          define_method :new do |*args, &block|
+            result = super(*args, &block)
             names = dependency_map.to_h
             deps = names.each_with_object({}) { |(name, identifier), obj|
               obj[name] = container[identifier]

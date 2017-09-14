@@ -4,7 +4,7 @@ namespace :banks do
   task :import => :environment do
     file = Dir["db/banks/*"].sort.last
     puts "process data from #{file}"
-    Bank.update_from(File.read(file))
+    Bank.update_from(file)
   end
 
 end

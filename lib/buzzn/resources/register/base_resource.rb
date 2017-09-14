@@ -25,14 +25,6 @@ module Register
     has_many! :readings, ReadingResource
 
     # API methods for the endpoints
-    
-    def cccreate_reading(params = {})
-      create(permissions.readings.create) do
-        to_resource(object.readings.create!(params),
-                    permissions.readings,
-                    ReadingResource)
-      end
-    end
 
     def ticker
       current_power.for_register(self)

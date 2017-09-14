@@ -43,8 +43,9 @@ class Bank < ActiveRecord::Base
     result
   end
 
-  def self.update_from(data)
-    split(data).each do |line|
+  def self.update_from_file(file)
+    data = Buzzn::Util::File.read(file)
+    data.split(/\r?\n/).each do |line|
       params = as_params(line)
       if params[:service_type] != '2' && params[:bic] != ''
         process(params)
@@ -53,15 +54,6 @@ class Bank < ActiveRecord::Base
   end
 
   private
-
-  def self.split(data)
-    # first assume they use utf-8 and fall back to latin-1
-    begin
-      data.split(/\r?\n/)
-    rescue ArgumentError
-      data.force_encoding(Encoding::ISO_8859_1).split(/\r?\n/)
-    end
-  end
 
   def self.process(params)
     if bank = get(params)

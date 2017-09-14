@@ -180,6 +180,7 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         old = meter.updated_at
+        sleep 1
         PATCH "/#{group.id}/meters/#{meter.id}", admin,
               updated_at: meter.updated_at,
               product_name: 'SmartySuper',
