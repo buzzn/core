@@ -651,19 +651,6 @@ CREATE TABLE addresses (
     country country DEFAULT 'DE'::country NOT NULL
 );
 
-
---
--- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE ar_internal_metadata (
-    key character varying NOT NULL,
-    value character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
 --
 -- Name: bank_accounts; Type: TABLE; Schema: public; Owner: -
 --
@@ -1366,14 +1353,6 @@ ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regcl
 
 ALTER TABLE ONLY addresses
     ADD CONSTRAINT addresses_pkey PRIMARY KEY (id);
-
-
---
--- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY ar_internal_metadata
-    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
 
 
 --
