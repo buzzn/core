@@ -78,5 +78,8 @@ module Buzzn
       Buzzn::Logger.root = Rails.logger
       Buzzn::Boot::Init.run
     end
+
+    # We don't use the Rails cache, all caching is directly from roda to redis.
+    config.cache_store = nil
   end
 end
