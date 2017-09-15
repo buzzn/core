@@ -1,0 +1,53 @@
+FROM ruby:2.3.1
+MAINTAINER admin@buzzn.net
+
+# Set Rails to run in production
+ENV RAILS_ENV development
+ENV RACK_ENV development
+ENV SECRET_KEY_BASE 053ac4b0bb8bfd1e67bb3c2949c30447b79fe4f94b01d2acd5662009ab3ae4f984236423b6f2ec6a70b1698ba3aab423b2b52578c5b0442bb8a19ed491bfaade
+
+
+# Install apt based dependencies required to run Rails as
+# well as RubyGems. As the Ruby image itself is based on a
+# Debian image, we use apt-get to install those.
+
+RUN apt-get update && \
+  apt-get install -y \
+  build-essential \
+  vim \
+  wget \
+  imagemagick \
+  nodejs
+
+# install postgresql(pg_dump) needet for migrations
+RUN touch /etc/apt/sources.list
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' >> /etc/apt/sources.list
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN apt-get update -y
+RUN apt-get install postgresql-9.4 -y
+
+# Configure the main working directory. This is the base
+# directory used in any further RUN, COPY, and ENTRYPOINT
+# commands.
+RUN mkdir -p /core
+WORKDIR /core
+
+# Copy the Gemfile as well as the Gemfile.lock and install
+# the RubyGems. This is a separate step so the dependencies
+# will be cached unless changes to one of those two files
+# are made.
+COPY Gemfile Gemfile.lock ./
+RUN gem install bundler && bundle install --jobs 20 --retry 5
+
+
+# Copy the main application.
+COPY . ./
+
+# Expose port 3000 to the Docker host, so we can access it
+# from the outside.
+EXPOSE 3000
+
+# The main command to run when the container starts. Also
+# tell the Rails dev server to bind to all interfaces by
+# default.
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
