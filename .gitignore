@@ -11,13 +11,13 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore the default SQLite database.
+# Ignore the default SQLite database
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
 /db/seed_assets/buzzn_production.sql
 
-# Ignore all logfiles and tempfiles.
+# Ignore all logfiles and tempfiles
 /log/*.log
 /tmp
 
