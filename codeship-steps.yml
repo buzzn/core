@@ -11,7 +11,7 @@
   - service: core
     command: bash -c "bundle exec rake db:create db:structure:load db:migrate && bundle exec rake db:data"
   - service: core
-    command: bash -c "bundle exec rake db:create db:migrate banks:import zip_to_price:import"
+    command: bash -c "bundle exec rake db:create db:migrate banks:import"
   - service: core
     command: bash -c "bundle exec rake db:create db:migrate sep:import_pv_bhkw"
   - service: core
