@@ -195,7 +195,6 @@ RSpec.configure do |config|
   config.append_after(:each) do |spec|
     Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) # HACK https://github.com/buzzn/buzzn/blob/master/config/environments/test.rb#L43-L44 is not working
     Redis.current.flushall
-    Rails.cache.clear
   end
 
 
