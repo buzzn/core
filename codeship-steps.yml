@@ -1,0 +1,18 @@
+- type: serial
+  steps:
+  - service: core
+    command: bash -c "bundle exec rake db:create db:migrate && bundle exec rspec --tag ~slow:false spec/models spec/services"
+  - service: core
+    command: bash -c "bundle exec rake db:create db:migrate && bundle exec rspec --tag ~slow:false spec/requests"
+  - service: core
+    command: bash -c "bundle exec rake db:create db:migrate && bundle exec rspec --tag ~slow:false spec/resources spec/pdfs"
+  - service: core
+    command: bash -c "bundle exec rake db:create db:migrate && bundle exec rspec --tag ~slow:false spec/types spec/buzzn"
+  - service: core
+    command: bash -c "bundle exec rake db:create db:structure:load db:migrate && bundle exec rake db:data"
+  - service: core
+    command: bash -c "bundle exec rake db:create db:migrate banks:import zip_to_price:import"
+  - service: core
+    command: bash -c "bundle exec rake db:create db:migrate sep:import_pv_bhkw"
+  - service: core
+    command: bash -c "bundle exec rake db:create db:migrate slp:import_h0"
