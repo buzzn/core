@@ -7,7 +7,7 @@
   - service: core
     command: bash -c "bundle exec rake db:create db:migrate && bundle exec rspec --tag ~slow:false spec/resources spec/pdfs"
   - service: core
-    command: bash -c "bundle exec rake db:create db:migrate && bundle exec rspec --tag ~slow:false spec/types spec/buzzn"
+    command: bash -c "bundle exec rake db:create db:migrate && bundle exec rspec --tag ~slow:false spec/buzzn"
   - service: core
     command: bash -c "bundle exec rake db:create db:structure:load db:migrate && bundle exec rake db:data"
   - service: core
