@@ -1,4 +1,4 @@
-# coding: utf-8
+require 'csv'
 class ZipToPrice < ActiveRecord::Base
 
   COLUMNS = { zip: 'Plz',
