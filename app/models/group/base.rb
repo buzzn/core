@@ -76,7 +76,7 @@ module Group
       Sidekiq::Client.push({
        'class' => CalculateGroupScoresWorker,
        'queue' => :default,
-       'args' => [ (Time.now.utc - 1.day).to_s ]
+       'args' => [ Buzzn::Utils::Chronos.yesterday.to_s ]
       })
     end
 

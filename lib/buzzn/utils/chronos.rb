@@ -8,6 +8,10 @@ module Buzzn
           Time.now.utc
         end
 
+        def yesterday
+          today - 1.day
+        end
+
         def today
           n = now
           Date.new(n.year, n.month, n.day)
