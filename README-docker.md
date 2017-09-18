@@ -12,8 +12,8 @@ but you can also uncomment the core_test service for running your tests.
 #### Create Release Image
 - login to dockerhub `docker login -u=buzzn -p=xxxxxx`
 - build image `docker build -t buzzn/core .`
-- tag image `docker tag buzzn/core buzzn/core:6`
-- push image `docker push buzzn/core:6`
+- tag image `docker tag buzzn/core buzzn/core:42`
+- push image `docker push buzzn/core:42`
 
 #### troubleshoot
 - stop the stack `docker-compose down`

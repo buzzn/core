@@ -19,7 +19,12 @@
 
 # Ignore all logfiles and tempfiles
 /log/*.log
-/tmp
+
+/tmp/cache/*
+/tmp/files/*
+/tmp/pids/*
+/tmp/sessions/*
+/tmp/sockets/*
 
 # Ignore OSX Metadata
 .DS_Store
