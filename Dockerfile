@@ -4,7 +4,6 @@ MAINTAINER admin@buzzn.net
 # Set Rails to run in production
 ENV RAILS_ENV production
 ENV RACK_ENV production
-ENV DB_ADAPTER nulldb
 ENV SECRET_KEY_BASE 4302a93016c91a2074f05c247570bd12a604c3368d711861df1cbab4b967d81796562097aad566f12016a721a6f461a1cd376a94f826721ab6fb8b483c5b8b81
 
 # Install apt based dependencies required to run Rails as
@@ -42,11 +41,6 @@ RUN gem install bundler && bundle install --jobs 20 --retry 5 --without developm
 
 # Copy the main application.
 COPY . ./
-
-# Precompile Rails assets
-# http://blog.zeit.io/use-a-fake-db-adapter-to-play-nice-with-rails-assets-precompilation/
-RUN bundle exec rake assets:precompile -t
-
 
 # Expose port 3000 to the Docker host, so we can access it
 # from the outside.
