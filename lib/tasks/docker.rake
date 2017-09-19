@@ -1,0 +1,22 @@
+namespace :docker do
+  namespace :image do
+
+    def image_name
+      @_image_name ||= begin
+        repo_name = `git remote get-url origin`.split("/").last.gsub(".git", '').chomp
+        OpenStruct.new(local: repo_name, public: "buzzn/#{repo_name}")
+      end
+    end
+
+    desc "Builds an image of the current branch."
+    task :build do
+      sh "docker build -t #{image_name.local} ."
+    end
+
+    desc "Builds an image of the current branch and push it to the registry at hub.docker.com."
+    task push: :build do
+      sh "docker tag #{image_name.local} #{image_name.public}"
+      sh "docker push #{image_name.public}"
+    end
+  end
+end
