@@ -1,7 +1,7 @@
-describe ZipToPriceRoda do
+describe Utils::ZipToPriceRoda do
 
   def app
-    ZipToPriceRoda # this defines the active application for this test
+    Utils::ZipToPriceRoda # this defines the active application for this test
   end
 
   before :all do
