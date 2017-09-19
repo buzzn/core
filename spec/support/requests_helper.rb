@@ -8,8 +8,6 @@ module RequestsHelper
     def login_path(path = nil)
       (@login_path ||= path) ||
         (superclass.respond_to?(:login_path) ? superclass.login_path : nil)
-    rescue
-      binding.pry
     end
   end
 

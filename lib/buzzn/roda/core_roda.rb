@@ -25,14 +25,6 @@ class CoreRoda < Roda
   plugin :heartbeat
 
   route do |r|
-    # for the active admin
-    r.on 'session' do
-      r.on 'admin' do
-        r.run Session::LogoutRoda
-      end
-
-      r.run Session::AccountRoda
-    end
 
     r.on 'api' do
       r.on 'display' do

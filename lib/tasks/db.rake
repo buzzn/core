@@ -37,4 +37,5 @@ Rake::Task["db:migrate"].enhance do
     puts "\n\n=========== create missing DB user:\n\tcreateuser -U postgres #{options[:user]}"
     raise e
   end
+  Rake::Task["db:structure:dump"].execute
 end

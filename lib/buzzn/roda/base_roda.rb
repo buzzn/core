@@ -42,7 +42,7 @@ class BaseRoda < Roda
     enable :session_expiration
 
     session_expiration_redirect nil
-    session_inactivity_timeout 9#00 # 15 minutes
+    session_inactivity_timeout 900 # 15 minutes
     max_session_lifetime 86400 # 1 day
 
     db Buzzn::DB

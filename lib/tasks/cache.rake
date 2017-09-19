@@ -1,8 +1,0 @@
-namespace :cache do
-
-  task :update => :environment do
-    Group::Base.update_chart_cache
-    Register::Base.update_chart_cache
-  end
-
-end

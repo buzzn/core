@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
 
 
   before_filter :http_basic_authenticate
-  before_filter :authenticate_user!
 
   def http_basic_authenticate
     if Rails.env.staging?
@@ -23,21 +22,8 @@ class ApplicationController < ActionController::Base
   #protect_from_forgery with: :null_session
 
 
-  def authenticate_user!
-    @current_user = Account::Base.where(id: session['account_id']).first
-    redirect_to '/session/login?redirect=/admin' unless @current_user
-  end
-
   rescue_from SecurityError do |exception|
     redirect_to "/"
-  end
-
-  def authenticate_admin_user!
-    unless current_user.person.has_role?(:admin)
-      @current_user = nil
-      session['account_id']=nil
-      redirect_to '/session/login?recirect=/admin'
-    end
   end
 
   def new_session_path(scope)

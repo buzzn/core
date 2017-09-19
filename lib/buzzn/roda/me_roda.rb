@@ -13,9 +13,9 @@ module Me
 
       change_login_requires_password? true
       session_expiration_redirect nil
-      session_inactivity_timeout 15 # minutes
+      session_inactivity_timeout 15 * 60 # minutes
       max_session_lifetime 86400 # 1 day
-      jwt_secret 'testmenow'
+      jwt_secret (ENV['JWT_SECRET'] || raise('missing JWT_SECRET in env'))
       json_response_error_status 401
 
       set_error_flash do |message|
