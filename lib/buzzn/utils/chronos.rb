@@ -9,7 +9,7 @@ module Buzzn
         end
 
         def yesterday
-          today - 1.day
+          today - 1
         end
 
         def today
