@@ -20,7 +20,6 @@ describe Me, :skip_nested do
     Account::LoginChangeKey.delete_all
     Account::Base.delete_all
     Person.delete_all
-    Organization.delete_all
   end
 
   # me

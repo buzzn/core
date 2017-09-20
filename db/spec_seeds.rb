@@ -1,5 +1,6 @@
 require_relative 'common_seeds'
 
+Organization.delete_all
 Fabricate(:dummy)
 Fabricate(:dummy_energy)
 Fabricate(:discovergy)
