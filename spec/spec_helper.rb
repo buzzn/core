@@ -92,7 +92,7 @@ RSpec.configure do |config|
         if klass.class == Module
           klass = (klass.const_get 'Base' rescue nil)
         end
-        if klass          
+        if klass
           if klass.count > 0
             if first
               first = false
@@ -104,6 +104,7 @@ RSpec.configure do |config|
         end
       end
     end
+    load 'db/spec_seeds.rb'
     Organization.constants.each do |c|
       name = c.to_s.downcase.to_sym
       if Organization.respond_to?(name) && name != :columns

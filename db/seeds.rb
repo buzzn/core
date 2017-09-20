@@ -1,6 +1,8 @@
 # Contains Base configuration and data for a new system.
 # Don't add sample data here, add it to sample_data.rb.
 
+require_relative 'common_seeds'
+
 puts '-- seed base system data --'
 
 Fabricate(:buzzn_energy)
@@ -25,14 +27,9 @@ Fabricate(:distribution_system_operator, name: 'RheinEnergie AG')
 Fabricate(:buzzn_metering)
 Fabricate(:dummy)
 Fabricate(:discovergy)
-Fabricate(:mysmartgrid)
 
 # Stromkennzeichnungen
 Fabricate(:energy_mix_germany)
 Fabricate(:energy_mix_buzzn)
-
-[[1, 'Unverified'], [2, 'Verified'], [3, 'Closed']].each do |id, name|
-  Account::Status.create!(id: id, name: name)
-end
 
 require_relative 'sample_data'
