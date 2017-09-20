@@ -70,7 +70,7 @@ describe Buzzn::ScoreCalculator do
       subject.calculate_closeness_scores
       expect(Score.count).to eq 3
       Score.all.each do |score|
-        expect(score.value).to eq -1.0
+        expect(score.value).to eq(-1.0)
         expect(score.mode).to eq 'closeness'
       end
     end
