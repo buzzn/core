@@ -82,7 +82,7 @@ RSpec.configure do |config|
     Mongoid.purge!
   end
 
-  config.before(:all) do
+  config.before(:suite) do
     load 'db/spec_seeds.rb'
   end
 
