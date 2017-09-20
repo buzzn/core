@@ -187,7 +187,7 @@ describe Buzzn::ScoreCalculator do
       end
     end
 
-    it 'calculates sufficiency' do |spec|
+    it 'calculates sufficiency', retry: 3 do |spec|
       VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
         subject.calculate_sufficiency_scores
         expect(Score.count).to eq 3
