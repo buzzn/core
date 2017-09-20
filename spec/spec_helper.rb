@@ -82,6 +82,10 @@ RSpec.configure do |config|
     Mongoid.purge!
   end
 
+  config.before(:all) do
+    load 'db/spec_seeds.rb'
+  end
+
   config.before(:context) do
     #Mongoid.purge!
     first = true
@@ -102,15 +106,6 @@ RSpec.configure do |config|
             warn "#{klass}: #{klass.count}"
           end
         end
-      end
-    end
-    load 'db/spec_seeds.rb'
-    Organization.constants.each do |c|
-      name = c.to_s.downcase.to_sym
-      if Organization.respond_to?(name) && name != :columns
-        # reset cache
-        Organization.instance_variable_set(:"@a_#{name}", nil)
-        Organization.send(name) || Fabricate(name)
       end
     end
   end
