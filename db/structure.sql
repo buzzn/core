@@ -1497,19 +1497,10 @@ ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
 
 
 --
--- Name: schema_info_buzzn; Type: TABLE; Schema: public; Owner: -
+-- Name: schema_info; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE schema_info_buzzn (
-    version integer DEFAULT 0 NOT NULL
-);
-
-
---
--- Name: schema_info_password; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE schema_info_password (
+CREATE TABLE schema_info (
     version integer DEFAULT 0 NOT NULL
 );
 
@@ -3039,4 +3030,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170906020031');
 INSERT INTO schema_migrations (version) VALUES ('20170907190442');
 
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
+
+INSERT INTO schema_migrations (version) VALUES ('20170920131047');
+
+INSERT INTO schema_migrations (version) VALUES ('20170920143153');
 
