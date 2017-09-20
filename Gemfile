@@ -101,7 +101,6 @@ end
 
 group :development do
   gem 'pry-rails'
-  gem 'quiet_assets'
   gem 'annotate'
   gem 'yard'
 end
