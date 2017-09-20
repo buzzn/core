@@ -82,6 +82,10 @@ RSpec.configure do |config|
     Mongoid.purge!
   end
 
+  config.before(:suite) do
+    load 'db/spec_seeds.rb'
+  end
+
   config.before(:context) do
     #Mongoid.purge!
     first = true
@@ -92,7 +96,7 @@ RSpec.configure do |config|
         if klass.class == Module
           klass = (klass.const_get 'Base' rescue nil)
         end
-        if klass          
+        if klass
           if klass.count > 0
             if first
               first = false
@@ -102,14 +106,6 @@ RSpec.configure do |config|
             warn "#{klass}: #{klass.count}"
           end
         end
-      end
-    end
-    Organization.constants.each do |c|
-      name = c.to_s.downcase.to_sym
-      if Organization.respond_to?(name) && name != :columns
-        # reset cache
-        Organization.instance_variable_set(:"@a_#{name}", nil)
-        Organization.send(name) || Fabricate(name)
       end
     end
   end
@@ -178,31 +174,6 @@ RSpec.configure do |config|
       self.setup_entity(method) || super
     else
       super
-    end
-  end
-
-  def clean_manually
-    BankAccount.delete_all
-    Organization.delete_all
-    Contract::Tariff.delete_all
-    Contract::Payment.delete_all
-    Contract::Base.delete_all
-    User.delete_all
-    Register::Base.delete_all
-    Group::Base.delete_all
-    Broker::Base.delete_all
-    Meter::Base.delete_all
-    Billing.delete_all
-    BillingCycle.delete_all
-    Mongoid.purge!
-  end
-
-  def clean_database
-    if Register::Base.count + Group::Base.count + Broker::Base.count + Meter::Base.count + Reading.count > 0
-      warn '-' * 80
-      warn 'DB cleaner failed - cleaning manually'
-      warn '-' * 80
-      clean_manually
     end
   end
 

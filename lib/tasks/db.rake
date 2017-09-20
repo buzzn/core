@@ -1,11 +1,3 @@
-Rake::Task["db:structure:load"].enhance do
-  require 'buzzn/db'
-  db = Buzzn::DB
-  if db[:account_statuses].count == 0
-    db[:account_statuses].import([:id, :name], [[1, 'Unverified'], [2, 'Verified'], [3, 'Closed']])
-  end
-end
-
 Rake::Task["db:migrate"].enhance do
 
   Sequel.extension :migration
