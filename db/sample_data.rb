@@ -16,6 +16,8 @@ def user_with_register
   return user, register
 end
 
+puts '-- seed sample data --'
+
 buzzn_team_names = %w[ felix justus danusch thomas stefan philipp christian kristian pavel eva ralf ]
 buzzn_team = []
 buzzn_team_names.each do |user_name|

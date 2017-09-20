@@ -1,9 +1,8 @@
 # Contains Base configuration and data for a new system.
 # Don't add sample data here, add it to sample_data.rb.
 
-puts '-- seed development database --'
+puts '-- seed base system data --'
 
-puts '  organizations'
 Fabricate(:buzzn_energy)
 Fabricate(:dummy_energy)
 Fabricate(:germany)
@@ -32,5 +31,8 @@ Fabricate(:mysmartgrid)
 Fabricate(:energy_mix_germany)
 Fabricate(:energy_mix_buzzn)
 
+[[1, 'Unverified'], [2, 'Verified'], [3, 'Closed']].each do |id, name|
+  Account::Status.create!(id: id, name: name)
+end
 
 require_relative 'sample_data'
