@@ -1,7 +1,7 @@
 # we can not have nested transactions on AR connection and use Sequel at the
 # same time as it does not see the entities from AR connection
 describe Me::Roda, :skip_nested do
-  
+
   def app
     Me::Roda # this defines the active application for this test
   end
@@ -21,7 +21,6 @@ describe Me::Roda, :skip_nested do
     Account::LoginChangeKey.delete_all
     Account::Base.delete_all
     Person.delete_all
-    Organization.delete_all
   end
 
   entity(:password) { 'Example123' }
@@ -294,7 +293,7 @@ describe Me::Roda, :skip_nested do
         ]
       }
     end
-    
+
     let(:invalid_password_json) do
       {
         "errors"=>[
@@ -316,7 +315,7 @@ describe Me::Roda, :skip_nested do
       expect(response).to have_http_status(422)
       expect(json).to eq no_matching_passwords_json
 
-      
+
       POST '/reset-password', nil,
            key: "#{user.id}_#{key}",
            password: user.password,
@@ -337,7 +336,7 @@ describe Me::Roda, :skip_nested do
       POST '/logout', user
       expect(response).to have_http_status(200)
       $authorizations[user.id] = response['Authorization']
-      
+
       GET '', user
       expect(response).to have_http_status(403)
       $authorizations.delete(user.id)

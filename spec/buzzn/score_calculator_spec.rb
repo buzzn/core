@@ -70,7 +70,7 @@ describe Buzzn::ScoreCalculator do
       subject.calculate_closeness_scores
       expect(Score.count).to eq 3
       Score.all.each do |score|
-        expect(score.value).to eq -1.0
+        expect(score.value).to eq(-1.0)
         expect(score.mode).to eq 'closeness'
       end
     end
@@ -187,7 +187,7 @@ describe Buzzn::ScoreCalculator do
       end
     end
 
-    it 'calculates sufficiency' do |spec|
+    it 'calculates sufficiency', retry: 3 do |spec|
       VCR.use_cassette("lib/#{spec.metadata[:description].downcase}") do
         subject.calculate_sufficiency_scores
         expect(Score.count).to eq 3
