@@ -59,10 +59,6 @@ Sequel.migration do
       foreign_key :id, :accounts, :primary_key=>true, :type=>:Bignum
       DateTime :changed_at, :null=>false, :default=>Sequel::CURRENT_TIMESTAMP
     end
-
-    # NOTE the PG_USER is for codeship
-    user = ENV['PG_USER'] || get{Sequel.lit('current_user')} + '_password'
-    run "GRANT REFERENCES ON accounts TO #{user}" rescue raise("execute: createuser -U postgres #{user}")
   end
 
   down do
