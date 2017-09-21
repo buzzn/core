@@ -10,8 +10,7 @@ describe Me, :skip_nested do
   login_path '/api/me/login'
 
   entity!(:account) { Proc.new { @a ||= Fabricate(:user) } }
-
-  entity(:person) { account.person }
+  entity!(:account_change_login) { Proc.new { @b ||= Fabricate(:user) } }
 
   after :all do
     Role.delete_all
@@ -47,7 +46,7 @@ describe Me, :skip_nested do
     schema 'reset_password', []
   end
 
-  post '/change-login', account, status: 200, description: 'change login key sent via email' do
+  post '/change-login', account_change_login, status: 200, description: 'change login key sent via email' do
     description 'change login and verify with key'
     schema 'change_login', [{"parameter"=>"password", "detail"=>"invalid password"}]
   end
