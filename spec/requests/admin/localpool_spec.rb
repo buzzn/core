@@ -116,6 +116,8 @@ describe Admin::LocalpoolRoda do
 
       GET "?include=", admin
       expect(response).to have_http_status(200)
+      expect(json.keys).to match_array ['array', 'createable']
+      expect(json['createable']).to eq true
       expect(sort(json['array'])).to eq sort(localpools_json)
     end
   end
