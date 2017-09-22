@@ -1,5 +1,5 @@
 # coding: utf-8
-describe Display::GroupPermissions do
+describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
 
   entity(:admin) { Fabricate(:admin) }
   entity(:manager) { Fabricate(:user) }

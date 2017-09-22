@@ -1,5 +1,4 @@
-# coding: utf-8
-describe PersonPermissions do
+describe "#{Buzzn::Permission} - #{PersonResource}" do
 
   entity(:admin) { Fabricate(:admin) }
   entity!(:me) do

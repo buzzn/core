@@ -1,5 +1,4 @@
-# coding: utf-8
-describe Admin::LocalpoolPermissions do
+describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
   def update(object)
     object.update(updated_at: object.object.updated_at)
