@@ -28,8 +28,8 @@ describe Buzzn::Types::ZipPrice do
     expect(zip_price.unit_cents_netto).to eq unit_price
     expect(zip_price.yearly_euro_netto).to eq price.measurement_euro_year_et + price.baseprice_euro_year_et
 
-    expect(zip_price.baseprice_cents_per_month).to eq ((price.measurement_euro_year_et + price.baseprice_euro_year_et) * 100).to_i
-    expect(zip_price.energyprice_cents_per_kilowatt_hour).to eq (unit_price * 12).to_i
+    expect(zip_price.baseprice_cents_per_month).to eq ((price.measurement_euro_year_et + price.baseprice_euro_year_et) * 100).round.to_i
+    expect(zip_price.energyprice_cents_per_kilowatt_hour).to eq (unit_price * 12).round.to_i
     expect(zip_price.total_cents_per_month).to eq ((price.measurement_euro_year_et + price.baseprice_euro_year_et) * 100 + unit_price).round.to_i
   end
 
@@ -41,8 +41,8 @@ describe Buzzn::Types::ZipPrice do
     expect(zip_price.unit_cents_netto).to eq unit_price
     expect(zip_price.yearly_euro_netto).to eq price.measurement_euro_year_dt + price.baseprice_euro_year_dt
 
-    expect(zip_price.baseprice_cents_per_month).to eq ((price.measurement_euro_year_dt + price.baseprice_euro_year_dt) * 100).to_i
-    expect(zip_price.energyprice_cents_per_kilowatt_hour).to eq (unit_price * 12).to_i
+    expect(zip_price.baseprice_cents_per_month).to eq ((price.measurement_euro_year_dt + price.baseprice_euro_year_dt) * 100).round.to_i
+    expect(zip_price.energyprice_cents_per_kilowatt_hour).to eq (unit_price * 12).round.to_i
     expect(zip_price.total_cents_per_month).to eq ((price.measurement_euro_year_dt + price.baseprice_euro_year_dt) * 100 + unit_price).round.to_i
   end
 
@@ -54,8 +54,8 @@ describe Buzzn::Types::ZipPrice do
     expect(zip_price.unit_cents_netto).to eq unit_price
     expect(zip_price.yearly_euro_netto).to eq price.baseprice_euro_year_et
 
-    expect(zip_price.baseprice_cents_per_month).to eq (price.baseprice_euro_year_et * 100).to_i
-    expect(zip_price.energyprice_cents_per_kilowatt_hour).to eq (unit_price * 12).to_i
+    expect(zip_price.baseprice_cents_per_month).to eq (price.baseprice_euro_year_et * 100).round.to_i
+    expect(zip_price.energyprice_cents_per_kilowatt_hour).to eq (unit_price * 12).round.to_i
     expect(zip_price.total_cents_per_month).to eq (price.baseprice_euro_year_et * 100 + unit_price).round.to_i
   end
 end
