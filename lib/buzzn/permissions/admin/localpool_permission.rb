@@ -69,6 +69,13 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
     update :managers
     delete :none
 
+    address do
+      create :managers
+      retrieve :managers
+      update :managers
+      delete :managers
+    end
+
     register do
       create :none
       retrieve :managers_contract

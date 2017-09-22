@@ -12,6 +12,8 @@ module Contract
 
     belongs_to :register, class_name: Register::Base
 
+    has_one :address, as: :addressable
+
     validates :register, presence: false
     validates :localpool, presence: false
     validates :begin_date, presence: true

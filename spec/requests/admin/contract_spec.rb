@@ -55,7 +55,8 @@ describe Admin::LocalpoolRoda do
       Fabricate(:metering_point_operator_contract,
                 localpool: localpool,
                 contractor: organization,
-                customer: person)
+                customer: person,
+                address: Fabricate(:address))
     end
 
     entity(:localpool_power_taker_contract) do
@@ -260,6 +261,18 @@ describe Admin::LocalpoolRoda do
           "deletable"=>false,
           "begin_date"=>contract.begin_date.to_s,
           "metering_point_operator_name"=>contract.metering_point_operator_name,
+          'address' => {
+            "id"=>contract.address.id,
+            "type"=>"address",
+            'updated_at'=>contract.address.updated_at.as_json,
+            "street"=>contract.address.street,
+            "city"=>contract.address.city,
+            "state"=>contract.address.attributes['state'],
+            "zip"=>contract.address.zip,
+            "country"=>contract.address.attributes['country'],
+            "updatable"=>true,
+            "deletable"=>true
+          },
           "tariffs"=>{
             'array'=>[
               {
@@ -349,7 +362,7 @@ describe Admin::LocalpoolRoda do
           let(:contract_json) { send "#{type}_contract_json" }
 
           it '200' do
-            GET "/#{localpool.id}/contracts/#{contract.id}", admin, include: 'tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register'
+            GET "/#{localpool.id}/contracts/#{contract.id}", admin, include: 'address,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end

@@ -6,5 +6,6 @@ module Contract
     attributes  :begin_date,
                 :metering_point_operator_name
 
+    has_one :address
   end
 end
