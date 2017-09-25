@@ -34,6 +34,10 @@ module Admin
           update_localpool.call(r.params, resource: [localpool])
         end
 
+        r.patch! do
+          update_localpool.call(r.params, resource: [localpool])
+        end
+
         r.on 'contracts' do
           r.run ContractRoda
         end
