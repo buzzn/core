@@ -3,7 +3,7 @@ module ActiveRecordSequelMigrationsAdapter
     config = ActiveRecord::Base.connection_config.dup
     # NOTE the PG_USER is for codeship
     config[:user] = config[:username] || ENV['PG_USER'] || ENV['USER']
-    config.slice(:user, :password, :port, :database)
+    config.slice(:host, :user, :password, :port, :database)
   end
 
   def run_sequel_migration(number)
