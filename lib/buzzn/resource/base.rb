@@ -113,12 +113,15 @@ module Buzzn::Resource
         enum = all_allowed(user, [], permissions.retrieve, model.all)
         unbound = [:anonymous]
         unbound += user.unbound_rolenames if user
-        Buzzn::Resource::Collection.new(enum,
-                                        (clazz || self).method(:to_resource),
-                                        user,
-                                        unbound,
-                                        permissions,
-                                        clazz || self)
+        to_resource = (clazz || self).method(:to_resource)
+        result = Buzzn::Resource::Collection.new(enum,
+                                                 to_resource,
+                                                 user,
+                                                 unbound,
+                                                 permissions,
+                                                 clazz || self)
+        result['createable'] = allowed?(unbound, permissions.create)
+        result
       end
 
       def to_resource(user, roles, permissions, instance, clazz = nil)

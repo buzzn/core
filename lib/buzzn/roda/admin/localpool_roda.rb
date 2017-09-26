@@ -5,23 +5,38 @@ module Admin
     PARENT = :localpool
 
     include Import.args[:env,
-                        'transaction.charts']
+                        'transaction.charts',
+                        'transaction.create_localpool',
+                        'transaction.update_localpool']
 
     plugin :shared_vars
     plugin :aggregation
+    plugin :created_deleted
 
     route do |r|
 
       localpools = LocalpoolResource.all(current_user)
 
-      r.root do
+      r.get! do
         rodauth.check_session_expiration
         localpools
+      end
+
+      r.post! do
+        rodauth.check_session_expiration
+        created do
+          create_localpool.call(r.params,
+                                resource: [localpools.method(:create)])
+        end
       end
 
       r.on :id do |id|
 
         shared[PARENT] = localpool = localpools.retrieve(id)
+
+        r.patch! do
+          update_localpool.call(r.params, resource: [localpool])
+        end
 
         r.on 'registers' do
           shared[:registers] = localpool.registers
