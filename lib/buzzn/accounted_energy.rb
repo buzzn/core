@@ -18,7 +18,7 @@ module Buzzn
     CONSUMPTION_THIRD_PARTY = "consumption_third_party"
 
     SINGLE_LABELS = [DEMARCATION_PV,
-                     DEMARCATION_CHP, 
+                     DEMARCATION_CHP,
                      GRID_CONSUMPTION,
                      GRID_FEEDING,
                      GRID_CONSUMPTION_CORRECTED,
