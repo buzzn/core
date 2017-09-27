@@ -83,7 +83,7 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    load 'db/spec_seeds.rb'
+    load 'db/seeds/setup_data_specs.rb'
   end
 
   config.before(:context) do

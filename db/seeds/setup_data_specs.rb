@@ -1,6 +1,6 @@
-require_relative 'common_seeds'
+require_relative 'setup_data_common'
 
-puts "-- seeding spec seeds"
+puts "seeds: loading spec setup data"
 Organization.delete_all
 Fabricate(:dummy)
 Fabricate(:dummy_energy)
