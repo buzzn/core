@@ -12,7 +12,7 @@ class RegisterRoda < BaseRoda
     registers = shared[:registers]
 
     r.get! do
-      rodauth.check_session_expiration
+      #rodauth.check_session_expiration
       registers
     end
 
@@ -21,7 +21,7 @@ class RegisterRoda < BaseRoda
       register = registers.retrieve(id)
 
       r.get! do
-        rodauth.check_session_expiration
+        #rodauth.check_session_expiration
         register
       end
 
