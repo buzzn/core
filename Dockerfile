@@ -14,7 +14,7 @@ RUN apt-get update && \
     apt-get install -y \
     build-essential \
     imagemagick \
-    nodejs \
+    nodejs
     vim \
     wget
 
