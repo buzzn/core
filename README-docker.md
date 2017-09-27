@@ -35,13 +35,18 @@ Before running the stack with docker for the first time, run these commands:
 
 #### Running tests
 
-`docker exec -e RAILS_ENV=test -it core_web_1 rspec`
+`docker exec -e RAILS_ENV=test core_web_1 rspec`
 
 #### Run tests constantly with guard
 
-`docker exec -e RAILS_ENV=test -it core_web_1 guard`
+`docker exec -e RAILS_ENV=test core_web_1 guard`
 
 Note: right now guard doesn't work properly, it doesn't start on file changes. Whether running the app in docker or on "bare metal".
+
+#### Open a shell in the Rails/web container
+
+`docker exec -it core_web_1 /bin/bash`
+
 
 #### Rebuild container after changes
 
