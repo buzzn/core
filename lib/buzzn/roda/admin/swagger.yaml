@@ -8,12 +8,34 @@ basePath: "/api/admin"
 paths:
   "/localpools":
     get:
-      description: return all public localpools
+      description: return all localpools
       produces:
       - application/json
       responses:
         200:
           description: success
+    post:
+      description: creates localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: name
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: description
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_id}":
     get:
       description: returns the localpool
@@ -27,6 +49,37 @@ paths:
       responses:
         200:
           description: success
+    patch:
+      description: updates the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: description
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/billing-cycles":
     get:
       description: returns all the billing-cycles of the localpool
@@ -1480,6 +1533,22 @@ paths:
         in: path
         required: true
         type: string
+      responses:
+        200:
+          description: success
+  "/organizations":
+    get:
+      description: return all organizations
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success
+  "/persons":
+    get:
+      description: return all persons
+      produces:
+      - application/json
       responses:
         200:
           description: success
