@@ -6,7 +6,11 @@
 #                          installed the spring binstubs per the docs)
 #  * zeus: 'zeus rspec' (requires the server to be started separately)
 #  * 'just' rspec: 'rspec'
+<<<<<<< HEAD
 guard :rspec, cmd: "rspec -f doc" do
+=======
+guard :rspec, cmd: "time rspec -f doc" do
+>>>>>>> Update Guardfile with a recent one generated with `guard init rspec`.
 
   require "guard/rspec/dsl"
   dsl = Guard::RSpec::Dsl.new(self)
