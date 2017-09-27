@@ -10,12 +10,10 @@ module Buzzn
         Buzzn::GeneralError => 404
       }
 
-      def self.new
-        super do |e|
+      def self.new(logger: Logger.new(self))
+        super() do |e|
           response.status = ERRORS[e.class] || 500
           response['Content-Type'] = 'application/json'
-          puts "#{e.message}\n\t" + e.backtrace.join("\n\t") if response.status == 500
-          title = e.class.to_s.sub(/.*::/, '').underscore.split(/_/).collect{|c| c.capitalize}.join(' ')
 
           case e
           when Buzzn::ValidationError
@@ -26,10 +24,16 @@ module Buzzn
               end
             end
             errors = "{\"errors\":[#{errs.join(',')}]}"
+            logger.debug{ errors.to_s }
           when Buzzn::PermissionDenied, Buzzn::RecordNotFound, Buzzn::StaleEntity
             errors = "{\"errors\":[{\"detail\":\"#{e.message}\"}]}"
+            logger.info{ errors.to_s }
           else
+            logger.info{ "#{e.message}\n\t" + e.backtrace.join("\n\t")}
             errors = "{\"errors\":[{\"detail\":\"internal server error\"}]}"
+          end
+          if response.status == 500
+          else
           end
           response.write(errors)
         end
