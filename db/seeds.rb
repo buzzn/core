@@ -3,7 +3,7 @@
 
 require_relative 'common_seeds'
 
-puts '-- seed base system data --'
+puts '-- seed setup data --'
 
 Fabricate(:buzzn_energy)
 Fabricate(:dummy_energy)

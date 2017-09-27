@@ -1,5 +1,4 @@
 .git
-.env*
 log
 docs
 README-docker.md
@@ -12,4 +11,4 @@ tmp/*
 public/uploads/*
 docker-compose.yml
 Dockerfile
-Dockerfile.develop
+Dockerfile.development
