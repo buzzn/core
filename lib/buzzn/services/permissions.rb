@@ -22,7 +22,7 @@ module Buzzn::Services
     end
     
     configure do |config|
-      config.resolver = Resolver.new(config)  
+      config.resolver = Resolver.new(config)
     end
   end
 end

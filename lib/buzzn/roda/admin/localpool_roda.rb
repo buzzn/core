@@ -5,33 +5,36 @@ module Admin
     PARENT = :localpool
 
     include Import.args[:env,
-                        'transaction.charts']
+                        'transaction.charts',
+                        'transaction.create_localpool',
+                        'transaction.update_localpool']
 
     plugin :shared_vars
     plugin :aggregation
+    plugin :created_deleted
 
     route do |r|
 
       localpools = LocalpoolResource.all(current_user)
 
-      r.root do
-        rodauth.check_session_expiration
-        localpools
-      end
-
       r.on :id do |id|
 
         shared[PARENT] = localpool = localpools.retrieve(id)
 
+        # NOTE: registers does not check on session expiration
+        #       as it is used by bubbles and charts
         r.on 'registers' do
           shared[:registers] = localpool.registers
           r.run ::RegisterRoda
         end
 
-        rodauth.check_session_expiration
+        #rodauth.check_session_expiration
+
+        r.patch! do
+          update_localpool.call(r.params, resource: [localpool])
+        end
 
         r.on 'contracts' do
-          rodauth.check_session_expiration
           r.run ContractRoda
         end
 
@@ -84,6 +87,19 @@ module Admin
           aggregated(localpool.bubbles)
         end
 
+      end
+
+      #rodauth.check_session_expiration
+
+      r.get! do
+        localpools
+      end
+
+      r.post! do
+        created do
+          create_localpool.call(r.params,
+                                resource: [localpools.method(:create)])
+        end
       end
     end
   end

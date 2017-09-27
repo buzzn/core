@@ -1,6 +1,8 @@
 require 'sequel'
 class CoreRoda < Roda
 
+  use Rack::CommonLogger, Logger.new(STDERR)
+
   use Rack::Session::Cookie, :secret => ENV['SECRET'] || 'my secret', :key => '_buzzn_session'
 
   use Rack::Cors, debug: Rails.env != 'production'  do

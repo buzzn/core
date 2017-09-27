@@ -116,9 +116,140 @@ describe Admin::LocalpoolRoda do
 
       GET "?include=", admin
       expect(response).to have_http_status(200)
+      expect(json.keys).to match_array ['array', 'createable']
+      expect(json['createable']).to eq true
       expect(sort(json['array'])).to eq sort(localpools_json)
     end
   end
+
+  context 'POST' do
+
+    let(:wrong_json) do
+      {
+        "errors"=>[
+          {"parameter"=>"name",
+           "detail"=>"size cannot be greater than 64"},
+          {"parameter"=>"description",
+           "detail"=>"size cannot be greater than 256"}
+        ]
+      }
+    end
+
+    it '422' do
+      POST "", admin,
+           name: 'Some Name' * 10,
+           description: 'rain rain go away, come back again another day' * 100
+      expect(json.to_yaml).to eq wrong_json.to_yaml
+      expect(response).to have_http_status(422)
+    end
+
+    let(:created_json) do
+      {
+        'type' => 'group_localpool',
+        'name' => 'suPer Duper',
+        'slug' => 'super-duper',
+        'description' => 'superduper localpool location on the dark side of the moon',
+        'updatable'=>true,
+        'deletable'=>true 
+      }
+    end
+
+    let(:new_localpool) do
+      json = created_json.dup
+      json.delete('type')
+      json.delete('updatable')
+      json.delete('deletable')
+      json
+    end
+
+    it '201' do
+      POST "", admin, new_localpool
+
+      expect(response).to have_http_status(201)
+      result = json
+      id = result.delete('id')
+      expect(result.delete('updated_at')).not_to be_nil
+      expect(Group::Localpool.find(id)).not_to be_nil
+      expect(result.to_yaml).to eq created_json.to_yaml
+    end
+  end
+
+  context 'PATCH' do
+
+    let(:wrong_json) do
+      {
+        "errors"=>[
+          {"parameter"=>"updated_at",
+           "detail"=>"is missing"},
+          {"parameter"=>"name",
+           "detail"=>"size cannot be greater than 64"},
+          {"parameter"=>"description",
+           "detail"=>"size cannot be greater than 256"}
+        ]
+      }
+    end
+
+    let(:stale_json) do
+      {
+        "errors" => [
+          {"detail"=>"Group::Localpool: #{localpool.id} was updated at: #{localpool.updated_at}"}]
+      }
+    end
+
+    let(:updated_json) do
+      {
+        "id"=>localpool.id,
+        "type"=>"group_localpool",
+        "name"=>"a b c d",
+        "slug" => 'a-b-c-d',
+        "description"=>'none',
+        "updatable"=>true,
+        "deletable"=>true
+      }
+    end
+
+    it '404' do
+      PATCH "/bla-blub", admin
+      expect(response).to have_http_status(404)
+      expect(json).to eq not_found_json
+    end
+
+    it '409' do
+      PATCH "/#{localpool.id}", admin,
+            updated_at: DateTime.now
+
+      expect(response).to have_http_status(409)
+      expect(json.to_yaml).to eq stale_json.to_yaml
+    end
+
+      it '422' do
+        PATCH "/#{localpool.id}", admin,
+              name: 'NoName' * 20,
+              description: 'something' * 100
+
+        expect(response).to have_http_status(422)
+        expect(json.to_yaml).to eq wrong_json.to_yaml
+      end
+
+      it '200' do
+        old = localpool.updated_at
+        PATCH "/#{localpool.id}", admin,
+              updated_at: localpool.updated_at,
+              name: 'a b c d',
+              description: 'none'
+        
+        expect(response).to have_http_status(200)
+        localpool.reload
+        expect(localpool.name).to eq 'a b c d'
+        expect(localpool.description).to eq 'none'
+
+        result = json
+        # TODO fix it: our time setup does not allow
+        #expect(result.delete('updated_at')).to be > old.as_json
+        expect(result.delete('updated_at')).not_to eq old.as_json
+        expect(result.to_yaml).to eq updated_json.to_yaml
+       end
+    end
 
   context 'localpool-processing-contract' do
 
