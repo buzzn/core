@@ -26,6 +26,11 @@ module Group
       Contract::Localpool.joins(:localpool).where(localpool: base)
     end
 
+    scope :contracts, -> (base = nil) {
+      base ||= where('1=1') # take the complete set
+      Contract::Localpool.joins(:localpool).where(localpool: base)
+    }
+
     def persons
       self.class.persons(self)
     end
@@ -46,7 +51,7 @@ module Group
                        .select(1)
                        .exists
       Person.where(localpool_users.or(contract_users))
-    end
+    }
 
     def organizations
       self.class.organizations(contracts)
@@ -56,7 +61,7 @@ module Group
       Organization.where(base.where('contracts.customer_id = organizations.id or contracts.contractor_id = organizations.id')
                   .select(1)
                   .exists)
-    end
+    }
 
     def meters
       Meter::Base.where(id: registers.select(:meter_id))
