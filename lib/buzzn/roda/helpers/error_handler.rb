@@ -32,9 +32,6 @@ module Buzzn
             logger.info{ "#{e.message}\n\t" + e.backtrace.join("\n\t")}
             errors = "{\"errors\":[{\"detail\":\"internal server error\"}]}"
           end
-          if response.status == 500
-          else
-          end
           response.write(errors)
         end
       end
