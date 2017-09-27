@@ -6,7 +6,7 @@
 #                          installed the spring binstubs per the docs)
 #  * zeus: 'zeus rspec' (requires the server to be started separately)
 #  * 'just' rspec: 'rspec'
-guard :rspec, cmd: "time rspec -f doc" do
+guard :rspec, cmd: "rspec -f doc" do
 
   require "guard/rspec/dsl"
   dsl = Guard::RSpec::Dsl.new(self)
