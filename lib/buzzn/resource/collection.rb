@@ -12,6 +12,10 @@ module Buzzn::Resource
       @meta = {}
     end
 
+    def objects
+      @enum
+    end
+
     def current_roles(id)
       @unbound_roles | (@current_user ? @current_user.uuids_to_rolenames.fetch(id, []) : [])
     end
