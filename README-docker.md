@@ -52,6 +52,18 @@ Note: right now guard doesn't work properly, it doesn't start on file changes. W
 
 Run `docker-compose up --build`. That is usually only required when changing the `Gemfile` or the `Dockerfile`.
 
+#### Starting the sidekiq worker
+
+This starts the worker inside the Rails application container:
+
+`docker exec -it core_web_1 bundle exec sidekiq`
+
+#### Starting clockwork (cron replacement)
+
+This starts the worker inside the Rails application container:
+
+`docker exec -it core_web_1 bundle exec clockwork config/clock.rb`
+
 #### Create Release Image
 
 - the fast way: 
