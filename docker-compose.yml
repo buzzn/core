@@ -36,7 +36,7 @@ services:
       - core_staging_public:/core/public
 
   postgres:
-    image: postgres:9.4.12-alpine
+    image: postgres:9.6.5-alpine
     ports:
       - "5432"
     environment:
