@@ -39,12 +39,14 @@ class BaseRoda < Roda
 
   plugin :rodauth, csrf: false do
   
-    enable :session_expiration
+    enable :session_expiration, :jwt
 
     session_expiration_redirect nil
     session_inactivity_timeout 900 # 15 minutes
     max_session_lifetime 86400 # 1 day
 
     db Buzzn::DB
+
+    jwt_secret (ENV['JWT_SECRET'] || raise('missing JWT_SECRET in env'))
   end
 end

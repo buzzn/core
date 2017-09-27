@@ -69,13 +69,12 @@ module Buzzn
 
     config.x.templates_path = Rails.root.join('app', 'pdfs')
 
-    config.logger = Logger.new(STDOUT)
-    config.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
-    config.log_level = ENV['LOG_LEVEL'] || 'info'
-
     config.after_initialize do
       # setup service components, transactions
-      Buzzn::Logger.root = Rails.logger
+      Buzzn::Logger.root = ::Logger.new(STDOUT).tap do |logger|
+        logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
+        logger.level = ENV['LOG_LEVEL'] || 'debug'
+      end
       Buzzn::Boot::Init.run
     end
 
