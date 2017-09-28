@@ -85,7 +85,6 @@ gem 'remote_lock'
 gem 'fabrication'
 gem 'dotenv-rails'
 
-
 group :production, :staging do
   gem 'newrelic_rpm'
 end
@@ -94,7 +93,11 @@ group :development, :test do
   gem 'brakeman', :require => false
   gem 'lol_dba'
   gem 'listen'
-  gem 'launchy'
+  gem 'guard'
+  gem 'guard-livereload'
+  gem 'guard-bundler'
+  gem 'guard-brakeman'
+  gem 'guard-rspec'
 end
 
 group :development do
@@ -111,11 +114,6 @@ group :test do
   gem 'pry-stack_explorer'
   gem 'rspec-rails'
   gem 'email_spec'
-  gem 'guard'
-  gem 'guard-livereload'
-  gem 'guard-bundler'
-  gem 'guard-brakeman'
-  gem 'guard-rspec'
   gem 'timecop'
   gem 'rspec-retry'
   gem 'webmock'
