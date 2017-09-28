@@ -6,4 +6,9 @@ Fabricator :new_bank_account, class_name: "BankAccount" do
   bank_name               "GLS Bank"
   direct_debit            true
   contracting_party       { Fabricate(:new_person) }
+
+  before_create do |account, _transients|
+    # this works for both Person and Organization
+    account.holder = account.contracting_party.name if account.contracting_party
+  end
 end

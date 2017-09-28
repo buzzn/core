@@ -20,6 +20,20 @@ describe "Fabricators produce valid records" do
     subject { Fabricate(:new_bank_account) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:contracting_party, Person) }
+    it "sets the holder to the name of the contracting_party's account" do
+      expect(subject.holder).to eq(subject.contracting_party.name)
+    end
+  end
+
+  context "Contract" do
+    subject { Fabricate(:new_contract) }
+    it { is_expected.to be_valid }
+    it { is_expected.to have_association(:localpool, Group::Localpool) }
+    # TODO make this an organization
+    # it { is_expected.to have_association(:contractor, Person) }
+    it { is_expected.to have_association(:contractor_bank_account, BankAccount) }
+    it { is_expected.to have_association(:customer, Person) }
+    it { is_expected.to have_association(:customer_bank_account, BankAccount) }
   end
 
   context "Device" do
@@ -53,6 +67,11 @@ describe "Fabricators produce valid records" do
       expect(meter.registers).to eq([register])
       expect(meter).to be_valid
     end
+  end
+
+  context "Payment" do
+    subject { Fabricate(:new_payment) }
+    it { is_expected.to be_valid }
   end
 
   context "Person" do
