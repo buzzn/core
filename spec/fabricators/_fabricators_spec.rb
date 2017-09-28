@@ -69,6 +69,12 @@ describe "Fabricators produce valid records" do
     end
   end
 
+  context "Organization" do
+    subject { Fabricate(:new_organization) }
+    it { is_expected.to be_valid }
+    it { is_expected.to have_association(:contact, Person) }
+  end
+
   context "Payment" do
     subject { Fabricate(:new_payment) }
     it { is_expected.to be_valid }
