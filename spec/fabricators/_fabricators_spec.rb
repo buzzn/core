@@ -1,5 +1,11 @@
 describe "Fabricators produce valid records" do
 
+  matcher :have_association do |association_accessor, association_klass|
+    match do |actual|
+      actual.send(association_accessor).instance_of?(association_klass)
+    end
+  end
+
   context "Address" do
     subject { Fabricate(:new_address) }
     it { is_expected.to be_valid }
@@ -13,28 +19,20 @@ describe "Fabricators produce valid records" do
   context "Bank account" do
     subject { Fabricate(:new_bank_account) }
     it { is_expected.to be_valid }
-    it "has a contracting party" do
-      expect(subject.contracting_party).to be_instance_of(Person)
-    end
+    it { is_expected.to have_association(:contracting_party, Person) }
   end
 
   context "Device" do
     subject { Fabricate(:new_device) }
     it { is_expected.to be_valid }
-    it "has a register" do
-      expect(subject.register).to be_instance_of(Register::Input)
-    end
+    it { is_expected.to have_association(:register, Register::Input) }
   end
 
   context "FormulaPart" do
     subject { Fabricate(:new_formula_part) }
     it { is_expected.to be_valid }
-    it "has a register" do
-      expect(subject.register).to be_instance_of(Register::Input)
-    end
-    it "has an operand" do
-      expect(subject.operand).to be_instance_of(Register::Input)
-    end
+    it { is_expected.to have_association(:register, Register::Input) }
+    it { is_expected.to have_association(:operand, Register::Input) }
   end
 
   context "Localpool" do
@@ -45,9 +43,7 @@ describe "Fabricators produce valid records" do
   context "Meter::Real" do
     subject { Fabricate(:new_meter_real) }
     it { is_expected.to be_valid }
-    it "has a group" do
-      expect(subject.group).to be_instance_of(Group::Localpool)
-    end
+    it { is_expected.to have_association(:group, Group::Localpool) }
     it "has a register" do
       expect(subject.registers.first).to be_instance_of(Register::Input)
     end
@@ -62,9 +58,7 @@ describe "Fabricators produce valid records" do
   context "Person" do
     subject { Fabricate(:new_person) }
     it { is_expected.to be_valid }
-    it "has an address" do
-      expect(subject.address).to be_instance_of(Address)
-    end
+    it { is_expected.to have_association(:address, Address) }
   end
 
   context "Reading" do
@@ -75,12 +69,8 @@ describe "Fabricators produce valid records" do
   context "Register::Input" do
     subject { Fabricate(:new_register_input) }
     it { is_expected.to be_valid }
-    it "has a group" do
-      expect(subject.group).to be_instance_of(Group::Localpool)
-    end
-    it "has a meter" do
-      expect(subject.meter).to be_instance_of(Meter::Real)
-    end
+    it { is_expected.to have_association(:group, Group::Localpool) }
+    it { is_expected.to have_association(:meter, Meter::Real) }
     it "can override meter" do
       meter    = Fabricate(:new_meter_real)
       register = Fabricate(:new_register_input, meter: meter)
