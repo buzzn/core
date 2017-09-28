@@ -26,6 +26,17 @@ describe "Fabricators produce valid records" do
     end
   end
 
+  context "FormulaPart" do
+    subject { Fabricate(:new_formula_part) }
+    it { is_expected.to be_valid }
+    it "has a register" do
+      expect(subject.register).to be_instance_of(Register::Input)
+    end
+    it "has an operand" do
+      expect(subject.operand).to be_instance_of(Register::Input)
+    end
+  end
+
   context "Localpool" do
     subject { Fabricate(:new_localpool) }
     it { is_expected.to be_valid }
