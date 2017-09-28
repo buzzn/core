@@ -56,6 +56,11 @@ describe "Fabricators produce valid records" do
     end
   end
 
+  context "Reading" do
+    subject { Fabricate(:new_reading) }
+    it { is_expected.to be_valid }
+  end
+
   context "Register::Input" do
     subject { Fabricate(:new_register_input) }
     it { is_expected.to be_valid }
