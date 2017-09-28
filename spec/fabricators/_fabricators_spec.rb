@@ -1,5 +1,23 @@
 describe "Fabricators produce valid records" do
 
+  context "Address", :focus do
+    subject { Fabricate(:new_address) }
+    it { is_expected.to be_valid }
+  end
+
+  context "Person", :focus do
+    subject { Fabricate(:new_person) }
+    it { is_expected.to be_valid }
+    it "has an address" do
+      expect(subject.address).to be_instance_of(Address)
+    end
+  end
+
+  context "Bank account" do
+    subject { Fabricate(:new_bank_account) }
+    it { is_expected.to be_valid }
+  end
+
   context "Device" do
     subject { Fabricate(:new_device) }
     it { is_expected.to be_valid }
