@@ -162,7 +162,7 @@ module Meter
     end
 
     scope :real,      -> {where(type: Real)}
-    scope :virtual,   -> {where(type: Virtual)}    
+    scope :virtual,   -> {where(type: Virtual)}
     scope :restricted, ->(uuids) { joins(registers: :contracts).where('contracts.id': uuids) }
 
     def name
