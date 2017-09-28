@@ -3,8 +3,7 @@ Fabricator(:new_device, class_name: 'Device') do
   manufacturer_product_name         "Generic product"
   manufacturer_product_serialnumber "47-11"
   mode                              "OUT"
-  # TODO add register fabricator
-  # register
+  register                          { Fabricate(:new_register_input) }
   law                               "KWKG"
   category                          "Generic category"
   primary_energy                    Device::NATURAL_GAS
