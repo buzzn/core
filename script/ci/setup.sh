@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
-
-echo "Hello world from setup"
+# Run the following commands in the CI shell process with:
+# source script/ci/setup.sh
 
 # for using custom mongodb version
 curl -sSL https://raw.githubusercontent.com/codeship/scripts/master/packages/mongodb.sh | bash -s
