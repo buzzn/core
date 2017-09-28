@@ -1,8 +1,6 @@
 module Meter
   class Real < Base
 
-    MUST_HAVE_AT_LEAST_ONE = 'must have at least one register'
-
     has_many :registers, class_name: Register::Real, foreign_key: :meter_id
     validates_associated :registers
 
@@ -43,9 +41,7 @@ module Meter
     end
 
     def validate_invariants
-      if registers.size == 0
-        errors.add(:registers, MUST_HAVE_AT_LEAST_ONE)
-      end
+      errors.add(:registers, 'must have at least one register') if registers.empty?
       errors.add(:registers, 'must be all none virtual') if registers.detect { |r| r.is_a? Register::Virtual }
     end
 
