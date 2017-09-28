@@ -1,11 +1,11 @@
 describe "Fabricators produce valid records" do
 
-  context "Address", :focus do
+  context "Address" do
     subject { Fabricate(:new_address) }
     it { is_expected.to be_valid }
   end
 
-  context "Person", :focus do
+  context "Person" do
     subject { Fabricate(:new_person) }
     it { is_expected.to be_valid }
     it "has an address" do
@@ -16,6 +16,9 @@ describe "Fabricators produce valid records" do
   context "Bank account" do
     subject { Fabricate(:new_bank_account) }
     it { is_expected.to be_valid }
+    it "has a contracting party" do
+      expect(subject.contracting_party).to be_instance_of(Person)
+    end
   end
 
   context "Device" do
