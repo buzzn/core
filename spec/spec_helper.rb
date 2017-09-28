@@ -189,4 +189,8 @@ RSpec.configure do |config|
   # show exception that triggers a retry if verbose_retry is set to true
   config.display_try_failure_messages = true
 
+  # Enable the :focus tag, but run all specs when no focus is set.
+  # https://relishapp.com/rspec/rspec-core/v/2-6/docs/filtering/run-all-when-everything-filtered
+  config.filter_run(focus: true)
+  config.run_all_when_everything_filtered = true
 end
