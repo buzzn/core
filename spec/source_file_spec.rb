@@ -2,7 +2,7 @@ describe "Source File" do
 
   Dir[File.expand_path('../../../../../app/controllers/api/v1/*.rb', __FILE__)].each do |file|
 
-    if !file.end_with?('base.rb') && !file.end_with?('defaults.rb') 
+    if !file.end_with?('base.rb') && !file.end_with?('defaults.rb')
       it "#{file.sub(/.*api/, 'api')} only permitted_params are allowed" do
         content = File.read(file)
         content.each_line do |line|
@@ -38,7 +38,7 @@ describe "Source File" do
       content = File.read(file)
       content.each_line do |line|
         expect(line).not_to match /Time.now/
-      end      
+      end
     end
   end
 

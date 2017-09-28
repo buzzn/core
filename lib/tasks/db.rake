@@ -18,7 +18,7 @@ namespace :db do
   desc 'This rebuilds development db without slp/sep'
   task :data => [
                    'db:prepare',
-                   'db:seed'              
+                   'db:seed'
                  ]
 
   desc 'This rebuilds development db'

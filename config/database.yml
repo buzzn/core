@@ -1,7 +1,7 @@
 default: &default
-  adapter: <%= ENV['DB_ADAPTER'] ||= 'postgresql' %>
-  host: <%= ENV['DB_HOST'] ||= 'localhost' %>
-  port: <%= ENV['DB_PORT'] ||= '5432' %>
+  adapter: <%= ENV['DB_ADAPTER'] %>
+  host: <%= ENV['DB_HOST'] %>
+  port: <%= ENV['DB_PORT'] %>
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   encoding: unicode
