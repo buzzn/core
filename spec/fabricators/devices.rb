@@ -1,4 +1,15 @@
 Fabricator(:new_device, class_name: 'Device') do
-#  name        { sequence { |i| "Localpool #{i}" } }
-#  description { |attrs| "#{attrs[:name]} description" }
+  manufacturer_name                 "Generic manufacturer name"
+  manufacturer_product_name         "Generic product"
+  manufacturer_product_serialnumber "47-11"
+  mode                              "OUT"
+  # TODO add register fabricator
+  # register
+  law                               "KWKG"
+  category                          "Generic category"
+  primary_energy                    Device::NATURAL_GAS
+  watt_peak                         5500
+  watt_hour_pa                      6000
+  commissioning                     Date.parse("1995-01-01")
+  mobile                            false
 end
