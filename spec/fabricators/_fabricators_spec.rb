@@ -2,7 +2,7 @@ describe "Fabricators produce valid records" do
 
   matcher :have_association do |association_accessor, association_klass|
     match do |actual|
-      actual.send(association_accessor).instance_of?(association_klass)
+      actual.send(association_accessor).is_a?(association_klass)
     end
   end
 
@@ -109,5 +109,6 @@ describe "Fabricators produce valid records" do
   context "Tariff" do
     subject { Fabricate(:new_tariff) }
     it { is_expected.to be_valid }
+    it { is_expected.to have_association(:contracts, Contract::Base) }
   end
 end
