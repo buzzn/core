@@ -105,4 +105,9 @@ describe "Fabricators produce valid records" do
       expect(meter.registers.size).to eq(2)
     end
   end
+
+  context "Tariff" do
+    subject { Fabricate(:new_tariff) }
+    it { is_expected.to be_valid }
+  end
 end
