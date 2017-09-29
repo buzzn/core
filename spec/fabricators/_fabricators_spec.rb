@@ -86,6 +86,12 @@ describe "Fabricators produce valid records" do
     it { is_expected.to have_association(:address, Address) }
   end
 
+  context "Prices" do
+    subject { Fabricate(:new_price) }
+    it { is_expected.to be_valid }
+    it { is_expected.to have_association(:localpool, Group::Localpool) }
+  end
+
   context "Reading" do
     subject { Fabricate(:new_reading) }
     it { is_expected.to be_valid }
