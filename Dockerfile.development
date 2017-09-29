@@ -11,12 +11,12 @@ ENV SECRET_KEY_BASE 053ac4b0bb8bfd1e67bb3c2949c30447b79fe4f94b01d2acd5662009ab3a
 # Debian image, we use apt-get to install those.
 
 RUN apt-get update && \
-  apt-get install -y \
-  build-essential \
-  vim \
-  wget \
-  imagemagick \
-  nodejs
+    apt-get install -y \
+    build-essential \
+    imagemagick \
+    nodejs \
+    vim \
+    wget
 
 # install postgresql, pg_dump is needed for loading and dumping structure.sql
 RUN touch /etc/apt/sources.list \
@@ -36,11 +36,12 @@ WORKDIR /core
 # will be cached unless changes to one of those two files
 # are made.
 COPY Gemfile Gemfile.lock ./
-RUN gem install bundler && bundle install --jobs 20 --retry 5
+RUN gem install bundler \
+    && bundle install --jobs 20 --retry 5
 
 
 # Copy the main application.
-COPY . ./
+COPY . .
 
 # Expose port 3000 to the Docker host, so we can access it
 # from the outside.

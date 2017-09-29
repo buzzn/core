@@ -14,9 +14,9 @@ RUN apt-get update && \
     apt-get install -y \
     build-essential \
     imagemagick \
-    nodejs
+    nodejs \
     vim \
-    wget \
+    wget
 
 # install postgresql, pg_dump is needed for loading and dumping structure.sql
 RUN touch /etc/apt/sources.list \
