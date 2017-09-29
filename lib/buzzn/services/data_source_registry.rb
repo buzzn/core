@@ -20,7 +20,7 @@ module Buzzn::Services
         raise ArgumentError.new("is not a #{Buzzn::DataSource}: #{source.class}")
       end
       @container.register(source.class::NAME, source)
-      @logger.info{"registered #{source.class::NAME}: #{source}"}
+      @logger.debug{"registered #{source.class::NAME}: #{source}"}
     end
 
     def get(data_source)
