@@ -41,8 +41,6 @@ module Contract
     MUST_NOT_BE_BUZZN_SYSTEMS    = 'must not be buzzn-systems'
     MUST_NOT_BE_BUZZN            = 'must not be buzzn'
 
-
-
     class << self
       private :new
     end
@@ -50,7 +48,9 @@ module Contract
     belongs_to :contractor, polymorphic: true
     belongs_to :customer, polymorphic: true
 
+    # FIXME: looks like class_name and foreign_key are default, so they could be omitted.
     has_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id, dependent: :destroy
+    # FIXME: is the foreign key correct here?
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
 
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
