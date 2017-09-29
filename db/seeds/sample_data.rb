@@ -1,11 +1,59 @@
 puts "seeds: loading sample data"
 
-Group::Localpool.delete_all
+Group::Localpool.destroy_all
 Fabricate(:new_localpool) do
   name "People Power Group"
   description "Power to the people!"
   website "www.peoplepower.de"
 end
+
+require 'smarter_csv'
+
+module Converters
+  class Date
+    def self.convert(value)
+      ::Date.strptime(value, '%m/%d/%y') # parses custom date format into Date instance
+    end
+  end
+  class Number
+    def self.convert(value)
+      value.gsub('.', '').to_i
+    end
+  end
+  class PreferredLanguage
+    def self.convert(value)
+      { 'DE' => :german, 'EN' => :english }[value]
+    end
+  end
+end
+
+def import_csv(model_name, options)
+  file_name = Rails.root.join("db/sample_data/#{model_name}.csv")
+  hashes = SmarterCSV.process(file_name,
+    col_sep: ";",
+    convert_values_to_numeric: false,
+    value_converters: options[:converters]
+  )
+  hashes.each { |hash| Fabricate(:"new_#{model_name.to_s.singularize}", hash.slice(*options[:fields]))}
+end
+
+[Reading::Continuous, Reading::Single].each(&:destroy_all)
+import_csv(:readings,
+           converters: {date: Converters::Date, raw_value: Converters::Number, value: Converters::Number },
+           fields: [:date, :raw_value, :unit, :reason, :read_by, :quality, :source, :status, :comment]
+)
+
+Person.destroy_all
+import_csv(:persons,
+           converters: {preferred_language: Converters::PreferredLanguage },
+           fields: [:first_name, :last_name, :email, :phone, :fax, :title , :prefix, :preferred_language]
+)
+
+Organization.destroy_all
+import_csv(:organizations,
+           converters: {preferred_language: Converters::PreferredLanguage },
+           fields: [:name, :description, :slug, :image, :email, :edifactemail, :phone, :fax, :website, :mode, :market_place_id]
+)
 
 __END__
 

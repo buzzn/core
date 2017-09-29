@@ -84,6 +84,7 @@ gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
 gem 'dotenv-rails'
+gem 'smarter_csv'
 
 group :production, :staging do
   gem 'newrelic_rpm'
