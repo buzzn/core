@@ -1,7 +1,6 @@
 Fabricator(:new_energy_classification, class_name: 'EnergyClassification') do
   tariff_name                      "Generic Mix"
-  # TODO add organization
-  # organization                     "Generic Organization"
+  organization                     { Fabricate(:new_organization) }
   nuclear_ratio                    2.1
   coal_ratio                       5.9
   gas_ratio                        40.9

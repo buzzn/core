@@ -14,6 +14,7 @@ describe "Fabricators produce valid records" do
   context "Energy classification" do
     subject { Fabricate(:new_energy_classification) }
     it { is_expected.to be_valid }
+    it { is_expected.to have_association(:organization, Organization) }
   end
 
   context "Bank account" do
