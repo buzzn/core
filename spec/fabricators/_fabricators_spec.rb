@@ -29,8 +29,7 @@ describe "Fabricators produce valid records" do
     subject { Fabricate(:new_contract) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:localpool, Group::Localpool) }
-    # TODO make this an organization
-    # it { is_expected.to have_association(:contractor, Person) }
+    it { is_expected.to have_association(:contractor, Organization) }
     it { is_expected.to have_association(:contractor_bank_account, BankAccount) }
     it { is_expected.to have_association(:customer, Person) }
     it { is_expected.to have_association(:customer_bank_account, BankAccount) }

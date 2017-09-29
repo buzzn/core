@@ -6,8 +6,7 @@ Fabricator(:new_contract, class_name: 'Contract::MeteringPointOperator') do
   signing_date                  Date.parse("2015-10-11")
   begin_date                    Date.parse("2016-01-01")
   customer                      { Fabricate(:new_person, first_name: "Wolfgang") }
-  # TODO make this an organization
-  contractor                    { Fabricate(:new_person, first_name: "Contractor") }
+  contractor                    { Fabricate(:new_organization) }
   first_master_uid              { sequence(:uid, 90688251510000000000002677114) }
   second_master_uid             { sequence(:uid) }
   contract_number_addition      1
