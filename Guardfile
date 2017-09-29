@@ -26,4 +26,6 @@ guard :rspec, cmd: "rspec -f doc" do
   watch(rails.spec_helper)     { rspec.spec_dir }
   watch(rails.routes)          { "#{rspec.spec_dir}/routing" }
   watch(rails.app_controller)  { "#{rspec.spec_dir}/controllers" }
+
+  watch(%r{^spec/fabricators/.+\.rb}) { 'spec/fabricators/_fabricators_spec.rb' }
 end
