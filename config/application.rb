@@ -86,5 +86,8 @@ module Buzzn
 
     # we don't use the asset pipeline, this application is API-only.
     config.assets.enabled = false
+
+    # details: http://guides.rubyonrails.org/api_app.html
+    config.api_only = true
   end
 end
