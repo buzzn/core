@@ -3,7 +3,10 @@ namespace :docker do
 
     def image_name
       @_image_name ||= begin
-        repo_name = `git remote get-url origin`.split("/").last.gsub(".git", '').chomp
+        # Overwritten since the repo still has to be renamed to core.
+        # Be careful when copy/pasting this file between console and admin app.
+        # repo_name = `git remote get-url origin`.split("/").last.gsub(".git", '').chomp
+        repo_name = 'core'
         OpenStruct.new(local: repo_name, public: "buzzn/#{repo_name}")
       end
     end
