@@ -44,7 +44,6 @@ gem 'iban-tools'
 # Backend
 gem 'rails'
 gem 'sprockets-rails'
-gem 'simple_form'
 gem 'jquery-rails'
 gem 'haml-rails'
 gem 'sass-rails'
