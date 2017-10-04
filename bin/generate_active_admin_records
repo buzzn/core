@@ -6,7 +6,6 @@ require_relative "../config/environment"
 all_classes     = ActiveRecord::Base.descendants
 ignored_classes = [
  ActiveAdmin::Comment,
- ActsAsVotable::Vote,
  Comment,
  Doorkeeper::AccessGrant,
  Doorkeeper::AccessToken,
