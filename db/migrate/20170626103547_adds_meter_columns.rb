@@ -48,6 +48,9 @@ class AddsMeterColumns < ActiveRecord::Migration
     add_column :meters, :section, :section, index: true
     add_column :meters, :manufacturer_name, :manufacturer_name, index: true
     
+    add_column :meters, :group_id, :uuid
+    Register::Base.reset_column_information
+    Meter::Base.reset_column_information
     Meter::Base.all.each do |meter|
       if meter.voltage_level
         meter.send("#{meter.voltage_level}!")
@@ -148,8 +151,9 @@ class AddsMeterColumns < ActiveRecord::Migration
           meter.manufacturer_name = meter.manufacturer_name_old
         end
       end
-      p meter.valid?
+      #p meter.valid?
     end
+    remove_column :meters, :group_id
     remove_column :meters, :ownership_old
     remove_column :meters, :section_old
     remove_column :meters, :manufacturer_name_old
