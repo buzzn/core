@@ -27,3 +27,4 @@ dump.rdb
 
 .byebug_history
 .rspec-local
+public/uploads
