@@ -43,9 +43,6 @@ gem 'iban-tools'
 
 # Backend
 gem 'rails'
-gem 'sprockets-rails'
-gem 'therubyracer'
-gem 'uglifier'
 gem 'money-rails'
 gem 'activerecord-nulldb-adapter'
 gem 'mongoid'
