@@ -271,10 +271,6 @@ GEM
       mongo (~> 2.1)
       origin (~> 2.2)
       tzinfo (>= 0.3.37)
-    moped (2.0.7)
-      bson (~> 3.0)
-      connection_pool (~> 2.0)
-      optionable (~> 0.2.0)
     multi_json (1.12.1)
     multipart-post (2.0.0)
     nenv (0.3.0)
@@ -286,7 +282,6 @@ GEM
       shellany (~> 0.0)
     oauth (0.5.1)
     oj (2.17.1)
-    optionable (0.2.0)
     origin (2.2.0)
     pg (0.18.4)
     pry (0.11.1)
@@ -476,7 +471,6 @@ DEPENDENCIES
   mini_magick
   money-rails
   mongoid
-  moped
   multi_json
   newrelic_rpm
   oauth
