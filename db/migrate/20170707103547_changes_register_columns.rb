@@ -1,5 +1,7 @@
 class ChangesRegisterColumns < ActiveRecord::Migration
   def up
+    Register::Base.reset_column_information
+    Meter::Base.reset_column_information
     rename_column :registers, :direction, :direction_old
     rename_column :registers, :label, :label_old
 
