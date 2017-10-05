@@ -135,6 +135,14 @@ paths:
       responses:
         200:
           description: logged out
+  "/ping":
+    get:
+      description: returns 'pong'
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success
   "/reset-password":
     post:
       description: reset password with given key
