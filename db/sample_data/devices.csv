@@ -1,0 +1,4 @@
+manufacturer_name;manufacturer_product_name;manufacturer_product_serialnumber;mode;register_id;law;category;primary_energy;watt_peak;watt_hour_pa;commissioning;mobile
+Senertec;Dachs;453454-K-45645;OUT;Produktion BHKW;KWKG;Blockheizkraftwerk;NATURAL_GAS;5500;6000;1/1/95;FALSCH
+Solarex;MX-64;446.436.124;OUT;Produktion PV;EEG;Photovoltaikanlage;SUN;2160;2200;4/10/17;FALSCH
+Mitsubishi;i-MiEV;VIN23233;IN;Ladestation eAuto;n/a;eMobilität;Other;49000;;4/10/17;

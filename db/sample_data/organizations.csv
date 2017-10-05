@@ -11,7 +11,6 @@ Bayernwerk Netz GmbH;;bayernwerk-netz;;;netz-msb-mdl@bayernwerk.de;+49 941 20171
 Buzzn Systems;;buzzn-systems;;;;089 / 32 16 8;;www.buzzn.net;metering_point_operator;9910960000001;;;;;;;
 Discovergy;MPO of EasyMeters;discovergy;;;;;;https://discovergy.com/;metering_point_operator;;;;;;;;
 MySmartGrid;Fraunhofer Institut;mysmartgrid;;;;;;https://www.itwm.fraunhofer.de/en/departments/hpc/green-by-it/mySmartGrid-energy-savings.html;metering_point_operator;;;;;;;;
-Buzzn Systems;;;;;;;;;metering_service_provider;9910963000008;;;;;;;
 Buzzn GmbH (Lieferant);Buzzn community power (performed by S-Hall);buzzn-energy;;;;089 / 32 16 8;;www.buzzn.net;electricity_supplier;9905229000008;;;;;;;
 Drittlieferant;any non-localgroup supplier;3rd-party;;;;;;;electricity_supplier;;;;;;;;
 Germany;used for energy mix 'Germany';germany;;;;;;;electricity_supplier;;;;;;;;

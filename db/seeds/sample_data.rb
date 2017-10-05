@@ -1,59 +1,82 @@
 puts "seeds: loading sample data"
 
 Group::Localpool.destroy_all
-Fabricate(:new_localpool) do
+localpool_people_power = Fabricate(:new_localpool) do
   name "People Power Group"
   description "Power to the people!"
   website "www.peoplepower.de"
 end
 
-require 'smarter_csv'
-
-module Converters
-  class Date
-    def self.convert(value)
-      ::Date.strptime(value, '%m/%d/%y') # parses custom date format into Date instance
-    end
-  end
-  class Number
-    def self.convert(value)
-      value.gsub('.', '').to_i
-    end
-  end
-  class PreferredLanguage
-    def self.convert(value)
-      { 'DE' => :german, 'EN' => :english }[value]
-    end
-  end
-end
-
-def import_csv(model_name, options)
-  file_name = Rails.root.join("db/sample_data/#{model_name}.csv")
-  hashes = SmarterCSV.process(file_name,
-    col_sep: ";",
-    convert_values_to_numeric: false,
-    value_converters: options[:converters]
-  )
-  hashes.each { |hash| Fabricate(:"new_#{model_name.to_s.singularize}", hash.slice(*options[:fields]))}
-end
+require_relative 'import_csv'
 
 [Reading::Continuous, Reading::Single].each(&:destroy_all)
 import_csv(:readings,
            converters: {date: Converters::Date, raw_value: Converters::Number, value: Converters::Number },
-           fields: [:date, :raw_value, :unit, :reason, :read_by, :quality, :source, :status, :comment]
+           fields: %i(date raw_value unit reason read_by quality source status comment)
 )
 
 Person.destroy_all
 import_csv(:persons,
            converters: {preferred_language: Converters::PreferredLanguage },
-           fields: [:first_name, :last_name, :email, :phone, :fax, :title , :prefix, :preferred_language]
+           fields: %i(first_name last_name email phone fax title  prefix preferred_language)
 )
+Person.all.each do |person|
+  Fabricate(:new_bank_account, contracting_party: person)
+end
 
 Organization.destroy_all
 import_csv(:organizations,
            converters: {preferred_language: Converters::PreferredLanguage },
-           fields: [:name, :description, :slug, :image, :email, :edifactemail, :phone, :fax, :website, :mode, :market_place_id]
+           fields: %i(name description slug image email edifactemail phone fax website mode market_place_id)
 )
+Organization.all.each do |organization|
+  Fabricate(:new_bank_account, contracting_party: organization)
+end
+
+Device.destroy_all
+import_csv(:devices,
+           converters: { watt_peak: Converters::Number, watt_hour_pa: Converters::Number, commissioning: Converters::Date, mobile: Converters::Boolean, primary_energy: Converters::Downcase },
+           fields: %i(manufacturer_name manufacturer_product_name manufacturer_product_serialnumber mode law category primary_energy watt_peak watt_hour_pa commissioning mobile)
+)
+
+# don't destroy since there are some previously created ones that would loose referential integrity
+import_csv(:meter_reals,
+           converters: { manufacturer_name: Converters::MeterManufacturerName, calibrated_until: Converters::Date, sent_data_dso: Converters::Date },
+           fields: %i(type manufacturer_name product_name product_serialnumber calibrated_until converter_constant ownership direction section build_year sent_data_dso),
+           overrides: { registers: [ Fabricate(:new_register_input, group: localpool_people_power) ] }
+)
+
+import_csv(:payments,
+           converters: { price_cents: Converters::Number, begin_date: Converters::Date, end_date: Converters::Date, cycle: Converters::Downcase, source: Converters::Downcase },
+           fields: %i(price_cents begin_date end_date cycle source)
+)
+
+puts "\n* Energy Classifications"
+EnergyClassification.destroy_all
+Fabricate(:new_energy_classification) do
+  tariff_name                       'Buzzn Energy'
+  organization                      { Organization.find_by(slug: 'buzzn-energy') }
+  nuclear_ratio                     2.1
+  coal_ratio                        5.9
+  gas_ratio                         40.9
+  other_fossiles_ratio              4.5
+  renewables_eeg_ratio              46.5
+  other_renewables_ratio            0.1
+  co2_emission_gramm_per_kwh        131
+  nuclear_waste_miligramm_per_kwh   0.03
+end
+Fabricate(:new_energy_classification) do
+  tariff_name                       'Energy Mix Germany'
+  organization                      { Organization.find_by(slug: 'germany') }
+  nuclear_ratio                     15.4
+  coal_ratio                        43.8
+  gas_ratio                         6.5
+  other_fossiles_ratio              2.5
+  renewables_eeg_ratio              28.7
+  other_renewables_ratio            3.1
+  co2_emission_gramm_per_kwh        476
+  nuclear_waste_miligramm_per_kwh   0.4
+end
 
 __END__
 

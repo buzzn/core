@@ -5,7 +5,7 @@ Fabricator(:new_meter_real, class_name: 'Meter::Real') do
   group                        { Fabricate(:new_localpool) }
   manufacturer_name            Meter::Real.manufacturer_names[:easy_meter]
   product_name                 "R2D2"
-  product_serialnumber         { sequence { |i| "6564" + sprintf("%04d", i) } }
+  product_serialnumber         { sequence { |i| "7564" + sprintf("%04d", i) } }
   calibrated_until             Date.parse("2027-10-13")
   converter_constant           1
   ownership                    Meter::Real.ownerships[:buzzn_systems]
