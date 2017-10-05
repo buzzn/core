@@ -56,6 +56,7 @@ describe Me::Roda, :skip_nested do
       expect(authorize(user)).not_to be_nil
 
       GET '', user
+      expect(response.headers['Access-Control-Expose-Headers']).to eq 'Authorization'
       expect(response).to have_http_status(200)
       expect(json['id']).to eq user.person.id
     end
