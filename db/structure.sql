@@ -555,6 +555,22 @@ CREATE TYPE reason AS ENUM (
 
 
 --
+-- Name: role_names; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE role_names AS ENUM (
+    'BUZZN_OPERATOR',
+    'GROUP_OWNER',
+    'GROUP_ADMIN',
+    'GROUP_MEMBER',
+    'GROUP_ENERGY_MENTOR',
+    'SELF',
+    'CONTRACT',
+    'ORGANIZATION'
+);
+
+
+--
 -- Name: section; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1448,11 +1464,11 @@ CREATE TABLE registers (
 
 CREATE TABLE roles (
     id integer NOT NULL,
-    name character varying,
     resource_id uuid,
     resource_type character varying,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    name role_names NOT NULL
 );
 
 
@@ -2311,20 +2327,6 @@ CREATE INDEX index_registers_on_meter_id ON registers USING btree (meter_id);
 
 
 --
--- Name: index_roles_on_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_roles_on_name ON roles USING btree (name);
-
-
---
--- Name: index_roles_on_name_and_resource_type_and_resource_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_roles_on_name_and_resource_type_and_resource_id ON roles USING btree (name, resource_type, resource_id);
-
-
---
 -- Name: index_scores_on_scoreable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2891,4 +2893,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170906020031');
 INSERT INTO schema_migrations (version) VALUES ('20170907190442');
 
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
+
+INSERT INTO schema_migrations (version) VALUES ('20171005091701');
 

@@ -14,7 +14,7 @@ describe Admin::LocalpoolRoda do
     entity(:group) do
       group = Fabricate(:localpool)
       Account::Base.find(user.resource_owner_id)
-        .person.add_role(:localpool_member, group)
+        .person.add_role(Role::GROUP_MEMBER, group)
       group
     end
 

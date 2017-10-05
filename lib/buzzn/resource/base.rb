@@ -95,14 +95,15 @@ module Buzzn::Resource
         @abstract == true
       end
 
+      ANONYMOUS = [Role::ANONYMOUS].freeze
       def all_allowed(user, roles, perms, enum)
         if user.nil?
-          if allowed?([:anonymous], perms)
+          if allowed?(ANONYMOUS, perms)
             enum
           else
             enum.where('1=2') # deliver an empty AR relation
           end
-        elsif allowed?([:anonymous] | roles | user.unbound_rolenames, perms)
+        elsif allowed?(ANONYMOUS | roles | user.unbound_rolenames, perms)
           enum
         else
           enum.permitted(user.uuids_for(perms)) rescue enum.restricted(user.uuids_for(perms))
@@ -111,7 +112,7 @@ module Buzzn::Resource
 
       def all(user, clazz = nil)
         enum = all_allowed(user, [], permissions.retrieve, model.all)
-        unbound = [:anonymous]
+        unbound = ANONYMOUS
         unbound += user.unbound_rolenames if user
         to_resource = (clazz || self).method(:to_resource)
         result = Buzzn::Resource::Collection.new(enum,
@@ -157,7 +158,7 @@ module Buzzn::Resource
         @permissions
       end
 
-      ANONYMOUS = { '*' => :* }.freeze
+      ALL_PERMISSIONS = { '*' => :* }.freeze
       def roles_map(user)
         result = {}
         if user
@@ -167,7 +168,7 @@ module Buzzn::Resource
             (result[r.resource_id || '*'] ||= []) << r.name.to_sym
           end
         else
-          result = ANONYMOUS
+          result = ALL_PERMISSIONS
         end
         result
       end
@@ -254,7 +255,6 @@ module Buzzn::Resource
           when Buzzn::Resource::Collection
             obj.json(json, v)
           when Array
-            #  binding.pry
             json << obj.to_json(include: v)
           when NilClass
             json << 'null'

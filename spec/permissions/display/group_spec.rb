@@ -9,14 +9,14 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
   entity!(:tribe) do
     group = Fabricate(:tribe)
     Fabricate(:real_meter).registers.first.update(group: group)
-    manager.person.add_role(:manager, group)
+    manager.person.add_role(Role::GROUP_ADMIN, group)
     group
   end
 
   entity!(:localpool)  do
     group = Fabricate(:localpool)
     Fabricate(:virtual_meter).register.update(group: group)
-    manager.person.add_role(:manager, group)
+    manager.person.add_role(Role::GROUP_ADMIN, group)
     group
   end
 

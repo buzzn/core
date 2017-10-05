@@ -3,7 +3,7 @@ describe BankAccount do
 
   entity(:user_with_register) do
     user = Fabricate(:user)
-    user.add_role(:manager, register)
+    user.add_role(Role::GROUP_ADMIN, register)
     user
   end
 
@@ -13,14 +13,14 @@ describe BankAccount do
 
   entity(:manager_of_group) do
     user = Fabricate(:user)
-    user.add_role(:manager, manager_group)
+    user.add_role(Role::GROUP_ADMIN, manager_group)
     user
   end
 
   entity(:member_group) { Fabricate(:localpool) }
   entity(:member_of_group) do
     user = Fabricate(:user)
-    user.add_role(:member, member_group)
+    user.add_role(Role::GROUP_MEMBER, member_group)
     user
   end
 

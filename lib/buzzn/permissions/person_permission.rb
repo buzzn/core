@@ -1,7 +1,7 @@
 Buzzn::Permission.new(PersonResource) do
   # define groups of roles
   group(:none)
-  group(:self, :self)
+  group(:self, Role::SELF)
 
   # top level CRUD permissions
   create :none

@@ -7,13 +7,13 @@ Fabricator :user, class_name: Account::Base do
   after_create { |account|
     Account::PasswordHash.create(account: account,
                                  password_hash: BCrypt::Password.create('Example123'))
-    account.person.add_role(:self, account.person)
+    account.person.add_role(Role::SELF, account.person)
     account.person.update(email: account.email)
   }
 end
 
 Fabricator :admin, from: :user do
-  after_create { |account| account.person.add_role(:admin) }
+  after_create { |account| account.person.add_role(Role::BUZZN_OPERATOR) }
 end
 
 Fabricator :felix, from: :admin do

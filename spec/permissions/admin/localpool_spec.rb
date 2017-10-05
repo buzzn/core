@@ -12,7 +12,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
   entity(:buzzn_operator) do
     user = Fabricate(:user)
-    user.person.add_role(:buzzn_operator, nil)
+    user.person.add_role(Role::BUZZN_OPERATOR, nil)
     user
   end
   entity(:localpool_owner) { Fabricate(:user) }
@@ -26,18 +26,18 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
   entity!(:localpool1) do
     pool = Fabricate(:localpool)
-    localpool_member.person.add_role(:localpool_member, pool)
-    localpool_member2.person.add_role(:localpool_member, pool)
+    localpool_member.person.add_role(Role::GROUP_MEMBER, pool)
+    localpool_member2.person.add_role(Role::GROUP_MEMBER, pool)
     
     pool
   end
 
   entity!(:localpool2) do
     pool = Fabricate(:localpool)
-    localpool_owner.person.add_role(:localpool_owner, pool)
-    localpool_manager.person.add_role(:localpool_manager, pool)
-    localpool_member3.person.add_role(:localpool_member, pool)
-    localpool_member4.person.add_role(:localpool_member, pool)
+    localpool_owner.person.add_role(Role::GROUP_OWNER, pool)
+    localpool_manager.person.add_role(Role::GROUP_ADMIN, pool)
+    localpool_member3.person.add_role(Role::GROUP_MEMBER, pool)
+    localpool_member4.person.add_role(Role::GROUP_MEMBER, pool)
     meter = Fabricate(:input_meter)
     # HACK as meter.input_register.group = pool does not work
     meter.input_register.update(group_id: pool.id)

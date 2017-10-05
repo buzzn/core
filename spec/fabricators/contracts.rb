@@ -184,7 +184,7 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
-    c.customer.add_role(:contract, c) if c.customer.is_a? Person
+    c.customer.add_role(Role::CONTRACT, c) if c.customer.is_a? Person
     c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor) unless c.contractor_bank_account
     c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer) unless c.customer_bank_account
     c.save

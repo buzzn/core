@@ -26,7 +26,7 @@ describe Display::GroupRoda do
 
   entity!(:group) do
     group = Fabricate(:localpool)
-    Account::Base.find(user.resource_owner_id).person.add_role(:manager, group)
+    Account::Base.find(user.resource_owner_id).person.add_role(Role::GROUP_ADMIN, group)
     group
   end
 
@@ -141,7 +141,7 @@ describe Display::GroupRoda do
       entity(:mentor) { Fabricate(:user).person }
       let(:group) do
         group = send [:tribe, :localpool].sample
-        mentor.add_role(:manager, group)
+        mentor.add_role(Role::GROUP_ADMIN, group)
         group
       end
 
