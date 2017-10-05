@@ -16,9 +16,9 @@ describe Admin::LocalpoolRoda do
 
     entity!(:person) do
       Account::Base.find(other.resource_owner_id)
-        .person.add_role(:localpool_member, group)
+        .person.add_role(Role::GROUP_MEMBER, group)
       user = Account::Base.find(user_token.resource_owner_id).person
-      user.add_role(:localpool_owner, group)
+      user.add_role(Role::GROUP_OWNER, group)
       Fabricate(:bank_account, contracting_party: user)
       Fabricate(:address, addressable: user)
       user

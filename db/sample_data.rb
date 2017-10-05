@@ -115,7 +115,7 @@ meter.broker = Fabricate(:discovergy_broker,
 
 puts 'group karin strom'
 karins_pv_group = Fabricate(:tribe_karins_pv_strom, registers: [register_pv_karin])
-karin.person.add_role :manager, karins_pv_group
+karin.person.add_role Role::GROUP_ADMIN, karins_pv_group
 karins_pv_group.registers << @christian_register
 karins_pv_group.registers << @philip_register
 karins_pv_group.registers << @thomas_register
@@ -186,7 +186,7 @@ Fabricate(:fp_minus, operand: @register_z1b, register: @fichtenweg8)
 puts 'Localpool home_of_the_brave'
 localpool_home_of_the_brave = Fabricate(:localpool_home_of_the_brave, registers: [@register_z2, @register_z4, @fichtenweg10, @fichtenweg8])
 justus = User.where(email: 'justus@buzzn.net').first
-buzzn_team.each { |m| m.person.add_role(:manager, localpool_home_of_the_brave) }
+buzzn_team.each { |m| m.person.add_role(Role::GROUP_ADMIN, localpool_home_of_the_brave) }
 
 
 
@@ -335,14 +335,14 @@ localpool_wagnis4.registers << register_60009393
 localpool_wagnis4.registers << register_60009442
 localpool_wagnis4.registers << register_60009441
 
-# Fabricate(:user).add_role(:manager, localpool_wagnis4)
+# Fabricate(:user).add_role(Role::GROUP_ADMIN, localpool_wagnis4)
 
 
 puts 'Localpool hell & warm forstenried'
 #Ab hier: Hell & Warm (Forstenried)
 pesc = Fabricate(:pesc)
 hell_und_warm = Fabricate(:hell_und_warm)
-# Fabricate(:user).add_role(:manager, hell_und_warm)
+# Fabricate(:user).add_role(Role::GROUP_ADMIN, hell_und_warm)
 
 # Übergabe in out
 meter = Fabricate(:easymeter_1305004864)
@@ -373,7 +373,7 @@ meter.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETE
 ### Localpool ###
 
 localpool_forstenried = Fabricate(:localpool_forstenried, registers: [register_60138947, register_60138943, register_1338000816])
-#  Fabricate(:user).add_role(:manager, localpool_forstenried)
+#  Fabricate(:user).add_role(Role::GROUP_ADMIN, localpool_forstenried)
 localpool_forstenried.registers << register_60009484
 localpool_forstenried.registers << register_1305004864
 localpool_forstenried.registers << register_1305004864_out

@@ -6,14 +6,14 @@ describe Display::GroupResource do
   entity!(:tribe) do
     group = Fabricate(:tribe)
     Fabricate(:real_meter).registers.first.update(group: group)
-    admin.person.add_role(:manager, group)
+    admin.person.add_role(Role::GROUP_ADMIN, group)
     group
   end
 
   entity!(:localpool)  do
     group = Fabricate(:localpool)
     Fabricate(:virtual_meter).register.update(group: group)
-    admin.person.add_role(:manager, group)
+    admin.person.add_role(Role::GROUP_ADMIN, group)
     group
   end
 

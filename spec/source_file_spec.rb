@@ -45,11 +45,9 @@ describe "Source File" do
   (Dir['lib/**/*rb'] + Dir['app/models/*rb'] + Dir['app/controller/api/**/*rb']).each do |file|
     ['add_role', 'remove_role'].each do |roler|
       it "source code files do not use #{roler} in #{file}" do
-        if file != 'lib/buzzn/managed_roles.rb'
-          content = File.read(file)
-          content.each_line do |line|
-            expect(line).not_to match /#{roler}/
-          end
+        content = File.read(file)
+        content.each_line do |line|
+          expect(line).not_to match /#{roler}/
         end
       end
     end

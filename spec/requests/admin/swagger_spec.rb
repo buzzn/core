@@ -23,7 +23,7 @@ describe Admin do
 
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
-    person.add_role(:localpool_owner, localpool)
+    person.add_role(Role::GROUP_OWNER, localpool)
     Fabricate(:localpool_processing_contract, localpool: localpool, customer: organization)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
     localpool

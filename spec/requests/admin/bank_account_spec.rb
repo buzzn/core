@@ -24,7 +24,7 @@ describe Admin::BankAccountRoda do
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
     Account::Base.find(user.resource_owner_id)
-      .person.add_role(:localpool_member, localpool)
+      .person.add_role(Role::GROUP_MEMBER, localpool)
     localpool
   end
 

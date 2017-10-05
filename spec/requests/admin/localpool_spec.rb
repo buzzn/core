@@ -32,7 +32,7 @@ describe Admin::LocalpoolRoda do
   entity(:manager) { Fabricate(:user).person }
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
-    manager.add_role(:manager, localpool)
+    manager.add_role(Role::GROUP_ADMIN, localpool)
     3.times.each do
       c = Fabricate(:localpool_power_taker_contract)
       c.register.group = localpool
@@ -41,7 +41,7 @@ describe Admin::LocalpoolRoda do
     Fabricate(:localpool_processing_contract, localpool: localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
     Account::Base.find(user.resource_owner_id)
-      .person.add_role(:localpool_member, localpool)
+      .person.add_role(Role::GROUP_MEMBER, localpool)
     localpool
   end
 
