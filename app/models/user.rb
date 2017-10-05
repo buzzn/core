@@ -4,8 +4,6 @@ class User < ContractingParty
 
   validates :legal_notes, acceptance: true
 
-  acts_as_voter
-
   has_one :profile, :dependent => :destroy
   accepts_nested_attributes_for :profile
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
