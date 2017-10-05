@@ -65,6 +65,11 @@ module Me
         person
       end
 
+      r.get! 'ping' do
+        r.response['Content-Type'] = 'text/plain'
+        'pong'
+      end
+
       r.patch! do
         update_person.call(r.params, resource: [person])
       end
