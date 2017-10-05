@@ -43,7 +43,7 @@ import_csv(:devices,
 import_csv(:meter_reals,
            converters: { manufacturer_name: Converters::MeterManufacturerName, calibrated_until: Converters::Date, sent_data_dso: Converters::Date },
            fields: %i(type manufacturer_name product_name product_serialnumber calibrated_until converter_constant ownership direction section build_year sent_data_dso),
-           overrides: { registers: [ Fabricate(:new_register_input, group: localpool_people_power) ] }
+           overrides: { group: localpool_people_power, registers: [ Fabricate(:new_register_input, group: localpool_people_power) ] }
 )
 
 import_csv(:payments,
