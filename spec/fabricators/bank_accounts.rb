@@ -1,13 +1,18 @@
-Fabricator :new_bank_account, class_name: "BankAccount" do
-  holder                  "Hans Holder"
-  iban                    { "DE89370400440532013000" } # taken from https://goo.gl/Ga6573
-  bic                     { "BYLADEM1001" }
-  bank_name               { ['GLS Bank', 'Sparkasse München', 'Berliner Volksbank', 'UniCredit HypoVereinsbank'].sample }
-  direct_debit            true
-  contracting_party       { Fabricate(:new_person) }
-
-  before_create do |account, _transients|
-    # this works for both Person and Organization
-    account.holder = account.contracting_party.name if account.contracting_party
-  end
+Fabricator :bank_account do
+  holder            { FFaker::Name.name }
+  iban              'DE23100000001234567890'
+  bic               { FFaker::Product.letters(8) }
+  bank_name         { FFaker::Company.name.slice(0...63) }
+  direct_debit      { FFaker::Boolean.maybe }
+  created_at        { (rand*10).days.ago }
+  contracting_party { Fabricate(:person) }
 end
+
+Fabricator :bank_account_mustermann, from: :bank_account do
+  holder      'Max Musterman'
+  iban        'DE23100000001234567890'
+  bic         'BELADEBE'
+  bank_name   'Berliner Sparkasse'
+  direct_debit true
+end
+

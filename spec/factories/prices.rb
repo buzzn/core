@@ -1,0 +1,9 @@
+FactoryGirl.define do
+  factory :price do
+    sequence(:name)                     { |i| "Generic price #{i}" }
+    begin_date                          Date.parse("2016-01-01")
+    energyprice_cents_per_kilowatt_hour 27.9
+    baseprice_cents_per_month           300
+    localpool                           { FactoryGirl.create(:localpool) }
+  end
+end
