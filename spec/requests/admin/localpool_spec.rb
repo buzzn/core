@@ -46,21 +46,30 @@ describe Admin::LocalpoolRoda do
     localpool
   end
 
-  entity(:localpool_no_contracts) { Fabricate(:localpool) }
+  entity(:localpool_no_contracts) do
+    Fabricate(:localpool, organization: Fabricate(:other_organization))
+  end
 
   let(:empty_json) { [] }
 
   let(:localpools_json) do
     Group::Localpool.all.collect do |localpool|
+      incompleteness =
+        if localpool == localpool_no_contracts
+          {'owner' => {'contact' => ['must be filled']}}
+        else
+          {'owner' => ['must be filled']}
+        end
       {
         "id"=>localpool.id,
         "type"=>"group_localpool",
         'updated_at'=>localpool.updated_at.as_json,
         "name"=>localpool.name,
-        "description"=>localpool.description,
         "slug"=>localpool.slug,
+        "description"=>localpool.description,
         "updatable"=>true,
-        "deletable"=>true
+        "deletable"=>true,
+        'incompleteness' => incompleteness
       }
     end
   end
@@ -75,6 +84,7 @@ describe Admin::LocalpoolRoda do
       "description"=>localpool_no_contracts.description,
       "updatable"=>true,
       "deletable"=>true,
+      'incompleteness' => {'owner' => {'contact' => ['must be filled']}},
       "meters"=>{
         'array'=> localpool_no_contracts.meters.collect do |meter|
           {
@@ -152,7 +162,8 @@ describe Admin::LocalpoolRoda do
         'slug' => 'super-duper',
         'description' => 'superduper localpool location on the dark side of the moon',
         'updatable'=>true,
-        'deletable'=>true 
+        'deletable'=>true,
+        'incompleteness' => {'owner' => ['must be filled']}
       }
     end
 
@@ -206,7 +217,8 @@ describe Admin::LocalpoolRoda do
         "slug" => 'a-b-c-d',
         "description"=>'none',
         "updatable"=>true,
-        "deletable"=>true
+        "deletable"=>true,
+        'incompleteness' => {'owner' => ['must be filled']}
       }
     end
 

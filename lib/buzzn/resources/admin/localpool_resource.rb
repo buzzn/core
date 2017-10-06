@@ -2,12 +2,13 @@ require_relative '../group_resource'
 require_relative '../person_resource'
 require_relative 'price_resource'
 require_relative 'billing_cycle_resource'
+require_relative '../../schemas/admin/localpool_incompleteness'
 module Admin
   class LocalpoolResource < GroupResource
 
     model Group::Localpool
 
-    attributes :updatable, :deletable
+    attributes :updatable, :deletable, :incompleteness
 
     has_one :localpool_processing_contract
     has_one :metering_point_operator_contract
@@ -21,6 +22,11 @@ module Admin
     has_many :persons
     has_many :prices, PriceResource
     has_many :billing_cycles, BillingCycleResource
+    has_one :owner
+
+    def incompleteness
+      LocalpoolIncompleteness.(self).messages
+    end
 
     # API methods for endpoints
 
