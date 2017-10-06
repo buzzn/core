@@ -15,34 +15,34 @@ module RequestsHelper
     self.class.login_path || raise('login path not set')
   end
 
-  def authorize(account)
+  def authorize(account, headers = {})
     $authorizations ||= {}
     pwd = account.respond_to?(:password) ? account.password : 'Example123'
     token = account ? $authorizations[account.id] : nil
     if account && token.nil?
-      post login_path, {login: account.email, password: pwd}.to_json, {'Content-Type': 'application/json'}
+      post login_path, {login: account.email, password: pwd}.to_json, {'Content-Type' => 'application/json'}.merge(headers)
       token = response.headers['Authorization']
       $authorizations[account.id] = token
     end
     token
   end
 
-  def do_it(action, path, params, account )
-    headers = {
+  def do_it(action, path, params, account, headers = {})
+    default_headers = {
       "Accept"              => "application/json",
       "Content-Type"        => "application/json",
     }
     account = account.call if account.is_a? Proc
     case account
     when Doorkeeper::AccessToken
-      headers["HTTP_AUTHORIZATION"]  = "Bearer #{account.token}"
+      default_headers["HTTP_AUTHORIZATION"]  = "Bearer #{account.token}"
     when Account::Base
-      headers['Authorization'] = authorize(account)
+      default_headers['Authorization'] = authorize(account, headers)
     when NilClass
     else
       raise "can not handle #{account.class}"
     end
-    send action, path, params, headers
+    send action, path, params, default_headers.merge(headers)
 
     if response.status == 500
       puts json.to_yaml rescue response.body
@@ -50,24 +50,24 @@ module RequestsHelper
   end
   private :do_it
 
-  def GET(path, token = nil, params = {})
-    do_it :get, path, params, token
+  def GET(path, token = nil, params = {}, headers = {})
+    do_it(:get, path, params, token, headers)
   end
 
-  def PATCH(path, token = nil, params = {})
-    do_it(:patch, path, params.to_json, token)
+  def PATCH(path, token = nil, params = {}, headers = {})
+    do_it(:patch, path, params.to_json, token, headers)
   end
 
-  def POST(path, token = nil, params = {})
-    do_it :post, path, params.to_json, token
+  def POST(path, token = nil, params = {}, headers = {})
+    do_it(:post, path, params.to_json, token, headers)
   end
 
-  def PUT(path, token = nil, params = {})
-    do_it :put, path, params, token
+  def PUT(path, token = nil, params = {}, headers = {})
+    do_it(:put, path, params, token, headers)
   end
 
-  def DELETE(path, token = nil, params = {})
-    do_it :delete, path, params, token
+  def DELETE(path, token = nil, params = {}, headers = {})
+    do_it(:delete, path, params, token, headers)
   end
 
   def json

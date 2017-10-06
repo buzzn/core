@@ -1,5 +1,7 @@
 require 'sequel'
-class CoreRoda < Roda
+require_relative 'common_roda'
+
+class CoreRoda < CommonRoda
 
   use Rack::CommonLogger, Logger.new(STDERR)
 
@@ -10,18 +12,10 @@ class CoreRoda < Roda
       domains = %r(#{ENV['CORS']})
       origins *domains
       ['/api/*'].each do |path|
-        resource path, headers: :any, methods: [:get, :post, :patch, :put, :delete, :options]
+        resource path, headers: :any, methods: [:get, :post, :patch, :put, :delete, :options], expose: 'Authorization'
       end
     end
   end
-
-  plugin :default_headers,
-    'Content-Type'=>'application/json',
-  #  'Content-Security-Policy'=>"default-src 'self'",
-  #  'Strict-Transport-Security'=>'max-age=16070400;',
-    'X-Frame-Options'=>'deny',
-    'X-Content-Type-Options'=>'nosniff',
-    'X-XSS-Protection'=>'1; mode=block'
 
   # adds /heartbeat endpoint
   plugin :heartbeat

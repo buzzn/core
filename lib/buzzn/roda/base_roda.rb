@@ -1,3 +1,4 @@
+require_relative 'common_roda'
 require_relative 'helpers/serializer'
 require_relative 'helpers/error_handler'
 require_relative 'plugins/doorkeeper'
@@ -6,7 +7,7 @@ require_relative 'plugins/terminal_verbs'
 require_relative 'plugins/created_deleted'
 require_relative 'plugins/aggregation'
 
-class BaseRoda < Roda
+class BaseRoda < CommonRoda
 
   use Rack::Session::Cookie, :secret => ENV['SECRET'] || 'my secret', :key => '_buzzn_session'
 

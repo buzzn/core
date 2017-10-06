@@ -26,6 +26,10 @@ describe Me, :skip_nested do
     description 'returns me (person) of the current logged in user'
   end
 
+  get '/ping', account do
+    description "returns 'pong'"
+  end
+
   patch '/', account do
     description 'updates me (person) of the current logged in user'
     schema 'update_person'
