@@ -6,7 +6,6 @@ class CommonRoda < Roda
   #  'Strict-Transport-Security'=>'max-age=16070400;',
     'X-Frame-Options' => 'deny',
     'X-Content-Type-Options' => 'nosniff',
-    'X-XSS-Protection' => '1; mode=block',
-    'Access-Control-Expose-Headers' => 'Authorization'
+    'X-XSS-Protection' => '1; mode=block'
 
 end
