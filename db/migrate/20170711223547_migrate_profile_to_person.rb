@@ -9,7 +9,13 @@ class MigrateProfileToPerson < ActiveRecord::Migration
                  'F'
                end
       user = profile.user
-      person = Person.create(title: profile.title,
+      title = case profile.title
+              when 'Dr. habil.'
+                'Dr.'
+              else
+                profile.title
+              end
+      person = Person.create(title: title,
                              prefix: prefix,
                              first_name: profile.first_name,
                              last_name: profile.last_name,

@@ -1,4 +1,13 @@
 namespace :db do
+
+  desc 'Empties the database (without dropping, recreating or migrating it)'
+  task empty: :environment do
+    Rails.application.eager_load! # required so all active record classes are loaded and can be iterated
+    ActiveRecord::Base.connection.disable_referential_integrity do
+      ActiveRecord::Base.descendants.each { |model| model.delete_all unless model.abstract_class? }
+    end
+  end
+
   desc 'This rebuilds development db without any data'
   task :prepare => [
                   'log:clear',

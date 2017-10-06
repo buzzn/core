@@ -41,3 +41,4 @@ dump.rdb
 /config/database.yml
 
 .byebug_history
+.rspec-local

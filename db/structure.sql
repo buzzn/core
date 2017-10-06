@@ -1209,27 +1209,6 @@ CREATE TABLE meters (
 
 
 --
--- Name: nne_vnbs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE nne_vnbs (
-    verbandsnummer character varying NOT NULL,
-    typ character varying,
-    messung_et double precision,
-    abrechnung_et double precision,
-    zaehler_et double precision,
-    mp_et double precision,
-    messung_dt double precision,
-    abrechnung_dt double precision,
-    zaehler_dt double precision,
-    mp_dt double precision,
-    arbeitspreis double precision,
-    grundpreis double precision,
-    vorlaeufig boolean
-);
-
-
---
 -- Name: oauth_access_grants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1548,38 +1527,6 @@ CREATE TABLE tariffs (
 
 
 --
--- Name: used_zip_sns; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE used_zip_sns (
-    id integer NOT NULL,
-    zip character varying,
-    kwh integer,
-    price double precision,
-    created_at timestamp without time zone
-);
-
-
---
--- Name: used_zip_sns_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE used_zip_sns_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: used_zip_sns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE used_zip_sns_id_seq OWNED BY used_zip_sns.id;
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1642,16 +1589,6 @@ CREATE TABLE users_roles (
 
 
 --
--- Name: zip_kas; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE zip_kas (
-    zip character varying NOT NULL,
-    ka double precision
-);
-
-
---
 -- Name: zip_to_prices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1673,37 +1610,6 @@ CREATE TABLE zip_to_prices (
     dso character varying NOT NULL,
     updated boolean NOT NULL
 );
-
-
---
--- Name: zip_vnbs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE zip_vnbs (
-    id integer NOT NULL,
-    zip character varying,
-    place character varying,
-    verbandsnummer character varying
-);
-
-
---
--- Name: zip_vnbs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE zip_vnbs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: zip_vnbs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE zip_vnbs_id_seq OWNED BY zip_vnbs.id;
 
 
 --
@@ -1732,20 +1638,6 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 --
 
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
-
-
---
--- Name: used_zip_sns id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY used_zip_sns ALTER COLUMN id SET DEFAULT nextval('used_zip_sns_id_seq'::regclass);
-
-
---
--- Name: zip_vnbs id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY zip_vnbs ALTER COLUMN id SET DEFAULT nextval('zip_vnbs_id_seq'::regclass);
 
 
 --
@@ -2053,14 +1945,6 @@ ALTER TABLE ONLY tariffs
 
 
 --
--- Name: used_zip_sns used_zip_sns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY used_zip_sns
-    ADD CONSTRAINT used_zip_sns_pkey PRIMARY KEY (id);
-
-
---
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2074,14 +1958,6 @@ ALTER TABLE ONLY users
 
 ALTER TABLE ONLY zip_to_prices
     ADD CONSTRAINT zip_to_prices_pkey PRIMARY KEY (id);
-
-
---
--- Name: zip_vnbs zip_vnbs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY zip_vnbs
-    ADD CONSTRAINT zip_vnbs_pkey PRIMARY KEY (id);
 
 
 --
@@ -2292,13 +2168,6 @@ CREATE UNIQUE INDEX index_groups_on_slug ON groups USING btree (slug);
 --
 
 CREATE UNIQUE INDEX index_meters_on_group_id_and_position ON meters USING btree (group_id, "position");
-
-
---
--- Name: index_nne_vnbs_on_verbandsnummer; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_nne_vnbs_on_verbandsnummer ON nne_vnbs USING btree (verbandsnummer);
 
 
 --
@@ -2540,24 +2409,10 @@ CREATE INDEX index_users_roles_on_user_id_and_role_id ON users_roles USING btree
 
 
 --
--- Name: index_zip_kas_on_zip; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_zip_kas_on_zip ON zip_kas USING btree (zip);
-
-
---
 -- Name: index_zip_to_prices_on_zip; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_zip_to_prices_on_zip ON zip_to_prices USING btree (zip);
-
-
---
--- Name: index_zip_vnbs_on_zip; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_zip_vnbs_on_zip ON zip_vnbs USING btree (zip);
 
 
 --
@@ -2970,6 +2825,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170418125916');
 INSERT INTO schema_migrations (version) VALUES ('20170420141436');
 
 INSERT INTO schema_migrations (version) VALUES ('20170424153456');
+
+INSERT INTO schema_migrations (version) VALUES ('20170503124043');
 
 INSERT INTO schema_migrations (version) VALUES ('20170505151515');
 

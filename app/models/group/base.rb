@@ -97,7 +97,6 @@ module Group
           register.group = nil
           register.save
         end
-        self.root_comments.each{|comment| comment.destroy}
       end
   end
 end

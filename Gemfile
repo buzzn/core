@@ -79,11 +79,12 @@ gem 'acts_as_commentable_with_threading'
 gem 'awesome_nested_set'
 gem 'attr_encrypted', '1.3.5'
 gem 'byebug'
-gem 'acts_as_votable'
 gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
+gem 'factory_girl'
 gem 'dotenv-rails'
+gem 'smarter_csv'
 
 group :production, :staging do
   gem 'newrelic_rpm'
