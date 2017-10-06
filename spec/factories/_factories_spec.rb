@@ -65,6 +65,10 @@ describe "Factories produce valid records" do
     it "has a register" do
       expect(subject.registers.first).to be_instance_of(Register::Input)
     end
+    it "creates a register that belongs to the same group" do
+      meter    = create(:meter_real)
+      expect(meter.registers.first.group).to eq(meter.group)
+    end
     it "can override registers" do
       register = create(:register_input)
       meter    = create(:meter_real, registers: [register])

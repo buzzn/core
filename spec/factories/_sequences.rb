@@ -2,7 +2,7 @@ FactoryGirl.define do
   # Please keep sequences ordered alphabetically
   sequence(:localpool_name)      { |i| "Localpool #{i}"  }
   sequence(:metering_point_id)   { |i| "DE26917588246326615503884372" + sprintf("%03d", i) }
-  sequence(:meter_serial_number) { |i| "7564" + sprintf("%04d", i) }
+  sequence(:meter_serial_number) { |i| "6564" + sprintf("%04d", i) }
   sequence(:mpo_contract_number) { |i| i + 90_012 }
   sequence(:organization_name)   { |i| "Generic organization #{i}" }
   sequence(:price_name)          { |i| "Generic price #{i}" }

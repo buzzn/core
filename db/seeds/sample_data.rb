@@ -8,6 +8,10 @@ FactoryGirl.find_definitions
 Group::Localpool.destroy_all
 localpool_people_power = FactoryGirl.create(:localpool, :people_power)
 
+FactoryGirl.create_list(:meter_real, 21, :one_way, group: localpool_people_power)
+FactoryGirl.create(:meter_real, :two_way, group: localpool_people_power)
+
+__END__
 
 [Reading::Continuous, Reading::Single].each(&:destroy_all)
 puts "\n* Readings"
@@ -39,13 +43,6 @@ Device.destroy_all
 import_csv(:devices,
            converters: { watt_peak: Converters::Number, watt_hour_pa: Converters::Number, commissioning: Converters::Date, mobile: Converters::Boolean, primary_energy: Converters::Downcase },
            fields: %i(manufacturer_name manufacturer_product_name manufacturer_product_serialnumber mode law category primary_energy watt_peak watt_hour_pa commissioning mobile)
-)
-
-# don't destroy since there are some previously created ones that would loose referential integrity
-import_csv(:meter_reals,
-           converters: { manufacturer_name: Converters::MeterManufacturerName, calibrated_until: Converters::Date, sent_data_dso: Converters::Date },
-           fields: %i(type manufacturer_name product_name product_serialnumber calibrated_until converter_constant ownership direction section build_year sent_data_dso),
-           overrides: { group: localpool_people_power, registers: [ FactoryGirl.create(:register_input, group: localpool_people_power) ] }
 )
 
 import_csv(:payments,
