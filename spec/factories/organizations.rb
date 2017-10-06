@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :organization do
-    sequence(:name)  { |i| "Generic organization #{i}" }
+    name             { generate(:organization_name) }
     description      "Description of the generic organization"
     mode             Organization.modes.first
     email            "dev+generic-organization@buzzn.net"

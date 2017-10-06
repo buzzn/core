@@ -7,7 +7,7 @@ FactoryGirl.define do
     group                        { FactoryGirl.create(:localpool) }
     manufacturer_name            Meter::Real.manufacturer_names[:easy_meter]
     product_name                 "R2D2"
-    sequence(:product_serialnumber) { |i| "7564" + sprintf("%04d", i) }
+    product_serialnumber         { generate(:meter_serial_number) }
     calibrated_until             Date.parse("2027-10-13")
     converter_constant           1
     ownership                    Meter::Real.ownerships[:buzzn_systems]

@@ -2,14 +2,14 @@ FactoryGirl.define do
   factory :contract, class: 'Contract::MeteringPointOperator' do
     localpool                     { FactoryGirl.create(:localpool) }
     status                        Contract::Base.statuses[:active]
-    sequence(:contract_number, 90012)
+    contract_number               { generate(:mpo_contract_number) }
     slug                          { |attrs| "mpo-#{attrs[:contract_number]}" }
     signing_date                  Date.parse("2015-10-11")
     begin_date                    Date.parse("2016-01-01")
     customer                      { FactoryGirl.create(:person, first_name: "Wolfgang") }
     contractor                    { FactoryGirl.create(:organization) }
-    sequence(:first_master_uid, 90688251510000000000002677114)
-    sequence(:second_master_uid)
+    first_master_uid              { generate(:register_uid) }
+    second_master_uid             { generate(:register_uid) }
     contract_number_addition      1
     power_of_attorney             true
     terms_accepted                true

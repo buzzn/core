@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :localpool, class: 'Group::Localpool' do
-    sequence(:name)        { |i| "Localpool #{i}" }
+    name        { generate(:localpool_name) }
     description { |attrs| "#{attrs[:name]} description" }
   end
 end
