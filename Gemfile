@@ -82,6 +82,7 @@ gem 'byebug'
 gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
+gem 'factory_girl'
 gem 'dotenv-rails'
 gem 'smarter_csv'
 
