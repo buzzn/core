@@ -44,13 +44,13 @@ def import_csv(model_name, converters: {}, fields: [], overrides: {}, dry_run: f
   )
   puts "\n* #{model_name.to_s.capitalize}"
   hashes.each do |hash|
-    fabricator     = "new_#{model_name.to_s.singularize}".to_sym
+    fabricator     = "#{model_name.to_s.singularize}".to_sym
     attributes     = hash.slice(*fields).merge(overrides)
     attributes_str = attributes.map do |k, v|
       v = v.is_a?(Numeric) ? v : "'#{v}'"
       "#{k}: #{v}"
     end.join(", ")
-    puts "Fabricate(:#{fabricator}, #{attributes_str})"
-    Fabricate(fabricator, attributes) unless dry_run
+    puts "FactoryGirl.create(:#{fabricator}, #{attributes_str})"
+    FactoryGirl.create(fabricator, attributes) unless dry_run
   end
 end

@@ -6,7 +6,7 @@ FactoryGirl.define do
     slug                          { |attrs| "mpo-#{attrs[:contract_number]}" }
     signing_date                  Date.parse("2015-10-11")
     begin_date                    Date.parse("2016-01-01")
-    customer                      { FactoryGirl.create(:person, first_name: "Wolfgang") }
+    customer                      { FactoryGirl.create(:person, :wolfgang) }
     contractor                    { FactoryGirl.create(:organization) }
     first_master_uid              { generate(:register_uid) }
     second_master_uid             { generate(:register_uid) }

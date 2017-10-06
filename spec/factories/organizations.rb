@@ -7,6 +7,6 @@ FactoryGirl.define do
     edifactemail     "dev+generic-organization-edifact@buzzn.net"
     phone            "089 / 32 16 8"
     website          "www.generic-organization.com"
-    contact          { FactoryGirl.create(:person, first_name: "Otto", last_name: "Organisator") }
+    contact          { FactoryGirl.create(:person, :organization_contact) }
   end
 end

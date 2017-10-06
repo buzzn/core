@@ -1,18 +1,20 @@
-puts "seeds: loading sample data"
-
-Group::Localpool.destroy_all
-localpool_people_power = Fabricate(:new_localpool) do
-  name "People Power Group"
-  description "Power to the people!"
-  website "www.peoplepower.de"
-end
-
 require_relative 'import_csv'
 
+puts "seeds: loading sample data"
+
+FactoryGirl.definition_file_paths = %w(spec/factories)
+FactoryGirl.find_definitions
+
+Group::Localpool.destroy_all
+localpool_people_power = FactoryGirl.create(:localpool, :people_power)
+
+
 [Reading::Continuous, Reading::Single].each(&:destroy_all)
+puts "\n* Readings"
+
 import_csv(:readings,
            converters: {date: Converters::Date, raw_value: Converters::Number, value: Converters::Number },
-           fields: %i(date raw_value unit reason read_by quality source status comment)
+           fields: %i(date raw_value reason read_by comment)
 )
 
 Person.destroy_all
@@ -21,7 +23,7 @@ import_csv(:persons,
            fields: %i(first_name last_name email phone fax title  prefix preferred_language)
 )
 Person.all.each do |person|
-  Fabricate(:new_bank_account, contracting_party: person)
+  FactoryGirl.create(:bank_account, contracting_party: person)
 end
 
 Organization.destroy_all
@@ -30,7 +32,7 @@ import_csv(:organizations,
            fields: %i(name description slug image email edifactemail phone fax website mode market_place_id)
 )
 Organization.all.each do |organization|
-  Fabricate(:new_bank_account, contracting_party: organization)
+  FactoryGirl.create(:bank_account, contracting_party: organization)
 end
 
 Device.destroy_all
@@ -43,7 +45,7 @@ import_csv(:devices,
 import_csv(:meter_reals,
            converters: { manufacturer_name: Converters::MeterManufacturerName, calibrated_until: Converters::Date, sent_data_dso: Converters::Date },
            fields: %i(type manufacturer_name product_name product_serialnumber calibrated_until converter_constant ownership direction section build_year sent_data_dso),
-           overrides: { group: localpool_people_power, registers: [ Fabricate(:new_register_input, group: localpool_people_power) ] }
+           overrides: { group: localpool_people_power, registers: [ FactoryGirl.create(:register_input, group: localpool_people_power) ] }
 )
 
 import_csv(:payments,
@@ -53,30 +55,8 @@ import_csv(:payments,
 
 puts "\n* Energy Classifications"
 EnergyClassification.destroy_all
-Fabricate(:new_energy_classification) do
-  tariff_name                       'Buzzn Energy'
-  organization                      { Organization.find_by(slug: 'buzzn-energy') }
-  nuclear_ratio                     2.1
-  coal_ratio                        5.9
-  gas_ratio                         40.9
-  other_fossiles_ratio              4.5
-  renewables_eeg_ratio              46.5
-  other_renewables_ratio            0.1
-  co2_emission_gramm_per_kwh        131
-  nuclear_waste_miligramm_per_kwh   0.03
-end
-Fabricate(:new_energy_classification) do
-  tariff_name                       'Energy Mix Germany'
-  organization                      { Organization.find_by(slug: 'germany') }
-  nuclear_ratio                     15.4
-  coal_ratio                        43.8
-  gas_ratio                         6.5
-  other_fossiles_ratio              2.5
-  renewables_eeg_ratio              28.7
-  other_renewables_ratio            3.1
-  co2_emission_gramm_per_kwh        476
-  nuclear_waste_miligramm_per_kwh   0.4
-end
+FactoryGirl.create(:energy_classification, :buzzn)
+FactoryGirl.create(:energy_classification, :germany)
 
 __END__
 
