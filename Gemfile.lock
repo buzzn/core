@@ -96,7 +96,6 @@ GEM
       unicode_utils (~> 1.4)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
-    daemons (1.2.4)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
     doorkeeper (3.1.0)
@@ -325,6 +324,7 @@ GEM
     pry-stack_explorer (0.4.9.2)
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
+    puma (3.10.0)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.5)
@@ -444,10 +444,6 @@ GEM
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
-    thin (1.5.1)
-      daemons (>= 1.0.9)
-      eventmachine (>= 0.12.6)
-      rack (>= 1.0.0)
     thor (0.20.0)
     thread_safe (0.3.5)
     tilt (2.0.5)
@@ -531,6 +527,7 @@ DEPENDENCIES
   pry-rails
   pry-rescue
   pry-stack_explorer
+  puma
   quiet_assets
   rack-cors
   rails
@@ -551,7 +548,6 @@ DEPENDENCIES
   slim
   sprockets-rails
   therubyracer
-  thin
   timecop
   uglifier
   validates_zipcode
