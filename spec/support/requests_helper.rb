@@ -20,7 +20,7 @@ module RequestsHelper
     pwd = account.respond_to?(:password) ? account.password : 'Example123'
     token = account ? $authorizations[account.id] : nil
     if account && token.nil?
-      post login_path, {login: account.email, password: pwd}.to_json, {'Content-Type': 'application/json'}.merge(headers)
+      post login_path, {login: account.email, password: pwd}.to_json, {'Content-Type' => 'application/json'}.merge(headers)
       token = response.headers['Authorization']
       $authorizations[account.id] = token
     end
