@@ -6,9 +6,9 @@ module Me
                         'transaction.update_person']
 
     plugin :rodauth, csrf: false, json: :only do
-      
+
       enable :login, :logout, :change_password, :change_login, :session_expiration, :reset_password, :verify_login_change, :jwt
-      
+
       db Buzzn::DB
 
       change_login_requires_password? true
@@ -22,7 +22,7 @@ module Me
         k, v = json_response[json_response_field_error_key]
         errors = [{parameter: k, detail: v}]
         response.status = 422
-        request.halt [response.status, {'Content-Type': 'application/json'},
+        request.halt [response.status, {'Content-Type' => 'application/json'},
                       [{errors: errors}.to_json]]
       end
 
