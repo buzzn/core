@@ -20,10 +20,6 @@ Fabricator :buzzn_operator, from: :user do
   after_create { |account| account.person.add_role(Role::BUZZN_OPERATOR) }
 end
 
-Fabricator :buzzn_operator, from: :user do
-  after_create { |account| account.person.add_role(:buzzn_operator) }
-end
-
 Fabricator :felix, from: :admin do
   email               'felix@buzzn.net'
   person             { Fabricate(:person_felix) }

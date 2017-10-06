@@ -191,6 +191,19 @@ module Buzzn::Resource
       @object = resource
     end
 
+    def [](attr)
+      if self.respond_to?(attr)
+        self.send(attr)
+      else
+        object.attributes[attr.to_s] || object.send(attr)
+      end
+    end
+    alias :get :[]
+
+    def key?(attr)
+       self.respond_to?(attr) || object.attributes.key?(attr) || object.respond_to?(attr)
+    end
+
     def to_collection(enum, perms, clazz = nil)
       Buzzn::Resource::Collection.new(enum,
                                       (clazz || self.class).method(:to_resource),
@@ -233,7 +246,7 @@ module Buzzn::Resource
     def json(json, includes)
       first = true
       self.class.attribute_names.flatten.each do |attr|
-        obj = self.respond_to?(attr) ? self.send(attr) : (object.attributes[attr.to_s] || object.send(attr))
+        obj = get(attr)
         if first
           first = false
           json << '{'
@@ -264,6 +277,11 @@ module Buzzn::Resource
         end
       end if includes.is_a? Hash
       json << '}'
+    end
+
+    def is_a?(clazz)
+      # for dry-validation we say we are a Hash
+      super || clazz == Hash
     end
   end
 end

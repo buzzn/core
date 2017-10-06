@@ -1180,7 +1180,9 @@ CREATE TABLE groups (
     description text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    type character varying NOT NULL
+    type character varying NOT NULL,
+    organization_id uuid,
+    person_id uuid
 );
 
 
@@ -2166,6 +2168,20 @@ CREATE INDEX index_formula_parts_on_register_id ON formula_parts USING btree (re
 
 
 --
+-- Name: index_groups_on_organization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_organization_id ON groups USING btree (organization_id);
+
+
+--
+-- Name: index_groups_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_person_id ON groups USING btree (person_id);
+
+
+--
 -- Name: index_groups_on_readable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2501,6 +2517,22 @@ ALTER TABLE ONLY accounts
 
 ALTER TABLE ONLY accounts
     ADD CONSTRAINT accounts_status_id_fkey FOREIGN KEY (status_id) REFERENCES account_statuses(id);
+
+
+--
+-- Name: groups fk_groups_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_organization FOREIGN KEY (organization_id) REFERENCES organizations(id);
+
+
+--
+-- Name: groups fk_groups_person; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_person FOREIGN KEY (person_id) REFERENCES persons(id);
 
 
 --
@@ -2910,6 +2942,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170907190442');
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
 
 INSERT INTO schema_migrations (version) VALUES ('20171005091701');
+
+INSERT INTO schema_migrations (version) VALUES ('20171006143958');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009065708');
 

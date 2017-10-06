@@ -9,7 +9,8 @@ describe Admin::LocalpoolResource do
                            'description',
                            'slug',
                            'updatable',
-                           'deletable' ] }
+                           'deletable',
+                           'incompleteness' ] }
 
   let(:resources) { Admin::LocalpoolResource.all(admin) }
 

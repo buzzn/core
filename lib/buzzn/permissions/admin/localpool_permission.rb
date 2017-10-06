@@ -24,6 +24,13 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
     retrieve :managers
   end
 
+  owner do
+    retrieve :managers
+    contact do
+      retrieve :managers
+    end
+  end
+
   energy_consumers do
     retrieve :managers
   end
