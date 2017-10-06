@@ -4,7 +4,7 @@ FactoryGirl.define do
     manufacturer_product_name         "Generic product"
     manufacturer_product_serialnumber "47-11"
     mode                              "OUT"
-    register                          { FactoryGirl.create(:register_input) }
+    register                          { FactoryGirl.create(:register, :input) }
     law                               "KWKG"
     category                          "Generic category"
     primary_energy                    Device::NATURAL_GAS

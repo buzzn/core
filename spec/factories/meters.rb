@@ -32,7 +32,7 @@ FactoryGirl.define do
         # Add a register and prevent creating another meter (goes into endless loop) by passing in self.
         # This also allows passing registers to the factory like this
         # FactoryGirl.creating(:meter_real, registers: [a_register_instance])
-        registers = evaluator.registers || [FactoryGirl.build(:register_input, meter: meter, group: meter.group)]
+        registers = evaluator.registers || [FactoryGirl.build(:register, :input, meter: meter, group: meter.group)]
         meter.registers = registers
       end
 

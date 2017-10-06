@@ -35,13 +35,13 @@ module Converters
   end
 end
 
-def import_csv(model_name, converters: {}, fields: [], overrides: {}, dry_run: false)
+def get_csv(model_name, converters = {})
   file_name = Rails.root.join("db/sample_data/#{model_name}.csv")
-  hashes = SmarterCSV.process(file_name,
-    col_sep: ";",
-    convert_values_to_numeric: false,
-    value_converters: converters
-  )
+  SmarterCSV.process(file_name, col_sep: ";", convert_values_to_numeric: false, value_converters: converters)
+end
+
+def import_csv(model_name, converters: {}, fields: [], overrides: {}, dry_run: false)
+  hashes = get_csv(model_name, converters)
   puts "\n* #{model_name.to_s.capitalize}"
   hashes.each do |hash|
     fabricator     = "#{model_name.to_s.singularize}".to_sym

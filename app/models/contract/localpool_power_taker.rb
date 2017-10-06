@@ -21,7 +21,7 @@ module Contract
         errors.add(:register, MUST_BELONG_TO_LOCALPOOL)
       end
       # TODO find a better place to set this
-      self.localpool ||= register.group      
+      self.localpool ||= register.group
       if register.group != localpool
         errors.add(:register, MUST_BELONG_TO_LOCALPOOL)
       end

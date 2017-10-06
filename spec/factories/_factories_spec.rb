@@ -35,8 +35,22 @@ describe "Factories produce valid records" do
     it { is_expected.to have_association(:customer, Person) }
     it { is_expected.to have_association(:customer_bank_account, BankAccount) }
     it "has correctly generated contract numbers" do
-      expect(subject.contract_number).to be >= 90_012
+      expect(subject.contract_number).to be >= 90_000
       expect(subject.contract_number).to be <= 100_000
+    end
+    context "powertaker contract" do
+      subject { create(:contract, :localpool_powertaker) }
+      describe "customer" do
+        it "has a customer named Powertaker" do
+          expect(subject.customer.last_name).to match(/^Powertaker/)
+        end
+        it "has a customer with a bank_account" do
+          expect(subject.customer.bank_accounts.size).to be >= 1
+        end
+      end
+      describe "register" do
+        it { is_expected.to have_association(:register, Register::Input) }
+      end
     end
   end
 
@@ -70,7 +84,7 @@ describe "Factories produce valid records" do
       expect(meter.registers.first.group).to eq(meter.group)
     end
     it "can override registers" do
-      register = create(:register_input)
+      register = create(:register, :input)
       meter    = create(:meter_real, registers: [register])
       expect(meter.registers).to eq([register])
       expect(meter).to be_valid
@@ -81,6 +95,12 @@ describe "Factories produce valid records" do
     subject { create(:organization) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:contact, Person) }
+    context "Trait with bank_account" do
+      subject { create(:organization, :with_bank_account) }
+      it "has a bank_account" do
+        expect(subject.bank_accounts.size).to eq(1)
+      end
+    end
   end
 
   context "Payment" do
@@ -92,6 +112,13 @@ describe "Factories produce valid records" do
     subject { create(:person) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:address, Address) }
+    it { expect(subject.bank_accounts).to be_empty }
+    context "Trait with bank_account" do
+      subject { create(:person, :with_bank_account) }
+      it "has a bank_account" do
+        expect(subject.bank_accounts.size).to eq(1)
+      end
+    end
   end
 
   context "Prices" do
@@ -106,13 +133,13 @@ describe "Factories produce valid records" do
   end
 
   context "Register::Input" do
-    subject { create(:register_input) }
+    subject { create(:register, :input) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:group, Group::Localpool) }
     it { is_expected.to have_association(:meter, Meter::Real) }
     it "can override meter" do
       meter    = create(:meter_real)
-      register = create(:register_input, meter: meter)
+      register = create(:register, :input, meter: meter)
       expect(register.meter).to eq(meter)
       expect(register).to be_valid
       meter.reload

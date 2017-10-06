@@ -6,8 +6,8 @@ FactoryGirl.define do
     slug                          { |attrs| "mpo-#{attrs[:contract_number]}" }
     signing_date                  Date.parse("2015-10-11")
     begin_date                    Date.parse("2016-01-01")
-    customer                      { FactoryGirl.create(:person, :wolfgang) }
-    contractor                    { FactoryGirl.create(:organization) }
+    customer                      { SeedSingletons.persons.wolfgang }
+    contractor                    { FactoryGirl.create(:organization, :with_bank_account) }
     first_master_uid              { generate(:register_uid) }
     second_master_uid             { generate(:register_uid) }
     contract_number_addition      1
@@ -16,9 +16,25 @@ FactoryGirl.define do
     metering_point_operator_name  "Generic metering point operator"
 
     before(:create) do |contract, _transients|
-      # TODO: reuse the contracting party's account here
-      contract.contractor_bank_account = FactoryGirl.create(:bank_account, contracting_party: contract.contractor)
-      contract.customer_bank_account   = FactoryGirl.create(:bank_account, contracting_party: contract.customer)
+      %i(customer contractor).each do |identifier|
+        person_bank_account = contract.send(identifier).bank_accounts.first
+        contract.send("#{identifier}_bank_account=", person_bank_account) if person_bank_account.present?
+      end
+    end
+  end
+
+  trait :metering_point_operator do
+    initialize_with { Contract::MeteringPointOperator.new } # a slight hack to define a trait of contract, but use a different subclass
+  end
+
+  trait :localpool_powertaker do
+    initialize_with { Contract::LocalpoolPowerTaker.new } # a slight hack to define a trait of contract, but use a different subclass
+    forecast_kwh_pa 1000
+    customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }
+    contractor      { SeedSingletons.persons.wolfgang }
+    before(:create) do |contract, _transients|
+      meter = FactoryGirl.create(:meter_real, :one_way, group: contract.localpool)
+      contract.register = meter.registers.first
     end
   end
 end

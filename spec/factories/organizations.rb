@@ -8,5 +8,11 @@ FactoryGirl.define do
     phone            "089 / 32 16 8"
     website          "www.generic-organization.com"
     contact          { FactoryGirl.create(:person, :organization_contact) }
+
+    trait :with_bank_account do
+      before(:create) do |organization|
+        organization.bank_accounts = [ FactoryGirl.create(:bank_account) ]
+      end
+    end
   end
 end

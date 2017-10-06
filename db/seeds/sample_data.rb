@@ -8,7 +8,13 @@ FactoryGirl.find_definitions
 Group::Localpool.destroy_all
 localpool_people_power = FactoryGirl.create(:localpool, :people_power)
 
-FactoryGirl.create_list(:meter_real, 21, :one_way, group: localpool_people_power)
+10.times do
+  FactoryGirl.create(:contract, :localpool_powertaker,
+                     localpool: localpool_people_power,
+                     customer: FactoryGirl.create(:person, :powertaker)
+  )
+end
+
 FactoryGirl.create(:meter_real, :two_way, group: localpool_people_power)
 
 __END__
