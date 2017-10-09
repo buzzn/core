@@ -73,7 +73,7 @@ describe "Group Model" do
       expect(localpool.registers.grid_feeding_corrected.size).to eq 1
     end
 
-    describe 'assigning owner', :focus do
+    describe 'assigning owner' do
       let(:localpool) { Fabricate(:localpool, person: nil, organization: nil) }
       context 'when new owner is an organization' do
         it 'is a assigned correctly' do
