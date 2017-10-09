@@ -91,7 +91,7 @@ describe Me::Roda do
         "title"=>"Prof.",
         "first_name"=>"Maxima",
         "last_name"=>"Toll",
-        "phone"=>"080 123312",
+        "phone"=>"+(0)84.32 123-312 x123 #123",
         "fax"=>"08191 123312",
         "email"=>person.email,
         "preferred_language"=>"de",
@@ -129,7 +129,7 @@ describe Me::Roda do
             prefix: 'Both',
             first_name: 'Maxima' * 20,
             last_name: 'Toll' * 40,
-            phone: 'asddasd',
+            phone: '+(0)80 123-312.321 x123 #123 *1@2&3',
             fax: '123312' * 40,
             preferred_language: 'none'
 
@@ -145,7 +145,7 @@ describe Me::Roda do
             prefix: 'M',
             first_name: 'Maxima',
             last_name: 'Toll',
-            phone: '080 123312',
+            phone: '+(0)84.32 123-312 x123 #123',
             fax: '08191 123312',
             preferred_language: 'de'
 
@@ -155,7 +155,7 @@ describe Me::Roda do
       expect(person.prefix).to eq 'male'
       expect(person.first_name).to eq 'Maxima'
       expect(person.last_name).to eq 'Toll'
-      expect(person.phone).to eq '080 123312'
+      expect(person.phone).to eq '+(0)84.32 123-312 x123 #123'
       expect(person.fax).to eq '08191 123312'
       expect(person.preferred_language).to eq 'german'
 
