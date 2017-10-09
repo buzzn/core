@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :localpool, class: 'Group::Localpool' do
     name        { generate(:localpool_name) }
     description { |attrs| "#{attrs[:name]} description" }
-
+    owner       { FactoryGirl.create(:person) }
     trait :people_power do
       name "People Power Group"
       description "Power to the people!"
