@@ -1295,7 +1295,6 @@ CREATE TABLE organizations (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     market_place_id character varying,
-    represented_by character varying,
     sales_tax_number integer,
     tax_rate double precision,
     tax_number integer,
@@ -1305,7 +1304,8 @@ CREATE TABLE organizations (
     mandate_reference character varying,
     creditor_id character varying,
     account_number character varying,
-    contact_id uuid
+    contact_id uuid,
+    legal_representation_id uuid
 );
 
 
@@ -2229,6 +2229,13 @@ CREATE INDEX index_organizations_on_contact_id ON organizations USING btree (con
 
 
 --
+-- Name: index_organizations_on_legal_representation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organizations_on_legal_representation_id ON organizations USING btree (legal_representation_id);
+
+
+--
 -- Name: index_organizations_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2494,6 +2501,14 @@ ALTER TABLE ONLY accounts
 
 ALTER TABLE ONLY accounts
     ADD CONSTRAINT accounts_status_id_fkey FOREIGN KEY (status_id) REFERENCES account_statuses(id);
+
+
+--
+-- Name: organizations fk_organizations_legal_representation; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organizations
+    ADD CONSTRAINT fk_organizations_legal_representation FOREIGN KEY (legal_representation_id) REFERENCES persons(id);
 
 
 --
@@ -2895,6 +2910,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170907190442');
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
 
 INSERT INTO schema_migrations (version) VALUES ('20171005091701');
+
+INSERT INTO schema_migrations (version) VALUES ('20171009065708');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 

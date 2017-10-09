@@ -15,6 +15,7 @@ class OrganizationResource < Buzzn::Resource::Entity
 
   has_one :address
   has_one :contact
+  has_one :legal_representation
 
   has_many :bank_accounts
 
