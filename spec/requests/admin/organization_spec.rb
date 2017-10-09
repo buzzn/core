@@ -34,7 +34,8 @@ describe Admin::LocalpoolRoda do
     entity!(:organization) do
       organization = Fabricate(:metering_service_provider,
                                address: address,
-                               contact: Fabricate(:person))
+                               contact: Fabricate(:person),
+                               legal_representation: Fabricate(:person))
       Fabricate(:bank_account, contracting_party: organization)
       Fabricate(:metering_point_operator_contract,
                 localpool: group,
@@ -90,6 +91,22 @@ describe Admin::LocalpoolRoda do
             "image"=>organization.contact.image.md.url,
             "updatable"=>true,
             "deletable"=>false,
+          },
+          'legal_representation'=>{
+            "id"=>organization.legal_representation.id,
+            "type"=>"person",
+            'updated_at'=>organization.legal_representation.updated_at.as_json,
+            "prefix"=>organization.legal_representation.attributes['prefix'],
+            "title"=>organization.legal_representation.title,
+            "first_name"=>organization.legal_representation.first_name,
+            "last_name"=>organization.legal_representation.last_name,
+            "phone"=>organization.legal_representation.phone,
+            "fax"=>organization.legal_representation.fax,
+            "email"=>organization.legal_representation.email,
+            "preferred_language"=>organization.legal_representation.attributes['preferred_language'],
+            "image"=>organization.legal_representation.image.md.url,
+            "updatable"=>true,
+            "deletable"=>false,
           }
         }
       end
@@ -105,7 +122,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200' do
-        GET "/#{group.id}/organizations/#{organization.id}", admin, include: 'bank_accounts, contact'
+        GET "/#{group.id}/organizations/#{organization.id}", admin, include: 'bank_accounts, contact, legal_representation'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq organization_json.to_yaml
       end

@@ -35,11 +35,17 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
       retrieve :managers_organization
       update :managers_organization
       delete :none
-      address do
+      address do # TODO Ralf: is the address of the contact of an organization of any relevance ?
         retrieve :managers_organization
         update :managers_organization
         delete :none
       end
+    end
+
+    legal_representation do
+      retrieve :managers_organization
+      update :managers_organization
+      delete :none
     end
 
     address do
