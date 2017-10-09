@@ -37,7 +37,7 @@ FactoryGirl.define do
       end
 
       trait :one_way do
-      direction_number             Meter::Real.direction_numbers[:one_way_meter]
+        direction_number           Meter::Real.direction_numbers[:one_way_meter]
         converter_constant         1
       end
 

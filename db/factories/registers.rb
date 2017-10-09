@@ -14,11 +14,13 @@ FactoryGirl.define do
     share_publicly        false
 
     trait :input do
-      name                { generate(:register_input_name) }
+      initialize_with { Register::Input.new } # a slight hack to define a trait of contract, but use a different subclass
+      name            { generate(:register_input_name) }
     end
 
     trait :output do
-       name               { generate(:register_output_name) }
+      initialize_with { Register::Output.new } # a slight hack to define a trait of contract, but use a different subclass
+      name            { generate(:register_output_name) }
     end
   end
 end
