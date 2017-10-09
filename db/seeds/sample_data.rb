@@ -48,7 +48,6 @@ powertakers.each do |_key, person|
     contractor: localpool_people_power.owner,
     customer: person
   )
-  ap contract.register
   person.add_role(Role::GROUP_MEMBER, localpool_people_power) # can see his group
 end
 powertakers[:pt1].add_role(Role::SELF, localpool_people_power) # can see his profile
