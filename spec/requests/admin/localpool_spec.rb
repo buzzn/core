@@ -40,26 +40,36 @@ describe Admin::LocalpoolRoda do
     end
     Fabricate(:localpool_processing_contract, localpool: localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
+    localpool.meters.each { |meter| meter.update(group: localpool) }
     Account::Base.find(user.resource_owner_id)
       .person.add_role(Role::GROUP_MEMBER, localpool)
     localpool
   end
 
-  entity(:localpool_no_contracts) { Fabricate(:localpool) }
+  entity(:localpool_no_contracts) do
+    Fabricate(:localpool, organization: Fabricate(:other_organization))
+  end
 
   let(:empty_json) { [] }
 
   let(:localpools_json) do
     Group::Localpool.all.collect do |localpool|
+      incompleteness =
+        if localpool == localpool_no_contracts
+          {'owner' => {'contact' => ['must be filled']}}
+        else
+          {'owner' => ['must be filled']}
+        end
       {
         "id"=>localpool.id,
         "type"=>"group_localpool",
         'updated_at'=>localpool.updated_at.as_json,
         "name"=>localpool.name,
-        "description"=>localpool.description,
         "slug"=>localpool.slug,
+        "description"=>localpool.description,
         "updatable"=>true,
-        "deletable"=>true
+        "deletable"=>true,
+        'incompleteness' => incompleteness
       }
     end
   end
@@ -74,6 +84,7 @@ describe Admin::LocalpoolRoda do
       "description"=>localpool_no_contracts.description,
       "updatable"=>true,
       "deletable"=>true,
+      'incompleteness' => {'owner' => {'contact' => ['must be filled']}},
       "meters"=>{
         'array'=> localpool_no_contracts.meters.collect do |meter|
           {
@@ -82,6 +93,7 @@ describe Admin::LocalpoolRoda do
             'updated_at'=>meter.updated_at.as_json,
             "product_name"=>meter.product_name,
             "product_serialnumber"=>meter.product_serialnumber,
+            'sequence_number' => meter.sequence_number,
             "updatable"=>true,
             "deletable"=>true
           }
@@ -150,7 +162,8 @@ describe Admin::LocalpoolRoda do
         'slug' => 'super-duper',
         'description' => 'superduper localpool location on the dark side of the moon',
         'updatable'=>true,
-        'deletable'=>true 
+        'deletable'=>true,
+        'incompleteness' => {'owner' => ['must be filled']}
       }
     end
 
@@ -204,7 +217,8 @@ describe Admin::LocalpoolRoda do
         "slug" => 'a-b-c-d',
         "description"=>'none',
         "updatable"=>true,
-        "deletable"=>true
+        "deletable"=>true,
+        'incompleteness' => {'owner' => ['must be filled']}
       }
     end
 

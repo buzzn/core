@@ -6,6 +6,13 @@ module Group
 
     scope :restricted, ->(uuids) { where(id: uuids) }
 
+    belongs_to :organization
+    belongs_to :person
+
+    def owner
+      organization || person
+    end
+
     def metering_point_operator_contract
       Contract::MeteringPointOperator.where(localpool_id: self).first
     end

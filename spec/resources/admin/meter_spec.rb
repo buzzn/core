@@ -19,6 +19,7 @@ describe Meter::BaseResource do
   let(:base_keys) { ['id', 'type', 'updated_at',
                      'product_name',
                      'product_serialnumber',
+                     'sequence_number',
                      'updatable',
                      'deletable'] }
 

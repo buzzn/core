@@ -143,12 +143,12 @@ module Meter
       if group_id_changed?
         raise ArgumentError.new('can not change group') unless group_id_was.nil?
         max = Meter::Base.where(group: group).size
-        self.position = max
+        self.sequence_number = max
       end
     end
 
     before_destroy do
-      # TODO need to figure out the position thingy
+      # TODO need to figure out what to do with the sequence_number
       raise 'can not delete meter with group' if group
     end
 

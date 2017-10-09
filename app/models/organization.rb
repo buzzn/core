@@ -9,6 +9,7 @@ class Organization < ContractingParty
   has_many :energy_classifications
 
   belongs_to :contact, class_name: Person
+  belongs_to :legal_representation, class_name: Person
 
   def self.modes
     %w{

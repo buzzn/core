@@ -1180,7 +1180,9 @@ CREATE TABLE groups (
     description text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    type character varying NOT NULL
+    type character varying NOT NULL,
+    organization_id uuid,
+    person_id uuid
 );
 
 
@@ -1219,7 +1221,7 @@ CREATE TABLE meters (
     manufacturer_name manufacturer_name,
     build_year integer,
     sent_data_dso date,
-    "position" integer,
+    sequence_number integer,
     group_id uuid
 );
 
@@ -1295,7 +1297,6 @@ CREATE TABLE organizations (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     market_place_id character varying,
-    represented_by character varying,
     sales_tax_number integer,
     tax_rate double precision,
     tax_number integer,
@@ -1305,7 +1306,8 @@ CREATE TABLE organizations (
     mandate_reference character varying,
     creditor_id character varying,
     account_number character varying,
-    contact_id uuid
+    contact_id uuid,
+    legal_representation_id uuid
 );
 
 
@@ -2166,6 +2168,20 @@ CREATE INDEX index_formula_parts_on_register_id ON formula_parts USING btree (re
 
 
 --
+-- Name: index_groups_on_organization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_organization_id ON groups USING btree (organization_id);
+
+
+--
+-- Name: index_groups_on_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_person_id ON groups USING btree (person_id);
+
+
+--
 -- Name: index_groups_on_readable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2180,10 +2196,10 @@ CREATE UNIQUE INDEX index_groups_on_slug ON groups USING btree (slug);
 
 
 --
--- Name: index_meters_on_group_id_and_position; Type: INDEX; Schema: public; Owner: -
+-- Name: index_meters_on_group_id_and_sequence_number; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_meters_on_group_id_and_position ON meters USING btree (group_id, "position");
+CREATE UNIQUE INDEX index_meters_on_group_id_and_sequence_number ON meters USING btree (group_id, sequence_number);
 
 
 --
@@ -2226,6 +2242,13 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON oauth_applications USING 
 --
 
 CREATE INDEX index_organizations_on_contact_id ON organizations USING btree (contact_id);
+
+
+--
+-- Name: index_organizations_on_legal_representation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organizations_on_legal_representation_id ON organizations USING btree (legal_representation_id);
 
 
 --
@@ -2494,6 +2517,30 @@ ALTER TABLE ONLY accounts
 
 ALTER TABLE ONLY accounts
     ADD CONSTRAINT accounts_status_id_fkey FOREIGN KEY (status_id) REFERENCES account_statuses(id);
+
+
+--
+-- Name: groups fk_groups_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_organization FOREIGN KEY (organization_id) REFERENCES organizations(id);
+
+
+--
+-- Name: groups fk_groups_person; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_person FOREIGN KEY (person_id) REFERENCES persons(id);
+
+
+--
+-- Name: organizations fk_organizations_legal_representation; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organizations
+    ADD CONSTRAINT fk_organizations_legal_representation FOREIGN KEY (legal_representation_id) REFERENCES persons(id);
 
 
 --
@@ -2895,4 +2942,10 @@ INSERT INTO schema_migrations (version) VALUES ('20170907190442');
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
 
 INSERT INTO schema_migrations (version) VALUES ('20171005091701');
+
+INSERT INTO schema_migrations (version) VALUES ('20171006143958');
+
+INSERT INTO schema_migrations (version) VALUES ('20171009065708');
+
+INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 
