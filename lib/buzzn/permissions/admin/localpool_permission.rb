@@ -35,6 +35,13 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
     retrieve :managers
   end
 
+  address do
+    create :managers
+    retrieve :managers
+    update :managers
+    delete :none
+  end
+
   organizations do
     crud :managers
 
@@ -81,13 +88,6 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
     retrieve :managers_contract
     update :managers
     delete :none
-
-    address do
-      create :managers
-      retrieve :managers
-      update :managers
-      delete :managers
-    end
 
     register do
       create :none
@@ -151,6 +151,13 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
     retrieve :managers
     update :managers
     delete :operators
+
+    address do
+      create :managers
+      retrieve :managers
+      update :managers
+      delete :managers
+    end
 
     # reuse permissions from 'registers'
     registers '/registers'

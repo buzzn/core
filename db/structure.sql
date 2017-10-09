@@ -880,8 +880,6 @@ CREATE TABLE addresses (
     zip character varying(16) NOT NULL,
     longitude double precision,
     latitude double precision,
-    addressable_id uuid,
-    addressable_type character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     addition character varying,
@@ -1182,7 +1180,8 @@ CREATE TABLE groups (
     updated_at timestamp without time zone,
     type character varying NOT NULL,
     organization_id uuid,
-    person_id uuid
+    person_id uuid,
+    address_id uuid
 );
 
 
@@ -1222,7 +1221,8 @@ CREATE TABLE meters (
     build_year integer,
     sent_data_dso date,
     sequence_number integer,
-    group_id uuid
+    group_id uuid,
+    address_id uuid
 );
 
 
@@ -1307,7 +1307,8 @@ CREATE TABLE organizations (
     creditor_id character varying,
     account_number character varying,
     contact_id uuid,
-    legal_representation_id uuid
+    legal_representation_id uuid,
+    address_id uuid
 );
 
 
@@ -1350,7 +1351,8 @@ CREATE TABLE persons (
     subject_to_tax boolean,
     mandate_reference character varying,
     creditor_id character varying,
-    image character varying
+    image character varying,
+    address_id uuid
 );
 
 
@@ -1986,13 +1988,6 @@ CREATE UNIQUE INDEX accounts_email_index ON accounts USING btree (email) WHERE (
 
 
 --
--- Name: index_addressable; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_addressable ON addresses USING btree (addressable_id, addressable_type);
-
-
---
 -- Name: index_bank_accounts_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2168,6 +2163,13 @@ CREATE INDEX index_formula_parts_on_register_id ON formula_parts USING btree (re
 
 
 --
+-- Name: index_groups_on_address_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_address_id ON groups USING btree (address_id);
+
+
+--
 -- Name: index_groups_on_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2193,6 +2195,13 @@ CREATE INDEX index_groups_on_readable ON groups USING btree (readable);
 --
 
 CREATE UNIQUE INDEX index_groups_on_slug ON groups USING btree (slug);
+
+
+--
+-- Name: index_meters_on_address_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_meters_on_address_id ON meters USING btree (address_id);
 
 
 --
@@ -2238,6 +2247,13 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON oauth_applications USING 
 
 
 --
+-- Name: index_organizations_on_address_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organizations_on_address_id ON organizations USING btree (address_id);
+
+
+--
 -- Name: index_organizations_on_contact_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2263,6 +2279,13 @@ CREATE UNIQUE INDEX index_organizations_on_slug ON organizations USING btree (sl
 --
 
 CREATE INDEX index_payments_on_contract_id ON payments USING btree (contract_id);
+
+
+--
+-- Name: index_persons_on_address_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_persons_on_address_id ON persons USING btree (address_id);
 
 
 --
@@ -2520,6 +2543,14 @@ ALTER TABLE ONLY accounts
 
 
 --
+-- Name: groups fk_groups_address; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
 -- Name: groups fk_groups_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2536,11 +2567,35 @@ ALTER TABLE ONLY groups
 
 
 --
+-- Name: meters fk_meters_address; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY meters
+    ADD CONSTRAINT fk_meters_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
+-- Name: organizations fk_organizations_address; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organizations
+    ADD CONSTRAINT fk_organizations_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
 -- Name: organizations fk_organizations_legal_representation; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY organizations
     ADD CONSTRAINT fk_organizations_legal_representation FOREIGN KEY (legal_representation_id) REFERENCES persons(id);
+
+
+--
+-- Name: persons fk_persons_address; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY persons
+    ADD CONSTRAINT fk_persons_address FOREIGN KEY (address_id) REFERENCES addresses(id);
 
 
 --
@@ -2946,6 +3001,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171005091701');
 INSERT INTO schema_migrations (version) VALUES ('20171006143958');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009065708');
+
+INSERT INTO schema_migrations (version) VALUES ('20171009090631');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 

@@ -33,9 +33,9 @@ describe Admin::LocalpoolRoda do
     entity!(:address) { Fabricate(:address) }
     entity!(:organization) do
       organization = Fabricate(:metering_service_provider,
-                               address: address,
                                contact: Fabricate(:person),
                                legal_representation: Fabricate(:person))
+      organization.update(address: address)
       Fabricate(:bank_account, contracting_party: organization)
       Fabricate(:metering_point_operator_contract,
                 localpool: group,
@@ -179,13 +179,13 @@ describe Admin::LocalpoolRoda do
         end
 
         it '404' do
-          address.update(addressable: nil)
+          organization.update(address: nil)
           begin
             GET "/#{group.id}/organizations/#{organization.id}/address", admin
             expect(response).to have_http_status(404)
             expect(json).to eq address_not_found_json
           ensure
-            address.update(addressable: organization)
+            organization.update(address: address)
           end
         end
 

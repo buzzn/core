@@ -4,6 +4,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
   entity!(:me) do
     me = Fabricate(:user)
     me.person.address = Fabricate(:address)
+    me.person.save
     me
   end
 
@@ -59,7 +60,8 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
 
             expect { address.update({updated_at: address.object.updated_at}) }.not_to raise_error
 
-            address.delete
+            person.object.address = nil
+            person.object.save
             expect(person.object.reload.address).to be_nil
           end
         end
