@@ -58,6 +58,29 @@ describe Group::Base do
       expect(localpool.registers.grid_consumption_corrected.size).to eq 1
       expect(localpool.registers.grid_feeding_corrected.size).to eq 1
     end
+
+    describe 'assigning owner', :focus do
+      let(:localpool) { Fabricate(:localpool, person: nil, organization: nil) }
+      context 'when new owner is an organization' do
+        it 'is a assigned correctly' do
+          new_owner = Fabricate(:organization, mode: :metering_service_provider)
+          localpool.owner = new_owner
+          expect(localpool.owner).to eq(new_owner)
+        end
+      end
+      context 'when new owner is a person' do
+        it 'is a assigned correctly' do
+          new_owner = Fabricate(:person)
+          localpool.owner = new_owner
+          expect(localpool.owner).to eq(new_owner)
+        end
+      end
+      context 'when new owner is neither person nor organization' do
+        it 'raises an exception' do
+          expect { localpool.owner = OpenStruct.new }.to raise_error(RuntimeError, /Can't assign/)
+        end
+      end
+    end
   end
 end
 
