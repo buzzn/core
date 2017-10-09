@@ -1,5 +1,5 @@
-# Generates and caches DB records that we need to access globally.
-module SeedSingletons
+# Generates and caches the factories/DB records that we need to access globally.
+module SeedsRepository
   class << self
     def persons
       @persons ||= OpenStruct.new(

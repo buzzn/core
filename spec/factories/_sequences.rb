@@ -5,6 +5,7 @@ FactoryGirl.define do
   sequence(:meter_serial_number)  { |i| i + 65640000 }
   sequence(:mpo_contract_number)  { |i| i + 90_000 }
   sequence(:organization_name)    { |i| "Generic organization #{i}" }
+  sequence(:person_image)         { |i| name = (i % 60) + 1; "#{name}.jpg" }
   sequence(:powertaker_email)     { |i| "dev+pt#{i}@buzzn.net" }
   sequence(:powertaker_last_name) { |i| "Powertaker #{i}" }
   sequence(:price_name)           { |i| "Generic price #{i}" }

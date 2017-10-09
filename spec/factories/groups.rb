@@ -8,5 +8,11 @@ FactoryGirl.define do
       description "Power to the people!"
       website "www.peoplepower.de"
     end
+
+    trait :hell_und_warm do
+      name "hell & warm"
+      description "Hell und Warm!"
+      website "www.hellundwarm.de"
+    end
   end
 end

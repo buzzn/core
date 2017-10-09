@@ -6,7 +6,7 @@ FactoryGirl.define do
     slug                          { |attrs| "mpo-#{attrs[:contract_number]}" }
     signing_date                  Date.parse("2015-10-11")
     begin_date                    Date.parse("2016-01-01")
-    customer                      { SeedSingletons.persons.wolfgang }
+    customer                      { FactoryGirl.create(:person) }
     contractor                    { FactoryGirl.create(:organization, :with_bank_account) }
     first_master_uid              { generate(:register_uid) }
     second_master_uid             { generate(:register_uid) }
@@ -31,7 +31,7 @@ FactoryGirl.define do
     initialize_with { Contract::LocalpoolPowerTaker.new } # a slight hack to define a trait of contract, but use a different subclass
     forecast_kwh_pa 1000
     customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }
-    contractor      { SeedSingletons.persons.wolfgang }
+    contractor      { FactoryGirl.create(:person, :with_bank_account) }
     before(:create) do |contract, _transients|
       meter = FactoryGirl.create(:meter_real, :one_way, group: contract.localpool)
       contract.register = meter.registers.first
