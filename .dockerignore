@@ -6,7 +6,6 @@ README-specs.md
 spec
 db/seed_assets/*
 db/banks/*
-db/seeds.rb
 tmp/*
 public/uploads/*
 docker-compose.yml
