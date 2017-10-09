@@ -19,21 +19,29 @@ module Group
     end
 
     def contracts
-      Contract::Localpool.joins(:localpool).where(localpool: self)
+      self.class.contracts(self)
+    end
+
+    def self.contracts(base = where('1=1')) # take the complete set as default
+      Contract::Localpool.joins(:localpool).where(localpool: base)
     end
 
     def persons
+      self.class.persons(self)
+    end
+
+    def self.persons(base = where('1=1')) # take the complete set as default
       roles           = Role.arel_table
       persons_roles     = Arel::Table.new(:persons_roles)
       persons         = Person.arel_table
       localpool_users = persons_roles
                         .join(roles)
                         .on(roles[:id].eq(persons_roles[:role_id])
-                             .and(roles[:resource_id].eq(self.id)))
+                             .and(roles[:resource_id].eq(base)))
                         .where(persons_roles[:person_id].eq(persons[:id]))
                         .project(1)
                         .exists
-      contract_users = contracts
+      contract_users = contracts(base)
                        .where('contracts.customer_id = persons.id or contracts.contractor_id = persons.id')
                        .select(1)
                        .exists
@@ -41,8 +49,11 @@ module Group
     end
 
     def organizations
-      Organization.where(contracts
-                          .where('contracts.customer_id = organizations.id or contracts.contractor_id = organizations.id')
+      self.class.organizations(contracts)
+    end
+
+    def self.organizations(base = contracts)
+      Organization.where(base.where('contracts.customer_id = organizations.id or contracts.contractor_id = organizations.id')
                   .select(1)
                   .exists)
     end

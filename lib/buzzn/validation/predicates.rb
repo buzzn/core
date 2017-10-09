@@ -16,7 +16,7 @@ module Buzzn::Validation
     end
 
     predicate(:phone_number?) do |value|
-      ! /^[()+\s0-9]*$/.match(value).nil?
+      ! /^[0-9+\(\)#\.\s\/ext-]+$/.match(value).nil?
     end
   end
 end

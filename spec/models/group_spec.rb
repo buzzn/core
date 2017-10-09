@@ -34,6 +34,17 @@ describe "Group Model" do
 
   describe Group::Localpool do
 
+    it 'has organizations and persons' do
+      second = Fabricate(:localpool) # has no contracts and thus no persons and orgas
+      pools = Group::Localpool.where(id: [localpool, second])
+      persons = localpool.contracts.collect { |c| c.customer }.uniq
+      organizations = localpool.contracts.collect { |c| c.contractor }.uniq
+      expect(pools.persons).to match_array persons
+      expect(pools.organizations).to match_array organizations
+      expect(localpool.persons).to match_array persons
+      expect(localpool.organizations).to match_array organizations
+    end
+
     it 'adds multiple addresses to localpool' do
       main_address = Fabricate(:address, city: 'Berlin', created_at: Time.now - 1.year)
       localpool.addresses << main_address

@@ -23,7 +23,7 @@ describe Admin do
 
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
-    person.add_role(:localpool_owner, localpool)
+    person.add_role(Role::GROUP_OWNER, localpool)
     Fabricate(:localpool_processing_contract, localpool: localpool, customer: organization)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
     localpool
@@ -89,12 +89,30 @@ describe Admin do
     s.basePath = '/api/admin'
   end
 
+  get '/persons' do
+    description 'return all persons'
+  end
+
+  get '/organizations' do
+    description 'return all organizations'
+  end
+
   get '/localpools' do
-    description 'return all public localpools'
+    description 'return all localpools'
+  end
+
+  post '/localpools' do
+    description 'creates localpool'
+    schema 'create_localpool'
   end
 
   get '/localpools/{localpool.id}' do
     description 'returns the localpool'
+  end
+
+  patch '/localpools/{localpool.id}' do
+    description 'updates the localpool'
+    schema 'update_localpool'
   end
 
   get '/localpools/{localpool.id}/bubbles' do

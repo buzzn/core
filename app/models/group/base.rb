@@ -33,7 +33,7 @@ module Group
     has_many :brokers, class_name: Broker::Base, as: :resource, :dependent => :destroy
 
     def managers
-      Person.with_roles(self, :manager)
+      Person.with_roles(self, Role::GROUP_ADMIN)
     end
 
     has_many :scores, as: :scoreable
