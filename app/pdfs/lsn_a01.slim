@@ -59,7 +59,7 @@ html
         td #{power_taker.full_contract_number}
       tr
         td Bezugsstelle:
-        td = power_taker.register.address.street
+        td = power_taker.register.meter.address.street
       tr
         td Zählernummer
         td = power_taker.register.meter.product_serialnumber
@@ -108,10 +108,10 @@ html
     table
       tr.grey
         td Adresse
-        td #{power_taker.register.address.street}, #{power_taker.register.address.zip} #{power_taker.register.address.city}
+        td #{power_taker.register.meter.address.street}, #{power_taker.register.meter.address.zip} #{power_taker.register.meter.address.city}
       tr
         td Adresszusatz
-        td = power_taker.register.address.addition
+        td = power_taker.register.meter.address.addition
       tr.grey
         td Ziehen Sie neu ein?
         td = power_taker.move_in
