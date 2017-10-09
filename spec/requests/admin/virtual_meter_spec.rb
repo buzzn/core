@@ -40,6 +40,7 @@ describe Admin::LocalpoolRoda do
     entity(:meter) do
       meter = Fabricate(:virtual_meter)
       meter.register.update(group: group)
+      meter.update(group: group)
       Fabricate(:fp_plus, operand: Fabricate(:meter).registers.first,
                 register: meter.register)
       meter
@@ -62,6 +63,7 @@ describe Admin::LocalpoolRoda do
         'updated_at'=> meter.updated_at.as_json,
         "product_name"=>meter.product_name,
         "product_serialnumber"=>meter.product_serialnumber,
+        'sequence_number' => 0,
         "updatable"=>true,
         "deletable"=>true,
         "formula_parts"=> {
@@ -140,6 +142,7 @@ describe Admin::LocalpoolRoda do
           "type"=>"meter_virtual",
           "product_name"=>'SmartySuper',
           "product_serialnumber"=>'41234',
+          'sequence_number' => 0,
           "updatable"=>true,
           "deletable"=>true,
         }
