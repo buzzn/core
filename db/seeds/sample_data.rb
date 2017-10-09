@@ -3,7 +3,7 @@ require_relative 'seeds_repository'
 
 puts "seeds: loading sample data"
 
-FactoryGirl.definition_file_paths = %w(spec/factories)
+FactoryGirl.definition_file_paths = %w(db/factories)
 FactoryGirl.find_definitions
 
 #
