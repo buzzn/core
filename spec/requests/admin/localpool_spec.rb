@@ -40,6 +40,7 @@ describe Admin::LocalpoolRoda do
     end
     Fabricate(:localpool_processing_contract, localpool: localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
+    localpool.meters.each { |meter| meter.update(group: localpool) }
     Account::Base.find(user.resource_owner_id)
       .person.add_role(Role::GROUP_MEMBER, localpool)
     localpool
@@ -82,6 +83,7 @@ describe Admin::LocalpoolRoda do
             'updated_at'=>meter.updated_at.as_json,
             "product_name"=>meter.product_name,
             "product_serialnumber"=>meter.product_serialnumber,
+            'sequence_number' => meter.sequence_number,
             "updatable"=>true,
             "deletable"=>true
           }

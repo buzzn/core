@@ -1219,7 +1219,7 @@ CREATE TABLE meters (
     manufacturer_name manufacturer_name,
     build_year integer,
     sent_data_dso date,
-    "position" integer,
+    sequence_number integer,
     group_id uuid
 );
 
@@ -2180,10 +2180,10 @@ CREATE UNIQUE INDEX index_groups_on_slug ON groups USING btree (slug);
 
 
 --
--- Name: index_meters_on_group_id_and_position; Type: INDEX; Schema: public; Owner: -
+-- Name: index_meters_on_group_id_and_sequence_number; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_meters_on_group_id_and_position ON meters USING btree (group_id, "position");
+CREATE UNIQUE INDEX index_meters_on_group_id_and_sequence_number ON meters USING btree (group_id, sequence_number);
 
 
 --
@@ -2895,4 +2895,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170907190442');
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
 
 INSERT INTO schema_migrations (version) VALUES ('20171005091701');
+
+INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 

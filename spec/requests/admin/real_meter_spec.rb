@@ -41,12 +41,14 @@ describe Admin::LocalpoolRoda do
       meter = Fabricate(:input_meter)
       meter.update(sent_data_dso: Date.today)
       meter.input_register.update(group: group)
+      meter.update(group: group)
       meter
     end
 
-    let(:real_meter) do
+    entity(:real_meter) do
       meter = Fabricate(:output_meter)
       meter.output_register.update(group: group)
+      meter.update(group: group)
       meter
     end
 
@@ -57,6 +59,7 @@ describe Admin::LocalpoolRoda do
         'updated_at'=> meter.updated_at.as_json,
         "product_name"=>meter.product_name,
         "product_serialnumber"=>meter.product_serialnumber,
+        'sequence_number' => meter.sequence_number,
         "updatable"=>true,
         "deletable"=>true,
         "manufacturer_name"=>meter.attributes['manufacturer_name'],
@@ -176,6 +179,7 @@ describe Admin::LocalpoolRoda do
           "type"=>"meter_real",
           "product_name"=>'Smarty Super Meter',
           "product_serialnumber"=>'12341234',
+          'sequence_number' => meter.sequence_number,
           "updatable"=>true,
           "deletable"=>true,
           "manufacturer_name"=>'other',

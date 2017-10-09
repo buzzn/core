@@ -6,10 +6,10 @@ module Meter
     model Base
 
     attributes :product_name,
-               :product_serialnumber
+               :product_serialnumber,
+               :sequence_number
 
     attributes :updatable, :deletable
-
   end
 end
 

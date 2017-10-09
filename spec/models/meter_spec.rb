@@ -65,15 +65,15 @@ describe Meter::Real do
     expect(meter.registers).not_to eq []
   end
 
-  it 'gets a position if added to a group' do
-    expect(meter.position).to be_nil
+  it 'gets a sequence_number if added to a group' do
+    expect(meter.sequence_number).to be_nil
     meter.update(group: group)
-    expect(meter.reload.position).to eq 0
+    expect(meter.reload.sequence_number).to eq 0
     expect(meter.group).to eq group
 
     expect { meter.update(group: Fabricate(:localpool)) }.to raise_error ArgumentError
 
     easymeter.update(group: group)
-    expect(easymeter.reload.position).to eq 1
+    expect(easymeter.reload.sequence_number).to eq 1
   end
 end
