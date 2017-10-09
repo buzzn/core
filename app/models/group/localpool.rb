@@ -13,6 +13,16 @@ module Group
       organization || person
     end
 
+    def owner=(new_owner)
+      if new_owner.is_a?(Person)
+        self.person = new_owner
+      elsif new_owner.is_a?(Organization)
+        self.organization = new_owner
+      else
+        raise "Can't assign #{new_owner} as owner, not an Person or Organization."
+      end
+    end
+
     def metering_point_operator_contract
       Contract::MeteringPointOperator.where(localpool_id: self).first
     end
