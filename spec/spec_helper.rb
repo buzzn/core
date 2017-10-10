@@ -97,7 +97,7 @@ RSpec.configure do |config|
           klass = (klass.const_get 'Base' rescue nil)
         end
         if klass
-          if klass.count > 0
+          if (klass == Organization && klass.count != 7) || (klass != Organization && klass.count > 0)
             if first
               first = false
               warn '-' * 80
