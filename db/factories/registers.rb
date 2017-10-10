@@ -6,7 +6,6 @@ FactoryGirl.define do
     meter                 { FactoryGirl.build(:meter_real) }
     direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]
-    metering_point_id # uses sequence
     pre_decimal_position  6
     post_decimal_position 2
     low_load_ability      false
@@ -21,6 +20,10 @@ FactoryGirl.define do
     trait :output do
       initialize_with { Register::Output.new } # a slight hack to define a trait of contract, but use a different subclass
       name            { generate(:register_output_name) }
+    end
+
+    trait :grid_connected do
+      metering_point_id # uses sequence
     end
   end
 end

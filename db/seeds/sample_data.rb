@@ -156,14 +156,14 @@ contracts[:common_consumption] = localpool_contract(
 #
 registers = {
   ecar:     create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:other], group: SeedsRepository.localpools.people_power),
-  grid_out: create(:register, :output, name: 'Netzanschluss Einspeisung', label: Register::Base.labels[:grid_feeding], group: SeedsRepository.localpools.people_power,
+  grid_out: create(:register, :output, :grid_connected, name: 'Netzanschluss Einspeisung', label: Register::Base.labels[:grid_feeding], group: SeedsRepository.localpools.people_power,
                    meter: SeedsRepository.meters.grid,
                    readings: [
                      create(:reading, :setup, date: '2016-01-01', raw_value: 1_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40'),
                      create(:reading, :regular, date: '2016-12-31', raw_value: 12_000_000)
                    ]
   ),
-  grid_in: create(:register, :input, name: 'Netzanschluss Bezug', group: SeedsRepository.localpools.people_power,
+  grid_in: create(:register, :input, :grid_connected, name: 'Netzanschluss Bezug', group: SeedsRepository.localpools.people_power,
                    meter: SeedsRepository.meters.grid,
                    readings: [
                      create(:reading, :setup, date: '2016-01-01', raw_value: 2_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40'),
