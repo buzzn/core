@@ -47,7 +47,9 @@ describe Admin::LocalpoolRoda do
   end
 
   entity(:localpool_no_contracts) do
-    Fabricate(:localpool, organization: Fabricate(:other_organization))
+    Fabricate(:localpool,
+              organization: Fabricate(:other_organization),
+              address: Fabricate(:address))
   end
 
   let(:empty_json) { [] }
@@ -98,6 +100,18 @@ describe Admin::LocalpoolRoda do
             "deletable"=>true
           }
         end
+      },
+      'address' => {
+        "id"=>localpool_no_contracts.address.id,
+        "type"=>"address",
+        'updated_at'=>localpool_no_contracts.address.updated_at.as_json,
+        "street"=>localpool_no_contracts.address.street,
+        "city"=>localpool_no_contracts.address.city,
+        "state"=>localpool_no_contracts.address.attributes['state'],
+        "zip"=>localpool_no_contracts.address.zip,
+        "country"=>localpool_no_contracts.address.attributes['country'],
+        "updatable"=>true,
+        "deletable"=>false
       }
     }
   end
@@ -116,7 +130,7 @@ describe Admin::LocalpoolRoda do
     end
 
     it '200' do
-      GET "/#{localpool_no_contracts.id}", admin, include: :meters
+      GET "/#{localpool_no_contracts.id}", admin, include: 'meters, address'
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq localpool_json.to_yaml
     end

@@ -22,6 +22,7 @@ module Meter
 
 
     has_many :registers
+    has_one :address
 
     # API methods for the endpoints
 

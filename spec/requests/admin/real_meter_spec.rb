@@ -38,7 +38,7 @@ describe Admin::LocalpoolRoda do
     end
     
     entity(:meter) do
-      meter = Fabricate(:input_meter)
+      meter = Fabricate(:input_meter, address: Fabricate(:address))
       meter.update(sent_data_dso: Date.today)
       meter.input_register.update(group: group)
       meter.update(group: group)
@@ -102,6 +102,18 @@ describe Admin::LocalpoolRoda do
               "obis"=>meter.input_register.obis,
             }
           ]
+        },
+        'address' => {
+          "id"=>meter.address.id,
+          "type"=>"address",
+          'updated_at'=>meter.address.updated_at.as_json,
+          "street"=>meter.address.street,
+          "city"=>meter.address.city,
+          "state"=>meter.address.attributes['state'],
+          "zip"=>meter.address.zip,
+          "country"=>meter.address.attributes['country'],
+          "updatable"=>true,
+          "deletable"=>true
         }
       }
     end
@@ -121,7 +133,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200' do
-        GET "/#{group.id}/meters/#{meter.id}", admin, include: :registers
+        GET "/#{group.id}/meters/#{meter.id}", admin, include: 'registers, address'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq meter_json.to_yaml
       end
