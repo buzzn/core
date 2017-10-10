@@ -22,7 +22,6 @@ owner.add_role(Role::GROUP_OWNER, SeedsRepository.localpools.people_power)
 # Traudl Brumbauer, will be admin of several localpools
 brumbauer = create(:person, first_name: 'Traudl',last_name: 'Brumbauer', prefix: 'F')
 brumbauer.add_role(Role::GROUP_ADMIN, SeedsRepository.localpools.people_power) # can admin the organization
-brumbauer.add_role(Role::ORGANIZATION, SeedsRepository.localpools.hell_un) # can see the organization
 
 readings_attributes = {
   pt1: [

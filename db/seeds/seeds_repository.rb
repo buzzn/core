@@ -21,8 +21,7 @@ module SeedsRepository
 
     def localpools
       @localpools ||= OpenStruct.new(
-       people_power: FactoryGirl.create(:localpool, :people_power, owner: SeedsRepository.persons.wolfgang),
-       hell_und_warm: FactoryGirl.create(:localpool, :hell_und_warm)
+       people_power: FactoryGirl.create(:localpool, :people_power, owner: SeedsRepository.persons.wolfgang)
       )
     end
 
