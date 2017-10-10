@@ -23,15 +23,14 @@ owner.add_role(Role::GROUP_OWNER, SeedsRepository.localpools.people_power)
 brumbauer = create(:person, first_name: 'Traudl', last_name: 'Brumbauer', prefix: 'F')
 brumbauer.add_role(Role::GROUP_ADMIN, SeedsRepository.localpools.people_power) # can admin the organization
 
-def localpool_contract(attrs: {}, customer:, readings: [])
+def localpool_contract(attrs = {})
   localpool = SeedsRepository.localpools.people_power
-  contract = create(:contract, :localpool_powertaker,
-    { localpool: localpool, contractor: localpool.owner, customer: customer }.merge(attrs)
-  )
-  contract.register.readings = readings
+  factory_attributes = attrs.except(:readings).merge(localpool: localpool).reverse_merge(contractor: localpool.owner)
+  contract = create(:contract, :localpool_powertaker, factory_attributes)
+  contract.register.readings = attrs[:readings] unless attrs.fetch(:readings, []).empty?
   if contract.customer.is_a?(Person) # TODO: clarify what to do when it's an Organization?
     contract.customer.add_role(Role::GROUP_MEMBER, localpool)
-    contract.customer.add_role(Role::SELF, customer)
+    contract.customer.add_role(Role::SELF, attrs[:customer])
     contract.customer.add_role(Role::CONTRACT, contract)
   end
   contract
@@ -56,11 +55,9 @@ contracts[:pt2] = localpool_contract(
 )
 
 contracts[:pt3] = localpool_contract(
-  attrs: {
-    signing_date: (Date.today - 5.days),
-    begin_date: Date.today + 1.month,
-    status: Contract::Base.statuses[:onboarding]
-  },
+  signing_date: (Date.today - 5.days),
+  begin_date: Date.today + 1.month,
+  status: Contract::Base.statuses[:onboarding],
   customer: create(:person, :with_bank_account, first_name: 'Bernd', last_name: 'Powertaker3'),
   readings: [
     create(:reading, :setup, date: '2017-10-01', raw_value: 1_000)
@@ -68,13 +65,11 @@ contracts[:pt3] = localpool_contract(
 )
 
 contracts[:pt4] = localpool_contract(
-  attrs: {
-    signing_date: Date.parse("2017-1-10"),
-    begin_date: Date.parse("2017-2-1"),
-    cancellation_date: Date.yesterday,
-    end_date: Date.today + 1.month,
-    status: Contract::Base.statuses[:terminated]
-  },
+  signing_date: Date.parse("2017-1-10"),
+  begin_date: Date.parse("2017-2-1"),
+  cancellation_date: Date.yesterday,
+  end_date: Date.today + 1.month,
+  status: Contract::Base.statuses[:terminated],
   customer: create(:person, :with_bank_account, first_name: 'Karlheinz', last_name: 'Powertaker4'),
   readings: [
     create(:reading, :setup, date: '2017-02-01', raw_value: 1_000)
@@ -83,11 +78,9 @@ contracts[:pt4] = localpool_contract(
 
 # beendet, Auszug
 contracts[:pt5a] = localpool_contract(
-  attrs: {
-    cancellation_date: Date.parse("2017-3-10"),
-    end_date: Date.parse("2017-4-1"),
-    status: Contract::Base.statuses[:ended]
-  },
+  cancellation_date: Date.parse("2017-3-10"),
+  end_date: Date.parse("2017-4-1"),
+  status: Contract::Base.statuses[:ended],
   customer: create(:person, :with_bank_account, first_name: 'Sylvia', last_name: 'Powertaker5a (zieht aus)', prefix: 'F'),
   readings: [
     create(:reading, :setup, date: '2016-01-01', raw_value: 1_000),
@@ -98,53 +91,43 @@ contracts[:pt5a] = localpool_contract(
 
 # Leerstand
 contracts[:pt5_empty] = localpool_contract(
-  attrs: {
-    signing_date: contracts[:pt5a].cancellation_date,
-    begin_date: contracts[:pt5a].end_date,
-    cancellation_date: Date.parse("2017-4-30"),
-    end_date: Date.parse("2017-5-1"),
-    status: Contract::Base.statuses[:ended],
-    register: contracts[:pt5a].register # important !
-  },
+  signing_date: contracts[:pt5a].cancellation_date,
+  begin_date: contracts[:pt5a].end_date,
+  cancellation_date: Date.parse("2017-4-30"),
+  end_date: Date.parse("2017-5-1"),
+  status: Contract::Base.statuses[:ended],
+  register: contracts[:pt5a].register, # important !
   customer: create(:organization, :with_bank_account, name: 'Hausverwaltung Schneider (Leerstand)'),
 )
 
 # zieht ein
 contracts[:pt5b] = localpool_contract(
-  attrs: {
-    signing_date: Date.parse("2017-4-10"),
-    begin_date: Date.parse("2017-5-1"),
-    register: contracts[:pt5a].register # important !
-  },
+  signing_date: Date.parse("2017-4-10"),
+  begin_date: Date.parse("2017-5-1"),
+  register: contracts[:pt5a].register, # important !
   customer: create(:person, :with_bank_account, first_name: 'Fritz', last_name: 'Powertaker5b (zieht ein)'),
 )
 
 # Drittlieferant
 contracts[:pt6] = localpool_contract(
-  attrs: {
-    contractor: SeedsRepository.organizations.third_party
-  },
+  contractor: SeedsRepository.organizations.third_party,
   customer: create(:person, :with_bank_account, first_name: 'Horst', last_name: 'Powertaker6 (drittbeliefert)'),
 )
 
 # Drittlieferant, vor Wechsel zu people power
 contracts[:pt7a] = localpool_contract(
-  attrs: {
-    cancellation_date: Date.parse("2017-2-15"),
-    end_date: Date.parse("2017-3-1"),
-    status: Contract::Base.statuses[:ended],
-    contractor: SeedsRepository.organizations.third_party
-  },
+  cancellation_date: Date.parse("2017-2-15"),
+  end_date: Date.parse("2017-3-1"),
+  status: Contract::Base.statuses[:ended],
+  contractor: SeedsRepository.organizations.third_party,
   customer: create(:person, :with_bank_account, first_name: 'Anna', last_name: 'Powertaker7 (Wechsel zu uns)', prefix: 'F'),
 )
 contracts[:pt7a].customer.add_role(Role::GROUP_ENERGY_MENTOR, contracts[:pt7a].localpool)
 
 # Drittlieferant, nach Wechsel zu people power
 contracts[:pt7b] = localpool_contract(
-  attrs: {
-    signing_date: contracts[:pt7a].cancellation_date,
-    begin_date: contracts[:pt7a].end_date
-  },
+  signing_date: contracts[:pt7a].cancellation_date,
+  begin_date: contracts[:pt7a].end_date,
   customer: contracts[:pt7a].customer
 )
 
@@ -154,17 +137,17 @@ contracts[:pt8] = localpool_contract(
 )
 
 # Two more powertakers to make them 10 ...
-{
-  pt9:  create(:person, :with_bank_account, first_name: 'Justine',   last_name: 'Powertaker9', prefix: 'F'),
-  pt10: create(:person, :with_bank_account, first_name: 'Mohammed',  last_name: 'Powertaker10')
-}.each { |key, person| contracts[key] = localpool_contract(customer: person) }
+contracts[:pt9] = localpool_contract(
+  customer: create(:person, :with_bank_account, first_name: 'Justine', last_name: 'Powertaker9', prefix: 'F')
+)
+contracts[:pt10] = localpool_contract(
+  customer: create(:person, :with_bank_account, first_name: 'Mohammed',last_name: 'Powertaker10')
+)
 
 # Allgemeinstrom (Hausbeleuchtung etc.)
 contracts[:common_consumption] = localpool_contract(
-  attrs: {
-    contractor: SeedsRepository.localpools.people_power.owner,
-    register: create(:register, :input, name: "Allgemeinstrom")
-  },
+  contractor: SeedsRepository.localpools.people_power.owner,
+  register: create(:register, :input, name: "Allgemeinstrom"),
   customer: SeedsRepository.localpools.people_power.owner
 )
 
