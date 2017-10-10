@@ -3,7 +3,7 @@ FactoryGirl.define do
     register    { FactoryGirl.create(:register, :input) }
     date        Date.parse("2017-09-28")
     raw_value   1_234
-    value       1_234
+    value       { raw_value }
     unit        Reading::Single.units[:watt_hour]
     reason      Reading::Single.reasons[:device_setup]
     read_by     Reading::Single.read_bys[:buzzn]
