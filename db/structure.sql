@@ -1181,7 +1181,8 @@ CREATE TABLE groups (
     type character varying NOT NULL,
     organization_id uuid,
     person_id uuid,
-    address_id uuid
+    address_id uuid,
+    CONSTRAINT check_localpool_owner CHECK ((NOT ((person_id IS NOT NULL) AND (organization_id IS NOT NULL))))
 );
 
 
@@ -3005,4 +3006,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171009065708');
 INSERT INTO schema_migrations (version) VALUES ('20171009090631');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010074910');
 

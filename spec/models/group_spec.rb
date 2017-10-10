@@ -1,5 +1,5 @@
 # coding: utf-8
-describe "Group Model" do
+describe Group::Base do
 
   entity!(:localpool) { Fabricate(:localpool) }
   entity!(:tribe) { Fabricate(:tribe) }
@@ -60,4 +60,29 @@ describe "Group Model" do
       expect(localpool.registers.grid_feeding_corrected.size).to eq 1
     end
   end
+end
+
+# the below test throws an error which rolls back the nested transaction, i.e.
+# run it without nested transactions
+describe Group::Localpool, :skip_nested do
+
+  let(:person) {  Fabricate(:person) }
+  let(:organization) { Fabricate(:other_organization) }
+  let(:localpool) { Fabricate(:localpool, person: person) }
+
+  after do
+    localpool.delete
+    person.delete
+    organization.delete
+    Register::Base.delete_all
+    Meter::Base.delete_all
+  end
+
+  it 'has one owner' do
+    localpool.organization = organization
+    expect { localpool.save }.to raise_error ActiveRecord::StatementInvalid
+    localpool.person = nil
+    expect { localpool.save }.not_to raise_error
+  end
+
 end
