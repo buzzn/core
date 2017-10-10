@@ -32,5 +32,11 @@ module SeedsRepository
         grid: create(:meter_real, :two_way, group: SeedsRepository.localpools.people_power)
       )
     end
+
+    def organizations
+      @organizations ||= OpenStruct.new(
+        third_party: create(:organization, name: 'Drittlieferant')
+      )
+    end
   end
 end
