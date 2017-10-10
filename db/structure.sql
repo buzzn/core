@@ -1090,6 +1090,34 @@ CREATE TABLE core_configs (
 
 
 --
+-- Name: customer_numbers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE customer_numbers (
+    id integer NOT NULL
+);
+
+
+--
+-- Name: customer_numbers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE customer_numbers_id_seq
+    START WITH 1000000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customer_numbers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE customer_numbers_id_seq OWNED BY customer_numbers.id;
+
+
+--
 -- Name: devices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1309,7 +1337,8 @@ CREATE TABLE organizations (
     account_number character varying,
     contact_id uuid,
     legal_representation_id uuid,
-    address_id uuid
+    address_id uuid,
+    customer_number integer
 );
 
 
@@ -1353,7 +1382,8 @@ CREATE TABLE persons (
     mandate_reference character varying,
     creditor_id character varying,
     image character varying,
-    address_id uuid
+    address_id uuid,
+    customer_number integer
 );
 
 
@@ -1655,6 +1685,13 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 
 
 --
+-- Name: customer_numbers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customer_numbers ALTER COLUMN id SET DEFAULT nextval('customer_numbers_id_seq'::regclass);
+
+
+--
 -- Name: roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1803,6 +1840,14 @@ ALTER TABLE ONLY contracts
 
 ALTER TABLE ONLY core_configs
     ADD CONSTRAINT core_configs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customer_numbers customer_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customer_numbers
+    ADD CONSTRAINT customer_numbers_pkey PRIMARY KEY (id);
 
 
 --
@@ -2584,6 +2629,14 @@ ALTER TABLE ONLY organizations
 
 
 --
+-- Name: organizations fk_organizations_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organizations
+    ADD CONSTRAINT fk_organizations_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
+
+
+--
 -- Name: organizations fk_organizations_legal_representation; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2597,6 +2650,14 @@ ALTER TABLE ONLY organizations
 
 ALTER TABLE ONLY persons
     ADD CONSTRAINT fk_persons_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
+-- Name: persons fk_persons_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY persons
+    ADD CONSTRAINT fk_persons_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
 
 
 --
@@ -3008,4 +3069,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171009090631');
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 
 INSERT INTO schema_migrations (version) VALUES ('20171010074910');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010075030');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010082537');
 
