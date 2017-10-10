@@ -328,6 +328,17 @@ CREATE TYPE country AS ENUM (
 
 
 --
+-- Name: cycle; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE cycle AS ENUM (
+    'monthly',
+    'yearly',
+    'once'
+);
+
+
+--
 -- Name: direction; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1351,8 +1362,8 @@ CREATE TABLE payments (
     begin_date date NOT NULL,
     end_date date,
     price_cents integer NOT NULL,
-    cycle character varying,
-    contract_id uuid NOT NULL
+    contract_id uuid NOT NULL,
+    cycle cycle
 );
 
 
@@ -3074,4 +3085,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171010075030');
 INSERT INTO schema_migrations (version) VALUES ('20171010082537');
 
 INSERT INTO schema_migrations (version) VALUES ('20171010094247');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010102959');
 
