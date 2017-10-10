@@ -12,7 +12,7 @@ include FactoryGirl::Syntax::Methods
 #
 
 # buzzn operator
-operator = create(:person, first_name: 'Philipp',   last_name: 'Operator')
+operator = create(:person, first_name: 'Philipp', last_name: 'Operator')
 operator.add_role(Role::BUZZN_OPERATOR)
 
 # group owner
@@ -20,40 +20,65 @@ owner = SeedsRepository.persons.wolfgang
 owner.add_role(Role::GROUP_OWNER, SeedsRepository.localpools.people_power)
 
 # Traudl Brumbauer, will be admin of several localpools
-brumbauer = create(:person, first_name: 'Traudl',last_name: 'Brumbauer', prefix: 'F')
+brumbauer = create(:person, first_name: 'Traudl', last_name: 'Brumbauer', prefix: 'F')
 brumbauer.add_role(Role::GROUP_ADMIN, SeedsRepository.localpools.people_power) # can admin the organization
 
-readings_attributes = {
-  pt1: [
-    attributes_for(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
-    attributes_for(:reading, :regular, date: '2016-12-31', raw_value: 2_400_000, register: nil)
-  ],
-  pt2: [
-    attributes_for(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
-    attributes_for(:reading, :regular, date: '2016-12-31', raw_value: 4_500_000, register: nil)
-  ],
-  pt3: [
-    attributes_for(:reading, :setup, date: '2017-10-01', raw_value: 1_000, register: nil)
-  ],
-  pt4: [
-    attributes_for(:reading, :setup, date: '2017-02-01', raw_value: 1_000, register: nil)
-  ],
-  pt5a: [
-    attributes_for(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
-    attributes_for(:reading, :regular, date: '2016-12-31', raw_value: 1_300_000, register: nil),
-    attributes_for(:reading, :contract_change, date: '2017-04-01', raw_value: 1_765_000, register: nil)
-  ]
-}
+def localpool_contract(customer:, readings: [])
+  localpool = SeedsRepository.localpools.people_power
+  contract = create(:contract, :localpool_powertaker,
+    localpool: localpool,
+    contractor: localpool.owner,
+    customer: customer
+  )
+  contract.register.readings = readings
+  contract.customer.add_role(Role::GROUP_MEMBER, localpool)
+  contract.customer.add_role(Role::SELF, customer)
+  contract.customer.add_role(Role::CONTRACT, contract)
+  contract
+end
 
-#
-# Powertakers
-#
-powertakers = {
-  pt1:  create(:person, :with_bank_account, first_name: 'Sabine',    last_name: 'Powertaker1', title: 'Prof.', prefix: 'F'),
-  pt2:  create(:person, :with_bank_account, first_name: 'Claudia',   last_name: 'Powertaker2', title: 'Prof. Dr.', prefix: 'F'),
-  pt3:  create(:person, :with_bank_account, first_name: 'Bernd',     last_name: 'Powertaker3'),
-  pt4:  create(:person, :with_bank_account, first_name: 'Karlheinz', last_name: 'Powertaker4'),
-  pt5a: create(:person, :with_bank_account, first_name: 'Sylvia',    last_name: 'Powertaker5a (zieht ein)', prefix: 'F'),
+contracts = {}
+
+contracts[:pt1] = localpool_contract(
+  customer: create(:person, :with_bank_account, first_name: 'Sabine', last_name: 'Powertaker1', title: 'Prof.', prefix: 'F'),
+  readings: [
+    create(:reading, :setup, date: '2016-01-01', raw_value: 1_000),
+    create(:reading, :regular, date: '2016-12-31', raw_value: 2_400_000)
+  ]
+)
+
+contracts[:pt2] = localpool_contract(
+  customer: create(:person, :with_bank_account, first_name: 'Claudia', last_name: 'Powertaker2', title: 'Prof. Dr.', prefix: 'F'),
+  readings: [
+    create(:reading, :setup, date: '2016-01-01', raw_value: 1_000),
+    create(:reading, :regular, date: '2016-12-31', raw_value: 4_500_000)
+  ]
+)
+
+contracts[:pt3] = localpool_contract(
+  customer: create(:person, :with_bank_account, first_name: 'Bernd', last_name: 'Powertaker3'),
+  readings: [
+    create(:reading, :setup, date: '2017-10-01', raw_value: 1_000)
+  ]
+)
+
+contracts[:pt4] = localpool_contract(
+  customer: create(:person, :with_bank_account, first_name: 'Karlheinz', last_name: 'Powertaker4'),
+  readings: [
+    create(:reading, :setup, date: '2017-02-01', raw_value: 1_000)
+  ]
+)
+
+contracts[:pt5a] = localpool_contract(
+  customer: create(:person, :with_bank_account, first_name: 'Sylvia',    last_name: 'Powertaker5a (zieht ein)', prefix: 'F'),
+  readings: [
+    create(:reading, :setup, date: '2016-01-01', raw_value: 1_000),
+    create(:reading, :regular, date: '2016-12-31', raw_value: 1_300_000),
+    create(:reading, :contract_change, date: '2017-04-01', raw_value: 1_765_000)
+  ]
+)
+
+more_powertakers = {
   pt5b: create(:person, :with_bank_account, first_name: 'Fritz',     last_name: 'Powertaker5b (zieht aus)'),
   pt6:  create(:person, :with_bank_account, first_name: 'Horst',     last_name: 'Powertaker6 (drittbeliefert)'),
   pt7:  create(:person, :with_bank_account, first_name: 'Karla',     last_name: 'Powertaker7 (Mentor)', prefix: 'F'),
@@ -61,20 +86,9 @@ powertakers = {
   pt9:  create(:person, :with_bank_account, first_name: 'Justine',   last_name: 'Powertaker9', prefix: 'F'),
   pt10: create(:person, :with_bank_account, first_name: 'Mohammed',  last_name: 'Powertaker10')
 }
-powertakers.each do |key, person|
-  contract = create(:contract, :localpool_powertaker,
-    localpool: SeedsRepository.localpools.people_power,
-    contractor: SeedsRepository.localpools.people_power.owner,
-    customer: person
-  )
-  # add readings if given
-  readings_attributes.fetch(key, []).each { |attrs| contract.register.readings.create!(attrs.except(:register)) }
-  person.add_role(Role::GROUP_MEMBER, SeedsRepository.localpools.people_power) # can see his group
-end
-powertakers[:pt1].add_role(Role::SELF, SeedsRepository.localpools.people_power) # can see his profile
-powertakers[:pt1].add_role(Role::CONTRACT, SeedsRepository.localpools.people_power) # can see his contract
+more_powertakers.each { |key, person| contracts[key] = localpool_contract(customer: person) }
 
-powertakers[:pt7].add_role(Role::GROUP_ENERGY_MENTOR, SeedsRepository.localpools.people_power)
+contracts[:pt7].customer.add_role(Role::GROUP_ENERGY_MENTOR, contracts[:pt7].localpool)
 
 #
 # Further registers (without powertakers)
