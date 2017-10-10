@@ -58,6 +58,7 @@ describe Admin::LocalpoolRoda do
           "email"=>organization.email,
           "description"=>organization.description,
           "mode"=>"metering_service_provider",
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>true,
           "bank_accounts"=>{
@@ -89,6 +90,7 @@ describe Admin::LocalpoolRoda do
             "email"=>organization.contact.email,
             "preferred_language"=>organization.contact.attributes['preferred_language'],
             "image"=>organization.contact.image.md.url,
+            'customer_number' => nil,
             "updatable"=>true,
             "deletable"=>false,
           },
@@ -105,6 +107,7 @@ describe Admin::LocalpoolRoda do
             "email"=>organization.legal_representation.email,
             "preferred_language"=>organization.legal_representation.attributes['preferred_language'],
             "image"=>organization.legal_representation.image.md.url,
+            'customer_number' => nil,
             "updatable"=>true,
             "deletable"=>false,
           }
@@ -166,6 +169,7 @@ describe Admin::LocalpoolRoda do
           "email"=>organization.email,
           "description"=>organization.description,
           "mode"=>organization.mode,
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>true,
           "address"=>address_json

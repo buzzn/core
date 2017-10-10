@@ -35,6 +35,7 @@ describe Admin::Roda do
             "email"=>person.email,
             'preferred_language'=>person.attributes['preferred_language'],
             "image"=>person.image.md.url,
+            'customer_number' => nil,
             "updatable"=>false,
             "deletable"=>false,
           }
@@ -71,6 +72,7 @@ describe Admin::Roda do
             "email"=>organization.email,
             "description"=>organization.description,
             "mode"=>organization.mode,
+            'customer_number' => nil,
             "updatable"=>false,
             "deletable"=>false,
           }

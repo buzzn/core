@@ -338,6 +338,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.contractor.email,
           "description"=>contract.contractor.description,
           "mode"=>contract.contractor.mode,
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -354,6 +355,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>contract.customer.image.md.url,
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -485,6 +487,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.contractor.email,
           "description"=>contract.contractor.description,
           "mode"=>contract.contractor.mode,
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false,
           "address" => nil
@@ -502,6 +505,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>contract.customer.image.md.url,
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false,
           'address'=>{
@@ -703,6 +707,7 @@ describe Admin::LocalpoolRoda do
             "email"=>manager.email,
             "preferred_language"=>manager.attributes['preferred_language'],
             "image"=>manager.image.md.url,
+            'customer_number' => nil,
             "updatable"=>true,
             "deletable"=>true,
             "bank_accounts"=> { 'array'=>[] }
