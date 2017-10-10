@@ -37,9 +37,14 @@ describe Admin::LocalpoolRoda do
       c = Fabricate(:localpool_power_taker_contract)
       c.register.group = localpool
       c.register.save
+      c.localpool = localpool
+      c.save!
     end
     Fabricate(:localpool_processing_contract, localpool: localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
+    localpool.contracts.each do |c|
+      c.customer.update(customer_number: CustomerNumber.create.id)
+    end
     localpool.meters.each { |meter| meter.update(group: localpool) }
     Account::Base.find(user.resource_owner_id)
       .person.add_role(Role::GROUP_MEMBER, localpool)
@@ -265,7 +270,7 @@ describe Admin::LocalpoolRoda do
               updated_at: localpool.updated_at,
               name: 'a b c d',
               description: 'none'
-        
+
         expect(response).to have_http_status(200)
         localpool.reload
         expect(localpool.name).to eq 'a b c d'
@@ -312,7 +317,7 @@ describe Admin::LocalpoolRoda do
               "baseprice_cents_per_month"=>t.baseprice_cents_per_month,
             }
           end
-        },                   
+        },
         "payments"=>{
           'array'=> contract.payments.collect do |p|
             {
@@ -355,7 +360,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>contract.customer.image.md.url,
-          'customer_number' => nil,
+          'customer_number' => contract.customer.customer_number,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -397,7 +402,7 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'GET' do
-      
+
       let(:nested_not_found_json) do
         {
           "errors" => [
@@ -505,7 +510,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>contract.customer.image.md.url,
-          'customer_number' => nil,
+          'customer_number' => contract.customer.customer_number,
           "updatable"=>true,
           "deletable"=>false,
           'address'=>{
@@ -559,7 +564,7 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'GET' do
-      
+
       let(:nested_not_found_json) do
         {
           "errors" => [
@@ -602,7 +607,7 @@ describe Admin::LocalpoolRoda do
           "id"=>contract.id,
           "type"=>"contract_localpool_power_taker",
           'updated_at'=>contract.updated_at.as_json,
-          "status"=>"waiting_for_approval",
+          "status"=>contract.status,
           "full_contract_number"=>"#{contract.contract_number}/#{contract.contract_number_addition}",
           "customer_number"=>contract.customer_number,
           "signing_user"=>contract.signing_user,
@@ -611,65 +616,30 @@ describe Admin::LocalpoolRoda do
           "end_date"=>nil,
           "updatable"=>true,
           "deletable"=>false,
-          "tariffs"=>{
-            'array' => contract.tariffs.collect do |t|
-              {
-                "id"=>t.id,
-                "type"=>'contract_tariff',
-                "name"=>t.name,
-                "begin_date"=>t.begin_date.to_s,
-                "end_date"=>nil,
-                "energyprice_cents_per_kwh"=>t.energyprice_cents_per_kwh,
-                "baseprice_cents_per_month"=>t.baseprice_cents_per_month,
-              }
-            end
-          },
-          "payments"=>{
-            'array'=>contract.payments.collect do |p|
-              {
-                "id"=>p.id,
-                "type"=>'contract_payment',
-                "begin_date"=>p.begin_date.to_s,
-                "end_date"=>nil,
-                "price_cents"=>p.price_cents,
-                "cycle"=>p.cycle,
-                "source"=>p.source,
-              }
-            end
-          },
-          "contractor"=>{
-            "id"=>contract.contractor.id,
-            "type"=>"user",
-            "updatable"=>true,
-            "deletable"=>false
-          },
+          "begin_date"=>contract.begin_date.to_s,
+          'forecast_kwh_pa'=>contract.forecast_kwh_pa,
+          'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
+          'third_party_billing_number'=>contract.third_party_billing_number,
+          'third_party_renter_number'=>contract.third_party_renter_number,
+          'old_supplier_name'=>contract.old_supplier_name,
+          'old_customer_number'=>contract.old_customer_number,
+          'old_account_number'=>contract.old_account_number,
           "customer"=>{
             "id"=>contract.customer.id,
-            "type"=>"user",
+            "type"=>"person",
+            'updated_at'=>contract.customer.updated_at.as_json,
+            "prefix"=>contract.customer.attributes['prefix'],
+            "title"=>contract.customer.title,
+            "first_name"=>contract.customer.first_name,
+            "last_name"=>contract.customer.last_name,
+            "phone"=>contract.customer.phone,
+            "fax"=>contract.customer.fax,
+            "email"=>contract.customer.email,
+            "preferred_language"=>contract.customer.attributes['preferred_language'],
+            "image"=>contract.customer.image.md.url,
+            'customer_number' => contract.customer.customer_number,
             "updatable"=>true,
-            "deletable"=>false
-          },
-          "customer_bank_account"=>{
-            "id"=>contract.customer_bank_account.id,
-            "type"=>"bank_account",
-            "holder"=>contract.customer_bank_account.holder,
-            "bank_name"=>contract.customer_bank_account.bank_name,
-            "bic"=>contract.customer_bank_account.bic,
-            "iban"=>contract.customer_bank_account.iban,
-            "direct_debit"=>contract.customer_bank_account.direct_debit,
-            'updatable'=> true,
-            'deletable'=> false
-          },
-          "contractor_bank_account"=>{
-            "id"=>contract.contractor_bank_account.id,
-            "type"=>"bank_account",
-            "holder"=>contract.contractor_bank_account.holder,
-            "bank_name"=>contract.contractor_bank_account.bank_name,
-            "bic"=>contract.contractor_bank_account.bic,
-            "iban"=>contract.contractor_bank_account.iban,
-            "direct_debit"=>contract.contractor_bank_account.direct_debit,
-            'updatable'=> true,
-            'deletable'=> false
+            "deletable"=>false,
           }
         }
       end
@@ -681,7 +651,7 @@ describe Admin::LocalpoolRoda do
         expect(json['array'].to_yaml).to eq empty_json.to_yaml
         expect(response).to have_http_status(200)
 
-        GET "/#{localpool.id}/power-taker-contracts", admin
+        GET "/#{localpool.id}/power-taker-contracts", admin, include: :customer
         expect(json['array'].to_yaml).to eq power_taker_contracts_json.to_yaml
         expect(response).to have_http_status(200)
       end
@@ -714,10 +684,10 @@ describe Admin::LocalpoolRoda do
           }
         ]
       end
-      
+
       it "200" do
         GET "/#{localpool.id}/managers", admin, include: :bank_accounts
-          
+
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(managers_json.to_yaml)
       end

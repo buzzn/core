@@ -1103,7 +1103,7 @@ CREATE TABLE customer_numbers (
 --
 
 CREATE SEQUENCE customer_numbers_id_seq
-    START WITH 1000000
+    START WITH 100000
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
