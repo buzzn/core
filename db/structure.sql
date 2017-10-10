@@ -1352,7 +1352,6 @@ CREATE TABLE payments (
     end_date date,
     price_cents integer NOT NULL,
     cycle character varying,
-    source character varying,
     contract_id uuid NOT NULL
 );
 
@@ -3073,4 +3072,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171010074910');
 INSERT INTO schema_migrations (version) VALUES ('20171010075030');
 
 INSERT INTO schema_migrations (version) VALUES ('20171010082537');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010094247');
 

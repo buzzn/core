@@ -6,8 +6,7 @@ module Contract
     attributes  :begin_date,
                 :end_date,
                 :price_cents,
-                :cycle,
-                :source
+                :cycle
 
     def updated_at; nil; end
   end

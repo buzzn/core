@@ -328,7 +328,6 @@ describe Admin::LocalpoolRoda do
               "end_date"=>nil,
               "price_cents"=>p.price_cents,
               "cycle"=>p.cycle,
-              "source"=>p.source,
             }
           end
         },
@@ -477,7 +476,6 @@ describe Admin::LocalpoolRoda do
               "end_date"=>p.end_date ? p.end_date.to_s : nil,
               "price_cents"=>p.price_cents,
               "cycle"=>p.cycle,
-              "source"=>p.source,
             }
           end
         },
