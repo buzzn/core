@@ -9,18 +9,14 @@ FactoryGirl.definition_file_paths = %w(db/factories)
 FactoryGirl.find_definitions
 include FactoryGirl::Syntax::Methods
 
-#
-# Create persons and roles on the group
-#
-
-# call it once so it is generated
+# Call the buzzn operator once so it is generated.
 SeedsRepository.persons.buzzn_operator
 
 def localpool_contract(attrs = {})
   localpool = SeedsRepository.localpools.people_power
-  factory_attributes = attrs.except(:readings).merge(localpool: localpool).reverse_merge(contractor: localpool.owner)
+  factory_attributes = attrs.except(:register_readings).merge(localpool: localpool).reverse_merge(contractor: localpool.owner)
   contract = create(:contract, :localpool_powertaker, factory_attributes)
-  contract.register.readings = attrs[:readings] unless attrs.fetch(:readings, []).empty?
+  contract.register.readings = attrs[:register_readings] unless attrs.fetch(:register_readings, []).empty?
   if contract.customer.is_a?(Person) # TODO: clarify what to do when it's an Organization?
     contract.customer.add_role(Role::GROUP_MEMBER, localpool)
     contract.customer.add_role(Role::CONTRACT, contract)
@@ -32,7 +28,7 @@ contracts = {}
 
 contracts[:pt1] = localpool_contract(
   customer: SeedsRepository.persons[:pt1],
-  readings: [
+  register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
     build(:reading, :regular, date: '2016-12-31', raw_value: 2_400_000, register: nil)
   ]
@@ -40,7 +36,7 @@ contracts[:pt1] = localpool_contract(
 
 contracts[:pt2] = localpool_contract(
   customer: SeedsRepository.persons[:pt2],
-  readings: [
+  register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
     build(:reading, :regular, date: '2016-12-31', raw_value: 4_500_000, register: nil)
   ]
@@ -51,7 +47,7 @@ contracts[:pt3] = localpool_contract(
   begin_date: Date.today + 1.month,
   status: Contract::Base.statuses[:onboarding],
   customer: SeedsRepository.persons[:pt3],
-  readings: [
+  register_readings: [
     build(:reading, :setup, date: '2017-10-01', raw_value: 1_000, register: nil)
   ]
 )
@@ -63,7 +59,7 @@ contracts[:pt4] = localpool_contract(
   end_date: Date.today + 1.month,
   status: Contract::Base.statuses[:terminated],
   customer: SeedsRepository.persons[:pt4],
-  readings: [
+  register_readings: [
     build(:reading, :setup, date: '2017-02-01', raw_value: 1_000, register: nil)
   ]
 )
@@ -74,7 +70,7 @@ contracts[:pt5a] = localpool_contract(
   end_date: Date.parse("2017-4-1"),
   status: Contract::Base.statuses[:ended],
   customer: SeedsRepository.persons[:pt5a],
-  readings: [
+  register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
     build(:reading, :regular, date: '2016-12-31', raw_value: 1_300_000, register: nil),
     build(:reading, :contract_change, date: '2017-04-01', raw_value: 1_765_000, register: nil)
