@@ -12,7 +12,7 @@ Example: updating a register.
     - request validation
     - calling the business logic
     - producing HTTP response (headers, status, ...)
-- Buzzn::Transaction (lib/buzzn/transactions) encapsulates the business logic. It is used for mutating resources. Reads go diretly to a Buzzn::Resource.
+- Buzzn::Transaction (lib/buzzn/transactions) encapsulates the business logic. It is used for mutating resources. Reads go directly to a Buzzn::Resource.
 - Buzzn::Resource (lib/buzzn/transactions)
     - handles authorization / permissions
     - can implement business logic
@@ -20,19 +20,24 @@ Example: updating a register.
 
 ### How & where do we validate stuff?
 
-Validation levels
+We use (dry-validation)[dry-rb.org/gems/dry-validation] schemas for all new validations ("schemas"). They are used on these levels:
 
-1. incompleteness 
-    - dry validation
-    - 
+#### 1. Completeness schemas
 
-2. transaction validations (validate the requests)
-    - dry validation
-    - in buzzn/schemas
+In some parts of the application we want to show users that an object graph is not yet complete. The completeness schema validates that. For example, while a a customer can be saved without a bank account, it needs to be filled in before the billing can be started.
 
-3. invariants (on the model)
-    - use validation for create transaction to generate DB constraints
-    - method validate_invariants (AR validations/errors) (deprecated)
+#### 2. Transaction schemas
+
+Transaction schemas belong to a request ("create a register", for example) and validate that the data
+coming in from the client is valid before it is passed to the transaction.
+
+#### 3. Invariants schemas
+
+These are model-layer validations that always must be true. A user record must always have a first and last name, a register must always have a meter, and so on.
+
+We define these invariant validation separately and generate database constraints from them.
+
+Note on the ActiveRecord validations: the standard validation DSL (`validates :iban, presence: true`, etc.) as well as the methods `validate_invariants` are deprecated, we're in the process of replacing them with invariant schemas.
 
 ### How do we use ActiveRecord?
 
