@@ -19,11 +19,13 @@ FactoryGirl.define do
 
     trait :input do
       initialize_with { Register::Input.new } # a slight hack to define a trait of contract, but use a different subclass
+      direction       Register::Base.directions[:input]
       name            { generate(:register_input_name) }
     end
 
     trait :output do
       initialize_with { Register::Output.new } # a slight hack to define a trait of contract, but use a different subclass
+      direction       Register::Base.directions[:output]
       name            { generate(:register_output_name) }
     end
 
@@ -33,15 +35,15 @@ FactoryGirl.define do
     end
 
     trait :grid_input do
-      grid_connected
       input
+      grid_connected
       label Register::Base.labels[:grid_consumption]
       name 'Netzanschluss Bezug'
     end
 
     trait :grid_output do
-      grid_connected
       output
+      grid_connected
       label Register::Base.labels[:grid_feeding]
       name 'Netzanschluss Einspeisung'
     end
