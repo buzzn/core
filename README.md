@@ -5,7 +5,9 @@ Production | Staging
 https://app.buzzn.com | https://staging.buzzn.com
 [ ![Codeship Status for buzzn/kiosk](https://app.codeship.com/projects/9ea4e2c0-381a-0132-1daa-26b918746a8c/status?branch=release)](https://app.codeship.com/projects/41893) | [ ![Codeship Status for buzzn/kiosk](https://app.codeship.com/projects/9ea4e2c0-381a-0132-1daa-26b918746a8c/status?branch=master)](https://app.codeship.com/projects/41893)
 
+## Application Architecture
 
+See [docs/application_architecture.md](docs/application_architecture.md).
 
 ## Setup Ruby with rbenv
     https://github.com/sstephenson/rbenv#installation
