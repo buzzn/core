@@ -43,14 +43,13 @@ Note on the ActiveRecord validations: the standard validation DSL (`validates :i
 
 We use the ORM features of ActiveRecord, but don't put business logic there. So scopes, associations and finders are Ok to use. Regarding other AR features:
 
-* lifecycle callbacks (before_create, ...) 
+#### Lifecycle callbacks (before_create, ...) 
 
 We use them only to change the record itself. They should not affect other objects, send emails, generate queue messages, or have other unexpected side-effects. Those things should instead happen on a higher architecture layer, i.e. in the resource or transaction.
 
-* validations
+#### Validations
 
-- deprecated
-- see the validations section on this page for how to do them instead.
+Are deprecated, see the validations section on this page for how to do them instead.
 
 ### What about Rails?
 
