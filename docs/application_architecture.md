@@ -7,11 +7,11 @@ What is described here how we implement new features. Legacy code is converted w
 
 Example: updating a register.
 
-- the requests is routed to a block of code through in the roda tree (in lib/roda). Roda code blocks are comparable to Rails controller actions. So the responsibilities of that block are
+- the requests is routed to a block of code through the roda tree (in lib/roda). Roda code blocks are comparable to Rails controller actions. So the responsibilities of that block are
     - authentication
     - request validation
     - calling the business logic
-    - producing HTTP response (headers, status, ...)
+    - producing the HTTP response (headers, status, ...)
 - Buzzn::Transaction (lib/buzzn/transactions) encapsulates the business logic. It is used for mutating resources. Reads go directly to a Buzzn::Resource.
 - Buzzn::Resource (lib/buzzn/transactions)
     - handles authorization / permissions
@@ -24,20 +24,20 @@ We use [dry-validation](http://dry-rb.org/gems/dry-validation) schemas for all n
 
 #### 1. Completeness schemas
 
-In some parts of the application we want to show users that an object graph is not yet complete. The completeness schema validates that. For example, while a a customer can be saved without a bank account, it needs to be filled in before the billing can be started.
+In some parts of the application we want to show users that an object graph is not yet complete. The completeness schema validates that. For example, while a customer can be saved without a bank account, the bank account is required before the billing can be started.
 
 #### 2. Transaction schemas
 
-Transaction schemas belong to a request ("create a register", for example) and validate that the data
-coming in from the client is valid before it is passed to the transaction.
+Transaction schemas validate the client request data before it is passed to the transaction.
+Depending on the kind request and transaction ("context"), data for the same model may have to be validated differently.
 
 #### 3. Invariants schemas
 
 These are model-layer validations that always must be true, regardless of context. A user record must always have a first and last name, a register must always have a meter, and so on.
 
-We define these invariant validation separately and generate database constraints from them.
+We define these invariant validations in separate schemas and generate database constraints for the model from them.
 
-Note on the ActiveRecord validations: the standard validation DSL (`validates :iban, presence: true`, etc.) as well as the methods `validate_invariants` are deprecated, we're in the process of replacing them with invariant schemas.
+Note on the ActiveRecord validations: the standard validation DSL (`validates :iban, presence: true`, etc.) as well as the methods `validate_invariants` are deprecated. We're in the process of replacing them with invariant schemas.
 
 ### How do we use ActiveRecord?
 
