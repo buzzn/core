@@ -54,7 +54,7 @@ We use them only to change the record itself. They should not affect other objec
 
 ### What about Rails?
 
-The Rails framework does (a lot of useful things)[https://github.com/rails-api/rails-api#handled-at-the-middleware-layer], but some of that we want do to differently. Details:
+The Rails framework does [a lot of useful things](https://github.com/rails-api/rails-api#handled-at-the-middleware-layer), but some of that we want do to differently. Details:
 
 - we don't use controllers, they are replaced by the Roda tree.
 - we don't use views and the asset pipeline, they are in the process of being removed. Check branch remove-assets for current status.
