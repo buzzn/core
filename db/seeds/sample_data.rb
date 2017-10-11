@@ -137,19 +137,20 @@ create(:meter_real, :two_way,
     create(:register, :grid_output,
       group: SeedsRepository.localpools.people_power,
       readings: [
-        build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40'),
-        build(:reading, :regular, date: '2016-12-31', raw_value: 12_000_000)
+        build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40', register: nil),
+        build(:reading, :regular, date: '2016-12-31', raw_value: 12_000_000, register: nil)
       ]
     ),
     create(:register, :grid_input,
       group: SeedsRepository.localpools.people_power,
       readings: [
-        build(:reading, :setup, date: '2016-01-01', raw_value: 2_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40'),
-        build(:reading, :regular, date: '2016-12-31', raw_value: 66_000_000)
+        build(:reading, :setup, date: '2016-01-01', raw_value: 2_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40', register: nil),
+        build(:reading, :regular, date: '2016-12-31', raw_value: 66_000_000, register: nil)
       ]
     )
   ]
 )
+
 
 #
 # More registers (without powertakers & contracts)
@@ -158,17 +159,17 @@ registers = {}
 
 registers[:ecar] = create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:other],
   group: SeedsRepository.localpools.people_power,
-  devices: [ create(:device, :ecar, commissioning: '2017-04-10') ]
+  devices: [ create(:device, :ecar, commissioning: '2017-04-10', register: nil) ]
 )
 
 registers[:bhkw] = create(:register, :production_bhkw,
   group: SeedsRepository.localpools.people_power,
-  devices: [ create(:device, :bhkw, commissioning: '1995-01-01') ]
+  devices: [ create(:device, :bhkw, commissioning: '1995-01-01', register: nil) ]
 )
 
 registers[:pv] = create(:register, :production_pv,
   group: SeedsRepository.localpools.people_power,
-  devices: [ create(:device, :pv, commissioning: '2017-04-10') ]
+  devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
 )
 
 __END__
