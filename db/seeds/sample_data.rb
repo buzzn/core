@@ -131,39 +131,45 @@ contracts[:common_consumption] = localpool_contract(
   register: create(:register, :input, name: "Allgemeinstrom", group: SeedsRepository.localpools.people_power),
 )
 
+create(:meter_real, :two_way,
+  group: SeedsRepository.localpools.people_power,
+  registers: [
+    create(:register, :grid_output,
+      group: SeedsRepository.localpools.people_power,
+      readings: [
+        build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40'),
+        build(:reading, :regular, date: '2016-12-31', raw_value: 12_000_000)
+      ]
+    ),
+    create(:register, :grid_input,
+      group: SeedsRepository.localpools.people_power,
+      readings: [
+        build(:reading, :setup, date: '2016-01-01', raw_value: 2_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40'),
+        build(:reading, :regular, date: '2016-12-31', raw_value: 66_000_000)
+      ]
+    )
+  ]
+)
+
 #
 # More registers (without powertakers & contracts)
 #
-_registers = {
-  ecar:     create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:other],
-                   group: SeedsRepository.localpools.people_power,
-                   devices: [ create(:device, :ecar, commissioning: '2017-04-10') ]
-  ),
-  grid_output: create(:register, :grid_output,
-                   group: SeedsRepository.localpools.people_power,
-                   meter: SeedsRepository.meters.grid,
-                   readings: [
-                     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40'),
-                     build(:reading, :regular, date: '2016-12-31', raw_value: 12_000_000)
-                   ]
-  ),
-  grid_input: create(:register, :grid_input,
-                  group: SeedsRepository.localpools.people_power,
-                  meter: SeedsRepository.meters.grid,
-                  readings: [
-                    build(:reading, :setup, date: '2016-01-01', raw_value: 2_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40'),
-                    build(:reading, :regular, date: '2016-12-31', raw_value: 66_000_000)
-                  ]
-  ),
-  bhkw:    create(:register, :production_bhkw,
-                  group: SeedsRepository.localpools.people_power,
-                  devices: [ create(:device, :bhkw, commissioning: '1995-01-01') ]
-  ),
-  pv:      create(:register, :production_pv,
-                  group: SeedsRepository.localpools.people_power,
-                  devices: [ create(:device, :pv, commissioning: '2017-04-10') ]
-  )
-}
+registers = {}
+
+registers[:ecar] = create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:other],
+  group: SeedsRepository.localpools.people_power,
+  devices: [ create(:device, :ecar, commissioning: '2017-04-10') ]
+)
+
+registers[:bhkw] = create(:register, :production_bhkw,
+  group: SeedsRepository.localpools.people_power,
+  devices: [ create(:device, :bhkw, commissioning: '1995-01-01') ]
+)
+
+registers[:pv] = create(:register, :production_pv,
+  group: SeedsRepository.localpools.people_power,
+  devices: [ create(:device, :pv, commissioning: '2017-04-10') ]
+)
 
 __END__
 

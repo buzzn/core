@@ -3,7 +3,7 @@ FactoryGirl.define do
     group                 { FactoryGirl.create(:localpool) }
     # Can't save the associated meter yet. It validates it has a register, and then we run into a chicken-and-egg
     # situation (each record requires the other to be persisted to be valid).
-    meter                 { FactoryGirl.build(:meter_real, group: group) }
+    meter                 { FactoryGirl.build(:meter_real, group: group, registers: []) }
     direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]
     pre_decimal_position  6
@@ -14,7 +14,7 @@ FactoryGirl.define do
 
     before(:create) do |register|
       # make sure register and meter are wired up correctly
-      register.meter.registers = [register]
+      register.meter.registers << register
     end
 
     trait :input do
