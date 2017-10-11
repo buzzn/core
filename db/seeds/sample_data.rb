@@ -138,9 +138,10 @@ contracts[:common_consumption] = localpool_contract(
 #
 # More registers (without powertakers & contracts)
 #
-registers = {
+_registers = {
   ecar:     create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:other],
-                   group: SeedsRepository.localpools.people_power
+                   group: SeedsRepository.localpools.people_power,
+                   devices: [ create(:device, :ecar, commissioning: '2017-04-10') ]
   ),
   grid_output: create(:register, :grid_output,
                    group: SeedsRepository.localpools.people_power,
@@ -158,13 +159,15 @@ registers = {
                     build(:reading, :regular, date: '2016-12-31', raw_value: 66_000_000)
                   ]
   ),
-  bhkw:    create(:register, :production_bhkw, group: SeedsRepository.localpools.people_power),
-  pv:      create(:register, :production_pv, group: SeedsRepository.localpools.people_power)
+  bhkw:    create(:register, :production_bhkw,
+                  group: SeedsRepository.localpools.people_power,
+                  devices: [ create(:device, :bhkw, commissioning: '1995-01-01') ]
+  ),
+  pv:      create(:register, :production_pv,
+                  group: SeedsRepository.localpools.people_power,
+                  devices: [ create(:device, :pv, commissioning: '2017-04-10') ]
+  )
 }
-
-FactoryGirl.create(:device, :bhkw, commissioning: '1995-01-01', register: registers[:bhkw])
-FactoryGirl.create(:device, :pv, commissioning: '2017-04-10', register: registers[:pv])
-FactoryGirl.create(:device, :ecar, commissioning: '2017-04-10', register: registers[:ecar])
 
 __END__
 
