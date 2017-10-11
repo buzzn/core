@@ -2,16 +2,21 @@ FactoryGirl.define do
   factory :person do
     first_name          { FFaker::NameDE.first_name }
     last_name           { FFaker::NameDE.last_name }
-    email               { "dev+#{first_name.downcase}.#{last_name.downcase}@buzzn.net" }
+    email do
+      first = first_name.downcase.gsub(/[^0-9a-z]/, '')
+      last  = last_name.downcase.gsub(/[^0-9a-z]/, '')
+      "dev+#{first}.#{last}@buzzn.net"
+    end
     phone               { FFaker::PhoneNumberDE.phone_number }
     prefix              Person.prefixes[:male]
     preferred_language  Person.preferred_languages[:german]
     address
 
+    # All group owners seem to be called Wolfgang, so we dedicate a trait to him.
     trait :wolfgang do
-      title             'Dr.'
-      first_name        'Wolfgang'
-      last_name         'Owner'
+      title      'Dr.'
+      first_name 'Wolfgang'
+      last_name  'Owner'
     end
 
     trait :organization_contact do
@@ -28,6 +33,10 @@ FactoryGirl.define do
     trait :powertaker do
       last_name { generate(:powertaker_last_name) }
       email     { generate(:powertaker_email) }
+    end
+
+    trait :with_self_role do
+      after(:create) { |person| person.add_role(Role::SELF, person) }
     end
 
     # Image is not added by default because the uploader creates a bunch of variations/resizes,

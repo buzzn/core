@@ -12,7 +12,7 @@ FactoryGirl.define do
     share_with_group      true
     share_publicly        false
 
-    before(:create) do |register, _evaluator|
+    before(:create) do |register|
       # make sure register and meter are wired up correctly
       register.meter.registers = [register]
     end
@@ -27,8 +27,35 @@ FactoryGirl.define do
       name            { generate(:register_output_name) }
     end
 
+    # This register is publicly connected. Only those have a metering point id
     trait :grid_connected do
       metering_point_id # uses sequence
+    end
+
+    trait :grid_input do
+      grid_connected
+      input
+      label Register::Base.labels[:grid_consumption]
+      name 'Netzanschluss Bezug'
+    end
+
+    trait :grid_output do
+      grid_connected
+      output
+      label Register::Base.labels[:grid_feeding]
+      name 'Netzanschluss Einspeisung'
+    end
+
+    trait :production_bhkw do
+      output
+      label Register::Base.labels[:production_chp]
+      name 'Produktion BHKW'
+    end
+
+    trait :production_pv do
+      output
+      name 'Produktion PV'
+      label Register::Base.labels[:production_pv]
     end
   end
 end
