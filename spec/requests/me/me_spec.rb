@@ -4,15 +4,7 @@ describe Me::Roda do
     Me::Roda # this defines the active application for this test
   end
 
-  login_path '/login'
-
-  entity!(:admin) { Fabricate(:admin_token) }
-
-  entity!(:user_token) { Fabricate(:user_token) }
-
-  entity!(:other) { Fabricate(:user_token) }
-
-  entity(:person) { Account::Base.find(user_token.resource_owner_id).person }
+  entity(:person) { $user.person }
 
   let(:denied_json) do
     {
@@ -56,7 +48,7 @@ describe Me::Roda do
     end
 
     it '200' do
-      GET '', user_token
+      GET '', $user#_token
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq person_json.to_yaml
     end
@@ -120,13 +112,13 @@ describe Me::Roda do
     end
 
     it '409' do
-      PATCH '', user_token, updated_at: DateTime.now
+      PATCH '', $user, updated_at: DateTime.now
       expect(response).to have_http_status(409)
       expect(json).to eq stale_json
     end
 
     it '422 wrong' do
-      PATCH '', user_token,
+      PATCH '', $user,
             title: 'Master' * 20,
             prefix: 'Both',
             first_name: 'Maxima' * 20,
@@ -134,14 +126,13 @@ describe Me::Roda do
             phone: '+(0)80 123-312.321 x123 #123 *1@2&3',
             fax: '123312' * 40,
             preferred_language: 'none'
-
       expect(response).to have_http_status(422)
       expect(json.to_yaml).to eq send("wrong_json").to_yaml
     end
 
     it '200' do
       old = person.updated_at
-      PATCH '', user_token,
+      PATCH '', $user,
             updated_at: person.updated_at,
             title: 'Prof.',
             prefix: 'M',

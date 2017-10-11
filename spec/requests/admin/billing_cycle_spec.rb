@@ -1,25 +1,15 @@
+require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   def app
-    Admin::LocalpoolRoda # this defines the active application for this test
+    TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
   context 'billing_cycles' do
 
-    entity(:user) { Fabricate(:user_token) }
-    entity(:admin) { Fabricate(:admin_token) }
     entity(:group) { Fabricate(:localpool) }
     entity(:billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
     entity!(:other_billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
-    entity(:regular_token) do
-      Fabricate(:user_token)
-    end
-    entity(:manager_token) do
-      token = Fabricate(:user_token)
-      Account::Base.find(token.resource_owner_id)
-        .person.add_role(Role::GROUP_ADMIN, group)
-      token
-    end
     entity!(:billing) { Fabricate(:billing,
                                   billing_cycle: billing_cycle,
                                   localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
@@ -43,23 +33,13 @@ describe Admin::LocalpoolRoda do
       {
         "errors" => [
           {
-            "detail"=>"BillingCycle: bla-blub not found by User: #{admin.resource_owner_id}"
+            "detail"=>"BillingCycle: bla-blub not found by User: #{$admin.id}"
           }
         ]
       }
     end
 
     context 'GET' do
-
-      let(:denied_json) do
-        {
-          "errors" => [
-            {
-              "detail"=>"retrieve BillingCycleResource: permission denied for User: #{user.resource_owner_id}"
-            }
-          ]
-        }
-      end
 
       let(:cycles_json) do
         BillingCycle.all.collect do |cycle|
@@ -96,13 +76,13 @@ describe Admin::LocalpoolRoda do
       end
 
       it '404' do
-        GET "/#{group.id}/billing-cycles/bla-blub", admin
+        GET "/test/#{group.id}/billing-cycles/bla-blub", $admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
       it '200 all' do
-        GET "/#{group.id}/billing-cycles?include=billings", admin
+        GET "/test/#{group.id}/billing-cycles?include=billings", $admin
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq sort(cycles_json).to_yaml
       end
@@ -123,13 +103,13 @@ describe Admin::LocalpoolRoda do
       end
 
       it '422 wrong' do
-        POST "/#{group.id}/billing-cycles", admin, begin_date: 'blablu', end_date: 'blubla', name: 'something'*10
+        POST "/test/#{group.id}/billing-cycles", $admin, begin_date: 'blablu', end_date: 'blubla', name: 'something'*10
         expect(response).to have_http_status(422)
         expect(json.to_yaml).to eq wrong_json.to_yaml
       end
 
       it '201' do
-        POST "/#{group.id}/billing-cycles", admin, begin_date: begin_date, end_date: end_date, name: 'mine', include: :billings
+        POST "/test/#{group.id}/billing-cycles", $admin, begin_date: begin_date, end_date: end_date, name: 'mine', include: :billings
         expect(response).to have_http_status(201)
         result = json
         id = result.delete('id')
@@ -191,20 +171,20 @@ describe Admin::LocalpoolRoda do
       end
 
       it '404' do
-        PATCH "/#{group.id}/billing-cycles/bla-blub", admin
+        PATCH "/test/#{group.id}/billing-cycles/bla-blub", $admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
       it '409' do
-        PATCH "/#{group.id}/billing-cycles/#{billing_cycle.id}", admin,
+        PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
               updated_at: DateTime.now
         expect(response).to have_http_status(409)
         expect(json).to eq stale_json
       end
 
       it '422' do
-        PATCH "/#{group.id}/billing-cycles/#{billing_cycle.id}", admin,
+        PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
               begin_date: 'blablu',
               end_date: 'blubla',
               name: 'hello mister' * 20
@@ -214,7 +194,7 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         old = billing_cycle.updated_at
-        PATCH "/#{group.id}/billing-cycles/#{billing_cycle.id}", admin,
+        PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
               updated_at: billing_cycle.updated_at,
               name: 'abcd',
               begin_date: Date.today,
@@ -240,7 +220,7 @@ describe Admin::LocalpoolRoda do
       it '204' do
         size = BillingCycle.all.size
 
-        DELETE "/#{group.id}/billing-cycles/#{other_billing_cycle.id}", admin
+        DELETE "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
         expect(response).to have_http_status(204)
         expect(BillingCycle.all.size).to eq size - 1
 

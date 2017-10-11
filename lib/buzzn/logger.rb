@@ -30,5 +30,9 @@ module Buzzn
         end
       end
     end
+
+    def <<(msg)
+      @root.<< msg if @root.warn? rescue nil
+    end
   end
 end

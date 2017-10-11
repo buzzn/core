@@ -1,12 +1,11 @@
+require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   def app
-    Admin::LocalpoolRoda # this defines the active application for this test
+    TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
   context 'contracts' do
-
-    entity(:admin) { Fabricate(:admin_token) }
 
     entity(:localpool) { Fabricate(:localpool) }
 
@@ -26,27 +25,24 @@ describe Admin::LocalpoolRoda do
       orga
     end
 
-    entity(:user) do
-      token = Fabricate(:user_token)
-      account = Account::Base.find(token.resource_owner_id)
-      account.person.add_role(Role::GROUP_MEMBER, localpool)
-      token
+    before do
+      $user.person.add_role(Role::GROUP_MEMBER, localpool)
     end
 
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve Contract::Base: permission denied for User: #{user.resource_owner_id}" }
-        ]
-      }
-    end
+    # let(:denied_json) do
+    #   {
+    #     "errors" => [
+    #       {
+    #         "detail"=>"retrieve Contract::Base: permission denied for User: #{$user.id}" }
+    #     ]
+    #   }
+    # end
 
     let(:not_found_json) do
       {
         "errors" => [
           {
-            "detail"=>"Contract::Localpool: bla-blub not found by User: #{admin.resource_owner_id}" }
+            "detail"=>"Contract::Localpool: bla-blub not found by User: #{$admin.id}" }
         ]
       }
     end
@@ -323,19 +319,19 @@ describe Admin::LocalpoolRoda do
         {
           "errors" => [
             {
-              "detail"=>"retrieve Contract::MeteringPointOperator: #{metering_point_operator_contract.id} permission denied for User: #{user.resource_owner_id}" }
+              "detail"=>"retrieve Contract::MeteringPointOperator: #{metering_point_operator_contract.id} permission denied for User: #{$user.id}" }
           ]
         }
       end
 
       it '403' do
-        GET "/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", user
+        GET "/test/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $user
         expect(json).to eq denied_json
         expect(response).to have_http_status(403)
       end
 
       it '404' do
-        GET "/#{localpool.id}/contracts/bla-blub", admin
+        GET "/test/#{localpool.id}/contracts/bla-blub", $admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
@@ -349,7 +345,7 @@ describe Admin::LocalpoolRoda do
           let(:contract_json) { send "#{type}_contract_json" }
 
           it '200' do
-            GET "/#{localpool.id}/contracts/#{contract.id}", admin, include: 'tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register'
+            GET "/test/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end
@@ -385,7 +381,7 @@ describe Admin::LocalpoolRoda do
         end
 
         it '200' do
-          GET "/#{localpool.id}/contracts/#{contract.id}/customer", admin
+          GET "/test/#{localpool.id}/contracts/#{contract.id}/customer", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq(customer_json.to_yaml)
         end
@@ -421,7 +417,7 @@ describe Admin::LocalpoolRoda do
         end
 
         it '200' do
-          GET "/#{localpool.id}/contracts/#{contract.id}/contractor", admin
+          GET "/test/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq(contractor_json.to_yaml)
         end

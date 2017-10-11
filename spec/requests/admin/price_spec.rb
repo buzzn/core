@@ -1,30 +1,20 @@
+require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   def app
-    Admin::LocalpoolRoda # this defines the active application for this test
+    TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
   context 'prices' do
 
-    entity(:user) { Fabricate(:user_token) }
-    entity(:admin) { Fabricate(:admin_token) }
     entity(:localpool) { Fabricate(:localpool) }
     entity(:price) { Fabricate(:price, localpool: localpool)}
-    
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve PriceResource: permission denied for User: #{user.resource_owner_id}" }
-        ]
-      }
-    end
 
     let(:not_found_json) do
       {
         "errors" => [
           {
-            "detail"=>"Price: bla-bla-blub not found by User: #{admin.resource_owner_id}" }
+            "detail"=>"Price: bla-bla-blub not found by User: #{$admin.id}" }
         ]
       }
     end
@@ -42,7 +32,7 @@ describe Admin::LocalpoolRoda do
     context 'POST' do
 
       it '422' do
-        POST "/#{localpool.id}/prices", admin,
+        POST "/test/#{localpool.id}/prices", $admin,
              name: 'Max Mueller' * 10,
              begin_date: 'heute-hier-morgen-dort',
              energyprice_cents_per_kilowatt_hour: 'not so much',
@@ -72,7 +62,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '201' do
-        POST "/#{localpool.id}/prices", admin, new_price
+        POST "/test/#{localpool.id}/prices", $admin, new_price
 
         expect(response).to have_http_status(201)
         result = json
@@ -107,7 +97,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200 all' do
-        GET "/#{localpool.id}/prices", admin
+        GET "/test/#{localpool.id}/prices", $admin
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(prices_json.to_yaml)
@@ -152,13 +142,13 @@ describe Admin::LocalpoolRoda do
       end
 
       it '404' do
-        PATCH "/#{localpool.id}/prices/bla-bla-blub", admin
+        PATCH "/test/#{localpool.id}/prices/bla-bla-blub", $admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
       it '409' do
-        PATCH "/#{localpool.id}/prices/#{price.id}", admin,
+        PATCH "/test/#{localpool.id}/prices/#{price.id}", $admin,
               updated_at: DateTime.now
 
         expect(response).to have_http_status(409)
@@ -166,7 +156,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '422' do
-        PATCH "/#{localpool.id}/prices/#{price.id}", admin,
+        PATCH "/test/#{localpool.id}/prices/#{price.id}", $admin,
               name: 'Max Mueller' * 10,
               begin_date: 'today',
               energyprice_cents_per_kilowatt_hour: '2.4 Euro',
@@ -178,7 +168,7 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         old = price.updated_at
-        PATCH "/#{localpool.id}/prices/#{price.id}", admin,
+        PATCH "/test/#{localpool.id}/prices/#{price.id}", $admin,
               updated_at: price.updated_at,
               name: 'abcd',
               begin_date: Date.new(2015, 1, 1),

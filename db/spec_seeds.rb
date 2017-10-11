@@ -9,3 +9,7 @@ Fabricate(:buzzn_energy)
 Fabricate(:buzzn_systems)
 Fabricate(:mysmartgrid)
 Fabricate(:germany)
+
+$admin = Fabricate(:admin)
+$user = Fabricate(:user)
+$other = Fabricate(:user)

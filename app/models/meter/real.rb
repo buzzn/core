@@ -16,7 +16,7 @@ module Meter
            amperix: AMPERIX,
            ferraris: FERRARIS,
            other: OTHER
-         }
+         }    
     MANUFACTURER_NAMES = [EASY_METER, AMPERIX, FERRARIS, OTHER]
 
     # direction numbers

@@ -3,7 +3,7 @@ require_relative 'common_roda'
 
 class CoreRoda < CommonRoda
 
-  use Rack::CommonLogger, Logger.new(STDERR)
+  use Rack::CommonLogger, Buzzn::Logger.new(self)
 
   use Rack::CommonLogger, Logger.new(STDERR)
 

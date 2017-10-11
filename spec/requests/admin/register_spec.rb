@@ -1,28 +1,15 @@
+require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   def app
-    Admin::LocalpoolRoda # this defines the active application for this test
-  end
-
-  entity(:admin) { Fabricate(:admin_token) }
-
-  entity(:user) { Fabricate(:user_token) }
-
-  let(:denied_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"retrieve Register::Base: permission denied for User: #{user.resource_owner_id}"
-        }
-      ]
-    }
+    TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
   let(:not_found_json) do
     {
       "errors" => [
         {
-          "detail"=>"Register::Base: bla-blub not found by User: #{admin.resource_owner_id}"
+          "detail"=>"Register::Base: bla-blub not found by User: #{$admin.id}"
         }
       ]
     }
@@ -63,7 +50,7 @@ describe Admin::LocalpoolRoda do
          {
            "errors" => [
              {
-               "detail"=>"Register::Real: bla-blub not found by User: #{admin.resource_owner_id}"
+               "detail"=>"Register::Real: bla-blub not found by User: #{$admin.id}"
              }
            ]
          }
@@ -130,20 +117,20 @@ describe Admin::LocalpoolRoda do
        end
 
        it '404' do
-         PATCH "/#{group.id}/meters/#{meter.id}/registers/bla-blub", admin
+         PATCH "/test/#{group.id}/meters/#{meter.id}/registers/bla-blub", $admin
          expect(response).to have_http_status(404)
          expect(json).to eq not_found_json
        end
 
        it '409' do
-         PATCH "/#{group.id}/meters/#{meter.id}/registers/#{register.id}", admin,
+         PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                updated_at: DateTime.now
          expect(response).to have_http_status(409)
          expect(json).to eq stale_json
        end
 
        it '422 wrong' do
-         PATCH "/#{group.id}/meters/#{meter.id}/registers/#{register.id}", admin,
+         PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                metering_point_id: '123321' * 20,
                name: 'Smarty' * 20,
                label: 'grid',
@@ -160,7 +147,7 @@ describe Admin::LocalpoolRoda do
 
        it '200' do
          old = register.updated_at
-         PATCH "/#{group.id}/meters/#{meter.id}/registers/#{register.id}", admin,
+         PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                updated_at: register.updated_at,
                metering_point_id: '123456',
                name: 'Smarty',
@@ -285,13 +272,13 @@ describe Admin::LocalpoolRoda do
       end
 
       it '404' do
-        GET "/#{group.id}/registers/bla-blub", admin
+        GET "/test/#{group.id}/registers/bla-blub", $admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
       it '200 all' do
-        GET "/#{group.id}/registers", admin
+        GET "/test/#{group.id}/registers", $admin
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq sort(registers_json).to_yaml
       end
@@ -332,7 +319,7 @@ describe Admin::LocalpoolRoda do
             register = send "#{type}_register"
             registers_json = send("#{type}_registers_json")
 
-            GET "/#{group.id}/meters/#{register.meter.id}/registers", admin
+            GET "/test/#{group.id}/meters/#{register.meter.id}/registers", $admin
             expect(response).to have_http_status(200)
             expect(sort(json['array']).to_yaml).to eq sort(registers_json).to_yaml
           end
@@ -341,11 +328,11 @@ describe Admin::LocalpoolRoda do
             register = send "#{type}_register"
             register_json = send "#{type}_register_json"
 
-            GET "/#{group.id}/registers/#{register.id}", admin
+            GET "/test/#{group.id}/registers/#{register.id}", $admin
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
 
-            GET "/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", admin
+            GET "/test/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
           end
@@ -366,7 +353,7 @@ describe Admin::LocalpoolRoda do
         # the regsiter but not to the readings
 
         it '404' do
-          GET "/#{group.id}/registers/bla-blub/readings", admin
+          GET "/test/#{group.id}/registers/bla-blub/readings", $admin
           expect(response).to have_http_status(404)
           expect(json).to eq not_found_json
         end
@@ -401,7 +388,7 @@ describe Admin::LocalpoolRoda do
             end
 
             it '200' do
-              GET "/#{group.id}/registers/#{register.id}/readings", admin
+              GET "/test/#{group.id}/registers/#{register.id}/readings", $admin
 
               expect(response).to have_http_status(200)
               expect(sort(json['array']).to_yaml).to eq sort(readings_json).to_yaml

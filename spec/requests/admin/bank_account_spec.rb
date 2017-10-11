@@ -3,13 +3,15 @@ describe Admin::BankAccountRoda do
   class BankAccountParentRoda < BaseRoda
     plugin :shared_vars
     route do |r|
-      r.on :id do |id|
+      r.on 'test', :id do |id|
         localpool = Admin::LocalpoolResource.all(current_user).first
         localpool.object.persons
         parent = localpool.organizations.where(id: id).first || localpool.persons.where(id: id).first
         shared[Admin::BankAccountRoda::PARENT] = parent
         r.run Admin::BankAccountRoda
       end
+      
+      r.run Me::Roda 
     end
   end
 
@@ -17,14 +19,9 @@ describe Admin::BankAccountRoda do
     BankAccountParentRoda # this defines the active application for this test
   end
 
-  entity(:admin) { Fabricate(:admin_token) }
-
-  entity(:user) { Fabricate(:user_token) }
-
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
-    Account::Base.find(user.resource_owner_id)
-      .person.add_role(Role::GROUP_MEMBER, localpool)
+    $user.person.add_role(Role::GROUP_MEMBER, localpool)
     localpool
   end
 
@@ -45,7 +42,7 @@ describe Admin::BankAccountRoda do
     {
       "errors" => [
         {
-          "detail"=>"BankAccount: bla-bla-blub not found by User: #{admin.resource_owner_id}" }
+          "detail"=>"BankAccount: bla-bla-blub not found by User: #{$admin.id}" }
       ]
     }
   end
@@ -74,7 +71,7 @@ describe Admin::BankAccountRoda do
         {
           "errors" => [
             {
-              "detail"=>"retrieve BankAccount: #{bank_account.id} permission denied for User: #{user.resource_owner_id}" }
+              "detail"=>"retrieve BankAccount: #{bank_account.id} permission denied for User: #{$user.id}" }
           ]
         }
       end
@@ -98,7 +95,7 @@ describe Admin::BankAccountRoda do
           {
             "errors" => [
               {
-                "detail"=>"create_bank_account OrganizationResource: #{parent.id} permission denied for User: #{user.resource_owner_id}" }
+                "detail"=>"create_bank_account OrganizationResource: #{parent.id} permission denied for User: #{$user.id}" }
             ]
           }
         end
@@ -116,20 +113,20 @@ describe Admin::BankAccountRoda do
         # can not construct users to see parent but not bank_account
         if name == :organization_account
           it '403' do
-            POST "/#{parent.id}", user, holder: 'someone', iban: 'DE23100000001234567890', bank_name: 'Limitless Limited', bic: '123123123XXX'
+            POST "/test/#{parent.id}", $user, holder: 'someone', iban: 'DE23100000001234567890', bank_name: 'Limitless Limited', bic: '123123123XXX'
             expect(response).to have_http_status(403)
             expect(json).to eq create_denied_json
           end
         end
 
         it '422 missing' do
-          POST "/#{parent.id}", admin
+          POST "/test/#{parent.id}", $admin
           expect(response).to have_http_status(422)
           expect(json.to_yaml).to eq missing_json.to_yaml
         end
 
         it '422 wrong' do
-          POST "/#{parent.id}", admin,
+          POST "/test/#{parent.id}", $admin,
                bank_name: 'blablub' * 20,
                holder: 'noone' * 20,
                iban: 123321
@@ -172,20 +169,20 @@ describe Admin::BankAccountRoda do
         # can not construct users to see parent but not bank_account
         if name == :organization_account
           it '403' do
-            PATCH "/#{parent.id}/#{bank_account.id}", user
+            PATCH "/test/#{parent.id}/#{bank_account.id}", $user
             expect(response).to have_http_status(403)
             expect(json).to eq denied_json
           end
         end
 
         it '404' do
-          PATCH "/#{parent.id}/bla-bla-blub", admin
+          PATCH "/test/#{parent.id}/bla-bla-blub", $admin
           expect(response).to have_http_status(404)
           expect(json).to eq not_found_json
         end
 
         it '409' do
-          PATCH "/#{parent.id}/#{bank_account.id}", admin,
+          PATCH "/test/#{parent.id}/#{bank_account.id}", $admin,
                 updated_at: DateTime.now
           
           expect(response).to have_http_status(409)
@@ -193,7 +190,7 @@ describe Admin::BankAccountRoda do
         end
 
         it '422' do
-          PATCH "/#{parent.id}/#{bank_account.id}", admin,
+          PATCH "/test/#{parent.id}/#{bank_account.id}", $admin,
                 holder: 'Max Mueller' * 10,
                 bank_name: 'Bundesbank' * 10,
                 iban: '12341234' * 20
@@ -204,7 +201,7 @@ describe Admin::BankAccountRoda do
 
         it '200' do
           old = bank_account.updated_at
-          PATCH "/#{parent.id}/#{bank_account.id}", admin,
+          PATCH "/test/#{parent.id}/#{bank_account.id}", $admin,
                 updated_at: bank_account.updated_at,
                 bank_name: 'Bundesbank',
                 holder: 'Max Mueller',
@@ -234,26 +231,26 @@ describe Admin::BankAccountRoda do
         # can not construct users to see parent but not bank_account
         if name == :organization_account
           it '403' do
-            GET "/#{parent.id}/#{bank_account.id}", user
+            GET "/test/#{parent.id}/#{bank_account.id}", $user
             expect(response).to have_http_status(403)
             expect(json).to eq denied_json
           end
         end
 
         it '404' do
-          GET "/#{parent.id}/bla-bla-blub", admin
+          GET "/test/#{parent.id}/bla-bla-blub", $admin
           expect(response).to have_http_status(404)
           expect(json).to eq not_found_json
         end
 
         it '200' do
-          GET "/#{parent.id}/#{bank_account.id}", admin
+          GET "/test/#{parent.id}/#{bank_account.id}", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq bank_account_json.to_yaml
         end
 
         it '200 all' do
-          GET "/#{parent.id}", admin
+          GET "/test/#{parent.id}", $admin
           expect(response).to have_http_status(200)
           expect(json['array'].to_yaml).to eq bank_accounts_json.to_yaml
         end
@@ -264,14 +261,14 @@ describe Admin::BankAccountRoda do
         # can not construct users to see parent but not bank_account
         if name == :organization_account
           it '403' do
-            DELETE "/#{parent.id}/#{bank_account.id}", user
+            DELETE "/test/#{parent.id}/#{bank_account.id}", $user
             expect(response).to have_http_status(403)
             expect(json).to eq denied_json
           end
         end
 
         it '404' do
-          DELETE "/#{parent.id}/bla-bla-blub", admin
+          DELETE "/test/#{parent.id}/bla-bla-blub", $admin
           expect(response).to have_http_status(404)
           expect(json).to eq not_found_json
         end
@@ -279,7 +276,7 @@ describe Admin::BankAccountRoda do
         it '204' do
           size = BankAccount.all.size
 
-          DELETE "/#{parent.id}/#{bank_account.id}", admin
+          DELETE "/test/#{parent.id}/#{bank_account.id}", $admin
           expect(response).to have_http_status(204)
           expect(BankAccount.all.size).to eq size - 1
 

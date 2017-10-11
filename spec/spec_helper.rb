@@ -1,6 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] = 'test'
-ENV['LOG_LEVEL'] ||= 'info' # can not set it in rails env as it is always 'error'
+ENV['LOG_LEVEL'] ||= 'error' # can not set it in rails env as it is always 'error'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'vcr'
@@ -97,7 +97,11 @@ RSpec.configure do |config|
           klass = (klass.const_get 'Base' rescue nil)
         end
         if klass
-          if (klass.is_a?(Organization) && klass.count != 7) || (!klass.is_a?(Organization) && klass.count > 0)
+          if (klass == Role && klass.count != 4) ||
+             (klass == Account::Base && klass.count != 3) ||
+             (klass == Person && klass.count != 3) ||
+             (klass == Organization && klass.count != 7) ||
+             (klass != Organization && klass != Role && klass != Person && klass != Account::Base && klass.count > 0)
             if first
               first = false
               warn '-' * 80

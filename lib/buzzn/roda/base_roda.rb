@@ -23,12 +23,8 @@ class BaseRoda < CommonRoda
   plugin :doorkeeper
 
   plugin :current_user do |app|
-    if app.doorkeeper_token
-      Account::Base.where(id: app.doorkeeper_token.resource_owner_id).first
-    else
-      if (app.rodauth.valid_jwt? rescue false)
-        Account::Base.where(id: app.rodauth.session[:account_id]).first
-      end
+    if (app.rodauth.valid_jwt? rescue false)
+      Account::Base.where(id: app.rodauth.session[:account_id]).first
     end
   end
 
@@ -38,16 +34,17 @@ class BaseRoda < CommonRoda
 
   plugin :empty_root
 
-  plugin :rodauth, csrf: false do
+  plugin :rodauth, csrf: false, json: :only do
   
     enable :session_expiration, :jwt
 
-    session_expiration_redirect nil
-    session_inactivity_timeout 900 # 15 minutes
-    max_session_lifetime 86400 # 1 day
-
     db Buzzn::DB
 
+    session_expiration_redirect nil
+    session_inactivity_timeout 15 * 60 # 15 minutes
+    max_session_lifetime 86400 # 1 day
+
     jwt_secret (ENV['JWT_SECRET'] || raise('missing JWT_SECRET in env'))
+    json_response_error_status 401
   end
 end

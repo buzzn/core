@@ -1,30 +1,17 @@
-# coding: utf-8
+require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   def app
-    Admin::LocalpoolRoda # this defines the active application for this test
+    TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
   context 'organizations' do
-
-    entity(:admin) { Fabricate(:admin_token) }
-
-    entity(:user) { Fabricate(:user_token) }
-
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve Organization: permission denied for User: #{user.resource_owner_id}" }
-        ]
-      }
-    end
 
     let(:not_found_json) do
       {
         "errors" => [
           {
-            "detail"=>"Organization: bla-blub not found by User: #{admin.resource_owner_id}" }
+            "detail"=>"Organization: bla-blub not found by User: #{$admin.id}" }
         ]
       }
     end
@@ -119,13 +106,13 @@ describe Admin::LocalpoolRoda do
       end
 
       it '404' do
-        GET "/#{group.id}/organizations/bla-blub", admin
+        GET "/test/#{group.id}/organizations/bla-blub", $admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
       it '200' do
-        GET "/#{group.id}/organizations/#{organization.id}", admin, include: 'bank_accounts, contact, legal_representation'
+        GET "/test/#{group.id}/organizations/#{organization.id}", $admin, include: 'bank_accounts, contact, legal_representation'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq organization_json.to_yaml
       end
@@ -137,7 +124,7 @@ describe Admin::LocalpoolRoda do
         {
           "errors" => [
             {
-              "detail"=>"OrganizationResource: address not found by User: #{admin.resource_owner_id}" }
+              "detail"=>"OrganizationResource: address not found by User: #{$admin.id}" }
           ]
         }
       end
@@ -185,7 +172,7 @@ describe Admin::LocalpoolRoda do
         it '404' do
           organization.update(address: nil)
           begin
-            GET "/#{group.id}/organizations/#{organization.id}/address", admin
+            GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
             expect(response).to have_http_status(404)
             expect(json).to eq address_not_found_json
           ensure
@@ -194,11 +181,11 @@ describe Admin::LocalpoolRoda do
         end
 
         it '200' do
-          GET "/#{group.id}/organizations/#{organization.id}/address", admin
+          GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq address_json.to_yaml
 
-          GET "/#{group.id}/organizations/#{organization.id}", admin, include: 'address'
+          GET "/test/#{group.id}/organizations/#{organization.id}", $admin, include: 'address'
           expect(response).to have_http_status(200)
           expect(json).to eq organization_json
 

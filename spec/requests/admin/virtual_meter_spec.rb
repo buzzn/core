@@ -1,20 +1,15 @@
-# coding: utf-8
+require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   def app
-    Admin::LocalpoolRoda # this defines the active application for this test
+    TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
   context 'meters as virtual' do
 
-    entity(:admin) { Fabricate(:admin_token) }
-
-    entity(:user) { Fabricate(:user_token) }
-
     entity(:group) do
       group = Fabricate(:localpool)
-      Account::Base.find(user.resource_owner_id)
-        .person.add_role(Role::GROUP_MEMBER, group)
+      $user.person.add_role(Role::GROUP_MEMBER, group)
       group
     end
 
@@ -22,7 +17,7 @@ describe Admin::LocalpoolRoda do
       {
         "errors" => [
           {
-            "detail"=>"retrieve Meter::Virtual: #{meter.id} permission denied for User: #{user.resource_owner_id}" }
+            "detail"=>"retrieve Meter::Virtual: #{meter.id} permission denied for User: #{$user.id}" }
         ]
       }
     end
@@ -31,7 +26,7 @@ describe Admin::LocalpoolRoda do
       {
         "errors" => [
           {
-            "detail"=>"Meter::Base: bla-blub not found by User: #{admin.resource_owner_id}"
+            "detail"=>"Meter::Base: bla-blub not found by User: #{$admin.id}"
           }
         ]
       }
@@ -103,19 +98,19 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
 
       it '403' do
-        GET "/#{group.id}/meters/#{meter.id}", user
+        GET "/test/#{group.id}/meters/#{meter.id}", $user
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
       end
 
       it '404' do
-        GET "/#{group.id}/meters/bla-blub", admin
+        GET "/test/#{group.id}/meters/bla-blub", $admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
       it '200' do
-        GET "/#{group.id}/meters/#{meter.id}", admin, include: 'formula_parts: register'
+        GET "/test/#{group.id}/meters/#{meter.id}", $admin, include: 'formula_parts: register'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq meter_json.to_yaml
       end
@@ -156,26 +151,26 @@ describe Admin::LocalpoolRoda do
       end
 
       it '403' do
-        PATCH "/#{group.id}/meters/#{meter.id}", user
+        PATCH "/test/#{group.id}/meters/#{meter.id}", $user
         expect(response).to have_http_status(403)
         expect(json).to eq denied_json
       end
 
       it '404' do
-        PATCH "/#{group.id}/meters/bla-blub", admin
+        PATCH "/test/#{group.id}/meters/bla-blub", $admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
       it '409' do
-        PATCH "/#{group.id}/meters/#{meter.id}", admin,
+        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: DateTime.now
         expect(response).to have_http_status(409)
         expect(json).to eq stale_json
       end
 
       it '422' do
-        PATCH "/#{group.id}/meters/#{meter.id}", admin,
+        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               manufacturer_name: 'Maxima' * 20,
               product_name: 'SmartyMeter' * 10,
               product_serialnumber: '12341234' * 10
@@ -187,7 +182,7 @@ describe Admin::LocalpoolRoda do
       it '200' do
         old = meter.updated_at
         sleep 1
-        PATCH "/#{group.id}/meters/#{meter.id}", admin,
+        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: meter.updated_at,
               product_name: 'SmartySuper',
               product_serialnumber: '41234'
@@ -210,7 +205,7 @@ describe Admin::LocalpoolRoda do
       let(:not_found_json) do
         {
           "errors" => [
-            {"detail"=>"Register::FormulaPart: bla-blub not found by User: #{admin.resource_owner_id}"}
+            {"detail"=>"Register::FormulaPart: bla-blub not found by User: #{$admin.id}"}
           ]
         }
       end
@@ -233,19 +228,19 @@ describe Admin::LocalpoolRoda do
         end
 
         it '404' do
-          GET "/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", admin
+          GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
           expect(response).to have_http_status(404)
           expect(json).to eq not_found_json
         end
 
         it '200 all' do
-          GET "/#{group.id}/meters/#{meter.id}/formula-parts", admin
+          GET "/test/#{group.id}/meters/#{meter.id}/formula-parts", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq parts_json.to_yaml
         end
 
         it '200' do
-          GET "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", admin
+          GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq part_json.to_yaml
         end
@@ -256,7 +251,7 @@ describe Admin::LocalpoolRoda do
         let(:register_not_found_json) do
           {
             "errors" => [
-              {"detail"=>"Register::Base: something not found by User: #{admin.resource_owner_id}"}
+              {"detail"=>"Register::Base: something not found by User: #{$admin.id}"}
             ]
           }
         end
@@ -264,7 +259,7 @@ describe Admin::LocalpoolRoda do
         let(:register_denied_json) do
           {
             "errors" => [
-              {"detail"=>"retrieve Register::Output: #{register2.id} permission denied for User: #{admin.resource_owner_id}"}
+              {"detail"=>"retrieve Register::Output: #{register2.id} permission denied for User: #{$admin.id}"}
             ]
           }
         end
@@ -296,12 +291,12 @@ describe Admin::LocalpoolRoda do
         end
 
         it '404' do
-          PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", admin
+          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
           expect(response).to have_http_status(404)
           expect(json).to eq not_found_json
 
-          PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
-                admin,
+          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
+                $admin,
                 updated_at: DateTime.now,
                 register_id: 'something'
           expect(response).to have_http_status(404)
@@ -309,14 +304,14 @@ describe Admin::LocalpoolRoda do
         end
         
         it '403' do
-          PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", user
+          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $user
           expect(response).to have_http_status(403)
           expect(json).to eq denied_json
 
           register2.update(group: nil)
           begin
-            PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
-                  admin,
+            PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
+                  $admin,
                   updated_at: DateTime.now,
                   register_id: register2.id
             expect(response).to have_http_status(403)
@@ -327,14 +322,14 @@ describe Admin::LocalpoolRoda do
         end
 
         it '409' do
-          PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", admin,
+          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
                 updated_at: DateTime.now
           expect(response).to have_http_status(409)
           expect(json).to eq stale_json
         end
 
         it '422' do
-          PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", admin,
+          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
                 operator: '+/-'
 
           expect(response).to have_http_status(422)
@@ -343,7 +338,7 @@ describe Admin::LocalpoolRoda do
 
         it '200' do
           old = meter.updated_at
-          PATCH "/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", admin,
+          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
                 updated_at: formula_part.updated_at,
                 operator: '-',
                 register_id: register2.id

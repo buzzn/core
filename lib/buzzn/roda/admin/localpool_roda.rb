@@ -28,7 +28,7 @@ module Admin
           r.run ::RegisterRoda
         end
 
-        #rodauth.check_session_expiration
+        rodauth.check_session_expiration
 
         r.patch! do
           update_localpool.call(r.params, resource: [localpool])

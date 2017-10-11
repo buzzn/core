@@ -12,7 +12,7 @@ module RequestsHelper
   end
 
   def login_path
-    self.class.login_path || raise('login path not set')
+    self.class.login_path || '/login'
   end
 
   def authorize(account, headers = {})

@@ -1,10 +1,15 @@
 describe Admin::Roda do
 
-  def app
-    Admin::Roda # this defines the active application for this test
+  class TestAdminRoda < BaseRoda
+    route do |r|
+      r.on('test') { r.run Admin::Roda }
+      r.run Me::Roda 
+    end
   end
 
-  entity!(:admin) { Fabricate(:admin_token) }
+  def app
+    TestAdminRoda # this defines the active application for this test
+  end
 
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
@@ -43,7 +48,7 @@ describe Admin::Roda do
       end
 
       it '200' do
-        GET "/persons", admin
+        GET "/test/persons", $admin
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(persons_json.to_yaml)
@@ -80,7 +85,7 @@ describe Admin::Roda do
       end
 
       it '200' do
-        GET "/organizations", admin
+        GET "/test/organizations", $admin
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(organizations_json.to_yaml)
