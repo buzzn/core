@@ -45,7 +45,7 @@ We use the ORM features of ActiveRecord, but don't put business logic there. So 
 
 * lifecycle callbacks (before_create, ...) 
 
-We use them only to change the record itself. They should not affect other objects, send emails, generate queue messages, or have other unexpected side-effects. Those things should instead happen on a higher architectur layer, i.e. in the resource or transaction.
+We use them only to change the record itself. They should not affect other objects, send emails, generate queue messages, or have other unexpected side-effects. Those things should instead happen on a higher architecture layer, i.e. in the resource or transaction.
 
 * validations
 
