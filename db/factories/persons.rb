@@ -20,8 +20,8 @@ FactoryGirl.define do
     end
 
     trait :with_bank_account do
-      before(:create) do |person|
-        person.bank_accounts = [ FactoryGirl.create(:bank_account) ]
+      after(:create) do |person|
+        person.bank_accounts = [ FactoryGirl.create(:bank_account, contracting_party: person) ]
       end
     end
 

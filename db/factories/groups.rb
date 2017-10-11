@@ -14,5 +14,9 @@ FactoryGirl.define do
       description "Hell und Warm!"
       website "www.hellundwarm.de"
     end
+
+    after(:create) do |group, evaluator|
+      group.owner.add_role(Role::GROUP_OWNER, group)
+    end
   end
 end

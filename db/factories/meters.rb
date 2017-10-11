@@ -28,7 +28,7 @@ FactoryGirl.define do
       edifact_tariff               Meter::Real.edifact_tariffs[:single_tariff]
       edifact_data_logging         Meter::Real.edifact_data_loggings[:electronic]
 
-      after(:build) do |meter, evaluator|
+      before(:create) do |meter, evaluator|
         # Add a register and prevent creating another meter (goes into endless loop) by passing in self.
         # This also allows passing registers to the factory like this
         # FactoryGirl.creating(:meter_real, registers: [a_register_instance])

@@ -10,8 +10,8 @@ FactoryGirl.define do
     contact          { FactoryGirl.create(:person, :organization_contact) }
 
     trait :with_bank_account do
-      before(:create) do |organization|
-        organization.bank_accounts = [ FactoryGirl.create(:bank_account) ]
+      after(:create) do |organization|
+        organization.bank_accounts = [ FactoryGirl.create(:bank_account, contracting_party: organization) ]
       end
     end
   end

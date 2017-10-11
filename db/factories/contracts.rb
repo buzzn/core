@@ -33,8 +33,10 @@ FactoryGirl.define do
     customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }
     contractor      { FactoryGirl.create(:person, :with_bank_account) }
     before(:create) do |contract, _transients|
-      meter = FactoryGirl.create(:meter_real, :one_way, group: contract.localpool)
-      contract.register = meter.registers.first
+      unless contract.register
+        meter = FactoryGirl.create(:meter_real, :one_way, group: contract.localpool)
+        contract.register = meter.registers.first
+      end
     end
   end
 end
