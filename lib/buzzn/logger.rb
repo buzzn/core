@@ -32,7 +32,7 @@ module Buzzn
     end
 
     def <<(msg)
-      @root.<< msg if @root.warn? rescue nil
+      @root.<< msg if @root.info? rescue nil
     end
   end
 end

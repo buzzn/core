@@ -38,6 +38,5 @@ class CoreRoda < CommonRoda
       end
     end
 
-    r.run Rails.application
   end
 end

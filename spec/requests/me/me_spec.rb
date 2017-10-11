@@ -4,7 +4,7 @@ describe Me::Roda do
     Me::Roda # this defines the active application for this test
   end
 
-  entity(:person) { $user.person }
+  entity(:person) { $user.person.reload }
 
   let(:denied_json) do
     {

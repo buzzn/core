@@ -15,12 +15,7 @@ describe Me::Roda, :skip_nested do
   end
 
   after :all do
-    Role.delete_all
-    Account::PasswordHash.delete_all
-    Account::PasswordResetKey.delete_all
-    Account::LoginChangeKey.delete_all
-    Account::Base.delete_all
-    Person.delete_all
+    load 'db/spec_seeds.rb'
   end
 
   entity(:password) { 'Example123' }

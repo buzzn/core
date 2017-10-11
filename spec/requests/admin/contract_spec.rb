@@ -26,17 +26,8 @@ describe Admin::LocalpoolRoda do
     end
 
     before do
-      $user.person.add_role(Role::GROUP_MEMBER, localpool)
+      $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
     end
-
-    # let(:denied_json) do
-    #   {
-    #     "errors" => [
-    #       {
-    #         "detail"=>"retrieve Contract::Base: permission denied for User: #{$user.id}" }
-    #     ]
-    #   }
-    # end
 
     let(:not_found_json) do
       {

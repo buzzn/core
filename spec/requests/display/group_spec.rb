@@ -20,7 +20,7 @@ describe Display::GroupRoda do
 
   entity!(:group) do
     group = Fabricate(:localpool)
-    $user.person.add_role(Role::GROUP_ADMIN, group)
+    $user.person.reload.add_role(Role::GROUP_ADMIN, group)
     group
   end
 

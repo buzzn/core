@@ -9,7 +9,7 @@ describe Admin::LocalpoolRoda do
 
     entity(:group) do
       group = Fabricate(:localpool)
-      $user.person.add_role(Role::GROUP_MEMBER, group)
+      $user.person.reload.add_role(Role::GROUP_MEMBER, group)
       group
     end
 

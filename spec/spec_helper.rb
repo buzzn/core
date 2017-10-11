@@ -1,6 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] = 'test'
-ENV['LOG_LEVEL'] ||= 'error' # can not set it in rails env as it is always 'error'
+ENV['LOG_LEVEL'] ||= 'warn' # can not set it in rails env as it is always 'error'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'vcr'
@@ -87,7 +87,6 @@ RSpec.configure do |config|
   end
 
   config.before(:context) do
-    #Mongoid.purge!
     first = true
     ActiveRecord::Base.connection.tables.each do |table|
       next if table.match(/\Aschema_migrations\Z/)

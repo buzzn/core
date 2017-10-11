@@ -10,8 +10,8 @@ describe Admin::LocalpoolRoda do
     entity!(:group) { Fabricate(:localpool) }
 
     entity!(:person) do
-      $other.person.add_role(Role::GROUP_MEMBER, group)
-      person = $user.person
+      $other.person.reload.add_role(Role::GROUP_MEMBER, group)
+      person = $user.person.reload
       person.add_role(Role::GROUP_OWNER, group)
       Fabricate(:bank_account, contracting_party: person)
       person.update(address: Fabricate(:address))

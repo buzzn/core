@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 class Role < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
-
-  #scopify
+  has_and_belongs_to_many :persons, :join_table => :persons_roles
 
   def self.users_roles_arel_table
     @arel ||= Arel::Table.new(:users_roles)

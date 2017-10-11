@@ -13,12 +13,7 @@ describe Me, :skip_nested do
   entity!(:account_change_login) { Proc.new { @b ||= Fabricate(:user) } }
 
   after :all do
-    Role.delete_all
-    Account::PasswordHash.delete_all
-    Account::PasswordResetKey.delete_all
-    Account::LoginChangeKey.delete_all
-    Account::Base.delete_all
-    Person.delete_all
+    load 'db/spec_seeds.rb'
   end
 
   # me
@@ -68,7 +63,7 @@ describe Me, :skip_nested do
   # swagger
 
   it 'GET /swagger.json' do
-    GET swagger.basePath + '/swagger.json', admin
+    GET swagger.basePath + '/swagger.json', $admin
     expect(response).to have_http_status(200)
     expect(json).not_to be_nil
   end

@@ -34,8 +34,6 @@ module RequestsHelper
     }
     account = account.call if account.is_a? Proc
     case account
-    when Doorkeeper::AccessToken
-      default_headers["HTTP_AUTHORIZATION"]  = "Bearer #{account.token}"
     when Account::Base
       default_headers['Authorization'] = authorize(account, headers)
     when NilClass

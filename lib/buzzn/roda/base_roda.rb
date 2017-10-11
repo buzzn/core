@@ -1,7 +1,6 @@
 require_relative 'common_roda'
 require_relative 'helpers/serializer'
 require_relative 'helpers/error_handler'
-require_relative 'plugins/doorkeeper'
 require_relative 'plugins/current_user'
 require_relative 'plugins/terminal_verbs'
 require_relative 'plugins/created_deleted'
@@ -19,8 +18,6 @@ class BaseRoda < CommonRoda
          :serializer=> Buzzn::Roda::Serializer.new
 
   plugin :terminal_verbs
-
-  plugin :doorkeeper
 
   plugin :current_user do |app|
     if (app.rodauth.valid_jwt? rescue false)
