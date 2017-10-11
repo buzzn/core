@@ -27,7 +27,7 @@ end
 contracts = {}
 
 contracts[:pt1] = localpool_contract(
-  customer: SeedsRepository.persons[:pt1],
+  customer: SeedsRepository.persons.pt1,
   register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
     build(:reading, :regular, date: '2016-12-31', raw_value: 2_400_000, register: nil)
@@ -35,7 +35,7 @@ contracts[:pt1] = localpool_contract(
 )
 
 contracts[:pt2] = localpool_contract(
-  customer: SeedsRepository.persons[:pt2],
+  customer: SeedsRepository.persons.pt2,
   register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
     build(:reading, :regular, date: '2016-12-31', raw_value: 4_500_000, register: nil)
@@ -46,7 +46,7 @@ contracts[:pt3] = localpool_contract(
   signing_date: (Date.today - 5.days),
   begin_date: Date.today + 1.month,
   status: Contract::Base.statuses[:onboarding],
-  customer: SeedsRepository.persons[:pt3],
+  customer: SeedsRepository.persons.pt3,
   register_readings: [
     build(:reading, :setup, date: '2017-10-01', raw_value: 1_000, register: nil)
   ]
@@ -58,7 +58,7 @@ contracts[:pt4] = localpool_contract(
   cancellation_date: Date.yesterday,
   end_date: Date.today + 1.month,
   status: Contract::Base.statuses[:terminated],
-  customer: SeedsRepository.persons[:pt4],
+  customer: SeedsRepository.persons.pt4,
   register_readings: [
     build(:reading, :setup, date: '2017-02-01', raw_value: 1_000, register: nil)
   ]
@@ -97,7 +97,7 @@ contracts[:pt5b] = localpool_contract(
 )
 
 # Drittlieferant
-contracts[:pt6] = localpool_contract(contractor: SeedsRepository.organizations.third_party_supplier, customer: SeedsRepository.persons[:pt6])
+contracts[:pt6] = localpool_contract(contractor: SeedsRepository.organizations.third_party_supplier, customer: SeedsRepository.persons.pt6)
 
 # Drittlieferant, vor Wechsel zu people power
 contracts[:pt7a] = localpool_contract(
@@ -105,7 +105,7 @@ contracts[:pt7a] = localpool_contract(
   end_date: Date.parse("2017-3-1"),
   status: Contract::Base.statuses[:ended],
   contractor: SeedsRepository.organizations.third_party_supplier,
-  customer: SeedsRepository.persons[:pt7],
+  customer: SeedsRepository.persons.pt7,
 )
 contracts[:pt7a].customer.add_role(Role::GROUP_ENERGY_MENTOR, contracts[:pt7a].localpool)
 
@@ -113,16 +113,16 @@ contracts[:pt7a].customer.add_role(Role::GROUP_ENERGY_MENTOR, contracts[:pt7a].l
 contracts[:pt7b] = localpool_contract(
   signing_date: contracts[:pt7a].cancellation_date,
   begin_date: contracts[:pt7a].end_date,
-  customer: SeedsRepository.persons[:pt7],
+  customer: SeedsRepository.persons.pt7,
   register: contracts[:pt7a].register, # important !
 )
 
 # English
-contracts[:pt8] = localpool_contract(customer: SeedsRepository.persons[:pt8])
+contracts[:pt8] = localpool_contract(customer: SeedsRepository.persons.pt8)
 
 # Two more powertakers to make them 10 ...
-contracts[:pt9] = localpool_contract(customer: SeedsRepository.persons[:pt9])
-contracts[:pt10] = localpool_contract(customer: SeedsRepository.persons[:pt10])
+contracts[:pt9] = localpool_contract(customer: SeedsRepository.persons.pt9)
+contracts[:pt10] = localpool_contract(customer: SeedsRepository.persons.pt10)
 
 # Allgemeinstrom (Hausbeleuchtung etc.)
 contracts[:common_consumption] = localpool_contract(
