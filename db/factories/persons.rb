@@ -1,5 +1,8 @@
 FactoryGirl.define do
   factory :person do
+    transient do
+      roles []
+    end
     first_name          { FFaker::NameDE.first_name }
     last_name           { FFaker::NameDE.last_name }
     email do
@@ -11,6 +14,10 @@ FactoryGirl.define do
     prefix              Person.prefixes[:male]
     preferred_language  Person.preferred_languages[:german]
     address
+
+    after(:create) do |person, evaluator|
+      evaluator.roles.each { |role, resource| person.add_role(role, resource) }
+    end
 
     # All group owners seem to be called Wolfgang, so we dedicate a trait to him.
     trait :wolfgang do

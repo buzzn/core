@@ -6,7 +6,9 @@ module SeedsRepository
 
     def persons
       @persons ||= OpenStruct.new(
+        buzzn_operator: create(:person, :with_self_role, first_name: 'Philipp', last_name: 'Operator', roles: { Role::BUZZN_OPERATOR => nil }),
         group_owner: person(:wolfgang),
+        brumbauer:   person(first_name: 'Traudl', last_name: 'Brumbauer', prefix: 'F'),
         pt1:  person(first_name: 'Sabine', last_name: 'Powertaker1', title: 'Prof.', prefix: 'F'),
         pt2:  person(first_name: 'Claudia', last_name: 'Powertaker2', title: 'Prof. Dr.', prefix: 'F'),
         pt3:  person(first_name: 'Bernd', last_name: 'Powertaker3'),
@@ -17,13 +19,13 @@ module SeedsRepository
         pt7:  person(first_name: 'Anna', last_name: 'Powertaker7 (Wechsel zu uns)', prefix: 'F'),
         pt8:  person(first_name: 'Geoffrey',  last_name: 'Powertaker8', preferred_language: 'english'),
         pt9:  person(first_name: 'Justine', last_name: 'Powertaker9', prefix: 'F'),
-        pt10: person(first_name: 'Mohammed',last_name: 'Powertaker10')
+        pt10: person(first_name: 'Mohammed', last_name: 'Powertaker10')
       )
     end
 
     def localpools
       @localpools ||= OpenStruct.new(
-       people_power: create(:localpool, :people_power, owner: persons.group_owner)
+       people_power: create(:localpool, :people_power, owner: persons.group_owner, admins: [ persons.brumbauer ])
       )
     end
 
@@ -35,7 +37,8 @@ module SeedsRepository
 
     def organizations
       @organizations ||= OpenStruct.new(
-        third_party: create(:organization, name: 'Drittlieferant')
+        third_party_supplier: create(:organization, :with_bank_account, name: 'Drittlieferant'),
+        property_management: create(:organization, :with_bank_account, name: 'Hausverwaltung Schneider (Leerstand)')
       )
     end
 

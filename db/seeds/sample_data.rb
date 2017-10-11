@@ -13,13 +13,8 @@ include FactoryGirl::Syntax::Methods
 # Create persons and roles on the group
 #
 
-# buzzn operator
-operator = create(:person, first_name: 'Philipp', last_name: 'Operator')
-operator.add_role(Role::BUZZN_OPERATOR)
-
-# Traudl Brumbauer, will be admin of several localpools
-brumbauer = create(:person, first_name: 'Traudl', last_name: 'Brumbauer', prefix: 'F')
-brumbauer.add_role(Role::GROUP_ADMIN, SeedsRepository.localpools.people_power) # can admin the organization
+# call it once so it is generated
+SeedsRepository.persons.buzzn_operator
 
 def localpool_contract(attrs = {})
   localpool = SeedsRepository.localpools.people_power
@@ -94,7 +89,7 @@ contracts[:pt5_empty] = localpool_contract(
   end_date: Date.parse("2017-5-1"),
   status: Contract::Base.statuses[:ended],
   register: contracts[:pt5a].register, # important !
-  customer: create(:organization, :with_bank_account, name: 'Hausverwaltung Schneider (Leerstand)'),
+  customer: SeedsRepository.organizations.property_management,
 )
 
 # zieht ein
@@ -106,14 +101,14 @@ contracts[:pt5b] = localpool_contract(
 )
 
 # Drittlieferant
-contracts[:pt6] = localpool_contract(contractor: SeedsRepository.organizations.third_party, customer: SeedsRepository.persons[:pt6])
+contracts[:pt6] = localpool_contract(contractor: SeedsRepository.organizations.third_party_supplier, customer: SeedsRepository.persons[:pt6])
 
 # Drittlieferant, vor Wechsel zu people power
 contracts[:pt7a] = localpool_contract(
   cancellation_date: Date.parse("2017-2-15"),
   end_date: Date.parse("2017-3-1"),
   status: Contract::Base.statuses[:ended],
-  contractor: SeedsRepository.organizations.third_party,
+  contractor: SeedsRepository.organizations.third_party_supplier,
   customer: SeedsRepository.persons[:pt7],
 )
 contracts[:pt7a].customer.add_role(Role::GROUP_ENERGY_MENTOR, contracts[:pt7a].localpool)
