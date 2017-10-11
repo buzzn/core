@@ -20,7 +20,7 @@ Example: updating a register.
 
 ### How & where do we validate stuff?
 
-We use (dry-validation)[dry-rb.org/gems/dry-validation] schemas for all new validations ("schemas"). They are used on these levels:
+We use [dry-validation](dry-rb.org/gems/dry-validation) schemas for all new validations ("schemas"). They are used on these levels:
 
 #### 1. Completeness schemas
 
@@ -33,7 +33,7 @@ coming in from the client is valid before it is passed to the transaction.
 
 #### 3. Invariants schemas
 
-These are model-layer validations that always must be true. A user record must always have a first and last name, a register must always have a meter, and so on.
+These are model-layer validations that always must be true, regardless of context. A user record must always have a first and last name, a register must always have a meter, and so on.
 
 We define these invariant validation separately and generate database constraints from them.
 
