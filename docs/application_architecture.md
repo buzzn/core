@@ -8,10 +8,11 @@ What is described here how we implement new features. Legacy code is converted w
 Example: updating a register.
 
 - the requests is routed to a block of code through in the roda tree (in lib/roda). Roda code blocks are comparable to Rails controller actions. So the responsibilities of that block are
-    - authorization
+    - authentication
+    - request validation
     - calling the business logic
-    - TODO
-- Buzzn::Transaction encapsulates the business logic. It is optional, sometimes it's enough to just implement a Buzzn::Resource (lib/buzzn/transactions).
+    - producing HTTP response (headers, status, ...)
+- Buzzn::Transaction (lib/buzzn/transactions) encapsulates the business logic. It is used for mutating resources. Reads go diretly to a Buzzn::Resource.
 - Buzzn::Resource (lib/buzzn/transactions)
     - handles authorization / permissions
     - can implement business logic
@@ -19,11 +20,19 @@ Example: updating a register.
 
 ### How & where do we validate stuff?
 
-We distinguish between these types of validations
+Validation levels
 
-- "high-level", context-specific validations (on update of a user an id must be submitted). Used to validate requests. They are implmented with dry-validations found in lib/schemas, lib/validation ?
-- record invariants (user must always have a first name). Currently implemented with the validate_invariants method in each ActiveRecord model
-- TODO
+1. incompleteness 
+    - dry validation
+    - 
+
+2. transaction validations (validate the requests)
+    - dry validation
+    - in buzzn/schemas
+
+3. invariants (on the model)
+    - use validation for create transaction to generate DB constraints
+    - method validate_invariants (AR validations/errors) (deprecated)
 
 ### How do we use ActiveRecord?
 
@@ -31,12 +40,12 @@ We use the ORM features of ActiveRecord, but don't put business logic there. So 
 
 * lifecycle callbacks (before_create, ...) 
 
-We use them when they only affect the record itself. They should not affect other objects, send emails, generate queue messages, or have other unexpected side-effects. Those things should instead happen on a higher architectur layer, i.e. in the resource or transaction.
+We use them only to change the record itself. They should not affect other objects, send emails, generate queue messages, or have other unexpected side-effects. Those things should instead happen on a higher architectur layer, i.e. in the resource or transaction.
 
 * validations
 
 - deprecated
-- see the validations section on this page for how to do things instead.
+- see the validations section on this page for how to do them instead.
 
 ### What about Rails?
 
@@ -45,6 +54,6 @@ The Rails framework does (a lot of useful things)[https://github.com/rails-api/r
 - we don't use controllers, they are replaced by the Roda tree.
 - we don't use views and the asset pipeline, they are in the process of being removed. Check branch remove-assets for current status.
 - the Rails logging mechanism will be replaced by our own logging (Buzzn::Logger)
-- Rails environments will be discontinued. The application will configuration only through environment variables. See http://12factor.net/config for the reasoning
+- Rails environments will be discontinued. The application will only be configured through environment variables. See http://12factor.net/config for the reasoning.
 - tests: the tests inherit from Rack::Test
 - mid-term the rails gem should be removed, and replaced with the gems we still want to use (like activerecord, activesupport, rack, rack-test, bundler)
