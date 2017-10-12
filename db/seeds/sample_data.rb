@@ -31,6 +31,9 @@ contracts[:pt1] = localpool_contract(
   register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
     build(:reading, :regular, date: '2016-12-31', raw_value: 2_400_000, register: nil)
+  ],
+  payments: [
+    build(:payment, price_cents: 55_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
   ]
 )
 
@@ -39,6 +42,9 @@ contracts[:pt2] = localpool_contract(
   register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
     build(:reading, :regular, date: '2016-12-31', raw_value: 4_500_000, register: nil)
+  ],
+  payments: [
+    build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
   ]
 )
 
@@ -49,6 +55,9 @@ contracts[:pt3] = localpool_contract(
   customer: SeedsRepository.persons.pt3,
   register_readings: [
     build(:reading, :setup, date: '2017-10-01', raw_value: 1_000, register: nil)
+  ],
+  payments: [
+    build(:payment, price_cents: 67_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
   ]
 )
 
@@ -61,6 +70,9 @@ contracts[:pt4] = localpool_contract(
   customer: SeedsRepository.persons.pt4,
   register_readings: [
     build(:reading, :setup, date: '2017-02-01', raw_value: 1_000, register: nil)
+  ],
+  payments: [
+    build(:payment, price_cents: 53_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
   ]
 )
 
@@ -74,6 +86,9 @@ contracts[:pt5a] = localpool_contract(
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
     build(:reading, :regular, date: '2016-12-31', raw_value: 1_300_000, register: nil),
     build(:reading, :contract_change, date: '2017-04-01', raw_value: 1_765_000, register: nil)
+  ],
+  payments: [
+    build(:payment, price_cents: 45_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
   ]
 )
 
@@ -172,15 +187,14 @@ registers[:pv] = create(:register, :production_pv,
   devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
 )
 
+
+# TODO add organizations and their energy energy_classifications
+# %i(buzzn germany).each { |trait| create(:energy_classification, trait) }
+
+# TODO create MPO contract
+# create(:payment, price_cents: 12000, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+
 __END__
-
-puts "\n* Energy Classifications"
-%i(buzzn germany).each { |trait| create(:energy_classification, trait) }
-
-import_csv(:payments,
-           converters: { price_cents: Converters::Number, begin_date: Converters::Date, end_date: Converters::Date, cycle: Converters::Downcase, source: Converters::Downcase },
-           fields: %i(price_cents begin_date end_date cycle source)
-)
 
 #
 # on hold, to be refactored

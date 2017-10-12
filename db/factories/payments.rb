@@ -4,6 +4,5 @@ FactoryGirl.define do
     begin_date   Date.parse("2016-01-01")
     cycle        Contract::Payment::MONTHLY
     source       Contract::Payment::CALCULATED
-    contracts    { FactoryGirl.create(:contract) }
   end
 end
