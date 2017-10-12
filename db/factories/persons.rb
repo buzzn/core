@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :person do
     transient do
-      roles []
+      roles {}
     end
     first_name          { FFaker::NameDE.first_name }
     last_name           { FFaker::NameDE.last_name }
@@ -16,7 +16,7 @@ FactoryGirl.define do
     address
 
     after(:create) do |person, evaluator|
-      evaluator.roles.each { |role, resource| person.add_role(role, resource) }
+      evaluator.roles.each { |role, resource| person.add_role(role, resource) } if evaluator.roles
     end
 
     # All group owners seem to be called Wolfgang, so we dedicate a trait to him.
