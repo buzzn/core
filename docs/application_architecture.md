@@ -3,24 +3,24 @@
 Note: as with most systems, the buzzn/core architecture is not perfectly consistent. 
 What is described here how we implement new features. Legacy code is converted when functional changes require it, and when the time allows it.
 
-### Brief overview of the typical request flow
+### Overview of the typical request flow
 
 Example: updating a register.
 
 - the requests is routed to a block of code through the roda tree (in lib/roda). Roda code blocks are comparable to Rails controller actions. So the responsibilities of that block are
     - authentication
     - request validation
-    - calling the business logic
+    - calling the bussiness logic
     - producing the HTTP response (headers, status, ...)
 - Buzzn::Transaction (lib/buzzn/transactions) encapsulates the business logic. It is used for mutating resources. Reads go directly to a Buzzn::Resource.
-- Buzzn::Resource (lib/buzzn/transactions)
+- Buzzn::Resource (lib/buzzn/resources)
     - handles authorization / permissions
     - can implement business logic
     - serializes response to JSON
 
 ### How & where do we validate stuff?
 
-We use [dry-validation](http://dry-rb.org/gems/dry-validation) schemas for all new validations ("schemas"). They are used on these levels:
+We use [dry-validation](http://dry-rb.org/gems/dry-validation) for all new validations ("schemas"). They are used on these levels:
 
 #### 1. Completeness schemas
 
@@ -29,11 +29,11 @@ In some parts of the application we want to show users that an object graph is n
 #### 2. Transaction schemas
 
 Transaction schemas validate the client request data before it is passed to the transaction.
-Depending on the kind request and transaction ("context"), data for the same model may have to be validated differently.
+Depending on the kind of request and transaction (create, update, ...), data for the same model may have to be validated differently.
 
 #### 3. Invariants schemas
 
-These are model-layer validations that always must be true, regardless of context. A user record must always have a first and last name, a register must always have a meter, and so on.
+These are model-layer validations that always must be true, regardless of transaction. A user record must always have a first and last name, a register must always have a meter, and so on.
 
 We define these invariant validations in separate schemas and generate database constraints for the model from them.
 
