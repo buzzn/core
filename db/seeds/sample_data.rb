@@ -168,7 +168,9 @@ create(:meter_real, :two_way,
 #
 # Create other contracts for peoplepower group
 #
-# FIXME: contractor needs to be buzzn not generic org
+# FIXME:
+#  - contractor needs to be buzzn not generic org
+#  - when https://goo.gl/6pzpFd is implemented, assign the grid in/out registers correctly
 create(:contract, :metering_point_operator,
        localpool: SeedsRepository.localpools.people_power,
        customer: SeedsRepository.localpools.people_power.owner,

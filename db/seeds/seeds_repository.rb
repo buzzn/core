@@ -25,7 +25,14 @@ module SeedsRepository
 
     def localpools
       @localpools ||= OpenStruct.new(
-       people_power: create(:localpool, :people_power, owner: persons.group_owner, admins: [ persons.brumbauer ])
+       people_power: create(:localpool, :people_power, owner: persons.group_owner,
+                            admins: [ persons.brumbauer ],
+                            # FIXME: to be renamed to group_tariff
+                            prices: [
+                              build(:price, name: "Hausstrom - Standard"),
+                              build(:price, name: "Hausstrom - Reduziert", energyprice_cents_per_kilowatt_hour: 24.9),
+                            ]
+       )
       )
     end
 

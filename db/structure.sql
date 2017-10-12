@@ -2287,13 +2287,6 @@ CREATE INDEX index_persons_roles_on_role_id_and_person_id ON persons_roles USING
 
 
 --
--- Name: index_prices_on_begin_date_and_localpool_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_prices_on_begin_date_and_localpool_id ON prices USING btree (begin_date, localpool_id);
-
-
---
 -- Name: index_profiles_on_readable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2948,4 +2941,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171006143958');
 INSERT INTO schema_migrations (version) VALUES ('20171009065708');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012111744');
 
