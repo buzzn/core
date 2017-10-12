@@ -15,10 +15,15 @@ describe Admin::LocalpoolRoda do
                 localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                           register: group.registers.consumption.first))
     end
+
     entity!(:other_billing) { Fabricate(:billing,
                                         billing_cycle: billing_cycle,
                                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                                                   register: group.registers.consumption[1])) }
+
+    let(:expired_json) do
+      {"error" => "This session has expired, please login again."}
+    end
 
     context 'GET' do
       let(:billings_json) do
@@ -51,6 +56,16 @@ describe Admin::LocalpoolRoda do
             }
           ]
         }
+      end
+
+      it '401' do
+        GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
 
       it '403' do
@@ -99,6 +114,16 @@ describe Admin::LocalpoolRoda do
             "updatable"=>true,
             "deletable"=>true
           }
+        end
+      end
+
+      it '401' do
+        GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          POST "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/regular", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
         end
       end
 
@@ -169,6 +194,16 @@ describe Admin::LocalpoolRoda do
         }
       end
 
+      it '401' do
+        GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+
       it '409' do
         PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", $admin, updated_at: DateTime.now
         expect(response).to have_http_status(409)
@@ -198,6 +233,16 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'DELETE' do
+
+      it '401' do
+        GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          DELETE "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
 
       it '403' do
         # TODO needs read perms on billing-cycles but no delete perms on billings

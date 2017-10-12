@@ -42,6 +42,10 @@ describe Admin::LocalpoolRoda do
     reg
   end
 
+  let(:expired_json) do
+    {"error" => "This session has expired, please login again."}
+  end
+
   context 'meters' do
    context 'registers' do
      context 'PATCH' do
@@ -114,6 +118,16 @@ describe Admin::LocalpoolRoda do
               "detail"=>"must be boolean"}
            ]
          }
+       end
+
+       it '401' do
+         GET "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
+         Timecop.travel(Time.now + 30 * 60) do
+           PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
+
+           expect(response).to have_http_status(401)
+           expect(json).to eq(expired_json)
+         end
        end
 
        it '404' do
@@ -269,6 +283,21 @@ describe Admin::LocalpoolRoda do
         register = [real_register, virtual_register].sample
         Fabricate(:reading, register_id: register.id)
         register
+      end
+
+      it '401' do
+        GET "/test/#{group.id}/registers/#{register.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{group.id}/registers/#{register.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+
+          GET "/test/#{group.id}/registers", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
 
       it '404' do

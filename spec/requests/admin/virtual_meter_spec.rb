@@ -13,6 +13,10 @@ describe Admin::LocalpoolRoda do
       group
     end
 
+    let(:expired_json) do
+      {"error" => "This session has expired, please login again."}
+    end
+
     let(:denied_json) do
       {
         "errors" => [
@@ -97,6 +101,21 @@ describe Admin::LocalpoolRoda do
 
     context 'GET' do
 
+      it '401' do
+        GET "/test/#{group.id}/meters/#{meter.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{group.id}/meters/#{meter.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+
+          GET "/test/#{group.id}/meters", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+
       it '403' do
         GET "/test/#{group.id}/meters/#{meter.id}", $user
         expect(response).to have_http_status(403)
@@ -148,6 +167,16 @@ describe Admin::LocalpoolRoda do
           "errors" => [
             {"detail"=>"Meter::Virtual: #{meter.id} was updated at: #{meter.updated_at}"}]
         }
+      end
+
+      it '401' do
+        GET "/test/#{group.id}/meters/#{meter.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          PATCH "/test/#{group.id}/meters/#{meter.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
 
       it '403' do
@@ -227,6 +256,21 @@ describe Admin::LocalpoolRoda do
           }
         end
 
+        it '401' do
+          GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
+          Timecop.travel(Time.now + 30 * 60) do
+            GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
+
+            expect(response).to have_http_status(401)
+            expect(json).to eq(expired_json)
+
+            GET "/test/#{group.id}/meters/#{meter.id}/formula-parts", $admin
+
+            expect(response).to have_http_status(401)
+            expect(json).to eq(expired_json)
+          end
+        end
+
         it '404' do
           GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
           expect(response).to have_http_status(404)
@@ -288,6 +332,16 @@ describe Admin::LocalpoolRoda do
             "type"=>"meter_formula_part",
             'operator'=> '-'
           }
+        end
+
+        it '401' do
+          GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
+          Timecop.travel(Time.now + 30 * 60) do
+            PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
+
+            expect(response).to have_http_status(401)
+            expect(json).to eq(expired_json)
+          end
         end
 
         it '404' do

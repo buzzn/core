@@ -13,6 +13,10 @@ describe Admin::LocalpoolRoda do
       group
     end
 
+    let(:expired_json) do
+      {"error" => "This session has expired, please login again."}
+    end
+
     let(:denied_json) do
       {
         "errors" => [
@@ -115,6 +119,16 @@ describe Admin::LocalpoolRoda do
 
     context 'GET' do
 
+      it '401' do
+        GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+
       it '403' do
         GET "/test/#{group.id}/meters/#{real_meter.id}", $user
         expect(response).to have_http_status(403)
@@ -206,6 +220,16 @@ describe Admin::LocalpoolRoda do
           "edifact_data_logging"=>'Z04',
           "sent_data_dso"=>'2010-01-01',
         }
+      end
+
+      it '401' do
+        GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          PATCH "/test/#{group.id}/meters/#{real_meter.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
 
       it '403' do

@@ -28,6 +28,15 @@ module Admin
           r.run ::RegisterRoda
         end
 
+        r.get! 'charts' do
+          aggregated(charts.call(r.params,
+                                 resource: [localpool.method(:charts)]))
+        end
+
+        r.get! 'bubbles' do
+          aggregated(localpool.bubbles)
+        end
+
         rodauth.check_session_expiration
 
         r.patch! do
@@ -78,18 +87,9 @@ module Admin
           localpool.managers
         end
 
-        r.get! 'charts' do
-          aggregated(charts.call(r.params,
-                                 resource: [localpool.method(:charts)]))
-        end
-
-        r.get! 'bubbles' do
-          aggregated(localpool.bubbles)
-        end
-
       end
 
-      #rodauth.check_session_expiration
+      rodauth.check_session_expiration
 
       r.get! do
         localpools

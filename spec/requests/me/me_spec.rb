@@ -6,6 +6,10 @@ describe Me::Roda do
 
   entity(:person) { $user.person.reload }
 
+  let(:expired_json) do
+    {"error" => "This session has expired, please login again." }
+  end
+
   let(:denied_json) do
     {
       "errors" => [
@@ -39,7 +43,38 @@ describe Me::Roda do
     }
   end
 
+  context 'ping' do
+    context 'GET' do
+      
+      it '200' do
+        GET '/ping', $user
+        expect(response).to have_http_status(200)
+        expect(response.body).to eq 'pong'
+      end
+
+      it '401' do
+        GET '/ping', $user
+        Timecop.travel(Time.now + 30 * 60) do
+          GET '/ping', $user
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+    end
+  end
+
   context 'GET' do
+
+    it '401' do
+      GET '', $user
+      Timecop.travel(Time.now + 30 * 60) do
+        GET '', $user
+
+        expect(response).to have_http_status(401)
+        expect(json).to eq(expired_json)
+      end
+    end
 
     it '403' do
       GET ''
@@ -48,7 +83,7 @@ describe Me::Roda do
     end
 
     it '200' do
-      GET '', $user#_token
+      GET '', $user
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq person_json.to_yaml
     end
@@ -105,6 +140,16 @@ describe Me::Roda do
       }
     end
 
+    it '401' do
+      GET '', $user
+      Timecop.travel(Time.now + 30 * 60) do
+        PATCH '', $user
+
+        expect(response).to have_http_status(401)
+        expect(json).to eq(expired_json)
+      end
+    end
+
     it '403' do
       PATCH ''
       expect(response).to have_http_status(403)
@@ -117,7 +162,7 @@ describe Me::Roda do
       expect(json).to eq stale_json
     end
 
-    it '422 wrong' do
+    it '422' do
       PATCH '', $user,
             title: 'Master' * 20,
             prefix: 'Both',

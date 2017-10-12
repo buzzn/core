@@ -17,6 +17,10 @@ describe Admin::Roda do
     localpool
   end
 
+  let(:expired_json) do
+    {"error" => "This session has expired, please login again."}
+  end
+
   context 'persons' do
 
     context 'GET' do
@@ -52,6 +56,16 @@ describe Admin::Roda do
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(persons_json.to_yaml)
+      end
+
+      it '401' do
+        GET "/test/persons", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/persons", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
     end
   end
@@ -89,6 +103,16 @@ describe Admin::Roda do
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(organizations_json.to_yaml)
+      end
+
+      it '401' do
+        GET "/test/organizations", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/organizations", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
     end
   end

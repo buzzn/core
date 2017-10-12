@@ -4,6 +4,8 @@ describe Admin::BankAccountRoda do
     plugin :shared_vars
     route do |r|
       r.on 'test', :id do |id|
+        rodauth.check_session_expiration
+
         localpool = Admin::LocalpoolResource.all(current_user).first
         localpool.object.persons
         parent = localpool.organizations.where(id: id).first || localpool.persons.where(id: id).first
@@ -17,6 +19,10 @@ describe Admin::BankAccountRoda do
 
   def app
     BankAccountParentRoda # this defines the active application for this test
+  end
+
+  let(:expired_json) do
+    {"error" => "This session has expired, please login again."}
   end
 
   entity!(:localpool) do
@@ -175,6 +181,16 @@ describe Admin::BankAccountRoda do
           end
         end
 
+        it '401' do
+          GET "/test/#{parent.id}/#{bank_account.id}", $admin
+          Timecop.travel(Time.now + 30 * 60) do
+            PATCH "/test/#{parent.id}/#{bank_account.id}", $admin
+            
+            expect(response).to have_http_status(401)
+            expect(json).to eq(expired_json)
+          end
+        end
+
         it '404' do
           PATCH "/test/#{parent.id}/bla-bla-blub", $admin
           expect(response).to have_http_status(404)
@@ -243,6 +259,16 @@ describe Admin::BankAccountRoda do
           expect(json).to eq not_found_json
         end
 
+        it '401' do
+          GET "/test/#{parent.id}/#{bank_account.id}", $admin
+          Timecop.travel(Time.now + 30 * 60) do
+            GET "/test/#{parent.id}/#{bank_account.id}", $admin
+            
+            expect(response).to have_http_status(401)
+            expect(json).to eq(expired_json)
+          end
+        end
+
         it '200' do
           GET "/test/#{parent.id}/#{bank_account.id}", $admin
           expect(response).to have_http_status(200)
@@ -264,6 +290,16 @@ describe Admin::BankAccountRoda do
             DELETE "/test/#{parent.id}/#{bank_account.id}", $user
             expect(response).to have_http_status(403)
             expect(json).to eq denied_json
+          end
+        end
+
+        it '401' do
+          GET "/test/#{parent.id}/#{bank_account.id}", $admin
+          Timecop.travel(Time.now + 30 * 60) do
+            DELETE "/test/#{parent.id}/#{bank_account.id}", $admin
+            
+            expect(response).to have_http_status(401)
+            expect(json).to eq(expired_json)
           end
         end
 

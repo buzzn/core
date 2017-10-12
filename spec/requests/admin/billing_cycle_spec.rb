@@ -19,6 +19,10 @@ describe Admin::LocalpoolRoda do
                                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                                                   register: Fabricate.build(:input_register, group: group))) }
 
+    let(:expired_json) do
+      {"error" => "This session has expired, please login again."}
+    end
+
     let(:wrong_json) do
       {
         "errors"=>[
@@ -75,6 +79,21 @@ describe Admin::LocalpoolRoda do
         end
       end
 
+      it '401' do
+        GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+
+          GET "/test/#{group.id}/billing-cycles", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+
       it '404' do
         GET "/test/#{group.id}/billing-cycles/bla-blub", $admin
         expect(response).to have_http_status(404)
@@ -100,6 +119,16 @@ describe Admin::LocalpoolRoda do
           "end_date"=>'2017-01-01T00:00:00.000Z',
           "billings"=>{'array'=>[]}
         }
+      end
+
+      it '401' do
+        GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          POST "/test/#{group.id}/billing-cycles", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
 
       it '422 wrong' do
@@ -170,6 +199,16 @@ describe Admin::LocalpoolRoda do
         }
       end
 
+      it '401' do
+        GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          PATCH "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+
       it '404' do
         PATCH "/test/#{group.id}/billing-cycles/bla-blub", $admin
         expect(response).to have_http_status(404)
@@ -216,6 +255,16 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'DELETE' do
+
+      it '401' do
+        GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          DELETE "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
 
       it '204' do
         size = BillingCycle.all.size

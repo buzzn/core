@@ -23,6 +23,10 @@ describe Admin::LocalpoolRoda do
       ]
     }
   end
+  
+  let(:expired_json) do
+    {"error" => "This session has expired, please login again."}
+  end
 
   entity(:manager) { Fabricate(:user).person }
   entity!(:localpool) do
@@ -116,6 +120,22 @@ describe Admin::LocalpoolRoda do
   end
 
   context 'GET' do
+
+    it '401' do
+      GET "/test/#{localpool.id}", $admin
+      Timecop.travel(Time.now + 30 * 60) do
+        GET "/test/#{localpool.id}", $admin
+
+        expect(response).to have_http_status(401)
+        expect(json).to eq(expired_json)
+
+        GET "/test", $admin
+
+        expect(response).to have_http_status(401)
+        expect(json).to eq(expired_json)
+      end
+    end
+
     it '403 permission denied' do
       GET "/test/#{localpool.id}", $other
       expect(response).to have_http_status(403)
@@ -160,6 +180,16 @@ describe Admin::LocalpoolRoda do
       }
     end
 
+    it '401' do
+      GET "/test", $admin
+      Timecop.travel(Time.now + 30 * 60) do
+        POST "/test", $admin
+
+        expect(response).to have_http_status(401)
+        expect(json).to eq(expired_json)
+      end
+    end
+ 
     it '422' do
       POST "/test", $admin,
            name: 'Some Name' * 10,
@@ -233,6 +263,16 @@ describe Admin::LocalpoolRoda do
         "deletable"=>true,
         'incompleteness' => {'owner' => ['must be filled']}
       }
+    end
+
+    it '401' do
+      GET "/test/#{localpool.id}", $admin
+      Timecop.travel(Time.now + 30 * 60) do
+        PATCH "/test/#{localpool.id}", $admin
+
+        expect(response).to have_http_status(401)
+        expect(json).to eq(expired_json)
+      end
     end
 
     it '404' do
@@ -405,6 +445,16 @@ describe Admin::LocalpoolRoda do
         }
       end
 
+      it '401' do
+        GET "/test/#{localpool.id}/localpool-processing-contract", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{localpool.id}/localpool-processing-contract", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+
       it '403' do
         GET "/test/#{localpool.id}/localpool-processing-contract", $user
         expect(response).to have_http_status(403)
@@ -565,6 +615,15 @@ describe Admin::LocalpoolRoda do
           ]
         }
       end
+      it '401' do
+        GET "/test/#{localpool.id}/metering-point-operator-contract", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{localpool.id}/metering-point-operator-contract", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
 
       it '403' do
         GET "/test/#{localpool.id}/metering-point-operator-contract", $user
@@ -638,6 +697,16 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'GET' do
+      it '401' do
+        GET "/test/#{localpool.id}/power-taker-contracts", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{localpool.id}/power-taker-contracts", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+
       it '200' do
         GET "/test/#{localpool.id}/power-taker-contracts", $user
         expect(json['array'].to_yaml).to eq empty_json.to_yaml
@@ -675,6 +744,16 @@ describe Admin::LocalpoolRoda do
             "bank_accounts"=> { 'array'=>[] }
           }
         ]
+      end
+
+      it '401' do
+        GET "/test/#{localpool.id}/managers", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{localpool.id}/managers", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
 
       it "200" do

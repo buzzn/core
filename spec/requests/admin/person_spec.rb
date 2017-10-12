@@ -18,6 +18,10 @@ describe Admin::LocalpoolRoda do
       person
     end
 
+    let(:expired_json) do
+      {"error" => "This session has expired, please login again."}
+    end
+
     let(:denied_json) do
       {
         "errors" => [
@@ -211,6 +215,21 @@ describe Admin::LocalpoolRoda do
         json['deletable']=false
         json.delete('address')
         json
+      end
+
+      it '401' do
+        GET "/test/#{group.id}/persons/#{person.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{group.id}/persons", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+
+          GET "/test/#{group.id}/persons/#{person.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
 
       it '403' do

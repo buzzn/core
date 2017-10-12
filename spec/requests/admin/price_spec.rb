@@ -10,6 +10,10 @@ describe Admin::LocalpoolRoda do
     entity(:localpool) { Fabricate(:localpool) }
     entity(:price) { Fabricate(:price, localpool: localpool)}
 
+    let(:expired_json) do
+      {"error" => "This session has expired, please login again."}
+    end
+
     let(:not_found_json) do
       {
         "errors" => [
@@ -30,6 +34,16 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'POST' do
+
+      it '401' do
+        GET "/test/#{localpool.id}/prices", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          POST "/test/#{localpool.id}/prices", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
 
       it '422' do
         POST "/test/#{localpool.id}/prices", $admin,
@@ -96,6 +110,20 @@ describe Admin::LocalpoolRoda do
         end
       end
 
+      it '401' do
+        GET "/test/#{localpool.id}/prices", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{localpool.id}/prices", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+          GET "/test/#{localpool.id}/prices/#{price.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+
       it '200 all' do
         GET "/test/#{localpool.id}/prices", $admin
 
@@ -139,6 +167,16 @@ describe Admin::LocalpoolRoda do
           "updatable"=>true,
           "deletable"=>true
         }
+      end
+
+      it '401' do
+        GET "/test/#{localpool.id}/prices/#{price.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          PATCH "/test/#{localpool.id}/prices/#{price.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
 
       it '404' do

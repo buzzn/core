@@ -38,6 +38,10 @@ describe Admin::LocalpoolRoda do
       }
     end
 
+    let(:expired_json) do
+      {"error" => "This session has expired, please login again."}
+    end
+
     entity(:metering_point_operator_contract) do
       Fabricate(:metering_point_operator_contract,
                 localpool: localpool,
@@ -315,6 +319,21 @@ describe Admin::LocalpoolRoda do
         }
       end
 
+      it '401' do
+        GET "/test/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+
+          GET "/test/#{localpool.id}/contracts", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+
       it '403' do
         GET "/test/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $user
         expect(json).to eq denied_json
@@ -371,6 +390,16 @@ describe Admin::LocalpoolRoda do
           json
         end
 
+        it '401' do
+          GET "/test/#{localpool.id}/contracts/#{contract.id}/customer", $admin
+          Timecop.travel(Time.now + 30 * 60) do
+            GET "/test/#{localpool.id}/contracts/#{contract.id}/customer", $admin
+
+            expect(response).to have_http_status(401)
+            expect(json).to eq(expired_json)
+          end
+        end
+
         it '200' do
           GET "/test/#{localpool.id}/contracts/#{contract.id}/customer", $admin
           expect(response).to have_http_status(200)
@@ -405,6 +434,16 @@ describe Admin::LocalpoolRoda do
           json['tax_rate']=nil
           json['tax_number']=nil
           json
+        end
+
+        it '401' do
+          GET "/test/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
+          Timecop.travel(Time.now + 30 * 60) do
+            GET "/test/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
+
+            expect(response).to have_http_status(401)
+            expect(json).to eq(expired_json)
+          end
         end
 
         it '200' do

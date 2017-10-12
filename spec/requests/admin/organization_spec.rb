@@ -16,6 +16,10 @@ describe Admin::LocalpoolRoda do
       }
     end
 
+    let(:expired_json) do
+      {"error" => "This session has expired, please login again."}
+    end
+
     entity(:group) { Fabricate(:localpool) }
     entity!(:address) { Fabricate(:address) }
     entity!(:organization) do
@@ -101,6 +105,21 @@ describe Admin::LocalpoolRoda do
         }
       end
 
+      it '401' do
+        GET "/test/#{group.id}/organizations/#{organization.id}", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/#{group.id}/organizations", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+
+          GET "/test/#{group.id}/organizations/#{organization.id}", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+
       it '403' do
         # nothing to test here as an organization is public
       end
@@ -164,6 +183,16 @@ describe Admin::LocalpoolRoda do
       end
 
       context 'GET' do
+
+        it '401' do
+          GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
+          Timecop.travel(Time.now + 30 * 60) do
+            GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
+
+            expect(response).to have_http_status(401)
+            expect(json).to eq(expired_json)
+          end
+        end
 
         it '403' do
           # nothing to test here as an address of an organization is public
