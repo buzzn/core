@@ -24,10 +24,18 @@ FactoryGirl.define do
   end
 
   trait :metering_point_operator do
+    contract_number { generate(:mpo_contract_number) }
     initialize_with { Contract::MeteringPointOperator.new } # a slight hack to define a trait of contract, but use a different subclass
   end
 
+  trait :localpool_processing do
+    # FIXME: clarify and adapt contract number format
+    contract_number { generate(:mpo_contract_number) }
+    initialize_with { Contract::LocalpoolProcessing.new } # a slight hack to define a trait of contract, but use a different subclass
+  end
+
   trait :localpool_powertaker do
+    contract_number { generate(:lpt_contract_number) }
     initialize_with { Contract::LocalpoolPowerTaker.new } # a slight hack to define a trait of contract, but use a different subclass
     forecast_kwh_pa 1000
     customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }

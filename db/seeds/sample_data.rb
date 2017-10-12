@@ -166,6 +166,22 @@ create(:meter_real, :two_way,
   ]
 )
 
+#
+# Create other contracts for peoplepower group
+#
+# FIXME: contractor needs to be buzzn not generic org
+create(:contract, :metering_point_operator,
+       localpool: SeedsRepository.localpools.people_power,
+       customer: SeedsRepository.localpools.people_power.owner,
+       payments: [
+         build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+       ]
+)
+
+# create(:contract, :localpool_processing,
+#        localpool: SeedsRepository.localpools.people_power,
+#        customer: SeedsRepository.localpools.people_power.owner
+# )
 
 #
 # More registers (without powertakers & contracts)
