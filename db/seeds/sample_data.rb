@@ -203,22 +203,127 @@ registers[:pv] = create(:register, :production_pv,
   devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
 )
 
-
 # TODO add organizations and their energy energy_classifications
 # %i(buzzn germany).each { |trait| create(:energy_classification, trait) }
 
-# TODO create MPO contract
-# create(:payment, price_cents: 12000, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
-
-__END__
-
-#
-# on hold, to be refactored
-#
-import_csv(:organizations,
-           converters: {preferred_language: Converters::PreferredLanguage },
-           fields: %i(name description slug image email edifactemail phone fax website mode market_place_id)
+FactoryGirl.create(:organization, :contracting_party,
+                   name: 'Buzzn GmbH',
+                   description: 'Purveyor of peoplepower since 2009',
+                   slug: 'buzzn',
+                   email: 'dev@buzzn.net',
+                   phone: '089 / 32 16 8',
+                   website: 'www.buzzn.net'
 )
-Organization.all.each do |organization|
-  create(:bank_account, contracting_party: organization)
-end
+FactoryGirl.create(:organization, :transmission_system_operator,
+                   name: '50Hertz Transmission GmbH',
+                   slug: '50hertz',
+                   edifactemail: 'roman.schuelke@50hertz.com',
+                   phone: '+49 30 51503782',
+                   fax: '+49 30 51504511',
+                   website: 'http://www.50hertz.com/de',
+                   market_place_id: '9911845000009'
+)
+FactoryGirl.create(:organization, :transmission_system_operator,
+                   name: 'Tennet TSO GmbH',
+                   slug: 'tennet',
+                   edifactemail: 'biko-bka@tennet.eu',
+                   phone: '+49 921 507404575',
+                   fax: '+49 921 507404566',
+                   website: 'https://www.tennet.eu/de', market_place_id: '4033872000058'
+)
+FactoryGirl.create(:organization, :transmission_system_operator,
+                   name: 'Amprion GmbH',
+                   slug: 'amprion',
+                   edifactemail: 'gpke@amprion.net',
+                   phone: '+49 231 5849 12502',
+                   fax: '+49 231 5849 14509',
+                   website: 'https://www.amprion.net',
+                   market_place_id: '4045399000077'
+)
+FactoryGirl.create(:organization, :transmission_system_operator,
+                   name: 'TransnetBW GmbH',
+                   slug: 'transnetbw',
+                   edifactemail: 'bilanzkreise@transnetbw.de',
+                   phone: '+49 711 21858 3706',
+                   fax: '+49 711 21858 4413',
+                   website: 'https://www.transnetbw.de/de',
+                   market_place_id: '9911835000001'
+)
+FactoryGirl.create(:organization, :distribution_system_operator,
+                   name: 'E.ON Netz GmbH',
+                   slug: 'eon-netz',
+                   website: 'https://www.eon.com'
+)
+FactoryGirl.create(:organization, :distribution_system_operator,
+                   name: 'Stadtwerke Augsburg GmbH',
+                   slug: 'sw-augsburg',
+                   website: 'www.sw-augsburg.de'
+)
+FactoryGirl.create(:organization, :distribution_system_operator,
+                   name: 'SWM Infrastruktur GmbH & Co. KG',
+                   slug: 'swm',
+                   edifactemail: 'netznutzung@swm.de',
+                   phone: '+49 89 2361 4644',
+                   fax: '+49 89 2361 4699',
+                   website: 'http://www.swm-infrastruktur.de',
+                   market_place_id: '9907248000001'
+)
+FactoryGirl.create(:organization, :distribution_system_operator,
+                   name: 'Bayernwerk Netz GmbH',
+                   slug: 'bayernwerk-netz',
+                   edifactemail: 'netz-msb-mdl@bayernwerk.de',
+                   phone: '+49 941 2017128',
+                   fax: '+49 941 2017113',
+                   website: 'http://www.bayernwerk-netz.de',
+                   market_place_id: '9901068000001'
+)
+FactoryGirl.create(:organization, :metering_point_operator,
+                   name: 'Buzzn Systems',
+                   slug: 'buzzn-systems',
+                   phone: '089 / 32 16 8',
+                   website: 'www.buzzn.net',
+                   market_place_id: '9910960000001'
+)
+FactoryGirl.create(:organization, :metering_point_operator,
+                   name: 'Discovergy',
+                   description: 'MPO of EasyMeters',
+                   slug: 'discovergy',
+                   website: 'https://discovergy.com'
+)
+FactoryGirl.create(:organization, :metering_point_operator,
+                   name: 'MySmartGrid',
+                   description: 'Fraunhofer Institut',
+                   slug: 'mysmartgrid',
+                   website: 'https://www.itwm.fraunhofer.de/en/departments/hpc/green-by-it/mySmartGrid-energy-savings.html'
+)
+FactoryGirl.create(:organization, :electricity_supplier,
+                   name: 'Buzzn GmbH (Lieferant)',
+                   description: 'Buzzn community power (performed by S-Hall)',
+                   slug: 'buzzn-energy',
+                   phone: '089 / 32 16 8',
+                   website: 'www.buzzn.net',
+                   market_place_id: '9905229000008'
+)
+FactoryGirl.create(:organization, :electricity_supplier,
+                   name: 'Germany',
+                   description: 'used for energy mix \'Germany\'',
+                   slug: 'germany'
+)
+FactoryGirl.create(:organization, :electricity_supplier,
+                   name: 'E.ON'
+)
+FactoryGirl.create(:organization, :electricity_supplier,
+                   name: 'RWE'
+)
+FactoryGirl.create(:organization, :electricity_supplier,
+                   name: 'Vattenfall'
+)
+FactoryGirl.create(:organization, :electricity_supplier,
+                   name: 'EnBW'
+)
+FactoryGirl.create(:organization, :other, :with_bank_account,
+                   name: 'hell & warm Forstenried GmbH',
+                   slug: 'hell-warm',
+                   email: 'xxx@info.de',
+                   phone: '089/89057180', mode: 'other'
+)

@@ -31,8 +31,8 @@ module SeedsRepository
 
     def organizations
       @organizations ||= OpenStruct.new(
-        third_party_supplier: create(:organization, :with_bank_account, name: 'Drittlieferant'),
-        property_management: create(:organization, :with_bank_account, name: 'Hausverwaltung Schneider (Leerstand)')
+        third_party_supplier: create(:organization, :contracting_party, name: 'Drittlieferant'),
+        property_management: create(:organization, :contracting_party, name: 'Hausverwaltung Schneider (Leerstand)')
       )
     end
 
