@@ -1,8 +1,23 @@
+FactoryGirl.definition_file_paths = %w(db/factories)
+
 describe "Factories produce valid records" do
 
   matcher :have_association do |association_accessor, association_klass|
     match do |actual|
       actual.send(association_accessor).is_a?(association_klass)
+    end
+  end
+
+  context "Account", :focus do
+    subject { create(:account, password: "Helloworld") }
+    it { is_expected.to be_valid }
+    it "has the same email as the person it belongs to" do
+      expect(subject.email).to eq(subject.person.email)
+    end
+    it "has set the password correctly" do
+      password_record = Account::PasswordHash.find_by(account: subject)
+      actual          = BCrypt::Password.new(password_record.password_hash)
+      expect(actual).to eq("Helloworld")
     end
   end
 
