@@ -1,4 +1,3 @@
-require_relative 'import_csv'
 require_relative 'seeds_repository'
 
 # ActiveRecord::Base.logger = Logger.new(STDOUT)
@@ -203,7 +202,7 @@ registers[:pv] = create(:register, :production_pv,
   devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
 )
 
-# TODO add organizations and their energy energy_classifications
+# FIXME add organizations and their energy energy_classifications
 # %i(buzzn germany).each { |trait| create(:energy_classification, trait) }
 
 FactoryGirl.create(:organization, :contracting_party,
