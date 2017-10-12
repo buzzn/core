@@ -27,7 +27,6 @@ FactoryGirl.define do
     end
 
     trait :organization_contact do
-      first_name 'Karl'
       last_name  'Kontakt'
     end
 
@@ -44,6 +43,10 @@ FactoryGirl.define do
 
     trait :with_self_role do
       after(:create) { |person| person.add_role(Role::SELF, person) }
+    end
+
+    trait :with_account do
+      after(:create) { |person| create(:account, person: person) }
     end
 
     # Image is not added by default because the uploader creates a bunch of variations/resizes,
