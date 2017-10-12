@@ -179,11 +179,6 @@ create(:contract, :metering_point_operator,
        ]
 )
 
-# create(:contract, :localpool_processing,
-#        localpool: SeedsRepository.localpools.people_power,
-#        customer: SeedsRepository.localpools.people_power.owner
-# )
-
 #
 # More registers (without powertakers & contracts)
 #
@@ -203,9 +198,6 @@ registers[:pv] = create(:register, :production_pv,
   group: SeedsRepository.localpools.people_power,
   devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
 )
-
-# FIXME add organizations and their energy energy_classifications
-# %i(buzzn germany).each { |trait| create(:energy_classification, trait) }
 
 FactoryGirl.create(:organization, :contracting_party,
                    name: 'Buzzn GmbH',
@@ -279,13 +271,6 @@ FactoryGirl.create(:organization, :distribution_system_operator,
                    market_place_id: '9901068000001'
 )
 FactoryGirl.create(:organization, :metering_point_operator,
-                   name: 'Buzzn Systems',
-                   slug: 'buzzn-systems',
-                   phone: '089 / 32 16 8',
-                   website: 'www.buzzn.net',
-                   market_place_id: '9910960000001'
-)
-FactoryGirl.create(:organization, :metering_point_operator,
                    name: 'Discovergy',
                    description: 'MPO of EasyMeters',
                    slug: 'discovergy',
@@ -303,12 +288,14 @@ FactoryGirl.create(:organization, :electricity_supplier,
                    slug: 'buzzn-energy',
                    phone: '089 / 32 16 8',
                    website: 'www.buzzn.net',
-                   market_place_id: '9905229000008'
+                   market_place_id: '9905229000008',
+                   energy_classifications: [ create(:energy_classification, :buzzn_energy) ]
 )
 FactoryGirl.create(:organization, :electricity_supplier,
                    name: 'Germany',
                    description: 'used for energy mix \'Germany\'',
-                   slug: 'germany'
+                   slug: 'germany',
+                   energy_classifications: [ create(:energy_classification, :germany) ]
 )
 FactoryGirl.create(:organization, :electricity_supplier,
                    name: 'E.ON'
@@ -328,3 +315,10 @@ FactoryGirl.create(:organization, :other, :with_bank_account,
                    email: 'xxx@info.de',
                    phone: '089/89057180', mode: 'other'
 )
+
+# FIXME: fails with validation 'Gültigkeitsprüfung ist fehlgeschlagen: Contractor must be buzzn-systems'
+# create(:contract, :localpool_processing,
+#        localpool: SeedsRepository.localpools.people_power,
+#        customer: SeedsRepository.localpools.people_power.owner,
+#        contractor: SeedsRepository.organizations.buzzn_systems
+# )

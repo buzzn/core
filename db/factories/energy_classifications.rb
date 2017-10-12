@@ -11,7 +11,7 @@ FactoryGirl.define do
     co2_emission_gramm_per_kwh       131
     nuclear_waste_miligramm_per_kwh  0.03
 
-    trait :buzzn do
+    trait :buzzn_energy do
       tariff_name                       'Buzzn Energy'
       organization                      { Organization.find_by(slug: 'buzzn-energy') }
     end
