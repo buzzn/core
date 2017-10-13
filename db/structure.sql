@@ -1279,6 +1279,40 @@ CREATE TABLE oauth_applications (
 
 
 --
+-- Name: organization_market_functions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE organization_market_functions (
+    id integer NOT NULL,
+    organization_id integer,
+    function_name character varying,
+    market_partner_id character varying,
+    edifact_email character varying,
+    contact_person_id integer,
+    address_id integer
+);
+
+
+--
+-- Name: organization_market_functions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE organization_market_functions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_market_functions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE organization_market_functions_id_seq OWNED BY organization_market_functions.id;
+
+
+--
 -- Name: organizations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1652,6 +1686,13 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 
 
 --
+-- Name: organization_market_functions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organization_market_functions ALTER COLUMN id SET DEFAULT nextval('organization_market_functions_id_seq'::regclass);
+
+
+--
 -- Name: roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1888,6 +1929,14 @@ ALTER TABLE ONLY oauth_access_tokens
 
 ALTER TABLE ONLY oauth_applications
     ADD CONSTRAINT oauth_applications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_market_functions organization_market_functions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organization_market_functions
+    ADD CONSTRAINT organization_market_functions_pkey PRIMARY KEY (id);
 
 
 --
@@ -2943,4 +2992,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171009065708');
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 
 INSERT INTO schema_migrations (version) VALUES ('20171012111744');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012204100');
 

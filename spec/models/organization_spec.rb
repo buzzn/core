@@ -7,7 +7,7 @@ describe "Organization Model" do
     [ Fabricate(:metering_point_operator),
       Fabricate(:electricity_supplier) ]
   end
-    
+
   it 'filters organization' do
     [organization.name, organization.mode, organization.email,
      organization.description, organization.website, organization.address.zip,
@@ -31,5 +31,18 @@ describe "Organization Model" do
   it 'filters organization with no params', :retry => 3 do
     organizations = Organization.filter(nil)
     expect(organizations.size).to eq Organization.count
+  end
+
+  describe "market functions", :focus do
+    context "when org has a market function" do
+      before { organization.market_functions.create(function_name: :power_giver, market_partner_id: "42") }
+      it "is returned correctly" do
+        expect(organization.market_functions.size).to eq(1)
+        expect(organization.market_functions.first.market_partner_id).to eq("42")
+      end
+      it "can be accessed through the method #in_market_function" do
+        expect(organization.in_market_function(:power_giver).market_partner_id).to eq("42")
+      end
+    end
   end
 end
