@@ -1,5 +1,5 @@
 describe Display::GroupRoda do
-  
+
   def app
     Display::GroupRoda # this defines the active application for this test
   end
@@ -468,7 +468,7 @@ describe Display::GroupRoda do
       end
 
       it '200 standard profile' do
-        warn "\n  _____\n /     \\\n| () () |\n \\  ^  /\n  |||||\n  |||||\n\n actually there are no results and the tests are commented out\n\n"
+        skip "There are no results and the json response tests are commented out\n\n"
         setup_readings
         begin
           Timecop.freeze(time)

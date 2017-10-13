@@ -43,18 +43,9 @@ gem 'iban-tools'
 
 # Backend
 gem 'rails'
-gem 'sprockets-rails'
-gem 'simple_form'
-gem 'jquery-rails'
-gem 'haml-rails'
-gem 'sass-rails'
-gem 'coffee-rails'
-gem 'therubyracer'
-gem 'uglifier'
 gem 'money-rails'
 gem 'activerecord-nulldb-adapter'
 gem 'mongoid'
-gem 'moped'
 gem 'redis'
 gem 'redis-namespace'
 gem 'puma'
@@ -103,7 +94,6 @@ end
 
 group :development do
   gem 'pry-rails'
-  gem 'quiet_assets'
   gem 'annotate'
   gem 'yard'
 end

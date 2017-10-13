@@ -80,5 +80,14 @@ module Buzzn
 
     # We don't use the Rails cache, all caching is directly from roda to redis.
     config.cache_store = nil
+
+    # Disable Rails's static asset server (Apache or nginx will already do this).
+    config.serve_static_files = false
+
+    # we don't use the asset pipeline, this application is API-only.
+    config.assets.enabled = false
+
+    # details: http://guides.rubyonrails.org/api_app.html
+    config.api_only = true
   end
 end
