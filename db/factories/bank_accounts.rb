@@ -5,12 +5,12 @@ FactoryGirl.define do
     bic                     { "BYLADEM1001" }
     bank_name               { ['GLS Bank', 'Sparkasse München', 'Berliner Volksbank', 'UniCredit HypoVereinsbank'].sample }
     direct_debit            true
-    # FIXME clarify if this is the same as holder
-    # contracting_party       { FactoryGirl.create(:person) }
 
     before(:create) do |account, _transients|
+      # assign contracting_party if not present yet
+      account.contracting_party = FactoryGirl.create(:person) unless account.contracting_party
       # this works for both Person and Organization
-      account.holder = account.contracting_party.name if account.contracting_party
+      account.holder = account.contracting_party.name
     end
   end
 end
