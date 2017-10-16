@@ -76,6 +76,7 @@ module Contract
 
     validate :validate_invariants
 
+    # FIXME: I don't understand why this is needed ...
     def initialize(*args)
       super
     end
@@ -114,6 +115,7 @@ module Contract
         errors.add(:contractor_bank_account, MUST_MATCH) if contractor_bank_account && ! contractor.bank_accounts.include?(contractor_bank_account)
         if contractor.buzzn_energy? || contractor.buzzn_systems?
           errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.empty?
+          # FIXME: why is at least one payment required?
           errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.empty?
         end
       end

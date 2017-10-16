@@ -38,6 +38,7 @@ FactoryGirl.define do
 
   trait :localpool_processing do
     contract_number { generate(:mpo_contract_number) }
+    second_master_uid  { nil } # the model has a validation that this should not be there ...
     initialize_with { Contract::LocalpoolProcessing.new } # a slight hack to define a trait of contract, but use a different subclass
   end
 
@@ -52,6 +53,18 @@ FactoryGirl.define do
         meter = FactoryGirl.create(:meter_real, :one_way, group: contract.localpool)
         contract.register = meter.registers.first
       end
+    end
+  end
+
+  trait :with_tariff do
+    before(:create) do |contract, _transients|
+      contract.tariffs = [ build(:tariff) ]
+    end
+  end
+
+  trait :with_payment do
+    before(:create) do |contract, _transients|
+      contract.payments = [ build(:payment) ]
     end
   end
 end

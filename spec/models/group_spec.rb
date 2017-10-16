@@ -3,6 +3,7 @@ describe "Group Model" do
 
   entity!(:localpool) { Fabricate(:localpool) }
   entity!(:tribe) { Fabricate(:tribe) }
+  entity!(:buzzn_systems) { FactoryGirl.create(:organization, name: 'buzzn systems UG', slug: 'buzzn-systems') }
 
   it 'filters group' do
     group = [tribe, localpool].sample
@@ -59,12 +60,12 @@ describe "Group Model" do
     end
 
     it 'get a metering_point_operator_contract from localpool' do
-      Fabricate(:metering_point_operator_contract, localpool: localpool)
+      create(:contract, :metering_point_operator, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn_systems)
       expect(localpool.metering_point_operator_contract).to be_a Contract::MeteringPointOperator
     end
 
     it 'get a localpool_processing_contract from localpool' do
-      Fabricate(:localpool_processing_contract, localpool: localpool)
+      create(:contract, :localpool_processing, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn_systems)
       expect(localpool.localpool_processing_contract).to be_a Contract::LocalpoolProcessing
     end
 

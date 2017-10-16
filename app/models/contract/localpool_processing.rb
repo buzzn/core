@@ -17,10 +17,7 @@ module Contract
 
     def validate_invariants
       super
-      if contractor
-        errors.add(:contractor, MUST_BE_BUZZN_SYSTEMS) unless contractor == Organization.buzzn_systems
-      end
+      errors.add(:contractor, MUST_BE_BUZZN_SYSTEMS) if contractor && !contractor.buzzn_systems?
     end
-
   end
 end
