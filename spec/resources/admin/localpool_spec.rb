@@ -7,6 +7,7 @@ describe Admin::LocalpoolResource do
                            'name',
                            'description',
                            'slug',
+                           'start_date',
                            'updatable',
                            'deletable',
                            'incompleteness' ] }

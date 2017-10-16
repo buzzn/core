@@ -5,12 +5,14 @@ Buzzn::Transaction.define do |t|
   t.register_validation(:create_localpool_schema) do
     required(:name).filled(:str?, max_size?: 64)
     optional(:description).filled(:str?, max_size?: 256)
+    optional(:start_date).filled(:date?)
   end
 
   t.register_validation(:update_localpool_schema) do
     required(:updated_at).filled(:date_time?)
     optional(:name).filled(:str?, max_size?: 64)
     optional(:description).filled(:str?, max_size?: 256)
+    optional(:start_date).filled(:date?)
   end
 
   t.define(:create_localpool) do

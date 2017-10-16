@@ -33,6 +33,11 @@ paths:
         type: string
         format: ''
         maxLength: 256
+      - name: start_date
+        in: formData
+        required: false
+        type: string
+        format: date
       responses:
         201:
           description: created
@@ -77,6 +82,11 @@ paths:
         type: string
         format: ''
         maxLength: 256
+      - name: start_date
+        in: formData
+        required: false
+        type: string
+        format: date
       responses:
         200:
           description: patched

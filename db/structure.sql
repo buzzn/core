@@ -1221,6 +1221,7 @@ CREATE TABLE groups (
     organization_id uuid,
     person_id uuid,
     address_id uuid,
+    start_date date,
     CONSTRAINT check_localpool_owner CHECK ((NOT ((person_id IS NOT NULL) AND (organization_id IS NOT NULL))))
 );
 
@@ -2560,6 +2561,22 @@ ALTER TABLE ONLY persons
 
 
 --
+-- Name: persons_roles fk_persons_roles_person; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY persons_roles
+    ADD CONSTRAINT fk_persons_roles_person FOREIGN KEY (person_id) REFERENCES persons(id);
+
+
+--
+-- Name: persons_roles fk_persons_roles_role; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY persons_roles
+    ADD CONSTRAINT fk_persons_roles_role FOREIGN KEY (role_id) REFERENCES roles(id);
+
+
+--
 -- Name: meters fk_rails_276fdd6a78; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2975,5 +2992,9 @@ INSERT INTO schema_migrations (version) VALUES ('20171010094247');
 
 INSERT INTO schema_migrations (version) VALUES ('20171010102959');
 
+INSERT INTO schema_migrations (version) VALUES ('20171011134536');
+
 INSERT INTO schema_migrations (version) VALUES ('20171011151135');
+
+INSERT INTO schema_migrations (version) VALUES ('20171016125437');
 
