@@ -1,35 +1,41 @@
 describe "Organization Model" do
 
-  entity(:organization) { Fabricate(:hell_und_warm) }
+  describe "filtering" do
+    let(:org_to_find)          { create(:organization, :with_address) }
+    let!(:other_organizations) { create_list(:organization, 2, :with_address) }
 
-  entity!(:organizations) do
-    [ Fabricate(:metering_point_operator),
-      Fabricate(:electricity_supplier) ]
-  end
+    it 'filters organization' do
+      [org_to_find.name, org_to_find.email,
+       org_to_find.description, org_to_find.website, org_to_find.address.zip,
+       org_to_find.address.city, org_to_find.address.street].each do |value|
 
-  it 'filters organization' do
-    [organization.name, organization.mode, organization.email,
-     organization.description, organization.website, organization.address.zip,
-     organization.address.city, organization.address.street].each do |val|
-
-      len = (val.size * 3)/4
-      [val, val.upcase, val.downcase, val[0..len], val[-(len+1)..-1]].each do |value|
-        organizations = Organization.filter(value)
-        expect(organizations).to include organization
+        # FIXME: clarify what's going on here.
+        length = (value.size * 3)/4
+        searchable_values = [
+          value,
+          value.upcase,
+          value.downcase,
+          value[0..length],
+          # FIXME: clarify what's going on here.
+          value[-(length+1)..-1]
+        ]
+        searchable_values.each do |search_string|
+          found_organizations = Organization.filter(search_string)
+          expect(found_organizations).to include org_to_find
+        end
       end
     end
-  end
+
+    it 'can not find anything', :retry => 3 do
+      organizations = Organization.filter('Der Clown ist müde und geht nach Hause.')
+      expect(organizations).to be_empty
+    end
 
 
-  it 'can not find anything', :retry => 3 do
-    organizations = Organization.filter('Der Clown ist müde und geht nach Hause.')
-    expect(organizations.size).to eq 0
-  end
-
-
-  it 'filters organization with no params', :retry => 3 do
-    organizations = Organization.filter(nil)
-    expect(organizations.size).to eq Organization.count
+    it 'filters organization with no params', :retry => 3 do
+      other_organizations = Organization.filter(nil)
+      expect(other_organizations.size).to eq Organization.count
+    end
   end
 
   describe "market functions" do

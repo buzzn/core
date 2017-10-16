@@ -11,20 +11,6 @@ class Organization < ContractingParty
   belongs_to :contact, class_name: Person
   belongs_to :legal_representation, class_name: Person
 
-  # TODO remove
-  def self.modes
-    %w{
-      power_giver
-      power_taker
-      electricity_supplier
-      metering_service_provider
-      metering_point_operator
-      distribution_system_operator
-      transmission_system_operator
-      other
-    }
-  end
-
   has_many :market_functions, dependent: :destroy, class_name: "OrganizationMarketFunction"
 
   def in_market_function(function)
@@ -36,15 +22,7 @@ class Organization < ContractingParty
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
   validates :phone, presence: true
 
-  # TODO remove
-  validates :mode, presence: true, inclusion: {in: modes}
-
   scope :permitted, ->(uuids) { where(nil) } # organizations are public
-
-  # TODO remove
-  self.modes.each do |mode|
-    scope mode + "s", -> { where(mode: mode) }
-  end
 
   # define some predefined organziation with cache
   { dummy: 'dummy organization',
@@ -70,11 +48,11 @@ class Organization < ContractingParty
   end
 
   def self.search_attributes
-    [:name, :mode, :email, :website, :description, address: [:city, :zip, :street]]
+    # FIXME: clarify if we need to be able to search by mode here.
+    [:name, :email, :website, :description, address: [:city, :zip, :street]]
   end
 
   def self.filter(value)
     do_filter(value, *search_attributes)
   end
-
 end
