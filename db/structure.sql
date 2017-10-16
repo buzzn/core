@@ -1319,15 +1319,12 @@ CREATE TABLE organizations (
     image character varying,
     name character varying,
     email character varying,
-    edifactemail character varying,
     phone character varying,
     fax character varying,
     description character varying,
     website character varying,
-    mode character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    market_place_id character varying,
     sales_tax_number integer,
     tax_rate double precision,
     tax_number integer,
@@ -2986,4 +2983,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171012111744');
 INSERT INTO schema_migrations (version) VALUES ('20171012204100');
 
 INSERT INTO schema_migrations (version) VALUES ('20171016085826');
+
+INSERT INTO schema_migrations (version) VALUES ('20171016111731');
 
