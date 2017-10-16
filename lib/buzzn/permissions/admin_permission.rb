@@ -1,4 +1,4 @@
-Buzzn::Permission.new(AdminResource) do
+AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
   group(:managers, :admin, :buzzn_operator, :localpool_manager)
 
   retrieve :managers

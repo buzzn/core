@@ -1,17 +1,7 @@
 module Buzzn
   class Permission
-    
-    PermissionContainer = Import.instance('service.permissions')
 
-    def self.new(name, object = nil, &block)
-      perms = super
-      if perms.key
-        PermissionContainer.register(perms.key, perms)
-      end
-      perms
-    end
-
-    attr_reader :key, :name
+    attr_reader :name
 
     def initialize(name, parent = nil, &block)
       if parent
@@ -19,7 +9,6 @@ module Buzzn
         @name = name
       else
         @name = name.to_s.sub('Resource', '').sub('::', '_').underscore.downcase.to_sym
-        @key = name
       end
 
       @perms = {}

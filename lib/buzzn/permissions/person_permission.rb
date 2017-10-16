@@ -1,4 +1,4 @@
-Buzzn::Permission.new(PersonResource) do
+PersonResource::Permission = Buzzn::Permission.new(PersonResource) do
   # define groups of roles
   group(:none)
   group(:self, Role::SELF)
