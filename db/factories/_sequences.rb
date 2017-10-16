@@ -2,6 +2,7 @@ FactoryGirl.define do
   # Please keep sequences ordered alphabetically
   sequence(:localpool_name)       { |i| "Localpool #{i}"  }
   sequence(:lpt_contract_number)  { |i| i + 60_000 }
+  sequence(:market_partner_id)    { |i| i + 9_911_845_999_000 }
   sequence(:metering_point_id)    { |i| "DE" + (i + 26917588246326615503884_000).to_s }
   sequence(:meter_serial_number)  { |i| i + 65640_000 }
   sequence(:mpo_contract_number)  { |i| i + 90_000 }
@@ -14,4 +15,5 @@ FactoryGirl.define do
   sequence(:register_input_name)  { |i| "Wohnung #{i}" }
   sequence(:register_output_name) { |i| "Output #{i}" }
   sequence(:tariff_name)          { |i| "Generic tariff #{i}" }
+  sequence(:edifact_email)        { |i| "dev+edifact#{i}@buzzn.net" }
 end

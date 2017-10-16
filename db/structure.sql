@@ -469,6 +469,22 @@ CREATE TYPE manufacturer_name AS ENUM (
 
 
 --
+-- Name: market_partner_function; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE market_partner_function AS ENUM (
+    'distribution_system_operator',
+    'electricity_supplier',
+    'metering_point_operator',
+    'metering_service_provider',
+    'other',
+    'power_giver',
+    'power_taker',
+    'transmission_system_operator'
+);
+
+
+--
 -- Name: operator; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1283,33 +1299,14 @@ CREATE TABLE oauth_applications (
 --
 
 CREATE TABLE organization_market_functions (
-    id integer NOT NULL,
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
     organization_id integer,
-    function_name character varying,
     market_partner_id character varying,
     edifact_email character varying,
     contact_person_id integer,
-    address_id integer
+    address_id integer,
+    function market_partner_function
 );
-
-
---
--- Name: organization_market_functions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE organization_market_functions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: organization_market_functions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE organization_market_functions_id_seq OWNED BY organization_market_functions.id;
 
 
 --
@@ -1683,13 +1680,6 @@ ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq':
 --
 
 ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regclass);
-
-
---
--- Name: organization_market_functions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY organization_market_functions ALTER COLUMN id SET DEFAULT nextval('organization_market_functions_id_seq'::regclass);
 
 
 --
@@ -2994,4 +2984,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 INSERT INTO schema_migrations (version) VALUES ('20171012111744');
 
 INSERT INTO schema_migrations (version) VALUES ('20171012204100');
+
+INSERT INTO schema_migrations (version) VALUES ('20171016085826');
 

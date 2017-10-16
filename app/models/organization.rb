@@ -27,8 +27,8 @@ class Organization < ContractingParty
 
   has_many :market_functions, dependent: :destroy, class_name: "OrganizationMarketFunction"
 
-  def in_market_function(function_name)
-    market_functions.find_by(function_name: function_name)
+  def in_market_function(function)
+    market_functions.find_by(function: function)
   end
 
   validates :name, presence: true, length: { in: 3..40 }, uniqueness: true

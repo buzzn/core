@@ -118,6 +118,11 @@ describe "Factories produce valid records" do
     end
   end
 
+  context "OrganizationMarketFunction" do
+    subject { create(:organization_market_function) }
+    it { is_expected.to be_valid }
+  end
+
   context "Payment" do
     subject { create(:payment) }
     it { is_expected.to be_valid }

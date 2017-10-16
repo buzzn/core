@@ -1,8 +1,11 @@
 class OrganizationMarketFunction < ActiveRecord::Base
 
+  # TODO add FK constraints
   belongs_to :organization
+  belongs_to :contact_person, class_name: "Person"
+  belongs_to :address
 
-  enum role_name: %i(
+  enum function: %i(
     distribution_system_operator
     electricity_supplier
     metering_point_operator
@@ -11,18 +14,8 @@ class OrganizationMarketFunction < ActiveRecord::Base
     power_giver
     power_taker
     transmission_system_operator
-  )
+  ).map.with_object({}) { |key, hash| hash[key] = key.to_s }
 
-  # TODO add enum/constraints
-  validates :function_name, uniqueness: { scope: :organization }, inclusion: self.role_names.keys
+  validates :function, uniqueness: { scope: :organization_id }
   validates :market_partner_id, uniqueness: true
-
-  get_from_org_if_empty = %i(name contact_person address)
-  get_from_org_if_empty.each do |attr|
-    define_method(attr) do
-      read_attribute(attr) || organization.send(attr)
-    end
-  end
-
-  delegate :legal_representative_person, to: :organization
 end
