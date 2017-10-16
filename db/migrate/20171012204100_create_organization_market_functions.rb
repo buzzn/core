@@ -6,7 +6,7 @@ class CreateOrganizationMarketFunctions < ActiveRecord::Migration
       t.string :edifact_email
 
       # TODO: add foreign keys
-      t.uuid :organization
+      t.uuid :organization_id
       t.uuid :contact_person_id
       t.uuid :address_id
 
