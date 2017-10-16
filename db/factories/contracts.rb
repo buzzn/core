@@ -28,8 +28,15 @@ FactoryGirl.define do
     initialize_with { Contract::MeteringPointOperator.new } # a slight hack to define a trait of contract, but use a different subclass
   end
 
+  trait :power_taker do
+    contract_number { generate(:power_taker_contract_number) }
+  end
+
+  trait :power_giver do
+    contract_number { generate(:power_giver_contract_number) }
+  end
+
   trait :localpool_processing do
-    # FIXME: clarify and adapt contract number format
     contract_number { generate(:mpo_contract_number) }
     initialize_with { Contract::LocalpoolProcessing.new } # a slight hack to define a trait of contract, but use a different subclass
   end
