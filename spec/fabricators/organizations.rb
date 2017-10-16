@@ -53,32 +53,31 @@ end
 
 # needed for groups fabricator - legacy naming
 Fabricator :buzzn_metering, from: :metering_point_operator do
-  name Organization::BUZZN_SYSTEMS
+  name 'buzzn systems UG'
 end
 
-
 Fabricator :discovergy, from: :metering_point_operator do
-  name Organization::DISCOVERGY
+  name 'Discovergy'
 end
 
 Fabricator :mysmartgrid, from: :metering_point_operator do
-  name Organization::MYSMARTGRID
+  name 'MySmartGrid'
 end
 
 Fabricator :buzzn_systems, from: :metering_point_operator do
-  name Organization::BUZZN_SYSTEMS
+  name 'buzzn systems UG'
 end
 
 Fabricator :buzzn_energy, from: :electricity_supplier do
-  name Organization::BUZZN_ENERGY
+  name 'buzzn GmbH'
 end
 
 Fabricator :dummy_energy, from: :electricity_supplier do
-  name Organization::DUMMY_ENERGY
+  name 'dummy energy supplier'
 end
 
 Fabricator :germany, from: :electricity_supplier do
-  name Organization::GERMANY
+  name 'Germany Energy Mix'
 end
 
 Fabricator :gemeindewerke_peissenberg, from: :electricity_supplier do
@@ -86,5 +85,5 @@ Fabricator :gemeindewerke_peissenberg, from: :electricity_supplier do
 end
 
 Fabricator :dummy, from: :other_organization do
-  name Organization::DUMMY
+  name 'dummy organization'
 end

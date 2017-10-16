@@ -908,5 +908,5 @@ Fabricator :osc_sulz, from: :other_supplier_contract do
   forecast_kwh_pa                 5000
   renewable_energy_law_taxation   Contract::Base::FULL
   status                          Contract::Base::ACTIVE
-  contractor                      { Organization.gemeindewerke_peissenberg || Fabricate(:gemeindewerke_peissenberg) }
+  contractor                      { Fabricate(:gemeindewerke_peissenberg) }
 end
