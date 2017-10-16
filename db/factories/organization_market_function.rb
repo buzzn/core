@@ -5,8 +5,11 @@ FactoryGirl.define do
     market_partner_id { generate(:market_partner_id) }
     edifact_email { generate(:edifact_email) }
     # associations
-    organization
     contact_person { FactoryGirl.create(:person) }
     address
+
+    before(:create) do |function, _transients|
+      function.organization ||= FactoryGirl.build(:organization)
+    end
   end
 end

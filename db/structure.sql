@@ -1302,7 +1302,7 @@ CREATE TABLE organization_market_functions (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     market_partner_id character varying,
     edifact_email character varying,
-    organization uuid,
+    organization_id uuid,
     contact_person_id uuid,
     address_id uuid,
     function market_partner_function

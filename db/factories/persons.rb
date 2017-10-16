@@ -48,7 +48,7 @@ FactoryGirl.define do
     # Be careful where you add the image; the uploader creates a bunch of variations/resizes,
     # significantly slowing down the factory.
     trait :with_image do
-      image { File.new(Rails.root.join('db/seed_assets/profiles', generate(:person_image))) }
+      # image { File.new(Rails.root.join('db/seed_assets/profiles', generate(:person_image))) }
     end
 
     trait :with_account do

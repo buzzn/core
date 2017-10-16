@@ -44,8 +44,10 @@ module SeedsRepository
       @organizations ||= OpenStruct.new(
         third_party_supplier: create(:organization, :contracting_party, name: 'Drittlieferant'),
         property_management: create(:organization, :contracting_party, name: 'Hausverwaltung Schneider (Leerstand)'),
-        buzzn_systems: create(:organization, :metering_point_operator, name: 'Buzzn Systems', slug: 'buzzn-systems',
-                              phone: '089 / 32 16 8', website: 'www.buzzn.net', market_place_id: '9910960000001')
+        buzzn_gmbh: create(:organization, name: 'Buzzn GmbH', slug: 'buzzn-gmbh',
+                              phone: '089 / 32 16 8', website: 'www.buzzn.net',
+                              energy_classifications: [ create(:energy_classification, :buzzn_energy) ]
+        )
       )
     end
 

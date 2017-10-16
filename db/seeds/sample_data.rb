@@ -199,14 +199,24 @@ registers[:pv] = create(:register, :production_pv,
   devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
 )
 
-FactoryGirl.create(:organization, :contracting_party,
-                   name: 'Buzzn GmbH',
-                   description: 'Purveyor of peoplepower since 2009',
-                   slug: 'buzzn',
-                   email: 'dev@buzzn.net',
-                   phone: '089 / 32 16 8',
-                   website: 'www.buzzn.net'
-)
+# Add buzzn GmbH Market functions
+SeedsRepository.organizations.buzzn_gmbh.market_functions = [
+  # FIXME clarify if functions are correct
+  build(:organization_market_function, function: :electricity_supplier, market_partner_id: '9905229000008'),
+  build(:organization_market_function, function: :metering_service_provider, market_partner_id: '9905216000003'),
+  build(:organization_market_function, function: :metering_point_operator, market_partner_id: '9910960000001')
+]
+SeedsRepository.organizations.buzzn_gmbh.save!
+
+# FactoryGirl.create(:organization, :contracting_party,
+#                    name: 'Buzzn GmbH',
+#                    description: 'Purveyor of peoplepower since 2009',
+#                    slug: 'buzzn',
+#                    email: 'dev@buzzn.net',
+#                    phone: '089 / 32 16 8',
+#                    website: 'www.buzzn.net',
+#                    energy_classifications: [ create(:energy_classification, :buzzn_energy) ],
+# )
 FactoryGirl.create(:organization, :transmission_system_operator,
                    name: '50Hertz Transmission GmbH',
                    slug: '50hertz',
@@ -214,7 +224,13 @@ FactoryGirl.create(:organization, :transmission_system_operator,
                    phone: '+49 30 51503782',
                    fax: '+49 30 51504511',
                    website: 'http://www.50hertz.com/de',
-                   market_place_id: '9911845000009'
+                   market_place_id: '9911845000009',
+                   market_functions: [
+                     create(:organization_market_function,
+                            function: :transmission_system_operator,
+                            market_partner_id: '9911845000009'
+                     )
+                   ]
 )
 FactoryGirl.create(:organization, :transmission_system_operator,
                    name: 'Tennet TSO GmbH',
@@ -222,7 +238,13 @@ FactoryGirl.create(:organization, :transmission_system_operator,
                    edifactemail: 'biko-bka@tennet.eu',
                    phone: '+49 921 507404575',
                    fax: '+49 921 507404566',
-                   website: 'https://www.tennet.eu/de', market_place_id: '4033872000058'
+                   website: 'https://www.tennet.eu/de', market_place_id: '4033872000058',
+                   market_functions: [
+                     create(:organization_market_function,
+                            function: :transmission_system_operator,
+                            market_partner_id: '4033872000058'
+                     )
+                   ]
 )
 FactoryGirl.create(:organization, :transmission_system_operator,
                    name: 'Amprion GmbH',
@@ -231,7 +253,13 @@ FactoryGirl.create(:organization, :transmission_system_operator,
                    phone: '+49 231 5849 12502',
                    fax: '+49 231 5849 14509',
                    website: 'https://www.amprion.net',
-                   market_place_id: '4045399000077'
+                   market_place_id: '4045399000077',
+                   market_functions: [
+                     create(:organization_market_function,
+                            function: :transmission_system_operator,
+                            market_partner_id: '4045399000077'
+                     )
+                   ]
 )
 FactoryGirl.create(:organization, :transmission_system_operator,
                    name: 'TransnetBW GmbH',
@@ -240,7 +268,13 @@ FactoryGirl.create(:organization, :transmission_system_operator,
                    phone: '+49 711 21858 3706',
                    fax: '+49 711 21858 4413',
                    website: 'https://www.transnetbw.de/de',
-                   market_place_id: '9911835000001'
+                   market_place_id: '9911835000001',
+                   market_functions: [
+                     create(:organization_market_function,
+                            function: :transmission_system_operator,
+                            market_partner_id: '9911835000001'
+                     )
+                   ]
 )
 FactoryGirl.create(:organization, :distribution_system_operator,
                    name: 'E.ON Netz GmbH',
@@ -259,7 +293,18 @@ FactoryGirl.create(:organization, :distribution_system_operator,
                    phone: '+49 89 2361 4644',
                    fax: '+49 89 2361 4699',
                    website: 'http://www.swm-infrastruktur.de',
-                   market_place_id: '9907248000001'
+                   market_place_id: '9907248000001',
+                   market_functions: [
+                     create(:organization_market_function,
+                            function: :distribution_system_operator,
+                            market_partner_id: '9907248000001'
+                     ),
+                     create(:organization_market_function,
+                            function: :metering_service_provider,
+                            market_partner_id: '9904886000005'
+                     )
+                   ]
+
 )
 FactoryGirl.create(:organization, :distribution_system_operator,
                    name: 'Bayernwerk Netz GmbH',
@@ -281,15 +326,6 @@ FactoryGirl.create(:organization, :metering_point_operator,
                    description: 'Fraunhofer Institut',
                    slug: 'mysmartgrid',
                    website: 'https://www.itwm.fraunhofer.de/en/departments/hpc/green-by-it/mySmartGrid-energy-savings.html'
-)
-FactoryGirl.create(:organization, :electricity_supplier,
-                   name: 'Buzzn GmbH (Lieferant)',
-                   description: 'Buzzn community power (performed by S-Hall)',
-                   slug: 'buzzn-energy',
-                   phone: '089 / 32 16 8',
-                   website: 'www.buzzn.net',
-                   market_place_id: '9905229000008',
-                   energy_classifications: [ create(:energy_classification, :buzzn_energy) ]
 )
 FactoryGirl.create(:organization, :electricity_supplier,
                    name: 'Germany',
