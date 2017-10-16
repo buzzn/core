@@ -1,5 +1,28 @@
 describe "Organization Model" do
 
+  describe "predefined organizations" do
+    before             { create(:organization, name: 'buzzn GmbH', slug: 'buzzn-energy') }
+    let(:buzzn_energy) { Organization.find_by(slug: 'buzzn-energy') }
+    after(:each)       { Organization.destroy_all } # FIXME clean DB before each test even when running with rspec
+
+    it "can be found by constant" do
+      expect(Organization::BUZZN_ENERGY).to eq(buzzn_energy.name)
+    end
+
+    it "can be found by method" do
+      expect(Organization.buzzn_energy).to eq(buzzn_energy)
+    end
+
+    describe "predicate method" do
+      it "returns true when org is in symbol" do
+        expect(buzzn_energy).to be_buzzn_energy
+      end
+      it "returns false when org is not in symbol" do
+        expect(create(:organization)).not_to be_buzzn_energy
+      end
+    end
+  end
+
   describe "filtering" do
     let(:org_to_find)          { create(:organization, :with_address) }
     let!(:other_organizations) { create_list(:organization, 2, :with_address) }
