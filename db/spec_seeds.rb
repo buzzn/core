@@ -11,6 +11,7 @@ Fabricate(:buzzn_systems)
 Fabricate(:mysmartgrid)
 Fabricate(:germany)
 
+PersonsRole.delete_all
 Role.delete_all
 Account::PasswordHash.delete_all
 Account::PasswordResetKey.delete_all

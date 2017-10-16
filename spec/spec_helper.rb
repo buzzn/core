@@ -96,11 +96,12 @@ RSpec.configure do |config|
           klass = (klass.const_get 'Base' rescue nil)
         end
         if klass
-          if (klass == Role && klass.count != 4) ||
+          if (klass == PersonsRole && klass.count != 4) ||
+             (klass == Role && klass.count != 4) ||
              (klass == Account::Base && klass.count != 3) ||
              (klass == Person && klass.count != 3) ||
              (klass == Organization && klass.count != 7) ||
-             (klass != Organization && klass != Role && klass != Person && klass != Account::Base && klass.count > 0)
+             (klass != Organization && klass != PersonsRole && klass != Role && klass != Person && klass != Account::Base && klass.count > 0)
             if first
               first = false
               warn '-' * 80
