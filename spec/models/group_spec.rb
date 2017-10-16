@@ -74,18 +74,23 @@ describe "Group Model" do
     end
 
     describe 'assigning owner' do
-      let(:localpool) { Fabricate(:localpool, person: nil, organization: nil) }
+      let(:localpool) { build(:localpool, owner: nil) }
       context 'when new owner is an organization' do
+        let(:new_owner) { create(:organization) }
+        before { expect(localpool.owner).to be_nil } # assert precondition ...
         it 'is a assigned correctly' do
-          new_owner = Fabricate(:organization, mode: :metering_service_provider)
           localpool.owner = new_owner
+          expect(localpool.owner).to eq(new_owner)
+          localpool.save && localpool.reload
           expect(localpool.owner).to eq(new_owner)
         end
       end
       context 'when new owner is a person' do
+        let(:new_owner) { create(:person) }
         it 'is a assigned correctly' do
-          new_owner = Fabricate(:person)
           localpool.owner = new_owner
+          expect(localpool.owner).to eq(new_owner)
+          localpool.save && localpool.reload
           expect(localpool.owner).to eq(new_owner)
         end
       end
