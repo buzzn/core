@@ -1,4 +1,4 @@
-Buzzn::Permission.new(Display::GroupResource) do
+Display::GroupResource::Permission = Buzzn::Permission.new(Display::GroupResource) do
   # define groups of roles
   group(:none)
   group(:all, Role::ANONYMOUS)

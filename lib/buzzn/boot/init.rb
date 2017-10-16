@@ -45,22 +45,12 @@ module Buzzn
             app.to_a.each { |path| require path }
           end
 
-          # load resource
-          Application.config.paths['lib'].dup.tap do |app|
-            app.glob = "buzzn/resource/*.rb"
-            app.to_a.each { |path| require path }
-          end
-
-          # load resources
-          Application.config.paths['lib'].dup.tap do |app|
-            app.glob = "buzzn/resources/**/*.rb"
-            app.to_a.each { |path| require path }
-          end
-
-          # load rodas
-          Application.config.paths['lib'].dup.tap do |app|
-            app.glob = "buzzn/roda/**/*.rb"
-            app.to_a.each { |path| require path }
+          # eager require some files
+          %w(resource resources roda permissions).each do |dir|
+            Application.config.paths['lib'].dup.tap do |app|
+              app.glob = "buzzn/#{dir}/**/*.rb"
+              app.to_a.each { |path| require path }
+            end
           end
         end
 
