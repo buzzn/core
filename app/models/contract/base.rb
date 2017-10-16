@@ -112,10 +112,9 @@ module Contract
       errors.add(:power_of_attorney, MUST_BE_TRUE ) unless power_of_attorney
       if contractor
         errors.add(:contractor_bank_account, MUST_MATCH) if contractor_bank_account && ! contractor.bank_accounts.include?(contractor_bank_account)
-        if contractor == Organization.buzzn_energy ||
-           contractor == Organization.buzzn_systems
-          errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.size == 0
-          errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.size == 0
+        if contractor.buzzn_energy? || contractor.buzzn_systems?
+          errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.empty?
+          errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.empty?
         end
       end
 
