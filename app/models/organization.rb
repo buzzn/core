@@ -44,9 +44,8 @@ class Organization < ContractingParty
 
     (class << self; self; end).instance_eval do
       # Example: def buzzn_energy
-      define_method "#{key.to_s}" do
-        # find record
-        eval "@a_#{key} ||= where(name: #{key.to_s.upcase}).first"
+      define_method(key) do
+        where(name: name).first
       end
     end
   end
