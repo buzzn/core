@@ -469,6 +469,22 @@ CREATE TYPE manufacturer_name AS ENUM (
 
 
 --
+-- Name: market_partner_function; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE market_partner_function AS ENUM (
+    'distribution_system_operator',
+    'electricity_supplier',
+    'metering_point_operator',
+    'metering_service_provider',
+    'other',
+    'power_giver',
+    'power_taker',
+    'transmission_system_operator'
+);
+
+
+--
 -- Name: operator; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1279,6 +1295,21 @@ CREATE TABLE oauth_applications (
 
 
 --
+-- Name: organization_market_functions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE organization_market_functions (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    market_partner_id character varying,
+    edifact_email character varying,
+    organization uuid,
+    contact_person_id uuid,
+    address_id uuid,
+    function market_partner_function
+);
+
+
+--
 -- Name: organizations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1888,6 +1919,14 @@ ALTER TABLE ONLY oauth_access_tokens
 
 ALTER TABLE ONLY oauth_applications
     ADD CONSTRAINT oauth_applications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_market_functions organization_market_functions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organization_market_functions
+    ADD CONSTRAINT organization_market_functions_pkey PRIMARY KEY (id);
 
 
 --
@@ -2943,4 +2982,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171009065708');
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 
 INSERT INTO schema_migrations (version) VALUES ('20171012111744');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012204100');
+
+INSERT INTO schema_migrations (version) VALUES ('20171016085826');
 

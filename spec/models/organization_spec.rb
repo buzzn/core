@@ -1,4 +1,3 @@
-# coding: utf-8
 describe "Organization Model" do
 
   entity(:organization) { Fabricate(:hell_und_warm) }
@@ -7,7 +6,7 @@ describe "Organization Model" do
     [ Fabricate(:metering_point_operator),
       Fabricate(:electricity_supplier) ]
   end
-    
+
   it 'filters organization' do
     [organization.name, organization.mode, organization.email,
      organization.description, organization.website, organization.address.zip,
@@ -31,5 +30,21 @@ describe "Organization Model" do
   it 'filters organization with no params', :retry => 3 do
     organizations = Organization.filter(nil)
     expect(organizations.size).to eq Organization.count
+  end
+
+  describe "market functions" do
+    context "when org has a market function" do
+      let!(:record)      { create(:organization_market_function, function: :power_giver) }
+      let(:organization) { record.organization }
+
+      it "is returned correctly" do
+        expect(organization.market_functions.size).to eq(1)
+        expect(organization.market_functions.first).to eq(record)
+      end
+
+      it "can be accessed through the method #in_market_function" do
+        expect(organization.in_market_function(:power_giver)).to eq(record)
+      end
+    end
   end
 end

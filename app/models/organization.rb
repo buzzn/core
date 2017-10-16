@@ -11,6 +11,7 @@ class Organization < ContractingParty
   belongs_to :contact, class_name: Person
   belongs_to :legal_representation, class_name: Person
 
+  # TODO remove
   def self.modes
     %w{
       power_giver
@@ -24,15 +25,23 @@ class Organization < ContractingParty
     }
   end
 
+  has_many :market_functions, dependent: :destroy, class_name: "OrganizationMarketFunction"
+
+  def in_market_function(function)
+    market_functions.find_by(function: function)
+  end
 
   validates :name, presence: true, length: { in: 3..40 }, uniqueness: true
   validates :email, presence: true
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
   validates :phone, presence: true
+
+  # TODO remove
   validates :mode, presence: true, inclusion: {in: modes}
 
   scope :permitted, ->(uuids) { where(nil) } # organizations are public
 
+  # TODO remove
   self.modes.each do |mode|
     scope mode + "s", -> { where(mode: mode) }
   end
