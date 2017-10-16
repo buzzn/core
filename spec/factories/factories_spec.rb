@@ -8,7 +8,7 @@ describe "Factories produce valid records" do
     end
   end
 
-  context "Account", :focus do
+  context "Account" do
     subject { create(:account, password: "Helloworld") }
     it { is_expected.to be_valid }
     it "has the same email as the person it belongs to" do
