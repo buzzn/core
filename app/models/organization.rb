@@ -24,24 +24,28 @@ class Organization < ContractingParty
 
   scope :permitted, ->(uuids) { where(nil) } # organizations are public
 
-  # define some predefined organziation with cache
-  { dummy: 'dummy organization',
-    dummy_energy: 'dummy energy supplier',
+  # define some predefined organizations with cache
+  {
     buzzn_energy: 'buzzn GmbH',
     buzzn_systems: 'buzzn systems UG',
     discovergy: 'Discovergy',
     mysmartgrid: 'MySmartGrid',
     germany: 'Germany Energy Mix',
-    gemeindewerke_peissenberg: 'Gemeindewerke Peißenberg' }.each do |key, name|
+    gemeindewerke_peissenberg: 'Gemeindewerke Peißenberg'
+  }.each do |key, name|
 
+    # Example: BUZZN_ENERGY = 'buzzn GmbH'
     const_set key.to_s.upcase, name
 
+    # Example: def buzzn_energy?
     define_method "#{key.to_s}?" do
       self.name == "#{name}"
     end
 
     (class << self; self; end).instance_eval do
+      # Example: def buzzn_energy
       define_method "#{key.to_s}" do
+        # find record
         eval "@a_#{key} ||= where(name: #{key.to_s.upcase}).first"
       end
     end

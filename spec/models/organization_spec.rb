@@ -13,11 +13,11 @@ describe "Organization Model" do
       expect(Organization.buzzn_energy).to eq(buzzn_energy)
     end
 
-    describe "predicate method" do
-      it "returns true when org is in symbol" do
+    describe "the predicate method" do
+      it "returns true when org is the called method" do
         expect(buzzn_energy).to be_buzzn_energy
       end
-      it "returns false when org is not in symbol" do
+      it "returns false when org is not the called method" do
         expect(create(:organization)).not_to be_buzzn_energy
       end
     end
