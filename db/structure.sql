@@ -1300,11 +1300,11 @@ CREATE TABLE oauth_applications (
 
 CREATE TABLE organization_market_functions (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    organization_id integer,
     market_partner_id character varying,
     edifact_email character varying,
-    contact_person_id integer,
-    address_id integer,
+    organization uuid,
+    contact_person_id uuid,
+    address_id uuid,
     function market_partner_function
 );
 
