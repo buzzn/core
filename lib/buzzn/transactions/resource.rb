@@ -17,5 +17,28 @@ Buzzn::Transaction.define do |t|
   t.register_step(:nested_resource) do |input, method|
     Dry::Monads.Right(method.call(input))
   end
+
+  t.register_step(:method) do |input, method|
+    Dry::Monads.Right(method.call(input))
+  end
+
+  t.register_step(:retrieve) do |id, resources|
+    Dry::Monads.Right(resources.retrieve(id))
+  end
+
+  t.register_step(:build) do |input, resources|
+    Dry::Monads.Right(resources.build(input))
+  end
+
+  t.register_step(:constraints) do |input, contraints|
+    result = contraints.(input)
+    if result.success?
+      Dry::Monads.Right(result.output)
+    else
+      raise Buzzn::ValidationError.new(result.errors)
+      # TODO better use this and handle on roda
+      #Dry::Monads.Left(result.errors)
+    end
+  end
 end
 

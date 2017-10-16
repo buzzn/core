@@ -1,4 +1,6 @@
 require_relative 'resource'
+require_relative '../schemas/person_constraints'
+
 Buzzn::Transaction.define do |t|
   t.register_validation(:create_localpool_schema) do
     required(:name).filled(:str?, max_size?: 64)
@@ -14,6 +16,17 @@ Buzzn::Transaction.define do |t|
   t.define(:create_localpool) do
     validate :create_localpool_schema
     step :resource, with: :nested_resource
+  end
+
+  t.define(:create_localpool_owner) do
+    step :validate, with: :constraints
+    step :build, with: :build
+    step :assign, with: :method
+  end
+
+  t.define(:assign_localpool_owner) do
+    step :find, with: :retrieve
+    step :assign, with: :method
   end
 
   t.define(:update_localpool) do

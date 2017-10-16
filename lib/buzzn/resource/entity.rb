@@ -92,6 +92,7 @@ module Buzzn::Resource
     rescue ActiveRecord::RecordInvalid => e
       raise Buzzn::CascadingValidationError.new(nil, e)
     end
+    alias :guarded :create
 
     def persisted?
       object.persisted?

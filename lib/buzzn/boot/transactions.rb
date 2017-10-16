@@ -1,4 +1,5 @@
 require_relative 'validation_step_adapter'
+require_relative '../schemas/support/form'
 module Buzzn
   class Transaction
 
@@ -15,12 +16,26 @@ module Buzzn
   module Boot
     class Transactions
 
+      class Resolver < Dry::Container::Resolver
+        def call(container, key)
+          if key.respond_to?(:call)
+            key
+          else
+            super
+          end
+        end
+      end
+
       attr_reader :container, :steps
 
       def initialize
         @logger = Logger.new(self)
         @container = Dry::Container.new
-        @steps = Dry::Container.new
+        @steps = Dry::Container.new do
+          configure do |config|
+            config.resolver = Resolver.new
+          end
+        end
       end
 
       def define(name, &block)
@@ -29,7 +44,7 @@ module Buzzn
       end
 
       def register_validation(name, &block)
-        steps.register(name, Dry::Validation.Form(Validation::Form, &block))
+        steps.register(name, Dry::Validation.Form(Schemas::Form, &block))
         @logger.debug { "registered validation #{name}" }
       end
 
