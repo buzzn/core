@@ -1,5 +1,4 @@
-# coding: utf-8
-describe Bank do
+describe Bank, slow: true do
 
   let(:dir) { 'db/banks' }
   let(:first_file) { File.join(dir, "BLZ_20160606.txt") }
@@ -9,14 +8,14 @@ describe Bank do
     Bank.update_from_file(first_file)
   end
 
-  it 'updates data idempotent', slow: true do
+  it 'updates data idempotent' do
     first = Bank.all.each { |b| b.attributes.to_json }
     Bank.update_from_file(first_file)
     second = Bank.all.each { |b| b.attributes.to_json }
     expect(second).to eq first
   end
-  
-  it 'updates data same as fresh import', slow: true do
+
+  it 'updates data same as fresh import' do
     Bank.update_from_file(second_file)
     first = Bank.all.each { |b| b.attributes.to_json }
     Bank.delete_all
@@ -37,15 +36,15 @@ describe Bank do
     # via iban
     second = Bank.find_by_iban('DE2770022200123456789')
     expect(second).to eq bank
-    
+
     second = Bank.find_by_iban('DE27 7002 2200123456789 ')
     expect(second).to eq bank
-    
+
     # mutliple bic entries
     bank = Bank.find_by_bic('COBADEBBXXX')
     expect(bank.zip).to eq "10891"
     expect(bank.place).to eq "Berlin"
-    
+
     second = Bank.find_by_bic('COBADEBB')
     expect(second).to eq bank
   end

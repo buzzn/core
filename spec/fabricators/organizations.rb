@@ -10,31 +10,24 @@ end
 
 
 Fabricator :other_organization, from: :organization do
-  mode 'other'
 end
 
 Fabricator :distribution_system_operator, from: :organization do
-  mode 'distribution_system_operator'
 end
 
 Fabricator :power_giver, from: :organization do
-  mode 'power_giver'
 end
 
 Fabricator :electricity_supplier, from: :organization do
-  mode 'electricity_supplier'
 end
 
 Fabricator :metering_service_provider, from: :organization do
-  mode 'metering_service_provider'
 end
 
 Fabricator :metering_point_operator, from: :organization do
-  mode 'metering_point_operator'
 end
 
 Fabricator :transmission_system_operator, from: :organization do
-  mode 'transmission_system_operator'
 end
 
 Fabricator :power_giver_with_contracts, from: :power_giver do
