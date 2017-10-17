@@ -30,7 +30,6 @@ module Contract
     MUST_BE_TRUE                 = 'must be true'
     MUST_HAVE_AT_LEAST_ONE       = 'must have at least one'
     WAS_ALREADY_CANCELLED        = 'was already cancelled'
-    MUST_BE_BUZZN_SYSTEMS        = 'must be buzzn-systems'
     MUST_BE_BUZZN                = 'must be buzzn'
     MUST_BELONG_TO_LOCALPOOL     = 'must belong to a localpool'
     MUST_MATCH                   = 'must match'
@@ -38,7 +37,6 @@ module Contract
     CAN_NOT_BE_PRESENT           = 'can not be present when there is a '
     NOT_ALLOWED_FOR_OLD_CONTRACT = 'not allowed for old contract'
     CAN_NOT_BELONG_TO_DUMMY      = 'can not belong to dummy organization'
-    MUST_NOT_BE_BUZZN_SYSTEMS    = 'must not be buzzn-systems'
     MUST_NOT_BE_BUZZN            = 'must not be buzzn'
 
     class << self
@@ -146,7 +144,7 @@ module Contract
     private
 
     def contractor_is_buzzn?
-      contractor.is_a?(Organization) && (contractor.buzzn_energy? || contractor.buzzn_systems?)
+      contractor.is_a?(Organization) && contractor.buzzn?
     end
   end
 end

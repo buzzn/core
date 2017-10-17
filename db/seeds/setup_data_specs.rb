@@ -5,7 +5,6 @@ Organization.delete_all
 # Fabricate(:dummy)
 # Fabricate(:dummy_energy)
 # Fabricate(:discovergy)
-# Fabricate(:buzzn_energy)
-# Fabricate(:buzzn_systems)
+# Fabricate(:buzzn)
 # Fabricate(:mysmartgrid)
 # Fabricate(:germany)

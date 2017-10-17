@@ -14,7 +14,7 @@ describe Buzzn::Services::ReadingCalculation do
     register = meter.input_register
     Fabricate(:single_reading, register: register, date: Date.new(2015, 6, 1), value: 5000000, reason: Reading::Single::DEVICE_SETUP)
     Fabricate(:single_reading, register: register, date: Date.new(2015, 12, 29), value: 237000000, reason: Reading::Single::REGULAR_READING)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 239000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::BUZZN_SYSTEMS, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 239000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::BUZZN, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2016, 6, 27), value: 1239000000, reason: Reading::Single::MIDWAY_READING)
     Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 3), value: 2239000000, reason: Reading::Single::REGULAR_READING)
     register
@@ -23,20 +23,20 @@ describe Buzzn::Services::ReadingCalculation do
   entity :register_with_device_change_at_beginning do
     meter = Fabricate(:input_meter)
     register = meter.input_register
-    Fabricate(:single_reading, register: register, date: Date.new(2014, 12, 31), value: 11855000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN_SYSTEMS, meter_serialnumber: 77134105, status: Reading::Single::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2015, 6, 1), value: 13855000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN_SYSTEMS, meter_serialnumber: 77134105, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2014, 12, 31), value: 11855000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN, meter_serialnumber: 77134105, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2015, 6, 1), value: 13855000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN, meter_serialnumber: 77134105, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2015, 6, 1), value: 0, reason: Reading::Single::DEVICE_CHANGE_2)
-    Fabricate(:single_reading, register: register, date: Date.new(2015, 12, 31), value: 239000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::BUZZN_SYSTEMS, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2015, 12, 31), value: 239000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::BUZZN, status: Reading::Single::Z86)
     register
   end
 
   entity :register_with_device_change_in_between do
     meter = Fabricate(:input_meter)
     register = meter.input_register
-    Fabricate(:single_reading, register: register, date: Date.new(2015, 6, 1), value: 11855000000, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN_SYSTEMS, meter_serialnumber: 77134105, status: Reading::Single::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2015, 8, 4), value: 13855000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN_SYSTEMS, meter_serialnumber: 77134105, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2015, 6, 1), value: 11855000000, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN, meter_serialnumber: 77134105, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2015, 8, 4), value: 13855000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN, meter_serialnumber: 77134105, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2015, 8, 4), value: 0, reason: Reading::Single::DEVICE_CHANGE_2)
-    Fabricate(:single_reading, register: register, date: Date.new(2015, 12, 31), value: 239000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::BUZZN_SYSTEMS, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2015, 12, 31), value: 239000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::BUZZN, status: Reading::Single::Z86)
     register
   end
 
@@ -45,8 +45,8 @@ describe Buzzn::Services::ReadingCalculation do
     register = meter.input_register
     Fabricate(:single_reading, register: register, date: Date.new(2015, 6, 1), value: 5000000, reason: Reading::Single::DEVICE_SETUP)
     Fabricate(:single_reading, register: register, date: Date.new(2015, 12, 31), value: 1239000000, reason: Reading::Single::DEVICE_CHANGE_1)
-    Fabricate(:single_reading, register: register, date: Date.new(2015, 12, 31), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN_SYSTEMS, meter_serialnumber: 12345678, status: Reading::Single::Z86)
-    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 239000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN_SYSTEMS, meter_serialnumber: 12345678, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2015, 12, 31), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN, meter_serialnumber: 12345678, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 239000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::BUZZN, meter_serialnumber: 12345678, status: Reading::Single::Z86)
     register
   end
 
@@ -214,7 +214,7 @@ describe Buzzn::Services::ReadingCalculation do
         register.readings.where(reason: [Reading::Single::DEVICE_CHANGE_1, Reading::Single::DEVICE_CHANGE_2]).delete_all
         first_reading.update(date: Date.new(2015, 10, 30), value: 50000000)
       end
-    
+
       xit 'extrapolates' do
         device_change_readings = [reading_1, reading_2]
         reading_2.update(date: Date.new(2015, 11, 15))
@@ -229,7 +229,7 @@ describe Buzzn::Services::ReadingCalculation do
         # FIXME double check value with Stefon + Phlipp
         expect(value).to eq watt_hour(33066666.666666668)
       end
-    
+
       xit 'intrapolates' do
         device_change_readings = [reading_1, reading_2]
         reading_2.update(date: Date.new(2015, 11, 15))
@@ -569,8 +569,8 @@ describe Buzzn::Services::ReadingCalculation do
       Reading::Single.all.by_register_id(register_id).each { |reading| reading.delete }
     end
 
-    Fabricate(:single_reading, register_id: meter.input_register.id, date: Date.new(2015, 2, 1), value: 1000000, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::ENERGY_QUANTITY_SUMMARIZED, source: Reading::Single::BUZZN_SYSTEMS, status: Reading::Single::Z86)
-    Fabricate(:single_reading, register_id: meter.output_register.id, date: Date.new(2015, 2, 1), value: 1000000, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::ENERGY_QUANTITY_SUMMARIZED, source: Reading::Single::BUZZN_SYSTEMS, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register_id: meter.input_register.id, date: Date.new(2015, 2, 1), value: 1000000, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::ENERGY_QUANTITY_SUMMARIZED, source: Reading::Single::BUZZN, status: Reading::Single::Z86)
+    Fabricate(:single_reading, register_id: meter.output_register.id, date: Date.new(2015, 2, 1), value: 1000000, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::ENERGY_QUANTITY_SUMMARIZED, source: Reading::Single::BUZZN, status: Reading::Single::Z86)
 
     [Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED,
      Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED].each do |label|
@@ -609,7 +609,7 @@ describe Buzzn::Services::ReadingCalculation do
       accounted_energy_grid_consumption
     end
 
-    it 'with more lsn than third party supplied' do 
+    it 'with more lsn than third party supplied' do
       # cleanup
       grid_meter.input_register.readings.where(quality: Reading::Single::ENERGY_QUANTITY_SUMMARIZED).delete_all
       grid_meter.output_register.readings.where(quality: Reading::Single::ENERGY_QUANTITY_SUMMARIZED).delete_all
@@ -620,7 +620,7 @@ describe Buzzn::Services::ReadingCalculation do
       total_accounted_energy.add(accounted_energy_grid_feeding)
       total_accounted_energy.add(accounted_energy_grid_consumption)
       total_accounted_energy.add(accounted_energy_consumption_third_party)
-      
+
       size = Reading::Single.all.size
       consumption_corrected, feeding_corrected = subject.calculate_corrected_grid_values(total_accounted_energy, grid_meter.input_register, grid_meter.output_register)
       expect(Reading::Single.all.size).to eq size + 2
@@ -641,7 +641,7 @@ describe Buzzn::Services::ReadingCalculation do
       total_accounted_energy.add(accounted_energy_grid_feeding)
       total_accounted_energy.add(accounted_energy_grid_consumption)
       total_accounted_energy.add(accounted_energy_consumption_third_party_2)
-      
+
 
       size = Reading::Single.all.size
       consumption_corrected, feeding_corrected = subject.calculate_corrected_grid_values(total_accounted_energy, grid_meter.input_register, grid_meter.output_register)

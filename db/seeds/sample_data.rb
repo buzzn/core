@@ -275,7 +275,7 @@ FactoryGirl.create(:organization, :electricity_supplier,
                    phone: '089 / 32 16 8',
                    website: 'www.buzzn.net',
                    market_place_id: '9905229000008',
-                   energy_classifications: [ create(:energy_classification, :buzzn_energy) ]
+                   energy_classifications: [ create(:energy_classification, :buzzn) ]
 )
 FactoryGirl.create(:organization, :electricity_supplier,
                    name: 'E.ON'
@@ -300,5 +300,5 @@ FactoryGirl.create(:organization, :other, :with_bank_account,
 # create(:contract, :localpool_processing,
 #        localpool: SeedsRepository.localpools.people_power,
 #        customer: SeedsRepository.localpools.people_power.owner,
-#        contractor: SeedsRepository.organizations.buzzn_systems
+#        contractor: SeedsRepository.organizations.buzzn
 # )

@@ -13,7 +13,7 @@ FactoryGirl.define do
       product_name                 "Q3D"
       calibrated_until             Date.parse("2027-10-13")
       converter_constant           1
-      ownership                    Meter::Real.ownerships[:buzzn_systems]
+      ownership                    Meter::Real.ownerships[:buzzn]
       direction_number             Meter::Real.direction_numbers[:one_way_meter]
       section                      Meter::Real.sections[:electricity]
       build_year                   2015

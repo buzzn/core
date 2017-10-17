@@ -14,8 +14,8 @@ describe "Contract Sub Models" do
    :localpool_processing_contract,
    :localpool_processing_contract_for_organization].each do |contract_fabricator|
 
-    it "creates valid #{contract_fabricator}" do
-      contract = Fabricate(contract_fabricator)
+    it "creates valid contract: #{contract_fabricator}" do
+      contract = Fabricate.build(contract_fabricator)
       expect(contract).to be_valid
     end
   end

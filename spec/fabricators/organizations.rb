@@ -59,11 +59,7 @@ Fabricator :mysmartgrid, from: :metering_point_operator do
   name 'MySmartGrid'
 end
 
-Fabricator :buzzn_systems, from: :metering_point_operator do
-  name 'buzzn systems UG'
-end
-
-Fabricator :buzzn_energy, from: :electricity_supplier do
+Fabricator :buzzn, from: :electricity_supplier do
   name 'buzzn GmbH'
 end
 

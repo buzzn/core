@@ -1,9 +1,7 @@
-# coding: utf-8
 describe Group::Base do
 
   entity!(:localpool) { Fabricate(:localpool) }
-  entity!(:tribe) { Fabricate(:tribe) }
-  entity!(:buzzn_systems) { FactoryGirl.create(:organization, name: 'buzzn systems UG', slug: 'buzzn-systems') }
+  entity!(:tribe)     { Fabricate(:tribe) }
 
   it 'filters group' do
     group = [tribe, localpool].sample
@@ -35,24 +33,27 @@ describe Group::Base do
 
   describe Group::Localpool do
 
-    it 'has organizations and persons' do
-      second = Fabricate(:localpool) # has no contracts and thus no persons and orgas
-      pools = Group::Localpool.where(id: [localpool, second])
+    let(:buzzn) { Organization.buzzn }
+
+    it 'has organizations and persons', :focus do
+      localpool_without_contracts = Fabricate(:localpool)
+      both_localpools = Group::Localpool.where(id: [localpool, localpool_without_contracts])
       persons = localpool.contracts.collect { |c| c.customer }.uniq
+      expect(persons.size).to be > 0
       organizations = localpool.contracts.collect { |c| c.contractor }.uniq
-      expect(pools.persons).to match_array persons
-      expect(pools.organizations).to match_array organizations
+      expect(both_localpools.persons).to match_array persons
+      expect(both_localpools.organizations).to match_array organizations
       expect(localpool.persons).to match_array persons
       expect(localpool.organizations).to match_array organizations
     end
 
     it 'get a metering_point_operator_contract from localpool' do
-      create(:contract, :metering_point_operator, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn_systems)
+      create(:contract, :metering_point_operator, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn)
       expect(localpool.metering_point_operator_contract).to be_a Contract::MeteringPointOperator
     end
 
     it 'get a localpool_processing_contract from localpool' do
-      create(:contract, :localpool_processing, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn_systems)
+      create(:contract, :localpool_processing, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn)
       expect(localpool.localpool_processing_contract).to be_a Contract::LocalpoolProcessing
     end
 

@@ -10,11 +10,7 @@ module Contract
 
     def validate_invariants
       super
-      if contractor&.buzzn_energy?
-        errors.add(:contractor, MUST_NOT_BE_BUZZN)
-      elsif contractor&.buzzn_systems?
-        errors.add(:contractor, MUST_NOT_BE_BUZZN_SYSTEMS)
-      end
+      errors.add(:contractor, MUST_NOT_BE_BUZZN) if contractor&.buzzn?
     end
   end
 end

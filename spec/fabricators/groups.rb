@@ -1,5 +1,3 @@
-# coding: utf-8
-
 ['localpool', 'tribe'].each do |klass_type|
   klass = "Group::#{klass_type.camelize}".constantize
   Fabricator klass_type, class_name: klass do
@@ -37,7 +35,7 @@ Fabricator :tribe_with_two_comments_readable_by_world, from: :tribe do
      }
     comment         = Fabricate(:comment, comment_params)
     comment_params[:parent_id] = comment.id
-    comment2        = Fabricate(:comment, comment_params)
+    _comment2        = Fabricate(:comment, comment_params)
   }
 end
 
@@ -201,7 +199,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:osc_saba, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
     Fabricate(:lptc_saba, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
-    Fabricate(:lpc_sulz, localpool: self, contractor: Organization.buzzn_systems || Fabricate(:buzzn_systems), customer: Organization.where(name: 'HaFi').first)
+    Fabricate(:lpc_sulz, localpool: self, contractor: Organization.buzzn || Fabricate(:buzzn), customer: Organization.where(name: 'HaFi').first)
 
     # TODO use Fabricate(:price_sulz) - as it breaks the lcp_report when using
     #      Fabricate(:price_sulz)

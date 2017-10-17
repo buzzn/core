@@ -1,6 +1,6 @@
 describe "Organization Model" do
 
-  describe "predefined organizations", :focus do
+  describe "predefined organizations" do
     before       { Organization.buzzn = create(:organization, name: 'buzzn GmbH', slug: 'buzzn') }
     let(:buzzn)  { Organization.find_by(slug: 'buzzn') }
     after(:each) { Organization.destroy_all } # FIXME clean DB before each test even when running with rspec
