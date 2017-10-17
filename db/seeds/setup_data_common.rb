@@ -6,7 +6,7 @@ Account::Status.delete_all
 end
 
 Organization.delete_all
-Organization.buzzn = FactoryGirl.create(:organization,
+Organization.buzzn = FactoryGirl.create(:organization, :with_address,
                    name: 'Buzzn GmbH',
                    description: 'Purveyor of peoplepower since 2009',
                    slug: 'buzzn',
@@ -14,13 +14,13 @@ Organization.buzzn = FactoryGirl.create(:organization,
                    phone: '089 / 32 16 8',
                    website: 'www.buzzn.net'
 )
-Organization.discovergy = FactoryGirl.create(:organization,
+Organization.discovergy = FactoryGirl.create(:organization, :with_address,
                    name: 'Discovergy',
                    description: 'MPO of EasyMeters',
                    slug: 'discovergy',
                    website: 'https://discovergy.com'
 )
-Organization.germany = FactoryGirl.create(:organization,
+Organization.germany = FactoryGirl.create(:organization, :with_address,
                    name: 'Germany Energy Mix',
                    description: 'used for energy mix \'Germany\'',
                    slug: 'germany',
