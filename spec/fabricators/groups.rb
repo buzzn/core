@@ -128,7 +128,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
   end
 
   after_create do |localpool|
-    Fabricate(:organization, mode: 'other', name: 'HaFi').update(address: Fabricate(:address))
+    Fabricate(:organization, name: 'HaFi').update(address: Fabricate(:address))
     register = Fabricate(:easymeter_60404846).registers.first
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 13855000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
