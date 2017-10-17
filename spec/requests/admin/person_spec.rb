@@ -20,7 +20,7 @@ describe Admin::LocalpoolRoda do
       user = Account::Base.find(user_token.resource_owner_id).person
       user.add_role(Role::GROUP_OWNER, group)
       Fabricate(:bank_account, contracting_party: user)
-      Fabricate(:address, addressable: user)
+      user.update(address: Fabricate(:address))
       user
     end
 

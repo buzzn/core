@@ -23,6 +23,7 @@ module Admin
     has_many :prices, PriceResource
     has_many :billing_cycles, BillingCycleResource
     has_one :owner
+    has_one :address
 
     def incompleteness
       LocalpoolIncompleteness.(self).messages

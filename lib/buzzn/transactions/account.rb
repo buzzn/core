@@ -27,4 +27,8 @@ Buzzn::Transaction.define do |t|
   t.register_validation(:verify_login_change_schema) do
     required(:key).filled(:str?, max_size?: 64)
   end
+
+  # NOTE: implemented in rodauth, the above validations are only used to
+  # generate swagger.json.
+  # t.define(:create_session)
 end

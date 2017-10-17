@@ -4,10 +4,8 @@ docs
 README-docker.md
 README-specs.md
 spec
-db/seed_assets/*
 db/banks/*
 tmp/*
-public/uploads/*
 docker-compose.yml
 Dockerfile
 Dockerfile.development

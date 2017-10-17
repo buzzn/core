@@ -102,12 +102,6 @@ module Group
       Meter::Base.find_by_sql("SELECT DISTINCT * FROM meters WHERE id IN(#{sql})")
     end
 
-    # use first address as main address
-    # TODO: maybe improve this so that the user can select between all addresses
-    def main_address
-      self.addresses.order("created_at ASC").first
-    end
-
     def create_corrected_grid_registers
       # TODO: maybe add obis attribute and formula parts if it makes sense
       if registers.grid_consumption_corrected.empty?

@@ -47,7 +47,6 @@ module Register
 
     has_many :contracts, class_name: Contract::Base, dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
-    has_one :address, as: :addressable, dependent: :destroy
     has_many :readings, class_name: Reading::Single, foreign_key: 'register_id'
     has_many :scores, as: :scoreable
 
@@ -102,7 +101,7 @@ module Register
     scope :permitted, ->(uuids) { joins(:contracts).where('contracts.id': uuids) }
 
     def self.search_attributes
-      [:name, address: [:city, :zip, :street]]
+      [:name]
     end
 
     def self.filter(value)
@@ -110,9 +109,6 @@ module Register
     end
 
     def validate_invariants
-      if contracts.size > 0 && address.nil?
-        errors.add(:address, 'missing Address when having contracts')
-      end
       if observer_max_threshold < observer_min_threshold
         errors.add(:observer_max_threshold, 'must be greater or equal min_watt')
         errors.add(:observer_min_threshold, 'must be smaller or equal max_watt')

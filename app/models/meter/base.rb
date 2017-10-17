@@ -135,8 +135,9 @@ module Meter
     validates_associated :broker
 
     belongs_to :group, class_name: Group::Localpool
+    belongs_to :address
 
-    # hack for restricted scope
+    # hack needed for restricted scope
     has_many :registers, class_name: Register::Base, foreign_key: :meter_id
 
     before_save do

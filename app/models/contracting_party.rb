@@ -23,13 +23,6 @@ class ContractingParty < ActiveRecord::Base
   validate :validate_invariants
 
   def validate_invariants
-    if contracts.size > 0
-      errors.add(:address, 'is missing') unless address
-    end
-    # TODO something like this:
-    #if owned_contracts.size > 0
-    #  errors.add(:bank_account, 'is missing') unless bank_account
-    #end
   end
 
   def contracts

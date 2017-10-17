@@ -4,7 +4,7 @@ class Organization < ContractingParty
 
   include Filterable
 
-  has_one :address, as: :addressable, dependent: :destroy
+  belongs_to :address
 
   has_many :energy_classifications
 

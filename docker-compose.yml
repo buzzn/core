@@ -11,7 +11,6 @@ volumes:
     driver: local
 
 services:
-
   web:
     build:
       context: .
@@ -29,6 +28,28 @@ services:
     volumes:
       # Mount the current directory into `/core` inside the running container.
       - '.:/core'
+  core_staging_clockwork:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bundle exec clockwork config/clock.rb
+    depends_on:
+      - core_staging_worker
+      - postgres
+      - redis
+      - mongo
+    env_file: .env.docker
+
+  core_staging_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "bundle exec rake db:migrate && bundle exec sidekiq"
+    depends_on:
+      - postgres
+      - redis
+      - mongo
+    env_file: .env.docker
 
   postgres:
     image: postgres:9.6.5-alpine

@@ -46,19 +46,6 @@ describe "Group Model" do
       expect(localpool.organizations).to match_array organizations
     end
 
-    it 'adds multiple addresses to localpool' do
-      main_address = Fabricate(:address, city: 'Berlin', created_at: Time.now - 1.year)
-      localpool.addresses << main_address
-      secondary_address = Fabricate(:address, city: 'München')
-      localpool.addresses << secondary_address
-
-      expect(localpool.main_address.city).to eq main_address.city
-
-      secondary_address.update_column(:created_at, Time.now - 2.years)
-
-      expect(localpool.main_address.city).to eq secondary_address.city
-    end
-
     it 'get a metering_point_operator_contract from localpool' do
       create(:contract, :metering_point_operator, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn_systems)
       expect(localpool.metering_point_operator_contract).to be_a Contract::MeteringPointOperator
