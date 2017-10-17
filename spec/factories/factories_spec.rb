@@ -92,6 +92,7 @@ describe "Factories produce valid records" do
     subject { create(:meter_real) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:group, Group::Localpool) }
+    it { is_expected.to have_association(:address, Address) }
     it "has a register" do
       expect(subject.registers.first).to be_instance_of(Register::Input)
     end
