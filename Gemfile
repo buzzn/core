@@ -54,7 +54,7 @@ gem 'mail_view'
 gem 'rack-cors',               require: 'rack/cors'
 gem 'doorkeeper'
 gem 'rolify'
-gem 'ffaker'
+gem 'ffaker' # using ffaker instead of faker because it has German fakers.
 gem 'mini_magick'
 gem 'carrierwave'
 gem 'aws-sdk'
@@ -73,6 +73,7 @@ gem 'byebug'
 gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
+gem 'factory_girl'
 gem 'dotenv-rails'
 
 group :production, :staging do

@@ -51,7 +51,7 @@ module Register
                               timestamp: timestamp,
                               power_milliwatt: nil,
                               reason: reason,
-                              source: Reading::Continuous::BUZZN_SYSTEMS,
+                              source: Reading::Continuous::BUZZN,
                               quality: Reading::Continuous::READ_OUT,
                               state: 'Z86',
                               meter_serialnumber: self.meter.product_serialnumber)

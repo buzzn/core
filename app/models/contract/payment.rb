@@ -12,7 +12,11 @@ module Contract
        }
     CYCLES = [MONTHLY, YEARLY, ONCE].freeze
 
+    # FIXME: a payment belongs to ONE contract, so the association should also be named contract
     belongs_to :contracts, class_name: Base, foreign_key: :contract_id
+    # FIXME: remove these when association is fixed
+    alias contract contracts
+    alias contract= contracts=
 
     validates :begin_date, presence: true
     validates :end_date, presence: false

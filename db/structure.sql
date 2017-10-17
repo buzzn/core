@@ -480,6 +480,22 @@ CREATE TYPE manufacturer_name AS ENUM (
 
 
 --
+-- Name: market_partner_function; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE market_partner_function AS ENUM (
+    'distribution_system_operator',
+    'electricity_supplier',
+    'metering_point_operator',
+    'metering_service_provider',
+    'other',
+    'power_giver',
+    'power_taker',
+    'transmission_system_operator'
+);
+
+
+--
 -- Name: operator; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -678,7 +694,7 @@ CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -696,7 +712,7 @@ CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -714,7 +730,7 @@ CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) 
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -732,7 +748,7 @@ CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS b
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -1319,6 +1335,21 @@ CREATE TABLE oauth_applications (
 
 
 --
+-- Name: organization_market_functions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE organization_market_functions (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    market_partner_id character varying,
+    edifact_email character varying,
+    organization_id uuid,
+    contact_person_id uuid,
+    address_id uuid,
+    function market_partner_function
+);
+
+
+--
 -- Name: organizations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1328,15 +1359,12 @@ CREATE TABLE organizations (
     image character varying,
     name character varying,
     email character varying,
-    edifactemail character varying,
     phone character varying,
     fax character varying,
     description character varying,
     website character varying,
-    mode character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    market_place_id character varying,
     sales_tax_number integer,
     tax_rate double precision,
     tax_number integer,
@@ -1949,6 +1977,14 @@ ALTER TABLE ONLY oauth_applications
 
 
 --
+-- Name: organization_market_functions organization_market_functions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organization_market_functions
+    ADD CONSTRAINT organization_market_functions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: organizations organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2363,13 +2399,6 @@ CREATE INDEX index_persons_roles_on_person_id_and_role_id ON persons_roles USING
 --
 
 CREATE INDEX index_persons_roles_on_role_id_and_person_id ON persons_roles USING btree (role_id, person_id);
-
-
---
--- Name: index_prices_on_begin_date_and_localpool_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_prices_on_begin_date_and_localpool_id ON prices USING btree (begin_date, localpool_id);
 
 
 --
@@ -3077,6 +3106,14 @@ INSERT INTO schema_migrations (version) VALUES ('20171009065708');
 INSERT INTO schema_migrations (version) VALUES ('20171009090631');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012111744');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012204100');
+
+INSERT INTO schema_migrations (version) VALUES ('20171016085826');
+
+INSERT INTO schema_migrations (version) VALUES ('20171016111731');
 
 INSERT INTO schema_migrations (version) VALUES ('20171010074910');
 

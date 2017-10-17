@@ -168,6 +168,7 @@ describe Admin::LocalpoolRoda do
           "website"=>organization.website,
           "email"=>organization.email,
           "description"=>organization.description,
+          # FIXME this is now stored on association OrganizationMarketFunction
           "mode"=>organization.mode,
           'customer_number' => nil,
           "updatable"=>true,

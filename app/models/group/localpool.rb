@@ -13,6 +13,21 @@ module Group
       organization || person
     end
 
+    def owner=(new_owner)
+      if new_owner.is_a?(Person)
+        self.person = new_owner
+      elsif new_owner.is_a?(Organization)
+        self.organization = new_owner
+      elsif new_owner.nil?
+        # Allow assigning nil, otherwise we can't build a localpool step by step. An unsaved record should be
+        # allowed not to have an owner yet.
+        # FIXME add invariant validation that an organization must have an owner.
+        # FIXME revisit decision to make owner non-polymorphic.
+      else
+        raise "Can't assign #{new_owner.inspect} as owner, not a Person or Organization."
+      end
+    end
+
     def metering_point_operator_contract
       Contract::MeteringPointOperator.where(localpool_id: self).first
     end

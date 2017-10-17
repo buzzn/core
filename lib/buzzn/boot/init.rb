@@ -81,7 +81,7 @@ module Buzzn
           begin
             service = Buzzn::Services.const_get(cname).new
             MainContainer.register("service.#{name}", service)
-            @logger.info{"registered #{name}: #{service}"}
+            @logger.debug{"registered #{name}: #{service}"}
           rescue Dry::Container::Error => e
             @logger.debug{"register #{name} failed: #{e.message}"}
             errors[path] = e

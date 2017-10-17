@@ -5,7 +5,6 @@ README-docker.md
 README-specs.md
 spec
 db/banks/*
-db/seeds.rb
 tmp/*
 docker-compose.yml
 Dockerfile

@@ -9,8 +9,6 @@ class Price < ActiveRecord::Base
   validates :energyprice_cents_per_kilowatt_hour, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :baseprice_cents_per_month, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
-  validates_uniqueness_of :begin_date, scope: [:localpool_id], message: 'already available for given localpool'
-
   scope :valid_at, ->  (timestamp) do
     timestamp = case timestamp
                 when DateTime

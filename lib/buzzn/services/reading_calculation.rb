@@ -412,7 +412,7 @@ module Buzzn
                                   value: value * 1000,
                                   unit: :watt_hour,
                                   reason: Reading::Single::REGULAR_READING,
-                                  source: Reading::Single::BUZZN_SYSTEMS,
+                                  source: Reading::Single::BUZZN,
                                   quality: Reading::Single::READ_OUT,
                                   state: Reading::Single::Z86)
       end

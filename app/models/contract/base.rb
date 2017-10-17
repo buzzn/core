@@ -30,7 +30,6 @@ module Contract
     MUST_BE_TRUE                 = 'must be true'
     MUST_HAVE_AT_LEAST_ONE       = 'must have at least one'
     WAS_ALREADY_CANCELLED        = 'was already cancelled'
-    MUST_BE_BUZZN_SYSTEMS        = 'must be buzzn-systems'
     MUST_BE_BUZZN                = 'must be buzzn'
     MUST_BELONG_TO_LOCALPOOL     = 'must belong to a localpool'
     MUST_MATCH                   = 'must match'
@@ -38,10 +37,7 @@ module Contract
     CAN_NOT_BE_PRESENT           = 'can not be present when there is a '
     NOT_ALLOWED_FOR_OLD_CONTRACT = 'not allowed for old contract'
     CAN_NOT_BELONG_TO_DUMMY      = 'can not belong to dummy organization'
-    MUST_NOT_BE_BUZZN_SYSTEMS    = 'must not be buzzn-systems'
     MUST_NOT_BE_BUZZN            = 'must not be buzzn'
-
-
 
     class << self
       private :new
@@ -50,7 +46,9 @@ module Contract
     belongs_to :contractor, polymorphic: true
     belongs_to :customer, polymorphic: true
 
+    # FIXME: looks like class_name and foreign_key are default, so they could be omitted.
     has_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id, dependent: :destroy
+    # FIXME: is the foreign key correct here?
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
 
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
@@ -76,17 +74,18 @@ module Contract
 
     validate :validate_invariants
 
+    # FIXME: I don't understand why this is needed ...
     def initialize(*args)
       super
     end
 
-    scope :power_givers,             -> {where(type: PowerGiver)}
-    scope :power_takers,             -> {where(type: PowerTaker)}
-    scope :localpool_power_takers,   -> {where(type: LocalpoolPowerTaker)}
-    scope :localpool_processing,     -> {where(type: LocalpoolProcessing)}
-    scope :metering_point_operators, -> {where(type: MeteringPointOperator)}
-    scope :other_suppliers,          -> {where(type: OtherSupplier)}
-    scope :localpool_power_takers_and_other_suppliers, ->  {where('type in (?)', [LocalpoolPowerTaker, OtherSupplier])}
+    scope :power_givers,             -> { where(type: 'PowerGiver') }
+    scope :power_takers,             -> { where(type: 'PowerTaker') }
+    scope :localpool_power_takers,   -> { where(type: 'LocalpoolPowerTaker') }
+    scope :localpool_processing,     -> { where(type: 'LocalpoolProcessing') }
+    scope :metering_point_operators, -> { where(type: 'MeteringPointOperator') }
+    scope :other_suppliers,          -> { where(type: 'OtherSupplier') }
+    scope :localpool_power_takers_and_other_suppliers, ->  {where('type in (?)', %w(LocalpoolPowerTaker OtherSupplier))}
 
     scope :running_in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                           .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
@@ -112,10 +111,10 @@ module Contract
       errors.add(:power_of_attorney, MUST_BE_TRUE ) unless power_of_attorney
       if contractor
         errors.add(:contractor_bank_account, MUST_MATCH) if contractor_bank_account && ! contractor.bank_accounts.include?(contractor_bank_account)
-        if contractor == Organization.buzzn_energy ||
-           contractor == Organization.buzzn_systems
-          errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.size == 0
-          errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.size == 0
+        if contractor_is_buzzn?
+          errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.empty?
+          # FIXME: why is at least one payment required?
+          errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.empty?
         end
       end
 
@@ -140,6 +139,12 @@ module Contract
 
     def self.filter(search)
       do_filter(search, *search_attributes)
+    end
+
+    private
+
+    def contractor_is_buzzn?
+      contractor.is_a?(Organization) && contractor.buzzn?
     end
   end
 end

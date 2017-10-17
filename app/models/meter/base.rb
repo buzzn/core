@@ -108,19 +108,19 @@ module Meter
     MOUNTING_METHODS = [PLUG_TECHNIQUE, THREE_POINT_MOUNTING, CAP_RAIL]
 
     # ownerships
-    BUZZN_SYSTEMS = 'BUZZN_SYSTEMS'
+    BUZZN  = 'BUZZN_SYSTEMS' # Legacy identifier; consider changing the PG enum value to BUZZN as well.
     FOREIGN_OWNERSHIP = 'FOREIGN_OWNERSHIP'
     CUSTOMER = 'CUSTOMER'
     LEASED = 'LEASED'
     BOUGHT = 'BOUGHT'
     enum ownership: {
-           buzzn_systems:     BUZZN_SYSTEMS,
+           buzzn:             BUZZN,
            foreign_ownership: FOREIGN_OWNERSHIP,
            customer:          CUSTOMER,
            leased:            LEASED,
            bought:            BOUGHT
          }
-    OWNERSHIPS = [BUZZN_SYSTEMS, FOREIGN_OWNERSHIP, CUSTOMER, LEASED, BOUGHT]
+    OWNERSHIPS = [BUZZN, FOREIGN_OWNERSHIP, CUSTOMER, LEASED, BOUGHT]
 
     # sections
     ELECTRICITY = 'S'
@@ -163,7 +163,7 @@ module Meter
     end
 
     scope :real,      -> {where(type: Real)}
-    scope :virtual,   -> {where(type: Virtual)}    
+    scope :virtual,   -> {where(type: Virtual)}
     scope :restricted, ->(uuids) { joins(registers: :contracts).where('contracts.id': uuids) }
 
     def name

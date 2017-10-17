@@ -25,7 +25,7 @@ module Reading
     PROPOSED_VALUE = 'proposed_value'
 
     # source constants
-    BUZZN_SYSTEMS = 'buzzn_systems'
+    BUZZN = 'buzzn_systems'
     CUSTOMER_LSG = 'customer_lsg' #lsg = localpool strom geber
     LSN = 'lsn' # lsn = localpool strom nehmer
     VNB = 'vnb' # vnb = verteilnetzbetreiber
@@ -47,7 +47,7 @@ module Reading
       end
 
       def sources
-        @source ||= [BUZZN_SYSTEMS, CUSTOMER_LSG, LSN, VNB, THIRD_PARTY_MSB_MDL, OTHER, USER_INPUT, SLP, SEP_PV, SEP_BHKW]
+        @source ||= [BUZZN, CUSTOMER_LSG, LSN, VNB, THIRD_PARTY_MSB_MDL, OTHER, USER_INPUT, SLP, SEP_PV, SEP_BHKW]
       end
     end
 
