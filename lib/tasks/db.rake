@@ -4,7 +4,13 @@ namespace :db do
   task empty: :environment do
     Rails.application.eager_load! # required so all active record classes are loaded and can be iterated
     ActiveRecord::Base.connection.disable_referential_integrity do
-      ActiveRecord::Base.descendants.each { |model| model.delete_all unless model.abstract_class? }
+      ActiveRecord::Base.descendants.each do |model|
+        begin
+          model.delete_all unless model.abstract_class?
+        rescue => e
+          puts "Failed to delete all #{model} records: #{e.message}"
+        end
+      end
     end
   end
 
