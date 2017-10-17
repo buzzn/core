@@ -1,6 +1,6 @@
 module Buzzn
-  module Validation
-    class SchemaVisitor
+  module Schemas
+    class Visitor
 
       def self.visit(schema, &block)
         new(schema).visit(&block)
@@ -9,7 +9,13 @@ module Buzzn
       attr_reader :schema
 
       def initialize(schema)
-        @schema = Buzzn::Transaction.transactions.steps["#{schema}_schema"]
+        key = "#{schema}_schema"
+        @schema =
+          if  Buzzn::Transaction.transactions.steps.key?(key)
+            Buzzn::Transaction.transactions.steps[key]
+          else
+            schema
+          end
       end
 
       def visit(&block)

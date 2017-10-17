@@ -344,9 +344,6 @@ describe Admin::LocalpoolRoda do
         let("customer_json") do
           json = person_json.dup
           json.delete('address')
-          json['sales_tax_number']=nil
-          json['tax_rate']=nil
-          json['tax_number']=nil
           json
         end
 
@@ -376,9 +373,6 @@ describe Admin::LocalpoolRoda do
           json = organization_json.dup
           json.delete('address')
           json.delete('contact')
-          json['sales_tax_number']=nil
-          json['tax_rate']=nil
-          json['tax_number']=nil
           json
         end
 

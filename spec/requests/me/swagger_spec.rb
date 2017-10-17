@@ -1,3 +1,4 @@
+require 'buzzn/schemas/support/visitor'
 # we can not have nested transactions on AR connection and use Sequel at the
 # same time as it does not see the entities from AR connection
 describe Me, :skip_nested do

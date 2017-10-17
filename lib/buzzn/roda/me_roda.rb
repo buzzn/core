@@ -67,8 +67,7 @@ module Me
 
       rodauth.check_session_expiration
 
-      person = PersonResource.all(current_user, ContractingPartyPersonResource)
-               .retrieve(current_user.person.id)
+      person = PersonResource.all(current_user).retrieve(current_user.person.id)
 
       r.get! do
         person

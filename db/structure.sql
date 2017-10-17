@@ -1038,6 +1038,24 @@ CREATE TABLE comments (
 
 
 --
+-- Name: contract_tax_data_tables; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE contract_tax_data_tables (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    retailer boolean,
+    provider_permission boolean,
+    subject_to_tax boolean,
+    tax_rate integer,
+    tax_number character varying(64),
+    sales_tax_number character varying(64),
+    creditor_identification character varying(64),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
 -- Name: contracts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1084,7 +1102,8 @@ CREATE TABLE contracts (
     contractor_bank_account_id uuid,
     signing_user character varying,
     status contract_status DEFAULT 'onboarding'::contract_status,
-    renewable_energy_law_taxation taxation
+    renewable_energy_law_taxation taxation,
+    mandate_reference character varying
 );
 
 
@@ -1289,14 +1308,6 @@ CREATE TABLE organizations (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     market_place_id character varying,
-    sales_tax_number integer,
-    tax_rate double precision,
-    tax_number integer,
-    retailer boolean,
-    provider_permission boolean,
-    subject_to_tax boolean,
-    mandate_reference character varying,
-    creditor_id character varying,
     account_number character varying,
     contact_id uuid,
     legal_representation_id uuid,
@@ -1335,14 +1346,6 @@ CREATE TABLE persons (
     title title,
     prefix prefix,
     preferred_language preferred_language,
-    sales_tax_number integer,
-    tax_rate double precision,
-    tax_number integer,
-    retailer boolean,
-    provider_permission boolean,
-    subject_to_tax boolean,
-    mandate_reference character varying,
-    creditor_id character varying,
     image character varying,
     address_id uuid,
     customer_number integer
@@ -1786,6 +1789,14 @@ ALTER TABLE ONLY billings
 
 ALTER TABLE ONLY comments
     ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contract_tax_data_tables contract_tax_data_tables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contract_tax_data_tables
+    ADD CONSTRAINT contract_tax_data_tables_pkey PRIMARY KEY (id);
 
 
 --
@@ -2975,6 +2986,10 @@ INSERT INTO schema_migrations (version) VALUES ('20171010102959');
 INSERT INTO schema_migrations (version) VALUES ('20171011151135');
 
 INSERT INTO schema_migrations (version) VALUES ('20171016125437');
+
+INSERT INTO schema_migrations (version) VALUES ('20171016140547');
+
+INSERT INTO schema_migrations (version) VALUES ('20171017052738');
 
 INSERT INTO schema_migrations (version) VALUES ('20171017081409');
 

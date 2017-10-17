@@ -1,5 +1,5 @@
 describe Me::Roda do
-  
+
   def app
     Me::Roda # this defines the active application for this test
   end
@@ -37,15 +37,12 @@ describe Me::Roda do
       'customer_number' => nil,
       "updatable"=>true,
       "deletable"=>false,
-      'sales_tax_number'=>nil,
-      'tax_rate'=>nil,
-      'tax_number'=>nil
     }
   end
 
   context 'ping' do
     context 'GET' do
-      
+
       it '200' do
         GET '/ping', $user
         expect(response).to have_http_status(200)
@@ -126,10 +123,7 @@ describe Me::Roda do
         "image"=>person.image.md.url,
         'customer_number' => nil,
         "updatable"=>true,
-        "deletable"=>false,
-        "sales_tax_number"=>nil,
-        "tax_rate"=>nil,
-        "tax_number"=>nil
+        "deletable"=>false
       }
     end
 

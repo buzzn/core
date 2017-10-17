@@ -1,3 +1,4 @@
+require 'buzzn/schemas/support/visitor'
 describe Display do
   include SwaggerHelper
 

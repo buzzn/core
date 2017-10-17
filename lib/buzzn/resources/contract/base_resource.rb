@@ -1,4 +1,3 @@
-require_relative '../contracting_party_resource'
 module Contract
   class BaseResource < Buzzn::Resource::Entity
 
@@ -18,8 +17,8 @@ module Contract
 
     has_many :tariffs
     has_many :payments
-    has_one :contractor, ContractingPartyResource
-    has_one :customer, ContractingPartyResource
+    has_one :contractor
+    has_one :customer
     has_one :customer_bank_account
     has_one :contractor_bank_account
   end

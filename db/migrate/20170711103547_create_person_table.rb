@@ -1,6 +1,7 @@
+require 'buzzn/schemas/support/migration_visitor'
 class CreatePersonTable < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Validation::MigrationSchemaVisitor.new(:create_person)
+  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(:create_person)
 
   def up
     SCHEMA.up(:persons, self)
