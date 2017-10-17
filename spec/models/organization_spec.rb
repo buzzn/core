@@ -1,11 +1,13 @@
 describe "Organization Model" do
 
   describe "predefined organizations" do
-    before       { Organization.buzzn = create(:organization, name: 'buzzn GmbH', slug: 'buzzn') }
     let(:buzzn)  { Organization.find_by(slug: 'buzzn') }
-    after(:each) { Organization.destroy_all } # FIXME clean DB before each test even when running with rspec
 
-    it "can be accessed by method" do
+    it "is available" do
+      expect(Organization.buzzn).not_to be_nil
+    end
+
+    it "it is still in the database" do
       expect(Organization.buzzn).to eq(buzzn)
     end
 
