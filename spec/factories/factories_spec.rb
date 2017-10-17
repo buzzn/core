@@ -85,6 +85,7 @@ describe "Factories produce valid records" do
   context "Localpool" do
     subject { create(:localpool) }
     it { is_expected.to be_valid }
+    it { is_expected.to have_association(:address, Address) }
   end
 
   context "Meter::Real" do
