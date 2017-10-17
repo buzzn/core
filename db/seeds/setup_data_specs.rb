@@ -1,7 +1,8 @@
 require_relative 'setup_data_common'
 
 puts "seeds: loading spec setup data"
-Organization.delete_all
+# (some of) these are now generated in setup_data_common
+# Organization.delete_all
 # Fabricate(:dummy)
 # Fabricate(:dummy_energy)
 # Fabricate(:discovergy)
