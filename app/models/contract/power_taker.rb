@@ -32,19 +32,14 @@ module Contract
       if onboarding?
         errors.add(:begin_date, IS_MISSING) unless begin_date
       end
-
-      unless register.address
-        # TODO shall this be a requirement for register anyways ?
-        errors.add(:register, 'missing Register Address')
-      end
     end
 
     def calculate_price
-      if register && forecast_kwh_pa && register.address &&
-         register.meter
+      # TODO remove me and fix the tests
+      if register && forecast_kwh_pa && register.meter && register.meter.address
         # TODO some validation or errors or something
         prices = Buzzn::Types::ZipPrices.new(annual_kwh: forecast_kwh_pa,
-                                             zip: register.address.zip.to_i,
+                                             zip: register.meter.address.zip.to_i,
                                              type: 'single')#register.meter.metering_type)
         if price = prices.max_price
           self.tariffs << Contract::Tariff.new(name: 'TODO Tariff',

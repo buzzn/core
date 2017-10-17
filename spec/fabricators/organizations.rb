@@ -48,7 +48,9 @@ Fabricator :hell_und_warm, from: :other_organization do
   phone       '089-89057180'
   email       't.brumbauer@wogeno.de'
   description 'Betreiber des Localpools Forstenried'
-  address     { Fabricate(:address, street: 'Aberlestraße 16', zip: '81371', city: 'München', state: 'DE_BY') }
+  after_create do |o|
+    o.update(address: Fabricate(:address, street: 'Aberlestraße 16', zip: '81371', city: 'München', state: 'DE_BY'))
+  end
 end
 
 # needed for groups fabricator - legacy naming

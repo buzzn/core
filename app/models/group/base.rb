@@ -28,6 +28,8 @@ module Group
     mount_uploader :logo, PictureUploader
     #mount_uploader :image, PictureUploader
 
+    belongs_to :address
+
     has_many :registers, class_name: Register::Base, foreign_key: :group_id
 
     has_many :brokers, class_name: Broker::Base, as: :resource, :dependent => :destroy

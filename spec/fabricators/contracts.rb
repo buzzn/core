@@ -41,7 +41,7 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
   signing_date             { FFaker::Time.date }
   customer                 {
     user = Fabricate(:person)
-    user.address = Fabricate(:address)
+    user.update(address: Fabricate(:address))
     user
   }
   contractor               { Organization.discovergy }
@@ -83,8 +83,8 @@ Fabricator :other_supplier_contract, class_name: Contract::OtherSupplier do
   forecast_kwh_pa          { rand(100) + 1 }
   customer                 { Fabricate(:person) }
   register                 { Fabricate(:input_register,
-                                       meter: Fabricate.build(:meter),
-                                       address: Fabricate.build(:address) ) }
+                                       meter: Fabricate.build(:meter)) }
+                                       #address: Fabricate.build(:address) ) }
   renewable_energy_law_taxation Contract::Base::FULL
 end
 
@@ -102,8 +102,8 @@ Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
   forecast_kwh_pa          { rand(100) + 1 }
   customer                 { Fabricate(:person) }
   register                 { Fabricate(:input_register,
-                                       meter: Fabricate.build(:meter),
-                                       address: Fabricate.build(:address) ) }
+                                       meter: Fabricate.build(:meter)) }
+#                                       address: Fabricate.build(:address) ) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
@@ -145,8 +145,8 @@ Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
   register                 { Fabricate(:output_register,
-                                       meter: Fabricate.build(:meter),
-                                       address: Fabricate.build(:address) ) }
+                                       meter: Fabricate.build(:meter)) }
+#                                       address: Fabricate.build(:address) ) }
   customer                 { Fabricate(:person) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
@@ -178,8 +178,8 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   contractor               { Fabricate(:person) }
   register                 { Fabricate(:input_register,
                                        group: Fabricate(:localpool),
-                                       meter: Fabricate.build(:meter),
-                                       address: Fabricate.build(:address) ) }
+                                       meter: Fabricate.build(:meter)) }
+#                                       address: Fabricate.build(:address) ) }
   renewable_energy_law_taxation { Contract::Base::FULL }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }

@@ -28,15 +28,7 @@ module Filterable
         case param
         when Hash
           param.each do |k,v|
-            if k == :address
-              child  = Arel::Table.new(k.to_s.tableize,)
-              parent = Arel::Table.new(prefix.to_s.tableize)
-              on     = child.create_on(child['addressable_id'].eq(parent['id']))
-              join   = child.create_join(child, on, Arel::Nodes::OuterJoin)
-              result = nested(sql, result.joins(join), k.to_s.tableize, v)
-            else
-              result = nested(sql, result.joins(k), k.to_s.tableize, v)
-            end
+            result = nested(sql, result.joins(k), k.to_s.tableize, v)
           end
         when Array
           param.each do |k|
