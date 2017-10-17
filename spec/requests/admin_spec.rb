@@ -35,6 +35,7 @@ describe Admin::Roda do
             "email"=>person.email,
             'preferred_language'=>person.attributes['preferred_language'],
             "image"=>person.image.md.url,
+            'customer_number' => nil,
             "updatable"=>false,
             "deletable"=>false,
           }
@@ -72,6 +73,7 @@ describe Admin::Roda do
             "description"=>organization.description,
             # FIXME this is now stored on association OrganizationMarketFunction
             "mode"=>organization.mode,
+            'customer_number' => nil,
             "updatable"=>false,
             "deletable"=>false,
           }

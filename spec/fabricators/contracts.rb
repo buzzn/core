@@ -2,7 +2,6 @@
 Fabricator :payment, class_name: Contract::Payment do
   begin_date    { FFaker::Time.date }
   price_cents   { rand(100) + 1 }
-  source        { Contract::Payment::CALCULATED }
   cycle         { Contract::Payment::MONTHLY }
 end
 
@@ -264,14 +263,12 @@ Fabricator :lpc_forstenried, from: :localpool_processing_contract do
                       begin_date: begindate,
                       end_date: begindate,
                       price_cents: 100000,
-                      cycle: Contract::Payment::ONCE,
-                      source: Contract::Payment::CALCULATED),
+                      cycle: Contract::Payment::ONCE),
                     Fabricate.build(:payment,
                       begin_date: begindate,
                       end_date: begindate,
                       price_cents: 100000,
-                      cycle: Contract::Payment::ONCE,
-                      source: Contract::Payment::TRANSFERRED)] }
+                      cycle: Contract::Payment::ONCE)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
     c.customer_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
@@ -298,32 +295,27 @@ Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
                                     begin_date: begindate,
                                     end_date: begindate,
                                     price_cents: 30000,
-                                    cycle: Contract::Payment::ONCE,
-                                    source: Contract::Payment::CALCULATED),
+                                    cycle: Contract::Payment::ONCE),
                                   Fabricate.build(:payment,
                                     begin_date: begindate,
                                     end_date: begindate,
                                     price_cents: 30000,
-                                    cycle: Contract::Payment::ONCE,
-                                    source: Contract::Payment::TRANSFERRED),
+                                    cycle: Contract::Payment::ONCE),
                                   Fabricate.build(:payment,
                                     begin_date: begindate,
                                     end_date: nil,
                                     price_cents: 55000,
-                                    cycle: Contract::Payment::MONTHLY,
-                                    source: Contract::Payment::CALCULATED),
+                                    cycle: Contract::Payment::MONTHLY),
                                   Fabricate.build(:payment,
                                     begin_date: begindate,
                                     end_date: begindate.end_of_year,
                                     price_cents: 55000,
-                                    cycle: Contract::Payment::MONTHLY,
-                                    source: Contract::Payment::TRANSFERRED),
+                                    cycle: Contract::Payment::MONTHLY),
                                   Fabricate.build(:payment,
                                     begin_date: begindate.next_year.beginning_of_year,
                                     end_date: begindate.next_year.end_of_year,
                                     price_cents: 55000,
-                                    cycle: Contract::Payment::MONTHLY,
-                                    source: Contract::Payment::TRANSFERRED)] }
+                                    cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
     c.customer_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
@@ -349,8 +341,7 @@ Fabricator :lptc_mabe, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 3500,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -373,8 +364,7 @@ Fabricator :lptc_inbr, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 3400,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -397,8 +387,7 @@ Fabricator :lptc_pebr, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 1600,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -421,8 +410,7 @@ Fabricator :lptc_anbr, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 5100,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -445,8 +433,7 @@ Fabricator :lptc_gubr, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 1600,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -469,8 +456,7 @@ Fabricator :lptc_mabr, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 2400,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -493,8 +479,7 @@ Fabricator :lptc_dabr, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 6200,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -517,8 +502,7 @@ Fabricator :lptc_zubu, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 8800,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -541,8 +525,7 @@ Fabricator :lptc_mace, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 2400,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -565,8 +548,7 @@ Fabricator :lptc_stcs, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 2200,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -592,8 +574,7 @@ Fabricator :lptc_pafi, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: enddate,
                                       price_cents: 4100,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -616,8 +597,7 @@ Fabricator :lptc_raja, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 5000,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
     c.save
@@ -649,8 +629,7 @@ Fabricator :lptc_hafi, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 0,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
 end
 
 Fabricator :lptc_hubv, from: :localpool_power_taker_contract do
@@ -669,8 +648,7 @@ Fabricator :lptc_hubv, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 5500,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
 end
 
 Fabricator :lptc_mape, from: :localpool_power_taker_contract do
@@ -689,8 +667,7 @@ Fabricator :lptc_mape, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 11000,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
 end
 
 Fabricator :lptc_hafi2, from: :localpool_power_taker_contract do
@@ -710,8 +687,7 @@ Fabricator :lptc_hafi2, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: enddate,
                                       price_cents: 0,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
 end
 
 Fabricator :lptc_musc, from: :localpool_power_taker_contract do
@@ -730,8 +706,7 @@ Fabricator :lptc_musc, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 23000,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
 end
 
 Fabricator :lptc_viwe, from: :localpool_power_taker_contract do
@@ -750,8 +725,7 @@ Fabricator :lptc_viwe, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 9900,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
 end
 
 Fabricator :lptc_reho, from: :localpool_power_taker_contract do
@@ -770,8 +744,7 @@ Fabricator :lptc_reho, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 11200,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
 end
 
 Fabricator :lptc_pewi, from: :localpool_power_taker_contract do
@@ -790,8 +763,7 @@ Fabricator :lptc_pewi, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 6000,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
 end
 
 Fabricator :lptc_saba, from: :localpool_power_taker_contract do
@@ -810,8 +782,7 @@ Fabricator :lptc_saba, from: :localpool_power_taker_contract do
                                       begin_date: begindate,
                                       end_date: nil,
                                       price_cents: 6600,
-                                      cycle: Contract::Payment::MONTHLY,
-                                      source: Contract::Payment::CALCULATED)] }
+                                      cycle: Contract::Payment::MONTHLY)] }
 end
 
 Fabricator :osc_saba, from: :other_supplier_contract do
@@ -847,14 +818,12 @@ Fabricator :lpc_sulz, from: :localpool_processing_contract do
                       begin_date: begindate,
                       end_date: begindate,
                       price_cents: 100000,
-                      cycle: Contract::Payment::ONCE,
-                      source: Contract::Payment::CALCULATED),
+                      cycle: Contract::Payment::ONCE),
                     Fabricate.build(:payment,
                       begin_date: begindate,
                       end_date: begindate,
                       price_cents: 100000,
-                      cycle: Contract::Payment::ONCE,
-                      source: Contract::Payment::TRANSFERRED)] }
+                      cycle: Contract::Payment::ONCE)] }
 end
 
 Fabricator :mpoc_sulz, from: :metering_point_operator_contract do
@@ -876,26 +845,22 @@ Fabricator :mpoc_sulz, from: :metering_point_operator_contract do
                                     begin_date: begindate,
                                     end_date: begindate,
                                     price_cents: 30000,
-                                    cycle: Contract::Payment::ONCE,
-                                    source: Contract::Payment::CALCULATED),
+                                    cycle: Contract::Payment::ONCE),
                                   Fabricate.build(:payment,
                                     begin_date: begindate,
                                     end_date: begindate,
                                     price_cents: 30000,
-                                    cycle: Contract::Payment::ONCE,
-                                    source: Contract::Payment::TRANSFERRED),
+                                    cycle: Contract::Payment::ONCE),
                                   Fabricate.build(:payment,
                                     begin_date: begindate,
                                     end_date: nil,
                                     price_cents: 55000,
-                                    cycle: Contract::Payment::MONTHLY,
-                                    source: Contract::Payment::CALCULATED),
+                                    cycle: Contract::Payment::MONTHLY),
                                   Fabricate.build(:payment,
                                     begin_date: begindate,
                                     end_date: begindate.end_of_year,
                                     price_cents: 55000,
-                                    cycle: Contract::Payment::MONTHLY,
-                                    source: Contract::Payment::TRANSFERRED)] }
+                                    cycle: Contract::Payment::MONTHLY)] }
 end
 
 Fabricator :osc_sulz, from: :other_supplier_contract do

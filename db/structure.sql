@@ -328,6 +328,17 @@ CREATE TYPE country AS ENUM (
 
 
 --
+-- Name: cycle; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE cycle AS ENUM (
+    'monthly',
+    'yearly',
+    'once'
+);
+
+
+--
 -- Name: direction; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -683,7 +694,7 @@ CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -701,7 +712,7 @@ CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -719,7 +730,7 @@ CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) 
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -737,7 +748,7 @@ CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS b
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -1106,6 +1117,34 @@ CREATE TABLE core_configs (
 
 
 --
+-- Name: customer_numbers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE customer_numbers (
+    id integer NOT NULL
+);
+
+
+--
+-- Name: customer_numbers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE customer_numbers_id_seq
+    START WITH 100000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customer_numbers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE customer_numbers_id_seq OWNED BY customer_numbers.id;
+
+
+--
 -- Name: devices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1197,7 +1236,8 @@ CREATE TABLE groups (
     type character varying NOT NULL,
     organization_id uuid,
     person_id uuid,
-    address_id uuid
+    address_id uuid,
+    CONSTRAINT check_localpool_owner CHECK ((NOT ((person_id IS NOT NULL) AND (organization_id IS NOT NULL))))
 );
 
 
@@ -1336,7 +1376,8 @@ CREATE TABLE organizations (
     account_number character varying,
     contact_id uuid,
     legal_representation_id uuid,
-    address_id uuid
+    address_id uuid,
+    customer_number integer
 );
 
 
@@ -1349,9 +1390,8 @@ CREATE TABLE payments (
     begin_date date NOT NULL,
     end_date date,
     price_cents integer NOT NULL,
-    cycle character varying,
-    source character varying,
-    contract_id uuid NOT NULL
+    contract_id uuid NOT NULL,
+    cycle cycle
 );
 
 
@@ -1380,7 +1420,8 @@ CREATE TABLE persons (
     mandate_reference character varying,
     creditor_id character varying,
     image character varying,
-    address_id uuid
+    address_id uuid,
+    customer_number integer
 );
 
 
@@ -1682,6 +1723,13 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 
 
 --
+-- Name: customer_numbers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customer_numbers ALTER COLUMN id SET DEFAULT nextval('customer_numbers_id_seq'::regclass);
+
+
+--
 -- Name: roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1830,6 +1878,14 @@ ALTER TABLE ONLY contracts
 
 ALTER TABLE ONLY core_configs
     ADD CONSTRAINT core_configs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customer_numbers customer_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customer_numbers
+    ADD CONSTRAINT customer_numbers_pkey PRIMARY KEY (id);
 
 
 --
@@ -2612,6 +2668,14 @@ ALTER TABLE ONLY organizations
 
 
 --
+-- Name: organizations fk_organizations_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organizations
+    ADD CONSTRAINT fk_organizations_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
+
+
+--
 -- Name: organizations fk_organizations_legal_representation; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2625,6 +2689,14 @@ ALTER TABLE ONLY organizations
 
 ALTER TABLE ONLY persons
     ADD CONSTRAINT fk_persons_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
+-- Name: persons fk_persons_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY persons
+    ADD CONSTRAINT fk_persons_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
 
 
 --
@@ -3042,4 +3114,14 @@ INSERT INTO schema_migrations (version) VALUES ('20171012204100');
 INSERT INTO schema_migrations (version) VALUES ('20171016085826');
 
 INSERT INTO schema_migrations (version) VALUES ('20171016111731');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010074910');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010075030');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010082537');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010094247');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010102959');
 

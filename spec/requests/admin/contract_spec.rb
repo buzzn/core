@@ -81,6 +81,7 @@ describe Admin::LocalpoolRoda do
         "email"=>person.email,
         "preferred_language"=>person.attributes['preferred_language'],
         "image"=>person.image.md.url,
+        'customer_number' => nil,
         "updatable"=>true,
         "deletable"=>false,
         'address'=>{
@@ -116,6 +117,7 @@ describe Admin::LocalpoolRoda do
         "email"=>organization.email,
         "description"=>organization.description,
         "mode"=>"metering_point_operator",
+        'customer_number' => nil,
         "updatable"=>true,
         "deletable"=>false,
         'address'=>{
@@ -189,7 +191,6 @@ describe Admin::LocalpoolRoda do
                 "end_date"=>p.end_date ? p.end_date.to_s : nil,
                 "price_cents"=>p.price_cents,
                 "cycle"=>p.cycle,
-                "source"=>p.source,
               }
             end
           },
@@ -284,7 +285,6 @@ describe Admin::LocalpoolRoda do
                 "end_date"=>p.end_date ? p.end_date.to_s : nil,
                 "price_cents"=>p.price_cents,
                 "cycle"=>p.cycle,
-                "source"=>p.source,
               }
             end
           },

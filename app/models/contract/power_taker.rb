@@ -36,10 +36,10 @@ module Contract
 
     def calculate_price
       # TODO remove me and fix the tests
-      if register && forecast_kwh_pa && register.meter && register.meter.address
+      if register && forecast_kwh_pa && register.address
         # TODO some validation or errors or something
         prices = Buzzn::Types::ZipPrices.new(annual_kwh: forecast_kwh_pa,
-                                             zip: register.meter.address.zip.to_i,
+                                             zip: register.address.zip.to_i,
                                              type: 'single')#register.meter.metering_type)
         if price = prices.max_price
           self.tariffs << Contract::Tariff.new(name: 'TODO Tariff',

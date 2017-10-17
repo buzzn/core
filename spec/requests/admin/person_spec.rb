@@ -62,6 +62,7 @@ describe Admin::LocalpoolRoda do
         "email"=>person.email,
         "preferred_language"=>person.attributes['preferred_language'],
         "image"=>person.image.md.url,
+        'customer_number' => nil,
         "updatable"=>true,
         "deletable"=>false,
         "bank_accounts"=>{
@@ -110,6 +111,7 @@ describe Admin::LocalpoolRoda do
           "email"=>person.email,
           "preferred_language"=>person.attributes['preferred_language'],
           "image"=>person.image.md.url,
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false,
           "bank_accounts"=> {
@@ -147,6 +149,7 @@ describe Admin::LocalpoolRoda do
           "email"=>person.email,
           "preferred_language"=>person.attributes['preferred_language'],
           "image"=>person.image.md.url,
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false,
           "bank_accounts"=> {
@@ -184,6 +187,7 @@ describe Admin::LocalpoolRoda do
           "email"=>person.email,
           "preferred_language"=>person.attributes['preferred_language'],
           "image"=>person.image.md.url,
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false,
           "bank_accounts"=>{

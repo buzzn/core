@@ -93,11 +93,11 @@ RSpec.configure do |config|
       next if table.match(/\Aschema_migrations\Z/)
       klass = table.singularize.camelize.safe_constantize
       if klass
-        if klass.class == Module
+        if klass.class.is_a?(Module)
           klass = (klass.const_get 'Base' rescue nil)
         end
         if klass
-          if klass.count > 0
+          if (klass.is_a?(Organization) && klass.count != 7) || (!klass.is_a?(Organization) && klass.count > 0)
             if first
               first = false
               warn '-' * 80

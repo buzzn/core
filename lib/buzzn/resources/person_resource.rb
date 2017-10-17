@@ -12,7 +12,8 @@ class PersonResource < Buzzn::Resource::Entity
               :fax,
               :email,
               :preferred_language,
-              :image
+              :image,
+              :customer_number
 
   attributes :updatable, :deletable
 
