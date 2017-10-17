@@ -1,4 +1,3 @@
-# coding: utf-8
 class Broker::Discovergy < Broker::Base
   include Import.active_record['service.current_power']
 

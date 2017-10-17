@@ -1,4 +1,3 @@
-# coding: utf-8
 # frozen-string-literal: true
 module Reading
   class Single < ActiveRecord::Base

@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Register::BaseResource do
 
   entity(:admin) { Fabricate(:admin) }

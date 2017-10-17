@@ -1,4 +1,3 @@
-# coding: utf-8
 Fabricator :billing_cycle do
   begin_date  { Time.now.beginning_of_year - 1.year }
   end_date    { Time.now.end_of_year - 1.year }

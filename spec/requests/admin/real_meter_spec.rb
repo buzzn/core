@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Admin::LocalpoolRoda do
 
   def app

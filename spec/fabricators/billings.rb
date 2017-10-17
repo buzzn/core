@@ -1,4 +1,3 @@
-# coding: utf-8
 Fabricator :billing do
   status                        { Billing::OPEN }
   total_energy_consumption_kwh  1000

@@ -1,4 +1,3 @@
-# coding: utf-8
 describe "Device Model" do
 
   entity(:out_device_with_register) do

@@ -1,4 +1,3 @@
-# coding: utf-8
 describe BankAccount do
 
   entity(:user_with_register) do

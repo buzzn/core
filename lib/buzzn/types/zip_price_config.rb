@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'dry-struct'
 require 'dry-types'
 

@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 Fabricator :user, class_name: Account::Base do
   i = 0

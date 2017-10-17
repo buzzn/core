@@ -1,4 +1,3 @@
-# coding: utf-8
 Fabricator :energy_classification, from: EnergyClassification do
   tariff_name { FFaker::Name.name.slice(0...30) }
   nuclear_ratio { 10.0 }

@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Admin::LocalpoolResource do
 
   entity(:admin) { Fabricate(:admin) }

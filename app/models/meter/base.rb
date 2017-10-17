@@ -1,4 +1,3 @@
-# coding: utf-8
 module Meter
   class Base < ActiveRecord::Base
     self.table_name = :meters

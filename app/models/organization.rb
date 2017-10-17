@@ -1,4 +1,3 @@
-# coding: utf-8
 class Organization < ContractingParty
   self.table_name = :organizations
 

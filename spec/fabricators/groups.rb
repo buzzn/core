@@ -1,4 +1,3 @@
-# coding: utf-8
 
 ['localpool', 'tribe'].each do |klass_type|
   klass = "Group::#{klass_type.camelize}".constantize

@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Admin::BillingCycleResource do
 
   entity(:localpool) { Fabricate(:localpool_sulz_with_registers_and_readings) }

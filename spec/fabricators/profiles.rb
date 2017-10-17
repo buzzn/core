@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 Fabricator :profile do
   first_name  { FFaker::Name.first_name.slice(0...30) }

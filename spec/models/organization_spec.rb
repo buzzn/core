@@ -1,4 +1,3 @@
-# coding: utf-8
 describe "Organization Model" do
 
   entity(:organization) { Fabricate(:hell_und_warm) }
