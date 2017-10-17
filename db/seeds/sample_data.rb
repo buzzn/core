@@ -271,12 +271,6 @@ FactoryGirl.create(:organization, :distribution_system_operator,
                    market_place_id: '9901068000001'
 )
 FactoryGirl.create(:organization, :metering_point_operator,
-                   name: 'Discovergy',
-                   description: 'MPO of EasyMeters',
-                   slug: 'discovergy',
-                   website: 'https://discovergy.com'
-)
-FactoryGirl.create(:organization, :metering_point_operator,
                    name: 'MySmartGrid',
                    description: 'Fraunhofer Institut',
                    slug: 'mysmartgrid',
