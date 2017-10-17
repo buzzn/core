@@ -29,12 +29,18 @@ FactoryGirl.define do
       edifact_data_logging         Meter::Real.edifact_data_loggings[:electronic]
 
       before(:create) do |meter, evaluator|
-        registers = if evaluator.registers.present?
+        # registers
+        meter.registers = if evaluator.registers.present?
           evaluator.registers
         else
           [ FactoryGirl.build(:register, :input, meter: meter, group: meter.group) ]
         end
-        meter.registers = registers
+        # address
+        meter.address = if meter.group.address
+          meter.group.address.dup # use from group when present
+        else
+          FactoryGirl.create(:address)
+        end
       end
 
       trait :one_way do
