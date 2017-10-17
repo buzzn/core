@@ -25,6 +25,9 @@ class Organization < ContractingParty
     }
   end
 
+  # TMP hack
+  attr_accessor :mode, :edifactemail, :market_place_id
+
   has_many :market_functions, dependent: :destroy, class_name: "OrganizationMarketFunction"
 
   def in_market_function(function)
@@ -37,7 +40,7 @@ class Organization < ContractingParty
   validates :phone, presence: true
 
   # TODO remove
-  validates :mode, presence: true, inclusion: {in: modes}
+  # validates :mode, presence: true, inclusion: {in: modes}
 
   scope :permitted, ->(uuids) { where(nil) } # organizations are public
 
