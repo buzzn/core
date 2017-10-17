@@ -19,7 +19,9 @@ module PdfsHelper
   end
 
   private
-  def _log(file)
-    warn "  ------> #{file}"
+
+  def _log(string)
+    # TODO make a ::Buzzn.logger that we can access from everywhere.
+    ::Rails.logger.debug(string)
   end
 end
