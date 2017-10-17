@@ -1,8 +1,6 @@
 # coding: utf-8
 class Address < ActiveRecord::Base
 
-  belongs_to :addressable, polymorphic: true
-
   # example:
   #   germany: 'DE'
   #   austria: 'AT'

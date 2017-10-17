@@ -5,7 +5,7 @@ module Register
 
     belongs_to :meter, class_name: Meter::Real, foreign_key: :meter_id
 
-    delegate :address, to: :meter
+    delegate :address, to: :meter, allow_nil: true
 
     def obis
       raise 'not implemented'
