@@ -1,4 +1,3 @@
-# coding: utf-8
 class Organization < ContractingParty
   self.table_name = :organizations
 
@@ -24,29 +23,14 @@ class Organization < ContractingParty
 
   scope :permitted, ->(uuids) { where(nil) } # organizations are public
 
-  # define some predefined organizations with cache
-  {
-    buzzn_energy: 'buzzn GmbH',
-    buzzn_systems: 'buzzn systems UG',
-    discovergy: 'Discovergy',
-    mysmartgrid: 'MySmartGrid',
-    germany: 'Germany Energy Mix',
-    gemeindewerke_peissenberg: 'Gemeindewerke Peißenberg'
-  }.each do |key, name|
-
-    # Example: BUZZN_ENERGY = 'buzzn GmbH'
-    const_set key.to_s.upcase, name
-
-    # Example: def buzzn_energy?
-    define_method "#{key.to_s}?" do
-      self.name == "#{name}"
-    end
-
-    (class << self; self; end).instance_eval do
-      # Example: def buzzn_energy
-      define_method(key) do
-        where(name: name).first
-      end
+  # Define some class-accessors for commonly used organizations (example: Organization.buzzn).
+  # Note they are nil by default, need to be assigned from init code somewhere.
+  PREDEFINED_ORGANIZATIONS = %i(buzzn germany discovergy)
+  mattr_accessor(*PREDEFINED_ORGANIZATIONS)
+  PREDEFINED_ORGANIZATIONS.each do |accessor|
+    # Defines a predicate method, example: @organization.buzzn?
+    define_method "#{accessor}?" do
+      self == self.class.send(accessor)
     end
   end
 

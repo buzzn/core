@@ -199,14 +199,6 @@ registers[:pv] = create(:register, :production_pv,
   devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
 )
 
-FactoryGirl.create(:organization, :contracting_party,
-                   name: 'Buzzn GmbH',
-                   description: 'Purveyor of peoplepower since 2009',
-                   slug: 'buzzn',
-                   email: 'dev@buzzn.net',
-                   phone: '089 / 32 16 8',
-                   website: 'www.buzzn.net'
-)
 FactoryGirl.create(:organization, :transmission_system_operator,
                    name: '50Hertz Transmission GmbH',
                    slug: '50hertz',
@@ -284,12 +276,6 @@ FactoryGirl.create(:organization, :electricity_supplier,
                    website: 'www.buzzn.net',
                    market_place_id: '9905229000008',
                    energy_classifications: [ create(:energy_classification, :buzzn_energy) ]
-)
-FactoryGirl.create(:organization, :electricity_supplier,
-                   name: 'Germany',
-                   description: 'used for energy mix \'Germany\'',
-                   slug: 'germany',
-                   energy_classifications: [ create(:energy_classification, :germany) ]
 )
 FactoryGirl.create(:organization, :electricity_supplier,
                    name: 'E.ON'

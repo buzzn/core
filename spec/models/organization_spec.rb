@@ -1,24 +1,20 @@
 describe "Organization Model" do
 
-  describe "predefined organizations" do
-    before             { create(:organization, name: 'buzzn GmbH', slug: 'buzzn-energy') }
-    let(:buzzn_energy) { Organization.find_by(slug: 'buzzn-energy') }
-    after(:each)       { Organization.destroy_all } # FIXME clean DB before each test even when running with rspec
+  describe "predefined organizations", :focus do
+    before       { Organization.buzzn = create(:organization, name: 'buzzn GmbH', slug: 'buzzn') }
+    let(:buzzn)  { Organization.find_by(slug: 'buzzn') }
+    after(:each) { Organization.destroy_all } # FIXME clean DB before each test even when running with rspec
 
-    it "can be found by constant" do
-      expect(Organization::BUZZN_ENERGY).to eq(buzzn_energy.name)
-    end
-
-    it "can be found by method" do
-      expect(Organization.buzzn_energy).to eq(buzzn_energy)
+    it "can be accessed by method" do
+      expect(Organization.buzzn).to eq(buzzn)
     end
 
     describe "the predicate method" do
       it "returns true when org is the called method" do
-        expect(buzzn_energy).to be_buzzn_energy
+        expect(buzzn).to be_buzzn
       end
       it "returns false when org is not the called method" do
-        expect(create(:organization)).not_to be_buzzn_energy
+        expect(create(:organization)).not_to be_buzzn
       end
     end
   end
