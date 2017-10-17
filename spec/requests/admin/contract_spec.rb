@@ -145,6 +145,7 @@ describe Admin::LocalpoolRoda do
           'old_supplier_name'=>contract.old_supplier_name,
           'old_customer_number'=>contract.old_customer_number,
           'old_account_number'=>contract.old_account_number,
+          'mandate_reference' => nil,
           "tariffs"=>{
             'array'=>[
               {

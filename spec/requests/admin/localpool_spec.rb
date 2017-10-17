@@ -348,6 +348,13 @@ describe Admin::LocalpoolRoda do
         "first_master_uid"=>contract.first_master_uid,
         "second_master_uid"=>nil,
         "begin_date"=>contract.begin_date.to_s,
+        'subject_to_tax' => nil,
+        'sales_tax_number' => nil,
+        'tax_number' => nil,
+        'tax_rate' => nil,
+        'creditor_idenfication' => nil,
+        'retailer' => nil,
+        'provider_permission' => nil,
         "tariffs"=>{
           'array'=> contract.tariffs.collect do |t|
             {
@@ -638,6 +645,7 @@ describe Admin::LocalpoolRoda do
           'old_supplier_name'=>contract.old_supplier_name,
           'old_customer_number'=>contract.old_customer_number,
           'old_account_number'=>contract.old_account_number,
+          'mandate_reference' => nil,
           "customer"=>{
             "id"=>contract.customer.id,
             "type"=>"person",

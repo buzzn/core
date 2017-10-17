@@ -1038,10 +1038,10 @@ CREATE TABLE comments (
 
 
 --
--- Name: contract_tax_data_tables; Type: TABLE; Schema: public; Owner: -
+-- Name: contract_tax_datas; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE contract_tax_data_tables (
+CREATE TABLE contract_tax_datas (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     retailer boolean,
     provider_permission boolean,
@@ -1051,7 +1051,8 @@ CREATE TABLE contract_tax_data_tables (
     sales_tax_number character varying(64),
     creditor_identification character varying(64),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    contract_id uuid
 );
 
 
@@ -1792,11 +1793,11 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: contract_tax_data_tables contract_tax_data_tables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: contract_tax_datas contract_tax_datas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contract_tax_data_tables
-    ADD CONSTRAINT contract_tax_data_tables_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY contract_tax_datas
+    ADD CONSTRAINT contract_tax_datas_pkey PRIMARY KEY (id);
 
 
 --
@@ -2493,6 +2494,14 @@ ALTER TABLE ONLY accounts
 
 ALTER TABLE ONLY accounts
     ADD CONSTRAINT accounts_status_id_fkey FOREIGN KEY (status_id) REFERENCES account_statuses(id);
+
+
+--
+-- Name: contract_tax_datas fk_contract_tax_datas_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contract_tax_datas
+    ADD CONSTRAINT fk_contract_tax_datas_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
 
 
 --

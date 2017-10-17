@@ -9,6 +9,15 @@ module Contract
     end
 
     belongs_to :localpool, class_name: Group::Localpool
+    has_one :contract_tax_data, class_name: Contract::TaxData, foreign_key: :contract_id
+    delegate :subject_to_tax,
+             :sales_tax_number,
+             :tax_number,
+             :tax_rate,
+             :creditor_idenfication,
+             :retailer,
+             :provider_permission,
+             to: :contract_tax_data, allow_nil: true
 
     validates :localpool, presence: true
     validates :first_master_uid, presence: true

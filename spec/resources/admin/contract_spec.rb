@@ -83,7 +83,16 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = ['begin_date', 'first_master_uid', 'second_master_uid'] + base_attributes
+      attributes = ['begin_date',
+                    'first_master_uid',
+                    'second_master_uid',
+                    'subject_to_tax',
+                    'sales_tax_number',
+                    'tax_number',
+                    'tax_rate',
+                    'creditor_idenfication',
+                    'retailer',
+                    'provider_permission'] + base_attributes
       attrs = resources.retrieve(localpool_processing.id).to_h
       expect(attrs['id']).to eq localpool_processing.id
       expect(attrs['type']).to eq 'contract_localpool_processing'
@@ -108,7 +117,8 @@ describe Contract::BaseResource do
                     'third_party_renter_number',
                     'old_supplier_name',
                     'old_customer_number',
-                    'old_account_number'] + base_attributes
+                    'old_account_number',
+                    'mandate_reference'] + base_attributes
       attrs = resources.retrieve(localpool_power_taker.id).to_h
       expect(attrs['id']).to eq localpool_power_taker.id
       expect(attrs['type']).to eq 'contract_localpool_power_taker'
