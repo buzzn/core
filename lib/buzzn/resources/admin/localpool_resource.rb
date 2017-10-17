@@ -8,7 +8,13 @@ module Admin
 
     model Group::Localpool
 
-    attributes :start_date, :updatable, :deletable, :incompleteness
+    attributes :start_date,
+               :show_object,
+               :show_production,
+               :show_energy,
+               :show_contact,
+               :updatable, :deletable,
+               :incompleteness
 
     has_one :localpool_processing_contract
     has_one :metering_point_operator_contract
