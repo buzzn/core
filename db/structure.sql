@@ -1066,7 +1066,6 @@ CREATE TABLE contracts (
     forecast_kwh_pa bigint,
     signing_date date,
     end_date date,
-    terms_accepted boolean,
     confirm_pricing_model boolean,
     power_of_attorney boolean,
     customer_number character varying,
@@ -3001,4 +3000,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171016140547');
 INSERT INTO schema_migrations (version) VALUES ('20171017052738');
 
 INSERT INTO schema_migrations (version) VALUES ('20171017081409');
+
+INSERT INTO schema_migrations (version) VALUES ('20171018123008');
 

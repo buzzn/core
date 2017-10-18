@@ -69,7 +69,6 @@ module Contract
     validates :cancellation_date, presence: false
     validates :end_date, presence: false
 
-    validates :terms_accepted, presence: true
     validates :power_of_attorney, presence: true
     validates_uniqueness_of :contract_number_addition, scope: [:contract_number], message: 'already available for given contract_number', if: 'contract_number_addition.present?'
 
@@ -108,7 +107,6 @@ module Contract
     end
 
     def validate_invariants
-      errors.add(:terms_accepted, MUST_BE_TRUE ) unless terms_accepted
       errors.add(:power_of_attorney, MUST_BE_TRUE ) unless power_of_attorney
       if contractor
         errors.add(:contractor_bank_account, MUST_MATCH) if contractor_bank_account && ! contractor.bank_accounts.include?(contractor_bank_account)
