@@ -32,7 +32,7 @@ contracts[:pt1] = localpool_contract(
     build(:reading, :regular, date: '2016-12-31', raw_value: 2_400_000, register: nil)
   ],
   payments: [
-    build(:payment, price_cents: 55_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+    build(:payment, price_cents: 55_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
 
@@ -43,7 +43,7 @@ contracts[:pt2] = localpool_contract(
     build(:reading, :regular, date: '2016-12-31', raw_value: 4_500_000, register: nil)
   ],
   payments: [
-    build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+    build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
 
@@ -56,7 +56,7 @@ contracts[:pt3] = localpool_contract(
     build(:reading, :setup, date: '2017-10-01', raw_value: 1_000, register: nil)
   ],
   payments: [
-    build(:payment, price_cents: 67_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+    build(:payment, price_cents: 67_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
 
@@ -71,7 +71,7 @@ contracts[:pt4] = localpool_contract(
     build(:reading, :setup, date: '2017-02-01', raw_value: 1_000, register: nil)
   ],
   payments: [
-    build(:payment, price_cents: 53_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+    build(:payment, price_cents: 53_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
 
@@ -87,7 +87,7 @@ contracts[:pt5a] = localpool_contract(
     build(:reading, :contract_change, date: '2017-04-01', raw_value: 1_765_000, register: nil)
   ],
   payments: [
-    build(:payment, price_cents: 45_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+    build(:payment, price_cents: 45_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
 
@@ -175,7 +175,7 @@ create(:contract, :metering_point_operator,
        localpool: SeedsRepository.localpools.people_power,
        customer: SeedsRepository.localpools.people_power.owner,
        payments: [
-         build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+         build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')
        ]
 )
 
