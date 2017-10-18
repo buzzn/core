@@ -5,16 +5,6 @@ describe Admin::LocalpoolRoda do
     TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
-  let(:not_found_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"Register::Base: bla-blub not found by User: #{$admin.id}"
-        }
-      ]
-    }
-  end
-
   entity(:group) { Fabricate(:localpool) }
 
   entity(:meter) { Fabricate(:real_meter) }
@@ -42,30 +32,9 @@ describe Admin::LocalpoolRoda do
     reg
   end
 
-  let(:expired_json) do
-    {"error" => "This session has expired, please login again."}
-  end
-
   context 'meters' do
    context 'registers' do
      context 'PATCH' do
-
-       let(:not_found_json) do
-         {
-           "errors" => [
-             {
-               "detail"=>"Register::Real: bla-blub not found by User: #{$admin.id}"
-             }
-           ]
-         }
-       end
-
-       let(:stale_json) do
-         {
-           "errors" => [
-             {"detail"=>"#{register.class.name}: #{register.id} was updated at: #{register.updated_at}"}]
-         }
-       end
 
        let(:updated_json) do
          last = register.readings.order('date').last
@@ -122,28 +91,24 @@ describe Admin::LocalpoolRoda do
 
        it '401' do
          GET "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
-         Timecop.travel(Time.now + 30 * 60) do
+         Timecop.travel(Time.now + 6 * 60 * 60) do
            PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
-
-           expect(response).to have_http_status(401)
-           expect(json).to eq(expired_json)
+           expect(response).to be_session_expired_json(401)
          end
        end
 
        it '404' do
          PATCH "/test/#{group.id}/meters/#{meter.id}/registers/bla-blub", $admin
-         expect(response).to have_http_status(404)
-         expect(json).to eq not_found_json
+         expect(response).to be_not_found_json(404, Register::Real)
        end
 
        it '409' do
          PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                updated_at: DateTime.now
-         expect(response).to have_http_status(409)
-         expect(json).to eq stale_json
+         expect(response).to be_stale_json(409, register)
        end
 
-       it '422 wrong' do
+       it '422' do
          PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                metering_point_id: '123321' * 20,
                name: 'Smarty' * 20,
@@ -276,7 +241,7 @@ describe Admin::LocalpoolRoda do
           json
         end
       end
-      
+
       # NOTE picking a sample register is enough for the 404 tests
 
       let(:register) do
@@ -287,23 +252,18 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/registers/#{register.id}", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           GET "/test/#{group.id}/registers/#{register.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
 
           GET "/test/#{group.id}/registers", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
       it '404' do
         GET "/test/#{group.id}/registers/bla-blub", $admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
+        expect(response).to be_not_found_json(404, Register::Base)
       end
 
       it '200 all' do
@@ -383,8 +343,7 @@ describe Admin::LocalpoolRoda do
 
         it '404' do
           GET "/test/#{group.id}/registers/bla-blub/readings", $admin
-          expect(response).to have_http_status(404)
-          expect(json).to eq not_found_json
+          expect(response).to be_not_found_json(404, Register::Base)
         end
 
         [:real, :virtual].each do |type|

@@ -75,4 +75,9 @@ module RequestsHelper
   def sort(hash, id = 'id')
     hash.sort{|n,m| m[id] <=> n[id]}
   end
+
+  def expire_admin_session
+
+
+  end
 end

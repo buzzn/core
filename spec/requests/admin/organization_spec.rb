@@ -7,19 +7,6 @@ describe Admin::LocalpoolRoda do
 
   context 'organizations' do
 
-    let(:not_found_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"Organization: bla-blub not found by User: #{$admin.id}" }
-        ]
-      }
-    end
-
-    let(:expired_json) do
-      {"error" => "This session has expired, please login again."}
-    end
-
     entity(:group) { Fabricate(:localpool) }
     entity!(:address) { Fabricate(:address) }
     entity!(:organization) do
@@ -107,16 +94,12 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/organizations/#{organization.id}", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           GET "/test/#{group.id}/organizations", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
 
           GET "/test/#{group.id}/organizations/#{organization.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
@@ -126,8 +109,7 @@ describe Admin::LocalpoolRoda do
 
       it '404' do
         GET "/test/#{group.id}/organizations/bla-blub", $admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
+        expect(response).to be_not_found_json(404, Organization)
       end
 
       it '200' do
@@ -138,15 +120,6 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'address' do
-
-      let(:address_not_found_json) do
-        {
-          "errors" => [
-            {
-              "detail"=>"OrganizationResource: address not found by User: #{$admin.id}" }
-          ]
-        }
-      end
 
       let(:address_json) do
         {
@@ -186,11 +159,9 @@ describe Admin::LocalpoolRoda do
 
         it '401' do
           GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
-          Timecop.travel(Time.now + 30 * 60) do
+          Timecop.travel(Time.now + 6 * 60 * 60) do
             GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
-
-            expect(response).to have_http_status(401)
-            expect(json).to eq(expired_json)
+            expect(response).to be_session_expired_json(401)
           end
         end
 
@@ -202,8 +173,7 @@ describe Admin::LocalpoolRoda do
           organization.update(address: nil)
           begin
             GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
-            expect(response).to have_http_status(404)
-            expect(json).to eq address_not_found_json
+            expect(response).to be_not_found_json(404, OrganizationResource, :address)
           ensure
             organization.update(address: address)
           end

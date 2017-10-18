@@ -10,19 +10,6 @@ describe Admin::LocalpoolRoda do
     entity(:localpool) { Fabricate(:localpool) }
     entity(:price) { Fabricate(:price, localpool: localpool)}
 
-    let(:expired_json) do
-      {"error" => "This session has expired, please login again."}
-    end
-
-    let(:not_found_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"Price: bla-bla-blub not found by User: #{$admin.id}" }
-        ]
-      }
-    end
-
     let(:wrong_json) do
       {
         "errors"=>[
@@ -37,11 +24,9 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{localpool.id}/prices", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           POST "/test/#{localpool.id}/prices", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
@@ -112,15 +97,12 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{localpool.id}/prices", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           GET "/test/#{localpool.id}/prices", $admin
+          expect(response).to be_session_expired_json(401)
 
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
           GET "/test/#{localpool.id}/prices/#{price.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
@@ -149,13 +131,6 @@ describe Admin::LocalpoolRoda do
         }
       end
 
-      let(:stale_json) do
-        {
-          "errors" => [
-            {"detail"=>"Price: #{price.id} was updated at: #{price.updated_at}"}]
-        }
-      end
-
       let(:updated_json) do
         {
           "id"=>price.id,
@@ -173,24 +148,19 @@ describe Admin::LocalpoolRoda do
         GET "/test/#{localpool.id}/prices/#{price.id}", $admin
         Timecop.travel(Time.now + 30 * 60) do
           PATCH "/test/#{localpool.id}/prices/#{price.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
       it '404' do
-        PATCH "/test/#{localpool.id}/prices/bla-bla-blub", $admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
+        PATCH "/test/#{localpool.id}/prices/bla-blub", $admin
+        expect(response).to be_not_found_json(404, Price)
       end
 
       it '409' do
         PATCH "/test/#{localpool.id}/prices/#{price.id}", $admin,
               updated_at: DateTime.now
-
-        expect(response).to have_http_status(409)
-        expect(json.to_yaml).to eq stale_json.to_yaml
+        expect(response).to be_stale_json(409, price)
       end
 
       it '422' do
@@ -212,7 +182,7 @@ describe Admin::LocalpoolRoda do
               begin_date: Date.new(2015, 1, 1),
               energyprice_cents_per_kilowatt_hour: 22.66,
               baseprice_cents_per_month: 400
-        
+
         expect(response).to have_http_status(200)
         price.reload
         expect(price.name).to eq 'abcd'

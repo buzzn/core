@@ -18,30 +18,6 @@ describe Admin::LocalpoolRoda do
       person
     end
 
-    let(:expired_json) do
-      {"error" => "This session has expired, please login again."}
-    end
-
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve Person: #{person.id} permission denied for User: #{$other.id}"
-          }
-        ]
-      }
-    end
-
-    let(:not_found_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"Person: bla-blub not found by User: #{$admin.id}"
-          }
-        ]
-      }
-    end
-
     let(:empty_json) do
       []
     end
@@ -219,29 +195,23 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/persons/#{person.id}", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           GET "/test/#{group.id}/persons", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
 
           GET "/test/#{group.id}/persons/#{person.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
         GET "/test/#{group.id}/persons/#{person.id}", $other
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        expect(response).to be_denied_json(403, person, $other)
       end
 
       it '404' do
         GET "/test/#{group.id}/persons/bla-blub", $admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
+        expect(response).to be_not_found_json(404, Person)
       end
 
       it '200' do

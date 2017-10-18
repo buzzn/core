@@ -17,28 +17,6 @@ describe Admin::LocalpoolRoda do
     end
     entity!(:reading) { Fabricate(:single_reading, register: register)}
 
-    let(:expired_json) do
-      {"error" => "This session has expired, please login again."}
-    end
-
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve SingleReadingResource: permission denied for User: #{$user.id}" }
-        ]
-      }
-    end
-
-    let(:not_found_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"Reading::Single: bla-bla-blub not found by User: #{$admin.id}" }
-        ]
-      }
-    end
-
     let(:wrong_json) do
       {
         "errors"=>[
@@ -59,11 +37,9 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           POST "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
@@ -175,16 +151,12 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
 
           GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
@@ -197,10 +169,8 @@ describe Admin::LocalpoolRoda do
       end
 
       it '404' do
-        GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/bla-bla-blub", $admin
-
-        expect(response).to have_http_status(404)
-        expect(json.to_yaml).to eq(not_found_json.to_yaml)
+        GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/bla-blub", $admin
+        expect(response).to be_not_found_json(404, Reading::Single)
       end
 
       it '200' do
@@ -210,16 +180,14 @@ describe Admin::LocalpoolRoda do
         expect(json.to_yaml).to eq(reading_json.to_yaml)
       end
     end
-    
+
     context 'DELETE' do
 
       it '401' do
         GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           DELETE "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
@@ -231,7 +199,7 @@ describe Admin::LocalpoolRoda do
         count = Reading::Single.count
         reading = Fabricate(:single_reading, register: register)
         expect(Reading::Single.count).to eq count + 1
-        
+
         DELETE "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
 
         expect(response).to have_http_status(200)

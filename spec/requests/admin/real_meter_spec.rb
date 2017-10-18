@@ -13,29 +13,6 @@ describe Admin::LocalpoolRoda do
       group
     end
 
-    let(:expired_json) do
-      {"error" => "This session has expired, please login again."}
-    end
-
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve Meter::Real: #{real_meter.id} permission denied for User: #{$user.id}" }
-        ]
-      }
-    end
-
-    let(:not_found_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"Meter::Base: bla-blub not found by User: #{$admin.id}"
-          }
-        ]
-      }
-    end
-    
     entity(:meter) do
       meter = Fabricate(:input_meter, address: Fabricate(:address))
       meter.update(sent_data_dso: Date.today)
@@ -121,24 +98,20 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
         GET "/test/#{group.id}/meters/#{real_meter.id}", $user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        expect(response).to be_denied_json(403, real_meter)
       end
 
       it '404' do
         GET "/test/#{group.id}/meters/bla-blub", $admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
+        expect(response).to be_not_found_json(404, Meter::Base)
       end
 
       it '200' do
@@ -224,39 +197,27 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           PATCH "/test/#{group.id}/meters/#{real_meter.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
         PATCH "/test/#{group.id}/meters/#{real_meter.id}", $user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        expect(response).to be_denied_json(403, real_meter)
       end
 
       it '404' do
         PATCH "/test/#{group.id}/meters/bla-blub", $admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
-      end
-
-      let(:stale_json) do
-        {
-          "errors" => [
-            {"detail"=>"Meter::Real: #{real_meter.id} was updated at: #{real_meter.updated_at}"}]
-        }
+        expect(response).to be_not_found_json(404, Meter::Base)
       end
 
       it '409' do
         meter = real_meter
         PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: DateTime.now
-        expect(response).to have_http_status(409)
-        expect(json).to eq stale_json
+        expect(response).to be_stale_json(409, meter)
       end
 
       it '422' do
@@ -280,7 +241,7 @@ describe Admin::LocalpoolRoda do
               edifact_cycle_interval: 'something',
               edifact_data_logging: 'something',
               direction_number: 'uni'
-        
+
         expect(response).to have_http_status(422)
         expect(json.to_yaml).to eq wrong_json.to_yaml
       end

@@ -21,10 +21,6 @@ describe Admin::LocalpoolRoda do
                                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
                                                                                   register: group.registers.consumption[1])) }
 
-    let(:expired_json) do
-      {"error" => "This session has expired, please login again."}
-    end
-
     context 'GET' do
       let(:billings_json) do
         Billing.all.reload.collect do |billing|
@@ -48,23 +44,11 @@ describe Admin::LocalpoolRoda do
         end
       end
 
-      let(:not_found_json) do
-        {
-          "errors" => [
-            {
-              "detail"=>"Billing: bla-blub not found by User: #{$admin.id}"
-            }
-          ]
-        }
-      end
-
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
@@ -74,8 +58,7 @@ describe Admin::LocalpoolRoda do
 
       it '404' do
         GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/bla-blub", $admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
+        expect(response).to be_not_found_json(404, Billing)
       end
 
       it '200 all' do
@@ -119,11 +102,9 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           POST "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/regular", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
@@ -131,7 +112,7 @@ describe Admin::LocalpoolRoda do
         # TODO needs read perms on billing-cycles but no create perms on billings
       end
 
-      it '422 wrong' do
+      it '422' do
         POST "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/regular", $admin, accounting_year: 'blablu'
         expect(response).to have_http_status(422)
         expect(json.to_yaml).to eq wrong_json.to_yaml
@@ -152,7 +133,7 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'PATCH' do
-      
+
       entity :updated_json do
         {
           "id"=>billing.id,
@@ -187,30 +168,20 @@ describe Admin::LocalpoolRoda do
         }
       end
 
-      let(:stale_json) do
-        {
-          "errors" => [
-            {"detail"=>"Billing: #{billing.id} was updated at: #{billing.updated_at}"}]
-        }
-      end
-
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
       it '409' do
         PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", $admin, updated_at: DateTime.now
-        expect(response).to have_http_status(409)
-        expect(json).to eq stale_json
+        expect(response).to be_stale_json(409, billing)
       end
 
-      it '422 wrong' do
+      it '422' do
         PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", $admin, status: 'bla', receivables_cents: 'something', invoice_number: 'the-number-of-the-???' * 20
         expect(response).to have_http_status(422)
         expect(json.to_yaml).to eq wrong_json.to_yaml
@@ -236,11 +207,9 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           DELETE "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 

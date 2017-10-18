@@ -13,29 +13,6 @@ describe Admin::LocalpoolRoda do
       group
     end
 
-    let(:expired_json) do
-      {"error" => "This session has expired, please login again."}
-    end
-
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve Meter::Virtual: #{meter.id} permission denied for User: #{$user.id}" }
-        ]
-      }
-    end
-
-    let(:not_found_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"Meter::Base: bla-blub not found by User: #{$admin.id}"
-          }
-        ]
-      }
-    end
-
     entity(:meter) do
       meter = Fabricate(:virtual_meter)
       meter.register.update(group: group)
@@ -103,29 +80,23 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/meters/#{meter.id}", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           GET "/test/#{group.id}/meters/#{meter.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
 
           GET "/test/#{group.id}/meters", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
         GET "/test/#{group.id}/meters/#{meter.id}", $user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        expect(response).to be_denied_json(403, meter)
       end
 
       it '404' do
         GET "/test/#{group.id}/meters/bla-blub", $admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
+        expect(response).to be_not_found_json(404, Meter::Base)
       end
 
       it '200' do
@@ -162,40 +133,28 @@ describe Admin::LocalpoolRoda do
         }
       end
 
-      let(:stale_json) do
-        {
-          "errors" => [
-            {"detail"=>"Meter::Virtual: #{meter.id} was updated at: #{meter.updated_at}"}]
-        }
-      end
-
       it '401' do
         GET "/test/#{group.id}/meters/#{meter.id}", $admin
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 6 * 60 * 60) do
           PATCH "/test/#{group.id}/meters/#{meter.id}", $admin
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
         PATCH "/test/#{group.id}/meters/#{meter.id}", $user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        expect(response).to be_denied_json(403, meter)
       end
 
       it '404' do
         PATCH "/test/#{group.id}/meters/bla-blub", $admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
+        expect(response).to be_not_found_json(404, Meter::Base)
       end
 
       it '409' do
         PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: DateTime.now
-        expect(response).to have_http_status(409)
-        expect(json).to eq stale_json
+        expect(response).to be_stale_json(409, meter)
       end
 
       it '422' do
@@ -231,14 +190,6 @@ describe Admin::LocalpoolRoda do
 
     context 'formula-parts' do
 
-      let(:not_found_json) do
-        {
-          "errors" => [
-            {"detail"=>"Register::FormulaPart: bla-blub not found by User: #{$admin.id}"}
-          ]
-        }
-      end
-
       context 'GET' do
 
         let(:part_json) do
@@ -258,23 +209,18 @@ describe Admin::LocalpoolRoda do
 
         it '401' do
           GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
-          Timecop.travel(Time.now + 30 * 60) do
+          Timecop.travel(Time.now + 6 * 60 * 60) do
             GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
-
-            expect(response).to have_http_status(401)
-            expect(json).to eq(expired_json)
+            expect(response).to be_session_expired_json(401)
 
             GET "/test/#{group.id}/meters/#{meter.id}/formula-parts", $admin
-
-            expect(response).to have_http_status(401)
-            expect(json).to eq(expired_json)
+            expect(response).to be_session_expired_json(401)
           end
         end
 
         it '404' do
           GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
-          expect(response).to have_http_status(404)
-          expect(json).to eq not_found_json
+          expect(response).to be_not_found_json(404, Register::FormulaPart)
         end
 
         it '200 all' do
@@ -291,22 +237,6 @@ describe Admin::LocalpoolRoda do
       end
 
       context 'PATCH' do
-      
-        let(:register_not_found_json) do
-          {
-            "errors" => [
-              {"detail"=>"Register::Base: something not found by User: #{$admin.id}"}
-            ]
-          }
-        end
-
-        let(:register_denied_json) do
-          {
-            "errors" => [
-              {"detail"=>"retrieve Register::Output: #{register2.id} permission denied for User: #{$admin.id}"}
-            ]
-          }
-        end
 
         let(:wrong_json) do
           {
@@ -319,13 +249,6 @@ describe Admin::LocalpoolRoda do
           }
         end
 
-        let(:stale_json) do
-          {
-            "errors" => [
-              {"detail"=>"Register::FormulaPart: #{formula_part.id} was updated at: #{formula_part.updated_at}"}]
-          }
-        end
-  
         let(:updated_json) do
           {
             "id"=>formula_part.id,
@@ -336,31 +259,26 @@ describe Admin::LocalpoolRoda do
 
         it '401' do
           GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
-          Timecop.travel(Time.now + 30 * 60) do
+          Timecop.travel(Time.now + 6 * 60 * 60) do
             PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
-
-            expect(response).to have_http_status(401)
-            expect(json).to eq(expired_json)
+            expect(response).to be_session_expired_json(401)
           end
         end
 
         it '404' do
           PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
-          expect(response).to have_http_status(404)
-          expect(json).to eq not_found_json
+          expect(response).to be_not_found_json(404, Register::FormulaPart)
 
           PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
                 $admin,
                 updated_at: DateTime.now,
-                register_id: 'something'
-          expect(response).to have_http_status(404)
-          expect(json).to eq register_not_found_json
+                register_id: 'bla-blub'
+          expect(response).to be_not_found_json(404, Register::Base)
         end
-        
+
         it '403' do
           PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $user
-          expect(response).to have_http_status(403)
-          expect(json).to eq denied_json
+          expect(response).to be_denied_json(403, meter)
 
           register2.update(group: nil)
           begin
@@ -368,8 +286,7 @@ describe Admin::LocalpoolRoda do
                   $admin,
                   updated_at: DateTime.now,
                   register_id: register2.id
-            expect(response).to have_http_status(403)
-            expect(json).to eq register_denied_json
+            expect(response).to be_denied_json(403, register2, $admin)
           ensure
             register2.update(group: group)
           end
@@ -378,8 +295,7 @@ describe Admin::LocalpoolRoda do
         it '409' do
           PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
                 updated_at: DateTime.now
-          expect(response).to have_http_status(409)
-          expect(json).to eq stale_json
+          expect(response).to be_stale_json(409, formula_part)
         end
 
         it '422' do

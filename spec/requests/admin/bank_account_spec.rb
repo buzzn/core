@@ -12,17 +12,13 @@ describe Admin::BankAccountRoda do
         shared[Admin::BankAccountRoda::PARENT] = parent
         r.run Admin::BankAccountRoda
       end
-      
-      r.run Me::Roda 
+
+      r.run Me::Roda
     end
   end
 
   def app
     BankAccountParentRoda # this defines the active application for this test
-  end
-
-  let(:expired_json) do
-    {"error" => "This session has expired, please login again."}
   end
 
   entity!(:localpool) do
@@ -44,15 +40,6 @@ describe Admin::BankAccountRoda do
     Fabricate(:bank_account, contracting_party: contract.contractor)
   end
 
-  let(:not_found_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"BankAccount: bla-bla-blub not found by User: #{$admin.id}" }
-      ]
-    }
-  end
-
   [:person_account, :organization_account].each do |name|
     context "#{name.to_s.sub(/_.*/,'')} parent" do
 
@@ -70,15 +57,6 @@ describe Admin::BankAccountRoda do
           "direct_debit"=>bank_account.direct_debit,
           'updatable' => true,
           'deletable' => true
-        }
-      end
-
-      let(:denied_json) do
-        {
-          "errors" => [
-            {
-              "detail"=>"retrieve BankAccount: #{bank_account.id} permission denied for User: #{$user.id}" }
-          ]
         }
       end
 
@@ -125,13 +103,7 @@ describe Admin::BankAccountRoda do
           end
         end
 
-        it '422 missing' do
-          POST "/test/#{parent.id}", $admin
-          expect(response).to have_http_status(422)
-          expect(json.to_yaml).to eq missing_json.to_yaml
-        end
-
-        it '422 wrong' do
+        it '422' do
           POST "/test/#{parent.id}", $admin,
                bank_name: 'blablub' * 20,
                holder: 'noone' * 20,
@@ -150,13 +122,6 @@ describe Admin::BankAccountRoda do
           json
         end
 
-        let(:stale_json) do
-          {
-            "errors" => [
-              {"detail"=>"BankAccount: #{bank_account.id} was updated at: #{bank_account.updated_at}"}]
-          }
-        end
-
         let(:wrong_json) do
           {
             "errors"=>[
@@ -172,37 +137,31 @@ describe Admin::BankAccountRoda do
           }
         end
 
+        it '401' do
+          GET "/test/#{parent.id}/#{bank_account.id}", $admin
+          Timecop.travel(Time.now +  6 * 60 * 60) do
+            PATCH "/test/#{parent.id}/#{bank_account.id}", $admin
+            expect(response).to be_session_expired_json(401)
+          end
+        end
+
         # can not construct users to see parent but not bank_account
         if name == :organization_account
           it '403' do
             PATCH "/test/#{parent.id}/#{bank_account.id}", $user
-            expect(response).to have_http_status(403)
-            expect(json).to eq denied_json
-          end
-        end
-
-        it '401' do
-          GET "/test/#{parent.id}/#{bank_account.id}", $admin
-          Timecop.travel(Time.now + 30 * 60) do
-            PATCH "/test/#{parent.id}/#{bank_account.id}", $admin
-            
-            expect(response).to have_http_status(401)
-            expect(json).to eq(expired_json)
+            expect(response).to be_denied_json(403, bank_account)
           end
         end
 
         it '404' do
-          PATCH "/test/#{parent.id}/bla-bla-blub", $admin
-          expect(response).to have_http_status(404)
-          expect(json).to eq not_found_json
+          PATCH "/test/#{parent.id}/bla-blub", $admin
+          expect(response).to be_not_found_json(404, BankAccount)
         end
 
         it '409' do
           PATCH "/test/#{parent.id}/#{bank_account.id}", $admin,
                 updated_at: DateTime.now
-          
-          expect(response).to have_http_status(409)
-          expect(json).to eq stale_json
+          expect(response).to be_stale_json(409, bank_account)
         end
 
         it '422' do
@@ -210,7 +169,7 @@ describe Admin::BankAccountRoda do
                 holder: 'Max Mueller' * 10,
                 bank_name: 'Bundesbank' * 10,
                 iban: '12341234' * 20
-          
+
           expect(response).to have_http_status(422)
           expect(json).to eq wrong_json
         end
@@ -248,24 +207,20 @@ describe Admin::BankAccountRoda do
         if name == :organization_account
           it '403' do
             GET "/test/#{parent.id}/#{bank_account.id}", $user
-            expect(response).to have_http_status(403)
-            expect(json).to eq denied_json
+            expect(response).to be_denied_json(403, bank_account)
           end
         end
 
         it '404' do
-          GET "/test/#{parent.id}/bla-bla-blub", $admin
-          expect(response).to have_http_status(404)
-          expect(json).to eq not_found_json
+          GET "/test/#{parent.id}/bla-blub", $admin
+          expect(response).to be_not_found_json(404, BankAccount)
         end
 
         it '401' do
           GET "/test/#{parent.id}/#{bank_account.id}", $admin
-          Timecop.travel(Time.now + 30 * 60) do
+          Timecop.travel(Time.now + 6 * 60 * 60) do
             GET "/test/#{parent.id}/#{bank_account.id}", $admin
-            
-            expect(response).to have_http_status(401)
-            expect(json).to eq(expired_json)
+            expect(response).to be_session_expired_json(401)
           end
         end
 
@@ -281,32 +236,28 @@ describe Admin::BankAccountRoda do
           expect(json['array'].to_yaml).to eq bank_accounts_json.to_yaml
         end
       end
-      
+
       context 'DELETE' do
 
         # can not construct users to see parent but not bank_account
         if name == :organization_account
           it '403' do
             DELETE "/test/#{parent.id}/#{bank_account.id}", $user
-            expect(response).to have_http_status(403)
-            expect(json).to eq denied_json
+            expect(response).to be_denied_json(403, bank_account)
           end
         end
 
         it '401' do
           GET "/test/#{parent.id}/#{bank_account.id}", $admin
-          Timecop.travel(Time.now + 30 * 60) do
+          Timecop.travel(Time.now + 6 * 60 * 60) do
             DELETE "/test/#{parent.id}/#{bank_account.id}", $admin
-            
-            expect(response).to have_http_status(401)
-            expect(json).to eq(expired_json)
+            expect(response).to be_session_expired_json(401)
           end
         end
 
         it '404' do
-          DELETE "/test/#{parent.id}/bla-bla-blub", $admin
-          expect(response).to have_http_status(404)
-          expect(json).to eq not_found_json
+          DELETE "/test/#{parent.id}/bla-blub", $admin
+          expect(response).to be_not_found_json(404, BankAccount)
         end
 
         it '204' do
