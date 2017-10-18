@@ -72,7 +72,6 @@ describe Admin::Roda do
             "email"=>organization.email,
             "description"=>organization.description,
             # FIXME this is now stored on association OrganizationMarketFunction
-            "mode"=>organization.mode,
             'customer_number' => nil,
             "updatable"=>false,
             "deletable"=>false,
