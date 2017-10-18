@@ -5,8 +5,6 @@ class CoreRoda < CommonRoda
 
   use Rack::CommonLogger, Logger.new(STDERR)
 
-  use Rack::CommonLogger, Logger.new(STDERR)
-
   use Rack::Session::Cookie, :secret => ENV['SECRET'] || 'my secret', :key => '_buzzn_session'
 
   use Rack::Cors, debug: Rails.env != 'production'  do
@@ -32,7 +30,7 @@ class CoreRoda < CommonRoda
       r.on 'admin' do
         r.run Admin::Roda
       end
-      
+
       r.on 'me' do
         r.run Me::Roda
       end
