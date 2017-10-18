@@ -52,7 +52,7 @@ class BillingCycle < ActiveRecord::Base
       tariff = contract.tariffs.at(accounted_energy.first_reading.timestamp.to_date).first
       count_months = Buzzn::Utils::Chronos.timespan_in_months(accounted_energy.first_reading.timestamp, accounted_energy.last_reading.timestamp)
       total_price_cents = tariff.baseprice_cents_per_month * count_months
-      prepayments = contract.payments.in_year(accounting_year).by_source(Contract::Payment::TRANSFERRED)
+      prepayments = contract.payments.in_year(accounting_year)
       prepayments_cents = 0
       prepayments.each do |prepayment|
         prepayments_cents += prepayment.price_cents

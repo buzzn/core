@@ -123,6 +123,7 @@ module SwaggerHelper
 
     def generic(path, method, user, options, &block)
       it "#{method.to_s.upcase} #{path}" do
+        user ||= $admin
         normalized = path.gsub(/_[1-9]/, '').gsub('.', '_')
         unless spath = paths[normalized]
           spath = Swagger::Data::Path.new
@@ -169,7 +170,7 @@ module SwaggerHelper
     end
 
     [:post, :get, :patch, :delete].each do |method|
-      define_method(method) do |path, user = admin, options = {}, &block|
+      define_method(method) do |path, user = nil, options = {}, &block|
         generic(path, method, user, options, &block) if path
       end
     end

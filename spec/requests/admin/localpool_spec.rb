@@ -1,32 +1,8 @@
+require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   def app
-    Admin::LocalpoolRoda # this defines the active application for this test
-  end
-
-  entity(:admin) { Fabricate(:admin_token) }
-
-  entity(:user) { Fabricate(:user_token) }
-
-  entity(:other) { Fabricate(:user_token) }
-
-  let(:denied_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"retrieve Group::Localpool: #{localpool.id} permission denied for User: #{other.resource_owner_id}"
-        }
-      ]
-    }
-  end
-
-  let(:not_found_json) do
-    {
-      "errors" => [
-        {
-          "detail"=>"Group::Localpool: bla-blub not found by User: #{admin.resource_owner_id}" }
-      ]
-    }
+    TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
   entity(:manager) { Fabricate(:user).person }
@@ -37,12 +13,16 @@ describe Admin::LocalpoolRoda do
       c = Fabricate(:localpool_power_taker_contract)
       c.register.group = localpool
       c.register.save
+      c.localpool = localpool
+      c.save!
     end
     Fabricate(:localpool_processing_contract, localpool: localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
+    localpool.contracts.each do |c|
+      c.customer.update(customer_number: CustomerNumber.create.id)
+    end
     localpool.meters.each { |meter| meter.update(group: localpool) }
-    Account::Base.find(user.resource_owner_id)
-      .person.add_role(Role::GROUP_MEMBER, localpool)
+    $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
     localpool
   end
 
@@ -117,30 +97,40 @@ describe Admin::LocalpoolRoda do
   end
 
   context 'GET' do
-    it '403 permission denied' do
-      GET "/#{localpool.id}", other
-      expect(response).to have_http_status(403)
-      expect(json).to eq denied_json
+
+    it '401' do
+      GET "/test/#{localpool.id}", $admin
+      expire_admin_session do
+        GET "/test/#{localpool.id}", $admin
+        expect(response).to be_session_expired_json(401)
+
+        GET "/test", $admin
+        expect(response).to be_session_expired_json(401)
+      end
+    end
+
+    it '403' do
+      GET "/test/#{localpool.id}", $other
+      expect(response).to be_denied_json(403, localpool, $other)
     end
 
     it '404' do
-      GET "/bla-blub", admin
-      expect(response).to have_http_status(404)
-      expect(json).to eq not_found_json
+      GET "/test/bla-blub", $admin
+      expect(response).to be_not_found_json(404, Group::Localpool)
     end
 
     it '200' do
-      GET "/#{localpool_no_contracts.id}", admin, include: 'meters, address'
+      GET "/test/#{localpool_no_contracts.id}", $admin, include: 'meters, address'
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq localpool_json.to_yaml
     end
 
     it '200 all' do
-      GET ""
+      GET "/test"
       expect(response).to have_http_status(200)
       expect(json['array']).to eq empty_json
 
-      GET "?include=", admin
+      GET "/test?include=", $admin
       expect(response).to have_http_status(200)
       expect(json.keys).to match_array ['array', 'createable']
       expect(json['createable']).to eq true
@@ -161,8 +151,16 @@ describe Admin::LocalpoolRoda do
       }
     end
 
+    it '401' do
+      GET "/test", $admin
+      expire_admin_session do
+        POST "/test", $admin
+        expect(response).to be_session_expired_json(401)
+      end
+    end
+
     it '422' do
-      POST "", admin,
+      POST "/test", $admin,
            name: 'Some Name' * 10,
            description: 'rain rain go away, come back again another day' * 100
       expect(json.to_yaml).to eq wrong_json.to_yaml
@@ -190,7 +188,7 @@ describe Admin::LocalpoolRoda do
     end
 
     it '201' do
-      POST "", admin, new_localpool
+      POST "/test", $admin, new_localpool
 
       expect(response).to have_http_status(201)
       result = json
@@ -236,14 +234,21 @@ describe Admin::LocalpoolRoda do
       }
     end
 
+    it '401' do
+      GET "/test/#{localpool.id}", $admin
+      expire_admin_session do
+        PATCH "/test/#{localpool.id}", $admin
+        expect(response).to be_session_expired_json(401)
+      end
+    end
+
     it '404' do
-      PATCH "/bla-blub", admin
-      expect(response).to have_http_status(404)
-      expect(json).to eq not_found_json
+      PATCH "/test/bla-blub", $admin
+      expect(response).to be_not_found_json(404, Group::Localpool)
     end
 
     it '409' do
-      PATCH "/#{localpool.id}", admin,
+      PATCH "/test/#{localpool.id}", $admin,
             updated_at: DateTime.now
 
       expect(response).to have_http_status(409)
@@ -251,7 +256,7 @@ describe Admin::LocalpoolRoda do
     end
 
       it '422' do
-        PATCH "/#{localpool.id}", admin,
+        PATCH "/test/#{localpool.id}", $admin,
               name: 'NoName' * 20,
               description: 'something' * 100
 
@@ -261,11 +266,11 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         old = localpool.updated_at
-        PATCH "/#{localpool.id}", admin,
+        PATCH "/test/#{localpool.id}", $admin,
               updated_at: localpool.updated_at,
               name: 'a b c d',
               description: 'none'
-        
+
         expect(response).to have_http_status(200)
         localpool.reload
         expect(localpool.name).to eq 'a b c d'
@@ -312,7 +317,7 @@ describe Admin::LocalpoolRoda do
               "baseprice_cents_per_month"=>t.baseprice_cents_per_month,
             }
           end
-        },                   
+        },
         "payments"=>{
           'array'=> contract.payments.collect do |p|
             {
@@ -323,7 +328,6 @@ describe Admin::LocalpoolRoda do
               "end_date"=>nil,
               "price_cents"=>p.price_cents,
               "cycle"=>p.cycle,
-              "source"=>p.source,
             }
           end
         },
@@ -338,6 +342,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.contractor.email,
           "description"=>contract.contractor.description,
           "mode"=>contract.contractor.mode,
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -354,6 +359,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>contract.customer.image.md.url,
+          'customer_number' => contract.customer.customer_number,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -384,41 +390,29 @@ describe Admin::LocalpoolRoda do
       }
     end
 
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve Contract::LocalpoolProcessingResource: permission denied for User: #{user.resource_owner_id}"
-          }
-        ]
-      }
-    end
-
     context 'GET' do
-      
-      let(:nested_not_found_json) do
-        {
-          "errors" => [
-            {
-              "detail"=>"Admin::LocalpoolResource: localpool_processing_contract not found by User: #{admin.resource_owner_id}" }
-          ]
-        }
+
+      it '401' do
+        GET "/test/#{localpool.id}/localpool-processing-contract", $admin
+        expire_admin_session do
+          GET "/test/#{localpool.id}/localpool-processing-contract", $admin
+          expect(response).to be_session_expired_json(401)
+        end
       end
 
       it '403' do
-        GET "/#{localpool.id}/localpool-processing-contract", user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        GET "/test/#{localpool.id}/localpool-processing-contract", $user
+        expect(response).to be_denied_json(403, Contract::LocalpoolProcessingResource)
       end
 
       it '404' do
-        GET "/#{localpool_no_contracts.id}/localpool-processing-contract", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq nested_not_found_json
+        GET "/test/#{localpool_no_contracts.id}/localpool-processing-contract", $admin
+        expect(response).to be_not_found_json(404, Admin::LocalpoolResource,
+                                              :localpool_processing_contract)
       end
 
       it '200' do
-        GET "/#{localpool.id}/localpool-processing-contract", admin, include: 'tariffs,payments,contractor,customer,customer_bank_account,contractor_bank_account'
+        GET "/test/#{localpool.id}/localpool-processing-contract", $admin, include: 'tariffs,payments,contractor,customer,customer_bank_account,contractor_bank_account'
         expect(json.to_yaml).to eq processing_json.to_yaml
         expect(response).to have_http_status(200)
 
@@ -470,7 +464,6 @@ describe Admin::LocalpoolRoda do
               "end_date"=>p.end_date ? p.end_date.to_s : nil,
               "price_cents"=>p.price_cents,
               "cycle"=>p.cycle,
-              "source"=>p.source,
             }
           end
         },
@@ -485,6 +478,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.contractor.email,
           "description"=>contract.contractor.description,
           "mode"=>contract.contractor.mode,
+          'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false,
           "address" => nil
@@ -502,6 +496,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>contract.customer.image.md.url,
+          'customer_number' => contract.customer.customer_number,
           "updatable"=>true,
           "deletable"=>false,
           'address'=>{
@@ -544,45 +539,29 @@ describe Admin::LocalpoolRoda do
       }
     end
 
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve Contract::MeteringPointOperatorResource: permission denied for User: #{user.resource_owner_id}"
-          }
-        ]
-      }
-    end
-
     context 'GET' do
-      
-      let(:nested_not_found_json) do
-        {
-          "errors" => [
-            {
-              "detail"=>"Admin::LocalpoolResource: metering_point_operator_contract not found by User: #{admin.resource_owner_id}" }
-          ]
-        }
+
+      it '401' do
+        GET "/test/#{localpool.id}/metering-point-operator-contract", $admin
+        expire_admin_session do
+          GET "/test/#{localpool.id}/metering-point-operator-contract", $admin
+          expect(response).to be_session_expired_json(401)
+        end
       end
 
       it '403' do
-        GET "/#{localpool.id}/metering-point-operator-contract", user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        GET "/test/#{localpool.id}/metering-point-operator-contract", $user
+        expect(response).to be_denied_json(403, Contract::MeteringPointOperatorResource)
       end
 
       it '404' do
-        GET "/bla-blub/metering-point-operator-contract", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
-
-        GET "/#{localpool_no_contracts.id}/metering-point-operator-contract", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq nested_not_found_json
+        GET "/test/#{localpool_no_contracts.id}/metering-point-operator-contract", $admin
+        expect(response).to be_not_found_json(404, Admin::LocalpoolResource,
+                                              :metering_point_operator_contract)
       end
 
       it '200' do
-        GET "/#{localpool.id}/metering-point-operator-contract", admin, include: 'tariffs,payments,contractor:address,customer:address,customer_bank_account,contractor_bank_account'
+        GET "/test/#{localpool.id}/metering-point-operator-contract", $admin, include: 'tariffs,payments,contractor:address,customer:address,customer_bank_account,contractor_bank_account'
 
         expect(json.to_yaml).to eq metering_point_json.to_yaml
         expect(response).to have_http_status(200)
@@ -598,7 +577,7 @@ describe Admin::LocalpoolRoda do
           "id"=>contract.id,
           "type"=>"contract_localpool_power_taker",
           'updated_at'=>contract.updated_at.as_json,
-          "status"=>"waiting_for_approval",
+          "status"=>contract.status,
           "full_contract_number"=>"#{contract.contract_number}/#{contract.contract_number_addition}",
           "customer_number"=>contract.customer_number,
           "signing_user"=>contract.signing_user,
@@ -607,77 +586,50 @@ describe Admin::LocalpoolRoda do
           "end_date"=>nil,
           "updatable"=>true,
           "deletable"=>false,
-          "tariffs"=>{
-            'array' => contract.tariffs.collect do |t|
-              {
-                "id"=>t.id,
-                "type"=>'contract_tariff',
-                "name"=>t.name,
-                "begin_date"=>t.begin_date.to_s,
-                "end_date"=>nil,
-                "energyprice_cents_per_kwh"=>t.energyprice_cents_per_kwh,
-                "baseprice_cents_per_month"=>t.baseprice_cents_per_month,
-              }
-            end
-          },
-          "payments"=>{
-            'array'=>contract.payments.collect do |p|
-              {
-                "id"=>p.id,
-                "type"=>'contract_payment',
-                "begin_date"=>p.begin_date.to_s,
-                "end_date"=>nil,
-                "price_cents"=>p.price_cents,
-                "cycle"=>p.cycle,
-                "source"=>p.source,
-              }
-            end
-          },
-          "contractor"=>{
-            "id"=>contract.contractor.id,
-            "type"=>"user",
-            "updatable"=>true,
-            "deletable"=>false
-          },
+          "begin_date"=>contract.begin_date.to_s,
+          'forecast_kwh_pa'=>contract.forecast_kwh_pa,
+          'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
+          'third_party_billing_number'=>contract.third_party_billing_number,
+          'third_party_renter_number'=>contract.third_party_renter_number,
+          'old_supplier_name'=>contract.old_supplier_name,
+          'old_customer_number'=>contract.old_customer_number,
+          'old_account_number'=>contract.old_account_number,
           "customer"=>{
             "id"=>contract.customer.id,
-            "type"=>"user",
+            "type"=>"person",
+            'updated_at'=>contract.customer.updated_at.as_json,
+            "prefix"=>contract.customer.attributes['prefix'],
+            "title"=>contract.customer.title,
+            "first_name"=>contract.customer.first_name,
+            "last_name"=>contract.customer.last_name,
+            "phone"=>contract.customer.phone,
+            "fax"=>contract.customer.fax,
+            "email"=>contract.customer.email,
+            "preferred_language"=>contract.customer.attributes['preferred_language'],
+            "image"=>contract.customer.image.md.url,
+            'customer_number' => contract.customer.customer_number,
             "updatable"=>true,
-            "deletable"=>false
-          },
-          "customer_bank_account"=>{
-            "id"=>contract.customer_bank_account.id,
-            "type"=>"bank_account",
-            "holder"=>contract.customer_bank_account.holder,
-            "bank_name"=>contract.customer_bank_account.bank_name,
-            "bic"=>contract.customer_bank_account.bic,
-            "iban"=>contract.customer_bank_account.iban,
-            "direct_debit"=>contract.customer_bank_account.direct_debit,
-            'updatable'=> true,
-            'deletable'=> false
-          },
-          "contractor_bank_account"=>{
-            "id"=>contract.contractor_bank_account.id,
-            "type"=>"bank_account",
-            "holder"=>contract.contractor_bank_account.holder,
-            "bank_name"=>contract.contractor_bank_account.bank_name,
-            "bic"=>contract.contractor_bank_account.bic,
-            "iban"=>contract.contractor_bank_account.iban,
-            "direct_debit"=>contract.contractor_bank_account.direct_debit,
-            'updatable'=> true,
-            'deletable'=> false
+            "deletable"=>false,
           }
         }
       end
     end
 
     context 'GET' do
+      it '401' do
+        GET "/test/#{localpool.id}/power-taker-contracts", $admin
+        expire_admin_session do
+          GET "/test/#{localpool.id}/power-taker-contracts", $admin
+          expect(response).to be_session_expired_json(401)
+        end
+      end
+
       it '200' do
-        GET "/#{localpool.id}/power-taker-contracts", user
+        GET "/test/#{localpool.id}/power-taker-contracts", $user
         expect(json['array'].to_yaml).to eq empty_json.to_yaml
         expect(response).to have_http_status(200)
 
-        GET "/#{localpool.id}/power-taker-contracts", admin
+        GET "/test/#{localpool.id}/power-taker-contracts", $admin, include: :customer
         expect(json['array'].to_yaml).to eq power_taker_contracts_json.to_yaml
         expect(response).to have_http_status(200)
       end
@@ -703,16 +655,25 @@ describe Admin::LocalpoolRoda do
             "email"=>manager.email,
             "preferred_language"=>manager.attributes['preferred_language'],
             "image"=>manager.image.md.url,
+            'customer_number' => nil,
             "updatable"=>true,
             "deletable"=>true,
             "bank_accounts"=> { 'array'=>[] }
           }
         ]
       end
-      
+
+      it '401' do
+        GET "/test/#{localpool.id}/managers", $admin
+        expire_admin_session do
+          GET "/test/#{localpool.id}/managers", $admin
+          expect(response).to be_session_expired_json(401)
+        end
+      end
+
       it "200" do
-        GET "/#{localpool.id}/managers", admin, include: :bank_accounts
-          
+        GET "/test/#{localpool.id}/managers", $admin, include: :bank_accounts
+
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(managers_json.to_yaml)
       end

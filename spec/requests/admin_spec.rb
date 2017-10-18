@@ -1,15 +1,24 @@
 describe Admin::Roda do
 
-  def app
-    Admin::Roda # this defines the active application for this test
+  class TestAdminRoda < BaseRoda
+    route do |r|
+      r.on('test') { r.run Admin::Roda }
+      r.run Me::Roda 
+    end
   end
 
-  entity!(:admin) { Fabricate(:admin_token) }
+  def app
+    TestAdminRoda # this defines the active application for this test
+  end
 
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
     localpool
+  end
+
+  let(:expired_json) do
+    {"error" => "This session has expired, please login again."}
   end
 
   context 'persons' do
@@ -35,6 +44,7 @@ describe Admin::Roda do
             "email"=>person.email,
             'preferred_language'=>person.attributes['preferred_language'],
             "image"=>person.image.md.url,
+            'customer_number' => nil,
             "updatable"=>false,
             "deletable"=>false,
           }
@@ -42,10 +52,20 @@ describe Admin::Roda do
       end
 
       it '200' do
-        GET "/persons", admin
+        GET "/test/persons", $admin
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(persons_json.to_yaml)
+      end
+
+      it '401' do
+        GET "/test/persons", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/persons", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
     end
   end
@@ -71,6 +91,7 @@ describe Admin::Roda do
             "email"=>organization.email,
             "description"=>organization.description,
             "mode"=>organization.mode,
+            'customer_number' => nil,
             "updatable"=>false,
             "deletable"=>false,
           }
@@ -78,10 +99,20 @@ describe Admin::Roda do
       end
 
       it '200' do
-        GET "/organizations", admin
+        GET "/test/organizations", $admin
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(organizations_json.to_yaml)
+      end
+
+      it '401' do
+        GET "/test/organizations", $admin
+        Timecop.travel(Time.now + 30 * 60) do
+          GET "/test/organizations", $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
       end
     end
   end

@@ -4,8 +4,6 @@ describe Display::GroupRoda do
     Display::GroupRoda # this defines the active application for this test
   end
 
-  entity(:admin) { Fabricate(:admin_token) }
-
   entity(:discovergy_meter) do
     meter = Fabricate(:easymeter_60139082) # in_out meter
     # TODO what to do with the in-out fact ?
@@ -118,19 +116,19 @@ describe Display::GroupRoda do
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
 
-            GET "/#{group.id}/bubbles", admin
+            GET "/#{group.id}/bubbles", nil
 
             expect(response).to have_http_status(200)
             expect(json['expires_at']).to eq(discovergy_json['expires_at'])
             expect(sort(json['array'], 'resource_id')).to match_array(sort(discovergy_json['array'], 'resource_id'))
             expect(expires = response.headers['Expires']).not_to be_nil
-            expect(response.headers['Cache-Control']).to eq "private, max-age=15"
+            expect(response.headers['Cache-Control']).to eq "public, max-age=15"
             expect(etag = response.headers['ETag']).not_to be_nil
             expect(modified = response.headers['Last-Modified']).not_to be_nil
 
             # cache hit
             Timecop.freeze(time + 5)
-            GET "/#{group.id}/bubbles", admin
+            GET "/#{group.id}/bubbles", nil
 
             expect(response).to have_http_status(200)
             expect(json['expires_at']).to eq(discovergy_json['expires_at'])
@@ -189,13 +187,13 @@ describe Display::GroupRoda do
           expect(response.headers['ETag']).not_to be_nil
           expect(response.headers['Last-Modified']).not_to be_nil
 
-          GET "/#{profile_group.id}/bubbles", admin
+          GET "/#{profile_group.id}/bubbles", nil
 
           expect(response).to have_http_status(200)
           expect(json).to eq(profile_json)
           expect(response.headers['Expires']).not_to be_nil
           # - 1 minute see 'time' and when readings were created
-          expect(response.headers['Cache-Control']).to eq "private, max-age=899"
+          expect(response.headers['Cache-Control']).to eq "public, max-age=899"
           expect(response.headers['ETag']).not_to be_nil
           expect(response.headers['Last-Modified']).not_to be_nil
         ensure
@@ -283,7 +281,7 @@ describe Display::GroupRoda do
     context 'GET' do
 
       it '422 missing' do
-        GET "/#{group.id}/charts", admin
+        GET "/#{group.id}/charts", nil
         expect(response).to have_http_status(422)
         expect(json).to eq missing_json
       end
@@ -302,11 +300,11 @@ describe Display::GroupRoda do
           begin
             Timecop.freeze(time)
 
-            GET "/#{group.id}/charts", admin, duration: :hour
+            GET "/#{group.id}/charts", nil, duration: :hour
 
             expect(response).to have_http_status(200)
             expect(json).to eq(hour_json)
-            expect(response.headers['Cache-Control']).to eq "private, max-age=15"
+            expect(response.headers['Cache-Control']).to eq "public, max-age=15"
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
 
@@ -334,11 +332,11 @@ describe Display::GroupRoda do
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
 
-            GET "/#{group.id}/charts", admin, duration: :year
+            GET "/#{group.id}/charts", nil, duration: :year
 
             expect(response).to have_http_status(200)
             expect(json).to eq(year_json)
-            expect(response.headers['Cache-Control']).to eq "private, max-age=86400"
+            expect(response.headers['Cache-Control']).to eq "public, max-age=86400"
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
           ensure
@@ -473,11 +471,11 @@ describe Display::GroupRoda do
         begin
           Timecop.freeze(time)
 
-          GET "/#{profile_group.id}/charts", admin, duration: :hour
+          GET "/#{profile_group.id}/charts", nil, duration: :hour
 
           expect(response).to have_http_status(200)
           #expect(json).to eq(profile_hour_json)
-          expect(response.headers['Cache-Control']).to eq "private, max-age=15"
+          expect(response.headers['Cache-Control']).to eq "public, max-age=15"
           expect(response.headers['ETag']).not_to be_nil
           expect(response.headers['Last-Modified']).not_to be_nil
 
@@ -505,11 +503,11 @@ describe Display::GroupRoda do
           expect(response.headers['ETag']).not_to be_nil
           expect(response.headers['Last-Modified']).not_to be_nil
 
-          GET  "/#{profile_group.id}/charts", admin, duration: :year
+          GET  "/#{profile_group.id}/charts", nil, duration: :year
 
           #expect(json).to eq(profile_year_json)
           expect(response).to have_http_status(200)
-          expect(response.headers['Cache-Control']).to eq "private, max-age=86400"
+          expect(response.headers['Cache-Control']).to eq "public, max-age=86400"
           expect(response.headers['ETag']).not_to be_nil
           expect(response.headers['Last-Modified']).not_to be_nil
         ensure

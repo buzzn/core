@@ -1,42 +1,18 @@
-# coding: utf-8
+require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   def app
-    Admin::LocalpoolRoda # this defines the active application for this test
+    TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
   context 'meters as real' do
 
-    entity(:admin) { Fabricate(:admin_token) }
-
-    entity(:user) { Fabricate(:user_token) }
-
     entity(:group) do
       group = Fabricate(:localpool)
-      Account::Base.find(user.resource_owner_id)
-        .person.add_role(Role::GROUP_MEMBER, group)
+      $user.person.reload.add_role(Role::GROUP_MEMBER, group)
       group
     end
 
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve Meter::Real: #{real_meter.id} permission denied for User: #{user.resource_owner_id}" }
-        ]
-      }
-    end
-
-    let(:not_found_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"Meter::Base: bla-blub not found by User: #{admin.resource_owner_id}"
-          }
-        ]
-      }
-    end
-    
     entity(:meter) do
       meter = Fabricate(:input_meter, address: Fabricate(:address))
       meter.update(sent_data_dso: Date.today)
@@ -120,20 +96,26 @@ describe Admin::LocalpoolRoda do
 
     context 'GET' do
 
+      it '401' do
+        GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
+        expire_admin_session do
+          GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
+          expect(response).to be_session_expired_json(401)
+        end
+      end
+
       it '403' do
-        GET "/#{group.id}/meters/#{real_meter.id}", user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        GET "/test/#{group.id}/meters/#{real_meter.id}", $user
+        expect(response).to be_denied_json(403, real_meter)
       end
 
       it '404' do
-        GET "/#{group.id}/meters/bla-blub", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
+        GET "/test/#{group.id}/meters/bla-blub", $admin
+        expect(response).to be_not_found_json(404, Meter::Base)
       end
 
       it '200' do
-        GET "/#{group.id}/meters/#{meter.id}", admin, include: 'registers, address'
+        GET "/test/#{group.id}/meters/#{meter.id}", $admin, include: 'registers, address'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq meter_json.to_yaml
       end
@@ -213,36 +195,34 @@ describe Admin::LocalpoolRoda do
         }
       end
 
+      it '401' do
+        GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
+        expire_admin_session do
+          PATCH "/test/#{group.id}/meters/#{real_meter.id}", $admin
+          expect(response).to be_session_expired_json(401)
+        end
+      end
+
       it '403' do
-        PATCH "/#{group.id}/meters/#{real_meter.id}", user
-        expect(response).to have_http_status(403)
-        expect(json).to eq denied_json
+        PATCH "/test/#{group.id}/meters/#{real_meter.id}", $user
+        expect(response).to be_denied_json(403, real_meter)
       end
 
       it '404' do
-        PATCH "/#{group.id}/meters/bla-blub", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
-      end
-
-      let(:stale_json) do
-        {
-          "errors" => [
-            {"detail"=>"Meter::Real: #{real_meter.id} was updated at: #{real_meter.updated_at}"}]
-        }
+        PATCH "/test/#{group.id}/meters/bla-blub", $admin
+        expect(response).to be_not_found_json(404, Meter::Base)
       end
 
       it '409' do
         meter = real_meter
-        PATCH "/#{group.id}/meters/#{meter.id}", admin,
+        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: DateTime.now
-        expect(response).to have_http_status(409)
-        expect(json).to eq stale_json
+        expect(response).to be_stale_json(409, meter)
       end
 
       it '422' do
         meter = real_meter
-        PATCH "/#{group.id}/meters/#{meter.id}", admin,
+        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               manufacturer_name: 'Maxima' * 20,
               product_name: 'SmartyMeter' * 10,
               product_serialnumber: '12341234' * 10,
@@ -261,7 +241,7 @@ describe Admin::LocalpoolRoda do
               edifact_cycle_interval: 'something',
               edifact_data_logging: 'something',
               direction_number: 'uni'
-        
+
         expect(response).to have_http_status(422)
         expect(json.to_yaml).to eq wrong_json.to_yaml
       end
@@ -270,7 +250,7 @@ describe Admin::LocalpoolRoda do
         meter = real_meter
         sent = meter.sent_data_dso
         old = meter.updated_at
-        PATCH "/#{group.id}/meters/#{meter.id}", admin,
+        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: meter.updated_at,
               manufacturer_name: Meter::Real::OTHER,
               product_name: 'Smarty Super Meter',

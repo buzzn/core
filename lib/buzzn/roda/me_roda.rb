@@ -55,19 +55,23 @@ module Me
         raise Buzzn::PermissionDenied.new(Person, :retrieve, nil)
       end
 
-      # TODO remove `if rodauth.valid_jwt?` once doorkeeper is gone
-      rodauth.check_session_expiration if rodauth.valid_jwt?
+      r.get! 'ping' do
+        if rodauth.session[rodauth.session_last_activity_session_key] + rodauth.session_inactivity_timeout < Buzzn::Utils::Chronos.now.to_i
+          r.response.status = 401
+          {"error" => "This session has expired, please login again." }
+        else
+          r.response['Content-Type'] = 'text/plain'
+          'pong'
+        end
+      end
+
+      rodauth.check_session_expiration
 
       person = PersonResource.all(current_user, ContractingPartyPersonResource)
                .retrieve(current_user.person.id)
 
       r.get! do
         person
-      end
-
-      r.get! 'ping' do
-        r.response['Content-Type'] = 'text/plain'
-        'pong'
       end
 
       r.patch! do

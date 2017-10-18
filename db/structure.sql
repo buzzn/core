@@ -328,6 +328,17 @@ CREATE TYPE country AS ENUM (
 
 
 --
+-- Name: cycle; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE cycle AS ENUM (
+    'monthly',
+    'yearly',
+    'once'
+);
+
+
+--
 -- Name: direction; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1106,6 +1117,34 @@ CREATE TABLE core_configs (
 
 
 --
+-- Name: customer_numbers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE customer_numbers (
+    id integer NOT NULL
+);
+
+
+--
+-- Name: customer_numbers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE customer_numbers_id_seq
+    START WITH 100000
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customer_numbers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE customer_numbers_id_seq OWNED BY customer_numbers.id;
+
+
+--
 -- Name: devices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1197,7 +1236,8 @@ CREATE TABLE groups (
     type character varying NOT NULL,
     organization_id uuid,
     person_id uuid,
-    address_id uuid
+    address_id uuid,
+    CONSTRAINT check_localpool_owner CHECK ((NOT ((person_id IS NOT NULL) AND (organization_id IS NOT NULL))))
 );
 
 
@@ -1243,58 +1283,6 @@ CREATE TABLE meters (
 
 
 --
--- Name: oauth_access_grants; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE oauth_access_grants (
-    token character varying NOT NULL,
-    expires_in integer NOT NULL,
-    redirect_uri text NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    revoked_at timestamp without time zone,
-    scopes character varying,
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    resource_owner_id uuid DEFAULT uuid_generate_v4(),
-    application_id uuid DEFAULT uuid_generate_v4()
-);
-
-
---
--- Name: oauth_access_tokens; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE oauth_access_tokens (
-    token character varying NOT NULL,
-    refresh_token character varying,
-    expires_in integer,
-    revoked_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    scopes character varying,
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    application_id uuid DEFAULT uuid_generate_v4(),
-    resource_owner_id integer
-);
-
-
---
--- Name: oauth_applications; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE oauth_applications (
-    name character varying NOT NULL,
-    uid character varying NOT NULL,
-    secret character varying NOT NULL,
-    redirect_uri text NOT NULL,
-    scopes character varying DEFAULT ''::character varying NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    owner_id uuid,
-    owner_type character varying,
-    id uuid DEFAULT uuid_generate_v4() NOT NULL
-);
-
-
---
 -- Name: organization_market_functions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1336,7 +1324,8 @@ CREATE TABLE organizations (
     account_number character varying,
     contact_id uuid,
     legal_representation_id uuid,
-    address_id uuid
+    address_id uuid,
+    customer_number integer
 );
 
 
@@ -1349,9 +1338,8 @@ CREATE TABLE payments (
     begin_date date NOT NULL,
     end_date date,
     price_cents integer NOT NULL,
-    cycle character varying,
-    source character varying,
-    contract_id uuid NOT NULL
+    contract_id uuid NOT NULL,
+    cycle cycle
 );
 
 
@@ -1380,7 +1368,8 @@ CREATE TABLE persons (
     mandate_reference character varying,
     creditor_id character varying,
     image character varying,
-    address_id uuid
+    address_id uuid,
+    customer_number integer
 );
 
 
@@ -1682,6 +1671,13 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 
 
 --
+-- Name: customer_numbers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customer_numbers ALTER COLUMN id SET DEFAULT nextval('customer_numbers_id_seq'::regclass);
+
+
+--
 -- Name: roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1833,6 +1829,14 @@ ALTER TABLE ONLY core_configs
 
 
 --
+-- Name: customer_numbers customer_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY customer_numbers
+    ADD CONSTRAINT customer_numbers_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: devices devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1894,30 +1898,6 @@ ALTER TABLE ONLY registers
 
 ALTER TABLE ONLY meters
     ADD CONSTRAINT meters_pkey PRIMARY KEY (id);
-
-
---
--- Name: oauth_access_grants oauth_access_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY oauth_access_grants
-    ADD CONSTRAINT oauth_access_grants_pkey PRIMARY KEY (id);
-
-
---
--- Name: oauth_access_tokens oauth_access_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY oauth_access_tokens
-    ADD CONSTRAINT oauth_access_tokens_pkey PRIMARY KEY (id);
-
-
---
--- Name: oauth_applications oauth_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY oauth_applications
-    ADD CONSTRAINT oauth_applications_pkey PRIMARY KEY (id);
 
 
 --
@@ -2245,41 +2225,6 @@ CREATE INDEX index_meters_on_address_id ON meters USING btree (address_id);
 --
 
 CREATE UNIQUE INDEX index_meters_on_group_id_and_sequence_number ON meters USING btree (group_id, sequence_number);
-
-
---
--- Name: index_oauth_access_grants_on_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_oauth_access_grants_on_token ON oauth_access_grants USING btree (token);
-
-
---
--- Name: index_oauth_access_tokens_on_refresh_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_oauth_access_tokens_on_refresh_token ON oauth_access_tokens USING btree (refresh_token);
-
-
---
--- Name: index_oauth_access_tokens_on_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_oauth_access_tokens_on_token ON oauth_access_tokens USING btree (token);
-
-
---
--- Name: index_oauth_applications_on_owner_id_and_owner_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_oauth_applications_on_owner_id_and_owner_type ON oauth_applications USING btree (owner_id, owner_type);
-
-
---
--- Name: index_oauth_applications_on_uid; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_oauth_applications_on_uid ON oauth_applications USING btree (uid);
 
 
 --
@@ -2612,6 +2557,14 @@ ALTER TABLE ONLY organizations
 
 
 --
+-- Name: organizations fk_organizations_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organizations
+    ADD CONSTRAINT fk_organizations_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
+
+
+--
 -- Name: organizations fk_organizations_legal_representation; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2625,6 +2578,14 @@ ALTER TABLE ONLY organizations
 
 ALTER TABLE ONLY persons
     ADD CONSTRAINT fk_persons_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
+-- Name: persons fk_persons_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY persons
+    ADD CONSTRAINT fk_persons_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
 
 
 --
@@ -3013,8 +2974,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170807070447');
 
 INSERT INTO schema_migrations (version) VALUES ('20170808070447');
 
-INSERT INTO schema_migrations (version) VALUES ('20170812012646');
-
 INSERT INTO schema_migrations (version) VALUES ('20170812013443');
 
 INSERT INTO schema_migrations (version) VALUES ('20170817032303');
@@ -3034,6 +2993,18 @@ INSERT INTO schema_migrations (version) VALUES ('20171009065708');
 INSERT INTO schema_migrations (version) VALUES ('20171009090631');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010074910');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010075030');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010082537');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010094247');
+
+INSERT INTO schema_migrations (version) VALUES ('20171010102959');
+
+INSERT INTO schema_migrations (version) VALUES ('20171011151135');
 
 INSERT INTO schema_migrations (version) VALUES ('20171012111744');
 

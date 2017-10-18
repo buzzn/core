@@ -6,8 +6,6 @@ class ContractingParty < ActiveRecord::Base
 
   has_many :bank_accounts, dependent: :destroy
 
-  has_one :address, as: :addressable, dependent: :destroy
-
   validates_associated :address
   validates :sales_tax_number, presence: false
   validates :tax_rate, presence: false
