@@ -10,13 +10,28 @@ Account::Status.delete_all
 end
 
 Organization.delete_all
-Organization.buzzn = FactoryGirl.create(:organization, :with_address,
+Organization.buzzn = Organization.create!(
                    name: 'Buzzn GmbH',
                    description: 'Purveyor of peoplepower since 2009',
                    slug: 'buzzn',
                    email: 'dev+buzzn@buzzn.net',
                    phone: '089 / 32 16 8',
-                   website: 'www.buzzn.net'
+                   website: 'www.buzzn.net',
+                   energy_classifications: [ build(:energy_classification, :buzzn) ],
+                   # FIXME !
+                   address: build(:address),
+                   # FIXME rename to contact person and add real contact
+                   contact: build(:person),
+                   market_functions: [
+                    build(:organization_market_function,
+                          function: :electricity_supplier,
+                          market_partner_id: "9905229000008",
+                          edifact_email: "justus@buzzn.net",
+                          # FIXME !
+                          address: build(:address),
+                          contact_person: build(:person)
+                    )
+                   ]
 )
 Organization.discovergy = FactoryGirl.create(:organization, :with_address,
                    name: 'Discovergy',

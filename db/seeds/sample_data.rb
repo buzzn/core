@@ -164,22 +164,21 @@ create(:meter_real, :two_way,
 #
 # Create other contracts for peoplepower group
 #
-# FIXME:
-#  - contractor needs to be buzzn not generic org
-#  - when https://goo.gl/6pzpFd is implemented, assign the grid in/out registers correctly
+# FIXME: when https://goo.gl/6pzpFd is implemented, assign the grid in/out registers correctly
 create(:contract, :metering_point_operator,
        localpool: SeedsRepository.localpools.people_power,
        customer: SeedsRepository.localpools.people_power.owner,
-       payments: [
-         build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')
-       ]
+       contractor: Organization.buzzn,
+       payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ],
+       tariffs: [ build(:tariff) ]
 )
-# FIXME: fails with validation 'Gültigkeitsprüfung ist fehlgeschlagen: Contractor must be buzzn-systems'
-# create(:contract, :localpool_processing,
-#        localpool: SeedsRepository.localpools.people_power,
-#        customer: SeedsRepository.localpools.people_power.owner,
-#        contractor: SeedsRepository.organizations.buzzn
-# )
+create(:contract, :localpool_processing,
+       localpool: SeedsRepository.localpools.people_power,
+       customer: SeedsRepository.localpools.people_power.owner,
+       contractor: Organization.buzzn,
+       payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ],
+       tariffs: [ build(:tariff) ]
+)
 
 #
 # More registers (without powertakers & contracts)

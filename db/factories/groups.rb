@@ -8,6 +8,7 @@ FactoryGirl.define do
     name        { generate(:localpool_name) }
     description { |attrs| "#{attrs[:name]} description" }
     owner       { FactoryGirl.create(:person) }
+    address
 
     trait :people_power do
       name "People Power Group"
