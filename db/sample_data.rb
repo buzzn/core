@@ -376,8 +376,8 @@ localpool_forstenried = Fabricate(:localpool_forstenried, registers: [register_6
 localpool_forstenried.registers << register_60009484
 localpool_forstenried.registers << register_1305004864
 localpool_forstenried.registers << register_1305004864_out
-lpc_forstenried = Fabricate(:lpc_forstenried, signing_user: FFaker::Name.name, localpool: localpool_forstenried, customer: hell_und_warm)
-mpoc_forstenried = Fabricate(:mpoc_forstenried, signing_user: lpc_forstenried.signing_user, localpool: localpool_forstenried, customer: hell_und_warm)
+lpc_forstenried = Fabricate(:lpc_forstenried, localpool: localpool_forstenried, customer: hell_und_warm)
+mpoc_forstenried = Fabricate(:mpoc_forstenried, localpool: localpool_forstenried, customer: hell_und_warm)
 
 ### create discovery-brokers from live system ###
 Fabricate(:discovergy_broker, resource: localpool_forstenried, mode: :in, external_id: 'VIRTUAL_00000077')
@@ -390,81 +390,81 @@ meter = Fabricate(:easymeter_60051595)
 register_60051595 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051595
-lptc = Fabricate(:lptc_mabe, signing_user: mabe.person.name, register: register_60051595, customer: mabe.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_mabe, register: register_60051595, customer: mabe.person, contractor: hell_und_warm)
 
 inbr = Fabricate(:inbr)
 meter = Fabricate(:easymeter_60051547)
 register_60051547 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051547
-lptc = Fabricate(:lptc_inbr, signing_user: inbr.person.name, register: register_60051547, customer: inbr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_inbr, register: register_60051547, customer: inbr.person, contractor: hell_und_warm)
 
 pebr = Fabricate(:pebr)
 meter = Fabricate(:easymeter_60051620)
 register_60051620 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051620
-lptc = Fabricate(:lptc_pebr, signing_user: pebr.person.name, register: register_60051620, customer: pebr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_pebr, register: register_60051620, customer: pebr.person, contractor: hell_und_warm)
 
 anbr = Fabricate(:anbr)
 meter = Fabricate(:easymeter_60051602)
 register_60051602 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051602
-lptc = Fabricate(:lptc_anbr, signing_user: anbr.person.name, register: register_60051602, customer: anbr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_anbr, register: register_60051602, customer: anbr.person, contractor: hell_und_warm)
 
 gubr = Fabricate(:gubr)
 meter = Fabricate(:easymeter_60051618)
 register_60051618 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051618
-lptc = Fabricate(:lptc_gubr, signing_user: gubr.person.name, register: register_60051618, customer: gubr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_gubr, register: register_60051618, customer: gubr.person, contractor: hell_und_warm)
 
 mabr = Fabricate(:mabr)
 meter = Fabricate(:easymeter_60051557)
 register_60051557 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051557
-lptc = Fabricate(:lptc_mabr, signing_user: mabr, register: register_60051557, customer: mabr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_mabr, register: register_60051557, customer: mabr.person, contractor: hell_und_warm)
 
 dabr = Fabricate(:dabr)
 meter = Fabricate(:easymeter_60051596)
 register_60051596 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051596
-lptc = Fabricate(:lptc_dabr, signing_user: dabr.person.name, register: register_60051596, customer: dabr.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_dabr, register: register_60051596, customer: dabr.person, contractor: hell_und_warm)
 
 zubu = Fabricate(:zubu)
 meter = Fabricate(:easymeter_60051558)
 register_60051558 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051558
-lptc = Fabricate(:lptc_zubu, signing_user: zubu.person.name, register: register_60051558, customer: zubu.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_zubu, register: register_60051558, customer: zubu.person, contractor: hell_und_warm)
 
 mace = Fabricate(:mace)
 meter = Fabricate(:easymeter_60051551)
 register_60051551 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051551
-lptc = Fabricate(:lptc_mace, signing_user: mace.person.name, register: register_60051551, customer: mace.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_mace,  register: register_60051551, customer: mace.person, contractor: hell_und_warm)
 
 stcs = Fabricate(:stcs)
 meter = Fabricate(:easymeter_60051619)
 register_60051619 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051619
-lptc = Fabricate(:lptc_stcs, signing_user: stcs.person.name, register: register_60051619, customer: stcs.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_stcs, register: register_60051619, customer: stcs.person, contractor: hell_und_warm)
 
 pafi = Fabricate(:pafi)
 meter = Fabricate(:easymeter_60051556)
 register_60051556 = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_forstenried.registers << register_60051556
-lptc = Fabricate(:lptc_pafi, signing_user: pafi, register: register_60051556, customer: pafi.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_pafi, register: register_60051556, customer: pafi.person, contractor: hell_und_warm)
 
 #this is the user that lives in S 33 after partick_fierley moved out
 raja = Fabricate(:raja)
-lptc = Fabricate(:lptc_raja, signing_user: raja.person.name, register: register_60051556, customer: raja.person, contractor: hell_und_warm)
+lptc = Fabricate(:lptc_raja, register: register_60051556, customer: raja.person, contractor: hell_und_warm)
 
 # mafr = Fabricate(:user)
 # meter = Fabricate(:easymeter_60051617)
@@ -927,8 +927,8 @@ Fabricate(:reading, register_id: register_60404845.id, timestamp: Time.new(2016,
 Fabricate(:reading, register_id: register_60404845.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 7060800, reason: Reading::Continuous::REGULAR_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 
 localpool_sulz = Fabricate(:localpool_sulz, registers: [register_60404855, register_60404845])
-mpoc_sulz = Fabricate(:mpoc_sulz, signing_user: FFaker::Name.name, localpool: localpool_sulz, customer: sulz_contractor)
-lpc_sulz = Fabricate(:lpc_sulz, signing_user: mpoc_sulz.signing_user, localpool: localpool_sulz, customer: sulz_contractor)
+mpoc_sulz = Fabricate(:mpoc_sulz, localpool: localpool_sulz, customer: sulz_contractor)
+lpc_sulz = Fabricate(:lpc_sulz, localpool: localpool_sulz, customer: sulz_contractor)
 billing_cycle_sulz = Fabricate(:billing_cycle_sulz, localpool_id: localpool_sulz.id)
 Fabricate(:price_sulz, localpool: localpool_sulz)
 
@@ -937,7 +937,7 @@ register = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_sulz.registers << register
 orga = Fabricate(:organization, mode: 'other')
-lptc = Fabricate(:lptc_hafi, signing_user: FFaker::Name.name, register: register, customer: orga, contractor: sulz_contractor)
+lptc = Fabricate(:lptc_hafi, register: register, customer: orga, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 13855000, reason: Reading::Continuous::DEVICE_CHANGE_1, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: 77134105, state: 'Z86')
 reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::Continuous::DEVICE_CHANGE_2, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 241100, reason: Reading::Continuous::REGULAR_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
@@ -949,7 +949,7 @@ register = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_sulz.registers << register
 person = Fabricate(:person)
-lptc = Fabricate(:lptc_hubv, signing_user: person.name, register: register, customer: person, contractor: sulz_contractor)
+lptc = Fabricate(:lptc_hubv, register: register, customer: person, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 27489000, reason: Reading::Continuous::DEVICE_CHANGE_1, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: 77134118, state: 'Z86')
 reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::Continuous::DEVICE_CHANGE_2, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 864100, reason: Reading::Continuous::REGULAR_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
@@ -961,7 +961,7 @@ register = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_sulz.registers << register
 orga = Fabricate(:organization, mode: 'other')
-lptc = Fabricate(:lptc_mape, signing_user: FFaker::Name.name, register: register, customer: orga, contractor: sulz_contractor)
+lptc = Fabricate(:lptc_mape, register: register, customer: orga, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 24124000, reason: Reading::Continuous::DEVICE_CHANGE_1, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: 49350039, state: 'Z86')
 reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::Continuous::DEVICE_CHANGE_2, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1892400, reason: Reading::Continuous::REGULAR_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
@@ -973,10 +973,10 @@ register = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_sulz.registers << register
 orga = Fabricate(:organization, mode: 'other')
-lptc = Fabricate(:lptc_hafi2, signing_user: FFaker::Name.name, register: register, customer: orga, contractor: sulz_contractor)
+lptc = Fabricate(:lptc_hafi2, register: register, customer: orga, contractor: sulz_contractor)
 
 person = Fabricate(:person)
-lptc = Fabricate(:lptc_pewi, signing_user: person.name, register: register, customer: person, contractor: sulz_contractor)
+lptc = Fabricate(:lptc_pewi, register: register, customer: person, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 23790, reason: Reading::Continuous::DEVICE_CHANGE_1, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: 4789917, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::Continuous::DEVICE_CHANGE_2, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 10, 31), energy_milliwatt_hour: 191000, reason: Reading::Continuous::CONTRACT_CHANGE, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::CUSTOMER_LSG, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
@@ -990,7 +990,7 @@ register = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_sulz.registers << register
 person = Fabricate(:person)
-lptc = Fabricate(:lptc_musc, signing_user: person.name, register: register, customer: person, contractor: sulz_contractor)
+lptc = Fabricate(:lptc_musc, register: register, customer: person, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 8024000, reason: Reading::Continuous::DEVICE_CHANGE_1, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: 5640077, state: 'Z86')
 reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::Continuous::DEVICE_CHANGE_2, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 456300, reason: Reading::Continuous::REGULAR_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
@@ -1002,7 +1002,7 @@ register = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_sulz.registers << register
 person = Fabricate(:person)
-lptc = Fabricate(:lptc_viwe, signing_user: person.name, register: register, customer: person, contractor: sulz_contractor)
+lptc = Fabricate(:lptc_viwe, register: register, customer: person, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 19442000, reason: Reading::Continuous::DEVICE_CHANGE_1, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: 77134120, state: 'Z86')
 reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::Continuous::DEVICE_CHANGE_2, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 809700, reason: Reading::Continuous::REGULAR_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
@@ -1013,7 +1013,7 @@ meter = Fabricate(:easymeter_60404852)
 register = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_sulz.registers << register
-lptc = Fabricate(:lptc_reho, signing_user: person.name, register: register, customer: person, contractor: sulz_contractor)
+lptc = Fabricate(:lptc_reho, register: register, customer: person, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 9597000, reason: Reading::Continuous::DEVICE_CHANGE_1, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: 5000705, state: 'Z86')
 reading_1 = Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 0, reason: Reading::Continuous::DEVICE_CHANGE_2, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 1), energy_milliwatt_hour: 1523000, reason: Reading::Continuous::REGULAR_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: meter.product_serialnumber, state: 'Z86')
@@ -1024,10 +1024,10 @@ meter = Fabricate(:easymeter_60327350)
 register = meter.input_register
 meter.broker = Fabricate(:discovergy_broker, mode: 'in', external_id: "EASYMETER_#{meter.product_serialnumber}", resource: meter )
 localpool_sulz.registers << register
-osc = (Fabricate(:osc_saba, signing_user: person.name, register: register, customer: person, contractor: sulz_contractor))
+osc = (Fabricate(:osc_saba, register: register, customer: person, contractor: sulz_contractor))
 
 person = Fabricate(:person)
-lptc = Fabricate(:lptc_saba, signing_user: person.name, register: register, customer: person, contractor: sulz_contractor)
+lptc = Fabricate(:lptc_saba, register: register, customer: person, contractor: sulz_contractor)
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 8, 4), energy_milliwatt_hour: 9078000, reason: Reading::Continuous::DEVICE_REMOVAL, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: 4939588, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2016, 12, 16), energy_milliwatt_hour: 9341900, reason: Reading::Continuous::REGULAR_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: 4939588, state: 'Z86')
 Fabricate(:reading, register_id: register.id, timestamp: Time.new(2017, 1, 12), energy_milliwatt_hour: 9521100, reason: Reading::Continuous::REGULAR_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN_SYSTEMS, meter_serialnumber: 4939588, state: 'Z86')

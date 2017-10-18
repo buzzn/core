@@ -63,7 +63,6 @@ module Contract
 
     validates :contract_number, presence: false
     validates :customer_number, presence: false
-    validates :origianl_signing_user, presence: false
 
     validates :signing_date, presence: true
     validates :cancellation_date, presence: false

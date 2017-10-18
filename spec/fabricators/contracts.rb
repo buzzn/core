@@ -32,7 +32,6 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(90000) + 1 }
   contract_number_addition { rand(10000) + 1 }
-  signing_user             { FFaker::Name.name }
   power_of_attorney        true
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
@@ -73,7 +72,6 @@ Fabricator :other_supplier_contract, class_name: Contract::OtherSupplier do
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition { rand(10000) + 1 }
-  signing_user             { FFaker::Name.name }
   power_of_attorney        true
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
@@ -90,7 +88,6 @@ Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(20000) + 1 }
   contract_number_addition { rand(10000) + 1 }
-  signing_user             { FFaker::Name.name }
   begin_date               { FFaker::Time.date }
   power_of_attorney        true
   signing_date             { FFaker::Time.date }
@@ -132,7 +129,6 @@ Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(40000) + 1 }
   contract_number_addition { rand(10000) - 1 }
-  signing_user             { FFaker::Name.name }
   power_of_attorney        true
   confirm_pricing_model    true
   begin_date               { FFaker::Time.date }
@@ -162,7 +158,6 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition { rand(10000) + 1 }
-  signing_user             { FFaker::Name.name }
   power_of_attorney        true
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }
@@ -196,7 +191,6 @@ Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProces
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition 0
-  signing_user             { FFaker::Name.name }
   power_of_attorney        true
   begin_date               { FFaker::Time.date }
   signing_date             { FFaker::Time.date }

@@ -1100,7 +1100,6 @@ CREATE TABLE contracts (
     contract_number_addition integer,
     customer_bank_account_id uuid,
     contractor_bank_account_id uuid,
-    signing_user character varying,
     status contract_status DEFAULT 'onboarding'::contract_status,
     renewable_energy_law_taxation taxation,
     mandate_reference character varying
@@ -3002,4 +3001,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171017052738');
 INSERT INTO schema_migrations (version) VALUES ('20171017081409');
 
 INSERT INTO schema_migrations (version) VALUES ('20171018123008');
+
+INSERT INTO schema_migrations (version) VALUES ('20171018124326');
 

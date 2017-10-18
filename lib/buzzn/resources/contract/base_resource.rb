@@ -8,7 +8,6 @@ module Contract
     attributes  :status,
                 :full_contract_number,
                 :customer_number,
-                :signing_user,
                 :signing_date,
                 :cancellation_date,
                 :end_date
