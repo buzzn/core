@@ -1,5 +1,9 @@
 puts "seeds: loading common setup data"
 
+FactoryGirl.definition_file_paths = %w(db/factories)
+FactoryGirl.find_definitions
+include FactoryGirl::Syntax::Methods
+
 Account::Status.delete_all
 [[1, 'Unverified'], [2, 'Verified'], [3, 'Closed']].each do |id, name|
   Account::Status.create!(id: id, name: name)

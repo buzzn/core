@@ -4,10 +4,6 @@ require_relative 'seeds_repository'
 
 puts "seeds: loading sample data"
 
-FactoryGirl.definition_file_paths = %w(db/factories)
-FactoryGirl.find_definitions
-include FactoryGirl::Syntax::Methods
-
 # Call the buzzn operator once so it is generated.
 SeedsRepository.persons.buzzn_operator
 
@@ -32,7 +28,7 @@ contracts[:pt1] = localpool_contract(
     build(:reading, :regular, date: '2016-12-31', raw_value: 2_400_000, register: nil)
   ],
   payments: [
-    build(:payment, price_cents: 55_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+    build(:payment, price_cents: 55_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
 
@@ -43,7 +39,7 @@ contracts[:pt2] = localpool_contract(
     build(:reading, :regular, date: '2016-12-31', raw_value: 4_500_000, register: nil)
   ],
   payments: [
-    build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+    build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
 
@@ -56,7 +52,7 @@ contracts[:pt3] = localpool_contract(
     build(:reading, :setup, date: '2017-10-01', raw_value: 1_000, register: nil)
   ],
   payments: [
-    build(:payment, price_cents: 67_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+    build(:payment, price_cents: 67_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
 
@@ -71,7 +67,7 @@ contracts[:pt4] = localpool_contract(
     build(:reading, :setup, date: '2017-02-01', raw_value: 1_000, register: nil)
   ],
   payments: [
-    build(:payment, price_cents: 53_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+    build(:payment, price_cents: 53_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
 
@@ -87,7 +83,7 @@ contracts[:pt5a] = localpool_contract(
     build(:reading, :contract_change, date: '2017-04-01', raw_value: 1_765_000, register: nil)
   ],
   payments: [
-    build(:payment, price_cents: 45_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+    build(:payment, price_cents: 45_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
 
@@ -175,9 +171,15 @@ create(:contract, :metering_point_operator,
        localpool: SeedsRepository.localpools.people_power,
        customer: SeedsRepository.localpools.people_power.owner,
        payments: [
-         build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly', source: 'calculated')
+         build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')
        ]
 )
+# FIXME: fails with validation 'Gültigkeitsprüfung ist fehlgeschlagen: Contractor must be buzzn-systems'
+# create(:contract, :localpool_processing,
+#        localpool: SeedsRepository.localpools.people_power,
+#        customer: SeedsRepository.localpools.people_power.owner,
+#        contractor: SeedsRepository.organizations.buzzn
+# )
 
 #
 # More registers (without powertakers & contracts)
@@ -202,37 +204,30 @@ registers[:pv] = create(:register, :production_pv,
 FactoryGirl.create(:organization, :transmission_system_operator,
                    name: '50Hertz Transmission GmbH',
                    slug: '50hertz',
-                   edifactemail: 'roman.schuelke@50hertz.com',
                    phone: '+49 30 51503782',
                    fax: '+49 30 51504511',
                    website: 'http://www.50hertz.com/de',
-                   market_place_id: '9911845000009'
 )
 FactoryGirl.create(:organization, :transmission_system_operator,
                    name: 'Tennet TSO GmbH',
                    slug: 'tennet',
-                   edifactemail: 'biko-bka@tennet.eu',
                    phone: '+49 921 507404575',
                    fax: '+49 921 507404566',
-                   website: 'https://www.tennet.eu/de', market_place_id: '4033872000058'
+                   website: 'https://www.tennet.eu/de'
 )
 FactoryGirl.create(:organization, :transmission_system_operator,
                    name: 'Amprion GmbH',
                    slug: 'amprion',
-                   edifactemail: 'gpke@amprion.net',
                    phone: '+49 231 5849 12502',
                    fax: '+49 231 5849 14509',
                    website: 'https://www.amprion.net',
-                   market_place_id: '4045399000077'
 )
 FactoryGirl.create(:organization, :transmission_system_operator,
                    name: 'TransnetBW GmbH',
                    slug: 'transnetbw',
-                   edifactemail: 'bilanzkreise@transnetbw.de',
                    phone: '+49 711 21858 3706',
                    fax: '+49 711 21858 4413',
                    website: 'https://www.transnetbw.de/de',
-                   market_place_id: '9911835000001'
 )
 FactoryGirl.create(:organization, :distribution_system_operator,
                    name: 'E.ON Netz GmbH',
@@ -247,35 +242,22 @@ FactoryGirl.create(:organization, :distribution_system_operator,
 FactoryGirl.create(:organization, :distribution_system_operator,
                    name: 'SWM Infrastruktur GmbH & Co. KG',
                    slug: 'swm',
-                   edifactemail: 'netznutzung@swm.de',
                    phone: '+49 89 2361 4644',
                    fax: '+49 89 2361 4699',
                    website: 'http://www.swm-infrastruktur.de',
-                   market_place_id: '9907248000001'
 )
 FactoryGirl.create(:organization, :distribution_system_operator,
                    name: 'Bayernwerk Netz GmbH',
                    slug: 'bayernwerk-netz',
-                   edifactemail: 'netz-msb-mdl@bayernwerk.de',
                    phone: '+49 941 2017128',
                    fax: '+49 941 2017113',
                    website: 'http://www.bayernwerk-netz.de',
-                   market_place_id: '9901068000001'
 )
 FactoryGirl.create(:organization, :metering_point_operator,
                    name: 'MySmartGrid',
                    description: 'Fraunhofer Institut',
                    slug: 'mysmartgrid',
                    website: 'https://www.itwm.fraunhofer.de/en/departments/hpc/green-by-it/mySmartGrid-energy-savings.html'
-)
-FactoryGirl.create(:organization, :electricity_supplier,
-                   name: 'Buzzn GmbH (Lieferant)',
-                   description: 'Buzzn community power (performed by S-Hall)',
-                   slug: 'buzzn-energy',
-                   phone: '089 / 32 16 8',
-                   website: 'www.buzzn.net',
-                   market_place_id: '9905229000008',
-                   energy_classifications: [ create(:energy_classification, :buzzn) ]
 )
 FactoryGirl.create(:organization, :electricity_supplier,
                    name: 'E.ON'
@@ -293,12 +275,5 @@ FactoryGirl.create(:organization, :other, :with_bank_account,
                    name: 'hell & warm Forstenried GmbH',
                    slug: 'hell-warm',
                    email: 'xxx@info.de',
-                   phone: '089/89057180', mode: 'other'
+                   phone: '089/89057180'
 )
-
-# FIXME: fails with validation 'Gültigkeitsprüfung ist fehlgeschlagen: Contractor must be buzzn-systems'
-# create(:contract, :localpool_processing,
-#        localpool: SeedsRepository.localpools.people_power,
-#        customer: SeedsRepository.localpools.people_power.owner,
-#        contractor: SeedsRepository.organizations.buzzn
-# )
