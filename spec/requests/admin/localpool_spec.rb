@@ -341,7 +341,6 @@ describe Admin::LocalpoolRoda do
           "website"=>contract.contractor.website,
           "email"=>contract.contractor.email,
           "description"=>contract.contractor.description,
-          "mode"=>contract.contractor.mode,
           'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false
@@ -489,11 +488,21 @@ describe Admin::LocalpoolRoda do
           "website"=>contract.contractor.website,
           "email"=>contract.contractor.email,
           "description"=>contract.contractor.description,
-          "mode"=>contract.contractor.mode,
           'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false,
-          "address" => nil
+          "address" => {
+                    "id" => contract.contractor.address.id,
+                  "type" => "address",
+            "updated_at" => contract.contractor.address.updated_at.as_json,
+                "street" => contract.contractor.address.street,
+                  "city" => contract.contractor.address.city,
+                 "state" => contract.contractor.address.state,
+                   "zip" => contract.contractor.address.zip,
+               "country" => contract.contractor.address.attributes['country'],
+             "updatable" => true,
+             "deletable" => false
+        }
         },
         "customer"=>{
           "id"=>contract.customer.id,
@@ -590,7 +599,6 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         GET "/#{localpool.id}/metering-point-operator-contract", admin, include: 'tariffs,payments,contractor:address,customer:address,customer_bank_account,contractor_bank_account'
-
         expect(json.to_yaml).to eq metering_point_json.to_yaml
         expect(response).to have_http_status(200)
       end
