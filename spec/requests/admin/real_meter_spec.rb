@@ -98,7 +98,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
@@ -197,7 +197,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           PATCH "/test/#{group.id}/meters/#{real_meter.id}", $admin
           expect(response).to be_session_expired_json(401)
         end

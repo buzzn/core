@@ -77,7 +77,8 @@ module RequestsHelper
   end
 
   def expire_admin_session
-
-
+    Timecop.travel(Time.now +  60 * 60) do
+      yield
+    end
   end
 end

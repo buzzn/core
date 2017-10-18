@@ -46,7 +46,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
           expect(response).to be_session_expired_json(401)
         end
@@ -102,7 +102,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           POST "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/regular", $admin
           expect(response).to be_session_expired_json(401)
         end
@@ -170,7 +170,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
@@ -207,7 +207,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           DELETE "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/#{billing.id}", $admin
           expect(response).to be_session_expired_json(401)
         end

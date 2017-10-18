@@ -139,7 +139,7 @@ describe Admin::BankAccountRoda do
 
         it '401' do
           GET "/test/#{parent.id}/#{bank_account.id}", $admin
-          Timecop.travel(Time.now +  6 * 60 * 60) do
+          expire_admin_session do
             PATCH "/test/#{parent.id}/#{bank_account.id}", $admin
             expect(response).to be_session_expired_json(401)
           end
@@ -218,7 +218,7 @@ describe Admin::BankAccountRoda do
 
         it '401' do
           GET "/test/#{parent.id}/#{bank_account.id}", $admin
-          Timecop.travel(Time.now + 6 * 60 * 60) do
+          expire_admin_session do
             GET "/test/#{parent.id}/#{bank_account.id}", $admin
             expect(response).to be_session_expired_json(401)
           end
@@ -249,7 +249,7 @@ describe Admin::BankAccountRoda do
 
         it '401' do
           GET "/test/#{parent.id}/#{bank_account.id}", $admin
-          Timecop.travel(Time.now + 6 * 60 * 60) do
+          expire_admin_session do
             DELETE "/test/#{parent.id}/#{bank_account.id}", $admin
             expect(response).to be_session_expired_json(401)
           end

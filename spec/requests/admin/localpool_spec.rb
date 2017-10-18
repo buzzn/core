@@ -100,7 +100,7 @@ describe Admin::LocalpoolRoda do
 
     it '401' do
       GET "/test/#{localpool.id}", $admin
-      Timecop.travel(Time.now + 6 * 60 * 60) do
+      expire_admin_session do
         GET "/test/#{localpool.id}", $admin
         expect(response).to be_session_expired_json(401)
 
@@ -153,7 +153,7 @@ describe Admin::LocalpoolRoda do
 
     it '401' do
       GET "/test", $admin
-      Timecop.travel(Time.now + 6 * 60 * 60) do
+      expire_admin_session do
         POST "/test", $admin
         expect(response).to be_session_expired_json(401)
       end
@@ -236,7 +236,7 @@ describe Admin::LocalpoolRoda do
 
     it '401' do
       GET "/test/#{localpool.id}", $admin
-      Timecop.travel(Time.now + 6 * 60 * 60) do
+      expire_admin_session do
         PATCH "/test/#{localpool.id}", $admin
         expect(response).to be_session_expired_json(401)
       end
@@ -394,7 +394,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{localpool.id}/localpool-processing-contract", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           GET "/test/#{localpool.id}/localpool-processing-contract", $admin
           expect(response).to be_session_expired_json(401)
         end
@@ -543,7 +543,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{localpool.id}/metering-point-operator-contract", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           GET "/test/#{localpool.id}/metering-point-operator-contract", $admin
           expect(response).to be_session_expired_json(401)
         end
@@ -618,7 +618,7 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
       it '401' do
         GET "/test/#{localpool.id}/power-taker-contracts", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           GET "/test/#{localpool.id}/power-taker-contracts", $admin
           expect(response).to be_session_expired_json(401)
         end
@@ -665,7 +665,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{localpool.id}/managers", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           GET "/test/#{localpool.id}/managers", $admin
           expect(response).to be_session_expired_json(401)
         end

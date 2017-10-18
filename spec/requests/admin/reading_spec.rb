@@ -37,7 +37,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           POST "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
           expect(response).to be_session_expired_json(401)
         end
@@ -151,7 +151,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
           expect(response).to be_session_expired_json(401)
 
@@ -185,7 +185,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           DELETE "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
           expect(response).to be_session_expired_json(401)
         end

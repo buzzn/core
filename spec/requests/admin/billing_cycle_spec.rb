@@ -104,7 +104,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           POST "/test/#{group.id}/billing-cycles", $admin
           expect(response).to be_session_expired_json(401)
         end
@@ -173,7 +173,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           PATCH "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
@@ -226,7 +226,7 @@ describe Admin::LocalpoolRoda do
 
       it '401' do
         GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
-        Timecop.travel(Time.now + 6 * 60 * 60) do
+        expire_admin_session do
           DELETE "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
