@@ -20,8 +20,6 @@ module Contract
              to: :tax_data, allow_nil: true
 
     validates :localpool, presence: true
-    validates :first_master_uid, presence: true
-    validates :second_master_uid, presence: false
     validates :begin_date, presence: true
 
     def validate_invariants

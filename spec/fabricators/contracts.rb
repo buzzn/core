@@ -197,7 +197,6 @@ Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProces
   forecast_kwh_pa          { rand(100) + 1 }
   customer                 { Fabricate(:person) }
   localpool                { Fabricate(:localpool) }
-  first_master_uid         { sequence(:uid, 90688251510000000000002677114) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   contractor               { Organization.buzzn_systems }

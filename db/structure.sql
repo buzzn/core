@@ -1082,8 +1082,6 @@ CREATE TABLE contracts (
     attention_by text,
     third_party_billing_number character varying,
     third_party_renter_number character varying,
-    first_master_uid character varying,
-    second_master_uid character varying,
     metering_point_operator_name character varying,
     old_supplier_name character varying,
     type character varying NOT NULL,
@@ -3003,4 +3001,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171017081409');
 INSERT INTO schema_migrations (version) VALUES ('20171018123008');
 
 INSERT INTO schema_migrations (version) VALUES ('20171018124326');
+
+INSERT INTO schema_migrations (version) VALUES ('20171018132507');
 

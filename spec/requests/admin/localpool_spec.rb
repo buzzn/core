@@ -344,16 +344,7 @@ describe Admin::LocalpoolRoda do
         "end_date"=>nil,
         "updatable"=>true,
         "deletable"=>false,
-        "first_master_uid"=>contract.first_master_uid,
-        "second_master_uid"=>nil,
         "begin_date"=>contract.begin_date.to_s,
-        'subject_to_tax' => nil,
-        'sales_tax_number' => nil,
-        'tax_number' => nil,
-        'tax_rate' => nil,
-        'creditor_idenfication' => nil,
-        'retailer' => nil,
-        'provider_permission' => nil,
         "tariffs"=>{
           'array'=> contract.tariffs.collect do |t|
             {
