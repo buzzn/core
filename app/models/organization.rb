@@ -25,9 +25,6 @@ class Organization < ContractingParty
     }
   end
 
-  # TMP hack
-  attr_accessor :mode, :edifactemail, :market_place_id
-
   has_many :market_functions, dependent: :destroy, class_name: "OrganizationMarketFunction"
 
   def in_market_function(function)
