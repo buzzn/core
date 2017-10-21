@@ -156,6 +156,8 @@ describe Admin::LocalpoolRoda do
                 "end_date"=>nil,
                 "energyprice_cents_per_kwh"=>contract.tariffs[0].energyprice_cents_per_kwh,
                 "baseprice_cents_per_month"=>contract.tariffs[0].baseprice_cents_per_month,
+                'updatable' => false,
+                'deletable' => false,
               }
             ]
           },
@@ -249,6 +251,8 @@ describe Admin::LocalpoolRoda do
                 "end_date"=>nil,
                 "energyprice_cents_per_kwh"=>contract.tariffs[0].energyprice_cents_per_kwh,
                 "baseprice_cents_per_month"=>contract.tariffs[0].baseprice_cents_per_month,
+                'updatable' => false,
+                'deletable' => false,
               }
             ]
           },

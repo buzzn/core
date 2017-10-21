@@ -2,6 +2,7 @@ module Contract
   class Tariff < ActiveRecord::Base
 
     belongs_to :contracts, class_name: Base, foreign_key: :contract_id
+    belongs_to :group, class_name: Group::Base, foreign_key: :group_id
 
     validates :name, presence: true
     validates :begin_date, presence: true
@@ -13,26 +14,14 @@ module Contract
     scope :in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                   .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
     scope :at, -> (timestamp) do
-      timestamp = case timestamp
-                  when DateTime
-                    timestamp.to_time
-                  when Time
-                    timestamp
-                  when Date
-                    timestamp.to_time
-                  when Fixnum
-                    Time.at(timestamp)
-                  else
-                    raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")
-                  end
+      #binding.pry
       where('begin_date <= ?', timestamp)
         .where('end_date > ? OR end_date IS NULL', timestamp + 1.second)
     end
     scope :current, ->(now = Time.current) {where("begin_date < ? AND (end_date > ? OR end_date IS NULL)", now, now)}
 
-    def self.readable_by(*args)
-      # inherit from contract
-      where(Contract::Base.readable_by(*args).where("tariffs.contract_id = contracts.id").select(1).limit(1).exists)
-    end
+
+    # permissions helpers
+    scope :permitted, ->(uuids) { binding.pry; where(group_id: uuids) }
   end
 end

@@ -1,5 +1,6 @@
 class DropCoreTables < ActiveRecord::Migration
   def change
+    drop_table :tariffs
     drop_table :billings
     drop_table :billing_cycles
     drop_table :formula_parts

@@ -85,7 +85,7 @@ describe Admin::LocalpoolResource do
     attributes = ['localpool_processing_contract',
                   'metering_point_operator_contract',
                   'localpool_power_taker_contracts',
-                  'prices',
+                  'tariffs',
                   'admins',
                   'contracts',
                   'billing_cycles']
@@ -95,20 +95,21 @@ describe Admin::LocalpoolResource do
     expect(attrs.keys).to match_array base_attributes
   end
 
-  context 'prices' do
+  context 'tariffs' do
     it 'retrieve all' do
-      size = localpool.prices.size
+      size = localpool.tariffs.size
       attributes = ['name',
                     'baseprice_cents_per_month',
-                    'energyprice_cents_per_kilowatt_hour',
+                    'energyprice_cents_per_kwh',
                     'begin_date',
+                    'end_date',
                     'id',
                     'type',
                     'updated_at',
                     'updatable',
                     'deletable']
-      Fabricate(:price, localpool: localpool)
-      result = pools.retrieve(localpool.id).prices
+      Fabricate(:tariff, group: localpool)
+      result = pools.retrieve(localpool.id).tariffs
       expect(result.size).to eq size + 1
       expect(result.first.to_hash.keys).to match_array attributes
     end
@@ -117,13 +118,13 @@ describe Admin::LocalpoolResource do
       request_params = {
         name: "special",
         begin_date: Date.new(2016, 1, 1),
-        energyprice_cents_per_kilowatt_hour: 23.66,
+        energyprice_cents_per_kwh: 23.66,
         baseprice_cents_per_month: 500
       }
 
-      result = pools.retrieve(localpool.id).create_price(request_params)
-      expect(result.is_a?(Admin::PriceResource)).to eq true
-      expect(result.object.localpool).to eq localpool
+      result = pools.retrieve(localpool.id).create_tariff(request_params)
+      expect(result.is_a?(Contract::TariffResource)).to eq true
+      expect(result.object.group).to eq localpool
     end
   end
 

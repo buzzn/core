@@ -34,7 +34,9 @@ describe Admin, :swagger do
 
   entity!(:billing_cycle_2) { Fabricate(:billing_cycle, localpool: localpool) }
 
-  entity!(:price) { Fabricate(:price, localpool: localpool) }
+  entity!(:tariff) { Fabricate(:tariff, group: localpool) }
+
+  entity!(:tariff_2) { Fabricate(:tariff, group: localpool) }
 
   entity!(:contract) { localpool.contracts.sample }
 
@@ -287,24 +289,23 @@ describe Admin, :swagger do
     description 'delete the bank-accounts of the organization for the given IDs'
   end
 
-  # prices
+  # tariffs
 
-  get '/localpools/{localpool.id}/prices' do
-    description 'returns all the prices of the localpool'
+  get '/localpools/{localpool.id}/tariffs' do
+    description 'returns all the tariffs of the localpool'
   end
 
-  post '/localpools/{localpool.id}/prices' do
-    description 'create price for the localpool'
-    schema Schemas::Transactions::Admin::Price::Create
+  post '/localpools/{localpool.id}/tariffs' do
+    description 'create tariff for the localpool'
+    schema TariffCreate
   end
 
-  get '/localpools/{localpool.id}/prices/{price.id}' do
-    description 'returns the price of the localpool for the given IDs'
+  get '/localpools/{localpool.id}/tariffs/{tariff.id}' do
+    description 'returns the tariff of the localpool for the given IDs'
   end
 
-  patch '/localpools/{localpool.id}/prices/{price.id}' do
-    description 'updates the price of the localpool for the given IDs'
-    schema Schemas::Transactions::Admin::Price::Update
+  delete '/localpools/{localpool.id}/tariffs/{tariff_2.id}' do
+    description 'deletes the tariff of the localpool for the given IDs'
   end
 
   # billing-cycles

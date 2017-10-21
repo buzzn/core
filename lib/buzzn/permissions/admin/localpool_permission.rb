@@ -109,7 +109,7 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
 
       # reuse permissions from 'organizations' -> 'contact'
       contact '/organizations/contact'
- 
+
       address do
         retrieve :managers_organization_self
         update :managers_organization_self
@@ -202,8 +202,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     end
   end
 
-  prices do
-    crud :managers
+  tariffs do
+    create :operators
+    retrieve :all
+    delete :operators
   end
 
   billing_cycles do
@@ -211,8 +213,8 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     retrieve :all
     update :managers
     delete :managers
-    
-    billings do     
+
+    billings do
       create :managers
       retrieve :all
       update :managers

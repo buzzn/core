@@ -1715,21 +1715,6 @@ CREATE TABLE scores (
 
 
 --
--- Name: tariffs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE tariffs (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    name character varying NOT NULL,
-    begin_date date NOT NULL,
-    end_date date,
-    energyprice_cents_per_kwh integer NOT NULL,
-    baseprice_cents_per_month integer NOT NULL,
-    contract_id uuid NOT NULL
-);
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2147,14 +2132,6 @@ ALTER TABLE ONLY scores
 
 
 --
--- Name: tariffs tariffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY tariffs
-    ADD CONSTRAINT tariffs_pkey PRIMARY KEY (id);
-
-
---
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2563,13 +2540,6 @@ CREATE INDEX index_scores_on_scoreable_id_and_scoreable_type ON scores USING btr
 
 
 --
--- Name: index_tariffs_on_contract_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_tariffs_on_contract_id ON tariffs USING btree (contract_id);
-
-
---
 -- Name: index_users_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2916,14 +2886,6 @@ ALTER TABLE ONLY organizations
 
 ALTER TABLE ONLY payments
     ADD CONSTRAINT fk_rails_9215ad6069 FOREIGN KEY (contract_id) REFERENCES contracts(id);
-
-
---
--- Name: tariffs fk_rails_e863d6119e; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY tariffs
-    ADD CONSTRAINT fk_rails_e863d6119e FOREIGN KEY (contract_id) REFERENCES contracts(id);
 
 
 --
@@ -3337,6 +3299,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171018132507');
 INSERT INTO schema_migrations (version) VALUES ('20171018134029');
 
 INSERT INTO schema_migrations (version) VALUES ('20171018134419');
+
+INSERT INTO schema_migrations (version) VALUES ('20171019130218');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142114');
 
