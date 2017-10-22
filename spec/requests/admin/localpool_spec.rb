@@ -482,20 +482,20 @@ describe Admin::LocalpoolRoda do
         "deletable"=>false,
         "metering_point_operator_name"=>contract.metering_point_operator_name,
         "tariffs"=> {
-          'array'=>[
+          'array'=>contract.tariffs.collect do |tariff|
             {
-              "id"=>contract.tariffs[0].id,
+              "id"=>tariff.id,
               "type"=>'contract_tariff',
               'updated_at'=>nil,
-              "name"=>contract.tariffs[0].name,
-              "begin_date"=>contract.tariffs[0].begin_date.to_s,
+              "name"=>contract.tariff.name,
+              "begin_date"=>contract.tariff.begin_date.to_s,
               "end_date"=>nil,
-              "energyprice_cents_per_kwh"=>contract.tariffs[0].energyprice_cents_per_kwh,
-              "baseprice_cents_per_month"=>contract.tariffs[0].baseprice_cents_per_month,
+              "energyprice_cents_per_kwh"=>contract.tariff.energyprice_cents_per_kwh,
+              "baseprice_cents_per_month"=>contract.tariff.baseprice_cents_per_month,
               'updatable' => false,
               'deletable' => false,
             }
-          ]
+          end
         },
         "payments"=>{
           'array'=> contract.payments.collect do |p|

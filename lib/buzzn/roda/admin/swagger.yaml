@@ -1505,7 +1505,7 @@ paths:
         required: true
         type: string
         format: date
-      - name: energyprice_cents_per_kilowatt_hour
+      - name: energyprice_cents_per_kwh
         in: formData
         required: true
         type: number

@@ -13,5 +13,9 @@ module Contract
 
     # missing expected attribute
     def updated_at; nil; end
+
+    def deletable
+      super && object.contracts.nil?
+    end
   end
 end
