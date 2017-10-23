@@ -135,8 +135,6 @@ module Buzzn::Resource
 
       private
 
-      PermissionContainer = Import.instance('service.permissions')
-
       def allowed_roles(user, perms, id = nil)
         return false unless user
         roles = id ? user.rolenames_for(id) : user.unbound_rolenames
@@ -153,7 +151,7 @@ module Buzzn::Resource
 
       def permissions
         if @permissions.nil?
-          @permissions = PermissionContainer[self]
+          @permissions = (self::Permission rescue NoPermission)
         end
         @permissions
       end

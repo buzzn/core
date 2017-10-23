@@ -11,7 +11,7 @@ module Admin
         r.run LocalpoolRoda
       end
 
-#      rodauth.check_session_expiration
+      rodauth.check_session_expiration
 
       admin = AdminResource.new(current_user)
 

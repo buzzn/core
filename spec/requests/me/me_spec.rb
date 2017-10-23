@@ -4,15 +4,11 @@ describe Me::Roda do
     Me::Roda # this defines the active application for this test
   end
 
-  login_path '/login'
+  entity(:person) { $user.person.reload }
 
-  entity!(:admin) { Fabricate(:admin_token) }
-
-  entity!(:user_token) { Fabricate(:user_token) }
-
-  entity!(:other) { Fabricate(:user_token) }
-
-  entity(:person) { Account::Base.find(user_token.resource_owner_id).person }
+  let(:expired_json) do
+    {"error" => "This session has expired, please login again." }
+  end
 
   let(:denied_json) do
     {
@@ -47,7 +43,38 @@ describe Me::Roda do
     }
   end
 
+  context 'ping' do
+    context 'GET' do
+      
+      it '200' do
+        GET '/ping', $user
+        expect(response).to have_http_status(200)
+        expect(response.body).to eq 'pong'
+      end
+
+      it '401' do
+        GET '/ping', $user
+        Timecop.travel(Time.now + 30 * 60) do
+          GET '/ping', $user
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+    end
+  end
+
   context 'GET' do
+
+    it '401' do
+      GET '', $user
+      Timecop.travel(Time.now + 30 * 60) do
+        GET '', $user
+
+        expect(response).to have_http_status(401)
+        expect(json).to eq(expired_json)
+      end
+    end
 
     it '403' do
       GET ''
@@ -56,7 +83,7 @@ describe Me::Roda do
     end
 
     it '200' do
-      GET '', user_token
+      GET '', $user
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq person_json.to_yaml
     end
@@ -113,6 +140,16 @@ describe Me::Roda do
       }
     end
 
+    it '401' do
+      GET '', $user
+      Timecop.travel(Time.now + 30 * 60) do
+        PATCH '', $user
+
+        expect(response).to have_http_status(401)
+        expect(json).to eq(expired_json)
+      end
+    end
+
     it '403' do
       PATCH ''
       expect(response).to have_http_status(403)
@@ -120,13 +157,13 @@ describe Me::Roda do
     end
 
     it '409' do
-      PATCH '', user_token, updated_at: DateTime.now
+      PATCH '', $user, updated_at: DateTime.now
       expect(response).to have_http_status(409)
       expect(json).to eq stale_json
     end
 
-    it '422 wrong' do
-      PATCH '', user_token,
+    it '422' do
+      PATCH '', $user,
             title: 'Master' * 20,
             prefix: 'Both',
             first_name: 'Maxima' * 20,
@@ -134,14 +171,13 @@ describe Me::Roda do
             phone: '+(0)80 123-312.321 x123 #123 *1@2&3',
             fax: '123312' * 40,
             preferred_language: 'none'
-
       expect(response).to have_http_status(422)
       expect(json.to_yaml).to eq send("wrong_json").to_yaml
     end
 
     it '200' do
       old = person.updated_at
-      PATCH '', user_token,
+      PATCH '', $user,
             updated_at: person.updated_at,
             title: 'Prof.',
             prefix: 'M',

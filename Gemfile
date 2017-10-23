@@ -7,6 +7,8 @@ gem 'dry-monads'
 gem 'dry-transaction'
 gem 'dry-struct'
 gem 'dry-initializer'
+# TODO if we are going to use this singleton container then me (christian) needs to publish/push this gem and use it via rubygems.org
+gem 'dry-more-container', git: 'https://github.com/mkristian/dry-more-container.git'
 
 # pdf
 gem 'slim'
@@ -41,6 +43,9 @@ gem 'validates_zipcode'
 gem 'countries'
 gem 'iban-tools'
 
+# discovergy
+gem 'oauth'
+
 # Backend
 gem 'rails'
 gem 'money-rails'
@@ -52,7 +57,6 @@ gem 'puma'
 gem 'awesome_print'
 gem 'mail_view'
 gem 'rack-cors',               require: 'rack/cors'
-gem 'doorkeeper'
 gem 'rolify'
 gem 'ffaker'
 gem 'mini_magick'
@@ -70,7 +74,6 @@ gem 'acts_as_commentable_with_threading'
 gem 'awesome_nested_set'
 gem 'attr_encrypted', '1.3.5'
 gem 'byebug'
-gem 'oauth'
 gem 'remote_lock'
 gem 'fabrication'
 gem 'dotenv-rails'

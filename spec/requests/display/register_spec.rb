@@ -6,25 +6,11 @@ describe Display::GroupRoda do
 
   context 'registers' do
 
-    entity(:admin) { Fabricate(:admin_token) }
-
-    entity(:user) { Fabricate(:user_token) }
-
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve Register::Base: permission denied for User: #{user.resource_owner_id}"
-          }
-        ]
-      }
-    end
-
     let(:not_found_json) do
       {
         "errors" => [
           {
-            "detail"=>"Register::Base: bla-blub not found by User: #{admin.resource_owner_id}"
+            "detail"=>"Register::Base: bla-blub not found"
           }
         ]
       }
@@ -85,13 +71,13 @@ describe Display::GroupRoda do
       end
 
       it '404' do
-        GET "/#{group.id}/registers/bla-blub", admin
+        GET "/#{group.id}/registers/bla-blub", nil
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
 
       it '200 all' do
-        GET "/#{group.id}/registers?include=meter", admin
+        GET "/#{group.id}/registers?include=meter", nil
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq sort(registers_json).to_yaml
       end
@@ -103,7 +89,7 @@ describe Display::GroupRoda do
             register = send "#{type}_register"
             register_json = send "#{type}_register_json"
 
-            GET "/#{group.id}/registers/#{register.id}?include=meter", admin
+            GET "/#{group.id}/registers/#{register.id}?include=meter", nil
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
           end
@@ -120,7 +106,7 @@ describe Display::GroupRoda do
             let(:register) { send "#{type}_register" }
 
             it '404' do
-              GET "/#{group.id}/registers/#{register.id}/readings", admin
+              GET "/#{group.id}/registers/#{register.id}/readings", nil
 
               expect(response).to have_http_status(404)
             end

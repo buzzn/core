@@ -29,7 +29,7 @@ module Buzzn
             errors = "{\"errors\":[{\"detail\":\"#{e.message}\"}]}"
             logger.info{ errors.to_s }
           else
-            logger.info{ "#{e.message}\n\t" + e.backtrace.join("\n\t")}
+            logger.error{ "#{e.message}\n\t" + e.backtrace.join("\n\t")}
             errors = "{\"errors\":[{\"detail\":\"internal server error\"}]}"
           end
           if response.status == 500

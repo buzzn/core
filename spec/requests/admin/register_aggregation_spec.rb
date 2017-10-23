@@ -1,7 +1,8 @@
+require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   def app
-    Admin::LocalpoolRoda # this defines the active application for this test
+    TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
   entity(:discovergy_meter) do
@@ -25,8 +26,6 @@ describe Admin::LocalpoolRoda do
     group.registers += [slp_register, sep_register]
     group
   end
-
-  entity(:admin) { Fabricate(:admin_token) }
 
   let(:time) { Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1) }
 
@@ -67,7 +66,7 @@ describe Admin::LocalpoolRoda do
             begin
               Timecop.freeze(time)
 
-              GET "/#{group.id}/registers/#{input_register.id}/ticker", admin
+              GET "/test/#{group.id}/registers/#{input_register.id}/ticker", $admin
 
               expect(response).to have_http_status(200)
               expect(json).to eq(in_json)
@@ -76,7 +75,7 @@ describe Admin::LocalpoolRoda do
               expect(response.headers['ETag']).not_to be_nil
               expect(response.headers['Last-Modified']).not_to be_nil
 
-              GET "/#{group.id}/registers/#{output_register.id}/ticker", admin
+              GET "/test/#{group.id}/registers/#{output_register.id}/ticker", $admin
 
               expect(response).to have_http_status(200)
               expect(json).to eq(out_json)
@@ -87,7 +86,7 @@ describe Admin::LocalpoolRoda do
 
               # cache hit
               Timecop.freeze(time + 5)
-              GET "/#{group.id}/registers/#{output_register.id}/ticker", admin
+              GET "/test/#{group.id}/registers/#{output_register.id}/ticker", $admin
 
               expect(response).to have_http_status(200)
               expect(json).to eq(out_json)
@@ -97,7 +96,7 @@ describe Admin::LocalpoolRoda do
 
               # no cache hit
               Timecop.freeze(time + 25)
-              GET "/#{group.id}/registers/#{output_register.id}/ticker", admin
+              GET "/test/#{group.id}/registers/#{output_register.id}/ticker", $admin
 
               expect(response).to have_http_status(200)
               expect(json).to eq({ "timestamp" => 1467446702.188,
@@ -133,7 +132,7 @@ describe Admin::LocalpoolRoda do
           begin
             Timecop.freeze(time)
 
-            GET "/#{group.id}/registers/#{slp_register.id}/ticker", admin
+            GET "/test/#{group.id}/registers/#{slp_register.id}/ticker", $admin
 
             expect(response).to have_http_status(200)
             expect(json).to eq(slp_json)
@@ -143,7 +142,7 @@ describe Admin::LocalpoolRoda do
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
 
-            GET "/#{group.id}/registers/#{slp_register.id}/ticker", admin
+            GET "/test/#{group.id}/registers/#{slp_register.id}/ticker", $admin
 
             expect(response).to have_http_status(200)
             expect(json).to eq(slp_json)
@@ -230,13 +229,13 @@ describe Admin::LocalpoolRoda do
       context 'GET' do
 
         it '422 missing duration' do
-          GET "/#{group.id}/registers/#{input_register.id}/charts", admin
+          GET "/test/#{group.id}/registers/#{input_register.id}/charts", $admin
           expect(response).to have_http_status(422)
           expect(json).to eq missing_json
         end
 
         it '422 wrong duration' do
-          GET "/#{group.id}/registers/#{input_register.id}/charts", admin, duration: :century
+          GET "/test/#{group.id}/registers/#{input_register.id}/charts", $admin, duration: :century
           expect(response).to have_http_status(422)
           expect(json).to eq invalid_json
         end
@@ -247,7 +246,7 @@ describe Admin::LocalpoolRoda do
             begin
               Timecop.freeze(time)
 
-              GET "/#{group.id}/registers/#{input_register.id}/charts", admin, duration: :hour
+              GET "/test/#{group.id}/registers/#{input_register.id}/charts", $admin, duration: :hour
 
               expect(response).to have_http_status(200)
               expect(json).to eq(hour_json)
@@ -255,7 +254,7 @@ describe Admin::LocalpoolRoda do
               expect(response.headers['ETag']).not_to be_nil
               expect(response.headers['Last-Modified']).not_to be_nil
 
-              GET  "/#{group.id}/registers/#{output_register.id}/charts", admin, duration: :day
+              GET  "/test/#{group.id}/registers/#{output_register.id}/charts", $admin, duration: :day
 
               expect(response).to have_http_status(200)
               expect(json).to eq(day_json)
@@ -263,7 +262,7 @@ describe Admin::LocalpoolRoda do
               expect(response.headers['ETag']).not_to be_nil
               expect(response.headers['Last-Modified']).not_to be_nil
 
-              GET  "/#{group.id}/registers/#{input_register.id}/charts", admin, duration: :day, timestamp: time - 1.day
+              GET  "/test/#{group.id}/registers/#{input_register.id}/charts", $admin, duration: :day, timestamp: time - 1.day
 
               expect(response).to have_http_status(200)
               expect(json).to eq(yesterday_json)
@@ -271,7 +270,7 @@ describe Admin::LocalpoolRoda do
               expect(response.headers['ETag']).not_to be_nil
               expect(response.headers['Last-Modified']).not_to be_nil
 
-              GET  "/#{group.id}/registers/#{output_register.id}/charts", admin, duration: :month
+              GET  "/test/#{group.id}/registers/#{output_register.id}/charts", $admin, duration: :month
 
               expect(response).to have_http_status(200)
               expect(json).to eq(month_json)
@@ -279,7 +278,7 @@ describe Admin::LocalpoolRoda do
               expect(response.headers['ETag']).not_to be_nil
               expect(response.headers['Last-Modified']).not_to be_nil
 
-              GET  "/#{group.id}/registers/#{input_register.id}/charts", admin, duration: :year
+              GET  "/test/#{group.id}/registers/#{input_register.id}/charts", $admin, duration: :year
 
               expect(json).to eq(year_json)
               expect(response).to have_http_status(200)
@@ -423,7 +422,7 @@ describe Admin::LocalpoolRoda do
           begin
             Timecop.freeze(time)
 
-            GET "/#{group.id}/registers/#{slp_register.id}/charts", admin, duration: :hour
+            GET "/test/#{group.id}/registers/#{slp_register.id}/charts", $admin, duration: :hour
 
             expect(response).to have_http_status(200)
             expect(json).to eq(slp_hour_json)
@@ -431,7 +430,7 @@ describe Admin::LocalpoolRoda do
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
 
-            GET  "/#{group.id}/registers/#{sep_register.id}/charts", admin, duration: :day
+            GET  "/test/#{group.id}/registers/#{sep_register.id}/charts", $admin, duration: :day
 
             expect(response).to have_http_status(200)
             expect(json).to eq(sep_day_json)
@@ -439,7 +438,7 @@ describe Admin::LocalpoolRoda do
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
 
-            GET  "/#{group.id}/registers/#{slp_register.id}/charts", admin, duration: :day, timestamp: time - 1.day
+            GET  "/test/#{group.id}/registers/#{slp_register.id}/charts", $admin, duration: :day, timestamp: time - 1.day
 
             expect(response).to have_http_status(200)
             expect(json).to eq(slp_yesterday_json)
@@ -447,7 +446,7 @@ describe Admin::LocalpoolRoda do
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
 
-            GET  "/#{group.id}/registers/#{sep_register.id}/charts", admin, duration: :month
+            GET  "/test/#{group.id}/registers/#{sep_register.id}/charts", $admin, duration: :month
 
             expect(response).to have_http_status(200)
             expect(json).to eq(sep_month_json)
@@ -455,7 +454,7 @@ describe Admin::LocalpoolRoda do
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
 
-            GET  "/#{group.id}/registers/#{slp_register.id}/charts", admin, duration: :year
+            GET  "/test/#{group.id}/registers/#{slp_register.id}/charts", $admin, duration: :year
 
             expect(json).to eq(slp_year_json)
             expect(response).to have_http_status(200)

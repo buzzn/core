@@ -1,12 +1,11 @@
+require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   def app
-    Admin::LocalpoolRoda # this defines the active application for this test
+    TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
   context 'contracts' do
-
-    entity(:admin) { Fabricate(:admin_token) }
 
     entity(:localpool) { Fabricate(:localpool) }
 
@@ -26,29 +25,8 @@ describe Admin::LocalpoolRoda do
       orga
     end
 
-    entity(:user) do
-      token = Fabricate(:user_token)
-      account = Account::Base.find(token.resource_owner_id)
-      account.person.add_role(Role::GROUP_MEMBER, localpool)
-      token
-    end
-
-    let(:denied_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"retrieve Contract::Base: permission denied for User: #{user.resource_owner_id}" }
-        ]
-      }
-    end
-
-    let(:not_found_json) do
-      {
-        "errors" => [
-          {
-            "detail"=>"Contract::Localpool: bla-blub not found by User: #{admin.resource_owner_id}" }
-        ]
-      }
+    before do
+      $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
     end
 
     entity(:metering_point_operator_contract) do
@@ -319,25 +297,25 @@ describe Admin::LocalpoolRoda do
 
       # NOTE picking a sample contract is enough for the 404 and 403 tests
 
-      let(:denied_json) do
-        {
-          "errors" => [
-            {
-              "detail"=>"retrieve Contract::MeteringPointOperator: #{metering_point_operator_contract.id} permission denied for User: #{user.resource_owner_id}" }
-          ]
-        }
+      it '401' do
+        GET "/test/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $admin
+        expire_admin_session do
+          GET "/test/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $admin
+          expect(response).to be_session_expired_json(401)
+
+          GET "/test/#{localpool.id}/contracts", $admin
+          expect(response).to be_session_expired_json(401)
+        end
       end
 
       it '403' do
-        GET "/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", user
-        expect(json).to eq denied_json
-        expect(response).to have_http_status(403)
+        GET "/test/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $user
+        expect(response).to be_denied_json(403, metering_point_operator_contract)
       end
 
       it '404' do
-        GET "/#{localpool.id}/contracts/bla-blub", admin
-        expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
+        GET "/test/#{localpool.id}/contracts/bla-blub", $admin
+        expect(response).to be_not_found_json(404, Contract::Localpool)
       end
 
       [:metering_point_operator, :localpool_power_taker].each do |type|
@@ -349,7 +327,7 @@ describe Admin::LocalpoolRoda do
           let(:contract_json) { send "#{type}_contract_json" }
 
           it '200' do
-            GET "/#{localpool.id}/contracts/#{contract.id}", admin, include: 'tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register'
+            GET "/test/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end
@@ -358,18 +336,6 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'customer' do
-
-      # note: as customer is part of Contract::Base picking a sample contract is
-      #       sufficient for the tests
-      let(:customer_not_found_json) do
-        {
-          "errors" => [
-            {
-              # TODO fix bad error response
-              "detail"=>"Buzzn::RecordNotFound" }
-          ]
-        }
-      end
 
       context 'GET' do
 
@@ -384,8 +350,16 @@ describe Admin::LocalpoolRoda do
           json
         end
 
+        it '401' do
+          GET "/test/#{localpool.id}/contracts/#{contract.id}/customer", $admin
+          expire_admin_session do
+            GET "/test/#{localpool.id}/contracts/#{contract.id}/customer", $admin
+            expect(response).to be_session_expired_json(401)
+          end
+        end
+
         it '200' do
-          GET "/#{localpool.id}/contracts/#{contract.id}/customer", admin
+          GET "/test/#{localpool.id}/contracts/#{contract.id}/customer", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq(customer_json.to_yaml)
         end
@@ -393,18 +367,6 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'contractor' do
-
-      # note: as contractor is part of Contract::Base picking a sample contract is
-      #       sufficient for the tests
-      let(:contractor_not_found_json) do
-        {
-          "errors" => [
-            {
-              # TODO fix bad error response
-              "detail"=>"Buzzn::RecordNotFound" }
-          ]
-        }
-      end
 
       context 'GET' do
 
@@ -420,8 +382,16 @@ describe Admin::LocalpoolRoda do
           json
         end
 
+        it '401' do
+          GET "/test/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
+          expire_admin_session do
+            GET "/test/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
+            expect(response).to be_session_expired_json(401)
+          end
+        end
+
         it '200' do
-          GET "/#{localpool.id}/contracts/#{contract.id}/contractor", admin
+          GET "/test/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq(contractor_json.to_yaml)
         end

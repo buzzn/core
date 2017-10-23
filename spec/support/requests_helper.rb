@@ -12,7 +12,7 @@ module RequestsHelper
   end
 
   def login_path
-    self.class.login_path || raise('login path not set')
+    self.class.login_path || '/login'
   end
 
   def authorize(account, headers = {})
@@ -34,8 +34,6 @@ module RequestsHelper
     }
     account = account.call if account.is_a? Proc
     case account
-    when Doorkeeper::AccessToken
-      default_headers["HTTP_AUTHORIZATION"]  = "Bearer #{account.token}"
     when Account::Base
       default_headers['Authorization'] = authorize(account, headers)
     when NilClass
@@ -76,5 +74,11 @@ module RequestsHelper
 
   def sort(hash, id = 'id')
     hash.sort{|n,m| m[id] <=> n[id]}
+  end
+
+  def expire_admin_session
+    Timecop.travel(Time.now +  60 * 60) do
+      yield
+    end
   end
 end

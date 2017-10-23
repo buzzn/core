@@ -3,6 +3,7 @@ require_relative 'reader'
 require_relative 'active_record'
 require_relative 'main_container'
 require 'dry/auto_inject'
+require 'dry/more/container/singleton'
 
 # core extensions
 require_relative '../core/number'
@@ -23,21 +24,20 @@ module Buzzn
 
         def run
           @logger = Logger.new(self)
-          # setup services, redo require until no more errors
-          # or no more changes in which case there will be an error raised
+
+          # preload singleton services
+          singletons = Dry::More::Container::Singleton.new
           Application.config.paths['lib'].dup.tap do |app|
-            app.glob = "buzzn/services/*.rb"
-            remaining = -1
-            errors = init(*app.to_a)
-            while errors.size > 0
-              if errors.size == remaining
-                msg = errors.collect{|k, e| e.message}.join(',')
-                raise Dry::Container::Error.new(msg)
-              end
-              remaining = errors.size
-              errors = init(*errors.keys)
+            app.glob = "buzzn/services/**/*.rb"
+            app.to_a.each do |path|
+              require path
+              name = File.basename(path).sub(/\.rb/,'')
+              cname = name.split('_').collect {|n| n.capitalize }.join
+              clazz = Buzzn::Services.const_get(cname)
+              singletons.register("service.#{name}", clazz)
             end
           end
+          MainContainer.merge(singletons)
 
           # load transactions
           Application.config.paths['lib'].dup.tap do |app|
@@ -45,46 +45,12 @@ module Buzzn
             app.to_a.each { |path| require path }
           end
 
-          # load resource
-          Application.config.paths['lib'].dup.tap do |app|
-            app.glob = "buzzn/resource/*.rb"
-            app.to_a.each { |path| require path }
-          end
-
-          # load resources
-          Application.config.paths['lib'].dup.tap do |app|
-            app.glob = "buzzn/resources/**/*.rb"
-            app.to_a.each { |path| require path }
-          end
-
-          # load rodas
-          Application.config.paths['lib'].dup.tap do |app|
-            app.glob = "buzzn/roda/**/*.rb"
-            app.to_a.each { |path| require path }
-          end
-        end
-
-        private
-
-        def init(*paths)
-          errors = {}
-          paths.each do |path|
-            register(path, errors)
-          end
-          errors
-        end
-
-        def register(path, errors)
-          require path
-          name = File.basename(path).sub(/\.rb/,'')
-          cname = name.split('_').collect {|n| n.capitalize }.join
-          begin
-            service = Buzzn::Services.const_get(cname).new
-            MainContainer.register("service.#{name}", service)
-            @logger.info{"registered #{name}: #{service}"}
-          rescue Dry::Container::Error => e
-            @logger.debug{"register #{name} failed: #{e.message}"}
-            errors[path] = e
+          # eager require some files
+          %w(resource resources roda permissions).each do |dir|
+            Application.config.paths['lib'].dup.tap do |app|
+              app.glob = "buzzn/#{dir}/**/*.rb"
+              app.to_a.each { |path| require path }
+            end
           end
         end
       end

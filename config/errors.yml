@@ -1,0 +1,9 @@
+en:
+  errors:
+    phone_number?: "must be a valid phone-number"
+
+    iban?: "must be a valid iban"
+
+    email?: "must be a valid email"
+
+    valid_role?: "BUG: missing GROUP_ADMIN role"

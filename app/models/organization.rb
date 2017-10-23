@@ -59,6 +59,10 @@ class Organization < ContractingParty
     end
   end
 
+  def self.reset_cache
+    instance_variables.select { |n| n =~ /@a_/ }.each { |n| instance_variable_set(n, nil) }
+  end
+
   def self.search_attributes
     [:name, :mode, :email, :website, :description, address: [:city, :zip, :street]]
   end

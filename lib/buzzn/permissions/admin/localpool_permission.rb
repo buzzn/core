@@ -1,4 +1,4 @@
-Buzzn::Permission.new(Admin::LocalpoolResource) do
+Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolResource) do
 
   # define groups of roles
   group(:none)
@@ -26,7 +26,12 @@ Buzzn::Permission.new(Admin::LocalpoolResource) do
 
   owner do
     retrieve :managers
+    create :operators
+    update :operators
     contact do
+      retrieve :managers
+    end
+    legal_representation do
       retrieve :managers
     end
   end

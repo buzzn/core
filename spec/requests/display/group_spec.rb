@@ -4,17 +4,11 @@ describe Display::GroupRoda do
     Display::GroupRoda # this defines the active application for this test
   end
 
-  entity(:admin) { Fabricate(:admin_token) }
-
-  entity(:user) { Fabricate(:user_token) }
-
-  entity(:other) { Fabricate(:user_token) }
-
   let(:not_found_json) do
     {
       "errors" => [
         {
-          "detail"=>"Group::Base: bla-blub not found by User: #{admin.resource_owner_id}"
+          "detail"=>"Group::Base: bla-blub not found"
         }
       ]
     }
@@ -26,7 +20,7 @@ describe Display::GroupRoda do
 
   entity!(:group) do
     group = Fabricate(:localpool)
-    Account::Base.find(user.resource_owner_id).person.add_role(Role::GROUP_ADMIN, group)
+    $user.person.reload.add_role(Role::GROUP_ADMIN, group)
     group
   end
 
@@ -90,7 +84,7 @@ describe Display::GroupRoda do
     end
 
     it '404' do
-      GET "/bla-blub", admin
+      GET "/bla-blub", nil
       expect(response).to have_http_status(404)
       expect(json).to eq not_found_json
     end
@@ -100,29 +94,13 @@ describe Display::GroupRoda do
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq group_json.to_yaml
 
-      GET "/#{group.id}", user, include: :mentors
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq group_json.to_yaml
-
-      GET "/#{group.id}", admin, include: :mentors
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq group_json.to_yaml
-
-      GET "/#{group.slug}", admin, include: :mentors
+      GET "/#{group.slug}", nil, include: :mentors
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq group_json.to_yaml
     end
 
     it '200 all' do
       GET "", nil, include: :mentors
-      expect(response).to have_http_status(200)
-      expect(sort(json['array']).to_yaml).to eq sort(groups_json).to_yaml
-
-      GET "", user, include: :mentors
-      expect(response).to have_http_status(200)
-      expect(sort(json['array']).to_yaml).to eq sort(groups_json).to_yaml
-
-      GET "", admin, include: :mentors
       expect(response).to have_http_status(200)
       expect(sort(json['array']).to_yaml).to eq sort(groups_json).to_yaml
     end
@@ -133,7 +111,7 @@ describe Display::GroupRoda do
     context 'GET' do
 
       it '404' do
-        GET "/bla-blub/mentors", admin
+        GET "/bla-blub/mentors", nil
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
@@ -160,7 +138,7 @@ describe Display::GroupRoda do
       end
 
       it "200" do
-        GET "/#{group.id}/mentors", admin
+        GET "/#{group.id}/mentors", nil
           
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(mentors_json.to_yaml)
@@ -220,14 +198,14 @@ describe Display::GroupRoda do
       end
 
       it '422 missing' do
-        GET "/#{group.id}/scores", admin
+        GET "/#{group.id}/scores", nil
 
         expect(response).to have_http_status(422)
         expect(json.to_yaml).to eq(missing_json.to_yaml)
       end
 
       it '422 wrong' do
-        GET "/#{group.id}/scores", admin,
+        GET "/#{group.id}/scores", nil,
             interval: :today,
             timestamp: 'today',
             mode: :any
@@ -237,14 +215,14 @@ describe Display::GroupRoda do
       end
 
       it '200' do
-        GET "/#{group.id}/scores", admin,
+        GET "/#{group.id}/scores", nil,
             interval: intervals.sample,
             timestamp: Time.current - 10.years
 
         expect(json['array'].to_yaml).to eq(empty_json.to_yaml)
         expect(response).to have_http_status(200)
 
-        GET "/#{group.id}/scores", admin,
+        GET "/#{group.id}/scores", nil,
             interval: intervals.sample,
             timestamp: Time.current - 10.years,
             mode: modes.sample
@@ -252,7 +230,7 @@ describe Display::GroupRoda do
         expect(json['array'].to_yaml).to eq(empty_json.to_yaml)
         expect(response).to have_http_status(200)
 
-        GET "/#{group.id}/scores", admin,
+        GET "/#{group.id}/scores", nil,
             interval: interval,
             timestamp: now,
             mode: mode

@@ -1,0 +1,6 @@
+class AddForeignKeyContraintsInPersonsRole < ActiveRecord::Migration
+  def change
+    add_foreign_key :persons_roles, :roles, name: :fk_persons_roles_role
+    add_foreign_key :persons_roles, :persons, name: :fk_persons_roles_person
+  end
+end

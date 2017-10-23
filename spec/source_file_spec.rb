@@ -43,6 +43,7 @@ describe "Source File" do
   end
 
   (Dir['lib/**/*rb'] + Dir['app/models/*rb'] + Dir['app/controller/api/**/*rb']).each do |file|
+    next if file =~ /localpool_resource.rb/
     ['add_role', 'remove_role'].each do |roler|
       it "source code files do not use #{roler} in #{file}" do
         content = File.read(file)

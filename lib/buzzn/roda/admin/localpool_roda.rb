@@ -28,7 +28,16 @@ module Admin
           r.run ::RegisterRoda
         end
 
-        #rodauth.check_session_expiration
+        r.get! 'charts' do
+          aggregated(charts.call(r.params,
+                                 resource: [localpool.method(:charts)]))
+        end
+
+        r.get! 'bubbles' do
+          aggregated(localpool.bubbles)
+        end
+
+        rodauth.check_session_expiration
 
         r.patch! do
           update_localpool.call(r.params, resource: [localpool])
@@ -78,18 +87,37 @@ module Admin
           localpool.managers
         end
 
-        r.get! 'charts' do
-          aggregated(charts.call(r.params,
-                                 resource: [localpool.method(:charts)]))
+        r.on 'person_owner' do
+          r.post! do
+            create_localpool_owner.call(r.params,
+                                        validate: [PersonContraints],
+                                        build: [localpool.persons],
+                                        assign: [localpool.method(:assign_owner)])
+          end
+
+          r.post! :id do |id|
+            assign_localpool_owner.call(id,
+                                        find: [localpool.persons],
+                                        assign: [localpool.method(:assign_owner)])
+          end
         end
 
-        r.get! 'bubbles' do
-          aggregated(localpool.bubbles)
-        end
+        r.on 'organization_owner' do
+          r.post! do
+            create_localpool_owner.call(r.params,
+                                        validate: [OrganizationContraints],
+                                        build: [localpool.organizations],
+                                        assign: [localpool.method(:assign_owner)])
+          end
 
+          r.post! :id do |id|
+            assign_localpool_owner.call(localpool.organizations.retrieve(id),
+                                        assign: [localpool.method(:assign_owner)])
+          end
+        end
       end
 
-      #rodauth.check_session_expiration
+      rodauth.check_session_expiration
 
       r.get! do
         localpools
