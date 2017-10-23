@@ -13,6 +13,9 @@ namespace :docker do
 
     desc "Builds an image of the current branch."
     task :build do
+      filename = 'BUILD_INFO'
+      sh 'echo "version: $(git log --pretty=format:%H -n1)" > ' + filename
+      sh 'echo "timestamp: $(date)" >> ' + filename
       sh "docker build -t #{image_name.local} ."
     end
 

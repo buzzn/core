@@ -28,7 +28,7 @@ module Me
 
       create_verify_login_change_email do |login|
         def login.deliver!
-          puts "TODO email for #{self}"
+          Me::Roda.logger.info("TODO email for #{self}")
           self
         end
         login
@@ -36,7 +36,7 @@ module Me
 
       create_reset_password_email do
         def reset_password_key_value.deliver!
-          puts "TODO email for #{self}"
+          Me::Roda.logger.info("TODO email for #{self}")
           self
         end
         reset_password_key_value
