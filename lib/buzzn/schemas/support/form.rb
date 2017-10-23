@@ -13,7 +13,7 @@ module Buzzn
     end
 
     def self.Form(base = nil, **options, &block)
-      klass = base ? Form.configure(Class.new(base)) : Form
+      klass = base ? Form.configure(Class.new(base.class)) : Form
       Dry::Validation.Schema(klass, options, &block)
     end
   end

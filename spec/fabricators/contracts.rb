@@ -27,7 +27,6 @@ end
 # == Metering Point Operator Contract ==
 
 Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPointOperator do
-  status                   Contract::Base::ONBOARDING
   metering_point_operator_name { FFaker::Name.name }
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(90000) + 1 }
@@ -154,7 +153,6 @@ end
 # == Localpool Power Taker Contract ==
 
 Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPowerTaker do
-  status                   Contract::Base::ONBOARDING
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition { rand(10000) + 1 }
@@ -187,7 +185,6 @@ end
 # == Localpool Processing Contract ==
 
 Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProcessing do
-  status                   Contract::Base::ONBOARDING
   customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition 0
@@ -227,7 +224,6 @@ Fabricator :mpoc_karin, from: :metering_point_operator_contract do
   contractor    { Organization.discovergy }
   customer      { Fabricate(:karin) }
   register      { Fabricate(:easymeter_60051431).output_register }
-  status        Contract::Base::ACTIVE
 end
 
 # == Localpool Contracts for Mehrgenerationenplatz Forstenried ==
@@ -321,7 +317,6 @@ Fabricator :lptc_mabe, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1495
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -344,7 +339,6 @@ Fabricator :lptc_inbr, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1480
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -367,7 +361,6 @@ Fabricator :lptc_pebr, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 651
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -390,7 +383,6 @@ Fabricator :lptc_anbr, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 2275
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -413,7 +405,6 @@ Fabricator :lptc_gubr, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 621
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -436,7 +427,6 @@ Fabricator :lptc_mabr, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1000
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -459,7 +449,6 @@ Fabricator :lptc_dabr, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 2800
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -482,7 +471,6 @@ Fabricator :lptc_zubu, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 4000
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -505,7 +493,6 @@ Fabricator :lptc_mace, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1000
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -528,7 +515,6 @@ Fabricator :lptc_stcs, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 900
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -551,10 +537,9 @@ Fabricator :lptc_pafi, from: :localpool_power_taker_contract do
   begin_date                      begindate
   end_date                        enddate
   signing_date                    signingdate
-  cancellation_date               cancellationdate
+  termination_date               cancellationdate
   forecast_kwh_pa                 1800
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ENDED
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -577,7 +562,6 @@ Fabricator :lptc_raja, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 2215
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -609,7 +593,6 @@ Fabricator :lptc_hafi, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1
   renewable_energy_law_taxation   Contract::Base::REDUCED
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_sulz)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -628,7 +611,6 @@ Fabricator :lptc_hubv, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 2102
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_sulz)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -647,7 +629,6 @@ Fabricator :lptc_mape, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 4603
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_sulz)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -667,7 +648,6 @@ Fabricator :lptc_hafi2, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1
   renewable_energy_law_taxation   Contract::Base::REDUCED
-  status                          Contract::Base::ENDED
   tariffs                         { [Fabricate.build(:tariff_sulz)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -686,7 +666,6 @@ Fabricator :lptc_musc, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 11095
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_sulz)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -705,7 +684,6 @@ Fabricator :lptc_viwe, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 1972
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_sulz)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -724,7 +702,6 @@ Fabricator :lptc_reho, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 3706
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_sulz)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -743,7 +720,6 @@ Fabricator :lptc_pewi, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 3693
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_sulz)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -762,7 +738,6 @@ Fabricator :lptc_saba, from: :localpool_power_taker_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 3090
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   tariffs                         { [Fabricate.build(:tariff_sulz)] }
   payments                        { [Fabricate.build(:payment,
                                       begin_date: begindate,
@@ -782,7 +757,6 @@ Fabricator :osc_saba, from: :other_supplier_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 2500
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::TERMINATED
 end
 
 # == LCP Contracts Sulz == #
@@ -858,6 +832,5 @@ Fabricator :osc_sulz, from: :other_supplier_contract do
   signing_date                    signingdate
   forecast_kwh_pa                 5000
   renewable_energy_law_taxation   Contract::Base::FULL
-  status                          Contract::Base::ACTIVE
   contractor                      { Organization.gemeindewerke_peissenberg || Fabricate(:gemeindewerke_peissenberg) }
 end

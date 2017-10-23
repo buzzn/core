@@ -61,22 +61,10 @@ module Contract
     validates :contractor_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'contractor_type'
     validates :customer_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'customer_type'
 
-    validates :contract_number, presence: false
-    validates :customer_number, presence: false
-
-    validates :signing_date, presence: true
-    validates :cancellation_date, presence: false
-    validates :end_date, presence: false
-
-    validates :power_of_attorney, presence: true
     validates_uniqueness_of :contract_number_addition, scope: [:contract_number], message: 'already available for given contract_number', if: 'contract_number_addition.present?'
 
 
-    validate :validate_invariants
-
-    def initialize(*args)
-      super
-    end
+    #validate :validate_invariants
 
     scope :power_givers,             -> {where(type: PowerGiver)}
     scope :power_takers,             -> {where(type: PowerTaker)}
@@ -114,11 +102,6 @@ module Contract
           errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.size == 0
           errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.size == 0
         end
-      end
-
-      # check lifecycle changes
-      if change = changes['status']
-        errors.add(:status, WAS_ALREADY_CANCELLED) if [ENDED, TERMINATED].member?(change[0])
       end
     end
 

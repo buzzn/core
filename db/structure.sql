@@ -59,18 +59,6 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 SET search_path = public, pg_catalog;
 
 --
--- Name: contract_status; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE contract_status AS ENUM (
-    'onboarding',
-    'approvedactive',
-    'terminated',
-    'ended'
-);
-
-
---
 -- Name: country; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1085,7 +1073,7 @@ CREATE TABLE contracts (
     metering_point_operator_name character varying,
     old_supplier_name character varying,
     type character varying NOT NULL,
-    cancellation_date date,
+    termination_date date,
     old_customer_number character varying,
     old_account_number character varying,
     customer_id uuid,
@@ -1098,7 +1086,6 @@ CREATE TABLE contracts (
     contract_number_addition integer,
     customer_bank_account_id uuid,
     contractor_bank_account_id uuid,
-    status contract_status DEFAULT 'onboarding'::contract_status,
     renewable_energy_law_taxation taxation,
     mandate_reference character varying
 );
@@ -3003,4 +2990,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171018123008');
 INSERT INTO schema_migrations (version) VALUES ('20171018124326');
 
 INSERT INTO schema_migrations (version) VALUES ('20171018132507');
+
+INSERT INTO schema_migrations (version) VALUES ('20171018134029');
+
+INSERT INTO schema_migrations (version) VALUES ('20171018134419');
 

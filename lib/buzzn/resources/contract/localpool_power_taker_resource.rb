@@ -3,8 +3,7 @@ module Contract
 
     model LocalpoolPowerTaker
 
-    attributes  :begin_date,
-                :forecast_kwh_pa,
+    attributes  :forecast_kwh_pa,
                 :renewable_energy_law_taxation,
                 :third_party_billing_number,
                 :third_party_renter_number,

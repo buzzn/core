@@ -281,5 +281,13 @@ module Buzzn::Resource
       # for dry-validation we say we are a Hash
       super || clazz == Hash
     end
+
+    def method_missing(method, *args)
+      if key?(method) && args.size == 0
+        get(method)
+      else
+        super
+      end
+    end
   end
 end

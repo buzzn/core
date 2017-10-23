@@ -20,7 +20,6 @@ module Contract
              to: :tax_data, allow_nil: true
 
     validates :localpool, presence: true
-    validates :begin_date, presence: true
 
     def validate_invariants
       super

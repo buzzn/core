@@ -1,3 +1,4 @@
+require 'buzzn/schemas/contract_invariants'
 module Contract
   class BaseResource < Buzzn::Resource::Entity
 
@@ -5,12 +6,13 @@ module Contract
 
     model Base
 
-    attributes  :status,
-                :full_contract_number,
+    attributes  :full_contract_number,
                 :customer_number,
                 :signing_date,
-                :cancellation_date,
-                :end_date
+                :begin_date,
+                :termination_date,
+                :end_date,
+                :status
 
     attributes :updatable, :deletable
 
@@ -20,5 +22,27 @@ module Contract
     has_one :customer
     has_one :customer_bank_account
     has_one :contractor_bank_account
+
+    ONBOARDING = 'onboarding'.freeze
+    ACTIVE = 'active'.freeze
+    TERMINATED = 'terminated'.freeze
+    ENDED = 'ended'.freeze
+    STATUS = [ONBOARDING, ACTIVE, TERMINATED, ENDED].freeze
+
+    def status
+      if end_date
+        ENDED
+      elsif termination_date
+        TERMINATED
+      elsif begin_date
+        ACTIVE
+      else
+        ONBOARDING
+      end
+    end
+
+    def invariants
+      ContractInvariants.(self)
+    end
   end
 end
