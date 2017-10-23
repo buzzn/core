@@ -3,7 +3,9 @@ require_relative 'common_roda'
 
 class CoreRoda < CommonRoda
 
-  use Rack::CommonLogger, Buzzn::Logger.new(self)
+  include Import.args[:env, 'service.health']
+
+  use Rack::CommonLogger, Buzzn::Logger.new(CoreRoda)
 
   use Rack::Session::Cookie, :secret => ENV['SECRET'] || 'my secret', :key => '_buzzn_session'
 
@@ -36,5 +38,14 @@ class CoreRoda < CommonRoda
       end
     end
 
+    r.on 'health' do
+      info = health.info
+      r.response.headers['content_type'] = 'application/json'
+      unless info[:healthy]
+        logger.error(info.to_yaml.strip)
+        r.response.status = 503
+      end
+      health.info.to_json
+    end
   end
 end
