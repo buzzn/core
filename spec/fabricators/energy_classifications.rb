@@ -8,7 +8,7 @@ Fabricator :energy_classification, from: EnergyClassification do
   other_renewables_ratio { 20.0 }
   co2_emission_gramm_per_kwh { 104.0 }
   nuclear_waste_miligramm_per_kwh { 0.4 }
-  created_at  { (rand*10).days.ago }
+  created_at  { (rand * 10).days.ago }
 end
 
 Fabricator :energy_mix_germany, from: :energy_classification do
@@ -21,7 +21,7 @@ Fabricator :energy_mix_germany, from: :energy_classification do
   other_renewables_ratio { 3.1 }
   co2_emission_gramm_per_kwh { 476.0 }
   nuclear_waste_miligramm_per_kwh { 0.4 }
-  organization { Organization.germany }
+  organization { Fabricate(:germany) }
 end
 
 Fabricator :energy_mix_buzzn, from: :energy_classification do
@@ -34,7 +34,7 @@ Fabricator :energy_mix_buzzn, from: :energy_classification do
   other_renewables_ratio { 0.1 }
   co2_emission_gramm_per_kwh { 131.0 }
   nuclear_waste_miligramm_per_kwh { 0.03 }
-  organization { Organization.buzzn_energy }
+  organization { Fabricate(:buzzn) }
 end
 
 Fabricator :sulz_supplier_mix, from: :energy_classification do
@@ -47,5 +47,5 @@ Fabricator :sulz_supplier_mix, from: :energy_classification do
   other_renewables_ratio { 0.2 }
   co2_emission_gramm_per_kwh { 427.0 }
   nuclear_waste_miligramm_per_kwh { 0.25 }
-  organization { Organization.gemeindewerke_peissenberg }
+  organization { Fabricate(:gemeindewerke_peissenberg) }
 end

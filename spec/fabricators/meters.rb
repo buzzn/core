@@ -4,7 +4,7 @@ Fabricator :meter, class_name: Meter::Real do
   product_name                        'AS 1440'
   product_serialnumber                { Random.new_seed.to_s.slice(0, 7) }
   created_at                          { (rand*10).days.ago }
-  ownership                           Meter::Base::BUZZN_SYSTEMS
+  ownership                           Meter::Base::BUZZN
   edifact_metering_type                      nil
   edifact_meter_size                          Meter::Base::EDL40
   direction_number                            Meter::Real::ONE_WAY_METER

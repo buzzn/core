@@ -1,6 +1,6 @@
 puts "seeds: loading application setup data"
 
-# Fabricate(:buzzn_energy)
+# Fabricate(:buzzn)
 # Fabricate(:dummy_energy)
 # Fabricate(:germany)
 # Fabricate(:electricity_supplier, name: 'E.ON')

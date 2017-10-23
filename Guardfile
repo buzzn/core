@@ -23,8 +23,6 @@ guard :rspec, cmd: "rspec -f doc" do
   # Rails config changes
   rails = dsl.rails
   watch(rails.spec_helper)     { rspec.spec_dir }
-  watch(rails.routes)          { "#{rspec.spec_dir}/routing" }
-  watch(rails.app_controller)  { "#{rspec.spec_dir}/controllers" }
 
   watch(%r{db/factories/.+\.rb}) { 'spec/factories/factories_spec.rb' }
 end

@@ -94,7 +94,6 @@ describe Admin::LocalpoolRoda do
         "website"=>organization.website,
         "email"=>organization.email,
         "description"=>organization.description,
-        "mode"=>"metering_point_operator",
         'customer_number' => nil,
         "updatable"=>true,
         "deletable"=>false,

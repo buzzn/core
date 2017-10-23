@@ -1,4 +1,3 @@
-
 ['localpool', 'tribe'].each do |klass_type|
   klass = "Group::#{klass_type.camelize}".constantize
   Fabricator klass_type, class_name: klass do
@@ -35,7 +34,7 @@ Fabricator :tribe_with_two_comments_readable_by_world, from: :tribe do
      }
     comment         = Fabricate(:comment, comment_params)
     comment_params[:parent_id] = comment.id
-    comment2        = Fabricate(:comment, comment_params)
+    _comment2        = Fabricate(:comment, comment_params)
   }
 end
 
@@ -128,7 +127,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
   end
 
   after_create do |localpool|
-    Fabricate(:organization, mode: 'other', name: 'HaFi').update(address: Fabricate(:address))
+    Fabricate(:organization, name: 'HaFi').update(address: Fabricate(:address))
     register = Fabricate(:easymeter_60404846).registers.first
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 13855000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
@@ -199,7 +198,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:osc_saba, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
     Fabricate(:lptc_saba, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
-    Fabricate(:lpc_sulz, localpool: self, contractor: Organization.buzzn_systems || Fabricate(:buzzn_systems), customer: Organization.where(name: 'HaFi').first)
+    Fabricate(:lpc_sulz, localpool: self, contractor: Organization.buzzn || Fabricate(:buzzn), customer: Organization.where(name: 'HaFi').first)
 
     # TODO use Fabricate(:price_sulz) - as it breaks the lcp_report when using
     #      Fabricate(:price_sulz)

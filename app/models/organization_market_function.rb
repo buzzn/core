@@ -16,6 +16,8 @@ class OrganizationMarketFunction < ActiveRecord::Base
     transmission_system_operator
   ).map.with_object({}) { |key, hash| hash[key] = key.to_s }
 
-  validates :function, uniqueness: { scope: :organization_id }
-  validates :market_partner_id, uniqueness: true
+  validates :organization_id, presence: true
+  validates :edifact_email, presence: true
+  validates :function, presence: true, uniqueness: { scope: :organization_id }
+  validates :market_partner_id, presence: true, uniqueness: true
 end

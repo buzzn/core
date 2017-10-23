@@ -9,7 +9,6 @@ class OrganizationResource < Buzzn::Resource::Entity
               :website,
               :email,
               :description,
-              :mode,
               :customer_number
 
   attributes :updatable, :deletable

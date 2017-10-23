@@ -78,7 +78,6 @@ gem 'remote_lock'
 gem 'fabrication'
 gem 'factory_girl'
 gem 'dotenv-rails'
-gem 'smarter_csv'
 
 group :production, :staging do
   gem 'newrelic_rpm'

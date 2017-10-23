@@ -8,14 +8,12 @@ module Contract
 
     def initialize(*args)
       super
-      self.contractor = Organization.buzzn_energy
+      self.contractor = Organization.buzzn
     end
 
     def validate_invariants
       super
-      if contractor
-        errors.add(:contractor, MUST_BE_BUZZN) unless contractor == Organization.buzzn_energy
-      end
+      errors.add(:contractor, MUST_BE_BUZZN) unless contractor&.buzzn?
     end
   end
 end

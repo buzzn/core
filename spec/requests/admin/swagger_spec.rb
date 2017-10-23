@@ -1,4 +1,4 @@
-describe Admin do
+describe Admin, :swagger do
   include SwaggerHelper
 
   def app
@@ -65,10 +65,10 @@ describe Admin do
 
   entity!(:reading) { Fabricate(:single_reading, register: register) }
   entity!(:reading_2) { Fabricate(:single_reading, register: register) }
-  
+
   entity!(:localpool_power_taker_contract) do
     register = Fabricate(:input_meter).input_register
-    register.update(group: localpool)    
+    register.update(group: localpool)
     Fabricate(:localpool_power_taker_contract,
               localpool: localpool,
               register: register)
@@ -124,7 +124,7 @@ describe Admin do
   end
 
   # contracts
-  
+
   get '/localpools/{localpool.id}/contracts' do
     description 'returns all the contracts of the localpool'
   end
@@ -181,7 +181,7 @@ describe Admin do
   end
 
   # virtual_meters > formula_parts
-  
+
   get '/localpools/{localpool.id}/meters/{virtual_meter.id}/formula-parts' do
     description 'get formula-parts of virtual meter for the given IDs'
   end
@@ -196,7 +196,7 @@ describe Admin do
   end
 
   # meters > registers
-  
+
   get '/localpools/{localpool.id}/meters/{meter.id}/registers' do
     description 'returns all registers of a meter for the given IDs'
   end
@@ -258,7 +258,7 @@ describe Admin do
   end
 
   # organizations
-  
+
   get '/localpools/{localpool.id}/organizations' do
     description 'returns all the organizations of the localpool'
   end
@@ -287,7 +287,7 @@ describe Admin do
   end
 
   # prices
-  
+
   get '/localpools/{localpool.id}/prices' do
     description 'returns all the prices of the localpool'
   end
@@ -355,25 +355,25 @@ describe Admin do
   end
 
   # localpool-processing-contract
-  
+
   get '/localpools/{localpool.id}/localpool-processing-contract' do
     description 'returns the localpool-processing-contract of the localpool'
   end
 
   # metering-point-operator-contract
-  
+
   get '/localpools/{localpool.id}/metering-point-operator-contract' do
     description 'returns the metering-point-operator-contract of the localpool'
   end
 
   # power-taker-contracts
-  
+
   get '/localpools/{localpool.id}/power-taker-contracts' do
     description 'returns all the power-taker-contracts of the localpool'
   end
 
   # managers
-  
+
   get '/localpools/{localpool.id}/managers' do
     description 'returns all the managers of the localpool'
   end

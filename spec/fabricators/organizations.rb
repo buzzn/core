@@ -9,31 +9,24 @@ end
 
 
 Fabricator :other_organization, from: :organization do
-  mode 'other'
 end
 
 Fabricator :distribution_system_operator, from: :organization do
-  mode 'distribution_system_operator'
 end
 
 Fabricator :power_giver, from: :organization do
-  mode 'power_giver'
 end
 
 Fabricator :electricity_supplier, from: :organization do
-  mode 'electricity_supplier'
 end
 
 Fabricator :metering_service_provider, from: :organization do
-  mode 'metering_service_provider'
 end
 
 Fabricator :metering_point_operator, from: :organization do
-  mode 'metering_point_operator'
 end
 
 Fabricator :transmission_system_operator, from: :organization do
-  mode 'transmission_system_operator'
 end
 
 Fabricator :power_giver_with_contracts, from: :power_giver do
@@ -54,32 +47,27 @@ end
 
 # needed for groups fabricator - legacy naming
 Fabricator :buzzn_metering, from: :metering_point_operator do
-  name Organization::BUZZN_SYSTEMS
+  name 'buzzn systems UG'
 end
 
-
 Fabricator :discovergy, from: :metering_point_operator do
-  name Organization::DISCOVERGY
+  name 'Discovergy'
 end
 
 Fabricator :mysmartgrid, from: :metering_point_operator do
-  name Organization::MYSMARTGRID
+  name 'MySmartGrid'
 end
 
-Fabricator :buzzn_systems, from: :metering_point_operator do
-  name Organization::BUZZN_SYSTEMS
-end
-
-Fabricator :buzzn_energy, from: :electricity_supplier do
-  name Organization::BUZZN_ENERGY
+Fabricator :buzzn, from: :electricity_supplier do
+  name 'buzzn GmbH'
 end
 
 Fabricator :dummy_energy, from: :electricity_supplier do
-  name Organization::DUMMY_ENERGY
+  name 'dummy energy supplier'
 end
 
 Fabricator :germany, from: :electricity_supplier do
-  name Organization::GERMANY
+  name 'Germany Energy Mix'
 end
 
 Fabricator :gemeindewerke_peissenberg, from: :electricity_supplier do
@@ -87,5 +75,5 @@ Fabricator :gemeindewerke_peissenberg, from: :electricity_supplier do
 end
 
 Fabricator :dummy, from: :other_organization do
-  name Organization::DUMMY
+  name 'dummy organization'
 end

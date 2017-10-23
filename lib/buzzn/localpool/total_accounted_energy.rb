@@ -130,11 +130,11 @@ module Buzzn::Localpool
     end
 
     def production_pv
-      sum(Buzzn::AccountedEnergy::PRODUCTION_PV) 
+      sum(Buzzn::AccountedEnergy::PRODUCTION_PV)
     end
 
     def production_chp
-      sum(Buzzn::AccountedEnergy::PRODUCTION_CHP) 
+      sum(Buzzn::AccountedEnergy::PRODUCTION_CHP)
     end
 
     def total_consumption_power_taker
@@ -177,7 +177,7 @@ module Buzzn::Localpool
     end
 
     private
-    
+
     def demarcation_type
       demarcation_chp = self[Buzzn::AccountedEnergy::DEMARCATION_CHP]
       demarcation_pv = self[Buzzn::AccountedEnergy::DEMARCATION_PV]

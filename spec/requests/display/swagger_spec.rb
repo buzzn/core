@@ -1,4 +1,4 @@
-describe Display do
+describe Display, :swagger do
   include SwaggerHelper
 
   def app

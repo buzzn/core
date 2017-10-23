@@ -90,7 +90,7 @@ describe Admin::Roda do
             "website"=>organization.website,
             "email"=>organization.email,
             "description"=>organization.description,
-            "mode"=>organization.mode,
+            # FIXME this is now stored on association OrganizationMarketFunction
             'customer_number' => nil,
             "updatable"=>false,
             "deletable"=>false,

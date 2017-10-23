@@ -10,20 +10,6 @@ class Organization < ContractingParty
   belongs_to :contact, class_name: Person
   belongs_to :legal_representation, class_name: Person
 
-  # TODO remove
-  def self.modes
-    %w{
-      power_giver
-      power_taker
-      electricity_supplier
-      metering_service_provider
-      metering_point_operator
-      distribution_system_operator
-      transmission_system_operator
-      other
-    }
-  end
-
   has_many :market_functions, dependent: :destroy, class_name: "OrganizationMarketFunction"
 
   def in_market_function(function)
@@ -35,36 +21,16 @@ class Organization < ContractingParty
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
   validates :phone, presence: true
 
-  # TODO remove
-  # validates :mode, presence: true, inclusion: {in: modes}
-
   scope :permitted, ->(uuids) { where(nil) } # organizations are public
 
-  # TODO remove
-  self.modes.each do |mode|
-    scope mode + "s", -> { where(mode: mode) }
-  end
-
-  # define some predefined organziation with cache
-  { dummy: 'dummy organization',
-    dummy_energy: 'dummy energy supplier',
-    buzzn_energy: 'buzzn GmbH',
-    buzzn_systems: 'buzzn systems UG',
-    discovergy: 'Discovergy',
-    mysmartgrid: 'MySmartGrid',
-    germany: 'Germany Energy Mix',
-    gemeindewerke_peissenberg: 'Gemeindewerke Peißenberg' }.each do |key, name|
-
-    const_set key.to_s.upcase, name
-
-    define_method "#{key.to_s}?" do
-      self.name == "#{name}"
-    end
-
-    (class << self; self; end).instance_eval do
-      define_method "#{key.to_s}" do
-        eval "@a_#{key} ||= where(name: #{key.to_s.upcase}).first"
-      end
+  # Define some class-accessors for commonly used organizations (example: Organization.buzzn).
+  # Note they are nil by default, need to be assigned from init code somewhere.
+  PREDEFINED_ORGANIZATIONS = %i(buzzn germany discovergy)
+  mattr_accessor(*PREDEFINED_ORGANIZATIONS)
+  PREDEFINED_ORGANIZATIONS.each do |accessor|
+    # Defines a predicate method, example: @organization.buzzn?
+    define_method "#{accessor}?" do
+      self == self.class.send(accessor)
     end
   end
 
@@ -73,11 +39,11 @@ class Organization < ContractingParty
   end
 
   def self.search_attributes
-    [:name, :mode, :email, :website, :description, address: [:city, :zip, :street]]
+    # FIXME: clarify if we need to be able to search by mode here.
+    [:name, :email, :website, :description, address: [:city, :zip, :street]]
   end
 
   def self.filter(value)
     do_filter(value, *search_attributes)
   end
-
 end

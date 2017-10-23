@@ -212,7 +212,7 @@ Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProces
   first_master_uid         { sequence(:uid, 90688251510000000000002677114) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
-  contractor               { Organization.buzzn_systems }
+  contractor               { Organization.buzzn }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
     c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer)
@@ -226,7 +226,7 @@ end
 
 
 Fabricator :mpoc_buzzn_metering, from: :metering_point_operator_contract do
-  contractor    { Organization.buzzn_energy }
+  contractor    { Organization.buzzn }
   tariffs       { [Fabricate.build(:tariff)] }
   payments      { [Fabricate.build(:payment)] }
 end
@@ -283,7 +283,7 @@ Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
   contract_number_addition      0
   begin_date                    begindate
   signing_date                  begindate - 2.months
-  contractor                    { Organization.buzzn_systems }
+  contractor                    { Organization.buzzn }
   tariffs                       { [Fabricate.build(:tariff,
                                     name: 'metering_standard',
                                     begin_date: begindate,
@@ -833,7 +833,7 @@ Fabricator :mpoc_sulz, from: :metering_point_operator_contract do
   contract_number_addition      0
   begin_date                    begindate
   signing_date                  begindate - 2.months
-  contractor                    { Organization.buzzn_systems }
+  contractor                    { Organization.buzzn }
   tariffs                       { [Fabricate.build(:tariff,
                                     name: 'metering_standard',
                                     begin_date: begindate,
@@ -872,5 +872,5 @@ Fabricator :osc_sulz, from: :other_supplier_contract do
   forecast_kwh_pa                 5000
   renewable_energy_law_taxation   Contract::Base::FULL
   status                          Contract::Base::ACTIVE
-  contractor                      { Organization.gemeindewerke_peissenberg || Fabricate(:gemeindewerke_peissenberg) }
+  contractor                      { Fabricate(:gemeindewerke_peissenberg) }
 end

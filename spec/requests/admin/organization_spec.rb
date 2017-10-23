@@ -35,7 +35,6 @@ describe Admin::LocalpoolRoda do
           "website"=>organization.website,
           "email"=>organization.email,
           "description"=>organization.description,
-          "mode"=>"metering_service_provider",
           'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>true,
@@ -147,7 +146,7 @@ describe Admin::LocalpoolRoda do
           "website"=>organization.website,
           "email"=>organization.email,
           "description"=>organization.description,
-          "mode"=>organization.mode,
+          # FIXME this is now stored on association OrganizationMarketFunction
           'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>true,
