@@ -38,7 +38,7 @@ services:
       - postgres
       - redis
       - mongo
-    env_file: .env.docker
+    env_file: .env.development-docker
 
   core_staging_worker:
     build:
@@ -49,7 +49,7 @@ services:
       - postgres
       - redis
       - mongo
-    env_file: .env.docker
+    env_file: .env.development-docker
 
   postgres:
     image: postgres:9.6.5-alpine
