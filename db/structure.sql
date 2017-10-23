@@ -694,7 +694,7 @@ CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -712,7 +712,7 @@ CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -730,7 +730,7 @@ CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) 
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -748,7 +748,7 @@ CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS b
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -1229,7 +1229,6 @@ CREATE TABLE groups (
     logo character varying,
     website character varying,
     image character varying,
-    readable character varying,
     description text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -1237,6 +1236,11 @@ CREATE TABLE groups (
     organization_id uuid,
     person_id uuid,
     address_id uuid,
+    start_date date,
+    show_object boolean,
+    show_production boolean,
+    show_energy boolean,
+    show_contact boolean,
     CONSTRAINT check_localpool_owner CHECK ((NOT ((person_id IS NOT NULL) AND (organization_id IS NOT NULL))))
 );
 
@@ -2200,13 +2204,6 @@ CREATE INDEX index_groups_on_person_id ON groups USING btree (person_id);
 
 
 --
--- Name: index_groups_on_readable; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_groups_on_readable ON groups USING btree (readable);
-
-
---
 -- Name: index_groups_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3013,4 +3010,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171012204100');
 INSERT INTO schema_migrations (version) VALUES ('20171016085826');
 
 INSERT INTO schema_migrations (version) VALUES ('20171016111731');
+
+INSERT INTO schema_migrations (version) VALUES ('20171016125437');
+
+INSERT INTO schema_migrations (version) VALUES ('20171017081409');
 

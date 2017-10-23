@@ -1,4 +1,3 @@
-# coding: utf-8
 Fabricator :discovergy_broker, class_name: Broker::Discovergy do
   mode :in
   provider_login 'team@localpool.de'

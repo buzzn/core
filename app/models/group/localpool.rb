@@ -1,4 +1,3 @@
-# coding: utf-8
 module Group
   class Localpool < Base
 
@@ -93,12 +92,6 @@ module Group
     def two_way_meters
       sql = "SELECT m.id FROM meters m, registers r, groups g WHERE r.meter_id = m.id AND r.group_id = g.id AND r.label NOT IN('#{Register::Base::GRID_CONSUMPTION_CORRECTED}', '#{Register::Base::GRID_FEEDING_CORRECTED}') AND g.id = '#{self.id}' GROUP BY m.id HAVING COUNT(*) > 1"
       Meter::Base.find_by_sql("SELECT DISTINCT * FROM meters WHERE id IN(#{sql})")
-    end
-
-    # use first address as main address
-    # TODO: maybe improve this so that the user can select between all addresses
-    def main_address
-      self.addresses.order("created_at ASC").first
     end
   end
 end

@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Buzzn::Utils::Power do
 
   it 'instantiate via Number' do

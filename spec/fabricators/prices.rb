@@ -1,4 +1,3 @@
-# coding: utf-8
 Fabricator :price do
   name                                { FFaker::Company.name }
   begin_date                          { Date.new(2017, 1, 1)}

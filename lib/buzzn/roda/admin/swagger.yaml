@@ -33,6 +33,27 @@ paths:
         type: string
         format: ''
         maxLength: 256
+      - name: start_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: show_object
+        in: formData
+        required: false
+        type: boolean
+      - name: show_production
+        in: formData
+        required: false
+        type: boolean
+      - name: show_energy
+        in: formData
+        required: false
+        type: boolean
+      - name: show_contact
+        in: formData
+        required: false
+        type: boolean
       responses:
         201:
           description: created
@@ -77,6 +98,27 @@ paths:
         type: string
         format: ''
         maxLength: 256
+      - name: start_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: show_object
+        in: formData
+        required: false
+        type: boolean
+      - name: show_production
+        in: formData
+        required: false
+        type: boolean
+      - name: show_energy
+        in: formData
+        required: false
+        type: boolean
+      - name: show_contact
+        in: formData
+        required: false
+        type: boolean
       responses:
         200:
           description: patched

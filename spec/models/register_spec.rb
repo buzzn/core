@@ -1,4 +1,3 @@
-# coding: utf-8
 describe "Register Model" do
 
   entity!(:urbanstr) do

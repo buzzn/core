@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Meter::BaseResource do
 
   entity(:admin) { Fabricate(:admin) }

@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Meter::Real do
 
   entity!(:easymeter) { Fabricate(:easy_meter_q3d) }

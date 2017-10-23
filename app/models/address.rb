@@ -1,4 +1,3 @@
-# coding: utf-8
 class Address < ActiveRecord::Base
 
   # example:

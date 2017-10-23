@@ -1,4 +1,3 @@
-# coding: utf-8
 describe "Contract Sub Models" do
   
   let(:power_taker_contract_move_in) do

@@ -1,4 +1,3 @@
-# coding: utf-8
 Fabricator :address do
   city          'Berlin'
   street        'Lützowplatz 17, HH'

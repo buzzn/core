@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'file_size_validator'
 class Device < ActiveRecord::Base
   include Filterable

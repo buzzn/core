@@ -1,4 +1,3 @@
-# coding: utf-8
 describe 'Buzzn::Discovergy::DataSource caching' do
 
   class FacadeMock4Caching

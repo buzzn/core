@@ -1,4 +1,3 @@
-# coding: utf-8
 Fabricator :payment, class_name: Contract::Payment do
   begin_date    { FFaker::Time.date }
   price_cents   { rand(100) + 1 }

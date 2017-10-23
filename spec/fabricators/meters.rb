@@ -1,4 +1,3 @@
-# coding: utf-8
 Fabricator :meter, class_name: Meter::Real do
   registers                           { [Fabricate.build([:input_register, :output_register].sample)] }
   manufacturer_name                    Meter::Real::FERRARIS

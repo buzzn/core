@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Buzzn::Discovergy::DataSource do
 
   require 'broker/discovergy'

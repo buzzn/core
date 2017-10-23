@@ -1,4 +1,3 @@
-# coding: utf-8
 Fabricator :organization do
   name        { FFaker::Company.name }
   phone       { FFaker::PhoneNumber.phone_number }

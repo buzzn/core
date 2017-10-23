@@ -1,11 +1,9 @@
-# coding: utf-8
 
 ['localpool', 'tribe'].each do |klass_type|
   klass = "Group::#{klass_type.camelize}".constantize
   Fabricator klass_type, class_name: klass do
     name        { FFaker::Company.name[0..39] }
     description { FFaker::Lorem.paragraphs.join('-') }
-    readable    'world'
     created_at  { (rand*10).days.ago }
     type        { "Group::#{klass_type.camelize}" }
   end

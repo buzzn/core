@@ -49,6 +49,11 @@ describe Admin::LocalpoolRoda do
         "name"=>localpool.name,
         "slug"=>localpool.slug,
         "description"=>localpool.description,
+        'start_date' => localpool.start_date.as_json,
+        'show_object' => localpool.show_object,
+        'show_production' => localpool.show_production,
+        'show_energy' => localpool.show_energy,
+        'show_contact' => localpool.show_contact,
         "updatable"=>true,
         "deletable"=>true,
         'incompleteness' => incompleteness
@@ -64,6 +69,11 @@ describe Admin::LocalpoolRoda do
       "name"=>localpool_no_contracts.name,
       "slug"=>localpool_no_contracts.slug,
       "description"=>localpool_no_contracts.description,
+      'start_date' => nil,
+      'show_object' => nil,
+      'show_production' => nil,
+      'show_energy' => nil,
+      'show_contact' => nil,
       "updatable"=>true,
       "deletable"=>true,
       'incompleteness' => {'owner' => {'contact' => ['must be filled']}},
@@ -146,7 +156,9 @@ describe Admin::LocalpoolRoda do
           {"parameter"=>"name",
            "detail"=>"size cannot be greater than 64"},
           {"parameter"=>"description",
-           "detail"=>"size cannot be greater than 256"}
+           "detail"=>"size cannot be greater than 256"},
+          {'parameter' => 'start_date',
+           'detail' => 'must be a date'}
         ]
       }
     end
@@ -162,7 +174,8 @@ describe Admin::LocalpoolRoda do
     it '422' do
       POST "/test", $admin,
            name: 'Some Name' * 10,
-           description: 'rain rain go away, come back again another day' * 100
+           description: 'rain rain go away, come back again another day' * 100,
+           start_date: 'today is the best'
       expect(json.to_yaml).to eq wrong_json.to_yaml
       expect(response).to have_http_status(422)
     end
@@ -173,6 +186,11 @@ describe Admin::LocalpoolRoda do
         'name' => 'suPer Duper',
         'slug' => 'super-duper',
         'description' => 'superduper localpool location on the dark side of the moon',
+        'start_date' => Date.today.as_json,
+        'show_object' => false,
+        'show_production' => true,
+        'show_energy' => false,
+        'show_contact' => true,
         'updatable'=>true,
         'deletable'=>true,
         'incompleteness' => {'owner' => ['must be filled']}
@@ -209,7 +227,17 @@ describe Admin::LocalpoolRoda do
           {"parameter"=>"name",
            "detail"=>"size cannot be greater than 64"},
           {"parameter"=>"description",
-           "detail"=>"size cannot be greater than 256"}
+           "detail"=>"size cannot be greater than 256"},
+          {'parameter' => 'start_date',
+           'detail' => 'must be a date'},
+          {'parameter' => 'show_object',
+           'detail' => 'must be boolean'},
+          {'parameter' => 'show_production',
+           'detail' => 'must be boolean'},
+          {'parameter' => 'show_energy',
+           'detail' => 'must be boolean'},
+          {'parameter' => 'show_contact',
+           'detail' => 'must be boolean'}
         ]
       }
     end
@@ -228,6 +256,11 @@ describe Admin::LocalpoolRoda do
         "name"=>"a b c d",
         "slug" => 'a-b-c-d',
         "description"=>'none',
+        'start_date' => Date.yesterday.as_json,
+        'show_object' => true,
+        'show_production' => false,
+        'show_energy' => true,
+        'show_contact' => false,
         "updatable"=>true,
         "deletable"=>true,
         'incompleteness' => {'owner' => ['must be filled']}
@@ -258,7 +291,12 @@ describe Admin::LocalpoolRoda do
       it '422' do
         PATCH "/test/#{localpool.id}", $admin,
               name: 'NoName' * 20,
-              description: 'something' * 100
+              description: 'something' * 100,
+              start_date: 'today is it not',
+              show_object: 'maybe',
+              show_production: 'nope',
+              show_energy: 'yep',
+              show_contact: 'not'
 
         expect(response).to have_http_status(422)
         expect(json.to_yaml).to eq wrong_json.to_yaml
@@ -269,12 +307,18 @@ describe Admin::LocalpoolRoda do
         PATCH "/test/#{localpool.id}", $admin,
               updated_at: localpool.updated_at,
               name: 'a b c d',
-              description: 'none'
+              description: 'none',
+              start_date: Date.yesterday.as_json,
+              show_object: true,
+              show_production: false,
+              show_energy: true,
+              show_contact: false
 
         expect(response).to have_http_status(200)
         localpool.reload
         expect(localpool.name).to eq 'a b c d'
         expect(localpool.description).to eq 'none'
+        expect(localpool.start_date).to eq Date.yesterday
 
         result = json
         # TODO fix it: our time setup does not allow

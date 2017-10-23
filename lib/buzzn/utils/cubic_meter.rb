@@ -1,4 +1,3 @@
-# coding: utf-8
 require_relative 'number'
 module Buzzn
   module Utils

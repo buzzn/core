@@ -1,4 +1,3 @@
-# coding: utf-8
 
 # ALL registers can only be used via Fabricate.build or with an extra meter: some_meter attribute, as a register can not exist without a meter
 

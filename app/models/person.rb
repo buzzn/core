@@ -1,4 +1,3 @@
-# coding: utf-8
 # frozen-string-literal: true
 class Person < ContractingParty
   self.table_name = :persons

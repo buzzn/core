@@ -87,6 +87,34 @@ module Admin
           localpool.managers
         end
 
+        r.on 'person_owner' do
+          r.post! do
+            create_localpool_owner.call(r.params,
+                                        validate: [PersonContraints],
+                                        build: [localpool.persons],
+                                        assign: [localpool.method(:assign_owner)])
+          end
+
+          r.post! :id do |id|
+            assign_localpool_owner.call(id,
+                                        find: [localpool.persons],
+                                        assign: [localpool.method(:assign_owner)])
+          end
+        end
+
+        r.on 'organization_owner' do
+          r.post! do
+            create_localpool_owner.call(r.params,
+                                        validate: [OrganizationContraints],
+                                        build: [localpool.organizations],
+                                        assign: [localpool.method(:assign_owner)])
+          end
+
+          r.post! :id do |id|
+            assign_localpool_owner.call(localpool.organizations.retrieve(id),
+                                        assign: [localpool.method(:assign_owner)])
+          end
+        end
       end
 
       rodauth.check_session_expiration

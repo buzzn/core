@@ -7,6 +7,8 @@ gem 'dry-monads'
 gem 'dry-transaction'
 gem 'dry-struct'
 gem 'dry-initializer'
+# TODO if we are going to use this singleton container then me (christian) needs to publish/push this gem and use it via rubygems.org
+gem 'dry-more-container', git: 'https://github.com/mkristian/dry-more-container.git'
 
 # pdf
 gem 'slim'

@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Buzzn::Utils::CubicMeter do
 
   it 'instantiate via Number' do

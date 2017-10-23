@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Bank do
 
   let(:dir) { 'db/banks' }

@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Buzzn::Utils::Energy do
 
   it 'instantiate via Number' do

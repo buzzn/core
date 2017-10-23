@@ -1,4 +1,3 @@
-# coding: utf-8
 
 describe Buzzn::StandardProfile::Facade do
     let(:facade) { Buzzn::StandardProfile::Facade.new }

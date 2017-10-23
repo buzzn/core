@@ -1,4 +1,3 @@
-# coding: utf-8
 #
 # http://www.bundesbank.de/Redaktion/DE/Downloads/Aufgaben/Unbarer_Zahlungsverkehr/Bankleitzahlen/merkblatt_bankleitzahlendatei.pdf
 #
