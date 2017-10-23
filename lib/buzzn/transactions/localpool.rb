@@ -6,6 +6,10 @@ Buzzn::Transaction.define do |t|
     required(:name).filled(:str?, max_size?: 64)
     optional(:description).filled(:str?, max_size?: 256)
     optional(:start_date).filled(:date?)
+    optional(:show_object).filled(:bool?)
+    optional(:show_production).filled(:bool?)
+    optional(:show_energy).filled(:bool?)
+    optional(:show_contact).filled(:bool?)
   end
 
   t.register_validation(:update_localpool_schema) do
@@ -13,6 +17,10 @@ Buzzn::Transaction.define do |t|
     optional(:name).filled(:str?, max_size?: 64)
     optional(:description).filled(:str?, max_size?: 256)
     optional(:start_date).filled(:date?)
+    optional(:show_object).filled(:bool?)
+    optional(:show_production).filled(:bool?)
+    optional(:show_energy).filled(:bool?)
+    optional(:show_contact).filled(:bool?)
   end
 
   t.define(:create_localpool) do

@@ -8,6 +8,10 @@ describe Admin::LocalpoolResource do
                            'description',
                            'slug',
                            'start_date',
+                           'show_object',
+                           'show_production',
+                           'show_energy',
+                           'show_contact',
                            'updatable',
                            'deletable',
                            'incompleteness' ] }
