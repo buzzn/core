@@ -345,7 +345,6 @@ describe Admin::LocalpoolRoda do
         'status' => 'active',
         "updatable"=>true,
         "deletable"=>false,
-        "begin_date"=>contract.begin_date.to_s,
         "tariffs"=>{
           'array'=> contract.tariffs.collect do |t|
             {
