@@ -39,6 +39,8 @@ services:
       - redis
       - mongo
     env_file: .env.development-docker
+    healthcheck:
+      disable: true
 
   core_staging_worker:
     build:
@@ -50,6 +52,8 @@ services:
       - redis
       - mongo
     env_file: .env.development-docker
+    healthcheck:
+      disable: true
 
   postgres:
     image: postgres:9.6.5-alpine

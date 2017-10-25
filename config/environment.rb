@@ -8,5 +8,4 @@ Encoding.default_internal = Encoding::UTF_8
 Buzzn::Application.initialize!
 
 
-APP_VERSION = `git rev-parse HEAD`
-
+APP_VERSION = "unknown" # `git rev-parse HEAD`
