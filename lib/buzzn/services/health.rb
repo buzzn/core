@@ -14,7 +14,7 @@ module Buzzn::Services
     end
 
     def redis?
-      redis.current.ping 'alive'
+      redis.ping == "PONG" ? 'alive' : 'dead'
     rescue
       'dead'
     end
