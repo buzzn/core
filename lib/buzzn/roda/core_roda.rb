@@ -7,8 +7,6 @@ class CoreRoda < CommonRoda
 
   use Rack::CommonLogger, Buzzn::Logger.new(CoreRoda)
 
-  use Rack::Session::Cookie, :secret => ENV['SECRET'] || 'my secret', :key => '_buzzn_session'
-
   use Rack::Cors, debug: Rails.env != 'production'  do
     allow do
       domains = %r(#{ENV['CORS']})
