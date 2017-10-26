@@ -22,6 +22,8 @@ class CoreRoda < CommonRoda
 
   route do |r|
 
+    logger.info(r.inspect)
+
     r.on 'api' do
       r.on 'display' do
         r.run Display::Roda
