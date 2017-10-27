@@ -1,7 +1,7 @@
 # buzzn architecture
 
 Note: as with most systems, the buzzn/core architecture is not perfectly consistent. 
-What is described here how we implement new features. Legacy code is converted when functional changes require it, and when the time allows it.
+Here we describe how we implement new features. Legacy code is converted when functional changes require it, and when time allows.
 
 ### Overview of the typical request flow
 
