@@ -39,7 +39,7 @@ These are model-layer validations that always must be true, regardless of transa
 
 Invariants extend the constraints schemas.
 
-### 4. Constraints schemas
+#### 4. Constraints schemas
 
 These are schemas which we use use to create database constraints.
 
