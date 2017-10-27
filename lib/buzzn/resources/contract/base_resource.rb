@@ -1,4 +1,4 @@
-require 'buzzn/schemas/contract_invariants'
+require 'buzzn/schemas/invariants/contract/base'
 module Contract
   class BaseResource < Buzzn::Resource::Entity
 
@@ -24,7 +24,7 @@ module Contract
     has_one :contractor_bank_account
 
     def invariants
-      ContractInvariants.(self)
+      Schemas::Invariants::Contract::Base.call(self)
     end
   end
 end
