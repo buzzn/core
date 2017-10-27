@@ -1,5 +1,5 @@
 require_relative 'resource'
-require_relative '../schemas/person_constraints'
+require_relative '../schemas/constraints/person'
 
 Buzzn::Transaction.define do |t|
   t.register_validation(:create_localpool_schema) do
