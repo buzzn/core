@@ -37,7 +37,11 @@ Depending on the kind of request and transaction (create, update, ...), data for
 
 These are model-layer validations that always must be true, regardless of transaction. Examples: a user record must always have a first and last name, a register must always have a meter.
 
-We define these invariant validations in separate schemas and generate database constraints for the model from them.
+Invariants extend the constraints schemas.
+
+### 4. Constraints schemas
+
+These are schemas which we use use to create database constraints.
 
 Note on the ActiveRecord validations: the standard validation DSL (`validates :iban, presence: true`, etc.) as well as the methods `validate_invariants` are deprecated. We're in the process of replacing them with invariant schemas implemented with dry-validation.
 
