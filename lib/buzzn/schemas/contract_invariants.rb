@@ -1,5 +1,5 @@
-require_relative 'contract_constraints'
-ContractInvariants = Buzzn::Schemas.Form(ContractConstraints) do
+require_relative 'constraints/contract/base'
+ContractInvariants = Buzzn::Schemas.Form(Schemas::Constraints::Contract::Base) do
   required(:termination_date).maybe
   required(:end_date).maybe
 

@@ -1,5 +1,5 @@
 require 'buzzn/schemas/support/migration_visitor'
-require 'buzzn/schemas/contract_tax_data_constraints'
+require 'buzzn/schemas/constraints/contract/tax_data'
 class CreateContractTaxDataTable < ActiveRecord::Migration
 
   SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Contract::TaxData)
