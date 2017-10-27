@@ -56,7 +56,7 @@ describe Contract::BaseResource do
 
   it 'constaints' do
     resources.each do |contract|
-      expect(ContractConstraints.(contract)).to be_success
+      expect(Schemas::Constraints::Contract::Base.call(contract)).to be_success
     end
   end
 
