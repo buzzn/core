@@ -2,7 +2,7 @@ require_relative '../group_resource'
 require_relative '../person_resource'
 require_relative 'price_resource'
 require_relative 'billing_cycle_resource'
-require_relative '../../schemas/admin/localpool_incompleteness'
+require_relative '../../schemas/completeness/admin/localpool'
 module Admin
   class LocalpoolResource < GroupResource
 
@@ -32,7 +32,7 @@ module Admin
     has_one :address
 
     def incompleteness
-      LocalpoolIncompleteness.(self).messages
+      Schemas::Completeness::Admin::Localpool.call(self).messages
     end
 
     # API methods for endpoints
