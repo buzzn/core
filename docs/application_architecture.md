@@ -24,24 +24,26 @@ We use [dry-validation](http://dry-rb.org/gems/dry-validation) for all new valid
 
 #### 1. Completeness schemas
 
-In some parts of the application we want to show users that an object graph is not yet complete. The completeness schema validates that. For example, while a customer can be saved without a bank account, the bank account is required before the billing can be started.
+For some use cases, we want to allow users to save incomplete objects or object graphs. The completeness schema implements the completeness part. Examples:
+- while a customer can be saved without a bank account, the bank account is required before the billing can be started.
+- when a contract is first created in the system, some information is still not available. We must be able to tell the user which information is still missing.
 
 #### 2. Transaction schemas
 
 Transaction schemas validate the client request data before it is passed to the transaction.
-Depending on the kind of request and transaction (create, update, ...), data for the same model may have to be validated differently.
+Depending on the kind of request and transaction (create, update, ...), data for the same resource or model may have to be validated differently, so one resource can have several transaction schemas.
 
 #### 3. Invariants schemas
 
-These are model-layer validations that always must be true, regardless of transaction. A user record must always have a first and last name, a register must always have a meter, and so on.
+These are model-layer validations that always must be true, regardless of transaction. Examples: a user record must always have a first and last name, a register must always have a meter.
 
 We define these invariant validations in separate schemas and generate database constraints for the model from them.
 
-Note on the ActiveRecord validations: the standard validation DSL (`validates :iban, presence: true`, etc.) as well as the methods `validate_invariants` are deprecated. We're in the process of replacing them with invariant schemas.
+Note on the ActiveRecord validations: the standard validation DSL (`validates :iban, presence: true`, etc.) as well as the methods `validate_invariants` are deprecated. We're in the process of replacing them with invariant schemas implemented with dry-validation.
 
 ### How do we use ActiveRecord?
 
-We use the ORM features of ActiveRecord, but don't put business logic there. So scopes, associations and finders are Ok to use. Regarding other AR features:
+We use the ORM features of ActiveRecord, but don't put business logic in them. So scopes, associations and finders are Ok to use. Regarding other AR features:
 
 #### Lifecycle callbacks (before_create, ...) 
 
