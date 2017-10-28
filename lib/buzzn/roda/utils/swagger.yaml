@@ -1,0 +1,37 @@
+---
+swagger: '2.0'
+info:
+  title: Utils API
+  description: Swagger for Utils Internal API
+  version: '1'
+basePath: "/api/utils"
+paths:
+  "/zip-to-price":
+    post:
+      description: calculates the price for the given zipcode
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - single
+        - double
+        - smart
+      - name: zip
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: annual_kwh
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      responses:
+        201:
+          description: created
