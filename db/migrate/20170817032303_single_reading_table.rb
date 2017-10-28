@@ -1,7 +1,9 @@
 require 'buzzn/schemas/support/migration_visitor'
+require 'buzzn/schemas/constraints/reading/single'
+
 class SingleReadingTable < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(:create_reading)
+  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Reading::Single)
 
   def up
     SCHEMA.up(:readings, self)

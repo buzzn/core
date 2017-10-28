@@ -1,9 +1,4 @@
 require_relative '../../constraints/person'
+require_relative '../person'
 
-module Schemas
-  module Transactions
-    module Person
-      Create = Schemas::Constraints::Person
-    end
-  end
-end
+Schemas::Transactions::Person::Create = Schemas::Constraints::Person
