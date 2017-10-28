@@ -1,7 +1,7 @@
 require 'buzzn/schemas/support/migration_visitor'
 require 'buzzn/schemas/constraints/price'
 
-class CreatePrice < ActiveRecord::Migration
+class CreatePrices < ActiveRecord::Migration
 
   SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Price)
 
