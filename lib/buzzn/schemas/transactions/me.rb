@@ -1,4 +1,4 @@
 require_relative '../transactions'
 
-module Schemas::Transactions::Account
+module Schemas::Transactions::Me
 end
