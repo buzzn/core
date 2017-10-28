@@ -1,10 +1,10 @@
 require 'buzzn/schemas/support/visitor'
-require 'buzzn/schemas/transactions/account/login'
-require 'buzzn/schemas/transactions/account/change_login'
-require 'buzzn/schemas/transactions/account/verify_change_login'
-require 'buzzn/schemas/transactions/account/logout'
-require 'buzzn/schemas/transactions/account/reset_password'
-require 'buzzn/schemas/transactions/account/reset_password_request'
+require 'buzzn/schemas/transactions/me/login'
+require 'buzzn/schemas/transactions/me/change_login'
+require 'buzzn/schemas/transactions/me/verify_change_login'
+require 'buzzn/schemas/transactions/me/logout'
+require 'buzzn/schemas/transactions/me/reset_password'
+require 'buzzn/schemas/transactions/me/reset_password_request'
 
 # we can not have nested transactions on AR connection and use Sequel at the
 # same time as it does not see the entities from AR connection
@@ -40,32 +40,32 @@ describe Me, :swagger, :skip_nested do
 
   post '/login', nil, status: 200, description: 'logged in' do
     description 'login'
-    schema Schemas::Transactions::Account::Login, [{"parameter"=>"login", "detail"=>"no matching login"}]
+    schema Schemas::Transactions::Me::Login, [{"parameter"=>"login", "detail"=>"no matching login"}]
   end
 
   post '/reset-password-request', nil, status: 200, description: 'key sent via email' do
     description 'request key for resetting password'
-    schema Schemas::Transactions::Account::ResetPasswordRequest, []
+    schema Schemas::Transactions::Me::ResetPasswordRequest, []
   end
 
   post '/reset-password', nil, status: 200, description: 'new password set' do
     description 'reset password with given key'
-    schema Schemas::Transactions::Account::ResetPassword, []
+    schema Schemas::Transactions::Me::ResetPassword, []
   end
 
   post '/change-login', account_change_login, status: 200, description: 'change login key sent via email' do
     description 'change login and verify with key'
-    schema Schemas::Transactions::Account::ChangeLogin, [{"parameter"=>"password", "detail"=>"invalid password"}]
+    schema Schemas::Transactions::Me::ChangeLogin, [{"parameter"=>"password", "detail"=>"invalid password"}]
   end
 
   post '/verify-login-change', account, status: 200, description: 'login verfied and changed' do
     description 'verify login change with key'
-    schema Schemas::Transactions::Account::VerifyChangeLogin, []
+    schema Schemas::Transactions::Me::VerifyChangeLogin, []
   end
 
   post '/logout', account, status: 200, description: 'logged out' do
     description 'logout'
-    schema Schemas::Transactions::Account::Logout
+    schema Schemas::Transactions::Me::Logout
   end
 
   # swagger
