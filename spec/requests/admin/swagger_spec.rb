@@ -215,7 +215,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
     description 'create reading for the register'
-    schema Schemas::Transactions::Reading::Create
+    schema Schemas::Transactions::Admin::Reading::Create
   end
 
   get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
@@ -295,7 +295,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/prices' do
     description 'create price for the localpool'
-    schema Schemas::Transactions::Price::Create
+    schema Schemas::Transactions::Admin::Price::Create
   end
 
   get '/localpools/{localpool.id}/prices/{price.id}' do
@@ -304,7 +304,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/prices/{price.id}' do
     description 'updates the price of the localpool for the given IDs'
-    schema Schemas::Transactions::Price::Update
+    schema Schemas::Transactions::Admin::Price::Update
   end
 
   # billing-cycles
@@ -339,7 +339,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/regular' do
     description 'creates a regular billings for billing-cycles'
-    schema Schemas::Transactions::Billing::CreateRegular
+    schema Schemas::Transactions::Admin::Billing::CreateRegular
   end
 
   get '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_1.id}' do
@@ -348,7 +348,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_1.id}' do
     description 'updates the billing of the billing-cycles for the given IDs'
-    schema Schemas::Transactions::Billing::Update
+    schema Schemas::Transactions::Admin::Billing::Update
   end
 
   delete '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_2.id}' do

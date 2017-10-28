@@ -1,4 +1,4 @@
 require_relative '../transactions'
 
-module Schemas::Transactions::Billing
+module Schemas::Transactions::Display
 end
