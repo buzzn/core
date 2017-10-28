@@ -121,7 +121,7 @@ describe Admin, :swagger do
 
   get '/localpools/{localpool.id}/charts' do
     description 'returns the charts of the localpool'
-    schema 'charts'
+    schema Schemas::Transactions::Chart
   end
 
   # contracts
@@ -158,7 +158,7 @@ describe Admin, :swagger do
 
   get '/localpools/{localpool.id}/registers/{register.id}/charts' do
     description 'returns the charts of the localpool'
-    schema 'charts'
+    schema Schemas::Transactions::Chart
   end
 
   # meters

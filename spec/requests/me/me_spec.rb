@@ -94,7 +94,7 @@ describe Me::Roda do
           {"parameter"=>"updated_at",
            "detail"=>"is missing"},
           {"parameter"=>"title",
-           "detail"=>"must be one of: Dr., Prof., Prof. Dr."},
+           "detail"=>"must be one of: Prof., Dr., Prof. Dr."},
           {"parameter"=>"prefix",
            "detail"=>"must be one of: F, M"},
           {"parameter"=>"first_name",

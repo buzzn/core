@@ -1,5 +1,8 @@
 require 'buzzn/schemas/support/visitor'
-describe Display, :swagger do
+require 'buzzn/schemas/transactions/chart'
+require 'buzzn/schemas/transactions/score'
+
+describe Display do
   include SwaggerHelper
 
   def app
@@ -30,7 +33,7 @@ describe Display, :swagger do
 
   get '/groups/{group.id}/scores' do
     description 'returns the score(s) of the group'
-    schema 'scores'
+    schema Schemas::Transactions::Score
   end
 
   get '/groups/{group.id}/mentors' do
@@ -43,7 +46,7 @@ describe Display, :swagger do
 
   get '/groups/{group.id}/charts' do
     description 'returns the charts of the group'
-    schema 'charts'
+    schema Schemas::Transactions::Chart
   end
 
   get '/groups/{group.id}/registers' do
@@ -60,7 +63,7 @@ describe Display, :swagger do
 
   get '/groups/{group.id}/registers/{register.id}/charts' do
     description 'returns the charts of the group'
-    schema 'charts'
+    schema Schemas::Transactions::Chart
   end
 
   it 'GET /swagger.json' do
