@@ -1,6 +1,6 @@
 require 'buzzn/schemas/support/visitor'
 require 'buzzn/schemas/transactions/chart'
-require 'buzzn/schemas/transactions/score'
+require 'buzzn/schemas/transactions/display/score'
 
 describe Display do
   include SwaggerHelper
@@ -33,7 +33,7 @@ describe Display do
 
   get '/groups/{group.id}/scores' do
     description 'returns the score(s) of the group'
-    schema Schemas::Transactions::Score
+    schema Schemas::Transactions::Display::Score
   end
 
   get '/groups/{group.id}/mentors' do
