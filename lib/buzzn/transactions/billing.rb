@@ -1,23 +1,16 @@
 require_relative 'resource'
-Buzzn::Transaction.define do |t|
-  t.register_validation(:create_regular_billings_schema) do
-    required(:accounting_year).filled(:int?)
-  end
+require_relative '../schemas/transactions/billing/create_regular'
+require_relative '../schemas/transactions/billing/update'
 
-  t.register_validation(:update_billing_schema) do
-    required(:updated_at).filled(:date_time?)
-    optional(:receivables_cents).filled(:int?)
-    optional(:invoice_number).filled(:str?, max_size?: 64)
-    optional(:status).value(included_in?: Billing.all_stati)
-  end
+Buzzn::Transaction.define do |t|
 
   t.define(:create_regular_billings) do
-    validate :create_regular_billings_schema
+    validate Schemas::Transactions::Billing::CreateRegular
     step :resource, with: :nested_resource
   end
 
   t.define(:update_billing) do
-    validate :update_billing_schema
+    validate Schemas::Transactions::Billing::Update
     step :resource, with: :update_resource
   end
 end

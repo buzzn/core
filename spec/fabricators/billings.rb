@@ -1,5 +1,5 @@
 Fabricator :billing do
-  status                        { Billing::OPEN }
+  status                        { Billing.status[:open] }
   total_energy_consumption_kwh  1000
   total_price_cents             30000
   prepayments_cents             29000

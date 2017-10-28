@@ -59,6 +59,19 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 SET search_path = public, pg_catalog;
 
 --
+-- Name: billings_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE billings_status AS ENUM (
+    'open',
+    'calculated',
+    'delivered',
+    'settled',
+    'closed'
+);
+
+
+--
 -- Name: country; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -507,30 +520,41 @@ CREATE TYPE ownership AS ENUM (
 
 
 --
--- Name: preferred_language; Type: TYPE; Schema: public; Owner: -
+-- Name: persons_preferred_language; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE preferred_language AS ENUM (
+CREATE TYPE persons_preferred_language AS ENUM (
     'de',
     'en'
 );
 
 
 --
--- Name: prefix; Type: TYPE; Schema: public; Owner: -
+-- Name: persons_prefix; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE prefix AS ENUM (
+CREATE TYPE persons_prefix AS ENUM (
     'F',
     'M'
 );
 
 
 --
--- Name: quality; Type: TYPE; Schema: public; Owner: -
+-- Name: persons_title; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE quality AS ENUM (
+CREATE TYPE persons_title AS ENUM (
+    'Prof.',
+    'Dr.',
+    'Prof. Dr.'
+);
+
+
+--
+-- Name: readings_quality; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE readings_quality AS ENUM (
     '20',
     '67',
     '79',
@@ -541,10 +565,10 @@ CREATE TYPE quality AS ENUM (
 
 
 --
--- Name: read_by; Type: TYPE; Schema: public; Owner: -
+-- Name: readings_read_by; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE read_by AS ENUM (
+CREATE TYPE readings_read_by AS ENUM (
     'BN',
     'SN',
     'SG',
@@ -553,10 +577,10 @@ CREATE TYPE read_by AS ENUM (
 
 
 --
--- Name: reason; Type: TYPE; Schema: public; Owner: -
+-- Name: readings_reason; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE reason AS ENUM (
+CREATE TYPE readings_reason AS ENUM (
     'IOM',
     'COM1',
     'COM2',
@@ -566,6 +590,38 @@ CREATE TYPE reason AS ENUM (
     'COS',
     'CMP',
     'COB'
+);
+
+
+--
+-- Name: readings_source; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE readings_source AS ENUM (
+    'SM',
+    'MAN'
+);
+
+
+--
+-- Name: readings_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE readings_status AS ENUM (
+    'Z83',
+    'Z84',
+    'Z86'
+);
+
+
+--
+-- Name: readings_unit; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE readings_unit AS ENUM (
+    'Wh',
+    'W',
+    'm³'
 );
 
 
@@ -596,16 +652,6 @@ CREATE TYPE section AS ENUM (
 
 
 --
--- Name: source; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE source AS ENUM (
-    'SM',
-    'MAN'
-);
-
-
---
 -- Name: state; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -630,45 +676,12 @@ CREATE TYPE state AS ENUM (
 
 
 --
--- Name: status; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE status AS ENUM (
-    'Z83',
-    'Z84',
-    'Z86'
-);
-
-
---
 -- Name: taxation; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE taxation AS ENUM (
     'F',
     'R'
-);
-
-
---
--- Name: title; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE title AS ENUM (
-    'Prof.',
-    'Dr.',
-    'Prof. Dr.'
-);
-
-
---
--- Name: unit; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE unit AS ENUM (
-    'Wh',
-    'W',
-    'm³'
 );
 
 
@@ -978,20 +991,20 @@ CREATE TABLE billing_cycles (
 
 CREATE TABLE billings (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    status character varying NOT NULL,
     total_energy_consumption_kwh integer NOT NULL,
     total_price_cents integer NOT NULL,
     prepayments_cents integer NOT NULL,
     receivables_cents integer NOT NULL,
-    invoice_number character varying,
-    start_reading_id character varying NOT NULL,
-    end_reading_id character varying NOT NULL,
-    device_change_reading_1_id character varying,
-    device_change_reading_2_id character varying,
+    invoice_number character varying(64),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    status billings_status,
+    start_reading_id uuid,
+    end_reading_id uuid,
+    device_change_reading_1_id uuid,
+    device_change_reading_2_id uuid,
     billing_cycle_id uuid,
-    localpool_power_taker_contract_id uuid,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    localpool_power_taker_contract_id uuid NOT NULL
 );
 
 
@@ -1355,9 +1368,9 @@ CREATE TABLE persons (
     fax character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    prefix prefix,
-    preferred_language preferred_language,
-    title title,
+    prefix persons_prefix,
+    preferred_language persons_preferred_language,
+    title persons_title,
     image character varying,
     address_id uuid,
     customer_number integer
@@ -1430,12 +1443,12 @@ CREATE TABLE readings (
     date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    unit unit,
-    reason reason,
-    read_by read_by,
-    quality quality,
-    source source,
-    status status,
+    unit readings_unit,
+    reason readings_reason,
+    read_by readings_read_by,
+    quality readings_quality,
+    source readings_source,
+    status readings_status,
     register_id uuid NOT NULL
 );
 
@@ -2052,13 +2065,6 @@ CREATE INDEX index_billings_on_localpool_power_taker_contract_id ON billings USI
 
 
 --
--- Name: index_billings_on_status; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_billings_on_status ON billings USING btree (status);
-
-
---
 -- Name: index_brokers; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2513,6 +2519,54 @@ ALTER TABLE ONLY accounts
 
 ALTER TABLE ONLY accounts
     ADD CONSTRAINT accounts_status_id_fkey FOREIGN KEY (status_id) REFERENCES account_statuses(id);
+
+
+--
+-- Name: billings fk_billings_billing_cycles; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_billing_cycles FOREIGN KEY (billing_cycle_id) REFERENCES billing_cycles(id);
+
+
+--
+-- Name: billings fk_billings_contracs; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_contracs FOREIGN KEY (localpool_power_taker_contract_id) REFERENCES contracts(id);
+
+
+--
+-- Name: billings fk_billings_device_change_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_device_change_1 FOREIGN KEY (device_change_reading_1_id) REFERENCES readings(id);
+
+
+--
+-- Name: billings fk_billings_device_change_2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_device_change_2 FOREIGN KEY (device_change_reading_2_id) REFERENCES readings(id);
+
+
+--
+-- Name: billings fk_billings_end_reading; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_end_reading FOREIGN KEY (end_reading_id) REFERENCES readings(id);
+
+
+--
+-- Name: billings fk_billings_start_reading; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_start_reading FOREIGN KEY (start_reading_id) REFERENCES readings(id);
 
 
 --
@@ -3044,4 +3098,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171018132507');
 INSERT INTO schema_migrations (version) VALUES ('20171018134029');
 
 INSERT INTO schema_migrations (version) VALUES ('20171018134419');
+
+INSERT INTO schema_migrations (version) VALUES ('20171028142114');
+
+INSERT INTO schema_migrations (version) VALUES ('20171028142256');
 
