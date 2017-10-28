@@ -1,25 +1,15 @@
 require_relative 'resource'
+require_relative '../schemas/transactions/bank_account/create'
+require_relative '../schemas/transactions/bank_account/update'
+
 Buzzn::Transaction.define do |t|
-  t.register_validation(:create_bank_account_schema) do
-    required(:bank_name).filled(:str?, max_size?: 64)
-    required(:holder).filled(:str?, max_size?: 64)
-    required(:iban).filled(:str?, :iban?, max_size?: 32)
-  end
-
-  t.register_validation(:update_bank_account_schema) do
-    required(:updated_at).filled(:date_time?)
-    optional(:bank_name).filled(:str?, max_size?: 64)
-    optional(:holder).filled(:str?, max_size?: 64)
-    optional(:iban).filled(:iban?, max_size?: 32)
-  end
-
   t.define(:create_bank_account) do
-    validate :create_bank_account_schema
+    validate Schemas::Transactions::BankAccount::Create
     step :resource, with: :nested_resource
   end
 
   t.define(:update_bank_account) do
-    validate :update_bank_account_schema
+    validate Schemas::Transactions::BankAccount::Update
     step :resource, with: :update_resource
   end
 end

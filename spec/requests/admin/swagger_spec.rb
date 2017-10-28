@@ -251,7 +251,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_1.id}' do
     description 'updates the bank-accounts of the person for the given IDs'
-    schema 'update_bank_account'
+    schema Schemas::Transactions::BankAccount::Update
   end
 
   delete '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_2.id}' do
@@ -280,7 +280,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/organizations/{organization.id}/bank-accounts/{bank_account_3.id}' do
     description 'updates the bank-accounts of the organization for the given IDs'
-    schema 'update_bank_account'
+    schema Schemas::Transactions::BankAccount::Update
   end
 
   delete '/localpools/{localpool.id}/organizations/{organization.id}/bank-accounts/{bank_account_4.id}' do
@@ -339,7 +339,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/regular' do
     description 'creates a regular billings for billing-cycles'
-    schema 'create_regular_billings'
+    schema Schemas::Transactions::Billing::CreateRegular
   end
 
   get '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_1.id}' do
@@ -348,7 +348,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_1.id}' do
     description 'updates the billing of the billing-cycles for the given IDs'
-    schema 'update_billing'
+    schema Schemas::Transactions::Billing::Update
   end
 
   delete '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_2.id}' do
