@@ -1,6 +1,6 @@
 require 'buzzn/schemas/constraints/billing'
 
-class CreateBilling < ActiveRecord::Migration
+class CreateBillings < ActiveRecord::Migration
 
   SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Billing)
 

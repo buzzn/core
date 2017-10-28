@@ -1039,10 +1039,10 @@ CREATE TABLE comments (
 
 
 --
--- Name: contract_tax_datas; Type: TABLE; Schema: public; Owner: -
+-- Name: contract_tax_data; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE contract_tax_datas (
+CREATE TABLE contract_tax_data (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     retailer boolean,
     provider_permission boolean,
@@ -1789,11 +1789,11 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: contract_tax_datas contract_tax_datas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: contract_tax_data contract_tax_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contract_tax_datas
-    ADD CONSTRAINT contract_tax_datas_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY contract_tax_data
+    ADD CONSTRAINT contract_tax_data_pkey PRIMARY KEY (id);
 
 
 --
@@ -2541,10 +2541,10 @@ ALTER TABLE ONLY billings
 
 
 --
--- Name: contract_tax_datas fk_contract_tax_datas_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: contract_tax_data fk_contract_tax_datas_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contract_tax_datas
+ALTER TABLE ONLY contract_tax_data
     ADD CONSTRAINT fk_contract_tax_datas_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
 
 
