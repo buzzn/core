@@ -215,7 +215,7 @@ describe Admin, :swagger do
 
   post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
     description 'create reading for the register'
-    schema 'create_reading'
+    schema Schemas::Transactions::Reading::Create
   end
 
   get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
@@ -295,7 +295,7 @@ describe Admin, :swagger do
 
   post '/localpools/{localpool.id}/prices' do
     description 'create price for the localpool'
-    schema 'create_price'
+    schema Schemas::Transactions::Price::Create
   end
 
   get '/localpools/{localpool.id}/prices/{price.id}' do
@@ -304,7 +304,7 @@ describe Admin, :swagger do
 
   patch '/localpools/{localpool.id}/prices/{price.id}' do
     description 'updates the price of the localpool for the given IDs'
-    schema 'update_price'
+    schema Schemas::Transactions::Price::Update
   end
 
   # billing-cycles

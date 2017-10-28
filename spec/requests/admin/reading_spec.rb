@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
@@ -19,7 +20,6 @@ describe Admin::LocalpoolRoda do
     let(:wrong_json) do
       {
         "errors"=>[
-          {"parameter"=>"date", "detail"=>"must be a date"},
           {"parameter"=>"raw_value", "detail"=>"must be a float"},
           {"parameter"=>"value", "detail"=>"must be a float"},
           {"parameter"=>"unit", "detail"=>"must be one of: Wh, W, m³"},
@@ -27,7 +27,8 @@ describe Admin::LocalpoolRoda do
           {"parameter"=>"read_by", "detail"=>"must be one of: BN, SN, SG, VNB"},
           {"parameter"=>"quality", "detail"=>"must be one of: 20, 67, 79, 187, 220, 201"},
           {"parameter"=>"source", "detail"=>"must be one of: SM, MAN"},
-          {"parameter"=>"status", "detail"=>"must be one of: Z83, Z84, Z86"}
+          {"parameter"=>"status", "detail"=>"must be one of: Z83, Z84, Z86"},
+          {"parameter"=>"date", "detail"=>"must be a date"}
         ]
       }
     end

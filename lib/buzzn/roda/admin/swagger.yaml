@@ -620,11 +620,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: date
-        in: formData
-        required: false
-        type: string
-        format: date
       - name: raw_value
         in: formData
         required: true
@@ -698,6 +693,11 @@ paths:
         type: string
         format: ''
         maxLength: 256
+      - name: date
+        in: formData
+        required: false
+        type: string
+        format: date
       responses:
         201:
           description: created

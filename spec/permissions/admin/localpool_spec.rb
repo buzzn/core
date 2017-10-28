@@ -28,7 +28,6 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     pool = Fabricate(:localpool)
     localpool_member.person.add_role(Role::GROUP_MEMBER, pool)
     localpool_member2.person.add_role(Role::GROUP_MEMBER, pool)
-
     pool
   end
 
@@ -50,6 +49,9 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
     pool
   end
+
+  entity!(:localpool3) { Fabricate(:localpool) }
+
   let(:contract) { localpool2.localpool_power_taker_contracts.first }
   let(:register) { localpool2.registers.real.input.first }
 
@@ -76,7 +78,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   end
 
   it 'all' do
-    expect(all(buzzn_operator)).to match_array [localpool1, localpool2]
+    expect(all(buzzn_operator)).to match_array [localpool1, localpool2, localpool3]
     expect(all(localpool_owner)).to match_array [localpool2]
     expect(all(localpool_manager)).to match_array [localpool2]
     expect(all(localpool_member)).to match_array [localpool1]
@@ -124,10 +126,10 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
 
     begin
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).delete }.not_to raise_error
-      expect(Group::Localpool.where(id: localpool2.id)).to eq []
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool3.id).delete }.not_to raise_error
+      expect(Group::Localpool.where(id: localpool3.id)).to eq []
     ensure
-      Group::Localpool.create(localpool2.attributes)
+      Group::Localpool.create(localpool3.attributes)
     end
 
     expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).delete }.to raise_error Buzzn::PermissionDenied

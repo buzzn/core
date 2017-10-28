@@ -655,8 +655,8 @@ CREATE TYPE taxation AS ENUM (
 --
 
 CREATE TYPE title AS ENUM (
-    'Dr.',
     'Prof.',
+    'Dr.',
     'Prof. Dr.'
 );
 
@@ -1355,9 +1355,9 @@ CREATE TABLE persons (
     fax character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    title title,
     prefix prefix,
     preferred_language preferred_language,
+    title title,
     image character varying,
     address_id uuid,
     customer_number integer
@@ -1381,12 +1381,12 @@ CREATE TABLE persons_roles (
 CREATE TABLE prices (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     name character varying NOT NULL,
-    baseprice_cents_per_month integer NOT NULL,
-    energyprice_cents_per_kilowatt_hour double precision NOT NULL,
     begin_date date NOT NULL,
-    localpool_id uuid,
+    energyprice_cents_per_kilowatt_hour double precision NOT NULL,
+    baseprice_cents_per_month integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    localpool_id uuid
 );
 
 
@@ -1424,10 +1424,10 @@ CREATE TABLE profiles (
 
 CREATE TABLE readings (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    date date,
     raw_value double precision NOT NULL,
     value double precision NOT NULL,
     comment character varying(256),
+    date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     unit unit,
@@ -2283,6 +2283,13 @@ CREATE INDEX index_persons_roles_on_role_id_and_person_id ON persons_roles USING
 
 
 --
+-- Name: index_prices_on_localpool_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_prices_on_localpool_id ON prices USING btree (localpool_id);
+
+
+--
 -- Name: index_profiles_on_readable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2586,6 +2593,14 @@ ALTER TABLE ONLY persons
 
 ALTER TABLE ONLY persons
     ADD CONSTRAINT fk_persons_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
+
+
+--
+-- Name: prices fk_prices_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY prices
+    ADD CONSTRAINT fk_prices_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
 
 
 --
