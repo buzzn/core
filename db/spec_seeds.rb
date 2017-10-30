@@ -1,15 +1,7 @@
-require_relative 'setup_data_common'
+require_relative 'common_seeds'
 
 Organization.delete_all
 Organization.reset_cache
-
-$admin = Fabricate(:admin)
-$user  = Fabricate(:user)
-$other = Fabricate(:user)
-
-__END__
-
-# Christian's state, to be merged with my changes
 Fabricate(:dummy)
 Fabricate(:dummy_energy)
 Fabricate(:discovergy)
@@ -25,3 +17,6 @@ Account::PasswordResetKey.delete_all
 Account::LoginChangeKey.delete_all
 Account::Base.delete_all
 Person.delete_all
+$admin = Fabricate(:admin)
+$user = Fabricate(:user)
+$other = Fabricate(:user)

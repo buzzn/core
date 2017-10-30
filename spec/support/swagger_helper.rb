@@ -9,7 +9,8 @@ module SwaggerHelper
       # dump inot yaml file as it tracks diffs better than json
       file = swagger.basePath.sub(/.api/, 'lib/buzzn/roda') + '/swagger.yaml'
       File.write(file, swagger.to_yaml)
-      puts "dumped swagger yaml #{file}"
+      logger = Buzzn::Logger.new(self)
+      logger.debug("Dumped swagger yaml #{file}")
     end
   end
 

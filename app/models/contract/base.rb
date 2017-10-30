@@ -7,7 +7,7 @@ module Contract
 
     # status consts
     ONBOARDING = 'onboarding'
-    ACTIVE     = 'approvedactive'
+    ACTIVE     = 'active'
     TERMINATED = 'terminated'
     ENDED      = 'ended'
     enum status: {
@@ -106,6 +106,20 @@ module Contract
 
     def full_contract_number
       "#{contract_number}/#{contract_number_addition}"
+    end
+
+    def status
+      status = if end_date
+        ENDED
+      elsif termination_date
+        TERMINATED
+      elsif begin_date
+        ACTIVE
+      else
+        ONBOARDING
+      end
+      # wrap the string in ActiveSupport::StringInquirer, which allows status.ended? etc, hiding the string.
+      status.inquiry
     end
 
     def self.search_attributes

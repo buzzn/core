@@ -6,7 +6,7 @@ module PdfsHelper
     File.open(file, 'wb') do |f|
       f.print(content)
     end
-    _log "dumped #{file}"
+    logger.debug("dumped #{file}" )
   end
 
   def print_pdf(name, content)
@@ -15,13 +15,12 @@ module PdfsHelper
     File.open(file, 'wb') do |f|
       f.print(content)
     end
-    _log "dumped #{file}"
+    logger.debug("dumped #{file}")
   end
 
   private
 
-  def _log(string)
-    # TODO make a ::Buzzn.logger that we can access from everywhere.
-    ::Rails.logger.debug(string)
+  def logger
+    @logger ||= Buzzn::Logger.new(self)
   end
 end

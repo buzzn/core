@@ -84,6 +84,7 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
+    puts "-- seeding spec seeds"
     load 'db/seeds/setup_data_specs.rb'
   end
 
