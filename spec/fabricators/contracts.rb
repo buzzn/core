@@ -39,7 +39,7 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
     user.update(address: Fabricate(:address))
     user
   }
-  contractor               { Organization.discovergy }
+  contractor               { FactoryGirl.create(:organization) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
