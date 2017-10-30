@@ -103,7 +103,7 @@ describe Admin do
 
   post '/localpools' do
     description 'creates localpool'
-    schema 'create_localpool'
+    schema Schemas::Transactions::Admin::Localpool::Create
   end
 
   get '/localpools/{localpool.id}' do
@@ -112,7 +112,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}' do
     description 'updates the localpool'
-    schema 'update_localpool'
+    schema Schemas::Transactions::Admin::Localpool::Update
   end
 
   get '/localpools/{localpool.id}/bubbles' do
