@@ -479,7 +479,6 @@ describe Admin::LocalpoolRoda do
         "status"=>'active',
         "updatable"=>true,
         "deletable"=>false,
-        "begin_date"=>contract.begin_date.to_s,
         "metering_point_operator_name"=>contract.metering_point_operator_name,
         "tariffs"=> {
           'array'=>[
