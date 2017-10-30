@@ -5,8 +5,8 @@ default: &default
   username: <%= ENV['DB_USER'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   encoding: unicode
-  pool: 15
-  checkout_timeout: 1
+  pool: 16
+  checkout_timeout: 0.5
   reaping_frequency: 60
 
 development:

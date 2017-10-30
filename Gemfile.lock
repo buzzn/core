@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/mkristian/dry-more-container.git
-  revision: 9756ddaf6b925356243bc1bdbf622a6a489c6ed2
+  revision: e4f9b990fd4feff12d3159d7764f270419c3a7fc
   specs:
     dry-more-container (0.1.0)
       concurrent-ruby (~> 1.0)

@@ -3,25 +3,24 @@ describe Contract::BaseResource do
   entity(:admin) { Fabricate(:admin) }
   entity(:localpool) { Fabricate(:localpool) }
 
-  entity(:metering_point_operator) { Fabricate(:metering_point_operator_contract,
+  entity!(:metering_point_operator) { Fabricate(:metering_point_operator_contract,
                                             localpool: localpool) }
-  entity(:localpool_processing) { Fabricate(:localpool_processing_contract,
+  entity!(:localpool_processing) { Fabricate(:localpool_processing_contract,
                                             localpool: localpool) }
-  entity(:localpool_power_taker) do
+  entity!(:localpool_power_taker) do
     register = Fabricate(:input_meter).input_register
     register.group = localpool
-    Fabricate(:localpool_power_taker_contract, register: register)
+    Fabricate(:localpool_power_taker_contract, localpool: localpool, register: register)
   end
-  entity(:power_taker) { Fabricate(:power_taker_contract_move_in) }
-  entity(:power_giver) { Fabricate(:power_giver_contract) }
+  entity!(:power_taker) { Fabricate(:power_taker_contract_move_in) }
+  entity!(:power_giver) { Fabricate(:power_giver_contract) }
 
   let(:base_attributes) { ['id', 'type', 'updated_at',
                            'status',
                            'full_contract_number',
                            'customer_number',
-                           'signing_user',
                            'signing_date',
-                           'cancellation_date',
+                           'termination_date',
                            'end_date',
                            'updatable',
                            'deletable'] }
@@ -55,6 +54,75 @@ describe Contract::BaseResource do
     end
   end
 
+  it 'constaints' do
+    resources.each do |contract|
+      expect(ContractConstraints.(contract)).to be_success
+    end
+  end
+
+  context 'invariants' do
+
+    it 'valid' do
+      resources.each do |contract|
+        contract.object.update begin_date: nil, termination_date: nil, end_date: nil
+        expect(contract).to have_valid_invariants
+
+        contract.object.update begin_date: Date.today
+        expect(contract).to have_valid_invariants
+
+        contract.object.update termination_date: Date.today
+        expect(contract).to have_valid_invariants
+
+        contract.object.update end_date: Date.today
+        expect(contract).to have_valid_invariants
+      end
+    end
+
+    context 'invalid' do
+      it 'missing begin_date and termination_date' do
+        resources.each do |contract|
+          contract.object.update begin_date: nil, termination_date: nil, end_date: Date.today
+          expect(contract).not_to have_valid_invariants
+          expect(contract.invariants.messages).to eq({:begin_date=>["must be filled"], :termination_date=>["must be filled"]})
+        end
+      end
+
+      it 'missing begin_date' do
+        resources.each do |contract|
+          contract.object.update begin_date: nil, termination_date: Date.today, end_date: Date.today
+          expect(contract).not_to have_valid_invariants
+          expect(contract.invariants.messages).to eq({:begin_date=>["must be filled"]})
+        end
+      end
+
+      it 'missing termination date' do
+        resources.each do |contract|
+          contract.object.update begin_date: Date.today, termination_date: nil, end_date: Date.today
+          expect(contract).not_to have_valid_invariants
+          expect(contract.invariants.messages).to eq({:termination_date=>["must be filled"]})
+        end
+      end
+    end
+  end
+
+  it 'status' do
+    resources.each do |contract|
+      contract.object.update begin_date: nil
+      contract.object.update termination_date: nil
+      contract.object.update end_date: nil
+      expect(contract.status).to eq Contract::BaseResource::ONBOARDING
+
+      contract.object.update begin_date: Date.today
+      expect(contract.status).to eq Contract::BaseResource::ACTIVE
+
+      contract.object.update termination_date: Date.today
+      expect(contract.status).to eq Contract::BaseResource::TERMINATED
+
+      contract.object.update end_date: Date.today
+      expect(contract.status).to eq Contract::BaseResource::ENDED
+    end
+  end
+
   describe Contract::MeteringPointOperatorResource do
 
     it 'retrieve - ids + types' do
@@ -85,7 +153,7 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = ['begin_date', 'first_master_uid', 'second_master_uid'] + base_attributes
+      attributes = ['begin_date'] + base_attributes
       attrs = resources.retrieve(localpool_processing.id).to_h
       expect(attrs['id']).to eq localpool_processing.id
       expect(attrs['type']).to eq 'contract_localpool_processing'
@@ -111,7 +179,8 @@ describe Contract::BaseResource do
                     'third_party_renter_number',
                     'old_supplier_name',
                     'old_customer_number',
-                    'old_account_number'] + base_attributes
+                    'old_account_number',
+                    'mandate_reference'] + base_attributes
       attrs = resources.retrieve(localpool_power_taker.id).to_h
       expect(attrs['id']).to eq localpool_power_taker.id
       expect(attrs['type']).to eq 'contract_localpool_power_taker'

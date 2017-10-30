@@ -1,6 +1,7 @@
+require_relative 'visitor'
 module Buzzn
-  module Validation
-    class MigrationSchemaVisitor < SchemaVisitor
+  module Schemas
+    class MigrationVisitor < Visitor
 
       def initialize(schema, includes: nil, excludes: [])
         super(schema)

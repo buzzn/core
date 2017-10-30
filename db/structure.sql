@@ -59,18 +59,6 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 SET search_path = public, pg_catalog;
 
 --
--- Name: contract_status; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE contract_status AS ENUM (
-    'onboarding',
-    'approvedactive',
-    'terminated',
-    'ended'
-);
-
-
---
 -- Name: country; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1054,6 +1042,25 @@ CREATE TABLE comments (
 
 
 --
+-- Name: contract_tax_datas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE contract_tax_datas (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    retailer boolean,
+    provider_permission boolean,
+    subject_to_tax boolean,
+    tax_rate integer,
+    tax_number character varying(64),
+    sales_tax_number character varying(64),
+    creditor_identification character varying(64),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    contract_id uuid
+);
+
+
+--
 -- Name: contracts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1063,7 +1070,6 @@ CREATE TABLE contracts (
     forecast_kwh_pa bigint,
     signing_date date,
     end_date date,
-    terms_accepted boolean,
     confirm_pricing_model boolean,
     power_of_attorney boolean,
     customer_number character varying,
@@ -1080,12 +1086,10 @@ CREATE TABLE contracts (
     attention_by text,
     third_party_billing_number character varying,
     third_party_renter_number character varying,
-    first_master_uid character varying,
-    second_master_uid character varying,
     metering_point_operator_name character varying,
     old_supplier_name character varying,
     type character varying NOT NULL,
-    cancellation_date date,
+    termination_date date,
     old_customer_number character varying,
     old_account_number character varying,
     customer_id uuid,
@@ -1098,9 +1102,8 @@ CREATE TABLE contracts (
     contract_number_addition integer,
     customer_bank_account_id uuid,
     contractor_bank_account_id uuid,
-    signing_user character varying,
-    status contract_status DEFAULT 'onboarding'::contract_status,
-    renewable_energy_law_taxation taxation
+    renewable_energy_law_taxation taxation,
+    mandate_reference character varying
 );
 
 
@@ -1317,14 +1320,7 @@ CREATE TABLE organizations (
     website character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    sales_tax_number integer,
-    tax_rate double precision,
-    tax_number integer,
-    retailer boolean,
-    provider_permission boolean,
-    subject_to_tax boolean,
-    mandate_reference character varying,
-    creditor_id character varying,
+    market_place_id character varying,
     account_number character varying,
     contact_id uuid,
     legal_representation_id uuid,
@@ -1363,14 +1359,6 @@ CREATE TABLE persons (
     title title,
     prefix prefix,
     preferred_language preferred_language,
-    sales_tax_number integer,
-    tax_rate double precision,
-    tax_number integer,
-    retailer boolean,
-    provider_permission boolean,
-    subject_to_tax boolean,
-    mandate_reference character varying,
-    creditor_id character varying,
     image character varying,
     address_id uuid,
     customer_number integer
@@ -1814,6 +1802,14 @@ ALTER TABLE ONLY billings
 
 ALTER TABLE ONLY comments
     ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contract_tax_datas contract_tax_datas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contract_tax_datas
+    ADD CONSTRAINT contract_tax_datas_pkey PRIMARY KEY (id);
 
 
 --
@@ -2514,6 +2510,14 @@ ALTER TABLE ONLY accounts
 
 
 --
+-- Name: contract_tax_datas fk_contract_tax_datas_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contract_tax_datas
+    ADD CONSTRAINT fk_contract_tax_datas_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
+
+
+--
 -- Name: groups fk_groups_address; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3013,5 +3017,19 @@ INSERT INTO schema_migrations (version) VALUES ('20171011151135');
 
 INSERT INTO schema_migrations (version) VALUES ('20171016125437');
 
+INSERT INTO schema_migrations (version) VALUES ('20171016140547');
+
+INSERT INTO schema_migrations (version) VALUES ('20171017052738');
+
 INSERT INTO schema_migrations (version) VALUES ('20171017081409');
+
+INSERT INTO schema_migrations (version) VALUES ('20171018123008');
+
+INSERT INTO schema_migrations (version) VALUES ('20171018124326');
+
+INSERT INTO schema_migrations (version) VALUES ('20171018132507');
+
+INSERT INTO schema_migrations (version) VALUES ('20171018134029');
+
+INSERT INTO schema_migrations (version) VALUES ('20171018134419');
 

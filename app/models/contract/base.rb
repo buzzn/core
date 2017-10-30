@@ -59,25 +59,7 @@ module Contract
     validates :contractor_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'contractor_type'
     validates :customer_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'customer_type'
 
-    validates :contract_number, presence: false
-    validates :customer_number, presence: false
-    validates :origianl_signing_user, presence: false
-
-    validates :signing_date, presence: true
-    validates :cancellation_date, presence: false
-    validates :end_date, presence: false
-
-    validates :terms_accepted, presence: true
-    validates :power_of_attorney, presence: true
     validates_uniqueness_of :contract_number_addition, scope: [:contract_number], message: 'already available for given contract_number', if: 'contract_number_addition.present?'
-
-
-    validate :validate_invariants
-
-    # FIXME: I don't understand why this is needed ...
-    def initialize(*args)
-      super
-    end
 
     scope :power_givers,             -> { where(type: 'PowerGiver') }
     scope :power_takers,             -> { where(type: 'PowerTaker') }
@@ -107,7 +89,6 @@ module Contract
     end
 
     def validate_invariants
-      errors.add(:terms_accepted, MUST_BE_TRUE ) unless terms_accepted
       errors.add(:power_of_attorney, MUST_BE_TRUE ) unless power_of_attorney
       if contractor
         errors.add(:contractor_bank_account, MUST_MATCH) if contractor_bank_account && ! contractor.bank_accounts.include?(contractor_bank_account)
@@ -116,11 +97,6 @@ module Contract
           # FIXME: why is at least one payment required?
           errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.empty?
         end
-      end
-
-      # check lifecycle changes
-      if change = changes['status']
-        errors.add(:status, WAS_ALREADY_CANCELLED) if [ENDED, TERMINATED].member?(change[0])
       end
     end
 

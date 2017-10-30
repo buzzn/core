@@ -40,6 +40,7 @@ describe Admin::LocalpoolRoda do
       Fabricate(:localpool_power_taker_contract,
                 customer: person,
                 contractor: organization,
+                localpool: localpool,
                 register: Fabricate(:input_register,
                                     group: localpool,
                                     meter: Fabricate.build(:meter)))
@@ -127,16 +128,15 @@ describe Admin::LocalpoolRoda do
           "id"=>contract.id,
           "type"=>"contract_localpool_power_taker",
           'updated_at'=>contract.updated_at.as_json,
-          "status"=>contract.attributes['status'],
           "full_contract_number"=>contract.full_contract_number,
           "customer_number"=>contract.customer_number,
-          "signing_user"=>contract.signing_user,
           "signing_date"=>contract.signing_date.to_s,
-          "cancellation_date"=>nil,
+          "begin_date"=>contract.begin_date.to_s,
+          "termination_date"=>nil,
           "end_date"=>nil,
+          "status"=>'active',
           "updatable"=>true,
           "deletable"=>false,
-          "begin_date"=>contract.begin_date.to_s,
           'forecast_kwh_pa'=>contract.forecast_kwh_pa,
           'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
           'third_party_billing_number'=>contract.third_party_billing_number,
@@ -144,6 +144,7 @@ describe Admin::LocalpoolRoda do
           'old_supplier_name'=>contract.old_supplier_name,
           'old_customer_number'=>contract.old_customer_number,
           'old_account_number'=>contract.old_account_number,
+          'mandate_reference' => nil,
           "tariffs"=>{
             'array'=>[
               {
@@ -227,16 +228,15 @@ describe Admin::LocalpoolRoda do
           "id"=>contract.id,
           "type"=>"contract_metering_point_operator",
           'updated_at'=>contract.updated_at.as_json,
-          "status"=>contract.attributes['status'],
           "full_contract_number"=>contract.full_contract_number,
           "customer_number"=>contract.customer_number,
-          "signing_user"=>contract.signing_user,
           "signing_date"=>contract.signing_date.as_json,
-          "cancellation_date"=>nil,
+          "begin_date"=>contract.begin_date.to_s,
+          "termination_date"=>nil,
           "end_date"=>nil,
+          "status"=>'active',
           "updatable"=>true,
           "deletable"=>false,
-          "begin_date"=>contract.begin_date.to_s,
           "metering_point_operator_name"=>contract.metering_point_operator_name,
           "tariffs"=>{
             'array'=>[
@@ -343,9 +343,6 @@ describe Admin::LocalpoolRoda do
         let("customer_json") do
           json = person_json.dup
           json.delete('address')
-          json['sales_tax_number']=nil
-          json['tax_rate']=nil
-          json['tax_number']=nil
           json
         end
 
@@ -375,9 +372,6 @@ describe Admin::LocalpoolRoda do
           json = organization_json.dup
           json.delete('address')
           json.delete('contact')
-          json['sales_tax_number']=nil
-          json['tax_rate']=nil
-          json['tax_number']=nil
           json
         end
 

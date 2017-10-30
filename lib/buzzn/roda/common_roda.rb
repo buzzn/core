@@ -1,8 +1,16 @@
 class CommonRoda < Roda
 
+  def self.logger
+    @logger ||= Buzzn::Logger.new(self)
+  end
+
+  def logger
+    self.class.logger
+  end
+
   plugin :default_headers,
     'Content-Type' => 'application/json',
-  #  'Content-Security-Policy'=>"default-src 'self'",
+    'Content-Security-Policy'=>"default-src 'none'",
   #  'Strict-Transport-Security'=>'max-age=16070400;',
     'X-Frame-Options' => 'deny',
     'X-Content-Type-Options' => 'nosniff',

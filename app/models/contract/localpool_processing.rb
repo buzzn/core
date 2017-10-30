@@ -8,12 +8,18 @@ module Contract
       a
     end
 
-    belongs_to :localpool, class_name: Group::Localpool
+    belongs_to :localpool, class_name: 'Group::Localpool'
+    has_one :tax_data, class_name: 'Contract::TaxData', foreign_key: :contract_id
+    delegate :subject_to_tax,
+             :sales_tax_number,
+             :tax_number,
+             :tax_rate,
+             :creditor_idenfication,
+             :retailer,
+             :provider_permission,
+             to: :tax_data, allow_nil: true
 
     validates :localpool, presence: true
-    validates :first_master_uid, presence: true
-    validates :second_master_uid, presence: false
-    validates :begin_date, presence: true
 
     def validate_invariants
       super

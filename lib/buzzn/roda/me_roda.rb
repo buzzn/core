@@ -28,7 +28,7 @@ module Me
 
       create_verify_login_change_email do |login|
         def login.deliver!
-          # TODO: send email
+          Me::Roda.logger.info("TODO email for #{self}")
           self
         end
         login
@@ -36,7 +36,7 @@ module Me
 
       create_reset_password_email do
         def reset_password_key_value.deliver!
-          # TODO: send email
+          Me::Roda.logger.info("TODO email for #{self}")
           self
         end
         reset_password_key_value
@@ -67,8 +67,7 @@ module Me
 
       rodauth.check_session_expiration
 
-      person = PersonResource.all(current_user, ContractingPartyPersonResource)
-               .retrieve(current_user.person.id)
+      person = PersonResource.all(current_user).retrieve(current_user.person.id)
 
       r.get! do
         person

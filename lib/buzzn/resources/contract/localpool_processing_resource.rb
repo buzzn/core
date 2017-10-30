@@ -3,9 +3,7 @@ module Contract
 
     model LocalpoolProcessing
 
-    attributes :first_master_uid,
-               :second_master_uid,
-               :begin_date
+    attributes :begin_date
 
   end
 end

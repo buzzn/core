@@ -6,5 +6,3 @@ Encoding.default_internal = Encoding::UTF_8
 
 # Initialize the Rails application.
 Buzzn::Application.initialize!
-
-APP_VERSION = `[ -d ".git" ] && git rev-parse HEAD`

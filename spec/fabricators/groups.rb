@@ -134,7 +134,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 241100000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 239000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
-    Fabricate(:lptc_hafi, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
+    Fabricate(:lptc_hafi, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404850).registers.first
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 27489000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
@@ -142,7 +142,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 864100000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 858000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
-    Fabricate(:lptc_hubv, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
+    Fabricate(:lptc_hubv, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404851).registers.first
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 24124000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
@@ -150,7 +150,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 1892400000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 1879000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
-    Fabricate(:lptc_mape, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
+    Fabricate(:lptc_mape, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404853).registers.first
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 23790000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
@@ -160,8 +160,8 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 808200000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 798000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
-    Fabricate(:lptc_hafi2, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
-    Fabricate(:lptc_pewi, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
+    Fabricate(:lptc_hafi2, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
+    Fabricate(:lptc_pewi, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404847).registers.first
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 8024000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
@@ -169,7 +169,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 456300000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 4529000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
-    Fabricate(:lptc_musc, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
+    Fabricate(:lptc_musc, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404854).registers.first
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 19442000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
@@ -177,7 +177,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 809700000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 805000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
-    Fabricate(:lptc_viwe, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
+    Fabricate(:lptc_viwe, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60404852).registers.first
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 9597000000, reason: Reading::Single::DEVICE_CHANGE_1, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
@@ -185,7 +185,7 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 1523000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2016, 12, 31), value: 1513000000, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::FORECAST_VALUE, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
-    Fabricate(:lptc_reho, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
+    Fabricate(:lptc_reho, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     register = Fabricate(:easymeter_60327350).registers.first
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 9078000000, reason: Reading::Single::DEVICE_REMOVAL, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
@@ -195,8 +195,8 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:single_reading, register: register, date: Date.new(2017, 2, 28), value: 733500000, reason: Reading::Single::DEVICE_CHANGE_2, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::POWER_GIVER, status: Reading::Single::Z86)
     Fabricate(:single_reading, register: register, date: Date.new(2017, 3, 1), value: 733500000, reason: Reading::Single::CONTRACT_CHANGE, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::POWER_GIVER, status: Reading::Single::Z86)
     localpool.registers << register
-    Fabricate(:osc_saba, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
-    Fabricate(:lptc_saba, signing_user: FFaker::Name.name, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
+    Fabricate(:osc_saba, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
+    Fabricate(:lptc_saba, register: register, customer: Fabricate(:person), contractor: Organization.where(name: 'HaFi').first)
 
     Fabricate(:lpc_sulz, localpool: self, contractor: Organization.buzzn || Fabricate(:buzzn), customer: Organization.where(name: 'HaFi').first)
 
@@ -211,6 +211,6 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
               baseprice_cents_per_month: 500)
     localpool.update(address: Fabricate(:address))
 
-    Fabricate(:osc_sulz, signing_user: FFaker::Name.name, register: self.registers.grid_consumption_corrected.first, customer: Organization.where(name: 'HaFi').first, localpool: self)
+    Fabricate(:osc_sulz, register: self.registers.grid_consumption_corrected.first, customer: Organization.where(name: 'HaFi').first, localpool: self)
   end
 end

@@ -14,7 +14,6 @@ module Contract
 
     validates :register, presence: false
     validates :localpool, presence: false
-    validates :begin_date, presence: true
     validates :metering_point_operator_name, presence: true
 
     def validate_invariants
