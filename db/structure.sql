@@ -365,9 +365,9 @@ CREATE TYPE direction_number AS ENUM (
 
 CREATE TYPE edifact_cycle_interval AS ENUM (
     'MONTHLY',
-    'YEARLY',
     'QUARTERLY',
-    'HALF_YEARLY'
+    'HALF_YEARLY',
+    'YEARLY'
 );
 
 
@@ -408,10 +408,10 @@ CREATE TYPE edifact_meter_size AS ENUM (
 
 CREATE TYPE edifact_metering_type AS ENUM (
     'AHZ',
-    'LAZ',
     'WSZ',
-    'EHZ',
+    'LAZ',
     'MAZ',
+    'EHZ',
     'IVA'
 );
 
@@ -495,7 +495,7 @@ CREATE TYPE operator AS ENUM (
 --
 
 CREATE TYPE ownership AS ENUM (
-    'BUZZN_SYSTEMS',
+    'BUZZN',
     'FOREIGN_OWNERSHIP',
     'CUSTOMER',
     'LEASED',
