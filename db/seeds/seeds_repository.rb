@@ -6,11 +6,6 @@ module SeedsRepository
 
     def persons
       @persons ||= OpenStruct.new(
-        buzzn_operator: create(:person, :with_self_role, :with_account,
-                               first_name: 'Philipp',
-                               last_name: 'Operator',
-                               email: 'dev+op@buzzn.net',
-                               roles: { Role::BUZZN_OPERATOR => nil }),
         group_owner: person(:wolfgang),
         brumbauer:   person(first_name: 'Traudl', last_name: 'Brumbauer', prefix: 'F'),
         pt1:  person(first_name: 'Sabine', last_name: 'Powertaker1', title: 'Prof.', prefix: 'F'),

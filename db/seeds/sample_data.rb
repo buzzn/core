@@ -1,11 +1,14 @@
 require_relative 'seeds_repository'
 
+# IMPORTANT: don't require factory girl in the part that generates the SEED data.
+# That data is also used for the production environments and must not be random.
+FactoryGirl.definition_file_paths = %w(db/factories)
+FactoryGirl.find_definitions
+include FactoryGirl::Syntax::Methods
+
 # ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 puts "seeds: loading sample data"
-
-# Call the buzzn operator once so it is generated.
-SeedsRepository.persons.buzzn_operator
 
 def localpool_contract(attrs = {})
   localpool = SeedsRepository.localpools.people_power

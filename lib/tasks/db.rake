@@ -44,4 +44,9 @@ namespace :db do
                   'zip2price:all',
                   'banks:import'
                 ]
+
+  desc 'Load some useful sample data into the application'
+  task sample: 'db:seed' do
+    require_relative '../../db/seeds/sample_data'
+  end
 end

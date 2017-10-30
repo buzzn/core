@@ -1,5 +1,12 @@
 puts "seeds: loading application setup data"
 
+# TODO: create account for buzzn operator
+# Person.create!(:person, :with_self_role, :with_account,
+#                        first_name: 'Philipp',
+#                        last_name: 'Operator',
+#                        email: 'dev+op@buzzn.net',
+#                        roles: { Role::BUZZN_OPERATOR => nil }),
+
 # Fabricate(:buzzn)
 # Fabricate(:dummy_energy)
 # Fabricate(:germany)
