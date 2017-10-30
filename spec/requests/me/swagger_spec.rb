@@ -14,7 +14,7 @@ describe Me, :swagger, :skip_nested do
   entity!(:account_change_login) { Proc.new { @b ||= Fabricate(:user) } }
 
   after :all do
-    load 'db/seeds/setup_data_common.rb'
+    load 'db/seeds/common.rb'
   end
 
   # me

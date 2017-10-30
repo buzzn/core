@@ -1,4 +1,4 @@
-require_relative 'seeds_repository'
+require_relative 'repository'
 
 # IMPORTANT: don't require factory girl in the part that generates the SEED data.
 # That data is also used for the production environments and must not be random.

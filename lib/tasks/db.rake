@@ -47,6 +47,6 @@ namespace :db do
 
   desc 'Load some useful sample data into the application'
   task sample: 'db:seed' do
-    require_relative '../../db/seeds/sample_data'
+    require_relative '../../db/samples/sample_data'
   end
 end

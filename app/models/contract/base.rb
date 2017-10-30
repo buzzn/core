@@ -36,7 +36,6 @@ module Contract
     IS_MISSING                   = 'is missing'
     CAN_NOT_BE_PRESENT           = 'can not be present when there is a '
     NOT_ALLOWED_FOR_OLD_CONTRACT = 'not allowed for old contract'
-    CAN_NOT_BELONG_TO_DUMMY      = 'can not belong to dummy organization'
     MUST_NOT_BE_BUZZN            = 'must not be buzzn'
 
     class << self

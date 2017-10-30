@@ -1,6 +1,6 @@
 class UserAccountChange < ActiveRecord::Migration
   def change
-    require_relative '../seeds/setup_data_common'
+    require_relative '../seeds/common'
     User.all.each do |user|
       next unless user.person
       account = Account::Base.create(email: user.email, person: user.person)

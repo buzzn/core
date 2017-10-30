@@ -62,18 +62,10 @@ Fabricator :buzzn, from: :electricity_supplier do
   name 'buzzn GmbH'
 end
 
-Fabricator :dummy_energy, from: :electricity_supplier do
-  name 'dummy energy supplier'
-end
-
 Fabricator :germany, from: :electricity_supplier do
   name 'Germany Energy Mix'
 end
 
 Fabricator :gemeindewerke_peissenberg, from: :electricity_supplier do
   name "Gemeindewerke Peißenberg"
-end
-
-Fabricator :dummy, from: :other_organization do
-  name 'dummy organization'
 end
