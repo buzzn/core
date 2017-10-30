@@ -110,16 +110,16 @@ describe Contract::BaseResource do
       contract.object.update begin_date: nil
       contract.object.update termination_date: nil
       contract.object.update end_date: nil
-      expect(contract.status).to eq Contract::BaseResource::ONBOARDING
+      expect(contract.status).to eq Contract::Base::ONBOARDING
 
       contract.object.update begin_date: Date.today
-      expect(contract.status).to eq Contract::BaseResource::ACTIVE
+      expect(contract.status).to eq Contract::Base::ACTIVE
 
       contract.object.update termination_date: Date.today
-      expect(contract.status).to eq Contract::BaseResource::TERMINATED
+      expect(contract.status).to eq Contract::Base::TERMINATED
 
       contract.object.update end_date: Date.today
-      expect(contract.status).to eq Contract::BaseResource::ENDED
+      expect(contract.status).to eq Contract::Base::ENDED
     end
   end
 
