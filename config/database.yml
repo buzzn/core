@@ -15,6 +15,7 @@ development:
 
 test:
   <<: *default
+  pool: 1
   database: buzzn_test
 
 staging:
