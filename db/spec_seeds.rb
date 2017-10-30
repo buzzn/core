@@ -1,6 +1,5 @@
 require_relative 'common_seeds'
 
-puts "-- seeding spec seeds"
 Organization.delete_all
 Organization.reset_cache
 Fabricate(:dummy)

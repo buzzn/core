@@ -7,7 +7,7 @@ module Contract
 
     # status consts
     ONBOARDING = 'onboarding'
-    ACTIVE     = 'approvedactive'
+    ACTIVE     = 'active'
     TERMINATED = 'terminated'
     ENDED      = 'ended'
     enum status: {

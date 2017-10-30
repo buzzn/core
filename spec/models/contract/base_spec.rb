@@ -13,7 +13,7 @@ describe 'Contract::Base' do
     context "when contract has begin date" do
       let(:contract) { Fabricate.build(:metering_point_operator_contract, begin_date: Date.yesterday) }
       it "is active" do
-        expect(contract.status).to be_approvedactive
+        expect(contract.status).to be_active
       end
 
       context "when contract also has end date" do
