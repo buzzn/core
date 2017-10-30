@@ -1,18 +1,14 @@
 FactoryGirl.define do
   factory :contract, class: 'Contract::MeteringPointOperator' do
     localpool                     { FactoryGirl.create(:localpool) }
-    status                        Contract::Base.statuses[:active]
     contract_number               { generate(:mpo_contract_number) }
     slug                          { |attrs| "mpo-#{attrs[:contract_number]}" }
     signing_date                  Date.parse("2015-10-11")
     begin_date                    Date.parse("2016-01-01")
     customer                      { FactoryGirl.create(:person, :with_bank_account) }
     contractor                    { FactoryGirl.create(:organization, :with_bank_account) }
-    first_master_uid              { generate(:register_uid) }
-    second_master_uid             { generate(:register_uid) }
     contract_number_addition      1
     power_of_attorney             true
-    terms_accepted                true
     metering_point_operator_name  "Generic metering point operator"
 
     before(:create) do |contract, _transients|
@@ -38,7 +34,6 @@ FactoryGirl.define do
 
   trait :localpool_processing do
     contract_number { generate(:mpo_contract_number) }
-    second_master_uid  { nil } # the model has a validation that this should not be there ...
     initialize_with { Contract::LocalpoolProcessing.new } # a slight hack to define a trait of contract, but use a different subclass
   end
 

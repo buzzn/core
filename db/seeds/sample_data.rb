@@ -46,7 +46,6 @@ contracts[:pt2] = localpool_contract(
 contracts[:pt3] = localpool_contract(
   signing_date: (Date.today - 5.days),
   begin_date: Date.today + 1.month,
-  status: Contract::Base.statuses[:onboarding],
   customer: SeedsRepository.persons.pt3,
   register_readings: [
     build(:reading, :setup, date: '2017-10-01', raw_value: 1_000, register: nil)
@@ -59,9 +58,8 @@ contracts[:pt3] = localpool_contract(
 contracts[:pt4] = localpool_contract(
   signing_date: Date.parse("2017-1-10"),
   begin_date: Date.parse("2017-2-1"),
-  cancellation_date: Date.yesterday,
+  termination_date: Date.yesterday,
   end_date: Date.today + 1.month,
-  status: Contract::Base.statuses[:terminated],
   customer: SeedsRepository.persons.pt4,
   register_readings: [
     build(:reading, :setup, date: '2017-02-01', raw_value: 1_000, register: nil)
@@ -73,9 +71,8 @@ contracts[:pt4] = localpool_contract(
 
 # beendet, Auszug
 contracts[:pt5a] = localpool_contract(
-  cancellation_date: Date.parse("2017-3-10"),
+  termination_date: Date.parse("2017-3-10"),
   end_date: Date.parse("2017-4-1"),
-  status: Contract::Base.statuses[:ended],
   customer: SeedsRepository.persons[:pt5a],
   register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
@@ -89,11 +86,10 @@ contracts[:pt5a] = localpool_contract(
 
 # Leerstand
 contracts[:pt5_empty] = localpool_contract(
-  signing_date: contracts[:pt5a].cancellation_date,
+  signing_date: contracts[:pt5a].termination_date,
   begin_date: contracts[:pt5a].end_date,
-  cancellation_date: Date.parse("2017-4-30"),
+  termination_date: Date.parse("2017-4-30"),
   end_date: Date.parse("2017-5-1"),
-  status: Contract::Base.statuses[:ended],
   register: contracts[:pt5a].register, # important !
   customer: SeedsRepository.organizations.property_management,
 )
@@ -111,9 +107,8 @@ contracts[:pt6] = localpool_contract(contractor: SeedsRepository.organizations.t
 
 # Drittlieferant, vor Wechsel zu people power
 contracts[:pt7a] = localpool_contract(
-  cancellation_date: Date.parse("2017-2-15"),
+  termination_date: Date.parse("2017-2-15"),
   end_date: Date.parse("2017-3-1"),
-  status: Contract::Base.statuses[:ended],
   contractor: SeedsRepository.organizations.third_party_supplier,
   customer: SeedsRepository.persons.pt7,
 )
@@ -121,7 +116,7 @@ contracts[:pt7a].customer.add_role(Role::GROUP_ENERGY_MENTOR, contracts[:pt7a].l
 
 # Drittlieferant, nach Wechsel zu people power
 contracts[:pt7b] = localpool_contract(
-  signing_date: contracts[:pt7a].cancellation_date,
+  signing_date: contracts[:pt7a].termination_date,
   begin_date: contracts[:pt7a].end_date,
   customer: SeedsRepository.persons.pt7,
   register: contracts[:pt7a].register, # important !
@@ -257,12 +252,6 @@ FactoryGirl.create(:organization, :metering_point_operator,
                    description: 'Fraunhofer Institut',
                    slug: 'mysmartgrid',
                    website: 'https://www.itwm.fraunhofer.de/en/departments/hpc/green-by-it/mySmartGrid-energy-savings.html'
-)
-FactoryGirl.create(:organization, :electricity_supplier,
-                   name: 'Germany',
-                   description: 'used for energy mix \'Germany\'',
-                   slug: 'germany',
-                   energy_classifications: [ create(:energy_classification, :germany) ]
 )
 FactoryGirl.create(:organization, :electricity_supplier,
                    name: 'RWE'
