@@ -96,8 +96,8 @@ describe Admin::LocalpoolRoda do
         {
           "type"=>"billing_cycle",
           "name"=>"mine",
-          "begin_date"=>'2016-01-01T00:00:00.000Z',
-          "end_date"=>'2017-01-01T00:00:00.000Z',
+          "begin_date"=>'2016-01-01',
+          "end_date"=>'2017-01-01',
           "billings"=>{'array'=>[]}
         }
       end
@@ -145,8 +145,8 @@ describe Admin::LocalpoolRoda do
           "id"=>billing_cycle.id,
           "type"=>"billing_cycle",
           "name"=>"abcd",
-          "begin_date"=>billing_cycle.begin_date.iso8601(3),
-          "end_date"=>billing_cycle.end_date.iso8601(3),
+          "begin_date"=>billing_cycle.begin_date.to_s,
+          "end_date"=>billing_cycle.end_date.to_s,
           "billings"=>{
             'array'=> billing_cycle.billings.collect do |billing|
               {

@@ -1,25 +1,16 @@
 require_relative 'resource'
-Buzzn::Transaction.define do |t|
-  t.register_validation(:create_billing_cycle_schema) do
-    required(:name).filled(:str?, max_size?: 64)
-    required(:begin_date).filled(:date?)
-    required(:end_date).filled(:date?)
-  end
+require_relative '../schemas/transactions/admin/billing_cycle/create'
+require_relative '../schemas/transactions/admin/billing_cycle/update'
 
-  t.register_validation(:update_billing_cycle_schema) do
-    required(:updated_at).filled(:date_time?)
-    optional(:name).filled(:str?, max_size?: 64)
-    optional(:begin_date).filled(:date?)
-    optional(:end_date).filled(:date?)
-  end
+Buzzn::Transaction.define do |t|
 
   t.define(:create_billing_cycle) do
-    validate :create_billing_cycle_schema
+    validate Schemas::Transactions::Admin::BillingCycle::Create
     step :resource, with: :nested_resource
   end
 
   t.define(:update_billing_cycle) do
-    validate :update_billing_cycle_schema
+    validate Schemas::Transactions::Admin::BillingCycle::Update
     step :resource, with: :update_resource
   end
 end

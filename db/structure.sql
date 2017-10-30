@@ -976,12 +976,12 @@ ALTER SEQUENCE banks_id_seq OWNED BY banks.id;
 
 CREATE TABLE billing_cycles (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    begin_date timestamp without time zone NOT NULL,
-    end_date timestamp without time zone NOT NULL,
-    name character varying NOT NULL,
-    localpool_id uuid,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    name character varying(64) NOT NULL,
+    begin_date date NOT NULL,
+    end_date date NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    localpool_id uuid NOT NULL
 );
 
 
@@ -2037,10 +2037,10 @@ CREATE UNIQUE INDEX index_banks_on_blz ON banks USING btree (blz);
 
 
 --
--- Name: index_billing_cycles_dates; Type: INDEX; Schema: public; Owner: -
+-- Name: index_billing_cycles_on_localpool_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_cycles_dates ON billing_cycles USING btree (begin_date, end_date);
+CREATE INDEX index_billing_cycles_on_localpool_id ON billing_cycles USING btree (localpool_id);
 
 
 --
@@ -2519,6 +2519,14 @@ ALTER TABLE ONLY accounts
 
 ALTER TABLE ONLY accounts
     ADD CONSTRAINT accounts_status_id_fkey FOREIGN KEY (status_id) REFERENCES account_statuses(id);
+
+
+--
+-- Name: billing_cycles fk_billing_cycles_localpools; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_cycles
+    ADD CONSTRAINT fk_billing_cycles_localpools FOREIGN KEY (localpool_id) REFERENCES groups(id);
 
 
 --
@@ -3100,6 +3108,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171018134029');
 INSERT INTO schema_migrations (version) VALUES ('20171018134419');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142114');
+
+INSERT INTO schema_migrations (version) VALUES ('20171028142206');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142256');
 

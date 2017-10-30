@@ -315,7 +315,7 @@ describe Admin, :swagger do
 
   post '/localpools/{localpool.id}/billing-cycles' do
     description 'creates a billing-cycles for the localpool'
-    schema 'create_billing_cycle'
+    schema Schemas::Transactions::Admin::BillingCycle::Create
   end
 
   get '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}' do
@@ -324,7 +324,7 @@ describe Admin, :swagger do
 
   patch '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}' do
     description 'updates the billing-cycles of the localpool'
-    schema 'update_billing_cycle'
+    schema Schemas::Transactions::Admin::BillingCycle::Update
   end
 
   delete '/localpools/{localpool.id}/billing-cycles/{billing_cycle_2.id}' do

@@ -15,11 +15,11 @@ class CreateBillings < ActiveRecord::Migration
     add_belongs_to :billings, :localpool_power_taker_contract, references: :contract, type: :uuid, index: true, null: false
 
     add_foreign_key :billings, :readings, name: :fk_billings_start_reading, column: :start_reading_id
-    add_foreign_key :billings, :readings, name: :fk_billings_end_reading, null: false, column: :end_reading_id
-    add_foreign_key :billings, :readings, name: :fk_billings_device_change_1, null: true, column: :device_change_reading_1_id
-    add_foreign_key :billings, :readings, name: :fk_billings_device_change_2, null: true, column: :device_change_reading_2_id
-    add_foreign_key :billings, :billing_cycles, name: :fk_billings_billing_cycles, null: false
-    add_foreign_key :billings, :contracts, name: :fk_billings_contracs, null: false, column: :localpool_power_taker_contract_id
+    add_foreign_key :billings, :readings, name: :fk_billings_end_reading, column: :end_reading_id
+    add_foreign_key :billings, :readings, name: :fk_billings_device_change_1, column: :device_change_reading_1_id
+    add_foreign_key :billings, :readings, name: :fk_billings_device_change_2, column: :device_change_reading_2_id
+    add_foreign_key :billings, :billing_cycles, name: :fk_billings_billing_cycles
+    add_foreign_key :billings, :contracts, name: :fk_billings_contracs, column: :localpool_power_taker_contract_id
 
     add_index :billings, [:billing_cycle_id, :status]
   end
