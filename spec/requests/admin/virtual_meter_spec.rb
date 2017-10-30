@@ -111,12 +111,12 @@ describe Admin::LocalpoolRoda do
       let(:wrong_json) do
         {
           "errors"=>[
-            {"parameter"=>"updated_at",
-             "detail"=>"is missing"},
             {"parameter"=>"product_name",
              "detail"=>"size cannot be greater than 64"},
             {"parameter"=>"product_serialnumber",
-             "detail"=>"size cannot be greater than 64"},
+             "detail"=>"size cannot be greater than 128"},
+            {"parameter"=>"updated_at",
+             "detail"=>"is missing"}
           ]
         }
       end
@@ -161,7 +161,7 @@ describe Admin::LocalpoolRoda do
         PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               manufacturer_name: 'Maxima' * 20,
               product_name: 'SmartyMeter' * 10,
-              product_serialnumber: '12341234' * 10
+              product_serialnumber: '12341234' * 20
 
         expect(response).to have_http_status(422)
         expect(json.to_yaml).to eq wrong_json.to_yaml

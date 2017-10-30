@@ -1,41 +1,16 @@
 require_relative 'resource'
-Buzzn::Transaction.define do |t|
-  t.register_validation(:update_real_meter_schema) do
-    required(:updated_at).filled(:date_time?)
-    optional(:manufacturer_name)
-      .value(included_in?: Meter::Real::MANUFACTURER_NAMES)
-    optional(:product_name).filled(:str?, max_size?: 64)
-    optional(:product_serialnumber).filled(:str?, max_size?: 64)
-    optional(:ownership).value(included_in?: Meter::Base::OWNERSHIPS)
-    optional(:section).value(included_in?: Meter::Base::SECTIONS)
-    optional(:build_year).filled(:int?, gt?: 1950, lt?: 2050)
-    optional(:sent_data_dso).filled(:date?)
-    optional(:converter_constant).filled(:int?)
-    optional(:calibrated_until).filled(:date?)
-    optional(:direction_number).value(included_in?: Meter::Real::DIRECTION_NUMBERS)
-    optional(:edifact_metering_type).value(included_in?: Meter::Base::METERING_TYPES)
-    optional(:edifact_meter_size).value(included_in?: Meter::Base::METER_SIZES)
-    optional(:edifact_measurement_method).value(included_in?: Meter::Base::MEASUREMENT_METHODS)
-    optional(:edifact_tariff).value(included_in?: Meter::Base::TARIFFS)
-    optional(:edifact_mounting_method).value(included_in?: Meter::Base::MOUNTING_METHODS)
-    optional(:edifact_voltage_level).value(included_in?: Meter::Base::VOLTAGE_LEVELS)
-    optional(:edifact_cycle_interval).value(included_in?: Meter::Base::CYCLE_INTERVALS)
-    optional(:edifact_data_logging).value(included_in?: Meter::Base::DATA_LOGGINGS)
-  end
+require_relative '../schemas/transactions/admin/meter/update_real'
+require_relative '../schemas/transactions/admin/meter/update_virtual'
 
-  t.register_validation(:update_virtual_meter_schema) do
-    required(:updated_at).filled(:date_time?)
-    optional(:product_name).filled(:str?, max_size?: 64)
-    optional(:product_serialnumber).filled(:str?, max_size?: 64)
-  end
+Buzzn::Transaction.define do |t|
 
   t.define(:update_real_meter) do
-    validate :update_real_meter_schema
+    validate Schemas::Transactions::Admin::Meter::UpdateReal
     step :resource, with: :update_resource
   end
 
   t.define(:update_virtual_meter) do
-    validate :update_virtual_meter_schema
+    validate Schemas::Transactions::Admin::Meter::UpdateVirtual
     step :resource, with: :update_resource
   end
 end

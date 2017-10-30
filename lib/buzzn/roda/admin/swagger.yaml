@@ -766,20 +766,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
-      - name: manufacturer_name
-        in: formData
-        required: false
-        type: string
-        enum:
-        - easy_meter
-        - amperix
-        - ferraris
-        - other
       - name: product_name
         in: formData
         required: false
@@ -791,13 +777,22 @@ paths:
         required: false
         type: string
         format: ''
-        maxLength: 64
+        maxLength: 128
+      - name: manufacturer_name
+        in: formData
+        required: false
+        type: string
+        enum:
+        - easy_meter
+        - amperix
+        - ferraris
+        - other
       - name: ownership
         in: formData
         required: false
         type: string
         enum:
-        - BUZZN_SYSTEMS
+        - BUZZN
         - FOREIGN_OWNERSHIP
         - CUSTOMER
         - LEASED
@@ -846,10 +841,10 @@ paths:
         type: string
         enum:
         - AHZ
-        - LAZ
         - WSZ
-        - EHZ
+        - LAZ
         - MAZ
+        - EHZ
         - IVA
       - name: edifact_meter_size
         in: formData
@@ -897,9 +892,9 @@ paths:
         type: string
         enum:
         - MONTHLY
-        - YEARLY
         - QUARTERLY
         - HALF_YEARLY
+        - YEARLY
       - name: edifact_data_logging
         in: formData
         required: false
@@ -907,6 +902,11 @@ paths:
         enum:
         - Z04
         - Z05
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
       responses:
         200:
           description: patched
@@ -1017,11 +1017,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
       - name: product_name
         in: formData
         required: false
@@ -1033,7 +1028,12 @@ paths:
         required: false
         type: string
         format: ''
-        maxLength: 64
+        maxLength: 128
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
       responses:
         200:
           description: patched
