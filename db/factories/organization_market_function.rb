@@ -9,7 +9,7 @@ FactoryGirl.define do
     address
 
     before(:create) do |function, _transients|
-      function.organization ||= FactoryGirl.build(:organization)
+      function.organization ||= FactoryGirl.create(:organization)
     end
   end
 end

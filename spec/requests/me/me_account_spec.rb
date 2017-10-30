@@ -15,7 +15,7 @@ describe Me::Roda, :skip_nested do
   end
 
   after :all do
-    load 'db/spec_seeds.rb'
+    load 'db/seeds/setup_data_common.rb'
   end
 
   entity(:password) { 'Example123' }

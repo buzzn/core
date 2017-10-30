@@ -8,7 +8,7 @@ Fabricator :person do
   first_name  { FFaker::Name.first_name.slice(0...30) }
   last_name   { FFaker::Name.last_name.slice(0...30) }
   phone       { FFaker::PhoneNumber.phone_number }
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', "#{((i+=1)%60) + 1}.jpg")) }
+  image       { nr = ((i += 1) % 30 ) + 1; File.new(Rails.root.join("spec/fixture_files/profiles/#{nr}.jpg")) }
 end
 
 
