@@ -67,7 +67,7 @@ module Admin
       guarded(permissions.owner.create) do
         Group::Localpool.transaction do
           # TODO type safe assignment ?
-          _assign_owner(to_resource(Organization.create!(params.merge(mode: :other)),
+          _assign_owner(to_resource(Organization.create!(params),
                                     permissions.owner,
                                     OrganizationResource))
         end
