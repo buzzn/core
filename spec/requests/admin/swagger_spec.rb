@@ -193,7 +193,7 @@ describe Admin, :swagger do
 
   patch '/localpools/{localpool.id}/meters/{virtual_meter.id}/formula-parts/{formula_part.id}' do
     description 'update formula-part of virtual meter for the given IDs'
-    schema 'update_formula_part'
+    schema Schemas::Transactions::Admin::Register::UpdateFormulaPart
   end
 
   # meters > registers
