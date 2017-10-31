@@ -10,7 +10,7 @@ describe Admin::LocalpoolRoda do
   entity(:meter) { Fabricate(:real_meter) }
 
   entity!(:real_register) do
-    Fabricate(meter.registers.is_a?(Register::Input) ? :output_register : :input_register,
+    Fabricate(meter.registers.first.is_a?(Register::Input) ? :output_register : :input_register,
               group: group,
               meter: meter)
     meter.registers.each do |reg|
@@ -63,20 +63,14 @@ describe Admin::LocalpoolRoda do
        let(:wrong_json) do
          {
            "errors"=>[
-             {"parameter"=>"updated_at",
-              "detail"=>"is missing"},
              {"parameter"=>"metering_point_id",
               "detail"=>"size cannot be greater than 32"},
-             {"parameter"=>"name",
-              "detail"=>"size cannot be greater than 64"},
              {"parameter"=>"label",
               "detail"=>"must be one of: CONSUMPTION, DEMARCATION_PV, DEMARCATION_CHP, PRODUCTION_PV, PRODUCTION_CHP, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER"},
              {"parameter"=>"pre_decimal_position",
               "detail"=>"must be an integer"},
              {"parameter"=>"post_decimal_position",
               "detail"=>"must be an integer"},
-             {"parameter"=>"low_load_ability",
-              "detail"=>"must be boolean"},
              {"parameter"=>"observer_enabled",
               "detail"=>"must be boolean"},
              {"parameter"=>"observer_min_threshold",
@@ -84,7 +78,13 @@ describe Admin::LocalpoolRoda do
              {"parameter"=>"observer_max_threshold",
               "detail"=>"must be an integer"},
              {"parameter"=>"observer_offline_monitoring",
-              "detail"=>"must be boolean"}
+              "detail"=>"must be boolean"},
+             {"parameter"=>"name",
+              "detail"=>"size cannot be greater than 64"},
+             {"parameter"=>"low_load_ability",
+              "detail"=>"must be boolean"},
+             {"parameter"=>"updated_at",
+              "detail"=>"is missing"},
            ]
          }
        end
@@ -130,7 +130,7 @@ describe Admin::LocalpoolRoda do
                updated_at: register.updated_at,
                metering_point_id: '123456',
                name: 'Smarty',
-               label: Register::Real::DEMARCATION_PV,
+               label: Register::Base.labels[:demarcation_pv],
                pre_decimal_position: 4,
                post_decimal_position: 3,
                low_load_ability: true,
@@ -177,10 +177,10 @@ describe Admin::LocalpoolRoda do
           "low_load_ability"=>false,
           "label"=>real_register.attributes['label'],
           "last_reading"=>last ? last.value : 0,
-          "observer_min_threshold"=>100,
-          "observer_max_threshold"=>5000,
-          "observer_enabled"=>false,
-          "observer_offline_monitoring"=>false,
+          "observer_min_threshold"=>nil,
+          "observer_max_threshold"=>nil,
+          "observer_enabled"=>nil,
+          "observer_offline_monitoring"=>nil,
           'updatable'=> true,
           'deletable'=> false,
           "createables"=>["readings"],

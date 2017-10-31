@@ -7,40 +7,9 @@ module Register
 
     include Filterable
 
-    #label constants
-    CONSUMPTION = 'CONSUMPTION'
-    DEMARCATION_PV = 'DEMARCATION_PV'
-    DEMARCATION_CHP = 'DEMARCATION_CHP'
-    PRODUCTION_PV = 'PRODUCTION_PV'
-    PRODUCTION_CHP = 'PRODUCTION_CHP'
-    GRID_CONSUMPTION = 'GRID_CONSUMPTION'
-    GRID_FEEDING = 'GRID_FEEDING'
-    GRID_CONSUMPTION_CORRECTED = 'GRID_CONSUMPTION_CORRECTED'
-    GRID_FEEDING_CORRECTED = 'GRID_FEEDING_CORRECTED'
-    OTHER = 'OTHER'
-    enum label: {
-           consumption: CONSUMPTION,
-           demarcation_pv: DEMARCATION_PV,
-           demarcation_chp: DEMARCATION_CHP,
-           production_pv: PRODUCTION_PV,
-           production_chp: PRODUCTION_CHP,
-           grid_consumption: GRID_CONSUMPTION,
-           grid_feeding: GRID_FEEDING,
-           grid_consumption_corrected: GRID_CONSUMPTION_CORRECTED,
-           grid_feeding_corrected: GRID_FEEDING_CORRECTED,
-           other: OTHER
-         }
-    LABELS = [CONSUMPTION, DEMARCATION_PV, DEMARCATION_CHP, PRODUCTION_PV,
-              PRODUCTION_CHP, GRID_CONSUMPTION, GRID_FEEDING,
-              GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER].freeze
+    enum label: %i(consumption demarcation_pv demarcation_chp production_pv production_chp grid_consumption grid_feeding grid_consumption_corrected grid_feeding_corrected other).each_with_object({}) { |item, map| map[item] = item.to_s.upcase }
 
-    IN = 'in'
-    OUT = 'out'
-    enum direction: {
-           input: IN,
-           output: OUT
-         }
-    DIRECTIONS = [IN, OUT].freeze
+    enum direction: { input: 'in', output: 'out' }
 
     belongs_to :group, class_name: Group::Base, foreign_key: :group_id
 
@@ -71,8 +40,6 @@ module Register
     validates :observer_offline_monitoring, presence: false
 
     validate :validate_invariants
-
-    mount_uploader :image, PictureUploader
 
     before_destroy :destroy_content
 
@@ -109,10 +76,6 @@ module Register
     end
 
     def validate_invariants
-      if observer_max_threshold < observer_min_threshold
-        errors.add(:observer_max_threshold, 'must be greater or equal min_watt')
-        errors.add(:observer_min_threshold, 'must be smaller or equal max_watt')
-      end
     end
 
     # not used anymore

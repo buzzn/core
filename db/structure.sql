@@ -636,6 +636,34 @@ CREATE TYPE readings_unit AS ENUM (
 
 
 --
+-- Name: registers_direction; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE registers_direction AS ENUM (
+    'in',
+    'out'
+);
+
+
+--
+-- Name: registers_label; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE registers_label AS ENUM (
+    'CONSUMPTION',
+    'DEMARCATION_PV',
+    'DEMARCATION_CHP',
+    'PRODUCTION_PV',
+    'PRODUCTION_CHP',
+    'GRID_CONSUMPTION',
+    'GRID_FEEDING',
+    'GRID_CONSUMPTION_CORRECTED',
+    'GRID_FEEDING_CORRECTED',
+    'OTHER'
+);
+
+
+--
 -- Name: role_names; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1469,27 +1497,25 @@ CREATE TABLE readings (
 
 CREATE TABLE registers (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    metering_point_id character varying,
-    name character varying,
-    image character varying,
-    meter_id uuid,
-    group_id uuid,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    observer_enabled boolean DEFAULT false,
-    observer_min_threshold integer DEFAULT 100,
-    observer_max_threshold integer DEFAULT 5000,
-    last_observed timestamp without time zone,
-    observer_offline_monitoring boolean DEFAULT false,
-    type character varying NOT NULL,
-    obis character varying,
+    metering_point_id character varying(32),
     pre_decimal_position integer,
     post_decimal_position integer,
+    observer_enabled boolean,
+    observer_min_threshold integer,
+    observer_max_threshold integer,
+    observer_offline_monitoring boolean,
+    name character varying(64) NOT NULL,
+    obis character varying(16) NOT NULL,
+    share_with_group boolean NOT NULL,
+    share_publicly boolean,
     low_load_ability boolean,
-    direction direction,
-    label label,
-    share_with_group boolean DEFAULT true NOT NULL,
-    share_publicly boolean DEFAULT false NOT NULL
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    label registers_label,
+    direction registers_direction,
+    type character varying NOT NULL,
+    meter_id uuid NOT NULL,
+    group_id uuid
 );
 
 
@@ -1907,14 +1933,6 @@ ALTER TABLE ONLY groups
 
 
 --
--- Name: registers metering_points_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY registers
-    ADD CONSTRAINT metering_points_pkey PRIMARY KEY (id);
-
-
---
 -- Name: meters meters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1976,6 +1994,14 @@ ALTER TABLE ONLY profiles
 
 ALTER TABLE ONLY readings
     ADD CONSTRAINT readings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: registers registers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY registers
+    ADD CONSTRAINT registers_pkey PRIMARY KEY (id);
 
 
 --
@@ -2362,6 +2388,20 @@ CREATE INDEX index_registers_on_meter_id ON registers USING btree (meter_id);
 
 
 --
+-- Name: index_registers_on_meter_id_and_direction; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_registers_on_meter_id_and_direction ON registers USING btree (meter_id, direction);
+
+
+--
+-- Name: index_registers_on_meter_id_and_obis; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_registers_on_meter_id_and_obis ON registers USING btree (meter_id, obis);
+
+
+--
 -- Name: index_scores_on_scoreable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2708,27 +2748,11 @@ ALTER TABLE ONLY organizations
 
 
 --
--- Name: registers fk_rails_88c9092860; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY registers
-    ADD CONSTRAINT fk_rails_88c9092860 FOREIGN KEY (meter_id) REFERENCES meters(id);
-
-
---
 -- Name: payments fk_rails_9215ad6069; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY payments
     ADD CONSTRAINT fk_rails_9215ad6069 FOREIGN KEY (contract_id) REFERENCES contracts(id);
-
-
---
--- Name: readings fk_rails_9a330278de; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY readings
-    ADD CONSTRAINT fk_rails_9a330278de FOREIGN KEY (register_id) REFERENCES registers(id);
 
 
 --
@@ -2745,6 +2769,30 @@ ALTER TABLE ONLY tariffs
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT fk_rails_fa67535741 FOREIGN KEY (person_id) REFERENCES persons(id);
+
+
+--
+-- Name: readings fk_readings_register; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY readings
+    ADD CONSTRAINT fk_readings_register FOREIGN KEY (register_id) REFERENCES registers(id);
+
+
+--
+-- Name: registers fk_registers_group; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY registers
+    ADD CONSTRAINT fk_registers_group FOREIGN KEY (group_id) REFERENCES groups(id);
+
+
+--
+-- Name: registers fk_registers_meter; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY registers
+    ADD CONSTRAINT fk_registers_meter FOREIGN KEY (meter_id) REFERENCES meters(id);
 
 
 --
@@ -3077,8 +3125,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170807070447');
 
 INSERT INTO schema_migrations (version) VALUES ('20170808070447');
 
-INSERT INTO schema_migrations (version) VALUES ('20170817032303');
-
 INSERT INTO schema_migrations (version) VALUES ('20170906020031');
 
 INSERT INTO schema_migrations (version) VALUES ('20170907190442');
@@ -3137,9 +3183,13 @@ INSERT INTO schema_migrations (version) VALUES ('20171028142114');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142206');
 
-INSERT INTO schema_migrations (version) VALUES ('20171028142256');
-
 INSERT INTO schema_migrations (version) VALUES ('20171031085223');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085280');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085290');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085295');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085300');
 

@@ -45,7 +45,6 @@ class CoreRoda < CommonRoda
       r.on 'utils' do
         r.run Utils::Roda
       end
-    end
 
       r.get! 'health' do
         info = health.info
