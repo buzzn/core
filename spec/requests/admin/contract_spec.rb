@@ -43,7 +43,7 @@ describe Admin::LocalpoolRoda do
                 localpool: localpool,
                 register: Fabricate(:input_register,
                                     group: localpool,
-                                    meter: Fabricate.build(:meter)))
+                                    meter: Fabricate.build(:output_meter)))
     end
 
     let(:person_json) do
@@ -210,10 +210,10 @@ describe Admin::LocalpoolRoda do
             "low_load_ability"=>false,
             "label"=>'CONSUMPTION',
             "last_reading"=>0,
-            "observer_min_threshold"=>100,
-            "observer_max_threshold"=>5000,
-            "observer_enabled"=>false,
-            "observer_offline_monitoring"=>false,
+            "observer_min_threshold"=>nil,
+            "observer_max_threshold"=>nil,
+            "observer_enabled"=>nil,
+            "observer_offline_monitoring"=>nil,
             'updatable'=> true,
             'deletable'=> false,
             "createables"=>["readings"],

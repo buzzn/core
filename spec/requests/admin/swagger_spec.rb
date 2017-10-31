@@ -208,7 +208,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/meters/{real_meter.id}/registers/{real_register.id}' do
     description 'update the real register of a meter for the given IDs'
-    schema 'update_real_register'
+    schema Schemas::Transactions::Admin::Register::UpdateReal
   end
 
   # meters > registers > readings
