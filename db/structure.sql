@@ -964,12 +964,12 @@ CREATE TABLE bank_accounts (
 
 CREATE TABLE banks (
     id integer NOT NULL,
-    blz character varying,
-    description character varying,
-    zip character varying,
-    place character varying,
-    name character varying,
-    bic character varying
+    blz character varying NOT NULL,
+    description character varying NOT NULL,
+    zip character varying NOT NULL,
+    place character varying NOT NULL,
+    name character varying NOT NULL,
+    bic character varying NOT NULL
 );
 
 
