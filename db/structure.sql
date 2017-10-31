@@ -451,6 +451,16 @@ CREATE TYPE edifact_voltage_level AS ENUM (
 
 
 --
+-- Name: formula_parts_operator; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE formula_parts_operator AS ENUM (
+    '+',
+    '-'
+);
+
+
+--
 -- Name: label; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1210,11 +1220,11 @@ CREATE TABLE energy_classifications (
 
 CREATE TABLE formula_parts (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    register_id uuid,
-    operand_id uuid,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    operator operator NOT NULL
+    operator formula_parts_operator,
+    register_id uuid NOT NULL,
+    operand_id uuid NOT NULL
 );
 
 
@@ -2557,6 +2567,22 @@ ALTER TABLE ONLY contract_tax_data
 
 
 --
+-- Name: formula_parts fk_formula_parts_operand; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formula_parts
+    ADD CONSTRAINT fk_formula_parts_operand FOREIGN KEY (operand_id) REFERENCES registers(id);
+
+
+--
+-- Name: formula_parts fk_formula_parts_register; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formula_parts
+    ADD CONSTRAINT fk_formula_parts_register FOREIGN KEY (register_id) REFERENCES registers(id);
+
+
+--
 -- Name: groups fk_groups_address; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3077,4 +3103,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171028142114');
 INSERT INTO schema_migrations (version) VALUES ('20171028142206');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142256');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085223');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085300');
 

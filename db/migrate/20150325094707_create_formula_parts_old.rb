@@ -1,4 +1,4 @@
-class CreateFormulaParts < ActiveRecord::Migration
+class CreateFormulaPartsOld < ActiveRecord::Migration
   def change
     enable_extension 'uuid-ossp'
     create_table :formula_parts, id: :uuid do |t|
