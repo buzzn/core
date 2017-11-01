@@ -11,7 +11,7 @@ describe Admin::LocalpoolRoda do
 
     entity(:person) do
       person = Fabricate(:person)
-      Fabricate(:bank_account, contracting_party: person)
+      Fabricate(:bank_account, owner: person)
       person.update(address: Fabricate(:address))
       person.reload
       person
@@ -19,7 +19,7 @@ describe Admin::LocalpoolRoda do
 
     entity(:organization) do
       orga = Fabricate(:metering_point_operator, contact: person)
-      Fabricate(:bank_account, contracting_party: orga)
+      Fabricate(:bank_account, owner: orga)
       orga.update(address: Fabricate(:address))
       orga.reload
       orga

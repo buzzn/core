@@ -9,7 +9,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
   end
 
   entity!(:bank_account) { Fabricate(:bank_account,
-                                     contracting_party: me.person) }
+                                     owner: me.person) }
 
   let(:anonymous) { nil }
 

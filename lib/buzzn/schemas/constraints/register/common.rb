@@ -1,7 +1,7 @@
 require_relative '../register'
 
 Schemas::Constraints::Register::Common = Buzzn::Schemas.Form do
-    optional(:metering_point_id).filled(:str?, max_size?: 32)
+    optional(:metering_point_id).filled(:str?, max_size?: 64)
     optional(:label).value(included_in?: Register::Base.labels.values)
     optional(:pre_decimal_position).filled(:int?, gteq?: 0)
     optional(:post_decimal_position).filled(:int?, gteq?: 0)

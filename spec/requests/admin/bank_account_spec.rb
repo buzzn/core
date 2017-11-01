@@ -33,18 +33,18 @@ describe Admin::BankAccountRoda do
 
   entity!(:person_account) do
     BankAccount.delete_all
-    Fabricate(:bank_account, contracting_party: contract.customer)
+    Fabricate(:bank_account, owner: contract.customer)
   end
 
   entity!(:organization_account) do
-    Fabricate(:bank_account, contracting_party: contract.contractor)
+    Fabricate(:bank_account, owner: contract.contractor)
   end
 
   [:person_account, :organization_account].each do |name|
     context "#{name.to_s.sub(/_.*/,'')} parent" do
 
       let(:bank_account) { send(name) }
-      let(:parent) { bank_account.contracting_party }
+      let(:parent) { bank_account.owner }
       let(:bank_account_json) do
         {
           "id"=>bank_account.id,
@@ -63,12 +63,12 @@ describe Admin::BankAccountRoda do
       let(:wrong_json) do
         {
           "errors"=>[
-            {"parameter"=>"bank_name",
-             "detail"=>"size cannot be greater than 64"},
             {"parameter"=>"holder",
              "detail"=>"size cannot be greater than 64"},
             {"parameter"=>"iban",
-             "detail"=>"must be a string"}
+             "detail"=>"must be a string"},
+            {"parameter"=>"bank_name",
+             "detail"=>"size cannot be greater than 64"},
           ]
         }
       end

@@ -41,15 +41,11 @@ module Register
 
     validate :validate_invariants
 
-    before_destroy :destroy_content
-
     scope :real,    -> { where(type: [Register::Input, Register::Output]) }
     scope :virtual, -> { where(type: Register::Virtual) }
 
     scope :consumption_production, -> do
-      by_labels(Register::Base::CONSUMPTION,
-                Register::Base::PRODUCTION_PV,
-                Register::Base::PRODUCTION_CHP)
+      by_labels(*Register::Base.labels.values_at(:consumption, :production_pv, :production_chp))
     end
 
     scope :by_group, -> (group) do
@@ -57,8 +53,8 @@ module Register
     end
 
     scope :by_labels, -> (*labels) do
-      if (Register::Base::LABELS & labels).sort != labels.sort
-        raise ArgumentError.new("#{labels.inspect} needs to be subset of #{LABELS}")
+      if (Register::Base.labels.values & labels).sort != labels.sort
+        raise ArgumentError.new("#{labels.inspect} needs to be subset of #{Register::Base.labels.values}")
       end
       self.where("label in (?)", labels)
     end
@@ -169,13 +165,6 @@ module Register
       else
         raise "unknown direction #{val}"
       end
-    end
-
-    private
-
-    def destroy_content
-      # TODO use delete_all ?
-      self.root_comments.each{|comment| comment.destroy}
     end
   end
 end
