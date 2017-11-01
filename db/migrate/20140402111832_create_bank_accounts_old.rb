@@ -1,4 +1,4 @@
-class CreateBankAccounts < ActiveRecord::Migration
+class CreateBankAccountsOld < ActiveRecord::Migration
   def change
     enable_extension 'uuid-ossp'
     create_table :bank_accounts, id: :uuid do |t|
@@ -18,5 +18,3 @@ class CreateBankAccounts < ActiveRecord::Migration
     add_index :bank_accounts, [:bank_accountable_id, :bank_accountable_type], name: 'index_accountable'
   end
 end
-
-

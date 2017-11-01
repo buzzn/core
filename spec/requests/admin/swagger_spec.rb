@@ -12,15 +12,15 @@ describe Admin, :swagger do
 
   entity!(:person) { account.person }
 
-  entity!(:bank_account_1) { Fabricate(:bank_account, contracting_party: person) }
+  entity!(:bank_account_1) { Fabricate(:bank_account, owner: person) }
 
-  entity!(:bank_account_2) { Fabricate(:bank_account, contracting_party: person) }
+  entity!(:bank_account_2) { Fabricate(:bank_account, owner: person) }
 
   entity!(:organization) { Fabricate(:other_organization) }
 
-  entity!(:bank_account_3) { Fabricate(:bank_account, contracting_party: organization) }
+  entity!(:bank_account_3) { Fabricate(:bank_account, owner: organization) }
 
-  entity!(:bank_account_4) { Fabricate(:bank_account, contracting_party: organization) }
+  entity!(:bank_account_4) { Fabricate(:bank_account, owner: organization) }
 
   entity!(:localpool) do
     localpool = Fabricate(:localpool)

@@ -935,7 +935,7 @@ paths:
         required: false
         type: string
         format: ''
-        maxLength: 32
+        maxLength: 64
       - name: label
         in: formData
         required: false

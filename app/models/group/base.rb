@@ -25,7 +25,7 @@ module Group
 
     validates :name, presence: true, uniqueness: true, length: { in: 4..40 }
 
-    mount_uploader :logo, PictureUploader
+    #mount_uploader :logo, PictureUploader
     #mount_uploader :image, PictureUploader
 
     belongs_to :address
@@ -61,11 +61,11 @@ module Group
 
     def energy_generator_type
       all_labels = output_registers.collect(&:label).uniq
-      if all_labels.include?(Register::Base::PRODUCTION_CHP) && all_labels.include?(Register::Base::PRODUCTION_PV)
+      if all_labels.include?(Register::Base.labels[:production_chp]) && all_labels.include?(Register::Base.labels[:production_pv])
         return HYBRID
-      elsif all_labels.include?(Register::Base::PRODUCTION_CHP)
+      elsif all_labels.include?(Register::Base.labels[:production_chp])
         return CHP
-      elsif all_labels.include?(Register::Base::PRODUCTION_PV)
+      elsif all_labels.include?(Register::Base.labels[:production_pv])
         return PV
       end
     end

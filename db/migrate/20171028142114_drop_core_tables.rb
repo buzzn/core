@@ -6,5 +6,6 @@ class DropCoreTables < ActiveRecord::Migration
     drop_table :registers
     drop_table :meters
     drop_table :groups
+    drop_table :bank_accounts
   end
 end

@@ -1097,16 +1097,16 @@ CREATE TABLE addresses (
 
 CREATE TABLE bank_accounts (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    slug character varying,
-    holder character varying,
-    encrypted_iban character varying,
-    bic character varying,
-    bank_name character varying,
+    holder character varying(64) NOT NULL,
+    iban character varying(32) NOT NULL,
+    bank_name character varying(64),
+    bic character varying(16),
     direct_debit boolean,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    contracting_party_id uuid,
-    contracting_party_type character varying
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    owner_person_id uuid,
+    owner_organization_id uuid,
+    CONSTRAINT check_bank_account_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
 );
 
 
@@ -1425,10 +1425,10 @@ CREATE TABLE groups (
     updated_at timestamp without time zone NOT NULL,
     type character varying NOT NULL,
     slug character varying NOT NULL,
-    address_id uuid NOT NULL,
-    person_id uuid,
-    organization_id uuid,
-    CONSTRAINT check_localpool_owner CHECK ((NOT ((person_id IS NOT NULL) AND (organization_id IS NOT NULL))))
+    address_id uuid,
+    owner_person_id uuid,
+    owner_organization_id uuid,
+    CONSTRAINT check_localpool_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
 );
 
 
@@ -1622,7 +1622,7 @@ CREATE TABLE readings (
 
 CREATE TABLE registers (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    metering_point_id character varying(32),
+    metering_point_id character varying(64),
     pre_decimal_position integer,
     post_decimal_position integer,
     observer_enabled boolean,
@@ -1639,6 +1639,7 @@ CREATE TABLE registers (
     label registers_label,
     direction registers_direction,
     type character varying NOT NULL,
+    last_observed timestamp without time zone,
     meter_id uuid NOT NULL,
     group_id uuid
 );
@@ -2177,10 +2178,17 @@ CREATE UNIQUE INDEX accounts_email_index ON accounts USING btree (email) WHERE (
 
 
 --
--- Name: index_bank_accounts_on_slug; Type: INDEX; Schema: public; Owner: -
+-- Name: index_bank_accounts_on_owner_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_bank_accounts_on_slug ON bank_accounts USING btree (slug);
+CREATE INDEX index_bank_accounts_on_owner_organization_id ON bank_accounts USING btree (owner_organization_id);
+
+
+--
+-- Name: index_bank_accounts_on_owner_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_bank_accounts_on_owner_person_id ON bank_accounts USING btree (owner_person_id);
 
 
 --
@@ -2352,17 +2360,17 @@ CREATE INDEX index_groups_on_address_id ON groups USING btree (address_id);
 
 
 --
--- Name: index_groups_on_organization_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_groups_on_owner_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_organization_id ON groups USING btree (organization_id);
+CREATE INDEX index_groups_on_owner_organization_id ON groups USING btree (owner_organization_id);
 
 
 --
--- Name: index_groups_on_person_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_groups_on_owner_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_person_id ON groups USING btree (person_id);
+CREATE INDEX index_groups_on_owner_person_id ON groups USING btree (owner_person_id);
 
 
 --
@@ -2704,6 +2712,22 @@ ALTER TABLE ONLY accounts
 
 
 --
+-- Name: bank_accounts fk_bank_accounts_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY bank_accounts
+    ADD CONSTRAINT fk_bank_accounts_organization FOREIGN KEY (owner_organization_id) REFERENCES organizations(id);
+
+
+--
+-- Name: bank_accounts fk_bank_accounts_person; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY bank_accounts
+    ADD CONSTRAINT fk_bank_accounts_person FOREIGN KEY (owner_person_id) REFERENCES persons(id);
+
+
+--
 -- Name: billing_cycles fk_billing_cycles_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2796,7 +2820,7 @@ ALTER TABLE ONLY groups
 --
 
 ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_organization FOREIGN KEY (organization_id) REFERENCES organizations(id);
+    ADD CONSTRAINT fk_groups_organization FOREIGN KEY (owner_organization_id) REFERENCES organizations(id);
 
 
 --
@@ -2804,7 +2828,7 @@ ALTER TABLE ONLY groups
 --
 
 ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_person FOREIGN KEY (person_id) REFERENCES persons(id);
+    ADD CONSTRAINT fk_groups_person FOREIGN KEY (owner_person_id) REFERENCES persons(id);
 
 
 --
@@ -3310,6 +3334,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171018134029');
 INSERT INTO schema_migrations (version) VALUES ('20171018134419');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142114');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085100');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085200');
 

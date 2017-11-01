@@ -553,8 +553,8 @@ describe Buzzn::Services::ReadingCalculation do
   end
 
   xit 'creates the corrected reading' do
-    meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
-                                          Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
+    meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base.labels[:grid_consumption_corrected]),
+                                          Fabricate.build(:output_register, label: Register::Base.labels[:grid_feeding_corrected])])
 
     [Buzzn::AccountedEnergy::GRID_CONSUMPTION_CORRECTED,
      Buzzn::AccountedEnergy::GRID_FEEDING_CORRECTED].each do |label|
@@ -595,8 +595,8 @@ describe Buzzn::Services::ReadingCalculation do
     let(:thirteen) { watt_hour(13000000000) }
     entity(:sample_reading) { Fabricate(:single_reading) }
     entity(:grid_meter) do
-      Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
-                                    Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
+      Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base.labels[:grid_consumption_corrected]),
+                                    Fabricate.build(:output_register, label: Register::Base.labels[:grid_feeding_corrected])])
     end
     let(:accounted_energy_grid_feeding) do
       accounted_energy_grid_feeding = Buzzn::AccountedEnergy.new(ten, sample_reading, sample_reading, sample_reading)
@@ -655,8 +655,8 @@ describe Buzzn::Services::ReadingCalculation do
   end
 
   xit 'gets missing reading' do |spec|
-    meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
-                                          Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
+    meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base.labels[:grid_consumption_corrected]),
+                                          Fabricate.build(:output_register, label: Register::Base.labels[:grid_feeding_corrected])])
     expect{ subject.get_missing_reading(meter.input_register, Date.new(2016, 1, 1)) }.to raise_error ArgumentError
 
     VCR.use_cassette("lib/buzzn/discovergy/gets_single_reading") do
@@ -671,4 +671,3 @@ describe Buzzn::Services::ReadingCalculation do
     end
   end
 end
-

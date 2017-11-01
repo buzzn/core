@@ -1,5 +1,5 @@
 # frozen-string-literal: true
-class Person < ContractingParty
+class Person < ActiveRecord::Base
   self.table_name = :persons
 
   # roles stuff
@@ -9,6 +9,8 @@ class Person < ContractingParty
   include Filterable
 
   belongs_to :address
+
+  has_many :bank_accounts, foreign_key: :owner_person_id
 
   # TODO remove this when decided on how to make the attachments (Document)
   mount_uploader :image, PictureUploader
@@ -42,12 +44,7 @@ class Person < ContractingParty
        }
   PREFERRED_LANGUAGES = [GERMAN, ENGLISH].freeze
 
-  validate :validate_invariants
-
-  def validate_invariants
-  end
-
-  scope :restricted, ->(uuids) do
+  scope :permitted, ->(uuids) do
     where(id: uuids)
   end
 

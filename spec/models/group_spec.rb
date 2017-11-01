@@ -1,3 +1,4 @@
+# coding: utf-8
 describe Group::Base do
 
   entity!(:localpool) { Fabricate(:localpool) }
@@ -64,9 +65,9 @@ describe Group::Base do
     end
 
     describe 'assigning owner' do
-      let(:localpool) { build(:localpool, owner: nil) }
+      let(:localpool) { Fabricate.build(:localpool, owner: nil) }
       context 'when new owner is an organization' do
-        let(:new_owner) { create(:organization) }
+        let(:new_owner) { Fabricate(:other_organization) }
         before { expect(localpool.owner).to be_nil } # assert precondition ...
         it 'is a assigned correctly' do
           localpool.owner = new_owner
@@ -76,7 +77,7 @@ describe Group::Base do
         end
       end
       context 'when new owner is a person' do
-        let(:new_owner) { create(:person) }
+        let(:new_owner) { Fabricate(:person) }
         it 'is a assigned correctly' do
           localpool.owner = new_owner
           expect(localpool.owner).to eq(new_owner)
@@ -99,7 +100,7 @@ describe Group::Localpool, :skip_nested do
 
   let(:person) {  Fabricate(:person) }
   let(:organization) { Fabricate(:other_organization) }
-  let(:localpool) { Fabricate(:localpool, person: person) }
+  let(:localpool) { Fabricate(:localpool, owner_person: person) }
 
   after do
     localpool.delete
@@ -110,9 +111,9 @@ describe Group::Localpool, :skip_nested do
   end
 
   it 'has one owner' do
-    localpool.organization = organization
+    localpool.owner_organization = organization
     expect { localpool.save }.to raise_error ActiveRecord::StatementInvalid
-    localpool.person = nil
+    localpool.owner_person = nil
     expect { localpool.save }.not_to raise_error
   end
 

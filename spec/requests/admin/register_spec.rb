@@ -64,7 +64,7 @@ describe Admin::LocalpoolRoda do
          {
            "errors"=>[
              {"parameter"=>"metering_point_id",
-              "detail"=>"size cannot be greater than 32"},
+              "detail"=>"size cannot be greater than 64"},
              {"parameter"=>"label",
               "detail"=>"must be one of: CONSUMPTION, DEMARCATION_PV, DEMARCATION_CHP, PRODUCTION_PV, PRODUCTION_CHP, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER"},
              {"parameter"=>"pre_decimal_position",

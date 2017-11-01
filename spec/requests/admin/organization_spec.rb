@@ -14,7 +14,7 @@ describe Admin::LocalpoolRoda do
                                contact: Fabricate(:person),
                                legal_representation: Fabricate(:person))
       organization.update(address: address)
-      Fabricate(:bank_account, contracting_party: organization)
+      Fabricate(:bank_account, owner: organization)
       Fabricate(:metering_point_operator_contract,
                 localpool: group,
                 customer: organization,

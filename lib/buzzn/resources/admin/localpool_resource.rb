@@ -84,16 +84,7 @@ module Admin
 
     def _assign_owner(new_owner)
       old_owner = owner
-      case new_owner
-      when PersonResource
-        object.organization = nil
-        object.person = new_owner.object
-      when OrganizationResource
-        object.person = nil
-        object.organization = new_owner.object
-      else
-        raise "can not handle #{new_owner.class}"
-      end
+      object.owner = new_owner.object
       setup_roles(old_owner, new_owner)
       object.save
       owner

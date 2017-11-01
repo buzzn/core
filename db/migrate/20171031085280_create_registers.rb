@@ -7,6 +7,7 @@ class CreateRegisters < ActiveRecord::Migration
     SCHEMA.up(:registers, self)
 
     add_column :registers, :type, :string, null: false
+    add_column :registers, :last_observed, :timestamp, null: true
 
     add_belongs_to :registers, :meter, type: :uuid, index: true, null: false
     add_belongs_to :registers, :group, reference: :register, type: :uuid, index: true, null: true

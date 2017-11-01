@@ -28,7 +28,7 @@ describe Admin::LocalpoolRoda do
 
   entity(:localpool_no_contracts) do
     Fabricate(:localpool,
-              organization: Fabricate(:other_organization),
+              owner: Fabricate(:other_organization),
               address: Fabricate(:address))
   end
 

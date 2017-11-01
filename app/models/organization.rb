@@ -1,10 +1,12 @@
-class Organization < ContractingParty
+# coding: utf-8
+class Organization < ActiveRecord::Base
   self.table_name = :organizations
 
   include Filterable
 
   belongs_to :address
 
+  has_many :bank_accounts, foreign_key: :owner_organization_id
   has_many :energy_classifications
 
   belongs_to :contact, class_name: Person

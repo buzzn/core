@@ -41,8 +41,8 @@ describe BankAccount do
   let(:params) do
     { holder: 'Me And The Corner', iban: 'DE23100000001234567890',
       bic: '123456789', bank_name: 'Yellow Submarine',
-      contracting_party_id: member_group_contract.id,
-      contracting_party_type: member_group_contract.class }
+      owner_id: member_group_contract.id,
+      owner_type: member_group_contract.class }
   end
 
   entity!(:member_group_bank_account) do
@@ -53,14 +53,14 @@ describe BankAccount do
   end
 
   entity!(:manager_group_bank_account) do
-    account = Fabricate(:bank_account, contracting_party: manager_of_group)
+    account = Fabricate(:bank_account, owner: manager_of_group)
     manager_group_contract.contractor_bank_account = account
     manager_group_contract.save!
     account
   end
 
   entity!(:register_bank_account) do
-    account = Fabricate(:bank_account, contracting_party: user_with_register)
+    account = Fabricate(:bank_account, owner: user_with_register)
     register_contract.contractor_bank_account = account
     register_contract.save!
     account
