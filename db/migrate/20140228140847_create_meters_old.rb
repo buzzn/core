@@ -1,4 +1,4 @@
-class CreateMeters < ActiveRecord::Migration
+class CreateMetersOld < ActiveRecord::Migration
   def change
     enable_extension 'uuid-ossp'
     create_table :meters, id: :uuid do |t|

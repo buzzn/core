@@ -491,6 +491,142 @@ CREATE TYPE manufacturer_name AS ENUM (
 
 
 --
+-- Name: meters_direction_number; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_direction_number AS ENUM (
+    'ERZ',
+    'ZRZ'
+);
+
+
+--
+-- Name: meters_edifact_cycle_interval; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_cycle_interval AS ENUM (
+    'MONTHLY',
+    'QUARTERLY',
+    'HALF_YEARLY',
+    'YEARLY'
+);
+
+
+--
+-- Name: meters_edifact_data_logging; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_data_logging AS ENUM (
+    'Z04',
+    'Z05'
+);
+
+
+--
+-- Name: meters_edifact_measurement_method; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_measurement_method AS ENUM (
+    'AMR',
+    'MMR'
+);
+
+
+--
+-- Name: meters_edifact_meter_size; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_meter_size AS ENUM (
+    'Z01',
+    'Z02',
+    'Z03'
+);
+
+
+--
+-- Name: meters_edifact_metering_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_metering_type AS ENUM (
+    'AHZ',
+    'WSZ',
+    'LAZ',
+    'MAZ',
+    'EHZ',
+    'IVA'
+);
+
+
+--
+-- Name: meters_edifact_mounting_method; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_mounting_method AS ENUM (
+    'BKE',
+    'DPA',
+    'HS'
+);
+
+
+--
+-- Name: meters_edifact_tariff; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_tariff AS ENUM (
+    'ETZ',
+    'ZTZ',
+    'NTZ'
+);
+
+
+--
+-- Name: meters_edifact_voltage_level; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_voltage_level AS ENUM (
+    'E06',
+    'E05',
+    'E04',
+    'E03'
+);
+
+
+--
+-- Name: meters_manufacturer_name; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_manufacturer_name AS ENUM (
+    'easy_meter',
+    'amperix',
+    'ferraris',
+    'other'
+);
+
+
+--
+-- Name: meters_ownership; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_ownership AS ENUM (
+    'BUZZN',
+    'FOREIGN_OWNERSHIP',
+    'CUSTOMER',
+    'LEASED',
+    'BOUGHT'
+);
+
+
+--
+-- Name: meters_section; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_section AS ENUM (
+    'S',
+    'G'
+);
+
+
+--
 -- Name: operator; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1262,23 +1398,20 @@ CREATE TABLE formula_parts (
 
 CREATE TABLE groups (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    slug character varying,
-    name character varying,
-    logo character varying,
-    website character varying,
-    image character varying,
-    description text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    type character varying NOT NULL,
-    organization_id uuid,
-    person_id uuid,
-    address_id uuid,
+    name character varying(64) NOT NULL,
+    description character varying(256),
     start_date date,
     show_object boolean,
     show_production boolean,
     show_energy boolean,
     show_contact boolean,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    type character varying NOT NULL,
+    slug character varying NOT NULL,
+    address_id uuid NOT NULL,
+    person_id uuid,
+    organization_id uuid,
     CONSTRAINT check_localpool_owner CHECK ((NOT ((person_id IS NOT NULL) AND (organization_id IS NOT NULL))))
 );
 
@@ -1289,35 +1422,27 @@ CREATE TABLE groups (
 
 CREATE TABLE meters (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    product_name character varying,
-    product_serialnumber character varying,
-    metering_type character varying,
-    meter_size character varying,
-    measurement_capture character varying,
-    mounting_method character varying,
-    calibrated_until date,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    type character varying NOT NULL,
-    voltage_level character varying,
-    cycle_interval character varying,
-    tariff character varying,
-    data_logging character varying,
-    converter_constant integer,
-    edifact_voltage_level edifact_voltage_level,
-    edifact_cycle_interval edifact_cycle_interval,
-    edifact_metering_type edifact_metering_type,
-    edifact_meter_size edifact_meter_size,
-    edifact_tariff edifact_tariff,
-    edifact_data_logging edifact_data_logging,
-    edifact_measurement_method edifact_measurement_method,
-    edifact_mounting_method edifact_mounting_method,
-    ownership ownership,
-    direction_number direction_number,
-    section section,
-    manufacturer_name manufacturer_name,
+    product_name character varying(64),
+    product_serialnumber character varying(128),
     build_year integer,
     sent_data_dso date,
+    converter_constant integer,
+    calibrated_until date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    manufacturer_name meters_manufacturer_name,
+    ownership meters_ownership,
+    section meters_section,
+    direction_number meters_direction_number,
+    edifact_metering_type meters_edifact_metering_type,
+    edifact_meter_size meters_edifact_meter_size,
+    edifact_measurement_method meters_edifact_measurement_method,
+    edifact_tariff meters_edifact_tariff,
+    edifact_mounting_method meters_edifact_mounting_method,
+    edifact_voltage_level meters_edifact_voltage_level,
+    edifact_cycle_interval meters_edifact_cycle_interval,
+    edifact_data_logging meters_edifact_data_logging,
+    type character varying NOT NULL,
     sequence_number integer,
     group_id uuid,
     address_id uuid
@@ -2219,6 +2344,13 @@ CREATE INDEX index_meters_on_address_id ON meters USING btree (address_id);
 
 
 --
+-- Name: index_meters_on_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_meters_on_group_id ON meters USING btree (group_id);
+
+
+--
 -- Name: index_meters_on_group_id_and_sequence_number; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2543,11 +2675,11 @@ ALTER TABLE ONLY accounts
 
 
 --
--- Name: billing_cycles fk_billing_cycles_localpools; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: billing_cycles fk_billing_cycles_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY billing_cycles
-    ADD CONSTRAINT fk_billing_cycles_localpools FOREIGN KEY (localpool_id) REFERENCES groups(id);
+    ADD CONSTRAINT fk_billing_cycles_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
 
 
 --
@@ -2655,6 +2787,14 @@ ALTER TABLE ONLY meters
 
 
 --
+-- Name: meters fk_meters_group; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY meters
+    ADD CONSTRAINT fk_meters_group FOREIGN KEY (group_id) REFERENCES groups(id);
+
+
+--
 -- Name: organizations fk_organizations_address; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2700,14 +2840,6 @@ ALTER TABLE ONLY persons
 
 ALTER TABLE ONLY prices
     ADD CONSTRAINT fk_prices_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
-
-
---
--- Name: meters fk_rails_276fdd6a78; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY meters
-    ADD CONSTRAINT fk_rails_276fdd6a78 FOREIGN KEY (group_id) REFERENCES groups(id);
 
 
 --
@@ -3040,8 +3172,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170418125916');
 
 INSERT INTO schema_migrations (version) VALUES ('20170420141436');
 
-INSERT INTO schema_migrations (version) VALUES ('20170424153456');
-
 INSERT INTO schema_migrations (version) VALUES ('20170503124043');
 
 INSERT INTO schema_migrations (version) VALUES ('20170505151515');
@@ -3146,9 +3276,13 @@ INSERT INTO schema_migrations (version) VALUES ('20171018134419');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142114');
 
-INSERT INTO schema_migrations (version) VALUES ('20171028142206');
+INSERT INTO schema_migrations (version) VALUES ('20171031085200');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085223');
+INSERT INTO schema_migrations (version) VALUES ('20171031085220');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085250');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085260');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085280');
 
