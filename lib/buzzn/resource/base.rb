@@ -1,5 +1,8 @@
+require 'buzzn/schemas/support/enable_dry_validation'
+
 module Buzzn::Resource
   class Base
+    include Buzzn::Schemas::DryValidationForResource
 
     attr_reader :object, :current_user, :current_roles, :permissions
 
@@ -187,19 +190,6 @@ module Buzzn::Resource
       @current_roles = current_roles
       @permissions = permissions
       @object = resource
-    end
-
-    def [](attr)
-      if self.respond_to?(attr)
-        self.send(attr)
-      else
-        object.attributes[attr.to_s] || object.send(attr)
-      end
-    end
-    alias :get :[]
-
-    def key?(attr)
-       self.respond_to?(attr) || object.attributes.key?(attr) || object.respond_to?(attr)
     end
 
     def to_collection(enum, perms, clazz = nil)
