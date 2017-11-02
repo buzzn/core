@@ -66,16 +66,22 @@ module Group
     has_many :prices, dependent: :destroy
     has_many :billing_cycles, dependent: :destroy
 
-    # TODO: maybe implement this as scope within meter model
-    def one_way_meters
-      sql = "SELECT m.id FROM meters m, registers r, groups g WHERE r.meter_id = m.id AND r.group_id = g.id AND r.label NOT IN('#{Register::Base.labels[:grid_consumption_corrected]}', '#{Register::Base.labels[:grid_feeding_corrected]}') AND g.id = '#{self.id}' GROUP BY m.id HAVING COUNT(*) = 1"
-      Meter::Base.find_by_sql("SELECT DISTINCT * FROM meters WHERE id IN(#{sql})")
+    def meter_without_corrected_registers
+      # TODO is this the same as:
+
+      # Meter::Base.where(id: registers.where('label NOT IN (?)', [Register::Base.labels[:grid_consumption_corrected], Register::Base.labels[:grid_feeding_corrected]]).select(:meter_id))
+
+      # ?
+
+      Meter::Real.where(id: registers.select(:meter_id))
     end
 
-    # TODO: maybe implement this as scope within meter model
+    def one_way_meters
+      meter_without_corrected_registers.where(direction_number: Meter::Real.direction_numbers[:one_way_meter])
+    end
+
     def two_way_meters
-      sql = "SELECT m.id FROM meters m, registers r, groups g WHERE r.meter_id = m.id AND r.group_id = g.id AND r.label NOT IN('#{Register::Base.labels[:grid_consumption_corrected]}', '#{Register::Base.labels[:grid_feeding_corrected]}') AND g.id = '#{self.id}' GROUP BY m.id HAVING COUNT(*) > 1"
-      Meter::Base.find_by_sql("SELECT DISTINCT * FROM meters WHERE id IN(#{sql})")
+      meter_without_corrected_registers.where(direction_number: Meter::Real.direction_numbers[:two_way_meter])
     end
   end
 end
