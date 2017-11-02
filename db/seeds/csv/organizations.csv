@@ -1,13 +1,13 @@
-name;description;slug;image;email;phone;fax;website
-Buzzn GmbH;Purveyor of peoplepower since 2009;buzzn;;team@buzzn.net;089 / 32 16 8;;www.buzzn.net
-50Hertz Transmission GmbH;;50hertz;;unknown@unknown.de;+49 30 51503782;+49 30 51504511;http://www.50hertz.com/de/
-Tennet TSO GmbH;;tennet;;unknown@unknown.de;+49 921 507404575;+49 921 507404566;https://www.tennet.eu/de
-Amprion GmbH;;amprion;;unknown@unknown.de;+49 231 5849 12502;+49 231 5849 14509;https://www.amprion.net
-TransnetBW GmbH;;transnetbw;;unknown@unknown.de;+49 711 21858 3706;+49 711 21858 4413;https://www.transnetbw.de/de
-SWM Infrastruktur GmbH & Co. KG;;swm;;unknown@unknown.de;+49 89 2361 4644;+49 89 2361 4699;http://www.swm-infrastruktur.de
+name;description;slug;image;email;phone;fax;website;street;city;zip;state;country
+Buzzn GmbH;Purveyor of peoplepower since 2009;buzzn;;team@buzzn.net;089 / 32 16 8;;www.buzzn.net;Combinat 56, Adams-Lehmann-Straße 56;München;80797;BY;DE
+50Hertz Transmission GmbH;;50hertz;;unknown@unknown.de;+49 30 51503782;+49 30 51504511;http://www.50hertz.com/de/;Heidestraße 2;Berlin;10557;BE;DE
+Tennet TSO GmbH;;tennet;;unknown@unknown.de;+49 921 507404575;+49 921 507404566;https://www.tennet.eu/de;Bernecker Straße 70;Bayreuth;95448;BY;DE
+Amprion GmbH;;amprion;;unknown@unknown.de;+49 231 5849 12502;+49 231 5849 14509;https://www.amprion.net;Rheinlanddamm 24;Dortmund;44139;RP;DE
+TransnetBW GmbH;;transnetbw;;unknown@unknown.de;+49 711 21858 3706;+49 711 21858 4413;https://www.transnetbw.de/de;Osloer Straße 15-17;Stuttgart;70173;BW;DE
+SWM Infrastruktur GmbH & Co. KG;;swm;;unknown@unknown.de;+49 89 2361 4644;+49 89 2361 4699;http://www.swm-infrastruktur.de;Emmy-Noether-Straße 2;München;80287;BY;DE
 E.ON Netz GmbH;;eon-netz;;unknown@unknown.de;0921 915-0;;https://www.eon.com
 Stadtwerke Augsburg GmbH;;sw-augsburg;;unknown@unknown.de;0821 65006500;;www.sw-augsburg.de
-Bayernwerk Netz GmbH;;bayernwerk-netz;;unknown@unknown.de;+49 941 2017128;+49 941 2017113;http://www.bayernwerk-netz.de
+Bayernwerk Netz GmbH;;bayernwerk-netz;;unknown@unknown.de;+49 941 2017128;+49 941 2017113;http://www.bayernwerk-netz.de;Lilienthalstraße 7;Regensburg;93049;BY;DE
 bnNETZE GmbH;;bn-netze;;unknown@unknown.de;+49 000000;;
 E.DIS AG ;;;;unknown@unknown.de;+49 000000;;
 E.ON Avacon AG;;;;unknown@unknown.de;+49 000000;;
@@ -31,13 +31,13 @@ Stromnetz Berlin GmbH;;;;unknown@unknown.de;+49 000000;;
 Stromnetz Hamburg GmbH ;;;;unknown@unknown.de;+49 000000;;
 swb Netze GmbH & Co. KG;;;;unknown@unknown.de;+49 000000;;
 Syna GmbH ;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke München GmbH;;;;unknown@unknown.de;+49 000000;;
+Stadtwerke München GmbH;;;;unknown@unknown.de;+49 000000;;;Emmy-Noether-Straße 2;München;80287;BY;DE
 Bürger Energie Genossenschaft Freisinger Land;;;;unknown@unknown.de;+49 000000;;
 LichtBlick Energie und Innovation GmbH;;;;unknown@unknown.de;+49 000000;;
 Discovergy;MPO of EasyMeters;discovergy;;unknown@unknown.de;+49 000000;;https://discovergy.com/
 MySmartGrid;Fraunhofer Institut;mysmartgrid;;unknown@unknown.de;+49 000000;;https://www.itwm.fraunhofer.de/en/departments/hpc/green-by-it/mySmartGrid-energy-savings.html
-SWM Versorgungs GmbH;;swm-versorgung;;unknown@unknown.de;+49 000000;;
+SWM Versorgungs GmbH;;swm-versorgung;;unknown@unknown.de;+49 000000;;Emmy-Noether-Straße 2;München;80287;BY;DE
 Drittlieferant;any non-localgroup supplier;3rd-party;;unknown@unknown.de;+49 000000;;
 Germany;used for energy mix 'Germany';germany;;unknown@unknown.de;+49 000000;;
-hell & warm Forstenried GmbH;Local group owner;hell-warm;;unknown@unknown.de;089/89057180;;
+hell & warm Forstenried GmbH;Local group owner;hell-warm;;unknown@unknown.de;089/89057180;;Aberlestr. 16;München;81371;BY;DE
 Hausverwaltung Schneider;Local group owner;hv-schneider;;unknown@unknown.de;+49 000000;;

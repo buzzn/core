@@ -57,6 +57,11 @@ module Converters
       { 'DE' => :german, 'EN' => :english }[value]
     end
   end
+  class State
+    def self.convert(value)
+      "DE_#{value}"
+    end
+  end
 end
 
 def get_csv(model_name, options = {})
@@ -85,7 +90,22 @@ end
 
 import_csv(:persons, converters: { preferred_language: Converters::PreferredLanguage })
 
-import_csv(:organizations)
+ADDRESS_ATTRIBUTES = %i(street city zip state country)
+get_csv(:organizations, converters: { state: Converters::State }).each do |row|
+  puts "Loading organization #{row[:name]}"
+  address_attrs = row.slice(*ADDRESS_ATTRIBUTES)
+  org_attrs     = row.except(*ADDRESS_ATTRIBUTES)
+  record        = Organization.new(org_attrs)
+  if ADDRESS_ATTRIBUTES.all? { |attr| address_attrs[attr].present? }
+    address = record.build_address(address_attrs)
+  else
+    puts "Warning: address attributes for #{row[:name]} not present or incomplete; skipping address creation."
+  end
+  unless record.save!
+    ap record
+    ap record.errors
+  end
+end
 
 Organization.buzzn   = Organization.find_by(slug: "buzzn")
 Organization.buzzn.energy_classifications = [ energy_classifications[:buzzn] ]
