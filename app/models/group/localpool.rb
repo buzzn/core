@@ -7,6 +7,9 @@ module Group
 
     belongs_to :organization
     belongs_to :person
+    has_many :addresses, as: :addressable, dependent: :destroy
+    has_many :prices, dependent: :destroy
+    has_many :billing_cycles, dependent: :destroy
 
     def owner
       organization || person
@@ -82,10 +85,6 @@ module Group
     def meters
       Meter::Base.where(id: registers.select(:meter_id))
     end
-
-    has_many :addresses, as: :addressable, dependent: :destroy
-    has_many :prices, dependent: :destroy
-    has_many :billing_cycles, dependent: :destroy
 
     # TODO: maybe implement this as scope within meter model
     def one_way_meters

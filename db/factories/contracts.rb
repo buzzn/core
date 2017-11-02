@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :contract, class: 'Contract::MeteringPointOperator' do
     localpool                     { FactoryGirl.create(:localpool) }
-    contract_number               { generate(:mpo_contract_number) }
+    contract_number               { generate(:metering_point_operator_contract_nr) }
     slug                          { |attrs| "mpo-#{attrs[:contract_number]}" }
     signing_date                  Date.parse("2015-10-11")
     begin_date                    Date.parse("2016-01-01")
@@ -20,25 +20,25 @@ FactoryGirl.define do
   end
 
   trait :metering_point_operator do
-    contract_number { generate(:mpo_contract_number) }
+    contract_number { generate(:metering_point_operator_contract_nr) }
     initialize_with { Contract::MeteringPointOperator.new } # a slight hack to define a trait of contract, but use a different subclass
   end
 
   trait :power_taker do
-    contract_number { generate(:power_taker_contract_number) }
+    contract_number { generate(:power_taker_contract_nr) }
   end
 
   trait :power_giver do
-    contract_number { generate(:power_giver_contract_number) }
+    contract_number { generate(:power_giver_contract_nr) }
   end
 
   trait :localpool_processing do
-    contract_number { generate(:mpo_contract_number) }
+    contract_number { generate(:localpool_processing_contract_nr) }
     initialize_with { Contract::LocalpoolProcessing.new } # a slight hack to define a trait of contract, but use a different subclass
   end
 
   trait :localpool_powertaker do
-    contract_number { generate(:lpt_contract_number) }
+    contract_number { generate(:localpool_power_taker_contract_nr) }
     initialize_with { Contract::LocalpoolPowerTaker.new } # a slight hack to define a trait of contract, but use a different subclass
     forecast_kwh_pa 1000
     customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }
