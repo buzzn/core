@@ -1106,7 +1106,7 @@ CREATE TABLE bank_accounts (
     updated_at timestamp without time zone NOT NULL,
     owner_person_id uuid,
     owner_organization_id uuid,
-    CONSTRAINT check_bank_account_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
+    CONSTRAINT check_bank_account_owner CHECK (((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))) OR ((owner_person_id IS NULL) AND (owner_organization_id IS NULL))))
 );
 
 
