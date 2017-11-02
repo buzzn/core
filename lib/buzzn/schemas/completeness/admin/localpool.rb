@@ -3,11 +3,9 @@ require_relative '../organization'
 module Schemas
   module Completeness
     module Admin
-      Localpool = Dry::Validation.Schema do
+      Localpool = Buzzn::Schemas.Schema do
 
         configure do
-          config.messages_file = 'config/errors.yml'
-
           def metering_point_id?(input)
             ! input.metering_point_id.nil?
           end
@@ -28,7 +26,6 @@ module Schemas
             end
           end
         end
-
 
         required(:owner) do
           ((filled?.and type?(OrganizationResource)).then schema(Schemas::Completeness::Organization)).and valid_role?.and filled?
