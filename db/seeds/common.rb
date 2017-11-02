@@ -1,4 +1,4 @@
-Buzzn::Logger.root.debug "seeds: loading common setup data"
+Buzzn::Logger.root.info "seeds: loading common setup data"
 
 #
 # Account statuses
@@ -36,22 +36,12 @@ energy_classifications = {
 }
 
 #
-# Essential organizations -- which the application requires to work
+# Organizations
 #
 
 require 'smarter_csv'
 
 module Converters
-  class Date
-    def self.convert(value)
-      ::Date.strptime(value, '%m/%d/%y') # parses custom date format into Date instance
-    end
-  end
-  class Number
-    def self.convert(value)
-      value.gsub('.', '').to_i
-    end
-  end
   class PreferredLanguage
     def self.convert(value)
       { 'DE' => :german, 'EN' => :english }[value]
@@ -97,7 +87,7 @@ get_csv(:organizations, converters: { state: Converters::State }).each do |row|
   org_attrs     = row.except(*ADDRESS_ATTRIBUTES)
   record        = Organization.new(org_attrs)
   if ADDRESS_ATTRIBUTES.all? { |attr| address_attrs[attr].present? }
-    address = record.build_address(address_attrs)
+    record.build_address(address_attrs)
   else
     Buzzn::Logger.root.debug "Warning: address attributes for #{row[:name]} not present or incomplete; skipping address creation."
   end
@@ -107,6 +97,7 @@ get_csv(:organizations, converters: { state: Converters::State }).each do |row|
   end
 end
 
+# Assigning buzzn and germany here is essential for the application to work!
 Organization.buzzn   = Organization.find_by(slug: "buzzn")
 Organization.buzzn.energy_classifications = [ energy_classifications[:buzzn] ]
 Organization.germany = Organization.find_by(slug: "germany")
