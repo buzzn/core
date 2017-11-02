@@ -1,3 +1,5 @@
+require 'buzzn/schemas/invariants/group/localpool'
+
 describe Group::Base do
 
   entity!(:localpool) { Fabricate(:localpool) }
@@ -61,6 +63,117 @@ describe Group::Base do
     xit 'creates corrected ÜGZ registers' do
       expect(localpool.registers.grid_consumption_corrected.size).to eq 1
       expect(localpool.registers.grid_feeding_corrected.size).to eq 1
+    end
+
+    describe 'invariants on' do
+      let(:schema) { Schemas::Invariants::Group::Localpool }
+      let(:localpool) { Fabricate.build(:localpool, owner: nil) }
+      let(:validator) { Buzzn::Schemas::ActiveRecordValidator.new(localpool) }
+      context 'grid_consumption_register' do
+        entity(:register) { Fabricate(:input_meter).input_register }
+        before { localpool.update(grid_consumption_register: register) }
+        context 'no meter.group' do
+          before { register.meter.group = nil }
+          context 'meter.register.group' do
+            before { register.group = localpool }
+            it 'is broken' do
+              expect(validator.validate(schema)[:grid_consumption_register]).not_to be_nil
+            end
+          end
+          context 'no meter.register.group' do
+            before { register.group = nil }
+            it 'is broken' do
+              expect(validator.validate(schema)[:grid_consumption_register]).not_to be_nil
+            end
+          end
+        end
+
+        context 'right meter.group' do
+          before { register.meter.group = localpool }
+          context 'no meter.register.group' do
+            before { register.group = nil }
+            it 'is valid' do
+              expect(validator.validate(schema)[:grid_consumption_register]).to be_nil
+            end
+          end
+          context 'meter.register.group' do
+            before { register.group = localpool }
+            it 'is broken' do
+              expect(validator.validate(schema)[:grid_consumption_register]).not_to be_nil
+            end
+          end
+        end
+
+        context 'wrong meter.group' do
+          entity(:other) { Fabricate(:localpool, owner: nil) }
+          before { register.meter.group = other }
+          context 'no meter.register.group' do
+            before { register.group = nil }
+            it 'is broken' do
+              expect(validator.validate(schema)[:grid_consumption_register]).not_to be_nil
+            end
+          end
+          context 'meter.register.group' do
+            before { register.group = localpool }
+            it 'is broken' do
+              expect(validator.validate(schema)[:grid_consumption_register]).not_to be_nil
+            end
+          end
+        end
+      end
+
+      context 'grid_feeding_register' do
+        entity(:register) { Fabricate(:output_meter).output_register }
+        before { localpool.update(grid_feeding_register: register) }
+        context 'no meter.group' do
+          before { register.meter.group = nil }
+          context 'meter.register.group' do
+            before { register.group = localpool }
+            it 'is broken' do
+              expect(validator.validate(schema)[:grid_feeding_register]).not_to be_nil
+            end
+          end
+          context 'no meter.register.group' do
+            before { register.group = nil }
+            it 'is broken' do
+              expect(validator.validate(schema)[:grid_feeding_register]).not_to be_nil
+            end
+          end
+        end
+
+        context 'right meter.group' do
+          before { register.meter.group = localpool }
+          context 'no meter.register.group' do
+            before { register.group = nil }
+            it 'is valid' do
+              expect(validator.validate(schema)[:grid_feeding_register]).to be_nil
+            end
+          end
+          context 'meter.register.group' do
+            before { register.group = localpool }
+            it 'is broken' do
+              expect(validator.validate(schema)[:grid_feeding_register]).not_to be_nil
+            end
+          end
+        end
+
+        context 'wrong meter.group' do
+          entity(:other) { Fabricate(:localpool, owner: nil) }
+          before { register.meter.group = other }
+          context 'no meter.register.group' do
+            before { register.group = nil }
+            it 'is broken' do
+              expect(validator.validate(schema)[:grid_feeding_register]).not_to be_nil
+            end
+          end
+          context 'meter.register.group' do
+            before { register.group = localpool }
+            it 'is broken' do
+              expect(validator.validate(schema)[:grid_feeding_register]).not_to be_nil
+            end
+          end
+        end
+      end
     end
 
     describe 'assigning owner' do

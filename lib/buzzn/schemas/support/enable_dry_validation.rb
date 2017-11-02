@@ -10,7 +10,7 @@ module Buzzn
     class ActiveRecordValidator
       include DryValidation
 
-      def intialize(model)
+      def initialize(model)
         @model = model
       end
 
@@ -24,7 +24,7 @@ module Buzzn
       end
 
       def validate(schema)
-        schema.call(self)
+        schema.call(self).errors
       end
     end
 
