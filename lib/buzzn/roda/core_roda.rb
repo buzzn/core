@@ -1,5 +1,6 @@
 require 'sequel'
 require_relative 'common_roda'
+require_relative 'plugins/terminal_verbs'
 
 class CoreRoda < CommonRoda
 
@@ -16,6 +17,8 @@ class CoreRoda < CommonRoda
       end
     end
   end
+
+  plugin :terminal_verbs
 
   # adds /heartbeat endpoint
   plugin :heartbeat
