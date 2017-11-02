@@ -9,3 +9,7 @@ en:
     valid_role?: "BUG: missing GROUP_ADMIN role"
 
     metering_point_id?: 'missing metering_point_id'
+
+    grid_consumption_group?: 'BUG: missing or wrong register.meter.group'
+    grid_feeding_group?: 'BUG: missing or wrong register.meter.group'
+    grid_register_no_group?: 'BUG: grid register can not belong to group'
