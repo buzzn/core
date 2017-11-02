@@ -1,5 +1,6 @@
 require 'sequel'
 require_relative 'common_roda'
+require_relative 'plugins/terminal_verbs'
 
 class CoreRoda < CommonRoda
 
@@ -11,11 +12,13 @@ class CoreRoda < CommonRoda
     allow do
       domains = %r(#{ENV['CORS']})
       origins *domains
-      ['/api/*'].each do |path|
+      ['/*'].each do |path|
         resource path, headers: :any, methods: [:get, :post, :patch, :put, :delete, :options], expose: 'Authorization'
       end
     end
   end
+
+  plugin :terminal_verbs
 
   # adds /heartbeat endpoint
   plugin :heartbeat
@@ -38,7 +41,7 @@ class CoreRoda < CommonRoda
       end
     end
 
-    r.on 'health' do
+    r.get! 'health' do
       info = health.info
       r.response.headers['content_type'] = 'application/json'
       unless info[:healthy]

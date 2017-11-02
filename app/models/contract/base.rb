@@ -10,15 +10,9 @@ module Contract
     ACTIVE     = 'active'
     TERMINATED = 'terminated'
     ENDED      = 'ended'
-    enum status: {
-           onboarding: ONBOARDING,
-           active: ACTIVE,
-           terminated: TERMINATED,
-           ended: ENDED
-         }
-    STATUS = [ONBOARDING, ACTIVE, TERMINATED, ENDED]
+    STATUS     = [ONBOARDING, ACTIVE, TERMINATED, ENDED]
 
-    FULL = 'F'
+    FULL    = 'F'
     REDUCED = 'R'
     enum renewable_energy_law_taxation: {
            full: FULL,
