@@ -38,7 +38,7 @@ class CoreRoda < CommonRoda
       end
     end
 
-    r.on 'health' do
+    r.get! 'health' do
       info = health.info
       r.response.headers['content_type'] = 'application/json'
       unless info[:healthy]
