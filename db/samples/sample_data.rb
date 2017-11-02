@@ -8,7 +8,7 @@ include FactoryGirl::Syntax::Methods
 
 # ActiveRecord::Base.logger = Logger.new(STDOUT)
 
-puts "seeds: loading sample data"
+Buzzn::Logger.root.debug("seeds: loading sample data")
 
 def localpool_contract(attrs = {})
   localpool = SeedsRepository.localpools.people_power

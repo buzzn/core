@@ -1,4 +1,4 @@
-puts "seeds: loading common setup data"
+Buzzn::Logger.root.debug "seeds: loading common setup data"
 
 #
 # Account statuses
@@ -78,7 +78,7 @@ def import_csv(model_name, options = {})
   selected_hashes = options[:only] ? hashes.select(&options[:only]) : hashes
   selected_hashes.each do |hash|
     label = hash[:name] || "#{hash[:first_name]} #{hash[:last_name]}"
-    puts "Loading #{model_name.to_s.singularize} #{label}"
+    Buzzn::Logger.root.debug "Loading #{model_name.to_s.singularize} #{label}"
     klass = model_name.to_s.singularize.camelize.constantize
     record = klass.create(hash)
     unless record.persisted?
@@ -92,14 +92,14 @@ import_csv(:persons, converters: { preferred_language: Converters::PreferredLang
 
 ADDRESS_ATTRIBUTES = %i(street city zip state country)
 get_csv(:organizations, converters: { state: Converters::State }).each do |row|
-  puts "Loading organization #{row[:name]}"
+  Buzzn::Logger.root.debug "Loading organization #{row[:name]}"
   address_attrs = row.slice(*ADDRESS_ATTRIBUTES)
   org_attrs     = row.except(*ADDRESS_ATTRIBUTES)
   record        = Organization.new(org_attrs)
   if ADDRESS_ATTRIBUTES.all? { |attr| address_attrs[attr].present? }
     address = record.build_address(address_attrs)
   else
-    puts "Warning: address attributes for #{row[:name]} not present or incomplete; skipping address creation."
+    Buzzn::Logger.root.debug "Warning: address attributes for #{row[:name]} not present or incomplete; skipping address creation."
   end
   unless record.save!
     ap record
@@ -116,12 +116,12 @@ get_csv(:organization_market_functions).each do |row|
   begin
     organization = Organization.find_by(name: row[:organization_id])
     unless organization
-      puts "Unable to find organization #{row[:organization_id]} for assigning market function."
+      Buzzn::Logger.root.debug "Unable to find organization #{row[:organization_id]} for assigning market function."
       next
     end
     contact = Person.find_by(last_name: row[:contact_person_id])
     organization.market_functions.create!(row.except(:organization_id).merge(contact_person: contact))
-    puts "Assigned market function #{row[:function]} to #{row[:organization_id]}"
+    Buzzn::Logger.root.debug "Assigned market function #{row[:function]} to #{row[:organization_id]}"
   rescue => e
     ap e
     ap row
