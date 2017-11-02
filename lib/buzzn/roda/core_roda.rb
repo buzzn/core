@@ -12,7 +12,7 @@ class CoreRoda < CommonRoda
     allow do
       domains = %r(#{ENV['CORS']})
       origins *domains
-      ['/api/*'].each do |path|
+      ['/*'].each do |path|
         resource path, headers: :any, methods: [:get, :post, :patch, :put, :delete, :options], expose: 'Authorization'
       end
     end
