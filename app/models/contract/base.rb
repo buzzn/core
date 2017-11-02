@@ -10,15 +10,9 @@ module Contract
     ACTIVE     = 'active'
     TERMINATED = 'terminated'
     ENDED      = 'ended'
-    enum status: {
-           onboarding: ONBOARDING,
-           active: ACTIVE,
-           terminated: TERMINATED,
-           ended: ENDED
-         }
-    STATUS = [ONBOARDING, ACTIVE, TERMINATED, ENDED]
+    STATUS     = [ONBOARDING, ACTIVE, TERMINATED, ENDED]
 
-    FULL = 'F'
+    FULL    = 'F'
     REDUCED = 'R'
     enum renewable_energy_law_taxation: {
            full: FULL,
@@ -40,8 +34,6 @@ module Contract
     CAN_NOT_BELONG_TO_DUMMY      = 'can not belong to dummy organization'
     MUST_NOT_BE_BUZZN_SYSTEMS    = 'must not be buzzn-systems'
     MUST_NOT_BE_BUZZN            = 'must not be buzzn'
-
-
 
     class << self
       private :new
