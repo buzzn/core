@@ -9,7 +9,7 @@ module Meter
     belongs_to :group, class_name: Group::Localpool
     belongs_to :address
 
-    # hack needed for restricted scope
+    # needed for permitted scope
     has_many :registers, class_name: Register::Base, foreign_key: :meter_id
 
     before_save do
@@ -28,11 +28,6 @@ module Meter
     validates :build_year, presence: false
     validates :calibrated_until, presence: false
     validates :edifact_measurement_method, presence: false
-
-    validate :validate_invariants
-
-    def validate_invariants
-    end
 
     scope :real,      -> {where(type: Real)}
     scope :virtual,   -> {where(type: Virtual)}

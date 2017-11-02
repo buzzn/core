@@ -9,7 +9,6 @@ module Group
     has_many :prices, dependent: :destroy
     has_many :billing_cycles, dependent: :destroy
 
-
     def metering_point_operator_contract
       Contract::MeteringPointOperator.where(localpool_id: self).first
     end
@@ -66,16 +65,16 @@ module Group
       Meter::Base.where(id: registers.select(:meter_id))
     end
 
-    # TODO: maybe implement this as scope within meter model
-    def one_way_meters
-      sql = "SELECT m.id FROM meters m, registers r, groups g WHERE r.meter_id = m.id AND r.group_id = g.id AND r.label NOT IN('#{Register::Base.labels[:grid_consumption_corrected]}', '#{Register::Base.labels[:grid_feeding_corrected]}') AND g.id = '#{self.id}' GROUP BY m.id HAVING COUNT(*) = 1"
-      Meter::Base.find_by_sql("SELECT DISTINCT * FROM meters WHERE id IN(#{sql})")
+    def meter_without_corrected_registers
+      Meter::Real.where(id: registers.select(:meter_id))
     end
 
-    # TODO: maybe implement this as scope within meter model
+    def one_way_meters
+      meter_without_corrected_registers.where(direction_number: Meter::Real.direction_numbers[:one_way_meter])
+    end
+
     def two_way_meters
-      sql = "SELECT m.id FROM meters m, registers r, groups g WHERE r.meter_id = m.id AND r.group_id = g.id AND r.label NOT IN('#{Register::Base.labels[:grid_consumption_corrected]}', '#{Register::Base.labels[:grid_feeding_corrected]}') AND g.id = '#{self.id}' GROUP BY m.id HAVING COUNT(*) > 1"
-      Meter::Base.find_by_sql("SELECT DISTINCT * FROM meters WHERE id IN(#{sql})")
+      meter_without_corrected_registers.where(direction_number: Meter::Real.direction_numbers[:two_way_meter])
     end
   end
 end
