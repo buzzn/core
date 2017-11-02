@@ -9,32 +9,32 @@ SWM Versorgungs GmbH;electricity_supplier;9904160000002;datenaustausch.vertrieb@
 Buzzn GmbH;electricity_supplier;9905229000008;justus@buzzn.net;Schütze
 Buzzn GmbH;metering_point_operator;9910960000001;stefan@buzzn.net;Erbacher
 Buzzn GmbH;metering_service_provider;9910963000008;stefan@buzzn.net;Erbacher
-Bayernwerk Netz GmbH;distribution_system_operator;9901068000001;;
-bnNETZE GmbH;distribution_system_operator;9901066000003;;
-E.DIS AG;distribution_system_operator;9901000000001;;
-E.ON Avacon AG;distribution_system_operator;9907137000005;;
-enercity Netzgesellschaft mbH;distribution_system_operator;9900269000000;;
-Gemeindewerke Peißenberg;distribution_system_operator;9900512000004;;
-LEW Verteilnetz GmbH;distribution_system_operator;9906440000009;;
-LSW Netz GmbH;distribution_system_operator;9907388000002;;
-Mitteldeutsche Netzgesellschaft Strom mbH;distribution_system_operator;4042805000102;;
-NEW Netz GmbH;distribution_system_operator;9900426000009;;
-Rheinische NETZGesellschaft mbH (RNG);distribution_system_operator;9907399000009;;
-Rhein-Ruhr Verteilnetz GmbH;distribution_system_operator;;;
-Stadtwerke Einbeck GmbH;distribution_system_operator;9900165000005;;
-Stadtwerke Kaltenkirchen GmbH;distribution_system_operator;9907633000004;;
-Stadtwerke Landshut;distribution_system_operator;9900371000005;;
-Stadtwerke Schorndorf GmbH;distribution_system_operator;9900578000006;;
-Stadtwerke Waiblingen GmbH;distribution_system_operator;9900662000003;;
-Stadtwerke Wedel GmbH;distribution_system_operator;9900671000002;;
-Stadtwerke Wiesbaden Netz GmbH;distribution_system_operator;9900683000008;;
-Stadtwerke Witzenhausen GmbH;distribution_system_operator;9907084000009;;
-Stromnetz Berlin GmbH;distribution_system_operator;9900080000007;;
-Stromnetz Hamburg GmbH;distribution_system_operator;9900259000002;;
-swb Netze GmbH & Co. KG;distribution_system_operator;9907203000004;;
-Syna GmbH;distribution_system_operator;9870092500008;;
-Stadtwerke München GmbH;electricity_supplier;9910660000004;;
-Bürger Energie Genossenschaft Freisinger Land;electricity_supplier;9911607000007;;
-Gemeindewerke Peißenberg;electricity_supplier;9903306000008;;
-Stadtwerke Landshut;electricity_supplier;9903047000002;;
-LichtBlick Energie und Innovation GmbH;electricity_supplier;9905294000009;;
+Bayernwerk Netz GmbH;distribution_system_operator;9901068000001;dev+fakeedifact@buzzn.net;Temporär
+bnNETZE GmbH;distribution_system_operator;9901066000003;dev+fakeedifact@buzzn.net;Temporär
+E.DIS AG;distribution_system_operator;9901000000001;dev+fakeedifact@buzzn.net;Temporär
+E.ON Avacon AG;distribution_system_operator;9907137000005;dev+fakeedifact@buzzn.net;Temporär
+enercity Netzgesellschaft mbH;distribution_system_operator;9900269000000;dev+fakeedifact@buzzn.net;Temporär
+Gemeindewerke Peißenberg;distribution_system_operator;9900512000004;dev+fakeedifact@buzzn.net;Temporär
+LEW Verteilnetz GmbH;distribution_system_operator;9906440000009;dev+fakeedifact@buzzn.net;Temporär
+LSW Netz GmbH;distribution_system_operator;9907388000002;dev+fakeedifact@buzzn.net;Temporär
+Mitteldeutsche Netzgesellschaft Strom mbH;distribution_system_operator;4042805000102;dev+fakeedifact@buzzn.net;Temporär
+NEW Netz GmbH;distribution_system_operator;9900426000009;dev+fakeedifact@buzzn.net;Temporär
+Rheinische NETZGesellschaft mbH (RNG);distribution_system_operator;9907399000009;dev+fakeedifact@buzzn.net;Temporär
+Rhein-Ruhr Verteilnetz GmbH;distribution_system_operator;dev+fakeedifact@buzzn.net;dev+fakeedifact@buzzn.net;Temporär
+Stadtwerke Einbeck GmbH;distribution_system_operator;9900165000005;dev+fakeedifact@buzzn.net;Temporär
+Stadtwerke Kaltenkirchen GmbH;distribution_system_operator;9907633000004;dev+fakeedifact@buzzn.net;Temporär
+Stadtwerke Landshut;distribution_system_operator;9900371000005;dev+fakeedifact@buzzn.net;Temporär
+Stadtwerke Schorndorf GmbH;distribution_system_operator;9900578000006;dev+fakeedifact@buzzn.net;Temporär
+Stadtwerke Waiblingen GmbH;distribution_system_operator;9900662000003;dev+fakeedifact@buzzn.net;Temporär
+Stadtwerke Wedel GmbH;distribution_system_operator;9900671000002;dev+fakeedifact@buzzn.net;Temporär
+Stadtwerke Wiesbaden Netz GmbH;distribution_system_operator;9900683000008;dev+fakeedifact@buzzn.net;Temporär
+Stadtwerke Witzenhausen GmbH;distribution_system_operator;9907084000009;dev+fakeedifact@buzzn.net;Temporär
+Stromnetz Berlin GmbH;distribution_system_operator;9900080000007;dev+fakeedifact@buzzn.net;Temporär
+Stromnetz Hamburg GmbH;distribution_system_operator;9900259000002;dev+fakeedifact@buzzn.net;Temporär
+swb Netze GmbH & Co. KG;distribution_system_operator;9907203000004;dev+fakeedifact@buzzn.net;Temporär
+Syna GmbH;distribution_system_operator;9870092500008;dev+fakeedifact@buzzn.net;Temporär
+Stadtwerke München GmbH;electricity_supplier;9910660000004;dev+fakeedifact@buzzn.net;Temporär
+Bürger Energie Genossenschaft Freisinger Land;electricity_supplier;9911607000007;dev+fakeedifact@buzzn.net;Temporär
+Gemeindewerke Peißenberg;electricity_supplier;9903306000008;dev+fakeedifact@buzzn.net;Temporär
+Stadtwerke Landshut;electricity_supplier;9903047000002;dev+fakeedifact@buzzn.net;Temporär
+LichtBlick Energie und Innovation GmbH;electricity_supplier;9905294000009;dev+fakeedifact@buzzn.net;Temporär

@@ -16,7 +16,7 @@ class Organization < ContractingParty
     market_functions.find_by(function: function)
   end
 
-  validates :name, presence: true, length: { in: 3..40 }, uniqueness: true
+  validates :name, presence: true, length: { in: 3..255 }, uniqueness: true
   validates :email, presence: true
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
   validates :phone, presence: true

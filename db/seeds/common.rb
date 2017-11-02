@@ -68,11 +68,12 @@ def get_csv(model_name, options = {})
   )
 end
 
-def import_csv(model_name, options)
+def import_csv(model_name, options = {})
   hashes = get_csv(model_name, options)
   selected_hashes = options[:only] ? hashes.select(&options[:only]) : hashes
   selected_hashes.each do |hash|
-    puts "Loading #{model_name.to_s.singularize} #{hash[:name]}"
+    label = hash[:name] || "#{hash[:first_name]} #{hash[:last_name]}"
+    puts "Loading #{model_name.to_s.singularize} #{label}"
     klass = model_name.to_s.singularize.camelize.constantize
     record = klass.create(hash)
     unless record.persisted?
@@ -84,9 +85,7 @@ end
 
 import_csv(:persons, converters: { preferred_language: Converters::PreferredLanguage })
 
-import_csv(:organizations,
-           only: ->(row) { row[:slug] =~ /buzzn|germany/ }
-)
+import_csv(:organizations)
 
 Organization.buzzn   = Organization.find_by(slug: "buzzn")
 Organization.buzzn.energy_classifications = [ energy_classifications[:buzzn] ]
@@ -94,7 +93,18 @@ Organization.germany = Organization.find_by(slug: "germany")
 Organization.germany.energy_classifications = [ energy_classifications[:germany] ]
 
 get_csv(:organization_market_functions).each do |row|
-  next unless row[:organization_id] == 'Buzzn GmbH'
-  contact = Person.find_by(last_name: row[:contact_person_id])
-  Organization.buzzn.market_functions.create!(row.except(:organization_id).merge(contact_person: contact))
+  begin
+    organization = Organization.find_by(name: row[:organization_id])
+    unless organization
+      puts "Unable to find organization #{row[:organization_id]} for assigning market function."
+      next
+    end
+    contact = Person.find_by(last_name: row[:contact_person_id])
+    organization.market_functions.create!(row.except(:organization_id).merge(contact_person: contact))
+    puts "Assigned market function #{row[:function]} to #{row[:organization_id]}"
+  rescue => e
+    ap e
+    ap row
+    ap organization
+  end
 end

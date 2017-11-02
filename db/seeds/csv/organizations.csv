@@ -1,13 +1,13 @@
 name;description;slug;image;email;phone;fax;website
 Buzzn GmbH;Purveyor of peoplepower since 2009;buzzn;;team@buzzn.net;089 / 32 16 8;;www.buzzn.net
-50Hertz Transmission GmbH;;50hertz;;;+49 30 51503782;+49 30 51504511;http://www.50hertz.com/de/
-Tennet TSO GmbH;;tennet;;;+49 921 507404575;+49 921 507404566;https://www.tennet.eu/de
-Amprion GmbH;;amprion;;;+49 231 5849 12502;+49 231 5849 14509;https://www.amprion.net
-TransnetBW GmbH;;transnetbw;; ;+49 711 21858 3706;+49 711 21858 4413;https://www.transnetbw.de/de
-SWM Infrastruktur GmbH & Co. KG;;swm ;;;+49 89 2361 4644;+49 89 2361 4699;http://www.swm-infrastruktur.de
-E.ON Netz GmbH;;eon-netz;;;;;https://www.eon.com
-Stadtwerke Augsburg GmbH;;sw-augsburg;;;;;www.sw-augsburg.de
-Bayernwerk Netz GmbH;;bayernwerk-netz;;;+49 941 2017128;+49 941 2017113;http://www.bayernwerk-netz.de
+50Hertz Transmission GmbH;;50hertz;;unknown@unknown.de;+49 30 51503782;+49 30 51504511;http://www.50hertz.com/de/
+Tennet TSO GmbH;;tennet;;unknown@unknown.de;+49 921 507404575;+49 921 507404566;https://www.tennet.eu/de
+Amprion GmbH;;amprion;;unknown@unknown.de;+49 231 5849 12502;+49 231 5849 14509;https://www.amprion.net
+TransnetBW GmbH;;transnetbw;;unknown@unknown.de;+49 711 21858 3706;+49 711 21858 4413;https://www.transnetbw.de/de
+SWM Infrastruktur GmbH & Co. KG;;swm;;unknown@unknown.de;+49 89 2361 4644;+49 89 2361 4699;http://www.swm-infrastruktur.de
+E.ON Netz GmbH;;eon-netz;;unknown@unknown.de;0921 915-0;;https://www.eon.com
+Stadtwerke Augsburg GmbH;;sw-augsburg;;unknown@unknown.de;0821 65006500;;www.sw-augsburg.de
+Bayernwerk Netz GmbH;;bayernwerk-netz;;unknown@unknown.de;+49 941 2017128;+49 941 2017113;http://www.bayernwerk-netz.de
 bnNETZE GmbH;;bn-netze;;unknown@unknown.de;+49 000000;;
 E.DIS AG ;;;;unknown@unknown.de;+49 000000;;
 E.ON Avacon AG;;;;unknown@unknown.de;+49 000000;;
@@ -31,10 +31,8 @@ Stromnetz Berlin GmbH;;;;unknown@unknown.de;+49 000000;;
 Stromnetz Hamburg GmbH ;;;;unknown@unknown.de;+49 000000;;
 swb Netze GmbH & Co. KG;;;;unknown@unknown.de;+49 000000;;
 Syna GmbH ;;;;unknown@unknown.de;+49 000000;;
-;;;;unknown@unknown.de;+49 000000;;
 Stadtwerke München GmbH;;;;unknown@unknown.de;+49 000000;;
 Bürger Energie Genossenschaft Freisinger Land;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke Landshut ;;;;unknown@unknown.de;+49 000000;;
 LichtBlick Energie und Innovation GmbH;;;;unknown@unknown.de;+49 000000;;
 Discovergy;MPO of EasyMeters;discovergy;;unknown@unknown.de;+49 000000;;https://discovergy.com/
 MySmartGrid;Fraunhofer Institut;mysmartgrid;;unknown@unknown.de;+49 000000;;https://www.itwm.fraunhofer.de/en/departments/hpc/green-by-it/mySmartGrid-energy-savings.html
