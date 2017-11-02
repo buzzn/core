@@ -11,7 +11,7 @@ describe Admin::LocalpoolRoda do
 
     entity(:person) do
       person = Fabricate(:person)
-      Fabricate(:bank_account, contracting_party: person)
+      Fabricate(:bank_account, owner: person)
       person.update(address: Fabricate(:address))
       person.reload
       person
@@ -19,7 +19,7 @@ describe Admin::LocalpoolRoda do
 
     entity(:organization) do
       orga = Fabricate(:metering_point_operator, contact: person)
-      Fabricate(:bank_account, contracting_party: orga)
+      Fabricate(:bank_account, owner: orga)
       orga.update(address: Fabricate(:address))
       orga.reload
       orga
@@ -43,7 +43,7 @@ describe Admin::LocalpoolRoda do
                 localpool: localpool,
                 register: Fabricate(:input_register,
                                     group: localpool,
-                                    meter: Fabricate.build(:meter)))
+                                    meter: Fabricate.build(:output_meter)))
     end
 
     let(:person_json) do
@@ -210,10 +210,10 @@ describe Admin::LocalpoolRoda do
             "low_load_ability"=>false,
             "label"=>'CONSUMPTION',
             "last_reading"=>0,
-            "observer_min_threshold"=>100,
-            "observer_max_threshold"=>5000,
-            "observer_enabled"=>false,
-            "observer_offline_monitoring"=>false,
+            "observer_min_threshold"=>nil,
+            "observer_max_threshold"=>nil,
+            "observer_enabled"=>nil,
+            "observer_offline_monitoring"=>nil,
             'updatable'=> true,
             'deletable'=> false,
             "createables"=>["readings"],

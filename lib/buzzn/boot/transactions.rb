@@ -31,11 +31,8 @@ module Buzzn
       def initialize
         @logger = Logger.new(self)
         @container = Dry::Container.new
-        @steps = Dry::Container.new do
-          configure do |config|
-            config.resolver = Resolver.new
-          end
-        end
+        @steps = Dry::Container.new
+        @steps.config.resolver = Resolver.new
       end
 
       def define(name, &block)

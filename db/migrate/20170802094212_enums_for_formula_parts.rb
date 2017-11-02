@@ -1,6 +1,6 @@
 class EnumsForFormulaParts < ActiveRecord::Migration
   def up
-    create_enum :operator, *Register::FormulaPart::OPERATORS
+    create_enum :operator, *Register::FormulaPart.operators.values
 
     rename_column :formula_parts, :operator, :opt
     add_column :formula_parts, :operator, :operator, null: true, index: true

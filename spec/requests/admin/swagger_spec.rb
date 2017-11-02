@@ -12,15 +12,15 @@ describe Admin do
 
   entity!(:person) { account.person }
 
-  entity!(:bank_account_1) { Fabricate(:bank_account, contracting_party: person) }
+  entity!(:bank_account_1) { Fabricate(:bank_account, owner: person) }
 
-  entity!(:bank_account_2) { Fabricate(:bank_account, contracting_party: person) }
+  entity!(:bank_account_2) { Fabricate(:bank_account, owner: person) }
 
   entity!(:organization) { Fabricate(:other_organization) }
 
-  entity!(:bank_account_3) { Fabricate(:bank_account, contracting_party: organization) }
+  entity!(:bank_account_3) { Fabricate(:bank_account, owner: organization) }
 
-  entity!(:bank_account_4) { Fabricate(:bank_account, contracting_party: organization) }
+  entity!(:bank_account_4) { Fabricate(:bank_account, owner: organization) }
 
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
@@ -103,7 +103,7 @@ describe Admin do
 
   post '/localpools' do
     description 'creates localpool'
-    schema 'create_localpool'
+    schema Schemas::Transactions::Admin::Localpool::Create
   end
 
   get '/localpools/{localpool.id}' do
@@ -112,7 +112,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}' do
     description 'updates the localpool'
-    schema 'update_localpool'
+    schema Schemas::Transactions::Admin::Localpool::Update
   end
 
   get '/localpools/{localpool.id}/bubbles' do
@@ -121,7 +121,7 @@ describe Admin do
 
   get '/localpools/{localpool.id}/charts' do
     description 'returns the charts of the localpool'
-    schema 'charts'
+    schema Schemas::Transactions::Chart
   end
 
   # contracts
@@ -158,7 +158,7 @@ describe Admin do
 
   get '/localpools/{localpool.id}/registers/{register.id}/charts' do
     description 'returns the charts of the localpool'
-    schema 'charts'
+    schema Schemas::Transactions::Chart
   end
 
   # meters
@@ -173,12 +173,12 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/meters/{real_meter.id}' do
     description 'updates the real meter for the given IDs'
-    schema 'update_real_meter'
+    schema Schemas::Transactions::Admin::Meter::UpdateReal
   end
 
   patch '/localpools/{localpool.id}/meters/{virtual_meter.id}' do
     description 'updates the virtual meter for the given IDs'
-    schema 'update_virtual_meter'
+    schema Schemas::Transactions::Admin::Meter::UpdateVirtual
   end
 
   # virtual_meters > formula_parts
@@ -193,7 +193,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/meters/{virtual_meter.id}/formula-parts/{formula_part.id}' do
     description 'update formula-part of virtual meter for the given IDs'
-    schema 'update_formula_part'
+    schema Schemas::Transactions::Admin::Register::UpdateFormulaPart
   end
 
   # meters > registers
@@ -208,14 +208,14 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/meters/{real_meter.id}/registers/{real_register.id}' do
     description 'update the real register of a meter for the given IDs'
-    schema 'update_real_register'
+    schema Schemas::Transactions::Admin::Register::UpdateReal
   end
 
   # meters > registers > readings
 
   post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
     description 'create reading for the register'
-    schema 'create_reading'
+    schema Schemas::Transactions::Admin::Reading::Create
   end
 
   get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
@@ -251,7 +251,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_1.id}' do
     description 'updates the bank-accounts of the person for the given IDs'
-    schema 'update_bank_account'
+    schema Schemas::Transactions::BankAccount::Update
   end
 
   delete '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_2.id}' do
@@ -280,7 +280,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/organizations/{organization.id}/bank-accounts/{bank_account_3.id}' do
     description 'updates the bank-accounts of the organization for the given IDs'
-    schema 'update_bank_account'
+    schema Schemas::Transactions::BankAccount::Update
   end
 
   delete '/localpools/{localpool.id}/organizations/{organization.id}/bank-accounts/{bank_account_4.id}' do
@@ -295,7 +295,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/prices' do
     description 'create price for the localpool'
-    schema 'create_price'
+    schema Schemas::Transactions::Admin::Price::Create
   end
 
   get '/localpools/{localpool.id}/prices/{price.id}' do
@@ -304,7 +304,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/prices/{price.id}' do
     description 'updates the price of the localpool for the given IDs'
-    schema 'update_price'
+    schema Schemas::Transactions::Admin::Price::Update
   end
 
   # billing-cycles
@@ -315,7 +315,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/billing-cycles' do
     description 'creates a billing-cycles for the localpool'
-    schema 'create_billing_cycle'
+    schema Schemas::Transactions::Admin::BillingCycle::Create
   end
 
   get '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}' do
@@ -324,7 +324,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}' do
     description 'updates the billing-cycles of the localpool'
-    schema 'update_billing_cycle'
+    schema Schemas::Transactions::Admin::BillingCycle::Update
   end
 
   delete '/localpools/{localpool.id}/billing-cycles/{billing_cycle_2.id}' do
@@ -339,7 +339,7 @@ describe Admin do
 
   post '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/regular' do
     description 'creates a regular billings for billing-cycles'
-    schema 'create_regular_billings'
+    schema Schemas::Transactions::Admin::Billing::CreateRegular
   end
 
   get '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_1.id}' do
@@ -348,7 +348,7 @@ describe Admin do
 
   patch '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_1.id}' do
     description 'updates the billing of the billing-cycles for the given IDs'
-    schema 'update_billing'
+    schema Schemas::Transactions::Admin::Billing::Update
   end
 
   delete '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_2.id}' do

@@ -90,7 +90,7 @@ module Admin
         r.on 'person_owner' do
           r.post! do
             create_localpool_owner.call(r.params,
-                                        validate: [PersonContraints],
+                                        validate: [Schemas::Transactions::Person::Create],
                                         build: [localpool.persons],
                                         assign: [localpool.method(:assign_owner)])
           end

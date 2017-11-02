@@ -1,8 +1,6 @@
 module Register
   class Virtual < Base
 
-    acts_as_commentable
-
     has_many :scores, as: :scoreable
 
     belongs_to :meter, class_name: Meter::Virtual, foreign_key: :meter_id

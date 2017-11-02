@@ -5,12 +5,12 @@ class ChangesRegisterColumns < ActiveRecord::Migration
     rename_column :registers, :direction, :direction_old
     rename_column :registers, :label, :label_old
 
-    create_enum :direction, *Register::Base::DIRECTIONS
-    create_enum :label, *Register::Base::LABELS
+    create_enum :direction, *Register::Base.directions.values
+    create_enum :label, *Register::Base.labels.values
 
     add_column :registers, :direction, :direction, index: true
     add_column :registers, :label, :label, index: true
-    
+
     Meter::Base.all.each do |meter|
       meter.update(converter_constant: 1) unless meter.converter_constant
     end

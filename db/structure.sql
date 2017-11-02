@@ -59,6 +59,19 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 SET search_path = public, pg_catalog;
 
 --
+-- Name: billings_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE billings_status AS ENUM (
+    'open',
+    'calculated',
+    'delivered',
+    'settled',
+    'closed'
+);
+
+
+--
 -- Name: country; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -352,9 +365,9 @@ CREATE TYPE direction_number AS ENUM (
 
 CREATE TYPE edifact_cycle_interval AS ENUM (
     'MONTHLY',
-    'YEARLY',
     'QUARTERLY',
-    'HALF_YEARLY'
+    'HALF_YEARLY',
+    'YEARLY'
 );
 
 
@@ -395,10 +408,10 @@ CREATE TYPE edifact_meter_size AS ENUM (
 
 CREATE TYPE edifact_metering_type AS ENUM (
     'AHZ',
-    'LAZ',
     'WSZ',
-    'EHZ',
+    'LAZ',
     'MAZ',
+    'EHZ',
     'IVA'
 );
 
@@ -438,6 +451,16 @@ CREATE TYPE edifact_voltage_level AS ENUM (
 
 
 --
+-- Name: formula_parts_operator; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE formula_parts_operator AS ENUM (
+    '+',
+    '-'
+);
+
+
+--
 -- Name: label; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -468,6 +491,142 @@ CREATE TYPE manufacturer_name AS ENUM (
 
 
 --
+-- Name: meters_direction_number; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_direction_number AS ENUM (
+    'ERZ',
+    'ZRZ'
+);
+
+
+--
+-- Name: meters_edifact_cycle_interval; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_cycle_interval AS ENUM (
+    'MONTHLY',
+    'QUARTERLY',
+    'HALF_YEARLY',
+    'YEARLY'
+);
+
+
+--
+-- Name: meters_edifact_data_logging; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_data_logging AS ENUM (
+    'Z04',
+    'Z05'
+);
+
+
+--
+-- Name: meters_edifact_measurement_method; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_measurement_method AS ENUM (
+    'AMR',
+    'MMR'
+);
+
+
+--
+-- Name: meters_edifact_meter_size; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_meter_size AS ENUM (
+    'Z01',
+    'Z02',
+    'Z03'
+);
+
+
+--
+-- Name: meters_edifact_metering_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_metering_type AS ENUM (
+    'AHZ',
+    'WSZ',
+    'LAZ',
+    'MAZ',
+    'EHZ',
+    'IVA'
+);
+
+
+--
+-- Name: meters_edifact_mounting_method; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_mounting_method AS ENUM (
+    'BKE',
+    'DPA',
+    'HS'
+);
+
+
+--
+-- Name: meters_edifact_tariff; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_tariff AS ENUM (
+    'ETZ',
+    'ZTZ',
+    'NTZ'
+);
+
+
+--
+-- Name: meters_edifact_voltage_level; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_edifact_voltage_level AS ENUM (
+    'E06',
+    'E05',
+    'E04',
+    'E03'
+);
+
+
+--
+-- Name: meters_manufacturer_name; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_manufacturer_name AS ENUM (
+    'easy_meter',
+    'amperix',
+    'ferraris',
+    'other'
+);
+
+
+--
+-- Name: meters_ownership; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_ownership AS ENUM (
+    'BUZZN',
+    'FOREIGN_OWNERSHIP',
+    'CUSTOMER',
+    'LEASED',
+    'BOUGHT'
+);
+
+
+--
+-- Name: meters_section; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_section AS ENUM (
+    'S',
+    'G'
+);
+
+
+--
 -- Name: operator; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -482,7 +641,7 @@ CREATE TYPE operator AS ENUM (
 --
 
 CREATE TYPE ownership AS ENUM (
-    'BUZZN_SYSTEMS',
+    'BUZZN',
     'FOREIGN_OWNERSHIP',
     'CUSTOMER',
     'LEASED',
@@ -491,30 +650,41 @@ CREATE TYPE ownership AS ENUM (
 
 
 --
--- Name: preferred_language; Type: TYPE; Schema: public; Owner: -
+-- Name: persons_preferred_language; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE preferred_language AS ENUM (
+CREATE TYPE persons_preferred_language AS ENUM (
     'de',
     'en'
 );
 
 
 --
--- Name: prefix; Type: TYPE; Schema: public; Owner: -
+-- Name: persons_prefix; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE prefix AS ENUM (
+CREATE TYPE persons_prefix AS ENUM (
     'F',
     'M'
 );
 
 
 --
--- Name: quality; Type: TYPE; Schema: public; Owner: -
+-- Name: persons_title; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE quality AS ENUM (
+CREATE TYPE persons_title AS ENUM (
+    'Prof.',
+    'Dr.',
+    'Prof. Dr.'
+);
+
+
+--
+-- Name: readings_quality; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE readings_quality AS ENUM (
     '20',
     '67',
     '79',
@@ -525,10 +695,10 @@ CREATE TYPE quality AS ENUM (
 
 
 --
--- Name: read_by; Type: TYPE; Schema: public; Owner: -
+-- Name: readings_read_by; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE read_by AS ENUM (
+CREATE TYPE readings_read_by AS ENUM (
     'BN',
     'SN',
     'SG',
@@ -537,10 +707,10 @@ CREATE TYPE read_by AS ENUM (
 
 
 --
--- Name: reason; Type: TYPE; Schema: public; Owner: -
+-- Name: readings_reason; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE reason AS ENUM (
+CREATE TYPE readings_reason AS ENUM (
     'IOM',
     'COM1',
     'COM2',
@@ -550,6 +720,66 @@ CREATE TYPE reason AS ENUM (
     'COS',
     'CMP',
     'COB'
+);
+
+
+--
+-- Name: readings_source; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE readings_source AS ENUM (
+    'SM',
+    'MAN'
+);
+
+
+--
+-- Name: readings_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE readings_status AS ENUM (
+    'Z83',
+    'Z84',
+    'Z86'
+);
+
+
+--
+-- Name: readings_unit; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE readings_unit AS ENUM (
+    'Wh',
+    'W',
+    'm³'
+);
+
+
+--
+-- Name: registers_direction; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE registers_direction AS ENUM (
+    'in',
+    'out'
+);
+
+
+--
+-- Name: registers_label; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE registers_label AS ENUM (
+    'CONSUMPTION',
+    'DEMARCATION_PV',
+    'DEMARCATION_CHP',
+    'PRODUCTION_PV',
+    'PRODUCTION_CHP',
+    'GRID_CONSUMPTION',
+    'GRID_FEEDING',
+    'GRID_CONSUMPTION_CORRECTED',
+    'GRID_FEEDING_CORRECTED',
+    'OTHER'
 );
 
 
@@ -580,16 +810,6 @@ CREATE TYPE section AS ENUM (
 
 
 --
--- Name: source; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE source AS ENUM (
-    'SM',
-    'MAN'
-);
-
-
---
 -- Name: state; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -614,45 +834,12 @@ CREATE TYPE state AS ENUM (
 
 
 --
--- Name: status; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE status AS ENUM (
-    'Z83',
-    'Z84',
-    'Z86'
-);
-
-
---
 -- Name: taxation; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE taxation AS ENUM (
     'F',
     'R'
-);
-
-
---
--- Name: title; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE title AS ENUM (
-    'Dr.',
-    'Prof.',
-    'Prof. Dr.'
-);
-
-
---
--- Name: unit; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE unit AS ENUM (
-    'Wh',
-    'W',
-    'm³'
 );
 
 
@@ -894,16 +1081,16 @@ CREATE TABLE addresses (
 
 CREATE TABLE bank_accounts (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    slug character varying,
-    holder character varying,
-    encrypted_iban character varying,
-    bic character varying,
-    bank_name character varying,
+    holder character varying(64) NOT NULL,
+    iban character varying(32) NOT NULL,
+    bank_name character varying(64),
+    bic character varying(16),
     direct_debit boolean,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    contracting_party_id uuid,
-    contracting_party_type character varying
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    owner_person_id uuid,
+    owner_organization_id uuid,
+    CONSTRAINT check_bank_account_owner CHECK (((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))) OR ((owner_person_id IS NULL) AND (owner_organization_id IS NULL))))
 );
 
 
@@ -913,12 +1100,12 @@ CREATE TABLE bank_accounts (
 
 CREATE TABLE banks (
     id integer NOT NULL,
-    blz character varying,
-    description character varying,
-    zip character varying,
-    place character varying,
-    name character varying,
-    bic character varying
+    blz character varying NOT NULL,
+    description character varying NOT NULL,
+    zip character varying NOT NULL,
+    place character varying NOT NULL,
+    name character varying NOT NULL,
+    bic character varying NOT NULL
 );
 
 
@@ -947,12 +1134,12 @@ ALTER SEQUENCE banks_id_seq OWNED BY banks.id;
 
 CREATE TABLE billing_cycles (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    begin_date timestamp without time zone NOT NULL,
-    end_date timestamp without time zone NOT NULL,
-    name character varying NOT NULL,
-    localpool_id uuid,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    name character varying(64) NOT NULL,
+    begin_date date NOT NULL,
+    end_date date NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    localpool_id uuid NOT NULL
 );
 
 
@@ -962,20 +1149,20 @@ CREATE TABLE billing_cycles (
 
 CREATE TABLE billings (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    status character varying NOT NULL,
     total_energy_consumption_kwh integer NOT NULL,
     total_price_cents integer NOT NULL,
     prepayments_cents integer NOT NULL,
     receivables_cents integer NOT NULL,
-    invoice_number character varying,
-    start_reading_id character varying NOT NULL,
-    end_reading_id character varying NOT NULL,
-    device_change_reading_1_id character varying,
-    device_change_reading_2_id character varying,
+    invoice_number character varying(64),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    status billings_status,
+    start_reading_id uuid,
+    end_reading_id uuid,
+    device_change_reading_1_id uuid,
+    device_change_reading_2_id uuid,
     billing_cycle_id uuid,
-    localpool_power_taker_contract_id uuid,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    localpool_power_taker_contract_id uuid NOT NULL
 );
 
 
@@ -1026,10 +1213,10 @@ CREATE TABLE comments (
 
 
 --
--- Name: contract_tax_datas; Type: TABLE; Schema: public; Owner: -
+-- Name: contract_tax_data; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE contract_tax_datas (
+CREATE TABLE contract_tax_data (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     retailer boolean,
     provider_permission boolean,
@@ -1197,11 +1384,11 @@ CREATE TABLE energy_classifications (
 
 CREATE TABLE formula_parts (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    register_id uuid,
-    operand_id uuid,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    operator operator NOT NULL
+    operator formula_parts_operator,
+    register_id uuid NOT NULL,
+    operand_id uuid NOT NULL
 );
 
 
@@ -1211,24 +1398,21 @@ CREATE TABLE formula_parts (
 
 CREATE TABLE groups (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    slug character varying,
-    name character varying,
-    logo character varying,
-    website character varying,
-    image character varying,
-    description text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    type character varying NOT NULL,
-    organization_id uuid,
-    person_id uuid,
-    address_id uuid,
+    name character varying(64) NOT NULL,
+    description character varying(256),
     start_date date,
     show_object boolean,
     show_production boolean,
     show_energy boolean,
     show_contact boolean,
-    CONSTRAINT check_localpool_owner CHECK ((NOT ((person_id IS NOT NULL) AND (organization_id IS NOT NULL))))
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    type character varying NOT NULL,
+    slug character varying NOT NULL,
+    address_id uuid,
+    owner_person_id uuid,
+    owner_organization_id uuid,
+    CONSTRAINT check_localpool_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
 );
 
 
@@ -1238,35 +1422,27 @@ CREATE TABLE groups (
 
 CREATE TABLE meters (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    product_name character varying,
-    product_serialnumber character varying,
-    metering_type character varying,
-    meter_size character varying,
-    measurement_capture character varying,
-    mounting_method character varying,
-    calibrated_until date,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    type character varying NOT NULL,
-    voltage_level character varying,
-    cycle_interval character varying,
-    tariff character varying,
-    data_logging character varying,
-    converter_constant integer,
-    edifact_voltage_level edifact_voltage_level,
-    edifact_cycle_interval edifact_cycle_interval,
-    edifact_metering_type edifact_metering_type,
-    edifact_meter_size edifact_meter_size,
-    edifact_tariff edifact_tariff,
-    edifact_data_logging edifact_data_logging,
-    edifact_measurement_method edifact_measurement_method,
-    edifact_mounting_method edifact_mounting_method,
-    ownership ownership,
-    direction_number direction_number,
-    section section,
-    manufacturer_name manufacturer_name,
+    product_name character varying(64),
+    product_serialnumber character varying(128),
     build_year integer,
     sent_data_dso date,
+    converter_constant integer,
+    calibrated_until date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    manufacturer_name meters_manufacturer_name,
+    ownership meters_ownership,
+    section meters_section,
+    direction_number meters_direction_number,
+    edifact_metering_type meters_edifact_metering_type,
+    edifact_meter_size meters_edifact_meter_size,
+    edifact_measurement_method meters_edifact_measurement_method,
+    edifact_tariff meters_edifact_tariff,
+    edifact_mounting_method meters_edifact_mounting_method,
+    edifact_voltage_level meters_edifact_voltage_level,
+    edifact_cycle_interval meters_edifact_cycle_interval,
+    edifact_data_logging meters_edifact_data_logging,
+    type character varying NOT NULL,
     sequence_number integer,
     group_id uuid,
     address_id uuid
@@ -1327,9 +1503,9 @@ CREATE TABLE persons (
     fax character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    title title,
-    prefix prefix,
-    preferred_language preferred_language,
+    prefix persons_prefix,
+    preferred_language persons_preferred_language,
+    title persons_title,
     image character varying,
     address_id uuid,
     customer_number integer
@@ -1353,12 +1529,12 @@ CREATE TABLE persons_roles (
 CREATE TABLE prices (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     name character varying NOT NULL,
-    baseprice_cents_per_month integer NOT NULL,
-    energyprice_cents_per_kilowatt_hour double precision NOT NULL,
     begin_date date NOT NULL,
-    localpool_id uuid,
+    energyprice_cents_per_kilowatt_hour double precision NOT NULL,
+    baseprice_cents_per_month integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    localpool_id uuid
 );
 
 
@@ -1396,18 +1572,18 @@ CREATE TABLE profiles (
 
 CREATE TABLE readings (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    date date,
     raw_value double precision NOT NULL,
     value double precision NOT NULL,
     comment character varying(256),
+    date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    unit unit,
-    reason reason,
-    read_by read_by,
-    quality quality,
-    source source,
-    status status,
+    unit readings_unit,
+    reason readings_reason,
+    read_by readings_read_by,
+    quality readings_quality,
+    source readings_source,
+    status readings_status,
     register_id uuid NOT NULL
 );
 
@@ -1418,27 +1594,26 @@ CREATE TABLE readings (
 
 CREATE TABLE registers (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    metering_point_id character varying,
-    name character varying,
-    image character varying,
-    meter_id uuid,
-    group_id uuid,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    observer_enabled boolean DEFAULT false,
-    observer_min_threshold integer DEFAULT 100,
-    observer_max_threshold integer DEFAULT 5000,
-    last_observed timestamp without time zone,
-    observer_offline_monitoring boolean DEFAULT false,
-    type character varying NOT NULL,
-    obis character varying,
+    metering_point_id character varying(64),
     pre_decimal_position integer,
     post_decimal_position integer,
+    observer_enabled boolean,
+    observer_min_threshold integer,
+    observer_max_threshold integer,
+    observer_offline_monitoring boolean,
+    name character varying(64) NOT NULL,
+    obis character varying(16) NOT NULL,
+    share_with_group boolean NOT NULL,
+    share_publicly boolean,
     low_load_ability boolean,
-    direction direction,
-    label label,
-    share_with_group boolean DEFAULT true NOT NULL,
-    share_publicly boolean DEFAULT false NOT NULL
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    label registers_label,
+    direction registers_direction,
+    type character varying NOT NULL,
+    last_observed timestamp without time zone,
+    meter_id uuid NOT NULL,
+    group_id uuid
 );
 
 
@@ -1776,11 +1951,11 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: contract_tax_datas contract_tax_datas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: contract_tax_data contract_tax_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contract_tax_datas
-    ADD CONSTRAINT contract_tax_datas_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY contract_tax_data
+    ADD CONSTRAINT contract_tax_data_pkey PRIMARY KEY (id);
 
 
 --
@@ -1856,14 +2031,6 @@ ALTER TABLE ONLY groups
 
 
 --
--- Name: registers metering_points_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY registers
-    ADD CONSTRAINT metering_points_pkey PRIMARY KEY (id);
-
-
---
 -- Name: meters meters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1920,6 +2087,14 @@ ALTER TABLE ONLY readings
 
 
 --
+-- Name: registers registers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY registers
+    ADD CONSTRAINT registers_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1967,10 +2142,17 @@ CREATE UNIQUE INDEX accounts_email_index ON accounts USING btree (email) WHERE (
 
 
 --
--- Name: index_bank_accounts_on_slug; Type: INDEX; Schema: public; Owner: -
+-- Name: index_bank_accounts_on_owner_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_bank_accounts_on_slug ON bank_accounts USING btree (slug);
+CREATE INDEX index_bank_accounts_on_owner_organization_id ON bank_accounts USING btree (owner_organization_id);
+
+
+--
+-- Name: index_bank_accounts_on_owner_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_bank_accounts_on_owner_person_id ON bank_accounts USING btree (owner_person_id);
 
 
 --
@@ -1988,10 +2170,10 @@ CREATE UNIQUE INDEX index_banks_on_blz ON banks USING btree (blz);
 
 
 --
--- Name: index_billing_cycles_dates; Type: INDEX; Schema: public; Owner: -
+-- Name: index_billing_cycles_on_localpool_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_cycles_dates ON billing_cycles USING btree (begin_date, end_date);
+CREATE INDEX index_billing_cycles_on_localpool_id ON billing_cycles USING btree (localpool_id);
 
 
 --
@@ -2013,13 +2195,6 @@ CREATE INDEX index_billings_on_billing_cycle_id_and_status ON billings USING btr
 --
 
 CREATE INDEX index_billings_on_localpool_power_taker_contract_id ON billings USING btree (localpool_power_taker_contract_id);
-
-
---
--- Name: index_billings_on_status; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_billings_on_status ON billings USING btree (status);
 
 
 --
@@ -2149,17 +2324,17 @@ CREATE INDEX index_groups_on_address_id ON groups USING btree (address_id);
 
 
 --
--- Name: index_groups_on_organization_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_groups_on_owner_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_organization_id ON groups USING btree (organization_id);
+CREATE INDEX index_groups_on_owner_organization_id ON groups USING btree (owner_organization_id);
 
 
 --
--- Name: index_groups_on_person_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_groups_on_owner_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_person_id ON groups USING btree (person_id);
+CREATE INDEX index_groups_on_owner_person_id ON groups USING btree (owner_person_id);
 
 
 --
@@ -2174,6 +2349,13 @@ CREATE UNIQUE INDEX index_groups_on_slug ON groups USING btree (slug);
 --
 
 CREATE INDEX index_meters_on_address_id ON meters USING btree (address_id);
+
+
+--
+-- Name: index_meters_on_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_meters_on_group_id ON meters USING btree (group_id);
 
 
 --
@@ -2254,6 +2436,13 @@ CREATE UNIQUE INDEX index_prices_on_begin_date_and_localpool_id ON prices USING 
 
 
 --
+-- Name: index_prices_on_localpool_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_prices_on_localpool_id ON prices USING btree (localpool_id);
+
+
+--
 -- Name: index_profiles_on_readable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2307,6 +2496,20 @@ CREATE INDEX index_registers_on_group_id ON registers USING btree (group_id);
 --
 
 CREATE INDEX index_registers_on_meter_id ON registers USING btree (meter_id);
+
+
+--
+-- Name: index_registers_on_meter_id_and_direction; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_registers_on_meter_id_and_direction ON registers USING btree (meter_id, direction);
+
+
+--
+-- Name: index_registers_on_meter_id_and_obis; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_registers_on_meter_id_and_obis ON registers USING btree (meter_id, obis);
 
 
 --
@@ -2480,11 +2683,99 @@ ALTER TABLE ONLY accounts
 
 
 --
--- Name: contract_tax_datas fk_contract_tax_datas_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: bank_accounts fk_bank_accounts_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contract_tax_datas
+ALTER TABLE ONLY bank_accounts
+    ADD CONSTRAINT fk_bank_accounts_organization FOREIGN KEY (owner_organization_id) REFERENCES organizations(id);
+
+
+--
+-- Name: bank_accounts fk_bank_accounts_person; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY bank_accounts
+    ADD CONSTRAINT fk_bank_accounts_person FOREIGN KEY (owner_person_id) REFERENCES persons(id);
+
+
+--
+-- Name: billing_cycles fk_billing_cycles_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_cycles
+    ADD CONSTRAINT fk_billing_cycles_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
+
+
+--
+-- Name: billings fk_billings_billing_cycles; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_billing_cycles FOREIGN KEY (billing_cycle_id) REFERENCES billing_cycles(id);
+
+
+--
+-- Name: billings fk_billings_contracs; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_contracs FOREIGN KEY (localpool_power_taker_contract_id) REFERENCES contracts(id);
+
+
+--
+-- Name: billings fk_billings_device_change_1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_device_change_1 FOREIGN KEY (device_change_reading_1_id) REFERENCES readings(id);
+
+
+--
+-- Name: billings fk_billings_device_change_2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_device_change_2 FOREIGN KEY (device_change_reading_2_id) REFERENCES readings(id);
+
+
+--
+-- Name: billings fk_billings_end_reading; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_end_reading FOREIGN KEY (end_reading_id) REFERENCES readings(id);
+
+
+--
+-- Name: billings fk_billings_start_reading; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings
+    ADD CONSTRAINT fk_billings_start_reading FOREIGN KEY (start_reading_id) REFERENCES readings(id);
+
+
+--
+-- Name: contract_tax_data fk_contract_tax_datas_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contract_tax_data
     ADD CONSTRAINT fk_contract_tax_datas_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
+
+
+--
+-- Name: formula_parts fk_formula_parts_operand; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formula_parts
+    ADD CONSTRAINT fk_formula_parts_operand FOREIGN KEY (operand_id) REFERENCES registers(id);
+
+
+--
+-- Name: formula_parts fk_formula_parts_register; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formula_parts
+    ADD CONSTRAINT fk_formula_parts_register FOREIGN KEY (register_id) REFERENCES registers(id);
 
 
 --
@@ -2500,7 +2791,7 @@ ALTER TABLE ONLY groups
 --
 
 ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_organization FOREIGN KEY (organization_id) REFERENCES organizations(id);
+    ADD CONSTRAINT fk_groups_organization FOREIGN KEY (owner_organization_id) REFERENCES organizations(id);
 
 
 --
@@ -2508,7 +2799,7 @@ ALTER TABLE ONLY groups
 --
 
 ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_person FOREIGN KEY (person_id) REFERENCES persons(id);
+    ADD CONSTRAINT fk_groups_person FOREIGN KEY (owner_person_id) REFERENCES persons(id);
 
 
 --
@@ -2517,6 +2808,14 @@ ALTER TABLE ONLY groups
 
 ALTER TABLE ONLY meters
     ADD CONSTRAINT fk_meters_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
+-- Name: meters fk_meters_group; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY meters
+    ADD CONSTRAINT fk_meters_group FOREIGN KEY (group_id) REFERENCES groups(id);
 
 
 --
@@ -2560,11 +2859,11 @@ ALTER TABLE ONLY persons
 
 
 --
--- Name: meters fk_rails_276fdd6a78; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: prices fk_prices_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY meters
-    ADD CONSTRAINT fk_rails_276fdd6a78 FOREIGN KEY (group_id) REFERENCES groups(id);
+ALTER TABLE ONLY prices
+    ADD CONSTRAINT fk_prices_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
 
 
 --
@@ -2576,27 +2875,11 @@ ALTER TABLE ONLY organizations
 
 
 --
--- Name: registers fk_rails_88c9092860; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY registers
-    ADD CONSTRAINT fk_rails_88c9092860 FOREIGN KEY (meter_id) REFERENCES meters(id);
-
-
---
 -- Name: payments fk_rails_9215ad6069; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY payments
     ADD CONSTRAINT fk_rails_9215ad6069 FOREIGN KEY (contract_id) REFERENCES contracts(id);
-
-
---
--- Name: readings fk_rails_9a330278de; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY readings
-    ADD CONSTRAINT fk_rails_9a330278de FOREIGN KEY (register_id) REFERENCES registers(id);
 
 
 --
@@ -2613,6 +2896,30 @@ ALTER TABLE ONLY tariffs
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT fk_rails_fa67535741 FOREIGN KEY (person_id) REFERENCES persons(id);
+
+
+--
+-- Name: readings fk_readings_register; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY readings
+    ADD CONSTRAINT fk_readings_register FOREIGN KEY (register_id) REFERENCES registers(id);
+
+
+--
+-- Name: registers fk_registers_group; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY registers
+    ADD CONSTRAINT fk_registers_group FOREIGN KEY (group_id) REFERENCES groups(id);
+
+
+--
+-- Name: registers fk_registers_meter; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY registers
+    ADD CONSTRAINT fk_registers_meter FOREIGN KEY (meter_id) REFERENCES meters(id);
 
 
 --
@@ -2889,8 +3196,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170418125916');
 
 INSERT INTO schema_migrations (version) VALUES ('20170420141436');
 
-INSERT INTO schema_migrations (version) VALUES ('20170424153456');
-
 INSERT INTO schema_migrations (version) VALUES ('20170503124043');
 
 INSERT INTO schema_migrations (version) VALUES ('20170505151515');
@@ -2947,8 +3252,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170808070447');
 
 INSERT INTO schema_migrations (version) VALUES ('20170812013443');
 
-INSERT INTO schema_migrations (version) VALUES ('20170817032303');
-
 INSERT INTO schema_migrations (version) VALUES ('20170906020031');
 
 INSERT INTO schema_migrations (version) VALUES ('20170907190442');
@@ -2994,4 +3297,24 @@ INSERT INTO schema_migrations (version) VALUES ('20171018132507');
 INSERT INTO schema_migrations (version) VALUES ('20171018134029');
 
 INSERT INTO schema_migrations (version) VALUES ('20171018134419');
+
+INSERT INTO schema_migrations (version) VALUES ('20171028142114');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085100');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085200');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085220');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085250');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085260');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085280');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085290');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085295');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085300');
 

@@ -1,9 +1,9 @@
-
+# coding: utf-8
 ['localpool', 'tribe'].each do |klass_type|
   klass = "Group::#{klass_type.camelize}".constantize
   Fabricator klass_type, class_name: klass do
     name        { FFaker::Company.name[0..39] }
-    description { FFaker::Lorem.paragraphs.join('-') }
+    description { FFaker::Lorem.paragraphs.join('-')[0..250] }
     created_at  { (rand*10).days.ago }
     type        { "Group::#{klass_type.camelize}" }
   end
@@ -102,8 +102,8 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
     Fabricate(:single_reading, register: register, date: Date.new(2017, 1, 1), value: 510200000*20, reason: Reading::Single::REGULAR_READING, quality: Reading::Single::READ_OUT, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register
 
-    meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base::GRID_CONSUMPTION_CORRECTED),
-                                          Fabricate.build(:output_register, label: Register::Base::GRID_FEEDING_CORRECTED)])
+    meter = Fabricate(:meter, registers: [Fabricate.build(:input_register, label: Register::Base.labels[:grid_consumption_corrected]),
+                                          Fabricate.build(:output_register, label: Register::Base.labels[:grid_feeding_corrected])])
     register = meter.input_register
     Fabricate(:single_reading, register: register, date: Date.new(2016, 8, 4), value: 0, reason: Reading::Single::DEVICE_SETUP, quality: Reading::Single::ENERGY_QUANTITY_SUMMARIZED, source: Reading::Single::MANUAL, read_by: Reading::Single::BUZZN, status: Reading::Single::Z86)
     localpool.registers << register

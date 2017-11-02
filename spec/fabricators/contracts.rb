@@ -43,8 +43,11 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
-    c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer)
+    # keep it here as this file goes away and we want to keep migrations clean
+    # in the end
+    BankAccount.reset_column_information
+    c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
+    c.customer_bank_account = Fabricate(:bank_account, owner: c.customer)
     c.save
   end
 end
@@ -76,7 +79,7 @@ Fabricator :other_supplier_contract, class_name: Contract::OtherSupplier do
   forecast_kwh_pa          { rand(100) + 1 }
   customer                 { Fabricate(:person) }
   register                 { Fabricate(:input_register,
-                                       meter: Fabricate.build(:meter)) }
+                                       meter: Fabricate.build(:output_meter)) }
                                        #address: Fabricate.build(:address) ) }
   renewable_energy_law_taxation Contract::Base::FULL
 end
@@ -93,13 +96,13 @@ Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
   forecast_kwh_pa          { rand(100) + 1 }
   customer                 { Fabricate(:person) }
   register                 { Fabricate(:input_register,
-                                       meter: Fabricate.build(:meter)) }
+                                       meter: Fabricate.build(:output_meter)) }
 #                                       address: Fabricate.build(:address) ) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
-    c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
+    c.customer_bank_account = Fabricate(:bank_account, owner: c.customer)
     c.save
   end
 end
@@ -134,14 +137,14 @@ Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
   signing_date             { FFaker::Time.date }
   forecast_kwh_pa          { rand(100) + 1 }
   register                 { Fabricate(:output_register,
-                                       meter: Fabricate.build(:meter)) }
+                                       meter: Fabricate.build(:input_meter)) }
 #                                       address: Fabricate.build(:address) ) }
   customer                 { Fabricate(:person) }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
-    c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
+    c.customer_bank_account = Fabricate(:bank_account, owner: c.customer)
     c.save
   end
 end
@@ -164,15 +167,15 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   contractor               { Fabricate(:person) }
   register                 { Fabricate(:input_register,
                                        group: Fabricate(:localpool),
-                                       meter: Fabricate.build(:meter)) }
+                                       meter: Fabricate.build(:output_meter)) }
 #                                       address: Fabricate.build(:address) ) }
   renewable_energy_law_taxation { Contract::Base::FULL }
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
     c.customer.add_role(Role::CONTRACT, c) if c.customer.is_a? Person
-    c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor) unless c.contractor_bank_account
-    c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer) unless c.customer_bank_account
+    c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor) unless c.contractor_bank_account
+    c.customer_bank_account = Fabricate(:bank_account, owner: c.customer) unless c.customer_bank_account
     c.save
   end
 end
@@ -198,8 +201,8 @@ Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProces
   payments                 { [Fabricate.build(:payment)] }
   contractor               { Organization.buzzn_systems }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
-    c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
+    c.customer_bank_account = Fabricate(:bank_account, owner: c.customer)
     c.save
   end
 end
@@ -252,8 +255,8 @@ Fabricator :lpc_forstenried, from: :localpool_processing_contract do
                       price_cents: 100000,
                       cycle: Contract::Payment::ONCE)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
-    c.customer_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
+    c.customer_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -299,8 +302,8 @@ Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
                                     price_cents: 55000,
                                     cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
-    c.customer_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
+    c.customer_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -324,7 +327,7 @@ Fabricator :lptc_mabe, from: :localpool_power_taker_contract do
                                       price_cents: 3500,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -346,7 +349,7 @@ Fabricator :lptc_inbr, from: :localpool_power_taker_contract do
                                       price_cents: 3400,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -368,7 +371,7 @@ Fabricator :lptc_pebr, from: :localpool_power_taker_contract do
                                       price_cents: 1600,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -390,7 +393,7 @@ Fabricator :lptc_anbr, from: :localpool_power_taker_contract do
                                       price_cents: 5100,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -412,7 +415,7 @@ Fabricator :lptc_gubr, from: :localpool_power_taker_contract do
                                       price_cents: 1600,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -434,7 +437,7 @@ Fabricator :lptc_mabr, from: :localpool_power_taker_contract do
                                       price_cents: 2400,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -456,7 +459,7 @@ Fabricator :lptc_dabr, from: :localpool_power_taker_contract do
                                       price_cents: 6200,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -478,7 +481,7 @@ Fabricator :lptc_zubu, from: :localpool_power_taker_contract do
                                       price_cents: 8800,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -500,7 +503,7 @@ Fabricator :lptc_mace, from: :localpool_power_taker_contract do
                                       price_cents: 2400,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -522,7 +525,7 @@ Fabricator :lptc_stcs, from: :localpool_power_taker_contract do
                                       price_cents: 2200,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -547,7 +550,7 @@ Fabricator :lptc_pafi, from: :localpool_power_taker_contract do
                                       price_cents: 4100,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end
@@ -569,7 +572,7 @@ Fabricator :lptc_raja, from: :localpool_power_taker_contract do
                                       price_cents: 5000,
                                       cycle: Contract::Payment::MONTHLY)] }
   after_create do |c|
-    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
   end
 end

@@ -43,8 +43,9 @@ module Buzzn
           next unless include?(name)
           case type
           when :enum
-            clazz.create_enum name, *options[:values]
-            clazz.add_column table, name, name, index: true, null: true
+            enum = "#{table}_#{name}"
+            clazz.create_enum enum, *options[:values]
+            clazz.add_column table, name, enum, index: true, null: true
           else
             # omit
           end
@@ -57,8 +58,9 @@ module Buzzn
           next unless include?(name)
           case type
           when :enum
+            enum = "#{table}_#{name}"
             clazz.remove_column table, name
-            clazz.drop_enum name
+            clazz.drop_enum enum
           else
             # omit
           end

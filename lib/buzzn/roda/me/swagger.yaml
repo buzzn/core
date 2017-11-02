@@ -31,8 +31,8 @@ paths:
         required: false
         type: string
         enum:
-        - Dr.
         - Prof.
+        - Dr.
         - Prof. Dr.
       - name: prefix
         in: formData

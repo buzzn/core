@@ -28,7 +28,6 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     pool = Fabricate(:localpool)
     localpool_member.person.add_role(Role::GROUP_MEMBER, pool)
     localpool_member2.person.add_role(Role::GROUP_MEMBER, pool)
-    
     pool
   end
 
@@ -50,6 +49,9 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
     pool
   end
+
+  entity!(:localpool3) { Fabricate(:localpool) }
+
   let(:contract) { localpool2.localpool_power_taker_contracts.first }
   let(:register) { localpool2.registers.real.input.first }
 
@@ -76,7 +78,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   end
 
   it 'all' do
-    expect(all(buzzn_operator)).to match_array [localpool1, localpool2]
+    expect(all(buzzn_operator)).to match_array [localpool1, localpool2, localpool3]
     expect(all(localpool_owner)).to match_array [localpool2]
     expect(all(localpool_manager)).to match_array [localpool2]
     expect(all(localpool_member)).to match_array [localpool1]
@@ -101,20 +103,20 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     expect{ Admin::LocalpoolResource.all(user).retrieve(localpool2.id) }.to raise_error Buzzn::PermissionDenied
 
     expect{ Admin::LocalpoolResource.all(anonymous).retrieve(localpool1.id) }.to raise_error Buzzn::PermissionDenied
-    expect{ Admin::LocalpoolResource.all(anonymous).retrieve(localpool2.id) }.to raise_error Buzzn::PermissionDenied    
+    expect{ Admin::LocalpoolResource.all(anonymous).retrieve(localpool2.id) }.to raise_error Buzzn::PermissionDenied
   end
-  
+
   it 'update' do
     expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id)) }.not_to raise_error
     expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id)) }.not_to raise_error
-    
+
     expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id)) }.not_to raise_error
 
     expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id)) }.not_to raise_error
 
     expect{ update(Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id)) }.to raise_error Buzzn::PermissionDenied
   end
-  
+
   it 'delete' do
     begin
       expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).delete }.not_to raise_error
@@ -124,10 +126,10 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
 
     begin
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).delete }.not_to raise_error
-      expect(Group::Localpool.where(id: localpool2.id)).to eq []
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool3.id).delete }.not_to raise_error
+      expect(Group::Localpool.where(id: localpool3.id)).to eq []
     ensure
-      Group::Localpool.create(localpool2.attributes)
+      Group::Localpool.create(localpool3.attributes)
     end
 
     expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).delete }.to raise_error Buzzn::PermissionDenied
@@ -168,7 +170,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
     it 'update' do
       expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).prices.first) }.not_to raise_error
-    
+
       expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).prices.first)  }.not_to raise_error
 
       expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).prices.first)  }.not_to raise_error
@@ -195,7 +197,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       ensure
         Price.create(price.attributes)
       end
-    end  
+    end
   end
 
   context 'billing_cycles' do
@@ -228,7 +230,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
     it 'update' do
       expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).billing_cycles.first) }.not_to raise_error
-    
+
       expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).billing_cycles.first) }.not_to raise_error
 
       expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).billing_cycles.first) }.not_to raise_error
@@ -255,9 +257,9 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       ensure
         BillingCycle.create(billing_cycle.attributes)
       end
-    end  
+    end
   end
-  
+
   context 'persons' do
 
     def persons(user, id)
@@ -273,7 +275,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       expect(persons(localpool_owner, localpool2.id)).to match_array localpool2.persons
 
       expect(persons(localpool_manager, localpool2.id)).to match_array localpool2.persons
-      
+
       expect(persons(localpool_member, localpool1.id)).to match_array [localpool_member.person]
     end
 
@@ -298,7 +300,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).persons.first.delete }.to raise_error Buzzn::PermissionDenied
     end
   end
-  
+
   context 'metering_point_operator_contract' do
 
     it 'retrieve' do
@@ -378,7 +380,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       expect(registers(localpool_member, localpool1.id)).to match_array []
 
       expect(registers(localpool_member3, localpool2.id)).to match_array localpool2.registers.input.real
-      
+
       expect(registers(localpool_member4, localpool2.id)).to match_array []
 
       expect{ registers(localpool_member, localpool2.id) }.to raise_error Buzzn::PermissionDenied
@@ -386,7 +388,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
     it 'update' do
       expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).registers.first) }.not_to raise_error
-    
+
       expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).registers.first) }.not_to raise_error
 
       expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).registers.first) }.not_to raise_error
@@ -402,7 +404,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       expect(Admin::LocalpoolResource.all(localpool_member3).retrieve(localpool2.id).registers.retrieve(register.id).object).to eq register
 
       expect{ Admin::LocalpoolResource.all(localpool_member4).retrieve(localpool2.id).registers.retrieve(register.id) }.to raise_error Buzzn::PermissionDenied
-    end  
+    end
   end
 
   context 'localpool_power_taker_contracts' do
@@ -422,7 +424,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       expect(localpool_power_taker_contracts(localpool_member, localpool1.id)).to match_array []
 
       expect(localpool_power_taker_contracts(localpool_member3, localpool2.id)).to match_array localpool2.localpool_power_taker_contracts
-      
+
       expect(localpool_power_taker_contracts(localpool_member4, localpool2.id)).to match_array []
 
       expect{ localpool_power_taker_contracts(localpool_member, localpool2.id) }.to raise_error Buzzn::PermissionDenied
@@ -430,7 +432,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
     it 'update' do
       expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_power_taker_contracts.first) }.not_to raise_error
-    
+
       expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_power_taker_contracts.first) }.not_to raise_error
 
       expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_power_taker_contracts.first) }.not_to raise_error
@@ -446,6 +448,6 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       expect(Admin::LocalpoolResource.all(localpool_member3).retrieve(localpool2.id).localpool_power_taker_contracts.retrieve(contract.id).object).to eq contract
 
       expect{ Admin::LocalpoolResource.all(localpool_member4).retrieve(localpool2.id).localpool_power_taker_contracts.retrieve(contract.id) }.to raise_error Buzzn::PermissionDenied
-    end  
+    end
   end
 end

@@ -21,19 +21,18 @@ class AddsMeterColumns < ActiveRecord::Migration
     rename_column :meters, :section, :section_old
     rename_column :meters, :manufacturer_name, :manufacturer_name_old
 
-    create_enum :direction_number, *Meter::Real::DIRECTION_NUMBERS
-    create_enum :section, *Meter::Base::SECTIONS
-    create_enum :ownership, *Meter::Base::OWNERSHIPS
-
-    create_enum :edifact_voltage_level, *Meter::Base::VOLTAGE_LEVELS
-    create_enum :edifact_cycle_interval, *Meter::Base::CYCLE_INTERVALS
-    create_enum :edifact_data_logging, *Meter::Base::DATA_LOGGINGS
-    create_enum :edifact_measurement_method, *Meter::Base::MEASUREMENT_METHODS
-    create_enum :edifact_meter_size, *Meter::Base::METER_SIZES
-    create_enum :edifact_metering_type, *Meter::Base::METERING_TYPES
-    create_enum :edifact_mounting_method, *Meter::Base::MOUNTING_METHODS
-    create_enum :edifact_tariff, *Meter::Base::TARIFFS
-    create_enum :manufacturer_name, *Meter::Real::MANUFACTURER_NAMES
+    create_enum :direction_number, *Meter::Real.direction_numbers.values
+    create_enum :section, *Meter::Real.sections.values
+    create_enum :ownership, *Meter::Real.ownerships.values
+    create_enum :edifact_voltage_level, *Meter::Real.edifact_voltage_levels.values
+    create_enum :edifact_cycle_interval, *Meter::Real.edifact_cycle_intervals.values
+    create_enum :edifact_data_logging, *Meter::Real.edifact_data_loggings.values
+    create_enum :edifact_measurement_method, *Meter::Real.edifact_measurement_methods.values
+    create_enum :edifact_meter_size, *Meter::Real.edifact_meter_sizes.values
+    create_enum :edifact_metering_type, *Meter::Real.edifact_metering_types.values
+    create_enum :edifact_mounting_method, *Meter::Real.edifact_mounting_methods.values
+    create_enum :edifact_tariff, *Meter::Real.edifact_tariffs.values
+    create_enum :manufacturer_name, *Meter::Real.manufacturer_names.values
 
     add_column :meters, :edifact_voltage_level, :edifact_voltage_level, index: true
     add_column :meters, :edifact_cycle_interval, :edifact_cycle_interval, index: true
@@ -47,7 +46,7 @@ class AddsMeterColumns < ActiveRecord::Migration
     add_column :meters, :direction_number, :direction_number, index: true
     add_column :meters, :section, :section, index: true
     add_column :meters, :manufacturer_name, :manufacturer_name, index: true
-    
+
     add_column :meters, :group_id, :uuid
     Register::Base.reset_column_information
     Meter::Base.reset_column_information
@@ -123,7 +122,7 @@ class AddsMeterColumns < ActiveRecord::Migration
           when 'plug_technique'
             Meter::Base::PLUG_TECHNIQUE
           when 'three_point_hanging'
-            Meter::Base::THREE_POINT_MOUNTING 
+            Meter::Base::THREE_POINT_MOUNTING
           when 'cap_rail'
             Meter::Base::CAP_RAIL
           else

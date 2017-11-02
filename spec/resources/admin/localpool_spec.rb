@@ -176,8 +176,7 @@ describe Admin::LocalpoolResource do
     before do
       organization.object.contact = nil
       organization.object.save
-      pool.object.person = nil
-      pool.object.organization = nil
+      pool.object.owner = nil
       pool.object.save
     end
 

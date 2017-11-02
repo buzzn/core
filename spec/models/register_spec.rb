@@ -1,7 +1,8 @@
-describe "Register Model" do
+# coding: utf-8
+describe Register do
 
   entity!(:urbanstr) do
-    Fabricate(:register_urbanstr88, meter: Fabricate(:meter))
+    Fabricate(:register_urbanstr88, meter: Fabricate(:output_meter))
   end
 
   entity! :register do
@@ -44,8 +45,8 @@ describe "Register Model" do
     end
     expect(Register::Base.all.consumption.size).to eq consumption + 3
     expect(Register::Base.all.production_pv.size).to eq production + 3
-    expect(Register::Base.all.by_labels(Register::Base::CONSUMPTION, Register::Base::PRODUCTION_PV).size).to eq consumption + production + 6
-    expect(Register::Base.all.by_labels(Register::Base::GRID_FEEDING, Register::Base::DEMARCATION_PV).size).to eq 0
+    expect(Register::Base.all.by_labels(Register::Base.labels[:consumption], Register::Base.labels[:production_pv]).size).to eq consumption + production + 6
+    expect(Register::Base.all.by_labels(Register::Base.labels[:grid_feeding], Register::Base.labels[:demarcation_pv]).size).to eq 0
     expect{ Register::Base.all.by_labels('something') }.to raise_error ArgumentError
   end
 

@@ -67,10 +67,10 @@ describe Admin::LocalpoolRoda do
               "low_load_ability"=>false,
               "label"=>meter.input_register.attributes['label'],
               "last_reading"=>0,
-              'observer_min_threshold'=> 100,
-              'observer_max_threshold'=> 5000,
-              'observer_enabled'=> false,
-              'observer_offline_monitoring'=> false,
+              'observer_min_threshold'=> nil,
+              'observer_max_threshold'=> nil,
+              'observer_enabled'=> nil,
+              'observer_offline_monitoring'=> nil,
               'updatable'=> true,
               'deletable'=> false,
               'createables' => ['readings'],
@@ -126,14 +126,12 @@ describe Admin::LocalpoolRoda do
       let(:wrong_json) do
         {
           "errors"=>[
-            {"parameter"=>"updated_at",
-             "detail"=>"is missing"},
-            {"parameter"=>"manufacturer_name",
-             "detail"=>"must be one of: easy_meter, amperix, ferraris, other"},
             {"parameter"=>"product_name",
              "detail"=>"size cannot be greater than 64"},
             {"parameter"=>"product_serialnumber",
-             "detail"=>"size cannot be greater than 64"},
+             "detail"=>"size cannot be greater than 128"},
+            {"parameter"=>"manufacturer_name",
+             "detail"=>"must be one of: easy_meter, amperix, ferraris, other"},
             {"parameter"=>"section",
              "detail"=>"must be one of: S, G"},
             {"parameter"=>"build_year",
@@ -147,7 +145,7 @@ describe Admin::LocalpoolRoda do
             {"parameter"=>"direction_number",
              "detail"=>"must be one of: ERZ, ZRZ"},
             {"parameter"=>"edifact_metering_type",
-             "detail"=>"must be one of: AHZ, LAZ, WSZ, EHZ, MAZ, IVA"},
+             "detail"=>"must be one of: AHZ, WSZ, LAZ, MAZ, EHZ, IVA"},
             {"parameter"=>"edifact_meter_size",
              "detail"=>"must be one of: Z01, Z02, Z03"},
             {"parameter"=>"edifact_measurement_method",
@@ -159,9 +157,11 @@ describe Admin::LocalpoolRoda do
             {"parameter"=>"edifact_voltage_level",
              "detail"=>"must be one of: E06, E05, E04, E03"},
             {"parameter"=>"edifact_cycle_interval",
-             "detail"=>"must be one of: MONTHLY, YEARLY, QUARTERLY, HALF_YEARLY"},
+             "detail"=>"must be one of: MONTHLY, QUARTERLY, HALF_YEARLY, YEARLY"},
             {"parameter"=>"edifact_data_logging",
-             "detail"=>"must be one of: Z04, Z05"}
+             "detail"=>"must be one of: Z04, Z05"},
+            {"parameter"=>"updated_at",
+             "detail"=>"is missing"}
           ]
         }
       end
@@ -225,7 +225,7 @@ describe Admin::LocalpoolRoda do
         PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               manufacturer_name: 'Maxima' * 20,
               product_name: 'SmartyMeter' * 10,
-              product_serialnumber: '12341234' * 10,
+              product_serialnumber: '12341234' * 20,
               onwership: 'me',
               section: 'some' * 60,
               build_year: 'this-year',
@@ -252,24 +252,24 @@ describe Admin::LocalpoolRoda do
         old = meter.updated_at
         PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: meter.updated_at,
-              manufacturer_name: Meter::Real::OTHER,
+              manufacturer_name: Meter::Real.manufacturer_names[:other],
               product_name: 'Smarty Super Meter',
               product_serialnumber: '12341234',
-              ownership: Meter::Base::CUSTOMER,
-              section: Meter::Base::GAS,
+              ownership: Meter::Real.ownerships[:customer],
+              section: Meter::Real.sections[:gas],
               build_year: 2017,
               sent_data_dso: '2010-01-01',
               converter_constant: 20,
               calibrated_until: Date.today,
-              edifact_metering_type: Meter::Base::DIGITAL_HOUSEHOLD_METER,
-              edifact_meter_size: Meter::Base::EDL21,
-              edifact_measurement_method: Meter::Base::MANUAL,
-              edifact_tariff: Meter::Base::DUAL_TARIFF,
-              edifact_mounting_method: Meter::Base::CAP_RAIL,
-              edifact_voltage_level: Meter::Base::HIGH_LEVEL,
-              edifact_cycle_interval: Meter::Base::QUARTERLY,
-              edifact_data_logging: Meter::Base::ANALOG,
-              direction_number: Meter::Real::TWO_WAY_METER
+              edifact_metering_type: Meter::Real.edifact_metering_types[:digital_household_meter],
+              edifact_meter_size: Meter::Real.edifact_meter_sizes[:edl21],
+              edifact_measurement_method: Meter::Real.edifact_measurement_methods[:manual],
+              edifact_tariff: Meter::Real.edifact_tariffs[:dual_tariff],
+              edifact_mounting_method: Meter::Real.edifact_mounting_methods[:cap_rail],
+              edifact_voltage_level: Meter::Real.edifact_voltage_levels[:high_level],
+              edifact_cycle_interval: Meter::Real.edifact_cycle_intervals[:quarterly],
+              edifact_data_logging: Meter::Real.edifact_data_loggings[:analog],
+              direction_number: Meter::Real.direction_numbers[:two_way_meter]
 
         expect(response).to have_http_status(200)
         meter.reload

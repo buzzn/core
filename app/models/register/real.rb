@@ -66,9 +66,9 @@ module Register
           raise StandardError.new('cannot retrieve reading for register ' + self.id + ' at given time')
         end
         value = case attributes['direction']
-                when IN
+                when Base.directions[:input]
                   data.in
-                when OUT
+                when Base.directions[:output]
                   data.out
                 else
                   raise "unknown direction #{direction}"

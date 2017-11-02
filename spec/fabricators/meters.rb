@@ -1,27 +1,28 @@
+# coding: utf-8
 Fabricator :meter, class_name: Meter::Real do
   registers                           { [Fabricate.build([:input_register, :output_register].sample)] }
-  manufacturer_name                    Meter::Real::FERRARIS
+  manufacturer_name                    Meter::Real.manufacturer_names[:ferraris]
   product_name                        'AS 1440'
   product_serialnumber                { Random.new_seed.to_s.slice(0, 7) }
   created_at                          { (rand*10).days.ago }
-  ownership                           Meter::Base::BUZZN_SYSTEMS
+  ownership                           Meter::Real.ownerships[:buzzn]
   edifact_metering_type                      nil
-  edifact_meter_size                          Meter::Base::EDL40
-  direction_number                            Meter::Real::ONE_WAY_METER
-  edifact_measurement_method                 Meter::Base::REMOTE
-  edifact_mounting_method                     Meter::Base::THREE_POINT_MOUNTING
+  edifact_meter_size                          Meter::Real.edifact_meter_sizes[:edl40]
+  direction_number                            Meter::Real.direction_numbers[:one_way_meter]
+  edifact_measurement_method                 Meter::Real.edifact_measurement_methods[:remote]
+  edifact_mounting_method                     Meter::Real.edifact_mounting_methods[:three_point_mounting]
   build_year                          { 5.years.ago }
   calibrated_until                     { 5.years.from_now }
-  section                             Meter::Base::ELECTRICITY
-  edifact_voltage_level                       Meter::Base::LOW_LEVEL
-  edifact_cycle_interval                      Meter::Base::YEARLY
+  section                             Meter::Real.sections[:electricity]
+  edifact_voltage_level                       Meter::Real.edifact_voltage_levels[:low_level]
+  edifact_cycle_interval                      Meter::Real.edifact_cycle_intervals[:yearly]
   sent_data_dso                       nil
-  edifact_tariff                              Meter::Base::SINGLE_TARIFF
-  edifact_data_logging                        Meter::Base::ELECTRONIC
+  edifact_tariff                              Meter::Real.edifact_tariffs[:single_tariff]
+  edifact_data_logging                        Meter::Real.edifact_data_loggings[:electronic]
 end
 
 Fabricator :real_meter, from: :meter do
-  manufacturer_name           { Meter::Real::MANUFACTURER_NAMES.sample }
+  manufacturer_name           { Meter::Real.manufacturer_names.values.sample }
   product_name    { FFaker::Name.name }
 end
 
@@ -33,7 +34,7 @@ end
 [:input, :output].each do |mode|
   Fabricator "#{mode}_meter", class_name: Meter::Real do
     registers                   { [Fabricate.build("#{mode}_register")] }
-    manufacturer_name           { Meter::Real::MANUFACTURER_NAMES.sample }
+    manufacturer_name           { Meter::Real.manufacturer_names.values.sample }
     product_name    { FFaker::Name.name }
     product_serialnumber  { Random.new_seed.to_s.slice(0, 7) }
   end
@@ -794,4 +795,3 @@ Fabricator :easymeter_60404849, from: :easy_meter_q3d do
   product_serialnumber   '60404849'
   registers { [Fabricate.build(:register_60404849)] }
 end
-

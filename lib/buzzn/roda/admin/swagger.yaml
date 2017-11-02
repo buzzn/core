@@ -620,11 +620,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: date
-        in: formData
-        required: false
-        type: string
-        format: date
       - name: raw_value
         in: formData
         required: true
@@ -698,6 +693,11 @@ paths:
         type: string
         format: ''
         maxLength: 256
+      - name: date
+        in: formData
+        required: false
+        type: string
+        format: date
       responses:
         201:
           description: created
@@ -766,20 +766,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
-      - name: manufacturer_name
-        in: formData
-        required: false
-        type: string
-        enum:
-        - easy_meter
-        - amperix
-        - ferraris
-        - other
       - name: product_name
         in: formData
         required: false
@@ -791,13 +777,22 @@ paths:
         required: false
         type: string
         format: ''
-        maxLength: 64
+        maxLength: 128
+      - name: manufacturer_name
+        in: formData
+        required: false
+        type: string
+        enum:
+        - easy_meter
+        - amperix
+        - ferraris
+        - other
       - name: ownership
         in: formData
         required: false
         type: string
         enum:
-        - BUZZN_SYSTEMS
+        - BUZZN
         - FOREIGN_OWNERSHIP
         - CUSTOMER
         - LEASED
@@ -846,10 +841,10 @@ paths:
         type: string
         enum:
         - AHZ
-        - LAZ
         - WSZ
-        - EHZ
+        - LAZ
         - MAZ
+        - EHZ
         - IVA
       - name: edifact_meter_size
         in: formData
@@ -897,9 +892,9 @@ paths:
         type: string
         enum:
         - MONTHLY
-        - YEARLY
         - QUARTERLY
         - HALF_YEARLY
+        - YEARLY
       - name: edifact_data_logging
         in: formData
         required: false
@@ -907,6 +902,11 @@ paths:
         enum:
         - Z04
         - Z05
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
       responses:
         200:
           description: patched
@@ -930,18 +930,7 @@ paths:
         in: path
         required: true
         type: string
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
       - name: metering_point_id
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 32
-      - name: name
         in: formData
         required: false
         type: string
@@ -974,10 +963,6 @@ paths:
         type: integer
         format: int64
         minimum: 0
-      - name: low_load_ability
-        in: formData
-        required: false
-        type: boolean
       - name: observer_enabled
         in: formData
         required: false
@@ -998,6 +983,21 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: low_load_ability
+        in: formData
+        required: false
+        type: boolean
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
       responses:
         200:
           description: patched
@@ -1017,11 +1017,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
       - name: product_name
         in: formData
         required: false
@@ -1033,7 +1028,12 @@ paths:
         required: false
         type: string
         format: ''
-        maxLength: 64
+        maxLength: 128
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
       responses:
         200:
           description: patched

@@ -2,7 +2,7 @@ require_relative '../group_resource'
 require_relative '../person_resource'
 require_relative 'price_resource'
 require_relative 'billing_cycle_resource'
-require_relative '../../schemas/admin/localpool_incompleteness'
+require_relative '../../schemas/completeness/admin/localpool'
 module Admin
   class LocalpoolResource < GroupResource
 
@@ -32,7 +32,7 @@ module Admin
     has_one :address
 
     def incompleteness
-      LocalpoolIncompleteness.(self).messages
+      Schemas::Completeness::Admin::Localpool.call(self).messages
     end
 
     # API methods for endpoints
@@ -84,16 +84,7 @@ module Admin
 
     def _assign_owner(new_owner)
       old_owner = owner
-      case new_owner
-      when PersonResource
-        object.organization = nil
-        object.person = new_owner.object
-      when OrganizationResource
-        object.person = nil
-        object.organization = new_owner.object
-      else
-        raise "can not handle #{new_owner.class}"
-      end
+      object.owner = new_owner.object
       setup_roles(old_owner, new_owner)
       object.save
       owner
