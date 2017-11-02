@@ -43,6 +43,9 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
   tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
+    # keep it here as this file goes away and we want to keep migrations clean
+    # in the end
+    BankAccount.reset_column_information
     c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
     c.customer_bank_account = Fabricate(:bank_account, owner: c.customer)
     c.save
