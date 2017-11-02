@@ -13,7 +13,7 @@ class CreateBankAccounts < ActiveRecord::Migration
     add_foreign_key :bank_accounts, :persons, name: :fk_bank_accounts_person, column: :owner_person_id
     add_foreign_key :bank_accounts, :organizations, name: :fk_bank_accounts_organization, column: :owner_organization_id
 
-    execute 'ALTER TABLE bank_accounts ADD CONSTRAINT check_bank_account_owner CHECK (NOT (owner_person_id IS NOT NULL AND owner_organization_id IS NOT NULL))'
+    execute 'ALTER TABLE bank_accounts ADD CONSTRAINT check_bank_account_owner CHECK (NOT ((owner_person_id IS NOT NULL AND owner_organization_id IS NOT NULL)) OR (owner_person_id IS NULL AND owner_organization_id IS NULL))'
   end
 
   def down
