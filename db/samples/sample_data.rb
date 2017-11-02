@@ -199,15 +199,17 @@ create(:contract, :metering_point_operator,
        localpool: $localpools[:people_power],
        customer: $localpools[:people_power].owner,
        contractor: Organization.buzzn,
-       payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ],
-       tariffs: [ build(:tariff) ]
+       payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ]
 )
 create(:contract, :localpool_processing,
        localpool: $localpools[:people_power],
        customer: $localpools[:people_power].owner,
        contractor: Organization.buzzn,
        payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ],
-       tariffs: [ build(:tariff) ]
+       tariffs: [
+        build(:tariff, name: "Regular", energyprice_cents_per_kwh: 28.9),
+        build(:tariff, name: "Reduced", energyprice_cents_per_kwh: 25.9)
+      ]
 )
 
 #
