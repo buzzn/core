@@ -37,8 +37,9 @@ module SeedsRepository
 
     def organizations
       @organizations ||= OpenStruct.new(
-        third_party_supplier: create(:organization, :contracting_party, name: 'Drittlieferant'),
-        property_management: create(:organization, :contracting_party, name: 'Hausverwaltung Schneider (Leerstand)')
+        # We expect the seed data to have been loaded when creating the sample data.
+        third_party_supplier: Organization.find_by(slug: '3rd-party'),
+        property_management: Organization.find_by(slug: 'hv-schneider')
       )
     end
 
