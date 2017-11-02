@@ -42,6 +42,10 @@ describe Admin::LocalpoolRoda do
         else
           {'owner' => ['must be filled']}
         end
+      incompleteness.merge!(
+        {'grid_feeding_register' => ['must be filled'],
+         'grid_consumption_register' => ['must be filled']}
+      )
       {
         "id"=>localpool.id,
         "type"=>"group_localpool",
@@ -76,7 +80,13 @@ describe Admin::LocalpoolRoda do
       'show_contact' => nil,
       "updatable"=>true,
       "deletable"=>true,
-      'incompleteness' => {'owner' => {'contact' => ['must be filled']}},
+      'incompleteness' => {
+        'owner' => {
+          'contact' => ['must be filled']
+        },
+        'grid_feeding_register' => ['must be filled'],
+        'grid_consumption_register' => ['must be filled']
+      },
       "meters"=>{
         'array'=> localpool_no_contracts.meters.collect do |meter|
           {
@@ -193,7 +203,11 @@ describe Admin::LocalpoolRoda do
         'show_contact' => true,
         'updatable'=>true,
         'deletable'=>true,
-        'incompleteness' => {'owner' => ['must be filled']}
+        'incompleteness' => {
+          'owner' => ['must be filled'],
+          'grid_feeding_register' => ['must be filled'],
+          'grid_consumption_register' => ['must be filled']
+        }
       }
     end
 
@@ -263,7 +277,11 @@ describe Admin::LocalpoolRoda do
         'show_contact' => false,
         "updatable"=>true,
         "deletable"=>true,
-        'incompleteness' => {'owner' => ['must be filled']}
+        'incompleteness' => {
+          'owner' => ['must be filled'],
+          'grid_feeding_register' => ['must be filled'],
+          'grid_consumption_register' => ['must be filled']
+        }
       }
     end
 

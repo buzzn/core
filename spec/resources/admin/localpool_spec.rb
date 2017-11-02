@@ -188,10 +188,10 @@ describe Admin::LocalpoolResource do
       end
 
       it 'invalid' do
-        expect(pool.incompleteness).to eq({owner:["must be filled"]})
+        expect(pool.incompleteness[:owner]).to eq(["must be filled"])
         pool.assign_owner(person)
         person.object.remove_role(Role::GROUP_OWNER, pool.object)
-        expect(pool.incompleteness).to eq({owner:["BUG: missing GROUP_ADMIN role"]})
+        expect(pool.incompleteness[:owner]).to eq(["BUG: missing GROUP_ADMIN role"])
       end
 
       it 'setup roles' do
@@ -206,24 +206,24 @@ describe Admin::LocalpoolResource do
 
       it 'create' do
         pool.create_person_owner(Fabricate.build(:person).attributes)
-        expect(pool.incompleteness).to eq({})
+        expect(pool.incompleteness[:owner]).to be_nil
         expect(pool.owner.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
         expect(pool.owner.object.roles.size).to eq 1
 
         owner = pool.owner
         pool.create_person_owner(Fabricate.build(:person).attributes)
-        expect(pool.incompleteness).to eq({})
+        expect(pool.incompleteness[:owner]).to be_nil
         expect(owner.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
         expect(owner.object.roles.size).to eq 0
 
         pool.create_organization_owner(Fabricate.build(:organization).attributes)
-        expect(pool.incompleteness).to eq({owner:{contact:["must be filled"]}})
+        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
         expect(pool.owner.legal_representation).to be_nil
       end
 
       it 'assign' do
         pool.assign_owner(person)
-        expect(pool.incompleteness).to eq({})
+        expect(pool.incompleteness[:owner]).to be_nil
 
         owner = pool.owner
 
@@ -231,12 +231,12 @@ describe Admin::LocalpoolResource do
         expect(person.object.roles.size).to eq 1
 
         pool.assign_owner(person2)
-        expect(pool.incompleteness).to eq({})
+        expect(pool.incompleteness[:owner]).to be_nil
         expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
         expect(person.object.roles.size).to eq 0
 
         pool.assign_owner(organization)
-        expect(pool.incompleteness).to eq({owner:{contact:["must be filled"]}})
+        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
         expect(organization.legal_representation.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
         expect(organization.legal_representation.object.roles.size).to eq 1
         expect(person2.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
@@ -251,12 +251,12 @@ describe Admin::LocalpoolResource do
       end
 
       it 'invalid' do
-        expect(pool.incompleteness).to eq({owner:["must be filled"]})
+        expect(pool.incompleteness[:owner]).to eq(["must be filled"])
         pool.assign_owner(organization)
         organization.legal_representation.object.remove_role(Role::GROUP_OWNER, pool.object)
-        expect(pool.incompleteness).to eq({owner:{contact:["must be filled"]}})
+        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
         organization.object.contact = person_raw
-        expect(pool.incompleteness).to eq({owner:["BUG: missing GROUP_ADMIN role"]})
+        expect(pool.incompleteness[:owner]).to eq(["BUG: missing GROUP_ADMIN role"])
       end
 
       it 'setup roles' do
@@ -271,32 +271,105 @@ describe Admin::LocalpoolResource do
 
       it 'create' do
         pool.create_organization_owner(Fabricate.build(:organization).attributes)
-        expect(pool.incompleteness).to eq({owner:{contact:["must be filled"]}})
+        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
         expect(pool.owner.legal_representation).to be_nil
 
         pool.create_person_owner(Fabricate.build(:person).attributes)
-        expect(pool.incompleteness).to eq({})
+        expect(pool.incompleteness[:owner]).to be_nil
         expect(pool.owner.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
         expect(pool.owner.object.roles.size).to eq 1
       end
 
       it 'assign' do
         pool.assign_owner(organization)
-        expect(pool.incompleteness).to eq({owner:{contact:["must be filled"]}})
+        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
         expect(organization.legal_representation.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
         expect(organization.legal_representation.object.roles.size).to eq 1
 
         pool.assign_owner(organization2)
-        expect(pool.incompleteness).to eq({owner:{contact:["must be filled"]}})
+        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
         expect(organization.legal_representation.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
         expect(organization.legal_representation.object.roles.size).to eq 0
 
         pool.assign_owner(person)
-        expect(pool.incompleteness).to eq({})
+        expect(pool.incompleteness[:owner]).to be_nil
         expect(organization2.legal_representation.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
         expect(organization2.legal_representation.object.roles.size).to eq 0
         expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
         expect(person.object.roles.size).to eq 1
+      end
+    end
+  end
+
+  context 'grid registers' do
+
+    entity!(:pool) { pools.first }
+
+    context 'grid_consumption_register' do
+
+      context 'without register' do
+        before { pool.object.update(grid_consumption_register: nil) }
+        it 'is incomplete' do
+          expect(pool.incompleteness[:grid_consumption_register]).to eq ["must be filled"]
+        end
+      end
+
+      context 'with register' do
+        entity(:input_register) { Fabricate(:input_meter).input_register}
+
+        context 'without metering_point_id' do
+          before do
+            input_register.update(metering_point_id: nil)
+            pool.object.update(grid_consumption_register: input_register)
+          end
+          it 'is incomplete' do
+            expect(pool.incompleteness[:grid_consumption_register]).to eq ["missing metering_point_id"]
+          end
+        end
+
+        context 'with metering_point_id' do
+          before do
+            input_register.update(metering_point_id: 'DE123423123')
+            pool.object.update(grid_consumption_register: input_register)
+          end
+          it 'is complete' do
+            expect(pool.incompleteness[:grid_consumption_register]).to be_nil
+          end
+        end
+      end
+    end
+
+    context 'grid_feeding_register' do
+
+      context 'without register' do
+        before { pool.object.update(grid_feeding_register: nil) }
+        it 'is incomplete' do
+          expect(pool.incompleteness[:grid_feeding_register]).to eq ["must be filled"]
+        end
+      end
+
+      context 'with register' do
+        entity(:output_register) { Fabricate(:output_meter).output_register }
+
+        context 'without metering_point_id' do
+          before do
+            output_register.update(metering_point_id: nil)
+            pool.object.update(grid_feeding_register: output_register)
+          end
+          it 'is incomplete' do
+            expect(pool.incompleteness[:grid_feeding_register]).to eq ["missing metering_point_id"]
+          end
+        end
+
+        context 'with metering_point_id' do
+          before do
+            output_register.update(metering_point_id: 'DE123423123')
+            pool.object.update(grid_feeding_register: output_register)
+          end
+          it 'is complete' do
+            expect(pool.incompleteness[:grid_feeding_register]).to be_nil
+          end
+        end
       end
     end
   end

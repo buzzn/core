@@ -7,3 +7,5 @@ en:
     email?: "must be a valid email"
 
     valid_role?: "BUG: missing GROUP_ADMIN role"
+
+    metering_point_id?: 'missing metering_point_id'

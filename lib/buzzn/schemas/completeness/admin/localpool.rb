@@ -7,6 +7,11 @@ module Schemas
 
         configure do
           config.messages_file = 'config/errors.yml'
+
+          def metering_point_id?(input)
+            ! input.metering_point_id.nil?
+          end
+
           def valid_role?(input)
             case input
             when PersonResource
@@ -24,8 +29,17 @@ module Schemas
           end
         end
 
+
         required(:owner) do
           ((filled?.and type?(OrganizationResource)).then schema(Schemas::Completeness::Organization)).and valid_role?.and filled?
+        end
+
+        required(:grid_feeding_register) do
+          filled?.then(metering_point_id?).and filled?
+        end
+
+        required(:grid_consumption_register) do
+          filled?.then(metering_point_id?).and filled?
         end
       end
     end
