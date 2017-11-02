@@ -36,36 +36,65 @@ energy_classifications = {
 }
 
 #
-# Organizations the application requires to work
+# Essential organizations -- which the application requires to work
 #
-Organization.buzzn = Organization.create!(
-  name: 'Buzzn GmbH',
-  description: 'Purveyor of peoplepower since 2009',
-  slug: 'buzzn',
-  email: 'dev+buzzn@buzzn.net',
-  phone: '089 / 32 16 8',
-  website: 'www.buzzn.net',
-  energy_classifications: [ energy_classifications[:buzzn] ],
-  # FIXME
-  # address: FactoryGirl.build(:address),
-  # contact: FactoryGirl.build(:person)
-)
-Organization.buzzn.market_functions.create!(
-  function: :electricity_supplier,
-  market_partner_id: "9905229000008",
-  edifact_email: "justus@buzzn.net",
-  address: Organization.buzzn.address,
-  contact_person: Organization.buzzn.contact
+
+require 'smarter_csv'
+
+module Converters
+  class Date
+    def self.convert(value)
+      ::Date.strptime(value, '%m/%d/%y') # parses custom date format into Date instance
+    end
+  end
+  class Number
+    def self.convert(value)
+      value.gsub('.', '').to_i
+    end
+  end
+  class PreferredLanguage
+    def self.convert(value)
+      { 'DE' => :german, 'EN' => :english }[value]
+    end
+  end
+end
+
+def get_csv(model_name, options = {})
+  file_name = Rails.root.join("db/seeds/csv/#{model_name}.csv")
+  SmarterCSV.process(file_name,
+    col_sep: ";",
+    convert_values_to_numeric: false,
+    value_converters: options[:converters]
+  )
+end
+
+def import_csv(model_name, options)
+  hashes = get_csv(model_name, options)
+  selected_hashes = options[:only] ? hashes.select(&options[:only]) : hashes
+  selected_hashes.each do |hash|
+    puts "Loading #{model_name.to_s.singularize} #{hash[:name]}"
+    klass = model_name.to_s.singularize.camelize.constantize
+    record = klass.create(hash)
+    unless record.persisted?
+      ap record
+      ap record.errors
+    end
+  end
+end
+
+import_csv(:persons, converters: { preferred_language: Converters::PreferredLanguage })
+
+import_csv(:organizations,
+           only: ->(row) { row[:slug] =~ /buzzn|germany/ }
 )
 
-Organization.germany = Organization.create!(
-  name: 'Germany Energy Mix',
-  description: 'used for energy mix \'Germany\'',
-  slug: 'germany',
-  email: 'dev+org-germany@buzzn.net',
-  phone: '040 12345',
-  energy_classifications: [ energy_classifications[:germany] ],
-  # FIXME
-  address: Organization.buzzn.address,
-  contact: Organization.buzzn.contact
-)
+Organization.buzzn   = Organization.find_by(slug: "buzzn")
+Organization.buzzn.energy_classifications = [ energy_classifications[:buzzn] ]
+Organization.germany = Organization.find_by(slug: "germany")
+Organization.germany.energy_classifications = [ energy_classifications[:germany] ]
+
+get_csv(:organization_market_functions).each do |row|
+  next unless row[:organization_id] == 'Buzzn GmbH'
+  contact = Person.find_by(last_name: row[:contact_person_id])
+  Organization.buzzn.market_functions.create!(row.except(:organization_id).merge(contact_person: contact))
+end

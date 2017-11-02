@@ -18,7 +18,7 @@ module SeedsRepository
         pt7:  person(first_name: 'Anna', last_name: 'Powertaker7 (Wechsel zu uns)', prefix: 'F'),
         pt8:  person(first_name: 'Sam',  last_name: 'Powertaker8', preferred_language: 'english'),
         pt9:  person(first_name: 'Justine', last_name: 'Powertaker9', prefix: 'F'),
-        pt10: person(first_name: 'Mohammed', last_name: 'Powertaker10')
+        pt10: person(first_name: 'Mohammed', last_name: 'Powertaker10'),
       )
     end
 

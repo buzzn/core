@@ -1,0 +1,40 @@
+organization_id;function;market_partner_id;edifact_email;contact_person_id
+50Hertz Transmission GmbH;transmission_system_operator;9911845000009;roman.schuelke@50hertz.com;Höhn
+Tennet TSO GmbH;transmission_system_operator;4033872000058;biko-bka@tennet.eu;Schülke
+Amprion GmbH;transmission_system_operator;4045399000077;bilanzkreisdaten@amprion.net;Mayer
+TransnetBW GmbH;transmission_system_operator;9911835000001;bilanzkreise@transnetbw.de;Nossek
+SWM Infrastruktur GmbH & Co. KG;distribution_system_operator;9907248000001;netznutzung@swm.de;Pertsch
+SWM Infrastruktur GmbH & Co. KG;metering_point_operator;9904886000005;messstellenzugang@swm-infrastruktur.de;Rehmeier
+SWM Versorgungs GmbH;electricity_supplier;9904160000002;datenaustausch.vertrieb@swm.de;Lieferantenwechsel
+Buzzn GmbH;electricity_supplier;9905229000008;justus@buzzn.net;Schütze
+Buzzn GmbH;metering_point_operator;9910960000001;stefan@buzzn.net;Erbacher
+Buzzn GmbH;metering_service_provider;9910963000008;stefan@buzzn.net;Erbacher
+Bayernwerk Netz GmbH;distribution_system_operator;9901068000001;;
+bnNETZE GmbH;distribution_system_operator;9901066000003;;
+E.DIS AG;distribution_system_operator;9901000000001;;
+E.ON Avacon AG;distribution_system_operator;9907137000005;;
+enercity Netzgesellschaft mbH;distribution_system_operator;9900269000000;;
+Gemeindewerke Peißenberg;distribution_system_operator;9900512000004;;
+LEW Verteilnetz GmbH;distribution_system_operator;9906440000009;;
+LSW Netz GmbH;distribution_system_operator;9907388000002;;
+Mitteldeutsche Netzgesellschaft Strom mbH;distribution_system_operator;4042805000102;;
+NEW Netz GmbH;distribution_system_operator;9900426000009;;
+Rheinische NETZGesellschaft mbH (RNG);distribution_system_operator;9907399000009;;
+Rhein-Ruhr Verteilnetz GmbH;distribution_system_operator;;;
+Stadtwerke Einbeck GmbH;distribution_system_operator;9900165000005;;
+Stadtwerke Kaltenkirchen GmbH;distribution_system_operator;9907633000004;;
+Stadtwerke Landshut;distribution_system_operator;9900371000005;;
+Stadtwerke Schorndorf GmbH;distribution_system_operator;9900578000006;;
+Stadtwerke Waiblingen GmbH;distribution_system_operator;9900662000003;;
+Stadtwerke Wedel GmbH;distribution_system_operator;9900671000002;;
+Stadtwerke Wiesbaden Netz GmbH;distribution_system_operator;9900683000008;;
+Stadtwerke Witzenhausen GmbH;distribution_system_operator;9907084000009;;
+Stromnetz Berlin GmbH;distribution_system_operator;9900080000007;;
+Stromnetz Hamburg GmbH;distribution_system_operator;9900259000002;;
+swb Netze GmbH & Co. KG;distribution_system_operator;9907203000004;;
+Syna GmbH;distribution_system_operator;9870092500008;;
+Stadtwerke München GmbH;electricity_supplier;9910660000004;;
+Bürger Energie Genossenschaft Freisinger Land;electricity_supplier;9911607000007;;
+Gemeindewerke Peißenberg;electricity_supplier;9903306000008;;
+Stadtwerke Landshut;electricity_supplier;9903047000002;;
+LichtBlick Energie und Innovation GmbH;electricity_supplier;9905294000009;;

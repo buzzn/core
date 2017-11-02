@@ -181,93 +181,17 @@ create(:contract, :localpool_processing,
 #
 # More registers (without powertakers & contracts)
 #
-registers = {}
-
-registers[:ecar] = create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:other],
-  group: SeedsRepository.localpools.people_power,
-  devices: [ create(:device, :ecar, commissioning: '2017-04-10', register: nil) ]
-)
-
-registers[:bhkw] = create(:register, :production_bhkw,
-  group: SeedsRepository.localpools.people_power,
-  devices: [ create(:device, :bhkw, commissioning: '1995-01-01', register: nil) ]
-)
-
-registers[:pv] = create(:register, :production_pv,
-  group: SeedsRepository.localpools.people_power,
-  devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
-)
-
-FactoryGirl.create(:organization, :transmission_system_operator,
-                   name: '50Hertz Transmission GmbH',
-                   slug: '50hertz',
-                   phone: '+49 30 51503782',
-                   fax: '+49 30 51504511',
-                   website: 'http://www.50hertz.com/de'
-)
-FactoryGirl.create(:organization, :transmission_system_operator,
-                   name: 'Tennet TSO GmbH',
-                   slug: 'tennet',
-                   phone: '+49 921 507404575',
-                   fax: '+49 921 507404566',
-                   website: 'https://www.tennet.eu/de'
-)
-FactoryGirl.create(:organization, :transmission_system_operator,
-                   name: 'Amprion GmbH',
-                   slug: 'amprion',
-                   phone: '+49 231 5849 12502',
-                   fax: '+49 231 5849 14509',
-                   website: 'https://www.amprion.net'
-)
-FactoryGirl.create(:organization, :transmission_system_operator,
-                   name: 'TransnetBW GmbH',
-                   slug: 'transnetbw',
-                   phone: '+49 711 21858 3706',
-                   fax: '+49 711 21858 4413',
-                   website: 'https://www.transnetbw.de/de'
-)
-FactoryGirl.create(:organization, :distribution_system_operator,
-                   name: 'E.ON Netz GmbH',
-                   slug: 'eon-netz',
-                   website: 'https://www.eon.com'
-)
-FactoryGirl.create(:organization, :distribution_system_operator,
-                   name: 'Stadtwerke Augsburg GmbH',
-                   slug: 'sw-augsburg',
-                   website: 'www.sw-augsburg.de'
-)
-FactoryGirl.create(:organization, :distribution_system_operator,
-                   name: 'SWM Infrastruktur GmbH & Co. KG',
-                   slug: 'swm',
-                   phone: '+49 89 2361 4644',
-                   fax: '+49 89 2361 4699',
-                   website: 'http://www.swm-infrastruktur.de'
-)
-FactoryGirl.create(:organization, :distribution_system_operator,
-                   name: 'Bayernwerk Netz GmbH',
-                   slug: 'bayernwerk-netz',
-                   phone: '+49 941 2017128',
-                   fax: '+49 941 2017113',
-                   website: 'http://www.bayernwerk-netz.de',
-)
-FactoryGirl.create(:organization, :metering_point_operator,
-                   name: 'MySmartGrid',
-                   description: 'Fraunhofer Institut',
-                   slug: 'mysmartgrid',
-                   website: 'https://www.itwm.fraunhofer.de/en/departments/hpc/green-by-it/mySmartGrid-energy-savings.html'
-)
-FactoryGirl.create(:organization, :electricity_supplier,
-                   name: 'RWE'
-)
-FactoryGirl.create(:organization, :electricity_supplier,
-                   name: 'Vattenfall'
-)
-FactoryGirl.create(:organization, :electricity_supplier,
-                   name: 'EnBW'
-)
-FactoryGirl.create(:organization, :other, :with_bank_account,
-                   name: 'hell & warm Forstenried GmbH',
-                   slug: 'hell-warm',
-                   email: 'xxx@info.de',
-                   phone: '089/89057180'
-)
+_registers = {
+  ecar: create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:other],
+    group: SeedsRepository.localpools.people_power,
+    devices: [ create(:device, :ecar, commissioning: '2017-04-10', register: nil) ]
+  ),
+  bhkw: create(:register, :production_bhkw,
+    group: SeedsRepository.localpools.people_power,
+    devices: [ create(:device, :bhkw, commissioning: '1995-01-01', register: nil) ]
+  ),
+  pv: create(:register, :production_pv,
+    group: SeedsRepository.localpools.people_power,
+    devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
+  )
+}
