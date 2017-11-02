@@ -25,8 +25,11 @@ def person(attributes)
 end
 
 persons = {
+  operator: person(first_name: 'Philipp', last_name: 'Operator', roles: { Role::BUZZN_OPERATOR => nil }),
   group_owner: person(:wolfgang),
-  brumbauer:   person(first_name: 'Traudl', last_name: 'Brumbauer', prefix: 'F'),
+  brumbauer:   person(first_name: 'Traudl', last_name: 'Brumbauer', prefix: 'F',
+                      roles: { Role::ORGANIZATION => Organization.find_by(slug: 'hell-warm') }
+  ),
   pt1:  person(first_name: 'Sabine', last_name: 'Powertaker1', title: 'Prof.', prefix: 'F'),
   pt2:  person(first_name: 'Carla', last_name: 'Powertaker2', title: 'Prof. Dr.', prefix: 'F'),
   pt3:  person(first_name: 'Bernd', last_name: 'Powertaker3'),
@@ -50,7 +53,6 @@ $localpools = {
                   ]
                 )
 }
-
 
 contracts = {}
 
