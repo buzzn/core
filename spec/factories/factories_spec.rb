@@ -95,7 +95,7 @@ describe "Factories produce valid records" do
   end
 
   context "Meter::Real" do
-    subject { create(:meter_real) }
+    subject { create(:meter, :real) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:group, Group::Localpool) }
     it { is_expected.to have_association(:address, Address) }
@@ -103,12 +103,12 @@ describe "Factories produce valid records" do
       expect(subject.registers.first).to be_instance_of(Register::Input)
     end
     it "creates a register that belongs to the same group" do
-      meter    = create(:meter_real)
+      meter    = create(:meter, :real)
       expect(meter.registers.first.group).to eq(meter.group)
     end
     it "can override registers" do
       register = create(:register, :input)
-      meter    = create(:meter_real, registers: [register])
+      meter    = create(:meter, :real, registers: [register])
       expect(meter.registers).to eq([register])
       expect(meter).to be_valid
     end
@@ -170,7 +170,7 @@ describe "Factories produce valid records" do
     it { is_expected.to have_association(:group, Group::Localpool) }
     it { is_expected.to have_association(:meter, Meter::Real) }
     it "can override meter" do
-      meter    = create(:meter_real)
+      meter    = create(:meter, :real)
       register = create(:register, :input, meter: meter)
       expect(register.meter).to eq(meter)
       expect(register).to be_valid

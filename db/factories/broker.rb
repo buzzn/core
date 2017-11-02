@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :broker, class: 'Broker::Base' do
     provider_login     "login"
     provider_password  "123456789"
-    resource           { FactoryGirl.create(:meter_real) }
+    resource           { FactoryGirl.create(:meter, :real) }
     mode               :out
     type               "Broker::Base"
 

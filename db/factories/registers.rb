@@ -3,7 +3,7 @@ FactoryGirl.define do
     group                 { FactoryGirl.create(:localpool) }
     # Can't save the associated meter yet. It validates it has a register, and then we run into a chicken-and-egg
     # situation (each record requires the other to be persisted to be valid).
-    meter                 { FactoryGirl.build(:meter_real, group: group, registers: []) }
+    meter                 { FactoryGirl.build(:meter, :real, group: group, registers: []) }
     direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]
     pre_decimal_position  6
@@ -15,6 +15,22 @@ FactoryGirl.define do
     before(:create) do |register|
       # make sure register and meter are wired up correctly
       register.meter.registers << register
+    end
+
+    trait :virtual do
+      initialize_with { Register::Virtual.new } # a slight hack to define a trait of contract, but use a different subclass
+      name            { 'Generic virtual register' }
+      meter           { FactoryGirl.build(:meter_virtual, group: group, registers: []) }
+    end
+
+    trait :virtual_input do
+      virtual
+      direction       Register::Base.directions[:input]
+    end
+
+    trait :virtual_output do
+      virtual
+      direction       Register::Base.directions[:output]
     end
 
     trait :input do
