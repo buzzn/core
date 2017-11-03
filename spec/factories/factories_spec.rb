@@ -114,25 +114,6 @@ describe "Factories produce valid records" do
     end
   end
 
-  context "Meter::Virtual" do
-    subject { create(:meter, :virtual) }
-    it { is_expected.to be_valid }
-    it { is_expected.to have_association(:group, Group::Localpool) }
-    it "has a register" do
-      expect(subject.registers.first).to be_instance_of(Register::Virtual)
-    end
-    it "creates a register that belongs to the same group" do
-      meter    = create(:meter, :virtual)
-      expect(meter.registers.first.group).to eq(meter.group)
-    end
-    it "can override registers" do
-      register = create(:register, :virtual_input)
-      meter    = create(:meter, :virtual, registers: [register])
-      expect(meter.registers).to eq([register])
-      expect(meter).to be_valid
-    end
-  end
-
   context "Organization" do
     subject { create(:organization) }
     it { is_expected.to be_valid }
@@ -196,6 +177,17 @@ describe "Factories produce valid records" do
       meter.reload
       expect(meter.registers.size).to eq(2)
     end
+  end
+
+  context "Register::Virtual (input)" do
+    subject { create(:register, :virtual_input) }
+    it { is_expected.to be_valid }
+    it { is_expected.to have_association(:group, Group::Localpool) }
+    it { is_expected.to have_association(:meter, Meter::Virtual) }
+    it "has a valid and persisted meter" do
+     expect(subject.meter).to be_valid
+     expect(subject.meter).to be_persisted
+   end
   end
 
   context "Tariff" do

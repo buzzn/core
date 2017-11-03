@@ -4,7 +4,6 @@ FactoryGirl.define do
       broker_id nil
     end
     group                 { FactoryGirl.create(:localpool) }
-    meter                 { FactoryGirl.build(:meter, :real, group: group, registers: []) }
     direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]
     pre_decimal_position  6
@@ -13,16 +12,18 @@ FactoryGirl.define do
     share_with_group      true
     share_publicly        false
 
-    before(:create) do |register, evaluator|
-      # make sure register and meter are wired up correctly
-      register.brokers << create(:broker, :discovergy, external_id: evaluator.broker_id) if evaluator.broker_id
-      register.meter.registers << register
+    trait :real do
+      before(:create) do |register, evaluator|
+        register.meter = evaluator.meter || FactoryGirl.build(:meter, :real, group: register.group, registers: [ register ])
+      end
     end
 
     trait :virtual do
       initialize_with { Register::Virtual.new } # a slight hack to define a trait, but use a different subclass
       name            { 'Generic virtual register' }
-      meter           { FactoryGirl.build(:meter, :virtual, group: group, registers: []) }
+      before(:create) do |register, evaluator|
+        register.meter = evaluator.meter || FactoryGirl.build(:meter, :virtual, group: register.group, register: register)
+      end
     end
 
     trait :virtual_input do
@@ -36,12 +37,14 @@ FactoryGirl.define do
     end
 
     trait :input do
+      real
       initialize_with { Register::Input.new } # a slight hack to define a trait of contract, but use a different subclass
       direction       Register::Base.directions[:input]
       name            { generate(:register_input_name) }
     end
 
     trait :output do
+      real
       initialize_with { Register::Output.new } # a slight hack to define a trait of contract, but use a different subclass
       direction       Register::Base.directions[:output]
       name            { generate(:register_output_name) }
@@ -49,6 +52,7 @@ FactoryGirl.define do
 
     # This register is publicly connected. Only those have a metering point id
     trait :grid_connected do
+      real
       metering_point_id # uses sequence
     end
 

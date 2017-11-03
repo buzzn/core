@@ -182,7 +182,7 @@ _meters = {
           build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40', register: nil),
           build(:reading, :regular, date: '2016-12-31', raw_value: 12_000_000, register: nil)
         ],
-        broker_id: 'EASYMETER_60300855'
+        # broker_id: 'EASYMETER_60300855'
       ),
       create(:register, :grid_input,
         group: $localpools[:people_power],
@@ -190,20 +190,11 @@ _meters = {
           build(:reading, :setup, date: '2016-01-01', raw_value: 2_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40', register: nil),
           build(:reading, :regular, date: '2016-12-31', raw_value: 66_000_000, register: nil)
         ],
-        broker_id: 'EASYMETER_60300855'
+        # broker_id: 'EASYMETER_60300855'
       )
     ]
-  ),
-  # Virtual registers, used for corrections or calculations
-  # 'grid_consumption_corrected': create(:meter, :virtual,
-  #   group: $localpools[:people_power]
-  # ),
-  # 'grid_feeding_corrected': create(:meter, :virtual,
-  #   group: $localpools[:people_power]
-  # )
+  )
 }
-
-
 
 #
 # Create other contracts for peoplepower group
@@ -241,5 +232,15 @@ _registers = {
   pv: create(:register, :production_pv,
     group: $localpools[:people_power],
     devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
-  )
+  ),
+  grid_consumption_corrected: create(:register, :virtual_input,
+    group: $localpools[:people_power],
+    label: Register::Base.labels[:grid_consumption_corrected],
+    name: "ÜGZ Bezug korrigiert"
+  ),
+  grid_feeding_corrected: create(:register, :virtual_output,
+    group: $localpools[:people_power],
+    label: Register::Base.labels[:grid_feeding_corrected],
+    name: "ÜGZ Einspeisung korrigiert"
+  ),
 }
