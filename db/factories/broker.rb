@@ -7,7 +7,7 @@ FactoryGirl.define do
     type               "Broker::Base"
 
     trait :discovergy do
-      initialize_with { Broker::Discovergy.new } # a slight hack to define a trait of broker, but use a different subclass
+      initialize_with { Broker::Discovergy.new }
       type            "Broker::Discovergy"
       external_id     "discovergy-001"
       consumer_key    "some-consumer-key"

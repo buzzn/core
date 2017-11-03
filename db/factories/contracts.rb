@@ -21,7 +21,7 @@ FactoryGirl.define do
 
   trait :metering_point_operator do
     contract_number { generate(:metering_point_operator_contract_nr) }
-    initialize_with { Contract::MeteringPointOperator.new } # a slight hack to define a trait of contract, but use a different subclass
+    initialize_with { Contract::MeteringPointOperator.new }
   end
 
   trait :power_taker do
@@ -34,12 +34,12 @@ FactoryGirl.define do
 
   trait :localpool_processing do
     contract_number { generate(:localpool_processing_contract_nr) }
-    initialize_with { Contract::LocalpoolProcessing.new } # a slight hack to define a trait of contract, but use a different subclass
+    initialize_with { Contract::LocalpoolProcessing.new }
   end
 
   trait :localpool_powertaker do
     contract_number { generate(:localpool_power_taker_contract_nr) }
-    initialize_with { Contract::LocalpoolPowerTaker.new } # a slight hack to define a trait of contract, but use a different subclass
+    initialize_with { Contract::LocalpoolPowerTaker.new }
     forecast_kwh_pa 1000
     customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }
     contractor      { FactoryGirl.create(:person, :with_bank_account) }

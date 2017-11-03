@@ -19,7 +19,7 @@ FactoryGirl.define do
     end
 
     trait :virtual do
-      initialize_with { Register::Virtual.new } # a slight hack to define a trait, but use a different subclass
+      initialize_with { Register::Virtual.new }
       name            { 'Generic virtual register' }
       before(:create) do |register, evaluator|
         register.meter = evaluator.meter || FactoryGirl.build(:meter, :virtual, group: register.group, register: register)
@@ -38,21 +38,20 @@ FactoryGirl.define do
 
     trait :input do
       real
-      initialize_with { Register::Input.new } # a slight hack to define a trait of contract, but use a different subclass
+      initialize_with { Register::Input.new }
       direction       Register::Base.directions[:input]
       name            { generate(:register_input_name) }
     end
 
     trait :output do
       real
-      initialize_with { Register::Output.new } # a slight hack to define a trait of contract, but use a different subclass
+      initialize_with { Register::Output.new }
       direction       Register::Base.directions[:output]
       name            { generate(:register_output_name) }
     end
 
     # This register is publicly connected. Only those have a metering point id
     trait :grid_connected do
-      real
       metering_point_id # uses sequence
     end
 
