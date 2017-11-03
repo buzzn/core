@@ -14,7 +14,8 @@ FactoryGirl.define do
 
     trait :real do
       before(:create) do |register, evaluator|
-        register.meter = evaluator.meter || FactoryGirl.build(:meter, :real, group: register.group, registers: [ register ])
+        register.meter = evaluator.meter || FactoryGirl.build(:meter, :real, group: register.group, registers: [])
+        register.meter.registers << register
       end
     end
 
