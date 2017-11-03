@@ -1,8 +1,5 @@
 FactoryGirl.define do
   factory :register, class: 'Register::Input' do
-    transient do
-      broker_id nil
-    end
     group                 { FactoryGirl.create(:localpool) }
     direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]

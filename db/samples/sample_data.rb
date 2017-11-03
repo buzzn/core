@@ -55,7 +55,31 @@ $localpools = {
                 )
 }
 
+
+#
+# Create contracts for peoplepower group
+#
+
 contracts = {}
+
+# FIXME: when https://goo.gl/6pzpFd is implemented, assign the grid in/out registers correctly
+contracts[:mpo] = create(:contract, :metering_point_operator,
+       localpool: $localpools[:people_power],
+       customer: $localpools[:people_power].owner,
+       contractor: Organization.buzzn,
+       payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ]
+)
+
+contracts[:lpp] = create(:contract, :localpool_processing,
+       localpool: $localpools[:people_power],
+       customer: $localpools[:people_power].owner,
+       contractor: Organization.buzzn,
+       payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ],
+       tariffs: [
+        build(:tariff, name: "Regular", energyprice_cents_per_kwh: 28.9, contracts: nil),
+        build(:tariff, name: "Reduced", energyprice_cents_per_kwh: 25.9, contracts: nil)
+      ]
+)
 
 contracts[:pt1] = localpool_contract(
   customer: persons[:pt1],
@@ -172,10 +196,6 @@ contracts[:common_consumption] = localpool_contract(
   register: create(:register, :input, name: "Allgemeinstrom", group: $localpools[:people_power]),
 )
 
-# Keeping it simple -- rather than setting the broker through the contract --> register --> brokers chain,
-# assign the brokers here.
-create(:broker, :discovergy, external_id: 'EASYMETER_60327609', resource: contracts[:pt1].register.meter)
-
 meters = {
   # the connection to the public grid, two-way register
   grid: create(:meter, :real, :two_way,
@@ -186,48 +206,23 @@ meters = {
         readings: [
           build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40', register: nil),
           build(:reading, :regular, date: '2016-12-31', raw_value: 12_000_000, register: nil)
-        ],
-        # broker_id: 'EASYMETER_60300855'
+        ]
       ),
       create(:register, :grid_input,
         group: $localpools[:people_power],
         readings: [
           build(:reading, :setup, date: '2016-01-01', raw_value: 2_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40', register: nil),
           build(:reading, :regular, date: '2016-12-31', raw_value: 66_000_000, register: nil)
-        ],
-        # broker_id: 'EASYMETER_60300855'
+        ]
       )
     ]
   )
 }
 
-
-#
-# Create other contracts for peoplepower group
-#
-# FIXME: when https://goo.gl/6pzpFd is implemented, assign the grid in/out registers correctly
-create(:contract, :metering_point_operator,
-       localpool: $localpools[:people_power],
-       customer: $localpools[:people_power].owner,
-       contractor: Organization.buzzn,
-       payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ]
-)
-
-create(:contract, :localpool_processing,
-       localpool: $localpools[:people_power],
-       customer: $localpools[:people_power].owner,
-       contractor: Organization.buzzn,
-       payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ],
-       tariffs: [
-        build(:tariff, name: "Regular", energyprice_cents_per_kwh: 28.9, contracts: nil),
-        build(:tariff, name: "Reduced", energyprice_cents_per_kwh: 25.9, contracts: nil)
-      ]
-)
-
 #
 # More registers (without powertakers & contracts)
 #
-_registers = {
+registers = {
   ecar: create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:other],
     group: $localpools[:people_power],
     devices: [ build(:device, :ecar, commissioning: '2017-04-10', register: nil) ]
@@ -257,3 +252,24 @@ _registers = {
     name: "ÜGZ Einspeisung korrigiert"
   ),
 }
+
+#
+# Brokers
+#
+# Keeping it simple -- rather than setting the broker through the contract --> register --> brokers chain,
+# assign the brokers here.
+# It would be better if the external id of the broker was inferred by meter manufacturer name + serialnumber,
+# but that's not implemented yet.
+create(:broker, :discovergy, external_id: 'EASYMETER_60327609', resource: contracts[:pt1].register.meter)
+create(:broker, :discovergy, external_id: 'EASYMETER_60327610', resource: contracts[:pt2].register.meter)
+create(:broker, :discovergy, external_id: 'EASYMETER_60327611', resource: contracts[:pt3].register.meter)
+create(:broker, :discovergy, external_id: 'EASYMETER_60327612', resource: contracts[:pt4].register.meter)
+create(:broker, :discovergy, external_id: 'EASYMETER_60327613', resource: contracts[:pt5a].register.meter)
+create(:broker, :discovergy, external_id: 'EASYMETER_60327614', resource: contracts[:pt6].register.meter)
+create(:broker, :discovergy, external_id: 'EASYMETER_60327605', resource: contracts[:pt7a].register.meter)
+create(:broker, :discovergy, external_id: 'EASYMETER_60327606', resource: contracts[:pt8].register.meter)
+create(:broker, :discovergy, external_id: 'EASYMETER_60327607', resource: contracts[:pt9].register.meter)
+create(:broker, :discovergy, external_id: 'EASYMETER_60327608', resource: contracts[:pt10].register.meter)
+
+create(:broker, :discovergy, external_id: 'EASYMETER_60327608', resource: registers[:pv].meter)
+# create(:broker, :discovergy, external_id: 'EASYMETER_60300855', mode: nil, resource: meters[:grid])
