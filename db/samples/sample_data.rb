@@ -172,6 +172,10 @@ contracts[:common_consumption] = localpool_contract(
   register: create(:register, :input, name: "Allgemeinstrom", group: $localpools[:people_power]),
 )
 
+# Keeping it simple -- rather than setting the broker through the contract --> register --> brokers chain,
+# assign the brokers here.
+create(:broker, :discovergy, external_id: 'EASYMETER_60327609', resource: contracts[:pt1].register.meter)
+
 meters = {
   # the connection to the public grid, two-way register
   grid: create(:meter, :real, :two_way,
