@@ -27,28 +27,30 @@ class CoreRoda < CommonRoda
 
     logger.info(r.inspect)
 
-    r.on 'api' do
-      r.on 'display' do
-        r.run Display::Roda
+    ActiveRecord::Base.connection_pool.with_connection do
+      r.on 'api' do
+        r.on 'display' do
+          r.run Display::Roda
+        end
+
+        r.on 'admin' do
+          r.run Admin::Roda
+        end
+
+        r.on 'me' do
+          r.run Me::Roda
+        end
       end
 
-      r.on 'admin' do
-        r.run Admin::Roda
+      r.get! 'health' do
+        info = health.info
+        r.response.headers['content_type'] = 'application/json'
+        unless info[:healthy]
+          logger.error(info.to_yaml.strip)
+          r.response.status = 503
+        end
+        health.info.to_json
       end
-
-      r.on 'me' do
-        r.run Me::Roda
-      end
-    end
-
-    r.get! 'health' do
-      info = health.info
-      r.response.headers['content_type'] = 'application/json'
-      unless info[:healthy]
-        logger.error(info.to_yaml.strip)
-        r.response.status = 503
-      end
-      health.info.to_json
     end
   end
 end
