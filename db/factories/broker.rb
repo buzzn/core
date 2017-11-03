@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :broker, class: 'Broker::Base' do
     provider_login     "login"
     provider_password  "123456789"
-    # This sucks. resource is currently always Meter::Real, so we should name it accordingly.
+    # This sucks. Resource is currently always Meter::Real, so we should name it accordingly.
     resource           { FactoryGirl.build(:meter, :real) }
     type               "Broker::Base"
 
