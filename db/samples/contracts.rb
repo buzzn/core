@@ -43,14 +43,14 @@ SampleData.contracts.pt1 = localpool_contract(
 )
 
 SampleData.contracts.pt2 = localpool_contract(
-customer: SampleData.persons.pt2,
-register_readings: [
-build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
-build(:reading, :regular, date: '2016-12-31', raw_value: 4_500_000, register: nil)
-],
-payments: [
-build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')
-]
+  customer: SampleData.persons.pt2,
+  register_readings: [
+    build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
+    build(:reading, :regular, date: '2016-12-31', raw_value: 4_500_000, register: nil)
+  ],
+  payments: [
+    build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')
+  ]
 )
 
 SampleData.contracts.pt3 = localpool_contract(

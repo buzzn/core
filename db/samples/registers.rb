@@ -29,5 +29,5 @@ SampleData.registers = OpenStruct.new(
     group: SampleData.localpools.people_power,
     label: Register::Base.labels[:grid_feeding_corrected],
     name: "ÜGZ Einspeisung korrigiert"
-  ),
+  )
 )
