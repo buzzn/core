@@ -14,13 +14,13 @@ end
 
 Fabricator :tariff_forstenried, from: :tariff do
   begin_date                { Date.new(2014, 12, 15) }
-  energyprice_cents_per_kwh { 25.5 }
+  energyprice_cents_per_kwh  { 25.5 }
   baseprice_cents_per_month { 250 }
 end
 
 Fabricator :tariff_sulz, from: :tariff do
   begin_date                { Date.new(2016, 8, 4) }
-  energyprice_cents_per_kwh { 23.8 }
+  energyprice_cents_per_kwh  { 23.8 }
   baseprice_cents_per_month { 500 }
 end
 
@@ -270,7 +270,7 @@ Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
                                     name: 'metering_standard',
                                     begin_date: begindate,
                                     end_date: nil,
-                                    energyprice_cents_per_kwh: 0,
+                                    energyprice_cents_per_kwh: 1,
                                     baseprice_cents_per_month: 30000)] }
   payments                      { [Fabricate.build(:payment,
                                     begin_date: begindate,
@@ -771,7 +771,7 @@ Fabricator :lpc_sulz, from: :localpool_processing_contract do
                       name: 'localpool_processing_standard',
                       begin_date: begindate,
                       end_date: begindate,
-                      energyprice_cents_per_kwh: 0,
+                      energyprice_cents_per_kwh: 1,
                       baseprice_cents_per_month: 100000)] }
   payments        { [Fabricate.build(:payment,
                       begin_date: begindate,
@@ -798,7 +798,7 @@ Fabricator :mpoc_sulz, from: :metering_point_operator_contract do
                                     name: 'metering_standard',
                                     begin_date: begindate,
                                     end_date: nil,
-                                    energyprice_cents_per_kwh: 0,
+                                    energyprice_cents_per_kwh: 1,
                                     baseprice_cents_per_month: 30000)] }
   payments                      { [Fabricate.build(:payment,
                                     begin_date: begindate,

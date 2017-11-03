@@ -1,5 +1,5 @@
 # coding: utf-8
-describe Register::BaseResource do
+describe Contract::TariffResource do
 
   entity(:admin) { Fabricate(:admin) }
   entity(:localpool) { Fabricate(:localpool) }
@@ -9,15 +9,21 @@ describe Register::BaseResource do
                                             localpool: localpool,
                                             tariffs: [tariff]) }
 
-  let(:resource) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).tariffs.first }
+  let(:tariff_resource) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).tariffs.first }
 
-  it 'can be deleted' do
-    tariff.update(contracts: nil)
-    expect(resource.deletable).to eq true
+  context 'without contracts' do
+    before { tariff.contracts.delete_all }
+    it 'can be deleted' do
+      expect(tariff_resource.deletable).to eq true
+    end
   end
 
-  it 'can not be deleted' do
-    tariff.update(contracts: localpool_processing)
-    expect(resource.deletable).to eq false
+  context 'with contract' do
+    before do
+      localpool_processing.tariffs << tariff unless localpool_processing.tariffs.include?(tariff)
+    end
+    it 'can not be deleted' do
+      expect(tariff_resource.deletable).to eq false
+    end
   end
 end

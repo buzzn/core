@@ -297,7 +297,7 @@ describe Admin, :swagger do
 
   post '/localpools/{localpool.id}/tariffs' do
     description 'create tariff for the localpool'
-    schema TariffCreate
+    schema Schemas::Transactions::Admin::Tariff::Create
   end
 
   get '/localpools/{localpool.id}/tariffs/{tariff.id}' do

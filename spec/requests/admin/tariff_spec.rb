@@ -7,8 +7,8 @@ describe Admin::LocalpoolRoda do
 
   context 'tariffs' do
 
-    entity(:localpool) { Fabricate(:localpool) }
-    entity(:tariff) { Fabricate(:tariff, group: localpool)}
+    entity!(:localpool) { Fabricate(:localpool) }
+    entity!(:tariff) { Fabricate(:tariff, group: localpool)}
 
     let(:expired_json) do
       {"error" => "This session has expired, please login again."}
@@ -26,6 +26,7 @@ describe Admin::LocalpoolRoda do
     let(:wrong_json) do
       {
         "errors"=>[
+          {'parameter' => 'name', 'detail' => 'size cannot be greater than 64'},
           {"parameter"=>"begin_date", "detail"=>"must be a date"},
           {"parameter"=>"energyprice_cents_per_kwh", "detail"=>"must be a float"},
           {"parameter"=>"baseprice_cents_per_month", "detail"=>"must be an integer"}

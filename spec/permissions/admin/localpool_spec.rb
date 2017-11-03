@@ -146,13 +146,11 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     before { tariff } # ensure at least one tariff
 
     def tariffs(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).tariffs.collect do |l|
-        l.object
-      end
+      Admin::LocalpoolResource.all(user).retrieve(id).tariffs.objects.reload
     end
 
     it 'all' do
-      expect(tariffs(buzzn_operator, localpool1.id)).to eq []
+      expect(tariffs(buzzn_operator, localpool1.id)).to match_array localpool1.tariffs.reload
       expect(tariffs(buzzn_operator, localpool2.id)).to match_array localpool2.tariffs.reload
 
       expect(tariffs(localpool_owner, localpool2.id)).to match_array localpool2.tariffs.reload
@@ -163,8 +161,8 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
 
     it 'create' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).create_tariff }.to raise_error Buzzn::ValidationError
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).create_tariff }.to raise_error Buzzn::ValidationError
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).create_tariff(Fabricate.build(:tariff).attributes) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).create_tariff(Fabricate.build(:tariff).attributes) }.not_to raise_error
 
       expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).create_tariff }.to raise_error Buzzn::PermissionDenied
       expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).create_tariff }.to raise_error Buzzn::PermissionDenied
@@ -201,9 +199,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   context 'billing_cycles' do
 
     def billing_cycles(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).billing_cycles.collect do |l|
-        l.object
-      end
+      Admin::LocalpoolResource.all(user).retrieve(id).billing_cycles.objects
     end
 
     it 'all' do
@@ -261,9 +257,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   context 'persons' do
 
     def persons(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).persons.collect do |l|
-        l.object
-      end
+      Admin::LocalpoolResource.all(user).retrieve(id).persons.objects
     end
 
     it 'all' do
@@ -363,9 +357,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   context 'registers' do
 
     def registers(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).registers.collect do |l|
-        l.object
-      end
+      Admin::LocalpoolResource.all(user).retrieve(id).registers.objects
     end
 
     it 'all' do
@@ -407,9 +399,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   context 'localpool_power_taker_contracts' do
 
     def localpool_power_taker_contracts(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).localpool_power_taker_contracts.collect do |l|
-        l.object
-      end
+      Admin::LocalpoolResource.all(user).retrieve(id).localpool_power_taker_contracts.objects
     end
 
     it 'all' do

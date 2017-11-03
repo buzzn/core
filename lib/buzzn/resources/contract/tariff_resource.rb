@@ -15,7 +15,7 @@ module Contract
     def updated_at; nil; end
 
     def deletable
-      super && object.contracts.nil?
+      super && object.contracts.empty?
     end
   end
 end

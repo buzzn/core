@@ -1500,6 +1500,7 @@ paths:
         required: true
         type: string
         format: ''
+        maxLength: 64
       - name: begin_date
         in: formData
         required: true
@@ -1510,11 +1511,15 @@ paths:
         required: true
         type: number
         format: float
+        minimum: 0
+        exclusiveMinimum: true
       - name: baseprice_cents_per_month
         in: formData
         required: true
         type: integer
         format: int64
+        minimum: 0
+        exclusiveMinimum: true
       responses:
         201:
           description: created
