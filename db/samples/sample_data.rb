@@ -171,7 +171,7 @@ contracts[:common_consumption] = localpool_contract(
   register: create(:register, :input, name: "Allgemeinstrom", group: $localpools[:people_power]),
 )
 
-_meters = {
+meters = {
   # the connection to the public grid, two-way register
   grid: create(:meter, :real, :two_way,
     group: $localpools[:people_power],
@@ -233,10 +233,16 @@ _registers = {
     group: $localpools[:people_power],
     devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
   ),
+  # This virtual register calculates the consumption of all powertakers that are supplied by buzzn.
+  # That's why the formula parts subtract powertaker 6's register, since he is supplied by someone else.
   grid_consumption_corrected: create(:register, :virtual_input,
     group: $localpools[:people_power],
     label: Register::Base.labels[:grid_consumption_corrected],
-    name: "ÜGZ Bezug korrigiert"
+    name: "ÜGZ Bezug korrigiert",
+    formula_parts: [
+      build(:formula_part, :plus,  operand: meters[:grid].registers.input.first, register: nil),
+      build(:formula_part, :minus, operand: contracts[:pt6].register, register: nil)
+    ]
   ),
   grid_feeding_corrected: create(:register, :virtual_output,
     group: $localpools[:people_power],
