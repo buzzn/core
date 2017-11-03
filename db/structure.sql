@@ -682,7 +682,7 @@ CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt
+SELECT substr(password_hash, 0, 30) INTO salt 
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -700,7 +700,7 @@ CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt
+SELECT substr(password_hash, 0, 30) INTO salt 
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -718,7 +718,7 @@ CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) 
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid
+SELECT password_hash = hash INTO valid 
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -736,7 +736,7 @@ CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS b
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid
+SELECT password_hash = hash INTO valid 
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -1320,7 +1320,6 @@ CREATE TABLE organizations (
     website character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    market_place_id character varying,
     account_number character varying,
     contact_id uuid,
     legal_representation_id uuid,
@@ -2995,14 +2994,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171009090631');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 
-INSERT INTO schema_migrations (version) VALUES ('20171012111744');
-
-INSERT INTO schema_migrations (version) VALUES ('20171012204100');
-
-INSERT INTO schema_migrations (version) VALUES ('20171016085826');
-
-INSERT INTO schema_migrations (version) VALUES ('20171016111731');
-
 INSERT INTO schema_migrations (version) VALUES ('20171010074910');
 
 INSERT INTO schema_migrations (version) VALUES ('20171010075030');
@@ -3014,6 +3005,14 @@ INSERT INTO schema_migrations (version) VALUES ('20171010094247');
 INSERT INTO schema_migrations (version) VALUES ('20171010102959');
 
 INSERT INTO schema_migrations (version) VALUES ('20171011151135');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012111744');
+
+INSERT INTO schema_migrations (version) VALUES ('20171012204100');
+
+INSERT INTO schema_migrations (version) VALUES ('20171016085826');
+
+INSERT INTO schema_migrations (version) VALUES ('20171016111731');
 
 INSERT INTO schema_migrations (version) VALUES ('20171016125437');
 
