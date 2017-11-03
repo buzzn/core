@@ -223,18 +223,18 @@ create(:contract, :localpool_processing,
 _registers = {
   ecar: create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:other],
     group: $localpools[:people_power],
-    devices: [ create(:device, :ecar, commissioning: '2017-04-10', register: nil) ]
+    devices: [ build(:device, :ecar, commissioning: '2017-04-10', register: nil) ]
   ),
   bhkw: create(:register, :production_bhkw,
     group: $localpools[:people_power],
-    devices: [ create(:device, :bhkw, commissioning: '1995-01-01', register: nil) ]
+    devices: [ build(:device, :bhkw, commissioning: '1995-01-01', register: nil) ]
   ),
   pv: create(:register, :production_pv,
     group: $localpools[:people_power],
-    devices: [ create(:device, :pv, commissioning: '2017-04-10', register: nil) ]
+    devices: [ build(:device, :pv, commissioning: '2017-04-10', register: nil) ]
   ),
-  # This virtual register calculates the consumption of all powertakers that are supplied by buzzn.
-  # That's why the formula parts subtract powertaker 6's register, since he is supplied by someone else.
+  # This virtual register sums up the consumption of all powertakers supplied by buzzn.
+  # That's why the formula parts subtract powertaker 6's register, since he is supplied by a third party.
   grid_consumption_corrected: create(:register, :virtual_input,
     group: $localpools[:people_power],
     label: Register::Base.labels[:grid_consumption_corrected],
