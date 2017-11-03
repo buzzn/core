@@ -164,31 +164,37 @@ describe "Factories produce valid records" do
     it { is_expected.to be_valid }
   end
 
-  context "Register::Input" do
-    subject { create(:register, :input) }
-    it { is_expected.to be_valid }
-    it { is_expected.to have_association(:group, Group::Localpool) }
-    it { is_expected.to have_association(:meter, Meter::Real) }
-    it "can override meter" do
-      meter    = create(:meter, :real)
-      register = create(:register, :input, meter: meter)
-      expect(register.meter).to eq(meter)
-      expect(register).to be_valid
-      meter.reload
-      expect(meter.registers.size).to eq(2)
+  context "Register" do
+
+    shared_examples 'a valid register' do |expected_meter_class|
+      it { is_expected.to be_valid }
+      it { is_expected.to have_association(:group, Group::Localpool) }
+      it { is_expected.to have_association(:meter, expected_meter_class.constantize) }
+      it "can override meter" do
+        meter    = create(:meter, :real)
+        register = create(:register, :input, meter: meter)
+        expect(register.meter).to eq(meter)
+        expect(register).to be_valid
+        meter.reload
+        expect(meter.registers.size).to eq(2)
+      end
+       it "has a valid and persisted meter" do
+        expect(subject.meter).to be_valid
+        expect(subject.meter).to be_persisted
+      end
+    end
+
+    context "Input" do
+      subject { create(:register, :input) }
+      include_examples 'a valid register', 'Meter::Real'
+    end
+
+    context "Virtual input" do
+      subject { create(:register, :virtual_input) }
+      include_examples 'a valid register', 'Meter::Virtual'
     end
   end
 
-  context "Register::Virtual (input)" do
-    subject { create(:register, :virtual_input) }
-    it { is_expected.to be_valid }
-    it { is_expected.to have_association(:group, Group::Localpool) }
-    it { is_expected.to have_association(:meter, Meter::Virtual) }
-    it "has a valid and persisted meter" do
-     expect(subject.meter).to be_valid
-     expect(subject.meter).to be_persisted
-   end
-  end
 
   context "Tariff" do
     subject { create(:tariff) }
