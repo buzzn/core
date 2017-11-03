@@ -4,8 +4,8 @@ FactoryGirl.define do
     begin_date   Date.parse("2016-01-01")
     cycle        Contract::Payment.cycles[:monthly]
 
-    before(:create) do |payment, _transients|
-      payment.contract ||= FactoryGirl.create(:contract, :metering_point_operator)
+    before(:create) do |payment, _evaluator|
+      payment.contract ||= FactoryGirl.build(:contract, :metering_point_operator)
     end
   end
 end

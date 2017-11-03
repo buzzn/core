@@ -3,6 +3,7 @@ FactoryGirl.define do
 
     transient do
       admins []
+      prices_attrs []
     end
 
     name        { generate(:localpool_name) }
@@ -19,6 +20,7 @@ FactoryGirl.define do
     after(:create) do |group, evaluator|
       group.owner.add_role(Role::GROUP_OWNER, group)
       evaluator.admins.each { |admin| admin.add_role(Role::GROUP_ADMIN, group) }
+      evaluator.prices_attrs.each { |price_attrs| build(:price, price_attrs.merge(localpool: group)) }
     end
   end
 end

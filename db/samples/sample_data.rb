@@ -1,3 +1,4 @@
+
 # IMPORTANT: don't require factory girl in the part that generates the SEED data.
 # That data is also used for the production environments and must not contain faked data!
 FactoryGirl.definition_file_paths = %w(db/factories)
@@ -47,9 +48,9 @@ $localpools = {
    people_power: create(:localpool, :people_power, owner: persons[:group_owner],
                   admins: [ persons[:brumbauer] ],
                   # FIXME: to be renamed to group_tariff
-                  prices: [
-                    build(:price, name: "Hausstrom - Standard"),
-                    build(:price, name: "Hausstrom - Reduziert", energyprice_cents_per_kilowatt_hour: 24.9),
+                  prices_attrs: [
+                    { name: "Hausstrom - Standard" },
+                    { name: "Hausstrom - Reduziert", energyprice_cents_per_kilowatt_hour: 24.9 },
                   ]
                 )
 }
@@ -196,6 +197,7 @@ meters = {
   )
 }
 
+
 #
 # Create other contracts for peoplepower group
 #
@@ -206,14 +208,15 @@ create(:contract, :metering_point_operator,
        contractor: Organization.buzzn,
        payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ]
 )
+
 create(:contract, :localpool_processing,
        localpool: $localpools[:people_power],
        customer: $localpools[:people_power].owner,
        contractor: Organization.buzzn,
        payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ],
        tariffs: [
-        build(:tariff, name: "Regular", energyprice_cents_per_kwh: 28.9),
-        build(:tariff, name: "Reduced", energyprice_cents_per_kwh: 25.9)
+        build(:tariff, name: "Regular", energyprice_cents_per_kwh: 28.9, contracts: nil),
+        build(:tariff, name: "Reduced", energyprice_cents_per_kwh: 25.9, contracts: nil)
       ]
 )
 
