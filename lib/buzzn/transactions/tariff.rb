@@ -1,9 +1,9 @@
 require_relative 'resource'
-require_relative '../schemas/tariff_create'
+require_relative '../schemas/transactions/admin/tariff/create'
 Buzzn::Transaction.define do |t|
 
   t.define(:create_tariff) do
-    validate TariffCreate
+    validate Schemas::Transactions::Admin::Tariff::Create
     step :resource, with: :nested_resource
   end
 end
