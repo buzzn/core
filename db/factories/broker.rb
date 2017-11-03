@@ -6,8 +6,12 @@ FactoryGirl.define do
     resource           { FactoryGirl.build(:meter, :real) }
     type               "Broker::Base"
 
-    before(:create) do |broker, _evaluator|
-      broker.mode = broker.resource.registers.first.is_a?(Register::Input) ? :in : :out
+    before(:create) do |broker, evaluator|
+      broker.mode = if evaluator.mode
+        evaluator.mode
+      else
+        broker.resource.registers.first.is_a?(Register::Input) ? :in : :out
+      end
     end
 
     trait :discovergy do

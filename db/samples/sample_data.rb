@@ -271,5 +271,5 @@ create(:broker, :discovergy, external_id: 'EASYMETER_60327606', resource: contra
 create(:broker, :discovergy, external_id: 'EASYMETER_60327607', resource: contracts[:pt9].register.meter)
 create(:broker, :discovergy, external_id: 'EASYMETER_60327608', resource: contracts[:pt10].register.meter)
 
-create(:broker, :discovergy, external_id: 'EASYMETER_60327608', resource: registers[:pv].meter)
-# create(:broker, :discovergy, external_id: 'EASYMETER_60300855', mode: nil, resource: meters[:grid])
+create(:broker, :discovergy, external_id: 'EASYMETER_60327687', resource: registers[:pv].meter)
+create(:broker, :discovergy, external_id: 'EASYMETER_60300855', mode: :in_out, resource: meters[:grid])
