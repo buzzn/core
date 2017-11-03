@@ -16,12 +16,6 @@ FactoryGirl.define do
         register_factory = meter.is_a?(Meter::Virtual) ? :virtual_input : :input
         [ FactoryGirl.build(:register, register_factory, meter: meter, group: meter.group) ]
       end
-      # address
-      meter.address = if meter.group.address
-        meter.group.address.dup # use from group when present
-      else
-        FactoryGirl.create(:address)
-      end
     end
 
     trait :one_way do
@@ -53,11 +47,20 @@ FactoryGirl.define do
       edifact_cycle_interval       Meter::Real.edifact_cycle_intervals[:yearly]
       edifact_tariff               Meter::Real.edifact_tariffs[:single_tariff]
       edifact_data_logging         Meter::Real.edifact_data_loggings[:electronic]
+      before(:create) do |meter, _evaluator|
+        meter.address = if meter.group.address
+          meter.group.address.dup # use from group when present
+        else
+          FactoryGirl.create(:address)
+        end
+      end
     end
 
     trait :virtual do
-      initialize_with { Meter::Virtual.new }
-      product_name                 "buzzn virtual meter"
+      initialize_with             { Meter::Virtual.new }
+      manufacturer_name           nil
+      direction_number            nil
+      product_name                "buzzn virtual meter"
     end
   end
 end

@@ -1,8 +1,9 @@
 FactoryGirl.define do
   factory :register, class: 'Register::Input' do
+    transient do
+      broker_id nil
+    end
     group                 { FactoryGirl.create(:localpool) }
-    # Can't save the associated meter yet. It validates it has a register, and then we run into a chicken-and-egg
-    # situation (each record requires the other to be persisted to be valid).
     meter                 { FactoryGirl.build(:meter, :real, group: group, registers: []) }
     direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]
@@ -12,15 +13,16 @@ FactoryGirl.define do
     share_with_group      true
     share_publicly        false
 
-    before(:create) do |register|
+    before(:create) do |register, evaluator|
       # make sure register and meter are wired up correctly
+      register.brokers << create(:broker, :discovergy, external_id: evaluator.broker_id) if evaluator.broker_id
       register.meter.registers << register
     end
 
     trait :virtual do
-      initialize_with { Register::Virtual.new } # a slight hack to define a trait of contract, but use a different subclass
+      initialize_with { Register::Virtual.new } # a slight hack to define a trait, but use a different subclass
       name            { 'Generic virtual register' }
-      meter           { FactoryGirl.build(:meter_virtual, group: group, registers: []) }
+      meter           { FactoryGirl.build(:meter, :virtual, group: group, registers: []) }
     end
 
     trait :virtual_input do
