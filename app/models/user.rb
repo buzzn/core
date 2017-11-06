@@ -146,10 +146,7 @@ class User < ContractingParty
   end
 
   def self.dummy
-    # TODO make this a cached value like the Orgnanization.discovergy, etc
-    #   @dummy ||= self.where(email: 'sys@buzzn.net').first
-    # and share the hardocded string as constant and the Fabricator and/or
-    # db/seeds.rb
+    # TODO make this a cached value like Organization.buzzn, Organization.discovergy.
     raise 'TODO'
   end
 
