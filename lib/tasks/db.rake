@@ -45,8 +45,20 @@ namespace :db do
                   'banks:import'
                 ]
 
-  desc 'Load some useful sample data into the application'
-  task sample: ['db:empty', 'db:seed'] do
-    require_relative '../../db/samples/_load'
+  Rake::Task["seed"].clear
+  task :seed do
+    puts "The db:seed rake task has been removed. Please use one of these instead:"
+    system "rake -T db:seed"
+  end
+  namespace :seed do
+    desc 'Loads essential data into the application'
+    task setup_data: :environment do
+      require_relative '../../db/setup_data'
+    end
+
+    desc 'Loads an example localpool with users etc. into the application'
+    task example_data: ['db:empty', 'db:seed:setup_data'] do
+      require_relative '../../db/example_data'
+    end
   end
 end

@@ -26,5 +26,5 @@ end
 # load files
 SAMPLES_TO_LOAD.each do |type|
   Buzzn::Logger.root.info("seeds: loading sample data for #{type}")
-  require_relative type.to_s
+  require_relative "example_data/#{type}"
 end
