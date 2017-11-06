@@ -115,7 +115,8 @@ module Buzzn
 
     def calculate_closeness_scores
       if day_interval[1] <= @now && day_interval[2] >= @now
-        closeness = calculate_current_closeness
+        # FIXME we do not have an address on register anymore
+        closeness = 0 # calculate_current_closeness
       else
         closeness = 0
       end

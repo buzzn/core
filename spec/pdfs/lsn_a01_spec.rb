@@ -15,7 +15,7 @@ describe Buzzn::Pdfs::LSN_A01 do
     contract.customer.address = Fabricate(:address)
     contract.register = Fabricate(:easymeter_60404849).registers.first
     contract.register.meter.update(address: Fabricate(:address_sulz))
-    contract.register.update(metering_point_id: 'DE17995926438168678487098331001') 
+    contract.register.update(metering_point_id: 'DE17995926438168678487098331001')
     contract.register.group = Fabricate(:localpool_sulz)
     contract
   end
@@ -23,9 +23,12 @@ describe Buzzn::Pdfs::LSN_A01 do
   subject { Buzzn::Pdfs::LSN_A01.new(contract) }
 
   it 'renders html' do
-    html = subject.to_html
-    print_html(Buzzn::Pdfs::LSN_A01::TEMPLATE, html)
-    expect(html).to eq File.read(__FILE__.sub(/rb$/, 'html'))
+    # we have a hardcoded date which needs to match
+    Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) do
+      html = subject.to_html
+      print_html(Buzzn::Pdfs::LSN_A01::TEMPLATE, html)
+      expect(html).to eq File.read(__FILE__.sub(/rb$/, 'html'))
+    end
   end
 
   it 'generates pdf' do

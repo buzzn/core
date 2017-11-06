@@ -1,5 +1,5 @@
 Buzzn::Application.configure do
-  
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # The test environment is used exclusively to run your application's
@@ -37,10 +37,4 @@ Buzzn::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.allow_concurrency = false # TODO https://github.com/rails/rails/issues/15089
-
-  config.after_initialize do
-    # Set Time.now to July 2, 2016 10:05:00 AM (at this instant), but allow it to move forward
-    t = Time.local(2016, 7, 2, 10, 5, 0)
-    Timecop.travel(t)
-  end
 end

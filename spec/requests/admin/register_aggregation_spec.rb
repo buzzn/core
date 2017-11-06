@@ -29,6 +29,10 @@ describe Admin::LocalpoolRoda do
 
   let(:time) { Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1) }
 
+  # need to cleanup authroizations as we move tests in time
+  before(:context) { $authorizations.clear if $authorizations }
+  after(:context) { $authorizations.clear }
+
   context 'registers' do
     context 'ticker' do
 
@@ -63,9 +67,11 @@ describe Admin::LocalpoolRoda do
           VCR.use_cassette("request/api/v1/discovergy") do
 
             time = Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1)
-            begin
-              Timecop.freeze(time)
-
+            # shared variables between Timecop blocks
+            expires = nil
+            etag = nil
+            modified = nil
+            Timecop.freeze(time) do
               GET "/test/#{group.id}/registers/#{input_register.id}/ticker", $admin
 
               expect(response).to have_http_status(200)
@@ -83,9 +89,10 @@ describe Admin::LocalpoolRoda do
               expect(response.headers['Cache-Control']).to eq "private, max-age=15"
               expect(etag = response.headers['ETag']).not_to be_nil
               expect(modified = response.headers['Last-Modified']).not_to be_nil
+            end
 
-              # cache hit
-              Timecop.freeze(time + 5)
+            # cache hit
+            Timecop.freeze(time + 5) do
               GET "/test/#{group.id}/registers/#{output_register.id}/ticker", $admin
 
               expect(response).to have_http_status(200)
@@ -93,9 +100,10 @@ describe Admin::LocalpoolRoda do
               expect(response.headers['Expires']).to eq expires
               expect(response.headers['ETag']).to eq etag
               expect(response.headers['Last-Modified']).to eq modified
+            end
 
-              # no cache hit
-              Timecop.freeze(time + 25)
+            # no cache hit
+            Timecop.freeze(time + 25) do
               GET "/test/#{group.id}/registers/#{output_register.id}/ticker", $admin
 
               expect(response).to have_http_status(200)
@@ -107,8 +115,6 @@ describe Admin::LocalpoolRoda do
               expect(response.headers['Expires']).not_to eq expires
               expect(response.headers['ETag']).not_to eq etag
               expect(response.headers['Last-Modified']).not_to eq modified
-            ensure
-              Timecop.return
             end
           end
         end
@@ -129,9 +135,7 @@ describe Admin::LocalpoolRoda do
             timestamp += 15.minutes
           end
 
-          begin
-            Timecop.freeze(time)
-
+          Timecop.freeze(time) do
             GET "/test/#{group.id}/registers/#{slp_register.id}/ticker", $admin
 
             expect(response).to have_http_status(200)
@@ -151,8 +155,6 @@ describe Admin::LocalpoolRoda do
             expect(response.headers['Cache-Control']).to eq "private, max-age=899"
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
-          ensure
-            Timecop.return
           end
         end
 
@@ -243,9 +245,7 @@ describe Admin::LocalpoolRoda do
         it '200 discovergy' do
           VCR.use_cassette("request/api/v1/discovergy") do
 
-            begin
-              Timecop.freeze(time)
-
+            Timecop.freeze(time) do
               GET "/test/#{group.id}/registers/#{input_register.id}/charts", $admin, duration: :hour
 
               expect(response).to have_http_status(200)
@@ -285,8 +285,6 @@ describe Admin::LocalpoolRoda do
               expect(response.headers['Cache-Control']).to eq "private, max-age=86400"
               expect(response.headers['ETag']).not_to be_nil
               expect(response.headers['Last-Modified']).not_to be_nil
-            ensure
-              Timecop.return
             end
           end
         end
@@ -419,9 +417,7 @@ describe Admin::LocalpoolRoda do
           Reading::Continuous.all.delete_all
           setup_readings
           time = Time.find_zone('UTC').local(2016, 2, 1, 1, 30, 1)
-          begin
-            Timecop.freeze(time)
-
+          Timecop.freeze(time) do
             GET "/test/#{group.id}/registers/#{slp_register.id}/charts", $admin, duration: :hour
 
             expect(response).to have_http_status(200)
@@ -461,8 +457,6 @@ describe Admin::LocalpoolRoda do
             expect(response.headers['Cache-Control']).to eq "private, max-age=86400"
             expect(response.headers['ETag']).not_to be_nil
             expect(response.headers['Last-Modified']).not_to be_nil
-          ensure
-            Timecop.return
           end
         end
 

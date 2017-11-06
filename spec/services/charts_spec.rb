@@ -91,11 +91,13 @@ describe Buzzn::Services::Charts do
 
 
   it 'delivers the right result for a virtual register' do |spec|
-    VCR.use_cassette("lib/buzzn/#{spec.metadata[:description].downcase}") do
-      interval = Buzzn::Interval.day(Time.current.in_time_zone('Berlin'))
-      result = subject.for_register(virtual_register, interval)
-      result_single = subject.for_register(virtual_register.formula_parts.first.operand, interval)
-      expect(result.in).to eq result_single.out
+    Timecop.travel(Time.local(2016, 7, 2, 10, 5, 0)) do
+      VCR.use_cassette("lib/buzzn/#{spec.metadata[:description].downcase}") do
+        interval = Buzzn::Interval.day(Time.current.in_time_zone('Berlin'))
+        result = subject.for_register(virtual_register, interval)
+        result_single = subject.for_register(virtual_register.formula_parts.first.operand, interval)
+        expect(result.in).to eq result_single.out
+      end
     end
   end
 

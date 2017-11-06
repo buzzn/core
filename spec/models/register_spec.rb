@@ -59,11 +59,6 @@ describe "Register Model" do
 
     before do
       register.update(observer_enabled: false, observer_offline_monitoring: false)
-      Timecop.freeze(now)
-    end
-
-    after do
-      Timecop.return
     end
 
     it 'creates activities via sidekiq' do
@@ -73,44 +68,50 @@ describe "Register Model" do
     end
 
     it 'nothing' do |spec|
-      VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}") do
-        register.update observer_enabled: false
-        result = register.create_observer_activities
-        expect(result).to eq Register::Base::NONE
+      Timecop.freeze(now) do
+        VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}") do
+          register.update observer_enabled: false
+          result = register.create_observer_activities
+          expect(result).to eq Register::Base::NONE
+        end
       end
     end
 
     it 'exceeds' do |spec|
-      VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}") do
-        register.update observer_enabled: true, observer_max_threshold: 200, observer_min_threshold: 0
-        result = register.create_observer_activities
-        expect(result).to eq Register::Base::EXCEEDS
+      Timecop.freeze(now) do
+        VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}") do
+          register.update observer_enabled: true, observer_max_threshold: 200, observer_min_threshold: 0
+          result = register.create_observer_activities
+          expect(result).to eq Register::Base::EXCEEDS
+        end
       end
     end
 
     it 'undershoots' do |spec|
-      VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}") do
-        register.update observer_enabled: true, observer_min_threshold: 1000, observer_max_threshold: 2000
-        result = register.create_observer_activities
-        expect(result).to eq Register::Base::UNDERSHOOTS
+      Timecop.freeze(now) do
+        VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}") do
+          register.update observer_enabled: true, observer_min_threshold: 1000, observer_max_threshold: 2000
+          result = register.create_observer_activities
+          expect(result).to eq Register::Base::UNDERSHOOTS
+        end
       end
     end
 
     it 'offline' do |spec|
       now = Time.find_zone('Berlin').local(2016,3,1, 1,30,1)
-      VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}_first") do
-        Timecop.return
-        Timecop.freeze(now)
-        register.update observer_offline_monitoring: true, last_observed: now.utc
-        result = register.create_observer_activities
-        expect(result).to eq Register::Base::NONE
+      Timecop.freeze(now) do
+        VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}_first") do
+          register.update observer_offline_monitoring: true, last_observed: now.utc
+          result = register.create_observer_activities
+          expect(result).to eq Register::Base::NONE
+        end
       end
-      VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}_second") do
-        Timecop.return
-        now += 5.minutes
-        Timecop.freeze(now)
-        result = register.create_observer_activities
-        expect(result).to eq Register::Base::OFFLINE
+      now += 5.minutes
+      Timecop.freeze(now) do
+        VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}_second") do
+          result = register.create_observer_activities
+          expect(result).to eq Register::Base::OFFLINE
+        end
       end
     end
   end
