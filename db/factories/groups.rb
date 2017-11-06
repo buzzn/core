@@ -10,6 +10,7 @@ FactoryGirl.define do
     description { |attrs| "#{attrs[:name]} description" }
     owner       { FactoryGirl.create(:person) }
     address
+    start_date  { Date.parse("2016-01-01") }
 
     trait :people_power do
       name "People Power Group"
