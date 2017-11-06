@@ -1,7 +1,7 @@
 require 'lsn_a01'
 describe Buzzn::Pdfs::LSN_A01 do
 
-  entity(:contractor) { Fabricate(:hell_und_warm) }
+  entity(:contractor) { Fabricate(:hell_und_warm_deprecated) }
   entity(:person) { Fabricate(:person) }
   entity(:contract) do
     contract = Fabricate(:lptc_mabe)

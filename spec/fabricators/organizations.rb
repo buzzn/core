@@ -35,8 +35,9 @@ Fabricator :power_giver_with_contracts, from: :power_giver do
   end
 end
 
-Fabricator :hell_und_warm, from: :other_organization do
-  name        'hell & warm Forstenried GmbH'
+# This fabricator should not be used any more, use the hell & warm organization loaded with setup
+Fabricator :hell_und_warm_deprecated, from: :other_organization do
+  name        'hell & warm Forstenried GmbH (deprecated)'
   phone       '089-89057180'
   email       't.brumbauer@wogeno.de'
   description 'Betreiber des Localpools Forstenried'
