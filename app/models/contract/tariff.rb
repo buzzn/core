@@ -1,5 +1,6 @@
 module Contract
   class Tariff < ActiveRecord::Base
+    self.table_name = :tariffs
 
     belongs_to :contracts, class_name: Base, foreign_key: :contract_id
     belongs_to :group, class_name: Group::Base, foreign_key: :group_id
