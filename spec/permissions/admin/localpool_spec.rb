@@ -157,7 +157,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
       expect(tariffs(localpool_owner, localpool2.id)).to match_array localpool2.tariffs.reload
       expect(tariffs(localpool_manager, localpool2.id)).to match_array localpool2.tariffs.reload
-      expect(tariffs(localpool_member, localpool1.id)).to match_array []
+      expect(tariffs(localpool_member, localpool1.id)).to match_array localpool1.tariffs.reload
 
       expect{ tariffs(localpool_member, localpool2.id) }.to raise_error Buzzn::PermissionDenied
     end
