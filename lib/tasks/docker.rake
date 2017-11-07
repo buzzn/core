@@ -29,6 +29,7 @@ namespace :docker do
       sh "docker tag #{image_name.local} #{image_name.public}"
       sh "docker tag #{image_name.local} #{image_name.public_latest}"
       sh "docker push #{image_name.public}"
+      sh "docker push #{image_name.public_latest}"
     end
   end
 end
