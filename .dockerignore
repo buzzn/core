@@ -4,7 +4,6 @@ docs
 README-docker.md
 README-specs.md
 spec
-!spec/fixture_files/profiles
 db/banks/*
 tmp/*
 docker-compose.yml

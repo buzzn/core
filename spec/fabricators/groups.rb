@@ -41,7 +41,6 @@ end
 
 Fabricator :tribe_hof_butenland, from: :tribe do
   name  'Hof Butenland'
-  logo  { File.new(Rails.root.join('spec/fixture_files', 'groups', 'hof_butenland', 'logo.jpg')) }
 end
 
 
@@ -68,8 +67,6 @@ Fabricator :localpool_wagnis4, from: :localpool do
   name        'Wagnis 4'
   website     'http://www.wagnis.org/wagnis/wohnprojekte/wagnis-4.html'
   description "Dies ist der Localpool von Wagnis 4."
-  logo        File.new(Rails.root.join('spec/fixture_files', 'groups', 'wagnis4', 'logo.png'))
-  image       File.new(Rails.root.join('spec/fixture_files', 'groups', 'wagnis4', 'image.png'))
   after_create do |localpool|
     Fabricate(:mpoc_buzzn_metering, localpool: localpool)
   end
@@ -80,8 +77,6 @@ Fabricator :localpool_forstenried, from: :localpool do
   name        'Mehrgenerationenplatz Forstenried'
   website     'http://www.energie.wogeno.de/'
   description { "Dies ist der Localpool des Mehrgenerationenplatzes Forstenried der Freien Waldorfschule München Südwest und Wogeno München eG." }
-  logo      { File.new(Rails.root.join('spec/fixture_files', 'groups', 'forstenried', 'schule_logo_wogeno.jpg'))}
-  image     { File.new(Rails.root.join('spec/fixture_files', 'groups', 'forstenried', 'Wogeno_app.jpg')) }
 end
 
 Fabricator :localpool_sulz, from: :localpool do

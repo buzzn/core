@@ -6,7 +6,6 @@ Fabricator :profile do
   phone       { FFaker::PhoneNumber.phone_number }
   terms       true
   i = 0
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', "#{((i+=1)%60) + 1}.jpg")) }
   about_me    { FFaker::Lorem.sentence }
   website     { "http://www.#{FFaker::Internet.domain_name}" }
   created_at  { (rand*10).days.ago }
@@ -18,7 +17,6 @@ Fabricator :profile_felix, from: :profile do
   first_name  'Felix'
   last_name   'Faerber'
   website     'http://www.ffaerber.com'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'felix.jpg')) }
 end
 
 
@@ -31,61 +29,51 @@ end
 Fabricator :profile_justus, from: :profile do
   first_name  'Justus'
   last_name   'Schütze'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'justus.jpg')) }
 end
 
 Fabricator :profile_danusch, from: :profile do
   first_name  'Danusch'
   last_name   'Mahmoudi'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'danusch.jpg')) }
 end
 
 Fabricator :profile_thomas, from: :profile do
   first_name  'Thomas'
   last_name   'Theenhaus'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'thomas.jpg')) }
 end
 
 Fabricator :profile_eva, from: :profile do
   first_name  'Eva'
   last_name   'Klopp'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'martina.jpg')) }
 end
 
 Fabricator :profile_stefan, from: :profile do
   first_name  'Stefan'
   last_name   'Erbacher'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'stefan.jpg')) }
 end
 
 Fabricator :profile_karin, from: :profile do
   first_name  'Karin'
   last_name   'Smith'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'karin.jpg')) }
 end
 
 Fabricator :profile_pavel, from: :profile do
   first_name  'Pavel'
   last_name   'Gorbachev'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'ole.jpg')) }
 end
 
 Fabricator :profile_philipp, from: :profile do
   first_name  'Philipp'
   last_name   'Osswald'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'philipp.jpg')) }
 end
 
 Fabricator :profile_christian, from: :profile do
   first_name  'Christian'
   last_name   'Widmann'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'christian.jpg')) }
 end
 
 Fabricator :profile_mustafa, from: :profile do
   first_name  'Mustafa'
   last_name   'Akman'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', "13.jpg")) }
 end
 
 Fabricator :profile_kristian, from: :profile do
@@ -93,20 +81,15 @@ Fabricator :profile_kristian, from: :profile do
   last_name   'Meier'
 end
 
-
-
 Fabricator :profile_jangerdes, from: :profile do
   first_name  'Jan'
   last_name   'Gerdes'
-  #image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'christian.jpg')) }
 end
 
 Fabricator :profile_christian_schuetze, from: :profile do
   first_name  'Christian'
   last_name   'Schütze'
-  image       { File.new(Rails.root.join('spec/fixture_files', 'profiles', 'christian_schuetze.jpg')) }
 end
-
 
 Fabricator :profile_uxtest, from: :profile do
   first_name 'Test'

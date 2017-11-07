@@ -46,7 +46,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: bash -c "bundle exec rake db:migrate && bundle exec sidekiq"
+    command: bash -c "bundle exec rake db:migrate db:seed:example_data && bundle exec sidekiq"
     depends_on:
       - postgres
       - redis

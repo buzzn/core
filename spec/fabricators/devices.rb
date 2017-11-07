@@ -37,7 +37,6 @@ Fabricator :auto_justus, from: :in_device do
   category                      'Elektroauto'
   watt_peak                     49000
   commissioning                 Date.new(2012,10,1)
-  image { File.new(Rails.root.join('spec/fixture_files', 'devices', 'justus', 'auto.jpg' )) }
 end
 
 
@@ -49,7 +48,6 @@ Fabricator :bhkw_justus, from: :out_device do
   primary_energy                Device::NATURAL_GAS
   watt_peak                     1000
   commissioning                 Date.new(2012,10,1)
-  image { File.new(Rails.root.join('spec/fixture_files', 'devices', 'justus', 'bhkw.jpg' )) }
 end
 
 Fabricator :dach_pv_justus, from: :out_device do
@@ -60,7 +58,6 @@ Fabricator :dach_pv_justus, from: :out_device do
   primary_energy                Device::SUN
   watt_peak                     8510
   commissioning                 Date.new(2012,3,31)
-  image { File.new(Rails.root.join('spec/fixture_files', 'devices', 'justus', 'pv.jpg' )) }
 end
 
 Fabricator :carport_pv_justus, from: :device do
@@ -72,7 +69,6 @@ Fabricator :carport_pv_justus, from: :device do
   primary_energy                Device::SUN
   watt_peak                     5300
   commissioning                 Date.new(2012,1,1)
-  image { File.new(Rails.root.join('spec/fixture_files', 'devices', 'justus', 'carport-pv.jpg' )) }
 end
 
 
@@ -85,7 +81,6 @@ Fabricator :pv_karin, from: :device do
   primary_energy                Device::SUN
   watt_peak                     2160
   commissioning                 Date.new(2002,11,1)
-  image { File.new(Rails.root.join('spec/fixture_files', 'devices', 'karin', 'pv.jpg' )) }
 end
 
 
@@ -97,7 +92,6 @@ Fabricator :bhkw_stefan, from: :out_device do
   primary_energy                Device::NATURAL_GAS
   watt_peak                     5500
   commissioning                 Date.new(1995,11,1)
-  image { File.new(Rails.root.join('spec/fixture_files', 'devices', 'stefan', 'bhkw.jpg' )) }
 end
 
 
@@ -110,7 +104,6 @@ Fabricator :hof_butenland_wind, from: :out_device do
   primary_energy                Device::WIND
   watt_peak                     55000
   commissioning                 Date.new(1989,12,1)
-  image { File.new(Rails.root.join('spec/fixture_files', 'devices', 'butenland', 'wind.jpg' )) }
 end
 
 
@@ -123,5 +116,4 @@ Fabricator :gocycle, from: :in_device do
   category                      'Pedelec'
   watt_peak                     250
   commissioning                 Date.new(2014,6,1)
-  image { File.new(Rails.root.join('spec/fixture_files', 'devices', 'felix', 'gocycle.jpg' )) }
 end
