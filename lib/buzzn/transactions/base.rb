@@ -6,15 +6,21 @@ class Transactions::Base
   class << self
 
     def new(**)
-      if ['create', 'with_step_args'].include? caller_locations[0].label
+      if ['for', 'with_step_args'].include? caller_locations[0].label
         super
       else
         raise NoMethodError.new("#{caller_locations[0]}: semi private method 'new' called for #{self}")
       end
     end
 
-    def create(*)
-      raise 'not implemented'
+    def for(schema = nil, subject = nil, *steps)
+      args = {}
+      args[:validate] = [schema] if schema
+      if subject
+        arg = [subject]
+        steps.each { |s| args[s] = arg }
+      end
+      new.with_step_args(args)
     end
   end
 end

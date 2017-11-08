@@ -1,7 +1,7 @@
 require_relative '../localpool'
 
 class Transactions::Admin::Localpool::AssignOwner < Transactions::Base
-  def self.create(localpool)
+  def self.for(localpool)
     new.with_step_args(
       authorize: [localpool, :assign],
       persist: [localpool]

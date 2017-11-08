@@ -78,7 +78,7 @@ module Me
       end
 
       r.patch! do
-        Transactions::Person::Update.create(person).call(r.params)
+        Transactions::Person::Update.for(person).call(r.params)
       end
     end
   end

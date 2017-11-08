@@ -2,12 +2,8 @@ require_relative '../localpool'
 require_relative '../../../schemas/transactions/admin/localpool/create'
 
 class Transactions::Admin::Localpool::Create < Transactions::Base
-  def self.create(localpools)
-    new.with_step_args(
-      validate: [Schemas::Transactions::Admin::Localpool::Create],
-      authorize: [localpools],
-      persist: [localpools]
-    )
+  def self.for(localpools)
+    super(Schemas::Transactions::Admin::Localpool::Create, localpools, :authorize, :persist)
   end
 
   step :validate, with: :'operations.validation'

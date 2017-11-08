@@ -1,7 +1,7 @@
 require_relative '../localpool'
 
 class Transactions::Admin::Localpool::CreatePersonOwner < Transaction::Base
-  def self.create(localpool)
+  def self.for(localpool)
     new.with_step_args(
       validate: [Schemas::Transactions::Admin::Organization::Create],
       authorize: [localpool, :assign],

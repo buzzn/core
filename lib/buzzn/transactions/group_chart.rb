@@ -1,12 +1,9 @@
 require_relative 'base'
+require_relative '../schemas/transactions/chart'
 
 class Transactions::GroupChart < Transactions::Base
-  def self.create(localpool)
-    new.with_step_args(
-      validate: Schemas::Transactions::Chart,
-      authorize: [localpool],
-      chart: [localpool]
-    )
+  def self.for(localpool)
+    super(Schemas::Transactions::Chart, localpool, :authorize, :chart)
   end
 
   step :validate, with: :'operations.validation'
