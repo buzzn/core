@@ -11,11 +11,44 @@ class Operations::Action::Update
       # TODO better a Left Monad and handle on roda
       raise Buzzn::StaleEntity.new(resource.object)
     else
-      resource.object.update!(input)
-      Dry::Monads.Right(resource)
+      update(input, resource)
     end
   rescue => e
     # TODO better a Left Monad and handle on roda
     raise e
+  end
+
+  def update(input, resource)
+    resource.object.class.transaction do
+      resource.object.attributes = input
+      result = check_invariant(resource.object)
+      if result.success?
+        resource.touch
+        resource.save!
+        Right(resource)
+      else
+        Left(result)
+      end
+    end
+  end
+
+  ALWAYS_SUCCESS = Object.new.tap do |o|
+    def o.success?; true; end
+  end
+
+  def check_invariant(object)
+    invariant = find_invariant(object.class)
+    if invariant
+      invariant.call(object.attributes)
+    else
+      ALWAYS_SUCCESS
+    end
+  end
+
+  def find_invariant(clazz)
+    if clazz != ActiveRecord::Base
+      invariant = "#{Schemas::Invariants}::#{clazz}".safe_constantize
+      invariant || find_invariant(clazz.superclass)
+    end
   end
 end

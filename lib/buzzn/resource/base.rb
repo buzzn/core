@@ -6,6 +6,10 @@ module Buzzn::Resource
 
     attr_reader :object, :current_user, :current_roles, :permissions
 
+    def context
+      Context.new(current_user, current_roles, permissions)
+    end
+
     class << self
 
       def attribute_names
@@ -21,13 +25,20 @@ module Buzzn::Resource
       end
 
       def new(resource, options = {})
+        # FIXME probably not needed
         @abstract = false if @abstract.nil?
+        # TODO this should be the only contructor
+        if options.is_a? Context
+          options = Context.dry_validation.public_attributes(options)
+        end
         options ||= {}
         # ActiveModel::SerializableResource does not check whether it has
         # already an serializer, so we check it here and just return it
+        # FIXME check if still needed
         if resource.is_a? self
           resource
         elsif abstract?
+          # FIXME find if still needed
           to_resource(options[:current_user], options[:current_roles],
                       options[:permissions], resource)
         else

@@ -1,23 +1,26 @@
-require_relative '../localpool'
+require_relative 'assign_owner_base'
 
-class Transactions::Admin::Localpool::CreatePersonOwner < Transaction::Base
-  def self.for(localpool)
-    new.with_step_args(
-      validate: [Schemas::Transactions::Admin::Person::Create],
-      authorize: [localpool, :assign],
-      persist: [localpool]
-    )
-  end
-
-  step :validate, with: 'operations.validation'
-  step :authorize, with: :'operations.authorize.generic'
-  step :persist
-
-  def persist(input, localpools)
-    Group::Localpool.transaction do
-      person = localpool.object.persons.build(input)
-      localpool.object.update!(owner: person)
+module Transactions::Admin::Localpool
+  class CreatePersonOwner < AssignOWnerBase
+    def self.for(localpool)
+      new.with_step_args(
+        validate: [Schemas::Transactions::Admin::Person::Create],
+        authorize: [localpool, localpool.permissions.owner.create],
+        persist: [localpool]
+      )
     end
-    Right(localpool.owner)
+
+    step :validate, with: 'operations.validation'
+    step :authorize, with: :'operations.authorize.generic'
+    step :persist
+
+    def persist(input, localpool)
+      Group::Localpool.transaction do
+        person = localpool.to_resource(Person.create!(params),
+                                       permissions.owner,
+                                       PersonResource)
+        Right(assign_owner(person))
+      end
+    end
   end
 end
