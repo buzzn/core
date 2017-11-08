@@ -1,7 +1,7 @@
 SampleData.localpools = OpenStruct.new(
   people_power: create(:localpool, :people_power,
     owner: SampleData.persons.group_owner,
-    admins: [ SampleData.persons.brumbauer] ,
+    admins: [ SampleData.persons.brumbauer],
     # FIXME: to be renamed to group_tariff
     prices_attrs: [
       { name: "Hausstrom - Standard" },
