@@ -1,5 +1,5 @@
 module Buzzn
   module Types
-   include Dry::Types.module
+    include Dry::Types.module
   end
 end
