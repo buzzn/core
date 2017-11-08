@@ -3,7 +3,7 @@ FactoryGirl.define do
     provider_login     "login"
     provider_password  "123456789"
     # FIXME: the resource association currently always contains a Meter::Real, so we should name it like that.
-    resource           { FactoryGirl.build(:meter, :real) }
+    resource           { FactoryGirl.create(:meter, :real) }
     type               "Broker::Base"
 
     before(:create) do |broker, evaluator|
