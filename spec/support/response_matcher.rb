@@ -32,7 +32,7 @@ RSpec::Matchers.define :be_stale_json do |expected, instance|
   end
 end
 
-RSpec::Matchers.define :be_denied_json do |expected, instance, user = nil|
+RSpec::Matchers.define :be_denied_json do |expected, instance, user: nil, prefix: 'retrieve'|
   match do |actual|
     if instance.is_a?(Class)
       clazz = instance
@@ -44,7 +44,7 @@ RSpec::Matchers.define :be_denied_json do |expected, instance, user = nil|
     JSON.parse(actual.body) == {
       "errors" => [
         {
-          "detail"=>"retrieve #{clazz}: #{id}permission denied for User: #{(user || $user).id}"
+          "detail"=>"#{prefix} #{clazz}: #{id}permission denied for User: #{(user || $user).id}"
         }
       ]
     } && actual.status == expected

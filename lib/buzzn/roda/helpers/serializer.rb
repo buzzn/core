@@ -10,6 +10,9 @@ module Buzzn
         options = {include: Buzzn::IncludeParser.parse(request.params['include'])}
         case object
         when Dry::Monads::Either::Right
+          if object.value.created_at == object.value.updated_at
+            request.response.status = 201
+          end
           object.value.to_json(options)
         when Dry::Monads::Either::Left
           errors = []

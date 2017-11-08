@@ -131,7 +131,7 @@ describe Admin::LocalpoolRoda do
 
     it '403' do
       GET "/test/#{localpool.id}", $other
-      expect(response).to be_denied_json(403, localpool, $other)
+      expect(response).to be_denied_json(403, localpool, user: $other)
     end
 
     it '404' do
@@ -179,6 +179,11 @@ describe Admin::LocalpoolRoda do
         POST "/test", $admin
         expect(response).to be_session_expired_json(401)
       end
+    end
+
+    it '403' do
+      POST "/test", $user, new_localpool
+      expect(response).to be_denied_json(403, Admin::LocalpoolResource, user: $user, prefix: :create)
     end
 
     it '422' do
