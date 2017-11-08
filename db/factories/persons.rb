@@ -31,8 +31,8 @@ FactoryGirl.define do
     end
 
     trait :with_bank_account do
-      after(:create) do |person|
-        person.bank_accounts = [ FactoryGirl.create(:bank_account, contracting_party: person) ]
+      after(:build) do |person, _evaluator|
+        person.bank_accounts << FactoryGirl.build(:bank_account)
       end
     end
 

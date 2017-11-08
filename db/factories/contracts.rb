@@ -13,8 +13,8 @@ FactoryGirl.define do
 
     before(:create) do |contract, _evaluator|
       %i(customer contractor).each do |identifier|
-        person_bank_account = contract.send(identifier).bank_accounts.first
-        contract.send("#{identifier}_bank_account=", person_bank_account) if person_bank_account.present?
+        bank_account = contract.send(identifier).bank_accounts.first
+        contract.send("#{identifier}_bank_account=", bank_account) if bank_account.present?
       end
     end
   end

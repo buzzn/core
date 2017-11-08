@@ -6,7 +6,7 @@ FactoryGirl.define do
     bank_name               { ['GLS Bank', 'Sparkasse München', 'Berliner Volksbank', 'UniCredit HypoVereinsbank'].sample }
     direct_debit            true
 
-    before(:create) do |account, _transients|
+    after(:build) do |account, _transients|
       # assign contracting_party if not present yet
       account.contracting_party = FactoryGirl.create(:person) unless account.contracting_party
       # this works for both Person and Organization

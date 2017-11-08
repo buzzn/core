@@ -6,6 +6,9 @@ describe "Factories produce valid records" do
     match do |actual|
       actual.send(association_accessor).is_a?(association_klass)
     end
+    failure_message do |actual|
+      "Expected #{actual.class}##{association_accessor} to contain a #{association_klass}, but it's #{actual.send(association_accessor).inspect}."
+    end
   end
 
   context "Account" do
@@ -46,9 +49,13 @@ describe "Factories produce valid records" do
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:localpool, Group::Localpool) }
     it { is_expected.to have_association(:contractor, Organization) }
-    it { is_expected.to have_association(:contractor_bank_account, BankAccount) }
+    it "has bank account" do
+      is_expected.to have_association(:contractor_bank_account, BankAccount)
+    end
     it { is_expected.to have_association(:customer, Person) }
-    it { is_expected.to have_association(:customer_bank_account, BankAccount) }
+    it "customer bank", :focus do
+      is_expected.to have_association(:customer_bank_account, BankAccount)
+    end
     it "has correctly generated contract numbers" do
       expect(subject.contract_number).to be >= 90_000
       expect(subject.contract_number).to be <= 100_000
