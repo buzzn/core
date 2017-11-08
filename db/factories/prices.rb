@@ -4,6 +4,9 @@ FactoryGirl.define do
     begin_date                          Date.parse("2016-01-01")
     energyprice_cents_per_kilowatt_hour 27.9
     baseprice_cents_per_month           300
-    localpool                           { FactoryGirl.build(:localpool) }
+
+    after(:build) do |price|
+      price.localpool = FactoryGirl.create(:localpool) unless price.localpool
+    end
   end
 end

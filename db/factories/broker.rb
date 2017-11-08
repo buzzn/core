@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :broker, class: 'Broker::Base' do
     provider_login     "login"
     provider_password  "123456789"
-    # This sucks. Resource is currently always Meter::Real, so we should name it accordingly.
+    # FIXME: the resource association currently always contains a Meter::Real, so we should name it like that.
     resource           { FactoryGirl.build(:meter, :real) }
     type               "Broker::Base"
 
