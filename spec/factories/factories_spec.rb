@@ -206,6 +206,6 @@ describe "Factories produce valid records" do
   context "Tariff" do
     subject { create(:tariff) }
     it { is_expected.to be_valid }
-    it { is_expected.to have_association(:contracts, Contract::Base) }
+    it { expect(subject.contracts.first).to be_a(Contract::Base) }
   end
 end
