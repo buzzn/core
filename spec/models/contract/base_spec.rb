@@ -31,4 +31,16 @@ describe 'Contract::Base' do
       end
     end
   end
+
+  context "tariffs" do
+    let(:contract) { Fabricate.build(:metering_point_operator_contract) }
+    it "has none by default" do
+      expect(contract.tariffs).to eq([])
+    end
+    it "correctly creates and saves a tariff" do
+      tariff = create(:tariff)
+      contract.tariffs << tariff
+      expect(contract.tariffs).to eq([tariff])
+    end
+  end
 end
