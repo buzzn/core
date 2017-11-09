@@ -13,9 +13,9 @@ module Me
 
       change_login_requires_password? true
       session_expiration_redirect nil
-      session_inactivity_timeout ENV['SESSION_INACTIVITY_TIMEOUT'].to_i || (60 * 15) # default to 15 minutes.
+      session_inactivity_timeout Import.global('config.session_inactivity_timeout').to_i
       max_session_lifetime 86400 # 1 day
-      jwt_secret (ENV['JWT_SECRET'] || raise('missing JWT_SECRET in env'))
+      jwt_secret Import.global('config.jwt_secret')
       json_response_error_status 401
 
       set_error_flash do |message|

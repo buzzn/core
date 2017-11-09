@@ -8,8 +8,6 @@ require_relative 'plugins/aggregation'
 
 class BaseRoda < CommonRoda
 
-  use Rack::Session::Cookie, :secret => ENV['SECRET'] || 'my secret', :key => '_buzzn_session'
-
   plugin :json_parser, parser: MultiJson.method(:load)
 
   plugin :json,
@@ -38,10 +36,10 @@ class BaseRoda < CommonRoda
     db Buzzn::DB
 
     session_expiration_redirect nil
-    session_inactivity_timeout ENV['SESSION_INACTIVITY_TIMEOUT'].to_i || (60 * 15) # default to 15 minutes.
+    session_inactivity_timeout Import.global('config.session_inactivity_timeout').to_i
     max_session_lifetime 86400 # 1 day
 
-    jwt_secret (ENV['JWT_SECRET'] || raise('missing JWT_SECRET in env'))
+    jwt_secret Import.global('config.jwt_secret')
     json_response_error_status 401
   end
 end

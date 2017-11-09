@@ -9,7 +9,7 @@ require 'dry/more/container/singleton'
 require_relative '../core/number'
 
 Import = Dry::AutoInject(Buzzn::Boot::MainContainer)
-def Import.instance(key)
+def Import.global(key)
   container[key]
 end
 
