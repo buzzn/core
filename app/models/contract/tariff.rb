@@ -15,6 +15,6 @@ module Contract
 
 
     # permissions helpers
-    scope :permitted, ->(uuids) { binding.pry; where(group_id: uuids) }
+    scope :permitted, ->(uuids) { where(group_id: uuids) }
   end
 end
