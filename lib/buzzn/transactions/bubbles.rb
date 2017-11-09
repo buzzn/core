@@ -1,15 +1,12 @@
 require_relative 'base'
 
 class Transactions::Bubbles < Transactions::Base
-  def self.for(localpool)
-    super(nil, localpool, :authorize, :bubbles)
-  end
 
-  step :authorize, with: :'operations.authorization.generic'
+  step :authorize
   step :bubbles, with: :'operations.bubbles'
 
-  def authorize(input, localpool)
+  def authorize(group)
     # TODO check privacy settings here
-    Right(input)
+    Right(group)
   end
 end

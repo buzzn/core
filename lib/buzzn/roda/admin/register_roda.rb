@@ -1,12 +1,11 @@
 require_relative '../admin_roda'
+require_relative '../../transactions/admin/register/update_real'
+require_relative '../../transactions/admin/register/update_virtual'
+
 class Admin::RegisterRoda < BaseRoda
   CHILDREN = :registers
 
   plugin :shared_vars
-
-  include Import.args[:env,
-                      'transaction.update_real_register',
-                      'transaction.update_virtual_register']
 
   route do |r|
 
@@ -27,9 +26,13 @@ class Admin::RegisterRoda < BaseRoda
       r.patch! do
         case register.object
         when Register::Real
-          update_real_register.call(r.params, resource: [register])
+          Transactions::Admin::Register::UpdateReal
+            .for(register)
+            .call(r.params)
         when Register::Virtual
-          update_virtual_register.call(r.params, resource: [register])
+          Transactions::Admin::Register::UpdateVirtual
+            .for(register)
+            .call(r.params)
         else
           raise "unknown model: #{register.class.model}"
         end

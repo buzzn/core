@@ -29,7 +29,7 @@ module Buzzn::Resource
         @abstract = false if @abstract.nil?
         # TODO this should be the only contructor
         if options.is_a? Context
-          options = Context.dry_validation.public_attributes(options)
+          options = options.to_h
         end
         options ||= {}
         # ActiveModel::SerializableResource does not check whether it has

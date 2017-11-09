@@ -1,12 +1,11 @@
 require_relative '../admin_roda'
+require_relative '../../transactions/admin/register/update_formula_part'
+
 module Admin
   class FormulaPartRoda < BaseRoda
     CHILDREN = :parts
 
     plugin :shared_vars
-
-    include Import.args[:env,
-                        'transaction.update_formula_part']
 
     route do |r|
 
@@ -24,9 +23,9 @@ module Admin
         end
 
         r.patch! do
-          update_formula_part.call(r.params,
-                                   registers: [shared[LocalpoolRoda::PARENT].registers],
-                                   resource: [part])
+          Transactions::Admin::Register::UpdateFormulaPart
+            .for(shared[LocalpoolRoda::PARENT].registers, part)
+            .call(r.params)
         end
       end
     end

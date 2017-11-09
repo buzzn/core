@@ -1,12 +1,10 @@
-module Display
-  class ScoreResource < Buzzn::Resource::Base
+class Display::ScoreResource < Buzzn::Resource::Base
 
-    model Score
+  model Score
 
-    attributes  :mode,
-                :interval,
-                :interval_beginning,
-                :interval_end,
-                :value
-  end
+  attributes  :mode,
+              :interval,
+              :interval_beginning,
+              :interval_end,
+              :value
 end

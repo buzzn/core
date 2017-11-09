@@ -1,21 +1,19 @@
 require_relative '../admin_roda'
+require_relative '../../transactions/admin/billing/create_regular'
+require_relative '../../transactions/admin/billing/update'
+require_relative '../../transactions/admin/billing/delete'
+
 class Admin::BillingRoda < BaseRoda
   plugin :shared_vars
-  plugin :created_deleted
-
-  include Import.args[:env,
-                      'transaction.create_regular_billings',
-                      'transaction.update_billing']
 
   route do |r|
 
     billing_cycle = shared[:billing_cycle]
 
     r.post! 'regular' do
-      created do
-        create_regular_billings.call(r.params,
-                                     resource: [billing_cycle.method(:create_regular_billings)])
-      end
+      Transactions::Admin::Billing::CreateRegular
+          .for(billing_cycle)
+          .call(r.params)
     end
 
     billings = billing_cycle.billings
@@ -31,13 +29,14 @@ class Admin::BillingRoda < BaseRoda
       end
 
       r.patch! do
-        update_billing.call(r.params, resource: [billing])
+        Transactions::Admin::Billing::Update
+          .for(billing)
+          .call(r.params)
       end
 
       r.delete! do
-        deleted do
-          billing.delete
-        end
+        Transactions::Admin::Billing::Delete
+          .call(billing)
       end
     end
   end

@@ -8,7 +8,7 @@ describe Admin::BankAccountRoda do
 
         localpool = Admin::LocalpoolResource.all(current_user).first
         localpool.object.persons
-        parent = localpool.organizations.where(id: id).first || localpool.persons.where(id: id).first
+        parent = localpool.organizations.retrieve_or_nil(id) || localpool.persons.retrieve_or_nil(id)
         shared[Admin::BankAccountRoda::PARENT] = parent
         r.run Admin::BankAccountRoda
       end
@@ -79,17 +79,7 @@ describe Admin::BankAccountRoda do
           {
             "errors" => [
               {
-                "detail"=>"create_bank_account OrganizationResource: #{parent.id} permission denied for User: #{$user.id}" }
-            ]
-          }
-        end
-
-        let(:missing_json) do
-          {
-            "errors"=>[
-              {"parameter"=>"bank_name", "detail"=>"is missing"},
-              {"parameter"=>"holder", "detail"=>"is missing"},
-              {"parameter"=>"iban", "detail"=>"is missing"},
+                "detail"=>" OrganizationResource: #{parent.id} permission denied for User: #{$user.id}" }
             ]
           }
         end
@@ -127,12 +117,12 @@ describe Admin::BankAccountRoda do
             "errors"=>[
               {"parameter"=>"updated_at",
                "detail"=>"is missing"},
-              {"parameter"=>"bank_name",
-               "detail"=>"size cannot be greater than 64"},
               {"parameter"=>"holder",
                "detail"=>"size cannot be greater than 64"},
               {"parameter"=>"iban",
-               "detail"=>"must be a valid iban"}
+               "detail"=>"must be a valid iban"},
+              {"parameter"=>"bank_name",
+               "detail"=>"size cannot be greater than 64"},
             ]
           }
         end

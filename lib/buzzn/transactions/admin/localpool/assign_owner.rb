@@ -4,7 +4,7 @@ module Transactions::Admin::Localpool
   class AssignOwner < AssignOwnerBase
     def self.for(localpool)
       new.with_step_args(
-        authorize: [localpool, :assign],
+        authorize: [localpool, localpool.permissions.owner.update],
         persist: [localpool]
       )
     end
@@ -14,7 +14,7 @@ module Transactions::Admin::Localpool
 
     def persist(input, localpool)
       Group::Localpool.transaction do
-        Right(assign_owner(new_owner))
+        Right(assign_owner(input))
       end
     end
   end

@@ -1226,12 +1226,6 @@ paths:
         required: true
         type: string
         format: date-time
-      - name: bank_name
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
       - name: holder
         in: formData
         required: false
@@ -1242,7 +1236,14 @@ paths:
         in: formData
         required: false
         type: string
-        format: iban
+        format: ''
+        maxLength: 32
+      - name: bank_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       responses:
         200:
           description: patched
@@ -1358,12 +1359,6 @@ paths:
         required: true
         type: string
         format: date-time
-      - name: bank_name
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
       - name: holder
         in: formData
         required: false
@@ -1374,7 +1369,14 @@ paths:
         in: formData
         required: false
         type: string
-        format: iban
+        format: ''
+        maxLength: 32
+      - name: bank_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       responses:
         200:
           description: patched

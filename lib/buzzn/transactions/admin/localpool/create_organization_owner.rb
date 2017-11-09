@@ -16,9 +16,9 @@ module Transactions::Admin::Localpool
 
     def persist(input, localpools)
       Group::Localpool.transaction do
-        context = localpool.context.sub_context(:owner)
+        context = localpool.context.owner
         organization = OrganizationResource.new(Organization.create!(input.merge(mode: :other), context)
-        Right(assign_owner(organization))
+        Right(assign_owner(localpool, organization))
       end
     end
   end

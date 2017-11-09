@@ -6,11 +6,15 @@ class Transactions::Base
   class << self
 
     def new(**)
-      if ['for', 'with_step_args'].include? caller_locations[0].label
+      if ['call', 'for', 'with_step_args'].include? caller_locations[0].label
         super
       else
         raise NoMethodError.new("#{caller_locations[0]}: semi private method 'new' called for #{self}")
       end
+    end
+
+    def call(*args)
+      new.call(*args)
     end
 
     def for(schema = nil, subject = nil, *steps)

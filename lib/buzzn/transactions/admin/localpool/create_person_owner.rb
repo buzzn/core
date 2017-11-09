@@ -16,10 +16,9 @@ module Transactions::Admin::Localpool
 
     def persist(input, localpool)
       Group::Localpool.transaction do
-        person = localpool.to_resource(Person.create!(params),
-                                       permissions.owner,
-                                       PersonResource)
-        Right(assign_owner(person))
+        context = localpool.context.owner
+        person = PersonResource.new(Person.create!(input), context)
+        Right(assign_owner(localpool, person))
       end
     end
   end

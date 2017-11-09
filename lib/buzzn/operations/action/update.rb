@@ -1,4 +1,4 @@
-require_relative '../authorization'
+require_relative '../action'
 
 class Operations::Action::Update
   include Dry::Transaction::Operation
@@ -13,9 +13,6 @@ class Operations::Action::Update
     else
       update(input, resource)
     end
-  rescue => e
-    # TODO better a Left Monad and handle on roda
-    raise e
   end
 
   def update(input, resource)
@@ -23,12 +20,19 @@ class Operations::Action::Update
       resource.object.attributes = input
       result = check_invariant(resource.object)
       if result.success?
-        resource.touch
-        resource.save!
+        persist(resource.object)
         Right(resource)
       else
+        # TODO ? resource.reload
         Left(result)
       end
+    end
+  end
+
+  def persist(object)
+    if object.changed?
+      object.touch
+      object.save!
     end
   end
 

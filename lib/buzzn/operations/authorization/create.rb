@@ -3,9 +3,7 @@ require_relative '../authorization'
 class Operations::Authorization::Create
   include Dry::Transaction::Operation
 
-  def call(input, resources = nil)
-    raise ArgumentError.new('missing resources') unless resources
-
+  def call(input, resources)
     if resources.createable?
       Dry::Monads.Right(input)
     else

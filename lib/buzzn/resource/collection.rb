@@ -14,6 +14,10 @@ module Buzzn::Resource
       @meta = {}
     end
 
+    def context
+      Context.new(@current_user, @unbound_roles, @permissions)
+    end
+
     def current_roles(id)
       @unbound_roles | (@current_user ? @current_user.uuids_to_rolenames.fetch(id, []) : [])
     end
@@ -23,6 +27,12 @@ module Buzzn::Resource
         block.call(@to_resource.call(@current_user, current_roles(model.id),
                                      @permissions, model, @instance_class))
       end
+    end
+
+    def filter(query)
+      # FIXME Collection should be immutable !
+      @objects = @objects.filter(query)
+      self
     end
 
     def retrieve_with_slug(id)
@@ -37,10 +47,20 @@ module Buzzn::Resource
       do_retrieve(id, id: id)
     end
 
-    def do_retrieve(id, *args)
+    def retrieve_or_nil(id)
+      do_retrieve_or_nil(id, id: id)
+    end
+
+    def do_retrieve_or_nil(id, *args)
       if result = @objects.where(*args).first
         @to_resource.call(@current_user, current_roles(id),
                           @permissions, result, @instance_class)
+      end
+    end
+
+    def do_retrieve(id, *args)
+      if result = do_retrieve_or_nil(id, *args)
+        result
       else
         clazz = @objects.class.to_s.sub(/::ActiveRecord_.*/,'').safe_constantize
         clazz ||= @instance_class && @instance_class.model

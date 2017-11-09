@@ -1,14 +1,13 @@
 require_relative '../base_roda'
+require_relative '../../transactions/utils/zip_to_price'
+
 module Utils
   class ZipToPriceRoda < BaseRoda
-
-    include Import.args[:env,
-                        'transaction.zip_to_price']
 
     route do |r|
 
       r.post! do
-        zip_to_price.call(r.params)
+        Transactions::Utils::ZipToPrice.call(r.params)
       end
     end
   end

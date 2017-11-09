@@ -1,9 +1,6 @@
 module Register
   class BaseResource < Buzzn::Resource::Entity
 
-    include Import.reader['service.current_power',
-                          'service.charts']
-
     abstract
 
     model Base
@@ -23,18 +20,6 @@ module Register
 
     has_one :group
     has_many! :readings, ReadingResource
-
-    # API methods for the endpoints
-
-    def ticker
-      current_power.for_register(self)
-    end
-
-    def charts(duration:, timestamp: nil)
-      @charts.for_register(self, Buzzn::Interval.create(duration, timestamp))
-    end
-
-    # attribute implementations
 
     def last_reading
       reading = object.readings.order('date').last

@@ -6,24 +6,40 @@ module Buzzn
         @logger ||= Buzzn::Logger.new(self)
       end
 
+      def infer_status(object)
+        if object.destroyed?
+          204
+        elsif object.created_at == object.updated_at
+          201
+        end
+      end
+
+      def handle_right(value, request)
+        if request.response.status.nil? && value.is_a?(Buzzn::Resource::Base)
+          request.response.status = infer_status(value.object)
+        end
+        value
+      end
+
+      def handle_left(value, request)
+        errors = []
+        value.errors.each do |name, messages|
+          messages.each do |message|
+            errors << { parameter: name,
+                        detail: message }
+          end
+        end
+        request.response.status = ErrorHandler::ERRORS[value.class] || 500
+        "{\"errors\":" << errors.to_json << "}"
+      end
+
       def call(object, request)
         options = {include: Buzzn::IncludeParser.parse(request.params['include'])}
         case object
         when Dry::Monads::Either::Right
-          if object.value.created_at == object.value.updated_at
-            request.response.status = 201
-          end
-          object.value.to_json(options)
+          handle_right(object.value, request).to_json(options)
         when Dry::Monads::Either::Left
-          errors = []
-          object.value.errors.each do |name, messages|
-            messages.each do |message|
-              errors << { parameter: name,
-                          detail: message }
-            end
-          end
-          request.response.status = ErrorHandler::ERRORS[object.value.class] || 500
-          "{\"errors\":" << errors.to_json
+          handle_left(object.value, request)
         when NilClass
           # response with 404 unless otherwise set
         else
