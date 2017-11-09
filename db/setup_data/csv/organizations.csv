@@ -1,43 +1,38 @@
 name;description;slug;image;email;phone;fax;website;street;city;zip;state;country
-Buzzn GmbH;Purveyor of peoplepower since 2009;buzzn;;team@buzzn.net;089 / 32 16 8;;www.buzzn.net;Combinat 56, Adams-Lehmann-Straße 56;München;80797;BY;DE
-50Hertz Transmission GmbH;;50hertz;;unknown@unknown.de;+49 30 51503782;+49 30 51504511;http://www.50hertz.com/de/;Heidestraße 2;Berlin;10557;BE;DE
-Tennet TSO GmbH;;tennet;;unknown@unknown.de;+49 921 507404575;+49 921 507404566;https://www.tennet.eu/de;Bernecker Straße 70;Bayreuth;95448;BY;DE
-Amprion GmbH;;amprion;;unknown@unknown.de;+49 231 5849 12502;+49 231 5849 14509;https://www.amprion.net;Rheinlanddamm 24;Dortmund;44139;RP;DE
-TransnetBW GmbH;;transnetbw;;unknown@unknown.de;+49 711 21858 3706;+49 711 21858 4413;https://www.transnetbw.de/de;Osloer Straße 15-17;Stuttgart;70173;BW;DE
-SWM Infrastruktur GmbH & Co. KG;;swm;;unknown@unknown.de;+49 89 2361 4644;+49 89 2361 4699;http://www.swm-infrastruktur.de;Emmy-Noether-Straße 2;München;80287;BY;DE
-E.ON Netz GmbH;;eon-netz;;unknown@unknown.de;0921 915-0;;https://www.eon.com
-Stadtwerke Augsburg GmbH;;sw-augsburg;;unknown@unknown.de;0821 65006500;;www.sw-augsburg.de
-Bayernwerk Netz GmbH;;bayernwerk-netz;;unknown@unknown.de;+49 941 2017128;+49 941 2017113;http://www.bayernwerk-netz.de;Lilienthalstraße 7;Regensburg;93049;BY;DE
-bnNETZE GmbH;;bn-netze;;unknown@unknown.de;+49 000000;;
-E.DIS AG ;;;;unknown@unknown.de;+49 000000;;
-E.ON Avacon AG;;;;unknown@unknown.de;+49 000000;;
-enercity Netzgesellschaft mbH;;;;unknown@unknown.de;+49 000000;;
-Gemeindewerke Peißenberg;;;;unknown@unknown.de;+49 000000;;
-LEW Verteilnetz GmbH ;;;;unknown@unknown.de;+49 000000;;
-LSW Netz GmbH;;;;unknown@unknown.de;+49 000000;;
-Mitteldeutsche Netzgesellschaft Strom mbH;;;;unknown@unknown.de;+49 000000;;
-NEW Netz GmbH ;;;;unknown@unknown.de;+49 000000;;
-Rheinische NETZGesellschaft mbH (RNG);;;;unknown@unknown.de;+49 000000;;
-Rhein-Ruhr Verteilnetz GmbH;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke Einbeck GmbH ;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke Kaltenkirchen GmbH;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke Landshut ;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke Schorndorf GmbH ;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke Waiblingen GmbH ;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke Wedel GmbH;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke Wiesbaden Netz GmbH;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke Witzenhausen GmbH;;;;unknown@unknown.de;+49 000000;;
-Stromnetz Berlin GmbH;;;;unknown@unknown.de;+49 000000;;
-Stromnetz Hamburg GmbH ;;;;unknown@unknown.de;+49 000000;;
-swb Netze GmbH & Co. KG;;;;unknown@unknown.de;+49 000000;;
-Syna GmbH ;;;;unknown@unknown.de;+49 000000;;
-Stadtwerke München GmbH;;;;unknown@unknown.de;+49 000000;;;Emmy-Noether-Straße 2;München;80287;BY;DE
-Bürger Energie Genossenschaft Freisinger Land;;;;unknown@unknown.de;+49 000000;;
-LichtBlick Energie und Innovation GmbH;;;;unknown@unknown.de;+49 000000;;
-Discovergy;MPO of EasyMeters;discovergy;;unknown@unknown.de;+49 000000;;https://discovergy.com/
-MySmartGrid;Fraunhofer Institut;mysmartgrid;;unknown@unknown.de;+49 000000;;https://www.itwm.fraunhofer.de/en/departments/hpc/green-by-it/mySmartGrid-energy-savings.html
-SWM Versorgungs GmbH;;swm-versorgung;;unknown@unknown.de;+49 000000;;Emmy-Noether-Straße 2;München;80287;BY;DE
-Drittlieferant;any non-localgroup supplier;3rd-party;;unknown@unknown.de;+49 000000;;
-Germany;used for energy mix 'Germany';germany;;unknown@unknown.de;+49 000000;;
+Buzzn GmbH;Purveyor of peoplepower since 2009;buzzn;;team@buzzn.net;089 / 32 16 8;;http://www.buzzn.net;Combinat 56, Adams-Lehmann-Straße 56;München;80797;BY;DE
+50Hertz Transmission GmbH;;50hertz;;roman.schuelke@50hertz.com;+49 30 51503782;+49 30 51504511;http://www.50hertz.com/de/;Heidestraße 2;Berlin;10557;BE;DE
+Tennet TSO GmbH;;tennet;;uenb-mako@tennet.eu;+49 921 507404575;+49 921 507404566;http://www.tennet.eu/de;Bernecker Straße 70;Bayreuth;95448;BY;DE
+Amprion GmbH;;amprion;;bilanzkreisdaten@amprion.net;+49 231 5849 12502;+49 231 5849 14509;http://www.amprion.net;Rheinlanddamm 24;Dortmund;44139;RP;DE
+TransnetBW GmbH;;transnetbw;;bilanzkreise@transnetbw.de;+49 711 21858 3706;+49 711 21858 4413;http://www.transnetbw.de/de;Osloer Straße 15-17;Stuttgart;70173;BW;DE
+SWM Infrastruktur GmbH & Co. KG;;swm-infrastruktur;;netznutzung@swm.de;+49 89 2361 4644;+49 89 2361 4699;http://www.swm-infrastruktur.de;Emmy-Noether-Straße 2;München;80287;BY;DE
+Bayernwerk Netz GmbH;;bayernwerk-netz;;netzvertraege@bayernwerk.de;+49 941 2017128;+49 941 2017113;http://www.bayernwerk-netz.de;Lilienthalstraße 7;Regensburg;93049;BY;DE
+bnNETZE GmbH;;bn-netze;;edm.bnnetze@energiexchange.de;+49 761 88888 2274;+49 761 88888 2006;http://www.bnnetze.de;Tullastraße 61;Freiburg;79108;BW;DE
+E.DIS AG ;;e-dis;;netznutzung@e-dis.de;+49 3361 70 2244;;http://www.e-dis-netz.de;Langewahler Straße 60;Fürstenwalde/Spree;15517;BB;DE
+Avacon Netz GmbH;;avacon;;vertragsmanagement@avacon.de;+49 5351 12333223;;http://www.avacon-netz.de;Schillerstraße 3;Helmstedt;38350;NI;DE
+enercity Netzgesellschaft mbH;;enercity;;lieferantenwechsel@enercity-netz.de;+49 511 430 1788;;http://www.enercity-netz.de;Auf der Papenburg 18;Hannover;30459;NI;DE
+Gemeindewerke Peißenberg;;gemeindewerke-peissenberg;;netznutzung@peissenberg.de;+49 8803 690 240;;http://www.gemeindewerke-peissenberg.de;Hauptstraße 77;Peißenberg;82380;BY;DE
+LEW Verteilnetz GmbH ;;lew;;netznutzung@lew-verteilnetz.de;+49 000000;;http://www.lew-verteilnetz.de;Schaezlerstraße 3;Augsburg;86150;BY;DE
+LSW Netz GmbH & Co. KG;;lsw;;jan.bohne@lsw.de;+49 5361 1893630;;http://www.lsw-netz.de;Heßlinger Straße 1-5;Wolfsburg;38440;NI;DE
+Mitteldeutsche Netzgesellschaft Strom mbH;;mitnetz;;vertragsmanagement@mitnetz-strom.de;+49 000000;;http://www.mitnetz-strom.de;Industriestraße 10;Kabelsketal;06184;ST;DE
+NEW Netz GmbH ;;new-netz;;joachim.bobert@new-netz-gmbh.de;+49 02451 624-6389;;http://www.new-netz-gmbh.de;Nikolaus-Becker-Straße 28 - 34;Geilenkirchen;52511;NW;DE
+Rheinische NETZGesellschaft mbH (RNG);;rng;;Vertragsmanagement@rng.de;+49 0221 4746571;;http://www.rng.de;Parkgürtel 26;Köln;50823;NW;DE
+Stadtwerke Einbeck GmbH ;;sw-einbeck;;sdammann@stadtwerke-einbeck.de;+49 5561 942 2227;;http://www.stadtwerke-einbeck.de;Grimsehlstraße 17;Einbeck;37574;NI;DE
+Stadtwerke Kaltenkirchen GmbH;;sw-kaltenkirchen;;olaf.nimz@stadtwerke-kaltenkirchen.de;+49 4191 9360;;http://www.stadtwerke-kaltenkirchen.de;Kamper Weg 38;Kaltenkirchen;24568;SH;DE
+Stadtwerke Landshut ;;sw-landshut;;j.fellner@stadtwerke-landshut.de;+49 0871 14362076;;http://www.stadtwerke-landshut.de;Christoph-Dorner-Straße 9;Landshut;84028;BY;DE
+Stadtwerke Schorndorf GmbH ;;sw-schorndorf;;eduard.tiede@stadtwerke-schorndorf.de;+49 7181 96450-407;;http://www.stadtwerke-schorndorf.de;Augustenstraße 7;Schorndorf;73614;BW;DE
+Stadtwerke Waiblingen GmbH ;;sw-waiblingen;;a.miethe@stwwn.de;+49 7151 131322;;http://www.stwwn.de;Schorndorfer Straße 67;Waiblingen;71332;BW;DE
+Stadtwerke Wedel GmbH;;sw-wedel;;w.heller@stadtwerke-wedel.de;+49 4103 805 102;;http://www.stadtwerke-wedel.de;Feldstraße 150;Wedel;22880;SH;DE
+Stadtwerke Wiesbaden Netz GmbH;;sw-wiesbaden;;ansprechpartner-datenaustausch@sw-netz.de;+49 000000;;http://www.sw-netz.de;Konradinerallee 25;Wiesbaden;65189;HE;DE
+Stadtwerke Witzenhausen GmbH;;sw-witzenhausen;;stefan.maeder@stadtwerke-witzenhausen.de;+49 5542 5005 155;;http://www.stadtwerke-witzenhausen.de;Hinter dem Deich 9;Witzenhausen;37213;HE;DE
+Stromnetz Berlin GmbH;;stromnetz-berlin;;netzkunden@stromnetz-berlin.de;+49 30 49202 3315;;http://www.stromnetz-berlin.de;Eichenstraße 3a;Berlin;12435;BB;DE
+Stromnetz Hamburg GmbH ;;stromnetz-hamburg;;marktpartner@stromnetz-hamburg.de;+49 40 55899 1076;;https://www.stromnetz-hamburg.de;Bramfelder Chaussee 130;Hamburg;22177;HH;DE
+wesernetz Bremen GmbH;;swb-netze;;netznutzung-hb@wesernetz.de;+49 000000;;https://www.swb-netze.de/;Theodor-Heuss-Allee 20;Bremen;28197;HB;DE
+Syna GmbH ;;syna;;netznutzungsmanagement@syna.de;+49 69 31072621;;http://www.syna.de;Ludwigshafener Straße 4;Frankfurt;65929;HE;DE
+Stadtwerke München GmbH;;swm;;datenaustausch.vertrieb@swm.de;+49 000000;;http://www.swm.de;Emmy-Noether-Straße 2;München;80287;BY;DE
+LichtBlick SE;;lichtblick;;versorgerwechsel@lichtblick.de;040-6360-1200;;http://www.lichtblick.de;Zirkusweg 6;Hamburg;20359;HH;DE
+Discovergy GmbH;MPO of EasyMeters;discovergy;;re@discovergy.com;+49 2408 709454 20;;http://discovergy.de;Am Berg 12;Aachen;52076;NW;DE
+SWM Versorgungs GmbH;;swm-versorgung;;datenaustausch.vertrieb@swm.de;+49 000000;;http://www.swm.de;Emmy-Noether-Straße 2;München;80287;BY;DE
+Drittlieferant;any non-localgroup supplier;3rd-party;;unknown@unknown.de;+49 000000;;;;;;;
+Germany;used for energy mix 'Germany';germany;;unknown@unknown.de;+49 000000;;;;;;;
 hell & warm Forstenried GmbH;Local group owner;hell-warm;;unknown@unknown.de;089/89057180;;;Aberlestr. 16;München;81371;BY;DE
-Hausverwaltung Schneider;Local group owner;hv-schneider;;unknown@unknown.de;+49 000000;;
+Hausverwaltung Schneider;Local group owner;hv-schneider;;hv-schneider@web.de;+49 000000;;;;;;;
