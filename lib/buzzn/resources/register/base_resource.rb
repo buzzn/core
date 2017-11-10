@@ -1,3 +1,5 @@
+require_relative '../reading_resource'
+
 module Register
   class BaseResource < Buzzn::Resource::Entity
 

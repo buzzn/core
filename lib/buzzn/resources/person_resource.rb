@@ -22,12 +22,6 @@ class PersonResource < Buzzn::Resource::Entity
   has_many :bank_accounts
 
   def image
-    user = User.where(person: object).first
-    if user
-      user.image.md.url
-    elsif object.image
-      object.image.md.url
-    else
-    end
+    object.image.md.url
   end
 end
