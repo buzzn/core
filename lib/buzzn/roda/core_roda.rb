@@ -40,10 +40,10 @@ class CoreRoda < CommonRoda
         r.on 'me' do
           r.run Me::Roda
         end
-      end
 
-      r.on 'utils' do
-        r.run Utils::Roda
+        r.on 'utils' do
+          r.run Utils::Roda
+        end
       end
 
       r.get! 'health' do

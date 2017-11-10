@@ -15,7 +15,9 @@ describe Me::Roda, :skip_nested do
   end
 
   after :all do
-    load 'db/setup_data/common.rb'
+    [Account::PasswordHash, Account::PasswordResetKey, Account::LoginChangeKey, Account::Base].each do |model|
+      model.where(id: user).delete_all
+    end
   end
 
   entity(:password) { 'Example123' }

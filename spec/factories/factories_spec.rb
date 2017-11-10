@@ -38,9 +38,9 @@ describe "Factories produce valid records" do
   context "Bank account" do
     subject { create(:bank_account) }
     it { is_expected.to be_valid }
-    it { is_expected.to have_association(:contracting_party, Person) }
-    it "sets the holder to the name of the contracting_party's account" do
-      expect(subject.holder).to eq(subject.contracting_party.name)
+    it { is_expected.to have_association(:owner, Person) }
+    it "sets the holder to the name of the owner's account" do
+      expect(subject.holder).to eq(subject.owner.name)
     end
   end
 
@@ -175,7 +175,9 @@ describe "Factories produce valid records" do
       it { is_expected.to be_valid }
       it { is_expected.to have_association(:group, Group::Localpool) }
       it { is_expected.to have_association(:meter, expected_meter_class.constantize) }
-      it "can override meter" do
+      xit "can override meter" do
+        # it is not possible to rewire meter and registers and
+        # meters and registers can only exists in combination
         meter    = create(:meter, :real)
         register = create(:register, :input, meter: meter)
         expect(register.meter).to eq(meter)

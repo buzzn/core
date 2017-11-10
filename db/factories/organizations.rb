@@ -9,7 +9,7 @@ FactoryGirl.define do
 
     trait :with_bank_account do
       after(:build) do |organization, _evaluator|
-        organization.bank_accounts << FactoryGirl.build(:bank_account)
+        organization.bank_accounts << FactoryGirl.build(:bank_account, owner: organization)
       end
     end
 

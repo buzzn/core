@@ -21,7 +21,10 @@ describe Me, :swagger, :skip_nested do
   entity!(:account_change_login) { Proc.new { @b ||= Fabricate(:user) } }
 
   after :all do
-    load 'db/setup_data/common.rb'
+    [ account.call, account_change_login.call].each |a|
+      [ Account::PasswordHash, Account::PasswordResetKey, Account::LoginChangeKey, Account::Base].each do |model|
+      model.where(id: a).delete_all
+    end
   end
 
   # me

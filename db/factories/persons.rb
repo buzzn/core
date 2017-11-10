@@ -32,7 +32,7 @@ FactoryGirl.define do
 
     trait :with_bank_account do
       after(:build) do |person, _evaluator|
-        person.bank_accounts << FactoryGirl.build(:bank_account)
+        person.bank_accounts << FactoryGirl.build(:bank_account, owner: person)
       end
     end
 

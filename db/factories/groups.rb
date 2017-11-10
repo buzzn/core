@@ -15,7 +15,8 @@ FactoryGirl.define do
     trait :people_power do
       name "People Power Group"
       description "Power to the people!"
-      website "www.peoplepower.de"
+      # FIXME resurrect this once we have it used by the application
+      #website "www.peoplepower.de"
     end
 
     after(:create) do |group, evaluator|
