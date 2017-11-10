@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Group::Base do
 
   entity!(:localpool) { Fabricate(:localpool) }
