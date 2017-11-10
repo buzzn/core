@@ -9,7 +9,7 @@ class BankAccount < ActiveRecord::Base
   scope :permitted, ->(uuids) { where(id: uuids) }
 
   def self.search_attributes
-    [:holder, :bank_name]#, :bic]
+    [:holder, :bank_name]
   end
 
   def self.filter(search)
