@@ -16,7 +16,7 @@ module Buzzn::Resource
       rescue ActiveRecord::RecordInvalid => e
         raise Buzzn::CascadingValidationError.new(nil, e)
       end
-      
+
       def has_many!(method, clazz = nil)
         has_many(method, clazz)
         createables << method

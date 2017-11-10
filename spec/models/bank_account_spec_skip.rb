@@ -111,7 +111,7 @@ describe BankAccount do
         # restart cached entity
         self.class.entities.delete(u == :manager_of_group ? :manager_group_bank_account : :register_bank_account)
       end
-      
+
     end
   end
 

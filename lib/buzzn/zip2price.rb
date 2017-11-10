@@ -105,7 +105,7 @@ module Buzzn
     end
 
     def to_price
-      return nil unless known_type? 
+      return nil unless known_type?
       entries = ZipVnb.where(zip: @zip).collect do |vbn|
         calculate(vbn.verbandsnummer)
       end

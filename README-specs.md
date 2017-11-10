@@ -19,7 +19,7 @@ ensure
   flush(:superdupper)
 end
 ```
-  
+
 ## Directory Structure ##
 
 spec/
@@ -103,7 +103,7 @@ As transactions provide some business logic as single object (with a `call` meth
 
     * validate and coerce the input parameters
 	* create/update/delete action on a resource
-	
+
 other transaction are possible like the charts/bubbles/tickers or groups/registers.
 
 Usually it is sufficient to test a transaction via the roda tree using it. some more complex validation need systematic tests and will be put here.

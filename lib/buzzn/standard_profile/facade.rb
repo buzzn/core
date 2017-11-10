@@ -34,7 +34,7 @@ module Buzzn::StandardProfile
                     AVG =>  "$#{AVG}"
                  }
                }.freeze
-    
+
     ENERGY_PROJECT = {
                  "$project" => {
                     BUCKET => "$#{BUCKET}",
@@ -162,7 +162,7 @@ module Buzzn::StandardProfile
       else
         offset = 1000 * next_day
       end
-      
+
       selector = SELECTORS[duration]
       project["$project"][units] = 1
       formats = {}
@@ -180,7 +180,7 @@ module Buzzn::StandardProfile
 
       # group
       pipe << GROUPS[duration]
-      
+
       # project
       if units == ENERGY
         pipe << ENERGY_PROJECT

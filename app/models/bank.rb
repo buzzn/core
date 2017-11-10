@@ -70,7 +70,7 @@ class Bank < ActiveRecord::Base
       params[name] = line[pos..last - 1].strip.encode(Encoding::UTF_8)
       pos = last
     end
-    params  
+    params
   end
 
   def self.update_or_delete(bank, params)
@@ -105,7 +105,7 @@ class Bank < ActiveRecord::Base
   def self.get_by_bic(bic)
     if bic
       bic.gsub!(/\s/, '')
-      if bic.size < 11     
+      if bic.size < 11
         bic += 'X' * (11 - bic.size)
       end
       where(bic: bic).limit(1).first

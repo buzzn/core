@@ -19,7 +19,7 @@ module Buzzn
           when Buzzn::ValidationError
             errs = []
             e.errors.each do |name, messages|
-              messages.each do |message|          
+              messages.each do |message|
                 errs << "{\"parameter\":\"#{name}\",\"detail\":\"#{message}\"}"
               end
             end

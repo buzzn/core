@@ -102,7 +102,7 @@ describe Display::GroupResource do
                         'first_name',
                         'last_name',
                         'image'] }
-    
+
     it 'retrieve' do
       expect(resource.mentors.retrieve(admin.person.id).object).to eq admin.person
     end

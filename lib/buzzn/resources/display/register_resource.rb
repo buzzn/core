@@ -20,7 +20,7 @@ module Display
         raise "unknown group type: #{object.class}"
       end
     end
-    
+
     # API methods for the endpoints
 
     def ticker

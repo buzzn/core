@@ -14,7 +14,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -36,7 +36,7 @@ http_interactions:
       encoding: ASCII-8BIT
       string: '{"key":"s9qs65at1enuf182ue10ed3q0l","secret":"rvqu0cvr0jifsahi28lv6qnohd","owner":"buzzn
         app test","attributes":{},"principal":null}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:05 GMT
 - request:
     method: post
@@ -81,7 +81,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: oauth_token=adbb9acfaf0d479cb82286322c518a49&oauth_token_secret=81cce4bb97e0468d8ace4c7b1c3e4f7e&oauth_callback_confirmed=true
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:05 GMT
 - request:
     method: get
@@ -97,7 +97,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -118,7 +118,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: oauth_verifier=c5881005d1784ca08f9e80d28c544843
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:05 GMT
 - request:
     method: post
@@ -164,6 +164,6 @@ http_interactions:
     body:
       encoding: UTF-8
       string: oauth_token=57e2915799974595bcdd96f7ed2b3dfa&oauth_token_secret=8adc5918636a4ac6ab16410f982c3a35
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:06 GMT
 recorded_with: VCR 3.0.3

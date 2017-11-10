@@ -48,7 +48,7 @@ describe Register::BaseResource do
     end
     expect(result).to match_array expected
   end
-    
+
   describe Register::RealResource do
 
     it 'retrieve all - ids + types' do
@@ -69,7 +69,7 @@ describe Register::BaseResource do
   end
 
   describe Register::VirtualResource do
-  
+
     it 'retrieve all - ids + types' do
       expected = Register::Virtual.all.collect do |v|
         ['register_virtual', v.id]

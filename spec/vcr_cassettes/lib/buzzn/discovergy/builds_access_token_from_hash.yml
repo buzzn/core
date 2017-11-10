@@ -14,7 +14,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -36,6 +36,6 @@ http_interactions:
       encoding: ASCII-8BIT
       string: '{"key":"e1jonhcm4lffb7atd8n6ttldpm","secret":"qao5c6rraev2dps6ojfg5m11fs","owner":"buzzn
         app test","attributes":{},"principal":null}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:10 GMT
 recorded_with: VCR 3.0.3

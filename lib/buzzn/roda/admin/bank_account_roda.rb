@@ -11,7 +11,7 @@ class Admin::BankAccountRoda < BaseRoda
                       'transaction.update_bank_account']
 
   route do |r|
-    
+
     parent = shared[PARENT]
 
     r.post! do
@@ -38,7 +38,7 @@ class Admin::BankAccountRoda < BaseRoda
       r.patch! do
         update_bank_account.call(r.params, resource: [bank_account])
       end
-      
+
       r.delete! do
         deleted do
           bank_account.delete

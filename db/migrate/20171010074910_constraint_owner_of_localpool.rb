@@ -1,4 +1,4 @@
-class ConstraintOwnerOfLocalpool < ActiveRecord::Migration  
+class ConstraintOwnerOfLocalpool < ActiveRecord::Migration
   def self.up
     execute 'ALTER TABLE groups ADD CONSTRAINT check_localpool_owner CHECK (NOT (person_id IS NOT NULL AND organization_id IS NOT NULL))'
   end

@@ -10,7 +10,7 @@ class CoreConfig < ActiveRecord::Base
 
   def self.store(config)
     namespace = config.class.name
-    transaction do 
+    transaction do
       config.instance_variables.each do |name|
         value = config.instance_variable_get(name)
         key = name.to_s[1..-1]

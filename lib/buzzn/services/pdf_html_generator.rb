@@ -29,7 +29,7 @@ class Buzzn::Services::PdfHtmlGenerator
 
   def initialize(templates = nil)
     @path = File.expand_path(templates || 'app/pdfs')
-    
+
     unless File.exists?(@path)
       raise ArgumentError.new("#{@path} does not exist")
     end
@@ -51,7 +51,7 @@ class Buzzn::Services::PdfHtmlGenerator
                                   footer: { left: 'Seite [page] von [topage]' })
   end
 
-  def render_html(name, html)  
+  def render_html(name, html)
     file = resolve_template(name)
     html.render(file)
   end

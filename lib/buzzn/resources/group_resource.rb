@@ -24,7 +24,7 @@ class GroupResource < Buzzn::Resource::Entity
     end
     all(permissions.scores, result, ScoreResource)
   end
-    
+
   def bubbles
     current_power.for_each_register_in_group(self)
   end

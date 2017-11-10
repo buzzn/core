@@ -21,7 +21,7 @@ describe ZipToPrice do
     ZipToPrice.from_csv(file1)
     csv2 = StringIO.new
     ZipToPrice.to_csv(csv2)
-    
+
     expect(csv1.string).to eq csv2.string
     content = Buzzn::Utils::File.read(file1).gsub(/\r\n?/, "\n")
     expect(content.gsub(/[.]0;/, ';').split("\n")).to match_array csv1.string.gsub(/[.]0;/, ';').split("\n")

@@ -38,7 +38,7 @@ module Register
 
     def last_reading
       reading = object.readings.order('date').last
-      reading ? reading.corrected_value.value : 0 
+      reading ? reading.corrected_value.value : 0
     end
   end
 end

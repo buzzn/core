@@ -13,7 +13,7 @@ class RenameMeterRegisterColumns < ActiveRecord::Migration
     remove_column :meters, :remote_readout
 
     add_column :meters, :sent_data_dso, :date
-    
+
     Meter::Base.reset_column_information
     Meter::Base.all.each do |meter|
       meter.update!(sent_data_dso: DataTime.new) if meter.send_data_dso

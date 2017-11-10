@@ -24,7 +24,7 @@ describe Buzzn::Services::DataSourceRegistry do
     expect(found).not_to be_nil
   end
 
-  it 'can not add non Buzzn::DataSource classes' do 
+  it 'can not add non Buzzn::DataSource classes' do
     expect { subject.add_source(:something) }.to raise_error ArgumentError
   end
 end

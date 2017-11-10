@@ -6,7 +6,7 @@ class Document < ActiveRecord::Base
   attr_readonly :path#, :encryption_details
 
   validates :path, presence: true, uniqueness: true
-  
+
   def read
     encrypted = storage.files.get(self.path).body
     Buzzn::Crypto::Decryptor.new(self.encryption_details)

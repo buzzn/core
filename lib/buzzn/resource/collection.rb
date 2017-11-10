@@ -59,7 +59,7 @@ module Buzzn::Resource
       end
     end
     private :do_retrieve
-        
+
     def to_a
       collect { |i| i }
     end

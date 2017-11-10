@@ -14,7 +14,7 @@ http_interactions:
   response:
     status:
       code: 200
-      message: 
+      message:
     headers:
       server:
       - nginx/1.10.0
@@ -36,7 +36,7 @@ http_interactions:
       encoding: ASCII-8BIT
       string: '{"key":"b19ljvfe2gc7i9bjd1817knifo","secret":"1p838j4r2vhk3ruhck9en5tbeb","owner":"buzzn
         app test","attributes":{},"principal":null}'
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:07 GMT
 - request:
     method: post
@@ -81,6 +81,6 @@ http_interactions:
     body:
       encoding: UTF-8
       string: oauth_token=c3c031e0248c403ba0b0e04119cfe14b&oauth_token_secret=07c71fd070bc4253b1c2265ed5822781&oauth_callback_confirmed=true
-    http_version: 
+    http_version:
   recorded_at: Sat, 02 Jul 2016 08:05:07 GMT
 recorded_with: VCR 3.0.3

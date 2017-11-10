@@ -23,7 +23,7 @@ class Admin::RegisterRoda < BaseRoda
       r.get! do
         register
       end
-      
+
       r.patch! do
         case register.object
         when Register::Real

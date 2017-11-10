@@ -4,7 +4,7 @@ class MoveMeteringPointsRolesToRegisters < ActiveRecord::Migration
       role.update_attribute(:resource_type, 'Register')
     end
   end
- 
+
   def down
     Role.where(resource_type: 'Register').each do |role|
       role.update_attribute(:resource_type, 'MeteringPoint')

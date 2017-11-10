@@ -7,7 +7,7 @@
 - stop it with `Control-C` in the same or `docker-compose down` in a separate shell.
 - the stack is running Rails in the **development** environment (controlled by [.env](./.env) and [.env.development](./.env.development))
 - the root directory of this git repository is mounted into the docker container. That means file changes are immediately effective in the docker container.
- 
+
 #### How to deploy
 
 Deployment is the business of the [buzzn/devops](https://github.com/buzzn/devops) repository. The `docker-compose.yml` file in this repo is **irrellevant for deployment**, env variables set in here will likely be ignored or overridden! See [buzzn/devop's README-DOCKER](https://github.com/buzzn/devops/blob/master/README-DOCKER.md) for more info.
@@ -66,7 +66,7 @@ This starts the worker inside the Rails application container:
 
 #### Create Release Image
 
-- the fast way: 
+- the fast way:
   - `rake docker:image:push`. This image is then addressable in docker hub as `buzzn/core:latest`.
 
 - the manual way, with more control and tagging the created image:
@@ -81,8 +81,8 @@ Some useful commands:
 
 - list all containers of the stack `docker-compose ps`
 - stop the stack `docker-compose down`
-- remove all volumes to delete the databases: 
-  - make sure to turn off all containers accessing the volumes: `docker-compose down`  
+- remove all volumes to delete the databases:
+  - make sure to turn off all containers accessing the volumes: `docker-compose down`
   - run `docker volume prune`
 - remove all buzzn containers `docker rm -f $(docker ps -a -q -f name=buzzn)`
 - remove all buzzn images `docker rmi -f $(docker images buzzn* -q)`

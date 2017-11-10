@@ -26,7 +26,7 @@ class Buzzn::Security::SecureHashSerializer
   def load(encrypted)
     core.load(encrypted)
   end
-   
+
   def dump(hash)
     core.dump(hash)
   end

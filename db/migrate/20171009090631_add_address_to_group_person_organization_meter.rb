@@ -20,7 +20,7 @@ class AddAddressToGroupPersonOrganizationMeter < ActiveRecord::Migration
       address = Address.where(addressable_id: o.id).first
       map[o.meter.id] = address if address
     end
-    
+
     add_belongs_to :persons, :address, index: true, type: :uuid, null: true
     add_foreign_key :persons, :addresses, name: :fk_persons_address
 
@@ -31,15 +31,15 @@ class AddAddressToGroupPersonOrganizationMeter < ActiveRecord::Migration
     Organization.reset_column_information
     Person.reset_column_information
     Meter::Base.reset_column_information
-      
+
     org.each do |id, address|
-      Organization.find(id).update(address: address) 
+      Organization.find(id).update(address: address)
     end
     per.each do |id, address|
-      Person.find(id).update(address: address) 
+      Person.find(id).update(address: address)
     end
     reg.each do |id, address|
-      Meter::Base.find(id).update(address: address) 
+      Meter::Base.find(id).update(address: address)
     end
 
     # remove duplicates

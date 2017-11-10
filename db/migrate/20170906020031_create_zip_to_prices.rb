@@ -1,5 +1,5 @@
 class CreateZipToPrices < ActiveRecord::Migration
-  def change    
+  def change
     create_table :zip_to_prices, id: :uuid do |t|
       t.integer :zip, null: false
       t.float   :price_euro_year_dt, null: false

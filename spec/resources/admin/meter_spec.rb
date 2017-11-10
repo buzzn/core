@@ -38,7 +38,7 @@ describe Meter::BaseResource do
     end
     expect(result).to match_array expected
   end
-    
+
   describe Meter::Real do
 
     it 'retrieve all - ids + types' do
@@ -75,7 +75,7 @@ describe Meter::BaseResource do
   end
 
   describe Meter::Virtual do
-  
+
     it 'retrieve all - ids + types' do
       expected = Meter::Virtual.all.collect do |v|
         ['meter_virtual', v.id]
@@ -85,7 +85,7 @@ describe Meter::BaseResource do
       end
       expect(result).to match_array expected
     end
-      
+
     it 'retrieve' do
       attrs = resources.retrieve(virtual.id).to_h
       expect(attrs['id']).to eq virtual.id

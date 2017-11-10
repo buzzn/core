@@ -28,7 +28,7 @@ describe Buzzn::Localpool::TotalAccountedEnergy do
       expect(total[label]).to eq reference[label].first
     end
   end
-  
+
   it 'return multiple values' do
     Buzzn::AccountedEnergy::MULTI_LABELS.each do |label|
       expect(total[label]).to match_array reference[label]
@@ -160,7 +160,7 @@ describe Buzzn::Localpool::TotalAccountedEnergy do
       expect(total.consumption_through_pv).to eq watt_hour(14)
     end
   end
-  
+
   context 'demarcation type CHP' do
 
     before do

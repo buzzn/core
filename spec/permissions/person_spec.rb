@@ -14,7 +14,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
   let(:anonymous) { nil }
 
   [:admin, :me, :anonymous].each do |user|
-    
+
     context "user<#{user}>" do
 
       let(:all) { PersonResource.all(send(user)) }
@@ -36,7 +36,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
           expect(all.retrieve(admin.person.id).object).to eq admin.person
         when :me
           expect { all.retrieve(admin.person.id) }.to raise_error Buzzn::PermissionDenied
-          expect(all.retrieve(me.person.id).object).to eq me.person          
+          expect(all.retrieve(me.person.id).object).to eq me.person
         end
       end
 

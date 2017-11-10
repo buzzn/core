@@ -32,5 +32,5 @@ Fabricator :address_sulz, from: :address do
   city    'Peißenberg'
   state   'DE_BY'
 end
-  
+
 # don't use fake data as every address results in a google request for geolocation

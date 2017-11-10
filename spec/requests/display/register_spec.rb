@@ -61,7 +61,7 @@ describe Display::GroupRoda do
       let(:registers_json) do
         [ real_register_json, virtual_register_json]
       end
-      
+
       # NOTE picking a sample register is enough for the 404 tests
 
       let(:register) do

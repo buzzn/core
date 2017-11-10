@@ -36,7 +36,7 @@ module Buzzn
       def yearly_euro_netto_double
         price.measurement_euro_year_dt +  price.baseprice_euro_year_dt + config.yearly_euro_intern
       end
-        
+
       def yearly_euro_netto_single
         price.measurement_euro_year_et +  price.baseprice_euro_year_et + config.yearly_euro_intern
       end

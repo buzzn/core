@@ -20,7 +20,7 @@ describe CoreConfig do
     CoreConfig.store(config)
     c = CoreConfig.load(Buzzn::Types::ZipPriceConfig)
     expect(c).to eq config
-    
+
     expect(CoreConfig.count).to eq 10
   end
 
