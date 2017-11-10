@@ -197,12 +197,12 @@ Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do
 
     # TODO use Fabricate(:price_sulz) - as it breaks the lcp_report when using
     #      Fabricate(:price_sulz)
-    Fabricate(:price,
-              localpool: self,
+    Fabricate(:tariff,
+              group: self,
               name: 'Standard',
 
               begin_date: Date.new(2016, 8, 4),
-              energyprice_cents_per_kilowatt_hour: 23.8, # assume all money-data is without taxes!
+              energyprice_cents_per_kwh: 23.8, # assume all money-data is without taxes!
               baseprice_cents_per_month: 500)
     localpool.update(address: Fabricate(:address))
 

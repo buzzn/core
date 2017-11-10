@@ -107,11 +107,13 @@ module Buzzn::Pdfs
     end
 
     def baseprice
-      12 * localpool.prices.valid_at(begin_date).first.baseprice_cents_per_month  / 100.0
+      # TODO we do not have the invariant that on each point in time there is
+      #      only one tariff - there can be more then one with different names
+      12 * localpool.tariffs.at(begin_date).first.baseprice_cents_per_month  / 100.0
     end
 
     def energyprice
-      localpool.prices.valid_at(begin_date).first.energyprice_cents_per_kilowatt_hour
+      localpool.tariffs.at(begin_date).first.energyprice_cents_per_kwh
     end
 
     def count_one_way_meter

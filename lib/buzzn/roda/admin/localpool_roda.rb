@@ -59,8 +59,8 @@ module Admin
           r.run OrganizationRoda
         end
 
-        r.on 'prices' do
-          r.run PriceRoda
+        r.on 'tariffs' do
+          r.run TariffRoda
         end
 
         r.on 'billing-cycles' do

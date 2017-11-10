@@ -1,6 +1,6 @@
 require_relative '../group_resource'
 require_relative '../person_resource'
-require_relative 'price_resource'
+require_relative '../contract/tariff_resource'
 require_relative 'billing_cycle_resource'
 require_relative '../../schemas/completeness/admin/localpool'
 module Admin
@@ -26,7 +26,7 @@ module Admin
     has_many :contracts
     has_many :registers
     has_many :persons
-    has_many :prices, PriceResource
+    has_many :tariffs, Contract::TariffResource
     has_many :billing_cycles, BillingCycleResource
     has_one :owner
     has_one :address
@@ -37,11 +37,11 @@ module Admin
 
     # API methods for endpoints
 
-    def create_price(params = {})
-      create(permissions.prices.create) do
-        to_resource(object.prices.create!(params),
-                    permissions.prices,
-                    PriceResource)
+    def create_tariff(params = {})
+      create(permissions.tariffs.create) do
+        to_resource(object.tariffs.create!(params),
+                    permissions.tariffs,
+                    Contract::TariffResource)
       end
     end
 

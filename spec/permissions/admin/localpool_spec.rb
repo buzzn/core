@@ -1,7 +1,8 @@
 describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
-  def update(object)
-    object.update(updated_at: object.object.updated_at)
+  def update(resource, params = nil)
+    params ||= {updated_at: resource.object.updated_at}
+    resource.update(params)
   end
 
   def all(user)
@@ -60,7 +61,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   entity!(:lpc) { Fabricate(:localpool_processing_contract,
                             localpool: localpool2) }
 
-  entity!(:price) { Fabricate(:price, localpool: localpool2)}
+  entity(:tariff) { Fabricate(:tariff, group: localpool2)}
   entity!(:billing_cycle) { Fabricate(:billing_cycle, localpool: localpool2) }
 
   it 'create' do
@@ -125,6 +126,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       Group::Localpool.create(localpool1.attributes)
     end
 
+    # note this also deletes the tariffs of the localpool
     begin
       expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool3.id).delete }.not_to raise_error
       expect(Group::Localpool.where(id: localpool3.id)).to eq []
@@ -139,73 +141,65 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).delete }.to raise_error Buzzn::PermissionDenied
   end
 
-  context 'prices' do
+  context 'tariffs' do
 
-    def prices(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).prices.collect do |l|
-        l.object
-      end
+    before { tariff } # ensure at least one tariff
+
+    def tariffs(user, id)
+      Admin::LocalpoolResource.all(user).retrieve(id).tariffs.objects.reload
     end
 
     it 'all' do
-      expect(prices(buzzn_operator, localpool1.id)).to eq []
-      expect(prices(buzzn_operator, localpool2.id)).to match_array localpool2.prices.reload
+      expect(tariffs(buzzn_operator, localpool1.id)).to match_array localpool1.tariffs.reload
+      expect(tariffs(buzzn_operator, localpool2.id)).to match_array localpool2.tariffs.reload
 
-      expect(prices(localpool_owner, localpool2.id)).to match_array localpool2.prices.reload
-      expect(prices(localpool_manager, localpool2.id)).to match_array localpool2.prices.reload
-      expect(prices(localpool_member, localpool1.id)).to match_array []
+      expect(tariffs(localpool_owner, localpool2.id)).to match_array localpool2.tariffs.reload
+      expect(tariffs(localpool_manager, localpool2.id)).to match_array localpool2.tariffs.reload
+      expect(tariffs(localpool_member, localpool1.id)).to match_array localpool1.tariffs.reload
 
-      expect{ prices(localpool_member, localpool2.id) }.to raise_error Buzzn::PermissionDenied
+      expect{ tariffs(localpool_member, localpool2.id) }.to raise_error Buzzn::PermissionDenied
     end
 
     it 'create' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).create_price }.to raise_error Buzzn::ValidationError
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).create_price }.to raise_error Buzzn::ValidationError
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).create_tariff(Fabricate.build(:tariff).attributes) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).create_tariff(Fabricate.build(:tariff).attributes) }.not_to raise_error
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).create_price }.to raise_error Buzzn::ValidationError
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).create_price }.to raise_error Buzzn::ValidationError
+      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).create_tariff }.to raise_error Buzzn::PermissionDenied
+      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).create_tariff }.to raise_error Buzzn::PermissionDenied
 
-      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).create_price }.to raise_error Buzzn::PermissionDenied
+      expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).create_tariff }.to raise_error Buzzn::PermissionDenied
     end
 
     it 'update' do
-      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).prices.first) }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).tariffs.first, {}) }.to raise_error Buzzn::PermissionDenied
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).prices.first)  }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.first, {})  }.to raise_error Buzzn::PermissionDenied
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).prices.first)  }.not_to raise_error
+      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.first, {})  }.to raise_error Buzzn::PermissionDenied
     end
 
     it 'delete' do
+      #binding.pry
+      tariffs = localpool2.tariffs.all.reject{|t| t == tariff}
       begin
-        expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).prices.retrieve(price.id).delete }.not_to raise_error
-        expect(localpool2.prices.reload).to eq []
+        expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).tariffs.retrieve(tariff.id).delete }.not_to raise_error
+        expect(localpool2.tariffs.reload).to match_array tariffs
       ensure
-        Price.create(price.attributes)
+        Contract::Tariff.create(tariff.attributes)
       end
 
-      begin
-        expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).prices.retrieve(price.id).delete }.not_to raise_error
-        expect(localpool2.prices.reload).to eq []
-      ensure
-        Price.create(price.attributes)
-      end
+      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.retrieve(tariff.id).delete }.to raise_error Buzzn::PermissionDenied
+      expect(localpool2.tariffs.reload).to match_array localpool2.tariffs.all
 
-      begin
-        expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).prices.retrieve(price.id).delete }.not_to raise_error
-        expect(localpool2.prices.reload).to eq []
-      ensure
-        Price.create(price.attributes)
-      end
+      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.retrieve(tariff.id).delete }.to raise_error Buzzn::PermissionDenied
+      expect(localpool2.tariffs.reload).to match_array localpool2.tariffs.all
     end
   end
 
   context 'billing_cycles' do
 
     def billing_cycles(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).billing_cycles.collect do |l|
-        l.object
-      end
+      Admin::LocalpoolResource.all(user).retrieve(id).billing_cycles.objects
     end
 
     it 'all' do
@@ -263,9 +257,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   context 'persons' do
 
     def persons(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).persons.collect do |l|
-        l.object
-      end
+      Admin::LocalpoolResource.all(user).retrieve(id).persons.objects
     end
 
     it 'all' do
@@ -365,9 +357,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   context 'registers' do
 
     def registers(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).registers.collect do |l|
-        l.object
-      end
+      Admin::LocalpoolResource.all(user).retrieve(id).registers.objects
     end
 
     it 'all' do
@@ -409,9 +399,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   context 'localpool_power_taker_contracts' do
 
     def localpool_power_taker_contracts(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).localpool_power_taker_contracts.collect do |l|
-        l.object
-      end
+      Admin::LocalpoolResource.all(user).retrieve(id).localpool_power_taker_contracts.objects
     end
 
     it 'all' do

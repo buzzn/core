@@ -1391,113 +1391,6 @@ paths:
       responses:
         200:
           description: success
-  "/localpools/{localpool_id}/prices":
-    get:
-      description: returns all the prices of the localpool
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-    post:
-      description: create price for the localpool
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: name
-        in: formData
-        required: true
-        type: string
-        format: ''
-      - name: begin_date
-        in: formData
-        required: true
-        type: string
-        format: date
-      - name: energyprice_cents_per_kilowatt_hour
-        in: formData
-        required: true
-        type: number
-        format: float
-      - name: baseprice_cents_per_month
-        in: formData
-        required: true
-        type: integer
-        format: int64
-      responses:
-        201:
-          description: created
-  "/localpools/{localpool_id}/prices/{price_id}":
-    get:
-      description: returns the price of the localpool for the given IDs
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: price_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-    patch:
-      description: updates the price of the localpool for the given IDs
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: price_id
-        in: path
-        required: true
-        type: string
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
-      - name: name
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: begin_date
-        in: formData
-        required: false
-        type: string
-        format: date
-      - name: energyprice_cents_per_kilowatt_hour
-        in: formData
-        required: false
-        type: number
-        format: float
-      - name: baseprice_cents_per_month
-        in: formData
-        required: false
-        type: integer
-        format: int64
-      responses:
-        200:
-          description: patched
   "/localpools/{localpool_id}/registers":
     get:
       description: returns all registers
@@ -1578,6 +1471,91 @@ paths:
       responses:
         200:
           description: success
+  "/localpools/{localpool_id}/tariffs":
+    get:
+      description: returns all the tariffs of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: create tariff for the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: name
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: begin_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: energyprice_cents_per_kwh
+        in: formData
+        required: true
+        type: number
+        format: float
+        minimum: 0
+        exclusiveMinimum: true
+      - name: baseprice_cents_per_month
+        in: formData
+        required: true
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/tariffs/{tariff_id}":
+    get:
+      description: returns the tariff of the localpool for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: tariff_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: deletes the tariff of the localpool for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: tariff_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
   "/organizations":
     get:
       description: return all organizations

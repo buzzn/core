@@ -9,17 +9,18 @@ Fabricator :tariff, class_name: Contract::Tariff do
   begin_date                { FFaker::Time.date }
   energyprice_cents_per_kwh { rand(100) + 1 }
   baseprice_cents_per_month { rand(10) + 1 }
+  group { Fabricate(:localpool) }
 end
 
 Fabricator :tariff_forstenried, from: :tariff do
   begin_date                { Date.new(2014, 12, 15) }
-  energyprice_cents_per_kwh { 25.5 }
+  energyprice_cents_per_kwh  { 25.5 }
   baseprice_cents_per_month { 250 }
 end
 
 Fabricator :tariff_sulz, from: :tariff do
   begin_date                { Date.new(2016, 8, 4) }
-  energyprice_cents_per_kwh { 23.8 }
+  energyprice_cents_per_kwh  { 23.8 }
   baseprice_cents_per_month { 500 }
 end
 
@@ -40,12 +41,9 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
     user
   }
   contractor               { FactoryGirl.create(:organization, :contracting_party) }
-  tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
-    # keep it here as this file goes away and we want to keep migrations clean
-    # in the end
-    BankAccount.reset_column_information
+    Fabricate(:tariff, group: c.localpool) if c.localpool
     c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
     c.customer_bank_account = Fabricate(:bank_account, owner: c.customer)
     c.save
@@ -97,8 +95,6 @@ Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
   customer                 { Fabricate(:person) }
   register                 { Fabricate(:input_register,
                                        meter: Fabricate.build(:output_meter)) }
-#                                       address: Fabricate.build(:address) ) }
-  tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
     c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
@@ -168,11 +164,10 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   register                 { Fabricate(:input_register,
                                        group: Fabricate(:localpool),
                                        meter: Fabricate.build(:output_meter)) }
-#                                       address: Fabricate.build(:address) ) }
   renewable_energy_law_taxation { Contract::Base::FULL }
-  tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
+    Fabricate(:tariff, group: c.localpool) if c.localpool
     c.customer.add_role(Role::CONTRACT, c) if c.customer.is_a? Person
     c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor) unless c.contractor_bank_account
     c.customer_bank_account = Fabricate(:bank_account, owner: c.customer) unless c.customer_bank_account
@@ -197,10 +192,10 @@ Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProces
   forecast_kwh_pa          { rand(100) + 1 }
   customer                 { Fabricate(:person) }
   localpool                { Fabricate(:localpool) }
-  tariffs                  { [Fabricate.build(:tariff)] }
   payments                 { [Fabricate.build(:payment)] }
   contractor               { Organization.buzzn }
   after_create do |c|
+    Fabricate(:tariff, group: c.localpool) if c.localpool
     c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
     c.customer_bank_account = Fabricate(:bank_account, owner: c.customer)
     c.save
@@ -238,12 +233,6 @@ Fabricator :lpc_forstenried, from: :localpool_processing_contract do
   contract_number_addition 0
   begin_date      begindate
   signing_date    begindate - 2.months
-  tariffs         { [Fabricate.build(:tariff,
-                      name: 'localpool_processing_standard',
-                      begin_date: begindate,
-                      end_date: begindate,
-                      energyprice_cents_per_kwh: 0,
-                      baseprice_cents_per_month: 100000)] }
   payments        { [Fabricate.build(:payment,
                       begin_date: begindate,
                       end_date: begindate,
@@ -255,6 +244,13 @@ Fabricator :lpc_forstenried, from: :localpool_processing_contract do
                       price_cents: 100000,
                       cycle: Contract::Payment::ONCE)] }
   after_create do |c|
+    Fabricate(:tariff,
+              name: 'localpool_processing_standard',
+              begin_date: begindate,
+              end_date: begindate,
+              energyprice_cents_per_kwh: 0,
+              baseprice_cents_per_month: 100000,
+              group: c.localpool) if c.localpool
     c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
     c.customer_bank_account = Fabricate(:bank_account_mustermann, holder: 'hell & warm Forstenried GmbH', owner: c.customer)
     c.save
@@ -274,7 +270,7 @@ Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
                                     name: 'metering_standard',
                                     begin_date: begindate,
                                     end_date: nil,
-                                    energyprice_cents_per_kwh: 0,
+                                    energyprice_cents_per_kwh: 1,
                                     baseprice_cents_per_month: 30000)] }
   payments                      { [Fabricate.build(:payment,
                                     begin_date: begindate,
@@ -775,7 +771,7 @@ Fabricator :lpc_sulz, from: :localpool_processing_contract do
                       name: 'localpool_processing_standard',
                       begin_date: begindate,
                       end_date: begindate,
-                      energyprice_cents_per_kwh: 0,
+                      energyprice_cents_per_kwh: 1,
                       baseprice_cents_per_month: 100000)] }
   payments        { [Fabricate.build(:payment,
                       begin_date: begindate,
@@ -802,7 +798,7 @@ Fabricator :mpoc_sulz, from: :metering_point_operator_contract do
                                     name: 'metering_standard',
                                     begin_date: begindate,
                                     end_date: nil,
-                                    energyprice_cents_per_kwh: 0,
+                                    energyprice_cents_per_kwh: 1,
                                     baseprice_cents_per_month: 30000)] }
   payments                      { [Fabricate.build(:payment,
                                     begin_date: begindate,

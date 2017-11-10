@@ -1,4 +1,4 @@
-class CreateTariff < ActiveRecord::Migration
+class CreateTariffOld < ActiveRecord::Migration
   def change
     create_table :tariffs, id: :uuid do |t|
       t.string :name, null: false

@@ -1295,6 +1295,16 @@ CREATE TABLE contracts (
 
 
 --
+-- Name: contracts_tariffs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE contracts_tariffs (
+    tariff_id uuid NOT NULL,
+    contract_id uuid NOT NULL
+);
+
+
+--
 -- Name: core_configs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1551,22 +1561,6 @@ CREATE TABLE persons_roles (
 
 
 --
--- Name: prices; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE prices (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    name character varying NOT NULL,
-    begin_date date NOT NULL,
-    energyprice_cents_per_kilowatt_hour double precision NOT NULL,
-    baseprice_cents_per_month integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    localpool_id uuid
-);
-
-
---
 -- Name: profiles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1720,12 +1714,14 @@ CREATE TABLE scores (
 
 CREATE TABLE tariffs (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    name character varying NOT NULL,
+    name character varying(64) NOT NULL,
     begin_date date NOT NULL,
-    end_date date,
-    energyprice_cents_per_kwh integer NOT NULL,
+    energyprice_cents_per_kwh double precision NOT NULL,
     baseprice_cents_per_month integer NOT NULL,
-    contract_id uuid NOT NULL
+    end_date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    group_id uuid
 );
 
 
@@ -2099,14 +2095,6 @@ ALTER TABLE ONLY persons
 
 
 --
--- Name: prices prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY prices
-    ADD CONSTRAINT prices_pkey PRIMARY KEY (id);
-
-
---
 -- Name: profiles profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2318,6 +2306,20 @@ CREATE UNIQUE INDEX index_contracts_on_slug ON contracts USING btree (slug);
 
 
 --
+-- Name: index_contracts_tariffs_on_contract_id_and_tariff_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_contracts_tariffs_on_contract_id_and_tariff_id ON contracts_tariffs USING btree (contract_id, tariff_id);
+
+
+--
+-- Name: index_contracts_tariffs_on_tariff_id_and_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_contracts_tariffs_on_tariff_id_and_contract_id ON contracts_tariffs USING btree (tariff_id, contract_id);
+
+
+--
 -- Name: index_devices_on_register_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2465,20 +2467,6 @@ CREATE INDEX index_persons_roles_on_role_id_and_person_id ON persons_roles USING
 
 
 --
--- Name: index_prices_on_begin_date_and_localpool_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_prices_on_begin_date_and_localpool_id ON prices USING btree (begin_date, localpool_id);
-
-
---
--- Name: index_prices_on_localpool_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_prices_on_localpool_id ON prices USING btree (localpool_id);
-
-
---
 -- Name: index_profiles_on_readable; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2563,10 +2551,17 @@ CREATE INDEX index_scores_on_scoreable_id_and_scoreable_type ON scores USING btr
 
 
 --
--- Name: index_tariffs_on_contract_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_tariffs_on_begin_date_and_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_tariffs_on_contract_id ON tariffs USING btree (contract_id);
+CREATE UNIQUE INDEX index_tariffs_on_begin_date_and_group_id ON tariffs USING btree (begin_date, group_id);
+
+
+--
+-- Name: index_tariffs_on_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tariffs_on_group_id ON tariffs USING btree (group_id);
 
 
 --
@@ -2799,6 +2794,22 @@ ALTER TABLE ONLY contract_tax_data
 
 
 --
+-- Name: contracts_tariffs fk_contracts_tariffs_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts_tariffs
+    ADD CONSTRAINT fk_contracts_tariffs_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
+
+
+--
+-- Name: contracts_tariffs fk_contracts_tariffs_tariff; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts_tariffs
+    ADD CONSTRAINT fk_contracts_tariffs_tariff FOREIGN KEY (tariff_id) REFERENCES tariffs(id);
+
+
+--
 -- Name: formula_parts fk_formula_parts_operand; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2895,14 +2906,6 @@ ALTER TABLE ONLY persons
 
 
 --
--- Name: prices fk_prices_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY prices
-    ADD CONSTRAINT fk_prices_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
-
-
---
 -- Name: organizations fk_rails_6b54950e91; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2916,14 +2919,6 @@ ALTER TABLE ONLY organizations
 
 ALTER TABLE ONLY payments
     ADD CONSTRAINT fk_rails_9215ad6069 FOREIGN KEY (contract_id) REFERENCES contracts(id);
-
-
---
--- Name: tariffs fk_rails_e863d6119e; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY tariffs
-    ADD CONSTRAINT fk_rails_e863d6119e FOREIGN KEY (contract_id) REFERENCES contracts(id);
 
 
 --
@@ -2956,6 +2951,14 @@ ALTER TABLE ONLY registers
 
 ALTER TABLE ONLY registers
     ADD CONSTRAINT fk_registers_meter FOREIGN KEY (meter_id) REFERENCES meters(id);
+
+
+--
+-- Name: tariffs fk_tariffs_group; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tariffs
+    ADD CONSTRAINT fk_tariffs_group FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE;
 
 
 --
@@ -3345,6 +3348,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171031085100');
 INSERT INTO schema_migrations (version) VALUES ('20171031085200');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085220');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085230');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085250');
 

@@ -10,7 +10,7 @@ class CoreRoda < CommonRoda
 
   use Rack::Cors, debug: Rails.env != 'production'  do
     allow do
-      domains = %r(#{ENV['CORS']})
+      domains = %r(#{Import.global('config.cors')})
       origins *domains
       ['/*'].each do |path|
         resource path, headers: :any, methods: [:get, :post, :patch, :put, :delete, :options], expose: 'Authorization'

@@ -6,7 +6,7 @@ module Group
     scope :permitted, ->(uuids) { where(id: uuids) }
 
     has_many :addresses, as: :addressable, dependent: :destroy
-    has_many :prices, dependent: :destroy
+    has_many :tariffs, dependent: :destroy, class_name: 'Contract::Tariff', foreign_key: :group_id
     has_many :billing_cycles, dependent: :destroy
 
     def metering_point_operator_contract

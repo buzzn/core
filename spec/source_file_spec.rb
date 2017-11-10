@@ -40,6 +40,13 @@ describe "Source File" do
         expect(line).not_to match /Time.now/
       end
     end
+    it "source code files do not use ENV in #{file}" do
+      next if file == 'lib/buzzn/boot/main_container.rb'
+      content = File.read(file)
+      content.each_line do |line|
+        expect(line).not_to match /ENV/
+      end
+    end
   end
 
   (Dir['lib/**/*rb'] + Dir['app/models/*rb'] + Dir['app/controller/api/**/*rb']).each do |file|
