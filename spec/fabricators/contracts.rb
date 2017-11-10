@@ -44,8 +44,8 @@ Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPoin
   payments                 { [Fabricate.build(:payment)] }
   after_create do |c|
     Fabricate(:tariff, group: c.localpool) if c.localpool
-    c.contractor_bank_account = Fabricate(:bank_account, contracting_party: c.contractor)
-    c.customer_bank_account = Fabricate(:bank_account, contracting_party: c.customer)
+    c.contractor_bank_account = Fabricate(:bank_account, owner: c.contractor)
+    c.customer_bank_account = Fabricate(:bank_account, owner: c.customer)
     c.save
   end
 end
