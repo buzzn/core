@@ -27,5 +27,6 @@ dump.rdb
 
 .byebug_history
 .rspec-local
+.env.local
 public/uploads
 BUILD_INFO
