@@ -1438,6 +1438,8 @@ CREATE TABLE groups (
     address_id uuid,
     owner_person_id uuid,
     owner_organization_id uuid,
+    grid_consumption_register_id uuid,
+    grid_feeding_register_id uuid,
     CONSTRAINT check_localpool_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
 );
 
@@ -2362,6 +2364,20 @@ CREATE INDEX index_groups_on_address_id ON groups USING btree (address_id);
 
 
 --
+-- Name: index_groups_on_grid_consumption_register_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_grid_consumption_register_id ON groups USING btree (grid_consumption_register_id);
+
+
+--
+-- Name: index_groups_on_grid_feeding_register_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_grid_feeding_register_id ON groups USING btree (grid_feeding_register_id);
+
+
+--
 -- Name: index_groups_on_owner_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2831,6 +2847,22 @@ ALTER TABLE ONLY formula_parts
 
 ALTER TABLE ONLY groups
     ADD CONSTRAINT fk_groups_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
+-- Name: groups fk_groups_grid_consumption; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_grid_consumption FOREIGN KEY (grid_consumption_register_id) REFERENCES registers(id);
+
+
+--
+-- Name: groups fk_groups_grid_feeding; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_grid_feeding FOREIGN KEY (grid_feeding_register_id) REFERENCES registers(id);
 
 
 --

@@ -1,6 +1,6 @@
 module Schemas
   module Completeness
-    Organization = Dry::Validation.Schema do
+    Organization = Buzzn::Schemas.Schema do
       required(:contact).filled
     end
   end

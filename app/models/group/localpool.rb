@@ -2,6 +2,9 @@ module Group
   class Localpool < Base
     include Owner
 
+    belongs_to :grid_consumption_register, class_name: 'Register::Input'
+    belongs_to :grid_feeding_register, class_name: 'Register::Output'
+
     # permissions helpers
     scope :permitted, ->(uuids) { where(id: uuids) }
 
