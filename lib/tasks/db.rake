@@ -1,8 +1,8 @@
 namespace :db do
 
-  desc 'Empties the database (without dropping, recreating or migrating it)'
+  desc 'Deletes all data in the database (without dropping, recreating or migrating it)'
   task empty: :environment do
-    Rails.application.eager_load! # required so all active record classes are loaded and can be iterated
+    Rails.application.eager_load! # required so all active record classes are loaded and can be iterated over
     ActiveRecord::Base.connection.disable_referential_integrity do
       ActiveRecord::Base.descendants.each do |model|
         begin
