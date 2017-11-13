@@ -25,4 +25,8 @@ Display::GroupResource::Permission = Buzzn::Permission.new(Display::GroupResourc
   charts do
     retrieve :all
   end
+
+  scores do
+    retrieve :all
+  end
 end

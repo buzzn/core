@@ -5,8 +5,6 @@ require_relative '../transactions/register_chart'
 
 class RegisterRoda < BaseRoda
 
-  #include Import.args[:env, 'transaction.charts']
-
   plugin :aggregation
   plugin :shared_vars
 

@@ -6,7 +6,7 @@ module Meter
 
     attributes :operator
 
-    #TODO: do soemthing like
+    #TODO: do something like
     # has_one :register, Register::BaseResource { object.operand }
 
     # on admin UI we use the virtual meter to manage the virtual registers

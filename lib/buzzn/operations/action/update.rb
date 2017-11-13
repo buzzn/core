@@ -36,14 +36,15 @@ class Operations::Action::Update
     end
   end
 
-  ALWAYS_SUCCESS = Object.new.tap do |o|
-    def o.success?; true; end
-  end
+  ALWAYS_SUCCESS = OpenStruct.new(success?: true)
 
   def check_invariant(object)
     invariant = find_invariant(object.class)
     if invariant
       invariant.call(object.attributes)
+      # FIXME currently this does not work as we need a similar workaround
+      #       on models as we have on resources to work with dry-validations
+      ALWAYS_SUCCESS
     else
       ALWAYS_SUCCESS
     end
