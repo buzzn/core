@@ -18,18 +18,12 @@ Before running the stack with docker for the first time, run these commands:
 
 - start all containers required for the stack:
     - `docker-compose up`
-- from a separate shell, create the development database and load the seeds:
-    - `docker exec core_web_1 rake db:create`
-    - `docker exec core_web_1 rake db:data` # db:create and db:data need to run separately right now.
-    - `docker exec core_web_1 rake db:data` # db:data once more, it only works on the 2nd run. Don't ask!
 
-- if you don't want seeds, only the create the DB and schema:
-    - `docker exec core_web_1 rake db:create`
-    - `docker exec core_web_1 rake db:prepare`
+- from a separate shell, initialize the application:
+    - `docker exec core_web_1 rake application:init`
 
-- do the same for tests:
-    - `docker exec -e RAILS_ENV=test core_web_1 rake db:create`
-    - `docker exec -e RAILS_ENV=test core_web_1 rake db:prepare`
+- additionally run the following to load some example data:
+    - `docker exec core_web_1 rake db:empty db:seed:example_data`
 
 # Day to day development
 
