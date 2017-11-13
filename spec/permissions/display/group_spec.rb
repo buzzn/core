@@ -83,6 +83,12 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
               expect { mentor.delete }.to raise_error Buzzn::PermissionDenied
             end
           end
+
+          context 'scores' do
+            it "retrieve" do
+              expect(group.permissions.scores.retrieve).to eq ['ANONYMOUS']
+            end
+          end
         end
       end
     end

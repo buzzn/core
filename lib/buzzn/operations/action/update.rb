@@ -44,6 +44,9 @@ class Operations::Action::Update
     invariant = find_invariant(object.class)
     if invariant
       invariant.call(object.attributes)
+      # FIXME currently this does not work as we need a similar workaround
+      #       on models as we have on resources to work with dry-validations
+      ALWAYS_SUCCESS
     else
       ALWAYS_SUCCESS
     end

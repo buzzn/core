@@ -30,7 +30,7 @@ module Admin
 
         r.delete! do
           Transactions::Admin::Tariff::Delete
-            .call(price)
+            .call(tariff)
         end
       end
     end
