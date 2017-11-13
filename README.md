@@ -14,9 +14,20 @@ See [docs/application_architecture.md](docs/application_architecture.md).
 | task name            | description   | source
 |----------------------|---------------|----------------
 | `rake`               | Run all tests | Rails default
-| `rake db:reset`      | Drops and recreates the DB and schema, loads essential setup data. Run with `RAILS_ENV=test` to prepare the DB for testing | Rails default
-| `rake db:empty` | Resets the database without dropping the DB. This is useful to reset the DB schema while it has open connections | Custom
-| `rake db:seed:example_data` | Load an example localpool into the DB | Custom
+| `rake db:reset`      | Drop and recreate the DB, load schema and setup data.<br />Run in `RAILS_ENV=test` to prepare the DB for testing. | Rails default
+| `rake db:empty` | Resets the database without dropping the DB.<br />Useful to reset DB when it has open connections. | Buzzn custom
+| `rake db:seed:example_data` | Load an example localpool into the DB.<br />It does not prepare/empty the DB, run `rake db:empty` beforehands if required. | Buzzn custom
+
+##### Common testing workflow - after checking out a remote branch
+
+- checkout the branch
+- run `RAILS_ENV=test rake db:reset` once to ensure DB is prepared
+- run `rake`
+
+##### Common testing workflow - to run one test file
+
+- run `RAILS_ENV=test rake db:reset` once to ensure DB is prepared
+- run `rspec path/to/spec_file`
 
 ## Loading setup and example data ("seeds")
 
