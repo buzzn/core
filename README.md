@@ -9,6 +9,15 @@ https://app.buzzn.com | https://staging.buzzn.com
 
 See [docs/application_architecture.md](docs/application_architecture.md).
 
+## Useful rake tasks
+
+| task name            | description   | source
+|----------------------|---------------|----------------
+| `rake`               | Run all tests | Rails default
+| `rake db:reset`      | Drops and recreates the DB and schema, loads essential setup data. Run with `RAILS_ENV=test` to prepare the DB for testing | Rails default
+| `rake db:empty` | Resets the database without dropping the DB. This is useful to reset the DB schema while it has open connections | Custom
+| `rake db:seed:example_data` | Load an example localpool into the DB | Custom
+
 ## Loading setup and example data ("seeds")
 
 Our application has two kinds of data that we can pre-load ("seed"), *setup* and *example* data.
