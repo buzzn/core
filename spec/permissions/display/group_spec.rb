@@ -83,13 +83,6 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
               expect { mentor.delete }.to raise_error Buzzn::PermissionDenied
             end
           end
-
-          context 'scores' do
-            let(:scores) { group.scores(interval: :day) }
-            it "retrieve" do
-              expect(scores.to_a).to eq []
-            end
-          end
         end
       end
     end

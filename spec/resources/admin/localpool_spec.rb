@@ -18,59 +18,6 @@ describe Admin::LocalpoolResource do
 
   entity!(:pools) { Admin::LocalpoolResource.all(admin) }
 
-  describe 'scores' do
-
-    entity(:group) { localpool }
-
-    [:day, :month, :year].each do |interval|
-      describe interval do
-
-        before { Score.delete_all }
-
-        [:sufficiency, :closeness, :autarchy, :fitting].each do |type|
-
-          describe type do
-
-            let!(:out_of_range) do
-                begin
-                  interval_information = Buzzn::ScoreCalculator.new(nil, Time.new(123123)).send(:interval, interval)
-                  Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
-                end
-            end
-
-            let!(:in_range) do
-                begin
-                  interval_information = Buzzn::ScoreCalculator.new(nil, Time.current.yesterday).send(:interval, interval)
-                  Score.create(mode: type, interval: interval_information[0], interval_beginning: interval_information[1], interval_end: interval_information[2], value: (rand * 10).to_i, scoreable_type: Group::Base, scoreable_id: group.id)
-                end
-            end
-
-            let(:attributes) { ['mode', 'interval', 'interval_beginning', 'interval_end', 'value'] }
-            it 'now' do
-              result = pools.retrieve(group.id)
-                         .scores(interval: interval, mode: type)
-              expect(result.size).to eq 1
-              first = ScoreResource.send(:new, result.first)
-              expect(first.to_hash.keys).to match_array attributes
-            end
-
-            it 'yesterday' do
-              result = pools.retrieve(group.id)
-                         .scores(interval: interval,
-                                 mode: type,
-                                 timestamp: Time.current.yesterday)
-              expect(result.size).to eq 1
-              first = ScoreResource.send(:new, result.first)
-              expect(first.to_hash.keys).to match_array attributes
-            end
-
-          end
-        end
-      end
-    end
-
-  end
-
   it 'retrieve all - ids + types' do
     expected = Group::Localpool.all.collect do |l|
       ['group_localpool', l.id]

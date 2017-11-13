@@ -152,7 +152,7 @@ describe Display::GroupResource do
 
             let(:attributes) { ['mode', 'interval', 'interval_beginning', 'interval_end', 'value'] }
 
-            it 'now' do
+            xit 'now' do
               result = Display::GroupResource
                          .all(admin)
                          .retrieve(group.id)
@@ -161,7 +161,7 @@ describe Display::GroupResource do
               expect(result.first.to_hash.keys).to match_array attributes
             end
 
-            it 'yesterday' do
+            xit 'yesterday' do
               result = Display::GroupResource
                          .all(admin)
                          .retrieve(group.id)

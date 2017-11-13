@@ -126,8 +126,8 @@ describe Contract::BaseResource do
   describe Contract::MeteringPointOperatorResource do
 
     it 'retrieve - ids + types' do
-      skip "Fails, no contract is found."
-      result = resources.metering_point_operators.collect do |r|
+      result = resources.select {|r| r.object.is_a?(Contract::MeteringPointOperator)}
+                 .collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [['contract_metering_point_operator', metering_point_operator.id]]
@@ -145,8 +145,8 @@ describe Contract::BaseResource do
   describe Contract::LocalpoolProcessingResource do
 
     it 'retrieve all - ids + types' do
-      skip "Fails, no contract is found."
-      result = resources.localpool_processing.collect do |r|
+      result = resources.select {|r| r.object.is_a?(Contract::LocalpoolProcessing)}
+                 .collect do |r|
         [r.type, r.id]
       end
       expect(result).to eq [['contract_localpool_processing', localpool_processing.id]]
@@ -164,8 +164,8 @@ describe Contract::BaseResource do
   describe Contract::LocalpoolPowerTakerResource do
 
     it 'retrieve - ids + types' do
-      skip "Fails, no contract is found."
-      result = resources.localpool_power_takers.collect do |r|
+      result = resources.select {|r| r.object.is_a?(Contract::LocalpoolPowerTaker)}
+                 .collect do |r|
         [r.object.class, r.id]
       end
       expect(result).to eq [[Contract::LocalpoolPowerTaker, localpool_power_taker.id]]
