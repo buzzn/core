@@ -15,10 +15,8 @@ namespace :db do
   end
 
   Rake::Task["seed"].clear
-  task :seed do
-    puts "The db:seed rake task has been removed. Please use one of these instead:"
-    system "rake -T db:seed"
-  end
+  task seed: 'seed:setup_data'
+
   namespace :seed do
     desc 'Loads essential data into the application'
     task setup_data: :environment do
