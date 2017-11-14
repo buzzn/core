@@ -4,7 +4,5 @@ module Contract
     model MeteringPointOperator
 
     attributes  :metering_point_operator_name
-
-    has_one :address
   end
 end

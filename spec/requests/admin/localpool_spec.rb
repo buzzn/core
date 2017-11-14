@@ -373,7 +373,7 @@ describe Admin::LocalpoolRoda do
             {
               "id"=>t.id,
               "type"=>'contract_tariff',
-              'updated_at'=>nil,
+              'updated_at'=>t.updated_at.as_json,
               "name"=>t.name,
               "begin_date"=>t.begin_date.to_s,
               "end_date"=>nil,
@@ -509,7 +509,7 @@ describe Admin::LocalpoolRoda do
             {
               "id"=>tariff.id,
               "type"=>'contract_tariff',
-              'updated_at'=>nil,
+              'updated_at'=>contract.tariff.updated_at.as_json,
               "name"=>contract.tariff.name,
               "begin_date"=>contract.tariff.begin_date.to_s,
               "end_date"=>nil,

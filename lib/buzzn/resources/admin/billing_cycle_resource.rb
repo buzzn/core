@@ -9,11 +9,5 @@ module Admin
                 :end_date
 
     has_many :billings, BillingResource
-
-    def create_regular_billings(accounting_year:)
-      to_collection(object.create_regular_billings(accounting_year),
-                    permissions.billings, BillingResource)
-    end
   end
 end
-

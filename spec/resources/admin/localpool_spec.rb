@@ -61,32 +61,9 @@ describe Admin::LocalpoolResource do
       expect(result.first.to_hash.keys).to match_array attributes
     end
 
-    it 'create' do
-      request_params = {
-        name: "special",
-        begin_date: Date.new(2016, 1, 1),
-        energyprice_cents_per_kwh: 23.66,
-        baseprice_cents_per_month: 500
-      }
-
-      result = pools.retrieve(localpool.id).create_tariff(request_params)
-      expect(result.is_a?(Contract::TariffResource)).to eq true
-      expect(result.object.group).to eq localpool
-    end
   end
 
   context 'billing cycles' do
-    it 'create' do
-      request_params = {
-        name: 'abcd',
-        begin_date: Date.new(2016, 1, 1),
-        end_date: Date.new(2016, 9, 1)
-      }
-
-      result = pools.retrieve(localpool.id).create_billing_cycle(request_params)
-      expect(result.is_a?(Admin::BillingCycleResource)).to eq true
-      expect(result.object.localpool).to eq localpool
-    end
 
     it 'retrieve all' do
       size = localpool.billing_cycles.size
@@ -110,140 +87,41 @@ describe Admin::LocalpoolResource do
 
     entity!(:pool) { pools.first }
 
-    entity!(:person_raw) { Fabricate(:person) }
-    entity!(:person2_raw) { Fabricate(:person) }
-
-    entity!(:person) do
-      PersonResource.new(person_raw, current_user: admin.person)
-    end
+    entity!(:person) { Fabricate(:person) }
 
     entity!(:organization) do
-      OrganizationResource.new(Fabricate(:other_organization, legal_representation: Fabricate(:person)), current_user: admin.person, current_roles: [Role::BUZZN_OPERATOR], permissions: pool.permissions.owner)
+      Fabricate(:other_organization)
     end
 
     before do
-      organization.object.contact = nil
-      organization.object.save
-      pool.object.owner = nil
-      pool.object.save
+      #organization.update(contact: nil)
+      pool.object.update(owner: nil)
     end
 
     context 'as person' do
 
-      entity!(:person2) do
-        PersonResource.new(person2_raw, current_user: admin.person)
-      end
-
       it 'invalid' do
         expect(pool.incompleteness[:owner]).to eq(["must be filled"])
-        pool.assign_owner(person)
-        person.object.remove_role(Role::GROUP_OWNER, pool.object)
+        pool.object.owner = person
+        person.remove_role(Role::GROUP_OWNER, pool.object)
+        expect(pool.incompleteness[:owner]).to eq(["BUG: missing GROUP_ADMIN role"])
+        person.add_role(Role::GROUP_OWNER, pool.object)
         expect(pool.incompleteness[:owner]).to eq(["BUG: missing GROUP_ADMIN role"])
       end
 
-      it 'setup roles' do
-        pool.setup_roles(nil, person)
-        expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
-        expect(person.object.roles.size).to eq 1
-
-        pool.setup_roles(person, nil)
-        expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
-        expect(person.object.roles.size).to eq 0
-      end
-
-      it 'create' do
-        pool.create_person_owner(Fabricate.build(:person).attributes)
-        expect(pool.incompleteness[:owner]).to be_nil
-        expect(pool.owner.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
-        expect(pool.owner.object.roles.size).to eq 1
-
-        owner = pool.owner
-        pool.create_person_owner(Fabricate.build(:person).attributes)
-        expect(pool.incompleteness[:owner]).to be_nil
-        expect(owner.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
-        expect(owner.object.roles.size).to eq 0
-
-        pool.create_organization_owner(Fabricate.build(:organization).attributes)
-        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
-        expect(pool.owner.legal_representation).to be_nil
-      end
-
-      it 'assign' do
-        pool.assign_owner(person)
-        expect(pool.incompleteness[:owner]).to be_nil
-
-        owner = pool.owner
-
-        expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
-        expect(person.object.roles.size).to eq 1
-
-        pool.assign_owner(person2)
-        expect(pool.incompleteness[:owner]).to be_nil
-        expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
-        expect(person.object.roles.size).to eq 0
-
-        pool.assign_owner(organization)
-        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
-        expect(organization.legal_representation.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
-        expect(organization.legal_representation.object.roles.size).to eq 1
-        expect(person2.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
-        expect(person2.object.roles.size).to eq 0
-      end
     end
 
     context 'as organization' do
 
-      entity!(:organization2) do
-        OrganizationResource.new(Fabricate(:other_organization, legal_representation: person2_raw), current_user: admin.person, current_roles: [Role::BUZZN_OPERATOR], permissions: pool.permissions.owner)
-      end
-
       it 'invalid' do
         expect(pool.incompleteness[:owner]).to eq(["must be filled"])
-        pool.assign_owner(organization)
-        organization.legal_representation.object.remove_role(Role::GROUP_OWNER, pool.object)
+        pool.object.owner = organization
         expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
-        organization.object.contact = person_raw
+        organization.contact = person
+        organization.contact.remove_role(Role::GROUP_OWNER, pool.object)
         expect(pool.incompleteness[:owner]).to eq(["BUG: missing GROUP_ADMIN role"])
-      end
-
-      it 'setup roles' do
-        pool.setup_roles(nil, organization)
-        expect(organization.legal_representation.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
-        expect(organization.legal_representation.object.roles.size).to eq 1
-
-        pool.setup_roles(organization, nil)
-        expect(organization.legal_representation.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
-        expect(organization.legal_representation.object.roles.size).to eq 0
-      end
-
-      it 'create' do
-        pool.create_organization_owner(Fabricate.build(:organization).attributes)
-        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
-        expect(pool.owner.legal_representation).to be_nil
-
-        pool.create_person_owner(Fabricate.build(:person).attributes)
-        expect(pool.incompleteness[:owner]).to be_nil
-        expect(pool.owner.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
-        expect(pool.owner.object.roles.size).to eq 1
-      end
-
-      it 'assign' do
-        pool.assign_owner(organization)
-        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
-        expect(organization.legal_representation.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
-        expect(organization.legal_representation.object.roles.size).to eq 1
-
-        pool.assign_owner(organization2)
-        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
-        expect(organization.legal_representation.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
-        expect(organization.legal_representation.object.roles.size).to eq 0
-
-        pool.assign_owner(person)
-        expect(pool.incompleteness[:owner]).to be_nil
-        expect(organization2.legal_representation.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
-        expect(organization2.legal_representation.object.roles.size).to eq 0
-        expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
-        expect(person.object.roles.size).to eq 1
+        organization.contact.add_role(Role::GROUP_OWNER, pool.object)
+        expect(pool.incompleteness[:owner]).to eq(["BUG: missing GROUP_ADMIN role"])
       end
     end
   end

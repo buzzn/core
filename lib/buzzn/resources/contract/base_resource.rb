@@ -22,9 +22,5 @@ module Contract
     has_one :customer
     has_one :customer_bank_account
     has_one :contractor_bank_account
-
-    def invariants
-      Schemas::Invariants::Contract::Base.call(self)
-    end
   end
 end

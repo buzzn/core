@@ -11,9 +11,6 @@ module Contract
 
     attributes :updatable, :deletable
 
-    # missing expected attribute
-    def updated_at; nil; end
-
     def deletable
       super && object.contracts.empty?
     end

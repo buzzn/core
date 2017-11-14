@@ -2,7 +2,7 @@ require 'rspec/expectations'
 
 RSpec::Matchers.define :have_valid_invariants do |expected|
   match do |actual|
-    actual.invariants.success?
+    expected.call(actual).success?
   end
 
   failure_message do |actual|

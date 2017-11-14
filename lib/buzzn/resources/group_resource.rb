@@ -1,6 +1,4 @@
 class GroupResource < Buzzn::Resource::Entity
-  include Import.reader['service.current_power',
-                        'service.charts']
 
   abstract
 
