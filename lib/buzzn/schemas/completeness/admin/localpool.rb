@@ -14,11 +14,11 @@ module Schemas
             case input
             when PersonResource
               role = input.object.roles.where(name: Role::GROUP_OWNER).detect do |r|
-                (r.resource.owner.is_a?(Person) && input.id == r.resource.owner.id) || (r.resource.owner.is_a?(Organization) && r.resource.owner.legal_representation && input.id == r.resource.owner.legal_representation.id)
+                (r.resource.owner.is_a?(Person) && input.id == r.resource.owner.id) || (r.resource.owner.is_a?(::Organization) && r.resource.owner.contact && input.id == r.resource.owner.contact.id)
               end
               role != nil
             when OrganizationResource
-              valid_role?(input.legal_representation)
+              valid_role?(input.contact)
             when NilClass
               true
             else

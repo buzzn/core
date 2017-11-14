@@ -65,16 +65,16 @@ describe Contract::BaseResource do
     it 'valid' do
       resources.each do |contract|
         contract.object.update begin_date: nil, termination_date: nil, end_date: nil
-        expect(contract).to have_valid_invariants
+        expect(contract).to have_valid_invariants Schemas::Invariants::Contract::Base
 
         contract.object.update begin_date: Date.today
-        expect(contract).to have_valid_invariants
+        expect(contract).to have_valid_invariants Schemas::Invariants::Contract::Base
 
         contract.object.update termination_date: Date.today
-        expect(contract).to have_valid_invariants
+        expect(contract).to have_valid_invariants Schemas::Invariants::Contract::Base
 
         contract.object.update end_date: Date.today
-        expect(contract).to have_valid_invariants
+        expect(contract).to have_valid_invariants Schemas::Invariants::Contract::Base
       end
     end
 
@@ -82,24 +82,24 @@ describe Contract::BaseResource do
       it 'missing begin_date and termination_date' do
         resources.each do |contract|
           contract.object.update begin_date: nil, termination_date: nil, end_date: Date.today
-          expect(contract).not_to have_valid_invariants
-          expect(contract.invariants.messages).to eq({:begin_date=>["must be filled"], :termination_date=>["must be filled"]})
+          expect(contract).not_to have_valid_invariants Schemas::Invariants::Contract::Base
+          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq({:begin_date=>["must be filled"], :termination_date=>["must be filled"]})
         end
       end
 
       it 'missing begin_date' do
         resources.each do |contract|
           contract.object.update begin_date: nil, termination_date: Date.today, end_date: Date.today
-          expect(contract).not_to have_valid_invariants
-          expect(contract.invariants.messages).to eq({:begin_date=>["must be filled"]})
+          expect(contract).not_to have_valid_invariants Schemas::Invariants::Contract::Base
+          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq({:begin_date=>["must be filled"]})
         end
       end
 
       it 'missing termination date' do
         resources.each do |contract|
           contract.object.update begin_date: Date.today, termination_date: nil, end_date: Date.today
-          expect(contract).not_to have_valid_invariants
-          expect(contract.invariants.messages).to eq({:termination_date=>["must be filled"]})
+          expect(contract).not_to have_valid_invariants Schemas::Invariants::Contract::Base
+          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq({:termination_date=>["must be filled"]})
         end
       end
     end

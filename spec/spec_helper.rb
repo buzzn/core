@@ -142,7 +142,7 @@ RSpec.configure do |config|
   end
 
   def build(*args)
-    FactoryGirl.buil(*args)
+    FactoryGirl.build(*args)
   end
 
   def method_missing(method, *args)
