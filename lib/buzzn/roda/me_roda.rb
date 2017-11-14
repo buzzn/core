@@ -18,11 +18,16 @@ module Me
       json_response_error_status 401
 
       set_error_flash do |message|
-        k, v = json_response[json_response_field_error_key]
-        errors = [{parameter: k, detail: v}]
-        response.status = 422
+        if request.path =~ /\/login\Z/
+          response.status = 401
+          payload = { error: 'Access Denied' }.to_json
+        else
+          response.status = 422
+          k, v = json_response[json_response_field_error_key]
+          payload = {errors: [{parameter: k, detail: v}]}.to_json
+        end
         request.halt [response.status, {'Content-Type' => 'application/json'},
-                      [{errors: errors}.to_json]]
+                      [payload]]
       end
 
       create_verify_login_change_email do |login|

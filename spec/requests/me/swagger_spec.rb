@@ -44,7 +44,7 @@ describe Me, :swagger, :skip_nested do
 
   post '/login', nil, status: 200, description: 'logged in' do
     description 'login'
-    schema Schemas::Transactions::Me::Login, [{"parameter"=>"login", "detail"=>"no matching login"}]
+    schema Schemas::Transactions::Me::Login, []
   end
 
   post '/reset-password-request', nil, status: 200, description: 'key sent via email' do
