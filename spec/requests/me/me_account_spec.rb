@@ -41,11 +41,9 @@ describe Me::Roda, :skip_nested do
 
   context 'login' do
 
-    let(:no_matching_login_json) do
+    let(:access_denied_json) do
       {
-        "errors"=>[
-          {"parameter"=>"login", "detail"=>"no matching login"}
-        ]
+        "error" => 'Access Denied'
       }
     end
 
@@ -58,14 +56,14 @@ describe Me::Roda, :skip_nested do
       expect(json['id']).to eq user.person.id
     end
 
-    it '422' do
+    it '401' do
       POST '/api/me/login', nil
-      expect(response).to have_http_status(422)
-      expect(json).to eq no_matching_login_json
+      expect(response).to have_http_status(401)
+      expect(json).to eq access_denied_json
 
       POST '/api/me/login', nil, login: user.email
-      expect(response).to have_http_status(422)
-      expect(json).to eq invalid_password_json
+      expect(response).to have_http_status(401)
+      expect(json).to eq access_denied_json
     end
   end
 
