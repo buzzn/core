@@ -175,6 +175,14 @@ RSpec.configure do |config|
     self.forced_entities << key.to_sym
   end
 
+  def create(*args)
+    FactoryGirl.create(*args)
+  end
+
+  def build(*args)
+    FactoryGirl.buil(*args)
+  end
+
   def method_missing(method, *args)
     if self.respond_to?(:setup_entity)
       self.setup_entity(method) || super

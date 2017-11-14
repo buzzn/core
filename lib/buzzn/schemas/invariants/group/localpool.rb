@@ -21,10 +21,12 @@ module Schemas
         required(:grid_consumption_register).maybe
         required(:grid_feeding_register).maybe
 
+        # FIXME needs tests and fix on ITs
         required(:grid_consumption_register) do
-          grid_consumption_group?.and grid_register_no_group?
+          grid_register_no_group?.and grid_consumption_group?
         end
 
+        # FIXME needs tests and fix on ITs
         required(:grid_feeding_register) do
           grid_register_no_group?.and grid_feeding_group?
         end
