@@ -4,23 +4,16 @@ class Organization < ActiveRecord::Base
   include Filterable
 
   belongs_to :address
+  belongs_to :contact, class_name: 'Person'
+  belongs_to :legal_representation, class_name: 'Person'
 
   has_many :bank_accounts, foreign_key: :owner_organization_id
   has_many :energy_classifications
-
-  belongs_to :contact, class_name: Person
-  belongs_to :legal_representation, class_name: Person
-
   has_many :market_functions, dependent: :destroy, class_name: "OrganizationMarketFunction"
 
   def in_market_function(function)
     market_functions.find_by(function: function)
   end
-
-  validates :name, presence: true, length: { in: 3..255 }, uniqueness: true
-  validates :email, presence: true
-  validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
-  validates :phone, presence: true
 
   scope :permitted, ->(uuids) { where(nil) } # organizations are public
 
@@ -40,7 +33,6 @@ class Organization < ActiveRecord::Base
   end
 
   def self.search_attributes
-    # FIXME: clarify if we need to be able to search by mode here.
     [:name, :email, :website, :description, address: [:city, :zip, :street]]
   end
 

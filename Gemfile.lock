@@ -369,6 +369,7 @@ GEM
     ruby-swagger (0.1.1)
       addressable
     ruby_dep (1.5.0)
+    ruby_regex (0.1.3)
     safe_yaml (1.0.4)
     schema_monkey (2.1.5)
       activerecord (>= 4.2)
@@ -491,6 +492,7 @@ DEPENDENCIES
   rspec-retry
   rspec_nested_transactions
   ruby-swagger
+  ruby_regex
   schema_plus_enums
   sidekiq
   slim
