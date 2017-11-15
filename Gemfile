@@ -97,7 +97,7 @@ end
 
 group :development do
   gem 'pry-rails'
-  gem 'annotate'
+  gem 'rake'
   gem 'yard'
 end
 
