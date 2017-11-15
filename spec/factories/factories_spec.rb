@@ -175,16 +175,6 @@ describe "Factories produce valid records" do
       it { is_expected.to be_valid }
       it { is_expected.to have_association(:group, Group::Localpool) }
       it { is_expected.to have_association(:meter, expected_meter_class.constantize) }
-      xit "can override meter" do
-        # it is not possible to rewire meter and registers and
-        # meters and registers can only exists in combination
-        meter    = create(:meter, :real)
-        register = create(:register, :input, meter: meter)
-        expect(register.meter).to eq(meter)
-        expect(register).to be_valid
-        meter.reload
-        expect(meter.registers.size).to eq(2)
-      end
        it "has a valid and persisted meter" do
         expect(subject.meter).to be_valid
         expect(subject.meter).to be_persisted
@@ -194,6 +184,16 @@ describe "Factories produce valid records" do
     context "Input" do
       subject { create(:register, :input) }
       include_examples 'a valid register', 'Meter::Real'
+      it "can override meter" do
+        # it is not possible to rewire meter and registers and
+        # meters and registers can only exists in combination
+        meter    = create(:meter, :real)
+        register = create(:register, :output, meter: meter)
+        expect(register.meter).to eq(meter)
+        expect(register).to be_valid
+        meter.reload
+        expect(meter.registers.size).to eq(2)
+      end
     end
 
     context "Virtual input" do
@@ -202,10 +202,15 @@ describe "Factories produce valid records" do
     end
   end
 
-
   context "Tariff" do
     subject { create(:tariff) }
     it { is_expected.to be_valid }
     it { expect(subject.contracts.first).to be_a(Contract::Base) }
+    it "can override group" do
+      group    = create(:localpool)
+      tariff   = create(:tariff, group: group)
+      expect(tariff.group).to eq(group)
+      expect(tariff).to be_valid
+    end
   end
 end

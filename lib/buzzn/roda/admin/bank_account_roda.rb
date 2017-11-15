@@ -1,24 +1,22 @@
 require_relative '../admin_roda'
+require_relative '../../transactions/admin/bank_account/create'
+require_relative '../../transactions/admin/bank_account/update'
+require_relative '../../transactions/admin/bank_account/delete'
+
 class Admin::BankAccountRoda < BaseRoda
 
   PARENT = :bank_account_parent
 
   plugin :shared_vars
-  plugin :created_deleted
-
-  include Import.args[:env,
-                      'transaction.create_bank_account',
-                      'transaction.update_bank_account']
 
   route do |r|
 
     parent = shared[PARENT]
 
     r.post! do
-      created do
-        create_bank_account.call(r.params,
-                                 resource: [parent.method(:create_bank_account)])
-      end
+        Transactions::Admin::BankAccount::Create
+          .for(parent)
+          .call(r.params)
     end
 
     bank_accounts = parent.bank_accounts
@@ -36,13 +34,14 @@ class Admin::BankAccountRoda < BaseRoda
       end
 
       r.patch! do
-        update_bank_account.call(r.params, resource: [bank_account])
+        Transactions::Admin::BankAccount::Update
+          .for(bank_account)
+          .call(r.params)
       end
 
       r.delete! do
-        deleted do
-          bank_account.delete
-        end
+        Transactions::Admin::BankAccount::Delete
+          .call(bank_account)
       end
     end
   end

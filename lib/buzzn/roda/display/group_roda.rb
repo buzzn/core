@@ -1,10 +1,9 @@
 require_relative '../display_roda'
+require_relative '../../transactions/bubbles'
+require_relative '../../transactions/group_chart'
+require_relative '../../transactions/display/score'
+
 class Display::GroupRoda < BaseRoda
-
-  include Import.args[:env,
-                      'transaction.scores',
-                      'transaction.charts']
-
   plugin :aggregation
   plugin :shared_vars
 
@@ -22,11 +21,18 @@ class Display::GroupRoda < BaseRoda
       end
 
       r.get! 'charts' do
-        aggregated(charts.call(r.params, resource: [group.method(:charts)]))
+        aggregated(
+          Transactions::GroupChart
+            .for(group)
+            .call(r.params).value
+        )
       end
 
       r.get! 'bubbles' do
-        aggregated(group.bubbles)
+        aggregated(
+          Transactions::Bubbles
+            .call(group).value
+        )
       end
 
       r.get! 'mentors' do
@@ -39,7 +45,9 @@ class Display::GroupRoda < BaseRoda
       end
 
       r.get! 'scores' do
-        scores.call(r.params, resource: [group.method(:scores)])
+        Transactions::Display::Score
+          .for(group)
+          .call(r.params)
       end
     end
   end

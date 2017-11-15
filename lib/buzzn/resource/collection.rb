@@ -2,18 +2,20 @@ module Buzzn::Resource
   class Collection
     include Enumerable
 
-    def initialize(enum, to_resource_method, current_user, unbound_roles, permissions, clazz = nil)
+    attr_reader :current_user, :permisions, :objects, :instance_class
+
+    def initialize(objects, to_resource_method, current_user, unbound_roles, permissions, clazz = nil)
       @current_user = current_user
       @unbound_roles = unbound_roles
       @permissions = permissions
-      @enum = enum
+      @objects = objects
       @to_resource = to_resource_method
-      @class = clazz
+      @instance_class = clazz
       @meta = {}
     end
 
-    def objects
-      @enum
+    def context
+      Context.new(@current_user, @unbound_roles, @permissions)
     end
 
     def current_roles(id)
@@ -21,14 +23,16 @@ module Buzzn::Resource
     end
 
     def each(&block)
-      @enum.each do |model|
+      @objects.each do |model|
         block.call(@to_resource.call(@current_user, current_roles(model.id),
-                                     @permissions, model, @class))
+                                     @permissions, model, @instance_class))
       end
     end
 
-    def create(params)
-      @class.create(@current_user, params)
+    def filter(query)
+      # FIXME Collection should be immutable !
+      @objects = @objects.filter(query)
+      self
     end
 
     def retrieve_with_slug(id)
@@ -43,14 +47,24 @@ module Buzzn::Resource
       do_retrieve(id, id: id)
     end
 
-    def do_retrieve(id, *args)
-      if result = @enum.where(*args).first
+    def retrieve_or_nil(id)
+      do_retrieve_or_nil(id, id: id)
+    end
+
+    def do_retrieve_or_nil(id, *args)
+      if result = @objects.where(*args).first
         @to_resource.call(@current_user, current_roles(id),
-                          @permissions, result, @class)
+                          @permissions, result, @instance_class)
+      end
+    end
+
+    def do_retrieve(id, *args)
+      if result = do_retrieve_or_nil(id, *args)
+        result
       else
-        clazz = @enum.class.to_s.sub(/::ActiveRecord_.*/,'').safe_constantize
-        clazz ||= @class && @class.model
-        clazz ||= @enum.first.class if @enum.first
+        clazz = @objects.class.to_s.sub(/::ActiveRecord_.*/,'').safe_constantize
+        clazz ||= @instance_class && @instance_class.model
+        clazz ||= @objects.first.class if @objects.first
         if clazz && clazz.where(*args).size > 0
           raise Buzzn::PermissionDenied.new(clazz.where(*args).first, :retrieve, @current_user)
         else
@@ -66,26 +80,24 @@ module Buzzn::Resource
     alias :to_ary :to_a
 
     def size
-      @enum.size
+      @objects.size
     end
 
-    def method_missing(method, *args)
-      if @enum.respond_to?(method)
-        @enum = @enum.send(method, *args)
-        self
-      else
-        super
-      end
+    def createable?
+      allowed?(:create)
     end
 
-    def respond_to?(method)
-      @enum.respond_to?(method) || super
+    def any_roles
+      (collect { |a| a.current_roles }.flatten | @unbound_roles).uniq
+    end
+
+    def allowed?(method)
+      (@permissions.send(method) & any_roles).size > 0
     end
 
     def []=(k, v)
       @meta[k] = v
     end
-
 
     def to_json(options = {})
       json = ''
@@ -112,13 +124,13 @@ module Buzzn::Resource
           '{"array":['
         end
       first = true
-      @enum.each do |model|
+      @objects.each do |model|
         if m = cache[model.class]
           m.instance_variable_set(:@object, model)
           m.instance_variable_set(:@current_roles, current_roles(model.id))
         else
           m = @to_resource.call(@current_user, current_roles(model.id),
-                                @permissions, model, @class)
+                                @permissions, model, @instance_class)
           cache[model.class] = m
         end
         if first

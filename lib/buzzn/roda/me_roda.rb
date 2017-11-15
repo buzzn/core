@@ -1,9 +1,8 @@
 require_relative 'base_roda'
+require_relative '../transactions/person/update'
+
 module Me
   class Roda < BaseRoda
-
-    include Import.args[:env,
-                        'transaction.update_person']
 
     plugin :rodauth, csrf: false, json: :only do
 
@@ -19,11 +18,16 @@ module Me
       json_response_error_status 401
 
       set_error_flash do |message|
-        k, v = json_response[json_response_field_error_key]
-        errors = [{parameter: k, detail: v}]
-        response.status = 422
+        if request.path =~ /\/login\Z/
+          response.status = 401
+          payload = { error: 'Access Denied' }.to_json
+        else
+          response.status = 422
+          k, v = json_response[json_response_field_error_key]
+          payload = {errors: [{parameter: k, detail: v}]}.to_json
+        end
         request.halt [response.status, {'Content-Type' => 'application/json'},
-                      [{errors: errors}.to_json]]
+                      [payload]]
       end
 
       create_verify_login_change_email do |login|
@@ -79,7 +83,7 @@ module Me
       end
 
       r.patch! do
-        update_person.call(r.params, resource: [person])
+        Transactions::Person::Update.for(person).call(r.params)
       end
     end
   end

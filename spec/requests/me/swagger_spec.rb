@@ -21,9 +21,10 @@ describe Me, :swagger, :skip_nested do
   entity!(:account_change_login) { Proc.new { @b ||= Fabricate(:user) } }
 
   after :all do
-    [ account.call, account_change_login.call].each |a|
-      [ Account::PasswordHash, Account::PasswordResetKey, Account::LoginChangeKey, Account::Base].each do |model|
-      model.where(id: a).delete_all
+    [account.call, account_change_login.call].each do |a|
+      [Account::PasswordHash, Account::PasswordResetKey, Account::LoginChangeKey, Account::Base].each do |model|
+        model.where(id: a).delete_all
+      end
     end
   end
 
@@ -43,7 +44,7 @@ describe Me, :swagger, :skip_nested do
 
   post '/login', nil, status: 200, description: 'logged in' do
     description 'login'
-    schema Schemas::Transactions::Me::Login, [{"parameter"=>"login", "detail"=>"no matching login"}]
+    schema Schemas::Transactions::Me::Login, []
   end
 
   post '/reset-password-request', nil, status: 200, description: 'key sent via email' do

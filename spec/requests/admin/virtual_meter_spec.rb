@@ -286,7 +286,7 @@ describe Admin::LocalpoolRoda do
                   $admin,
                   updated_at: DateTime.now,
                   register_id: register2.id
-            expect(response).to be_denied_json(403, register2, $admin)
+            expect(response).to be_denied_json(403, register2, user: $admin)
           ensure
             register2.update(group: group)
           end

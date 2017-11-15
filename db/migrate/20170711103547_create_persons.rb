@@ -1,4 +1,6 @@
 require 'buzzn/schemas/support/migration_visitor'
+require 'buzzn/schemas/constraints/person'
+
 class CreatePersons < ActiveRecord::Migration
 
   SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Person)

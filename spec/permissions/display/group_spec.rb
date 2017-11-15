@@ -85,9 +85,8 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
           end
 
           context 'scores' do
-            let(:scores) { group.scores(interval: :day) }
             it "retrieve" do
-              expect(scores.to_a).to eq []
+              expect(group.permissions.scores.retrieve).to eq ['ANONYMOUS']
             end
           end
         end

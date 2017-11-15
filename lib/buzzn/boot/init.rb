@@ -25,8 +25,9 @@ module Buzzn
         def run
           @logger = Logger.new(self)
 
-          # preload singleton services
-          singletons = Dry::More::Container::Singleton.new
+          # preload singletons
+          services = Dry::More::Container::Singleton.new
+          operations = Dry::More::Container::Singleton.new
           Application.config.paths['lib'].dup.tap do |app|
             app.glob = "buzzn/services/**/*.rb"
             app.to_a.each do |path|
@@ -34,16 +35,20 @@ module Buzzn
               name = File.basename(path).sub(/\.rb/,'')
               cname = name.split('_').collect {|n| n.capitalize }.join
               clazz = Buzzn::Services.const_get(cname)
-              singletons.register("service.#{name}", clazz)
+              services.register("service.#{name}", clazz)
+            end
+            app.glob = "buzzn/operations/**/*.rb"
+            app.to_a.each do |path|
+              require path
+              main = path.gsub(/^.*buzzn\/|.rb$/, '')
+              clazz = main.camelize.safe_constantize
+              name = main.gsub('/', '.')
+              if clazz.is_a?(Class)
+                operations.register("#{name}", clazz)
+              end
             end
           end
-          MainContainer.merge(singletons)
-
-          # load transactions
-          Application.config.paths['lib'].dup.tap do |app|
-            app.glob = "buzzn/transactions/*.rb"
-            app.to_a.each { |path| require path }
-          end
+          MainContainer.merge(services).merge(operations)
 
           # eager require some files
           %w(resource resources roda permissions).each do |dir|

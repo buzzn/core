@@ -206,7 +206,7 @@ describe Admin::LocalpoolRoda do
 
       it '403' do
         GET "/test/#{group.id}/persons/#{person.id}", $other
-        expect(response).to be_denied_json(403, person, $other)
+        expect(response).to be_denied_json(403, person, user: $other)
       end
 
       it '404' do

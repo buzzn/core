@@ -118,12 +118,12 @@ describe Admin::LocalpoolRoda do
         expect(json.to_yaml).to eq wrong_json.to_yaml
       end
 
-      it '201 all' do
+      it '200' do
         begin
           BillingCycle.billings(Billing.all)
 
           POST "/test/#{group.id}/billing-cycles/#{billing_cycle.id}/billings/regular", $admin, accounting_year: 2016
-          expect(response).to have_http_status(201)
+          expect(response).to have_http_status(200)
           expect(sort(json['array']).to_yaml).to eq sort(billings_json).to_yaml
 
         ensure

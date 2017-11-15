@@ -1,17 +1,16 @@
 require_relative '../admin_roda'
 require_relative '../plugins/aggregation'
+require_relative '../../transactions/bubbles'
+require_relative '../../transactions/group_chart'
+require_relative '../../transactions/admin/localpool/create'
+require_relative '../../transactions/admin/localpool/update'
+
 module Admin
   class LocalpoolRoda < BaseRoda
     PARENT = :localpool
 
-    include Import.args[:env,
-                        'transaction.charts',
-                        'transaction.create_localpool',
-                        'transaction.update_localpool']
-
     plugin :shared_vars
     plugin :aggregation
-    plugin :created_deleted
 
     route do |r|
 
@@ -29,18 +28,26 @@ module Admin
         end
 
         r.get! 'charts' do
-          aggregated(charts.call(r.params,
-                                 resource: [localpool.method(:charts)]))
+          aggregated(
+            Transactions::GroupChart
+              .for(localpool)
+              .call(r.params).value
+          )
         end
 
         r.get! 'bubbles' do
-          aggregated(localpool.bubbles)
+          aggregated(
+            Transactions::Bubbles
+              .call(localpool).value
+          )
         end
 
         rodauth.check_session_expiration
 
         r.patch! do
-          update_localpool.call(r.params, resource: [localpool])
+          Transactions::Admin::Localpool::Update
+            .for(localpool)
+            .call(r.params)
         end
 
         r.on 'contracts' do
@@ -89,30 +96,29 @@ module Admin
 
         r.on 'person_owner' do
           r.post! do
-            create_localpool_owner.call(r.params,
-                                        validate: [Schemas::Transactions::Person::Create],
-                                        build: [localpool.persons],
-                                        assign: [localpool.method(:assign_owner)])
+            Transactions::Admin::Localpool::CreatePersonOwner
+              .for(localpool)
+              .call(r.params)
           end
 
           r.post! :id do |id|
-            assign_localpool_owner.call(id,
-                                        find: [localpool.persons],
-                                        assign: [localpool.method(:assign_owner)])
+            Transactions::Admin::Localpool::AssignOwner
+              .for(localpool)
+              .call(localpool.persons.retrieve(id))
           end
         end
 
         r.on 'organization_owner' do
           r.post! do
-            create_localpool_owner.call(r.params,
-                                        validate: [OrganizationContraints],
-                                        build: [localpool.organizations],
-                                        assign: [localpool.method(:assign_owner)])
+            Transactions::Admin::Localpool::CreateOrganizationOwner
+              .for(localpool)
+              .call(r.params)
           end
 
           r.post! :id do |id|
-            assign_localpool_owner.call(localpool.organizations.retrieve(id),
-                                        assign: [localpool.method(:assign_owner)])
+            Transactions::Admin::Localpool::AssignOwner
+              .for(localpool)
+              .call(localpool.organizations.retrieve(id))
           end
         end
       end
@@ -124,10 +130,9 @@ module Admin
       end
 
       r.post! do
-        created do
-          create_localpool.call(r.params,
-                                resource: [localpools.method(:create)])
-        end
+        Transactions::Admin::Localpool::Create
+          .for(localpools)
+          .call(r.params)
       end
     end
   end

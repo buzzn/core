@@ -1,21 +1,19 @@
 require_relative '../admin_roda'
+require_relative '../../transactions/admin/tariff/create'
+require_relative '../../transactions/admin/tariff/delete'
+
 module Admin
   class TariffRoda < BaseRoda
     plugin :shared_vars
-    plugin :created_deleted
-
-    include Import.args[:env,
-                        'transaction.create_tariff']
 
     route do |r|
 
       localpool = shared[LocalpoolRoda::PARENT]
 
       r.post! do
-        created do
-          create_tariff.call(r.params,
-                            resource: [localpool.method(:create_tariff)])
-        end
+        Transactions::Admin::Tariff::Create
+          .for(localpool)
+          .call(r.params)
       end
 
       tariffs = localpool.tariffs
@@ -31,9 +29,8 @@ module Admin
         end
 
         r.delete! do
-          deleted do
-            tariff.delete
-          end
+          Transactions::Admin::Tariff::Delete
+            .call(tariff)
         end
       end
     end
