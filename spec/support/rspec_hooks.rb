@@ -42,6 +42,7 @@ RSpec.configure do |config|
   #
 
   config.after(:suite) do
+    puts "After suite"
     ActiveRecord::Base.connection.disable_referential_integrity do
       ActiveRecord::Base.descendants.each do |model|
         begin
