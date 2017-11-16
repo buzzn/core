@@ -42,6 +42,7 @@ gem 'oj'
 gem 'validates_zipcode'
 gem 'countries'
 gem 'iban-tools'
+gem 'ruby_regex'
 
 # discovergy
 gem 'oauth'
@@ -97,7 +98,7 @@ end
 
 group :development do
   gem 'pry-rails'
-  gem 'annotate'
+  gem 'rake'
   gem 'yard'
 end
 

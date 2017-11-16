@@ -8,5 +8,9 @@ class DropCoreTables < ActiveRecord::Migration
     drop_table :meters
     drop_table :groups
     drop_table :bank_accounts
+    drop_table :organization_market_functions
+    drop_table :organizations
+    drop_table :users
+    drop_table :addresses
   end
 end

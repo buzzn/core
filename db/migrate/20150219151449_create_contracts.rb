@@ -35,6 +35,7 @@ class CreateContracts < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+    add_column :contracts, :mandate_reference, :string
     add_index :contracts, :slug, :unique => true
     add_index :contracts, :mode
     add_index :contracts, :contracting_party_id

@@ -552,7 +552,7 @@ describe Admin::LocalpoolRoda do
             "updated_at" => contract.contractor.address.updated_at.as_json,
                 "street" => contract.contractor.address.street,
                   "city" => contract.contractor.address.city,
-                 "state" => contract.contractor.address.state,
+                 "state" => contract.contractor.address.attributes['state'],
                    "zip" => contract.contractor.address.zip,
                "country" => contract.contractor.address.attributes['country'],
              "updatable" => true,

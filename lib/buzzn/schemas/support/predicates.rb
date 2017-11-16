@@ -12,7 +12,11 @@ module Buzzn
       end
 
       predicate(:uuid?) do |value|
-        ! URI::MailTo::EMAIL_REGEXP.match(value).nil?
+        ! RubyRegex::UUID.match(value).nil?
+      end
+
+      predicate(:url?) do |value|
+        ! RubyRegex::URL.match(value).nil?
       end
 
       predicate(:phone_number?) do |value|
