@@ -11,7 +11,7 @@ class Beekeeper::Import
 
   def import_localpools
     Beekeeper::MinipoolObjekte.to_import.each do |record|
-      ap({ record.name => record.converted_attributes })
+      Group::Localpool.create!(record.converted_attributes)
     end
   end
 
