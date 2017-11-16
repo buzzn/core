@@ -68,50 +68,61 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
       name: name,
       start_date: start_date,
       distribution_system_operator: distribution_system_operator,
-      transmission_system_operator: transmission_system_operator
+      transmission_system_operator: transmission_system_operator,
+      electricity_supplier:         electricity_supplier
     }
   end
 
-  DSO_MAPPING = {
+  ORG_NAME_TO_SLUG_MAP = {
     "Bayernwerk"               => 'bayernwerk-netz',
     "E.dis AG"                 => 'e-dis',
     "Gemeindewerke Peißenberg" => 'gemeindewerke-peissenberg',
-    "Hamburg Netz"             => 'MISSING',
     "LEW"                      => 'lew',
     "NEW Netz"                 => 'new-netz',
-    "Netz Leipzig"             => 'MISSING', # LSW Netz?
-    "SW Netz GmbH"             => 'MISSING',
     "SWM"                      => 'swm-infrastruktur',
+    "SWM Versorgungs GmbH"     => 'swm-versorgung',
     "Stadtwerke Landshut"      => 'sw-landshut',
     "Stadtwerke Schorndorf"    => 'sw-schorndorf',
     "Stadtwerke Waiblingen"    => 'sw-waiblingen',
     "Syna"                     => 'syna',
-    "bnNetze"                  => 'bn-netze'
+    "bnNetze"                  => 'bn-netze',
+    "buzzn"                    => 'buzzn',
+    "Lichtblick"               => 'lichtblick',
+    # Orgs still to be created in the core app
+    "SW Netz GmbH"             => nil,
+    "Netz Leipzig"             => nil, # LSW Netz?
+    "BEG Freising"             => nil,
+    "Hamburg Netz"             => nil,
+    'MISSING'                  => nil
   }
 
   def distribution_system_operator
     operator = netzbetreiber.strip
     operator = 'SWM' if operator == 'Stadtwerke München'
     operator = 'Bayernwerk' if operator == 'Bayernwerk AG'
-    operator_slug = DSO_MAPPING.fetch(operator)
-    org = Organization.find_by(slug: operator_slug)
-    logger.warn("No distribution_system_operator '#{operator}' for localpool #{name}") unless org
-    org
+    slug = ORG_NAME_TO_SLUG_MAP.fetch(operator)
+    org_for_slug(slug, netzbetreiber, :distribution_system_operator)
   end
 
   def transmission_system_operator
-    operator_slug = case uenb
-    when /a(m)?prion/i then 'amprion'
-    when /tennet/i     then 'tennet'
-    when /50 hertz/i   then '50hertz'
-    when /Transnet BW/ then 'transnetbw'
-    else
-      logger.warn("No transmission_system_operator '#{uenb}' for localpool #{name}")
-      # raise "transmission_system_operator unknown"
+    slug = case uenb
+      when /a(m)?prion/i then 'amprion'
+      when /tennet/i     then 'tennet'
+      when /50 hertz/i   then '50hertz'
+      when /Transnet BW/ then 'transnetbw'
+      else
+        # nothing to do, org_for_slug will print a warning if org not found.
     end
-    Organization.find_by(slug: operator_slug)
+    org_for_slug(slug, uenb, :transmission_system_operator)
   end
 
+  def electricity_supplier
+    supplier = reststromlieferant.strip
+    supplier = 'SWM Versorgungs GmbH' if ['M-Strom business Garant', 'M-Ökostrom'].include?(supplier)
+    supplier = 'MISSING' if supplier == ''
+    slug = ORG_NAME_TO_SLUG_MAP.fetch(supplier)
+    org_for_slug(slug, supplier, :electricity_supplier)
+  end
 
   def start_date
     Date.parse(minipool_start)
@@ -125,5 +136,11 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
 
   def logger
     @logger ||= Buzzn::Logger.new(self)
+  end
+
+  def org_for_slug(slug, beekeeper_value, lookup_purpose)
+    org = Organization.find_by(slug: slug)
+    logger.warn("#{name}: unable to map #{lookup_purpose}. Beekeeper value is '#{beekeeper_value}'.") unless org
+    org
   end
 end
