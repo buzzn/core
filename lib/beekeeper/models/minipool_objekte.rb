@@ -67,13 +67,51 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
     {
       name: name,
       start_date: start_date,
-      distribution_system_operator: distribution_system_operator
+      distribution_system_operator: distribution_system_operator,
+      transmission_system_operator: transmission_system_operator
     }
   end
 
+  DSO_MAPPING = {
+    "Bayernwerk"               => 'bayernwerk-netz',
+    "E.dis AG"                 => 'e-dis',
+    "Gemeindewerke Peißenberg" => 'gemeindewerke-peissenberg',
+    "Hamburg Netz"             => 'MISSING',
+    "LEW"                      => 'lew',
+    "NEW Netz"                 => 'new-netz',
+    "Netz Leipzig"             => 'MISSING', # LSW Netz?
+    "SW Netz GmbH"             => 'MISSING',
+    "SWM"                      => 'swm-infrastruktur',
+    "Stadtwerke Landshut"      => 'sw-landshut',
+    "Stadtwerke Schorndorf"    => 'sw-schorndorf',
+    "Stadtwerke Waiblingen"    => 'sw-waiblingen',
+    "Syna"                     => 'syna',
+    "bnNetze"                  => 'bn-netze'
+  }
+
   def distribution_system_operator
-    netzbetreiber
+    operator = netzbetreiber.strip
+    operator = 'SWM' if operator == 'Stadtwerke München'
+    operator = 'Bayernwerk' if operator == 'Bayernwerk AG'
+    operator_slug = DSO_MAPPING.fetch(operator)
+    org = Organization.find_by(slug: operator_slug)
+    logger.warn("No distribution_system_operator '#{operator}' for localpool #{name}") unless org
+    org
   end
+
+  def transmission_system_operator
+    operator_slug = case uenb
+    when /a(m)?prion/i then 'amprion'
+    when /tennet/i     then 'tennet'
+    when /50 hertz/i   then '50hertz'
+    when /Transnet BW/ then 'transnetbw'
+    else
+      logger.warn("No transmission_system_operator '#{uenb}' for localpool #{name}")
+      # raise "transmission_system_operator unknown"
+    end
+    Organization.find_by(slug: operator_slug)
+  end
+
 
   def start_date
     Date.parse(minipool_start)
@@ -81,5 +119,11 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
 
   def name
     minipool_name.strip
+  end
+
+  private
+
+  def logger
+    @logger ||= Buzzn::Logger.new(self)
   end
 end

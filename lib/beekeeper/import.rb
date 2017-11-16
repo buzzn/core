@@ -11,9 +11,11 @@ class Beekeeper::Import
 
   def import_localpools
     Beekeeper::MinipoolObjekte.to_import.each do |record|
-      puts record.converted_attributes.map { |k, v| "#{k}: #{v}" }.join("\n")
       record.converted_attributes
-      Group::Localpool.create!(record.converted_attributes)
+      # puts
+      # puts record.converted_attributes.map { |k, v| "#{k}: #{v}" }.join("\n")
+      # attrs = record.converted_attributes.except(:distribution_system_operator, :transmission_system_operator, :electricity_supplier)
+      # Group::Localpool.create!(attrs)
     end
   end
 

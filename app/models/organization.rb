@@ -47,4 +47,8 @@ class Organization < ActiveRecord::Base
   def self.filter(value)
     do_filter(value, *search_attributes)
   end
+
+  def to_s
+    name
+  end
 end
