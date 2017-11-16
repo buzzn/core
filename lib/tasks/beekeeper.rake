@@ -3,11 +3,9 @@ $LOAD_PATH << File.expand_path('.')
 require 'lib/beekeeper/init'
 
 namespace :beekeeper do
-  desc "Run the migrations and spit out the generated attributes"
+  desc "Run the beekeeper import from the Beekeeper to our native DB"
   task import: :environment do
-    Beekeeper::MsbZählwerkDaten.all.each do |record|
-      ap({ record.register_nr => record.converted_attributes })
-    end
+    Beekeeper::Import.run!
   end
 
   task :generate_models do
