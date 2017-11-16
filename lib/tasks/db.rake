@@ -6,7 +6,7 @@ namespace :db do
     ActiveRecord::Base.connection.disable_referential_integrity do
       ActiveRecord::Base.descendants.each do |model|
         begin
-          model.delete_all unless model.abstract_class?
+          model.delete_all unless model.abstract_class? || model.namespace_name == "Beekeeper"
         rescue => e
           puts "Failed to delete all #{model} records: #{e.message}"
         end
