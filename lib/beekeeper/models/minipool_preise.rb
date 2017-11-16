@@ -9,6 +9,6 @@
 #  id             :integer          not null, primary key
 #
 
-class Beekeeper::MinipoolPreise < ActiveRecord::Base
+class Beekeeper::MinipoolPreise < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.minipool_preise'
 end

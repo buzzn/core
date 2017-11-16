@@ -8,6 +8,6 @@
 #  datum     :string(32)       not null
 #
 
-class Beekeeper::KommentareNb < ActiveRecord::Base
+class Beekeeper::KommentareNb < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.kommentare_nb'
 end

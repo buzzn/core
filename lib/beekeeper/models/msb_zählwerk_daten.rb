@@ -12,7 +12,7 @@
 #  nachkommastellen :integer          not null
 #
 
-class Beekeeper::MsbZählwerkDaten < ActiveRecord::Base
+class Beekeeper::MsbZählwerkDaten < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.msb_zählwerk_daten'
 
   def converted_attributes

@@ -16,6 +16,6 @@
 #  art            :string(20)       not null
 #
 
-class Beekeeper::Zstand < ActiveRecord::Base
+class Beekeeper::Zstand < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.zstand'
 end

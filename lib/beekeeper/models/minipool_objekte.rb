@@ -56,6 +56,6 @@
 #  red_eeg_satz                     :float            default(40.0), not null
 #
 
-class Beekeeper::MinipoolObjekte < ActiveRecord::Base
+class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.minipool_objekte'
 end

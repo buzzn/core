@@ -7,6 +7,6 @@
 #  verbandsnummer :string(45)
 #
 
-class Beekeeper::PlzNb < ActiveRecord::Base
+class Beekeeper::PlzNb < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.plz_nb'
 end

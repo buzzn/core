@@ -31,6 +31,6 @@
 #  mieternummer            :string(25)       not null
 #
 
-class Beekeeper::MinipoolSn < ActiveRecord::Base
+class Beekeeper::MinipoolSn < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.minipool_sn'
 end

@@ -8,6 +8,6 @@
 #  preis :float
 #
 
-class Beekeeper::P2pPrice < ActiveRecord::Base
+class Beekeeper::P2pPrice < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.p2p_price'
 end

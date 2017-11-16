@@ -10,6 +10,6 @@
 #  id_abschlag        :integer          not null, primary key
 #
 
-class Beekeeper::AbschlagVergleich < ActiveRecord::Base
+class Beekeeper::AbschlagVergleich < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.abschlag_vergleich'
 end

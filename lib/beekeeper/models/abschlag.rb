@@ -12,6 +12,6 @@
 #  bezugspreis    :integer          not null
 #
 
-class Beekeeper::Abschlag < ActiveRecord::Base
+class Beekeeper::Abschlag < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.abschlag'
 end

@@ -17,6 +17,6 @@
 #  sepa_glaeubiger_id   :string(40)       not null
 #
 
-class Beekeeper::Kontodaten < ActiveRecord::Base
+class Beekeeper::Kontodaten < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.kontodaten'
 end

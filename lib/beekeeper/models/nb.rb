@@ -27,6 +27,6 @@
 #  edifact_email        :string(45)
 #
 
-class Beekeeper::Nb < ActiveRecord::Base
+class Beekeeper::Nb < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.nb'
 end

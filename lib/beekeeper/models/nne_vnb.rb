@@ -17,6 +17,6 @@
 #  vorlaeufig     :string(8)
 #
 
-class Beekeeper::NneVnb < ActiveRecord::Base
+class Beekeeper::NneVnb < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.nne_vnb'
 end

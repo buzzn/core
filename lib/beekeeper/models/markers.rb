@@ -16,6 +16,6 @@
 #  timestamp     :string(32)
 #
 
-class Beekeeper::Markers < ActiveRecord::Base
+class Beekeeper::Markers < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.markers'
 end

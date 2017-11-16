@@ -17,6 +17,6 @@
 #  erstelldatum    :datetime
 #
 
-class Beekeeper::Konto < ActiveRecord::Base
+class Beekeeper::Konto < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.konto'
 end

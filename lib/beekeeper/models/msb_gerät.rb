@@ -64,6 +64,6 @@
 #  zpideinspeis              :string(40)       not null
 #
 
-class Beekeeper::MsbGerät < ActiveRecord::Base
+class Beekeeper::MsbGerät < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.msb_gerät'
 end

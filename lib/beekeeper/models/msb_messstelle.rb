@@ -35,6 +35,6 @@
 #  masterzpid2         :string(40)       not null
 #
 
-class Beekeeper::MsbMessstelle < ActiveRecord::Base
+class Beekeeper::MsbMessstelle < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.msb_messstelle'
 end

@@ -14,6 +14,6 @@
 #  anrede       :string(8)        not null
 #
 
-class Beekeeper::Adresse < ActiveRecord::Base
+class Beekeeper::Adresse < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.adresse'
 end

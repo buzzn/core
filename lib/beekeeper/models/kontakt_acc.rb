@@ -27,6 +27,6 @@
 #  photo_vorhanden :string(1)
 #
 
-class Beekeeper::KontaktAcc < ActiveRecord::Base
+class Beekeeper::KontaktAcc < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.kontakt_acc'
 end

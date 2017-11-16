@@ -26,6 +26,6 @@
 #  timestamp            :string(32)
 #
 
-class Beekeeper::NbSync < ActiveRecord::Base
+class Beekeeper::NbSync < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.nb_sync'
 end

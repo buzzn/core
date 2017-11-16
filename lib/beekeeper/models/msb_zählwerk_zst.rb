@@ -15,6 +15,6 @@
 #  id              :integer          not null, primary key
 #
 
-class Beekeeper::MsbZählwerkZst < ActiveRecord::Base
+class Beekeeper::MsbZählwerkZst < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.msb_zählwerk_zst'
 end

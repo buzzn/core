@@ -10,6 +10,6 @@
 #  nummernzusatz  :integer          not null
 #
 
-class Beekeeper::Kommentare < ActiveRecord::Base
+class Beekeeper::Kommentare < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.kommentare'
 end

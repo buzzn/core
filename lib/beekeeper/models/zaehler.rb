@@ -10,6 +10,6 @@
 #  zaehlpunktid   :string(33)       not null
 #
 
-class Beekeeper::Zaehler < ActiveRecord::Base
+class Beekeeper::Zaehler < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.zaehler'
 end

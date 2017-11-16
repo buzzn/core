@@ -17,6 +17,6 @@
 #  rechtsform      :string(20)       not null
 #
 
-class Beekeeper::Kontaktdaten < ActiveRecord::Base
+class Beekeeper::Kontaktdaten < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.kontaktdaten'
 end

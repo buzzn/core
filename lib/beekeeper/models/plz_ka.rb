@@ -6,6 +6,6 @@
 #  ka  :float
 #
 
-class Beekeeper::PlzKa < ActiveRecord::Base
+class Beekeeper::PlzKa < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.plz_ka'
 end
