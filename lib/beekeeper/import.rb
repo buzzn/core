@@ -10,8 +10,8 @@ class Beekeeper::Import
   end
 
   def import_localpools
-    Beekeeper::MsbZählwerkDaten.all.each do |record|
-      ap({ record.register_nr => record.converted_attributes })
+    Beekeeper::MinipoolObjekte.to_import.each do |record|
+      ap({ record.name => record.converted_attributes })
     end
   end
 

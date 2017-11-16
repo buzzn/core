@@ -58,4 +58,21 @@
 
 class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.minipool_objekte'
+
+  scope :to_import, -> { where("minipool_start != '0000-00-00'") }
+
+  def converted_attributes
+    {
+      name: name,
+      start_date: start_date
+    }
+  end
+
+  def start_date
+    Date.parse(minipool_start)
+  end
+
+  def name
+    minipool_name.strip
+  end
 end
