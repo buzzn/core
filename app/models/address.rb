@@ -40,4 +40,8 @@ class Address < ActiveRecord::Base
   def self.filter(value)
     do_filter(value, :city, :street, :zip)
   end
+
+  def to_s
+    "#{street}, #{zip} #{city}"
+  end
 end

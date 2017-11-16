@@ -59,6 +59,8 @@
 class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.minipool_objekte'
 
+  belongs_to :adresse, foreign_key: 'adress_id'
+
   scope :to_import, -> { where("minipool_start != '0000-00-00'") }
 
   # attr_accessor :distribution_system_operator, :transmission_system_operator, :electricity_supplier
@@ -69,7 +71,8 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
       start_date: start_date,
       distribution_system_operator: distribution_system_operator,
       transmission_system_operator: transmission_system_operator,
-      electricity_supplier:         electricity_supplier
+      electricity_supplier:         electricity_supplier,
+      address:                      address
     }
   end
 
@@ -130,6 +133,10 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
 
   def name
     minipool_name.strip
+  end
+
+  def address
+    Address.new(adresse.converted_attributes)
   end
 
   private

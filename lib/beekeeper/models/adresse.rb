@@ -16,4 +16,28 @@
 
 class Beekeeper::Adresse < Beekeeper::BaseRecord
   self.table_name = 'minipooldb.adresse'
+
+  def converted_attributes
+    {
+      street:   "#{strasse} #{hausnummer}",
+      addition: adresszusatz,
+      zip:      plz,
+      city:     stadt,
+      country:  'DE',
+      state:    state
+    }
+  end
+
+  private
+
+  STATE_NAME_TO_CODE_MAP = {
+    ""       => nil,
+    "BaWü"   => 'DE_BW',
+    "Bayern" => 'DE_BY'
+  }
+
+  def state
+    STATE_NAME_TO_CODE_MAP.fetch(bundesland)
+  end
+
 end
