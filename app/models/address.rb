@@ -4,9 +4,10 @@ class Address < ActiveRecord::Base
   # austria: 'AT'
   # switzerland: 'CH'
   # ...
-  ISO3166::Country.all.each_with_object({}) do |c, o|
-    o[c.name.gsub(/[().,]/,'').gsub(/ /, '_').downcase] = c.alpha2
-  end.tap do |map|
+  ISO3166::Country.all.tap do |countries|
+    map = countries.each_with_object({}) do |country, object|
+      object[country.name.gsub(/[().,]/,'').gsub(/ /, '_').downcase] = country.alpha2
+    end
     enum country: map
   end
 
@@ -26,13 +27,14 @@ class Address < ActiveRecord::Base
   # sachsen:                DE_SN
   # sachsen_anhalt:         DE_ST
   # thüringen:              DE_TH
-  ['DE'].each_with_object({}) do |country, o|
-    ISO3166::Country.new(country).subdivisions.each do |key, value|
-      val = "#{country}_#{key}"
-      o[value.name.sub(/-/, '_').downcase] = val
+  ['DE'].tap do |country|
+    map = country.each_with_object({}) do |country, object|
+      ISO3166::Country.new(country).subdivisions.each do |key, value|
+        new_key = value.name.sub(/-/, '_').downcase
+        object[new_key] = "#{country}_#{key}"
+      end
     end
-  end.tap do |states|
-    enum state: states
+    enum state: map
   end
 
   def self.filter(value)

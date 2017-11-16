@@ -30,6 +30,9 @@ module Admin
     has_many :billing_cycles, BillingCycleResource
     has_one :owner
     has_one :address
+    has_one :distribution_system_operator
+    has_one :transmission_system_operator
+    has_one :electricity_supplier
 
     def incompleteness
       Schemas::Completeness::Admin::Localpool.call(self).messages
