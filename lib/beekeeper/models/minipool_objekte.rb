@@ -61,11 +61,18 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
 
   scope :to_import, -> { where("minipool_start != '0000-00-00'") }
 
+  # attr_accessor :distribution_system_operator, :transmission_system_operator, :electricity_supplier
+
   def converted_attributes
     {
       name: name,
-      start_date: start_date
+      start_date: start_date,
+      distribution_system_operator: distribution_system_operator
     }
+  end
+
+  def distribution_system_operator
+    netzbetreiber
   end
 
   def start_date
