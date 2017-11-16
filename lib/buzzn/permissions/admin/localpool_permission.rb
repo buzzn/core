@@ -19,7 +19,19 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
   update :managers
   delete :operators
 
-  # nested method and its CRUD permissions, missing ones means no permissions
+  # nested method and its CRUD permissions
+  distribution_system_operator do
+    retrieve :operators
+  end
+
+  transmission_system_operator do
+    retrieve :operators
+  end
+
+  electricity_supplier do
+    retrieve :operators
+  end
+
   energy_producers do
     retrieve :managers
   end

@@ -12,11 +12,17 @@ class CreateGroups < ActiveRecord::Migration
 
     add_belongs_to :groups, :address, type: :uuid, index: true, null: true
     add_belongs_to :groups, :owner_person, reference: :persons, type: :uuid, index: true, null: true
-    add_belongs_to :groups, :owner_organization, reference: :organizations,type: :uuid, index: true, null: true
+    add_belongs_to :groups, :owner_organization, reference: :organizations, type: :uuid, index: true, null: true
+    add_belongs_to :groups, :distribution_system_operator, reference: :organizations, type: :uuid, index: true, null: true
+    add_belongs_to :groups, :transmission_system_operator, reference: :organizations, type: :uuid, index: true, null: true
+    add_belongs_to :groups, :electricity_supplier, reference: :organizations, type: :uuid, index: true, null: true
 
     add_foreign_key :groups, :addresses, name: :fk_groups_address
     add_foreign_key :groups, :persons, name: :fk_groups_person, column: :owner_person_id
     add_foreign_key :groups, :organizations, name: :fk_groups_organization, column: :owner_organization_id
+    add_foreign_key :groups, :organizations, name: :fk_groups_distribution_system_operator, column: :distribution_system_operator_id
+    add_foreign_key :groups, :organizations, name: :fk_groups_transmission_system_operator, column: :transmission_system_operator_id
+    add_foreign_key :groups, :organizations, name: :fk_groups_electricity_supplier, column: :electricity_supplier_id
 
     add_index :groups, [:slug], unique: true
 

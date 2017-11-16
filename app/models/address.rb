@@ -1,48 +1,41 @@
 class Address < ActiveRecord::Base
 
-  # example:
-  #   germany: 'DE'
-  #   austria: 'AT'
-  #   switzerland: 'CH'
-  #   ...
-  COUNTRIES = []
-  ISO3166::Country.all.each_with_object({}) do |c, o|
-    o[c.name.gsub(/[().,]/,'').gsub(/ /, '_').downcase] = c.alpha2
-    COUNTRIES << c.alpha2
-  end.tap do |map|
+  # germany: 'DE'
+  # austria: 'AT'
+  # switzerland: 'CH'
+  # ...
+  ISO3166::Country.all.tap do |countries|
+    map = countries.each_with_object({}) do |country, object|
+      object[country.name.gsub(/[().,]/,'').gsub(/ /, '_').downcase] = country.alpha2
+    end
     enum country: map
   end
-  # ['DE', 'AT', 'GB', ...]
-  COUNTRIES.freeze
 
-  # DE_BB: Brandenburg
-  # DE_BE: Berlin
-  # DE_BW: Baden-Württemberg
-  # DE_BY: Bayern
-  # DE_HB: Bremen
-  # DE_HE: Hessen
-  # DE_HH: Hamburg
-  # DE_MV: Mecklenburg-Vorpommern
-  # DE_NI: Niedersachsen
-  # DE_NW: Nordrhein-Westfalen
-  # DE_RP: Rheinland-Pfalz
-  # DE_SH: Schleswig-Holstein
-  # DE_SL: Saarland
-  # DE_SN: Sachsen
-  # DE_ST: Sachsen-Anhalt
-  # DE_TH: Thüringen
-  STATES = []
-  ['DE'].each_with_object({}) do |country, o|
-    ISO3166::Country.new(country).subdivisions.keys.each do |c|
-      val = "#{country}_#{c}"
-      o[val] = val
-      STATES << val
+  # brandenburg:            DE_BB
+  # berlin:                 DE_BE
+  # baden_württemberg:      DE_BW
+  # bayern:                 DE_BY
+  # bremen:                 DE_HB
+  # hessen:                 DE_HE
+  # hamburg:                DE_HH
+  # mecklenburg_vorpommern: DE_MV
+  # niedersachsen:          DE_NI
+  # nordrhein_westfalen:    DE_NW
+  # rheinland_pfalz:        DE_RP
+  # schleswig_holstein:     DE_SH
+  # saarland:               DE_SL
+  # sachsen:                DE_SN
+  # sachsen_anhalt:         DE_ST
+  # thüringen:              DE_TH
+  ['DE'].tap do |country|
+    map = country.each_with_object({}) do |country, object|
+      ISO3166::Country.new(country).subdivisions.each do |key, value|
+        new_key = value.name.sub(/-/, '_').downcase
+        object[new_key] = "#{country}_#{key}"
+      end
     end
-  end.tap do |states|
-    enum state: states
+    enum state: map
   end
-  # DE_BB, DE_BE, DE_BW, DE_BY, ...
-  STATES.freeze
 
   def self.filter(value)
     do_filter(value, :city, :street, :zip)

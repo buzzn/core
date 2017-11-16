@@ -1,4 +1,4 @@
-class CreateOrganizations < ActiveRecord::Migration
+class CreateOrganizationsOld < ActiveRecord::Migration
   def change
     enable_extension 'uuid-ossp'
     create_table :organizations, id: :uuid do |t|

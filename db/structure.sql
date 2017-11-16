@@ -59,23 +59,10 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 SET search_path = public, pg_catalog;
 
 --
--- Name: billings_status; Type: TYPE; Schema: public; Owner: -
+-- Name: addresses_country; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE billings_status AS ENUM (
-    'open',
-    'calculated',
-    'delivered',
-    'settled',
-    'closed'
-);
-
-
---
--- Name: country; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE country AS ENUM (
+CREATE TYPE addresses_country AS ENUM (
     'AD',
     'AE',
     'AF',
@@ -325,6 +312,43 @@ CREATE TYPE country AS ENUM (
     'ZA',
     'ZM',
     'ZW'
+);
+
+
+--
+-- Name: addresses_state; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE addresses_state AS ENUM (
+    'DE_BB',
+    'DE_BE',
+    'DE_BW',
+    'DE_BY',
+    'DE_HB',
+    'DE_HE',
+    'DE_HH',
+    'DE_MV',
+    'DE_NI',
+    'DE_NW',
+    'DE_RP',
+    'DE_SH',
+    'DE_SL',
+    'DE_SN',
+    'DE_ST',
+    'DE_TH'
+);
+
+
+--
+-- Name: billings_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE billings_status AS ENUM (
+    'open',
+    'calculated',
+    'delivered',
+    'settled',
+    'closed'
 );
 
 
@@ -653,6 +677,22 @@ CREATE TYPE operator AS ENUM (
 
 
 --
+-- Name: organization_market_functions_function; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE organization_market_functions_function AS ENUM (
+    'distribution_system_operator',
+    'electricity_supplier',
+    'metering_point_operator',
+    'metering_service_provider',
+    'other',
+    'power_giver',
+    'power_taker',
+    'transmission_system_operator'
+);
+
+
+--
 -- Name: ownership; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -822,30 +862,6 @@ CREATE TYPE role_names AS ENUM (
 CREATE TYPE section AS ENUM (
     'S',
     'G'
-);
-
-
---
--- Name: state; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE state AS ENUM (
-    'DE_BB',
-    'DE_BE',
-    'DE_BW',
-    'DE_BY',
-    'DE_HB',
-    'DE_HE',
-    'DE_HH',
-    'DE_MV',
-    'DE_NI',
-    'DE_NW',
-    'DE_RP',
-    'DE_SH',
-    'DE_SL',
-    'DE_SN',
-    'DE_ST',
-    'DE_TH'
 );
 
 
@@ -1078,16 +1094,14 @@ ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
 
 CREATE TABLE addresses (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    city character varying,
-    zip character varying(16) NOT NULL,
-    longitude double precision,
-    latitude double precision,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    addition character varying,
     street character varying(64) NOT NULL,
-    state state,
-    country country DEFAULT 'DE'::country NOT NULL
+    zip character varying(16) NOT NULL,
+    city character varying(64) NOT NULL,
+    addition character varying(64),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    country addresses_country,
+    state addresses_state
 );
 
 
@@ -1265,6 +1279,7 @@ CREATE TABLE contracts (
     localpool_id uuid,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
+    mandate_reference character varying,
     other_contract boolean,
     move_in boolean,
     begin_date date,
@@ -1289,8 +1304,7 @@ CREATE TABLE contracts (
     contract_number_addition integer,
     customer_bank_account_id uuid,
     contractor_bank_account_id uuid,
-    renewable_energy_law_taxation taxation,
-    mandate_reference character varying
+    renewable_energy_law_taxation taxation
 );
 
 
@@ -1438,6 +1452,9 @@ CREATE TABLE groups (
     address_id uuid,
     owner_person_id uuid,
     owner_organization_id uuid,
+    distribution_system_operator_id uuid,
+    transmission_system_operator_id uuid,
+    electricity_supplier_id uuid,
     grid_consumption_register_id uuid,
     grid_feeding_register_id uuid,
     CONSTRAINT check_localpool_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
@@ -1483,12 +1500,14 @@ CREATE TABLE meters (
 
 CREATE TABLE organization_market_functions (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    market_partner_id character varying,
-    edifact_email character varying,
-    organization_id uuid,
-    contact_person_id uuid,
+    market_partner_id character varying(64) NOT NULL,
+    edifact_email character varying(64) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    function organization_market_functions_function,
     address_id uuid,
-    function market_partner_function
+    organization_id uuid,
+    contact_person_id uuid
 );
 
 
@@ -1498,21 +1517,19 @@ CREATE TABLE organization_market_functions (
 
 CREATE TABLE organizations (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    name character varying(64) NOT NULL,
+    description character varying(256),
+    email character varying(64),
+    phone character varying(64),
+    fax character varying(64),
+    website character varying(64),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     slug character varying,
-    image character varying,
-    name character varying,
-    email character varying,
-    phone character varying,
-    fax character varying,
-    description character varying,
-    website character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    account_number character varying,
-    contact_id uuid,
-    legal_representation_id uuid,
+    customer_number integer,
     address_id uuid,
-    customer_number integer
+    legal_representation_id uuid,
+    contact_id uuid
 );
 
 
@@ -1547,8 +1564,8 @@ CREATE TABLE persons (
     preferred_language persons_preferred_language,
     title persons_title,
     image character varying,
-    address_id uuid,
-    customer_number integer
+    customer_number integer,
+    address_id uuid
 );
 
 
@@ -1724,58 +1741,6 @@ CREATE TABLE tariffs (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     group_id uuid
-);
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE users (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
-    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-    reset_password_token character varying,
-    reset_password_sent_at timestamp without time zone,
-    remember_created_at timestamp without time zone,
-    sign_in_count integer DEFAULT 0 NOT NULL,
-    current_sign_in_at timestamp without time zone,
-    last_sign_in_at timestamp without time zone,
-    current_sign_in_ip character varying,
-    last_sign_in_ip character varying,
-    confirmation_token character varying,
-    confirmed_at timestamp without time zone,
-    confirmation_sent_at timestamp without time zone,
-    unconfirmed_email character varying,
-    failed_attempts integer DEFAULT 0 NOT NULL,
-    unlock_token character varying,
-    locked_at timestamp without time zone,
-    invitation_token character varying,
-    invitation_created_at timestamp without time zone,
-    invitation_sent_at timestamp without time zone,
-    invitation_accepted_at timestamp without time zone,
-    invitation_limit integer,
-    invited_by_type character varying,
-    invitations_count integer DEFAULT 0,
-    group_id uuid,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    provider character varying,
-    uid character varying,
-    invited_by_id uuid,
-    invitation_message text,
-    data_protection_guidelines text,
-    terms_of_use text,
-    sales_tax_number integer,
-    tax_rate double precision,
-    tax_number integer,
-    retailer boolean,
-    provider_permission boolean,
-    subject_to_tax boolean,
-    mandate_reference character varying,
-    creditor_id character varying,
-    account_number character varying,
-    person_id uuid
 );
 
 
@@ -2145,14 +2110,6 @@ ALTER TABLE ONLY tariffs
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY users
-    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
---
 -- Name: zip_to_prices zip_to_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2364,6 +2321,20 @@ CREATE INDEX index_groups_on_address_id ON groups USING btree (address_id);
 
 
 --
+-- Name: index_groups_on_distribution_system_operator_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_distribution_system_operator_id ON groups USING btree (distribution_system_operator_id);
+
+
+--
+-- Name: index_groups_on_electricity_supplier_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_electricity_supplier_id ON groups USING btree (electricity_supplier_id);
+
+
+--
 -- Name: index_groups_on_grid_consumption_register_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2399,6 +2370,20 @@ CREATE UNIQUE INDEX index_groups_on_slug ON groups USING btree (slug);
 
 
 --
+-- Name: index_groups_on_transmission_system_operator_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_transmission_system_operator_id ON groups USING btree (transmission_system_operator_id);
+
+
+--
+-- Name: index_market_functions_on_organization_id_function; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_market_functions_on_organization_id_function ON organization_market_functions USING btree (organization_id, function);
+
+
+--
 -- Name: index_meters_on_address_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2420,6 +2405,34 @@ CREATE UNIQUE INDEX index_meters_on_group_id_and_sequence_number ON meters USING
 
 
 --
+-- Name: index_organization_market_functions_on_address_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organization_market_functions_on_address_id ON organization_market_functions USING btree (address_id);
+
+
+--
+-- Name: index_organization_market_functions_on_contact_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organization_market_functions_on_contact_person_id ON organization_market_functions USING btree (contact_person_id);
+
+
+--
+-- Name: index_organization_market_functions_on_market_partner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organization_market_functions_on_market_partner_id ON organization_market_functions USING btree (market_partner_id);
+
+
+--
+-- Name: index_organization_market_functions_on_organization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organization_market_functions_on_organization_id ON organization_market_functions USING btree (organization_id);
+
+
+--
 -- Name: index_organizations_on_address_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2438,13 +2451,6 @@ CREATE INDEX index_organizations_on_contact_id ON organizations USING btree (con
 --
 
 CREATE INDEX index_organizations_on_legal_representation_id ON organizations USING btree (legal_representation_id);
-
-
---
--- Name: index_organizations_on_slug; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_organizations_on_slug ON organizations USING btree (slug);
 
 
 --
@@ -2578,62 +2584,6 @@ CREATE UNIQUE INDEX index_tariffs_on_begin_date_and_group_id ON tariffs USING bt
 --
 
 CREATE INDEX index_tariffs_on_group_id ON tariffs USING btree (group_id);
-
-
---
--- Name: index_users_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_confirmation_token ON users USING btree (confirmation_token);
-
-
---
--- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
-
-
---
--- Name: index_users_on_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_users_on_group_id ON users USING btree (group_id);
-
-
---
--- Name: index_users_on_invitation_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_invitation_token ON users USING btree (invitation_token);
-
-
---
--- Name: index_users_on_invitations_count; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_users_on_invitations_count ON users USING btree (invitations_count);
-
-
---
--- Name: index_users_on_invited_by_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_users_on_invited_by_type ON users USING btree (invited_by_type);
-
-
---
--- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);
-
-
---
--- Name: index_users_on_unlock_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_unlock_token ON users USING btree (unlock_token);
 
 
 --
@@ -2850,6 +2800,22 @@ ALTER TABLE ONLY groups
 
 
 --
+-- Name: groups fk_groups_distribution_system_operator; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_distribution_system_operator FOREIGN KEY (distribution_system_operator_id) REFERENCES organizations(id);
+
+
+--
+-- Name: groups fk_groups_electricity_supplier; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_electricity_supplier FOREIGN KEY (electricity_supplier_id) REFERENCES organizations(id);
+
+
+--
 -- Name: groups fk_groups_grid_consumption; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2882,6 +2848,14 @@ ALTER TABLE ONLY groups
 
 
 --
+-- Name: groups fk_groups_transmission_system_operator; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_transmission_system_operator FOREIGN KEY (transmission_system_operator_id) REFERENCES organizations(id);
+
+
+--
 -- Name: meters fk_meters_address; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2898,11 +2872,51 @@ ALTER TABLE ONLY meters
 
 
 --
+-- Name: organization_market_functions fk_organization_market_functions_address; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organization_market_functions
+    ADD CONSTRAINT fk_organization_market_functions_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
+-- Name: organization_market_functions fk_organization_market_functions_contact_person; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organization_market_functions
+    ADD CONSTRAINT fk_organization_market_functions_contact_person FOREIGN KEY (contact_person_id) REFERENCES persons(id);
+
+
+--
+-- Name: organization_market_functions fk_organization_market_functions_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organization_market_functions
+    ADD CONSTRAINT fk_organization_market_functions_organization FOREIGN KEY (organization_id) REFERENCES organizations(id);
+
+
+--
+-- Name: persons fk_organizations_address; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY persons
+    ADD CONSTRAINT fk_organizations_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
 -- Name: organizations fk_organizations_address; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY organizations
     ADD CONSTRAINT fk_organizations_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+
+
+--
+-- Name: organizations fk_organizations_contact; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organizations
+    ADD CONSTRAINT fk_organizations_contact FOREIGN KEY (contact_id) REFERENCES persons(id);
 
 
 --
@@ -2922,14 +2936,6 @@ ALTER TABLE ONLY organizations
 
 
 --
--- Name: persons fk_persons_address; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY persons
-    ADD CONSTRAINT fk_persons_address FOREIGN KEY (address_id) REFERENCES addresses(id);
-
-
---
 -- Name: persons fk_persons_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2938,27 +2944,11 @@ ALTER TABLE ONLY persons
 
 
 --
--- Name: organizations fk_rails_6b54950e91; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY organizations
-    ADD CONSTRAINT fk_rails_6b54950e91 FOREIGN KEY (contact_id) REFERENCES persons(id);
-
-
---
 -- Name: payments fk_rails_9215ad6069; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY payments
     ADD CONSTRAINT fk_rails_9215ad6069 FOREIGN KEY (contract_id) REFERENCES contracts(id);
-
-
---
--- Name: users fk_rails_fa67535741; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY users
-    ADD CONSTRAINT fk_rails_fa67535741 FOREIGN KEY (person_id) REFERENCES persons(id);
 
 
 --
@@ -3285,17 +3275,7 @@ INSERT INTO schema_migrations (version) VALUES ('20170626163547');
 
 INSERT INTO schema_migrations (version) VALUES ('20170707103547');
 
-INSERT INTO schema_migrations (version) VALUES ('20170711103547');
-
-INSERT INTO schema_migrations (version) VALUES ('20170711153547');
-
-INSERT INTO schema_migrations (version) VALUES ('20170711201405');
-
-INSERT INTO schema_migrations (version) VALUES ('20170711223547');
-
 INSERT INTO schema_migrations (version) VALUES ('20170711323547');
-
-INSERT INTO schema_migrations (version) VALUES ('20170711423547');
 
 INSERT INTO schema_migrations (version) VALUES ('20170711523547');
 
@@ -3307,19 +3287,9 @@ INSERT INTO schema_migrations (version) VALUES ('20170719124713');
 
 INSERT INTO schema_migrations (version) VALUES ('20170721074915');
 
-INSERT INTO schema_migrations (version) VALUES ('20170724150100');
-
 INSERT INTO schema_migrations (version) VALUES ('20170731104218');
 
-INSERT INTO schema_migrations (version) VALUES ('20170801073138');
-
 INSERT INTO schema_migrations (version) VALUES ('20170802094212');
-
-INSERT INTO schema_migrations (version) VALUES ('20170804070447');
-
-INSERT INTO schema_migrations (version) VALUES ('20170807070447');
-
-INSERT INTO schema_migrations (version) VALUES ('20170808070447');
 
 INSERT INTO schema_migrations (version) VALUES ('20170906020031');
 
@@ -3329,19 +3299,9 @@ INSERT INTO schema_migrations (version) VALUES ('20170909015357');
 
 INSERT INTO schema_migrations (version) VALUES ('20171005091701');
 
-INSERT INTO schema_migrations (version) VALUES ('20171006143958');
-
-INSERT INTO schema_migrations (version) VALUES ('20171009065708');
-
-INSERT INTO schema_migrations (version) VALUES ('20171009090631');
-
 INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 
-INSERT INTO schema_migrations (version) VALUES ('20171010074910');
-
 INSERT INTO schema_migrations (version) VALUES ('20171010075030');
-
-INSERT INTO schema_migrations (version) VALUES ('20171010082537');
 
 INSERT INTO schema_migrations (version) VALUES ('20171010094247');
 
@@ -3359,8 +3319,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171016125437');
 
 INSERT INTO schema_migrations (version) VALUES ('20171016140547');
 
-INSERT INTO schema_migrations (version) VALUES ('20171017052738');
-
 INSERT INTO schema_migrations (version) VALUES ('20171017081409');
 
 INSERT INTO schema_migrations (version) VALUES ('20171018123008');
@@ -3375,7 +3333,17 @@ INSERT INTO schema_migrations (version) VALUES ('20171018134419');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142114');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085100');
+INSERT INTO schema_migrations (version) VALUES ('20171028200200');
+
+INSERT INTO schema_migrations (version) VALUES ('20171028200400');
+
+INSERT INTO schema_migrations (version) VALUES ('20171028200600');
+
+INSERT INTO schema_migrations (version) VALUES ('20171029000000');
+
+INSERT INTO schema_migrations (version) VALUES ('20171029000100');
+
+INSERT INTO schema_migrations (version) VALUES ('20171029000800');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085200');
 
@@ -3394,4 +3362,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171031085290');
 INSERT INTO schema_migrations (version) VALUES ('20171031085295');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085300');
+
+INSERT INTO schema_migrations (version) VALUES ('20171115086500');
+
+INSERT INTO schema_migrations (version) VALUES ('20171115095100');
 

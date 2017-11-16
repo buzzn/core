@@ -38,6 +38,10 @@ module Schemas
         required(:grid_consumption_register) do
           filled?.then(metering_point_id?).and filled?
         end
+
+        required(:distribution_system_operator).filled?
+        required(:transmission_system_operator).filled?
+        required(:electricity_supplier).filled?
       end
     end
   end
