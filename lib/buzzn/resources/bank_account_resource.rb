@@ -13,5 +13,4 @@ class BankAccountResource < Buzzn::Resource::Entity
               :direct_debit,
               :updatable, :deletable
 
-  # TODO make bank_name and bic derived from iban and not store them in DB
 end

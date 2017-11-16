@@ -83,7 +83,7 @@ describe Admin::LocalpoolRoda do
         expect(response).to have_http_status(201)
         result = json
         id = result.delete('id')
-        expect(result.delete('updated_at')).to be_nil
+        expect(result.delete('updated_at')).not_to be_nil
         expect(Contract::Tariff.find(id)).not_to be_nil
         expect(result.to_yaml).to eq created_json.to_yaml
       end
@@ -100,7 +100,7 @@ describe Admin::LocalpoolRoda do
         {
           "id"=>tariff.id,
           "type"=>"contract_tariff",
-          'updated_at' => nil,
+          'updated_at' => tariff.updated_at.as_json,
           "name"=>tariff.name,
           "begin_date"=>tariff.begin_date.to_s,
           'end_date' => nil,
@@ -116,7 +116,7 @@ describe Admin::LocalpoolRoda do
           {
             "id"=>tariff.id,
             "type"=>"contract_tariff",
-            'updated_at' => nil,
+            'updated_at' => tariff.updated_at.as_json,
             "name"=>tariff.name,
             "begin_date"=>tariff.begin_date.to_s,
             'end_date' => nil,
