@@ -4,13 +4,16 @@ module Group
 
     belongs_to :grid_consumption_register, class_name: 'Register::Input'
     belongs_to :grid_feeding_register, class_name: 'Register::Output'
-
-    # permissions helpers
-    scope :permitted, ->(uuids) { where(id: uuids) }
+    belongs_to :distribution_system_operator, class_name: 'Organization'
+    belongs_to :transmission_system_operator, class_name: 'Organization'
+    belongs_to :electricity_supplier, class_name: 'Organization'
 
     has_many :addresses, as: :addressable, dependent: :destroy
     has_many :tariffs, dependent: :destroy, class_name: 'Contract::Tariff', foreign_key: :group_id
     has_many :billing_cycles, dependent: :destroy
+
+    # permissions helpers
+    scope :permitted, ->(uuids) { where(id: uuids) }
 
     def metering_point_operator_contract
       Contract::MeteringPointOperator.where(localpool_id: self).first

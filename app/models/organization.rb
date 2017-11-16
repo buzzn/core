@@ -11,6 +11,12 @@ class Organization < ActiveRecord::Base
   has_many :energy_classifications
   has_many :market_functions, dependent: :destroy, class_name: "OrganizationMarketFunction"
 
+  OrganizationMarketFunction.functions.keys.each do |function|
+    send :scope, function, -> {
+      where(id: OrganizationMarketFunction.where(function: function).select(:organization_id))
+    }
+  end
+
   def in_market_function(function)
     market_functions.find_by(function: function)
   end
