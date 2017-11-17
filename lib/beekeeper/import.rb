@@ -11,8 +11,8 @@ class Beekeeper::Import
 
   def import_localpools
     Beekeeper::MinipoolObjekte.to_import.each do |record|
-      puts
-      puts record.converted_attributes.map { |k, v| "#{k}: #{v}" }.join("\n")
+      # puts
+      # puts record.converted_attributes.map { |k, v| "#{k}: #{v}" }.join("\n")
       Group::Localpool.create!(record.converted_attributes)
     end
   end

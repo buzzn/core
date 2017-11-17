@@ -78,12 +78,16 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
 
   ORG_NAME_TO_SLUG_MAP = {
     "Bayernwerk"               => 'bayernwerk-netz',
+    "Bayernwerke"              => 'bayernwerk-netz',
+    "Bayernwerk AG"            => 'bayernwerk-netz',
     "E.dis AG"                 => 'e-dis',
     "Gemeindewerke Peißenberg" => 'gemeindewerke-peissenberg',
     "LEW"                      => 'lew',
     "NEW Netz"                 => 'new-netz',
     "SWM"                      => 'swm-infrastruktur',
-    "SWM Versorgungs GmbH"     => 'swm-versorgung',
+    "Stadtwerke München"       => 'swm-infrastruktur',
+    "M-Strom business Garant"  => 'swm-versorgung',
+    "M-Ökostrom"               => 'swm-versorgung',
     "Stadtwerke Landshut"      => 'sw-landshut',
     "Stadtwerke Schorndorf"    => 'sw-schorndorf',
     "Stadtwerke Waiblingen"    => 'sw-waiblingen',
@@ -95,15 +99,11 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
     "SW Netz GmbH"             => nil,
     "Netz Leipzig"             => nil, # LSW Netz?
     "BEG Freising"             => nil,
-    "Hamburg Netz"             => nil,
-    'MISSING'                  => nil
+    "Hamburg Netz"             => nil
   }
 
   def distribution_system_operator
-    operator = netzbetreiber.strip
-    operator = 'SWM' if operator == 'Stadtwerke München'
-    operator = 'Bayernwerk' if operator == 'Bayernwerk AG'
-    slug = ORG_NAME_TO_SLUG_MAP.fetch(operator)
+    slug = ORG_NAME_TO_SLUG_MAP.fetch(netzbetreiber.strip)
     org_for_slug(slug, netzbetreiber, :distribution_system_operator)
   end
 
@@ -120,11 +120,8 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
   end
 
   def electricity_supplier
-    supplier = reststromlieferant.strip
-    supplier = 'SWM Versorgungs GmbH' if ['M-Strom business Garant', 'M-Ökostrom'].include?(supplier)
-    supplier = 'MISSING' if supplier == ''
-    slug = ORG_NAME_TO_SLUG_MAP.fetch(supplier)
-    org_for_slug(slug, supplier, :electricity_supplier)
+    slug = ORG_NAME_TO_SLUG_MAP.fetch(reststromlieferant.strip, "MISSING")
+    org_for_slug(slug, reststromlieferant, :electricity_supplier)
   end
 
   def start_date
