@@ -1,15 +1,16 @@
 require 'rspec/expectations'
+require 'buzzn/schemas/support/enable_dry_validation'
 
 RSpec::Matchers.define :have_valid_invariants do |expected|
   match do |actual|
-    expected.call(actual).success?
+    actual.invariant.success?
   end
 
   failure_message do |actual|
-    "expected that #{actual.class}##{actual.id} has valid invariants"
+    "expected #{actual.class}##{actual.id} to have valid invariants: #{actual.invariant.errors.keys.join(',')}"
   end
 
   failure_message_when_negated do |actual|
-    "expected that #{actual.class}##{actual.id} has invalid invariants"
+    "expected #{actual.class}##{actual.id} to have valid invariants: #{actual.invariant.errors.keys.join(',')}"
   end
 end
