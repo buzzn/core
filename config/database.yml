@@ -13,6 +13,14 @@ development:
   <<: *default
   database: buzzn_development
 
+buzzndb:
+  <<: *default
+  database: buzzndb
+
+minipooldb:
+  <<: *default
+  database: minipooldb
+
 test:
   <<: *default
   pool: 1
