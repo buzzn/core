@@ -2,16 +2,8 @@ namespace :db do
 
   desc 'Deletes all data in the database (without dropping, recreating or migrating it)'
   task empty: :environment do
-    Rails.application.eager_load! # required so all active record classes are loaded and can be iterated over
-    ActiveRecord::Base.connection.disable_referential_integrity do
-      ActiveRecord::Base.descendants.each do |model|
-        begin
-          model.delete_all unless model.abstract_class? || model.namespace_name == "Beekeeper"
-        rescue => e
-          puts "Failed to delete all #{model} records: #{e.message}"
-        end
-      end
-    end
+    require 'db/support/database_emptier'
+    DatabaseEmptier.call
   end
 
   Rake::Task["seed"].clear
