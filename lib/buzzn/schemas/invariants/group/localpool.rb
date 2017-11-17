@@ -1,4 +1,3 @@
-require_relative '../../constraints/contract/base'
 module Schemas
   module Invariants
     module Group

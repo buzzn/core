@@ -93,7 +93,7 @@ describe Group::Base do
           context 'no meter.register.group' do
             before { register.group = nil }
             it 'is valid' do
-              expect(validator.validate(schema)[:grid_consumption_register]).to be_nil
+              expect(validator.validate(schema).errors[:grid_consumption_register]).to be_nil
             end
           end
           context 'meter.register.group' do
@@ -146,7 +146,7 @@ describe Group::Base do
           context 'no meter.register.group' do
             before { register.group = nil }
             it 'is valid' do
-              expect(validator.validate(schema)[:grid_feeding_register]).to be_nil
+              expect(validator.validate(schema).errors[:grid_feeding_register]).to be_nil
             end
           end
           context 'meter.register.group' do

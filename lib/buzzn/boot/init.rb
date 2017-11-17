@@ -51,7 +51,7 @@ module Buzzn
           MainContainer.merge(services).merge(operations)
 
           # eager require some files
-          %w(resource resources roda permissions).each do |dir|
+          %w(resource resources roda permissions schemas).each do |dir|
             Application.config.paths['lib'].dup.tap do |app|
               app.glob = "buzzn/#{dir}/**/*.rb"
               app.to_a.each { |path| require path }
