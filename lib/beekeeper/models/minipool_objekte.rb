@@ -96,10 +96,10 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
     "buzzn"                    => 'buzzn',
     "Lichtblick"               => 'lichtblick',
     # Orgs still to be created in the core app
-    "SW Netz GmbH"             => nil,
-    "Netz Leipzig"             => nil, # LSW Netz?
-    "BEG Freising"             => nil,
-    "Hamburg Netz"             => nil
+    "SW Netz GmbH"             => 'sw-wiesbaden',
+    "Netz Leipzig"             => 'netz-leipzig',
+    "BEG Freising"             => 'sw-freising',
+    "Hamburg Netz"             => 'stromnetz-hamburg'
   }
 
   def distribution_system_operator
