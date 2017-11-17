@@ -2454,6 +2454,13 @@ CREATE INDEX index_organizations_on_legal_representation_id ON organizations USI
 
 
 --
+-- Name: index_organizations_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organizations_on_slug ON organizations USING btree (slug);
+
+
+--
 -- Name: index_payments_on_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
