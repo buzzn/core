@@ -46,7 +46,7 @@ namespace :beekeeper do
   end
 
   desc "Run the beekeeper import from the Beekeeper to our native DB"
-  task import: :environment do
+  task import: ['db:empty', 'db:seed:setup_data'] do
     Beekeeper::Import.run!
   end
 
