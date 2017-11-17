@@ -57,7 +57,7 @@ end
 def get_csv(model_name, options = {})
   file_name = Rails.root.join("db/setup_data/csv/#{model_name}.csv")
   SmarterCSV.process(file_name,
-    col_sep: ";",
+    col_sep: ",",
     convert_values_to_numeric: false,
     value_converters: options[:converters]
   )
