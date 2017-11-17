@@ -30,8 +30,12 @@ module Buzzn
         @model = model
       end
 
+      def attributes
+        @attributes ||= @model.attributes
+      end
+
       def get(attr)
-        @model.send(attr)
+        attributes[attr.to_s] || @model.send(attr)
       end
       alias :[] :get
 

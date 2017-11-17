@@ -8,11 +8,11 @@ describe Operations::Action::Update do
   entity(:resource_without_invariant) { PersonResource.new(Fabricate(:person), session) }
   let(:input) { {} }
 
-  it 'finds invariant' do
-    expect(subject.find_invariant(Register::Input)).to eq Schemas::Invariants::Register::Base
-    expect(subject.find_invariant(Register::Base)).to eq Schemas::Invariants::Register::Base
-    expect(subject.find_invariant(Person)).to eq nil
-  end
+  # it 'finds invariant' do
+  #   expect(subject.find_invariant(Register::Input)).to eq Schemas::Invariants::Register::Base
+  #   expect(subject.find_invariant(Register::Base)).to eq Schemas::Invariants::Register::Base
+  #   expect(subject.find_invariant(Person)).to eq nil
+  # end
 
   context 'stale' do
     before { input[:updated_at] = Time.now }
