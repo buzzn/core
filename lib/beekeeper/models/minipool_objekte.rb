@@ -99,11 +99,12 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
     "SW Netz GmbH"             => 'sw-wiesbaden',
     "Netz Leipzig"             => 'netz-leipzig',
     "BEG Freising"             => 'sw-freising',
-    "Hamburg Netz"             => 'stromnetz-hamburg'
+    "Hamburg Netz"             => 'stromnetz-hamburg',
+    "Stromnetz Berlin"         => 'stromnetz-berlin'
   }
 
   def distribution_system_operator
-    slug = ORG_NAME_TO_SLUG_MAP.fetch(netzbetreiber.strip)
+    slug = ORG_NAME_TO_SLUG_MAP.fetch(netzbetreiber.strip, "MISSING")
     org_for_slug(slug, netzbetreiber, :distribution_system_operator)
   end
 
