@@ -1,3 +1,7 @@
+# wireup invariant with AR validation
+require 'buzzn/schemas/support/enable_dry_validation'
+ActiveRecord::Base.send(:include, Buzzn::Schemas::ValidateInvariant)
+
 class Beekeeper::Import
   class << self
     def run!

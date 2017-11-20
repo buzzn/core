@@ -23,8 +23,6 @@ module Group
         )
     end
 
-    validates :name, presence: true, uniqueness: true, length: { in: 4..40 }
-
     #mount_uploader :logo, PictureUploader
     #mount_uploader :image, PictureUploader
 
