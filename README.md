@@ -54,6 +54,8 @@ This description is for staging, production should work the same once it's imple
 
 2. run `git push staging {your-local-branch}:master`
 
+_Note on the previous, docker-based system and deployment: the Dockerfiles and related code have been removed, [use this git tag](https://github.com/buzzn/core/tree/before-removing-docker-config) to get them back. The same tag is set in the console app._
+
 ## Setup Ruby with rbenv
 
     https://github.com/sstephenson/rbenv#installation
