@@ -1,0 +1,1 @@
+# This file only exists to keep heroku from running rake assets:precompile.
