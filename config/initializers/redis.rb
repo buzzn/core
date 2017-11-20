@@ -1,1 +1,1 @@
-Redis.current = Redis.new(host: Rails.application.secrets.redishost)
+Redis.current = Redis.new(url: Import.global('config.redis_url'))
