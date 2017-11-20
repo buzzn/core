@@ -1,21 +1,26 @@
-default: &default
+shared: &shared
   clients:
     default:
-      database: buzzn
-      hosts:
-        - <%= ENV['MONGO_HOST'] %>:27017
+      # see https://devcenter.heroku.com/articles/mongolab#mongoid-5
+      uri: <%= ENV['MONGODB_URI'] %>
       options:
+        # The default timeout is 5, which is the time in seconds
+        # for a connection to time out.
+        # We recommend 15 because it allows for plenty of time
+        # in most operating environments.
+        connect_timeout: 15
   options:
     preload_models: true
 
 development:
-  <<: *default
+  <<: *shared
 
 test:
-  <<: *default
+  <<: *shared
 
 staging:
-  <<: *default
+  <<: *shared
 
 production:
-  <<: *default
+  <<: *shared
+
