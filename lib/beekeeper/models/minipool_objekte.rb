@@ -101,7 +101,7 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
     "BEG Freising"             => 'sw-freising',
     "Hamburg Netz"             => 'stromnetz-hamburg',
     'Vattenfall'               => 'stromnetz-berlin',
-    'Stromnetz Berlin'         => 'stromnetz-berlin'
+    'Stromnetz Berlin'         => 'stromnetz-berlin',
   }
 
   def distribution_system_operator
