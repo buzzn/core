@@ -31,9 +31,10 @@ module Buzzn::Services
     end
 
     def build_info
-      YAML.load(File.read('BUILD_INFO').strip)
-    rescue
-      'unknown or can not be read'
+      {
+        timestamp: ENV['HEROKU_SLUG_COMMIT'] || '(unknown)',
+        version: ENV['HEROKU_RELEASE_CREATED_AT'] || '(unknown)'
+      }
     end
 
     def info
@@ -43,7 +44,7 @@ module Buzzn::Services
         redis: redis?,
         mongo: mongo?
       }
-      result[:healthy] = result.slice(:database, :redis, :mongo).values.all?{|v| v == 'alive'}
+      result[:healthy] = result.slice(:database, :redis, :mongo).values.all? { |v| v == 'alive' }
       result
     end
   end
