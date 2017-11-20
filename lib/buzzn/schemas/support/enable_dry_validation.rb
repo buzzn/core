@@ -7,6 +7,22 @@ module Buzzn
       end
     end
 
+    module ValidateInvariant
+
+      def self.included(model)
+        model.validate :validate_invariant
+      end
+
+      def validate_invariant
+        result = invariant
+        if result && !result.success?
+          result.errors.each do |key, value|
+            errors.add(key, value)
+          end
+        end
+      end
+    end
+
     module DryValidationForActiveRecord
 
       def find_invariant(clazz)
