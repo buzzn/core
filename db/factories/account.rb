@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :account, class: 'Account::Base' do
 
     transient do
-      password 'Example123'
+      password Import.global('config.default_account_password')
     end
 
     person
