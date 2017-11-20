@@ -43,6 +43,17 @@ Use the [list of example users](db/example_data/persons.rb#L6-L21) to log in. Lo
 **Important**: both rake tasks do not empty the database before running, so when there already is data in the system, there may be conflicts, causing the task to abort.
 So if you know what you are doing, run `rake db:empty` first, to completely delete all data from the database.
 
+## How to deploy
+
+This description is for staging, production should work the same once it's implemented.
+
+1. We're running on Heroku, so first do this one-time setup:
+
+- `git remote add staging https://git.heroku.com/buzzn-core-staging.git` 
+- `heroku login` (make sure it succeeds / you are a collaborator on the app)
+
+2. run `git push staging {your-local-branch}:master`
+
 ## Setup Ruby with rbenv
 
     https://github.com/sstephenson/rbenv#installation
