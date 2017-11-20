@@ -1,9 +1,5 @@
 default: &default
-  adapter: <%= ENV['DB_ADAPTER'] %>
-  host: <%= ENV['DB_HOST'] %>
-  port: <%= ENV['DB_PORT'] %>
-  username: <%= ENV['DB_USER'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
+  # the DB host, credentials etc. are taken from the env var DATABASE_URL.
   encoding: unicode
   pool: 16
   checkout_timeout: 0.5

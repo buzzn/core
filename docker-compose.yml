@@ -60,8 +60,7 @@ services:
     ports:
       - "5432"
     environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
+      DATABASE_URL: postgres://postgres@postgres:5432
     volumes:
       - postgresdb:/var/lib/postgresql/data
 
