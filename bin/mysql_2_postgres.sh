@@ -21,10 +21,3 @@ echo "convert mysql to pg"
 pgloader -v mysql://root@localhost/${schema} postgresql:///${schema}
 
 psql -d ${schema} -c "ALTER DATABASE ${schema} SET search_path TO ${schema}, public;"
-
-echo "pg dump ${schema}"
-pg_dump ${schema} > ${file/.sql/.postgres.sql}
-
-echo 'zip pg dump'
-zip ${file/.sql/.postgres.zip} ${file/.sql/.postgres.sql}
-#rm ${file}.*sql
