@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.2.23
+-- Dumped from database version 9.6.5
 -- Dumped by pg_dump version 9.6.5
 
 SET statement_timeout = 0;
@@ -2991,9 +2991,10 @@ ALTER TABLE ONLY tariffs
 
 
 --
+-- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user",public;
+SET search_path TO "$user", public;
 
 INSERT INTO schema_migrations (version) VALUES ('20140227153812');
 
