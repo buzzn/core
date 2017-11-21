@@ -14,7 +14,7 @@ class Beekeeper::Import
   end
 
   def import_localpools
-    Beekeeper::MinipoolObjekte.to_import.each do |record|
+    Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
       # puts
       # puts record.converted_attributes.map { |k, v| "#{k}: #{v}" }.join("\n")
       begin
