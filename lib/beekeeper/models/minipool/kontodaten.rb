@@ -19,4 +19,39 @@
 
 class Beekeeper::Minipool::Kontodaten < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.kontodaten'
+
+  def converted_attributes
+    {
+      holder:       kontoinhaber,
+      iban:         kontonummer,
+      bank_name:    bank_name,
+      bic:          bic,
+      direct_debit: direct_debit,
+    }
+  end
+
+  private
+
+  def direct_debit
+    case einzugsermaechtigung
+    when 1
+      true
+    when 0
+      false
+    else
+      raise "unknown einzugsermaechtigung: '#{einzugsermaechtigung}'"
+    end
+  end
+
+  def bank
+    @bank ||= Bank.find_by_iban(kontonummer)
+  end
+
+  def bank_name
+    bank.description
+  end
+
+  def bic
+    bank.bic
+  end
 end

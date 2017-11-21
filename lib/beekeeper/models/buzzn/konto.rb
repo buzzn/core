@@ -19,4 +19,40 @@
 
 class Beekeeper::Buzzn::Konto < Beekeeper::Buzzn::BaseRecord
   self.table_name = 'buzzndb.konto'
+
+  def converted_attributes
+    {
+      holder:       kontoinhaber,
+      iban:         kontonummer,
+      bank_name:    bank_name,
+      bic:          bic,
+      direct_debit: direct_debit,
+      created_at:   erstelldatum
+    }
+  end
+
+  private
+
+  def direct_debit
+    case einzugserm.strip
+    when 'J'
+      true
+    when 'N'
+      false
+    else
+      raise "unknown einzugserm: '#{einzugserm}'"
+    end
+  end
+
+  def bank
+    @bank ||= Bank.find_by_iban(kontonummer)
+  end
+
+  def bank_name
+    bank.description
+  end
+
+  def bic
+    bank.bic
+  end
 end

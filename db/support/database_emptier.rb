@@ -17,6 +17,8 @@ class DatabaseEmptier
     return false if model.abstract_class?
     # don't delete the beekeeper data we want to import
     return false if model.respond_to?(:namespace_name) && (model.namespace_name == "Beekeeper")
+    # don't delete Banks
+    return false if model.to_s == 'Bank'
     true
   end
 end

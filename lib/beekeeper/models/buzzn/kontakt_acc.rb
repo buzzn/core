@@ -31,16 +31,16 @@
 class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
   self.table_name = 'buzzndb.kontakt_acc'
 
-
-  def converted_attributes
+  def converted_attributes(bank_accounts = [])
     {
-      first_name:   vorname,
-      last_name:    nachname,
-      email:        email,
-      phone:        telefon,
-      prefix:       prefix,
-      title:        title,
-      address:      address,
+      first_name:    vorname,
+      last_name:     nachname,
+      email:         email,
+      phone:         telefon,
+      prefix:        prefix,
+      title:         title,
+      address:       address,
+      bank_accounts: bank_accounts,
     }
   end
 
@@ -88,5 +88,12 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
 
   def address
     Address.new(converted_address_attributes)
+  end
+
+  def bank_accounts
+    # TODO maybe this is right or wrong but it is not used in the moment
+    Beekeeper::Buzzn::Konto.where(fibunr: fibunr).all.collect do |konto|
+      BankAccount.new(konto.converted_attributes)
+    end
   end
 end

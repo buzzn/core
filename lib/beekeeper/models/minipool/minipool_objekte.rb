@@ -155,7 +155,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   end
 
   def owner_person
-    Person.new(kontakt_acc.converted_attributes)
+    Person.new(kontakt_acc.converted_attributes(bank_accounts))
   end
 
   def owner_organization
@@ -170,8 +170,12 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     Beekeeper::Buzzn::KontaktAcc.find(vertragskontonummer)
   end
 
-  def konto
-    Beekeeper::Buzzn::Konto.find(vertragskontonummer)
+  def bank_accounts
+    konto = Beekeeper::Minipool::Kontodaten.where(vertragsnummer: vertragsnummer, nummernzusatz: 0).first
+    [BankAccount.new(konto.converted_attributes)]
+  rescue Buzzn::RecordNotFound => e
+    logger.warn("#{name}: unable to find bank data: #{e.message}}")
+    []
   end
 
   def logger
