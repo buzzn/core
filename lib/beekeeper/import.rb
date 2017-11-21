@@ -1,3 +1,4 @@
+# coding: utf-8
 # wireup invariant with AR validation
 require 'buzzn/schemas/support/enable_dry_validation'
 ActiveRecord::Base.send(:include, Buzzn::Schemas::ValidateInvariant)
@@ -24,6 +25,9 @@ class Beekeeper::Import
         ap record.converted_attributes
       end
     end
+    logger.info("groups                      : #{Group::Localpool.where(owner_person_id: nil).count}")
+    logger.info("group person owners         : #{Group::Localpool.where('owner_person_id IS NOT NULL').count}")
+    logger.info("group person owner addresses: #{Group::Localpool.where('owner_person_id IS NOT NULL').select {|g| g.owner.address }.count}")
   end
 
   # Not used yet, created in the prototype.
@@ -32,4 +36,10 @@ class Beekeeper::Import
   #     ap({ record.register_nr => record.converted_attributes })
   #   end
   # end
+
+  private
+
+  def logger
+    @logger ||= Buzzn::Logger.new(self)
+  end
 end

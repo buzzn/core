@@ -1,3 +1,4 @@
+# coding: utf-8
 # == Schema Information
 #
 # Table name: minipooldb.minipool_objekte
@@ -72,7 +73,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       distribution_system_operator: distribution_system_operator,
       transmission_system_operator: transmission_system_operator,
       electricity_supplier:         electricity_supplier,
-      address:                      address
+      address:                      address,
+      owner:                        owner
     }
   end
 
