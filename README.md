@@ -88,7 +88,7 @@ So if you know what you are doing, run `rake db:empty` first, to completely dele
 - convert and import that data into the core DB:
     - `rake beekeeper:import`
 - optionally upload the local core DB into the Heroku DB
-  - `heroku pg:empty`
+  - `heroku pg:reset`
   - `heroku pg:push buzzn_development DATABASE_URL`
 
 # How to set up a development environment
