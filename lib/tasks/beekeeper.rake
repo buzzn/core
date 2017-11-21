@@ -44,7 +44,7 @@ namespace :beekeeper do
   end
 
   desc "Run the beekeeper import from the Beekeeper to our native DB"
-  task :import do
+  task import: :environment do
     # load the beekeeper stuff lazy on demand
     require 'lib/beekeeper/init'
     Beekeeper::Import.run!
