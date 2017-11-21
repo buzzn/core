@@ -138,10 +138,38 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     Address.new(adresse.converted_attributes)
   end
 
+  def owner
+    if account_new.privat1_gbr2_weg3_else4 == 'privat'
+      owner_person
+    else
+      owner_organization
+    end
+  end
+
   private
 
   def starts_in_future?
     start_date > Date.today
+  end
+
+  def owner_person
+    Person.new(kontakt_acc.converted_attributes)
+  end
+
+  def owner_organization
+    nil
+  end
+
+  def account_new
+    Beekeeper::Buzzn::AccountNew.find(vertragskontonummer)
+  end
+
+  def kontakt_acc
+    Beekeeper::Buzzn::KontaktAcc.find(vertragskontonummer)
+  end
+
+  def konto
+    Beekeeper::Buzzn::Konto.find(vertragskontonummer)
   end
 
   def logger

@@ -1,3 +1,4 @@
+# coding: utf-8
 # == Schema Information
 #
 # Table name: buzzndb.kontakt_acc
@@ -29,4 +30,37 @@
 
 class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
   self.table_name = 'buzzndb.kontakt_acc'
+
+
+  def converted_attributes
+    {
+      first_name:   vorname,
+      last_name:    nachname,
+      email:        email,
+      phone:        telefon,
+      prefix:       prefix,
+      title:        title,
+    }
+  end
+
+  private
+
+  ANREDE_TO_PREFIX_MAP = {
+    ""         => nil,
+    "Herr"     => 'M',
+    "Herrn"    => 'M',
+    "Frau"     => 'F'
+  }
+
+  TITEL_TO_TITLE_MAP = {
+    ""         => nil,
+  }
+
+  def prefix
+    ANREDE_TO_PREFIX_MAP.fetch(anrede)
+  end
+
+  def title
+    TITEL_TO_TITLE_MAP.fetch(titel)
+  end
 end
