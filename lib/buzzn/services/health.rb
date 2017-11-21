@@ -32,8 +32,8 @@ module Buzzn::Services
 
     def build_info
       {
-        version: ENV['HEROKU_SLUG_COMMIT'] || '(unknown)',
-        timestamp: ENV['HEROKU_RELEASE_CREATED_AT'] || '(unknown)'
+        version: Import.global('config.heroku_slug_commit'),
+        timestamp: Import.global('config.heroku_release_created_at')
       }
     end
 
