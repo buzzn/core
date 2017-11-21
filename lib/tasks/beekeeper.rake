@@ -14,13 +14,17 @@ namespace :beekeeper do
       file.ends_with?('.zip') ? unzip(file) : file
     end
 
+    # Example: db/beekeeper_sql/minipooldb_2017-11-17_TT.zip => minipooldb
+    def get_schema_name(file)
+      File.basename(file).split('_').first
+    end
+
     # Imports beekeeper MySQL dump to a postgres DB named after the file prefix (minipooldb).
     # Also dumps and zips the postgres data to FILENAME.postgres.zip.
     desc 'convert mysql dump to postgres dump FILE= required (can be a zip or sql file)'
-    file = get_unzipped(ENV['FILE'])
     task :mysql2postgres do
-      # Example: db/beekeeper_sql/minipooldb_2017-11-17_TT.zip => minipooldb
-      schema = File.basename(file).split('_').first
+      file   = get_unzipped(ENV['FILE'])
+      schema = get_schema_name(file)
       sh "bin/mysql_2_postgres.sh #{file} #{schema}"
     end
 
