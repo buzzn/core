@@ -140,13 +140,19 @@ class Beekeeper::MinipoolObjekte < Beekeeper::BaseRecord
 
   private
 
+  def starts_in_future?
+    start_date > Date.today
+  end
+
   def logger
     @logger ||= Buzzn::Logger.new(self)
   end
 
   def org_for_slug(slug, beekeeper_value, lookup_purpose)
     org = Organization.find_by(slug: slug)
-    logger.warn("#{name}: unable to map #{lookup_purpose}. Beekeeper value is '#{beekeeper_value}'.") unless org
+    if !org && !starts_in_future?
+      logger.warn("#{name}: unable to map #{lookup_purpose}. Beekeeper value is '#{beekeeper_value}'.")
+    end
     org
   end
 end
