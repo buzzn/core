@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.6
--- Dumped by pg_dump version 9.6.6
+-- Dumped from database version 9.6.5
+-- Dumped by pg_dump version 9.6.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -885,7 +885,7 @@ CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -903,7 +903,7 @@ CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -921,7 +921,7 @@ CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) 
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -939,7 +939,7 @@ CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS b
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN valid;
