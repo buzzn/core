@@ -33,10 +33,5 @@ module Admin
     has_one :distribution_system_operator
     has_one :transmission_system_operator
     has_one :electricity_supplier
-
-    def incompleteness
-      Schemas::Completeness::Admin::Localpool.call(self).messages
-    end
-
   end
 end

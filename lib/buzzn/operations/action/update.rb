@@ -23,7 +23,7 @@ class Operations::Action::Update
         persist(resource.object)
         Right(resource)
       else
-        # TODO ? resource.reload
+        resource.object.reload
         Left(result)
       end
     end
@@ -39,21 +39,10 @@ class Operations::Action::Update
   ALWAYS_SUCCESS = OpenStruct.new(success?: true)
 
   def check_invariant(object)
-    invariant = find_invariant(object.class)
-    if invariant
-      invariant.call(object.attributes)
-      # FIXME currently this does not work as we need a similar workaround
-      #       on models as we have on resources to work with dry-validations
-      ALWAYS_SUCCESS
+    if invariant = object.invariant
+      invariant
     else
       ALWAYS_SUCCESS
-    end
-  end
-
-  def find_invariant(clazz)
-    if clazz != ActiveRecord::Base
-      invariant = "#{Schemas::Invariants}::#{clazz}".safe_constantize
-      invariant || find_invariant(clazz.superclass)
     end
   end
 end

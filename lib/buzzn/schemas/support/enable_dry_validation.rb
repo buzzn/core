@@ -7,6 +7,38 @@ module Buzzn
       end
     end
 
+    module ValidateInvariant
+
+      def self.included(model)
+        model.validate :validate_invariant
+      end
+
+      def validate_invariant
+        result = invariant
+        if result && !result.success?
+          result.errors.each do |key, value|
+            errors.add(key, value)
+          end
+        end
+      end
+    end
+
+    module DryValidationForActiveRecord
+
+      def find_invariant(clazz)
+        if clazz != ActiveRecord::Base
+          invariant = "#{::Schemas::Invariants}::#{clazz}".safe_constantize
+          invariant || find_invariant(clazz.superclass)
+        end
+      end
+
+      def invariant
+        if invariant = find_invariant(self.class)
+          ActiveRecordValidator.new(self).validate(invariant)
+        end
+      end
+    end
+
     class ActiveRecordValidator
       include DryValidation
 
@@ -14,8 +46,12 @@ module Buzzn
         @model = model
       end
 
+      def attributes
+        @attributes ||= @model.attributes
+      end
+
       def get(attr)
-        @model.send(attr)
+        attributes[attr.to_s] || @model.send(attr)
       end
       alias :[] :get
 
@@ -24,7 +60,7 @@ module Buzzn
       end
 
       def validate(schema)
-        schema.call(self).errors
+        schema.call(self)
       end
     end
 
@@ -42,6 +78,22 @@ module Buzzn
 
       def key?(attr)
         self.respond_to?(attr) || object.attributes.key?(attr) || object.respond_to?(attr)
+      end
+
+
+      def find_completeness(clazz)
+        if clazz != Buzzn::Resource::Base
+          invariant = "#{::Schemas::Completeness}::#{clazz.to_s.sub(/Resource$/, '')}".safe_constantize
+          invariant || find_completeness(clazz.superclass)
+        end
+      end
+
+      def incompleteness
+        if completeness = find_completeness(self.class)
+          completeness.call(self).errors
+        else
+          raise "could not find #{::Schemas::Completeness}::#{self.class}"
+        end
       end
     end
   end

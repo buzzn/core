@@ -65,7 +65,10 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   entity!(:billing_cycle) { Fabricate(:billing_cycle, localpool: localpool2) }
 
   it 'create' do
-    expect{ Admin::LocalpoolResource.create(buzzn_operator, {}) }.to raise_error Buzzn::ValidationError
+    expect do
+      a = Admin::LocalpoolResource.create(buzzn_operator, {name: 'first'})
+      a.object.delete
+    end.not_to raise_error
 
     expect{ Admin::LocalpoolResource.create(localpool_owner, {}) }.to raise_error Buzzn::PermissionDenied
 

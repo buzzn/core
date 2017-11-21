@@ -18,6 +18,8 @@ class CreateOrganizations < ActiveRecord::Migration
     add_foreign_key :organizations, :persons, column: :legal_representation_id, name: :fk_organizations_legal_representation
     add_foreign_key :organizations, :persons, column: :contact_id, name: :fk_organizations_contact
     add_foreign_key :organizations, :customer_numbers, name: :fk_organizations_customer_number, column: :customer_number
+
+    add_index :organizations, [:slug], unique: true
   end
 
   def down
