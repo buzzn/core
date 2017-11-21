@@ -4,23 +4,29 @@ namespace :beekeeper do
 
   namespace :sql do
 
+    def unzip(file)
+      dir = File.dirname(file)
+      sh "unzip -o #{file} -d #{dir}"
+      file.sub(/.zip/, '.sql')
+    end
+
+    def get_unzipped(file)
+      file.ends_with?('.zip') ? unzip(file) : file
+    end
+
+    # Imports beekeeper MySQL dump to a postgres DB named after the file prefix (minipooldb).
+    # Also dumps and zips the postgres data to FILENAME.postgres.zip.
     desc 'convert mysql dump to postgres dump FILE= required (can be a zip or sql file)'
+    file = get_unzipped(ENV['FILE'])
     task :mysql2postgres do
-      file = ENV['FILE']
-      if file =~ /.zip$/
-        `unzip -o #{file}`
-        file = file.sub(/.zip/, '.sql')
-      end
-      sh "bin/mysql_2_postgres.sh #{file}"
+      # Example: db/beekeeper_sql/minipooldb_2017-11-17_TT.zip => minipooldb
+      schema = File.basename(file).split('_').first
+      sh "bin/mysql_2_postgres.sh #{file} #{schema}"
     end
 
     desc 'import sql-dump from FILE - db-name is the prefix of the filename until the first _ or - (can be a zip or sql file)'
     task :import do
-      file = ENV['SQL']
-      if file =~ /.zip$/
-        `unzip -o #{file}`
-        file = file.sub(/.zip/, '.sql')
-      end
+    file = get_unzipped(ENV['FILE'])
       env = file.sub(/[_-].*\z/, '')
       config = YAML.load(ERB.new(File.read("#{Rails.root}/config/database.yml")).result)[env]
       schema = config['database']
