@@ -35,6 +35,9 @@ FactoryGirl.define do
   trait :localpool_processing do
     contract_number { generate(:localpool_processing_contract_nr) }
     initialize_with { Contract::LocalpoolProcessing.new }
+    before(:create) do |contract, _evaluator|
+      contract.tax_data = FactoryGirl.build(:tax_data)
+    end
   end
 
   trait :localpool_powertaker do
