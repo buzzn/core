@@ -1,1 +1,3 @@
+# This file only exists to prevent Heroku from running the assets:precompile rake task.
+# The core app has no assets.
 {}
