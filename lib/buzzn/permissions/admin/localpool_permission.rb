@@ -36,16 +36,32 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     retrieve :managers
   end
 
+  persons do
+    create :managers
+    retrieve :managers_self
+    update :managers_self
+    delete :none
+
+    address do
+      crud :managers_self
+    end
+
+    bank_accounts :address
+  end
+
   owner do
     retrieve :managers
     create :operators
     update :operators
-    contact do
-      retrieve :managers
-    end
+    contact '/persons'
     legal_representation do
       retrieve :managers
     end
+    address do
+      crud :managers_self
+    end
+
+    bank_accounts :address
   end
 
   energy_consumers do
@@ -188,19 +204,6 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       # reuse permissions from 'registers'
       register '/registers'
     end
-  end
-
-  persons do
-    create :managers
-    retrieve :managers_self
-    update :managers_self
-    delete :none
-
-    address do
-      crud :managers_self
-    end
-
-    bank_accounts :address
   end
 
   managers do
