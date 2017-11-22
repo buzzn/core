@@ -14,7 +14,7 @@ module Contract
              :sales_tax_number,
              :tax_number,
              :tax_rate,
-             :creditor_idenfication,
+             :creditor_identification,
              :retailer,
              :provider_permission,
              to: :tax_data, allow_nil: true
