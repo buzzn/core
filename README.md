@@ -14,6 +14,7 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
   - [Loading setup and example data \("seeds"\)](#loading-setup-and-example-data-seeds)
 - [Beekeeper import](#beekeeper-import)
   - [How to run it](#how-to-run-it)
+- [How to deploy](#how-to-deploy)
 - [How to set up a development environment](#how-to-set-up-a-development-environment)
   - [Setup Ruby \(using rbenv\)](#setup-ruby-using-rbenv)
   - [Install required software](#install-required-software)
@@ -87,6 +88,19 @@ So if you know what you are doing, run `rake db:empty` first, to completely dele
 - optionally upload the local core DB into the Heroku DB
   - `heroku pg:reset`
   - `heroku pg:push buzzn_development DATABASE_URL`
+
+# How to deploy
+
+This description is for staging, production should work the same once it's implemented.
+
+1. We're running on Heroku, so first do this one-time setup:
+
+- `git remote add staging https://git.heroku.com/buzzn-core-staging.git` 
+- `heroku login` (make sure it succeeds / you are a collaborator on the app)
+
+2. run `git push staging {your-local-branch}:master`
+
+_Note on the previous, docker-based system and deployment: the Dockerfiles and related code have been removed, [use this git tag](https://github.com/buzzn/core/tree/before-removing-docker-config) to get them back. The same tag is set in the console app._
 
 # How to set up a development environment
 

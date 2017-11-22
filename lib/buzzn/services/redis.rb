@@ -1,8 +1,9 @@
 class Buzzn::Services::Redis
-  include Import['secrets.redishost']
+
+  include Import['config.redis_url']
 
   def create
-    ::Redis.new(host: redishost)
+    ::Redis.new(url: redis_url)
   end
 
   # just factory method for Redis

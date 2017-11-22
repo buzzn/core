@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+ruby '2.3.1'
 
 # infrastructure
 gem 'dry-auto_inject'
@@ -79,6 +80,9 @@ gem 'fabrication'
 gem 'factory_girl'
 gem 'dotenv-rails'
 gem 'smarter_csv'
+
+# Injected by Heroku, we might as well include it here directly
+gem 'rails_12factor'
 
 group :production, :staging do
   gem 'newrelic_rpm'

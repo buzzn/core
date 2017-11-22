@@ -31,9 +31,10 @@ module Buzzn::Services
     end
 
     def build_info
-      YAML.load(File.read('BUILD_INFO').strip)
-    rescue
-      'unknown or can not be read'
+      {
+        version: Import.global('config.heroku_slug_commit'),
+        timestamp: Import.global('config.heroku_release_created_at')
+      }
     end
 
     def info
@@ -43,7 +44,7 @@ module Buzzn::Services
         redis: redis?,
         mongo: mongo?
       }
-      result[:healthy] = result.slice(:database, :redis, :mongo).values.all?{|v| v == 'alive'}
+      result[:healthy] = result.slice(:database, :redis, :mongo).values.all? { |v| v == 'alive' }
       result
     end
   end
