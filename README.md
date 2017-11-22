@@ -23,10 +23,7 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
 - [Misc admin info](#misc-admin-info)
   - [Start sidekiq message queue](#start-sidekiq-message-queue)
   - [Stop sidekiq](#stop-sidekiq)
-  - [Interface for mail views](#interface-for-mail-views)
-  - [Mail Catcher](#mail-catcher)
   - [Find missing Indexes](#find-missing-indexes)
-  - [Find missing foreign keys](#find-missing-foreign-keys)
   - [Run analysis of security vulnerabilities](#run-analysis-of-security-vulnerabilities)
 - [Troubleshooting](#troubleshooting)
 - [Further links & documentation](#further-links--documentation)
@@ -107,42 +104,32 @@ So if you know what you are doing, run `rake db:empty` first, to completely dele
     cd core
     gem install bundler
     bundle install
-    bundle exec rake db:create db:structure:load db:seed:example_data
+    rake db:create db:structure:load db:seed:example_data
 
 ## Start Rails server in develoment mode
     rails server # also "rails s"
 
 ## Reset and Start Test Environment
     rake test:prepare
-    bundle exec guard
+    guard
 
 # Misc admin info
 
 ## Start sidekiq message queue
     redis-server
-    remark: probably necessary to reinit database (bundle exec rake db:init) to let sidekiq run properly
-    bundle exec rake sidekiq:start
-    remark: you must be logged in with admin rights to visit:
-    http://localhost:3000/sidekiq
+    remark: probably necessary to reinit database (rake db:init) to let sidekiq run properly
+    rake sidekiq:start
+
+The (very useful) Sidekiq Admin interface currently isn't set up. See [Sidekiq's documentation on standalone installation](https://github.com/mperham/sidekiq/wiki/Monitoring#standalone) for how to enable it.
 
 ## Stop sidekiq
-    bundle exec rake sidekiq:kill
-
-## Interface for mail views
-    http://localhost:3000/de/mail_view
-
-## Mail Catcher
-    mailcatcher
-    http://127.0.0.1:1080
+    rake sidekiq:kill
 
 ## Find missing Indexes
-    bundle exec lol_dba db:find_indexes
-
-## Find missing foreign keys
-    bundle exec rails generate immigration AddKeys
+    lol_dba db:find_indexes
 
 ## Run analysis of security vulnerabilities
-    bundle exec brakeman
+    brakeman
 
 # Troubleshooting
 
@@ -158,4 +145,3 @@ So if you know what you are doing, run `rake db:empty` first, to completely dele
 * [Privacy Settings (readability) of Resources](https://docs.google.com/spreadsheets/d/13NtNstj4AVEbxvXTEgx6Hit-g0NHsS7Uy5JPYceETjI/edit#gid=0)
 * [All Notifications & their User Groups](https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0)
 * [Overview over treating notifications on backend side](https://www.lucidchart.com/documents/edit/7f412806-aa84-46d6-93c7-76bedebd47d9)
- Hello
