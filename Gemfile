@@ -56,7 +56,6 @@ gem 'redis'
 gem 'redis-namespace'
 gem 'puma'
 gem 'awesome_print'
-gem 'mail_view'
 gem 'rack-cors',               require: 'rack/cors'
 gem 'rolify'
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
