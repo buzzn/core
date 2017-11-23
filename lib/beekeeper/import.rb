@@ -14,7 +14,7 @@ class Beekeeper::Import
   end
 
   def import_localpools
-    Beekeeper::MinipoolObjekte.to_import.each do |record|
+    Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
       # puts
       # puts record.converted_attributes.map { |k, v| "#{k}: #{v}" }.join("\n")
       begin
@@ -24,6 +24,15 @@ class Beekeeper::Import
         ap record.converted_attributes
       end
     end
+    logger.info("groups                               : #{Group::Localpool.count}")
+    logger.info("groups distribution_system_operator  : #{Group::Localpool.where('distribution_system_operator_id IS NOT NULL').count}")
+    logger.info("groups transmission_system_operator  : #{Group::Localpool.where('transmission_system_operator_id IS NOT NULL').count}")
+    logger.info("groups electricity_supplier          : #{Group::Localpool.where('electricity_supplier_id IS NOT NULL').count}")
+    logger.info("group person owners                  : #{Group::Localpool.where('owner_person_id IS NOT NULL').count}")
+    logger.info("group person owner addresses         : #{Group::Localpool.where('owner_person_id IS NOT NULL').select {|g| g.owner.address }.count}")
+    logger.info("group person owner with bank-accounts: #{Group::Localpool.where('owner_person_id IS NOT NULL').select {|g| !g.owner.bank_accounts.empty? }.count}")
+
+   # binding.pry
   end
 
   # Not used yet, created in the prototype.
@@ -32,4 +41,10 @@ class Beekeeper::Import
   #     ap({ record.register_nr => record.converted_attributes })
   #   end
   # end
+
+  private
+
+  def logger
+    @logger ||= Buzzn::Logger.new(self)
+  end
 end

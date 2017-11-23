@@ -36,22 +36,24 @@ namespace :beekeeper do
     Beekeeper::Import.run!
   end
 
-  task :generate_models do
-    # load the beekeeper stuff lazy on demand
-    require 'lib/beekeeper/init'
+  task generate_models: :environment do
+    schema = ENV['RAILS_ENV']
+    namespace = schema.capitalize.sub(/db/, '')
+
     require 'pg'
 
     # Output a table of current connections to the DB
     conn = ActiveRecord::Base.connection
-    query = "SELECT * FROM information_schema.tables WHERE table_schema='minipooldb'"
+    query = "SELECT * FROM information_schema.tables WHERE table_schema='#{schema}'"
     tables = conn.execute(query).map { |row| row['table_name']}
     tables.each do |table|
+      p table
       class_definition = <<~CODE
-        class Beekeeper::#{table.camelize} < Beekeeper::BaseRecord
-          self.table_name = 'minipooldb.#{table}'
+        class Beekeeper::#{namespace}::#{table.camelize} < Beekeeper::#{namespace}::BaseRecord
+          self.table_name = '#{schema}.#{table}'
         end
       CODE
-      path = Rails.root.join("lib/beekeeper/models/#{table}.rb")
+      path = Rails.root.join("lib/beekeeper/models/#{namespace.downcase}/#{table}.rb")
       File.open(path, 'w+') { |f| f.write(class_definition) }
     end
   end

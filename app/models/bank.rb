@@ -30,14 +30,14 @@ class Bank < ActiveRecord::Base
 
   def self.find_by_bic(bic)
     unless result = get_by_bic(bic)
-      not_found("bic=#{bic}")
+      not_found("bic '#{bic}'")
     end
     result
   end
 
   def self.find_by_iban(iban)
     unless result = get_by_iban(iban)
-      not_found("iban=#{iban}")
+      not_found("iban '#{iban}'")
     end
     result
   end
@@ -122,6 +122,6 @@ class Bank < ActiveRecord::Base
   end
 
   def self.not_found(msg)
-    raise Buzzn::RecordNotFound.new("#{self} with #{msg} not found")
+    raise Buzzn::RecordNotFound.new(self, msg)
   end
 end
