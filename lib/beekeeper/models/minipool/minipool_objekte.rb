@@ -73,7 +73,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       transmission_system_operator: transmission_system_operator,
       electricity_supplier:         electricity_supplier,
       address:                      address,
-      owner:                        owner
+      owner:                        owner,
+      bank_account:                 bank_accounts.first
     }
   end
 
@@ -155,7 +156,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   end
 
   def owner_person
-    Person.new(kontakt_acc.converted_attributes(bank_accounts))
+    Person.new(kontakt_acc.converted_attributes.merge(bank_accounts: bank_accounts))
   end
 
   def owner_organization

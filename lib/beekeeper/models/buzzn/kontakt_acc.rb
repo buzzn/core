@@ -30,7 +30,7 @@
 class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
   self.table_name = 'buzzndb.kontakt_acc'
 
-  def converted_attributes(bank_accounts = [])
+  def converted_attributes
     {
       first_name:    vorname,
       last_name:     nachname,
@@ -38,8 +38,7 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
       phone:         telefon,
       prefix:        prefix,
       title:         title,
-      address:       address,
-      bank_accounts: bank_accounts,
+      address:       address
     }
   end
 
