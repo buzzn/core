@@ -14,7 +14,8 @@ module Admin
                :show_energy,
                :show_contact,
                :updatable, :deletable,
-               :incompleteness
+               :incompleteness,
+               :bank_account
 
     has_one :localpool_processing_contract
     has_one :metering_point_operator_contract
