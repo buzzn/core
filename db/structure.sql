@@ -1455,6 +1455,7 @@ CREATE TABLE groups (
     distribution_system_operator_id uuid,
     transmission_system_operator_id uuid,
     electricity_supplier_id uuid,
+    bank_account_id uuid,
     grid_consumption_register_id uuid,
     grid_feeding_register_id uuid,
     CONSTRAINT check_localpool_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
@@ -2318,6 +2319,13 @@ CREATE INDEX index_formula_parts_on_register_id ON formula_parts USING btree (re
 --
 
 CREATE INDEX index_groups_on_address_id ON groups USING btree (address_id);
+
+
+--
+-- Name: index_groups_on_bank_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_bank_account_id ON groups USING btree (bank_account_id);
 
 
 --

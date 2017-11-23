@@ -27,6 +27,7 @@ module Group
     #mount_uploader :image, PictureUploader
 
     belongs_to :address
+    belongs_to :bank_account
 
     has_many :registers, class_name: Register::Base, foreign_key: :group_id
 
