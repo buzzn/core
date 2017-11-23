@@ -9,15 +9,15 @@ describe Admin::LocalpoolRoda do
     if account.present?
       {
         'id'                    => account.id,
+        'type'                  => 'bank_account',
+        'updated_at'            => account.updated_at.as_json,
         'holder'                => account.holder,
-        'iban'                  => account.iban,
         'bank_name'             => account.bank_name,
         'bic'                   => account.bic,
+        'iban'                  => account.iban,
         'direct_debit'          => account.direct_debit,
-        'created_at'            => account.created_at.as_json,
-        'updated_at'            => account.updated_at.as_json,
-        'owner_person_id'       => account.owner_person_id,
-        'owner_organization_id' => account.owner_organization_id
+        'updatable'             => false,
+        'deletable'             => false
       }
     else
       nil
