@@ -32,6 +32,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     retrieve :operators
   end
 
+  bank_account do
+    retrieve :operators
+  end
+
   energy_producers do
     retrieve :managers
   end
