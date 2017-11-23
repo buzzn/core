@@ -15,10 +15,10 @@ class Beekeeper::Import
 
   def import_localpools
     Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
-      logger.info("----")
-      logger.info("* #{record.name}")
-      logger.info(record.owner.is_a?(Person).to_s)
-      logger.info(record.owner&.bank_accounts.inspect)
+      logger.debug("----")
+      logger.debug("* #{record.name}")
+      logger.debug(record.owner.is_a?(Person).to_s)
+      logger.debug(record.owner&.bank_accounts.inspect)
       begin
         Group::Localpool.create!(record.converted_attributes)
       rescue => e
