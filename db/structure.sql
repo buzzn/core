@@ -1525,7 +1525,7 @@ CREATE TABLE organizations (
     website character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    slug character varying,
+    slug character varying NOT NULL,
     customer_number integer,
     address_id uuid,
     legal_representation_id uuid,

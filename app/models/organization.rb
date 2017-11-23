@@ -11,8 +11,8 @@ class Organization < ActiveRecord::Base
   has_many :energy_classifications
   has_many :market_functions, dependent: :destroy, class_name: "OrganizationMarketFunction"
 
-  before_save do
-    self.slug = Buzzn::Slug.new(self.name) if self.slug.nil?
+  before_create do
+    self.slug ||= Buzzn::Slug.new(self.name)
   end
 
   # make a scope for each possible market function
