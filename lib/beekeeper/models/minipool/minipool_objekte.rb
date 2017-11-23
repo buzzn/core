@@ -63,8 +63,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
   scope :to_import, -> { where("minipool_start != '0000-00-00'") }
 
-  # attr_accessor :distribution_system_operator, :transmission_system_operator, :electricity_supplier
-
   def converted_attributes
     {
       name: name,
@@ -98,7 +96,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     "bnNetze"                  => 'bn-netze',
     "buzzn"                    => 'buzzn',
     "Lichtblick"               => 'lichtblick',
-    # Orgs still to be created in the core app
     "SW Netz GmbH"             => 'sw-wiesbaden',
     "Netz Leipzig"             => 'netz-leipzig',
     "BEG Freising"             => 'sw-freising',
