@@ -453,30 +453,8 @@ describe Admin::LocalpoolRoda do
           "updatable"=>true,
           "deletable"=>false
         },
-        "customer_bank_account"=>{
-          "id"=>contract.customer_bank_account.id,
-          "type"=>"bank_account",
-          'updated_at'=>contract.customer_bank_account.updated_at.as_json,
-          "holder"=>contract.customer_bank_account.holder,
-          "bank_name"=>contract.customer_bank_account.bank_name,
-          "bic"=>contract.customer_bank_account.bic,
-          "iban"=>contract.customer_bank_account.iban,
-          "direct_debit"=>contract.customer_bank_account.direct_debit,
-          'updatable'=> true,
-          'deletable'=> false
-        },
-        "contractor_bank_account"=>{
-          "id"=>contract.contractor_bank_account.id,
-          "type"=>"bank_account",
-          'updated_at'=>contract.contractor_bank_account.updated_at.as_json,
-          "holder"=>contract.contractor_bank_account.holder,
-          "bank_name"=>contract.contractor_bank_account.bank_name,
-          "bic"=>contract.contractor_bank_account.bic,
-          "iban"=>contract.contractor_bank_account.iban,
-          "direct_debit"=>contract.contractor_bank_account.direct_debit,
-          'updatable'=> true,
-          'deletable'=> false
-        }
+        "customer_bank_account"=> serialized_bank_account(contract.customer_bank_account).merge('updatable' => true),
+        "contractor_bank_account"=> serialized_bank_account(contract.contractor_bank_account).merge('updatable' => true)
       }
     end
 
@@ -613,30 +591,8 @@ describe Admin::LocalpoolRoda do
             "deletable"=>false
           }
         },
-        "customer_bank_account"=>{
-          "id"=>contract.customer_bank_account.id,
-          "type"=>"bank_account",
-          'updated_at'=>contract.customer_bank_account.updated_at.as_json,
-          "holder"=>contract.customer_bank_account.holder,
-          "bank_name"=>contract.customer_bank_account.bank_name,
-          "bic"=>contract.customer_bank_account.bic,
-          "iban"=>contract.customer_bank_account.iban,
-          "direct_debit"=>contract.customer_bank_account.direct_debit,
-          'updatable'=> true,
-          'deletable'=> false
-        },
-        "contractor_bank_account"=>{
-          "id"=>contract.contractor_bank_account.id,
-          "type"=>"bank_account",
-          'updated_at'=>contract.contractor_bank_account.updated_at.as_json,
-          "holder"=>contract.contractor_bank_account.holder,
-          "bank_name"=>contract.contractor_bank_account.bank_name,
-          "bic"=>contract.contractor_bank_account.bic,
-          "iban"=>contract.contractor_bank_account.iban,
-          "direct_debit"=>contract.contractor_bank_account.direct_debit,
-          'updatable'=> true,
-          'deletable'=> false
-        }
+        "customer_bank_account"=> serialized_bank_account(contract.customer_bank_account).merge('updatable' => true),
+        "contractor_bank_account"=> serialized_bank_account(contract.contractor_bank_account).merge('updatable' => true)
       }
     end
 
