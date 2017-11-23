@@ -37,7 +37,7 @@ class Beekeeper::Import
 
   # Not used yet, created in the prototype.
   # def import_registers
-  #   Beekeeper::MsbZählwerkDaten.all.each do |record|
+  #   Beekeeper::Minipool::MsbZählwerkDaten.all.each do |record|
   #     ap({ record.register_nr => record.converted_attributes })
   #   end
   # end
