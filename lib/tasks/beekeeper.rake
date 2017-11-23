@@ -40,8 +40,6 @@ namespace :beekeeper do
     schema = ENV['RAILS_ENV']
     namespace = schema.capitalize.sub(/db/, '')
 
-    # load the beekeeper stuff lazy on demand
-    #require 'lib/beekeeper/init'
     require 'pg'
 
     # Output a table of current connections to the DB
