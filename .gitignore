@@ -30,5 +30,3 @@ dump.rdb
 .env.local
 public/uploads
 BUILD_INFO
-
-db/beekeeper_sql
