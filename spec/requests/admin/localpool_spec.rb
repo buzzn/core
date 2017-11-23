@@ -5,6 +5,25 @@ describe Admin::LocalpoolRoda do
     TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
+  def serialized_bank_account(account)
+    if account.present?
+      {
+        'id'                    => account.id,
+        'holder'                => account.holder,
+        'iban'                  => account.iban,
+        'bank_name'             => account.bank_name,
+        'bic'                   => account.bic,
+        'direct_debit'          => account.direct_debit,
+        'created_at'            => account.created_at.as_json,
+        'updated_at'            => account.updated_at.as_json,
+        'owner_person_id'       => account.owner_person_id,
+        'owner_organization_id' => account.owner_organization_id
+      }
+    else
+      nil
+    end
+  end
+
   entity(:manager) { Fabricate(:user).person }
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
@@ -29,7 +48,9 @@ describe Admin::LocalpoolRoda do
   entity(:localpool_no_contracts) do
     Fabricate(:localpool,
               owner: Fabricate(:other_organization),
-              address: Fabricate(:address))
+              address: Fabricate(:address),
+              bank_account: FactoryGirl.create(:bank_account)
+    )
   end
 
   let(:empty_json) { [] }
@@ -60,7 +81,8 @@ describe Admin::LocalpoolRoda do
         'show_contact' => localpool.show_contact,
         "updatable"=>true,
         "deletable"=>true,
-        'incompleteness' => incompleteness
+        'incompleteness' => incompleteness,
+        'bank_account' => serialized_bank_account(localpool.bank_account)
       }
     end
   end
@@ -87,6 +109,7 @@ describe Admin::LocalpoolRoda do
         'grid_feeding_register' => ['must be filled'],
         'grid_consumption_register' => ['must be filled']
       },
+      'bank_account' => serialized_bank_account(localpool_no_contracts.bank_account),
       "meters"=>{
         'array'=> localpool_no_contracts.meters.collect do |meter|
           {
@@ -212,7 +235,8 @@ describe Admin::LocalpoolRoda do
           'owner' => ['must be filled'],
           'grid_feeding_register' => ['must be filled'],
           'grid_consumption_register' => ['must be filled']
-        }
+        },
+        'bank_account' => nil
       }
     end
 
@@ -286,7 +310,8 @@ describe Admin::LocalpoolRoda do
           'owner' => ['must be filled'],
           'grid_feeding_register' => ['must be filled'],
           'grid_consumption_register' => ['must be filled']
-        }
+        },
+        'bank_account' => nil
       }
     end
 
