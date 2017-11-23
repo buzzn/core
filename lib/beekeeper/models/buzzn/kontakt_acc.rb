@@ -64,35 +64,16 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
     TITEL_TO_TITLE_MAP.fetch(titel)
   end
 
-  STATE_NAME_TO_CODE_MAP = {
-    nil      => nil,
-    ""       => nil,
-    "BaWü"   => 'DE_BW',
-    "Bayern" => 'DE_BY'
-  }
-
-  def state
-    STATE_NAME_TO_CODE_MAP.fetch(bundesland)
-  end
-
   def converted_address_attributes
     {
       street:   "#{strasse} #{hausnummer}",
       zip:      plz,
       city:     stadt,
       country:  'DE',
-      state:    state
     }
   end
 
   def address
     Address.new(converted_address_attributes)
-  end
-
-  def bank_accounts
-    # TODO maybe this is right or wrong but it is not used in the moment
-    Beekeeper::Buzzn::Konto.where(fibunr: fibunr).all.collect do |konto|
-      BankAccount.new(konto.converted_attributes)
-    end
   end
 end

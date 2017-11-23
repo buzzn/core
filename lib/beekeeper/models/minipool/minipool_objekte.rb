@@ -159,7 +159,9 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   end
 
   def owner_organization
-    nil
+    attributes = account_new.converted_attributes(bank_accounts)
+    slug = Buzzn::Slug.new(attributes[:name])
+    Organization.find_by(slug: slug) || Organization.new(attributes)
   end
 
   def account_new

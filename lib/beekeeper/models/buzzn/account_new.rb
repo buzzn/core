@@ -21,4 +21,30 @@
 
 class Beekeeper::Buzzn::AccountNew < Beekeeper::Buzzn::BaseRecord
   self.table_name = 'buzzndb.account_new'
+
+  def converted_attributes(bank_accounts = [])
+    {
+      name:          gesellschafts_name,
+      phone:         telefon,
+      fax:           fax,
+      email:         email,
+      address:       address,
+      bank_accounts: bank_accounts,
+    }
+  end
+
+  private
+
+  def converted_address_attributes
+    {
+      street:   "#{strasse} #{hausnummer}",
+      zip:      plz,
+      city:     stadt,
+      country:  'DE',
+    }
+  end
+
+  def address
+    Address.new(converted_address_attributes)
+  end
 end
