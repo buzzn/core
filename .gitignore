@@ -31,4 +31,4 @@ dump.rdb
 public/uploads
 BUILD_INFO
 
-db/beekeeper_sql/*
+db/beekeeper_sql
