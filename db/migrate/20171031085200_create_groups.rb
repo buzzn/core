@@ -16,6 +16,7 @@ class CreateGroups < ActiveRecord::Migration
     add_belongs_to :groups, :distribution_system_operator, reference: :organizations, type: :uuid, index: true, null: true
     add_belongs_to :groups, :transmission_system_operator, reference: :organizations, type: :uuid, index: true, null: true
     add_belongs_to :groups, :electricity_supplier, reference: :organizations, type: :uuid, index: true, null: true
+    add_belongs_to :groups, :bank_account, reference: :bank_accounts, type: :uuid, index: true, null: true
 
     add_foreign_key :groups, :addresses, name: :fk_groups_address
     add_foreign_key :groups, :persons, name: :fk_groups_person, column: :owner_person_id
