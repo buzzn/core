@@ -33,6 +33,7 @@ describe Admin::LocalpoolRoda do
         'grid_feeding_register' => ['must be filled'],
         'grid_consumption_register' => ['must be filled']
       },
+      'bank_account' => nil
     }
   end
 
