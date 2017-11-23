@@ -94,6 +94,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     "Stadtwerke Schorndorf"    => 'sw-schorndorf',
     "Stadtwerke Waiblingen"    => 'sw-waiblingen',
     "Syna"                     => 'syna',
+    "Syna GmbH"                => 'syna',
     "bnNetze"                  => 'bn-netze',
     "buzzn"                    => 'buzzn',
     "Lichtblick"               => 'lichtblick',
@@ -116,7 +117,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       when /a(m)?prion/i then 'amprion'
       when /tennet/i     then 'tennet'
       when /50 hertz/i   then '50hertz'
-      when /Transnet BW/ then 'transnetbw'
+      when /Transnet( )?BW/ then 'transnetbw'
       else
         # nothing to do, org_for_slug will print a warning if org not found.
     end

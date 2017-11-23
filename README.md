@@ -80,8 +80,8 @@ So if you know what you are doing, run `rake db:empty` first, to completely dele
    - `rake db:empty db:seed:example_data`
 - get the latest beekeeper MySQL dumps ("minipool_..." and "buzzndb_2017-11-17_TT.zip")
 - convert/load them into separate DBs in local postgres server
-    - `rake beekeeper:sql:mysql2postgres FILE=db/beekeeper_sql/minipooldb_2017-11-17_TT.zip`
-    - `rake beekeeper:sql:mysql2postgres FILE=db/beekeeper_sql/buzzndb_2017-11-17_TT.zip`
+    - `rake beekeeper:sql:mysql2postgres FILE=/absolute/path/to/minipooldb_2017-11-17_TT.zip`
+    - `rake beekeeper:sql:mysql2postgres FILE=/absolute/path/to/buzzndb_2017-11-17_TT.zip`
     - make sure no table has any errors, (check summary table at the end)
 - convert and import that data into the core DB:
     - `rake beekeeper:import`
