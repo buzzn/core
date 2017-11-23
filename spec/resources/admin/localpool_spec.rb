@@ -1,20 +1,21 @@
 describe Admin::LocalpoolResource do
 
   entity(:admin) { Fabricate(:admin) }
-  entity!(:localpool) { Fabricate(:localpool) }
+  entity!(:localpool) { Fabricate(:localpool, bank_account: FactoryGirl.create(:bank_account)) }
 
-  let(:base_attributes) { ['id', 'type', 'updated_at',
-                           'name',
-                           'description',
-                           'slug',
-                           'start_date',
-                           'show_object',
-                           'show_production',
-                           'show_energy',
-                           'show_contact',
-                           'updatable',
-                           'deletable',
-                           'incompleteness' ] }
+  let(:base_attributes) { %w(id type updated_at
+                           name
+                           description
+                           slug
+                           start_date
+                           show_object
+                           show_production
+                           show_energy
+                           show_contact
+                           updatable
+                           deletable
+                           incompleteness
+                           bank_account) }
 
   entity!(:pools) { Admin::LocalpoolResource.all(admin) }
 
@@ -28,17 +29,11 @@ describe Admin::LocalpoolResource do
     expect(result.sort).to eq expected.sort
   end
 
-  it 'retrieve' do
-    attributes = ['localpool_processing_contract',
-                  'metering_point_operator_contract',
-                  'localpool_power_taker_contracts',
-                  'tariffs',
-                  'admins',
-                  'contracts',
-                  'billing_cycles']
+  it 'retrieve base attributes' do
     attrs = pools.retrieve(localpool.id).to_h
     expect(attrs['id']).to eq localpool.id
     expect(attrs['type']).to eq 'group_localpool'
+    expect(attrs['bank_account']['id']).to eq localpool.bank_account.id
     expect(attrs.keys).to match_array base_attributes
   end
 
