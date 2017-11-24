@@ -24,6 +24,35 @@ describe Admin::LocalpoolRoda do
     end
   end
 
+  def serialized_incompleteness(localpool)
+    json = {
+      'owner' => ['must be filled'],
+      'grid_feeding_register' => ['must be filled'],
+      'grid_consumption_register' => ['must be filled'],
+      'distribution_system_operator' => ['must be filled'],
+      'transmission_system_operator' => ['must be filled'],
+      'electricity_supplier' => ['must be filled']
+    }
+    if localpool
+      unless localpool.bank_account
+        json['bank_account'] = ['must be filled']
+      end
+      case localpool.owner
+      when Organization
+        if localpool.owner.contact
+          json.delete('owner')
+        else
+          json['owner'] = {'contact' => ['must be filled']}
+        end
+      when Person
+        json.delete('owner')
+      end
+    else
+      json['bank_account'] = ['must be filled']
+    end
+    json
+  end
+
   entity(:manager) { Fabricate(:user).person }
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
@@ -57,16 +86,6 @@ describe Admin::LocalpoolRoda do
 
   let(:localpools_json) do
     Group::Localpool.all.collect do |localpool|
-      incompleteness =
-        if localpool == localpool_no_contracts
-          {'owner' => {'contact' => ['must be filled']}}
-        else
-          {'owner' => ['must be filled']}
-        end
-      incompleteness.merge!(
-        {'grid_feeding_register' => ['must be filled'],
-         'grid_consumption_register' => ['must be filled']}
-      )
       {
         "id"=>localpool.id,
         "type"=>"group_localpool",
@@ -81,7 +100,7 @@ describe Admin::LocalpoolRoda do
         'show_contact' => localpool.show_contact,
         "updatable"=>true,
         "deletable"=>true,
-        'incompleteness' => incompleteness,
+        'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => serialized_bank_account(localpool.bank_account)
       }
     end
@@ -102,13 +121,7 @@ describe Admin::LocalpoolRoda do
       'show_contact' => nil,
       "updatable"=>true,
       "deletable"=>true,
-      'incompleteness' => {
-        'owner' => {
-          'contact' => ['must be filled']
-        },
-        'grid_feeding_register' => ['must be filled'],
-        'grid_consumption_register' => ['must be filled']
-      },
+      'incompleteness' => serialized_incompleteness(localpool_no_contracts),
       'bank_account' => serialized_bank_account(localpool_no_contracts.bank_account),
       "meters"=>{
         'array'=> localpool_no_contracts.meters.collect do |meter|
@@ -231,11 +244,7 @@ describe Admin::LocalpoolRoda do
         'show_contact' => true,
         'updatable'=>true,
         'deletable'=>true,
-        'incompleteness' => {
-          'owner' => ['must be filled'],
-          'grid_feeding_register' => ['must be filled'],
-          'grid_consumption_register' => ['must be filled']
-        },
+        'incompleteness' => serialized_incompleteness(nil),
         'bank_account' => nil
       }
     end
@@ -306,11 +315,7 @@ describe Admin::LocalpoolRoda do
         'show_contact' => false,
         "updatable"=>true,
         "deletable"=>true,
-        'incompleteness' => {
-          'owner' => ['must be filled'],
-          'grid_feeding_register' => ['must be filled'],
-          'grid_consumption_register' => ['must be filled']
-        },
+        'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => nil
       }
     end

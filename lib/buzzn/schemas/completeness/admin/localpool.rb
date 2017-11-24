@@ -9,22 +9,6 @@ module Schemas
           def metering_point_id?(input)
             ! input.metering_point_id.nil?
           end
-
-          def valid_role?(input)
-            case input
-            when PersonResource
-              role = input.object.roles.where(name: Role::GROUP_OWNER).detect do |r|
-                (r.resource.owner.is_a?(Person) && input.id == r.resource.owner.id) || (r.resource.owner.is_a?(::Organization) && r.resource.owner.contact && input.id == r.resource.owner.contact.id)
-              end
-              role != nil
-            when OrganizationResource
-              valid_role?(input.contact)
-            when NilClass
-              true
-            else
-              raise "can not handle #{input.class}"
-            end
-          end
         end
 
         required(:owner) do
@@ -39,9 +23,10 @@ module Schemas
           filled?.then(metering_point_id?).and filled?
         end
 
-        required(:distribution_system_operator).filled?
-        required(:transmission_system_operator).filled?
-        required(:electricity_supplier).filled?
+        required(:distribution_system_operator).filled
+        required(:transmission_system_operator).filled
+        required(:electricity_supplier).filled
+        required(:bank_account).filled
       end
     end
   end
