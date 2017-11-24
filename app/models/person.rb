@@ -9,6 +9,7 @@ class Person < ActiveRecord::Base
   include Filterable
 
   belongs_to :address
+  belongs_to :customer_number, foreign_key: :customer_number
 
   has_many :bank_accounts, foreign_key: :owner_person_id
 
