@@ -6,7 +6,7 @@ module Owner
   end
 
   def owner
-    (owner_organization_id && owner_organization) || (owner_person_id && owner_person)
+    owner_organization || owner_person
   end
 
   def owner=(new_owner)
