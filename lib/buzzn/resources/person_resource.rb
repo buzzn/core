@@ -24,4 +24,8 @@ class PersonResource < Buzzn::Resource::Entity
   def image
     object.image.md.url
   end
+
+  def customer_number
+    object.customer_number&.id
+  end
 end

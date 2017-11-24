@@ -38,7 +38,7 @@ describe Admin::LocalpoolRoda do
     Fabricate(:localpool_processing_contract, localpool: localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
     localpool.contracts.each do |c|
-      c.customer.update(customer_number: CustomerNumber.create.id)
+      c.customer.update(customer_number: CustomerNumber.create)
     end
     localpool.meters.each { |meter| meter.update(group: localpool) }
     $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
@@ -449,7 +449,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>contract.customer.image.md.url,
-          'customer_number' => contract.customer.customer_number,
+          'customer_number' => contract.customer.customer_number.id,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -490,8 +490,7 @@ describe Admin::LocalpoolRoda do
 
   context 'metering-point-operator-contract' do
 
-
-    let(:metering_point_json) do
+    let(:expected_json) do
       contract = localpool.metering_point_operator_contract
       {
         "id"=>contract.id,
@@ -619,7 +618,7 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         GET "/test/#{localpool.id}/metering-point-operator-contract", $admin, include: 'tariffs,payments,contractor:address,customer:address,customer_bank_account,contractor_bank_account'
-        expect(json.to_yaml).to eq metering_point_json.to_yaml
+        expect(json.to_yaml).to eq expected_json.to_yaml
         expect(response).to have_http_status(200)
       end
     end
@@ -634,7 +633,7 @@ describe Admin::LocalpoolRoda do
           "type"=>"contract_localpool_power_taker",
           'updated_at'=>contract.updated_at.as_json,
           "full_contract_number"=>"#{contract.contract_number}/#{contract.contract_number_addition}",
-          "customer_number"=>contract.customer_number,
+          "customer_number"=>contract.customer_number.id,
           "signing_date"=>contract.signing_date.to_s,
           "begin_date"=>contract.begin_date.to_s,
           "termination_date"=>nil,

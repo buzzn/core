@@ -19,4 +19,7 @@ class OrganizationResource < Buzzn::Resource::Entity
 
   has_many :bank_accounts
 
+  def customer_number
+    object.customer_number&.id
+  end
 end
