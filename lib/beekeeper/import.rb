@@ -13,6 +13,8 @@ class Beekeeper::Import
     import_localpools
   end
 
+  private
+
   def import_localpools
     Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
       logger.debug("----")
@@ -47,8 +49,6 @@ class Beekeeper::Import
   #     ap({ record.register_nr => record.converted_attributes })
   #   end
   # end
-
-  private
 
   def logger
     @logger ||= Buzzn::Logger.new(self)

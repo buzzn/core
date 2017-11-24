@@ -76,6 +76,22 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     }
   end
 
+  def name
+    minipool_name.strip
+  end
+
+  def owner
+    owner = if account_new.privat1_gbr2_weg3_else4 == 'privat'
+      owner_person
+    else
+      owner_organization
+    end
+    owner.customer_number = CustomerNumber.find_or_create_by!(id: vertragskontonummer)
+    owner
+  end
+
+  private
+
   ORG_NAME_TO_SLUG_MAP = {
     "Bayernwerk"               => 'bayernwerk-netz',
     "Bayernwerke"              => 'bayernwerk-netz',
@@ -130,23 +146,9 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     Date.parse(minipool_start)
   end
 
-  def name
-    minipool_name.strip
-  end
-
   def address
     Address.new(adresse.converted_attributes)
   end
-
-  def owner
-    if account_new.privat1_gbr2_weg3_else4 == 'privat'
-      owner_person
-    else
-      owner_organization
-    end
-  end
-
-  private
 
   def starts_in_future?
     start_date > Date.today
