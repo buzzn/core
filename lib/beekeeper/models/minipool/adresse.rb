@@ -24,20 +24,6 @@ class Beekeeper::Minipool::Adresse < Beekeeper::Minipool::BaseRecord
       zip:      plz,
       city:     stadt,
       country:  'DE',
-      state:    state
     }
   end
-
-  private
-
-  STATE_NAME_TO_CODE_MAP = {
-    ""       => nil,
-    "BaWü"   => 'DE_BW',
-    "Bayern" => 'DE_BY'
-  }
-
-  def state
-    STATE_NAME_TO_CODE_MAP.fetch(bundesland)
-  end
-
 end
