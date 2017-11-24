@@ -30,6 +30,12 @@ FactoryGirl.define do
       last_name  'Kontakt'
     end
 
+    trait :organization_legal_representative do
+      with_bank_account
+      first_name 'Lars'
+      last_name  'Lawyer'
+    end
+
     trait :with_bank_account do
       after(:build) do |person, _evaluator|
         person.bank_accounts << FactoryGirl.build(:bank_account, owner: person)

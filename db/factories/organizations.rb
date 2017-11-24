@@ -41,5 +41,9 @@ FactoryGirl.define do
     trait :metering_point_operator do
       contracting_party
     end
+
+    trait :with_legal_representation do
+      legal_representation { FactoryGirl.build(:person, :organization_legal_representative) }
+    end
   end
 end
