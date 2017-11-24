@@ -1,6 +1,8 @@
-# wireup invariant with AR validation
+# coding: utf-8
+# wireup invariant with AR and raise error on invalid in before_save
 require 'buzzn/schemas/support/enable_dry_validation'
 ActiveRecord::Base.send(:include, Buzzn::Schemas::ValidateInvariant)
+
 
 class Beekeeper::Import
   class << self
@@ -14,13 +16,26 @@ class Beekeeper::Import
   end
 
   def import_localpools
+    #ActiveRecord::Base.logger = Logger.new(STDOUT)
     Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
       logger.debug("----")
       logger.debug("* #{record.name}")
       logger.debug(record.owner.is_a?(Person).to_s)
       logger.debug(record.owner&.bank_accounts.inspect)
       begin
-        Group::Localpool.create!(record.converted_attributes)
+        Group::Localpool.transaction do
+          # need to create localpool with broken invariants
+          localpool = Group::Localpool.create(record.converted_attributes)
+          # with localpool.id the roles on owner can be set
+          add_roles(localpool)
+          # now we can fail and rollback on broken invariants
+          unless localpool.invariant_valid?
+            raise ActiveRecord::RecordInvalid.new(localpool)
+          end
+          # finally save it all
+          localpool.save!
+        end
+
       rescue => e
         ap e
         ap record.converted_attributes
@@ -49,6 +64,21 @@ class Beekeeper::Import
   # end
 
   private
+
+  def add_roles(localpool)
+    owner =
+      case localpool.owner
+      when Organization
+        localpool.owner.contact
+      when Person
+        localpool.owner
+      else
+        nil
+      end
+    if owner
+      owner.add_role(Role::GROUP_OWNER, localpool)
+    end
+  end
 
   def logger
     @logger ||= Buzzn::Logger.new(self)

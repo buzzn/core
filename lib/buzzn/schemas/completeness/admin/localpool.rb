@@ -28,7 +28,7 @@ module Schemas
         end
 
         required(:owner) do
-          ((filled?.and type?(OrganizationResource)).then schema(Schemas::Completeness::Organization)).and valid_role?.and filled?
+          ((filled?.and type?(OrganizationResource)).then schema(Schemas::Completeness::Organization)).and(filled?)
         end
 
         required(:grid_feeding_register) do

@@ -29,7 +29,6 @@ describe Admin::LocalpoolRoda do
       'updatable'=>true,
       'deletable'=>true,
       'incompleteness' => {
-        'owner' => nil,
         'grid_feeding_register' => ['must be filled'],
         'grid_consumption_register' => ['must be filled']
       },
@@ -77,7 +76,7 @@ describe Admin::LocalpoolRoda do
 
     before do
       localpool.update(owner: person)
-      localpool_json['incompleteness']['owner'] = ['BUG: missing GROUP_ADMIN role']
+#      localpool_json['incompleteness']['owner'] = ['BUG: missing GROUP_ADMIN role']
       owner_json = person_json.dup
       owner_json['bank_accounts'] = {
         'array'=> person.bank_accounts.collect do |bank_account|
@@ -112,7 +111,7 @@ describe Admin::LocalpoolRoda do
 
     before do
       localpool.update(owner: organization)
-      localpool_json['incompleteness']['owner'] = ['BUG: missing GROUP_ADMIN role']
+#      localpool_json['incompleteness']['owner'] = ['BUG: missing GROUP_ADMIN role']
       localpool_json['owner'] = {
         "id"=>organization.id,
         "type"=>"organization",
