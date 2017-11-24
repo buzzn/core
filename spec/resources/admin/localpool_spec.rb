@@ -1,7 +1,7 @@
 describe Admin::LocalpoolResource do
 
   entity(:admin) { Fabricate(:admin) }
-  entity!(:localpool) { Fabricate(:localpool, bank_account: FactoryGirl.create(:bank_account)) }
+  entity!(:localpool) { Fabricate(:localpool, bank_account: create(:bank_account)) }
 
   let(:base_attributes) { %w(id type updated_at
                            name

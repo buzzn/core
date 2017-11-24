@@ -49,7 +49,7 @@ describe Admin::LocalpoolRoda do
     Fabricate(:localpool,
               owner: Fabricate(:other_organization),
               address: Fabricate(:address),
-              bank_account: FactoryGirl.create(:bank_account)
+              bank_account: create(:bank_account)
     )
   end
 
