@@ -1,8 +1,8 @@
-require 'buzzn/schemas/support/enable_dry_validation'
+require_relative '..//schemas/support/enable_dry_validation'
 
 module Buzzn::Resource
   class Base
-    include Buzzn::Schemas::DryValidationForResource
+    include Schemas::Support::DryValidationForResource
 
     attr_reader :object, :current_user, :current_roles, :permissions
 

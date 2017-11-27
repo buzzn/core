@@ -1,6 +1,6 @@
 require_relative '../constraints'
 
-Schemas::Constraints::Person = Buzzn::Schemas.Form do
+Schemas::Constraints::Person = Schemas::Support.Form do
   required(:prefix).value(included_in?: Person.prefixes.values)
   required(:first_name).filled(:str?, max_size?: 64)
   required(:last_name).filled(:str?, max_size?: 64)

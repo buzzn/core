@@ -2,7 +2,7 @@ require 'buzzn/schemas/constraints/billing_cycle'
 
 class CreateBillingCycles < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::BillingCycle)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::BillingCycle)
 
   def up
     SCHEMA.up(:billing_cycles, self)

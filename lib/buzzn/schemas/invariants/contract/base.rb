@@ -2,7 +2,7 @@ require_relative '../../constraints/contract/base'
 module Schemas
   module Invariants
     module Contract
-      Base = Buzzn::Schemas.Form(Schemas::Constraints::Contract::Base) do
+      Base = Schemas::Support.Form(Schemas::Constraints::Contract::Base) do
         required(:termination_date).maybe
         required(:end_date).maybe
 

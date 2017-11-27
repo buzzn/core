@@ -1,6 +1,6 @@
 require_relative '../contract'
 
-Schemas::Constraints::Contract::Base = Buzzn::Schemas.Form do
+Schemas::Constraints::Contract::Base = Schemas::Support.Form do
   required(:signing_date).filled(:date?)
   optional(:begin_date).maybe(:date?)
   optional(:termination_date).maybe(:date?)

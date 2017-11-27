@@ -2,7 +2,7 @@ require 'buzzn/schemas/constraints/organization'
 
 class CreateOrganizations < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Organization)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Organization)
 
   def up
     SCHEMA.up(:organizations, self)

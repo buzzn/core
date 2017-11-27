@@ -1,6 +1,6 @@
 require_relative '../reading'
 
-Schemas::Constraints::Reading::Single = Buzzn::Schemas.Form do
+Schemas::Constraints::Reading::Single = Schemas::Support.Form do
   required(:raw_value).filled(:float?)
   required(:value).filled(:float?)
   required(:unit).value(included_in?: Reading::Single.units.values)

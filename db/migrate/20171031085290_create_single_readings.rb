@@ -3,7 +3,7 @@ require 'buzzn/schemas/constraints/reading/single'
 
 class CreateSingleReadings < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Reading::Single)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Reading::Single)
 
   def up
     SCHEMA.up(:readings, self)

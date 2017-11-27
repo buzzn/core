@@ -1,6 +1,6 @@
 require_relative '../constraints'
 
-Schemas::Constraints::Price = Buzzn::Schemas.Form do
+Schemas::Constraints::Price = Schemas::Support.Form do
   required(:name).filled(:str?)
   required(:begin_date).filled(:date?)
   required(:energyprice_cents_per_kilowatt_hour).filled(:float?)

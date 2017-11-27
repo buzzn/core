@@ -37,18 +37,25 @@ describe Admin::LocalpoolRoda do
       unless localpool.bank_account
         json['bank_account'] = ['must be filled']
       end
+      unless localpool.address
+        json['address'] = ['must be filled']
+      end
       case localpool.owner
       when Organization
-        if localpool.owner.contact
-          json.delete('owner')
-        else
-          json['owner'] = {'contact' => ['must be filled']}
+        json['owner'] = {}
+        unless localpool.owner.contact
+          json['owner']['contact'] = ['must be filled']
         end
+        unless localpool.owner.address
+          json['owner']['address'] = ['must be filled']
+        end
+        json.delete('owner') if json['owner'].empty?
       when Person
         json.delete('owner')
       end
     else
       json['bank_account'] = ['must be filled']
+      json['address'] = ['must be filled']
     end
     json
   end
