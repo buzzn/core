@@ -1,7 +1,7 @@
 # coding: utf-8
 # wireup invariant with AR and raise error on invalid in before_save
 require 'buzzn/schemas/support/enable_dry_validation'
-ActiveRecord::Base.send(:include, Buzzn::Schemas::ValidateInvariant)
+ActiveRecord::Base.send(:include, Schemas::Support::ValidateInvariant)
 
 
 class Beekeeper::Import
@@ -17,8 +17,7 @@ class Beekeeper::Import
 
   def import_localpools
     #ActiveRecord::Base.logger = Logger.new(STDOUT)
-    admin = Account::Base.create(email: 'dev-ops@buzzn.net', person: Person.create(first_name: 'asd', last_name: 'dsa', email: 'dev-ops@buzzn.net'))
-    admin.person.add_role(Role::BUZZN_OPERATOR)
+    admin = Account::Base.find_by_email('dev+ops@buzzn.net')
     Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
       logger.debug("----")
       logger.debug("* #{record.name}")
@@ -43,6 +42,8 @@ class Beekeeper::Import
         ap record.converted_attributes
       end
     end
+
+    logger.info('')
     logger.info("groups                               : #{Group::Localpool.count}")
     logger.info("groups distribution_system_operator  : #{Group::Localpool.where('distribution_system_operator_id IS NOT NULL').count}")
     logger.info("groups transmission_system_operator  : #{Group::Localpool.where('transmission_system_operator_id IS NOT NULL').count}")

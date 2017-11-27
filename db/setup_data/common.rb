@@ -119,3 +119,10 @@ get_csv(:organization_market_functions).each do |row|
     ap organization
   end
 end
+
+#
+# Superuser person with account
+#
+superuser = Account::Base.create(email: 'dev+ops@buzzn.net', person: Person.create(first_name: 'Philipp', last_name: 'Operator', email: 'dev+ops@buzzn.net'))
+superuser.person.add_role(Role::SELF, superuser.person)
+superuser.person.add_role(Role::BUZZN_OPERATOR)

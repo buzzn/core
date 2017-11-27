@@ -31,6 +31,8 @@ describe Transactions::Admin::Localpool::OwnerBase do
 
   let(:subject) { Transactions::Admin::Localpool::OwnerBase.for }
 
+  before { person.roles.delete_all }
+
   context Person do
 
     it 'unassign' do
