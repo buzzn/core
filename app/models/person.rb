@@ -2,15 +2,12 @@
 class Person < ActiveRecord::Base
   self.table_name = :persons
 
-  # roles stuff
-  resourcify
-  rolify role_join_table_name: :persons_roles
-
   include Filterable
 
   belongs_to :address
   belongs_to :customer_number, foreign_key: :customer_number
 
+  has_and_belongs_to_many :roles#, through: :persons_roles
   has_many :bank_accounts, foreign_key: :owner_person_id
 
   # TODO remove this when decided on how to make the attachments (Document)
@@ -60,6 +57,38 @@ class Person < ActiveRecord::Base
   def name
     "#{first_name} #{last_name}"
   end
+
+  # roles related methods
+
+  def has_role?(name, resource = nil)
+    !detect_role(name, resource).nil?
+  end
+
+  def detect_role(name, resource)
+    if resource
+      type = resource.class.to_s
+      roles.detect {|r| r.attributes['name'] == name && r.resource_id == resource.id && r.resource_type == type }
+    else
+      roles.detect {|r| r.attributes['name'] == name }
+    end
+  end
+
+  def add_role(name, resource = nil)
+    self.roles << find_role(name, resource)
+  end
+
+  def remove_role(name, resource = nil)
+    self.roles.delete find_role(name, resource)
+  end
+
+  def find_role(name, resource)
+    if resource
+      Role.where(name: name, resource_id: resource.id, resource_type: resource.class).first || Role.new(name: name, resource_id: resource.id, resource_type: resource.class)
+    else
+      Role.where(name: name, resource_id: nil, resource_type: nil).first || Role.new(name: name)
+    end
+  end
+  private :find_role
 
   scope :with_roles, ->(resource = nil, *names) {
     rel = joins('INNER JOIN persons_roles ON persons_roles.person_id = persons.id').joins('INNER JOIN roles ON persons_roles.role_id = roles.id')

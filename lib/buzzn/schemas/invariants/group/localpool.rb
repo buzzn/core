@@ -27,6 +27,27 @@ module Schemas
           def electricity_supplier?(input)
             input.nil? || input.in_market_function(:electricity_supplier) != nil
           end
+
+          def has_owner_role?(input)
+            case input
+            when Person
+#              binding.pry
+              role = input.roles.where(name: Role::GROUP_OWNER).detect do |role|
+                #binding.pry if
+                  localpool = role.resource
+                owner = localpool.owner
+                (owner.is_a?(Person) && input.id == owner.id) ||
+                  (owner.is_a?(::Organization) && owner.contact && input.id == owner.contact.id)
+              end
+              role != nil
+            when Organization
+              has_owner_role?(input.contact)
+            when NilClass
+              true
+            else
+              raise "can not handle #{input.class}"
+            end
+          end
         end
 
         required(:grid_consumption_register).maybe
@@ -34,6 +55,7 @@ module Schemas
         required(:distribution_system_operator).maybe { distribution_system_operator? }
         required(:transmission_system_operator).maybe { transmission_system_operator? }
         required(:electricity_supplier).maybe { electricity_supplier? }
+        required(:owner).maybe { has_owner_role? }
 
         # FIXME needs tests and fix on ITs
         required(:grid_consumption_register) do

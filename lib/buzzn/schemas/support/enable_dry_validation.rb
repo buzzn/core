@@ -9,16 +9,23 @@ module Buzzn
 
     module ValidateInvariant
 
-      def self.included(model)
-        model.validate :validate_invariant
+      def vvalid?(*)
+        invariant_valid?
       end
 
-      def validate_invariant
+      def vvalidate(*)
+        valid?
+      end
+
+      def invariant_valid?
         result = invariant
         if result && !result.success?
           result.errors.each do |key, value|
             errors.add(key, value)
           end
+          false
+        else
+          true
         end
       end
     end

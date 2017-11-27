@@ -343,7 +343,6 @@ GEM
     rodauth (1.11.0)
       roda (>= 2.6.0)
       sequel (>= 4)
-    rolify (5.1.0)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
@@ -490,7 +489,6 @@ DEPENDENCIES
   remote_lock
   roda
   rodauth
-  rolify
   rspec-rails
   rspec-retry
   rspec_nested_transactions

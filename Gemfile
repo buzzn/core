@@ -58,7 +58,6 @@ gem 'redis-namespace'
 gem 'puma'
 gem 'awesome_print'
 gem 'rack-cors',               require: 'rack/cors'
-gem 'rolify'
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
 gem 'mini_magick'
 gem 'carrierwave'
