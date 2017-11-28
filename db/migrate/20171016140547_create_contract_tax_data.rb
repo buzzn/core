@@ -3,7 +3,7 @@ require 'buzzn/schemas/constraints/contract/tax_data'
 
 class CreateContractTaxData < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Contract::TaxData)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Contract::TaxData)
 
   def up
     SCHEMA.up(:contract_tax_data, self)

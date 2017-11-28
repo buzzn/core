@@ -1,6 +1,6 @@
 require_relative 'common'
 
-Schemas::Constraints::Meter::Base = Buzzn::Schemas.Form(Schemas::Constraints::Meter::Common) do
+Schemas::Constraints::Meter::Base = Schemas::Support.Form(Schemas::Constraints::Meter::Common) do
   optional(:manufacturer_name).value(included_in?: Meter::Real.manufacturer_names.values)
   optional(:ownership).value(included_in?: Meter::Real.ownerships.values)
   optional(:section).value(included_in?: Meter::Real.sections.values)

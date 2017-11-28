@@ -1,6 +1,6 @@
 require_relative '../person'
 
-Schemas::Transactions::Person::Update = Buzzn::Schemas.Form(Schemas::Transactions::Update) do
+Schemas::Transactions::Person::Update = Schemas::Support.Form(Schemas::Transactions::Update) do
   optional(:title).value(included_in?: ::Person.titles.values)
   optional(:prefix).value(included_in?: ::Person.prefixes.values)
   optional(:first_name).filled(:str?, max_size?: 64)

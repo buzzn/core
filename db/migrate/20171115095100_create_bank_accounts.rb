@@ -2,7 +2,7 @@
 
 class CreateBankAccounts < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::BankAccount)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::BankAccount)
 
   def up
     SCHEMA.up(:bank_accounts, self)

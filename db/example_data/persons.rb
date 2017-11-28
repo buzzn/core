@@ -3,7 +3,7 @@ def person(attributes)
 end
 
 SampleData.persons = OpenStruct.new(
-  operator:    person(first_name: 'Philipp', last_name: 'Operator', email: 'dev+ops@buzzn.net', roles: { Role::BUZZN_OPERATOR => nil }),
+  operator:    Person.find_by_email('dev+ops@buzzn.net'),
   group_owner: person(first_name: 'Wolfgang', last_name: 'Owner', title: 'Dr.', email: 'dev+owner@buzzn.net'),
   brumbauer:   person(first_name: 'Traudl', last_name: 'Brumbauer', prefix: 'F', email: 'dev+mgr@buzzn.net',
                       roles: { Role::ORGANIZATION => Organization.find_by(slug: 'hell-warm') }

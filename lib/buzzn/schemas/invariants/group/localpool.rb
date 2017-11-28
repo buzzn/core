@@ -1,7 +1,7 @@
 module Schemas
   module Invariants
     module Group
-      Localpool = Buzzn::Schemas.Form do
+      Localpool = Schemas::Support.Form do
 
         configure do
           def grid_register_no_group?(input)

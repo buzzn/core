@@ -3,7 +3,7 @@ require_relative '../../constraints/register/base'
 module Schemas
   module Invariants
     module Register
-      Base = Buzzn::Schemas.Form(Schemas::Constraints::Register::Base) do
+      Base = Schemas::Support.Form(Schemas::Constraints::Register::Base) do
         required(:observer_enabled).maybe
         required(:observer_min_threshold).maybe
         required(:observer_max_threshold).maybe
