@@ -60,6 +60,8 @@ describe Admin::LocalpoolRoda do
                 "low_load_ability"=>part.operand.low_load_ability,
                 "label"=>part.operand.attributes['label'],
                 "last_reading"=>0,
+                'share_with_group' => true,
+                'share_publicly' => false,
                 'observer_min_threshold'=> part.operand.observer_min_threshold,
                 'observer_max_threshold'=> part.operand.observer_max_threshold,
                 'observer_enabled'=> part.operand.observer_enabled,

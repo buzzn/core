@@ -14,6 +14,8 @@ module Register
                :low_load_ability,
                :label,
                :last_reading,
+               :share_with_group,
+               :share_publicly,
                :observer_min_threshold,
                :observer_max_threshold,
                :observer_enabled,

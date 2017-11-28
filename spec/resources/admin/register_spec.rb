@@ -21,6 +21,8 @@ describe Register::BaseResource do
                      'direction',
                      'last_reading',
                      'low_load_ability',
+                     'share_with_group',
+                     'share_publicly',
                      'observer_enabled',
                      'observer_max_threshold',
                      'observer_min_threshold',

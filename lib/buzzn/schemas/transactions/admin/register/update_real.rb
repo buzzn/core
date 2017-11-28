@@ -5,5 +5,7 @@ Schemas::Transactions::Admin::Register::UpdateReal = Schemas::Support.Form(Schem
   optional(:name).filled(:str?, max_size?: 64)
   # note: direction is immutable on real registers as it is bound to the type !
   optional(:low_load_ability).filled(:bool?)
+  optional(:share_with_group).filled(:bool?)
+  optional(:share_publicly).filled(:bool?)
   required(:updated_at).filled(:date_time?)
 end

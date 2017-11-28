@@ -993,6 +993,14 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: share_with_group
+        in: formData
+        required: false
+        type: boolean
+      - name: share_publicly
+        in: formData
+        required: false
+        type: boolean
       - name: updated_at
         in: formData
         required: true

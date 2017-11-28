@@ -211,6 +211,8 @@ describe Admin::LocalpoolRoda do
             "low_load_ability"=>false,
             "label"=>'CONSUMPTION',
             "last_reading"=>0,
+            'share_with_group' => true,
+            'share_publicly' => false,
             "observer_min_threshold"=>nil,
             "observer_max_threshold"=>nil,
             "observer_enabled"=>nil,
