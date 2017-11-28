@@ -17,7 +17,7 @@ class Beekeeper::Import
 
   def import_localpools
     #ActiveRecord::Base.logger = Logger.new(STDOUT)
-    Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
+    Beekeeper::Minipool::MinipoolObjekte.to_import.all.each do |record|
       logger.debug("----")
       logger.debug("* #{record.name}")
       logger.debug(record.owner.is_a?(Person).to_s)
@@ -25,9 +25,10 @@ class Beekeeper::Import
       begin
         Group::Localpool.transaction do
           # need to create localpool with broken invariants
-          localpool = Group::Localpool.create(record.converted_attributes)
+          localpool = Group::Localpool.create(record.converted_attributes.except(:registers))
           # with localpool.id the roles on owner can be set
           add_roles(localpool)
+          add_registers(localpool, record.converted_attributes[:registers])
           # now we can fail and rollback on broken invariants
           unless localpool.invariant_valid?
             raise ActiveRecord::RecordInvalid.new(localpool)
@@ -37,20 +38,12 @@ class Beekeeper::Import
         end
 
       rescue => e
-        ap e
-        ap record.converted_attributes
+        logger.error(e)
       end
     end
     log_import_info
     log_localpool_completeness
   end
-
-  # Not used yet, created in the prototype.
-  # def import_registers
-  #   Beekeeper::Minipool::MsbZählwerkDaten.all.each do |record|
-  #     ap({ record.register_nr => record.converted_attributes })
-  #   end
-  # end
 
   private
 
@@ -66,6 +59,16 @@ class Beekeeper::Import
       end
     if owner
       owner.add_role(Role::GROUP_OWNER, localpool)
+    end
+  end
+
+  def add_registers(localpool, registers)
+    registers.each do |register|
+      register.group_id = localpool.id
+      unless register.save
+        logger.error("Failed to save register #{register.inspect}")
+        logger.error("Errors: #{register.errors.inspect}")
+      end
     end
   end
 
@@ -87,6 +90,8 @@ class Beekeeper::Import
     logger.info("group orga owner with bank-accounts  : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| !g.owner.bank_accounts.empty? }.count}")
     logger.info("group orga contacts                  : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| g.owner.contact_id }.count}")
     logger.info("group orga contact addresses         : #{Organization.where(id: Group::Localpool.where('owner_organization_id IS NOT NULL').select(:owner_organization_id)).joins(:contact).where('persons.address_id IS NOT NULL').count}")
+    logger.info("registers                            : #{Register::Real.count}")
+    logger.info("meters                               : #{Meter::Real.count}")
   end
 
   def log_localpool_completeness

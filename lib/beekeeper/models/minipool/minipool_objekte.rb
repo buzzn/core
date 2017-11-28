@@ -81,7 +81,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       electricity_supplier:         electricity_supplier,
       address:                      address,
       owner:                        owner,
-      bank_account:                 bank_accounts.first
+      bank_account:                 bank_accounts.first,
+      registers:                    registers
     }
   end
 
@@ -91,8 +92,14 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
   private
 
+  # these are the meters
+  def msb_geräte
+    Beekeeper::Minipool::MsbGerät.where(vertragsnummer: messvertragsnummer)
   end
 
+  # these are the registers
+  def msb_zählwerk_daten
+    Beekeeper::Minipool::MsbZählwerkDaten.where(vertragsnummer: messvertragsnummer)
   end
 
   def start_date

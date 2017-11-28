@@ -8,7 +8,11 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     private
 
     def registers
-      msb_zählwerk_daten.map(&:converted_attributes)
+      msb_zählwerk_daten.map do |zählwerk|
+        attrs = zählwerk.converted_attributes
+        register_class = attrs[:type].constantize
+        register_class.new(attrs.except(:type))
+      end
     end
 
   end
