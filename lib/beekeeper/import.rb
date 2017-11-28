@@ -65,6 +65,7 @@ class Beekeeper::Import
   def add_registers(localpool, registers)
     registers.each do |register|
       register.group_id = localpool.id
+      register.meter.group_id = localpool.id
       unless register.save
         logger.error("Failed to save register #{register.inspect}")
         logger.error("Errors: #{register.errors.inspect}")
