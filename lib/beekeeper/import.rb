@@ -1,8 +1,6 @@
-# coding: utf-8
 # wireup invariant with AR and raise error on invalid in before_save
 require 'buzzn/schemas/support/enable_dry_validation'
 ActiveRecord::Base.send(:include, Schemas::Support::ValidateInvariant)
-
 
 class Beekeeper::Import
   class << self
@@ -19,7 +17,6 @@ class Beekeeper::Import
 
   def import_localpools
     #ActiveRecord::Base.logger = Logger.new(STDOUT)
-    admin = Account::Base.find_by_email('dev+ops@buzzn.net')
     Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
       logger.debug("----")
       logger.debug("* #{record.name}")
@@ -44,28 +41,8 @@ class Beekeeper::Import
         ap record.converted_attributes
       end
     end
-
-    logger.info('')
-    logger.info("groups                               : #{Group::Localpool.count}")
-    logger.info("groups distribution_system_operator  : #{Group::Localpool.where('distribution_system_operator_id IS NOT NULL').count}")
-    logger.info("groups transmission_system_operator  : #{Group::Localpool.where('transmission_system_operator_id IS NOT NULL').count}")
-    logger.info("groups electricity_supplier          : #{Group::Localpool.where('electricity_supplier_id IS NOT NULL').count}")
-    logger.info("group person owners                  : #{Group::Localpool.where('owner_person_id IS NOT NULL').count}")
-    logger.info("group person owner addresses         : #{Group::Localpool.where('owner_person_id IS NOT NULL').select {|g| g.owner.address }.count}")
-    logger.info("group person owner with bank-accounts: #{Group::Localpool.where('owner_person_id IS NOT NULL').select {|g| !g.owner.bank_accounts.empty? }.count}")
-    logger.info("group orga owners                    : #{Group::Localpool.where('owner_organization_id IS NOT NULL').count}")
-    logger.info("group orga owner addresses           : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| g.owner.address }.count}")
-    logger.info("group orga owner with bank-accounts  : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| !g.owner.bank_accounts.empty? }.count}")
-    logger.info("group orga contacts                  : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| g.owner.contact_id }.count}")
-    logger.info("group orga contact addresses         : #{Organization.where(id: Group::Localpool.where('owner_organization_id IS NOT NULL').select(:owner_organization_id)).joins(:contact).where('persons.address_id IS NOT NULL').count}")
-
-    logger.info('')
-    Admin::LocalpoolResource.all(admin).each do |localpool|
-      incompleteness = localpool.incompleteness.select {|k,v| k != :grid_feeding_register && k != :grid_consumption_register }
-      unless incompleteness.empty?
-        logger.info("localpool #{localpool.slug}:\n\t#{incompleteness.collect { |k, v| "#{k}: #{v}" }.join "\n\t"}")
-      end
-    end
+    log_import_info
+    log_localpool_completeness
   end
 
   # Not used yet, created in the prototype.
@@ -94,5 +71,32 @@ class Beekeeper::Import
 
   def logger
     @logger ||= Buzzn::Logger.new(self)
+  end
+
+  def log_import_info
+    logger.info('')
+    logger.info("groups                               : #{Group::Localpool.count}")
+    logger.info("groups distribution_system_operator  : #{Group::Localpool.where('distribution_system_operator_id IS NOT NULL').count}")
+    logger.info("groups transmission_system_operator  : #{Group::Localpool.where('transmission_system_operator_id IS NOT NULL').count}")
+    logger.info("groups electricity_supplier          : #{Group::Localpool.where('electricity_supplier_id IS NOT NULL').count}")
+    logger.info("group person owners                  : #{Group::Localpool.where('owner_person_id IS NOT NULL').count}")
+    logger.info("group person owner addresses         : #{Group::Localpool.where('owner_person_id IS NOT NULL').select {|g| g.owner.address }.count}")
+    logger.info("group person owner with bank-accounts: #{Group::Localpool.where('owner_person_id IS NOT NULL').select {|g| !g.owner.bank_accounts.empty? }.count}")
+    logger.info("group orga owners                    : #{Group::Localpool.where('owner_organization_id IS NOT NULL').count}")
+    logger.info("group orga owner addresses           : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| g.owner.address }.count}")
+    logger.info("group orga owner with bank-accounts  : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| !g.owner.bank_accounts.empty? }.count}")
+    logger.info("group orga contacts                  : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| g.owner.contact_id }.count}")
+    logger.info("group orga contact addresses         : #{Organization.where(id: Group::Localpool.where('owner_organization_id IS NOT NULL').select(:owner_organization_id)).joins(:contact).where('persons.address_id IS NOT NULL').count}")
+  end
+
+  def log_localpool_completeness
+    logger.info('')
+    admin = Account::Base.find_by_email('dev+ops@buzzn.net')
+    Admin::LocalpoolResource.all(admin).each do |localpool|
+      incompleteness = localpool.incompleteness.select {|k,v| k != :grid_feeding_register && k != :grid_consumption_register }
+      unless incompleteness.empty?
+        logger.info("localpool #{localpool.slug}:\n\t#{incompleteness.collect { |k, v| "#{k}: #{v}" }.join "\n\t"}")
+      end
+    end
   end
 end
