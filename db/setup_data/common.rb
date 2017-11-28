@@ -123,6 +123,13 @@ end
 #
 # Superuser person with account
 #
-superuser = Account::Base.create(email: 'dev+ops@buzzn.net', person: Person.create(first_name: 'Philipp', last_name: 'Operator', email: 'dev+ops@buzzn.net'))
-superuser.person.add_role(Role::SELF, superuser.person)
-superuser.person.add_role(Role::BUZZN_OPERATOR)
+begin
+  person = Person.create(first_name: 'Philipp', last_name: 'Operator', email: 'dev+ops@buzzn.net')
+  superuser = Account::Base.create(email: person.email,
+                                   status_id: Account::Status.find_by(name: 'Verified').id,
+                                   person: person)
+  superuser.person.add_role(Role::SELF, person)
+  superuser.person.add_role(Role::BUZZN_OPERATOR)
+  password_hash = BCrypt::Password.create(Import.global('config.default_account_password'))
+  Account::PasswordHash.create(account: superuser, password_hash: password_hash)
+end
