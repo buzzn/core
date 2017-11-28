@@ -3,7 +3,7 @@ require 'buzzn/schemas/constraints/person'
 
 class CreatePersons < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Person)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Person)
 
   def up
     SCHEMA.up(:persons, self)

@@ -6,6 +6,7 @@ class Organization < ActiveRecord::Base
   belongs_to :address
   belongs_to :contact, class_name: 'Person'
   belongs_to :legal_representation, class_name: 'Person'
+  belongs_to :customer_number, foreign_key: :customer_number
 
   has_many :bank_accounts, foreign_key: :owner_organization_id
   has_many :energy_classifications

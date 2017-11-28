@@ -2,7 +2,7 @@
 
 class CreateGroups < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Group)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Group)
 
   def up
     SCHEMA.up(:groups, self)

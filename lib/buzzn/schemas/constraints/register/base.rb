@@ -1,6 +1,6 @@
 require_relative 'common'
 
-Schemas::Constraints::Register::Base = Buzzn::Schemas.Form(Schemas::Constraints::Register::Common) do
+Schemas::Constraints::Register::Base = Schemas::Support.Form(Schemas::Constraints::Register::Common) do
   required(:name).filled(:str?, max_size?: 64)
   required(:direction).value(included_in?: Register::Base.directions.values)
   required(:obis).filled(:str?, max_size?: 16)

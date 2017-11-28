@@ -2,7 +2,7 @@ require 'buzzn/schemas/constraints/address'
 
 class CreateAddresses < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Address)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Address)
 
   def up
     SCHEMA.up(:addresses, self)

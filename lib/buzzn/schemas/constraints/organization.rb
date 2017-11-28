@@ -1,6 +1,6 @@
 require_relative '../constraints'
 
-Schemas::Constraints::Organization = Buzzn::Schemas.Form do
+Schemas::Constraints::Organization = Schemas::Support.Form do
   required(:name).filled(:str?, max_size?: 64)
   optional(:description).filled(:str?, max_size?: 256)
   optional(:email).filled(:str?, :email?, max_size?: 64)

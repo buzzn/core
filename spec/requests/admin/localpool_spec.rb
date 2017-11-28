@@ -24,6 +24,42 @@ describe Admin::LocalpoolRoda do
     end
   end
 
+  def serialized_incompleteness(localpool)
+    json = {
+      'owner' => ['must be filled'],
+      'grid_feeding_register' => ['must be filled'],
+      'grid_consumption_register' => ['must be filled'],
+      'distribution_system_operator' => ['must be filled'],
+      'transmission_system_operator' => ['must be filled'],
+      'electricity_supplier' => ['must be filled']
+    }
+    if localpool
+      unless localpool.bank_account
+        json['bank_account'] = ['must be filled']
+      end
+      unless localpool.address
+        json['address'] = ['must be filled']
+      end
+      case localpool.owner
+      when Organization
+        json['owner'] = {}
+        unless localpool.owner.contact
+          json['owner']['contact'] = ['must be filled']
+        end
+        unless localpool.owner.address
+          json['owner']['address'] = ['must be filled']
+        end
+        json.delete('owner') if json['owner'].empty?
+      when Person
+        json.delete('owner')
+      end
+    else
+      json['bank_account'] = ['must be filled']
+      json['address'] = ['must be filled']
+    end
+    json
+  end
+
   entity(:manager) { Fabricate(:user).person }
   entity!(:localpool) do
     localpool = Fabricate(:localpool)
@@ -38,7 +74,7 @@ describe Admin::LocalpoolRoda do
     Fabricate(:localpool_processing_contract, localpool: localpool)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
     localpool.contracts.each do |c|
-      c.customer.update(customer_number: CustomerNumber.create.id)
+      c.customer.update(customer_number: CustomerNumber.create)
     end
     localpool.meters.each { |meter| meter.update(group: localpool) }
     $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
@@ -57,16 +93,6 @@ describe Admin::LocalpoolRoda do
 
   let(:localpools_json) do
     Group::Localpool.all.collect do |localpool|
-      incompleteness =
-        if localpool == localpool_no_contracts
-          {'owner' => {'contact' => ['must be filled']}}
-        else
-          {'owner' => ['must be filled']}
-        end
-      incompleteness.merge!(
-        {'grid_feeding_register' => ['must be filled'],
-         'grid_consumption_register' => ['must be filled']}
-      )
       {
         "id"=>localpool.id,
         "type"=>"group_localpool",
@@ -81,7 +107,7 @@ describe Admin::LocalpoolRoda do
         'show_contact' => localpool.show_contact,
         "updatable"=>true,
         "deletable"=>true,
-        'incompleteness' => incompleteness,
+        'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => serialized_bank_account(localpool.bank_account)
       }
     end
@@ -102,13 +128,7 @@ describe Admin::LocalpoolRoda do
       'show_contact' => nil,
       "updatable"=>true,
       "deletable"=>true,
-      'incompleteness' => {
-        'owner' => {
-          'contact' => ['must be filled']
-        },
-        'grid_feeding_register' => ['must be filled'],
-        'grid_consumption_register' => ['must be filled']
-      },
+      'incompleteness' => serialized_incompleteness(localpool_no_contracts),
       'bank_account' => serialized_bank_account(localpool_no_contracts.bank_account),
       "meters"=>{
         'array'=> localpool_no_contracts.meters.collect do |meter|
@@ -231,11 +251,7 @@ describe Admin::LocalpoolRoda do
         'show_contact' => true,
         'updatable'=>true,
         'deletable'=>true,
-        'incompleteness' => {
-          'owner' => ['must be filled'],
-          'grid_feeding_register' => ['must be filled'],
-          'grid_consumption_register' => ['must be filled']
-        },
+        'incompleteness' => serialized_incompleteness(nil),
         'bank_account' => nil
       }
     end
@@ -306,11 +322,7 @@ describe Admin::LocalpoolRoda do
         'show_contact' => false,
         "updatable"=>true,
         "deletable"=>true,
-        'incompleteness' => {
-          'owner' => ['must be filled'],
-          'grid_feeding_register' => ['must be filled'],
-          'grid_consumption_register' => ['must be filled']
-        },
+        'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => nil
       }
     end
@@ -378,7 +390,7 @@ describe Admin::LocalpoolRoda do
 
   context 'localpool-processing-contract' do
 
-    let(:processing_json) do
+    let(:expected_json) do
       contract = localpool.localpool_processing_contract
       {
         "id"=>contract.id,
@@ -449,7 +461,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>contract.customer.image.md.url,
-          'customer_number' => contract.customer.customer_number,
+          'customer_number' => contract.customer.customer_number.id,
           "updatable"=>true,
           "deletable"=>false
         },
@@ -481,7 +493,7 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         GET "/test/#{localpool.id}/localpool-processing-contract", $admin, include: 'tariffs,payments,contractor,customer,customer_bank_account,contractor_bank_account'
-        expect(json.to_yaml).to eq processing_json.to_yaml
+        expect(json.to_yaml).to eq expected_json.to_yaml
         expect(response).to have_http_status(200)
 
       end
@@ -490,8 +502,7 @@ describe Admin::LocalpoolRoda do
 
   context 'metering-point-operator-contract' do
 
-
-    let(:metering_point_json) do
+    let(:expected_json) do
       contract = localpool.metering_point_operator_contract
       {
         "id"=>contract.id,
@@ -575,7 +586,7 @@ describe Admin::LocalpoolRoda do
           "email"=>contract.customer.email,
           "preferred_language"=>contract.customer.attributes['preferred_language'],
           "image"=>contract.customer.image.md.url,
-          'customer_number' => contract.customer.customer_number,
+          'customer_number' => contract.customer.customer_number.id,
           "updatable"=>true,
           "deletable"=>false,
           'address'=>{
@@ -619,7 +630,7 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         GET "/test/#{localpool.id}/metering-point-operator-contract", $admin, include: 'tariffs,payments,contractor:address,customer:address,customer_bank_account,contractor_bank_account'
-        expect(json.to_yaml).to eq metering_point_json.to_yaml
+        expect(json.to_yaml).to eq expected_json.to_yaml
         expect(response).to have_http_status(200)
       end
     end
@@ -627,7 +638,7 @@ describe Admin::LocalpoolRoda do
 
   context 'power-taker-contracts' do
 
-    let(:power_taker_contracts_json) do
+    let(:expected_json) do
       localpool.localpool_power_taker_contracts.collect do |contract|
         {
           "id"=>contract.id,
@@ -663,7 +674,7 @@ describe Admin::LocalpoolRoda do
             "email"=>contract.customer.email,
             "preferred_language"=>contract.customer.attributes['preferred_language'],
             "image"=>contract.customer.image.md.url,
-            'customer_number' => contract.customer.customer_number,
+            'customer_number' => contract.customer.customer_number.id,
             "updatable"=>true,
             "deletable"=>false,
           }
@@ -686,7 +697,7 @@ describe Admin::LocalpoolRoda do
         expect(response).to have_http_status(200)
 
         GET "/test/#{localpool.id}/power-taker-contracts", $admin, include: :customer
-        expect(json['array'].to_yaml).to eq power_taker_contracts_json.to_yaml
+        expect(json['array'].to_yaml).to eq expected_json.to_yaml
         expect(response).to have_http_status(200)
       end
     end

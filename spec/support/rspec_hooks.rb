@@ -21,7 +21,7 @@ RSpec.configure do |config|
         if klass
           if (klass == PersonsRole && klass.count != 4) ||
              (klass == Role && klass.count != 4) ||
-             (klass == Account::Base && klass.count != 3) ||
+             (klass == Account::Base && klass.count != 4) ||
              (klass == Person && klass.count != 3) ||
              (klass == Organization && klass.count != 7) ||
              (klass != Organization && klass != PersonsRole && klass != Role && klass != Person && klass != Account::Base && klass.count > 0)

@@ -89,19 +89,16 @@ describe Admin::LocalpoolResource do
     end
 
     before do
-      #organization.update(contact: nil)
       pool.object.update(owner: nil)
     end
 
     context 'as person' do
 
       it 'invalid' do
-        expect(pool.incompleteness[:owner]).to eq(["must be filled"])
+        expect(pool.incompleteness[:owner]).to eq(['must be filled'])
         pool.object.owner = person
         person.remove_role(Role::GROUP_OWNER, pool.object)
-#        expect(pool.incompleteness[:owner]).to eq(["BUG: missing GROUP_ADMIN role"])
         person.add_role(Role::GROUP_OWNER, pool.object)
-        #expect(pool.incompleteness[:owner]).to eq(["BUG: missing GROUP_ADMIN role"])
       end
 
     end
@@ -109,14 +106,13 @@ describe Admin::LocalpoolResource do
     context 'as organization' do
 
       it 'invalid' do
-        expect(pool.incompleteness[:owner]).to eq(["must be filled"])
+        expect(pool.incompleteness[:owner]).to eq(['must be filled'])
         pool.object.owner = organization
-        expect(pool.incompleteness[:owner]).to eq({contact:["must be filled"]})
+        expect(pool.incompleteness[:owner]).to eq({contact: ['must be filled'],
+                                                   address: ['must be filled']})
         organization.contact = person
         organization.contact.remove_role(Role::GROUP_OWNER, pool.object)
- #       expect(pool.incompleteness[:owner]).to eq(["BUG: missing GROUP_ADMIN role"])
         organization.contact.add_role(Role::GROUP_OWNER, pool.object)
-  #      expect(pool.incompleteness[:owner]).to eq(["BUG: missing GROUP_ADMIN role"])
       end
     end
   end
@@ -130,7 +126,7 @@ describe Admin::LocalpoolResource do
       context 'without register' do
         before { pool.object.update(grid_consumption_register: nil) }
         it 'is incomplete' do
-          expect(pool.incompleteness[:grid_consumption_register]).to eq ["must be filled"]
+          expect(pool.incompleteness[:grid_consumption_register]).to eq ['must be filled']
         end
       end
 
@@ -143,7 +139,7 @@ describe Admin::LocalpoolResource do
             pool.object.update(grid_consumption_register: input_register)
           end
           it 'is incomplete' do
-            expect(pool.incompleteness[:grid_consumption_register]).to eq ["missing metering_point_id"]
+            expect(pool.incompleteness[:grid_consumption_register]).to eq ['missing metering_point_id']
           end
         end
 
@@ -164,7 +160,7 @@ describe Admin::LocalpoolResource do
       context 'without register' do
         before { pool.object.update(grid_feeding_register: nil) }
         it 'is incomplete' do
-          expect(pool.incompleteness[:grid_feeding_register]).to eq ["must be filled"]
+          expect(pool.incompleteness[:grid_feeding_register]).to eq ['must be filled']
         end
       end
 
@@ -177,7 +173,7 @@ describe Admin::LocalpoolResource do
             pool.object.update(grid_feeding_register: output_register)
           end
           it 'is incomplete' do
-            expect(pool.incompleteness[:grid_feeding_register]).to eq ["missing metering_point_id"]
+            expect(pool.incompleteness[:grid_feeding_register]).to eq ['missing metering_point_id']
           end
         end
 

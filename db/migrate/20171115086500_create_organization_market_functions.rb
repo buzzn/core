@@ -2,7 +2,7 @@ require 'buzzn/schemas/constraints/organization_market_function'
 
 class CreateOrganizationMarketFunctions < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::OrganizationMarketFunction)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::OrganizationMarketFunction)
 
   def up
     SCHEMA.up(:organization_market_functions, self)

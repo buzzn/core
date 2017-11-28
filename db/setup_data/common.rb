@@ -119,3 +119,17 @@ get_csv(:organization_market_functions).each do |row|
     ap organization
   end
 end
+
+#
+# Superuser person with account
+#
+begin
+  person = Person.create(first_name: 'Philipp', last_name: 'Operator', email: 'dev+ops@buzzn.net')
+  superuser = Account::Base.create(email: person.email,
+                                   status_id: Account::Status.find_by(name: 'Verified').id,
+                                   person: person)
+  superuser.person.add_role(Role::SELF, person)
+  superuser.person.add_role(Role::BUZZN_OPERATOR)
+  password_hash = BCrypt::Password.create(Import.global('config.default_account_password'))
+  Account::PasswordHash.create(account: superuser, password_hash: password_hash)
+end

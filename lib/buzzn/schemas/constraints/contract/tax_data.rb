@@ -1,6 +1,6 @@
 require_relative '../contract'
 
-Schemas::Constraints::Contract::TaxData = Buzzn::Schemas.Form do
+Schemas::Constraints::Contract::TaxData = Schemas::Support.Form do
   optional(:retailer).filled(:bool?)
   optional(:provider_permission).filled(:bool?)
   optional(:subject_to_tax).filled(:bool?)

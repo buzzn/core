@@ -3,7 +3,7 @@ require 'buzzn/schemas/constraints/contract/tariff'
 
 class CreateTariff < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Contract::Tariff)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Contract::Tariff)
 
   def up
     SCHEMA.up(:tariffs, self)

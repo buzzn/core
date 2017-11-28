@@ -1,6 +1,6 @@
 require_relative '../constraints'
 
-Schemas::Constraints::BankAccount = Buzzn::Schemas.Form do
+Schemas::Constraints::BankAccount = Schemas::Support.Form do
   required(:holder).filled(:str?, max_size?: 64)
   required(:iban).filled(:str?, :iban?, max_size?: 32)
   optional(:bank_name).filled(:str?, max_size?: 64)

@@ -2,7 +2,7 @@ require 'buzzn/schemas/constraints/register/formula_part'
 
 class CreateFormulaParts < ActiveRecord::Migration
 
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Register::FormulaPart)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Register::FormulaPart)
 
   def up
     SCHEMA.up(:formula_parts, self)

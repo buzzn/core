@@ -1,6 +1,6 @@
 require_relative '../localpool'
 
-Schemas::Transactions::Admin::Localpool::Update = Buzzn::Schemas.Form(Schemas::Transactions::Update) do
+Schemas::Transactions::Admin::Localpool::Update = Schemas::Support.Form(Schemas::Transactions::Update) do
   optional(:name).filled(:str?, max_size?: 64)
   optional(:description).filled(:str?, max_size?: 256)
   optional(:start_date).filled(:date?)

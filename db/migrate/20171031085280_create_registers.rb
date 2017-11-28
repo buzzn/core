@@ -1,7 +1,7 @@
 require 'buzzn/schemas/constraints/register/base'
 
 class CreateRegisters < ActiveRecord::Migration
-  SCHEMA = Buzzn::Schemas::MigrationVisitor.new(Schemas::Constraints::Register::Base)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Register::Base)
 
   def up
     SCHEMA.up(:registers, self)

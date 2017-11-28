@@ -1,6 +1,6 @@
 require_relative '../constraints'
 
-Schemas::Constraints::Billing = Buzzn::Schemas.Form do
+Schemas::Constraints::Billing = Schemas::Support.Form do
   required(:status).value(included_in?: Billing.status.values)
   required(:total_energy_consumption_kwh).filled(:int?, gteq?: 0)
   required(:total_price_cents).filled(:int?, gteq?: 0)

@@ -5,6 +5,7 @@ class Person < ActiveRecord::Base
   include Filterable
 
   belongs_to :address
+  belongs_to :customer_number, foreign_key: :customer_number
 
   has_and_belongs_to_many :roles#, through: :persons_roles
   has_many :bank_accounts, foreign_key: :owner_person_id

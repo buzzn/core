@@ -27,7 +27,8 @@ describe Admin::LocalpoolRoda do
       'deletable'=>true,
       'incompleteness' => {
         'grid_feeding_register' => ['must be filled'],
-        'grid_consumption_register' => ['must be filled']
+        'grid_consumption_register' => ['must be filled'],
+        'bank_account' => ['must be filled']
       },
       'bank_account' => nil,
       'distribution_system_operator' => nil,

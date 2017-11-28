@@ -92,7 +92,7 @@ module SwaggerHelper
       ops.consumes = ['application/x-www-form-urlencoded']
     end
 
-    Buzzn::Schemas::Visitor.visit(@schema, &process_rule)
+    Schemas::Support::Visitor.visit(@schema, &process_rule)
     expect(expected).to match_array json['errors']
   end
 
