@@ -1,4 +1,7 @@
-# coding: utf-8
+require_relative 'concerns/minipool_objekte/organizations'
+require_relative 'concerns/minipool_objekte/owner'
+require_relative 'concerns/minipool_objekte/registers'
+
 # == Schema Information
 #
 # Table name: minipooldb.minipool_objekte
@@ -59,6 +62,11 @@
 
 class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.minipool_objekte'
+  self.primary_key = 'vertragsnummer'
+
+  include Beekeeper::Minipool::MinipoolObjekte::Organizations
+  include Beekeeper::Minipool::MinipoolObjekte::Owner
+  include Beekeeper::Minipool::MinipoolObjekte::Registers
 
   belongs_to :adresse, foreign_key: 'adress_id'
 
@@ -81,66 +89,10 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     minipool_name.strip
   end
 
-  def owner
-    owner = if account_new.privat1_gbr2_weg3_else4 == 'privat'
-      owner_person
-    else
-      owner_organization
-    end
-    owner.customer_number = CustomerNumber.find_or_create_by!(id: vertragskontonummer)
-    owner
-  end
-
   private
 
-  ORG_NAME_TO_SLUG_MAP = {
-    "Bayernwerk"               => 'bayernwerk-netz',
-    "Bayernwerke"              => 'bayernwerk-netz',
-    "Bayernwerk AG"            => 'bayernwerk-netz',
-    "E.dis AG"                 => 'e-dis',
-    "Gemeindewerke Peißenberg" => 'gemeindewerke-peissenberg',
-    "LEW"                      => 'lew',
-    "NEW Netz"                 => 'new-netz',
-    "SWM"                      => 'swm-infrastruktur',
-    "Stadtwerke München"       => 'swm-infrastruktur',
-    "M-Strom business Garant"  => 'swm-versorgung',
-    "M-Ökostrom"               => 'swm-versorgung',
-    "Stadtwerke Landshut"      => 'sw-landshut',
-    "Stadtwerke Schorndorf"    => 'sw-schorndorf',
-    "Stadtwerke Waiblingen"    => 'sw-waiblingen',
-    "Syna"                     => 'syna',
-    "Syna GmbH"                => 'syna',
-    "bnNetze"                  => 'bn-netze',
-    "buzzn"                    => 'buzzn',
-    "Lichtblick"               => 'lichtblick',
-    "SW Netz GmbH"             => 'sw-wiesbaden',
-    "Netz Leipzig"             => 'netz-leipzig',
-    "BEG Freising"             => 'sw-freising',
-    "Hamburg Netz"             => 'stromnetz-hamburg',
-    'Vattenfall'               => 'stromnetz-berlin',
-    'Stromnetz Berlin'         => 'stromnetz-berlin',
-  }
-
-  def distribution_system_operator
-    slug = ORG_NAME_TO_SLUG_MAP.fetch(netzbetreiber.strip, "MISSING")
-    org_for_slug(slug, netzbetreiber, :distribution_system_operator)
   end
 
-  def transmission_system_operator
-    slug = case uenb
-      when /a(m)?prion/i then 'amprion'
-      when /tennet/i     then 'tennet'
-      when /50 hertz/i   then '50hertz'
-      when /Transnet( )?BW/ then 'transnetbw'
-      else
-        # nothing to do, org_for_slug will print a warning if org not found.
-    end
-    org_for_slug(slug, uenb, :transmission_system_operator)
-  end
-
-  def electricity_supplier
-    slug = ORG_NAME_TO_SLUG_MAP.fetch(reststromlieferant.strip, "MISSING")
-    org_for_slug(slug, reststromlieferant, :electricity_supplier)
   end
 
   def start_date
@@ -151,49 +103,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     Address.new(adresse.converted_attributes)
   end
 
-  def starts_in_future?
-    start_date > Date.today
-  end
-
-  def owner_person
-    Person.new(kontakt_acc.converted_attributes.merge(bank_accounts: bank_accounts))
-  end
-
-  def owner_organization
-    attributes = account_new.converted_attributes(bank_accounts)
-    slug = Buzzn::Slug.new(attributes[:name])
-    Organization.find_by(slug: slug) || Organization.new(attributes.merge(contact: orga_contact))
-  end
-
-  def orga_contact
-    Person.new(kontakt_acc.converted_attributes)
-  end
-
-  def account_new
-    Beekeeper::Buzzn::AccountNew.find(vertragskontonummer)
-  end
-
-  def kontakt_acc
-    Beekeeper::Buzzn::KontaktAcc.find(vertragskontonummer)
-  end
-
-  def bank_accounts
-    konto = Beekeeper::Minipool::Kontodaten.where(vertragsnummer: vertragsnummer, nummernzusatz: 0).first
-    [BankAccount.new(konto.converted_attributes)]
-  rescue Buzzn::RecordNotFound => e
-    logger.warn("#{name}: unable to find bank data: #{e.message}}")
-    []
-  end
-
   def logger
     @logger ||= Buzzn::Logger.new(self)
-  end
-
-  def org_for_slug(slug, beekeeper_value, lookup_purpose)
-    org = Organization.find_by(slug: slug)
-    if !org && !starts_in_future?
-      logger.warn("#{name}: unable to map #{lookup_purpose}. Beekeeper value is '#{beekeeper_value}'.")
-    end
-    org
   end
 end
