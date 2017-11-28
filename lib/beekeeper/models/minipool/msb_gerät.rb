@@ -77,7 +77,11 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
       converter_constant:   zusatz1wandlerfaktor.strip,
       manufacturer_name:    manufacturer_name,
       ownership:            ownership,
-      direction_number:     direction_number
+      direction_number:     direction_number,
+      calibrated_until:     calibrated_until,
+      # TODO: always is "Strom". Do we really want to track this already?
+      # section:              sparte.strip,
+      # edifact_voltage_level: spannungsebene.strip
     }
   end
 
@@ -88,6 +92,13 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   end
 
   private
+
+  def calibrated_until
+    Date.parse(zählerGeeichtBis.strip)
+  rescue ArgumentError
+    logger.warn(%(invalid calibrated_until date "#{zählerGeeichtBis.strip}" for zählernummer #{zählernummer}))
+    nil
+  end
 
   #
   # the manufacturer name is an enum on our side. Beekeeper Data looks like this_
