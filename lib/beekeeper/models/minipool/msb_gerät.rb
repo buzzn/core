@@ -64,6 +64,67 @@
 #  zpideinspeis              :string(40)       not null
 #
 
+# these are the meters
 class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.msb_gerät'
+  self.primary_key = 'vertragsnummer'
+
+  def converted_attributes
+    {
+      product_serialnumber: zählernummer.strip,
+      product_name:         zählerTyp.strip,
+      build_year:           zählerBaujahr.strip,
+      converter_constant:   zusatz1wandlerfaktor.strip,
+      manufacturer_name:    manufacturer_name,
+      ownership:            ownership,
+      direction_number:     direction_number
+    }
+  end
+
+  # used directly from MsbZählwerkDaten
+  def metering_point_id
+    stripped = zpid.strip
+    stripped == "" ? nil : stripped
+  end
+
+  private
+
+  #
+  # the manufacturer name is an enum on our side. Beekeeper Data looks like this_
+  # TODO clarify if we need to import further manufacturerers, beekeeper lists 17 different ones
+  # (select count(*), "zählerHersteller" from msb_gerät group by "zählerHersteller")
+  #
+  def manufacturer_name
+    if zählerHersteller =~ /easymeter/i
+      'easy_meter'
+    else
+      'other'
+    end
+  end
+
+  OWNERSHIP_MAPPING = {
+    'Eigenturm bM' => 'BUZZN',
+    'Fremdbesitz'  => 'FOREIGN_OWNERSHIP',
+    'Kunde'        => 'CUSTOMER',
+    'gepachtet'    => 'LEASED',
+    'gekauft'      => 'BOUGHT'
+  }
+
+  def ownership
+    OWNERSHIP_MAPPING.fetch(zählerBesitz.strip)
+  rescue KeyError
+    logger.warn(%(unknown ownership for value "#{zählerBesitz}" for zählernummer #{zählernummer}))
+    nil
+  end
+
+  def direction_number
+    return 'ERZ' if richtung =~ /^ERZ/
+    return 'ZRZ' if richtung =~ /^ZRZ/
+    logger.warn(%(unknown direction for value "#{richtung}" for zählernummer #{zählernummer}))
+    nil
+  end
+
+  def logger
+    @logger ||= Buzzn::Logger.new(self)
+  end
 end

@@ -27,8 +27,10 @@ module Register
       Broker::Base.where(resource_id: self.meter.id, resource_type: Meter::Base)
     end
     validates :meter, presence: true
-    validates :metering_point_id, uniqueness: false, length: { in: 4..34 }, allow_blank: true
-    validates :name, presence: true, length: { in: 2..40 }
+    # TODO can this be removed? Superseded by schemas?
+    validates :metering_point_id, uniqueness: false, length: { in: 4..64 }, allow_blank: true
+    # TODO can this be removed? Superseded by schemas?
+    validates :name, presence: true, length: { in: 1..100 }
     # TODO virtual register ?
     validates :image, presence: false
     validates :regular_reeding, presence: false
