@@ -5,7 +5,7 @@ FactoryGirl.define do
     label                 Register::Base.labels[:consumption]
     obis                  '1-0:1.8.0'
     pre_decimal_position  6
-    post_decimal_position 2
+    post_decimal_position 1
     low_load_ability      false
     share_with_group      true
     share_publicly        false
