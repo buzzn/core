@@ -7,7 +7,13 @@ module Register
 
     include Filterable
 
-    enum label: %i(consumption demarcation_pv demarcation_chp production_pv production_chp grid_consumption grid_feeding grid_consumption_corrected grid_feeding_corrected other).each_with_object({}) { |item, map| map[item] = item.to_s.upcase }
+    enum label: %i(consumption consumption_common
+      demarcation_pv demarcation_chp demarcation_wind demarcation_water
+      production_pv production_chp production_wind production_water
+      grid_consumption grid_feeding
+      grid_consumption_corrected grid_feeding_corrected
+      other
+    ).each_with_object({}) { |item, map| map[item] = item.to_s.upcase }
 
     enum direction: { input: 'in', output: 'out' }
 
