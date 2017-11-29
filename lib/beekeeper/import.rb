@@ -105,7 +105,8 @@ class Beekeeper::Import
       warnings.each do |field, message|
         if message.is_a?(Hash)
           message.each do |subfield, submessage|
-            logger.info("#{field} #{subfield}: #{submessage} (warning)")
+            logger.info("#{field}:")
+            logger.info("- #{subfield}: #{submessage} (warning)")
           end
         else
           logger.info("#{field}: #{message} (warning)")
