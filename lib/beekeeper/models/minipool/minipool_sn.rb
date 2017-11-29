@@ -33,4 +33,8 @@
 
 class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.minipool_sn'
+
+  def eeg_umlage_reduced?
+    eeg_umlage == "-1"
+  end
 end

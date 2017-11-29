@@ -47,6 +47,10 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     @_msb_gerät ||= Beekeeper::Minipool::MsbGerät.find_by(vertragsnummer: vertragsnummer, nummernzusatz: nummernzusatz)
   end
 
+  def minipool_sn
+    @minipool_sn ||= Beekeeper::Minipool::MinipoolSn.find_by(buzznid: "#{vertragsnummer}/#{nummernzusatz}")
+  end
+
   def skip_import?
     virtual? || msb_gerät.virtual?
   end
@@ -87,53 +91,25 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     return 'Register::Output' if output?
   end
 
+  LABEL_MAP = {
+    'Bezug'           => 'CONSUMPTION',
+    'Sonstige'        => 'OTHER',
+    'PV Produktion'   => 'PRODUCTION_PV',
+    'BHKW Produktion' => 'PRODUCTION_CHP',
+    'PV Abgrenzung'   => 'DEMARCATION_PV',
+    'BHKW Abgrenzung' => 'DEMARCATION_CHP',
+    'ÜGZ Bezug'       => 'GRID_CONSUMPTION',
+    'ÜGZ Einspeisung' => 'GRID_FEEDING',
+  }
+
   def map_label
-    return 'PRODUCTION_PV' if is_pv_production_register?
-    return 'PRODUCTION_CHP' if is_chp_production_register?
-
-    return 'DEMARCATION_PV' if is_pv_demarcation_register?
-    return 'DEMARCATION_CHP' if is_chp_demarcation_register?
-
-    return 'GRID_CONSUMPTION' if is_grid_consumption_register?
-    return 'GRID_FEEDING' if is_grid_feeding_register?
-    return 'CONSUMPTION' if is_feeding_register?
-    # TODO map CONSUMPTION_COMMON:
-    # 1. join with minipool_sn using "#{messtellenvertrag}/#{nummernzusatz}" and buzznid
-    # 2. if eeg_umlage == -1 => CONSUMPTION_COMMON
-    return 'OTHER' if is_other_register?
-    add_warning(:label, "Unknown label: #{kennzeichnung.inspect}")
-  end
-
-  def is_feeding_register?
-    kennzeichnung == 'Bezug'
-  end
-
-  def is_other_register?
-    kennzeichnung == 'Sonstige'
-  end
-
-  def is_grid_consumption_register?
-    kennzeichnung == 'ÜGZ Bezug'
-  end
-
-  def is_grid_feeding_register?
-    kennzeichnung == 'ÜGZ Einspeisung'
-  end
-
-  def is_pv_production_register?
-    kennzeichnung == 'PV Produktion'
-  end
-
-  def is_chp_production_register?
-    kennzeichnung == 'BHKW Produktion'
-  end
-
-  def is_pv_demarcation_register?
-    kennzeichnung == 'PV Abgrenzung'
-  end
-
-  def is_chp_demarcation_register?
-    kennzeichnung == 'BHKW Abgrenzung'
+    label = if minipool_sn&.eeg_umlage_reduced?
+      'CONSUMPTION_COMMON'
+    else
+      LABEL_MAP[kennzeichnung]
+    end
+    add_warning(:label, "Unknown label: #{kennzeichnung.inspect}") unless label
+    label
   end
 
   def kennzeichnung
