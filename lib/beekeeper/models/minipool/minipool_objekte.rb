@@ -111,8 +111,4 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   def address
     Address.new(adresse.converted_attributes)
   end
-
-  def logger
-    @logger ||= Buzzn::Logger.new(self)
-  end
 end

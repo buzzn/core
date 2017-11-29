@@ -136,4 +136,5 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
     add_warning(:richtung, %(unknown direction for value "#{richtung}" for zählernummer #{zählernummer}))
     nil
   end
+
 end

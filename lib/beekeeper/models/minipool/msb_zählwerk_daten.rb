@@ -18,7 +18,6 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   self.primary_key = 'vertragsnummer'
 
   include Beekeeper::ImportWarnings
-
   delegate :metering_point_id, to: :msb_gerät
 
   def converted_attributes
@@ -149,4 +148,9 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   # def pool
   #   @pool ||= Beekeeper::MinipoolObjekte.find_by(messvertragsnummer: vertragsnummer)
   # end
+  #
+  #
+  def logger
+    @logger ||= Buzzn::Logger.new(self)
+  end
 end
