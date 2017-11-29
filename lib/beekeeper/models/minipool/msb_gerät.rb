@@ -69,6 +69,8 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.msb_gerät'
   self.primary_key = 'vertragsnummer'
 
+  include Beekeeper::ImportWarnings
+
   def converted_attributes
     {
       product_serialnumber: zählernummer.strip,
@@ -96,7 +98,7 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   def calibrated_until
     Date.parse(zählerGeeichtBis.strip)
   rescue ArgumentError
-    logger.warn(%(invalid calibrated_until date "#{zählerGeeichtBis.strip}" for zählernummer #{zählernummer}))
+    add_warning(:zählerGeeichtBis, %(invalid calibrated_until date "#{zählerGeeichtBis.strip}" for zählernummer #{zählernummer}))
     nil
   end
 
@@ -124,18 +126,14 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   def ownership
     OWNERSHIP_MAPPING.fetch(zählerBesitz.strip)
   rescue KeyError
-    logger.warn(%(unknown ownership for value "#{zählerBesitz}" for zählernummer #{zählernummer}))
+    add_warning(:zählerBesitz, %(unknown ownership for value "#{zählerBesitz}" for zählernummer #{zählernummer}))
     nil
   end
 
   def direction_number
     return 'ERZ' if richtung =~ /^ERZ/
     return 'ZRZ' if richtung =~ /^ZRZ/
-    logger.warn(%(unknown direction for value "#{richtung}" for zählernummer #{zählernummer}))
+    add_warning(:richtung, %(unknown direction for value "#{richtung}" for zählernummer #{zählernummer}))
     nil
-  end
-
-  def logger
-    @logger ||= Buzzn::Logger.new(self)
   end
 end

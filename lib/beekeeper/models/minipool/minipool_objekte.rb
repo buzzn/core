@@ -1,3 +1,4 @@
+require_relative 'concerns/import_warnings'
 require_relative 'concerns/minipool_objekte/organizations'
 require_relative 'concerns/minipool_objekte/owner'
 require_relative 'concerns/minipool_objekte/registers'
@@ -64,6 +65,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.minipool_objekte'
   self.primary_key = 'vertragsnummer'
 
+  include Beekeeper::ImportWarnings
   include Beekeeper::Minipool::MinipoolObjekte::Organizations
   include Beekeeper::Minipool::MinipoolObjekte::Owner
   include Beekeeper::Minipool::MinipoolObjekte::Registers
@@ -94,12 +96,12 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
   # these are the meters
   def msb_geräte
-    Beekeeper::Minipool::MsbGerät.where(vertragsnummer: messvertragsnummer)
+    @_msb_geräte ||= Beekeeper::Minipool::MsbGerät.where(vertragsnummer: messvertragsnummer)
   end
 
   # these are the registers
   def msb_zählwerk_daten
-    Beekeeper::Minipool::MsbZählwerkDaten.where(vertragsnummer: messvertragsnummer)
+    @_msb_zählwerk_daten ||= Beekeeper::Minipool::MsbZählwerkDaten.where(vertragsnummer: messvertragsnummer)
   end
 
   def start_date

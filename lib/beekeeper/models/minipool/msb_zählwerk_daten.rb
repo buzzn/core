@@ -17,6 +17,8 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.msb_zählwerk_daten'
   self.primary_key = 'vertragsnummer'
 
+  include Beekeeper::ImportWarnings
+
   delegate :metering_point_id, to: :msb_gerät
 
   def converted_attributes
@@ -38,21 +40,25 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     }
   end
 
+  def identifier
+    "#{vertragsnummer}/#{nummernzusatz}/#{zählwerkID} (name: #{read_attribute(:name)})"
+  end
+
+  def msb_gerät
+    @_msb_gerät ||= Beekeeper::Minipool::MsbGerät.find_by(vertragsnummer: vertragsnummer, nummernzusatz: nummernzusatz)
+  end
+
   private
 
   # FIXME right now every new register creates a new meter
   def meter
-    @meter ||= Meter::Real.new(msb_gerät.converted_attributes)
-  end
-
-  def msb_gerät
-    @msb_gerät ||= Beekeeper::Minipool::MsbGerät.find_by(vertragsnummer: vertragsnummer, nummernzusatz: nummernzusatz)
+    @_meter ||= Meter::Real.new(msb_gerät.converted_attributes)
   end
 
   def obis
     return '1-1:1.8.0' if ['1-1:1.8.0', "1-1:.8.0"].include?(read_attribute(:obis))
     return '1-1:2.8.0' if ['1-1:2.8.0', '1-1:2:8.0'].include?(read_attribute(:obis))
-    raise "Unknown obis: #{read_attribute(:obis)}"
+    add_warning(:obis, "Unknown obis: #{read_attribute(:obis)} for #{identifier}")
   end
 
   # TODO clarify if every register must be named, right now it isn't (see MISSING).
@@ -60,7 +66,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   def name
     stripped = msb_gerät.adresszusatz.strip
     if stripped.empty?
-      logger.error("Missing name for #{vertragsnummer}/#{nummernzusatz}/#{zählwerkID}")
+      add_warning(:name, "Missing name for #{identifier}")
       "MISSING"
     else
       stripped
@@ -143,9 +149,4 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   # def pool
   #   @pool ||= Beekeeper::MinipoolObjekte.find_by(messvertragsnummer: vertragsnummer)
   # end
-  #
-  #
-  def logger
-    @logger ||= Buzzn::Logger.new(self)
-  end
 end
