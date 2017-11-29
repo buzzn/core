@@ -73,17 +73,23 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
 
   def converted_attributes
     {
-      product_serialnumber: zählernummer.strip,
-      product_name:         zählerTyp.strip,
-      build_year:           zählerBaujahr.strip,
-      converter_constant:   zusatz1wandlerfaktor.strip,
-      manufacturer_name:    manufacturer_name,
-      ownership:            ownership,
-      direction_number:     direction_number,
-      calibrated_until:     calibrated_until,
-      # TODO: always is "Strom". Do we really want to track this already?
-      # section:              sparte.strip,
-      # edifact_voltage_level: spannungsebene.strip
+      product_serialnumber:   zählernummer.strip,
+      product_name:           zählerTyp.strip,
+      build_year:             zählerBaujahr.strip,
+      converter_constant:     zusatz1wandlerfaktor.strip,
+      manufacturer_name:      manufacturer_name,
+      ownership:              ownership,
+      direction_number:       direction_number,
+      calibrated_until:       calibrated_until,
+      # sequence_number:        nummernzusatz,
+      edifact_voltage_level:  edifact_voltage_level,
+      edifact_cycle_interval: edifact_cycle_interval,
+      edifact_metering_type:  edifact_metering_type,
+      edifact_meter_size:     edifact_meter_size,
+      edifact_data_logging:   edifact_data_logging,
+      edifact_tariff:         edifact_tariff,
+      edifact_measurement_method: edifact_measurement_method,
+      edifact_mounting_method: edifact_mounting_method,
     }
   end
 
@@ -93,7 +99,61 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
     stripped == "" ? nil : stripped
   end
 
+  def virtual?
+    zählernummer =~ /vi(r)?t/i
+  end
+
   private
+
+  def edifact_voltage_level
+    default_value = Meter::Real.edifact_voltage_levels[:low_level]
+    map_edifact_enum(:spannungsebene, :edifact_voltage_level, default: default_value)
+  end
+
+  def edifact_cycle_interval
+    # we only have these two values
+    return "YEARLY"  if turnusintervall.strip == "jährlich"
+    return "MONTHLY" if turnusintervall.strip == "monatlich"
+    add_warning(:turnusintervall, %(invalid edifact_cycle_interval "#{turnusintervall.strip}" for zählernummer #{zählernummer}))
+    nil
+  end
+
+  def edifact_metering_type
+    # SM (smart meter) is a identifier that doesn't exist in edifact, but we know that it needs to
+    # be mapped to EHZ (Elektronischer Haushaltszähler)
+    if zählerZählertyp =~ /^SM/
+      'EHZ'
+    else
+      map_edifact_enum(:zählerZählertyp, :edifact_metering_type)
+    end
+  end
+
+  def edifact_meter_size
+    # we know most of our meters are easymeters, and all of them are Z03, so we set that as default
+    # so PhO doesn't have up 660 records manually
+    default_value = Meter::Real.edifact_meter_sizes[:other_ehz]
+    map_edifact_enum(:zählerGröße, :edifact_meter_size, default: default_value)
+  end
+
+  def edifact_data_logging
+    return "Z05" if zählerFernauslesung.strip == "Ja"
+    return "Z04" if zählerFernauslesung.strip == "Nein"
+    add_warning(:zählerFernauslesung, %(invalid edifact_data_logging "#{zählerFernauslesung.strip}" for zählernummer #{zählernummer}))
+    nil
+  end
+
+  def edifact_tariff
+    map_edifact_enum(:tarif, :edifact_tariff)
+  end
+
+  def edifact_measurement_method
+    map_edifact_enum(:messwerterfassung, :edifact_measurement_method)
+  end
+
+  def edifact_mounting_method
+    default_value = Meter::Real.edifact_mounting_methods[:three_point_mounting]
+    map_edifact_enum(:befestigungsart, :edifact_mounting_method, default: default_value)
+  end
 
   def calibrated_until
     Date.parse(zählerGeeichtBis.strip)
@@ -102,11 +162,7 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
     nil
   end
 
-  #
-  # the manufacturer name is an enum on our side. Beekeeper Data looks like this_
-  # TODO clarify if we need to import further manufacturerers, beekeeper lists 17 different ones
-  # (select count(*), "zählerHersteller" from msb_gerät group by "zählerHersteller")
-  #
+  # TODO when manufacturer isn't easymeter, add the manufacturer name to a (new) description attribute
   def manufacturer_name
     if zählerHersteller =~ /easymeter/i
       'easy_meter'
@@ -137,4 +193,25 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
     nil
   end
 
+  #
+  # beekeeper stores the values for a few edifact attributes like this:
+  #
+  # ETZ - Eintarif
+  # SM - smart Meter
+  # ...
+  #
+  # This method parses the first capitalized letters (and numbers) and returns that if it a value we know.
+  #
+  def map_edifact_enum(beekeeper_name, our_name, default: nil)
+    known_values    = Meter::Real.send(our_name.to_s.pluralize).values # uses our enum
+    extracted_value = send(beekeeper_name).strip.scan(/^[A-Z0-9]+/).first
+    if known_values.include?(extracted_value)
+      extracted_value
+    elsif default
+      default
+    else
+      add_warning(beekeeper_name, %(invalid #{our_name} "#{extracted_value}" for zählernummer #{zählernummer}))
+      nil
+    end
+  end
 end
