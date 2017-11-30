@@ -20,7 +20,7 @@ class Beekeeper::Import
 
   def import_localpools
     #ActiveRecord::Base.logger = Logger.new(STDOUT)
-    Beekeeper::Minipool::MinipoolObjekte.to_import.all.each do |record|
+    Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
       logger.info("\n")
       logger.info("Localpool #{record.converted_attributes[:name]} (start: #{record.converted_attributes[:start_date]})")
       logger.info("-" * 80)
