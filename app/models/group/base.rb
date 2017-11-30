@@ -22,7 +22,7 @@ module Group
     belongs_to :bank_account
 
     has_many :meters, class_name: 'Meter::Base', foreign_key: :group_id
-    has_many :registers, class_name: 'Register::Base', foreign_key: :group_id
+    has_many :registers, through: :meters
     has_many :brokers, class_name: 'Broker::Base', as: :resource, dependent: :destroy
 
     def managers
