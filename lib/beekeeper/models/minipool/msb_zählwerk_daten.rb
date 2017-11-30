@@ -22,10 +22,10 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
   def converted_attributes
     @converted_attributes ||= {
+      meter_attributes:      meter_attributes,
       name:                  name,
       type:                  map_type,
       label:                 map_label,
-      meter:                 meter,
       metering_point_id:     metering_point_id,
       # set these defaults (not imported from beekeeper)
       share_with_group:      false,
@@ -65,9 +65,8 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
   private
 
-  # FIXME right now every new register creates a new meter
-  def meter
-    @_meter ||= Meter::Real.new(msb_gerät.converted_attributes)
+  def meter_attributes
+    msb_gerät.converted_attributes
   end
 
   def obis

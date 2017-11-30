@@ -90,7 +90,12 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
       edifact_tariff:         edifact_tariff,
       edifact_measurement_method: edifact_measurement_method,
       edifact_mounting_method: edifact_mounting_method,
+      buzznid:                 buzznid
     }
+  end
+
+  def buzznid
+    "#{vertragsnummer}/#{nummernzusatz}"
   end
 
   # used directly from MsbZählwerkDaten

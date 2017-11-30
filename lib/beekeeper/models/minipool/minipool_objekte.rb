@@ -72,7 +72,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
   belongs_to :adresse, foreign_key: 'adress_id'
 
-  scope :to_import, -> { where("minipool_start != '0000-00-00'") }
+  scope :to_import, -> { where("minipool_start != '0000-00-00'").order(:minipool_start, :minipool_name) }
 
   def converted_attributes
     @converted_attributes ||= {
