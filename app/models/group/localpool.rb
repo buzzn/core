@@ -67,10 +67,6 @@ module Group
                   .exists)
     end
 
-    def meters
-      Meter::Base.where(id: registers.select(:meter_id))
-    end
-
     def meter_without_corrected_registers
       Meter::Real.where(id: registers.select(:meter_id))
     end
