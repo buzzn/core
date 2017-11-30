@@ -52,7 +52,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   end
 
   def skip_import?
-    virtual? || msb_gerät.virtual?
+    msb_gerät.virtual?
   end
 
   private
@@ -114,9 +114,5 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
   def kennzeichnung
     read_attribute(:kennzeichnung).strip
-  end
-
-  def virtual?
-    kennzeichnung =~ /Abgrenzung/i
   end
 end

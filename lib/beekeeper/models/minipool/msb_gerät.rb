@@ -100,7 +100,10 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   end
 
   def virtual?
-    zählernummer =~ /vi(r)?t/i
+    regex = /vi(r)?t/i # match the variations "virt.", "virtuell" and "vituell", case insensitive
+    fields_to_check = %i(zählernummer adresszusatz zählerHersteller zählerTyp berechnetbeschreibungkurz)
+    fields_to_check.any? { |field| send(field) =~ regex }
+  end
   end
 
   private
