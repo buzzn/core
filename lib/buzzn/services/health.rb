@@ -3,7 +3,7 @@ module Buzzn::Services
   class Health
     include Import['service.redis',
                    'config.heroku_slug_commit',
-                   'config.heroku_release_created_at')
+                   'config.heroku_release_created_at']
 
     def database?
       if ActiveRecord::Base.connection.active?

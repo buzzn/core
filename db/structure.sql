@@ -1201,21 +1201,29 @@ CREATE TABLE billings (
 --
 
 CREATE TABLE brokers (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    mode character varying NOT NULL,
-    external_id character varying,
-    provider_login character varying NOT NULL,
-    encrypted_provider_password character varying NOT NULL,
-    encrypted_provider_token_key character varying,
-    encrypted_provider_token_secret character varying,
-    resource_id uuid NOT NULL,
-    resource_type character varying NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    id integer NOT NULL,
     type character varying NOT NULL,
-    consumer_key character varying,
-    consumer_secret character varying
+    external_id character varying
 );
+
+
+--
+-- Name: brokers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE brokers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: brokers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE brokers_id_seq OWNED BY brokers.id;
 
 
 --
@@ -1491,7 +1499,8 @@ CREATE TABLE meters (
     type character varying NOT NULL,
     sequence_number integer,
     group_id uuid,
-    address_id uuid
+    address_id uuid,
+    broker_id integer
 );
 
 
@@ -1801,6 +1810,13 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 
 
 --
+-- Name: brokers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY brokers ALTER COLUMN id SET DEFAULT nextval('brokers_id_seq'::regclass);
+
+
+--
 -- Name: customer_numbers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1935,6 +1951,14 @@ ALTER TABLE ONLY billings
 
 
 --
+-- Name: brokers brokers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY brokers
+    ADD CONSTRAINT brokers_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1980,14 +2004,6 @@ ALTER TABLE ONLY customer_numbers
 
 ALTER TABLE ONLY devices
     ADD CONSTRAINT devices_pkey PRIMARY KEY (id);
-
-
---
--- Name: brokers discovergy_brokers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY brokers
-    ADD CONSTRAINT discovergy_brokers_pkey PRIMARY KEY (id);
 
 
 --
@@ -2179,20 +2195,6 @@ CREATE INDEX index_billings_on_billing_cycle_id_and_status ON billings USING btr
 --
 
 CREATE INDEX index_billings_on_localpool_power_taker_contract_id ON billings USING btree (localpool_power_taker_contract_id);
-
-
---
--- Name: index_brokers; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_brokers ON brokers USING btree (mode, resource_id, resource_type);
-
-
---
--- Name: index_brokers_resources; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_brokers_resources ON brokers USING btree (resource_type, resource_id);
 
 
 --
@@ -2396,6 +2398,13 @@ CREATE UNIQUE INDEX index_market_functions_on_organization_id_function ON organi
 --
 
 CREATE INDEX index_meters_on_address_id ON meters USING btree (address_id);
+
+
+--
+-- Name: index_meters_on_broker_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_meters_on_broker_id ON meters USING btree (broker_id);
 
 
 --
@@ -2879,6 +2888,14 @@ ALTER TABLE ONLY meters
 
 
 --
+-- Name: meters fk_meters_broker; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY meters
+    ADD CONSTRAINT fk_meters_broker FOREIGN KEY (broker_id) REFERENCES brokers(id);
+
+
+--
 -- Name: meters fk_meters_group; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3347,6 +3364,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171018134029');
 INSERT INTO schema_migrations (version) VALUES ('20171018134419');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142114');
+
+INSERT INTO schema_migrations (version) VALUES ('20171028200100');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028200200');
 

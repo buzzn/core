@@ -12,5 +12,6 @@ class DropCoreTables < ActiveRecord::Migration
     drop_table :organizations
     drop_table :users
     drop_table :addresses
+    drop_table :brokers
   end
 end

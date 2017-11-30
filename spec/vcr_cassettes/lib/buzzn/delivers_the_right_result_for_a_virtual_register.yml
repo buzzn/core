@@ -85,7 +85,7 @@ http_interactions:
   recorded_at: Sat, 02 Jul 2016 08:05:42 GMT
 - request:
     method: get
-    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=8f9ecf0841784da0858e1df7a3e818c3&password=Zebulon_4711
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=me%40example.de&oauth_token=8f9ecf0841784da0858e1df7a3e818c3&password=blablubla
     body:
       encoding: US-ASCII
       string: ''
@@ -343,7 +343,7 @@ http_interactions:
   recorded_at: Sat, 02 Jul 2016 08:05:43 GMT
 - request:
     method: get
-    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=b90c6aaa1fff47d5a3ea3e242b7aac4d&password=Zebulon_4711
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=me%40example.de&oauth_token=b90c6aaa1fff47d5a3ea3e242b7aac4d&password=blablubla
     body:
       encoding: US-ASCII
       string: ''

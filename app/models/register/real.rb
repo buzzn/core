@@ -11,7 +11,6 @@ module Register
       raise 'not implemented'
     end
 
-    before_destroy :update_broker
     after_destroy :validate_meter
     def validate_meter
       unless meter.valid?
@@ -20,26 +19,10 @@ module Register
     end
 
     def data_source
-      if self.brokers.detect { |b| b.is_a? Broker::Discovergy }
+      if self.broker.is_a? Broker::Discovergy
         Buzzn::Discovergy::DataSource::NAME
-      elsif self.brokers.detect { |b| b.is_a? Broker::MySmartGrid }
-        Buzzn::MySmartGrid::DataSource::NAME
       else
         Buzzn::StandardProfile::DataSource::NAME
-      end
-    end
-
-    # TODO untested code
-    def update_broker
-      if meter.registers.size == 2 && !meter.broker.nil?
-        register = (meter.registers - [self]).first
-        if register.input?
-          meter.broker.update(mode: :in)
-        elsif register.output?
-          meter.broker.update(mode: :out)
-        else
-          raise 'unknown direction'
-        end
       end
     end
 
