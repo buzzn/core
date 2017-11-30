@@ -125,7 +125,7 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   end
 
   def edifact_metering_type
-    # SM (smart meter) is a identifier that doesn't exist in edifact, but we know that it needs to
+    # SM (smart meter) is an identifier that doesn't exist in edifact, but we know that it needs to
     # be mapped to EHZ (Elektronischer Haushaltszähler)
     if zählerZählertyp =~ /^SM/
       'EHZ'
