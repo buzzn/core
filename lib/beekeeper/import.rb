@@ -22,7 +22,7 @@ class Beekeeper::Import
     #ActiveRecord::Base.logger = Logger.new(STDOUT)
     Beekeeper::Minipool::MinipoolObjekte.to_import.all.each do |record|
       logger.info("\n")
-      logger.info("Localpool #{record.converted_attributes[:name]}")
+      logger.info("Localpool #{record.converted_attributes[:name]} (start: #{record.converted_attributes[:start_date]})")
       logger.info("-" * 80)
       begin
         Group::Localpool.transaction do
@@ -32,6 +32,7 @@ class Beekeeper::Import
           # with localpool.id the roles on owner can be set
           add_roles(localpool)
           add_registers(localpool, record.converted_attributes[:registers])
+          assign_grid_registers(localpool)
           # now we can fail and rollback on broken invariants
           unless localpool.invariant_valid?
             raise ActiveRecord::RecordInvalid.new(localpool)
@@ -65,12 +66,28 @@ class Beekeeper::Import
   end
 
   def add_registers(localpool, registers)
-    registers.each do |register|
-      register.group_id = localpool.id
-      register.meter.group_id = localpool.id
+    registers.map do |register|
+      register.meter.group = localpool
       unless register.save
         logger.error("Failed to save register #{register.inspect}")
         logger.error("Errors: #{register.errors.inspect}")
+      end
+      register
+    end
+  end
+
+  def assign_grid_registers(localpool)
+    %i(grid_consumption grid_feeding).each do |label|
+      found_registers = localpool.registers.send(label)
+      if found_registers.size == 1
+        localpool.update_attribute("#{label}_register", found_registers.first)
+      elsif found_registers.size > 1
+        logger.error("Error: found more than one #{label} registers:")
+        logger.error(found_registers.inspect)
+      else
+        # the 0/no register case is handled by the incompleteness validation below.
+        # Some groups (like Orleansstraße 61 and Häberlstraße 15) use a virtual register for the grid.
+        # Since we don't import those yet, those groups have incompleteness errors.
       end
     end
   end
@@ -88,7 +105,12 @@ class Beekeeper::Import
   def log_todos(localpool_id, warnings)
 
     resource = Admin::LocalpoolResource.all(buzzn_operator_account).retrieve(localpool_id)
-    incompleteness = resource.incompleteness.select { |k, v| k != :grid_feeding_register && k != :grid_consumption_register }
+    incompleteness = if resource.object.start_date.future?
+      logger.info("Skipping incompleteness checks, localpool hasn't started yet")
+      []
+    else
+      resource.incompleteness
+    end
 
     unless incompleteness.present? || warnings.present?
       logger.info("Nothing to do!")

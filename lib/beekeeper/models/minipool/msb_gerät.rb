@@ -104,6 +104,9 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
     fields_to_check = %i(zählernummer adresszusatz zählerHersteller zählerTyp berechnetbeschreibungkurz)
     fields_to_check.any? { |field| send(field) =~ regex }
   end
+
+  def msb_zählwerke
+    @_msb_zählwerke ||= Beekeeper::Minipool::MsbZählwerkDaten.where(vertragsnummer: vertragsnummer, nummernzusatz: nummernzusatz)
   end
 
   private
