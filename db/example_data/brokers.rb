@@ -10,10 +10,13 @@
 #
 
 def broker(attributes)
-  create(:broker, :discovergy, attributes.merge(
-    provider_login:    ENV['DISCOVERGY_LOGIN'],
-    provider_password: ENV['DISCOVERGY_PASSWORD']
-  ))
+  external_id = attributes.delete(:external_id)
+  meter = attributes.delete(:resource)
+  Meter::Base.transaction do
+    meter.update(broker: create(:broker, :discovergy),
+                 product_serialnumber: external_id.sub(/EASYMETER_/, ''))
+  end
+  meter.broker
 end
 
 SampleData.brokers = OpenStruct.new(

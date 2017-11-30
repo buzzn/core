@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 

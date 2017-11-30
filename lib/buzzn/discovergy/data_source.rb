@@ -7,7 +7,7 @@ module Buzzn::Discovergy
 
     NAME = :discovergy
 
-    def initialize(redis = Redis.current, facade = Facade.new(redis), cache_time = 15)
+    def initialize(redis = Redis.current, facade = Facade.new, cache_time = 15)
       @logger = Buzzn::Logger.new(self)
       @facade = facade
       @cache_time = cache_time
@@ -19,7 +19,7 @@ module Buzzn::Discovergy
 
     def collection(group_or_virtual_register, mode)
       result = Buzzn::DataResultArray.new(expires_at)
-      if group_or_virtual_register.brokers.by_data_source(self).empty?
+      if group_or_virtual_register.is_a?(Group::Base) || group_or_virtual_register.brokers.by_data_source(self).empty?
         group_or_virtual_register.registers.select do |r|
           r.direction?(mode)
         end.each do |register|
@@ -28,7 +28,7 @@ module Buzzn::Discovergy
         end
       else
         map = to_map(group_or_virtual_register)
-        group_or_virtual_register.brokers.by_data_source(self).each do |broker|
+        if group_or_virtual_register.data_source == self.NAME
           response = @facade.readings(broker, nil, mode, true)
           result += parse_collected_data(response, mode, map)
         end
@@ -38,11 +38,15 @@ module Buzzn::Discovergy
 
     def single_aggregated(register_or_group, mode)
       result = nil
-      brokers = register_or_group.brokers.by_data_source(self)
+      brokers = []
+      if !register_or_group.is_a?(Group::Base) &&
+         register_or_group.broker &&
+         register_or_group.data_source == NAME
+        brokers = [register_or_group.broker]
+      end
       if brokers.any? &&
          register_or_group.is_a?(Register::Base) &&
          register_or_group.group &&
-         register_or_group.group.brokers.by_data_source(self).any?
         result = collection(register_or_group.group, mode)
         result.each do |r|
           return r if r.resource_id == register_or_group.id
@@ -61,7 +65,7 @@ module Buzzn::Discovergy
     end
 
     def aggregated(register_or_group, mode, interval)
-      if register_or_group.brokers.empty?
+      if register_or_group.is_a?(Group::Base)
         aggregated_without_broker(register_or_group, mode, interval)
       else
         case register_or_group
@@ -125,39 +129,6 @@ module Buzzn::Discovergy
     end
     private :add
 
-    def create_virtual_meter_for_register(register)
-      if !register.is_a?(Register::Base) || !register.is_a?(Register::Virtual)
-        raise Buzzn::DataSourceError.new('ERROR - no virtual meters for non-virtual registers')
-      end
-      meter = register.meter
-      meter_ids_plus = register.formula_parts.plus.operand_meters.select(:product_serialnumber).collect{|m| "EASYMETER_#{m.product_serialnumber}"}
-      meter_ids_minus = register.formula_parts.minus.operand_meters.select(:product_serialnumber).collect{|m| "EASYMETER_#{m.product_serialnumber}"}
-      if meter_ids_plus.size + meter_ids_minus.size < 2
-        raise Buzzn::DataSourceError.new('Formula has to contain more than one meter.')
-      end
-      #TODO: write credentials into secrets or elsewhere ...
-      existing_random_broker = Broker::Discovergy.where(provider_login: 'team@localpool.de').first
-      response = @facade.create_virtual_meter(existing_random_broker, meter_ids_plus, meter_ids_minus, false)
-      broker = parse_virtual_meter_creation(response.body, 'virtual', meter)
-      return broker
-    end
-
-    def create_virtual_meters_for_group(group)
-      # TODO: make this SQL faster
-      in_meter_ids = group.registers.input.collect(&:meter).uniq.compact.collect(&:product_serialnumber).map{|s| 'EASYMETER_' + s}
-      out_meter_ids = group.registers.output.collect(&:meter).uniq.compact.collect(&:product_serialnumber).map{|s| 'EASYMETER_' + s}
-      existing_random_broker = Broker::Discovergy.where(provider_login: 'team@localpool.de').first
-      if in_meter_ids.size > 1
-        response = @facade.create_virtual_meter(existing_random_broker, in_meter_ids)
-        in_broker = parse_virtual_meter_creation(response.body, 'in', group)
-      end
-      if out_meter_ids.size > 1
-        response = @facade.create_virtual_meter(existing_random_broker, out_meter_ids)
-        out_broker = parse_virtual_meter_creation(response.body, 'out', group)
-      end
-      return [in_broker, out_broker].compact
-    end
-
     private
 
     def expires_at
@@ -191,8 +162,8 @@ module Buzzn::Discovergy
 
     def to_external_map(meter_to_register)
       map = {}
-      Broker::Discovergy.where(resource_id:  meter_to_register.keys).select(:external_id, :resource_id).each do |broker|
-        map[broker.external_id] = meter_to_register[broker.resource_id]
+      Meter::Base.where(id: meter_to_register.keys).each do |meter|
+        map[meter.broker.external_id] = meter_to_register[meter.id] if meter.broker
       end
       map
     end
@@ -346,18 +317,6 @@ module Buzzn::Discovergy
       return result
     end
 
-    def parse_virtual_meter_creation(response, mode, resource)
-      json = MultiJson.load(response)
-      # TODO: Move credentials into secrets
-      broker = Broker::Discovergy.create!(
-        mode: mode,
-        external_id: json['type'] + '_' + json['serialNumber'],
-        provider_login: 'team@localpool.de',
-        provider_password: 'Zebulon_4711',
-        resource: resource
-      )
-      return broker
-    end
 
     # need it at end to see all the methods
     include Buzzn::DataSource::Caching

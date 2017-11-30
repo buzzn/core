@@ -80,5 +80,11 @@ FactoryGirl.define do
       name 'Produktion PV'
       label Register::Base.labels[:production_pv]
     end
+
+    trait :consumption do
+      input
+      name 'Consumption'
+      label Register::Base.labels[:consumption]
+    end
   end
 end

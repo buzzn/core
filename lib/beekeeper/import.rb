@@ -1,8 +1,11 @@
 # wireup invariant with AR and raise error on invalid in before_save
 require 'buzzn/schemas/support/enable_dry_validation'
+require 'buzzn/types/discovergy'
+
 ActiveRecord::Base.send(:include, Schemas::Support::ValidateInvariant)
 
 class Beekeeper::Import
+::Import['service.datasource.discsovergy.api']
   class << self
     def run!
       new.run
@@ -38,16 +41,51 @@ class Beekeeper::Import
           end
           # finally save it all
           localpool.save!
+          warnings = add_brokers(localpool, warnings)
           log_todos(localpool.id, warnings)
         end
-      rescue => e
-        logger.error(e)
+      #rescue => e
+       # logger.error(e)
       end
+
     end
     log_import_summary
+    binding.pry
   end
 
   private
+
+  def meter_map
+    @meter_map ||=
+      begin
+        api = ::Import.global('service.datasource.discovergy.api')
+        meters = api.request(Types::Discovergy::Meters::Get.new)
+        meters.each_with_object({}) do |meter, map|
+          map[meter.serialNumber] = meter if meter.type == 'EASYMETER'
+        end
+      end
+  end
+
+  def add_brokers(localpool, warnings)
+    without_broker = localpool.meters.real.select do |meter|
+      if meter_map.key?(meter.product_serialnumber)
+        binding.pry if meter.broker
+        Broker::Discovergy.create!(meter: meter)
+        false
+      else
+        true
+      end
+    end
+    without_broker.each do |meter|
+      meter.registers.each do |register|
+        warnings ||= {}
+        warnings["register '#{register.name}'"] = 'is not on Discovergy'
+      end
+    end
+    warnings
+    #without_meter = map.select { |serial, _| !Meter::Real.where(product_serialnumber: serial).exists? }
+    #binding.pry
+  end
 
   def add_roles(localpool)
     owner =

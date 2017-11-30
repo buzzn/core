@@ -1,5 +1,6 @@
 require_relative '../utils'
 require_relative '../../schemas/transactions/utils/zip_to_price'
+require_relative '../../types/zip_prices'
 
 class Transactions::Utils::ZipToPrice < Transactions::Base
   def self.call(input)
@@ -10,7 +11,7 @@ class Transactions::Utils::ZipToPrice < Transactions::Base
   step :zip_to_price
 
   def zip_to_price(input)
-    prices = Buzzn::Types::ZipPrices.new(input)
+    prices = Types::ZipPrices.new(input)
     if result = prices.max_price
       Dry::Monads.Right(result)
     else

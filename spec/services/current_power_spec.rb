@@ -1,5 +1,9 @@
 describe Buzzn::Services::CurrentPower do
 
+  class MockRegister < Register::Input
+    def data_source; 'mock'; end
+  end
+
   class DummyDataSource < Buzzn::DataSource
 
     NAME = :dummy
@@ -27,7 +31,7 @@ describe Buzzn::Services::CurrentPower do
     attr_accessor :input, :output
 
     def single_aggregated(resource, mode)
-      mode == 'in' ? @input : @output
+      mode == 'in' ? @input.shift : @output.shift
     end
 
     def collection(*args)
@@ -48,25 +52,32 @@ describe Buzzn::Services::CurrentPower do
   end
 
   entity(:group) do
-    Fabricate(:tribe)
-    Display::GroupResource.all(Fabricate(:admin)).first
+    create(:localpool)
+    #Display::GroupResource.all(Fabricate(:admin)).first
   end
-  entity(:register) { Fabricate(:output_meter).output_register }
+
+  entity(:register) { create(:register, :output) }
+
   entity(:dummy_register) do
-    register = Fabricate(:input_meter).input_register
-    def register.data_source; 'dummy';end
-    def register.to_s; self.id; end
-    register
+    dummy = create(:register, :input)
+    def dummy.data_source; 'dummy'; end
+    def dummy.to_s; self.id; end
+    dummy
+  end
+
+  entity(:mock_register) do
+    mock = MockRegister.new(build(:register, :input).attributes.except('type'))
+    mock.meter = FactoryGirl.build(:meter, :real, group: mock.group)
+    mock.save!
+    mock
   end
 
   entity(:virtual_register) do
-    easymeter_60051599 = Fabricate(:easymeter_60051599)
-    easymeter_60051599.broker = Fabricate(:discovergy_broker, mode: 'out', external_id: "EASYMETER_60051599", resource: easymeter_60051599)
-    fichtenweg8 = Fabricate(:virtual_meter_fichtenweg8).register
-    Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
-    Fabricate(:fp_plus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
-    Fabricate(:fp_minus, operand: easymeter_60051599.registers.first, register: fichtenweg8)
-    fichtenweg8
+    register = create(:register, :virtual_input, group: mock_register.group)
+    create(:formula_part, :plus, register: register, operand: mock_register)
+    create(:formula_part, :minus, register: register, operand: mock_register)
+    create(:formula_part, :plus, register: register, operand: mock_register)
+    register
   end
 
   it 'delivers the right result for a register' do
@@ -79,15 +90,15 @@ describe Buzzn::Services::CurrentPower do
 
   it 'delivers the right result for each register in a group' do
     result = subject.for_each_register_in_group(group)
-    expect(result).to eq [:collection, group.object, 'in', :collection, group.object, 'out']
+    expect(result).to eq [:collection, group, 'in', :collection, group, 'out']
 
     expect { subject.for_each_register_in_group(group, 'a') }.to raise_error ArgumentError
     expect { subject.for_each_register_in_group(Object.new) }.to raise_error ArgumentError
   end
 
   it 'delivers the right result for a group' do
-    mock.input = Buzzn::DataResult.new(Time.current,123, nil, 'in')
-    mock.output = Buzzn::DataResult.new(Time.current,321, nil, 'out')
+    mock.input = [Buzzn::DataResult.new(Time.current,123, nil, 'in')]
+    mock.output = [Buzzn::DataResult.new(Time.current,321, nil, 'out')]
     result = subject.for_group(group)
     expect(result.resource_id).to eq group.id
     expect(result.in).to eq 123
@@ -98,11 +109,13 @@ describe Buzzn::Services::CurrentPower do
   end
 
   it 'delivers the right current power for a virtual register' do |spec|
-    VCR.use_cassette("lib/buzzn/#{spec.metadata[:description].downcase}") do
-      result = subject.for_register(virtual_register)
-      result_single = subject.for_register(virtual_register.formula_parts.first.operand)
-      expect(result).to eq result_single
-    end
+    # results for 'in' mode
+    mock.input = [Buzzn::DataResult.new(Time.current,123, mock_register.id, 'in')] * 4
+
+    result = subject.for_register(virtual_register)
+    result_single = subject.for_register(virtual_register.formula_parts.first.operand)
+    # the formula_parts are created to have the result of the first operand
+    expect(result).to eq result_single
   end
 
 end

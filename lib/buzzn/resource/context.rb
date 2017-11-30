@@ -19,7 +19,7 @@ module Buzzn::Resource
     end
 
     def to_h
-      @__options__
+      self.class.dry_initializer.attributes(self)
     end
   end
 end
