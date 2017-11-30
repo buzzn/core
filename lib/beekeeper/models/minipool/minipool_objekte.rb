@@ -75,7 +75,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   scope :to_import, -> { where("minipool_start != '0000-00-00'") }
 
   def converted_attributes
-    {
+    @converted_attributes ||= {
       name: name,
       start_date: start_date,
       distribution_system_operator: distribution_system_operator,

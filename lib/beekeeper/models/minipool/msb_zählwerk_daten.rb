@@ -21,7 +21,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   delegate :metering_point_id, to: :msb_gerät
 
   def converted_attributes
-    {
+    @converted_attributes ||= {
       name:                  name,
       type:                  map_type,
       label:                 map_label,
@@ -35,8 +35,12 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
       post_decimal_position: nachkommastellen,  # always 1
       low_load_ability:      false,              # always (string) "ZNS - Nicht schwachlastfähig"
       # TODO consider removing obis from DB, it can be derived from the type of register and is meaningless for virtual registers.
-      obis:                  obis,
+      obis:                  obis
     }
+  end
+
+  def buzznid
+    "#{vertragsnummer}/#{nummernzusatz}"
   end
 
   def identifier

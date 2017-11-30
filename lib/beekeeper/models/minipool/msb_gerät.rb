@@ -72,7 +72,7 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   include Beekeeper::ImportWarnings
 
   def converted_attributes
-    {
+    @converted_attributes ||= {
       product_serialnumber:   zählernummer.strip,
       product_name:           zählerTyp.strip,
       build_year:             zählerBaujahr.strip,
