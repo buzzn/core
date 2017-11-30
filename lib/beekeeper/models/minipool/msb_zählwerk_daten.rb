@@ -55,6 +55,10 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     msb_gerät.virtual?
   end
 
+  def kennzeichnung
+    read_attribute(:kennzeichnung).strip
+  end
+
   private
 
   # FIXME right now every new register creates a new meter
@@ -103,16 +107,15 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   }
 
   def map_label
-    label = if minipool_sn&.eeg_umlage_reduced?
-      'CONSUMPTION_COMMON'
-    else
-      LABEL_MAP[kennzeichnung]
+    label = LABEL_MAP[kennzeichnung]
+    if label == 'CONSUMPTION' && minipool_sn&.eeg_umlage_reduced?
+      label = 'CONSUMPTION_COMMON'
     end
+    if kennzeichnung == "PV Produktion" && msb_gerät.adresszusatz =~ /Wasser/
+      label = 'PRODUCTION_WATER'
+    end
+    # puts "#{kennzeichnung} #{msb_gerät.adresszusatz} => #{label}"
     add_warning(:label, "Unknown label: #{kennzeichnung.inspect}") unless label
     label
-  end
-
-  def kennzeichnung
-    read_attribute(:kennzeichnung).strip
   end
 end
