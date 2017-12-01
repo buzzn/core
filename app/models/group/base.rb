@@ -15,15 +15,23 @@ module Group
 
     before_destroy :destroy_content
 
+    def meters
+      Meter::Base.where(
+        Register::Base.where('registers.group_id = ? and registers.meter_id = meters.id', self)
+          .select(1)
+          .exists
+        )
+    end
+
     #mount_uploader :logo, PictureUploader
     #mount_uploader :image, PictureUploader
 
     belongs_to :address
     belongs_to :bank_account
 
-    has_many :meters, class_name: 'Meter::Base', foreign_key: :group_id
-    has_many :registers, class_name: 'Register::Base', foreign_key: :group_id
-    has_many :brokers, class_name: 'Broker::Base', as: :resource, dependent: :destroy
+    has_many :registers, class_name: Register::Base, foreign_key: :group_id
+
+    has_many :brokers, class_name: Broker::Base, as: :resource, :dependent => :destroy
 
     def managers
       Person.with_roles(self, Role::GROUP_ADMIN)
