@@ -72,7 +72,6 @@ class Beekeeper::Import
         logger.error("Failed to save register #{register.inspect}")
         logger.error("Errors: #{register.errors.inspect}")
       end
-      register
     end
   end
 
