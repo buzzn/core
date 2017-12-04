@@ -22,6 +22,5 @@ module Meter
 
 
     has_many :registers
-    has_one :address
   end
 end

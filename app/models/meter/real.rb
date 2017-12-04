@@ -82,7 +82,7 @@ module Meter
     def initialize(attr = {})
       super
       # TODO really needed ? too hacky !
-      attr[:registers].each {|r| r.meter = self} if attr.key?(:registers)
+      attr[:registers].each { |r| r.meter = self } if attr.key?(:registers)
     end
 
     def input_register=(attr)

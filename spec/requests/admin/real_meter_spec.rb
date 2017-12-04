@@ -14,7 +14,7 @@ describe Admin::LocalpoolRoda do
     end
 
     entity(:meter) do
-      meter = Fabricate(:input_meter, address: Fabricate(:address))
+      meter = Fabricate(:input_meter)
       meter.update(sent_data_dso: Date.today)
       meter.input_register.update(group: group)
       meter.update(group: group)
@@ -78,18 +78,6 @@ describe Admin::LocalpoolRoda do
               "obis"=>meter.input_register.obis,
             }
           ]
-        },
-        'address' => {
-          "id"=>meter.address.id,
-          "type"=>"address",
-          'updated_at'=>meter.address.updated_at.as_json,
-          "street"=>meter.address.street,
-          "city"=>meter.address.city,
-          "state"=>meter.address.attributes['state'],
-          "zip"=>meter.address.zip,
-          "country"=>meter.address.attributes['country'],
-          "updatable"=>true,
-          "deletable"=>true
         }
       }
     end
@@ -131,7 +119,7 @@ describe Admin::LocalpoolRoda do
             {"parameter"=>"product_serialnumber",
              "detail"=>"size cannot be greater than 128"},
             {"parameter"=>"manufacturer_name",
-             "detail"=>"must be one of: easy_meter, amperix, ferraris, other"},
+             "detail"=>"must be one of: easy_meter, other"},
             {"parameter"=>"section",
              "detail"=>"must be one of: S, G"},
             {"parameter"=>"build_year",
@@ -248,7 +236,6 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         meter = real_meter
-        sent = meter.sent_data_dso
         old = meter.updated_at
         PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: meter.updated_at,
