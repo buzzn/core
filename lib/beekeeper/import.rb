@@ -69,7 +69,6 @@ class Beekeeper::Import
   def add_brokers(localpool, warnings)
     without_broker = localpool.meters.real.select do |meter|
       if meter_map.key?(meter.product_serialnumber)
-        binding.pry if meter.broker
         Broker::Discovergy.create!(meter: meter)
         false
       else
