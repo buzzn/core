@@ -51,7 +51,6 @@ class Beekeeper::Import
 
     end
     log_import_summary
-    binding.pry
   end
 
   private
