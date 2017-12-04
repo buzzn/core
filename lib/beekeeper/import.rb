@@ -66,13 +66,22 @@ class Beekeeper::Import
       end
   end
 
+  def meter_on_discovergy?(serialnumber)
+    meter_map.key?(serialnumber)
+  end
+
   def add_brokers(localpool, warnings)
     without_broker = localpool.meters.real.select do |meter|
-      if meter_map.key?(meter.product_serialnumber)
-        Broker::Discovergy.create!(meter: meter)
-        false
+      if meter.easy_meter?
+        if meter_on_discovergy?(meter.product_serialnumber)
+          Broker::Discovergy.create!(meter: meter)
+          false
+        else
+          # these are the ones we have, but are not on Discovergy.
+          true
+        end
       else
-        true
+        false # non-easymeters are not smart and thus not connectable to Discovergy
       end
     end
     without_broker.each do |meter|
