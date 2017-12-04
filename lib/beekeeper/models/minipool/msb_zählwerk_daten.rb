@@ -43,10 +43,6 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     "#{vertragsnummer}/#{nummernzusatz}"
   end
 
-  def identifier
-    "#{vertragsnummer}/#{nummernzusatz}/#{zählwerkID} (name: #{read_attribute(:name)})"
-  end
-
   def msb_gerät
     @_msb_gerät ||= Beekeeper::Minipool::MsbGerät.find_by(vertragsnummer: vertragsnummer, nummernzusatz: nummernzusatz)
   end
@@ -72,13 +68,13 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   def obis
     return '1-1:1.8.0' if ['1-1:1.8.0', "1-1:.8.0"].include?(read_attribute(:obis))
     return '1-1:2.8.0' if ['1-1:2.8.0', '1-1:2:8.0'].include?(read_attribute(:obis))
-    add_warning(:obis, "Unknown obis: #{read_attribute(:obis)} for #{identifier}")
+    add_warning(:obis, "Unknown obis: #{read_attribute(:obis)} for #{buzznid}")
   end
 
   def name
     stripped = msb_gerät.adresszusatz.strip
     if stripped.empty?
-      add_warning(:name, "Missing name for #{identifier}")
+      add_warning(:name, "Missing name for #{buzznid}")
       "MISSING"
     else
       stripped
