@@ -59,16 +59,16 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     read_attribute(:kennzeichnung).strip
   end
 
-  private
-
-  def meter_attributes
-    msb_gerät.converted_attributes
-  end
-
   def obis
     return '1-1:1.8.0' if ['1-1:1.8.0', "1-1:.8.0"].include?(read_attribute(:obis))
     return '1-1:2.8.0' if ['1-1:2.8.0', '1-1:2:8.0'].include?(read_attribute(:obis))
     add_warning(:obis, "Unknown obis: #{read_attribute(:obis)} for #{buzznid}")
+  end
+
+  private
+
+  def meter_attributes
+    msb_gerät.converted_attributes
   end
 
   def name
@@ -107,14 +107,41 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
   def map_label
     label = LABEL_MAP[kennzeichnung]
-    if label == 'CONSUMPTION' && minipool_sn&.eeg_umlage_reduced?
-      label = 'CONSUMPTION_COMMON'
-    end
-    if kennzeichnung == "PV Produktion" && msb_gerät.adresszusatz =~ /Wasser/
-      label = 'PRODUCTION_WATER'
-    end
+    label = refine_consumption_label   if label == 'CONSUMPTION'
+    label = refine_production_pv_label if label == 'PRODUCTION_PV'
     # puts "#{kennzeichnung} #{msb_gerät.adresszusatz} => #{label}"
     add_warning(:label, "Unknown label: #{kennzeichnung.inspect}") unless label
     label
+  end
+
+  def refine_consumption_label
+    if minipool_sn&.eeg_umlage_reduced? || input_register_of_group_power_source?
+      'CONSUMPTION_COMMON'
+    else
+      'CONSUMPTION'
+    end
+  end
+
+  def refine_production_pv_label
+    # Am Urtlgraben has water.
+    return 'PRODUCTION_WATER' if msb_gerät.adresszusatz =~ /Wasser/
+    # Fritz-Winter-Straße has wind.
+    return 'PRODUCTION_WIND' if msb_gerät.adresszusatz =~ /Kleinwindrad/
+    'PRODUCTION_PV'
+  end
+
+  # Power producers often have a two-way meter, since they consume a little power themselves some times.
+  # This methods checks if this register is such a register.
+  def input_register_of_group_power_source?
+    input? && group_power_source_buzznids.include?(buzznid)
+  end
+
+  def group_power_source_buzznids
+    group_seas = group.attributes.slice("sea_1_buzznid", "sea_2_buzznid", "sea_3_buzznid").values
+    group_seas.select(&:present?)
+  end
+
+  def group
+    @group ||= Beekeeper::Minipool::MinipoolObjekte.find_by(messvertragsnummer: vertragsnummer)
   end
 end
