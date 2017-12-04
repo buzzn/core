@@ -10,11 +10,9 @@ class CreateMeters < ActiveRecord::Migration
     add_column :meters, :sequence_number, :integer, null: true
 
     add_belongs_to :meters, :group, type: :uuid, index: true, null: true
-    add_belongs_to :meters, :address, index: true, type: :uuid, null: true
     add_belongs_to :meters, :broker, index: true, null: true
 
     add_foreign_key :meters, :groups, name: :fk_meters_group
-    add_foreign_key :meters, :addresses, name: :fk_meters_address
     add_foreign_key :meters, :brokers, name: :fk_meters_broker
 
     add_index :meters, [:group_id, :sequence_number], unique: true
@@ -22,10 +20,8 @@ class CreateMeters < ActiveRecord::Migration
 
   def down
     drop_belongs_to :meters, :group, type: :uuid, index: true, null: true
-    drop_belongs_to :meters, :address, index: true, type: :uuid, null: true
 
     drop_foreign_key :meters, :groups, name: :fk_meters_group
-    drop_foreign_key :meters, :addresses, name: :fk_meters_address
 
     drop_index :meters, [:group_id, :sequence_number]
 

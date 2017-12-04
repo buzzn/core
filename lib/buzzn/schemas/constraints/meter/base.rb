@@ -2,6 +2,8 @@ require_relative 'common'
 
 Schemas::Constraints::Meter::Base = Schemas::Support.Form(Schemas::Constraints::Meter::Common) do
   optional(:manufacturer_name).value(included_in?: Meter::Real.manufacturer_names.values)
+  optional(:manufacturer_description).value(:str?)
+  optional(:location_description).value(:str?)
   optional(:ownership).value(included_in?: Meter::Real.ownerships.values)
   optional(:section).value(included_in?: Meter::Real.sections.values)
   optional(:build_year).filled(:int?, gt?: 1950, lt?: 2050)

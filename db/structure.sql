@@ -513,8 +513,6 @@ CREATE TYPE label AS ENUM (
 
 CREATE TYPE manufacturer_name AS ENUM (
     'easy_meter',
-    'amperix',
-    'ferraris',
     'other'
 );
 
@@ -642,8 +640,6 @@ CREATE TYPE meters_edifact_voltage_level AS ENUM (
 
 CREATE TYPE meters_manufacturer_name AS ENUM (
     'easy_meter',
-    'amperix',
-    'ferraris',
     'other'
 );
 
@@ -1488,6 +1484,8 @@ CREATE TABLE meters (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     product_name character varying(64),
     product_serialnumber character varying(128),
+    manufacturer_description character varying,
+    location_description character varying,
     build_year integer,
     sent_data_dso date,
     converter_constant integer,
@@ -1509,7 +1507,6 @@ CREATE TABLE meters (
     type character varying NOT NULL,
     sequence_number integer,
     group_id uuid,
-    address_id uuid,
     broker_id integer
 );
 
@@ -2404,13 +2401,6 @@ CREATE UNIQUE INDEX index_market_functions_on_organization_id_function ON organi
 
 
 --
--- Name: index_meters_on_address_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_meters_on_address_id ON meters USING btree (address_id);
-
-
---
 -- Name: index_meters_on_broker_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2887,14 +2877,6 @@ ALTER TABLE ONLY groups
 
 ALTER TABLE ONLY groups
     ADD CONSTRAINT fk_groups_transmission_system_operator FOREIGN KEY (transmission_system_operator_id) REFERENCES organizations(id);
-
-
---
--- Name: meters fk_meters_address; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY meters
-    ADD CONSTRAINT fk_meters_address FOREIGN KEY (address_id) REFERENCES addresses(id);
 
 
 --

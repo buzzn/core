@@ -1,6 +1,6 @@
 Fabricator :meter, class_name: Meter::Real do
   registers                           { [Fabricate.build([:input_register, :output_register].sample)] }
-  manufacturer_name                    Meter::Real.manufacturer_names[:ferraris]
+  manufacturer_name                    Meter::Real.manufacturer_names[:other]
   product_name                        'AS 1440'
   product_serialnumber                { Random.new_seed.to_s.slice(0, 7) }
   created_at                          { (rand*10).days.ago }

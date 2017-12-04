@@ -3,7 +3,7 @@ module Meter
 
     has_many :registers, class_name: Register::Real, foreign_key: :meter_id
 
-    enum manufacturer_name: [:easy_meter, :amperix, :ferraris, :other].each_with_object({}).each {|k, map| map[k] = k.to_s }
+    enum manufacturer_name: [:easy_meter, :other].each_with_object({}).each {|k, map| map[k] = k.to_s }
 
     enum direction_number: {
            one_way_meter: 'ERZ',
