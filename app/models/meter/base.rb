@@ -16,8 +16,10 @@ module Meter
     before_save do
       if group_id_changed?
         raise ArgumentError.new('can not change group') unless group_id_was.nil?
-        max = Meter::Base.where(group: group).size
-        self.sequence_number = max
+        unless sequence_number
+          max = Meter::Base.where(group: group).size
+          self.sequence_number = max
+        end
       end
     end
 

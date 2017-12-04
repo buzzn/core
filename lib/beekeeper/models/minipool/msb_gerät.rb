@@ -82,7 +82,7 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
       ownership:              ownership,
       direction_number:       direction_number,
       calibrated_until:       calibrated_until,
-      # sequence_number:        nummernzusatz,
+      sequence_number:        nummernzusatz,
       edifact_voltage_level:  edifact_voltage_level,
       edifact_cycle_interval: edifact_cycle_interval,
       edifact_metering_type:  edifact_metering_type,
