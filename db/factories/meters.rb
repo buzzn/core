@@ -47,13 +47,6 @@ FactoryGirl.define do
       edifact_cycle_interval       Meter::Real.edifact_cycle_intervals[:yearly]
       edifact_tariff               Meter::Real.edifact_tariffs[:single_tariff]
       edifact_data_logging         Meter::Real.edifact_data_loggings[:electronic]
-      before(:create) do |meter, _evaluator|
-        meter.address = if meter.group.address
-          meter.group.address.dup # use from group when present
-        else
-          FactoryGirl.create(:address)
-        end
-      end
     end
 
     trait :virtual do
