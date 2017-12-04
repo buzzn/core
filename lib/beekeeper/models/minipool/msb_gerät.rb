@@ -78,6 +78,7 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
       build_year:             zählerBaujahr.strip,
       converter_constant:     zusatz1wandlerfaktor.strip,
       manufacturer_name:      manufacturer_name,
+      manufacturer_description: manufacturer_description,
       ownership:              ownership,
       direction_number:       direction_number,
       calibrated_until:       calibrated_until,
@@ -179,6 +180,16 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
       'easy_meter'
     else
       'other'
+    end
+  end
+
+  def manufacturer_description
+    # If the manufacturer is easymeter, everything is in manufacturer_name and product_name.
+    # If the field zählerHersteller is not empty, we store it in manufacturer_description.
+    if manufacturer_name == 'easy_meter' || zählerHersteller.strip.empty?
+      nil
+    else
+      zählerHersteller
     end
   end
 
