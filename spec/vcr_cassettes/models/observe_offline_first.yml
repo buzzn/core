@@ -85,7 +85,7 @@ http_interactions:
   recorded_at: Tue, 01 Mar 2016 00:30:01 GMT
 - request:
     method: get
-    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=team%40localpool.de&oauth_token=68684278a81d4dc989ef3492a2df961f&password=Zebulon_4711
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=me%40example.de&oauth_token=68684278a81d4dc989ef3492a2df961f&password=blablubla
     body:
       encoding: US-ASCII
       string: ''

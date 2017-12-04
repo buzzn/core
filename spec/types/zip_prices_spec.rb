@@ -1,10 +1,13 @@
-describe Buzzn::Types::ZipPrices do
+require 'buzzn/types/zip_prices'
+require 'buzzn/types/zip_price_config'
+
+describe Types::ZipPrices do
 
   before :all do
     file = File.join('db', 'csv', "TEST_MINIMAL_GET_AG_2017ET_DTdot.csv")
     ZipToPrice.from_csv(file)
 
-    CoreConfig.store Buzzn::Types::ZipPriceConfig.new(
+    CoreConfig.store Types::ZipPriceConfig.new(
         kwkg_aufschlag: 1.0,
         ab_la_v: 1.0,
         strom_nev: 1.0,
@@ -19,13 +22,13 @@ describe Buzzn::Types::ZipPrices do
   end
 
   it 'max price when there is more then one DSO' do
-    prices = Buzzn::Types::ZipPrices.new(zip: 1468, type: 'single', annual_kwh: 1)
+    prices = Types::ZipPrices.new(zip: 1468, type: 'single', annual_kwh: 1)
     expect(prices.max_price.price.dso).to eq 'ENSO Netz GmbH'
     expect(ZipToPrice.by_zip(1468).count).to eq 2
   end
 
   it 'max price when there is exactly one DSO' do
-    prices = Buzzn::Types::ZipPrices.new(zip: 1445, type: 'single', annual_kwh: 1)
+    prices = Types::ZipPrices.new(zip: 1445, type: 'single', annual_kwh: 1)
     expect(prices.max_price.price.dso).to eq 'Stadtwerke Elbtal GmbH'
     expect(ZipToPrice.by_zip(1445).count).to eq 1
   end

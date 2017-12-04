@@ -1,7 +1,9 @@
 module Buzzn::Services
 
   class Health
-    include Import.args['service.redis']
+    include Import['service.redis',
+                   'config.heroku_slug_commit',
+                   'config.heroku_release_created_at']
 
     def database?
       if ActiveRecord::Base.connection.active?
@@ -32,8 +34,8 @@ module Buzzn::Services
 
     def build_info
       {
-        version: Import.global('config.heroku_slug_commit'),
-        timestamp: Import.global('config.heroku_release_created_at')
+        version: heroku_slug_commit,
+        timestamp: heroku_release_created_at
       }
     end
 

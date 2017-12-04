@@ -2,6 +2,7 @@ require_relative '../../buzzn'
 require_relative 'reader'
 require_relative 'active_record'
 require_relative 'main_container'
+require_relative '../services'
 require 'dry/auto_inject'
 require 'dry/more/container/singleton'
 
@@ -32,10 +33,22 @@ module Buzzn
             app.glob = "buzzn/services/**/*.rb"
             app.to_a.each do |path|
               require path
-              name = File.basename(path).sub(/\.rb/,'')
-              cname = name.split('_').collect {|n| n.capitalize }.join
-              clazz = Buzzn::Services.const_get(cname)
-              services.register("service.#{name}", clazz)
+
+              main = path.gsub(/^.*buzzn\/|.rb$/, '')
+              clazz = main.camelize.safe_constantize
+              if clazz # TODO remove if
+                if clazz.is_a?(Class)
+                  name = main.gsub('/', '.')
+                  services.register("#{name.sub(/services/, 'service')}", clazz)
+                end
+              else
+                # TODO remove old namespace handling
+
+                name = File.basename(path).sub(/\.rb/,'')
+                cname = name.split('_').collect {|n| n.capitalize }.join
+                clazz = Buzzn::Services.const_get(cname)
+                services.register("service.#{name}", clazz) if clazz.is_a?(Class)
+              end
             end
             app.glob = "buzzn/operations/**/*.rb"
             app.to_a.each do |path|
