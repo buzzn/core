@@ -20,9 +20,14 @@ SampleData.registers = OpenStruct.new(
   # This virtual register sums up the consumption of all powertakers supplied by buzzn.
   # That's why the formula parts subtract powertaker 6's register, since he is supplied by a third party.
 
-  # Temporarily disabled because they fail
+  #
+  # FIXME creating the following registers fails due to a DB constraint error:
+  # PG::NotNullViolation: ERROR:  null value in column "meter_id" violates not-null constraint
+  # I wasn't able to debug it or understand why this doesn't happen on the real meters above.
+  # Maybe we won't be using the virtual registers like this any more soon, so I don't debug the creation any further.
+  #
   # grid_consumption_corrected: create(:register, :virtual_input,
-  #   meter: build(:meter, :virtual, group: SampleData.localpools.people_power),
+  #   meter: build(:meter, :virtual, group: SampleData.localpools.people_power, registers: []),
   #   label: Register::Base.labels[:grid_consumption_corrected],
   #   name: "ÜGZ Bezug korrigiert",
   #   formula_parts: [
