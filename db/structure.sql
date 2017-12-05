@@ -374,54 +374,6 @@ CREATE TYPE formula_parts_operator AS ENUM (
 
 
 --
--- Name: label; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE label AS ENUM (
-    'CONSUMPTION',
-    'CONSUMPTION_COMMON',
-    'DEMARCATION_PV',
-    'DEMARCATION_CHP',
-    'DEMARCATION_WIND',
-    'DEMARCATION_WATER',
-    'PRODUCTION_PV',
-    'PRODUCTION_CHP',
-    'PRODUCTION_WIND',
-    'PRODUCTION_WATER',
-    'GRID_CONSUMPTION',
-    'GRID_FEEDING',
-    'GRID_CONSUMPTION_CORRECTED',
-    'GRID_FEEDING_CORRECTED',
-    'OTHER'
-);
-
-
---
--- Name: manufacturer_name; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE manufacturer_name AS ENUM (
-    'easy_meter',
-    'other'
-);
-
-
---
--- Name: market_partner_function; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE market_partner_function AS ENUM (
-    'distribution_system_operator',
-    'electricity_supplier',
-    'metering_point_operator',
-    'metering_service_provider',
-    'other',
-    'power_giver',
-    'power_taker',
-    'transmission_system_operator'
-);
-
----
 -- Name: meters_direction_number; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -746,7 +698,7 @@ CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt
+SELECT substr(password_hash, 0, 30) INTO salt 
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -764,7 +716,7 @@ CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt
+SELECT substr(password_hash, 0, 30) INTO salt 
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -782,7 +734,7 @@ CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) 
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid
+SELECT password_hash = hash INTO valid 
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -800,7 +752,7 @@ CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS b
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid
+SELECT password_hash = hash INTO valid 
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN valid;
