@@ -1,8 +1,8 @@
 class CreateDocuments < ActiveRecord::Migration
   def change
     create_table :documents, id: :uuid do |t|
-      t.string :path, null: false, size: 128
-      t.string :encryption_details, null: false, size: 256
+      t.string :path, null: false, limit: 128
+      t.string :encryption_details, null: false, limit: 256
 
       t.timestamps null: false
     end

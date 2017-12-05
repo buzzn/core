@@ -12,9 +12,6 @@ class Cleanup < ActiveRecord::Migration
     drop_table :badge_notifications
     drop_table :conversations
     drop_table :friendly_id_slugs
-    drop_table :taggings
-    drop_table :tags
     drop_table :versions
-    drop_table :votes
   end
 end

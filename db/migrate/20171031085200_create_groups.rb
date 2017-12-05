@@ -7,8 +7,8 @@ class CreateGroups < ActiveRecord::Migration
   def up
     SCHEMA.up(:groups, self)
 
-    add_column :groups, :type, :string, null: false, size: 64
-    add_column :groups, :slug, :string, null: false, size: 64
+    add_column :groups, :type, :string, null: false, limit: 64
+    add_column :groups, :slug, :string, null: false, limit: 64
 
     add_belongs_to :groups, :address, type: :uuid, index: true, null: true
     add_belongs_to :groups, :owner_person, reference: :persons, type: :uuid, index: true, null: true

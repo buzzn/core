@@ -364,117 +364,6 @@ CREATE TYPE cycle AS ENUM (
 
 
 --
--- Name: direction; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE direction AS ENUM (
-    'in',
-    'out'
-);
-
-
---
--- Name: direction_number; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE direction_number AS ENUM (
-    'ERZ',
-    'ZRZ'
-);
-
-
---
--- Name: edifact_cycle_interval; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE edifact_cycle_interval AS ENUM (
-    'MONTHLY',
-    'QUARTERLY',
-    'HALF_YEARLY',
-    'YEARLY'
-);
-
-
---
--- Name: edifact_data_logging; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE edifact_data_logging AS ENUM (
-    'Z04',
-    'Z05'
-);
-
-
---
--- Name: edifact_measurement_method; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE edifact_measurement_method AS ENUM (
-    'AMR',
-    'MMR'
-);
-
-
---
--- Name: edifact_meter_size; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE edifact_meter_size AS ENUM (
-    'Z01',
-    'Z02',
-    'Z03'
-);
-
-
---
--- Name: edifact_metering_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE edifact_metering_type AS ENUM (
-    'AHZ',
-    'WSZ',
-    'LAZ',
-    'MAZ',
-    'EHZ',
-    'IVA'
-);
-
-
---
--- Name: edifact_mounting_method; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE edifact_mounting_method AS ENUM (
-    'BKE',
-    'DPA',
-    'HS'
-);
-
-
---
--- Name: edifact_tariff; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE edifact_tariff AS ENUM (
-    'ETZ',
-    'ZTZ',
-    'NTZ'
-);
-
-
---
--- Name: edifact_voltage_level; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE edifact_voltage_level AS ENUM (
-    'E06',
-    'E05',
-    'E04',
-    'E03'
-);
-
-
---
 -- Name: formula_parts_operator; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -532,8 +421,7 @@ CREATE TYPE market_partner_function AS ENUM (
     'transmission_system_operator'
 );
 
-
---
+---
 -- Name: meters_direction_number; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -694,19 +582,6 @@ CREATE TYPE organization_market_functions_function AS ENUM (
 
 
 --
--- Name: ownership; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE ownership AS ENUM (
-    'BUZZN',
-    'FOREIGN_OWNERSHIP',
-    'CUSTOMER',
-    'LEASED',
-    'BOUGHT'
-);
-
-
---
 -- Name: persons_preferred_language; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -862,16 +737,6 @@ CREATE TYPE role_names AS ENUM (
 
 
 --
--- Name: section; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE section AS ENUM (
-    'S',
-    'G'
-);
-
-
---
 -- Name: taxation; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -891,7 +756,7 @@ CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -909,7 +774,7 @@ CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -927,7 +792,7 @@ CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) 
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -945,7 +810,7 @@ CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS b
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -1112,6 +977,26 @@ CREATE TABLE addresses (
 
 
 --
+-- Name: areas; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE areas (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    name character varying,
+    zoom integer DEFAULT 16,
+    address character varying,
+    polygons text,
+    polygon_encode character varying,
+    latitude double precision,
+    longitude double precision,
+    gmaps boolean,
+    group_id uuid,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
 -- Name: bank_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1136,12 +1021,12 @@ CREATE TABLE bank_accounts (
 
 CREATE TABLE banks (
     id integer NOT NULL,
-    blz character varying NOT NULL,
-    description character varying NOT NULL,
-    zip character varying NOT NULL,
-    place character varying NOT NULL,
-    name character varying NOT NULL,
-    bic character varying NOT NULL
+    blz character varying(32) NOT NULL,
+    description character varying(128) NOT NULL,
+    zip character varying(16) NOT NULL,
+    place character varying(64) NOT NULL,
+    name character varying(64) NOT NULL,
+    bic character varying(16) NOT NULL
 );
 
 
@@ -1233,30 +1118,6 @@ ALTER SEQUENCE brokers_id_seq OWNED BY brokers.id;
 
 
 --
--- Name: comments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE comments (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    commentable_id uuid,
-    commentable_type character varying,
-    title character varying,
-    body text,
-    subject character varying,
-    user_id uuid NOT NULL,
-    lft integer,
-    rgt integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    likes integer DEFAULT 0,
-    parent_id uuid,
-    image character varying,
-    chart_resolution character varying,
-    chart_timestamp timestamp without time zone
-);
-
-
---
 -- Name: contract_tax_data; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1288,7 +1149,7 @@ CREATE TABLE contracts (
     confirm_pricing_model boolean,
     power_of_attorney boolean,
     customer_number character varying,
-    register_id uuid,
+    metering_point_id uuid,
     organization_id uuid,
     localpool_id uuid,
     created_at timestamp without time zone NOT NULL,
@@ -1304,7 +1165,7 @@ CREATE TABLE contracts (
     third_party_renter_number character varying,
     metering_point_operator_name character varying,
     old_supplier_name character varying,
-    type character varying NOT NULL,
+    type character varying,
     termination_date date,
     old_customer_number character varying,
     old_account_number character varying,
@@ -1319,16 +1180,6 @@ CREATE TABLE contracts (
     customer_bank_account_id uuid,
     contractor_bank_account_id uuid,
     renewable_energy_law_taxation taxation
-);
-
-
---
--- Name: contracts_tariffs; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE contracts_tariffs (
-    tariff_id uuid NOT NULL,
-    contract_id uuid NOT NULL
 );
 
 
@@ -1391,7 +1242,7 @@ CREATE TABLE devices (
     watt_hour_pa integer,
     commissioning date,
     mobile boolean DEFAULT false,
-    register_id uuid,
+    metering_point_id uuid,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
@@ -1403,8 +1254,8 @@ CREATE TABLE devices (
 
 CREATE TABLE documents (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    path character varying NOT NULL,
-    encryption_details character varying NOT NULL,
+    path character varying(128) NOT NULL,
+    encryption_details character varying(256) NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -1433,6 +1284,28 @@ CREATE TABLE energy_classifications (
 
 
 --
+-- Name: equipment; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE equipment (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    slug character varying,
+    manufacturer_name character varying,
+    manufacturer_product_name character varying,
+    manufacturer_product_serialnumber character varying,
+    device_kind character varying,
+    device_type character varying,
+    ownership character varying,
+    build date,
+    calibrated_till date,
+    converter_constant integer,
+    meter_id uuid,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
 -- Name: formula_parts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1443,6 +1316,20 @@ CREATE TABLE formula_parts (
     operator formula_parts_operator,
     register_id uuid NOT NULL,
     operand_id uuid NOT NULL
+);
+
+
+--
+-- Name: friendships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE friendships (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    user_id uuid NOT NULL,
+    friend_id uuid NOT NULL,
+    status character varying,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -1461,8 +1348,8 @@ CREATE TABLE groups (
     show_contact boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    type character varying NOT NULL,
-    slug character varying NOT NULL,
+    type character varying(64) NOT NULL,
+    slug character varying(64) NOT NULL,
     address_id uuid,
     owner_person_id uuid,
     owner_organization_id uuid,
@@ -1512,6 +1399,22 @@ CREATE TABLE meters (
 
 
 --
+-- Name: notification_unsubscribers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE notification_unsubscribers (
+    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    notification_key character varying,
+    channel character varying,
+    user_id uuid,
+    trackable_id uuid,
+    trackable_type character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
 -- Name: organization_market_functions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1542,7 +1445,7 @@ CREATE TABLE organizations (
     website character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    slug character varying NOT NULL,
+    slug character varying(64) NOT NULL,
     customer_number integer,
     address_id uuid,
     legal_representation_id uuid,
@@ -1580,7 +1483,7 @@ CREATE TABLE persons (
     prefix persons_prefix,
     preferred_language persons_preferred_language,
     title persons_title,
-    image character varying,
+    image character varying(64),
     customer_number integer,
     address_id uuid
 );
@@ -1593,34 +1496,6 @@ CREATE TABLE persons (
 CREATE TABLE persons_roles (
     person_id uuid NOT NULL,
     role_id integer NOT NULL
-);
-
-
---
--- Name: profiles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE profiles (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    user_name character varying,
-    slug character varying,
-    title character varying,
-    image character varying,
-    first_name character varying,
-    last_name character varying,
-    about_me text,
-    website character varying,
-    gender character varying,
-    phone character varying,
-    time_zone character varying,
-    confirm_pricing_model boolean,
-    terms boolean,
-    readable character varying,
-    user_id uuid,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    email_notification_meter_offline boolean DEFAULT false,
-    address character varying
 );
 
 
@@ -1681,11 +1556,9 @@ CREATE TABLE registers (
 
 CREATE TABLE roles (
     id integer NOT NULL,
+    name character varying(64) NOT NULL,
     resource_id uuid,
-    resource_type character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    name role_names NOT NULL
+    resource_type character varying(32)
 );
 
 
@@ -1787,10 +1660,10 @@ CREATE TABLE zip_to_prices (
     unitprice_cents_kwh_et double precision NOT NULL,
     measurement_euro_year_et double precision NOT NULL,
     ka double precision NOT NULL,
-    state character varying NOT NULL,
-    community character varying NOT NULL,
+    state character varying(32) NOT NULL,
+    community character varying(32) NOT NULL,
     vdewid bigint NOT NULL,
-    dso character varying NOT NULL,
+    dso character varying(32) NOT NULL,
     updated boolean NOT NULL
 );
 
@@ -1926,6 +1799,14 @@ ALTER TABLE ONLY addresses
 
 
 --
+-- Name: areas areas_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY areas
+    ADD CONSTRAINT areas_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: bank_accounts bank_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1963,14 +1844,6 @@ ALTER TABLE ONLY billings
 
 ALTER TABLE ONLY brokers
     ADD CONSTRAINT brokers_pkey PRIMARY KEY (id);
-
-
---
--- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY comments
-    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
 
 
 --
@@ -2030,11 +1903,27 @@ ALTER TABLE ONLY energy_classifications
 
 
 --
+-- Name: equipment equipment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY equipment
+    ADD CONSTRAINT equipment_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: formula_parts formula_parts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY formula_parts
     ADD CONSTRAINT formula_parts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: friendships friendships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY friendships
+    ADD CONSTRAINT friendships_pkey PRIMARY KEY (id);
 
 
 --
@@ -2051,6 +1940,14 @@ ALTER TABLE ONLY groups
 
 ALTER TABLE ONLY meters
     ADD CONSTRAINT meters_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notification_unsubscribers notification_unsubscribers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY notification_unsubscribers
+    ADD CONSTRAINT notification_unsubscribers_pkey PRIMARY KEY (id);
 
 
 --
@@ -2083,14 +1980,6 @@ ALTER TABLE ONLY payments
 
 ALTER TABLE ONLY persons
     ADD CONSTRAINT persons_pkey PRIMARY KEY (id);
-
-
---
--- Name: profiles profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY profiles
-    ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 
 
 --
@@ -2146,6 +2035,13 @@ ALTER TABLE ONLY zip_to_prices
 --
 
 CREATE UNIQUE INDEX accounts_email_index ON accounts USING btree (email) WHERE (status_id = ANY (ARRAY[1, 2]));
+
+
+--
+-- Name: index_areas_on_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_areas_on_group_id ON areas USING btree (group_id);
 
 
 --
@@ -2205,20 +2101,6 @@ CREATE INDEX index_billings_on_localpool_power_taker_contract_id ON billings USI
 
 
 --
--- Name: index_comments_on_commentable_id_and_commentable_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_comments_on_commentable_id_and_commentable_type ON comments USING btree (commentable_id, commentable_type);
-
-
---
--- Name: index_comments_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_comments_on_user_id ON comments USING btree (user_id);
-
-
---
 -- Name: index_contract_number_and_its_addition; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2254,17 +2136,17 @@ CREATE INDEX index_contracts_on_localpool_id ON contracts USING btree (localpool
 
 
 --
+-- Name: index_contracts_on_metering_point_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contracts_on_metering_point_id ON contracts USING btree (metering_point_id);
+
+
+--
 -- Name: index_contracts_on_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_contracts_on_organization_id ON contracts USING btree (organization_id);
-
-
---
--- Name: index_contracts_on_register_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_contracts_on_register_id ON contracts USING btree (register_id);
 
 
 --
@@ -2275,24 +2157,10 @@ CREATE UNIQUE INDEX index_contracts_on_slug ON contracts USING btree (slug);
 
 
 --
--- Name: index_contracts_tariffs_on_contract_id_and_tariff_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_devices_on_metering_point_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_contracts_tariffs_on_contract_id_and_tariff_id ON contracts_tariffs USING btree (contract_id, tariff_id);
-
-
---
--- Name: index_contracts_tariffs_on_tariff_id_and_contract_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_contracts_tariffs_on_tariff_id_and_contract_id ON contracts_tariffs USING btree (tariff_id, contract_id);
-
-
---
--- Name: index_devices_on_register_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_devices_on_register_id ON devices USING btree (register_id);
+CREATE INDEX index_devices_on_metering_point_id ON devices USING btree (metering_point_id);
 
 
 --
@@ -2310,6 +2178,20 @@ CREATE INDEX index_energy_classifications_on_organization_id ON energy_classific
 
 
 --
+-- Name: index_equipment_on_meter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_equipment_on_meter_id ON equipment USING btree (meter_id);
+
+
+--
+-- Name: index_equipment_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_equipment_on_slug ON equipment USING btree (slug);
+
+
+--
 -- Name: index_formula_parts_on_operand_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2321,6 +2203,27 @@ CREATE INDEX index_formula_parts_on_operand_id ON formula_parts USING btree (ope
 --
 
 CREATE INDEX index_formula_parts_on_register_id ON formula_parts USING btree (register_id);
+
+
+--
+-- Name: index_friendships_on_friend_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_friendships_on_friend_id ON friendships USING btree (friend_id);
+
+
+--
+-- Name: index_friendships_on_friend_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_friendships_on_friend_id_and_user_id ON friendships USING btree (friend_id, user_id);
+
+
+--
+-- Name: index_friendships_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_friendships_on_user_id ON friendships USING btree (user_id);
 
 
 --
@@ -2422,6 +2325,41 @@ CREATE UNIQUE INDEX index_meters_on_group_id_and_sequence_number ON meters USING
 
 
 --
+-- Name: index_noti_unsub_full; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_noti_unsub_full ON notification_unsubscribers USING btree (user_id, trackable_id, trackable_type, notification_key);
+
+
+--
+-- Name: index_noti_unsub_trackable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_noti_unsub_trackable ON notification_unsubscribers USING btree (trackable_id, trackable_type);
+
+
+--
+-- Name: index_noti_unsub_trackable_and_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_noti_unsub_trackable_and_key ON notification_unsubscribers USING btree (trackable_id, trackable_type, notification_key);
+
+
+--
+-- Name: index_noti_unsub_user_and_trackable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_noti_unsub_user_and_trackable ON notification_unsubscribers USING btree (user_id, trackable_id, trackable_type);
+
+
+--
+-- Name: index_notification_unsubscribers_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notification_unsubscribers_on_user_id ON notification_unsubscribers USING btree (user_id);
+
+
+--
 -- Name: index_organization_market_functions_on_address_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2510,34 +2448,6 @@ CREATE INDEX index_persons_roles_on_person_id_and_role_id ON persons_roles USING
 --
 
 CREATE INDEX index_persons_roles_on_role_id_and_person_id ON persons_roles USING btree (role_id, person_id);
-
-
---
--- Name: index_profiles_on_readable; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_profiles_on_readable ON profiles USING btree (readable);
-
-
---
--- Name: index_profiles_on_slug; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_profiles_on_slug ON profiles USING btree (slug);
-
-
---
--- Name: index_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_profiles_on_user_id ON profiles USING btree (user_id);
-
-
---
--- Name: index_profiles_on_user_name; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_profiles_on_user_name ON profiles USING btree (user_name);
 
 
 --
@@ -2784,22 +2694,6 @@ ALTER TABLE ONLY contract_tax_data
 
 
 --
--- Name: contracts_tariffs fk_contracts_tariffs_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY contracts_tariffs
-    ADD CONSTRAINT fk_contracts_tariffs_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
-
-
---
--- Name: contracts_tariffs fk_contracts_tariffs_tariff; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY contracts_tariffs
-    ADD CONSTRAINT fk_contracts_tariffs_tariff FOREIGN KEY (tariff_id) REFERENCES tariffs(id);
-
-
---
 -- Name: formula_parts fk_formula_parts_operand; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3043,8 +2937,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140416193045');
 
 INSERT INTO schema_migrations (version) VALUES ('20140515074138');
 
-INSERT INTO schema_migrations (version) VALUES ('20140528121619');
-
 INSERT INTO schema_migrations (version) VALUES ('20140528181340');
 
 INSERT INTO schema_migrations (version) VALUES ('20140605130856');
@@ -3053,83 +2945,25 @@ INSERT INTO schema_migrations (version) VALUES ('20140616081945');
 
 INSERT INTO schema_migrations (version) VALUES ('20140616100740');
 
-INSERT INTO schema_migrations (version) VALUES ('20140622154815');
-
-INSERT INTO schema_migrations (version) VALUES ('20140730084558');
-
-INSERT INTO schema_migrations (version) VALUES ('20140930083931');
-
-INSERT INTO schema_migrations (version) VALUES ('20141112082237');
-
-INSERT INTO schema_migrations (version) VALUES ('20141112082238');
-
-INSERT INTO schema_migrations (version) VALUES ('20141112082239');
-
-INSERT INTO schema_migrations (version) VALUES ('20141112082240');
-
 INSERT INTO schema_migrations (version) VALUES ('20150114092836');
 
 INSERT INTO schema_migrations (version) VALUES ('20150219151449');
 
 INSERT INTO schema_migrations (version) VALUES ('20150325094707');
 
-INSERT INTO schema_migrations (version) VALUES ('20150327135326');
-
-INSERT INTO schema_migrations (version) VALUES ('20150407152833');
-
 INSERT INTO schema_migrations (version) VALUES ('20150613142417');
 
-INSERT INTO schema_migrations (version) VALUES ('20150619095317');
-
 INSERT INTO schema_migrations (version) VALUES ('20150625114349');
-
-INSERT INTO schema_migrations (version) VALUES ('20150626153325');
 
 INSERT INTO schema_migrations (version) VALUES ('20150630104513');
 
 INSERT INTO schema_migrations (version) VALUES ('20150722092022');
 
-INSERT INTO schema_migrations (version) VALUES ('20150820103035');
-
-INSERT INTO schema_migrations (version) VALUES ('20150831134142');
-
-INSERT INTO schema_migrations (version) VALUES ('20150904104902');
-
 INSERT INTO schema_migrations (version) VALUES ('20150916104557');
-
-INSERT INTO schema_migrations (version) VALUES ('20150923161601');
-
-INSERT INTO schema_migrations (version) VALUES ('20150925090918');
-
-INSERT INTO schema_migrations (version) VALUES ('20151007092822');
-
-INSERT INTO schema_migrations (version) VALUES ('20151012151021');
-
-INSERT INTO schema_migrations (version) VALUES ('20151023150629');
-
-INSERT INTO schema_migrations (version) VALUES ('20151109114235');
-
-INSERT INTO schema_migrations (version) VALUES ('20151203091129');
-
-INSERT INTO schema_migrations (version) VALUES ('20151209101130');
 
 INSERT INTO schema_migrations (version) VALUES ('20160120084020');
 
 INSERT INTO schema_migrations (version) VALUES ('20160217120441');
-
-INSERT INTO schema_migrations (version) VALUES ('20160217143008');
-
-INSERT INTO schema_migrations (version) VALUES ('20160217143754');
-
-INSERT INTO schema_migrations (version) VALUES ('20160217143947');
-
-INSERT INTO schema_migrations (version) VALUES ('20160218132858');
-
-INSERT INTO schema_migrations (version) VALUES ('20160218132922');
-
-INSERT INTO schema_migrations (version) VALUES ('20160218133232');
-
-INSERT INTO schema_migrations (version) VALUES ('20160218133241');
 
 INSERT INTO schema_migrations (version) VALUES ('20160223100219');
 
@@ -3138,8 +2972,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160413090939');
 INSERT INTO schema_migrations (version) VALUES ('20160422110752');
 
 INSERT INTO schema_migrations (version) VALUES ('20160602120455');
-
-INSERT INTO schema_migrations (version) VALUES ('20160622110731');
 
 INSERT INTO schema_migrations (version) VALUES ('20160622111108');
 
@@ -3151,21 +2983,9 @@ INSERT INTO schema_migrations (version) VALUES ('20160922130534');
 
 INSERT INTO schema_migrations (version) VALUES ('20160922154043');
 
-INSERT INTO schema_migrations (version) VALUES ('20160922163350');
-
 INSERT INTO schema_migrations (version) VALUES ('20160926060807');
 
-INSERT INTO schema_migrations (version) VALUES ('20160926135606');
-
-INSERT INTO schema_migrations (version) VALUES ('20160926140111');
-
-INSERT INTO schema_migrations (version) VALUES ('20160926140416');
-
-INSERT INTO schema_migrations (version) VALUES ('20160926140754');
-
 INSERT INTO schema_migrations (version) VALUES ('20161019155654');
-
-INSERT INTO schema_migrations (version) VALUES ('20161020085343');
 
 INSERT INTO schema_migrations (version) VALUES ('20161110152656');
 
@@ -3178,30 +2998,6 @@ INSERT INTO schema_migrations (version) VALUES ('20161115085848');
 INSERT INTO schema_migrations (version) VALUES ('20161115150524');
 
 INSERT INTO schema_migrations (version) VALUES ('20161116104658');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116115800');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116122929');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116133815');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116135219');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116135644');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116135708');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116135725');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116140032');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116143256');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116143420');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116143524');
-
-INSERT INTO schema_migrations (version) VALUES ('20161116143900');
 
 INSERT INTO schema_migrations (version) VALUES ('20161117132744');
 
@@ -3217,11 +3013,7 @@ INSERT INTO schema_migrations (version) VALUES ('20161128080018');
 
 INSERT INTO schema_migrations (version) VALUES ('20161130080018');
 
-INSERT INTO schema_migrations (version) VALUES ('20161205131404');
-
 INSERT INTO schema_migrations (version) VALUES ('20161223105036');
-
-INSERT INTO schema_migrations (version) VALUES ('20161225131404');
 
 INSERT INTO schema_migrations (version) VALUES ('20170109131405');
 
@@ -3233,17 +3025,11 @@ INSERT INTO schema_migrations (version) VALUES ('20170109131409');
 
 INSERT INTO schema_migrations (version) VALUES ('20170110152512');
 
-INSERT INTO schema_migrations (version) VALUES ('20170111082512');
-
 INSERT INTO schema_migrations (version) VALUES ('20170130131737');
 
 INSERT INTO schema_migrations (version) VALUES ('20170208161055');
 
 INSERT INTO schema_migrations (version) VALUES ('20170208163547');
-
-INSERT INTO schema_migrations (version) VALUES ('20170215132553');
-
-INSERT INTO schema_migrations (version) VALUES ('20170217080457');
 
 INSERT INTO schema_migrations (version) VALUES ('20170217113807');
 
@@ -3255,23 +3041,11 @@ INSERT INTO schema_migrations (version) VALUES ('20170221112718');
 
 INSERT INTO schema_migrations (version) VALUES ('20170228142810');
 
-INSERT INTO schema_migrations (version) VALUES ('20170301095532');
-
 INSERT INTO schema_migrations (version) VALUES ('20170303200236');
 
 INSERT INTO schema_migrations (version) VALUES ('20170303200703');
 
 INSERT INTO schema_migrations (version) VALUES ('20170303200921');
-
-INSERT INTO schema_migrations (version) VALUES ('20170303202644');
-
-INSERT INTO schema_migrations (version) VALUES ('20170303203539');
-
-INSERT INTO schema_migrations (version) VALUES ('20170310145748');
-
-INSERT INTO schema_migrations (version) VALUES ('20170406124043');
-
-INSERT INTO schema_migrations (version) VALUES ('20170410143944');
 
 INSERT INTO schema_migrations (version) VALUES ('20170410154959');
 
@@ -3279,25 +3053,7 @@ INSERT INTO schema_migrations (version) VALUES ('20170412212950');
 
 INSERT INTO schema_migrations (version) VALUES ('20170418125916');
 
-INSERT INTO schema_migrations (version) VALUES ('20170420141436');
-
-INSERT INTO schema_migrations (version) VALUES ('20170503124043');
-
-INSERT INTO schema_migrations (version) VALUES ('20170505151515');
-
-INSERT INTO schema_migrations (version) VALUES ('20170509141446');
-
 INSERT INTO schema_migrations (version) VALUES ('20170524090229');
-
-INSERT INTO schema_migrations (version) VALUES ('20170615163547');
-
-INSERT INTO schema_migrations (version) VALUES ('20170622163547');
-
-INSERT INTO schema_migrations (version) VALUES ('20170626103547');
-
-INSERT INTO schema_migrations (version) VALUES ('20170626163547');
-
-INSERT INTO schema_migrations (version) VALUES ('20170707103547');
 
 INSERT INTO schema_migrations (version) VALUES ('20170711323547');
 
@@ -3309,21 +3065,13 @@ INSERT INTO schema_migrations (version) VALUES ('20170714163547');
 
 INSERT INTO schema_migrations (version) VALUES ('20170719124713');
 
-INSERT INTO schema_migrations (version) VALUES ('20170721074915');
-
 INSERT INTO schema_migrations (version) VALUES ('20170731104218');
 
 INSERT INTO schema_migrations (version) VALUES ('20170802094212');
 
-INSERT INTO schema_migrations (version) VALUES ('20170906020031');
-
-INSERT INTO schema_migrations (version) VALUES ('20170907190442');
-
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
 
 INSERT INTO schema_migrations (version) VALUES ('20171005091701');
-
-INSERT INTO schema_migrations (version) VALUES ('20171009115140');
 
 INSERT INTO schema_migrations (version) VALUES ('20171010075030');
 
@@ -3332,10 +3080,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171010094247');
 INSERT INTO schema_migrations (version) VALUES ('20171010102959');
 
 INSERT INTO schema_migrations (version) VALUES ('20171011151135');
-
-INSERT INTO schema_migrations (version) VALUES ('20171012204100');
-
-INSERT INTO schema_migrations (version) VALUES ('20171016085826');
 
 INSERT INTO schema_migrations (version) VALUES ('20171016111731');
 
@@ -3357,6 +3101,14 @@ INSERT INTO schema_migrations (version) VALUES ('20171018134419');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142114');
 
+INSERT INTO schema_migrations (version) VALUES ('20171028200020');
+
+INSERT INTO schema_migrations (version) VALUES ('20171028200030');
+
+INSERT INTO schema_migrations (version) VALUES ('20171028200040');
+
+INSERT INTO schema_migrations (version) VALUES ('20171028200050');
+
 INSERT INTO schema_migrations (version) VALUES ('20171028200100');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028200200');
@@ -3374,8 +3126,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171029000800');
 INSERT INTO schema_migrations (version) VALUES ('20171031085200');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085220');
-
-INSERT INTO schema_migrations (version) VALUES ('20171031085230');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085250');
 
