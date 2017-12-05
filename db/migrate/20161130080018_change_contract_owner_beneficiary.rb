@@ -6,9 +6,6 @@ class ChangeContractOwnerBeneficiary < ActiveRecord::Migration
     add_belongs_to :contracts, :customer, references: :contracting_parties, index: true, type: :uuid
     add_foreign_key :contracts, :contracting_parties, column: :customer_id, null: false
 
-    add_belongs_to :contracts, :signing_user, references: :users, index: true, type: :uuid
-    add_foreign_key :contracts, :users, column: :signing_user_id, null: false
-
     reversible do |dir|
       dir.up do
         Contract::Base.all.each do |c|
@@ -42,6 +39,5 @@ class ChangeContractOwnerBeneficiary < ActiveRecord::Migration
 
     remove_column :contracts, :contract_owner_id, :uuid
     remove_column :contracts, :contract_beneficiary_id, :uuid
-    remove_column :contracts, :original_signing_user, :string
   end
 end
