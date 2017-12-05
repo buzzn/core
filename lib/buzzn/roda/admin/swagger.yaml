@@ -784,9 +784,17 @@ paths:
         type: string
         enum:
         - easy_meter
-        - amperix
-        - ferraris
         - other
+      - name: manufacturer_description
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: location_description
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: ownership
         in: formData
         required: false
@@ -942,10 +950,15 @@ paths:
         type: string
         enum:
         - CONSUMPTION
+        - CONSUMPTION_COMMON
         - DEMARCATION_PV
         - DEMARCATION_CHP
+        - DEMARCATION_WIND
+        - DEMARCATION_WATER
         - PRODUCTION_PV
         - PRODUCTION_CHP
+        - PRODUCTION_WIND
+        - PRODUCTION_WATER
         - GRID_CONSUMPTION
         - GRID_FEEDING
         - GRID_CONSUMPTION_CORRECTED
