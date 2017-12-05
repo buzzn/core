@@ -1530,9 +1530,9 @@ CREATE TABLE zip_to_prices (
     measurement_euro_year_et double precision NOT NULL,
     ka double precision NOT NULL,
     state character varying(32) NOT NULL,
-    community character varying(32) NOT NULL,
+    community character varying(64) NOT NULL,
     vdewid bigint NOT NULL,
-    dso character varying(64) NOT NULL,
+    dso character varying(32) NOT NULL,
     updated boolean NOT NULL
 );
 
