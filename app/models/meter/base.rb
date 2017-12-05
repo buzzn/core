@@ -3,9 +3,6 @@ module Meter
     self.table_name = :meters
     include Filterable
 
-    has_one :broker, as: :resource, dependent: :destroy, foreign_key: :resource_id, class_name: 'Broker::Base'
-    validates_associated :broker
-
     belongs_to :group, class_name: 'Group::Localpool'
     belongs_to :address
     belongs_to :broker, class_name: 'Broker::Base'

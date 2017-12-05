@@ -2,6 +2,8 @@ require_relative '../discovergy'
 
 class Services::Datasource::Discovergy::Api
 
+  class EmptyResponse < StandardError; end
+
   include Import['service.datasource.discovergy.oauth']
   include Import['service.datasource.discovergy.throughput']
 
@@ -14,18 +16,29 @@ class Services::Datasource::Discovergy::Api
      monitored_request(query)
   end
 
-  def request(query)
+  def request(query, builder = nil)
     payload = monitored_request(query)
+    if payload.empty?
+      raise EmptyResponse.new("no payload for query: #{query.to_uri('')}")
+    end
     result = MultiJson.load(payload)
 
+    if builder
+      builder.build(result)
+    else
+      build(result)
+    end
+  end
+
+  private
+
+  def build(result)
     case result
     when Array; process_array(result)
     when Hash;  process_hash(result)
     else        raise 'not implemented'
     end
   end
-
-  private
 
   def process_hash(hash)
     hash.each do |key, value|
@@ -65,7 +78,7 @@ class Services::Datasource::Discovergy::Api
 
     case response.code.to_i
     when (200..299)
-      return response.body
+      response.body
     when 401
       if first
         oauth.reset
@@ -76,10 +89,7 @@ class Services::Datasource::Discovergy::Api
     else
       raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + response.body)
     end
-
-    response.body
   rescue => e
     raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + e.message)
   end
-
 end

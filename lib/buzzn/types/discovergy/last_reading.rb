@@ -4,7 +4,7 @@ require_relative 'meter'
 
 class Types::Discovergy::LastReading < Types::Discovergy::Meter
 
-  option :fields, Types::Strict::Array.member(Types::Strict::String)
+  option :fields, Types::Strict::Array.member(Types::Strict::Symbol)
   option :each, Types::Strict::Bool, optional: true
 
   def to_path; :last_reading; end

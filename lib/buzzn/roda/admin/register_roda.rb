@@ -5,6 +5,7 @@ require_relative '../../transactions/admin/register/update_virtual'
 class Admin::RegisterRoda < BaseRoda
   CHILDREN = :registers
 
+  plugin :aggregation
   plugin :shared_vars
 
   route do |r|
@@ -36,6 +37,14 @@ class Admin::RegisterRoda < BaseRoda
         else
           raise "unknown model: #{register.class.model}"
         end
+      end
+
+      # FIXME for the time being until we make an analytics path
+      r.get! 'ticker' do
+        aggregated(
+          Transactions::Ticker
+            .call(register).value
+        )
       end
 
       r.on 'readings' do

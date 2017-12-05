@@ -20,7 +20,7 @@ module Register
 
     def data_source
       if self.broker.is_a? Broker::Discovergy
-        Buzzn::Discovergy::DataSource::NAME
+        Services::Datasource::Discovergy::Implementation::NAME
       else
         Buzzn::StandardProfile::DataSource::NAME
       end

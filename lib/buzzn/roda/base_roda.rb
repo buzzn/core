@@ -12,7 +12,7 @@ class BaseRoda < CommonRoda
 
   plugin :json,
          :include_request=>true,
-         :classes=>[Dry::Monads::Either::Right, Dry::Monads::Either::Left, NilClass, Array, Hash, Buzzn::DataResultSet, Buzzn::DataResultArray, Buzzn::DataResult, Buzzn::Resource::Base, Buzzn::Resource::Collection],
+         :classes=>[Dry::Monads::Either::Right, Dry::Monads::Either::Left, NilClass, Array, Hash, Buzzn::DataResultSet, Buzzn::DataResultArray, Buzzn::DataResult, Buzzn::Resource::Base, Buzzn::Resource::Collection, Types::Datasource::Current],
          :serializer=> Buzzn::Roda::Serializer.new
 
   plugin :terminal_verbs

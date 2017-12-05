@@ -750,6 +750,27 @@ paths:
       responses:
         204:
           description: deleted
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/ticker":
+    get:
+      description: returns the energy ticker of the register for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
   "/localpools/{localpool_id}/meters/{real_meter_id}":
     patch:
       description: updates the real meter for the given IDs

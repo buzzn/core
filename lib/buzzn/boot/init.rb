@@ -28,7 +28,9 @@ module Buzzn
 
           # preload singletons
           services = Dry::More::Container::Singleton.new
+          services.config.lazy = false
           operations = Dry::More::Container::Singleton.new
+          operations.config.lazy = false
           Application.config.paths['lib'].dup.tap do |app|
             app.glob = "buzzn/services/**/*.rb"
             app.to_a.each do |path|
@@ -62,6 +64,8 @@ module Buzzn
             end
           end
           MainContainer.merge(services).merge(operations)
+          services.finalize
+          operations.finalize
 
           # eager require some files
           %w(resource resources roda permissions schemas).each do |dir|

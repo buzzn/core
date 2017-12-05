@@ -4,6 +4,10 @@ module Buzzn
       class << self
         private :new
 
+        def current_millis
+          (now.to_f * 1000).to_i
+        end
+
         def now
           Time.now.utc
         end
@@ -46,4 +50,3 @@ module Buzzn
     end
   end
 end
-

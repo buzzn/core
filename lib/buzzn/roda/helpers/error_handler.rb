@@ -7,7 +7,8 @@ module Buzzn
         Buzzn::PermissionDenied => 403,
         Buzzn::StaleEntity => 409,
         Buzzn::ValidationError => 422,
-        Buzzn::GeneralError => 404
+        Buzzn::GeneralError => 404,
+        ::Services::Datasource::Discovergy::Api::EmptyResponse => 404
       }
 
       def self.new(logger: Logger.new(self))

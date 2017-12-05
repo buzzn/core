@@ -213,6 +213,12 @@ describe Admin, :swagger do
     schema Schemas::Transactions::Admin::Register::UpdateReal
   end
 
+  # meters > registers > ticker
+
+  get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/ticker' do
+    description 'returns the energy ticker of the register for the given IDs'
+  end
+
   # meters > registers > readings
 
   post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do

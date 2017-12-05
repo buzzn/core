@@ -9,7 +9,6 @@ module Buzzn::Services
       sources.each do |source|
         add_source(source)
       end
-      add_source(Buzzn::Discovergy::DataSource.new(redis))
       add_source(Buzzn::MissingDataSource.new)
       add_source(Buzzn::StandardProfile::DataSource.new)
       add_source(Buzzn::Virtual::DataSource.new(self))

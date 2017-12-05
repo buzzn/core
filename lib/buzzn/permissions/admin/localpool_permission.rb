@@ -113,6 +113,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     update :managers
     delete :none
 
+    ticker do
+      retrieve :managers
+    end
+
     readings do
       create :managers
       retrieve :managers_contract
