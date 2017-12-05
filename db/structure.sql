@@ -1187,7 +1187,7 @@ CREATE TABLE devices (
 CREATE TABLE documents (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     path character varying(128) NOT NULL,
-    encryption_details character varying(256) NOT NULL,
+    encryption_details character varying(512) NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -1532,7 +1532,7 @@ CREATE TABLE zip_to_prices (
     state character varying(32) NOT NULL,
     community character varying(32) NOT NULL,
     vdewid bigint NOT NULL,
-    dso character varying(32) NOT NULL,
+    dso character varying(64) NOT NULL,
     updated boolean NOT NULL
 );
 

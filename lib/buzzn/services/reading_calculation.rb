@@ -186,7 +186,6 @@ module Buzzn
           accounted_energy = last_reading.corrected_value - first_reading.corrected_value
           return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
         else
-          #binding.pry
           device_change_reading_1 = device_change_readings.first
           device_change_reading_2 = device_change_readings.last
           # if the device change happend exactly on the begin_date or end date just ignore it
@@ -195,7 +194,6 @@ module Buzzn
             accounted_energy = last_reading.corrected_value - first_reading.corrected_value
             return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original)
           else
-            #binding.pry
             accounted_energy = last_reading.corrected_value - device_change_reading_2.corrected_value + device_change_reading_1.corrected_value - first_reading.corrected_value
             return Buzzn::AccountedEnergy.new(accounted_energy, first_reading, last_reading, last_reading_original, true, device_change_reading_1, device_change_reading_2)
           end

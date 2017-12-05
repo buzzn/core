@@ -79,7 +79,6 @@ module Buzzn
 
       def to_s(order = nil)
         ord = INTERNAL_HALF_ORDER_SIZE - ORDERS.keys.index(order)
-        #binding.pry
         val = @value * 1000 ** ord
         "#{val} #{ORDERS[order]}#{UNITS[unit]}"
       end

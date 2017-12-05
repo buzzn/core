@@ -50,7 +50,6 @@ class Beekeeper::Import
 
     end
     log_import_summary
-    binding.pry
   end
 
   private
@@ -69,7 +68,6 @@ class Beekeeper::Import
   def add_brokers(localpool, warnings)
     without_broker = localpool.meters.real.select do |meter|
       if meter_map.key?(meter.product_serialnumber)
-        binding.pry if meter.broker
         Broker::Discovergy.create!(meter: meter)
         false
       else
@@ -84,7 +82,6 @@ class Beekeeper::Import
     end
     warnings
     #without_meter = map.select { |serial, _| !Meter::Real.where(product_serialnumber: serial).exists? }
-    #binding.pry
   end
 
   def add_roles(localpool)

@@ -46,11 +46,4 @@ module Buzzn
       @device_change = device_change
     end
   end
-
-  def ==(o)
-    binding.pry
-  end
-  def eql?(o)
-    binding.pry
-  end
 end
