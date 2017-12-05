@@ -31,10 +31,8 @@ module Schemas
           def has_owner_role?(input)
             case input
             when Person
-#              binding.pry
               role = input.roles.where(name: Role::GROUP_OWNER).detect do |role|
-                #binding.pry if
-                  localpool = role.resource
+                localpool = role.resource
                 owner = localpool.owner
                 (owner.is_a?(Person) && input.id == owner.id) ||
                   (owner.is_a?(::Organization) && owner.contact && input.id == owner.contact.id)

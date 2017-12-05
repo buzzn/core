@@ -14,7 +14,7 @@ FactoryGirl.define do
         evaluator.registers
       else
         register_factory = meter.is_a?(Meter::Virtual) ? :virtual_input : :input
-        [ FactoryGirl.build(:register, register_factory, meter: meter, group: meter.group) ]
+        [ FactoryGirl.build(:register, register_factory, meter: meter) ]
       end
     end
 

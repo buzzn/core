@@ -92,7 +92,6 @@ class Beekeeper::Import
     end
     warnings
     #without_meter = map.select { |serial, _| !Meter::Real.where(product_serialnumber: serial).exists? }
-    #binding.pry
   end
 
   def add_roles(localpool)

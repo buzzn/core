@@ -106,10 +106,6 @@ describe "Factories produce valid records" do
     it "has a register" do
       expect(subject.registers.first).to be_instance_of(Register::Input)
     end
-    it "creates a register that belongs to the same group" do
-      meter    = create(:meter, :real)
-      expect(meter.registers.first.group).to eq(meter.group)
-    end
     it "can override registers" do
       register = create(:register, :input)
       meter    = create(:meter, :real, registers: [register])
@@ -172,7 +168,6 @@ describe "Factories produce valid records" do
 
     shared_examples 'a valid register' do |expected_meter_class|
       it { is_expected.to be_valid }
-      it { is_expected.to have_association(:group, Group::Localpool) }
       it { is_expected.to have_association(:meter, expected_meter_class.constantize) }
        it "has a valid and persisted meter" do
         expect(subject.meter).to be_valid
