@@ -11,21 +11,21 @@ module Register
 
     enum direction: { input: 'in', output: 'out' }
 
-    belongs_to :group, class_name: Group::Base, foreign_key: :group_id
+    belongs_to :group, class_name: 'Group::Base', foreign_key: :group_id
 
-
-    has_many :contracts, class_name: Contract::Base, dependent: :destroy, foreign_key: 'register_id'
+    has_many :contracts, class_name: 'Contract::Base', dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
-    has_many :readings, class_name: Reading::Single, foreign_key: 'register_id'
+    has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'
     has_many :scores, as: :scoreable
 
     def data_source
       Buzzn::MissingDataSource.name
     end
 
-    def brokers
-      Broker::Base.where(resource_id: self.meter.id, resource_type: Meter::Base)
+    def broker
+      meter.broker
     end
+
     validates :meter, presence: true
     # TODO can this be removed? Superseded by schemas?
     validates :metering_point_id, uniqueness: false, length: { in: 4..64 }, allow_blank: true

@@ -6,8 +6,9 @@ module Meter
     has_one :broker, as: :resource, dependent: :destroy, foreign_key: :resource_id, class_name: 'Broker::Base'
     validates_associated :broker
 
-    belongs_to :group, class_name: Group::Localpool
+    belongs_to :group, class_name: 'Group::Localpool'
     belongs_to :address
+    belongs_to :broker, class_name: 'Broker::Base'
 
     # needed for permitted scope
     has_many :registers, class_name: Register::Base, foreign_key: :meter_id

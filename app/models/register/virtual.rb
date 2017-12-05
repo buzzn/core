@@ -33,7 +33,7 @@ module Register
 
     def data_source
       # give preference to discovergy
-      if self.brokers.detect { |b| b.is_a? Broker::Discovergy }
+      if self.broker.is_a? Broker::Discovergy
         Buzzn::Discovergy::DataSource::NAME
       else
         Buzzn::Virtual::DataSource::NAME

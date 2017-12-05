@@ -1,8 +1,9 @@
+require 'buzzn/types/zip_price_config'
+
 describe CoreConfig do
 
-
   let(:config) do
-    Buzzn::Types::ZipPriceConfig.new(
+    Types::ZipPriceConfig.new(
         kwkg_aufschlag: 0.445,
         ab_la_v: 0.006,
         strom_nev: 0.388,
@@ -18,7 +19,7 @@ describe CoreConfig do
 
   it 'stores and loads config' do
     CoreConfig.store(config)
-    c = CoreConfig.load(Buzzn::Types::ZipPriceConfig)
+    c = CoreConfig.load(Types::ZipPriceConfig)
     expect(c).to eq config
 
     expect(CoreConfig.count).to eq 10
@@ -27,7 +28,7 @@ describe CoreConfig do
   it 'updates and loads config' do
     CoreConfig.store(config)
 
-    conf = Buzzn::Types::ZipPriceConfig.new(
+    conf = Types::ZipPriceConfig.new(
       kwkg_aufschlag: 1.0,
       ab_la_v: 1.0,
       strom_nev: 1.0,
@@ -41,7 +42,7 @@ describe CoreConfig do
     )
     CoreConfig.store(conf)
 
-    c = CoreConfig.load(Buzzn::Types::ZipPriceConfig)
+    c = CoreConfig.load(Types::ZipPriceConfig)
     expect(c).to eq conf
 
     expect(CoreConfig.count).to eq 10
