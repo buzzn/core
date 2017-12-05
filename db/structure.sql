@@ -1532,7 +1532,7 @@ CREATE TABLE zip_to_prices (
     state character varying(32) NOT NULL,
     community character varying(64) NOT NULL,
     vdewid bigint NOT NULL,
-    dso character varying(64) NOT NULL,
+    dso character varying(128) NOT NULL,
     updated boolean NOT NULL
 );
 
