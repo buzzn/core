@@ -20,7 +20,9 @@ FactoryGirl.define do
       initialize_with { Register::Virtual.new }
       name            { 'Generic virtual register' }
       before(:create) do |register, evaluator|
+        ap evaluator.meter
         register.meter = evaluator.meter || FactoryGirl.build(:meter, :virtual, register: register)
+        register.meter.registers << register
       end
     end
 
@@ -80,10 +82,22 @@ FactoryGirl.define do
       label Register::Base.labels[:production_pv]
     end
 
+    trait :production_water do
+      output
+      name 'Produktion Wasser'
+      label Register::Base.labels[:production_water]
+    end
+
     trait :consumption do
       input
       name 'Consumption'
       label Register::Base.labels[:consumption]
+    end
+
+    trait :consumption_common do
+      input
+      name 'Consumption Common'
+      label Register::Base.labels[:consumption_common]
     end
   end
 end
