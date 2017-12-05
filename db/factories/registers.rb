@@ -1,6 +1,5 @@
 FactoryGirl.define do
   factory :register, class: 'Register::Input' do
-    group                 { FactoryGirl.create(:localpool) }
     direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]
     obis                  '1-0:1.8.0'
@@ -12,7 +11,7 @@ FactoryGirl.define do
 
     trait :real do
       before(:create) do |register, evaluator|
-        register.meter = evaluator.meter || FactoryGirl.build(:meter, :real, group: register.group, registers: [])
+        register.meter = evaluator.meter || FactoryGirl.build(:meter, :real, registers: [])
         register.meter.registers << register
       end
     end
@@ -21,7 +20,7 @@ FactoryGirl.define do
       initialize_with { Register::Virtual.new }
       name            { 'Generic virtual register' }
       before(:create) do |register, evaluator|
-        register.meter = evaluator.meter || FactoryGirl.build(:meter, :virtual, group: register.group, register: register)
+        register.meter = evaluator.meter || FactoryGirl.build(:meter, :virtual, register: register)
       end
     end
 
