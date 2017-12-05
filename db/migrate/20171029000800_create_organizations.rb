@@ -7,7 +7,7 @@ class CreateOrganizations < ActiveRecord::Migration
   def up
     SCHEMA.up(:organizations, self)
 
-    add_column :organizations, :slug, :string, null: false, size: 64
+    add_column :organizations, :slug, :string, null: false, limit: 64
     add_column :organizations, :customer_number, :integer, null: true
 
     add_belongs_to :organizations, :address, index: true, type: :uuid, null: true

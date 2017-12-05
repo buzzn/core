@@ -8,7 +8,7 @@ class CreatePersons < ActiveRecord::Migration
   def up
     SCHEMA.up(:persons, self)
 
-    add_column :persons, :image, :string, length: 64, null: true
+    add_column :persons, :image, :string, limit: 64, null: true
     add_column :persons, :customer_number, :integer, null: true
 
     add_belongs_to :persons, :address, index: true, type: :uuid, null: true
