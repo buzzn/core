@@ -37,6 +37,14 @@ See [docs/application_architecture.md](docs/application_architecture.md).
 
 # Useful rake tasks
 
+## Discovergy Credentials
+
+To wire up some datasource of some registers with the discovergy API you need add the credentials in
+.env.local
+
+DISCOVERGY_LOGIN=<username from lastpass>
+DISCOVERGY_PASSWORD=<password from lastpass>
+
 ## Overview
 
 | task name            | description   | source
