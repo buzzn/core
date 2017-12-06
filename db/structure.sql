@@ -1064,7 +1064,6 @@ CREATE TABLE contract_tax_data (
 
 CREATE TABLE contracts (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    slug character varying,
     forecast_kwh_pa bigint,
     signing_date date,
     end_date date,
@@ -1984,13 +1983,6 @@ CREATE INDEX index_contracts_on_organization_id ON contracts USING btree (organi
 
 
 --
--- Name: index_contracts_on_slug; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_contracts_on_slug ON contracts USING btree (slug);
-
-
---
 -- Name: index_contracts_tariffs_on_contract_id_and_tariff_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2815,4 +2807,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171031085300');
 INSERT INTO schema_migrations (version) VALUES ('20171115086500');
 
 INSERT INTO schema_migrations (version) VALUES ('20171115095100');
+
+INSERT INTO schema_migrations (version) VALUES ('20171206142306');
 

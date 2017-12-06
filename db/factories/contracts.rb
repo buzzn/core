@@ -2,7 +2,6 @@ FactoryGirl.define do
   factory :contract, class: 'Contract::MeteringPointOperator' do
     localpool                     { FactoryGirl.build(:localpool) }
     contract_number               { generate(:metering_point_operator_contract_nr) }
-    slug                          { |attrs| "mpo-#{attrs[:contract_number]}" }
     signing_date                  Date.parse("2015-10-11")
     begin_date                    Date.parse("2016-01-01")
     customer                      { FactoryGirl.build(:person, :with_bank_account) }
@@ -26,17 +25,14 @@ FactoryGirl.define do
 
   trait :power_taker do
     contract_number { generate(:power_taker_contract_nr) }
-    slug            { |attrs| "pt-#{attrs[:contract_number]}" }
   end
 
   trait :power_giver do
     contract_number { generate(:power_giver_contract_nr) }
-    slug            { |attrs| "pg-#{attrs[:contract_number]}" }
   end
 
   trait :localpool_processing do
     contract_number { generate(:localpool_processing_contract_nr) }
-    slug            { |attrs| "lpp-#{attrs[:contract_number]}" }
     initialize_with { Contract::LocalpoolProcessing.new }
     before(:create) do |contract, _evaluator|
       contract.tax_data = FactoryGirl.build(:tax_data)
@@ -45,7 +41,6 @@ FactoryGirl.define do
 
   trait :localpool_powertaker do
     contract_number { generate(:localpool_power_taker_contract_nr) }
-    slug            { |attrs| "lpt-#{attrs[:contract_number]}" }
     initialize_with { Contract::LocalpoolPowerTaker.new }
     forecast_kwh_pa 1000
     customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }
