@@ -18,9 +18,7 @@ class Services::Datasource::Discovergy::Api
 
   def request(query, builder = nil)
     payload = monitored_request(query)
-    if payload.empty?
-      raise EmptyResponse.new("no payload for query: #{query.to_uri('')}")
-    end
+    return if payload.empty?
     result = MultiJson.load(payload)
 
     if builder

@@ -27,6 +27,7 @@ class Discovergy::CurrentBuilder
   end
 
   def to_value(response)
+    return -1 unless response
     case unit
     when :Wh
       to_watt_hour(response)
