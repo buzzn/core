@@ -172,13 +172,8 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
     nil
   end
 
-  # TODO when manufacturer isn't easymeter, add the manufacturer name to a (new) description attribute
   def manufacturer_name
-    if zählerHersteller =~ /easymeter/i
-      'easy_meter'
-    else
-      'other'
-    end
+    zählerHersteller =~ /easymeter/i ? 'easy_meter' : 'other'
   end
 
   def manufacturer_description
