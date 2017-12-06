@@ -20,7 +20,6 @@ FactoryGirl.define do
       initialize_with { Register::Virtual.new }
       name            { 'Generic virtual register' }
       before(:create) do |register, evaluator|
-        ap evaluator.meter
         register.meter = evaluator.meter || FactoryGirl.build(:meter, :virtual, register: register)
         register.meter.registers << register
       end
