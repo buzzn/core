@@ -27,15 +27,14 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
       type:                  map_type,
       label:                 map_label,
       metering_point_id:     metering_point_id,
+      obis:                  obis,
       # set these defaults (not imported from beekeeper)
       share_with_group:      false,
       share_publicly:        false,
-      # TODO the following are always the same, consider removing
-      pre_decimal_position:  vorkommastellen,   # always 6
-      post_decimal_position: nachkommastellen,  # always 1
-      low_load_ability:      false,              # always (string) "ZNS - Nicht schwachlastfähig"
-      # TODO consider removing obis from DB, it can be derived from the type of register and is meaningless for virtual registers.
-      obis:                  obis
+      # these are always the same in beekeeper
+      pre_decimal_position:  6,
+      post_decimal_position: 1,
+      low_load_ability:      false
     }
   end
 
@@ -130,8 +129,8 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     'PRODUCTION_PV'
   end
 
-  # Power producers often have a two-way meter, since they consume a little power themselves some times.
-  # This methods checks if this register is such a register.
+  # Power production sources often have a two-way meter, one for their own power consumption and one for generation.
+  # This methods checks if we are such a register.
   def input_register_of_group_power_source?
     input? && group_power_source_buzznids.include?(buzznid)
   end
