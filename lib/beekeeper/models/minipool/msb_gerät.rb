@@ -118,8 +118,7 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   private
 
   def edifact_voltage_level
-    default_value = Meter::Real.edifact_voltage_levels[:low_level]
-    map_edifact_enum(:spannungsebene, :edifact_voltage_level, default: default_value)
+    map_edifact_enum(:spannungsebene, :edifact_voltage_level, default: :low_level)
   end
 
   def edifact_cycle_interval
