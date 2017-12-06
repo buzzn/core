@@ -26,10 +26,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       raise "buzznid unreliable!!" if attributes[:buzznid] !~ /^([0-9])+\/([0-9])+$/
       @@meters ||= {} # very ugly, err, I mean pragmatic
       if @@meters[attributes[:buzznid]]
-        # puts "Reusing existing meter instance for buzznid #{attributes[:buzznid]} (serial #{attributes[:product_serialnumber]})"
         @@meters[attributes[:buzznid]]
       else
-        # puts "Making new meter instance buzznid #{attributes[:buzznid]} (serial #{attributes[:product_serialnumber]})"
         @@meters[attributes[:buzznid]] = Meter::Real.new(attributes.except(:buzznid))
       end
     end
