@@ -62,12 +62,6 @@ describe Register do
       register.update(observer_enabled: false, observer_offline_monitoring: false)
     end
 
-    it 'creates activities via sidekiq' do
-      expect {
-        Register::Base.observe
-      }.to change(RegisterObserveWorker.jobs, :size).by(1)
-    end
-
     xit 'nothing' do |spec|
       Timecop.freeze(now) do
         VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}") do

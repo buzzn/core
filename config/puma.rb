@@ -1,10 +1,3 @@
-port ENV['PORT'] || 3000
-environment ENV['RACK_ENV'] || 'development'
-threads 16, 16
-
-__END__
-
-# FYI the following config is recommended by Heroku:
 # https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server
 
 workers Integer(ENV['WEB_CONCURRENCY'] || 2)

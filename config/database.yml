@@ -1,9 +1,8 @@
 default: &default
   # the DB host, credentials etc. are taken from the env var DATABASE_URL.
   encoding: unicode
-  pool: 16
+  pool: <%= ENV["DB_POOL"] || ENV['RAILS_MAX_THREADS'] || 5 %>
   checkout_timeout: 0.5
-  reaping_frequency: 60
 
 development:
   <<: *default

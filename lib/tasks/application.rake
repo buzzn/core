@@ -3,7 +3,6 @@ namespace :application do
   desc 'Initialize a new or completely reset an existing application'
   task :init => %w(
     application:init:clear
-    application:init:sidekiq
     application:init:carrierwave
     application:init:mongoid
     application:init:db
@@ -17,7 +16,6 @@ namespace :application do
 
   namespace :init do
     task clear: %w(log:clear tmp:clear)
-    task sidekiq: %w(sidekiq:kill sidekiq:delete_queues)
     task carrierwave: %w(carrierwave:delete_uploads)
     task mongoid: %w(db:mongoid:drop db:mongoid:remove_indexes db:mongoid:create_indexes)
     task db: %w(db:drop db:create db:structure:load)

@@ -1,4 +1,5 @@
 require 'sequel'
+require 'rack-timeout'
 require_relative 'common_roda'
 require_relative 'plugins/terminal_verbs'
 
@@ -7,6 +8,8 @@ class CoreRoda < CommonRoda
   include Import.args[:env, 'service.health']
 
   use Rack::CommonLogger, Buzzn::Logger.new(CoreRoda)
+
+  use Rack::Timeout, service_timeout: 20
 
   use Rack::Cors, debug: Rails.env != 'production'  do
     allow do

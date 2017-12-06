@@ -7,9 +7,6 @@ require 'vcr'
 require 'webmock/rspec'
 require 'rspec/retry'
 
-require 'sidekiq/testing'
-Sidekiq::Testing.fake!
-
 # no geocoding for tests
 class ::Address
   def geocode

@@ -27,12 +27,6 @@ describe Group::Base do
     expect(groups.size).to eq Group::Base.count
   end
 
-  it 'calculates scores of all groups via sidekiq' do
-    expect {
-      Group::Base.calculate_scores
-    }.to change(CalculateGroupScoresWorker.jobs, :size).by(1)
-  end
-
   describe Group::Localpool do
 
     let(:buzzn) { Organization.buzzn }

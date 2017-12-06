@@ -49,31 +49,23 @@ gem 'ruby_regex'
 gem 'oauth'
 
 # Backend
-gem 'rails'
-gem 'money-rails'
-gem 'activerecord-nulldb-adapter'
+gem 'puma'
+gem 'rails'#, '< 5.0.0'
 gem 'mongoid'
 gem 'redis'
-gem 'redis-namespace'
-gem 'puma'
-gem 'awesome_print'
+gem 'rack-timeout'
 gem 'rack-cors',               require: 'rack/cors'
+gem 'clockwork'
+gem 'money-rails'
+gem 'activerecord-nulldb-adapter' # ???
+gem 'redis-namespace'             # ???
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
 gem 'mini_magick'
 gem 'carrierwave'
 gem 'aws-sdk'
 gem 'aws-sdk-rails'
-gem 'whenever', require: false
-gem 'clockwork'
-gem 'sidekiq'
 gem 'faraday'
-gem 'attribute_normalizer'
-gem 'geocoder'
 gem 'jbuilder'
-gem 'acts_as_commentable_with_threading'
-gem 'awesome_nested_set'
-gem 'attr_encrypted', '1.3.5'
-gem 'byebug'
 gem 'remote_lock'
 gem 'fabrication'
 gem 'factory_girl'
@@ -88,8 +80,10 @@ group :production, :staging do
 end
 
 group :development, :test do
+  gem 'byebug'
+  gem 'awesome_print'
   gem 'brakeman', :require => false
-  gem 'lol_dba'
+  #gem 'lol_dba'
   gem 'listen'
   gem 'guard'
   gem 'guard-livereload'
