@@ -217,6 +217,14 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   #
   # This method parses the first capitalized letters (and numbers) and returns that if it a value we know.
   #
+  # Examples:
+  #
+  #   in:  "ETZ - Eintarif"
+  #   out: "ETZ"
+  #
+  #   in: "FOO - Bla bla" (unknown value)
+  #   out: nil
+  #
   def map_edifact_enum(beekeeper_name, our_name, default: nil)
     known_values    = Meter::Real.send(our_name.to_s.pluralize).values # uses our enum
     extracted_value = send(beekeeper_name).strip.scan(/^[A-Z0-9]+/).first
