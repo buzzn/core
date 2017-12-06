@@ -141,10 +141,9 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   end
 
   def edifact_meter_size
-    # we know most of our meters are easymeters, and all of them are Z03, so we set that as default
-    # so PhO doesn't have up 660 records manually
-    default_value = Meter::Real.edifact_meter_sizes[:other_ehz]
-    map_edifact_enum(:zählerGröße, :edifact_meter_size, default: default_value)
+    # We know most of our meters are easymeters, and all of them are Z03, so we set that as default
+    # so PhO doesn't have to update 660 records manually.
+    map_edifact_enum(:zählerGröße, :edifact_meter_size, default: :other_ehz)
   end
 
   def edifact_data_logging
@@ -163,8 +162,7 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   end
 
   def edifact_mounting_method
-    default_value = Meter::Real.edifact_mounting_methods[:three_point_mounting]
-    map_edifact_enum(:befestigungsart, :edifact_mounting_method, default: default_value)
+    map_edifact_enum(:befestigungsart, :edifact_mounting_method, default: :three_point_mounting)
   end
 
   def calibrated_until
