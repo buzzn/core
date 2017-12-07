@@ -131,7 +131,11 @@ describe Admin::LocalpoolResource do
       end
 
       context 'with register' do
-        entity(:input_register) { create(:register, :input, label: :grid_consumption) }
+        entity(:input_register) do
+          r = create(:meter, :real, group: localpool).input_register
+          r.update(label: :grid_consumption)
+          r
+        end
 
         context 'without metering_point_id' do
           before do
@@ -165,7 +169,11 @@ describe Admin::LocalpoolResource do
       end
 
       context 'with register' do
-        entity(:output_register) { create(:register, :output, label: :grid_feeding) }
+        entity(:output_register) do
+          r = create(:meter, :real, register_direction: :output, group: localpool).output_register
+          r.update(label: :grid_feeding)
+          r
+        end
 
         context 'without metering_point_id' do
           before do
