@@ -27,6 +27,14 @@ module Group
       Contract::LocalpoolPowerTaker.where(localpool_id: self)
     end
 
+    def grid_feeding_register
+      registers.grid_feeding.first
+    end
+
+    def grid_consumption_register
+      registers.grid_consumption.first
+    end
+
     def contracts
       self.class.contracts(self)
     end
