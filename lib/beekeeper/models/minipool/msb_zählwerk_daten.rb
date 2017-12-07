@@ -27,7 +27,6 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
       type:                  map_type,
       label:                 map_label,
       metering_point_id:     metering_point_id,
-      obis:                  obis,
       # set these defaults (not imported from beekeeper)
       share_with_group:      false,
       share_publicly:        false
