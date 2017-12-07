@@ -124,19 +124,19 @@ describe Admin::LocalpoolResource do
     context 'grid_consumption_register' do
 
       context 'without register' do
-        before { pool.object.update(grid_consumption_register: nil) }
+        before { pool.object.meters.clear }
         it 'is incomplete' do
           expect(pool.incompleteness[:grid_consumption_register]).to eq ['must be filled']
         end
       end
 
       context 'with register' do
-        entity(:input_register) { Fabricate(:input_meter).input_register}
+        entity(:input_register) { create(:register, :input, label: :grid_consumption) }
 
         context 'without metering_point_id' do
           before do
             input_register.update(metering_point_id: nil)
-            pool.object.update(grid_consumption_register: input_register)
+            pool.object.meters << input_register.meter
           end
           it 'is incomplete' do
             expect(pool.incompleteness[:grid_consumption_register]).to eq ['missing metering_point_id']
@@ -146,7 +146,7 @@ describe Admin::LocalpoolResource do
         context 'with metering_point_id' do
           before do
             input_register.update(metering_point_id: 'DE123423123')
-            pool.object.update(grid_consumption_register: input_register)
+            pool.object.meters << input_register.meter
           end
           it 'is complete' do
             expect(pool.incompleteness[:grid_consumption_register]).to be_nil
@@ -158,19 +158,19 @@ describe Admin::LocalpoolResource do
     context 'grid_feeding_register' do
 
       context 'without register' do
-        before { pool.object.update(grid_feeding_register: nil) }
+        before { pool.object.meters.clear }
         it 'is incomplete' do
           expect(pool.incompleteness[:grid_feeding_register]).to eq ['must be filled']
         end
       end
 
       context 'with register' do
-        entity(:output_register) { Fabricate(:output_meter).output_register }
+        entity(:output_register) { create(:register, :output, label: :grid_feeding) }
 
         context 'without metering_point_id' do
           before do
             output_register.update(metering_point_id: nil)
-            pool.object.update(grid_feeding_register: output_register)
+            pool.object.meters << output_register.meter
           end
           it 'is incomplete' do
             expect(pool.incompleteness[:grid_feeding_register]).to eq ['missing metering_point_id']
@@ -180,7 +180,7 @@ describe Admin::LocalpoolResource do
         context 'with metering_point_id' do
           before do
             output_register.update(metering_point_id: 'DE123423123')
-            pool.object.update(grid_feeding_register: output_register)
+            pool.object.meters << output_register.meter
           end
           it 'is complete' do
             expect(pool.incompleteness[:grid_feeding_register]).to be_nil
