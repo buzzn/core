@@ -37,7 +37,6 @@ describe Admin::LocalpoolRoda do
         "direction_number"=>meter.attributes['direction_number'],
         "converter_constant"=>meter.converter_constant,
         "ownership"=>meter.attributes['ownership'],
-        "section"=>meter.attributes['section'],
         "build_year"=>meter.build_year,
         "calibrated_until"=>meter.calibrated_until ? meter.calibrated_until.to_s : nil,
         "edifact_metering_type"=>meter.attributes['edifact_metering_type'],
@@ -115,8 +114,6 @@ describe Admin::LocalpoolRoda do
              "detail"=>"size cannot be greater than 128"},
             {"parameter"=>"manufacturer_name",
              "detail"=>"must be one of: easy_meter, other"},
-            {"parameter"=>"section",
-             "detail"=>"must be one of: S, G"},
             {"parameter"=>"build_year",
              "detail"=>"must be an integer"},
             {"parameter"=>"sent_data_dso",
@@ -163,7 +160,6 @@ describe Admin::LocalpoolRoda do
           "direction_number"=>'ZRZ',
           "converter_constant"=>20,
           "ownership"=>'CUSTOMER',
-          "section"=>'G',
           "build_year"=>2017,
           "calibrated_until"=>Date.today.to_s,
           "edifact_metering_type"=>'EHZ',
@@ -210,7 +206,6 @@ describe Admin::LocalpoolRoda do
               product_name: 'SmartyMeter' * 10,
               product_serialnumber: '12341234' * 20,
               onwership: 'me',
-              section: 'some' * 60,
               build_year: 'this-year',
               sent_data_dso: 'some-years-ago',
               converter_constant: 'convert-it',
@@ -238,7 +233,6 @@ describe Admin::LocalpoolRoda do
               product_name: 'Smarty Super Meter',
               product_serialnumber: '12341234',
               ownership: Meter::Real.ownerships[:customer],
-              section: Meter::Real.sections[:gas],
               build_year: 2017,
               sent_data_dso: '2010-01-01',
               converter_constant: 20,
@@ -258,7 +252,6 @@ describe Admin::LocalpoolRoda do
         expect(meter.manufacturer_name).to eq 'other'
         expect(meter.direction_number).to eq 'two_way_meter'
         expect(meter.ownership).to eq 'customer'
-        expect(meter.section).to eq 'gas'
         expect(meter.build_year).to eq 2017
         expect(meter.sent_data_dso).to eq Date.new(2010)
         expect(meter.converter_constant).to eq 20

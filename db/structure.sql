@@ -498,16 +498,6 @@ CREATE TYPE meters_ownership AS ENUM (
 
 
 --
--- Name: meters_section; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE meters_section AS ENUM (
-    'S',
-    'G'
-);
-
-
---
 -- Name: organization_market_functions_function; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1279,7 +1269,6 @@ CREATE TABLE meters (
     updated_at timestamp without time zone NOT NULL,
     manufacturer_name meters_manufacturer_name,
     ownership meters_ownership,
-    section meters_section,
     direction_number meters_direction_number,
     edifact_metering_type meters_edifact_metering_type,
     edifact_meter_size meters_edifact_meter_size,

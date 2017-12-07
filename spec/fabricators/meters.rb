@@ -12,7 +12,6 @@ Fabricator :meter, class_name: Meter::Real do
   edifact_mounting_method                     Meter::Real.edifact_mounting_methods[:three_point_mounting]
   build_year                          { 5.years.ago }
   calibrated_until                     { 5.years.from_now }
-  section                             Meter::Real.sections[:electricity]
   edifact_voltage_level                       Meter::Real.edifact_voltage_levels[:low_level]
   edifact_cycle_interval                      Meter::Real.edifact_cycle_intervals[:yearly]
   sent_data_dso                       nil
