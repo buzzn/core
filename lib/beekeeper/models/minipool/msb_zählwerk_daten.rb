@@ -30,11 +30,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
       obis:                  obis,
       # set these defaults (not imported from beekeeper)
       share_with_group:      false,
-      share_publicly:        false,
-      # these are always the same in beekeeper
-      pre_decimal_position:  6,
-      post_decimal_position: 1,
-      low_load_ability:      false
+      share_publicly:        false
     }
   end
 

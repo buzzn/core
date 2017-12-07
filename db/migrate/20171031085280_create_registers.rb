@@ -16,7 +16,7 @@ class CreateRegisters < ActiveRecord::Migration
 
     add_foreign_key :registers, :meters, name: :fk_registers_meter
 
-    add_index :registers, [:meter_id, :direction], unique: true
+      add_index :registers, [:meter_id, :direction], unique: true
   end
 
   def down

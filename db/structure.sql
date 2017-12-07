@@ -1410,8 +1410,6 @@ CREATE TABLE readings (
 CREATE TABLE registers (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     metering_point_id character varying(64),
-    pre_decimal_position integer,
-    post_decimal_position integer,
     observer_enabled boolean,
     observer_min_threshold integer,
     observer_max_threshold integer,
@@ -1419,7 +1417,6 @@ CREATE TABLE registers (
     name character varying(64) NOT NULL,
     share_with_group boolean NOT NULL,
     share_publicly boolean,
-    low_load_ability boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     label registers_label,

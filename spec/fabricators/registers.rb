@@ -13,9 +13,6 @@
     else
       label     Register::Base.labels[:consumption]
     end
-    low_load_ability false
-    pre_decimal_position 6
-    post_decimal_position 2
     share_with_group true
     share_publicly false
     type        { "Register::#{klass_type.camelize}" }
