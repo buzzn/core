@@ -17,3 +17,5 @@ en:
     distribution_system_operator?: 'wrong market function of distribution_system_operator'
     transmission_system_operator?: 'wrong market function of transmission_system_operator'
     electricity_supplier?: 'wrong market function of electricity_supplier'
+    at_most_one_grid_feeding_register?: 'must not have more than one grid feeding register'
+    at_most_one_grid_consumption_register?: 'must not have more than one grid consumption register'
