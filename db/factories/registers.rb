@@ -2,9 +2,6 @@ FactoryGirl.define do
   factory :register, class: 'Register::Input' do
     direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]
-    pre_decimal_position  6
-    post_decimal_position 1
-    low_load_ability      false
     share_with_group      true
     share_publicly        false
 

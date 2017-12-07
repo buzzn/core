@@ -83,6 +83,18 @@ module Register
       # but that causes lots of test & code to fail.
     end
 
+    def low_load_ability
+      false
+    end
+
+    def pre_decimal_position
+      6
+    end
+
+    def post_decimal_position
+      1
+    end
+
     def validate_invariants
     end
 

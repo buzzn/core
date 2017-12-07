@@ -143,4 +143,28 @@ describe Register do
       it { expect(Register::Output.new.obis).to eq("1-0:2.8.0") }
     end
   end
+
+  describe "low_load_ability" do
+    [Register::Base, Register::Real, Register::Input, Register::Output].each do |klass|
+      it "is false" do
+        expect(klass.new.low_load_ability).to be(false)
+      end
+    end
+  end
+
+  describe "pre_decimal_position" do
+    [Register::Base, Register::Real, Register::Input, Register::Output].each do |klass|
+      it "is false" do
+        expect(klass.new.pre_decimal_position).to eq(6)
+      end
+    end
+  end
+
+  describe "post_decimal_position" do
+    [Register::Base, Register::Real, Register::Input, Register::Output].each do |klass|
+      it "is false" do
+        expect(klass.new.post_decimal_position).to eq(1)
+      end
+    end
+  end
 end

@@ -5,5 +5,4 @@ Schemas::Constraints::Register::Base = Schemas::Support.Form(Schemas::Constraint
   required(:direction).value(included_in?: Register::Base.directions.values)
   required(:share_with_group).filled(:bool?)
   optional(:share_publicly).filled(:bool?)
-  optional(:low_load_ability).filled(:bool?)
 end
