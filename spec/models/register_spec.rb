@@ -131,7 +131,7 @@ describe Register do
 
   describe "obis" do
     context "when register is base" do
-      it { expect(Register::Input.new.obis).to be_nil }
+      it { expect(Register::Base.new.obis).to be_nil }
     end
     context "when register is real" do
       it { expect { Register::Real.new.obis }.to raise_error(RuntimeError, 'not implemented') }

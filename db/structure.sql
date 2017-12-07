@@ -1417,7 +1417,6 @@ CREATE TABLE registers (
     observer_max_threshold integer,
     observer_offline_monitoring boolean,
     name character varying(64) NOT NULL,
-    obis character varying(16) NOT NULL,
     share_with_group boolean NOT NULL,
     share_publicly boolean,
     low_load_ability boolean,
@@ -2245,13 +2244,6 @@ CREATE INDEX index_registers_on_meter_id ON registers USING btree (meter_id);
 --
 
 CREATE UNIQUE INDEX index_registers_on_meter_id_and_direction ON registers USING btree (meter_id, direction);
-
-
---
--- Name: index_registers_on_meter_id_and_obis; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_registers_on_meter_id_and_obis ON registers USING btree (meter_id, obis);
 
 
 --

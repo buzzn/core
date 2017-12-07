@@ -13,7 +13,6 @@
     else
       label     Register::Base.labels[:consumption]
     end
-    obis { klass_type == 'output' ? '1-0:2.8.0' : '1-0:1.8.0' }
     low_load_ability false
     pre_decimal_position 6
     post_decimal_position 2
