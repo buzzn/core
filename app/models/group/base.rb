@@ -15,21 +15,11 @@ module Group
 
     before_destroy :destroy_content
 
-    def meters
-      Meter::Base.where(
-        Register::Base.where('registers.group_id = ? and registers.meter_id = meters.id', self)
-          .select(1)
-          .exists
-        )
-    end
-
-    #mount_uploader :logo, PictureUploader
-    #mount_uploader :image, PictureUploader
-
     belongs_to :address
     belongs_to :bank_account
 
-    has_many :registers, class_name: Register::Base, foreign_key: :group_id
+    has_many :meters, class_name: 'Meter::Base', foreign_key: :group_id
+    has_many :registers, class_name: 'Register::Base', through: :meters
 
     def managers
       Person.with_roles(self, Role::GROUP_ADMIN)
@@ -47,17 +37,9 @@ module Group
       do_filter(search, *search_attributes)
     end
 
-    def input_registers
-      registers.input
-    end
-
-
-    def output_registers
-      registers.output
-    end
-
     def energy_generator_type
-      all_labels = output_registers.collect(&:label).uniq
+      # TODO with new labels in place this is outdated now
+      all_labels = registers.output.collect(&:label).uniq
       if all_labels.include?(Register::Base.labels[:production_chp]) && all_labels.include?(Register::Base.labels[:production_pv])
         return HYBRID
       elsif all_labels.include?(Register::Base.labels[:production_chp])

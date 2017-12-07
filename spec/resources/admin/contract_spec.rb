@@ -8,8 +8,7 @@ describe Contract::BaseResource do
   entity!(:localpool_processing) { Fabricate(:localpool_processing_contract,
                                             localpool: localpool) }
   entity!(:localpool_power_taker) do
-    register = Fabricate(:input_meter).input_register
-    register.group = localpool
+    register = create(:meter, :real, group: localpool).input_register
     Fabricate(:localpool_power_taker_contract, localpool: localpool, register: register)
   end
   entity!(:power_taker) { Fabricate(:power_taker_contract_move_in) }

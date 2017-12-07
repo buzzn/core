@@ -4,37 +4,24 @@ describe Display::GroupRoda do
     Display::GroupRoda # this defines the active application for this test
   end
 
+  entity(:group) { create(:localpool) }
+
+  entity(:discovergy_meter) do
+    meter = Fabricate(:easymeter_60139082, group: group) # in_out meter
+    # TODO what to do with the in-out fact ?
+    Fabricate(:discovergy_broker, meter: meter)
+    meter
+  end
+
+  let(:input_register) { discovergy_meter.input_register }
+
+  let(:output_register) { discovergy_meter.output_register }
+
+  entity(:slp_register) { create(:meter, :real, group: group).input_register }
+
+  entity(:sep_register) { Fabricate(:output_meter, group: group).output_register }
+
   context 'registers' do
-
-    entity(:discovergy_meter) do
-      meter = Fabricate(:easymeter_60139082) # in_out meter
-      # TODO what to do with the in-out fact ?
-      Fabricate(:discovergy_broker, meter: meter)
-      meter
-    end
-
-    entity(:group) do
-      group = Fabricate([:localpool, :tribe].sample)
-      group.registers += discovergy_meter.registers
-      group.registers += [slp_register, sep_register]
-      group
-    end
-
-    let(:input_register) do
-      input = discovergy_meter.registers.input.first
-      input.update(label: Register::Base.labels[:production_pv])
-      input
-    end
-
-    let(:output_register) do
-      output = discovergy_meter.registers.output.first
-      output.update(label: Register::Base.labels[:consumption])
-      output
-    end
-
-    entity(:slp_register) { Fabricate(:input_meter).input_register }
-
-    entity(:sep_register) { Fabricate(:output_meter).output_register }
 
     let(:time) { Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1) }
 

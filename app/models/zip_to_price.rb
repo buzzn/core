@@ -23,7 +23,7 @@ class ZipToPrice < ActiveRecord::Base
     CSV.parse(data.gsub(/\r\n?/, "\n"), col_sep: ';', headers: true) do |row|
       values = Hash[row.to_a].values
       if values.include?(nil) or values.size != 14
-        warn "skip corrupted row: #{row}"
+        logger.info "skip corrupted row: #{row}"
       else
         params = Hash[COLUMNS.keys.zip(values)]
         params[:updated] = true
@@ -42,4 +42,8 @@ class ZipToPrice < ActiveRecord::Base
   end
 
   scope :by_zip, ->(zip) { where(zip: zip) }
+
+  private
+
+  def self.logger; @_logger ||= Buzzn::Logger.new(self); end
 end

@@ -9,12 +9,21 @@ FactoryGirl.define do
     section                      Meter::Real.sections[:electricity]
 
     before(:create) do |meter, evaluator|
-      # registers
-      meter.registers = if evaluator.registers.present?
-        evaluator.registers
-      else
-        register_factory = meter.is_a?(Meter::Virtual) ? :virtual_input : :input
-        [ FactoryGirl.build(:register, register_factory, meter: meter) ]
+      case meter
+      when Meter::Virtual
+        # register
+        if evaluator.registers.present?
+          meter.register = evaluator.registers.first
+        else
+          meter.register = FactoryGirl.build(:register, :virtual_input, meter: meter)
+        end
+      when Meter::Real
+        # registers
+        if evaluator.registers.present?
+          meter.registers = evaluator.registers
+        else
+          meter.registers = [ FactoryGirl.build(:register, :input, meter: meter) ]
+        end
       end
     end
 

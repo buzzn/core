@@ -11,13 +11,9 @@ describe Display do
 
   login_path '/api/me/login'
 
-  entity!(:group) { Fabricate([:localpool, :tribe].sample) }
+  entity!(:group) { create(:localpool) }
 
-  entity!(:register) do
-    register = Fabricate(:meter).registers.first
-    register.update(group: group)
-    register
-  end
+  entity!(:register) { create(:meter, :real, group: group).input_register }
 
   swagger do |s|
     s.basePath = '/api/display'

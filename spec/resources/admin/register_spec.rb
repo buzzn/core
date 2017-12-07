@@ -1,19 +1,11 @@
 describe Register::BaseResource do
 
-  entity(:admin) { Fabricate(:admin) }
-  entity(:localpool) { Fabricate(:localpool) }
-  entity!(:real) do
-    register = Fabricate(:meter).registers.first
-    register.update(group: localpool)
-    register
-  end
-  entity!(:virtual) do
-    register = Fabricate(:virtual_meter).register
-    register.update(group: localpool)
-    register
-  end
+  entity(:admin)     { Fabricate(:admin) }
+  entity(:localpool) { create(:localpool) }
+  entity!(:real)     { create(:meter, :real, group: localpool).input_register }
+  entity!(:virtual)  { create(:meter, :virtual, group: localpool).register }
 
-  let(:resources) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).registers }
+  let(:resources)    { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).registers }
 
   let(:base_keys) { ['id', 'type', 'updated_at',
                      'label',

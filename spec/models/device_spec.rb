@@ -5,9 +5,8 @@ describe "Device Model" do
   end
 
   entity(:out_device_with_register_with_tribe) do
-     Fabricate(:out_device_with_register_with_tribe)
+     Fabricate(:out_device_with_register)
   end
-
 
   let!(:devices) do
     [out_device_with_register, out_device_with_register_with_tribe]
@@ -25,14 +24,12 @@ describe "Device Model" do
     end
   end
 
-
   it 'can not find anything' do
     devices = Device.filter('Der Clown ist müde und geht nach Hause.')
     expect(devices.size).to eq 0
   end
 
-
-  it 'filters device with no params', :retry => 3 do
+  it 'filters device with no params' do
     devices = Device.filter(nil)
     expect(devices.size).to eq Device.count
   end

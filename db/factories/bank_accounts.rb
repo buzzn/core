@@ -12,7 +12,7 @@ FactoryGirl.define do
 
     after(:build) do |account, transients|
       # assign owner if not present yet
-      account.owner = FactoryGirl.create(:person) unless transients.owner
+      account.owner = transients.owner || FactoryGirl.create(:person)
       # this works for both Person and Organization
       account.holder = (account.owner || transients.owner).name
     end

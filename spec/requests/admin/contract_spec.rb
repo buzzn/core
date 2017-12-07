@@ -42,8 +42,8 @@ describe Admin::LocalpoolRoda do
                 contractor: organization,
                 localpool: localpool,
                 register: Fabricate(:input_register,
-                                    group: localpool,
-                                    meter: Fabricate.build(:output_meter)))
+                                    meter: Fabricate.create(:output_meter,
+                                                            group: localpool)))
     end
 
     let(:person_json) do

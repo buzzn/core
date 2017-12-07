@@ -53,7 +53,6 @@ describe Buzzn::Services::CurrentPower do
 
   entity(:group) do
     create(:localpool)
-    #Display::GroupResource.all(Fabricate(:admin)).first
   end
 
   entity(:register) { create(:register, :output) }
@@ -67,13 +66,13 @@ describe Buzzn::Services::CurrentPower do
 
   entity(:mock_register) do
     mock = MockRegister.new(build(:register, :input).attributes.except('type'))
-    mock.meter = FactoryGirl.build(:meter, :real, group: mock.group)
+    mock.meter = FactoryGirl.build(:meter, :real, group: group)
     mock.save!
     mock
   end
 
   entity(:virtual_register) do
-    register = create(:register, :virtual_input, group: mock_register.group)
+    register = create(:meter, :virtual, group: mock_register.meter.group).register
     create(:formula_part, :plus, register: register, operand: mock_register)
     create(:formula_part, :minus, register: register, operand: mock_register)
     create(:formula_part, :plus, register: register, operand: mock_register)

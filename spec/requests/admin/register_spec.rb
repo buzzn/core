@@ -5,32 +5,15 @@ describe Admin::LocalpoolRoda do
     TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
-  entity(:group) { Fabricate(:localpool) }
+  entity(:group) { create(:localpool) }
 
-  entity(:meter) { Fabricate(:real_meter) }
+  entity(:meter) { create(:meter, :real, group: group) }
 
-  entity!(:real_register) do
-    Fabricate(meter.registers.first.is_a?(Register::Input) ? :output_register : :input_register,
-              group: group,
-              meter: meter)
-    meter.registers.each do |reg|
-      reg.group = group
-      reg.save
-    end
-    meter.registers.reload
-    meter.registers.first
-  end
+  entity!(:register) { meter.registers.first }
 
-  entity!(:register) do
-    meter.registers.detect{ |r| r != real_register }
-  end
+  entity!(:real_register) { create(:register, :output, meter: meter) }
 
-  entity!(:virtual_register) do
-    reg = Fabricate(:virtual_meter).register
-    reg.group = group
-    reg.save
-    reg
-  end
+  entity!(:virtual_register) { create(:meter, :virtual, group: group).register }
 
   context 'meters' do
    context 'registers' do
@@ -173,7 +156,7 @@ describe Admin::LocalpoolRoda do
           "direction"=>real_register.attributes['direction'],
           "name"=>real_register.name,
           "pre_decimal_position"=>6,
-          "post_decimal_position"=>2,
+          "post_decimal_position"=>real_register.post_decimal_position,
           "low_load_ability"=>false,
           "label"=>real_register.attributes['label'],
           "last_reading"=>last ? last.value : 0,

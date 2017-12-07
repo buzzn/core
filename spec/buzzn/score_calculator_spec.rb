@@ -103,11 +103,8 @@ describe Buzzn::ScoreCalculator do
 
     entity(:group2) do
       group         = Fabricate(:tribe)
-      register_in   = Fabricate(:input_meter).input_register
-      register_out  = Fabricate(:output_meter).output_register
-
-      group.registers += [register_in, register_out]
-
+      register_in   = Fabricate(:input_meter, group: group).input_register
+      register_out  = Fabricate(:output_meter, group: group).output_register
       group
     end
 
@@ -177,16 +174,13 @@ describe Buzzn::ScoreCalculator do
 
     let(:now) { Time.find_zone('Berlin').local(2016,10,5, 18,30,1)  }
     entity(:group3) do
-      easymeter_60051599 = Fabricate(:easymeter_60051599)
+      group = create(:localpool)
+      easymeter_60051599 = Fabricate(:easymeter_60051599, group: group)
       easymeter_60051599.broker = Fabricate(:discovergy_broker, meter: easymeter_60051599)
-      register_z2 = easymeter_60051599.registers.first
-      easymeter_60051559 = Fabricate(:easymeter_60051559)
+      easymeter_60051559 = Fabricate(:easymeter_60051559, group: group)
       easymeter_60051559.broker = Fabricate(:discovergy_broker, meter: easymeter_60051559)
-      register_z3 = easymeter_60051559.registers.first
-      easymeter_60051560 = Fabricate(:easymeter_60051560)
+      easymeter_60051560 = Fabricate(:easymeter_60051560, group: group)
       easymeter_60051560.broker = Fabricate(:discovergy_broker, meter: easymeter_60051560)
-      register_z4 = easymeter_60051560.registers.first
-      group = Fabricate(:localpool_home_of_the_brave, registers: [register_z2, register_z3, register_z4])
       group
     end
 

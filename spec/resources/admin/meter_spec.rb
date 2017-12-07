@@ -1,19 +1,11 @@
 describe Meter::BaseResource do
 
-  entity(:admin) { Fabricate(:admin) }
-  entity(:localpool) { Fabricate(:localpool) }
-  entity!(:real) do
-    meter = Fabricate(:meter)
-    meter.registers.first.update(group: localpool)
-    meter
-  end
-  entity!(:virtual) do
-    meter = Fabricate(:virtual_meter)
-    meter.register.update(group: localpool)
-    meter
-  end
+  entity(:admin)     { Fabricate(:admin) }
+  entity(:localpool) { create(:localpool) }
+  entity!(:real)     { create(:meter, :real, group: localpool) }
+  entity!(:virtual)  { create(:meter, :virtual, group: localpool) }
 
-  let(:resources) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).meters }
+  let(:resources)    { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).meters }
 
   let(:base_keys) { ['id', 'type', 'updated_at',
                      'product_name',

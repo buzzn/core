@@ -7,7 +7,13 @@ describe Admin::LocalpoolRoda do
 
   context 'billings' do
 
-    entity(:group) { Fabricate(:localpool, registers: [Fabricate(:input_meter).input_register, Fabricate(:input_meter).input_register]) }
+    entity(:group) do
+      group = create(:localpool)
+      create(:meter, :real, group: group)
+      create(:meter, :real, group: group)
+      group
+    end
+
     entity(:billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
     entity!(:billing) do
       Fabricate(:billing,

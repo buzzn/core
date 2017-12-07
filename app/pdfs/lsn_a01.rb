@@ -5,10 +5,6 @@ module Buzzn::Pdfs
 
     class ContractDecorator < SimpleDelegator
 
-      def localpool
-        register.group
-      end
-
       def contractor_contact
         case contractor
         when Person

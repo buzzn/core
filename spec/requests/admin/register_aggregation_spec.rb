@@ -5,8 +5,10 @@ describe Admin::LocalpoolRoda do
     TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
+  entity(:group) { create(:localpool) }
+
   entity(:discovergy_meter) do
-    meter = Fabricate(:easymeter_60139082) # in_out meter
+    meter = Fabricate(:easymeter_60139082, group: group) # in_out meter
     # TODO what to do with the in-out fact ?
     Fabricate(:discovergy_broker, meter: meter)
     meter
@@ -16,16 +18,9 @@ describe Admin::LocalpoolRoda do
 
   let(:output_register) { discovergy_meter.output_register }
 
-  entity(:slp_register) { Fabricate(:input_meter).input_register }
+  entity(:slp_register) { create(:meter, :real, group: group).input_register }
 
-  entity(:sep_register) { Fabricate(:output_meter).output_register }
-
-  entity(:group) do
-    group = Fabricate(:localpool)
-    group.registers += discovergy_meter.registers
-    group.registers += [slp_register, sep_register]
-    group
-  end
+  entity(:sep_register) { Fabricate(:output_meter, group: group).output_register }
 
   let(:time) { Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1) }
 

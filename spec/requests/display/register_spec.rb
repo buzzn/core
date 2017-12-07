@@ -16,21 +16,11 @@ describe Display::GroupRoda do
       }
     end
 
-    entity(:group) { Fabricate([:tribe, :localpool].sample) }
+    entity(:group) { create(:localpool) }
 
-    entity!(:real_register) do
-      reg = Fabricate(:real_meter).registers.first
-      reg.group = group
-      reg.save
-      reg
-    end
+    entity!(:real_register) { create(:meter, :real, group: group).input_register }
 
-    entity!(:virtual_register) do
-      reg = Fabricate(:virtual_meter).register
-      reg.group = group
-      reg.save
-      reg
-    end
+    entity!(:virtual_register) { create(:meter, :virtual, group: group).register }
 
     context 'GET' do
 

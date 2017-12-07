@@ -14,18 +14,13 @@ describe Admin::LocalpoolRoda do
     end
 
     entity(:meter) do
-      meter = Fabricate(:input_meter)
-      meter.update(sent_data_dso: Date.today)
-      meter.input_register.update(group: group)
-      meter.update(group: group)
-      meter
+      create(:meter, :real,
+             sent_data_dso: Date.today,
+             group: group)
     end
 
     entity(:real_meter) do
-      meter = Fabricate(:output_meter)
-      meter.output_register.update(group: group)
-      meter.update(group: group)
-      meter
+      Fabricate(:output_meter, group: group)
     end
 
     let(:meter_json) do
@@ -63,7 +58,7 @@ describe Admin::LocalpoolRoda do
               "direction"=>meter.input_register.attributes['direction'],
               "name"=>meter.input_register.name,
               "pre_decimal_position"=>6,
-              "post_decimal_position"=>2,
+              "post_decimal_position"=>meter.input_register.post_decimal_position,
               "low_load_ability"=>false,
               "label"=>meter.input_register.attributes['label'],
               "last_reading"=>0,

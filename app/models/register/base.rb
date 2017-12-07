@@ -17,8 +17,6 @@ module Register
 
     enum direction: { input: 'in', output: 'out' }
 
-    belongs_to :group, class_name: 'Group::Base', foreign_key: :group_id
-
     has_many :contracts, class_name: 'Contract::Base', dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
     has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'

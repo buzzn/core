@@ -8,27 +8,21 @@ describe Admin::LocalpoolRoda do
   context 'meters as virtual' do
 
     entity(:group) do
-      group = Fabricate(:localpool)
+      group = create(:localpool)
       $user.person.reload.add_role(Role::GROUP_MEMBER, group)
       group
     end
 
     entity(:meter) do
-      meter = Fabricate(:virtual_meter)
-      meter.register.update(group: group)
-      meter.update(group: group)
-      Fabricate(:fp_plus, operand: Fabricate(:meter).registers.first,
-                register: meter.register)
+      meter = create(:meter, :virtual, group: group)
+      create(:formula_part, operand: create(:meter, :real, group: group).input_register,
+             register: meter.register)
       meter
     end
 
     entity!(:register) { meter.register }
 
-    entity!(:register2)do
-      reg = Fabricate(:output_meter).registers.first
-      reg.update(group: group)
-      reg
-    end
+    entity!(:register2) { Fabricate(:output_meter, group: group).registers.first }
 
     entity!(:formula_part) { register.formula_parts.first }
 
@@ -279,17 +273,6 @@ describe Admin::LocalpoolRoda do
         it '403' do
           PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $user
           expect(response).to be_denied_json(403, meter)
-
-          register2.update(group: nil)
-          begin
-            PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
-                  $admin,
-                  updated_at: DateTime.now,
-                  register_id: register2.id
-            expect(response).to be_denied_json(403, register2, user: $admin)
-          ensure
-            register2.update(group: group)
-          end
         end
 
         it '409' do

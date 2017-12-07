@@ -3,7 +3,7 @@ module Meter
     self.table_name = :meters
     include Filterable
 
-    belongs_to :group, class_name: 'Group::Localpool'
+    belongs_to :group, class_name: 'Group::Base'
     belongs_to :address
     belongs_to :broker, class_name: 'Broker::Base'
 

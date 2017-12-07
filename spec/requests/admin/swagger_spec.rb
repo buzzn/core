@@ -8,22 +8,22 @@ describe Admin, :swagger do
 
   login_path '/api/me/login'
 
-  entity!(:account) { Fabricate(:user) }
+  entity!(:person) { create(:person, :with_account) }
 
-  entity!(:person) { account.person }
+  entity!(:account) { Account::Base.where(person: person) }
 
-  entity!(:bank_account_1) { Fabricate(:bank_account, owner: person) }
+  entity!(:bank_account_1) { create(:bank_account, owner: person) }
 
-  entity!(:bank_account_2) { Fabricate(:bank_account, owner: person) }
+  entity!(:bank_account_2) { create(:bank_account, owner: person) }
 
-  entity!(:organization) { Fabricate(:other_organization) }
+  entity!(:organization) { create(:organization, :other) }
 
-  entity!(:bank_account_3) { Fabricate(:bank_account, owner: organization) }
+  entity!(:bank_account_3) { create(:bank_account, owner: organization) }
 
-  entity!(:bank_account_4) { Fabricate(:bank_account, owner: organization) }
+  entity!(:bank_account_4) { create(:bank_account, owner: organization) }
 
   entity!(:localpool) do
-    localpool = Fabricate(:localpool)
+    localpool = create(:localpool)
     person.add_role(Role::GROUP_OWNER, localpool)
     Fabricate(:localpool_processing_contract, localpool: localpool, customer: organization)
     Fabricate(:metering_point_operator_contract, localpool: localpool)
@@ -34,44 +34,35 @@ describe Admin, :swagger do
 
   entity!(:billing_cycle_2) { Fabricate(:billing_cycle, localpool: localpool) }
 
-  entity!(:tariff) { Fabricate(:tariff, group: localpool) }
+  entity!(:tariff) { create(:tariff, group: localpool) }
 
-  entity!(:tariff_2) { Fabricate(:tariff, group: localpool) }
+  entity!(:tariff_2) { create(:tariff, group: localpool, begin_date: Date.today) }
 
   entity!(:contract) { localpool.contracts.sample }
 
-  entity!(:meter) { Fabricate(:meter) }
+  entity!(:meter) { create(:meter, :real, group: localpool) }
 
   entity!(:real_meter) { meter }
 
-  entity!(:real_register) { real_meter.registers.first }
+  entity!(:real_register) { real_meter.input_register }
 
-  entity!(:virtual_meter) do
-    meter = Fabricate(:virtual_meter)
-    meter.register.update(group: localpool)
-    meter
-  end
+  entity!(:virtual_meter) { create(:meter, :virtual, group: localpool) }
 
   entity!(:virtual_register) do
     reg = virtual_meter.register
-    Fabricate(:fp_plus, operand: real_register, register: reg)
+    create(:formula_part, operand: real_register, register: reg)
     reg
   end
 
   entity!(:formula_part) { virtual_register.formula_parts.first }
 
-  entity!(:register) do
-    register = meter.registers.first
-    register.update(group: localpool)
-    register
-  end
+  entity!(:register) { meter.registers.first }
 
   entity!(:reading) { Fabricate(:single_reading, register: register) }
   entity!(:reading_2) { Fabricate(:single_reading, register: register) }
 
   entity!(:localpool_power_taker_contract) do
-    register = Fabricate(:input_meter).input_register
-    register.update(group: localpool)
+    register = create(:meter, :real, group: localpool).input_register
     Fabricate(:localpool_power_taker_contract,
               localpool: localpool,
               register: register)

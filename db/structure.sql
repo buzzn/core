@@ -1427,8 +1427,7 @@ CREATE TABLE registers (
     direction registers_direction,
     type character varying NOT NULL,
     last_observed timestamp without time zone,
-    meter_id uuid NOT NULL,
-    group_id uuid
+    meter_id uuid NOT NULL
 );
 
 
@@ -2235,13 +2234,6 @@ CREATE UNIQUE INDEX index_readings_on_register_id_and_date_and_reason ON reading
 
 
 --
--- Name: index_registers_on_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_registers_on_group_id ON registers USING btree (group_id);
-
-
---
 -- Name: index_registers_on_meter_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2513,22 +2505,6 @@ ALTER TABLE ONLY groups
 
 
 --
--- Name: groups fk_groups_grid_consumption; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_grid_consumption FOREIGN KEY (grid_consumption_register_id) REFERENCES registers(id);
-
-
---
--- Name: groups fk_groups_grid_feeding; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_grid_feeding FOREIGN KEY (grid_feeding_register_id) REFERENCES registers(id);
-
-
---
 -- Name: groups fk_groups_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2654,14 +2630,6 @@ ALTER TABLE ONLY payments
 
 ALTER TABLE ONLY readings
     ADD CONSTRAINT fk_readings_register FOREIGN KEY (register_id) REFERENCES registers(id);
-
-
---
--- Name: registers fk_registers_group; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY registers
-    ADD CONSTRAINT fk_registers_group FOREIGN KEY (group_id) REFERENCES groups(id);
 
 
 --

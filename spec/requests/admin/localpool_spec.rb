@@ -66,8 +66,6 @@ describe Admin::LocalpoolRoda do
     manager.add_role(Role::GROUP_ADMIN, localpool)
     3.times do
       c = Fabricate(:localpool_power_taker_contract)
-      c.register.group = localpool
-      c.register.save
       c.localpool = localpool
       c.save!
     end

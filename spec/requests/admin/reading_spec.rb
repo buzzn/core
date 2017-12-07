@@ -8,14 +8,10 @@ describe Admin::LocalpoolRoda do
 
   context 'readings' do
 
-    entity(:localpool) { Fabricate(:localpool) }
-    entity(:meter) {Fabricate(:meter) }
-    entity(:register) do
-      register = meter.registers.first
-      register.update(group: localpool)
-      register
-    end
-    entity!(:reading) { Fabricate(:single_reading, register: register)}
+    entity(:localpool) { create(:localpool) }
+    entity(:meter)     { create(:meter, :real, group: localpool) }
+    entity(:register)  { meter.input_register }
+    entity!(:reading)  { create(:reading, register: register)}
 
     let(:wrong_json) do
       {
@@ -197,7 +193,7 @@ describe Admin::LocalpoolRoda do
 
       it '205' do
         count = Reading::Single.count
-        reading = Fabricate(:single_reading, register: register)
+        reading = create(:reading, register: register, date: Date.today)
         expect(Reading::Single.count).to eq count + 1
 
         DELETE "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin

@@ -1,8 +1,7 @@
 describe Buzzn::Localpool::Checks do
 
   entity(:register) do
-    register = Fabricate(:input_meter).input_register
-    Fabricate(:localpool).registers << register
+    register = create(:meter, :real).input_register
     register
   end
 
