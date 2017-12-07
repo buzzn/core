@@ -7,7 +7,6 @@ module Meter
                :direction_number,
                :converter_constant,
                :ownership,
-               :section,
                :build_year,
                :calibrated_until,
                :edifact_metering_type,
