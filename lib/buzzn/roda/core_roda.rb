@@ -9,7 +9,7 @@ class CoreRoda < CommonRoda
 
   use Rack::CommonLogger, Buzzn::Logger.new(CoreRoda)
 
-  use Rack::Timeout, service_timeout: 20
+  use Rack::Timeout, service_timeout: 29
 
   use Rack::Cors, debug: Rails.env != 'production'  do
     allow do
