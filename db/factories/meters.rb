@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :meter do
     transient do
       registers nil
+      register_direction :input
     end
 
     group                        { FactoryGirl.create(:localpool) }
@@ -22,7 +23,7 @@ FactoryGirl.define do
         if evaluator.registers.present?
           meter.registers = evaluator.registers
         else
-          meter.registers = [ FactoryGirl.build(:register, :input, meter: meter) ]
+          meter.registers = [ FactoryGirl.build(:register, evaluator.register_direction, meter: meter) ]
         end
       end
     end
