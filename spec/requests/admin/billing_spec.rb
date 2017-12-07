@@ -8,10 +8,9 @@ describe Admin::LocalpoolRoda do
   context 'billings' do
 
     entity(:group) do
-      group = create(:localpool)
-      create(:meter, :real, group: group)
-      create(:meter, :real, group: group)
-      group
+      meter = create(:meter, :real)
+      create(:meter, :real, group: meter.group)
+      meter.group
     end
 
     entity(:billing_cycle) { Fabricate(:billing_cycle, localpool: group) }

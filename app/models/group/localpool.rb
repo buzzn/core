@@ -67,11 +67,6 @@ module Group
                   .exists)
     end
 
-
-    def cmeter_without_corrected_registers
-      Meter::Real.where(id: registers.select(:meter_id))
-    end
-
     def one_way_meters
       meter_without_corrected_registers.where(direction_number: Meter::Real.direction_numbers[:one_way_meter])
     end
