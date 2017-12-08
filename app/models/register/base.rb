@@ -22,14 +22,6 @@ module Register
     has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'
     has_many :scores, as: :scoreable
 
-    def data_source
-      Buzzn::MissingDataSource.name
-    end
-
-    def broker
-      meter.broker
-    end
-
     validates :meter, presence: true
     # TODO can this be removed? Superseded by schemas?
     validates :metering_point_id, uniqueness: false, length: { in: 4..64 }, allow_blank: true
@@ -75,6 +67,33 @@ module Register
 
     def self.filter(value)
       do_filter(value, *search_attributes)
+    end
+
+
+    def data_source
+      Buzzn::MissingDataSource.name
+    end
+
+    def broker
+      meter.broker
+    end
+
+    # FIXME: it would be best to raise an exception here (and even define this class as abstract as well)
+    # but raising here causes lots of test & code to fail.
+    def obis
+      nil
+    end
+
+    def low_load_ability
+      false
+    end
+
+    def pre_decimal_position
+      6
+    end
+
+    def post_decimal_position
+      1
     end
 
     def validate_invariants

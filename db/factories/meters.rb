@@ -7,7 +7,6 @@ FactoryGirl.define do
 
     group                        { FactoryGirl.create(:localpool) }
     direction_number             Meter::Real.direction_numbers[:one_way_meter]
-    section                      Meter::Real.sections[:electricity]
 
     before(:create) do |meter, evaluator|
       case meter

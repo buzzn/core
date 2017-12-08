@@ -207,7 +207,7 @@ describe Admin::LocalpoolRoda do
             "direction"=>'in',
             "name"=>contract.register.name,
             "pre_decimal_position"=>6,
-            "post_decimal_position"=>2,
+            "post_decimal_position"=>1,
             "low_load_ability"=>false,
             "label"=>'CONSUMPTION',
             "last_reading"=>0,

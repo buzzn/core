@@ -2,10 +2,6 @@ FactoryGirl.define do
   factory :register, class: 'Register::Input' do
     direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]
-    obis                  '1-0:1.8.0'
-    pre_decimal_position  6
-    post_decimal_position 1
-    low_load_ability      false
     share_with_group      true
     share_publicly        false
 
@@ -47,7 +43,6 @@ FactoryGirl.define do
       initialize_with { Register::Output.new }
       direction       Register::Base.directions[:output]
       name            { generate(:register_output_name) }
-      obis            '1-0:2.8.0'
     end
 
     # This register is publicly connected. Only those have a metering point id
