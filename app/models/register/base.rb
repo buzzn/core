@@ -78,9 +78,10 @@ module Register
       meter.broker
     end
 
+    # FIXME: it would be best to raise an exception here (and even define this class as abstract as well)
+    # but raising here causes lots of test & code to fail.
     def obis
-      nil # it would be best to raise an exception here (and define the class as abstract)
-      # but that causes lots of test & code to fail.
+      nil
     end
 
     def low_load_ability
