@@ -98,12 +98,12 @@ describe 'Schemas::Invariants::Group::Localpool' do
 
     context "when there is none" do
       before do
-        localpool.update(meters: [])
+        localpool.meters.clear
         localpool.reload
         expect(localpool.grid_feeding_register).to be_nil # assert precondition
       end
       it "is valid" do
-        expect(localpool.invariant.errors[:id]).to be_nil
+        expect(localpool.invariant.errors[:grid_feeding_register]).to be_nil
       end
     end
 
@@ -115,7 +115,7 @@ describe 'Schemas::Invariants::Group::Localpool' do
         expect(localpool.grid_feeding_register).not_to be_nil # assert precondition
       end
       it "is valid" do
-        expect(localpool.invariant.errors[:id]).to be_nil
+        expect(localpool.invariant.errors[:grid_feeding_register]).to be_nil
       end
     end
     context "when there are two" do
@@ -125,7 +125,7 @@ describe 'Schemas::Invariants::Group::Localpool' do
         expect(localpool.grid_feeding_register).not_to be_nil # assert precondition
       end
       it "is invalid" do
-        expect(localpool.invariant.errors[:id].first).to match(/must not have more than one grid/)
+        expect(localpool.invariant.errors[:grid_feeding_register].first).to eq('must not have more than register with this label')
       end
     end
   end
