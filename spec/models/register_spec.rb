@@ -154,7 +154,7 @@ describe Register do
 
   describe "pre_decimal_position" do
     [Register::Base, Register::Real, Register::Input, Register::Output].each do |klass|
-      it "is false" do
+      it "is 6" do
         expect(klass.new.pre_decimal_position).to eq(6)
       end
     end
@@ -162,7 +162,7 @@ describe Register do
 
   describe "post_decimal_position" do
     [Register::Base, Register::Real, Register::Input, Register::Output].each do |klass|
-      it "is false" do
+      it "is 1" do
         expect(klass.new.post_decimal_position).to eq(1)
       end
     end
