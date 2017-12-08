@@ -109,6 +109,7 @@ describe 'Schemas::Invariants::Group::Localpool' do
 
     context "when there is one" do
       before do
+        localpool.update(meters: [])
         make_register(localpool)
         localpool.reload
         expect(localpool.grid_feeding_register).not_to be_nil # assert precondition
