@@ -45,6 +45,7 @@ module Schemas
         required(:electricity_supplier).maybe { electricity_supplier? }
         required(:owner).maybe { has_owner_role? }
         required(:grid_feeding_register).maybe { at_most_one_register_with_same_label? }
+        required(:grid_consumption_register).maybe { at_most_one_register_with_same_label? }
       end
     end
   end

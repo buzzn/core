@@ -88,54 +88,52 @@ describe 'Schemas::Invariants::Group::Localpool' do
     end
   end
 
-  shared_examples "a grid connected register" do
+  shared_examples "invariants of a grid connected register" do |label|
 
-    def make_register(localpool, label: :grid_feeding, register_direction: :input)
+    before { localpool.meters.clear }
+
+    # will return the grid_feeding or grid_consumption register
+    let(:tested_register)   { localpool.send("#{label}_register") }
+    let(:tested_invariants) { localpool.invariant.errors[:"#{label}_register"] }
+
+    subject { tested_invariants }
+
+    def make_register(localpool, label:, register_direction: :input)
       meter = create(:meter, :real, group: localpool, register_direction: register_direction)
       meter.input_register.update(label: label)
       meter.input_register
     end
 
-    context "when there is none" do
+    context "when there is no such register" do
       before do
-        localpool.meters.clear
-        localpool.reload
-        expect(localpool.grid_feeding_register).to be_nil # assert precondition
+        expect(tested_register).to be_nil # assert precondition
       end
-      it "is valid" do
-        expect(localpool.invariant.errors[:grid_feeding_register]).to be_nil
-      end
+      it { is_expected.to be_nil }
     end
 
-    context "when there is one" do
+    context "when there is one such register" do
       before do
-        localpool.update(meters: [])
-        make_register(localpool)
-        localpool.reload
-        expect(localpool.grid_feeding_register).not_to be_nil # assert precondition
+        make_register(localpool, label: label)
+        expect(tested_register).not_to be_nil # assert precondition
       end
-      it "is valid" do
-        expect(localpool.invariant.errors[:grid_feeding_register]).to be_nil
-      end
+      it { is_expected.to be_nil }
     end
-    context "when there are two" do
+
+    context "when there are two such registers" do
       before do
-        2.times { make_register(localpool) }
-        localpool.reload
-        expect(localpool.grid_feeding_register).not_to be_nil # assert precondition
+        2.times { make_register(localpool, label: label) }
+        expect(tested_register).not_to be_nil # assert precondition
       end
-      it "is invalid" do
-        expect(localpool.invariant.errors[:grid_feeding_register].first).to eq('must not have more than register with this label')
-      end
+      it { is_expected.to eq(['must not have more than register with this label']) }
     end
   end
 
   describe "grid feeding register" do
-    it_behaves_like "a grid connected register"
+    it_behaves_like "invariants of a grid connected register", :grid_feeding
   end
 
-  # describe "grid consumption register" do
-  #   it_behaves_like "a grid connected register"
-  # end
+  describe "grid consumption register" do
+    it_behaves_like "invariants of a grid connected register", :grid_consumption
+  end
 
 end
