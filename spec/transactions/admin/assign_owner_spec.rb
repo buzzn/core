@@ -2,9 +2,9 @@ require 'buzzn/transactions/admin/localpool/assign_owner'
 
 describe Transactions::Admin::Localpool::OwnerBase do
 
+  let!(:localpool)         { create(:localpool) }
   let(:person)             { create(:person) }
   let(:person_resource)    { PersonResource.new(person) }
-  let(:localpool)          { create(:localpool) }
 
   let(:account)            { Account::Base.where(person_id: user).first }
   let(:localpool_resource) { Admin::LocalpoolResource.all(account).first }
