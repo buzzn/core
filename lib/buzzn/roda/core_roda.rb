@@ -7,11 +7,13 @@ class CoreRoda < CommonRoda
 
   include Import.args[:env, 'service.health']
 
-  use Rack::CommonLogger, Buzzn::Logger.new(CoreRoda)
+  use Rack::CommonLogger, logger
 
   use Rack::Timeout, service_timeout: 29
 
-  use Rack::Cors, debug: Rails.env != 'production' do
+  Rack::Timeout::Logger.disable
+
+  use Rack::Cors, debug: logger.level < ::Logger::INFO do
     allow do
       origins(*%r(#{Import.global('config.cors')}))
       resource '/*', headers: :any, methods: [:get, :post, :patch, :put, :delete, :options], expose: 'Authorization'
