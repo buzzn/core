@@ -12,10 +12,9 @@ class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
     data_source_registry.add_source(self)
   end
 
-  def single_aggregated(register_or_group, mode)
-    if register_or_group.is_a?(Register::Base) && register_or_group.attributes['direction'] == mode
-      last_reading.power(register_or_group)
-    end
+  def ticker(register)
+    key = "discovergy.ticker.power.#{register.id}"
+    cache.get(key) || cache.set(key, last_reading.power(register).to_json, 15)
   end
 
   def collection(resource, mode)

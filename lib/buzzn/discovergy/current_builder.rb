@@ -45,19 +45,24 @@ class Discovergy::CurrentBuilder
 
   def to_watt_hour(response)
     values = response['values']
-    energy = values['energy']
-    energy_out = values['energyOut']
-    # TODO need to handle two-direction-meters
     value =
-      case register.direction
-      when 'output'
-        energy
-      when 'input'
-        energy
+      if register.meter.two_way_meter?
+        two_way_meter_value(values)
       else
-        raise "unknown direction: #{register.direction}"
+        values['energy']
       end
     # ENERGY/ENERGYOUT resolution is 10^-10 kWh
     value / 10000000
+  end
+
+  def two_way_meter_value(values)
+    case register.direction
+    when 'output'
+      values['energyOut']
+    when 'input'
+      values['energy']
+    else
+      raise "unknown direction: #{register.direction}"
+    end
   end
 end
