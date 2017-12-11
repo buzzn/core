@@ -35,7 +35,6 @@ class Beekeeper::Import
           # with localpool.id the roles on owner can be set
           add_roles(localpool)
           add_registers(localpool, record.converted_attributes[:registers])
-          assign_grid_registers(localpool)
           # now we can fail and rollback on broken invariants
           unless localpool.invariant_valid?
             raise ActiveRecord::RecordInvalid.new(localpool)
@@ -115,22 +114,6 @@ class Beekeeper::Import
       unless register.save
         logger.error("Failed to save register #{register.inspect}")
         logger.error("Errors: #{register.errors.inspect}")
-      end
-    end
-  end
-
-  def assign_grid_registers(localpool)
-    %i(grid_consumption grid_feeding).each do |label|
-      found_registers = localpool.registers.send(label)
-      if found_registers.size == 1
-        localpool.update_attribute("#{label}_register", found_registers.first)
-      elsif found_registers.size > 1
-        logger.error("Error: found more than one #{label} registers:")
-        logger.error(found_registers.inspect)
-      else
-        # the 0/no register case is handled by the incompleteness validation below.
-        # Some groups (like Orleansstraße 61 and Häberlstraße 15) use a virtual register for the grid.
-        # Since we don't import those yet, those groups have incompleteness errors.
       end
     end
   end
