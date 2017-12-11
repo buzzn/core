@@ -10,7 +10,6 @@ module Buzzn::Services
         add_source(source)
       end
       add_source(Buzzn::MissingDataSource.new)
-      add_source(Buzzn::StandardProfile::DataSource.new)
       add_source(Buzzn::Virtual::DataSource.new(self))
     end
 

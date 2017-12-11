@@ -4,11 +4,8 @@ class Services::CurrentPower
 
   include Import.args[registry: 'service.data_source_registry']
 
-  def ticker(resource)
-    register = register.object
-    result = registry.get(register.data_source).single_aggregated(register, register.direction.sub(/put/, ''))
-    result.freeze unless result.frozen?
-    result
+  def ticker(register)
+    registry.get(register.data_source).ticker(register)
   end
   alias :for_register :ticker
 

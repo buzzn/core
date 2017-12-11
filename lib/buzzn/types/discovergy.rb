@@ -1,4 +1,4 @@
-require_relative 'datasource'
+require_relative '../types'
 
 module Types::Discovergy
   module Get
