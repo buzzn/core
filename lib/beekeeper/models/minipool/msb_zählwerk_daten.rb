@@ -28,6 +28,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
       label:                 map_label,
       metering_point_id:     metering_point_id,
       obis:                  obis,
+      readings:              readings,
       # set these defaults (not imported from beekeeper)
       share_with_group:      false,
       share_publicly:        false,
@@ -142,5 +143,17 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
   def group
     @group ||= Beekeeper::Minipool::MinipoolObjekte.find_by(messvertragsnummer: vertragsnummer)
+  end
+
+  def readings
+    readings = Beekeeper::Minipool::MsbZählwerkZst.where(vertragsnummer: vertragsnummer, nummernzusatz: nummernzusatz, zählwerkID: zählwerkID).to_a
+    uniq_readings = readings.uniq{ |r| [r[:ablesezeitpunkt], r[:ablesegrund]] }
+
+    unless uniq_readings.length == readings.length
+      dups = readings.group_by { |r| [r[:ablesezeitpunkt], r[:ablesegrund]] }.select { |_, r| r.length > 1 }
+      add_warning(:reading, "Duplicate: #{dups.inspect}")
+    end
+
+    uniq_readings.map { |r| Reading::Single.new(r.converted_attributes) }
   end
 end
