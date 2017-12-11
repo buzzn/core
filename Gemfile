@@ -53,6 +53,7 @@ gem 'puma'
 gem 'rails'#, '< 5.0.0'
 gem 'mongoid'
 gem 'redis'
+gem 'rack-timeout'
 gem 'rack-cors',               require: 'rack/cors'
 gem 'clockwork'
 gem 'money-rails'
@@ -75,7 +76,6 @@ gem 'smarter_csv'
 gem 'rails_12factor'
 
 group :production, :staging do
-  gem 'rack-timeout'
   gem 'newrelic_rpm'
 end
 
