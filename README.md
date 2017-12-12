@@ -8,6 +8,7 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
 
 - [Application Architecture](#application-architecture)
 - [Useful rake tasks](#useful-rake-tasks)
+  - [Discovergy Credentials](#discovergy-credentials)
   - [Overview](#overview)
   - [Common testing workflow - after checking out a remote branch](#common-testing-workflow---after-checking-out-a-remote-branch)
   - [Common testing workflow - to run one test file](#common-testing-workflow---to-run-one-test-file)
@@ -167,5 +168,3 @@ The (very useful) Sidekiq Admin interface currently isn't set up. See [Sidekiq's
 * [Privacy Settings (readability) of Resources](https://docs.google.com/spreadsheets/d/13NtNstj4AVEbxvXTEgx6Hit-g0NHsS7Uy5JPYceETjI/edit#gid=0)
 * [All Notifications & their User Groups](https://docs.google.com/spreadsheets/d/1OPsKFke9NGUYPtWs7Nv5Iv4hMAvqpmYvCPtXEhPhYL4/edit#gid=0)
 * [Overview over treating notifications on backend side](https://www.lucidchart.com/documents/edit/7f412806-aa84-46d6-93c7-76bedebd47d9)
-
- Hello Heroku
