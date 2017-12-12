@@ -22,28 +22,15 @@ module Register
     has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'
     has_many :scores, as: :scoreable
 
-    validates :meter, presence: true
-    # TODO can this be removed? Superseded by schemas?
-    validates :metering_point_id, uniqueness: false, length: { in: 4..64 }, allow_blank: true
-    # TODO can this be removed? Superseded by schemas?
-    validates :name, presence: true, length: { in: 1..100 }
-    # TODO virtual register ?
-    validates :image, presence: false
-    validates :regular_reeding, presence: false
-    validates :observer_enabled, presence: false
-    validates :observer_min_threshold, presence: false
-    validates :observer_max_threshold, presence: false
-    validates :last_observed, presence: false
-    # TODO virtual register ?
-    validates :observer_offline_monitoring, presence: false
-
-    validate :validate_invariants
-
     scope :real,    -> { where(type: [Register::Input, Register::Output]) }
     scope :virtual, -> { where(type: Register::Virtual) }
 
     scope :consumption_production, -> do
       by_labels(*Register::Base.labels.values_at(:consumption, :production_pv, :production_chp))
+    end
+
+    scope :production, -> do
+      by_labels(*Register::Base.labels.values.select { |l| l =~ /PRODUCTION/ })
     end
 
     scope :by_group, -> (group) do

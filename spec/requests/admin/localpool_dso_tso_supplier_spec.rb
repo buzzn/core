@@ -31,6 +31,7 @@ describe Admin::LocalpoolRoda do
         'bank_account' => ['must be filled']
       },
       'bank_account' => nil,
+      'power_sources' => [],
       'distribution_system_operator' => nil,
       'transmission_system_operator' => nil,
       'electricity_supplier' => nil
