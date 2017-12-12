@@ -30,7 +30,7 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
       reason:    map_reason,
       quality:   map_quality,
       source:    map_source,
-      status:    map_status,
+      status:    statuszst.strip,
       read_by:   map_read_by,
     }
   end
@@ -46,7 +46,6 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
     'Geräteparameteränderung' => 'CMP',
     'Bilanzierungsgebietswechsel' => 'COB'
   }
-
 
   def map_reason
     REASON_MAP[ablesegrund.strip]
@@ -71,15 +70,6 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
     else
       'MAN'
     end
-  end
-
-  STATUS_MAP = {
-    'Z84' => 'Z84',
-    'Z86' => 'Z86',
-  }
-
-  def map_status
-    STATUS_MAP[statuszst.strip]
   end
 
   READ_BY_MAP = {
