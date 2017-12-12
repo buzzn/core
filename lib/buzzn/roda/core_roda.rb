@@ -9,7 +9,7 @@ class CoreRoda < CommonRoda
 
   use Rack::CommonLogger, Buzzn::Logger.new(CoreRoda)
 
-  use Rack::Timeout, service_timeout: 20
+  use Rack::Timeout, service_timeout: 29
 
   use Rack::Cors, debug: Rails.env != 'production'  do
     allow do
@@ -30,7 +30,10 @@ class CoreRoda < CommonRoda
 
     logger.info(r.inspect)
 
-    ActiveRecord::Base.connection_pool.with_connection do
+    ActiveRecord::Base.connection_pool.with_connection do |connection|
+
+      connection.enable_query_cache!
+
       r.on 'api' do
         r.on 'display' do
           r.run Display::Roda

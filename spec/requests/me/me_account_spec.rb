@@ -200,7 +200,7 @@ describe Me::Roda, :skip_nested do
     end
 
     let(:login) { "next.#{user.email}" }
-    let(:key) { Account::LoginChangeKey.where(id: user.id).first.key }
+    let(:key) { Account::LoginChangeKey.where(id: user.id).first.reload.key }
 
     it '200' do
       POST '/api/me/verify-login-change', nil,
@@ -249,7 +249,7 @@ describe Me::Roda, :skip_nested do
     end
 
     let(:key) do
-      Account::PasswordResetKey.where(id: user.id).first.key
+      Account::PasswordResetKey.where(id: user.id).first.reload.key
     end
 
     it '200' do

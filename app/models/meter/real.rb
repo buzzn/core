@@ -58,11 +58,6 @@ module Meter
 
     enum ownership: %i(buzzn foreign_ownership customer leased bought).each_with_object({}).each { |item, map| map[item] = item.to_s.upcase }
 
-    enum section: {
-           electricity: 'S',
-           gas:         'G'
-         }
-
     before_destroy do
       # we can't use registers.delete_all here because ActiveRecord translates this into a wrong SQL query.
       Register::Real.where(meter_id: self.id).delete_all

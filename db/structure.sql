@@ -1245,8 +1245,6 @@ CREATE TABLE groups (
     transmission_system_operator_id uuid,
     electricity_supplier_id uuid,
     bank_account_id uuid,
-    grid_consumption_register_id uuid,
-    grid_feeding_register_id uuid,
     CONSTRAINT check_localpool_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
 );
 
@@ -2044,20 +2042,6 @@ CREATE INDEX index_groups_on_electricity_supplier_id ON groups USING btree (elec
 
 
 --
--- Name: index_groups_on_grid_consumption_register_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_groups_on_grid_consumption_register_id ON groups USING btree (grid_consumption_register_id);
-
-
---
--- Name: index_groups_on_grid_feeding_register_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_groups_on_grid_feeding_register_id ON groups USING btree (grid_feeding_register_id);
-
-
---
 -- Name: index_groups_on_owner_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2755,4 +2739,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171115086500');
 INSERT INTO schema_migrations (version) VALUES ('20171115095100');
 
 INSERT INTO schema_migrations (version) VALUES ('20171206142306');
+
+INSERT INTO schema_migrations (version) VALUES ('20171207154218');
 

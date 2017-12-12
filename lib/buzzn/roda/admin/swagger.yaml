@@ -826,13 +826,6 @@ paths:
         - CUSTOMER
         - LEASED
         - BOUGHT
-      - name: section
-        in: formData
-        required: false
-        type: string
-        enum:
-        - S
-        - G
       - name: build_year
         in: formData
         required: false
@@ -985,18 +978,6 @@ paths:
         - GRID_CONSUMPTION_CORRECTED
         - GRID_FEEDING_CORRECTED
         - OTHER
-      - name: pre_decimal_position
-        in: formData
-        required: false
-        type: integer
-        format: int64
-        minimum: 0
-      - name: post_decimal_position
-        in: formData
-        required: false
-        type: integer
-        format: int64
-        minimum: 0
       - name: observer_enabled
         in: formData
         required: false
@@ -1023,10 +1004,6 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: low_load_ability
-        in: formData
-        required: false
-        type: boolean
       - name: updated_at
         in: formData
         required: true

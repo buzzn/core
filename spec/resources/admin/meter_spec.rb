@@ -57,7 +57,6 @@ describe Meter::BaseResource do
                                           'edifact_cycle_interval',
                                           'edifact_data_logging',
                                           'ownership',
-                                          'section',
                                           'build_year',
                                           'manufacturer_name',
                                           'converter_constant',

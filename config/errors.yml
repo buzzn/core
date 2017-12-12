@@ -17,3 +17,4 @@ en:
     distribution_system_operator?: 'wrong market function of distribution_system_operator'
     transmission_system_operator?: 'wrong market function of transmission_system_operator'
     electricity_supplier?: 'wrong market function of electricity_supplier'
+    at_most_one_register_with_same_label?: 'must not have more than register with this label'

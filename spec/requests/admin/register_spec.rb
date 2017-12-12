@@ -26,9 +26,9 @@ describe Admin::LocalpoolRoda do
            "type"=>"register_real",
            "direction"=>register.attributes['direction'],
            "name"=>'Smarty',
-           "pre_decimal_position"=>4,
-           "post_decimal_position"=>3,
-           "low_load_ability"=>true,
+           "pre_decimal_position"=>6,
+           "post_decimal_position"=>1,
+           "low_load_ability"=>false,
            "label"=>'DEMARCATION_PV',
            "last_reading"=>last ? last.value : 0,
            "observer_min_threshold"=>10,
@@ -50,10 +50,6 @@ describe Admin::LocalpoolRoda do
               "detail"=>"size cannot be greater than 64"},
              {"parameter"=>"label",
               "detail"=>"must be one of: CONSUMPTION, CONSUMPTION_COMMON, DEMARCATION_PV, DEMARCATION_CHP, DEMARCATION_WIND, DEMARCATION_WATER, PRODUCTION_PV, PRODUCTION_CHP, PRODUCTION_WIND, PRODUCTION_WATER, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER"},
-             {"parameter"=>"pre_decimal_position",
-              "detail"=>"must be an integer"},
-             {"parameter"=>"post_decimal_position",
-              "detail"=>"must be an integer"},
              {"parameter"=>"observer_enabled",
               "detail"=>"must be boolean"},
              {"parameter"=>"observer_min_threshold",
@@ -64,8 +60,6 @@ describe Admin::LocalpoolRoda do
               "detail"=>"must be boolean"},
              {"parameter"=>"name",
               "detail"=>"size cannot be greater than 64"},
-             {"parameter"=>"low_load_ability",
-              "detail"=>"must be boolean"},
              {"parameter"=>"updated_at",
               "detail"=>"is missing"},
            ]
@@ -114,9 +108,6 @@ describe Admin::LocalpoolRoda do
                metering_point_id: '123456',
                name: 'Smarty',
                label: Register::Base.labels[:demarcation_pv],
-               pre_decimal_position: 4,
-               post_decimal_position: 3,
-               low_load_ability: true,
                observer_enabled: true,
                observer_min_threshold: 10,
                observer_max_threshold: 100,
@@ -126,9 +117,6 @@ describe Admin::LocalpoolRoda do
          expect(register.metering_point_id).to eq'123456'
          expect(register.name).to eq 'Smarty'
          expect(register.label).to eq 'demarcation_pv'
-         expect(register.pre_decimal_position).to eq 4
-         expect(register.post_decimal_position).to eq 3
-         expect(register.low_load_ability).to eq true
          expect(register.observer_enabled).to eq true
          expect(register.observer_min_threshold).to eq 10
          expect(register.observer_max_threshold).to eq 100

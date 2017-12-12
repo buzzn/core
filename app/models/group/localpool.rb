@@ -27,6 +27,14 @@ module Group
       Contract::LocalpoolPowerTaker.where(localpool_id: self)
     end
 
+    def grid_feeding_register
+      registers.grid_feeding.first
+    end
+
+    def grid_consumption_register
+      registers.grid_consumption.first
+    end
+
     def contracts
       self.class.contracts(self)
     end
@@ -65,11 +73,6 @@ module Group
       Organization.where(base.where('contracts.customer_id = organizations.id or contracts.contractor_id = organizations.id')
                   .select(1)
                   .exists)
-    end
-
-
-    def cmeter_without_corrected_registers
-      Meter::Real.where(id: registers.select(:meter_id))
     end
 
     def one_way_meters

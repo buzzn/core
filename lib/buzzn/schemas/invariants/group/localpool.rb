@@ -19,13 +19,13 @@ module Schemas
           def has_owner_role?(input)
             case input
             when Person
-              role = input.roles.where(name: Role::GROUP_OWNER).detect do |role|
+              the_role = input.roles.where(name: Role::GROUP_OWNER).detect do |role|
                 localpool = role.resource
                 owner = localpool.owner
                 (owner.is_a?(Person) && input.id == owner.id) ||
                   (owner.is_a?(::Organization) && owner.contact && input.id == owner.contact.id)
               end
-              role != nil
+              the_role != nil
             when Organization
               has_owner_role?(input.contact)
             when NilClass
@@ -34,12 +34,18 @@ module Schemas
               raise "can not handle #{input.class}"
             end
           end
+
+          def at_most_one_register_with_same_label?(register)
+            register.meter.group.registers.where(label: register.attributes['label']).count <= 1
+          end
         end
 
         required(:distribution_system_operator).maybe { distribution_system_operator? }
         required(:transmission_system_operator).maybe { transmission_system_operator? }
         required(:electricity_supplier).maybe { electricity_supplier? }
         required(:owner).maybe { has_owner_role? }
+        required(:grid_feeding_register).maybe { at_most_one_register_with_same_label? }
+        required(:grid_consumption_register).maybe { at_most_one_register_with_same_label? }
       end
     end
   end
