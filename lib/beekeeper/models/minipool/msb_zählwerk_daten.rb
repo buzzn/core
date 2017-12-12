@@ -102,9 +102,6 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
   def map_label
     label = LABEL_MAP[kennzeichnung]
-    if msb_gerät.zählernummer.to_s == "60099323"
-      byebug
-    end
     label = refine_consumption_label   if label == 'CONSUMPTION'
     label = refine_production_pv_label if label == 'PRODUCTION_PV'
     # puts "#{kennzeichnung} #{msb_gerät.adresszusatz} => #{label}"
