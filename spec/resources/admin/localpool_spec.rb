@@ -39,31 +39,27 @@ describe Admin::LocalpoolResource do
     end
 
     entity!(:pool) { pools.first }
+    subject        { pool.power_sources }
+    before         { pool.object.meters.clear }
 
-    context 'group has a production pv and consumption' do
+    context 'when group has no registers' do
+      it { is_expected.to eq [] }
+    end
+
+    context 'when group has a production pv and consumption register' do
       before do
-        pool.object.meters.clear
         add_register_with_label(pool, :consumption)
         add_register_with_label(pool, :production_pv)
       end
-
-      it 'contains only production in list' do
-        expect(pool.power_sources).to eq ['pv']
-      end
-
+      it { is_expected.to eq ['pv'] }
     end
 
-    context 'group has a production wind and water' do
+    context 'when group has a production wind and water register' do
       before do
-        pool.object.meters.clear
         add_register_with_label(pool, :production_wind)
         add_register_with_label(pool, :production_water)
       end
-
-      it 'contains in list' do
-        expect(pool.power_sources).to eq ['wind', 'water']
-      end
-
+      it { is_expected.to eq ['wind', 'water'] }
     end
   end
 
