@@ -24,7 +24,7 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
     @converted_attributes ||= {
       raw_value: messwert * 1000,
       value:     messwert * 1000,
-      comment:   ablesegrund =~ /Gerätewechsel/i ? zaehlernummer : '',
+      comment:   comment,
       date:      Date.parse(ablesezeitpunkt),
       unit:      'Wh',
       reason:    map_reason,
@@ -46,6 +46,12 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
     'Geräteparameteränderung' => 'CMP',
     'Bilanzierungsgebietswechsel' => 'COB'
   }
+
+  def comment
+    if ablesegrund =~ /Gerätewechsel/i
+      "Zählernummer: #{zaehlernummer}"
+    end
+  end
 
   def map_reason
     REASON_MAP[ablesegrund.strip]
