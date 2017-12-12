@@ -142,11 +142,13 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
   def readings
     readings = Beekeeper::Minipool::MsbZählwerkZst.where(vertragsnummer: vertragsnummer, nummernzusatz: nummernzusatz, zählwerkID: zählwerkID).to_a
-    uniq_readings = readings.uniq{ |r| [r[:ablesezeitpunkt], r[:ablesegrund]] }
+    uniq_readings = readings.uniq { |r| [r[:ablesezeitpunkt], r[:ablesegrund]] }
 
     unless uniq_readings.length == readings.length
       dups = readings.group_by { |r| [r[:ablesezeitpunkt], r[:ablesegrund]] }.select { |_, r| r.length > 1 }
-      add_warning(:reading, "Duplicate: #{dups.inspect}")
+      dups.each do |dup|
+        add_warning(:readings, "duplicate for: #{dup.first.join(' / ')}")
+      end
     end
 
     uniq_readings.map { |r| Reading::Single.new(r.converted_attributes) }
