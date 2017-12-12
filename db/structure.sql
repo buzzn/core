@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.5
--- Dumped by pg_dump version 9.6.5
+-- Dumped from database version 9.6.6
+-- Dumped by pg_dump version 9.6.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -494,16 +494,6 @@ CREATE TYPE meters_ownership AS ENUM (
     'CUSTOMER',
     'LEASED',
     'BOUGHT'
-);
-
-
---
--- Name: meters_section; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE meters_section AS ENUM (
-    'S',
-    'G'
 );
 
 
@@ -1279,7 +1269,6 @@ CREATE TABLE meters (
     updated_at timestamp without time zone NOT NULL,
     manufacturer_name meters_manufacturer_name,
     ownership meters_ownership,
-    section meters_section,
     direction_number meters_direction_number,
     edifact_metering_type meters_edifact_metering_type,
     edifact_meter_size meters_edifact_meter_size,
@@ -1410,17 +1399,13 @@ CREATE TABLE readings (
 CREATE TABLE registers (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     metering_point_id character varying(64),
-    pre_decimal_position integer,
-    post_decimal_position integer,
     observer_enabled boolean,
     observer_min_threshold integer,
     observer_max_threshold integer,
     observer_offline_monitoring boolean,
     name character varying(64) NOT NULL,
-    obis character varying(16) NOT NULL,
     share_with_group boolean NOT NULL,
     share_publicly boolean,
-    low_load_ability boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     label registers_label,
@@ -2245,13 +2230,6 @@ CREATE INDEX index_registers_on_meter_id ON registers USING btree (meter_id);
 --
 
 CREATE UNIQUE INDEX index_registers_on_meter_id_and_direction ON registers USING btree (meter_id, direction);
-
-
---
--- Name: index_registers_on_meter_id_and_obis; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_registers_on_meter_id_and_obis ON registers USING btree (meter_id, obis);
 
 
 --
