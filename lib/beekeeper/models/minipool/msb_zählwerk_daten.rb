@@ -146,8 +146,10 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
     unless uniq_readings.length == readings.length
       dups = readings.group_by { |r| [r[:ablesezeitpunkt], r[:ablesegrund]] }.select { |_, r| r.length > 1 }
-      dups.each do |dup|
-        add_warning(:readings, "duplicate for: #{dup.first.join(' / ')}")
+      dups.each do |_, dup_arr|
+        dup_arr.each do |dup|
+          add_warning(:readings, "duplicate for: vertragsnummer: #{dup.vertragsnummer}, nummernzusatz: #{dup.nummernzusatz}, zählwerkID: #{dup.zählwerkID}, date: #{dup.ablesezeitpunkt}")
+        end
       end
     end
 
