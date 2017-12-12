@@ -15,7 +15,8 @@ describe Admin::LocalpoolResource do
                            updatable
                            deletable
                            incompleteness
-                           bank_account) }
+                           bank_account
+                           power_sources) }
 
   entity!(:pools) { Admin::LocalpoolResource.all(admin) }
 
@@ -29,12 +30,41 @@ describe Admin::LocalpoolResource do
     expect(result.sort).to eq expected.sort
   end
 
-  it 'retrieve base attributes' do
-    attrs = pools.retrieve(localpool.id).to_h
-    expect(attrs['id']).to eq localpool.id
-    expect(attrs['type']).to eq 'group_localpool'
-    expect(attrs['bank_account']['id']).to eq localpool.bank_account.id
-    expect(attrs.keys).to match_array base_attributes
+  context 'power_sources' do
+
+    def add_register_with_label(pool, label)
+      meter = create(:meter, :real, register_direction: :output, group: pool.object)
+      meter.output_register.send("#{label}!")
+      pool.object.reload
+    end
+
+    entity!(:pool) { pools.first }
+
+    context 'group has a production pv and consumption' do
+      before do
+        pool.object.meters.clear
+        add_register_with_label(pool, :consumption)
+        add_register_with_label(pool, :production_pv)
+      end
+
+      it 'contains only production in list' do
+        expect(pool.power_sources).to eq ['pv']
+      end
+
+    end
+
+    context 'group has a production wind and water' do
+      before do
+        pool.object.meters.clear
+        add_register_with_label(pool, :production_wind)
+        add_register_with_label(pool, :production_water)
+      end
+
+      it 'contains in list' do
+        expect(pool.power_sources).to eq ['wind', 'water']
+      end
+
+    end
   end
 
   context 'tariffs' do

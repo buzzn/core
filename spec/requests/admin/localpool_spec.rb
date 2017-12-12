@@ -106,7 +106,8 @@ describe Admin::LocalpoolRoda do
         "updatable"=>true,
         "deletable"=>true,
         'incompleteness' => serialized_incompleteness(localpool),
-        'bank_account' => serialized_bank_account(localpool.bank_account)
+        'bank_account' => serialized_bank_account(localpool.bank_account),
+        'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
       }
     end
   end
@@ -128,6 +129,7 @@ describe Admin::LocalpoolRoda do
       "deletable"=>true,
       'incompleteness' => serialized_incompleteness(localpool_no_contracts),
       'bank_account' => serialized_bank_account(localpool_no_contracts.bank_account),
+      'power_sources' => [],
       "meters"=>{
         'array'=> localpool_no_contracts.meters.collect do |meter|
           {
@@ -250,7 +252,8 @@ describe Admin::LocalpoolRoda do
         'updatable'=>true,
         'deletable'=>true,
         'incompleteness' => serialized_incompleteness(nil),
-        'bank_account' => nil
+        'bank_account' => nil,
+        'power_sources' => [],
       }
     end
 
@@ -321,7 +324,8 @@ describe Admin::LocalpoolRoda do
         "updatable"=>true,
         "deletable"=>true,
         'incompleteness' => serialized_incompleteness(localpool),
-        'bank_account' => nil
+        'bank_account' => nil,
+        'power_sources' => [],
       }
     end
 
@@ -723,7 +727,7 @@ describe Admin::LocalpoolRoda do
             'customer_number' => nil,
             "updatable"=>true,
             "deletable"=>true,
-            "bank_accounts"=> { 'array'=>[] }
+            "bank_accounts"=> { 'array'=>[] },
           }
         ]
       end
