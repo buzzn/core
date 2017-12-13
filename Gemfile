@@ -83,7 +83,6 @@ group :development, :test do
   gem 'byebug'
   gem 'awesome_print'
   gem 'brakeman', :require => false
-  #gem 'lol_dba'
   gem 'listen'
   gem 'guard'
   gem 'guard-livereload'
