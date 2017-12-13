@@ -4,7 +4,10 @@ require File.expand_path('../../lib/buzzn/boot/init', __FILE__)
 require 'rails/all'
 
 ## https://docs.newrelic.com/docs/agents/ruby-agent/features/garbage-collection#gc_setup
-GC::Profiler.enable
+if ENV['GC_PROFILER_ENABLED'] == 'true'
+  puts "Enabling GC profiler"
+  GC::Profiler.enable
+end
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
