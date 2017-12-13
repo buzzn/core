@@ -29,4 +29,3 @@ dump.rdb
 .rspec-local
 .env.local
 public/uploads
-BUILD_INFO
