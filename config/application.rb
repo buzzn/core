@@ -22,18 +22,6 @@ module Buzzn
 
     config.active_record.raise_in_transactional_callbacks = true # TODO: remove
 
-    tap do |config|
-      domains = %r(#{ENV['CORS']})
-      config.middleware.insert_before 0, 'Rack::Cors', debug: Rails.env != 'production'  do
-        allow do
-          origins *domains
-          ['/api/*', '/oauth/*'].each do |path|
-            resource path, headers: :any, methods: [:get, :post, :patch, :put, :delete, :options]
-          end
-        end
-      end
-    end
-
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
