@@ -1,1 +1,1 @@
-web: bundle exec puma -C config/puma.rb
+web: bin/start-stunnel bundle exec puma -C config/puma.rb
