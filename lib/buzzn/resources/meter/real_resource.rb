@@ -4,6 +4,8 @@ module Meter
     model Real
 
     attributes :manufacturer_name,
+               :manufacturer_description,
+               :location_description,
                :direction_number,
                :converter_constant,
                :ownership,
@@ -17,9 +19,14 @@ module Meter
                :edifact_voltage_level,
                :edifact_cycle_interval,
                :edifact_data_logging,
-               :sent_data_dso
+               :sent_data_dso,
+               :data_source
 
 
     has_many :registers
+
+    def data_source
+      object.registers.first&.data_source
+    end
   end
 end

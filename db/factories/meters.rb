@@ -40,6 +40,8 @@ FactoryGirl.define do
     trait :real do
       initialize_with              { Meter::Real.new }
       manufacturer_name            Meter::Real.manufacturer_names[:easy_meter]
+      manufacturer_description     { generate(:meter_manufacturer_description) }
+      location_description         { generate(:meter_location_description) }
       product_serialnumber         { generate(:meter_serial_number) }
       product_name                 "Q3D"
       calibrated_until             Date.parse("2027-10-13")

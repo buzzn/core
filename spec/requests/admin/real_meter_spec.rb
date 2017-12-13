@@ -34,6 +34,8 @@ describe Admin::LocalpoolRoda do
         "updatable"=>true,
         "deletable"=>true,
         "manufacturer_name"=>meter.attributes['manufacturer_name'],
+        "manufacturer_description"=>meter.attributes['manufacturer_description'],
+        "location_description"=>meter.attributes['location_description'],
         "direction_number"=>meter.attributes['direction_number'],
         "converter_constant"=>meter.converter_constant,
         "ownership"=>meter.attributes['ownership'],
@@ -48,6 +50,7 @@ describe Admin::LocalpoolRoda do
         "edifact_cycle_interval"=>meter.attributes['edifact_cycle_interval'],
         "edifact_data_logging"=>meter.attributes['edifact_data_logging'],
         "sent_data_dso"=>Date.today.to_s,
+        "data_source"=>meter.registers.first.data_source.to_s,
         "registers"=>{
           'array'=>[
             {
@@ -157,6 +160,8 @@ describe Admin::LocalpoolRoda do
           "updatable"=>true,
           "deletable"=>true,
           "manufacturer_name"=>'other',
+          "manufacturer_description"=>'Manufacturer description',
+          "location_description"=>'Location description',
           "direction_number"=>'ZRZ',
           "converter_constant"=>20,
           "ownership"=>'CUSTOMER',
@@ -171,6 +176,7 @@ describe Admin::LocalpoolRoda do
           "edifact_cycle_interval"=>'QUARTERLY',
           "edifact_data_logging"=>'Z04',
           "sent_data_dso"=>'2010-01-01',
+          "data_source"=>'standard_profile'
         }
       end
 
@@ -230,6 +236,8 @@ describe Admin::LocalpoolRoda do
         PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: meter.updated_at,
               manufacturer_name: Meter::Real.manufacturer_names[:other],
+              manufacturer_description: 'Manufacturer description',
+              location_description: 'Location description',
               product_name: 'Smarty Super Meter',
               product_serialnumber: '12341234',
               ownership: Meter::Real.ownerships[:customer],
@@ -245,11 +253,14 @@ describe Admin::LocalpoolRoda do
               edifact_voltage_level: Meter::Real.edifact_voltage_levels[:high_level],
               edifact_cycle_interval: Meter::Real.edifact_cycle_intervals[:quarterly],
               edifact_data_logging: Meter::Real.edifact_data_loggings[:analog],
-              direction_number: Meter::Real.direction_numbers[:two_way_meter]
+              direction_number: Meter::Real.direction_numbers[:two_way_meter],
+              data_source: 'standard_profile'
 
         expect(response).to have_http_status(200)
         meter.reload
         expect(meter.manufacturer_name).to eq 'other'
+        expect(meter.manufacturer_description).to eq 'Manufacturer description'
+        expect(meter.location_description).to eq 'Location description'
         expect(meter.direction_number).to eq 'two_way_meter'
         expect(meter.ownership).to eq 'customer'
         expect(meter.build_year).to eq 2017

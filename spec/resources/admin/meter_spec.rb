@@ -59,8 +59,11 @@ describe Meter::BaseResource do
                                           'ownership',
                                           'build_year',
                                           'manufacturer_name',
+                                          'manufacturer_description',
+                                          'location_description',
                                           'converter_constant',
-                                          'direction_number']
+                                          'direction_number',
+                                          'data_source']
     end
 
   end

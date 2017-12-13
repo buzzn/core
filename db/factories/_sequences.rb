@@ -5,6 +5,8 @@ FactoryGirl.define do
   sequence(:market_partner_id)                   { |i| i + 9_911_845_999_000 }
   sequence(:metering_point_id)                   { |i| "DE" + (i + 26917588246326615503884_000).to_s }
   sequence(:meter_serial_number)                 { |i| i + 65640_000 }
+  sequence(:meter_manufacturer_description)      { |i| "Manufacturer description #{i}" }
+  sequence(:meter_location_description)          { |i| "Location description #{i}" }
   sequence(:metering_point_operator_contract_nr) { |i| i + 90_000 }
   sequence(:organization_name)                   { |i| "Generic organization #{i}" }
   sequence(:person_image)                        { |i| name = (i % 30) + 1; "#{name}.jpg" }
