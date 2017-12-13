@@ -1,8 +1,6 @@
 Buzzn::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # config.middleware.use Rack::SslEnforcer
-
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -21,18 +19,14 @@ Buzzn::Application.configure do
   # For large-scale production use, consider using a caching reverse proxy like nginx, varnish or squid.
   # config.action_dispatch.rack_cache = true
 
-  # Disable Rails's static asset server (Apache or nginx will already do this).
+  # We're serving static files so a (future) CDN in front of us can fill it's cache from here.
   config.serve_static_files = true
-
-  # Specifies the header that your server uses for sending files.
-  # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
-  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
   # Set to :debug to see everything in the log.
-  config.log_level = :info
+  config.log_level = ENV['LOG_LEVEL'].to_sym
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -45,10 +39,9 @@ Buzzn::Application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  #config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options  = { :host => Rails.application.secrets.hostname }
-  config.action_mailer.delivery_method      = ENV['ACTION_MAILER_DELIVERY_METHOD'].to_sym
-
+  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default_url_options   = { host: Rails.application.secrets.hostname }
+  config.action_mailer.delivery_method       = ENV['ACTION_MAILER_DELIVERY_METHOD'].to_sym
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found).
