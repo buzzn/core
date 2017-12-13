@@ -11,13 +11,10 @@ class CoreRoda < CommonRoda
 
   use Rack::Timeout, service_timeout: 29
 
-  use Rack::Cors, debug: Rails.env != 'production'  do
+  use Rack::Cors, debug: Rails.env != 'production' do
     allow do
-      domains = %r(#{Import.global('config.cors')})
-      origins *domains
-      ['/*'].each do |path|
-        resource path, headers: :any, methods: [:get, :post, :patch, :put, :delete, :options], expose: 'Authorization'
-      end
+      origins(*%r(#{Import.global('config.cors')}))
+      resource '/*', headers: :any, methods: [:get, :post, :patch, :put, :delete, :options], expose: 'Authorization'
     end
   end
 
