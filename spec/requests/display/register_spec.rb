@@ -16,7 +16,7 @@ describe Display::GroupRoda do
       }
     end
 
-    entity(:group) { create(:localpool) }
+    entity(:group) { create(:localpool, show_display_app: true) }
 
     entity!(:real_register) { create(:meter, :real, group: group).input_register }
 

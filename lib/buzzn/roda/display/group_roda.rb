@@ -16,6 +16,11 @@ class Display::GroupRoda < BaseRoda
     r.on :id do |id|
 
       group = groups.retrieve_with_slug(id)
+
+      unless group.object.show_display_app
+        request.halt([403, {'Content-Type' => 'application/json'}, ["{}"]])
+      end
+
       r.get! do
         group
       end
