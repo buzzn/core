@@ -103,11 +103,13 @@ describe Admin::LocalpoolRoda do
         'show_production' => localpool.show_production,
         'show_energy' => localpool.show_energy,
         'show_contact' => localpool.show_contact,
+        'show_display_app' => localpool.show_display_app,
         "updatable"=>true,
         "deletable"=>true,
         'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => serialized_bank_account(localpool.bank_account),
         'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
+        'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/groups/#{localpool.slug}" : nil)
       }
     end
   end
@@ -125,11 +127,13 @@ describe Admin::LocalpoolRoda do
       'show_production' => nil,
       'show_energy' => nil,
       'show_contact' => nil,
+      'show_display_app' => nil,
       "updatable"=>true,
       "deletable"=>true,
       'incompleteness' => serialized_incompleteness(localpool_no_contracts),
       'bank_account' => serialized_bank_account(localpool_no_contracts.bank_account),
       'power_sources' => [],
+      'display_app_url' => nil,
       "meters"=>{
         'array'=> localpool_no_contracts.meters.collect do |meter|
           {
@@ -249,11 +253,13 @@ describe Admin::LocalpoolRoda do
         'show_production' => true,
         'show_energy' => false,
         'show_contact' => true,
+        'show_display_app' => true,
         'updatable'=>true,
         'deletable'=>true,
         'incompleteness' => serialized_incompleteness(nil),
         'bank_account' => nil,
         'power_sources' => [],
+        'display_app_url' => 'https://display.buzzn.io/super-duper',
       }
     end
 
@@ -297,6 +303,8 @@ describe Admin::LocalpoolRoda do
           {'parameter' => 'show_energy',
            'detail' => 'must be boolean'},
           {'parameter' => 'show_contact',
+           'detail' => 'must be boolean'},
+          {'parameter' => 'show_display_app',
            'detail' => 'must be boolean'}
         ]
       }
@@ -321,11 +329,13 @@ describe Admin::LocalpoolRoda do
         'show_production' => false,
         'show_energy' => true,
         'show_contact' => false,
+        'show_display_app' => false,
         "updatable"=>true,
         "deletable"=>true,
         'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => nil,
         'power_sources' => [],
+        'display_app_url' => nil
       }
     end
 
@@ -358,7 +368,8 @@ describe Admin::LocalpoolRoda do
               show_object: 'maybe',
               show_production: 'nope',
               show_energy: 'yep',
-              show_contact: 'not'
+              show_contact: 'not',
+              show_display_app: 'later'
 
         expect(response).to have_http_status(422)
         expect(json.to_yaml).to eq wrong_json.to_yaml
@@ -374,7 +385,8 @@ describe Admin::LocalpoolRoda do
               show_object: true,
               show_production: false,
               show_energy: true,
-              show_contact: false
+              show_contact: false,
+              show_display_app: false
 
         expect(response).to have_http_status(200)
         localpool.reload

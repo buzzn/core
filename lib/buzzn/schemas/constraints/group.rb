@@ -8,4 +8,5 @@ Schemas::Constraints::Group = Schemas::Support.Form do
   optional(:show_production).filled(:bool?)
   optional(:show_energy).filled(:bool?)
   optional(:show_contact).filled(:bool?)
+  optional(:show_display_app).filled(:bool?)
 end

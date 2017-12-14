@@ -23,6 +23,7 @@ describe Admin::LocalpoolRoda do
       'show_production' => nil,
       'show_energy' => nil,
       'show_contact' => nil,
+      'show_display_app' => nil,
       'updatable'=>true,
       'deletable'=>true,
       'incompleteness' => {
@@ -32,6 +33,7 @@ describe Admin::LocalpoolRoda do
       },
       'bank_account' => nil,
       'power_sources' => [],
+      'display_app_url' => nil,
       'distribution_system_operator' => nil,
       'transmission_system_operator' => nil,
       'electricity_supplier' => nil

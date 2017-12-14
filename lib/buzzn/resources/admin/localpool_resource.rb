@@ -13,10 +13,12 @@ module Admin
                :show_production,
                :show_energy,
                :show_contact,
+               :show_display_app,
                :updatable, :deletable,
                :incompleteness,
                :bank_account,
-               :power_sources
+               :power_sources,
+               :display_app_url
 
     has_one :localpool_processing_contract
     has_one :metering_point_operator_contract
@@ -41,6 +43,12 @@ module Admin
       object.registers.select(:label).production.collect do |register|
         register.label.sub('production_', '')
       end.uniq
+    end
+
+    def display_app_url
+      if object.show_display_app
+        "https://display.buzzn.io/#{object.slug}"
+      end
     end
   end
 end
