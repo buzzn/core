@@ -7,7 +7,7 @@ class Services::Datasource::Discovergy::Oauth
   include Import['config.discovergy_login',
                  'config.discovergy_password']
 
-  TIMEOUT = 5 # seconds
+  TIMEOUT = 15 # seconds
   URL = 'https://api.discovergy.com/public/v1'
 
   attr_reader :path

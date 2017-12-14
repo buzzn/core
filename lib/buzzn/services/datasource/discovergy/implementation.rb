@@ -2,8 +2,8 @@ require_relative '../discovergy'
 
 class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
 
-  include Import['service.datasource.discovergy.last_reading']
-  include Import['service.data_source_registry']
+  include Import['service.datasource.discovergy.last_reading',
+                 'service.data_source_registry']
 
   NAME = :discovergy
 
@@ -13,12 +13,11 @@ class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
   end
 
   def ticker(register)
-    key = "discovergy.ticker.power.#{register.id}"
-    cache.get(key) || cache.set(key, last_reading.power(register).to_json, 15)
+    last_reading.power(register)
   end
 
-  def collection(resource, mode)
-    nil
+  def bubbles(group)
+    last_reading.bubbles(group)
   end
 
   def aggregated(resource, mode, interval)

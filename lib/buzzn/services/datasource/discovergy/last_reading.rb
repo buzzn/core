@@ -14,11 +14,14 @@ class Services::Datasource::Discovergy::LastReading
     process(register, :W, false, :power)
   end
 
-  def bubbles(register)
-    unless register.is_a?(Register::Virtual)
-      raise "must be Register::Virtual: #{register}"
+  def bubbles(group)
+    if meter = Meter::Discovergy.where(group: group).first
+      query = Types::Discovergy::LastReading::Get.new(meter: meter,
+                                                      fields: [:power],
+                                                      each:   true)
+      builder = Discovergy::BubbleBuilder.new(meters: meter.group.meters)
+      api.request(query, builder)
     end
-    process(register, :W, true, :power)
   end
 
   private

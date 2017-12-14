@@ -26,11 +26,11 @@ module Register
     scope :virtual, -> { where(type: Register::Virtual) }
 
     scope :consumption_production, -> do
-      by_labels(*Register::Base.labels.values_at(:consumption, :production_pv, :production_chp))
+      by_labels(*Register::Base.labels.values.select { |l| l =~ /\A(PRODUCTION|CONSUMPTION)/ })
     end
 
     scope :production, -> do
-      by_labels(*Register::Base.labels.values.select { |l| l =~ /PRODUCTION/ })
+      by_labels(*Register::Base.labels.values.select { |l| l =~ /\APRODUCTION/ })
     end
 
     scope :by_group, -> (group) do

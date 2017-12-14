@@ -27,6 +27,10 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_broker do
+      broker                     { Broker::Discovergy.new }
+    end
+
     trait :one_way do
       direction_number           Meter::Real.direction_numbers[:one_way_meter]
       converter_constant         1

@@ -114,7 +114,7 @@ describe Admin::LocalpoolRoda do
           end
         end
 
-        it '200 standard profile' do
+        xit '200 standard profile' do
           Reading::Continuous.all.delete_all
           timestamp = Time.find_zone('Berlin').local(2016, 2, 1)
           40.times do |i|
@@ -408,7 +408,7 @@ describe Admin::LocalpoolRoda do
           }
         end
 
-        it '200 standard profile' do
+        xit '200 standard profile' do
           Reading::Continuous.all.delete_all
           setup_readings
           time = Time.find_zone('UTC').local(2016, 2, 1, 1, 30, 1)

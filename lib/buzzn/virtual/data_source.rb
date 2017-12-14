@@ -8,9 +8,7 @@ module Buzzn::Virtual
       @registry = registry
     end
 
-    def collection(resource, mode)
-      return nil if resource.is_a? Group::Base
-      # TODO handle register case
+    def bubbles(group)
       nil
     end
 

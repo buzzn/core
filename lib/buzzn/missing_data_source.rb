@@ -5,7 +5,7 @@ module Buzzn
 
     NAME = :missing
 
-    def collection(resource, mode)
+    def bubbles(group)
       nil
     end
 

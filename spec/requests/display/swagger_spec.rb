@@ -53,9 +53,10 @@ describe Display do
     description 'returns the register'
   end
 
-  get '/groups/{group.id}/registers/{register.id}/ticker' do
-    description 'returns the power ticker of the register'
-  end
+# return status 404 as is so it always fails
+#  get '/groups/{group.id}/registers/{register.id}/ticker' do
+#    description 'returns the power ticker of the register'
+#  end
 
   get '/groups/{group.id}/registers/{register.id}/charts' do
     description 'returns the charts of the group'

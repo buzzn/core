@@ -23,6 +23,10 @@ module Buzzn
       @root = root
     end
 
+    def debug?
+      @root.debug? rescue false
+    end
+
     [:debug, :info, :warn, :error].each do |method|
       define_method method do |msg = nil, &block|
         @root.send method do

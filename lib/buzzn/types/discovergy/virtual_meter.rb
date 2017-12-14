@@ -10,19 +10,17 @@ class Types::Discovergy::VirtualMeter < Types::Discovergy::Meter
     include Types::Discovergy::Get
   end
 
-  class Post < Types::Discovergy::VirtualMeter
+  class Post < Types::Discovergy::Base
+    extend Dry::Initializer
     include Types::Discovergy::Post
+
+    def to_path; :virtual_meter; end
 
     option :meter_ids_plus, Types::Strict::Array.member(Types::Strict::String)
     option :meter_ids_minus, Types::Strict::Array.member(Types::Strict::String), optional: true
 
-    protected
-
-    def attributes
-      attr = super
-      attr[:meterIdsPlus] = attr.delete(:meter_ids_plus)
-      attr[:meterIdsMinus] = attr.delete(:meter_ids_minus)
-      attr
+    def to_query
+      { meterIdsPlus: meter_ids_plus, meterIdsMinus: meter_ids_minus }.compact
     end
   end
 

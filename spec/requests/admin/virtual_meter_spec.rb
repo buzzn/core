@@ -33,7 +33,7 @@ describe Admin::LocalpoolRoda do
         'updated_at'=> meter.updated_at.as_json,
         "product_name"=>meter.product_name,
         "product_serialnumber"=>meter.product_serialnumber,
-        'sequence_number' => 0,
+        'sequence_number' => nil,
         "updatable"=>true,
         "deletable"=>true,
         "formula_parts"=> {
@@ -121,7 +121,7 @@ describe Admin::LocalpoolRoda do
           "type"=>"meter_virtual",
           "product_name"=>'SmartySuper',
           "product_serialnumber"=>'41234',
-          'sequence_number' => 0,
+          'sequence_number' => nil,
           "updatable"=>true,
           "deletable"=>true,
         }

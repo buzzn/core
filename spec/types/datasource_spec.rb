@@ -4,6 +4,12 @@ describe Types::Datasource do
 
   entity(:register) { create(:meter, :real).input_register }
 
+  it Types::Datasource::Bubble do
+    subject = Types::Datasource::Bubble.new(value: 123, register: register)
+    expect(subject.to_json).to eq "{\"id\":\"#{register.id}\",\"label\":\"#{register.label}\",\"value\":123}"
+    expect([subject].to_json).to eq "[{\"id\":\"#{register.id}\",\"label\":\"#{register.label}\",\"value\":123}]"
+  end
+
   context Types::Datasource::Current do
 
     it 'watt' do
