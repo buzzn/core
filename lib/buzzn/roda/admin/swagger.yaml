@@ -54,6 +54,10 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: show_display_app
+        in: formData
+        required: false
+        type: boolean
       responses:
         201:
           description: created
@@ -116,6 +120,10 @@ paths:
         required: false
         type: boolean
       - name: show_contact
+        in: formData
+        required: false
+        type: boolean
+      - name: show_display_app
         in: formData
         required: false
         type: boolean

@@ -1234,6 +1234,7 @@ CREATE TABLE groups (
     show_production boolean,
     show_energy boolean,
     show_contact boolean,
+    show_display_app boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     type character varying(64) NOT NULL,
