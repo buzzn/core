@@ -367,6 +367,8 @@ GEM
       activerecord (>= 4.2, < 5.1)
       its-it (~> 1.2)
       schema_plus_core
+    sentry-raven (2.7.1)
+      faraday (>= 0.7.6, < 1.0)
     sequel (4.49.0)
     shellany (0.0.1)
     sixarm_ruby_unaccent (1.1.1)
@@ -466,6 +468,7 @@ DEPENDENCIES
   ruby-swagger
   ruby_regex
   schema_plus_enums
+  sentry-raven
   slim
   smarter_csv
   timecop
