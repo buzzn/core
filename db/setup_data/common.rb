@@ -121,15 +121,14 @@ get_csv(:organization_market_functions).each do |row|
 end
 
 #
-# Superuser person with account
+# Create example operator person with account
 #
-begin
-  person = Person.create(first_name: 'Philipp', last_name: 'Operator', email: 'dev+ops@buzzn.net')
-  superuser = Account::Base.create(email: person.email,
-                                   status_id: Account::Status.find_by(name: 'Verified').id,
-                                   person: person)
-  superuser.person.add_role(Role::SELF, person)
-  superuser.person.add_role(Role::BUZZN_OPERATOR)
-  password_hash = BCrypt::Password.create(Import.global('config.default_account_password'))
-  Account::PasswordHash.create(account: superuser, password_hash: password_hash)
-end
+
+require_relative '../support/create_buzzn_operator'
+
+create_buzzn_operator(
+  first_name: 'Otto',
+  last_name:  'Operator',
+  email:      'dev+ops@buzzn.net',
+  password:   Import.global('config.default_account_password')
+)
