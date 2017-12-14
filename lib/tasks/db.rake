@@ -19,5 +19,16 @@ namespace :db do
     task example_data: 'db:seed:setup_data' do
       require_relative '../../db/example_data'
     end
+
+    desc "Create the login account for Philipp Oswald"
+    task pho_user: :environment do
+      require_relative '../../db/support/create_buzzn_operator'
+      create_buzzn_operator(
+        first_name: 'Phillip',
+        last_name:  '0ßwald',
+        email:      'philipp@buzzn.net',
+        password:   Import.global('config.pho_account_password')
+      )
+    end
   end
 end
