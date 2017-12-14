@@ -15,3 +15,14 @@ on_worker_boot do
   # See: https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#on-worker-boot
   ActiveRecord::Base.establish_connection
 end
+
+lowlevel_error_handler do |ex, env|
+  Raven.capture_exception(
+    ex,
+    message: ex.message,
+    extra: { puma: env },
+    transaction: "Puma"
+  )
+  # note the below is just a Rack response
+  [500, {}, ["An error has occurred, and developers have been informed. Please try reloading the page.\n"]]
+end
