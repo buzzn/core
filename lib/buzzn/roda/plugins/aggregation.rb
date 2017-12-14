@@ -19,6 +19,8 @@ class Roda
             result = object
           end
 
+          return unless result
+
           # cache-control headers
           request.etag(Digest::SHA256.base64digest(result.to_json))
           request.last_modified(Time.at(result.respond_to?(:last_timestamp) ?

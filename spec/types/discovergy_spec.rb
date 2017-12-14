@@ -68,18 +68,16 @@ describe Types::Discovergy do
 
     context 'POST' do
       it 'minimal' do
-        subject = Types::Discovergy::VirtualMeter::Post.new(meter: meter,
-                                                        meter_ids_plus: [])
+        subject = Types::Discovergy::VirtualMeter::Post.new(meter_ids_plus: [])
         expect(subject.http_method).to eq :post
-        expect(subject.to_uri(base)).to eq "#{base}/virtual_meter?meterId=#{meter.broker.external_id}&meterIdsPlus="
+        expect(subject.to_uri(base)).to eq "#{base}/virtual_meter?meterIdsPlus="
       end
 
       it 'full' do
-        subject = Types::Discovergy::VirtualMeter::Post.new(meter: meter,
-                                                        meter_ids_plus: [],
-                                                        meter_ids_minus: [])
+        subject = Types::Discovergy::VirtualMeter::Post.new(meter_ids_plus: [],
+                                                            meter_ids_minus: [])
         expect(subject.http_method).to eq :post
-        expect(subject.to_uri(base)).to eq "#{base}/virtual_meter?meterId=#{meter.broker.external_id}&meterIdsPlus=&meterIdsMinus="
+        expect(subject.to_uri(base)).to eq "#{base}/virtual_meter?meterIdsPlus=&meterIdsMinus="
       end
     end
 

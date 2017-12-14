@@ -94,7 +94,7 @@ describe "Factories produce valid records" do
   end
 
   context "Broker" do
-    subject { create(:broker) }
+    subject { create(:broker, meter: create(:meter, :real)) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:meter, Meter::Real) }
   end

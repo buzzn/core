@@ -58,6 +58,16 @@ module Meter
 
     enum ownership: %i(buzzn foreign_ownership customer leased bought).each_with_object({}).each { |item, map| map[item] = item.to_s.upcase }
 
+    before_save do
+      if group_id_changed?
+        raise ArgumentError.new('can not change group') unless group_id_was.nil?
+        unless sequence_number
+          max = Meter::Base.where(group: group).size
+          self.sequence_number = max
+        end
+      end
+    end
+
     before_destroy do
       # we can't use registers.delete_all here because ActiveRecord translates this into a wrong SQL query.
       Register::Real.where(meter_id: self.id).delete_all
@@ -67,11 +77,6 @@ module Meter
       define_method :"#{direction}_register" do
         Register.const_get(direction.capitalize).where(meter_id: self.id).first
       end
-    end
-
-    def validate_invariants
-      errors.add(:registers, 'must have at least one register') if registers.empty?
-      errors.add(:registers, 'must be all none virtual') if registers.detect { |r| r.is_a? Register::Virtual }
     end
 
     def initialize(attr = {})
@@ -88,9 +93,10 @@ module Meter
       registers << Register::Output.new(attr.merge(meter: self))
     end
 
+
     # work around AR short-comings
 
-    def valid?(*args)
+    def vvalid?(*args)
       if ! super && !errors[:registers].empty?
         registers.each do |r|
           index = 0

@@ -16,5 +16,6 @@ SampleData.meters = OpenStruct.new(
         ]
       )
     ]
-  )
+  ),
+  discovergy: Broker::Discovergy.create(meter: Meter::Discovergy.create(group: SampleData.localpools.people_power, product_serialnumber: '00000106')).meter
 )

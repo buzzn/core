@@ -32,7 +32,6 @@ class RegisterRoda < BaseRoda
             .for(register)
             .call(r.params).value
           )
-        #aggregated(charts.call(r.params, resource: [register.method(:charts)]))
       end
 
       r.get! 'ticker' do

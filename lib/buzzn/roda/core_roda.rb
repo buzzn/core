@@ -13,7 +13,7 @@ class CoreRoda < CommonRoda
 
   Rack::Timeout::Logger.disable
 
-  use Rack::Cors, debug: logger.level < ::Logger::INFO do
+  use Rack::Cors, debug: logger.debug? do
     allow do
       origins(*%r(#{Import.global('config.cors')}))
       resource '/*', headers: :any, methods: [:get, :post, :patch, :put, :delete, :options], expose: 'Authorization'

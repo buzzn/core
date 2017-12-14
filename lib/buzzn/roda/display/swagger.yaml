@@ -145,23 +145,6 @@ paths:
       responses:
         200:
           description: success
-  "/groups/{group_id}/registers/{register_id}/ticker":
-    get:
-      description: returns the power ticker of the register
-      produces:
-      - application/json
-      parameters:
-      - name: group_id
-        in: path
-        required: true
-        type: string
-      - name: register_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
   "/groups/{group_id}/scores":
     get:
       description: returns the score(s) of the group

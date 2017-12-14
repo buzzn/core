@@ -8,9 +8,8 @@ class Broker::Discovergy < Broker::Base
     case meter
     when Meter::Real
       "EASYMETER_#{meter.product_serialnumber}"
-    when Meter::Virtual
-      super
-    else raise "unknown meter type: #{meter.class}"
+    else
+      "VIRTUAL_#{meter.product_serialnumber}"
     end
   end
 end

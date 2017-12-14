@@ -7,7 +7,4 @@ class Types::Datasource::Unit
 
   option :unit, Unit
 
-  def to_json(*)
-    # TODO: '{"unit":"' << unit.to_s << '"'
-  end
 end

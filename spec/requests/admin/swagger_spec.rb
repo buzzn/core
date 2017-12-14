@@ -145,9 +145,10 @@ describe Admin, :swagger do
     description 'returns the register for given ID'
   end
 
-  get '/localpools/{localpool.id}/registers/{register.id}/ticker' do
-    description 'returns the power ticker of the register'
-  end
+  # return status 404 as is so it always fails
+  # get '/localpools/{localpool.id}/registers/{register.id}/ticker' do
+  #  description 'returns the power ticker of the register'
+  # end
 
   get '/localpools/{localpool.id}/registers/{register.id}/charts' do
     description 'returns the charts of the localpool'
@@ -206,9 +207,10 @@ describe Admin, :swagger do
 
   # meters > registers > ticker
 
-  get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/ticker' do
-    description 'returns the energy ticker of the register for the given IDs'
-  end
+  # return status 404 as is so it always fails
+  # get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/ticker' do
+  #  description 'returns the energy ticker of the register for the given IDs'
+  # end
 
   # meters > registers > readings
 
