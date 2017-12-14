@@ -14,12 +14,12 @@ describe Display::GroupRoda do
     }
   end
 
-  entity!(:tribe) { Fabricate(:tribe) }
+  entity!(:tribe) { Fabricate(:tribe, show_display_app: true) }
 
-  entity!(:localpool) { Fabricate(:localpool) }
+  entity!(:localpool) { Fabricate(:localpool, show_display_app: true) }
 
   entity!(:group) do
-    group = Fabricate(:localpool)
+    group = Fabricate(:localpool, show_display_app: true)
     $user.person.reload.add_role(Role::GROUP_ADMIN, group)
     group
   end
@@ -87,6 +87,16 @@ describe Display::GroupRoda do
       GET "/bla-blub", nil
       expect(response).to have_http_status(404)
       expect(json).to eq not_found_json
+    end
+
+    it '403' do
+      group.update(show_display_app: false)
+      begin
+        GET "/#{group.id}", nil
+        expect(response).to have_http_status(403)
+      ensure
+        group.update(show_display_app: true)
+      end
     end
 
     it '200' do

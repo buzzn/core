@@ -4,7 +4,7 @@ describe Display::GroupRoda do
     Display::GroupRoda # this defines the active application for this test
   end
 
-  entity(:group) { create(:localpool) }
+  entity(:group) { create(:localpool, show_display_app: true) }
 
   entity(:discovergy_meter) do
     meter = Fabricate(:easymeter_60139082, group: group) # in_out meter

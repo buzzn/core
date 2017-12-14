@@ -11,7 +11,7 @@ describe Display do
 
   login_path '/api/me/login'
 
-  entity!(:group) { create(:localpool) }
+  entity!(:group) { create(:localpool, show_display_app: true) }
 
   entity!(:register) { create(:meter, :real, group: group).input_register }
 
