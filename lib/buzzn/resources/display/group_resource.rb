@@ -7,6 +7,10 @@ module Display
     has_many :registers, RegisterResource
     has_many :mentors
 
+    def self.filter_all(objects)
+      objects.where(show_display_app: true)
+    end
+
     def mentors
       all(permissions.mentors,
           object.managers.limit(2),

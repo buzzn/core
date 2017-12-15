@@ -3,14 +3,14 @@ describe Display::GroupResource do
   entity(:admin) { Fabricate(:admin) }
 
   entity!(:tribe) do
-    group = Fabricate(:tribe)
+    group = Fabricate(:tribe, show_display_app: true)
     create(:meter, :real, group: group)
     admin.person.add_role(Role::GROUP_ADMIN, group)
     group
   end
 
   entity!(:localpool)  do
-    group = create(:localpool)
+    group = create(:localpool, show_display_app: true)
     create(:meter, :virtual, group: group)
     admin.person.add_role(Role::GROUP_ADMIN, group)
     group

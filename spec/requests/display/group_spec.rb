@@ -16,7 +16,7 @@ describe Display::GroupRoda do
 
   entity!(:tribe) { Fabricate(:tribe, show_display_app: true) }
 
-  entity!(:localpool) { Fabricate(:localpool, show_display_app: true) }
+  entity!(:localpool) { Fabricate(:localpool, show_display_app: false) }
 
   entity!(:group) do
     group = Fabricate(:localpool, show_display_app: true)
@@ -53,7 +53,7 @@ describe Display::GroupRoda do
     end
 
     let(:groups_json) do
-      Group::Base.all.collect do |group|
+      Group::Base.where(show_display_app: true).collect do |group|
         if group.is_a? Group::Tribe
           type = :tribe
         else
@@ -127,8 +127,9 @@ describe Display::GroupRoda do
       end
 
       entity(:mentor) { Fabricate(:user).person }
+
       let(:group) do
-        group = send [:tribe, :localpool].sample
+        group = tribe
         mentor.add_role(Role::GROUP_ADMIN, group)
         group
       end
@@ -160,7 +161,7 @@ describe Display::GroupRoda do
 
     context 'GET' do
 
-      entity(:group) { send [:tribe, :localpool].sample }
+      entity(:group) { tribe }
 
       let(:missing_json) do
         {
