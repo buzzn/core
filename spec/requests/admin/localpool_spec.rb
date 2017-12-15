@@ -322,7 +322,7 @@ describe Admin::LocalpoolRoda do
         "id"=>localpool.id,
         "type"=>"group_localpool",
         "name"=>"a b c d",
-        "slug" => 'a-b-c-d',
+        "slug" => 'a-b-c',
         "description"=>'none',
         'start_date' => Date.yesterday.as_json,
         'show_object' => true,

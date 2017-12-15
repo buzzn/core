@@ -1,6 +1,6 @@
 FactoryGirl.define do
   # Please keep sequences ordered alphabetically
-  sequence(:localpool_name)                      { |i| "Localpool #{i}"  }
+  sequence(:localpool_name)                      { |i| "Localpool #{Digest::SHA1.hexdigest i.to_s}"  }
   sequence(:localpool_power_taker_contract_nr)   { |i| i + 60_000 }
   sequence(:market_partner_id)                   { |i| i + 9_911_845_999_000 }
   sequence(:metering_point_id)                   { |i| "DE" + (i + 26917588246326615503884_000).to_s }
@@ -8,7 +8,7 @@ FactoryGirl.define do
   sequence(:meter_manufacturer_description)      { |i| "Manufacturer description #{i}" }
   sequence(:meter_location_description)          { |i| "Location description #{i}" }
   sequence(:metering_point_operator_contract_nr) { |i| i + 90_000 }
-  sequence(:organization_name)                   { |i| "Generic organization #{i}" }
+  sequence(:organization_name)                   { |i| "Generic organization #{Digest::SHA1.hexdigest i.to_s}" }
   sequence(:person_image)                        { |i| name = (i % 30) + 1; "#{name}.jpg" }
   sequence(:power_giver_contract_nr)             { |i| i + 40_000 }
   sequence(:power_taker_contract_nr)             { |i| i + 20_000 }
