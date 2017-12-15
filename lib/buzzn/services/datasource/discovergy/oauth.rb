@@ -38,14 +38,12 @@ class Services::Datasource::Discovergy::Oauth
     end
   end
 
-  def reset
-    @_mutex.synchronize do
-      @consumer = nil
-      @access_token = nil
-    end
-  end
-
   private
+
+  def reset
+    @consumer = nil
+    @access_token = nil
+  end
 
   def consumer_token
     conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
