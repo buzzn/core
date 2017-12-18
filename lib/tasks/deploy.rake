@@ -2,7 +2,7 @@ namespace :deploy do
 
   module Support
     def git_remotes
-      `git remote -v | grep push`.split("\n").map { |line| line.split("\t").first.to_sym }
+      `git remote`.split("\n").map(&:to_sym)
     end
 
     def ensure_git_remote_configured!(env)
