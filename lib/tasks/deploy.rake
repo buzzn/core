@@ -36,9 +36,9 @@ namespace :deploy do
   end
 
   task :production do
-    # ensure_git_remote_configured!(:production)
-    # if deploy(:production)
-    #   create_and_push_tag(:production)
-    # end
+    ensure_git_remote_configured!(:production)
+    if deploy(:production)
+      create_and_push_tag(:production)
+    end
   end
 end
