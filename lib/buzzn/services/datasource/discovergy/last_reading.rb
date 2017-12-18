@@ -14,7 +14,7 @@ class Services::Datasource::Discovergy::LastReading
     process(register, :W, false, :power)
   end
 
-  def bubbles(group)
+  def power_collection(group)
     if meter = Meter::Discovergy.where(group: group).first
       query = Types::Discovergy::LastReading::Get.new(meter: meter,
                                                       fields: [:power],

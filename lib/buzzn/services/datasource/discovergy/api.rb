@@ -59,12 +59,12 @@ class Services::Datasource::Discovergy::Api
 
   def monitored_request(query)
     begin
-      throughput.increment!
+      incremented = throughput.increment!
 
       do_request(query, true)
 
     ensure
-      throughput.decrement
+      throughput.decrement if incremented
     end
   end
 

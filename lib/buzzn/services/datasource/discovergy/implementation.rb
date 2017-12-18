@@ -17,7 +17,7 @@ class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
   end
 
   def bubbles(group)
-    last_reading.bubbles(group)
+    last_reading.power_collection(group)
   end
 
   def aggregated(resource, mode, interval)

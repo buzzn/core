@@ -1,3 +1,5 @@
+require_relative 'api_mock'
+
 describe Services::Datasource::Discovergy::OptimizedGroup do
 
   def serialized_meter(serial, type)
@@ -47,7 +49,7 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
   entity(:api) { ApiMock.new }
 
   entity(:optimized_group) do
-    optimized = Services::Datasource::Discovergy::OptimizedGroup.new(api: api)
+    Services::Datasource::Discovergy::OptimizedGroup.new(api: api)
   end
 
   entity(:localpool) { create(:localpool) }
