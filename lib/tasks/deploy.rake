@@ -1,6 +1,6 @@
 namespace :deploy do
 
-  module Support
+  module DeploymentSupport
     def git_remotes
       `git remote`.split("\n").map(&:to_sym)
     end
@@ -28,7 +28,7 @@ namespace :deploy do
     end
   end
 
-  include Support
+  include DeploymentSupport
 
   task :staging do
     ensure_git_remote_configured!(:staging)
@@ -36,9 +36,9 @@ namespace :deploy do
   end
 
   task :production do
-    ensure_git_remote_configured!(:production)
-    if deploy(:production)
-      create_and_push_tag(:production)
-    end
+    # ensure_git_remote_configured!(:production)
+    # if deploy(:production)
+    #   create_and_push_tag(:production)
+    # end
   end
 end
