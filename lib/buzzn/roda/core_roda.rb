@@ -27,10 +27,7 @@ class CoreRoda < CommonRoda
 
     logger.info(r.inspect)
 
-    ActiveRecord::Base.connection_pool.with_connection do |connection|
-
-      connection.enable_query_cache!
-
+    ActiveRecord::Base.connection_pool.with_connection do
       r.on 'api' do
         r.on 'display' do
           r.run Display::Roda
