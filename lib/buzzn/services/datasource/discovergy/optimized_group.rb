@@ -40,17 +40,15 @@ class Services::Datasource::Discovergy::OptimizedGroup
   end
 
   def delete(group)
-    meter = meta_meter(group)
+    meter = discovergy_meter(group)
     ::Meter::Discovergy.transaction do
-      result = process(VirtualMeter::Delete.new(meter: meter))
+      process(VirtualMeter::Delete.new(meter: meter))
       meter.delete
     end
   end
 
-  private
-
   def remote(group)
-    query = VirtualMeter::Get.new(meter: meta_meter(group))
+    query = VirtualMeter::Get.new(meter: discovergy_meter(group))
     process(query)
   end
 
@@ -60,7 +58,9 @@ class Services::Datasource::Discovergy::OptimizedGroup
     end.compact
   end
 
-  def meta_meter(group)
+  private
+
+  def discovergy_meter(group)
     ::Meter::Discovergy.where(group: group).first
   end
 

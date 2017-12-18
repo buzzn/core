@@ -12,10 +12,11 @@ class Services::Datasource::Discovergy::Throughput
   end
 
   def increment!
-    increment
-    if current > MAX_CONCURRENT_CONNECTIONS
+    if current == MAX_CONCURRENT_CONNECTIONS
       raise Buzzn::DataSourceError.new('discovergy limit reached')
     end
+    increment
+    true
   end
 
   def decrement
