@@ -109,7 +109,7 @@ describe Admin::LocalpoolRoda do
         'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => serialized_bank_account(localpool.bank_account),
         'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
-        'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/groups/#{localpool.slug}" : nil)
+        'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil)
       }
     end
   end
