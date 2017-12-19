@@ -39,6 +39,14 @@ module Admin
     has_one :electricity_supplier
     has_one :bank_account
 
+    # TODO remove this and use contructor injection once the resource code
+    #      is cleaned up
+    attr_reader :display_url
+    def initialize(*)
+      super
+      @display_url = Import.global('config.display_url')
+    end
+
     def power_sources
       object.registers.select(:label).production.collect do |register|
         register.label.sub('production_', '')
@@ -47,7 +55,7 @@ module Admin
 
     def display_app_url
       if object.show_display_app
-        "https://display.buzzn.io/#{object.slug}"
+        "#{display_url}/#{object.slug}"
       end
     end
   end
