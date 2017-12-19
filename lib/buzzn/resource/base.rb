@@ -143,7 +143,7 @@ module Buzzn::Resource
 
       def to_resource(user, roles, permissions, instance, clazz = nil)
         clazz ||= find_resource_class(instance.class)
-        unless clazz
+        if clazz.nil? || clazz.abstract?
           raise "could not find Resource class for #{instance.class}"
         end
         clazz.send(:new, instance, current_user: user, current_roles: roles, permissions: permissions)
