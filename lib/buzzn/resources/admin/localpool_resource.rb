@@ -46,6 +46,10 @@ module Admin
       super
       @display_url = Import.global('config.display_url')
     end
+    
+    def meters
+      all(permissions.meters, object.meters.real_or_virtual)
+    end
 
     def power_sources
       object.registers.select(:label).production.collect do |register|
