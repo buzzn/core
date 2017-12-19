@@ -37,9 +37,9 @@ module Buzzn::Resource
 
     def retrieve_with_slug(id)
       if id =~ RubyRegex::UUID
-        do_retrieve(id, 'id=? or slug=?', id, id.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, ''))
+        do_retrieve(id, id: id)
       else
-        do_retrieve(id, slug: id)
+        do_retrieve(id, slug: Buzzn::Slug.new(id))
       end
     end
 
