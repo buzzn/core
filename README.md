@@ -16,6 +16,9 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
 - [Beekeeper import](#beekeeper-import)
   - [How to run it](#how-to-run-it)
 - [How to deploy](#how-to-deploy)
+  - [One-time setup](#one-time-setup)
+  - [Deploy staging](#deploy-staging)
+  - [Deploy production](#deploy-production)
 - [How to set up a development environment](#how-to-set-up-a-development-environment)
   - [Setup Ruby \(using rbenv\)](#setup-ruby-using-rbenv)
   - [Install required software](#install-required-software)
@@ -55,6 +58,8 @@ DISCOVERGY_PASSWORD=<password from lastpass>
 | `rake db:reset`      | Drop and recreate the DB, load schema and setup data | Rails default
 | `rake db:empty` | Resets the database without dropping the DB.<br />Useful to reset DB when it has open connections. | Buzzn custom
 | `rake db:seed:example_data` | Load an example localpool into the DB.<br />It does not prepare/empty the DB, run `rake db:empty` beforehands if required. | Buzzn custom
+| `rake deploy:staging` | Deploy the application to staging. | Buzzn custom
+| `rake deploy:production` | Deploy the application to production and create a new release tag. | Buzzn custom
 
 ## Common testing workflow - after checking out a remote branch
 
@@ -100,14 +105,22 @@ So if you know what you are doing, run `rake db:empty` first, to completely dele
 
 # How to deploy
 
-This description is for staging, production should work the same once it's implemented.
+We're running on Heroku, so you can deploy from Heroku's web interface if you want. To do it from the command line:
 
-1. We're running on Heroku, so first do this one-time setup:
+## One-time setup
 
 - `git remote add staging https://git.heroku.com/buzzn-core-staging.git` 
-- `heroku login` (make sure it succeeds / you are a collaborator on the app)
+- `git remote add production https://git.heroku.com/buzzn-core-production.git` 
+- `heroku login` (make sure it succeeds and you are a collaborator on the app)
 
-2. run `git push staging {your-local-branch}:master`
+## Deploy staging
+
+Staging is deployed automatically for every green CI build on `master`. 
+To do it manually: `rake deploy:staging`.
+
+## Deploy production
+
+Run `rake deploy:production`. This pushes the current branch to Heroku and sets a release tag on the git repo.
 
 _Note on the previous, docker-based system and deployment: the Dockerfiles and related code have been removed, [use this git tag](https://github.com/buzzn/core/tree/before-removing-docker-config) to get them back. The same tag is set in the console app._
 
