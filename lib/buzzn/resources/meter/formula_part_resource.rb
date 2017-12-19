@@ -13,8 +13,7 @@ module Meter
     # IMO: a bit confusing for development and sooner or later to user
     def register
       to_resource(object.operand,
-                  permissions.register,
-                  Register::BaseResource)
+                  permissions.register)
     end
 
     def type
