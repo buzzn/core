@@ -393,11 +393,16 @@ describe Admin::LocalpoolRoda do
         expect(localpool.name).to eq 'a b c d'
         expect(localpool.description).to eq 'none'
         expect(localpool.start_date).to eq Date.yesterday
+        expect(localpool.show_object).to eq true
+        expect(localpool.show_production).to eq false
+        expect(localpool.show_energy).to eq true
+        expect(localpool.show_contact).to eq false
+        expect(localpool.show_display_app).to eq false
 
         result = json
         # TODO fix it: our time setup does not allow
         #expect(result.delete('updated_at')).to be > old.as_json
-        expect(result.delete('updated_at')).not_to eq old.as_json
+        expect(Time.parse(result.delete('updated_at'))).to be > old
         expect(result.to_yaml).to eq updated_json.to_yaml
        end
     end
