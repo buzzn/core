@@ -17,7 +17,7 @@ class Services::Datasource::Discovergy::OptimizedGroup
     minus = []
     group.registers.consumption_production.each do |r|
       next unless r.meter.broker
-      if r.label =~ /production/
+      if r.label.production?
         plus << r.meter.broker.external_id
       else
         minus << r.meter.broker.external_id
