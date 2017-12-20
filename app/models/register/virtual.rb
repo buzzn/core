@@ -3,10 +3,9 @@ module Register
 
     has_many :scores, as: :scoreable
 
-    belongs_to :meter, class_name: Meter::Virtual, foreign_key: :meter_id
+    belongs_to :meter, class_name: 'Meter::Virtual', foreign_key: :meter_id
 
     has_many :formula_parts, dependent: :destroy, foreign_key: 'register_id'
-    accepts_nested_attributes_for :formula_parts, reject_if: :all_blank, :allow_destroy => true
 
     def self.new(*args)
       a = super
@@ -25,10 +24,6 @@ module Register
         result += "#{formula_part.operator} #{formula_part.operand_id} "
       end
       return result
-    end
-
-    def get_operands_from_formula
-      self.formula_parts.collect(&:operand)
     end
 
     def data_source

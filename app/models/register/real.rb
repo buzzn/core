@@ -11,13 +11,6 @@ module Register
       raise 'not implemented'
     end
 
-    after_destroy :validate_meter
-    def validate_meter
-      unless meter.valid?
-        raise Buzzn::NestedValidationError.new(:meter, meter.errors)
-      end
-    end
-
     def data_source
       if self.broker.is_a? Broker::Discovergy
         Services::Datasource::Discovergy::Implementation::NAME

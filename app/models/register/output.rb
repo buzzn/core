@@ -9,10 +9,6 @@ module Register
       a
     end
 
-    # before_create do
-    #   self.direction = Base.directions[:output]
-    # end
-
     def obis
       '1-0:2.8.0'
     end

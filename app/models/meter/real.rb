@@ -92,22 +92,5 @@ module Meter
     def output_register=(attr)
       registers << Register::Output.new(attr.merge(meter: self))
     end
-
-
-    # work around AR short-comings
-
-    def vvalid?(*args)
-      if ! super && !errors[:registers].empty?
-        registers.each do |r|
-          index = 0
-          r.errors.each do |key, err|
-            errors.add(:"registers.#{index}.#{key}", err)
-            index += 1
-          end
-        end
-      end
-      errors.empty?
-    end
-
   end
 end
