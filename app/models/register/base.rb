@@ -7,13 +7,21 @@ module Register
 
     include Filterable
 
+    class Label < String
+      ['production', 'consumption', 'demarcation', 'grid'].each do |method|
+        define_method "#{method}?" do
+          self.to_s.start_with?(method)
+        end
+      end
+    end
+
     enum label: %i(consumption consumption_common
       demarcation_pv demarcation_chp demarcation_wind demarcation_water
       production_pv production_chp production_wind production_water
       grid_consumption grid_feeding
       grid_consumption_corrected grid_feeding_corrected
       other
-    ).each_with_object({}) { |item, map| map[item] = item.to_s.upcase }
+    ).each_with_object({}) { |item, map| map[Label.new(item.to_s)] = item.to_s.upcase }
 
     enum direction: { input: 'in', output: 'out' }
 
@@ -26,11 +34,11 @@ module Register
     scope :virtual, -> { where(type: Register::Virtual) }
 
     scope :consumption_production, -> do
-      by_labels(*Register::Base.labels.values.select { |l| l =~ /\A(PRODUCTION|CONSUMPTION)/ })
+      by_labels(*Register::Base.labels.select { |label, _| label.production? || label.consumption? }.values)
     end
 
     scope :production, -> do
-      by_labels(*Register::Base.labels.values.select { |l| l =~ /\APRODUCTION/ })
+      by_labels(*Register::Base.labels.select { |label, _| label.production? }.values)
     end
 
     scope :by_group, -> (group) do
@@ -81,9 +89,6 @@ module Register
 
     def post_decimal_position
       1
-    end
-
-    def validate_invariants
     end
 
     # not used anymore
