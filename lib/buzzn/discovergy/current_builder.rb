@@ -5,7 +5,9 @@ class Discovergy::CurrentBuilder
   extend Dry::Initializer
   include Types::Datasource
 
-  option :unit, Current::Unit
+  BROKEN_REGISTER_RESPONSE = -1
+  
+option :unit, Current::Unit
   option :register
 
   def build(response)
@@ -27,7 +29,7 @@ class Discovergy::CurrentBuilder
   end
 
   def to_value(response)
-    return -1 unless response
+    return BROKEN_REGISTER_RESPONSE unless response
     case unit
     when :Wh
       to_watt_hour(response)
