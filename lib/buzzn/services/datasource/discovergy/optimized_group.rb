@@ -8,8 +8,8 @@ class Services::Datasource::Discovergy::OptimizedGroup
   include Types::Discovergy
 
   def verify(group)
-    local(group).collect { |m| m.product_serialnumber }.sort ==
-      remote(group).collect { |m| m.serialNumber }.sort
+    local(group).collect { |m| m.product_serialnumber }.sort.uniq ==
+      remote(group).collect { |m| m.serialNumber }.sort.uniq
   end
 
   def create(group)
@@ -31,6 +31,7 @@ class Services::Datasource::Discovergy::OptimizedGroup
       meter = ::Meter::Discovergy.create(group: group,
                                          product_serialnumber: result.serialNumber)
       Broker::Discovergy.create(meter: meter)
+      meter
     end
   end
 
@@ -48,14 +49,18 @@ class Services::Datasource::Discovergy::OptimizedGroup
   end
 
   def remote(group)
-    query = VirtualMeter::Get.new(meter: discovergy_meter(group))
-    process(query)
+    if meter = discovergy_meter(group)
+      query = VirtualMeter::Get.new(meter: meter)
+      process(query)
+    else
+      []
+    end
   end
 
   def local(group)
     group.registers.consumption_production.collect do |register|
        register.meter if register.meter.broker
-    end.compact
+    end.compact.uniq
   end
 
   private

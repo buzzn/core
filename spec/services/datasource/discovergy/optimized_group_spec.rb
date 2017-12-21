@@ -92,10 +92,10 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
 
     it 'succeeds' do
       api.result = create_result
-      broker = optimized_group.create(localpool)
-      expect(broker.external_id).to eq 'VIRTUAL_00000104'
-      expect(broker.meter).to be_a ::Meter::Discovergy
-      expect(broker.meter.group).to eq localpool
+      meter = optimized_group.create(localpool)
+      expect(meter.broker.external_id).to eq 'VIRTUAL_00000104'
+      expect(meter).to be_a ::Meter::Discovergy
+      expect(meter.group).to eq localpool
       expect(api.query).to eq '/virtual_meter?meterIdsPlus=EASYMETER_9876543210&meterIdsMinus=EASYMETER_1234567890'
     end
   end
