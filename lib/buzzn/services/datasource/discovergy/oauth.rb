@@ -21,8 +21,9 @@ class Services::Datasource::Discovergy::Oauth
     @_mutex = Mutex.new
   end
 
-  def access_token_create
+  def access_token_create(force = false)
     @_mutex.synchronize do
+      reset if force
       if @access_token
         token_hash = {
           # old code claims both are needed

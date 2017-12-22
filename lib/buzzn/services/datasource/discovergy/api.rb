@@ -61,15 +61,15 @@ class Services::Datasource::Discovergy::Api
     begin
       incremented = throughput.increment!
 
-      do_request(query, true)
+      do_request(query, false)
 
     ensure
       throughput.decrement if incremented
     end
   end
 
-  def do_request(query, first)
-    token = oauth.access_token_create
+  def do_request(query, force)
+    token = oauth.access_token_create(force)
 
     @logger.info("#{query.http_method} #{query.to_uri(oauth.path)}")
     token.send(query.http_method, query.to_uri(oauth.path))
@@ -79,9 +79,8 @@ class Services::Datasource::Discovergy::Api
     when (200..299)
       response.body
     when 401
-      if first
-        oauth.reset
-        do_request(query, false)
+      unless force
+        do_request(query, true)
       else
         raise Buzzn::DataSourceError.new('unauthorized to get data from discovergy: ' + response.body)
       end
