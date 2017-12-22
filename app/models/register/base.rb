@@ -37,6 +37,10 @@ module Register
       by_labels(*Register::Base.labels.select { |label, _| label.production? || label.consumption? }.values)
     end
 
+    scope :production_consumption, -> do
+      consumption_production
+    end
+
     scope :production, -> do
       by_labels(*Register::Base.labels.select { |label, _| label.production? }.values)
     end
