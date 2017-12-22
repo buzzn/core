@@ -19,7 +19,6 @@ class Discovergy::AbstractBuilder
   private
 
   def adjust(val, register)
-    return nil unless register.label.consumption? || register.label.production?
     case register
     when Register::Output
       val > 0 ? 0 : -val

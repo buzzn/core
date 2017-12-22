@@ -19,7 +19,7 @@ class Services::Datasource::Discovergy::LastReading
       query = Types::Discovergy::LastReading::Get.new(meter: meter,
                                                       fields: [:power],
                                                       each:   true)
-      builder = Discovergy::BubbleBuilder.new(meters: meter.group.meters)
+      builder = Discovergy::BubbleBuilder.new(registers: meter.group.registers.consumption_production)
       api.request(query, builder)
     end
   end

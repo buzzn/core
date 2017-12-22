@@ -2,13 +2,13 @@ require_relative 'abstract_builder'
 
 class Discovergy::BubbleBuilder < Discovergy::AbstractBuilder
 
-  option :meters
+  option :registers
 
   def build(response)
     response.collect do |id, values|
       serial = id.sub(/.*_/, '')
-      meter = meters.detect { |m| m.product_serialnumber == serial }
-      build_bubble(meter, values)
+      register = registers.detect { |r| r.meter.product_serialnumber == serial }
+      build_bubble(register.meter, values)
     end.flatten.compact.uniq
   end
 
@@ -16,7 +16,7 @@ class Discovergy::BubbleBuilder < Discovergy::AbstractBuilder
 
   def build_bubble(meter, values)
     if meter
-      meter.registers.collect do |register|
+      meter.registers.where(id: registers).collect do |register|
         Bubble.new(value: to_watt(values, register), register: register)
       end
     end
