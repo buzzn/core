@@ -1,13 +1,11 @@
 require_relative '../discovergy'
 require_relative '../types/datasource'
 
-class Discovergy::CurrentBuilder
-  extend Dry::Initializer
-  include Types::Datasource
+class Discovergy::CurrentBuilder < Discovergy::AbstractBuilder
 
   BROKEN_REGISTER_RESPONSE = -1
-  
-option :unit, Current::Unit
+
+  option :unit, Current::Unit
   option :register
 
   def build(response)
@@ -24,25 +22,20 @@ option :unit, Current::Unit
   def build_easymeter(response)
     Current.new(time: response['time'],
                 unit: unit,
-                value: to_value(response),
+                value: to_value(response, register),
                 register: register)
   end
 
-  def to_value(response)
+  def to_value(response, register)
     return BROKEN_REGISTER_RESPONSE unless response
     case unit
     when :Wh
       to_watt_hour(response)
     when :W
-      to_watt(response)
+      to_watt(response, register)
     else
       raise "unknown unit: #{unit}"
     end
-  end
-
-  def to_watt(response)
-    # POWER(X) is the (phase) power in 10^-3 W
-    response['values']['power'] / 1000
   end
 
   def to_watt_hour(response)
