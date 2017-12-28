@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.3.1'
+#ruby '2.3.1'
 
 # infrastructure
 gem 'dry-auto_inject'
@@ -46,6 +46,10 @@ gem 'ruby_regex'
 
 # discovergy
 gem 'oauth'
+
+# metrics
+gem 'leafy'
+gem 'concurrent-ruby-ext'
 
 # Backend
 gem 'puma'
