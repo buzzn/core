@@ -47,6 +47,10 @@ gem 'ruby_regex'
 # discovergy
 gem 'oauth'
 
+# metrics
+gem 'leafy'
+gem 'concurrent-ruby-ext'
+
 # Backend
 gem 'puma'
 gem 'rails', '< 5'
