@@ -1,3 +1,5 @@
+require_relative '../../permission'
+
 Display::GroupResource::Permission = Buzzn::Permission.new(Display::GroupResource) do
   # define groups of roles
   group(:none)

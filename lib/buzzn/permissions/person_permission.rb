@@ -1,3 +1,5 @@
+require_relative '../permission'
+
 PersonResource::Permission = Buzzn::Permission.new(PersonResource) do
   # define groups of roles
   group(:none)

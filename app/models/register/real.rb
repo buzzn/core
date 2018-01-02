@@ -15,7 +15,7 @@ module Register
       if self.broker.is_a? Broker::Discovergy
         Services::Datasource::Discovergy::Implementation::NAME
       else
-        Buzzn::StandardProfile::DataSource::NAME
+        Services::Datasource::StandardProfile::Implementation::NAME
       end
     end
 
