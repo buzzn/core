@@ -2,7 +2,7 @@ require 'buzzn/pdf_generator'
 
 module Buzzn::Pdfs
   class LCP_Report < Buzzn::PdfGenerator
-    include Import.kwargs['service.reading_calculation']
+    include Import.kwargs['services.reading_calculation']
 
     TEMPLATE = 'lcp_report.slim'
 

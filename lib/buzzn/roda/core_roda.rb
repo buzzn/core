@@ -5,7 +5,7 @@ require_relative 'plugins/terminal_verbs'
 
 class CoreRoda < CommonRoda
 
-  include Import.args[:env, 'service.health']
+  include Import.args[:env, 'services.health']
 
   use Rack::CommonLogger, logger
 

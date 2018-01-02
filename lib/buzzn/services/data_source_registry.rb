@@ -5,7 +5,7 @@ require 'buzzn/virtual/data_source'
 module Services
 
   class DataSourceRegistry
-    include Import.args['service.redis']
+    include Import.args['services.redis']
 
     def initialize(redis = Redis.current, *sources)
       @logger = Buzzn::Logger.new(self)

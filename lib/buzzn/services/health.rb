@@ -1,7 +1,7 @@
 require_relative '../services'
 
 class Services::Health
-  include Import['service.redis',
+  include Import['services.redis',
                  'config.heroku_slug_commit',
                  'config.heroku_release_created_at']
 
