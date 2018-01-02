@@ -1,3 +1,5 @@
+require 'buzzn/slug'
+
 describe Buzzn::Slug do
 
 

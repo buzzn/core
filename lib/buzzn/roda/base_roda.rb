@@ -6,6 +6,14 @@ require_relative 'plugins/terminal_verbs'
 require_relative 'plugins/created_deleted'
 require_relative 'plugins/aggregation'
 
+require 'buzzn/data_result_set'
+require 'buzzn/data_result_array'
+require 'buzzn/data_point'
+require 'buzzn/data_result'
+
+require 'buzzn/db'
+
+
 class BaseRoda < CommonRoda
 
   plugin :json_parser, parser: MultiJson.method(:load)

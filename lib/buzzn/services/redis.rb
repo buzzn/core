@@ -1,5 +1,6 @@
-class Buzzn::Services::Redis
+require_relative '../services'
 
+class Services::Redis
   include Import['config.redis_url']
 
   def create

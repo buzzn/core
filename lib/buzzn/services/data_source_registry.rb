@@ -1,4 +1,8 @@
-module Buzzn::Services
+require_relative '../services'
+require 'buzzn/missing_data_source'
+require 'buzzn/virtual/data_source'
+
+module Services
 
   class DataSourceRegistry
     include Import.args['service.redis']

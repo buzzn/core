@@ -1,3 +1,5 @@
+require 'buzzn/localpool/checks'
+
 describe Buzzn::Localpool::Checks do
 
   entity(:register) do
