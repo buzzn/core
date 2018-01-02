@@ -1,4 +1,7 @@
 require 'csv'
+require 'buzzn/interval'
+require 'buzzn/utils/file'
+
 class ZipToPrice < ActiveRecord::Base
 
   COLUMNS = { zip: 'Plz',
