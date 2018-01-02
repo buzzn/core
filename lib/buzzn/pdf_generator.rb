@@ -1,6 +1,10 @@
 module Buzzn
   class PdfGenerator < ::Services::PdfHtmlGenerator::Html
+<<<<<<< HEAD
     include Import.reader['services.pdf_html_generator']
+=======
+    include Import.reader['service.pdf_html_generator']
+>>>>>>> cleanup namespace setup
 
     def template
       self.class.const_get('TEMPLATE')
