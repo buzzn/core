@@ -1,4 +1,5 @@
 require_relative '../discovergy'
+require 'buzzn/data_source_error'
 
 class Services::Datasource::Discovergy::Throughput
 

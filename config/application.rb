@@ -13,6 +13,8 @@ end
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
+require 'buzzn/logger'
+
 module Buzzn
   class Application < Rails::Application
 
@@ -46,9 +48,7 @@ module Buzzn
       g.helper      = false
     end
 
-    config.middleware.delete Rack::Lock
-
-    config.autoload_paths << "#{Rails.root}/lib"
+    #config.autoload_paths << "#{Rails.root}/lib"
 
     if ENV['AWS_ACCESS_KEY'].present?
       config.x.fog.storage_opts   = { provider: 'AWS', aws_access_key_id: ENV['AWS_ACCESS_KEY'], aws_secret_access_key: ENV['AWS_SECRET_KEY'], region: ENV['AWS_REGION'] }

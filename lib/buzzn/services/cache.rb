@@ -1,4 +1,5 @@
 require_relative '../types/cache_item'
+require_relative '../services'
 
 class Services::Cache
 

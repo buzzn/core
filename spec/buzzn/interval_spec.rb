@@ -1,3 +1,5 @@
+require 'buzzn/interval'
+
 describe Buzzn::Interval do
 
   let(:durations) { [:hour, :day, :month, :year] }

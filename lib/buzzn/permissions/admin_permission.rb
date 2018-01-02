@@ -1,3 +1,5 @@
+require_relative '../permission'
+
 AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
   group(:managers, :admin, :buzzn_operator, :localpool_manager)
 
