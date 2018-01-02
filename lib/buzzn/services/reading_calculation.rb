@@ -4,7 +4,7 @@ require 'buzzn/localpool/total_accounted_energy'
 
 class Services::ReadingCalculation
 
-  include Import['service.charts']
+  include Import['services.charts']
 
   # This method returns the energy measured for each register in the localpool in a specific period of time
   # input params:

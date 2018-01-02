@@ -5,7 +5,7 @@ require 'buzzn/data_source_error'
 
 class Services::Datasource::Discovergy::Throughput
 
-  include Import['service.redis', 'service.metrics']
+  include Import['services.redis', 'services.metrics']
 
   NAME = 'discovergy.throughput'
   MAX_CONCURRENT_CONNECTIONS = 30

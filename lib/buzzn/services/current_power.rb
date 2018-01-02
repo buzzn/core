@@ -2,9 +2,9 @@ require_relative '../services'
 
 class Services::CurrentPower
 
-  include Import['service.cache',
+  include Import['services.cache',
                  timetolive: 'config.datasource_timetolive_current',
-                 registry: 'service.data_source_registry']
+                 registry: 'services.data_source_registry']
 
   def ticker(register)
     key = "ticker.#{register.id}"

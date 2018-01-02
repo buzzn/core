@@ -1,7 +1,7 @@
 describe Services::PdfHtmlGenerator do
 
   class With < Services::PdfHtmlGenerator::Html
-    include Import.kwargs['service.pdf_html_generator']
+    include Import.kwargs['services.pdf_html_generator']
 
     def initialize(data = {})
       @data = data
