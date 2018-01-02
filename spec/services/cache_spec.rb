@@ -2,7 +2,7 @@ require 'buzzn/services/cache'
 
 describe Services::Cache do
 
-  let(:subject) { Import.global('service.cache') }
+  let(:subject) { Import.global('services.cache') }
 
   it 'puts json and returns cache-item' do
     item = subject.put('key', '{}', 10)

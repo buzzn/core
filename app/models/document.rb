@@ -3,7 +3,7 @@ require 'buzzn/crypto/decryptor'
 require 'buzzn/crypto/encryptor'
 
 class Document < ActiveRecord::Base
-  include Import.active_record['service.storage']
+  include Import.active_record['services.storage']
 
   serialize :encryption_details, Security::SecureHashSerializer.new
 

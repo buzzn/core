@@ -13,8 +13,8 @@ class Beekeeper::Import
   end
 
   def initialize(*)
-    @meters = ::Import.global('service.datasource.discovergy.meters')
-    @optimized = ::Import.global('service.datasource.discovergy.optimized_group')
+    @meters = ::Import.global('services.datasource.discovergy.meters')
+    @optimized = ::Import.global('services.datasource.discovergy.optimized_group')
   end
 
   def run

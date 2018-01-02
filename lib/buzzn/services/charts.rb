@@ -1,7 +1,7 @@
 require_relative '../services'
 
 class Services::Charts
-  include Import.args[registry: 'service.data_source_registry']
+  include Import.args[registry: 'services.data_source_registry']
 
   def for_register(register, interval)
     register = register.object if register.respond_to? :object

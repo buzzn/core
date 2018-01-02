@@ -1,6 +1,6 @@
 class BillingCycle < ActiveRecord::Base
 
-  include Import.active_record['service.reading_calculation']
+  include Import.active_record['services.reading_calculation']
 
   has_many :billings, dependent: :destroy
 

@@ -4,8 +4,8 @@ class Services::Datasource::Discovergy::Api
 
   class EmptyResponse < StandardError; end
 
-  include Import['service.datasource.discovergy.oauth']
-  include Import['service.datasource.discovergy.throughput']
+  include Import['services.datasource.discovergy.oauth']
+  include Import['services.datasource.discovergy.throughput']
 
   def initialize(**)
     super
