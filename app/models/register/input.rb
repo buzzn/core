@@ -1,3 +1,5 @@
+require_relative 'real'
+
 module Register
   class Input < Real
 

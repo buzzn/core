@@ -1,3 +1,5 @@
+require_relative 'base'
+
 module Buzzn::Resource
   class Entity < Base
 
@@ -104,7 +106,7 @@ module Buzzn::Resource
     end
 
     def type
-      self.class.model.to_s.gsub(/::/, '').underscore
+      Dry::Core::Inflector.underscore(self.class.model.to_s.gsub(/::/, '')).underscore
     end
 
     attribute :id, :type, :updated_at

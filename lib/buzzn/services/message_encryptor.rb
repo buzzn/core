@@ -1,7 +1,7 @@
 require_relative '../services'
 
 # a brief verification indicates that the ActiveSupport::MessageEncryptor
-# is threadsafe and can be used by mutliple threads concurrently
+# is threadsafe and can be used by multiple threads concurrently
 class Services::MessageEncryptor < ActiveSupport::MessageEncryptor
 
   def self.new

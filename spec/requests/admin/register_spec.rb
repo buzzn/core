@@ -217,7 +217,7 @@ describe Admin::LocalpoolRoda do
 
       let(:register) do
         register = [real_register, virtual_register].sample
-        Fabricate(:reading, register_id: register.id)
+        Fabricate(:single_reading, register: register)
         register
       end
 
@@ -325,7 +325,7 @@ describe Admin::LocalpoolRoda do
             let!(:readings_json) do
               readings = 2.times
                            .collect { Fabricate(:single_reading, register: register) }
-              readings.collect do |r|
+              register.readings.collect do |r|
                 {
                   "id"=>r.id,
                   "type"=>"reading",

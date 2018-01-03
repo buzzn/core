@@ -1,4 +1,3 @@
-require 'file_size_validator'
 class Device < ActiveRecord::Base
   include Filterable
 
@@ -21,13 +20,7 @@ class Device < ActiveRecord::Base
     end
   end
 
-  belongs_to :register, class_name: Register::Base, foreign_key: :register_id
-
-  validates :mode, presence: true
-  validates :manufacturer_name, presence: true, length: { in: 2..30 }
-  validates :manufacturer_product_name, presence: true, length: { in: 2..30 }
-  validates :watt_peak, numericality: { only_integer: true }, presence: true
-  validates :primary_energy, inclusion: {in: self.all_primary_energies}, if: 'primary_energy.present?'
+  belongs_to :register, class_name: 'Register::Base', foreign_key: :register_id
 
   def self.search_attributes
     [:manufacturer_name, :manufacturer_product_name, :mode, :category,

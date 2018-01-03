@@ -8,7 +8,7 @@ module Buzzn
         @parent = parent
         @name = name
       else
-        @name = name.to_s.sub('Resource', '').sub('::', '_').underscore.downcase.to_sym
+        @name = Dry::Core::Inflector.underscore(name.to_s.sub('Resource', '').sub('::', '_')).downcase.to_sym
       end
 
       @perms = {}
