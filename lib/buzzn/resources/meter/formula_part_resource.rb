@@ -1,4 +1,5 @@
 require_relative '../register/base_resource'
+
 module Meter
   class FormulaPartResource < Buzzn::Resource::Entity
 

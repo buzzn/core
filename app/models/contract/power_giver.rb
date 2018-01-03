@@ -1,3 +1,5 @@
+require_relative 'power'
+
 module Contract
   class PowerGiver < Power
 
@@ -5,7 +7,7 @@ module Contract
       super
     end
 
-    belongs_to :register, class_name: Register::Output
+    belongs_to :register, class_name: 'Register::Output'
 
     validates :register, presence: true
     validates :confirm_pricing_model, presence: true

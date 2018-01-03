@@ -44,9 +44,8 @@ class Services::Health
       build: build_info,
       database: database?,
       redis: redis?,
-      mongo: mongo?
     }
-    result[:healthy] = result.slice(:database, :redis, :mongo).values.all? { |v| v == 'alive' }
+    result[:healthy] = result.slice(:database, :redis).values.all? { |v| v == 'alive' }
     result
   end
 end

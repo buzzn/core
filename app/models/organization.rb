@@ -1,3 +1,5 @@
+require_relative 'organization_market_function'
+
 class Organization < ActiveRecord::Base
   self.table_name = :organizations
 

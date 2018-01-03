@@ -1,4 +1,6 @@
 # frozen-string-literal: true
+require_relative '../filterable'
+
 module Register
   class Base < ActiveRecord::Base
     self.table_name = :registers

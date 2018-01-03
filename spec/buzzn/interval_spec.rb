@@ -8,7 +8,7 @@ describe Buzzn::Interval do
 
   [:second, :hour, :day, :month, :year].each do |duration|
     it "creates a #{duration}" do
-      interval = subject.send(duration, Time.current)
+      interval = subject.send(duration, Time.now.utc)
       durations.each do |d|
         expect(interval.send(:"#{d}?")).to eq d == duration
       end

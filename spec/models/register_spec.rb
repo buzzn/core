@@ -117,7 +117,7 @@ describe Register do
     end
   end
 
-  it 'stores a reading in database' do
+  xit 'stores a reading in database' do
     meter = Fabricate(:easymeter_60009405)
     register = meter.registers.first
     register.instance_variable_set('@charts', Buzzn::Services::ChartsDummy.new)

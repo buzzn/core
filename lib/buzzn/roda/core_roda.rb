@@ -1,5 +1,7 @@
 require 'sequel'
 require 'rack-timeout'
+require 'rack/cors'
+
 require_relative 'common_roda'
 require_relative 'plugins/terminal_verbs'
 

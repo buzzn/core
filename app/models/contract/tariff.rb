@@ -3,7 +3,7 @@ module Contract
     self.table_name = :tariffs
 
     has_and_belongs_to_many :contracts, class_name: 'Contract::Base', association_foreign_key: :contract_id, foreign_key: :tariff_id
-    belongs_to :group, class_name: Group::Base, foreign_key: :group_id
+    belongs_to :group, class_name: 'Group::Base', foreign_key: :group_id
 
     scope :in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                   .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }

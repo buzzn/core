@@ -1,3 +1,5 @@
+require_relative 'localpool'
+
 module Contract
   class LocalpoolPowerTaker < Localpool
 
@@ -8,7 +10,7 @@ module Contract
       a
     end
 
-    belongs_to :register, class_name: Register::Input
+    belongs_to :register, class_name: 'Register::Input'
 
     validates :register, presence: true
     validates :forecast_kwh_pa, numericality: { only_integer: true, greater_than_or_equal_to: 0 }

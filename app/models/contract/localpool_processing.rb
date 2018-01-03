@@ -1,3 +1,5 @@
+require_relative 'localpool'
+
 module Contract
   class LocalpoolProcessing < Localpool
 

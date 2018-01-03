@@ -4,7 +4,7 @@ describe Services::Datasource::Discovergy::Throughput do
 
   let(:max) { Services::Datasource::Discovergy::Throughput::MAX_CONCURRENT_CONNECTIONS }
 
-  let(:subject) { Import.global('service.datasource.discovergy.throughput') }
+  let(:subject) { Import.global('services.datasource.discovergy.throughput') }
 
   it 'increments and decrements' do
     max.times do

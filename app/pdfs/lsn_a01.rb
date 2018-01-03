@@ -1,3 +1,5 @@
+require 'buzzn/pdf_generator'
+
 module Buzzn::Pdfs
   class LSN_A01 < Buzzn::PdfGenerator
 

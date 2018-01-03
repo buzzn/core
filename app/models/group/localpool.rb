@@ -1,3 +1,6 @@
+require_relative 'base'
+require_relative '../owner'
+
 module Group
   class Localpool < Base
     include Owner

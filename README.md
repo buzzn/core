@@ -39,6 +39,15 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
 
 See [docs/application_architecture.md](docs/application_architecture.md).
 
+# Bin-Scripts
+
+* bin/console - starts application with pry session
+* bin/server  - starts puma server
+* bin/rake    - runs rake with application bundler context
+* bin/rspec   - runs rspec with the current bundler context
+
+you can add `./bin` to your `PATH` to simplely use `console`, `server`, `rake` or `rspec`.
+
 # Useful rake tasks
 
 ## Discovergy Credentials
@@ -109,13 +118,13 @@ We're running on Heroku, so you can deploy from Heroku's web interface if you wa
 
 ## One-time setup
 
-- `git remote add staging https://git.heroku.com/buzzn-core-staging.git` 
-- `git remote add production https://git.heroku.com/buzzn-core-production.git` 
+- `git remote add staging https://git.heroku.com/buzzn-core-staging.git`
+- `git remote add production https://git.heroku.com/buzzn-core-production.git`
 - `heroku login` (make sure it succeeds and you are a collaborator on the app)
 
 ## Deploy staging
 
-Staging is deployed automatically for every green CI build on `master`. 
+Staging is deployed automatically for every green CI build on `master`.
 To do it manually: `rake deploy:staging`.
 
 ## Deploy production

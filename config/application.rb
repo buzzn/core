@@ -1,6 +1,6 @@
+require File.expand_path('../buzzn', __FILE__)
 require File.expand_path('../boot', __FILE__)
 
-require File.expand_path('../../lib/buzzn/boot/init', __FILE__)
 require 'rails/all'
 
 ## https://docs.newrelic.com/docs/agents/ruby-agent/features/garbage-collection#gc_setup
@@ -13,16 +13,10 @@ end
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
-require 'buzzn/logger'
-
 module Buzzn
   class Application < Rails::Application
 
-    config.active_record.schema_format = :sql
-
     config.exceptions_app = self.routes
-
-    config.active_record.raise_in_transactional_callbacks = true # TODO: remove
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -46,27 +40,6 @@ module Buzzn
       g.stylesheets = false
       g.javascripts = false
       g.helper      = false
-    end
-
-    #config.autoload_paths << "#{Rails.root}/lib"
-
-    if ENV['AWS_ACCESS_KEY'].present?
-      config.x.fog.storage_opts   = { provider: 'AWS', aws_access_key_id: ENV['AWS_ACCESS_KEY'], aws_secret_access_key: ENV['AWS_SECRET_KEY'], region: ENV['AWS_REGION'] }
-      config.x.fog.directory_opts = { key: ENV['AWS_BUCKET'], public: false }
-    else
-      config.x.fog.storage_opts   = { provider: 'Local', local_root: 'tmp' }
-      config.x.fog.directory_opts = { key: 'files' }
-    end
-
-    config.x.templates_path = Rails.root.join('app', 'pdfs')
-
-    config.after_initialize do
-      # setup service components, transactions
-      Buzzn::Logger.root = ::Logger.new(STDOUT).tap do |logger|
-        logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
-        logger.level = ENV['LOG_LEVEL'] || 'debug'
-      end
-      Buzzn::Boot::Init.run
     end
 
     # We don't use the Rails cache, all caching is directly from roda to redis.

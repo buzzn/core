@@ -1,3 +1,5 @@
+require_relative 'base_resource'
+
 module Meter
   class RealResource < BaseResource
 
