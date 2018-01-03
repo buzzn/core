@@ -61,13 +61,12 @@ namespace :beekeeper do
   namespace :person_images do
     task attach: :environment do
       Person.all.each do |person|
-        filename = person.email.downcase
-        local_file_path = Rails.root.join('lib/beekeeper/person_images', "#{filename}.jpg")
+        file_name = person.email.downcase
+        local_file_path = Rails.root.join('lib/beekeeper/person_images', "#{file_name}.jpg")
         putc '.'
         if File.exist?(local_file_path)
           puts "\nAssigning image #{local_file_path} to #{person.name}"
           person.update!(image: File.open(local_file_path))
-        else
         end
       end
     end
