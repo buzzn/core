@@ -20,9 +20,16 @@ namespace :db do
       require_relative '../../db/example_data'
     end
 
-    desc "Create the login account for Philipp Oswald"
+    desc "Create the login account for Philipp Oswald - WARN: this is destructive as it first deletes all other buzzn-operators"
     task pho_user: :environment do
       require_relative '../../db/support/create_buzzn_operator'
+      Account::Base.where(person_id: PersonsRole.where(role_id: Role.where(name: Role::BUZZN_OPERATOR).first).select(:person_id)).each do |a|
+        Account::Base.transaction do
+          Account::PasswordHash.find(a.id).delete
+          a.delete
+          a.person.delete
+        end
+      end
       create_buzzn_operator(
         first_name: 'Phillip',
         last_name:  'Oßwald',
