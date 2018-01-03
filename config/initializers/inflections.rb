@@ -1,3 +1,6 @@
+# TODO move to dry-inflection once ready
+require 'active_support'
+
 # Be sure to restart your server when you modify this file.
 
 # Add new inflection rules using the following format. Inflections

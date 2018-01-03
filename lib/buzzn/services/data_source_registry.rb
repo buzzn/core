@@ -7,7 +7,7 @@ module Services
   class DataSourceRegistry
     include Import.args['services.redis']
 
-    def initialize(redis = Redis.current, *sources)
+    def initialize(redis, *sources)
       @logger = Buzzn::Logger.new(self)
       @container = Dry::Container.new
       sources.each do |source|

@@ -1,3 +1,5 @@
+require_relative 'context'
+
 module Buzzn::Resource
   class Collection
     include Enumerable

@@ -1,4 +1,8 @@
-Aws.config.update({
-  region: Rails.application.secrets.aws_region,
-  credentials: Aws::Credentials.new( Rails.application.secrets.aws_access_key, Rails.application.secrets.aws_secret_access_key )
-})
+if ENV.key?('AWS_ACCESS_KEY')
+  Aws.config.update(
+    {
+      region: ENV['AWS_REGION'],
+      credentials: Aws::Credentials.new(ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_KEY'])
+    }
+  )
+end

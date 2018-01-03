@@ -1,4 +1,5 @@
-require_relative '..//schemas/support/enable_dry_validation'
+require_relative '../schemas/support/enable_dry_validation'
+require_relative 'context'
 
 module Buzzn::Resource
   class Base

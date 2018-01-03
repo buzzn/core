@@ -1,3 +1,5 @@
+require_relative 'base'
+
 module Contract
   class Power < Base
 

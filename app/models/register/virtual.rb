@@ -1,3 +1,5 @@
+require_relative 'base'
+
 module Register
   class Virtual < Base
 

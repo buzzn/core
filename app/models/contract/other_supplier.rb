@@ -1,3 +1,5 @@
+require_relative 'localpool_power_taker'
+
 module Contract
   class OtherSupplier < Contract::LocalpoolPowerTaker
 

@@ -1,3 +1,5 @@
+require_relative 'base'
+
 class Broker::Discovergy < Broker::Base
 
   def self.modes

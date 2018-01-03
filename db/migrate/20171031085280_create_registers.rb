@@ -14,7 +14,7 @@ class CreateRegisters < ActiveRecord::Migration
     add_belongs_to :groups, :grid_consumption_register, reference: :registers, type: :uuid, index: true, null: true
     add_belongs_to :groups, :grid_feeding_register, reference: :registers, type: :uuid, index: true, null: true
 
-    add_foreign_key :registers, :meters, name: :fk_registers_meter
+    add_foreign_key :registers, :meters, name: :fk_registers_meter, column: :meter_id
 
     add_index :registers, [:meter_id, :direction], unique: true
   end

@@ -35,14 +35,19 @@ module Buzzn
           importer = Dry::DependencyInjection::Importer.new(singletons)
           importer.import('lib/buzzn', 'services')
           importer.import('lib/buzzn', 'operations')
+
           MainContainer.merge(singletons)
+
+          # fianlize after we have the complete MainContainer setup
           singletons.finalize
 
           # eager require some files
+          Dir["./app/{uploaders,models,pdfs}/**/*.rb"].each do |path|
+            require path
+          end
           %w(resource resources roda permissions schemas).each do |dir|
-            Application.config.paths['lib'].dup.tap do |app|
-              app.glob = "buzzn/#{dir}/**/*.rb"
-              app.to_a.each { |path| require path }
+            Dir["./lib/buzzn/#{dir}/**/*.rb"].each do |path|
+              require path
             end
           end
         end

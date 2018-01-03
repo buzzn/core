@@ -1,3 +1,5 @@
+require 'ruby-swagger'
+
 module SwaggerHelper
 
   def self.included(spec)

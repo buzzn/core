@@ -1,3 +1,5 @@
+require_relative 'base_resource'
+
 module Register
   class RealResource < BaseResource
 

@@ -1,3 +1,5 @@
+require 'roda'
+
 class CommonRoda < Roda
 
   def self.logger
