@@ -1,4 +1,5 @@
 require 'buzzn/schemas/invariants/contract/base'
+
 module Contract
   class BaseResource < Buzzn::Resource::Entity
 

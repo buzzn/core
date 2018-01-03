@@ -1,4 +1,3 @@
-require 'lcp_report'
 describe Buzzn::Pdfs::LCP_Report do
 
   entity(:localpool) { Fabricate(:localpool_sulz_with_registers_and_readings) }

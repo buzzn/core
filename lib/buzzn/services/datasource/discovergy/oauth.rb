@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'oauth'
 
 require_relative '../discovergy'
 

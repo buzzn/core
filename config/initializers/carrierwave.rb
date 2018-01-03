@@ -1,3 +1,6 @@
+require 'carrierwave'
+require 'carrierwave/orm/activerecord'
+
 CarrierWave.configure do |config|
 
   # fail noisily in development when something goes wrong

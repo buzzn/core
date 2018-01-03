@@ -1,9 +1,5 @@
 class BankAccountResource < Buzzn::Resource::Entity
 
-  module Create
-
-  end
-
   model BankAccount
 
   attributes  :holder,

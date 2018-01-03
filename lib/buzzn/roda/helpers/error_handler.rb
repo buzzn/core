@@ -1,3 +1,5 @@
+require 'raven'
+
 module Buzzn
   module Roda
     class ErrorHandler < Proc

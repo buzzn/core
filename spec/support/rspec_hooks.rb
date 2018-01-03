@@ -47,11 +47,10 @@ RSpec.configure do |config|
   end
 
   config.after(:context) do
-    Mongoid.purge!
+#    Mongoid.purge!
   end
 
   config.append_after(:each) do |spec|
     Redis.current.flushall
-    Rails.cache.clear
   end
 end

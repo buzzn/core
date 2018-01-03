@@ -1,3 +1,5 @@
+require_relative '../../include_parser'
+
 module Buzzn
   module Roda
     class Serializer

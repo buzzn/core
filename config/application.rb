@@ -1,6 +1,6 @@
+require File.expand_path('../buzzn', __FILE__)
 require File.expand_path('../boot', __FILE__)
 
-require File.expand_path('../../lib/buzzn/boot/init', __FILE__)
 require 'rails/all'
 
 ## https://docs.newrelic.com/docs/agents/ruby-agent/features/garbage-collection#gc_setup
@@ -20,11 +20,11 @@ require 'buzzn/logger'
 module Buzzn
   class Application < Rails::Application
 
-    config.active_record.schema_format = :sql
+#    config.active_record.schema_format = :sql
 
     config.exceptions_app = self.routes
 
-    config.active_record.raise_in_transactional_callbacks = true # TODO: remove
+    #config.active_record.raise_in_transactional_callbacks = true # TODO: remove
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -50,6 +50,7 @@ module Buzzn
       g.helper      = false
     end
 
+<<<<<<< HEAD
     if ENV['AWS_ACCESS_KEY'].present?
       config.x.fog.storage_opts = {
         provider:              'AWS',
@@ -77,6 +78,8 @@ module Buzzn
       Buzzn::Boot::Init.run
     end
 
+=======
+>>>>>>> remove most of the rails setup
     # We don't use the Rails cache, all caching is directly from roda to redis.
     config.cache_store = nil
 

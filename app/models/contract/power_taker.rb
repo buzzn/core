@@ -1,3 +1,5 @@
+require_relative 'power'
+
 module Contract
   class PowerTaker < Power
 
@@ -5,7 +7,7 @@ module Contract
       super
     end
 
-    belongs_to :register, class_name: Register::Input
+    belongs_to :register, class_name: 'Register::Input'
 
     validates :register, presence: true
     validates :old_supplier_name, presence: false

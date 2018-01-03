@@ -1,3 +1,5 @@
+require_relative 'localpool'
+
 module Contract
   class MeteringPointOperator < Localpool
 
@@ -8,13 +10,13 @@ module Contract
       a
     end
 
-    belongs_to :localpool, class_name: Group::Localpool
+    belongs_to :localpool, class_name: 'Group::Localpool'
 
-    belongs_to :register, class_name: Register::Base
+    belongs_to :register, class_name: 'Register::Base'
 
-    validates :register, presence: false
-    validates :localpool, presence: false
-    validates :metering_point_operator_name, presence: true
+    # validates :register, presence: false
+    # validates :localpool, presence: false
+    # validates :metering_point_operator_name, presence: true
 
     def validate_invariants
       super

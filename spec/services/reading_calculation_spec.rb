@@ -112,7 +112,7 @@ describe Services::ReadingCalculation do
     expect(subject.select_closest_reading(date_4, reading_2, reading_3)).to eq reading_2
   end
 
-  it 'adjusts end date' do
+  xit 'adjusts end date' do
     end_date = Date.new(2015, 6, 1)
     accounting_year = 2015
 

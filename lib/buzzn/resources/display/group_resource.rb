@@ -1,5 +1,6 @@
 require_relative '../group_resource'
 require_relative 'register_resource'
+require_relative 'mentor_resource'
 
 module Display
   class GroupResource < ::GroupResource

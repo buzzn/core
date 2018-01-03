@@ -8,8 +8,7 @@ class AddMoreFieldsToContract < ActiveRecord::Migration
     add_column :contracts, :metering_point_operator_name, :string
     add_column :contracts, :old_electricity_supplier_name, :string
     remove_column :contracts, :tariff
-    remove_column :contracts, :price_cents
-    remove_column :contracts, :price_currency
+    remove_column :contracts, :price
     remove_column :contracts, :running
     remove_column :contracts, :retailer
     remove_column :contracts, :price_cents_per_kwh

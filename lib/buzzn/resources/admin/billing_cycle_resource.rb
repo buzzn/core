@@ -1,4 +1,5 @@
 require_relative 'billing_resource'
+
 module Admin
   class BillingCycleResource < Buzzn::Resource::Entity
 

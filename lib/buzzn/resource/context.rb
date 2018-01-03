@@ -1,3 +1,5 @@
+require 'dry-initializer'
+
 module Buzzn::Resource
   class Context
     extend Dry::Initializer

@@ -8,7 +8,7 @@ module Meter
     belongs_to :broker, class_name: 'Broker::Base'
 
     # needed for permitted scope
-    has_many :registers, class_name: Register::Base, foreign_key: :meter_id
+    has_many :registers, class_name: 'Register::Base', foreign_key: :meter_id
 
 
     before_destroy do
