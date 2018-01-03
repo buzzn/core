@@ -22,7 +22,7 @@ class PersonResource < Buzzn::Resource::Entity
   has_many :bank_accounts
 
   def image
-    object.image.md.url
+    nil#object.image.md.url
   end
 
   def customer_number
