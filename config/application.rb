@@ -13,8 +13,6 @@ end
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
-require 'buzzn/logger'
-
 module Buzzn
   class Application < Rails::Application
 
