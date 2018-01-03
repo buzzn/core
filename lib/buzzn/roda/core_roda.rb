@@ -5,7 +5,7 @@ require_relative 'plugins/terminal_verbs'
 
 class CoreRoda < CommonRoda
 
-  include Import.args[:env, 'service.health']
+  include Import.args[:env, 'service.health', 'service.object_space_metric']
 
   use Rack::CommonLogger, logger
 
@@ -27,6 +27,7 @@ class CoreRoda < CommonRoda
 
   route do |r|
 
+    object_space_metric.non_blocking_sample
     logger.info(r.inspect)
 
     ActiveRecord::Base.connection_pool.with_connection do
