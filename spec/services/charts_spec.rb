@@ -1,4 +1,6 @@
-describe Buzzn::Services::Charts do
+require 'buzzn/check_types_data_source'
+
+describe Services::Charts do
 
   class MockRegister < Register::Input
     def data_source; 'mock'; end
@@ -30,8 +32,8 @@ describe Buzzn::Services::Charts do
 
   let(:mock) { ChartsMockDataSource.new }
   subject do
-    Buzzn::Services::Charts.new(
-      Buzzn::Services::DataSourceRegistry.new(
+    Services::Charts.new(
+      Services::DataSourceRegistry.new(
         Redis.current,
         ChartsDummyDataSource.new,
         mock,

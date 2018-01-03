@@ -1,3 +1,5 @@
+require_relative 'data_source'
+
 module Buzzn
 
   # temporary workaround class until we have all the datasources for all our registers

@@ -1,7 +1,7 @@
 module Buzzn
 
   class ScoreCalculator
-    include Import.reader['service.charts']
+    include Import.reader['services.charts']
 
     def initialize(group, containing)
       @group                = group

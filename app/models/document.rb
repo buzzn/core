@@ -1,7 +1,11 @@
-class Document < ActiveRecord::Base
-  include Import.active_record['service.storage']
+require 'buzzn/security/secure_hash_serializer'
+require 'buzzn/crypto/decryptor'
+require 'buzzn/crypto/encryptor'
 
-  serialize :encryption_details, Buzzn::Security::SecureHashSerializer.new
+class Document < ActiveRecord::Base
+  include Import.active_record['services.storage']
+
+  serialize :encryption_details, Security::SecureHashSerializer.new
 
   attr_readonly :path#, :encryption_details
 
@@ -9,12 +13,12 @@ class Document < ActiveRecord::Base
 
   def read
     encrypted = storage.files.get(self.path).body
-    Buzzn::Crypto::Decryptor.new(self.encryption_details)
+    Crypto::Decryptor.new(self.encryption_details)
       .process(encrypted)
   end
 
   def store(data)
-    encrypted = Buzzn::Crypto::Encryptor.new.process(data)
+    encrypted = Crypto::Encryptor.new.process(data)
     self.encryption_details = encrypted.details
     if valid?
       storage.files.create({

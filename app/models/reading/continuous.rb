@@ -1,3 +1,4 @@
+require 'mongoid'
 module Reading
   class Continuous
     include Mongoid::Document

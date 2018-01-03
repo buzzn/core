@@ -31,41 +31,23 @@ module Buzzn
 
           # preload singletons
           singletons = Singletons.new
-          singletons.config.lazy = false
+          singletons.config.lazy = Import.global('config.lazy_services') == 'true'
           importer = Dry::DependencyInjection::Importer.new(singletons)
-
-          Application.config.paths['lib'].dup.tap do |app|
-            app.glob = "buzzn/services/**/*.rb"
-            app.to_a.each do |path|
-              require path
-
-              main = path.gsub(/^.*buzzn\/|.rb$/, '')
-              clazz = main.camelize.safe_constantize
-              if clazz # TODO remove if
-                if clazz.is_a?(Class)
-                  name = main.gsub('/', '.')
-                  singletons.register("#{name.sub(/services/, 'service')}", clazz)
-                end
-              else
-                # TODO remove old namespace handling
-
-                name = File.basename(path).sub(/\.rb/,'')
-                cname = name.split('_').collect {|n| n.capitalize }.join
-                clazz = Buzzn::Services.const_get(cname)
-                singletons.register("service.#{name}", clazz) if clazz.is_a?(Class)
-              end
-            end
-
-          end
+          importer.import('lib/buzzn', 'services')
           importer.import('lib/buzzn', 'operations')
+
           MainContainer.merge(singletons)
+
+          # fianlize after we have the complete MainContainer setup
           singletons.finalize
 
           # eager require some files
+          Dir["./app/{uploaders,models,pdfs}/**/*.rb"].each do |path|
+            require path
+          end
           %w(resource resources roda permissions schemas).each do |dir|
-            Application.config.paths['lib'].dup.tap do |app|
-              app.glob = "buzzn/#{dir}/**/*.rb"
-              app.to_a.each { |path| require path }
+            Dir["./lib/buzzn/#{dir}/**/*.rb"].each do |path|
+              require path
             end
           end
         end

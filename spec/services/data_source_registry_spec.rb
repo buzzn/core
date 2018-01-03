@@ -1,6 +1,6 @@
-describe Buzzn::Services::DataSourceRegistry do
+describe Services::DataSourceRegistry do
 
-  subject { Buzzn::Services::DataSourceRegistry.new }
+  subject { Services::DataSourceRegistry.new }
 
   module  Buzzn::Test
     class DataSource < Buzzn::DataSource

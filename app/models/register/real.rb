@@ -1,9 +1,11 @@
+require_relative 'base'
+
 module Register
   class Real < Base
 
-    include Import.active_record['service.charts']
+    include Import.active_record['services.charts']
 
-    belongs_to :meter, class_name: Meter::Real, foreign_key: :meter_id
+    belongs_to :meter, class_name: 'Meter::Real', foreign_key: :meter_id
 
     delegate :address, to: :meter, allow_nil: true
 
@@ -15,7 +17,7 @@ module Register
       if self.broker.is_a? Broker::Discovergy
         Services::Datasource::Discovergy::Implementation::NAME
       else
-        Buzzn::StandardProfile::DataSource::NAME
+        Services::Datasource::StandardProfile::Implementation::NAME
       end
     end
 

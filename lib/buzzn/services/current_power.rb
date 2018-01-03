@@ -2,8 +2,8 @@ require_relative '../services'
 
 class Services::CurrentPower
 
-  include Import[registry: 'service.data_source_registry']
-  include Import['service.cache']
+  include Import[registry: 'services.data_source_registry']
+  include Import['services.cache']
 
   TIME_TO_LIVE = 15
 

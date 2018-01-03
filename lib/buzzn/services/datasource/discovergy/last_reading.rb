@@ -4,7 +4,7 @@ require_relative '../../../discovergy'
 
 class Services::Datasource::Discovergy::LastReading
 
-  include Import['service.datasource.discovergy.api']
+  include Import['services.datasource.discovergy.api']
 
   def energy(register)
     process(register, :Wh, false, :energy, :energyOut)
