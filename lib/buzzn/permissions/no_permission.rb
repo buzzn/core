@@ -1,3 +1,5 @@
+require_relative '../permission'
+
 NoPermission = Buzzn::Permission.new(:no_permission) do
   group(:none) # empty group
 

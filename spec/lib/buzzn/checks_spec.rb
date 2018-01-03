@@ -1,3 +1,5 @@
+require 'buzzn/localpool/checks'
+
 describe Buzzn::Localpool::Checks do
 
   entity(:register) do
@@ -5,7 +7,7 @@ describe Buzzn::Localpool::Checks do
     register
   end
 
-  it 'finds object or error' do
+  xit 'finds object or error' do
     reading = Fabricate(:reading)
     date_of_first_reading = Buzzn::Localpool::Checks.find_object_or_error("no reading found for register") do
       Reading::Continuous.by_register_id(reading.register_id).sort('timestamp': 1).first.timestamp

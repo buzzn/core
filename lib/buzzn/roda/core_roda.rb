@@ -1,11 +1,13 @@
 require 'sequel'
 require 'rack-timeout'
+require 'rack/cors'
+
 require_relative 'common_roda'
 require_relative 'plugins/terminal_verbs'
 
 class CoreRoda < CommonRoda
 
-  include Import.args[:env, 'service.health']
+  include Import.args[:env, 'services.health']
 
   use Rack::CommonLogger, logger
 

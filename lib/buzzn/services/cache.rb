@@ -1,8 +1,9 @@
 require_relative '../types/cache_item'
+require_relative '../services'
 
 class Services::Cache
 
-  include Import['service.redis']
+  include Import['services.redis']
 
   def put(key, json, time_to_live)
     item = Types::CacheItem.new(json: json, time_to_live: time_to_live)

@@ -19,7 +19,7 @@ module Buzzn
     end
 
     def initialize(clazz, root)
-      @category = clazz.to_s.underscore.gsub('/', '.')
+      @category = Dry::Core::Inflector.underscore(clazz.to_s).gsub('/', '.')
       @root = root
     end
 

@@ -4,7 +4,7 @@ require_relative '../../../discovergy'
 
 class Services::Datasource::Discovergy::Meters
 
-  include Import['service.datasource.discovergy.api']
+  include Import['services.datasource.discovergy.api']
   include Types::Discovergy
 
   def all

@@ -1,9 +1,10 @@
 require_relative '../discovergy'
 
 class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
+  extend Dry::DependencyInjection::Eager
 
-  include Import['service.datasource.discovergy.last_reading',
-                 'service.data_source_registry']
+  include Import['services.datasource.discovergy.last_reading',
+                 'services.data_source_registry']
 
   NAME = :discovergy
 

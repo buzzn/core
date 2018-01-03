@@ -1,3 +1,4 @@
+require 'buzzn/standard_profile/facade'
 
 describe Buzzn::StandardProfile::Facade do
     let(:facade) { Buzzn::StandardProfile::Facade.new }

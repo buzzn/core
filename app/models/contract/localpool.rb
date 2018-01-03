@@ -1,6 +1,8 @@
+require_relative 'base'
+
 module Contract
   class Localpool < Base
-    belongs_to :localpool, class_name: Group::Localpool
+    belongs_to :localpool, class_name: 'Group::Localpool'
 
     # permissions helpers
 

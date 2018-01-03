@@ -46,12 +46,12 @@ module Contract
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
     belongs_to :customer_bank_account, class_name: 'BankAccount'
 
-    validates :contractor, presence: true
-    validates :customer, presence: true
-    validates :contractor_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'contractor_type'
-    validates :customer_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'customer_type'
+    # validates :contractor, presence: true
+    # validates :customer, presence: true
+    # validates :contractor_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'contractor_type'
+    # validates :customer_type, inclusion: {in: [Person.to_s, Organization.to_s]}, if: 'customer_type'
 
-    validates_uniqueness_of :contract_number_addition, scope: [:contract_number], message: 'already available for given contract_number', if: 'contract_number_addition.present?'
+    # validates_uniqueness_of :contract_number_addition, scope: [:contract_number], message: 'already available for given contract_number', if: 'contract_number_addition.present?'
 
     scope :power_givers,             -> { where(type: 'PowerGiver') }
     scope :power_takers,             -> { where(type: 'PowerTaker') }

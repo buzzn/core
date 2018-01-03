@@ -91,7 +91,7 @@ module Reading
          }
     UNITS = [WH, W, M3].freeze
 
-    belongs_to :register, class_name: Register::Base
+    belongs_to :register, class_name: 'Register::Base'
 
 
     scope :in_year, -> (year) {

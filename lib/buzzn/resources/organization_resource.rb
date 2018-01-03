@@ -1,5 +1,4 @@
 class OrganizationResource < Buzzn::Resource::Entity
-  include BankAccountResource::Create
 
   model Organization
 

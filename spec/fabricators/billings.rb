@@ -5,6 +5,6 @@ Fabricator :billing do
   prepayments_cents             29000
   receivables_cents             1000
   invoice_number                '12345678-987'
-  start_reading_id              { Fabricate(:reading).id }
-  end_reading_id                { Fabricate(:reading).id }
+#  start_reading_id              { Fabricate(:reading).id }
+#  end_reading_id                { Fabricate(:reading).id }
 end
