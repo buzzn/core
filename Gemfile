@@ -74,9 +74,9 @@ gem 'smarter_csv'
 # Injected by Heroku, we might as well include it here directly
 gem 'rails_12factor'
 
-gem "sentry-raven" # the Sentry exception notification service
 
 group :production, :staging do
+  gem "sentry-raven" # the Sentry exception notification service
   gem 'newrelic_rpm'
 end
 
