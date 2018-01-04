@@ -33,7 +33,7 @@ describe Me::Roda do
       "fax"=>person.fax,
       "email"=>person.email,
       'preferred_language'=>person.attributes['preferred_language'],
-      "image"=>person.image.md.url,
+      "image"=>person.image.medium.url,
       'customer_number' => nil,
       "updatable"=>true,
       "deletable"=>false,
@@ -120,7 +120,7 @@ describe Me::Roda do
         "fax"=>"08191 123312",
         "email"=>person.email,
         "preferred_language"=>"de",
-        "image"=>person.image.md.url,
+        "image"=>person.image.medium.url,
         'customer_number' => nil,
         "updatable"=>true,
         "deletable"=>false

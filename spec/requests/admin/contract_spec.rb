@@ -59,7 +59,7 @@ describe Admin::LocalpoolRoda do
         "fax"=>person.fax,
         "email"=>person.email,
         "preferred_language"=>person.attributes['preferred_language'],
-        "image"=>person.image.md.url,
+        "image"=>person.image.medium.url,
         'customer_number' => nil,
         "updatable"=>true,
         "deletable"=>false,

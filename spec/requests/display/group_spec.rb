@@ -45,7 +45,7 @@ describe Display::GroupRoda do
               "title"=>manager.attributes['title'],
               "first_name"=>manager.first_name,
               "last_name"=>manager.last_name,
-              "image"=>manager.image.md.url
+              "image"=>manager.image.medium.url
             }
           end
         }
@@ -75,7 +75,7 @@ describe Display::GroupRoda do
                 "title"=>manager.attributes['title'],
                 "first_name"=>manager.first_name,
                 "last_name"=>manager.last_name,
-                "image"=>manager.image.md.url
+                "image"=>manager.image.medium.url
               }
             end
           }
@@ -143,7 +143,7 @@ describe Display::GroupRoda do
             "title"=>mentor.attributes['title'],
             "first_name"=>mentor.first_name,
             "last_name"=>mentor.last_name,
-            "image"=>mentor.image.md.url,
+            "image"=>mentor.image.medium.url,
           }
         ]
       end
