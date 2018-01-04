@@ -59,6 +59,7 @@ namespace :beekeeper do
   end
 
   namespace :person_images do
+    desc "Attach images in lib/beekeeper/person_images to the person records, uploads them to S3 if configured."
     task attach: :environment do
       Person.all.each do |person|
         file_name = person.email.downcase
