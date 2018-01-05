@@ -1,4 +1,3 @@
-# frozen-string-literal: true
 class Person < ActiveRecord::Base
   self.table_name = :persons
 
@@ -10,8 +9,7 @@ class Person < ActiveRecord::Base
   has_and_belongs_to_many :roles#, through: :persons_roles
   has_many :bank_accounts, foreign_key: :owner_person_id
 
-  # TODO remove this when decided on how to make the attachments (Document)
-  mount_uploader :image, PictureUploader
+  mount_uploader :image, PersonImageUploader
 
   # prefixes
   FEMALE = 'F'

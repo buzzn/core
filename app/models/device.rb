@@ -23,8 +23,6 @@ class Device < ActiveRecord::Base
 
   belongs_to :register, class_name: Register::Base, foreign_key: :register_id
 
-  mount_uploader :image, PictureUploader
-
   validates :mode, presence: true
   validates :manufacturer_name, presence: true, length: { in: 2..30 }
   validates :manufacturer_product_name, presence: true, length: { in: 2..30 }
