@@ -190,6 +190,7 @@ class Beekeeper::Import
       end
     if owner
       owner.add_role(Role::GROUP_OWNER, localpool)
+      owner.add_role(Role::GROUP_ENERGY_MENTOR, localpool)
     end
   end
 
