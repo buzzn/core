@@ -17,8 +17,7 @@ gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
 # storage
-gem 'fog-aws', require: 'fog/aws'
-gem 'fog-local', require: 'fog/local'
+gem 'fog-aws'
 
 # swagger
 gem 'ruby-swagger'
@@ -90,6 +89,7 @@ group :development, :test do
   gem 'guard-bundler'
   gem 'guard-brakeman'
   gem 'guard-rspec'
+  gem 'fog-local'
 end
 
 group :development do
