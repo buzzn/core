@@ -87,6 +87,34 @@ describe Group::Base do
       end
     end
   end
+
+  context "mentors" do
+    let(:group) { create(:localpool) }
+
+    context "Group has no energy mentor" do
+      it "returns an empty array" do
+        expect(group.mentors).to eq([])
+      end
+    end
+
+    context "Group has one energy mentor" do
+      let(:person) { create(:person) }
+      before { person.add_role(Role::GROUP_ENERGY_MENTOR, group) }
+
+      it "returns the person" do
+        expect(group.mentors).to eq([person])
+      end
+    end
+
+    context "Group has two energy mentors" do
+      let(:persons) { create_list(:person, 2) }
+      before { persons.each { |person| person.add_role(Role::GROUP_ENERGY_MENTOR, group) } }
+
+      it "returns both persons" do
+        expect(group.mentors).to eq(persons)
+      end
+    end
+  end
 end
 
 # the below test throws an error which rolls back the nested transaction, i.e.

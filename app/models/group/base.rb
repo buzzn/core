@@ -25,6 +25,10 @@ module Group
       Person.with_roles(self, Role::GROUP_ADMIN)
     end
 
+    def mentors
+      Person.with_roles(self, Role::GROUP_ENERGY_MENTOR)
+    end
+
     has_many :scores, as: :scoreable
 
     scope :permitted, ->(uuids) { where(id: uuids) }
