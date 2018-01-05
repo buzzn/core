@@ -68,6 +68,9 @@ namespace :beekeeper do
         if File.exist?(local_file_path)
           puts "\nAssigning image #{local_file_path} to #{person.name}"
           person.update!(image: File.open(local_file_path))
+        else
+          person.remove_image!
+          person.save!
         end
       end
     end
