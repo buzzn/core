@@ -60,8 +60,6 @@ gem 'redis-namespace'             # ???
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
 gem 'mini_magick'
 gem 'carrierwave'
-gem 'aws-sdk'
-gem 'aws-sdk-rails'
 gem 'faraday'
 gem 'jbuilder'
 gem 'remote_lock'
