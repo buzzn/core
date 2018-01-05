@@ -75,13 +75,12 @@ class Beekeeper::Import
     @optimized_map ||= @meters.virtual_list
   end
 
-  OMIT_VIRTUAL_IDS = (0..105).collect {|i| i } + [107, 121, 9999997]
+  OMIT_VIRTUAL_IDS = (0..105).to_a + [107, 121, 9999997]
   def optimize(localpool, warnings)
     if optimized_groups.key?(localpool.slug)
       setup_optimized_groups(localpool, optimized_groups[localpool.slug])
       return warnings
     end
-    result = nil
     list = @optimized.local(localpool).collect do |m|
       optimized_map[m.product_serialnumber]
     end
