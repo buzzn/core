@@ -30,7 +30,7 @@ class Discovergy::CurrentBuilder < Discovergy::AbstractBuilder
     return BROKEN_REGISTER_RESPONSE unless response
     case unit
     when :Wh
-      to_watt_hour(response)
+      to_watt_hour(response, register)
     when :W
       to_watt(response, register)
     else
@@ -38,26 +38,4 @@ class Discovergy::CurrentBuilder < Discovergy::AbstractBuilder
     end
   end
 
-  def to_watt_hour(response)
-    values = response['values']
-    value =
-      if register.meter.two_way_meter?
-        two_way_meter_value(values)
-      else
-        values['energy']
-      end
-    # ENERGY/ENERGYOUT resolution is 10^-10 kWh
-    value / 10000000
-  end
-
-  def two_way_meter_value(values)
-    case register.direction
-    when 'output'
-      values['energyOut']
-    when 'input'
-      values['energy']
-    else
-      raise "unknown direction: #{register.direction}"
-    end
-  end
 end

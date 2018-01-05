@@ -12,6 +12,10 @@ module Buzzn::Virtual
       nil
     end
 
+    def daily_charts(group)
+      nil
+    end
+
     def single_aggregated(resource, mode)
       return nil if resource.is_a? Group::Base
       sum = 0

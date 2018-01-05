@@ -24,6 +24,10 @@ describe Services::CurrentPower do
     def bubbles(group)
       nil
     end
+
+    def daily_charts(group)
+      nil
+    end
   end
 
   entity!(:mock) { MockDataSource.new }

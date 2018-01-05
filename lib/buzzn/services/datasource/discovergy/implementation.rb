@@ -3,6 +3,7 @@ require_relative '../discovergy'
 class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
 
   include Import['services.datasource.discovergy.last_reading',
+                 'services.datasource.discovergy.charts',
                  'services.data_source_registry']
 
   NAME = :discovergy
@@ -19,6 +20,12 @@ class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
   def bubbles(group)
     last_reading.power_collection(group)
   end
+
+  def daily_charts(group)
+    charts.daily(group)
+  end
+
+  # old and probably obsolete
 
   def aggregated(resource, mode, interval)
     nil
