@@ -1,7 +1,18 @@
 require_relative '../services'
 
 class Services::Charts
-  include Import.args[registry: 'services.data_source_registry']
+
+  include Import[registry: 'services.data_source_registry']
+  include Import['services.cache']
+
+  TIME_TO_LIVE = 3 * 60 # seconds
+
+  def daily(group)
+    key = "charts.daily.#{group.id}"
+    cache.get(key) || cached_daily(key, group)
+  end
+
+  # old stuff - probably obsolete
 
   def for_register(register, interval)
     register = register.object if register.respond_to? :object
@@ -43,5 +54,16 @@ class Services::Charts
       result.add_all(data_source.aggregated(group, 'out', interval), interval.duration)
     end
     finalize(result, interval)
+  end
+
+  private
+
+  def cached_daily(key, group)
+    registry.each do |datasource|
+      if result = datasource.daily_charts(group)
+        return cache.put(key, result.to_json, TIME_TO_LIVE)
+      end
+    end
+    cache.put(key, "{}", TIME_TO_LIVE)
   end
 end

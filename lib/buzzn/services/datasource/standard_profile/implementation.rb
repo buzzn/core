@@ -19,6 +19,10 @@ class Services::Datasource::StandardProfile::Implementation < Buzzn::DataSource
     nil
   end
 
+  def daily_charts(group)
+    nil
+  end
+
   def aggregated(resource, mode, interval)
     nil
   end

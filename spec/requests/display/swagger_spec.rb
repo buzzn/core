@@ -27,11 +27,6 @@ describe Display do
     description 'returns the group'
   end
 
-  get '/groups/{group.id}/scores' do
-    description 'returns the score(s) of the group'
-    schema Schemas::Transactions::Display::Score
-  end
-
   get '/groups/{group.id}/mentors' do
     description 'returns the mentors of the group'
   end
@@ -41,26 +36,7 @@ describe Display do
   end
 
   get '/groups/{group.id}/charts' do
-    description 'returns the charts of the group'
-    schema Schemas::Transactions::Chart
-  end
-
-  get '/groups/{group.id}/registers' do
-    description 'returns all registers'
-  end
-
-  get '/groups/{group.id}/registers/{register.id}' do
-    description 'returns the register'
-  end
-
-# return status 404 as is so it always fails
-#  get '/groups/{group.id}/registers/{register.id}/ticker' do
-#    description 'returns the power ticker of the register'
-#  end
-
-  get '/groups/{group.id}/registers/{register.id}/charts' do
-    description 'returns the charts of the group'
-    schema Schemas::Transactions::Chart
+    description 'returns the daily charts of the group'
   end
 
   it 'GET /swagger.json' do
