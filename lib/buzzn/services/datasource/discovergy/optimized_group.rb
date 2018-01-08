@@ -8,8 +8,14 @@ class Services::Datasource::Discovergy::OptimizedGroup
   include Types::Discovergy
 
   def verify(group)
-    local(group).collect { |m| m.product_serialnumber }.sort.uniq ==
-      remote(group).collect { |m| m.serialNumber }.sort.uniq
+    local  = local(group).collect { |m| m.product_serialnumber }.sort.uniq
+    remote = remote(group).collect { |m| m.serialNumber }.sort.uniq
+    if local == remote
+      true
+    else
+      puts "Difference: #{local - remote}"
+      false
+    end
   end
 
   def create(group)

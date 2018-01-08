@@ -71,7 +71,7 @@ class Services::Datasource::Discovergy::Api
   def do_request(query, force)
     token = oauth.access_token_create(force)
 
-    @logger.info("#{query.http_method} #{query.to_uri(oauth.path)}")
+    @logger.debug("#{query.http_method} #{query.to_uri(oauth.path)}")
     token.send(query.http_method, query.to_uri(oauth.path))
     response = token.response
 
