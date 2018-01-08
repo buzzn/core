@@ -22,10 +22,11 @@ CarrierWave.configure do |config|
   else
     config.fog_provider     = 'fog/local'
     config.fog_credentials  = {
-      provider: 'Local',
-      local_root: './tmp/fog',
+      provider:   'Local',
+      local_root: 'public',
+      endpoint:   Import.global('config.hostname')
     }
-    config.fog_directory    = 'public/uploads'
+    config.fog_directory    = '' # when left nil, we get an exeption.
     config.asset_host       = nil
   end
 end
