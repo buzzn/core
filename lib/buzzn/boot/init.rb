@@ -79,7 +79,11 @@ module Buzzn
           singletons.finalize
         end
 
+<<<<<<< HEAD
         def eager_load_some
+=======
+          # eager require some files
+>>>>>>> remove most of the rails setup
           %w( uploaders models pdfs ).each do |sub|
             Dir["./app/#{sub}/**/*.rb"].sort.each do |path|
               require path

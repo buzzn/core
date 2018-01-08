@@ -1,16 +1,14 @@
 require_relative '../display_roda'
 require_relative '../../transactions/bubbles'
-require_relative '../../transactions/group_chart'
-require_relative '../../transactions/display/score'
+require_relative '../../transactions/display/daily_charts'
 
 class Display::GroupRoda < BaseRoda
   plugin :aggregation
-  plugin :shared_vars
 
   route do |r|
     groups = Display::GroupResource.all(current_user)
     r.root do
-      groups.filter(r.params['filter'])
+      groups
     end
 
     r.on :id do |id|
@@ -27,32 +25,18 @@ class Display::GroupRoda < BaseRoda
 
       r.get! 'charts' do
         aggregated(
-          Transactions::GroupChart
-            .for(group)
-            .call(r.params).value
+          Transactions::Display::DailyCharts.call(group).value
         )
       end
 
       r.get! 'bubbles' do
         aggregated(
-          Transactions::Bubbles
-            .call(group).value
+          Transactions::Bubbles.call(group).value
         )
       end
 
       r.get! 'mentors' do
         group.mentors
-      end
-
-      r.on 'registers' do
-        shared[:registers] = group.registers
-        r.run ::RegisterRoda
-      end
-
-      r.get! 'scores' do
-        Transactions::Display::Score
-          .for(group)
-          .call(r.params)
       end
     end
   end
