@@ -8,6 +8,8 @@ class Discovergy::BubbleBuilder < Discovergy::AbstractBuilder
     response.collect do |id, values|
       serial = id.sub(/.*_/, '')
       register = registers.detect { |r| r.meter.product_serialnumber == serial }
+      # there can be cases where the register does not exit any more on our side
+      next unless register
       build_bubble(register.meter, values)
     end.flatten.compact.uniq
   end
