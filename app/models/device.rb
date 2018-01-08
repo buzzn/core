@@ -27,9 +27,6 @@ class Device < ActiveRecord::Base
   validates :manufacturer_name, presence: true, length: { in: 2..30 }
   validates :manufacturer_product_name, presence: true, length: { in: 2..30 }
   validates :watt_peak, numericality: { only_integer: true }, presence: true
-  validates :image, :file_size => {
-    :maximum => 2.megabytes.to_i
-  }
   validates :primary_energy, inclusion: {in: self.all_primary_energies}, if: 'primary_energy.present?'
 
   def self.search_attributes
