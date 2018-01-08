@@ -18,14 +18,14 @@ CarrierWave.configure do |config|
     config.fog_directory    = Import.global('config.aws_bucket')
     config.asset_host       = Import.global('config.asset_host')
 
-  # use local filesystem
+  # use local filesystem (usually in development and test)
   else
-    # TODO
     config.fog_provider     = 'fog/local'
     config.fog_credentials  = {
       provider: 'Local',
-      local_root: '~/fog'
+      local_root: './tmp/fog',
     }
+    config.fog_directory    = 'public/uploads'
     config.asset_host       = nil
   end
 end
