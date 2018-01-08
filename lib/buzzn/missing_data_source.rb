@@ -11,6 +11,10 @@ module Buzzn
       nil
     end
 
+    def daily_charts(group)
+      nil
+    end
+
     def single_aggregated(resource, mode)
       DataResult.new(Time.current.to_f, 0, resource.id, mode) if resource.is_a?(Register::Base) && resource.data_source == :missing
     end

@@ -7,6 +7,29 @@ class Discovergy::AbstractBuilder
 
   protected
 
+  def to_watt_hour(response, register)
+    values = response['values']
+    value =
+      if register.meter.two_way_meter?
+        two_way_meter_value(values, register)
+      else
+        values['energy']
+      end
+    # ENERGY/ENERGYOUT resolution is 10^-10 kWh
+    value / 10_000_000.0
+  end
+
+  def two_way_meter_value(values, register)
+    case register.direction
+    when 'output'
+      values['energyOut']
+    when 'input'
+      values['energy']
+    else
+      raise "unknown direction: #{register.direction}"
+    end
+  end
+
   def to_watt(response, register)
     val = to_watt_raw(response)
     if register.meter.one_way_meter?

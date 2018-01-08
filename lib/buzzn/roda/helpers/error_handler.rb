@@ -10,6 +10,7 @@ module Buzzn
         Buzzn::StaleEntity => 409,
         Buzzn::ValidationError => 422,
         Buzzn::GeneralError => 404,
+        Buzzn::DataSourceError => 503,
         ::Services::Datasource::Discovergy::Api::EmptyResponse => 404
       }
 
