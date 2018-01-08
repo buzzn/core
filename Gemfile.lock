@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com/mkristian/dry-more-container.git
-  revision: e4f9b990fd4feff12d3159d7764f270419c3a7fc
-  specs:
-    dry-more-container (0.1.0)
-      concurrent-ruby (~> 1.0)
-      dry-container (~> 0.6)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -73,6 +65,8 @@ GEM
       tzinfo
     coderay (1.1.2)
     concurrent-ruby (1.0.5)
+    concurrent-ruby-ext (1.0.5)
+      concurrent-ruby (= 1.0.5)
     countries (2.0.8)
       i18n_data (~> 0.7.0)
       money (~> 6.7)
@@ -94,8 +88,12 @@ GEM
     dry-container (0.6.0)
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 0.1, >= 0.1.3)
-    dry-core (0.4.1)
+    dry-core (0.4.2)
       concurrent-ruby (~> 1.0)
+    dry-dependency-injection (0.1.0)
+      concurrent-ruby (~> 1.0)
+      dry-container (~> 0.6)
+      dry-core (~> 0.4)
     dry-equalizer (0.2.0)
     dry-initializer (2.3.0)
     dry-logic (0.4.1)
@@ -217,6 +215,8 @@ GEM
     key_struct (0.4.2)
     launchy (2.4.3)
       addressable (~> 2.3)
+    leafy (0.1.0)
+      concurrent-ruby (~> 1.0)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -278,7 +278,7 @@ GEM
     pry-stack_explorer (0.4.9.2)
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
-    puma (3.10.0)
+    puma (3.11.0)
     rack (1.6.8)
     rack-cors (0.4.0)
     rack-test (0.6.3)
@@ -415,12 +415,13 @@ DEPENDENCIES
   byebug
   carrierwave
   clockwork
+  concurrent-ruby-ext
   countries
   dotenv-rails
   dry-auto_inject
+  dry-dependency-injection
   dry-initializer
   dry-monads
-  dry-more-container!
   dry-struct
   dry-transaction
   dry-validation
@@ -439,6 +440,7 @@ DEPENDENCIES
   iban-tools
   jbuilder
   jwt
+  leafy
   listen
   mini_magick
   money-rails
@@ -479,8 +481,5 @@ DEPENDENCIES
   wkhtmltopdf-binary
   yard
 
-RUBY VERSION
-   ruby 2.3.1p112
-
 BUNDLED WITH
-   1.16.0
+   1.16.1
