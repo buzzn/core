@@ -8,6 +8,4 @@ Buzzn::Logger.root = ::Logger.new(STDOUT).tap do |logger|
   logger.level = ENV['LOG_LEVEL'] || 'debug'
 end
 
-Dir['config/initializers/*.rb'].each { |f| require "./#{f}" }
-
 Buzzn::Boot::Init.run

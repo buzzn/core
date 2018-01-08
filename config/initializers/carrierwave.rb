@@ -5,7 +5,7 @@ CarrierWave.root = '.'
 
 CarrierWave.configure do |config|
 
-  config.asset_host = Import.global('config.aws_asset_host')
+  config.asset_host = Import.global('config.asset_host') if Import.global?('config.asset_host')
 
   if Import.global?('config.aws_secret_key')
     config.storage = :fog

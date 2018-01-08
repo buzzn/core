@@ -12,7 +12,7 @@ environment ENV['RACK_ENV'] || 'development'
 
 on_worker_boot do |index|
   require 'leafy/core/console_reporter'
-  reporter = Leafy::Core::ConsoleReporter::Builder.for_registry(Import.global('service.metrics')) do
+  reporter = Leafy::Core::ConsoleReporter::Builder.for_registry(Import.global('services.metrics')) do
     output_to STDERR
     shutdown_executor_on_stop true
   end
