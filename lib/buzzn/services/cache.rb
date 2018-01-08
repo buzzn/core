@@ -2,7 +2,12 @@ require_relative '../types/cache_item'
 
 class Services::Cache
 
-  include Import['service.redis']
+  include Import['service.redis', 'service.metrics']
+
+  def initialize(**)
+    super
+    @hit = metrics.meter('cache.hit')
+  end
 
   def put(key, json, time_to_live)
     item = Types::CacheItem.new(json: json, time_to_live: time_to_live)
@@ -13,6 +18,7 @@ class Services::Cache
 
   def get(key)
     if (time_to_live = redis.ttl(key)) > 0
+      @hit.mark
       json, digest = redis.mget(key, digest_key(key))
       Types::CacheItem.new(json: json, digest: digest, time_to_live: time_to_live)
     end

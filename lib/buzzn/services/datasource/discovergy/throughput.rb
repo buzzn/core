@@ -1,14 +1,23 @@
+require 'leafy/core/gauge'
+require 'concurrent'
 require_relative '../discovergy'
 
 class Services::Datasource::Discovergy::Throughput
 
-  include Import['service.redis']
+  include Import['service.redis', 'service.metrics']
 
   NAME = 'discovergy.throughput'
   MAX_CONCURRENT_CONNECTIONS = 30
 
+  def initialize(**)
+    super
+    @throughput = Leafy::Core::Gauge.new
+    @throughput.value = 0
+    metrics.register(NAME, @throughput)
+  end
+
   def increment
-    @redis.incr(NAME)
+    @throughput.value = @redis.incr(NAME)
   end
 
   def increment!
@@ -20,7 +29,7 @@ class Services::Datasource::Discovergy::Throughput
   end
 
   def decrement
-    @redis.decr(NAME)
+    @throughput.value = @redis.decr(NAME)
   end
 
   def current
