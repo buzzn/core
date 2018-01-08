@@ -1,32 +1,32 @@
 describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
 
   entity(:admin) { Fabricate(:admin) }
-  entity(:manager) { Fabricate(:user) }
+  entity(:mentor) { Fabricate(:user) }
   entity(:other) { Fabricate(:user) }
   let(:anonymous) { nil }
 
   entity!(:tribe) do
     group = Fabricate(:tribe, show_display_app: true)
     Fabricate(:real_meter, group: group)
-    manager.person.add_role(Role::GROUP_ADMIN, group)
+    mentor.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group
   end
 
   entity!(:localpool)  do
     group = create(:localpool, show_display_app: true)
     create(:meter, :virtual, group: group)
-    manager.person.add_role(Role::GROUP_ADMIN, group)
+    mentor.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group
   end
 
-  [:admin, :manager, :other, :anonymous].each do |user|
+  %i(admin mentor other anonymous).each do |user|
     context "user<#{user}>" do
       let(:all) { Display::GroupResource.all(send(user)) }
       it "all - groups" do
         expect(all.collect { |l| l.object }).to match_array [tribe, localpool]
       end
 
-      [:tribe, :localpool].each do |type|
+      %i(tribe localpool).each do |type|
         context "group<#{type}>" do
           let(:group) { all.retrieve(send(type).id) }
 
@@ -67,20 +67,20 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
             let(:mentors) { group.mentors }
 
             it 'all' do
-              expect(mentors.collect{ |l| l.object }).to match_array group.object.managers.collect {|m| m }
+              expect(mentors.collect{ |l| l.object }).to match_array group.object.mentors.collect {|m| m }
             end
-            let(:mentor) { mentors.retrieve(mentors.first.id) }
+            let(:actual_mentor) { mentors.retrieve(mentors.first.id) }
 
             it "retrieve" do
-              expect(mentor.object).to eq mentors.first.object
+              expect(actual_mentor.object).to eq mentors.first.object
             end
 
             it 'update' do
-              expect { mentor.update({}) }.to raise_error Buzzn::PermissionDenied
+              expect { actual_mentor.update({}) }.to raise_error Buzzn::PermissionDenied
             end
 
             it 'delete' do
-              expect { mentor.delete }.to raise_error Buzzn::PermissionDenied
+              expect { actual_mentor.delete }.to raise_error Buzzn::PermissionDenied
             end
           end
 
