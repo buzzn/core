@@ -2,7 +2,7 @@ CarrierWave.configure do |config|
 
   config.asset_host = Rails.application.secrets.asset_host
 
-  if Rails.application.secrets.aws_access_key
+  if Rails.application.secrets.aws_secret_access_key
     config.storage = :fog
     config.fog_credentials  = {
       provider:               'AWS',
