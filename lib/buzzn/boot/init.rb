@@ -3,6 +3,8 @@ require_relative 'reader'
 require_relative 'active_record'
 require_relative 'main_container'
 require_relative '../services'
+
+require 'dotenv'
 require 'pry'
 require 'dry/auto_inject'
 require 'dry-dependency-injection'
@@ -13,6 +15,9 @@ require_relative '../core/number'
 Import = Dry::AutoInject(Buzzn::Boot::MainContainer)
 def Import.global(key)
   container[key]
+end
+def Import.global?(key)
+  container.key?(key)
 end
 
 module Buzzn
@@ -30,6 +35,36 @@ module Buzzn
         def run
           @logger = Logger.new(self)
 
+          setup_environment
+
+          setup_encoding
+
+          setup_initializers
+
+          preload_singletons
+
+          eager_load_some
+        end
+
+        private
+
+        def setup_environment
+          list = %W(.env.local .env.#{ENV['RACK_ENV']} .env ).select do |f|
+            File.exists?(f)
+          end
+          Dotenv.load(*list)
+        end
+
+        def setup_encoding
+          Encoding.default_external = Encoding::UTF_8
+          Encoding.default_internal = Encoding::UTF_8
+        end
+
+        def setup_initializers
+          Dir['config/initializers/*.rb'].each { |f| require "./#{f}" }
+        end
+
+        def preload_singletons
           # preload singletons
           singletons = Singletons.new
           singletons.config.lazy = Import.global('config.lazy_services') == 'true'
@@ -41,8 +76,9 @@ module Buzzn
 
           # finalize after we have the complete MainContainer setup
           singletons.finalize
+        end
 
-          # eager require some files
+        def eager_load_some
           %w( uploaders models pdfs ).each do |sub|
             Dir["./app/#{sub}/**/*.rb"].sort.each do |path|
               require path

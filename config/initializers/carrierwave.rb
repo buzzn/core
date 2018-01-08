@@ -5,17 +5,17 @@ CarrierWave.root = '.'
 
 CarrierWave.configure do |config|
 
-  config.asset_host = ENV['ASSET_HOST']
+  config.asset_host = Import.global('config.aws_asset_host')
 
-  if ENV.key?('AWS_SECRET_KEY')
+  if Import.global?('config.aws_secret_key')
     config.storage = :fog
     config.fog_credentials  = {
       provider:               'AWS',
-      aws_access_key_id:      ENV['AWS_ACCESS_KEY'],
-      aws_secret_access_key:  ENV['AWS_SECRET_KEY'],
-      region:                 ENV['AWS_REGION']
+      aws_access_key_id:      Import.global('config.aws_access_key'),
+      aws_secret_access_key:  Import.global('config.aws_secret_key'),
+      region:                 Import.global('config.aws_region')
     }
-    config.fog_directory    = ENV['AWS_BUCKET']
+    config.fog_directory    = Import.global('config.aws_bucket')
   else
     config.storage            = :file
     config.enable_processing  = true
