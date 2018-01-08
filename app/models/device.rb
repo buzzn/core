@@ -2,17 +2,17 @@ require 'file_size_validator'
 class Device < ActiveRecord::Base
   include Filterable
 
-  BIO_MASS = 'bio_mass'
-  BIO_GAS = 'bio_gas'
+  BIO_MASS    = 'bio_mass'
+  BIO_GAS     = 'bio_gas'
   NATURAL_GAS = 'natural_gas' # erdgas
-  FLUID_GAS = 'fluid_gas'
-  FUEL_OIL = 'fuel_oil' # Heizöl
-  WOOD = 'wood'
-  VEG_OIL = 'veg_oil' # Pflenzenöl
-  SUN = 'sun'
-  WIND = 'wind'
-  WATER = 'water'
-  OTHER = 'other'
+  FLUID_GAS   = 'fluid_gas'
+  FUEL_OIL    = 'fuel_oil' # Heizöl
+  WOOD        = 'wood'
+  VEG_OIL     = 'veg_oil' # Pflanzenöl
+  SUN         = 'sun'
+  WIND        = 'wind'
+  WATER       = 'water'
+  OTHER       = 'other'
 
   class << self
     def all_primary_energies
