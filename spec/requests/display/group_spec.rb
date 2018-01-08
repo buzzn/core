@@ -20,7 +20,7 @@ describe Display::GroupRoda do
 
   entity!(:group) do
     group = Fabricate(:localpool, show_display_app: true)
-    $user.person.reload.add_role(Role::GROUP_ADMIN, group)
+    $user.person.reload.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group
   end
 
@@ -37,7 +37,7 @@ describe Display::GroupRoda do
         "slug"=>group.slug,
         "description"=>group.description,
         "mentors"=> {
-          "array" => group.managers.collect do |manager|
+          "array" => group.mentors.collect do |manager|
             {
               "id"=>manager.id,
               "type"=>"person",
@@ -59,7 +59,7 @@ describe Display::GroupRoda do
         else
           type = :localpool
         end
-        json = {
+        {
           "id"=>group.id,
           "type"=>"group_#{type}",
           'updated_at'=>group.updated_at.as_json,
@@ -67,7 +67,7 @@ describe Display::GroupRoda do
           "slug"=>group.slug,
           "description"=>group.description,
           "mentors"=> {
-            'array' => group.managers.collect do |manager|
+            'array' => group.mentors.collect do |manager|
               {
                 "id"=>manager.id,
                 "type"=>"person",
@@ -130,7 +130,7 @@ describe Display::GroupRoda do
 
       let(:group) do
         group = tribe
-        mentor.add_role(Role::GROUP_ADMIN, group)
+        mentor.add_role(Role::GROUP_ENERGY_MENTOR, group)
         group
       end
 
