@@ -11,10 +11,26 @@ module Buzzn
         register("config.#{key}", value)
       end
 
+      def self.key?(key)
+        if k = env_key(key)
+          ENV.key?(k)
+        else
+          super
+        end
+      end
+
+      private
+
+      def self.env_key(key)
+        if key.to_s.start_with?('config.')
+          key.to_s[7..-1].upcase
+        end
+      end
+
       class Resolver < Dry::Container::Resolver
         def call(container, key)
-          if key.to_s.start_with?('config.')
-            get_env(key.to_s[7..-1]) || super
+          if k = MainContainer.env_key(key)
+            get_env(k) || super
           else
             super
           end
@@ -23,7 +39,7 @@ module Buzzn
         private
 
         def get_env(key)
-          ENV[key.upcase]
+          ENV[key]
         end
 
       end

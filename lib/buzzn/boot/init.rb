@@ -49,7 +49,8 @@ module Buzzn
         private
 
         def setup_environment
-          list = %W(.env.local .env.#{ENV['RACK_ENV']} .env ).select do |f|
+          env = Import.global?('config.rack_env') ? Import.global('config.rack_env') : 'development'
+          list = %W(.env.local .env.#{env} .env ).select do |f|
             File.exists?(f)
           end
           Dotenv.load(*list)
