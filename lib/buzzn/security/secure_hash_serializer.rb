@@ -1,5 +1,7 @@
-class Buzzn::Security::SecureHashSerializerCore
-  include Import['service.message_encryptor']
+require_relative '../security'
+
+class Security::SecureHashSerializerCore
+  include Import['services.message_encryptor']
 
   def load(encrypted)
     if encrypted.present?
@@ -17,10 +19,10 @@ class Buzzn::Security::SecureHashSerializerCore
     end
   end
 end
-class Buzzn::Security::SecureHashSerializer
+class Security::SecureHashSerializer
 
   def core
-    @core ||= Buzzn::Security::SecureHashSerializerCore.new
+    @core ||= Security::SecureHashSerializerCore.new
   end
 
   def load(encrypted)

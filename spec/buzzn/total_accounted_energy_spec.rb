@@ -1,3 +1,6 @@
+require 'buzzn/accounted_energy'
+require 'buzzn/localpool/total_accounted_energy'
+
 describe Buzzn::Localpool::TotalAccountedEnergy do
 
   entity(:reference) { {} }

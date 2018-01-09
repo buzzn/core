@@ -1,30 +1,32 @@
-module Buzzn::Crypto
-  class Encryptor
-    # authenticated encryption
-    # see also https://crypto.stanford.edu/RealWorldCrypto/slides/gueron.pdf
-    CIPHER_ALGORITHM = 'aes-128-gcm'
+require_relative '../crypto'
 
-    def process data
-      (cipher, details) = build_cipher
+class Crypto::Encryptor
+  # authenticated encryption
+  # see also https://crypto.stanford.edu/RealWorldCrypto/slides/gueron.pdf
+  # TODO use AES-SIV from https://github.com/miscreant/miscreant/wiki/Ruby-Documentation
+  #      inspired by https://youtu.be/3t3P7kzdP4M?t=2373
+  CIPHER_ALGORITHM = 'aes-128-gcm'
 
-      encrypted          = cipher.update(data) + cipher.final
-      details[:auth_tag] = cipher.auth_tag
+  def process data
+    (cipher, details) = build_cipher
 
-      OpenStruct.new(data: encrypted, details: details)
-    end
+    encrypted          = cipher.update(data) + cipher.final
+    details[:auth_tag] = cipher.auth_tag
 
-    private
-    def build_cipher
-      details = Hash.new
-      details[:cipher] = CIPHER_ALGORITHM
+    OpenStruct.new(data: encrypted, details: details)
+  end
 
-      cipher = OpenSSL::Cipher.new(details[:cipher])
-      cipher.encrypt
-      cipher.key       = details[:key]       = cipher.random_key
-      cipher.iv        = details[:iv]        = cipher.random_iv
-      cipher.auth_data = details[:auth_data] = SecureRandom.random_bytes(16)
+  private
+  def build_cipher
+    details = Hash.new
+    details[:cipher] = CIPHER_ALGORITHM
 
-      [cipher, details]
-    end
+    cipher = OpenSSL::Cipher.new(details[:cipher])
+    cipher.encrypt
+    cipher.key       = details[:key]       = cipher.random_key
+    cipher.iv        = details[:iv]        = cipher.random_iv
+    cipher.auth_data = details[:auth_data] = SecureRandom.random_bytes(16)
+
+    [cipher, details]
   end
 end

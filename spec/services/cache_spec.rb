@@ -2,15 +2,15 @@ require 'buzzn/services/cache'
 
 describe Services::Cache do
 
-  let(:subject) { Import.global('service.cache') }
+  let(:subject) { Import.global('services.cache') }
 
   it 'puts json and returns cache-item' do
-    item = subject.put('key', '{}', 10)
+    item = subject.put('key', '{}', 100)
     expect(item.to_json).to eq '{}'
-    expect(item.time_to_live).to eq 10
+    expect(item.time_to_live).to eq 100
     item = subject.get('key')
     expect(item.to_json).to eq '{}'
-    expect(item.time_to_live).to eq 10
+    expect(item.time_to_live).to eq 100
   end
 
   it 'expires after time-to-live' do

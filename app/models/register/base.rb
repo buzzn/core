@@ -3,7 +3,7 @@ module Register
   class Base < ActiveRecord::Base
     self.table_name = :registers
 
-    include Import.active_record['service.current_power']
+    include Import.active_record['services.current_power']
 
     include Filterable
 

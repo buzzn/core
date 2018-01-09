@@ -1,4 +1,4 @@
-describe Buzzn::Services::ReadingCalculation do
+describe Services::ReadingCalculation do
 
   entity :register_with_regular_readings do
     meter = Fabricate(:input_meter)

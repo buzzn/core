@@ -13,6 +13,10 @@ end
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
+$LOAD_PATH << './lib'
+
+require 'buzzn/logger'
+
 module Buzzn
   class Application < Rails::Application
 
@@ -45,10 +49,6 @@ module Buzzn
       g.javascripts = false
       g.helper      = false
     end
-
-    config.middleware.delete Rack::Lock
-
-    config.autoload_paths << "#{Rails.root}/lib"
 
     if ENV['AWS_ACCESS_KEY'].present?
       config.x.fog.storage_opts = {

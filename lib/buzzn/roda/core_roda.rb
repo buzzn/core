@@ -5,7 +5,7 @@ require_relative 'plugins/terminal_verbs'
 
 class CoreRoda < CommonRoda
 
-  include Import.args[:env, 'service.health', 'service.object_space_metric']
+  include Import.args[:env, 'services.health', 'services.object_space_metric']
 
   # In development, serve uploaded files with rack
   use Rack::Static, root: "public", urls: ["/uploads"]

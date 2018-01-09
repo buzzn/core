@@ -1,4 +1,5 @@
 require 'buzzn/score_calculator'
+require 'buzzn/slug'
 
 module Group
   class Base < ActiveRecord::Base

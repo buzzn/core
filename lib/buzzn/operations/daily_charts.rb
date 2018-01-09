@@ -1,10 +1,10 @@
 require_relative '../operations'
 
-class Operations::Chart
+class Operations::DailyCharts
   include Dry::Transaction::Operation
   include Import['services.charts']
 
-  def interval(input)
-    Buzzn::Interval.create(input[:duration], input[:timestamp])
+  def call(group)
+    Right(charts.daily(group.object))
   end
 end
