@@ -48,6 +48,7 @@ class Discovergy::DailyChartsBuilder < Discovergy::AbstractBuilder
   end
 
   def build_sum(register, consumption, production, data)
+    return unless register
     if register.label.production?
       do_sum(register, production, data)
     else
