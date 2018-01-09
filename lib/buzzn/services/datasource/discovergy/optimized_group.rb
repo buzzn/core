@@ -13,7 +13,8 @@ class Services::Datasource::Discovergy::OptimizedGroup
     if local == remote
       true
     else
-      puts "Difference: #{local - remote}"
+      diff = local - remote
+      puts "Verifying the optimized group failed, there's a difference between Discovergy's and our list: #{diff}"
       false
     end
   end

@@ -8,7 +8,9 @@ class Discovergy::BubbleBuilder < Discovergy::AbstractBuilder
     response.collect do |id, values|
       serial = id.sub(/.*_/, '')
       register = registers.detect { |r| r.meter.product_serialnumber == serial }
-      # Tmp. workaround to get the bubbles to show.
+      # Unfortunately our and Discovergy's list of meters can get out of sync as of now.
+      # We skip meters we don't know about to prevent an error. See
+      # https://github.com/buzzn/core/pull/1338/files for details.
       next unless register
       build_bubble(register.meter, values)
     end.flatten.compact.uniq
