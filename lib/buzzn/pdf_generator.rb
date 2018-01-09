@@ -1,3 +1,5 @@
+require_relative 'services/pdf_html_generator'
+
 module Buzzn
   class PdfGenerator < ::Services::PdfHtmlGenerator::Html
     include Import.reader['services.pdf_html_generator']

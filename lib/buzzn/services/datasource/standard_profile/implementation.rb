@@ -1,6 +1,7 @@
 require_relative '../standard_profile'
 
 class Services::Datasource::StandardProfile::Implementation < Buzzn::DataSource
+  extend Dry::DependencyInjection::Eager
 
   include Import['services.data_source_registry']
 
