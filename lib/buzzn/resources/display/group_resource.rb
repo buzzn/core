@@ -12,7 +12,7 @@ module Display
     end
 
     def mentors
-      all(permissions.mentors, object.mentors.limit(2), MentorResource)
+      all(permissions.mentors, object.mentors, MentorResource)
     end
   end
 end
