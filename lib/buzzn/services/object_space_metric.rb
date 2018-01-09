@@ -1,6 +1,6 @@
 class Services::ObjectSpaceMetric
   extend Dry::DependencyInjection::Eager
-  include Import['service.metrics']
+  include Import['services.metrics']
 
   def initialize(**)
     super
