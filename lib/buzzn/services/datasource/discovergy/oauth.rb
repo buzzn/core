@@ -104,7 +104,7 @@ class Services::Datasource::Discovergy::Oauth
       reset
       raise Buzzn::DataSourceError.new('authorization failed at discovergy: ' + response.body)
     end
-    @logger.info(response.body)
+    @logger.debug(response.body)
     response.body.split('=')[1]
   end
 

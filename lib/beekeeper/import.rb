@@ -118,10 +118,10 @@ class Beekeeper::Import
         puts "found optimized group #{serial}"
         optimized_groups[localpool.slug] = serial
         unless @optimized.verify(localpool)
-          raise 'BUG'
+          logger.error("BUG: list of local and remote meters doesn't match.")
         end
       else
-        raise 'BUG'
+        logger.error("BUG: serial expected to be >= 106, but was #{serial}.")
       end
     else
       warnings["discovergy"] = "found more than one virtual meter on Discovergy. can not optimized group: #{virtual_list.collect{|v| v.serialNumber}}"
