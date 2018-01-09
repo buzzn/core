@@ -7,6 +7,11 @@ class CoreRoda < CommonRoda
 
   include Import.args[:env, 'service.health', 'service.object_space_metric']
 
+  # In development, serve uploaded files with rack
+  if ENV['RACK_ENV'] == 'development'
+    use Rack::Static, root: "public", urls: ["/uploads"]
+  end
+
   use Rack::CommonLogger, logger
 
   use Rack::Timeout, service_timeout: 29
