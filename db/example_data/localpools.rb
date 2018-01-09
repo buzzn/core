@@ -1,7 +1,6 @@
 SampleData.localpools = OpenStruct.new(
   people_power: create(:localpool,
     name: "People Power Group (Testgruppe)",
-    show_display_app: true,
     description: "Power to the people!",
     show_display_app: true,
     owner: SampleData.persons.group_owner,
