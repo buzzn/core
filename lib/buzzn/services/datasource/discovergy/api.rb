@@ -13,7 +13,7 @@ class Services::Datasource::Discovergy::Api
   end
 
   def raw_request(query)
-     monitored_request(query)
+    monitored_request(query)
   end
 
   def request(query, builder = nil)
@@ -87,7 +87,5 @@ class Services::Datasource::Discovergy::Api
     else
       raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + response.body)
     end
-  rescue => e
-    raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + e.message)
   end
 end
