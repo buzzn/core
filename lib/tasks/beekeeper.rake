@@ -34,6 +34,8 @@ namespace :beekeeper do
     # load the beekeeper stuff lazy on demand
     require 'lib/beekeeper/init'
     Beekeeper::Import.run!
+    # attach any person images we have meanwhile.
+    Rake.application['beekeeper:person_images:attach'].invoke
   end
 
   task generate_models: :environment do
@@ -61,6 +63,8 @@ namespace :beekeeper do
   namespace :person_images do
     desc "Attach images in lib/beekeeper/person_images to the person records, uploads them to S3 if configured."
     task attach: :environment do
+      puts
+      puts "Attaching person images ..."
       Person.all.each do |person|
         file_name = person.email.downcase
         local_file_path = Rails.root.join('lib/beekeeper/person_images', "#{file_name}.jpg")
