@@ -36,7 +36,9 @@ module Buzzn
             logger.error{ "#{e.message}\n\t" + e.backtrace.join("\n\t")}
             errors = "{\"errors\":[{\"detail\":\"internal server error\"}]}"
           end
-          Raven.capture_exception(e) if response.status == 500
+          if defined?(Raven) && response.status == 500
+            Raven.capture_exception(e)
+          end
           response.write(errors)
         end
       end
