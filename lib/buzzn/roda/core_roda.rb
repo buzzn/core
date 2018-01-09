@@ -12,7 +12,7 @@ class CoreRoda < CommonRoda
 
   use Rack::CommonLogger, logger
 
-  use Rack::Timeout, service_timeout: 29
+#  use Rack::Timeout, service_timeout: 29
 
   Rack::Timeout::Logger.disable
 
