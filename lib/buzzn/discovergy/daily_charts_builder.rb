@@ -11,8 +11,10 @@ class Discovergy::DailyChartsBuilder < Discovergy::AbstractBuilder
     production = {}
     min = FIXNUM_MAX
     response.each do |id, data|
-      min = [min, data.size].min
-      build_sum(map[id], consumption, production, data)
+      if r = map[id] && data.size > 0
+        min = [min, data.size].min
+        build_sum(map[id], consumption, production, data)
+      end
     end
     truncate(consumption, min)
     truncate(production, min)
@@ -48,7 +50,6 @@ class Discovergy::DailyChartsBuilder < Discovergy::AbstractBuilder
   end
 
   def build_sum(register, consumption, production, data)
-    return unless register
     if register.label.production?
       do_sum(register, production, data)
     else
