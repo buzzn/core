@@ -5,7 +5,7 @@ def inspect_register(register)
   "#{register.name} (id: #{register.id})"
 end
 
-Group::Base.all.order(:name, :start_date).each do |group|
+Group::Base.where("start_date <= ?", Date.today).order(:name, :start_date).each do |group|
 
   puts
   puts "#{group.name} (start: #{group.start_date})"
