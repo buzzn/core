@@ -1,10 +1,8 @@
-require_relative 'abstract_builder'
+require_relative 'abstract_registers_builder'
 
-class Discovergy::DailyChartsBuilder < Discovergy::AbstractBuilder
+class Discovergy::DailyChartsBuilder < Discovergy::AbstractRegistersBuilder
 
   FIXNUM_MAX = 4294967296
-
-  option :registers
 
   def build(response)
     consumption = {}
@@ -29,12 +27,6 @@ class Discovergy::DailyChartsBuilder < Discovergy::AbstractBuilder
   def truncate(set, min)
     while set.size > min
       set.delete(set.keys.last)
-    end
-  end
-
-  def map
-    @map ||= registers.each_with_object({}) do |r, map|
-      map["EASYMETER_#{r.meter.product_serialnumber}"] = r
     end
   end
 
