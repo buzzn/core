@@ -110,7 +110,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   end
 
   def refine_consumption_label
-    if minipool_sn&.eeg_umlage_reduced? || input_register_of_group_power_source?
+    if minipool_sn&.eeg_umlage_reduced? || name_contains_allg? || input_register_of_group_power_source?
       'CONSUMPTION_COMMON'
     else
       'CONSUMPTION'
@@ -129,6 +129,10 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   # This methods checks if we are such a register.
   def input_register_of_group_power_source?
     input? && group_power_source_buzznids.include?(buzznid)
+  end
+
+  def name_contains_allg?
+    name =~ /allg/i
   end
 
   def group_power_source_buzznids
