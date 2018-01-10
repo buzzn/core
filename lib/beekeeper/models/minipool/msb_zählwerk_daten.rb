@@ -131,8 +131,9 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     input? && group_power_source_buzznids.include?(buzznid)
   end
 
+  # Labels of common consumption meters are inconsistent: "Allg.", "Gemeinschaft", ....
   def name_contains_allg?
-    name =~ /allg/i
+    name =~ /(allg|gemein)/i && name !~ /Bürogemeinschaft/
   end
 
   def group_power_source_buzznids
