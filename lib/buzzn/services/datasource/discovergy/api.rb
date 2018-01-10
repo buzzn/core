@@ -74,6 +74,7 @@ class Services::Datasource::Discovergy::Api
     @logger.debug("#{query.http_method} #{query.to_uri(oauth.path)}")
     token.send(query.http_method, query.to_uri(oauth.path))
     response = token.response
+    @logger.debug("#{response.code} #{response.body.size}")
 
     case response.code.to_i
     when (200..299)
