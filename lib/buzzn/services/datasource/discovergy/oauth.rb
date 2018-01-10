@@ -7,7 +7,8 @@ class Services::Datasource::Discovergy::Oauth
   include Import['config.discovergy_login',
                  'config.discovergy_password']
 
-  TIMEOUT = 15 # seconds
+  OPEN_TIMEOUT = 30 # seconds
+  TIMEOUT = 30 # seconds
   URL = 'https://api.discovergy.com/public/v1'
 
   attr_reader :path
@@ -47,7 +48,7 @@ class Services::Datasource::Discovergy::Oauth
   end
 
   def consumer_token
-    conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
+    conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: OPEN_TIMEOUT}) do |faraday|
       faraday.request  :url_encoded
       faraday.response :logger, @logger
       faraday.adapter :net_http
@@ -79,7 +80,9 @@ class Services::Datasource::Discovergy::Oauth
           site:               @url,
           request_token_path: "#{@path}/oauth1/request_token",
           authorize_path:     "#{@path}/oauth1/authorize",
-          access_token_path:  "#{@path}/oauth1/access_token"
+          access_token_path:  "#{@path}/oauth1/access_token",
+          timeout:            TIMEOUT,
+          open_timeout:       OPEN_TIMEOUT
         )
       rescue OAuth::Unauthorized
         reset
