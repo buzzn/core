@@ -8,7 +8,7 @@ class Services::Datasource::Discovergy::Oauth
                  'config.discovergy_password']
 
   OPEN_TIMEOUT = 30 # seconds
-  TIMEOUT = 30 # seconds
+  TIMEOUT = 40 # seconds
   URL = 'https://api.discovergy.com/public/v1'
 
   attr_reader :path
