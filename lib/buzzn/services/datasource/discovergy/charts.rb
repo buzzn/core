@@ -13,8 +13,8 @@ class Services::Datasource::Discovergy::Charts
                                                    each:   true,
                                                    from:   beginning_of_today,
                                                    resolution: :fifteen_minutes )
-      registers = group.registers.production_consumption.select(:meter_id, :label)
-      builder = Discovergy::DailyChartsBuilder.new(registers: meter.group.registers.consumption_production)
+      registers = group.registers.production_consumption.includes(:meter)
+      builder = Discovergy::DailyChartsBuilder.new(registers: registers)
       api.request(query, builder)
     end
   end
