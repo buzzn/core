@@ -5,7 +5,7 @@ class Services::Charts
   include Import[registry: 'services.data_source_registry']
   include Import['services.cache']
 
-  TIME_TO_LIVE = 3 * 60 # seconds
+  TIME_TO_LIVE = 15 * 60 # seconds
 
   def daily(group)
     key = "charts.daily.#{group.id}"
