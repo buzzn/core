@@ -1,4 +1,3 @@
-# ActiveRecord::Base.logger = Logger.new(STDOUT)
 require_relative "../lib/beekeeper/init"
 
 def inspect_register(register)
