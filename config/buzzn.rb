@@ -5,10 +5,10 @@ require 'buzzn/boot/init'
 require 'buzzn/logger'
 
 begin
-  list = %W(.env .env.#{ENV['RACK_ENV']} .env.local ).select do |f|
+  list = %W(.env.local .env.#{ENV['RACK_ENV']} .env ).select do |f|
     File.exists?(f)
   end
-  Dotenv.load(*list.reverse)
+  Dotenv.load(*list)
 end
 
 Encoding.default_external = Encoding::UTF_8

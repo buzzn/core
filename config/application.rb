@@ -50,36 +50,6 @@ module Buzzn
       g.helper      = false
     end
 
-<<<<<<< HEAD
-    if ENV['AWS_ACCESS_KEY'].present?
-      config.x.fog.storage_opts = {
-        provider:              'AWS',
-        aws_access_key_id:     ENV['AWS_ACCESS_KEY'],
-        aws_secret_access_key: ENV['AWS_SECRET_KEY'],
-        region:                ENV['AWS_REGION']
-      }
-      config.x.fog.directory_opts = {
-        key:                   ENV['AWS_BUCKET'],
-        public:                false
-      }
-    else
-      config.x.fog.storage_opts   = { provider: 'Local', local_root: 'tmp' }
-      config.x.fog.directory_opts = { key: 'files' }
-    end
-
-    config.x.templates_path = Rails.root.join('app', 'pdfs')
-
-    config.after_initialize do
-      # setup service components, transactions
-      Buzzn::Logger.root = ::Logger.new(STDOUT).tap do |logger|
-        logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
-        logger.level = ENV['LOG_LEVEL'] || 'debug'
-      end
-      Buzzn::Boot::Init.run
-    end
-
-=======
->>>>>>> remove most of the rails setup
     # We don't use the Rails cache, all caching is directly from roda to redis.
     config.cache_store = nil
 
