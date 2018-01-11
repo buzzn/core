@@ -6,6 +6,8 @@ ActiveRecord::Base.send(:include, Schemas::Support::ValidateInvariant)
 
 class Beekeeper::Import
 
+  OPTIMIZED_GROUPS_YAML = 'config/optimized_groups.yaml'
+
   class << self
     def run!
       new.run
@@ -55,7 +57,7 @@ class Beekeeper::Import
       end
 
     end
-    File.write('optimized_groups.yaml', Hash[optimized_groups.sort].to_yaml)
+    File.write(OPTIMIZED_GROUPS_YAML, Hash[optimized_groups.sort].to_yaml)
     log_import_summary
   end
 
@@ -66,7 +68,7 @@ class Beekeeper::Import
   end
 
   def optimized_groups
-    @optimized_groups ||= YAML.load(File.read('optimized_groups.yaml'))
+    @optimized_groups ||= YAML.load(File.read(OPTIMIZED_GROUPS_YAML))
   rescue
     @optimized_groups = {}
   end
