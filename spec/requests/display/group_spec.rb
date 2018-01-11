@@ -152,7 +152,7 @@ describe Display::GroupRoda do
         GET "/#{group.id}/mentors", nil
 
         expect(response).to have_http_status(200)
-        expect(json['array'].to_yaml).to eq(mentors_json.to_yaml)
+        expect(sort(json['array']).to_yaml).to eq(sort(mentors_json).to_yaml)
       end
     end
   end
