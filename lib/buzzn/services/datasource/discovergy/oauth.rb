@@ -43,8 +43,12 @@ class Services::Datasource::Discovergy::Oauth
   private
 
   def reset
-    @consumer = nil
+    @token = nil
     @access_token = nil
+  end
+
+  def token
+    @token ||= consumer_token
   end
 
   def consumer_token
@@ -71,23 +75,19 @@ class Services::Datasource::Discovergy::Oauth
   end
 
   def consumer
-    @consumer ||=
-      begin
-        token = consumer_token
-        OAuth::Consumer.new(
-          token.key,
-          token.secret,
-          site:               @url,
-          request_token_path: "#{@path}/oauth1/request_token",
-          authorize_path:     "#{@path}/oauth1/authorize",
-          access_token_path:  "#{@path}/oauth1/access_token",
-          timeout:            TIMEOUT,
-          open_timeout:       OPEN_TIMEOUT
-        )
-      rescue OAuth::Unauthorized
-        reset
-        raise Buzzn::DataSourceError.new('unable to get refresh token from discovergy')
-      end
+    OAuth::Consumer.new(
+      token.key,
+      token.secret,
+      site:               @url,
+      request_token_path: "#{@path}/oauth1/request_token",
+      authorize_path:     "#{@path}/oauth1/authorize",
+      access_token_path:  "#{@path}/oauth1/access_token",
+      timeout:            TIMEOUT,
+      open_timeout:       OPEN_TIMEOUT
+    )
+  rescue OAuth::Unauthorized
+    reset
+    raise Buzzn::DataSourceError.new('unable to get refresh token from discovergy')
   end
 
   def verifier(request_token)
