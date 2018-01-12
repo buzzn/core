@@ -432,6 +432,7 @@ DEPENDENCIES
   oauth
   oj
   pg
+  pry
   pry-rails
   pry-rescue
   pry-stack_explorer
