@@ -9,11 +9,11 @@ begin
           provider: 'AWS',
           aws_access_key_id: Import.global('config.aws_access_key'),
           aws_secret_access_key: Import.global('config.aws_secret_key'),
-          region: Import.global('config.aws_region'),
-          directory_opts: {
-            key: Import.global('config.aws_bucket'),
-            public: false
-          }
+          region: Import.global('config.aws_region')
+        },
+        directory_opts: {
+          key: Import.global('config.aws_bucket'),
+          public: false
         }
       }
     else
