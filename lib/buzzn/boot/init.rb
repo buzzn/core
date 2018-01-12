@@ -5,7 +5,11 @@ require_relative 'main_container'
 require_relative '../services'
 
 require 'dotenv'
-require 'pry' rescue nil
+begin
+  require 'pry'
+rescue LoadError
+  #ignore
+end
 require 'dry/auto_inject'
 require 'dry-dependency-injection'
 
