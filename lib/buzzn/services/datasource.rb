@@ -1,5 +1,5 @@
 require_relative '../services'
-require 'buzzn/data_source'
+require_relative '../data_source'
 
 module Services::Datasource
 end

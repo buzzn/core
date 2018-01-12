@@ -3,13 +3,13 @@ require_relative '../standard_profile'
 class Services::Datasource::StandardProfile::Implementation < Buzzn::DataSource
   extend Dry::DependencyInjection::Eager
 
-  include Import['services.data_source_registry']
+  include Import['services.datasource.registry']
 
   NAME = :standard_profile
 
   def initialize(**)
     super
-    data_source_registry.add_source(self)
+    registry.add_source(self)
   end
 
   def ticker(register)

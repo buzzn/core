@@ -5,13 +5,13 @@ class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
 
   include Import['services.datasource.discovergy.last_reading',
                  'services.datasource.discovergy.charts',
-                 'services.data_source_registry']
+                 'services.datasource.registry']
 
   NAME = :discovergy
 
   def initialize(**)
     super
-    data_source_registry.add_source(self)
+    registry.add_source(self)
   end
 
   def ticker(register)
