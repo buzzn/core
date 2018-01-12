@@ -5,7 +5,7 @@ require_relative 'main_container'
 require_relative '../services'
 
 require 'dotenv'
-require 'pry'
+require 'pry' resuce nil
 require 'dry/auto_inject'
 require 'dry-dependency-injection'
 
