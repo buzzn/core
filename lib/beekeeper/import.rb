@@ -192,7 +192,12 @@ class Beekeeper::Import
       end
     if owner
       owner.add_role(Role::GROUP_OWNER, localpool)
-      owner.add_role(Role::GROUP_ENERGY_MENTOR, localpool)
+      energy_mentor = if (localpool.name == 'Mehrgenerationenplatz Forstenried')
+        Person.find_by(first_name: 'Traudl', last_name: 'Brumbauer')
+      else
+        owner
+      end
+      energy_mentor.add_role(Role::GROUP_ENERGY_MENTOR, localpool)
     end
   end
 

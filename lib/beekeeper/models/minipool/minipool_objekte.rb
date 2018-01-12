@@ -111,7 +111,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
   GROUPS_WITH_DISPLAY_APP_ENABLED = [
     'Heigelstraße 27',
-    'Fritz-Winter-Straße 3+7 - WA10'
+    'Fritz-Winter-Straße 3+7 - WA10',
+    'Mehrgenerationenplatz Forstenried'
   ]
 
   # This will likely move to a magic Beekeeper field at some point so PhO can control which groups see the display app.
