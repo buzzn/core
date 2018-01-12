@@ -1,5 +1,3 @@
-require 'buzzn/check_types_data_source'
-
 describe Services::Charts do
 
   class MockRegister < Register::Input
@@ -32,14 +30,10 @@ describe Services::Charts do
 
   let(:mock) { ChartsMockDataSource.new }
   subject do
-    Services::Charts.new(
-      Services::DataSourceRegistry.new(
-        Redis.current,
-        ChartsDummyDataSource.new,
-        mock,
-        Buzzn::CheckTypesDataSource.new
-      )
-    )
+    registry = Services::DataSource::Registry.new
+    registry.add_source(ChartsDummyDataSource.new)
+    registry.add_source(mock)
+    Services::Charts.new(registry: registry)
   end
 
   entity(:group) { create(:localpool) }
