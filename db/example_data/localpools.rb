@@ -13,7 +13,8 @@ SampleData.localpools = OpenStruct.new(
       { name: "Hausstrom - Reduziert", energyprice_cents_per_kwh: 24.9 },
     ]
   ),
-  green_warriors: create(:localpool, name: "Green warriors (Testgruppe)",
+  green_warriors: create(:localpool,
+    name: "Green warriors (Testgruppe)",
     show_display_app: true,
     owner: FactoryGirl.create(:organization, :contracting_party, :with_legal_representation),
     distribution_system_operator: Organization.distribution_system_operator.last,

@@ -64,6 +64,7 @@ SampleData.contracts.pt3 = localpool_contract(
     build(:payment, price_cents: 67_00, begin_date: '2016-01-01', cycle: 'monthly')
   ]
 )
+SampleData.contracts.pt3.customer.add_role(Role::GROUP_ENERGY_MENTOR, SampleData.contracts.pt3.localpool)
 
 SampleData.contracts.pt4 = localpool_contract(
   signing_date: Date.parse("2017-1-10"),
@@ -125,7 +126,6 @@ SampleData.contracts.pt7a = localpool_contract(
   contractor: Organization.find_by(slug: '3rd-party'),
   customer: SampleData.persons.pt7,
 )
-SampleData.contracts.pt7a.customer.add_role(Role::GROUP_ENERGY_MENTOR, SampleData.contracts.pt7a.localpool)
 
 
 # Drittlieferant, nach Wechsel zu people power

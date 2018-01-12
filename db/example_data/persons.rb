@@ -10,7 +10,7 @@ SampleData.persons = OpenStruct.new(
   ),
   pt1:  person(first_name: 'Sabine', last_name: 'Powertaker1', title: 'Prof.', prefix: 'F', email: 'dev+pt1@buzzn.net'),
   pt2:  person(first_name: 'Carla', last_name: 'Powertaker2', title: 'Prof. Dr.', prefix: 'F', email: 'dev+pt2@buzzn.net'),
-  pt3:  person(first_name: 'Bernd', last_name: 'Powertaker3', email: 'dev+pt3@buzzn.net'),
+  pt3:  person(first_name: 'Maria', last_name: 'Mentor', prefix: 'F', email: 'dev+pt3@buzzn.net'),
   pt4:  person(first_name: 'Karl', last_name: 'Powertaker4', email: 'dev+pt4@buzzn.net'),
   pt5a: person(first_name: 'Sylvia', last_name: 'Powertaker5a (zieht aus)', prefix: 'F', email: 'dev+pt5a@buzzn.net'),
   pt5b: person(first_name: 'Fritz', last_name: 'Powertaker5b (zieht ein)', email: 'dev+pt5b@buzzn.net'),
