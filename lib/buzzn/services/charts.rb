@@ -2,7 +2,7 @@ require_relative '../services'
 
 class Services::Charts
 
-  include Import[registry: 'services.data_source_registry']
+  include Import[registry: 'services.datasource.registry']
   include Import['services.cache']
 
   TIME_TO_LIVE = 15 * 60 # seconds

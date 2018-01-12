@@ -4,7 +4,7 @@ class Services::CurrentPower
 
   include Import['services.cache',
                  timetolive: 'config.datasource_timetolive_current',
-                 registry: 'services.data_source_registry']
+                 registry: 'services.datasource.registry']
 
   def ticker(register)
     key = "ticker.#{register.id}"

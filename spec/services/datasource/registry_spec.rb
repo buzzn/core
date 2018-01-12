@@ -1,6 +1,6 @@
-describe Services::DataSourceRegistry do
+describe Services::Datasource::Registry do
 
-  subject { Services::DataSourceRegistry.new }
+  subject { Services::Datasource::Registry.new }
 
   module  Buzzn::Test
     class DataSource < Buzzn::DataSource
@@ -25,6 +25,6 @@ describe Services::DataSourceRegistry do
   end
 
   it 'can not add non Buzzn::DataSource classes' do
-    expect { subject.add_source(:something) }.to raise_error ArgumentError
+    expect { subject.add_source(:something) }.to raise_error NameError
   end
 end
