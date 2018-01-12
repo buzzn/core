@@ -71,6 +71,9 @@ gem 'factory_girl'
 gem 'dotenv-rails'
 gem 'smarter_csv'
 
+# bin/console
+gem 'pry'
+
 # Injected by Heroku, we might as well include it here directly
 gem 'rails_12factor'
 
