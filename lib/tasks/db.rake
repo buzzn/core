@@ -25,7 +25,7 @@ namespace :db do
       require_relative '../../db/support/create_buzzn_operator'
       create_buzzn_operator(
         first_name: 'Phillip',
-        last_name:  '0ßwald',
+        last_name:  'Oßwald',
         email:      'philipp@buzzn.net',
         password:   Import.global('config.pho_account_password')
       )
