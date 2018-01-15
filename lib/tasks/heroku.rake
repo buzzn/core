@@ -3,7 +3,7 @@ namespace :heroku do
   def push_local_db_to_heroku(env)
     sh "heroku pg:reset --remote=#{env}"
     sh "heroku pg:push buzzn_development DATABASE_URL --remote=#{env}" do |ok, status|
-      puts "Note: warnings/errors about extension ownership can ignored." unless ok
+      puts "Note: warnings/errors about extension ownership can be ignored." unless ok
     end
   end
 
