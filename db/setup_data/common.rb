@@ -119,16 +119,3 @@ get_csv(:organization_market_functions).each do |row|
     ap organization
   end
 end
-
-#
-# Create example operator person with account
-#
-
-require_relative '../support/create_buzzn_operator'
-
-create_buzzn_operator(
-  first_name: 'Otto',
-  last_name:  'Operator',
-  email:      'dev+ops@buzzn.net',
-  password:   Import.global('config.default_account_password')
-)
