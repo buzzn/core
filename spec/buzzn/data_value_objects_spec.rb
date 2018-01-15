@@ -1,3 +1,5 @@
+require 'buzzn/in_out_data_results'
+
 describe Buzzn::DataPoint do
 
   subject { Buzzn::DataPoint }
@@ -310,4 +312,3 @@ describe Buzzn::DataResultArray do
     expect(reference).to eq other
   end
 end
-

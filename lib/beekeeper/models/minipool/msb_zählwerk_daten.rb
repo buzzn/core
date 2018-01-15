@@ -110,7 +110,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   end
 
   def refine_consumption_label
-    if minipool_sn&.eeg_umlage_reduced? || input_register_of_group_power_source?
+    if name_hints_at_common_register? || input_register_of_group_power_source?
       'CONSUMPTION_COMMON'
     else
       'CONSUMPTION'
@@ -129,6 +129,12 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   # This methods checks if we are such a register.
   def input_register_of_group_power_source?
     input? && group_power_source_buzznids.include?(buzznid)
+  end
+
+  # Labels of common consumption meters are inconsistent: "Allg.", "Gemeinschaft", ....
+  def name_hints_at_common_register?
+    pattern = /(allg|gemein|Aufzug|Heiz|E-Tankstelle|ladestation|Haustechnik|Antenne|Gem EG|UV E-Bikes E-Raum|Hausstrom)/i
+    name =~ pattern && name !~ /Bürogemeinschaft/
   end
 
   def group_power_source_buzznids

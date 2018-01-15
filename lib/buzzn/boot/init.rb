@@ -3,8 +3,15 @@ require_relative 'reader'
 require_relative 'active_record'
 require_relative 'main_container'
 require_relative '../services'
+
+require 'dotenv'
+begin
+  require 'pry'
+rescue LoadError
+  #ignore
+end
 require 'dry/auto_inject'
-require 'dry/more/container/singleton'
+require 'dry-dependency-injection'
 
 # core extensions
 require_relative '../core/number'
@@ -13,6 +20,9 @@ Import = Dry::AutoInject(Buzzn::Boot::MainContainer)
 def Import.global(key)
   container[key]
 end
+def Import.global?(key)
+  container.key?(key)
+end
 
 module Buzzn
   module Services
@@ -20,58 +30,68 @@ module Buzzn
 
   module Boot
     class Init
+      class Singletons
+        include Dry::DependencyInjection::Singletons
+      end
 
       class << self
 
         def run
           @logger = Logger.new(self)
 
+          setup_environment
+
+          setup_encoding
+
+          setup_initializers
+
+          preload_singletons
+
+          eager_load_some
+        end
+
+        private
+
+        def setup_environment
+          env = Import.global?('config.rack_env') ? Import.global('config.rack_env') : 'development'
+          list = %W(.env.local .env.#{env} .env ).select do |f|
+            File.exists?(f)
+          end
+          Dotenv.load(*list)
+        end
+
+        def setup_encoding
+          Encoding.default_external = Encoding::UTF_8
+          Encoding.default_internal = Encoding::UTF_8
+        end
+
+        def setup_initializers
+          Dir['config/initializers/*.rb'].each { |f| require "./#{f}" }
+        end
+
+        def preload_singletons
           # preload singletons
-          services = Dry::More::Container::Singleton.new
-          services.config.lazy = false
-          operations = Dry::More::Container::Singleton.new
-          operations.config.lazy = false
-          Application.config.paths['lib'].dup.tap do |app|
-            app.glob = "buzzn/services/**/*.rb"
-            app.to_a.each do |path|
-              require path
+          singletons = Singletons.new
+          singletons.config.lazy = Import.global('config.lazy_services') == 'true'
+          importer = Dry::DependencyInjection::Importer.new(singletons)
+          importer.import('lib/buzzn', 'services')
+          importer.import('lib/buzzn', 'operations')
 
-              main = path.gsub(/^.*buzzn\/|.rb$/, '')
-              clazz = main.camelize.safe_constantize
-              if clazz # TODO remove if
-                if clazz.is_a?(Class)
-                  name = main.gsub('/', '.')
-                  services.register("#{name.sub(/services/, 'service')}", clazz)
-                end
-              else
-                # TODO remove old namespace handling
+          MainContainer.merge(singletons)
 
-                name = File.basename(path).sub(/\.rb/,'')
-                cname = name.split('_').collect {|n| n.capitalize }.join
-                clazz = Buzzn::Services.const_get(cname)
-                services.register("service.#{name}", clazz) if clazz.is_a?(Class)
-              end
-            end
-            app.glob = "buzzn/operations/**/*.rb"
-            app.to_a.each do |path|
+          # finalize after we have the complete MainContainer setup
+          singletons.finalize
+        end
+
+        def eager_load_some
+          %w( uploaders models pdfs ).each do |sub|
+            Dir["./app/#{sub}/**/*.rb"].sort.each do |path|
               require path
-              main = path.gsub(/^.*buzzn\/|.rb$/, '')
-              clazz = main.camelize.safe_constantize
-              name = main.gsub('/', '.')
-              if clazz.is_a?(Class)
-                operations.register("#{name}", clazz)
-              end
             end
           end
-          MainContainer.merge(services).merge(operations)
-          services.finalize
-          operations.finalize
-
-          # eager require some files
           %w(resource resources roda permissions schemas).each do |dir|
-            Application.config.paths['lib'].dup.tap do |app|
-              app.glob = "buzzn/#{dir}/**/*.rb"
-              app.to_a.each { |path| require path }
+            Dir["./lib/buzzn/#{dir}/**/*.rb"].each do |path|
+              require path
             end
           end
         end

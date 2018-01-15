@@ -23,7 +23,7 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
   - [Setup Ruby \(using rbenv\)](#setup-ruby-using-rbenv)
   - [Install required software](#install-required-software)
   - [Setup the rails Project](#setup-the-rails-project)
-  - [Start Rails server in develoment mode](#start-rails-server-in-develoment-mode)
+  - [Start server in develoment mode](#start-rails-server-in-develoment-mode)
   - [Reset and Start Test Environment](#reset-and-start-test-environment)
 - [Misc admin info](#misc-admin-info)
   - [Start sidekiq message queue](#start-sidekiq-message-queue)
@@ -38,6 +38,15 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
 # Application Architecture
 
 See [docs/application_architecture.md](docs/application_architecture.md).
+
+# Bin-Scripts
+
+* bin/console - starts application with pry session
+* bin/server  - starts puma server
+* bin/rake    - runs rake with application bundler context
+* bin/rspec   - runs rspec with the current bundler context
+
+you can add `./bin` to your `PATH` to simplely use `console`, `server`, `rake` or `rspec`.
 
 # Useful rake tasks
 
@@ -109,13 +118,13 @@ We're running on Heroku, so you can deploy from Heroku's web interface if you wa
 
 ## One-time setup
 
-- `git remote add staging https://git.heroku.com/buzzn-core-staging.git` 
-- `git remote add production https://git.heroku.com/buzzn-core-production.git` 
+- `git remote add staging https://git.heroku.com/buzzn-core-staging.git`
+- `git remote add production https://git.heroku.com/buzzn-core-production.git`
 - `heroku login` (make sure it succeeds and you are a collaborator on the app)
 
 ## Deploy staging
 
-Staging is deployed automatically for every green CI build on `master`. 
+Staging is deployed automatically for every green CI build on `master`.
 To do it manually: `rake deploy:staging`.
 
 ## Deploy production
@@ -142,8 +151,8 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
     bundle install
     rake db:create db:structure:load db:seed:example_data
 
-## Start Rails server in develoment mode
-    rails server # also "rails s"
+## Start server in develoment mode
+    bin/server
 
 ## Reset and Start Test Environment
     rake test:prepare

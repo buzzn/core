@@ -5,14 +5,14 @@ describe Display::GroupResource do
   entity!(:tribe) do
     group = Fabricate(:tribe, show_display_app: true)
     create(:meter, :real, group: group)
-    admin.person.add_role(Role::GROUP_ADMIN, group)
+    admin.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group
   end
 
   entity!(:localpool)  do
     group = create(:localpool, show_display_app: true)
     create(:meter, :virtual, group: group)
-    admin.person.add_role(Role::GROUP_ADMIN, group)
+    admin.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group
   end
 
@@ -74,7 +74,6 @@ describe Display::GroupResource do
 
     it 'retrieve - all' do
       [:tribe, :localpool].each do |type|
-        group = send(type)
         resource = send("#{type}_resource")
         expect(resource.registers.size).to eq 1
         resource.registers.each do |reg|

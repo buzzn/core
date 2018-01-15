@@ -1,3 +1,5 @@
+require 'slim'
+
 Slim::Engine.options[:pretty] = true
 module PdfsHelper
   def print_html(name, content)

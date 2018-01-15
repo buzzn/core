@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'oauth'
 
 require_relative '../discovergy'
 
@@ -7,7 +8,8 @@ class Services::Datasource::Discovergy::Oauth
   include Import['config.discovergy_login',
                  'config.discovergy_password']
 
-  TIMEOUT = 15 # seconds
+  OPEN_TIMEOUT = 30 # seconds
+  TIMEOUT = 40 # seconds
   URL = 'https://api.discovergy.com/public/v1'
 
   attr_reader :path
@@ -42,16 +44,16 @@ class Services::Datasource::Discovergy::Oauth
   private
 
   def reset
-    @consumer = nil
+    @token = nil
     @access_token = nil
   end
 
+  def token
+    @token ||= consumer_token
+  end
+
   def consumer_token
-    conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
-      faraday.request  :url_encoded
-      faraday.response :logger, @logger
-      faraday.adapter :net_http
-    end
+    conn = new_faraday_instance(@url)
     response = conn.post do |req|
       req.url "#{@path}/oauth1/consumer_token"
       req.headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -70,29 +72,23 @@ class Services::Datasource::Discovergy::Oauth
   end
 
   def consumer
-    @consumer ||=
-      begin
-        token = consumer_token
-        OAuth::Consumer.new(
-          token.key,
-          token.secret,
-          site:               @url,
-          request_token_path: "#{@path}/oauth1/request_token",
-          authorize_path:     "#{@path}/oauth1/authorize",
-          access_token_path:  "#{@path}/oauth1/access_token"
-        )
-      rescue OAuth::Unauthorized
-        reset
-        raise Buzzn::DataSourceError.new('unable to get refresh token from discovergy')
-      end
+    OAuth::Consumer.new(
+      token.key,
+      token.secret,
+      site:               @url,
+      request_token_path: "#{@path}/oauth1/request_token",
+      authorize_path:     "#{@path}/oauth1/authorize",
+      access_token_path:  "#{@path}/oauth1/access_token",
+      timeout:            TIMEOUT,
+      open_timeout:       OPEN_TIMEOUT
+    )
+  rescue OAuth::Unauthorized
+    reset
+    raise Buzzn::DataSourceError.new('unable to get refresh token from discovergy')
   end
 
   def verifier(request_token)
-    conn = Faraday.new(:url => @url, ssl: {verify: false}, request: {timeout: TIMEOUT, open_timeout: TIMEOUT}) do |faraday|
-      faraday.request  :url_encoded
-      faraday.response :logger, @logger
-      faraday.adapter :net_http
-    end
+    conn = new_faraday_instance(@url)
     response = conn.get do |req|
       req.url "#{@path}/oauth1/authorize"
       req.headers['Content-Type'] = 'text/plain'
@@ -104,12 +100,27 @@ class Services::Datasource::Discovergy::Oauth
       reset
       raise Buzzn::DataSourceError.new('authorization failed at discovergy: ' + response.body)
     end
-    @logger.info(response.body)
+    @logger.debug(response.body)
     response.body.split('=')[1]
   end
 
   def request_access_token
     request_token = consumer.get_request_token
     request_token.get_access_token(:oauth_verifier => verifier(request_token))
+  end
+
+  def new_faraday_instance(url)
+    options = {
+      url: url,
+      ssl: { verify: false },
+      request: { timeout: TIMEOUT, open_timeout: OPEN_TIMEOUT }
+    }
+    Faraday.new(options) do |faraday|
+      faraday.request  :url_encoded
+      faraday.response :logger, @logger do |logger|
+        logger.filter(/(password=)(\w+)/,'\1[FILTERED]')
+      end
+      faraday.adapter :net_http
+    end
   end
 end

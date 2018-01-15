@@ -22,11 +22,8 @@ class Roda
           return unless result
 
           # cache-control headers
-          request.etag(Digest::SHA256.base64digest(result.to_json))
-          request.last_modified(Time.at(result.respond_to?(:last_timestamp) ?
-                                          result.last_timestamp :
-                                          result.expires_at))
-          response.expires((result.expires_at - Time.current.to_f).to_i,
+          request.etag(result.digest)
+          response.expires(result.time_to_live,
                            (current_user ? :private : :public) => true)
 
           result

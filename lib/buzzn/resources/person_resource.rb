@@ -1,6 +1,6 @@
 require_relative 'bank_account_resource'
+
 class PersonResource < Buzzn::Resource::Entity
-  include BankAccountResource::Create
 
   model Person
 
@@ -22,7 +22,7 @@ class PersonResource < Buzzn::Resource::Entity
   has_many :bank_accounts
 
   def image
-    object.image.md.url
+    object.image.medium.url
   end
 
   def customer_number

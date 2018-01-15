@@ -1,3 +1,4 @@
+require 'buzzn/standard_profile/data_source'
 
 describe Buzzn::StandardProfile::DataSource do
   entity(:data_source) { Buzzn::StandardProfile::DataSource.new }

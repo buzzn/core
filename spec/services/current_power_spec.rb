@@ -6,7 +6,7 @@ describe Services::CurrentPower do
 
   class MockDataSource < Buzzn::DataSource
 
-    include Import['service.data_source_registry']
+    include Import['services.data_source_registry']
 
     NAME = :mock
 
@@ -22,6 +22,10 @@ describe Services::CurrentPower do
     end
 
     def bubbles(group)
+      nil
+    end
+
+    def daily_charts(group)
       nil
     end
   end

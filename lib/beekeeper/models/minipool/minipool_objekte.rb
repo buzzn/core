@@ -78,6 +78,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     @converted_attributes ||= {
       name: name,
       start_date: start_date,
+      show_display_app:             show_display_app,
       distribution_system_operator: distribution_system_operator,
       transmission_system_operator: transmission_system_operator,
       electricity_supplier:         electricity_supplier,
@@ -106,6 +107,21 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
   def start_date
     Date.parse(minipool_start)
+  end
+
+  GROUPS_WITH_DISPLAY_APP_ENABLED = [
+    'Bahnhofstr. 21',
+    'Fritz-Winter-Straße 3+7 - WA10',
+    'Heigelstraße 27',
+    'L.O.F.T.',
+    'Mehrgenerationenplatz Forstenried',
+    'People Power Group (Testgruppe)',
+    'WoGe'
+  ]
+
+  # This will likely move to a magic Beekeeper field at some point so PhO can control which groups see the display app.
+  def show_display_app
+    GROUPS_WITH_DISPLAY_APP_ENABLED.include?(minipool_name)
   end
 
   def address

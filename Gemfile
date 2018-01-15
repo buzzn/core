@@ -8,8 +8,7 @@ gem 'dry-monads'
 gem 'dry-transaction'
 gem 'dry-struct'
 gem 'dry-initializer'
-# TODO if we are going to use this singleton container then me (christian) needs to publish/push this gem and use it via rubygems.org
-gem 'dry-more-container', git: 'https://github.com/mkristian/dry-more-container.git'
+gem 'dry-dependency-injection'
 
 # pdf
 gem 'slim'
@@ -17,8 +16,7 @@ gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
 # storage
-gem 'fog-aws', require: 'fog/aws'
-gem 'fog-local', require: 'fog/local'
+gem 'fog-aws'
 
 # swagger
 gem 'ruby-swagger'
@@ -48,6 +46,10 @@ gem 'ruby_regex'
 # discovergy
 gem 'oauth'
 
+# metrics
+gem 'leafy'
+gem 'concurrent-ruby-ext'
+
 # Backend
 gem 'puma'
 gem 'rails', '< 5'
@@ -61,8 +63,6 @@ gem 'redis-namespace'             # ???
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
 gem 'mini_magick'
 gem 'carrierwave'
-gem 'aws-sdk'
-gem 'aws-sdk-rails'
 gem 'faraday'
 gem 'jbuilder'
 gem 'remote_lock'
@@ -71,12 +71,15 @@ gem 'factory_girl'
 gem 'dotenv-rails'
 gem 'smarter_csv'
 
+# bin/console
+gem 'pry'
+
 # Injected by Heroku, we might as well include it here directly
 gem 'rails_12factor'
 
-gem "sentry-raven" # the Sentry exception notification service
 
 group :production, :staging do
+  gem "sentry-raven" # the Sentry exception notification service
   gem 'newrelic_rpm'
 end
 
@@ -90,6 +93,7 @@ group :development, :test do
   gem 'guard-bundler'
   gem 'guard-brakeman'
   gem 'guard-rspec'
+  gem 'fog-local'
 end
 
 group :development do

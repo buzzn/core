@@ -1,18 +1,17 @@
-require 'file_size_validator'
 class Device < ActiveRecord::Base
   include Filterable
 
-  BIO_MASS = 'bio_mass'
-  BIO_GAS = 'bio_gas'
+  BIO_MASS    = 'bio_mass'
+  BIO_GAS     = 'bio_gas'
   NATURAL_GAS = 'natural_gas' # erdgas
-  FLUID_GAS = 'fluid_gas'
-  FUEL_OIL = 'fuel_oil' # Heizöl
-  WOOD = 'wood'
-  VEG_OIL = 'veg_oil' # Pflenzenöl
-  SUN = 'sun'
-  WIND = 'wind'
-  WATER = 'water'
-  OTHER = 'other'
+  FLUID_GAS   = 'fluid_gas'
+  FUEL_OIL    = 'fuel_oil' # Heizöl
+  WOOD        = 'wood'
+  VEG_OIL     = 'veg_oil' # Pflanzenöl
+  SUN         = 'sun'
+  WIND        = 'wind'
+  WATER       = 'water'
+  OTHER       = 'other'
 
   class << self
     def all_primary_energies
@@ -21,18 +20,7 @@ class Device < ActiveRecord::Base
     end
   end
 
-  belongs_to :register, class_name: Register::Base, foreign_key: :register_id
-
-  mount_uploader :image, PictureUploader
-
-  validates :mode, presence: true
-  validates :manufacturer_name, presence: true, length: { in: 2..30 }
-  validates :manufacturer_product_name, presence: true, length: { in: 2..30 }
-  validates :watt_peak, numericality: { only_integer: true }, presence: true
-  validates :image, :file_size => {
-    :maximum => 2.megabytes.to_i
-  }
-  validates :primary_energy, inclusion: {in: self.all_primary_energies}, if: 'primary_energy.present?'
+  belongs_to :register, class_name: 'Register::Base', foreign_key: :register_id
 
   def self.search_attributes
     [:manufacturer_name, :manufacturer_product_name, :mode, :category,

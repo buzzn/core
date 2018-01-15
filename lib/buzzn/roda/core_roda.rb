@@ -1,15 +1,20 @@
 require 'sequel'
 require 'rack-timeout'
+require 'rack/cors'
+
 require_relative 'common_roda'
 require_relative 'plugins/terminal_verbs'
 
 class CoreRoda < CommonRoda
 
-  include Import.args[:env, 'service.health']
+  include Import.args[:env, 'services.health', 'services.object_space_metric']
+
+  # In development, serve uploaded files with rack
+  use Rack::Static, root: "public", urls: ["/uploads"]
 
   use Rack::CommonLogger, logger
 
-  use Rack::Timeout, service_timeout: 29
+#  use Rack::Timeout, service_timeout: 29
 
   Rack::Timeout::Logger.disable
 
@@ -27,6 +32,7 @@ class CoreRoda < CommonRoda
 
   route do |r|
 
+    object_space_metric.non_blocking_sample
     logger.info(r.inspect)
 
     ActiveRecord::Base.connection_pool.with_connection do

@@ -2,10 +2,9 @@ require_relative '../services'
 
 class Services::CurrentPower
 
-  include Import[registry: 'service.data_source_registry']
-  include Import['service.cache']
-
-  TIME_TO_LIVE = 15
+  include Import['services.cache',
+                 timetolive: 'config.datasource_timetolive_current',
+                 registry: 'services.data_source_registry']
 
   def ticker(register)
     key = "ticker.#{register.id}"
@@ -17,15 +16,15 @@ class Services::CurrentPower
     cache.get(key) || cached_bubbles(key, group)
   end
 
-  def for_group(resource)
-    raise 'not implemented anymore'
-  end
-
   private
+
+  def time_to_live
+    @_ttl ||= timetolive.to_i
+  end
 
   def cached_ticker(key, register)
     if result = registry.get(register.data_source).ticker(register)
-      cache.put(key, result.to_json, TIME_TO_LIVE)
+      cache.put(key, result.to_json, time_to_live)
     end
   end
 
@@ -36,6 +35,6 @@ class Services::CurrentPower
         bubbles += result
       end
     end
-    cache.put(key, bubbles.to_json, TIME_TO_LIVE)
+    cache.put(key, bubbles.to_json, time_to_live)
   end
 end

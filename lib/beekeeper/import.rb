@@ -6,6 +6,8 @@ ActiveRecord::Base.send(:include, Schemas::Support::ValidateInvariant)
 
 class Beekeeper::Import
 
+  OPTIMIZED_GROUPS_YAML = 'config/optimized_groups.yaml'
+
   class << self
     def run!
       new.run
@@ -13,8 +15,8 @@ class Beekeeper::Import
   end
 
   def initialize(*)
-    @meters = ::Import.global('service.datasource.discovergy.meters')
-    @optimized = ::Import.global('service.datasource.discovergy.optimized_group')
+    @meters = ::Import.global('services.datasource.discovergy.meters')
+    @optimized = ::Import.global('services.datasource.discovergy.optimized_group')
   end
 
   def run
@@ -55,7 +57,7 @@ class Beekeeper::Import
       end
 
     end
-    File.write('optimized_groups.yaml', Hash[optimized_groups.sort].to_yaml)
+    File.write(OPTIMIZED_GROUPS_YAML, Hash[optimized_groups.sort].to_yaml)
     log_import_summary
   end
 
@@ -66,7 +68,7 @@ class Beekeeper::Import
   end
 
   def optimized_groups
-    @optimized_groups ||= YAML.load(File.read('optimized_groups.yaml'))
+    @optimized_groups ||= YAML.load(File.read(OPTIMIZED_GROUPS_YAML))
   rescue
     @optimized_groups = {}
   end
@@ -75,13 +77,12 @@ class Beekeeper::Import
     @optimized_map ||= @meters.virtual_list
   end
 
-  OMIT_VIRTUAL_IDS = (0..105).collect {|i| i } + [107, 121, 9999997]
+  OMIT_VIRTUAL_IDS = (0..105).to_a + [107, 121, 9999997]
   def optimize(localpool, warnings)
     if optimized_groups.key?(localpool.slug)
       setup_optimized_groups(localpool, optimized_groups[localpool.slug])
       return warnings
     end
-    result = nil
     list = @optimized.local(localpool).collect do |m|
       optimized_map[m.product_serialnumber]
     end
@@ -119,10 +120,10 @@ class Beekeeper::Import
         puts "found optimized group #{serial}"
         optimized_groups[localpool.slug] = serial
         unless @optimized.verify(localpool)
-          raise 'BUG'
+          logger.error("BUG: list of local and remote meters doesn't match.")
         end
       else
-        raise 'BUG'
+        logger.error("BUG: serial expected to be >= 106, but was #{serial}.")
       end
     else
       warnings["discovergy"] = "found more than one virtual meter on Discovergy. can not optimized group: #{virtual_list.collect{|v| v.serialNumber}}"
@@ -191,6 +192,9 @@ class Beekeeper::Import
       end
     if owner
       owner.add_role(Role::GROUP_OWNER, localpool)
+      unless localpool.name == 'Mehrgenerationenplatz Forstenried' || (owner.first_name == 'Traudl' && owner.last_name == 'Brumbauer')
+        owner.add_role(Role::GROUP_ENERGY_MENTOR, localpool)
+      end
     end
   end
 

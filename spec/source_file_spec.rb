@@ -1,6 +1,6 @@
 describe "Source File" do
 
-  (Dir['lib/**/*rb'] + Dir['app/**/*rb']).each do |file|
+  (Dir['config/initilaizers/*rb'] + Dir['lib/**/*rb'] + Dir['app/**/*rb']).each do |file|
     it "source code files do not use Time.now in #{file}" do
       next if file == 'lib/buzzn/utils/chronos.rb'
       content = File.read(file)

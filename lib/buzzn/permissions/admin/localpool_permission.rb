@@ -1,3 +1,5 @@
+require_relative '../../permission'
+
 Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolResource) do
 
   # define groups of roles

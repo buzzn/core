@@ -1,3 +1,5 @@
+require_relative 'data_source'
+
 module Buzzn
 
   # temporary workaround class until we have all the datasources for all our registers
@@ -6,6 +8,10 @@ module Buzzn
     NAME = :missing
 
     def bubbles(group)
+      nil
+    end
+
+    def daily_charts(group)
       nil
     end
 

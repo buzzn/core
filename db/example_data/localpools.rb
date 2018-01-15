@@ -2,6 +2,7 @@ SampleData.localpools = OpenStruct.new(
   people_power: create(:localpool,
     name: "People Power Group (Testgruppe)",
     description: "Power to the people!",
+    show_display_app: true,
     owner: SampleData.persons.group_owner,
     admins: [ SampleData.persons.brumbauer],
     distribution_system_operator: Organization.distribution_system_operator.first,
@@ -12,7 +13,9 @@ SampleData.localpools = OpenStruct.new(
       { name: "Hausstrom - Reduziert", energyprice_cents_per_kwh: 24.9 },
     ]
   ),
-  green_warriors: create(:localpool, name: "Green warriors (Testgruppe)",
+  green_warriors: create(:localpool,
+    name: "Green warriors (Testgruppe)",
+    show_display_app: true,
     owner: FactoryGirl.create(:organization, :contracting_party, :with_legal_representation),
     distribution_system_operator: Organization.distribution_system_operator.last,
     transmission_system_operator: Organization.transmission_system_operator.last,

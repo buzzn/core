@@ -1,3 +1,6 @@
+require_relative 'context'
+require 'ruby_regex'
+
 module Buzzn::Resource
   class Collection
     include Enumerable

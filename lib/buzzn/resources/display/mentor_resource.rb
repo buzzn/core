@@ -9,7 +9,7 @@ module Display
                 :image
 
     def image
-      object.image.md.url
+      object.image.medium.url
     end
   end
 end

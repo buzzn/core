@@ -4,7 +4,7 @@ require_relative '../../../discovergy'
 
 class Services::Datasource::Discovergy::LastReading
 
-  include Import['service.datasource.discovergy.api']
+  include Import['services.datasource.discovergy.api']
 
   def energy(register)
     process(register, :Wh, false, :energy, :energyOut)
@@ -19,7 +19,8 @@ class Services::Datasource::Discovergy::LastReading
       query = Types::Discovergy::LastReading::Get.new(meter: meter,
                                                       fields: [:power],
                                                       each:   true)
-      builder = Discovergy::BubbleBuilder.new(registers: meter.group.registers.consumption_production)
+      registers = group.registers.consumption_production.includes(:meter)
+      builder = Discovergy::BubbleBuilder.new(registers: registers)
       api.request(query, builder)
     end
   end

@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com/mkristian/dry-more-container.git
-  revision: e4f9b990fd4feff12d3159d7764f270419c3a7fc
-  specs:
-    dry-more-container (0.1.0)
-      concurrent-ruby (~> 1.0)
-      dry-container (~> 0.6)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -46,15 +38,6 @@ GEM
     addressable (2.4.0)
     arel (6.0.4)
     awesome_print (1.6.1)
-    aws-sdk (2.3.11)
-      aws-sdk-resources (= 2.3.11)
-    aws-sdk-core (2.3.11)
-      jmespath (~> 1.0)
-    aws-sdk-rails (1.0.1)
-      aws-sdk-resources (~> 2)
-      railties (>= 3)
-    aws-sdk-resources (2.3.11)
-      aws-sdk-core (= 2.3.11)
     bcrypt (3.1.11)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
@@ -62,17 +45,17 @@ GEM
     bson (3.2.6)
     builder (3.2.3)
     byebug (9.0.5)
-    carrierwave (0.11.2)
-      activemodel (>= 3.2.0)
-      activesupport (>= 3.2.0)
-      json (>= 1.7)
+    carrierwave (1.2.2)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
       mime-types (>= 1.16)
-      mimemagic (>= 0.3.0)
     clockwork (2.0.2)
       activesupport
       tzinfo
     coderay (1.1.2)
     concurrent-ruby (1.0.5)
+    concurrent-ruby-ext (1.0.5)
+      concurrent-ruby (= 1.0.5)
     countries (2.0.8)
       i18n_data (~> 0.7.0)
       money (~> 6.7)
@@ -94,8 +77,12 @@ GEM
     dry-container (0.6.0)
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 0.1, >= 0.1.3)
-    dry-core (0.4.1)
+    dry-core (0.4.2)
       concurrent-ruby (~> 1.0)
+    dry-dependency-injection (0.1.0)
+      concurrent-ruby (~> 1.0)
+      dry-container (~> 0.6)
+      dry-core (~> 0.4)
     dry-equalizer (0.2.0)
     dry-initializer (2.3.0)
     dry-logic (0.4.1)
@@ -141,31 +128,31 @@ GEM
       mail (~> 2.6.3)
     erubis (2.7.0)
     eventmachine (1.2.0.1)
-    excon (0.49.0)
+    excon (0.60.0)
     fabrication (2.15.2)
     factory_girl (4.8.1)
       activesupport (>= 3.0.0)
-    faraday (0.9.2)
+    faraday (0.13.1)
       multipart-post (>= 1.2, < 3)
     ffaker (2.2.0)
     ffi (1.9.18)
-    fog-aws (0.9.2)
-      fog-core (~> 1.27)
+    fog-aws (2.0.0)
+      fog-core (~> 1.38)
       fog-json (~> 1.0)
       fog-xml (~> 0.1)
       ipaddress (~> 0.8)
-    fog-core (1.40.0)
+    fog-core (1.45.0)
       builder
-      excon (~> 0.49)
+      excon (~> 0.58)
       formatador (~> 0.2)
     fog-json (1.0.2)
       fog-core (~> 1.0)
       multi_json (~> 1.10)
-    fog-local (0.3.0)
+    fog-local (0.4.0)
       fog-core (~> 1.27)
-    fog-xml (0.1.2)
+    fog-xml (0.1.3)
       fog-core
-      nokogiri (~> 1.5, >= 1.5.11)
+      nokogiri (>= 1.5.11, < 2.0.0)
     formatador (0.2.5)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
@@ -209,14 +196,12 @@ GEM
     jbuilder (2.5.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
-    jmespath (1.2.4)
-      json_pure (>= 1.8.1)
-    json (2.1.0)
-    json_pure (1.8.3)
     jwt (1.5.1)
     key_struct (0.4.2)
     launchy (2.4.3)
       addressable (~> 2.3)
+    leafy (0.1.0)
+      concurrent-ruby (~> 1.0)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -231,10 +216,9 @@ GEM
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
-    mimemagic (0.3.1)
     mini_magick (4.5.1)
     mini_portile2 (2.3.0)
-    minitest (5.10.3)
+    minitest (5.11.1)
     modware (0.1.3)
       key_struct (~> 0.4)
     monetize (1.4.0)
@@ -254,7 +238,7 @@ GEM
       mongo (~> 2.1)
       origin (~> 2.2)
       tzinfo (>= 0.3.37)
-    multi_json (1.12.1)
+    multi_json (1.12.2)
     multipart-post (2.0.0)
     nenv (0.3.0)
     newrelic_rpm (4.6.0.338)
@@ -278,7 +262,7 @@ GEM
     pry-stack_explorer (0.4.9.2)
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
-    puma (3.10.0)
+    puma (3.11.0)
     rack (1.6.8)
     rack-cors (0.4.0)
     rack-test (0.6.3)
@@ -297,8 +281,8 @@ GEM
       sprockets-rails
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
-    rails-dom-testing (1.0.8)
-      activesupport (>= 4.2.0.beta, < 5.0)
+    rails-dom-testing (1.0.9)
+      activesupport (>= 4.2.0, < 5.0)
       nokogiri (~> 1.6)
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.3)
@@ -408,19 +392,18 @@ PLATFORMS
 
 DEPENDENCIES
   awesome_print
-  aws-sdk
-  aws-sdk-rails
   bcrypt
   brakeman
   byebug
   carrierwave
   clockwork
+  concurrent-ruby-ext
   countries
   dotenv-rails
   dry-auto_inject
+  dry-dependency-injection
   dry-initializer
   dry-monads
-  dry-more-container!
   dry-struct
   dry-transaction
   dry-validation
@@ -439,6 +422,7 @@ DEPENDENCIES
   iban-tools
   jbuilder
   jwt
+  leafy
   listen
   mini_magick
   money-rails
@@ -448,6 +432,7 @@ DEPENDENCIES
   oauth
   oj
   pg
+  pry
   pry-rails
   pry-rescue
   pry-stack_explorer
@@ -483,4 +468,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.16.0
+   1.16.1

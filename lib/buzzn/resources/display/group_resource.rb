@@ -1,5 +1,6 @@
 require_relative '../group_resource'
 require_relative 'register_resource'
+require_relative 'mentor_resource'
 
 module Display
   class GroupResource < ::GroupResource
@@ -12,9 +13,7 @@ module Display
     end
 
     def mentors
-      all(permissions.mentors,
-          object.managers.limit(2),
-          MentorResource)
+      all(permissions.mentors, object.mentors, MentorResource)
     end
   end
 end

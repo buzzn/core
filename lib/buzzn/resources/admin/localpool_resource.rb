@@ -3,6 +3,7 @@ require_relative '../person_resource'
 require_relative '../contract/tariff_resource'
 require_relative 'billing_cycle_resource'
 require_relative '../../schemas/completeness/admin/localpool'
+
 module Admin
   class LocalpoolResource < GroupResource
 
@@ -46,7 +47,7 @@ module Admin
       super
       @display_url = Import.global('config.display_url')
     end
-    
+
     def meters
       all(permissions.meters, object.meters.real_or_virtual)
     end

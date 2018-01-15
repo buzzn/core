@@ -1,9 +1,11 @@
-class Buzzn::Services::MessageEncryptor < ActiveSupport::MessageEncryptor
+require_relative '../services'
+
+# a brief verification indicates that the ActiveSupport::MessageEncryptor
+# is threadsafe and can be used by multiple threads concurrently
+class Services::MessageEncryptor < ActiveSupport::MessageEncryptor
 
   def self.new
-    # a brief verification indicates that the ActiveSupport::MessageEncryptor
-    # is threadsafe and can be used by mutliple threads concurrently
-    super(Buzzn::Application.secrets.secret_key_base)
+    super(Import.global('config.secret_key_base'))
   end
 
 end

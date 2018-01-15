@@ -1,4 +1,5 @@
 require 'buzzn/score_calculator'
+require 'buzzn/slug'
 
 module Group
   class Base < ActiveRecord::Base
@@ -23,6 +24,10 @@ module Group
 
     def managers
       Person.with_roles(self, Role::GROUP_ADMIN)
+    end
+
+    def mentors
+      Person.with_roles(self, Role::GROUP_ENERGY_MENTOR)
     end
 
     has_many :scores, as: :scoreable

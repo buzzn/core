@@ -42,9 +42,7 @@ paths:
           description: success
   "/groups/{group_id}/charts":
     get:
-      description: returns the charts of the group
-      consumes:
-      - application/x-www-form-urlencoded
+      description: returns the daily charts of the group
       produces:
       - application/json
       parameters:
@@ -52,20 +50,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: duration
-        in: formData
-        required: true
-        type: string
-        enum:
-        - year
-        - month
-        - day
-        - hour
-      - name: timestamp
-        in: formData
-        required: false
-        type: string
-        format: date-time
       responses:
         200:
           description: success
@@ -79,106 +63,6 @@ paths:
         in: path
         required: true
         type: string
-      responses:
-        200:
-          description: success
-  "/groups/{group_id}/registers":
-    get:
-      description: returns all registers
-      produces:
-      - application/json
-      parameters:
-      - name: group_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/groups/{group_id}/registers/{register_id}":
-    get:
-      description: returns the register
-      produces:
-      - application/json
-      parameters:
-      - name: group_id
-        in: path
-        required: true
-        type: string
-      - name: register_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/groups/{group_id}/registers/{register_id}/charts":
-    get:
-      description: returns the charts of the group
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: group_id
-        in: path
-        required: true
-        type: string
-      - name: register_id
-        in: path
-        required: true
-        type: string
-      - name: duration
-        in: formData
-        required: true
-        type: string
-        enum:
-        - year
-        - month
-        - day
-        - hour
-      - name: timestamp
-        in: formData
-        required: false
-        type: string
-        format: date-time
-      responses:
-        200:
-          description: success
-  "/groups/{group_id}/scores":
-    get:
-      description: returns the score(s) of the group
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: group_id
-        in: path
-        required: true
-        type: string
-      - name: interval
-        in: formData
-        required: true
-        type: string
-        enum:
-        - year
-        - month
-        - day
-      - name: timestamp
-        in: formData
-        required: true
-        type: string
-        format: date-time
-      - name: mode
-        in: formData
-        required: false
-        type: string
-        enum:
-        - sufficiency
-        - closeness
-        - autarchy
-        - fitting
       responses:
         200:
           description: success

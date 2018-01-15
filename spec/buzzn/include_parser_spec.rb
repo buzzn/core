@@ -1,3 +1,5 @@
+require 'buzzn/include_parser'
+
 describe Buzzn::IncludeParser do
 
   it 'parses simple include strings' do

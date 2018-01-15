@@ -1,7 +1,9 @@
+require_relative 'base'
+
 module Meter
   class Real < Base
 
-    has_many :registers, class_name: Register::Real, foreign_key: :meter_id
+    has_many :registers, class_name: 'Register::Real', foreign_key: :meter_id
 
     enum manufacturer_name: [:easy_meter, :other].each_with_object({}).each {|k, map| map[k] = k.to_s }
 

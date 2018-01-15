@@ -1,3 +1,5 @@
+require 'raven'
+
 module Buzzn
   module Roda
     class ErrorHandler < Proc
@@ -8,6 +10,7 @@ module Buzzn
         Buzzn::StaleEntity => 409,
         Buzzn::ValidationError => 422,
         Buzzn::GeneralError => 404,
+        Buzzn::DataSourceError => 503,
         ::Services::Datasource::Discovergy::Api::EmptyResponse => 404
       }
 
@@ -33,7 +36,9 @@ module Buzzn
             logger.error{ "#{e.message}\n\t" + e.backtrace.join("\n\t")}
             errors = "{\"errors\":[{\"detail\":\"internal server error\"}]}"
           end
-          Raven.capture_exception(e) if response.status == 500
+          if defined?(Raven) && response.status == 500
+            Raven.capture_exception(e)
+          end
           response.write(errors)
         end
       end
