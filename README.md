@@ -24,7 +24,7 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
   - [Setup Ruby \(using rbenv\)](#setup-ruby-using-rbenv)
   - [Install required software](#install-required-software)
   - [Setup the rails Project](#setup-the-rails-project)
-  - [Start server in develoment mode](#start-server-in-develoment-mode)
+  - [Start server in development mode](#start-server-in-development-mode)
   - [Reset and Start Test Environment](#reset-and-start-test-environment)
 - [Misc admin info](#misc-admin-info)
   - [Start sidekiq message queue](#start-sidekiq-message-queue)
@@ -154,7 +154,7 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
     bundle install
     rake db:create db:structure:load db:seed:example_data
 
-## Start server in develoment mode
+## Start server in development mode
     bin/server
 
 ## Reset and Start Test Environment
