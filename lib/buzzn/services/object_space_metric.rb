@@ -1,3 +1,5 @@
+require_relative '../services'
+
 class Services::ObjectSpaceMetric
   extend Dry::DependencyInjection::Eager
   include Import['services.metrics']

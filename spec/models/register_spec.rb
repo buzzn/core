@@ -111,24 +111,6 @@ describe Register do
     end
   end
 
-  class Buzzn::Services::ChartsDummy
-    def for_register(register, interval)
-      return Buzzn::DataResultSet.send(:milliwatt_hour, 'some-id', [Buzzn::DataPoint.new(1491429601.399, 243378558930.2)])
-    end
-  end
-
-  xit 'stores a reading in database' do
-    meter = Fabricate(:easymeter_60009405)
-    register = meter.registers.first
-    register.instance_variable_set('@charts', Buzzn::Services::ChartsDummy.new)
-    register.store_reading_at(Time.current.beginning_of_day, Reading::Continuous::REGULAR_READING)
-    expect(Reading::Continuous.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
-    expect{register.store_reading_at(Time.current.beginning_of_day, Reading::Continuous::REGULAR_READING)}.to raise_error Mongoid::Errors::Validations
-    expect(Reading::Continuous.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
-    expect{register.store_reading_at(Time.current, Reading::Continuous::REGULAR_READING)}.to raise_error ArgumentError
-    expect(Reading::Continuous.all.by_register_id(register.id).at(Time.current.beginning_of_day).size).to eq 1
-  end
-
   describe "obis" do
     context "when register is base" do
       it { expect(Register::Base.new.obis).to be_nil }
