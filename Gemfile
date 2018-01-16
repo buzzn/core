@@ -31,7 +31,7 @@ gem 'jwt'
 
 # postgres
 gem 'schema_plus_enums'
-gem 'pg'
+gem 'pg', '0.20.0'
 
 # json
 gem 'multi_json'
@@ -99,7 +99,6 @@ end
 group :development do
   gem 'pry-rails'
   gem 'rake'
-  gem 'yard'
 end
 
 group :test do

@@ -20,7 +20,7 @@ namespace :heroku do
     task seed_and_import: %i(db:seed:example_data beekeeper:import)
 
     desc "Run the beekeeper import and push the result to staging"
-    task staging: %i(print_warning reset_db seed_and_import) do
+    task staging: %i(print_warning reset_db seed_and_import db:seed:buzzn_operator) do
       push_local_db_to_heroku(:staging)
     end
 
