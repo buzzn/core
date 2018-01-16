@@ -385,7 +385,6 @@ GEM
     wicked_pdf (1.1.0)
     wisper (2.0.0)
     wkhtmltopdf-binary (0.12.3.1)
-    yard (0.9.5)
 
 PLATFORMS
   ruby
@@ -462,7 +461,6 @@ DEPENDENCIES
   webmock
   wicked_pdf
   wkhtmltopdf-binary
-  yard
 
 RUBY VERSION
    ruby 2.3.1p112

@@ -99,7 +99,6 @@ end
 group :development do
   gem 'pry-rails'
   gem 'rake'
-  gem 'yard'
 end
 
 group :test do
