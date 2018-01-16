@@ -31,7 +31,7 @@ class Beekeeper::Import
 
   def import_localpools
     #ActiveRecord::Base.logger = Logger.new(STDOUT)
-    [Beekeeper::Minipool::MinipoolObjekte.to_import.first].each do |record|
+    Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
       logger.info("\n")
       logger.info("Localpool #{record.converted_attributes[:name]} (start: #{record.converted_attributes[:start_date]})")
       logger.info("-" * 80)
@@ -209,16 +209,26 @@ class Beekeeper::Import
 
   def add_powertaker_contracts(localpool, powertaker_contracts)
     powertaker_contracts.each do |contract|
-      ActiveRecord::Base.transaction do
-        customer = find_or_create_powertaker(contract[:powertaker])
-        attrs = contract.except(:powertaker).merge(
-          customer: customer,
-          contractor: localpool.owner,
-          localpool: localpool,
-          # FIXME: temporary hack because the correct registers still need to be assigned (using the buzznid).
-          register: Register::Input.new(name: "Fake temporary register for import", share_with_group: false, meter: Meter::Real.new)
-        )
-        ::Contract::LocalpoolPowerTaker.create!(attrs)
+      begin
+        ActiveRecord::Base.transaction do
+          customer = find_or_create_powertaker(contract[:powertaker])
+          meter = Meter::Real.find_by(product_serialnumber: contract[:meter_serialnumber])
+          register = if meter
+            meter.registers.input.first
+          else
+            # FIXME: temporary hack because the correct registers still need to be assigned (using the buzznid).
+            Register::Input.new(name: "Fake temporary register for import", share_with_group: false, meter: Meter::Real.new)
+          end
+          attrs = contract.except(:powertaker, :meter_serialnumber).merge(
+            customer: customer,
+            contractor: localpool.owner,
+            localpool: localpool,
+            register: register
+          )
+          ::Contract::LocalpoolPowerTaker.create!(attrs)
+        end
+      rescue => e
+        logger.error("#{e} (meter serial: #{contract[:meter_serialnumber]})")
       end
     end
   end
@@ -303,6 +313,7 @@ class Beekeeper::Import
     logger.info("group orga owner with bank-accounts  : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| !g.owner.bank_accounts.empty? }.count}")
     logger.info("group orga contacts                  : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| g.owner.contact_id }.count}")
     logger.info("group orga contact addresses         : #{Organization.where(id: Group::Localpool.where('owner_organization_id IS NOT NULL').select(:owner_organization_id)).joins(:contact).where('persons.address_id IS NOT NULL').count}")
+    logger.info("localpool powertaker contracts       : #{Contract::LocalpoolPowerTaker.count}")
     logger.info("registers                            : #{Register::Real.count}")
     logger.info("readings                             : #{Reading::Single.count}")
     logger.info("meters                               : #{Meter::Real.count}")
