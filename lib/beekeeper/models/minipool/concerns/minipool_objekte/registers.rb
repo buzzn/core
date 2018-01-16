@@ -23,12 +23,13 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     end
 
     def find_or_build_meter(attributes)
-      raise "buzznid unreliable!!" if attributes[:buzznid] !~ /^([0-9])+\/([0-9])+$/
-      @@meters ||= {} # very ugly, err, I mean pragmatic
-      if @@meters[attributes[:buzznid]]
-        @@meters[attributes[:buzznid]]
+      meter = Beekeeper::MeterRegistry.get(attributes[:buzznid])
+      if meter
+        meter
       else
-        @@meters[attributes[:buzznid]] = Meter::Real.new(attributes.except(:buzznid))
+        meter = Meter::Real.new(attributes.except(:buzznid))
+        Beekeeper::MeterRegistry.set(attributes[:buzznid], meter)
+        meter
       end
     end
   end
