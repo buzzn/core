@@ -40,6 +40,10 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
       contract_number_addition: nummernzusatz,
       forecast_kwh_pa:          prognose_verbrauch.to_i,
       powertaker:               powertaker,
+      signing_date:             begin_date,
+      begin_date:               begin_date,
+      termination_date:         end_date,
+      end_date:                 end_date,
       # register:                 register
     }
   end
@@ -74,6 +78,14 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   def kontaktdaten
     Beekeeper::Minipool::Kontaktdaten.find_by(kontaktdaten_id: kontakt_id)
+  end
+
+  def begin_date
+    Date.parse(bezugsbeginn)
+  end
+
+  def end_date
+    Date.parse(bezugsende)
   end
 
   def eeg_umlage_reduced?
