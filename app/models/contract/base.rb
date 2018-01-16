@@ -96,11 +96,12 @@ module Contract
     end
 
     def status
-      status = if end_date
+      today = Date.today
+      status = if end_date && end_date <= today
         ENDED
       elsif termination_date
         TERMINATED
-      elsif begin_date
+      elsif begin_date && begin_date <= today
         ACTIVE
       else
         ONBOARDING
