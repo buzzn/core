@@ -7,12 +7,16 @@ describe 'Contract::Base' do
       it "is onboarding" do
         expect(contract.status).to be_onboarding
         expect(contract.status).to eq('onboarding') # string still works
+        contract.update_attribute(:begin_date, Date.tomorrow)
+        expect(contract.status).to be_onboarding
       end
     end
 
     context "when contract has begin date" do
       let(:contract) { Fabricate.build(:metering_point_operator_contract, begin_date: Date.yesterday) }
       it "is active" do
+        expect(contract.status).to be_active
+        contract.update_attribute(:end_date, Date.tomorrow)
         expect(contract.status).to be_active
       end
 
