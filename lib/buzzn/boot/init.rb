@@ -2,14 +2,11 @@ require_relative '../../buzzn'
 require_relative 'reader'
 require_relative 'active_record'
 require_relative 'main_container'
+require_relative '../logger'
 require_relative '../services'
 
 require 'dotenv'
-begin
-  require 'pry'
-rescue LoadError
-  #ignore
-end
+require 'pry'
 require 'dry/auto_inject'
 require 'dry-dependency-injection'
 
@@ -25,9 +22,6 @@ def Import.global?(key)
 end
 
 module Buzzn
-  module Services
-  end
-
   module Boot
     class Init
       class Singletons
@@ -36,10 +30,13 @@ module Buzzn
 
       class << self
 
-        def run
-          @logger = Logger.new(self)
+        def run(logger)
 
           setup_environment
+
+          Buzzn::Logger.root = logger
+          logger.level = Import.global('config.log_level')
+          @logger = Logger.new(self)
 
           setup_encoding
 
