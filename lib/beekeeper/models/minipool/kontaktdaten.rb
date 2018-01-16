@@ -49,4 +49,8 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
     titel =~ /\s*Dr\.\s*/ ? 'Dr.' : nil
   end
 
+  def person?
+    rechtsform.strip == "Privatperson"
+  end
+
 end
