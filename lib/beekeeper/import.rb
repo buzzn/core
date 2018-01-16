@@ -213,6 +213,7 @@ class Beekeeper::Import
         customer = find_or_create_powertaker(contract[:powertaker])
         attrs = contract.except(:powertaker).merge(
           customer: customer,
+          contractor: localpool.owner,
           localpool: localpool,
           # FIXME: temporary hack because the correct registers still need to be assigned (using the buzznid).
           register: Register::Input.new(name: "Fake temporary register for import", share_with_group: false, meter: Meter::Real.new)
