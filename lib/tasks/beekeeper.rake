@@ -34,8 +34,6 @@ namespace :beekeeper do
     # load the beekeeper stuff lazy on demand
     require 'lib/beekeeper/init'
     Beekeeper::Import.run!
-    # attach any person images we have meanwhile.
-    Rake.application['beekeeper:person_images:attach'].invoke
   end
 
   task generate_models: :environment do

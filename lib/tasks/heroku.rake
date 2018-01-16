@@ -17,7 +17,7 @@ namespace :heroku do
     end
 
     task reset_db: %i(db:drop db:create db:structure:load)
-    task seed_and_import: %i(db:seed:example_data beekeeper:import)
+    task seed_and_import: %i(db:seed:example_data beekeeper:import beekeeper:person_images:attach)
 
     desc "Run the beekeeper import and push the result to staging"
     task staging: %i(print_warning reset_db seed_and_import db:seed:buzzn_operator) do
