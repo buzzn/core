@@ -212,7 +212,19 @@ class Beekeeper::Import
 
   def add_powertaker_contracts(localpool, powertaker_contracts)
     powertaker_contracts.each do |contract|
-      p contract
+      ActiveRecord::Base.transaction do
+        customer = contract[:powertaker] # contains an unsaved ActiveRecord instance with all required data.
+        # TODO: make sure we don't create the same person twice; check by email, first and last name.
+        customer.save!
+        puts "Saved #{customer.name}"
+        attrs = contract.except(:powertaker).merge(
+          customer: customer,
+          localpool: localpool,
+          # FIXME: temporary hack because the correct registers still need to be assigned (using the buzznid).
+          register: Register::Input.new(name: "Fake temporary register for import", share_with_group: false, meter: Meter::Real.new)
+        )
+        ::Contract::LocalpoolPowerTaker.create!(attrs)
+      end
     end
   end
 

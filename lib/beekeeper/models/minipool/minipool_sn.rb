@@ -37,8 +37,43 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
   def converted_attributes
     {
       contract_number:          vertragsnummer,
-      contract_number_addition: nummernzusatz
+      contract_number_addition: nummernzusatz,
+      forecast_kwh_pa:          prognose_verbrauch.to_i,
+      powertaker:               powertaker,
+      # register:                 register
     }
+  end
+
+  private
+
+  #
+  # WIP, but I may throw this away again.
+  #
+  # WARNING: this way of getting the register is quite fragile.
+  # The Beekeeper::MeterRegistry is only filled when add_registers has run before this method, which it does
+  # in the _current_ order of the import.
+  # def register
+  #   meter = Beekeeper::MeterRegistry.get(buzznid.strip)
+  #   ap meter
+  #   if meter
+  #     puts "METER"
+  #     meter.registers.first
+  #   else
+  #     puts "ELSE"
+  #     add_warning("contract register", "No meter found for buzznid #{buzznid}; imported contract has no register now.")
+  #     # For now, return a fake register so the import continues
+  #     Register::Input.new(name: "Fake temporary register for import")
+  #     # nil
+  #   end
+  # end
+
+  # this will be extended to return a new organization once we add those to the import
+  def powertaker
+    ::Person.new(kontaktdaten.converted_attributes)
+  end
+
+  def kontaktdaten
+    Beekeeper::Minipool::Kontaktdaten.find_by(kontaktdaten_id: kontakt_id)
   end
 
   def eeg_umlage_reduced?

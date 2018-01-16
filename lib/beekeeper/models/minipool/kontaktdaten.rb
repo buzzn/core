@@ -18,5 +18,35 @@
 #
 
 class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.kontaktdaten'
+
+  def converted_attributes
+    {
+      first_name:          vorname.strip,
+      last_name:           nachname.strip,
+      title:               title,
+      prefix:              prefix,
+      phone:               telefon.strip,
+      fax:                 fax.strip,
+      email:               email.strip,
+      preferred_language: :german
+    }
+  end
+
+  PREFIX_MAP = {
+    'Herr' => 'M',
+    'Frau' => 'F'
+  }
+
+  def prefix
+    PREFIX_MAP[anrede]
+  end
+
+  # title is an enum in the core app DB.
+  # also, we only have the values 'Dr.' and '' in beekeeper.
+  def title
+    titel =~ /\s*Dr\.\s*/ ? 'Dr.' : nil
+  end
+
 end
