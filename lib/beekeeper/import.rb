@@ -37,11 +37,12 @@ class Beekeeper::Import
       begin
         Group::Localpool.transaction do
           # need to create localpool with broken invariants
-          localpool = Group::Localpool.create(record.converted_attributes.except(:registers))
+          localpool = Group::Localpool.create(record.converted_attributes.except(:registers, :powertaker_contracts))
           warnings  = record.warnings || {}
           # with localpool.id the roles on owner can be set
           add_roles(localpool)
           add_registers(localpool, record.converted_attributes[:registers])
+          add_powertaker_contracts(localpool, record.converted_attributes[:powertaker_contracts])
           # now we can fail and rollback on broken invariants
           unless localpool.invariant_valid?
             raise ActiveRecord::RecordInvalid.new(localpool)
@@ -205,6 +206,12 @@ class Beekeeper::Import
         logger.error("Failed to save register #{register.inspect}")
         logger.error("Errors: #{register.errors.inspect}")
       end
+    end
+  end
+
+  def add_powertaker_contracts(localpool, powertaker_contracts)
+    powertaker_contracts.each do |contract|
+      p contract
     end
   end
 
