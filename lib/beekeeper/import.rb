@@ -1,6 +1,7 @@
 # wireup invariant with AR and raise error on invalid in before_save
 require 'buzzn/schemas/support/enable_dry_validation'
 require 'buzzn/types/discovergy'
+require 'beekeeper/meter_registry'
 
 ActiveRecord::Base.send(:include, Schemas::Support::ValidateInvariant)
 
