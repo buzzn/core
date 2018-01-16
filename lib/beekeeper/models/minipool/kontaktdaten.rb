@@ -30,7 +30,7 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
       phone:               telefon.strip,
       fax:                 fax.strip,
       email:               email.strip,
-      preferred_language: :german
+      preferred_language:  :german
     }
   end
 
