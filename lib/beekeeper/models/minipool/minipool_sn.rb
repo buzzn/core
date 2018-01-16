@@ -48,6 +48,8 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
     }
   end
 
+  delegate :person?, to: :kontaktdaten
+
   private
 
   #
@@ -73,11 +75,11 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   # this will be extended to return a new organization once we add those to the import
   def powertaker
-    ::Person.new(kontaktdaten.converted_attributes)
+    @powertaker ||= ::Person.new(kontaktdaten.converted_attributes)
   end
 
   def kontaktdaten
-    Beekeeper::Minipool::Kontaktdaten.find_by(kontaktdaten_id: kontakt_id)
+    @kontaktdaten ||= Beekeeper::Minipool::Kontaktdaten.find_by(kontaktdaten_id: kontakt_id)
   end
 
   def begin_date
