@@ -31,7 +31,7 @@ class Beekeeper::Import
 
   def import_localpools
     #ActiveRecord::Base.logger = Logger.new(STDOUT)
-    Beekeeper::Minipool::MinipoolObjekte.to_import.each do |record|
+    [Beekeeper::Minipool::MinipoolObjekte.to_import.first].each do |record|
       logger.info("\n")
       logger.info("Localpool #{record.converted_attributes[:name]} (start: #{record.converted_attributes[:start_date]})")
       logger.info("-" * 80)
@@ -100,9 +100,6 @@ class Beekeeper::Import
     else
       add_optimized_group(localpool, warnings)
     end
-  end
-
-  def merge(list1, list2)
   end
 
   def setup_optimized_groups(localpool, serial)
@@ -213,10 +210,7 @@ class Beekeeper::Import
   def add_powertaker_contracts(localpool, powertaker_contracts)
     powertaker_contracts.each do |contract|
       ActiveRecord::Base.transaction do
-        customer = contract[:powertaker] # contains an unsaved ActiveRecord instance with all required data.
-        # TODO: make sure we don't create the same person twice; check by email, first and last name.
-        customer.save!
-        puts "Saved #{customer.name}"
+        customer = find_or_create_powertaker(contract[:powertaker])
         attrs = contract.except(:powertaker).merge(
           customer: customer,
           localpool: localpool,
@@ -225,6 +219,23 @@ class Beekeeper::Import
         )
         ::Contract::LocalpoolPowerTaker.create!(attrs)
       end
+    end
+  end
+
+  # Make sure we don't create the same person twice.
+  # person_instance contains an unsaved ActiveRecord instance with all required data.
+  def find_or_create_powertaker(unsaved_person)
+    logger.debug "Find or create #{unsaved_person.name} (#{unsaved_person.email})"
+    # Unfortunately some persons can have the same email address in Beekeeper, so we need to add first and last name.
+    uniqueness_attrs = unsaved_person.attributes.slice("email", "first_name", "last_name")
+    person = Person.find_by(uniqueness_attrs)
+    if person
+      logger.debug "Using existing person #{person.id}"
+      person
+    else
+      logger.debug "Creating new person instance"
+      unsaved_person.save!
+      unsaved_person
     end
   end
 
