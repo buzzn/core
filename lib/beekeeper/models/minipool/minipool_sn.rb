@@ -33,6 +33,7 @@
 
 class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.minipool_sn'
+  include Beekeeper::ImportWarnings
 
   def converted_attributes
     {
@@ -44,7 +45,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
       begin_date:               begin_date,
       termination_date:         end_date,
       end_date:                 end_date,
-      # register:                 register
+      meter_serialnumber:       meter_serialnumber
     }
   end
 
@@ -52,26 +53,18 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   private
 
-  #
-  # WIP, but I may throw this away again.
-  #
-  # WARNING: this way of getting the register is quite fragile.
-  # The Beekeeper::MeterRegistry is only filled when add_registers has run before this method, which it does
-  # in the _current_ order of the import.
-  # def register
-  #   meter = Beekeeper::MeterRegistry.get(buzznid.strip)
-  #   ap meter
-  #   if meter
-  #     puts "METER"
-  #     meter.registers.first
-  #   else
-  #     puts "ELSE"
-  #     add_warning("contract register", "No meter found for buzznid #{buzznid}; imported contract has no register now.")
-  #     # For now, return a fake register so the import continues
-  #     Register::Input.new(name: "Fake temporary register for import")
-  #     # nil
-  #   end
-  # end
+  def meter_serialnumber
+    meter = Beekeeper::Minipool::MsbGerät.find_by(
+      lcpvertragsnummer: vertragsnummer,
+      nummernzusatz: nummernzusatz
+    )
+    if meter
+      meter.zählernummer.strip
+    else
+      add_warning(:meter_serialnumber, "No MsbGerät found for #{vertragsnummer}/#{nummernzusatz}")
+      nil
+    end
+  end
 
   # this will be extended to return a new organization once we add those to the import
   def powertaker
