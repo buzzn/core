@@ -13,6 +13,7 @@ class Beekeeper::Importer::RegistersAndMeters
         logger.error("Failed to save register #{register.inspect}")
         logger.error("Errors: #{register.errors.inspect}")
       end
+      register
     end
   end
 end
