@@ -38,7 +38,7 @@ class Beekeeper::Import
 
       warnings = record.warnings || {}
       Beekeeper::Importer::Brokers.new(logger).run(localpool, warnings)
-      Beekeeper::Importer::OptimizeGroups.new(logger).run(localpool, warnings)
+      Beekeeper::Importer::OptimizeGroup.new(logger).run(localpool, warnings)
       Beekeeper::Importer::LogLocalpoolTodos.new(logger).run(localpool.id, warnings)
     end
   end
