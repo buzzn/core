@@ -11,31 +11,31 @@ class Beekeeper::Importer::PowerTakerContracts
       begin
         ActiveRecord::Base.transaction do
           customer = find_or_create_powertaker(contract[:powertaker])
-          meter = Meter::Real.find_by(product_serialnumber: contract[:meter_serialnumber])
-          register = if meter
-            meter.registers.input.first
-          else
-            info = "vertragsnummer: #{contract[:contract_number]}/#{contract[:contract_number_addition]} (#{customer.name})"
-            logger.error("Meter with serial '#{contract[:meter_serialnumber]}' not found. #{info}")
-            # FIXME: temporary hack because the correct registers still need to be assigned (using the buzznid).
-            meter = Meter::Real.find_or_create_by(product_serialnumber: 'FAKE-FOR-IMPORT')
-            Register::Input.find_or_create_by(name: "Fake temporary register for import", share_with_group: false, meter: meter)
-          end
-          attrs = contract.except(:powertaker, :meter_serialnumber).merge(
-            customer: customer,
-            contractor: localpool.owner,
-            localpool: localpool,
-            register: register
-          )
-          ::Contract::LocalpoolPowerTaker.create!(attrs)
+          create_contract(localpool, customer, contract, registers)
         end
       rescue => e
-        logger.error("#{e} (meter serial: #{contract[:meter_serialnumber]})")
+        logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
       end
     end
   end
 
   private
+
+  def create_contract(localpool, customer, contract, registers)
+    meter    = registers.map(&:meter).find { |m| m.legacy_buzznid == contract[:buzznid] }
+    register = if meter
+      meter.registers.input.first
+    else
+      create_fake_virtual_register(contract[:buzznid])
+    end
+    contract_attributes = contract.except(:powertaker, :buzznid).merge(
+      localpool:  localpool,
+      register:   register,
+      customer:   customer,
+      contractor: localpool.owner
+    )
+    Contract::LocalpoolPowerTaker.create!(contract_attributes)
+  end
 
   # Make sure we don't create the same person twice.
   def find_or_create_powertaker(unsaved_person)
@@ -50,5 +50,12 @@ class Beekeeper::Importer::PowerTakerContracts
       unsaved_person.save!
       unsaved_person
     end
+  end
+
+  # As a temporary solution to importing the actual virtual registers (separate story), we create a fake, empty one.
+  def create_fake_virtual_register(buzznid)
+    logger.error("No meter/register for #{buzznid}, creating a fake temporary one.")
+    meter = Meter::Real.create!(product_serialnumber: 'FAKE-FOR-IMPORT', legacy_buzznid: buzznid)
+    Register::Input.create!(name: "FAKE-FOR-IMPORT", share_with_group: false, meter: meter)
   end
 end
