@@ -68,6 +68,7 @@ describe Admin::LocalpoolRoda do
               'observer_max_threshold'=> nil,
               'observer_enabled'=> nil,
               'observer_offline_monitoring'=> nil,
+              'meter_id' => meter.id,
               'updatable'=> true,
               'deletable'=> false,
               'createables' => ['readings'],
