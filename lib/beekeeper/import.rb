@@ -234,7 +234,6 @@ class Beekeeper::Import
   end
 
   # Make sure we don't create the same person twice.
-  # person_instance contains an unsaved ActiveRecord instance with all required data.
   def find_or_create_powertaker(unsaved_person)
     logger.debug "Find or create #{unsaved_person.name} (#{unsaved_person.email})"
     # Unfortunately some persons can have the same email address in Beekeeper, so we need to add first and last name.
