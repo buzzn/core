@@ -133,7 +133,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
   # Labels of common consumption meters are inconsistent: "Allg.", "Gemeinschaft", ....
   def name_hints_at_common_register?
-    pattern = /(allg|gemein|Aufzug|Heiz|E-Tankstelle|ladestation|Haustechnik|Antenne|Gem EG|UV E-Bikes E-Raum|Hausstrom)/i
+    pattern = /(allg|gemein|Aufzug|Heiz|E-Tankstelle|ladestation|Haustechnik|Antenne|Gem EG|UV E-Bikes E-Raum|Hausstrom|Tiefgarage)/i
     name =~ pattern && name !~ /Bürogemeinschaft/
   end
 
