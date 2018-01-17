@@ -1277,7 +1277,8 @@ CREATE TABLE meters (
     type character varying NOT NULL,
     sequence_number integer,
     group_id uuid,
-    broker_id integer
+    broker_id integer,
+    legacy_buzznid character varying
 );
 
 
@@ -2759,4 +2760,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171031085360');
 INSERT INTO schema_migrations (version) VALUES ('20171115086500');
 
 INSERT INTO schema_migrations (version) VALUES ('20171207154218');
+
+INSERT INTO schema_migrations (version) VALUES ('20180112000000');
 
