@@ -43,7 +43,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
       powertaker:               powertaker,
       signing_date:             begin_date,
       begin_date:               begin_date,
-      termination_date:         end_date,
+      termination_date:         termination_date,
       end_date:                 end_date,
       buzznid:                  buzznid.strip
     }
@@ -82,6 +82,10 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   def end_date
     Date.parse(bezugsende)
+  end
+
+  def termination_date
+    (end_date <= Date.today) ? end_date : nil
   end
 
   def eeg_umlage_reduced?
