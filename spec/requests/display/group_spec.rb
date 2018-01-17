@@ -87,6 +87,9 @@ describe Display::GroupRoda do
       GET "/bla-blub", nil
       expect(response).to have_http_status(404)
       expect(json).to eq not_found_json
+
+      GET "/#{group.slug}123", nil
+      expect(response).to have_http_status(404)
     end
 
     it '403' do

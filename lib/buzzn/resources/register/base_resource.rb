@@ -18,6 +18,7 @@ module Register
                :observer_max_threshold,
                :observer_enabled,
                :observer_offline_monitoring,
+               :meter_id,
                :updatable, :deletable, :createables
 
     has_one :group
