@@ -37,7 +37,7 @@ class Beekeeper::Import
       localpool.save!
 
       warnings = record.warnings || {}
-      unless ENV['SKIP_BROKERS']
+      unless Import.global('config.skip_brokers')
         Beekeeper::Importer::Brokers.new(logger).run(localpool, warnings)
         Beekeeper::Importer::OptimizeGroup.new(logger).run(localpool, warnings)
       end
