@@ -45,7 +45,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
       begin_date:               begin_date,
       termination_date:         end_date,
       end_date:                 end_date,
-      meter_serialnumber:       meter_serialnumber
+      buzznid:                  buzznid.strip
     }
   end
 
@@ -53,18 +53,19 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   private
 
-  def meter_serialnumber
-    meter = Beekeeper::Minipool::MsbGerät.find_by(
-      lcpvertragsnummer: vertragsnummer,
-      nummernzusatz: nummernzusatz
-    )
-    if meter
-      meter.zählernummer.strip
-    else
-      add_warning(:meter_serialnumber, "No MsbGerät found for #{vertragsnummer}/#{nummernzusatz}")
-      nil
-    end
-  end
+  # FIXME: currently not used. Remove once import of contracts is stable/reliable.
+  # def meter_serialnumber
+  #   meter = Beekeeper::Minipool::MsbGerät.find_by(
+  #     lcpvertragsnummer: vertragsnummer,
+  #     nummernzusatz: nummernzusatz
+  #   )
+  #   if meter
+  #     meter.zählernummer.strip
+  #   else
+  #     add_warning(:meter_serialnumber, "No MsbGerät found for #{vertragsnummer}/#{nummernzusatz}")
+  #     nil
+  #   end
+  # end
 
   # this will be extended to return a new organization once we add those to the import
   def powertaker
