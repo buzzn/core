@@ -39,15 +39,14 @@ class Beekeeper::Importer::PowerTakerContracts
 
   # Make sure we don't create the same person twice.
   def find_or_create_powertaker(unsaved_person)
-    logger.debug "Find or create #{unsaved_person.name} (#{unsaved_person.email})"
     # Unfortunately some persons can have the same email address in Beekeeper, so we need to add first and last name.
     uniqueness_attrs = unsaved_person.attributes.slice("email", "first_name", "last_name")
     person = Person.find_by(uniqueness_attrs)
     if person
-      logger.debug "Using existing person #{person.id}"
+      logger.debug "#{unsaved_person.name} (#{unsaved_person.email}): using existing person #{person.id}"
       person
     else
-      logger.debug "Creating new person instance"
+      logger.debug "#{unsaved_person.name} (#{unsaved_person.email}): creating new person instance"
       unsaved_person.save!
       unsaved_person
     end
