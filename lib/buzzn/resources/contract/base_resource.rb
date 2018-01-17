@@ -8,7 +8,6 @@ module Contract
     model Base
 
     attributes  :full_contract_number,
-                :customer_number,
                 :signing_date,
                 :begin_date,
                 :termination_date,

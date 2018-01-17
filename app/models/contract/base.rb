@@ -1,4 +1,5 @@
 require_relative '../filterable'
+require_relative '../owner'
 
 module Contract
   class Base < ActiveRecord::Base
@@ -6,6 +7,8 @@ module Contract
     self.abstract_class = true
 
     include Filterable
+    Owner.generate(self, 'customer')
+    Owner.generate(self, 'contractor')
 
     # status consts
     ONBOARDING = 'onboarding'
@@ -34,9 +37,6 @@ module Contract
     class << self
       private :new
     end
-
-    belongs_to :contractor, polymorphic: true
-    belongs_to :customer, polymorphic: true
 
     has_and_belongs_to_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy

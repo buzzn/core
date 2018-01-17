@@ -7,15 +7,15 @@ describe Admin::LocalpoolRoda do
 
   context 'organizations' do
 
-    entity(:group) { Fabricate(:localpool) }
-    entity!(:address) { Fabricate(:address) }
+    entity(:group) { create(:localpool) }
+    entity!(:address) { create(:address) }
     entity!(:organization) do
       organization = Fabricate(:metering_service_provider,
                                contact: Fabricate(:person),
                                legal_representation: Fabricate(:person))
       organization.update(address: address)
-      Fabricate(:bank_account, owner: organization)
-      Fabricate(:metering_point_operator_contract,
+      create(:bank_account, owner: organization)
+      create(:contract, :metering_point_operator,
                 localpool: group,
                 customer: organization,
                 contractor: organization)

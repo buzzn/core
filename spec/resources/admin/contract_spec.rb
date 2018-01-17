@@ -17,7 +17,6 @@ describe Contract::BaseResource do
   let(:base_attributes) { ['id', 'type', 'updated_at',
                            'status',
                            'full_contract_number',
-                           'customer_number',
                            'signing_date',
                            'termination_date',
                            'end_date',
