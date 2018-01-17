@@ -29,7 +29,6 @@ end
 
 Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPointOperator do
   metering_point_operator_name { FFaker::Name.name }
-  customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(90000) + 1 }
   contract_number_addition { rand(10000) + 1 }
   power_of_attorney        true
@@ -69,7 +68,6 @@ end
 # == Other Supplier Contract ==
 
 Fabricator :other_supplier_contract, class_name: Contract::OtherSupplier do
-  customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition { rand(10000) + 1 }
   power_of_attorney        true
@@ -85,7 +83,6 @@ end
 # == Power Taker Contract ==
 
 Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
-  customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(20000) + 1 }
   contract_number_addition { rand(10000) + 1 }
   begin_date               { FFaker::Time.date }
@@ -124,7 +121,6 @@ end
 # == Power Giver Contract ==
 
 Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
-  customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(40000) + 1 }
   contract_number_addition { rand(10000) - 1 }
   power_of_attorney        true
@@ -152,7 +148,6 @@ end
 # == Localpool Power Taker Contract ==
 
 Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPowerTaker do
-  customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition { rand(10000) + 1 }
   power_of_attorney        true
@@ -182,7 +177,6 @@ end
 # == Localpool Processing Contract ==
 
 Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProcessing do
-  customer_number          { sequence(:customer_number, 9261502) }
   contract_number          { rand(60000) + 1 }
   contract_number_addition 0
   power_of_attorney        true
@@ -227,7 +221,6 @@ end
 
 Fabricator :lpc_forstenried, from: :localpool_processing_contract do
   begindate = Date.new(2014, 12, 1)
-  customer_number '40021/1'
   contract_number          60015
   contract_number_addition 0
   begin_date      begindate
@@ -259,7 +252,6 @@ end
 Fabricator :mpoc_forstenried, from: :metering_point_operator_contract do
   begindate = Date.new(2014, 12, 1)
   metering_point_operator_name  'buzzn systems UG'
-  customer_number               '40021/1'
   contract_number               90041
   contract_number_addition      0
   begin_date                    begindate
@@ -761,7 +753,6 @@ end
 
 Fabricator :lpc_sulz, from: :localpool_processing_contract do
   begindate = Date.new(2016, 8, 4)
-  customer_number '40361/1'
   contract_number                 60042
   contract_number_addition        0
   begin_date      begindate
@@ -787,7 +778,6 @@ end
 Fabricator :mpoc_sulz, from: :metering_point_operator_contract do
   begindate = Date.new(2016, 8, 4)
   metering_point_operator_name  'buzzn systems UG'
-  customer_number               '40361/1'
   contract_number               90067
   contract_number_addition      0
   begin_date                    begindate

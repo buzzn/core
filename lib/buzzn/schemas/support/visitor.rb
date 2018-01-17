@@ -35,6 +35,8 @@ class Schemas::Support::Visitor
         visit_rule(rule.rules, result)
       when Dry::Logic::Operations::Key
         visit_rule(rule.rules, result)
+      when Dry::Logic::Operations::Implication
+        visit_rule(rule.rules[1..-1], result)
       when Dry::Logic::Rule::Predicate
         type = rule.predicate.to_s.gsub(/.*#|\?>$/, '')
         case type

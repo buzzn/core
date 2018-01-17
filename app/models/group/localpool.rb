@@ -62,7 +62,7 @@ module Group
                         .project(1)
                         .exists
       contract_users = contracts(base)
-                       .where('contracts.customer_id = persons.id or contracts.contractor_id = persons.id')
+                       .where('contracts.customer_person_id = persons.id or contracts.contractor_person_id = persons.id')
                        .select(1)
                        .exists
       Person.where(localpool_users.or(contract_users))
@@ -73,7 +73,7 @@ module Group
     end
 
     def self.organizations(base = contracts)
-      Organization.where(base.where('contracts.customer_id = organizations.id or contracts.contractor_id = organizations.id')
+      Organization.where(base.where('contracts.customer_organization_id = organizations.id or contracts.contractor_organization_id = organizations.id')
                   .select(1)
                   .exists)
     end

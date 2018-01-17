@@ -22,7 +22,7 @@ describe Admin::BankAccountRoda do
   end
 
   entity!(:localpool) do
-    localpool = Fabricate(:localpool)
+    localpool = create(:localpool)
     $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
     localpool
   end
@@ -32,7 +32,6 @@ describe Admin::BankAccountRoda do
                                  contractor: Fabricate(:other_organization)) }
 
   entity!(:person_account) do
-    BankAccount.delete_all
     Fabricate(:bank_account, owner: contract.customer)
   end
 
@@ -43,9 +42,7 @@ describe Admin::BankAccountRoda do
   [:person_account, :organization_account].each do |name|
     context "#{name.to_s.sub(/_.*/,'')} parent" do
 
-      let(:bank_account) { send(name) }
-      let(:parent) { bank_account.owner }
-      let(:bank_account_json) do
+      def serialized_bank_account(bank_account)
         {
           "id"=>bank_account.id,
           "type"=>"bank_account",
@@ -59,6 +56,10 @@ describe Admin::BankAccountRoda do
           'deletable' => true
         }
       end
+
+      let(:bank_account) { send(name) }
+      let(:parent) { bank_account.owner }
+      let(:bank_account_json) { serialized_bank_account(bank_account) }
 
       let(:wrong_json) do
         {
@@ -189,7 +190,7 @@ describe Admin::BankAccountRoda do
       context 'GET' do
 
         let(:bank_accounts_json) do
-          [ bank_account_json ]
+          parent.bank_accounts.collect {|bank_account| serialized_bank_account(bank_account) }
         end
 
 
@@ -223,7 +224,7 @@ describe Admin::BankAccountRoda do
         it '200 all' do
           GET "/test/#{parent.id}", $admin
           expect(response).to have_http_status(200)
-          expect(json['array'].to_yaml).to eq bank_accounts_json.to_yaml
+          expect(sort(json['array']).to_yaml).to eq sort(bank_accounts_json).to_yaml
         end
       end
 
