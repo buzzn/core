@@ -29,8 +29,8 @@ class Beekeeper::Import
       localpool = Group::Localpool.create(record.converted_attributes.except(:registers, :powertaker_contracts))
 
       Beekeeper::Importer::Roles.new(logger).run(localpool)
-      Beekeeper::Importer::RegistersAndMeters.new(logger).run(localpool, record.converted_attributes[:registers])
-      Beekeeper::Importer::PowerTakerContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts])
+      registers = Beekeeper::Importer::RegistersAndMeters.new(logger).run(localpool, record.converted_attributes[:registers])
+      Beekeeper::Importer::PowerTakerContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], registers)
 
       # now we can fail and rollback on broken invariants
       raise ActiveRecord::RecordInvalid.new(localpool) unless localpool.invariant_valid?

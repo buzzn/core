@@ -27,7 +27,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       if meter
         meter
       else
-        meter = Meter::Real.new(attributes.except(:buzznid))
+        meter = Meter::Real.new(attributes.except(:buzznid).merge(legacy_buzznid: attributes[:buzznid]))
         Beekeeper::MeterRegistry.set(attributes[:buzznid], meter)
         meter
       end

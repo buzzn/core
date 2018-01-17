@@ -6,7 +6,7 @@ class Beekeeper::Importer::PowerTakerContracts
     @logger = logger
   end
 
-  def run(localpool, powertaker_contracts)
+  def run(localpool, powertaker_contracts, registers)
     powertaker_contracts.each do |contract|
       begin
         ActiveRecord::Base.transaction do
