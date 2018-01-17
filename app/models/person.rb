@@ -6,43 +6,26 @@ class Person < ActiveRecord::Base
   belongs_to :address
   belongs_to :customer_number, foreign_key: :customer_number
 
-  has_and_belongs_to_many :roles#, through: :persons_roles
+  has_and_belongs_to_many :roles
   has_many :bank_accounts, foreign_key: :owner_person_id
 
   mount_uploader :image, PersonImageUploader
 
-  # prefixes
-  FEMALE = 'F'
-  MALE = 'M'
   enum prefix: {
-         female: FEMALE,
-         male:   MALE
+         female: 'F',
+         male:   'M'
        }
-  PREFIXES = [FEMALE, MALE].freeze
 
-  # titles
-  DR = 'Dr.'
-  PROF = 'Prof.'
-  PROF_DR = 'Prof. Dr.'
   enum titles: {
-         prof: PROF,
-         dr: DR,
-         prof_dr: PROF_DR
+         prof: 'Prof.',
+         dr: 'Dr.',
+         prof_dr: 'Prof. Dr.'
        }
-  TITLES = [DR, PROF, PROF_DR].freeze
 
-  # preferred languages
-  GERMAN = 'de'
-  ENGLISH = 'en'
   enum preferred_language: {
-         german:  GERMAN,
-         english: ENGLISH
+         german:  'de',
+         english: 'en'
        }
-  PREFERRED_LANGUAGES = [GERMAN, ENGLISH].freeze
-
-  scope :permitted, ->(uuids) do
-    where(id: uuids)
-  end
 
   def self.search_attributes
     [:first_name, :last_name, :email]
@@ -102,4 +85,5 @@ class Person < ActiveRecord::Base
   # permissions helpers
 
   scope :permitted, ->(uuids) { where(id: uuids) }
+
 end
