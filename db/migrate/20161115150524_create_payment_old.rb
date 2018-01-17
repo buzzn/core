@@ -1,4 +1,4 @@
-class CreatePayment < ActiveRecord::Migration
+class CreatePaymentOld < ActiveRecord::Migration
   def change
     create_table :payments, id: :uuid do |t|
       t.date :begin_date, null: false

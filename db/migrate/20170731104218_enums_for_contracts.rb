@@ -1,7 +1,7 @@
 class EnumsForContracts < ActiveRecord::Migration
   def up
     create_enum :contract_status, *Contract::Base::STATUS
-    create_enum :taxation, *Contract::Base::TAXATIONS
+    create_enum :taxation, *Contract::Base.renewable_energy_law_taxations.values
 
     remove_column :contracts, :status
     rename_column :contracts, :renewable_energy_law_taxation, :tax

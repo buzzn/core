@@ -111,7 +111,7 @@ describe Group::Base do
       before { persons.each { |person| person.add_role(Role::GROUP_ENERGY_MENTOR, group) } }
 
       it "returns both persons" do
-        expect(group.mentors).to eq(persons)
+        expect(group.mentors).to match_array(persons)
       end
     end
   end
