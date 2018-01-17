@@ -1,4 +1,4 @@
-class Beekeeper::Importer::OptimizeGroups
+class Beekeeper::Importer::OptimizeGroup
 
   attr_reader :logger
 
