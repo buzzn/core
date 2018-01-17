@@ -6,14 +6,10 @@ module Display
   class GroupResource < ::GroupResource
 
     has_many :registers, RegisterResource
-    has_many :mentors
+    has_many :mentors, MentorResource
 
     def self.filter_all(objects)
       objects.where(show_display_app: true)
-    end
-
-    def mentors
-      all(permissions.mentors, object.mentors, MentorResource)
     end
   end
 end
