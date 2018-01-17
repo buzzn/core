@@ -42,7 +42,7 @@ module Buzzn::Resource
       if id =~ RubyRegex::UUID
         do_retrieve(id, id: id)
       else
-        do_retrieve(id, slug: Buzzn::Slug.new(id))
+        do_retrieve(id, slug: id)
       end
     end
 
