@@ -80,12 +80,15 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
     Date.parse(bezugsbeginn)
   end
 
+  # Even if the contract is not terminated, beekeeper sets and end date (2050-01-01 or later).
+  # So only if the end_date is earlier than 2050-01-01, we take it seriously and import it.
   def end_date
-    Date.parse(bezugsende)
+    end_date = Date.parse(bezugsende)
+    end_date < Date.parse("2050-01-01") ? end_date : nil
   end
 
   def termination_date
-    (end_date <= Date.today) ? end_date : nil
+    (end_date && (end_date <= Date.today)) ? end_date : nil
   end
 
   def eeg_umlage_reduced?
