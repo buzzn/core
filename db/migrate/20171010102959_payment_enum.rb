@@ -1,6 +1,6 @@
 class PaymentEnum < ActiveRecord::Migration
   def change
-    create_enum :cycle, *Contract::Payment::CYCLES
+    create_enum :cycle, *Contract::Payment.cycles.values
 
     remove_column :payments, :cycle
 

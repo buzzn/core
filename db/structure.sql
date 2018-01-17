@@ -514,6 +514,17 @@ CREATE TYPE organization_market_functions_function AS ENUM (
 
 
 --
+-- Name: payments_cycle; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE payments_cycle AS ENUM (
+    'monthly',
+    'yearly',
+    'once'
+);
+
+
+--
 -- Name: persons_preferred_language; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1330,10 +1341,12 @@ CREATE TABLE organizations (
 CREATE TABLE payments (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     begin_date date NOT NULL,
-    end_date date,
     price_cents integer NOT NULL,
-    contract_id uuid NOT NULL,
-    cycle cycle
+    end_date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    cycle payments_cycle,
+    contract_id uuid NOT NULL
 );
 
 
@@ -1495,7 +1508,7 @@ CREATE TABLE tariffs (
     end_date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    group_id uuid
+    group_id uuid NOT NULL
 );
 
 
@@ -1921,6 +1934,13 @@ CREATE INDEX index_billings_on_localpool_power_taker_contract_id ON billings USI
 --
 
 CREATE UNIQUE INDEX index_contract_number_and_its_addition ON contracts USING btree (contract_number, contract_number_addition);
+
+
+--
+-- Name: index_contract_tax_data_on_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contract_tax_data_on_contract_id ON contract_tax_data USING btree (contract_id);
 
 
 --
@@ -2404,14 +2424,6 @@ ALTER TABLE ONLY billings
 
 
 --
--- Name: contract_tax_data fk_contract_tax_datas_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY contract_tax_data
-    ADD CONSTRAINT fk_contract_tax_datas_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
-
-
---
 -- Name: contracts_tariffs fk_contracts_tariffs_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2572,19 +2584,19 @@ ALTER TABLE ONLY organizations
 
 
 --
+-- Name: payments fk_payments_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY payments
+    ADD CONSTRAINT fk_payments_contract FOREIGN KEY (contract_id) REFERENCES contracts(id) ON DELETE CASCADE;
+
+
+--
 -- Name: persons fk_persons_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY persons
     ADD CONSTRAINT fk_persons_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
-
-
---
--- Name: payments fk_rails_9215ad6069; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY payments
-    ADD CONSTRAINT fk_rails_9215ad6069 FOREIGN KEY (contract_id) REFERENCES contracts(id);
 
 
 --
@@ -2609,6 +2621,14 @@ ALTER TABLE ONLY registers
 
 ALTER TABLE ONLY tariffs
     ADD CONSTRAINT fk_tariffs_group FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE;
+
+
+--
+-- Name: contract_tax_data fk_tax_data_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contract_tax_data
+    ADD CONSTRAINT fk_tax_data_contract FOREIGN KEY (contract_id) REFERENCES contracts(id) ON DELETE CASCADE;
 
 
 --
@@ -2719,9 +2739,13 @@ INSERT INTO schema_migrations (version) VALUES ('20171029000800');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085200');
 
+INSERT INTO schema_migrations (version) VALUES ('20171031085210');
+
 INSERT INTO schema_migrations (version) VALUES ('20171031085220');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085230');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085240');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085250');
 

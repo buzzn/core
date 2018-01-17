@@ -14,13 +14,10 @@ module Contract
     ENDED      = 'ended'
     STATUS     = [ONBOARDING, ACTIVE, TERMINATED, ENDED]
 
-    FULL    = 'F'
-    REDUCED = 'R'
     enum renewable_energy_law_taxation: {
-           full: FULL,
-           reduced: REDUCED
+           full: 'F',
+           reduced: 'R'
          }
-    TAXATIONS = [FULL, REDUCED]
 
     # error messages
     MUST_BE_TRUE                 = 'must be true'
@@ -41,7 +38,6 @@ module Contract
     belongs_to :contractor, polymorphic: true
     belongs_to :customer, polymorphic: true
 
-    # FIXME: looks like class_name and foreign_key are default, so they could be omitted.
     has_and_belongs_to_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
 
