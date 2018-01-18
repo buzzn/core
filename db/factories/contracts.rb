@@ -1,14 +1,23 @@
 FactoryGirl.define do
   factory :contract, class: 'Contract::MeteringPointOperator' do
+    transient do
+      customer nil
+      contractor nil
+    end
     localpool                     { FactoryGirl.build(:localpool) }
     contract_number               { generate(:metering_point_operator_contract_nr) }
     signing_date                  Date.parse("2015-10-11")
     begin_date                    Date.parse("2016-01-01")
-    customer                      { FactoryGirl.build(:person, :with_bank_account) }
-    contractor                    { FactoryGirl.build(:organization, :with_bank_account) }
     contract_number_addition      1
     power_of_attorney             true
     metering_point_operator_name  "Generic metering point operator"
+
+    after(:build) do |account, transients|
+      # assign customer if not present yet
+      account.customer = transients.customer || FactoryGirl.create(:person, :with_bank_account)
+      # assign contractor if not present yet
+      account.contractor = transients.contractor || FactoryGirl.create(:organization, :with_bank_account)
+    end
 
     before(:create) do |contract, _evaluator|
       %i(customer contractor).each do |identifier|

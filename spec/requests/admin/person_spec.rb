@@ -7,13 +7,13 @@ describe Admin::LocalpoolRoda do
 
   context 'persons' do
 
-    entity!(:group) { Fabricate(:localpool) }
+    entity!(:group) { create(:localpool) }
 
     entity!(:person) do
       $other.person.reload.add_role(Role::GROUP_MEMBER, group)
       person = $user.person.reload
       person.add_role(Role::GROUP_OWNER, group)
-      Fabricate(:bank_account, owner: person)
+      create(:bank_account, owner: person)
       person.update(address: Fabricate(:address))
       person
     end
