@@ -1,7 +1,5 @@
 class GroupResource < Buzzn::Resource::Entity
 
-  abstract
-
   model Group::Base
 
   attributes  :name,

@@ -86,7 +86,7 @@ module Buzzn::Resource
           perms = permissions.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
           if allowed?(perms.retrieve) && (result = object.send(method))
             self.class.to_resource(current_user, current_roles, perms,
-                                   result)
+                                   result, clazz)
           end
         end
       end
@@ -144,9 +144,8 @@ module Buzzn::Resource
 
       def to_resource(user, roles, permissions, instance, clazz = nil)
         clazz ||= find_resource_class(instance.class)
-        if clazz.nil? || clazz.abstract?
-          raise "could not find Resource class for #{instance.class}"
-        end
+        raise "could not find Resource class for #{instance.class}" if clazz.nil?
+        raise "could not instantiate Resource class for #{instance.class} as #{clazz} is abstract" if clazz.abstract?
         clazz.send(:new, instance, current_user: user, current_roles: roles, permissions: permissions)
       end
 
