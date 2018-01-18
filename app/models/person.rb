@@ -39,6 +39,10 @@ class Person < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
 
+  def contracts
+    Contract::Base.where(customer_person: self)
+  end
+
   # roles related methods
 
   def has_role?(name, resource = nil)
