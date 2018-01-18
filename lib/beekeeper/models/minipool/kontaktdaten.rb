@@ -22,6 +22,16 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.kontaktdaten'
 
   def converted_attributes
+    person? ? person_attributes : organization_attributes
+  end
+
+  def person?
+    rechtsform.strip == "Privatperson"
+  end
+
+  private
+
+  def person_attributes
     {
       first_name:          vorname.strip,
       last_name:           nachname.strip,
@@ -31,6 +41,19 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
       fax:                 fax.strip,
       email:               email.strip,
       preferred_language:  :german
+    }
+  end
+
+  def organization_attributes
+    {
+      name:  firma,
+      email: email.strip,
+      phone: telefon.strip,
+      fax:   fax.strip,
+      # slug,
+      # address,
+      # legal_representation,
+      # contact
     }
   end
 
@@ -48,9 +71,4 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
   def title
     titel =~ /\s*Dr\.\s*/ ? 'Dr.' : nil
   end
-
-  def person?
-    rechtsform.strip == "Privatperson"
-  end
-
 end
