@@ -53,20 +53,6 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   private
 
-  # FIXME: currently not used. Remove once import of contracts is stable/reliable.
-  # def meter_serialnumber
-  #   meter = Beekeeper::Minipool::MsbGerät.find_by(
-  #     lcpvertragsnummer: vertragsnummer,
-  #     nummernzusatz: nummernzusatz
-  #   )
-  #   if meter
-  #     meter.zählernummer.strip
-  #   else
-  #     add_warning(:meter_serialnumber, "No MsbGerät found for #{vertragsnummer}/#{nummernzusatz}")
-  #     nil
-  #   end
-  # end
-
   # this will be extended to return a new organization once we add those to the import
   def powertaker
     @powertaker ||= ::Person.new(kontaktdaten.converted_attributes)
