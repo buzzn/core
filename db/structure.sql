@@ -353,13 +353,12 @@ CREATE TYPE billings_status AS ENUM (
 
 
 --
--- Name: cycle; Type: TYPE; Schema: public; Owner: -
+-- Name: contracts_renewable_energy_law_taxation; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE cycle AS ENUM (
-    'monthly',
-    'yearly',
-    'once'
+CREATE TYPE contracts_renewable_energy_law_taxation AS ENUM (
+    'F',
+    'R'
 );
 
 
@@ -510,6 +509,17 @@ CREATE TYPE organization_market_functions_function AS ENUM (
     'power_giver',
     'power_taker',
     'transmission_system_operator'
+);
+
+
+--
+-- Name: payments_cycle; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE payments_cycle AS ENUM (
+    'monthly',
+    'yearly',
+    'once'
 );
 
 
@@ -665,16 +675,6 @@ CREATE TYPE roles_name AS ENUM (
     'SELF',
     'CONTRACT',
     'ORGANIZATION'
-);
-
-
---
--- Name: taxation; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE taxation AS ENUM (
-    'F',
-    'R'
 );
 
 
@@ -1054,45 +1054,42 @@ CREATE TABLE contract_tax_data (
 
 CREATE TABLE contracts (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    forecast_kwh_pa bigint,
-    signing_date date,
+    signing_date date NOT NULL,
+    begin_date date,
+    termination_date date,
     end_date date,
+    contract_number integer,
+    contract_number_addition integer,
+    forecast_kwh_pa integer,
+    original_signing_user character varying,
+    mandate_reference character varying,
     confirm_pricing_model boolean,
     power_of_attorney boolean,
-    original_signing_user character varying,
-    customer_number character varying,
-    metering_point_id uuid,
-    organization_id uuid,
-    localpool_id uuid,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    mandate_reference character varying,
     other_contract boolean,
     move_in boolean,
-    begin_date date,
     "authorization" boolean,
-    feedback text,
-    attention_by text,
     third_party_billing_number character varying,
     third_party_renter_number character varying,
     metering_point_operator_name character varying,
     old_supplier_name character varying,
-    type character varying,
-    termination_date date,
     old_customer_number character varying,
     old_account_number character varying,
-    customer_id uuid,
-    customer_type character varying,
-    contractor_id uuid,
-    contractor_type character varying,
     energy_consumption_before_kwh_pa character varying,
     down_payment_before_cents_per_month character varying,
-    contract_number integer,
-    contract_number_addition integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    renewable_energy_law_taxation contracts_renewable_energy_law_taxation,
+    type character varying(64) NOT NULL,
+    register_id uuid,
+    localpool_id uuid,
     customer_bank_account_id uuid,
     contractor_bank_account_id uuid,
-    renewable_energy_law_taxation taxation,
-    register_id uuid
+    customer_person_id uuid,
+    customer_organization_id uuid,
+    contractor_person_id uuid,
+    contractor_organization_id uuid,
+    CONSTRAINT check_contract_contractor CHECK ((NOT ((contractor_person_id IS NOT NULL) AND (contractor_organization_id IS NOT NULL)))),
+    CONSTRAINT check_contract_customer CHECK ((NOT ((customer_person_id IS NOT NULL) AND (customer_organization_id IS NOT NULL))))
 );
 
 
@@ -1331,10 +1328,12 @@ CREATE TABLE organizations (
 CREATE TABLE payments (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     begin_date date NOT NULL,
-    end_date date,
     price_cents integer NOT NULL,
-    contract_id uuid NOT NULL,
-    cycle cycle
+    end_date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    cycle payments_cycle,
+    contract_id uuid NOT NULL
 );
 
 
@@ -1496,7 +1495,7 @@ CREATE TABLE tariffs (
     end_date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    group_id uuid
+    group_id uuid NOT NULL
 );
 
 
@@ -1918,31 +1917,52 @@ CREATE INDEX index_billings_on_localpool_power_taker_contract_id ON billings USI
 
 
 --
--- Name: index_contract_number_and_its_addition; Type: INDEX; Schema: public; Owner: -
+-- Name: index_contract_tax_data_on_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_contract_number_and_its_addition ON contracts USING btree (contract_number, contract_number_addition);
-
-
---
--- Name: index_contracts_on_contract_number; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_contracts_on_contract_number ON contracts USING btree (contract_number);
+CREATE INDEX index_contract_tax_data_on_contract_id ON contract_tax_data USING btree (contract_id);
 
 
 --
--- Name: index_contracts_on_contractor_type_and_contractor_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_contracts_on_contractor_bank_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_contractor_type_and_contractor_id ON contracts USING btree (contractor_type, contractor_id);
+CREATE INDEX index_contracts_on_contractor_bank_account_id ON contracts USING btree (contractor_bank_account_id);
 
 
 --
--- Name: index_contracts_on_customer_type_and_customer_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_contracts_on_contractor_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_customer_type_and_customer_id ON contracts USING btree (customer_type, customer_id);
+CREATE INDEX index_contracts_on_contractor_organization_id ON contracts USING btree (contractor_organization_id);
+
+
+--
+-- Name: index_contracts_on_contractor_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contracts_on_contractor_person_id ON contracts USING btree (contractor_person_id);
+
+
+--
+-- Name: index_contracts_on_customer_bank_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contracts_on_customer_bank_account_id ON contracts USING btree (customer_bank_account_id);
+
+
+--
+-- Name: index_contracts_on_customer_organization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contracts_on_customer_organization_id ON contracts USING btree (customer_organization_id);
+
+
+--
+-- Name: index_contracts_on_customer_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contracts_on_customer_person_id ON contracts USING btree (customer_person_id);
 
 
 --
@@ -1953,17 +1973,10 @@ CREATE INDEX index_contracts_on_localpool_id ON contracts USING btree (localpool
 
 
 --
--- Name: index_contracts_on_metering_point_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_contracts_on_register_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_metering_point_id ON contracts USING btree (metering_point_id);
-
-
---
--- Name: index_contracts_on_organization_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_contracts_on_organization_id ON contracts USING btree (organization_id);
+CREATE INDEX index_contracts_on_register_id ON contracts USING btree (register_id);
 
 
 --
@@ -2405,11 +2418,67 @@ ALTER TABLE ONLY billings
 
 
 --
--- Name: contract_tax_data fk_contract_tax_datas_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: contracts fk_contracts_contractor_bank_account; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contract_tax_data
-    ADD CONSTRAINT fk_contract_tax_datas_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
+ALTER TABLE ONLY contracts
+    ADD CONSTRAINT fk_contracts_contractor_bank_account FOREIGN KEY (contractor_bank_account_id) REFERENCES bank_accounts(id);
+
+
+--
+-- Name: contracts fk_contracts_contractor_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts
+    ADD CONSTRAINT fk_contracts_contractor_organization FOREIGN KEY (contractor_organization_id) REFERENCES organizations(id);
+
+
+--
+-- Name: contracts fk_contracts_contractor_person; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts
+    ADD CONSTRAINT fk_contracts_contractor_person FOREIGN KEY (contractor_person_id) REFERENCES persons(id);
+
+
+--
+-- Name: contracts fk_contracts_customer_bank_account; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts
+    ADD CONSTRAINT fk_contracts_customer_bank_account FOREIGN KEY (customer_bank_account_id) REFERENCES bank_accounts(id);
+
+
+--
+-- Name: contracts fk_contracts_customer_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts
+    ADD CONSTRAINT fk_contracts_customer_organization FOREIGN KEY (customer_organization_id) REFERENCES organizations(id);
+
+
+--
+-- Name: contracts fk_contracts_customer_person; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts
+    ADD CONSTRAINT fk_contracts_customer_person FOREIGN KEY (customer_person_id) REFERENCES persons(id);
+
+
+--
+-- Name: contracts fk_contracts_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts
+    ADD CONSTRAINT fk_contracts_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
+
+
+--
+-- Name: contracts fk_contracts_register; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts
+    ADD CONSTRAINT fk_contracts_register FOREIGN KEY (register_id) REFERENCES registers(id);
 
 
 --
@@ -2573,19 +2642,19 @@ ALTER TABLE ONLY organizations
 
 
 --
+-- Name: payments fk_payments_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY payments
+    ADD CONSTRAINT fk_payments_contract FOREIGN KEY (contract_id) REFERENCES contracts(id) ON DELETE CASCADE;
+
+
+--
 -- Name: persons fk_persons_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY persons
     ADD CONSTRAINT fk_persons_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
-
-
---
--- Name: payments fk_rails_9215ad6069; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY payments
-    ADD CONSTRAINT fk_rails_9215ad6069 FOREIGN KEY (contract_id) REFERENCES contracts(id);
 
 
 --
@@ -2613,86 +2682,30 @@ ALTER TABLE ONLY tariffs
 
 
 --
+-- Name: contract_tax_data fk_tax_data_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contract_tax_data
+    ADD CONSTRAINT fk_tax_data_contract FOREIGN KEY (contract_id) REFERENCES contracts(id) ON DELETE CASCADE;
+
+
+--
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20140402111832');
-
 INSERT INTO schema_migrations (version) VALUES ('20140403173451');
-
-INSERT INTO schema_migrations (version) VALUES ('20140404074440');
-
-INSERT INTO schema_migrations (version) VALUES ('20150219151449');
 
 INSERT INTO schema_migrations (version) VALUES ('20150630104513');
 
-INSERT INTO schema_migrations (version) VALUES ('20160922130534');
-
-INSERT INTO schema_migrations (version) VALUES ('20160922154043');
-
-INSERT INTO schema_migrations (version) VALUES ('20160926060807');
-
-INSERT INTO schema_migrations (version) VALUES ('20161110152952');
-
-INSERT INTO schema_migrations (version) VALUES ('20161110184053');
-
-INSERT INTO schema_migrations (version) VALUES ('20161115150524');
-
-INSERT INTO schema_migrations (version) VALUES ('20161124095642');
-
-INSERT INTO schema_migrations (version) VALUES ('20161124100101');
-
-INSERT INTO schema_migrations (version) VALUES ('20161128080016');
-
-INSERT INTO schema_migrations (version) VALUES ('20161128080017');
-
-INSERT INTO schema_migrations (version) VALUES ('20161128080018');
-
-INSERT INTO schema_migrations (version) VALUES ('20161130080018');
-
-INSERT INTO schema_migrations (version) VALUES ('20170109131407');
-
-INSERT INTO schema_migrations (version) VALUES ('20170109131409');
-
-INSERT INTO schema_migrations (version) VALUES ('20170110152512');
-
-INSERT INTO schema_migrations (version) VALUES ('20170303200921');
-
-INSERT INTO schema_migrations (version) VALUES ('20170412212950');
-
-INSERT INTO schema_migrations (version) VALUES ('20170418125916');
-
 INSERT INTO schema_migrations (version) VALUES ('20170524090229');
 
-INSERT INTO schema_migrations (version) VALUES ('20170711323547');
-
 INSERT INTO schema_migrations (version) VALUES ('20170712163547');
-
-INSERT INTO schema_migrations (version) VALUES ('20170714163547');
-
-INSERT INTO schema_migrations (version) VALUES ('20170731104218');
 
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
 
 INSERT INTO schema_migrations (version) VALUES ('20171010075030');
-
-INSERT INTO schema_migrations (version) VALUES ('20171010094247');
-
-INSERT INTO schema_migrations (version) VALUES ('20171010102959');
-
-INSERT INTO schema_migrations (version) VALUES ('20171016140547');
-
-INSERT INTO schema_migrations (version) VALUES ('20171018123008');
-
-INSERT INTO schema_migrations (version) VALUES ('20171018124326');
-
-INSERT INTO schema_migrations (version) VALUES ('20171018132507');
-
-INSERT INTO schema_migrations (version) VALUES ('20171018134029');
-
-INSERT INTO schema_migrations (version) VALUES ('20171018134419');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028142114');
 
@@ -2718,29 +2731,33 @@ INSERT INTO schema_migrations (version) VALUES ('20171029000100');
 
 INSERT INTO schema_migrations (version) VALUES ('20171029000800');
 
+INSERT INTO schema_migrations (version) VALUES ('20171029000900');
+
 INSERT INTO schema_migrations (version) VALUES ('20171031085200');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085220');
-
-INSERT INTO schema_migrations (version) VALUES ('20171031085230');
-
-INSERT INTO schema_migrations (version) VALUES ('20171031085250');
-
 INSERT INTO schema_migrations (version) VALUES ('20171031085260');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085270');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085280');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085290');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085295');
-
 INSERT INTO schema_migrations (version) VALUES ('20171031085300');
 
+INSERT INTO schema_migrations (version) VALUES ('20171031085310');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085320');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085330');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085340');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085350');
+
+INSERT INTO schema_migrations (version) VALUES ('20171031085360');
+
 INSERT INTO schema_migrations (version) VALUES ('20171115086500');
-
-INSERT INTO schema_migrations (version) VALUES ('20171115095100');
-
-INSERT INTO schema_migrations (version) VALUES ('20171206142306');
 
 INSERT INTO schema_migrations (version) VALUES ('20171207154218');
 

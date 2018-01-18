@@ -1,10 +1,4 @@
-module Schemas
-  module Constraints
-    module Contract
-    end
-  end
-end
-#require_relative '../contract'
+require_relative '../contract'
 
 Schemas::Constraints::Contract::TariffCommon = Schemas::Support.Form do
   required(:name).filled(:str?, max_size?: 64)

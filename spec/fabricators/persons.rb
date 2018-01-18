@@ -1,10 +1,9 @@
-
 Fabricator :person do
   i = 0
   email       { "user.#{i+=1}@buzzn.net" }
-  prefix      { Person::PREFIXES.sample }
-  title       { ([nil] + Person::TITLES).sample }
-  preferred_language { Person::PREFERRED_LANGUAGES.sample}
+  prefix      { Person.prefixes.values.sample }
+  title       { ([nil] + Person.titles.values).sample }
+  preferred_language { Person.preferred_languages.values.sample}
   first_name  { FFaker::Name.first_name.slice(0...30) }
   last_name   { FFaker::Name.last_name.slice(0...30) }
   phone       { FFaker::PhoneNumber.phone_number }
