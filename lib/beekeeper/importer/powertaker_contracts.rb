@@ -135,16 +135,17 @@ class Beekeeper::Importer::PowerTakerContracts
     # key: pattern for kontaktdaten.firma
     # value: account_new.fibunr of the record that should be used for data
     account_new: {
-      /wagnis/i => 70069,
-      /Cohaus/ => 80792,
-      /IGEWO/  => 80583
+      /wagnis/i           => 70069,
+      /Cohaus/            => 80792,
+      /IGEWO/             => 80583,
+      /Hans Fischer GmbH/ => 80678,
+      /BEG Remstal/       => 80502,
     },
 
     # key: pattern for kontaktdaten.firma
     # value: kontaktdaten.kontaktdaten_id of the record that should be used for data
     kontaktdaten: {
       /Parkgelände GmbH/                         => 624,
-      /BEG Remstal/                              => 775,
       /Diakonie Stetten/                         => 790,
       /Gemeinde Hallbergmoos/                    => 777,
       /IFAGE Grundstücksverwaltungs GmbH/        => 442,
