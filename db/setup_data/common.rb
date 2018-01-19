@@ -84,7 +84,7 @@ ADDRESS_ATTRIBUTES = %i(street city zip country)
 get_csv(:organizations, converters: { state: Converters::State }).each do |row|
   Buzzn::Logger.root.debug "Loading organization #{row[:name]}"
   address_attrs = row.slice(*ADDRESS_ATTRIBUTES)
-  org_attrs     = row.except(*ADDRESS_ATTRIBUTES)
+  org_attrs     = row.except(*(ADDRESS_ATTRIBUTES + [:state]))
   record        = Organization.new(org_attrs)
   if ADDRESS_ATTRIBUTES.all? { |attr| address_attrs[attr].present? }
     record.build_address(address_attrs)
