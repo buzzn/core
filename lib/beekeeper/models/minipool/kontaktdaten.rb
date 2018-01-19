@@ -25,8 +25,13 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
     person? ? person_attributes : organization_attributes
   end
 
+  # The records with these ids are labeled "Privatperson" in beekeeper
+  # but actually are organizations.
+  INCORRECTLY_LABELED_PRIVATE = [
+    418, 419, 420, 421, 782, 783, 513, 837, 838
+  ]
   def person?
-    rechtsform.strip == "Privatperson"
+    rechtsform.strip == "Privatperson" && !INCORRECTLY_LABELED_PRIVATE.include?(kontaktdaten_id)
   end
 
   private
