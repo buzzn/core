@@ -82,15 +82,11 @@ class Beekeeper::Importer::PowerTakerContracts
   # Deduplication of the beekeeper data
   def find_or_create_organization(unsaved_record)
     puts unsaved_record.name
-    org_is_buzzn       = unsaved_record.name =~ /buzzn/
     account_new_fibunr = ORGANIZATION_DATA_LOOKUPS[:account_new].find { |pattern, fibunr| unsaved_record.name =~ pattern }&.at(1)
     kontaktdaten_id    = ORGANIZATION_DATA_LOOKUPS[:kontaktdaten].find { |pattern, fibunr| unsaved_record.name =~ pattern }&.at(1)
     org_with_same_slug = Organization.find_by(slug: Buzzn::Slug.new(unsaved_record.name))
 
-    if org_is_buzzn
-      puts "Organization is buzzn."
-      Organization.buzzn
-    elsif account_new_fibunr
+    if account_new_fibunr
       puts "Taking organization from account_new"
       # get the data to use for our record
       source_record = Beekeeper::Buzzn::AccountNew.find_by(fibunr: account_new_fibunr)
