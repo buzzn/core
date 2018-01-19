@@ -42,7 +42,7 @@ Fabricator :hell_und_warm_deprecated, from: :other_organization do
   email       't.brumbauer@wogeno.de'
   description 'Betreiber des Localpools Forstenried'
   after_create do |o|
-    o.update(address: Fabricate(:address, street: 'Aberlestraße 16', zip: '81371', city: 'München', state: 'DE_BY'))
+    o.update(address: Fabricate(:address, street: 'Aberlestraße 16', zip: '81371', city: 'München'))
   end
 end
 

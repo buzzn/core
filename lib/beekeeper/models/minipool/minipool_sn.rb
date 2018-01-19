@@ -37,15 +37,21 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   def converted_attributes
     {
-      contract_number:          vertragsnummer,
-      contract_number_addition: nummernzusatz,
-      forecast_kwh_pa:          prognose_verbrauch.to_i,
-      powertaker:               powertaker,
-      signing_date:             begin_date,
-      begin_date:               begin_date,
-      termination_date:         termination_date,
-      end_date:                 end_date,
-      buzznid:                  buzznid.strip
+      contract_number:               vertragsnummer,
+      contract_number_addition:      nummernzusatz,
+      forecast_kwh_pa:               prognose_verbrauch.to_i,
+      powertaker:                    powertaker,
+      signing_date:                  begin_date,
+      begin_date:                    begin_date,
+      termination_date:              termination_date,
+      end_date:                      end_date,
+      buzznid:                       buzznid.strip,
+      old_supplier_name:             vorlieferant,
+      old_customer_number:           kundennummer_alt,
+      old_account_number:            vertragskontonummer_alt,
+      third_party_renter_number:     mieternummer,
+      third_party_billing_number:    rechnungsnummer,
+      renewable_energy_law_taxation: renewable_energy_law_taxation,
     }
   end
 
@@ -55,7 +61,22 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   # this will be extended to return a new organization once we add those to the import
   def powertaker
-    @powertaker ||= ::Person.new(kontaktdaten.converted_attributes)
+    @powertaker ||= ::Person.new(kontaktdaten.converted_attributes.merge(address: address))
+  end
+
+  def renewable_energy_law_taxation
+    case eeg_umlage
+    when '1'
+      Contract::Base.renewable_energy_law_taxations[:full]
+    when '-1'
+      Contract::Base.renewable_energy_law_taxations[:reduced]
+    else
+      nil
+    end
+  end
+
+  def address
+    ::Address.new(Beekeeper::Minipool::Adresse.find_by(adress_id: adress_id).converted_attributes)
   end
 
   def kontaktdaten

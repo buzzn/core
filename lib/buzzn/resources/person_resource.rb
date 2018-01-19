@@ -20,6 +20,7 @@ class PersonResource < Buzzn::Resource::Entity
   has_one :address
 
   has_many :bank_accounts
+  has_many :contracts
 
   def image
     object.image.medium.url
