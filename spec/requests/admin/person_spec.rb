@@ -61,7 +61,6 @@ describe Admin::LocalpoolRoda do
           'updated_at'=>person.address.updated_at.as_json,
           "street"=>person.address.street,
           "city"=>person.address.city,
-          "state"=>person.address.attributes['state'],
           "zip"=>person.address.zip,
           "country"=>person.address.attributes['country'],
           "updatable"=>true,
