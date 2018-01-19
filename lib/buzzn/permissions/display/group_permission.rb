@@ -2,8 +2,8 @@ require_relative '../../permission'
 
 Display::GroupResource::Permission = Buzzn::Permission.new(Display::GroupResource) do
   # define groups of roles
-  group(:none)
-  group(:all, Role::ANONYMOUS)
+  define_group(:none)
+  define_group(:all, Role::ANONYMOUS)
 
   # top level CRUD permissions
   create :none

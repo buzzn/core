@@ -44,12 +44,20 @@ class Beekeeper::Importer::PowerTakerContracts
     person = Person.find_by(uniqueness_attrs)
     if person
       logger.debug "#{unsaved_person.name} (#{unsaved_person.email}): using existing person #{person.id}"
+      create_address(person, unsaved_person.address)
       person
     else
-      logger.debug "#{unsaved_person.name} (#{unsaved_person.email}): creating new person instance"
+      logger.debug "#{unsaved_person.name} (#{unsaved_person.email} #{unsaved_person.address.street} (#{unsaved_person.address.city})): creating new person with address instance"
       unsaved_person.save!
       unsaved_person
     end
+  end
+
+  def create_address(person, address)
+    return if person.address
+    address.save!
+    person.update(address: address)
+    logger.debug "#{address.street} (#{address.city}): creating new address for existing person #{person.id}"
   end
 
   # As a temporary solution to importing the actual virtual registers (separate story), we create a fake, empty one.

@@ -55,7 +55,11 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   # this will be extended to return a new organization once we add those to the import
   def powertaker
-    @powertaker ||= ::Person.new(kontaktdaten.converted_attributes)
+    @powertaker ||= ::Person.new(kontaktdaten.converted_attributes.merge(address: address))
+  end
+
+  def address
+    ::Address.new(Beekeeper::Minipool::Adresse.find_by(adress_id: adress_id).converted_attributes)
   end
 
   def kontaktdaten

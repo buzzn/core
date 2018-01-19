@@ -3,17 +3,17 @@ require_relative '../../permission'
 Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolResource) do
 
   # define groups of roles
-  group(:none)
-  group(:operators, Role::BUZZN_OPERATOR)
+  define_group(:none)
+  define_group(:operators, Role::BUZZN_OPERATOR)
   # get the roles from the 'operators' group and add Role::GROUP_OWNER
-  group(:owners, *(get(:operators) + [Role::GROUP_OWNER]))
+  define_group(:owners, *(get(:operators) + [Role::GROUP_OWNER]))
   # get the roles from the 'owners' group and add Role::GROUP_ADMIN
-  group(:managers,*(get(:owners) + [Role::GROUP_ADMIN]))
-  group(:managers_contract, *(get(:managers) + [Role::CONTRACT]))
-  group(:managers_organization, *(get(:managers) + [Role::ORGANIZATION]))
-  group(:managers_organization_self, *(get(:managers_organization) + [Role::SELF]))
-  group(:managers_self, *(get(:managers) + [Role::SELF]))
-  group(:all, *(get(:managers) + [Role::GROUP_MEMBER]))
+  define_group(:managers,*(get(:owners) + [Role::GROUP_ADMIN]))
+  define_group(:managers_contract, *(get(:managers) + [Role::CONTRACT]))
+  define_group(:managers_organization, *(get(:managers) + [Role::ORGANIZATION]))
+  define_group(:managers_organization_self, *(get(:managers_organization) + [Role::SELF]))
+  define_group(:managers_self, *(get(:managers) + [Role::SELF]))
+  define_group(:all, *(get(:managers) + [Role::GROUP_MEMBER]))
 
   # top level CRUD permissions
   create :operators

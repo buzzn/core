@@ -35,7 +35,7 @@ module Buzzn
       @parent ? @parent.root : self
     end
 
-    def group(name, *args)
+    def define_group(name, *args)
       @groups[name] = args.freeze
     end
 
