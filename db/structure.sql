@@ -334,7 +334,8 @@ CREATE TYPE billings_status AS ENUM (
 
 CREATE TYPE contracts_renewable_energy_law_taxation AS ENUM (
     'F',
-    'R'
+    'R',
+    'N'
 );
 
 

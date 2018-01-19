@@ -37,15 +37,21 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   def converted_attributes
     {
-      contract_number:          vertragsnummer,
-      contract_number_addition: nummernzusatz,
-      forecast_kwh_pa:          prognose_verbrauch.to_i,
-      powertaker:               powertaker,
-      signing_date:             begin_date,
-      begin_date:               begin_date,
-      termination_date:         termination_date,
-      end_date:                 end_date,
-      buzznid:                  buzznid.strip
+      contract_number:               vertragsnummer,
+      contract_number_addition:      nummernzusatz,
+      forecast_kwh_pa:               prognose_verbrauch.to_i,
+      powertaker:                    powertaker,
+      signing_date:                  begin_date,
+      begin_date:                    begin_date,
+      termination_date:              termination_date,
+      end_date:                      end_date,
+      buzznid:                       buzznid.strip,
+      old_supplier_name:             vorlieferant&.strip,
+      old_customer_number:           kundennummer_alt&.strip,
+      old_account_number:            vertragskontonummer_alt&.strip,
+      third_party_renter_number:     mieternummer&.strip,
+      third_party_billing_number:    rechnungsnummer&.strip,
+      renewable_energy_law_taxation: renewable_energy_law_taxation,
     }
   end
 
@@ -56,6 +62,17 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
   # this will be extended to return a new organization once we add those to the import
   def powertaker
     @powertaker ||= ::Person.new(kontaktdaten.converted_attributes.merge(address: address))
+  end
+
+  def renewable_energy_law_taxation
+    case eeg_umlage
+    when '1'
+      :full
+    when '-1'
+      :reduced
+    else
+      :null
+    end
   end
 
   def address
