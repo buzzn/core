@@ -6,5 +6,4 @@ Schemas::Constraints::Address = Schemas::Support.Form do
   required(:city).filled(:str?, max_size?: 64)
   required(:country).value(included_in?: Address.countries.values)
   optional(:addition).filled(:str?, max_size?: 64)
-  optional(:state).value(included_in?: Address.states.values)
 end
