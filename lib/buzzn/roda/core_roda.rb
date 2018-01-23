@@ -1,5 +1,4 @@
 require 'sequel'
-require 'rack-timeout'
 require 'rack/cors'
 
 require_relative 'common_roda'
@@ -13,10 +12,6 @@ class CoreRoda < CommonRoda
   use Rack::Static, root: "public", urls: ["/uploads"]
 
   use Rack::CommonLogger, logger
-
-#  use Rack::Timeout, service_timeout: 29
-
-  Rack::Timeout::Logger.disable
 
   use Rack::Cors, debug: logger.debug? do
     allow do
