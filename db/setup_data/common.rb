@@ -80,7 +80,7 @@ end
 
 import_csv(:persons, converters: { preferred_language: Converters::PreferredLanguage })
 
-ADDRESS_ATTRIBUTES = %i(street city zip state country)
+ADDRESS_ATTRIBUTES = %i(street city zip country)
 get_csv(:organizations, converters: { state: Converters::State }).each do |row|
   Buzzn::Logger.root.debug "Loading organization #{row[:name]}"
   address_attrs = row.slice(*ADDRESS_ATTRIBUTES)

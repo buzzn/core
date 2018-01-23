@@ -1,5 +1,3 @@
-require 'raven'
-
 module Buzzn
   module Roda
     class ErrorHandler < Proc
@@ -16,7 +14,7 @@ module Buzzn
 
       def self.new(logger: Logger.new(self))
         super() do |e|
-          response.status = ERRORS[e.class] || 500
+          response.status = ERRORS[e.class]
           response['Content-Type'] = 'application/json'
 
           case e
@@ -35,9 +33,6 @@ module Buzzn
           else
             logger.error{ "#{e.message}\n\t" + e.backtrace.join("\n\t")}
             errors = "{\"errors\":[{\"detail\":\"internal server error\"}]}"
-          end
-          if defined?(Raven) && response.status == 500
-            Raven.capture_exception(e)
           end
           response.write(errors)
         end

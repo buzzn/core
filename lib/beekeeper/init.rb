@@ -11,6 +11,6 @@ require 'buzzn/schemas/support/enable_dry_validation'
 require 'buzzn/types/discovergy'
 require 'beekeeper/meter_registry'
 
-Dir.glob('lib/beekeeper/importer/*').each { |importer| require importer }
+Dir.glob('lib/beekeeper/importer/*.rb').each { |importer| require importer }
 
 require_relative 'import'

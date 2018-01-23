@@ -4,10 +4,8 @@ class AddressResource < Buzzn::Resource::Entity
 
   attributes  :street,
               :city,
-              :state,
               :zip,
               :country
 
   attributes :updatable, :deletable
 end
-
