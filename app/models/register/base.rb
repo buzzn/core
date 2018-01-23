@@ -127,8 +127,6 @@ module Register
       end
     end
 
-
-
     # TODO move me into clockwork
     def self.observe
       Sidekiq::Client.push({

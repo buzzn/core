@@ -21,6 +21,12 @@ module Register
       end
     end
 
+    # When there's a two way meter where one register is for production and the other for consumption, the consumption
+    # register measures the "Kraftwerkseigenverbrauch", i.e. the own power consumption of a power generation facility.
+    def productions_own_consumption?
+      label.consumption? && !!meter.registers.find { |r| r.label.production? }
+    end
+
     # tested but unused
     def store_reading_at(time, reason)
       if time.is_a?(Time) && time.beginning_of_day == time

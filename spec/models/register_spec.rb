@@ -22,7 +22,6 @@ describe Register do
     end
   end
 
-
   it 'can not find anything' do
     registers = Register::Base.filter('Der Clown ist müde und geht nach Hause.')
     expect(registers.size).to eq 0
@@ -146,6 +145,33 @@ describe Register do
     [Register::Base, Register::Real, Register::Input, Register::Output].each do |klass|
       it "is 1" do
         expect(klass.new.post_decimal_position).to eq(1)
+      end
+    end
+  end
+
+  describe "productions_own_consumption?" do
+    context "Meter is one way" do
+      let(:meter) { create(:meter, :real, :one_way) }
+      it "returns false" do
+        expect(meter.registers.first.productions_own_consumption?).to eq(false)
+      end
+    end
+
+    context "Meter is two way" do
+      let(:meter) { create(:meter, :real, :two_way) }
+
+      context "has no production register" do
+        before { meter.registers << create(:register, :output) } # this creates an unlogical register, but just for test.
+        it "returns false" do
+          expect(meter.registers.first.productions_own_consumption?).to eq(false)
+        end
+      end
+
+      context "has a production register" do
+        before { meter.registers << create(:register, :output, label: :production_pv) }
+        it "returns true" do
+          expect(meter.registers.first.productions_own_consumption?).to eq(true)
+        end
       end
     end
   end
