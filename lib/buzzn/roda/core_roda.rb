@@ -15,7 +15,8 @@ class CoreRoda < CommonRoda
   use Rack::CommonLogger, logger
 
 #  use Rack::Timeout, service_timeout: 29
-#  Rack::Timeout::Logger.disable
+
+  Rack::Timeout::Logger.disable
 
   use Rack::Cors, debug: logger.debug? do
     allow do
