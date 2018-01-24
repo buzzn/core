@@ -14,7 +14,7 @@ module Buzzn
 
       def self.new(logger: Logger.new(self))
         super() do |e|
-          response.status = ERRORS[e.class]
+          response.status = ERRORS[e.class] || raise(e)
           response['Content-Type'] = 'application/json'
 
           case e
