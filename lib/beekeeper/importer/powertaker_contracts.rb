@@ -14,8 +14,8 @@ class Beekeeper::Importer::PowerTakerContracts
           customer = find_or_create_customer(contract[:powertaker])
           create_contract(localpool, customer, contract, registers)
         end
-      # rescue => e
-      #   logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
+      rescue => e
+        logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
       end
     end
   end
@@ -81,13 +81,13 @@ class Beekeeper::Importer::PowerTakerContracts
 
   # Deduplication of the beekeeper data
   def find_or_create_organization(unsaved_record)
-    puts unsaved_record.name
+    logger.debug(unsaved_record.name)
     account_new_fibunr = ORGANIZATION_DATA_LOOKUPS[:account_new].find { |pattern, fibunr| unsaved_record.name =~ pattern }&.at(1)
     kontaktdaten_id    = ORGANIZATION_DATA_LOOKUPS[:kontaktdaten].find { |pattern, fibunr| unsaved_record.name =~ pattern }&.at(1)
     org_with_same_slug = Organization.find_by(slug: Buzzn::Slug.new(unsaved_record.name))
 
     if account_new_fibunr
-      puts "Taking organization from account_new"
+      logger.debug("Taking organization from account_new")
       # get the data to use for our record
       source_record = Beekeeper::Buzzn::AccountNew.find_by(fibunr: account_new_fibunr)
       # check if we already created it
@@ -101,7 +101,7 @@ class Beekeeper::Importer::PowerTakerContracts
         Organization.create!(source_record.converted_attributes)
       end
     elsif kontaktdaten_id
-      puts "Taking organization from kontaktdaten"
+      logger.debug("Taking organization from kontaktdaten")
       # get the data to use for our record
       source_record = Beekeeper::Minipool::Kontaktdaten.find_by(kontaktdaten_id: kontaktdaten_id)
       # check if we already created it
@@ -115,10 +115,10 @@ class Beekeeper::Importer::PowerTakerContracts
         Organization.create!(source_record.converted_attributes)
       end
     elsif org_with_same_slug
-      puts "Using existing org with same slug"
+      logger.debug("Using existing org with same slug")
       org_with_same_slug
     else # lookup is configured for this record, import data as is, no deduplication
-      puts "Creating new organization"
+      logger.debug("Creating new organization")
       unsaved_record.save!
       unsaved_record
     end
