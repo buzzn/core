@@ -60,7 +60,11 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
   private
 
   def powertaker
-    @powertaker ||= ::Person.new(kontaktdaten.converted_attributes.merge(address: address))
+    @powertaker ||= if kontaktdaten.person?
+      Person.new(kontaktdaten.converted_attributes.merge(address: address))
+    else
+      Organization.new(kontaktdaten.converted_attributes)
+    end
   end
 
   def renewable_energy_law_taxation
@@ -76,11 +80,6 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   def address
     ::Address.new(Beekeeper::Minipool::Adresse.find_by(adress_id: adress_id).converted_attributes)
-    @powertaker ||= if kontaktdaten.person?
-      Person.new(kontaktdaten.converted_attributes)
-    else
-      Organization.new(kontaktdaten.converted_attributes)
-    end
   end
 
   def kontaktdaten

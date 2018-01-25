@@ -55,13 +55,13 @@ class Beekeeper::Importer::PowerTakerContracts
     uniqueness_attrs = unsaved_record.attributes.slice("email", "first_name", "last_name")
     person = Person.find_by(uniqueness_attrs)
     if person
-      logger.debug "#{unsaved_person.name} (#{unsaved_person.email}): using existing person #{person.id}"
-      create_address(person, unsaved_person.address)
+      logger.debug "#{unsaved_record.name} (#{unsaved_record.email}): using existing person #{person.id}"
+      create_address(person, unsaved_record.address)
       person
     else
-      logger.debug "#{unsaved_person.name} (#{unsaved_person.email} #{unsaved_person.address})): creating new person with address instance"
-      unsaved_person.save!
-      unsaved_person
+      logger.debug "#{unsaved_record.name} (#{unsaved_record.email} #{unsaved_record.address})): creating new person with address instance"
+      unsaved_record.save!
+      unsaved_record
     end
   end
 
