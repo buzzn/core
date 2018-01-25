@@ -11,7 +11,6 @@ class Beekeeper::Importer::LogImportSummary
     logger.info("-" * 80)
     logger.info("Import summary")
     logger.info("-" * 80)
-
     logger.info("groups                                                   : #{Group::Localpool.count}")
     logger.info("groups distribution_system_operator                      : #{Group::Localpool.where('distribution_system_operator_id IS NOT NULL').count}")
     logger.info("groups transmission_system_operator                      : #{Group::Localpool.where('transmission_system_operator_id IS NOT NULL').count}")

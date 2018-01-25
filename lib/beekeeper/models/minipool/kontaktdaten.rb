@@ -22,6 +22,25 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.kontaktdaten'
 
   def converted_attributes
+    person? ? person_attributes : organization_attributes
+  end
+
+  # These are not labeled "Privatperson" but actually are.
+  ADDITIONAL_PERSONS = [417, 1201]
+
+  # These are labeled "Privatperson" but actually aren't.
+  PERSONS_ACTUALLY_ORGANIZATIONS = [418, 419, 420, 421, 782, 783, 513, 837, 838]
+
+  def person?
+    is_additional_person           = ADDITIONAL_PERSONS.include?(kontaktdaten_id)
+    rechtsform_private             = rechtsform.strip == "Privatperson"
+    is_organization                = PERSONS_ACTUALLY_ORGANIZATIONS.include?(kontaktdaten_id)
+    is_additional_person || (rechtsform_private && !is_organization)
+  end
+
+  private
+
+  def person_attributes
     {
       first_name:          vorname.strip,
       last_name:           nachname.strip,
@@ -31,6 +50,19 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
       fax:                 fax.strip,
       email:               email.strip,
       preferred_language:  :german
+    }
+  end
+
+  def organization_attributes
+    {
+      name:  firma,
+      email: email.strip,
+      phone: telefon.strip,
+      fax:   fax.strip,
+      # slug,
+      # address,
+      # legal_representation,
+      # contact
     }
   end
 
@@ -48,9 +80,4 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
   def title
     titel =~ /\s*Dr\.\s*/ ? 'Dr.' : nil
   end
-
-  def person?
-    rechtsform.strip == "Privatperson"
-  end
-
 end

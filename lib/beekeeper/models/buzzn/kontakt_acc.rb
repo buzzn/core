@@ -32,11 +32,11 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
 
   def converted_attributes
     {
-      first_name:    vorname,
-      last_name:     nachname,
-      email:         email,
-      phone:         telefon,
-      prefix:        prefix,
+      first_name:    first_name,
+      last_name:     nachname.strip,
+      email:         email.strip,
+      phone:         telefon.strip,
+      prefix:        prefix.strip,
       title:         title,
       address:       address
     }
@@ -51,16 +51,18 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
     "Frau"     => 'F'
   }
 
-  TITEL_TO_TITLE_MAP = {
-    ""         => nil,
-  }
-
   def prefix
     ANREDE_TO_PREFIX_MAP.fetch(anrede)
   end
 
+  # title is an enum in the core app DB.
+  # also, we only have the values 'Dr.' and '' in beekeeper.
   def title
-    TITEL_TO_TITLE_MAP.fetch(titel)
+    titel.strip =~ /Dr\./ || vorname.strip =~ /^Dr\. / ? 'Dr.' : nil
+  end
+
+  def first_name
+    vorname.gsub(/Dr. /, '').strip
   end
 
   def converted_address_attributes

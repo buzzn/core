@@ -8,7 +8,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     private
 
     def powertaker_contracts
-      minipool_sns.select(&:person?).map(&:converted_attributes)
+      minipool_sns.map(&:converted_attributes)
     end
 
     # get the powertakers ("sn" == Stromnehmer) of this localpool
