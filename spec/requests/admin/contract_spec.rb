@@ -122,6 +122,7 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
       let(:localpool_power_taker_contract_json) do
         contract = localpool_power_taker_contract
+        meter = contract.register.meter
         {
           "id"=>contract.id,
           "type"=>"contract_localpool_power_taker",
@@ -218,6 +219,34 @@ describe Admin::LocalpoolRoda do
             "createables"=>["readings"],
             "metering_point_id"=>contract.register.metering_point_id,
             "obis"=>contract.register.obis,
+            'meter' => {
+              "id"=>meter.id,
+              "type"=>"meter_real",
+              'updated_at'=> meter.updated_at.as_json,
+              "product_name"=>meter.product_name,
+              "product_serialnumber"=>meter.product_serialnumber,
+              'sequence_number' => meter.sequence_number,
+              "updatable"=>false,
+              "deletable"=>false,
+              "manufacturer_name"=>meter.attributes['manufacturer_name'],
+              "manufacturer_description"=>meter.attributes['manufacturer_description'],
+              "location_description"=>meter.attributes['location_description'],
+              "direction_number"=>meter.attributes['direction_number'],
+              "converter_constant"=>meter.converter_constant,
+              "ownership"=>meter.attributes['ownership'],
+              "build_year"=>meter.build_year,
+              "calibrated_until"=>meter.calibrated_until ? meter.calibrated_until.to_s : nil,
+              "edifact_metering_type"=>meter.attributes['edifact_metering_type'],
+              "edifact_meter_size"=>meter.attributes['edifact_meter_size'],
+              "edifact_tariff"=>meter.attributes['edifact_tariff'],
+              "edifact_measurement_method"=>meter.attributes['edifact_measurement_method'],
+              "edifact_mounting_method"=>meter.attributes['edifact_mounting_method'],
+              "edifact_voltage_level"=>meter.attributes['edifact_voltage_level'],
+              "edifact_cycle_interval"=>meter.attributes['edifact_cycle_interval'],
+              "edifact_data_logging"=>meter.attributes['edifact_data_logging'],
+              "sent_data_dso"=>nil,
+              "data_source"=>meter.registers.first.data_source.to_s,
+            }
           }
         }
       end
@@ -327,7 +356,7 @@ describe Admin::LocalpoolRoda do
           let(:contract_json) { send "#{type}_contract_json" }
 
           it '200' do
-            GET "/test/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register'
+            GET "/test/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register:meter'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end

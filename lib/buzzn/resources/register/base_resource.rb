@@ -21,6 +21,7 @@ module Register
                :meter_id,
                :updatable, :deletable, :createables
 
+    has_one :meter
     has_one :group
     has_many! :readings, ReadingResource
 
