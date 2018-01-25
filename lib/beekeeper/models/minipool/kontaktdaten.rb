@@ -59,6 +59,7 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
       email: email.strip,
       phone: telefon.strip,
       fax:   fax.strip,
+      # these are fields our Organization model has, which we don't import, yet.
       # slug,
       # address,
       # legal_representation,
