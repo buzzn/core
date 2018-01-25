@@ -33,5 +33,5 @@ lowlevel_error_handler do |ex, env|
     transaction: "Puma"
   )
   # note the below is just a Rack response
-  [500, {}, ["An error has occurred, and developers have been informed. Please try reloading the page.\n"]]
+  [500, {'Content-Type'=> 'application/json'}, ['{"errors":["An error has occurred."]}']]
 end

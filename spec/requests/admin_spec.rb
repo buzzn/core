@@ -11,10 +11,10 @@ describe Admin::Roda do
     TestAdminRoda # this defines the active application for this test
   end
 
-  entity!(:localpool) do
-    localpool = Fabricate(:localpool)
-    Fabricate(:metering_point_operator_contract, localpool: localpool)
-    localpool
+  entity!(:localpool) { create(:localpool) }
+
+  entity!(:contract) do
+    create(:contract, :localpool_powertaker, localpool: localpool, contractor: create(:organization))
   end
 
   let(:expired_json) do
@@ -26,10 +26,10 @@ describe Admin::Roda do
     context 'GET' do
 
       let(:person) do
-        localpool.metering_point_operator_contract.customer
+        contract.customer
       end
 
-      let(:persons_json) do
+      let(:expected_persons_json) do
         [
           {
             "id"=>person.id,
@@ -51,11 +51,99 @@ describe Admin::Roda do
         ]
       end
 
-      it '200' do
+      let(:expected_persons_with_nested_json) do
+        json = expected_persons_json.first.dup
+        register = contract.register
+        contract_json = {
+          "id"=>contract.id,
+          "type"=>"contract_localpool_power_taker",
+          'updated_at'=>contract.updated_at.as_json,
+          "full_contract_number"=>contract.full_contract_number,
+          "signing_date"=>contract.signing_date.to_s,
+          "begin_date"=>contract.begin_date.to_s,
+          "termination_date"=>nil,
+          "end_date"=>nil,
+          "status"=>contract.status.to_s,
+          "updatable"=>false,
+          "deletable"=>false,
+          'forecast_kwh_pa'=>contract.forecast_kwh_pa,
+          'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
+          'third_party_billing_number'=>contract.third_party_billing_number,
+          'third_party_renter_number'=>contract.third_party_renter_number,
+          'old_supplier_name'=>contract.old_supplier_name,
+          'old_customer_number'=>contract.old_customer_number,
+          'old_account_number'=>contract.old_account_number,
+          'mandate_reference' => nil,
+          'localpool' => {
+            "id"=>localpool.id,
+            "type"=>"group_localpool",
+            'updated_at'=>localpool.updated_at.as_json,
+            "name"=>localpool.name,
+            "slug"=>localpool.slug,
+            "description"=>localpool.description,
+          },
+          'register' => {
+            "id"=>register.id,
+            "type"=>"register_real",
+            'updated_at'=>register.updated_at.as_json,
+            "direction"=>register.attributes['direction'],
+            "name"=>register.name,
+            "pre_decimal_position"=>register.pre_decimal_position,
+            "post_decimal_position"=>register.post_decimal_position,
+            "low_load_ability"=>register.low_load_ability,
+            "label"=>register.attributes['label'],
+            "last_reading"=> 0,
+            "observer_min_threshold"=>register.observer_min_threshold,
+            "observer_max_threshold"=>register.observer_max_threshold,
+            "observer_enabled"=>register.observer_enabled,
+            "observer_offline_monitoring"=>register.observer_offline_monitoring,
+            'meter_id' => register.meter_id,
+            'updatable'=> false,
+            'deletable'=> false,
+            "createables"=>["readings"],
+            "metering_point_id"=>register.metering_point_id,
+            "obis"=>register.obis
+          }
+        }
+        json['contracts'] = { 'array' => [ contract_json ] }
+        [ json ]
+      end
+
+      let(:expected_person_json) do
+        json = expected_persons_with_nested_json.first.dup
+        contracts = json.delete('contracts')
+        json['address'] = {
+          "id"=>person.address.id,
+          "type"=>"address",
+          'updated_at'=>person.address.updated_at.as_json,
+          "street"=>person.address.street,
+          "city"=>person.address.city,
+          "zip"=>person.address.zip,
+          "country"=>person.address.attributes['country'],
+          "updatable"=>false,
+          "deletable"=>false
+        }
+        json['contracts'] = contracts
+        json
+      end
+
+      it '200 all' do
         GET "/test/persons", $admin
 
         expect(response).to have_http_status(200)
-        expect(json['array'].to_yaml).to eq(persons_json.to_yaml)
+        expect(json['array'].to_yaml).to eq(expected_persons_json.to_yaml)
+
+        GET "/test/persons", $admin, include: 'contracts:[localpool,register]'
+
+        expect(response).to have_http_status(200)
+        expect(json['array'].to_yaml).to eq(expected_persons_with_nested_json.to_yaml)
+      end
+
+      it '200' do
+        GET "/test/persons/#{person.id}", $admin, include: 'address,contracts:[localpool,register]'
+
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq(expected_person_json.to_yaml)
       end
 
       it '401' do
@@ -75,7 +163,7 @@ describe Admin::Roda do
     context 'GET' do
 
       let(:organization) do
-        localpool.metering_point_operator_contract.contractor
+        contract.contractor
       end
 
       let(:organizations_json) do

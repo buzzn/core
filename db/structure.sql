@@ -316,30 +316,6 @@ CREATE TYPE addresses_country AS ENUM (
 
 
 --
--- Name: addresses_state; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE addresses_state AS ENUM (
-    'DE_BB',
-    'DE_BE',
-    'DE_BW',
-    'DE_BY',
-    'DE_HB',
-    'DE_HE',
-    'DE_HH',
-    'DE_MV',
-    'DE_NI',
-    'DE_NW',
-    'DE_RP',
-    'DE_SH',
-    'DE_SL',
-    'DE_SN',
-    'DE_ST',
-    'DE_TH'
-);
-
-
---
 -- Name: billings_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -358,7 +334,8 @@ CREATE TYPE billings_status AS ENUM (
 
 CREATE TYPE contracts_renewable_energy_law_taxation AS ENUM (
     'F',
-    'R'
+    'R',
+    'N'
 );
 
 
@@ -903,8 +880,7 @@ CREATE TABLE addresses (
     addition character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    country addresses_country,
-    state addresses_state
+    country addresses_country
 );
 
 

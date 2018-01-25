@@ -1,5 +1,6 @@
 require 'ostruct'
 require 'oauth'
+require 'faraday'
 
 require_relative '../discovergy'
 

@@ -19,7 +19,8 @@ module Contract
 
     enum renewable_energy_law_taxation: {
            full: 'F',
-           reduced: 'R'
+           reduced: 'R',
+           null: 'N' # none is not allowed by active-record
          }
 
     # error messages

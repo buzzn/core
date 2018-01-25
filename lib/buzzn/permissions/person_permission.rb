@@ -2,8 +2,8 @@ require_relative '../permission'
 
 PersonResource::Permission = Buzzn::Permission.new(PersonResource) do
   # define groups of roles
-  group(:none)
-  group(:self, Role::SELF)
+  define_group(:none)
+  define_group(:self, Role::SELF)
 
   # top level CRUD permissions
   create :none

@@ -10,9 +10,7 @@ require 'buzzn/data_result_set'
 require 'buzzn/data_result_array'
 require 'buzzn/data_point'
 require 'buzzn/data_result'
-
 require 'buzzn/db'
-
 
 class BaseRoda < CommonRoda
 
@@ -31,7 +29,7 @@ class BaseRoda < CommonRoda
     end
   end
 
-  plugin :error_handler, &Buzzn::Roda::ErrorHandler.new
+  plugin :error_handler, error_handler_classes: Buzzn::Roda::ErrorHandler::ERRORS.keys, &Buzzn::Roda::ErrorHandler.new
 
   plugin :drop_body
 

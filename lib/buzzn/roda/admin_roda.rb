@@ -15,8 +15,15 @@ module Admin
 
       admin = AdminResource.new(current_user)
 
-      r.get! 'persons' do
-        admin.persons
+      r.on 'persons' do
+
+        r.get! do
+          admin.persons
+        end
+
+        r.get! :id do |id|
+          admin.persons.retrieve(id)
+        end
       end
 
       r.get! 'organizations' do

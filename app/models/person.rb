@@ -8,6 +8,7 @@ class Person < ActiveRecord::Base
 
   has_and_belongs_to_many :roles
   has_many :bank_accounts, foreign_key: :owner_person_id
+  has_many :contracts, class_name: 'Contract::Base', foreign_key: 'customer_person_id'
 
   mount_uploader :image, PersonImageUploader
 
@@ -37,6 +38,10 @@ class Person < ActiveRecord::Base
 
   def name
     "#{first_name} #{last_name}"
+  end
+
+  def contracts
+    Contract::Base.where(customer_person: self)
   end
 
   # roles related methods
