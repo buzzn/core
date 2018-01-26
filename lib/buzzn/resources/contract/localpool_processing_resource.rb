@@ -1,7 +1,7 @@
-require_relative 'base_resource'
+require_relative 'localpool_resource'
 
 module Contract
-  class LocalpoolProcessingResource < BaseResource
+  class LocalpoolProcessingResource < LocalpoolResource
 
     model LocalpoolProcessing
 

@@ -143,6 +143,14 @@ describe Admin::LocalpoolRoda do
           'old_customer_number'=>contract.old_customer_number,
           'old_account_number'=>contract.old_account_number,
           'mandate_reference' => nil,
+          "localpool" => {
+            "id"=>contract.localpool.id,
+            "type"=>"group_localpool",
+            'updated_at'=>contract.localpool.updated_at.as_json,
+            "name"=>contract.localpool.name,
+            "slug"=>contract.localpool.slug,
+            "description"=>contract.localpool.description,
+          },
           "tariffs"=>{
             'array'=>contract.tariffs.collect do |tariff|
               {
@@ -266,6 +274,14 @@ describe Admin::LocalpoolRoda do
           "updatable"=>true,
           "deletable"=>false,
           "metering_point_operator_name"=>contract.metering_point_operator_name,
+          "localpool" => {
+            "id"=>contract.localpool.id,
+            "type"=>"group_localpool",
+            'updated_at'=>contract.localpool.updated_at.as_json,
+            "name"=>contract.localpool.name,
+            "slug"=>contract.localpool.slug,
+            "description"=>contract.localpool.description,
+          },
           "tariffs"=>{
             'array'=> contract.tariffs.collect do |tariff|
               {
@@ -356,7 +372,7 @@ describe Admin::LocalpoolRoda do
           let(:contract_json) { send "#{type}_contract_json" }
 
           it '200' do
-            GET "/test/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register:meter'
+            GET "/test/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register:meter'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end

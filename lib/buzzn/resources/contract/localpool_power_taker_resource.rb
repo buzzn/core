@@ -1,8 +1,7 @@
-require_relative 'base_resource'
-require_relative '../group_resource'
+require_relative 'localpool_resource'
 
 module Contract
-  class LocalpoolPowerTakerResource < BaseResource
+  class LocalpoolPowerTakerResource < LocalpoolResource
 
     model LocalpoolPowerTaker
 
@@ -16,6 +15,5 @@ module Contract
                 :mandate_reference
 
     has_one :register
-    has_one :localpool, GroupResource
   end
 end
