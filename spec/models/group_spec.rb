@@ -29,11 +29,16 @@ describe Group::Base do
 
   describe Group::Localpool do
 
-    let(:buzzn) { Organization.buzzn }
+    entity(:buzzn) { Organization.buzzn }
+
+    entity!(:localpool_with_contracts) do
+      create(:contract, :metering_point_operator, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn)
+      create(:contract, :localpool_processing, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn)
+      localpool
+    end
 
     it 'has organizations and persons' do
-      skip "Clarify with Christian how this should behave. Right now none of the localpools have persons or orgs."
-      localpool_without_contracts = Fabricate(:localpool)
+      localpool_without_contracts = create(:localpool)
       both_localpools = Group::Localpool.where(id: [localpool, localpool_without_contracts])
       persons = localpool.contracts.collect { |c| c.customer }.uniq
       expect(persons.size).to be > 0
@@ -45,18 +50,11 @@ describe Group::Base do
     end
 
     it 'get a metering_point_operator_contract from localpool' do
-      create(:contract, :metering_point_operator, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn)
       expect(localpool.metering_point_operator_contract).to be_a Contract::MeteringPointOperator
     end
 
     it 'get a localpool_processing_contract from localpool' do
-      create(:contract, :localpool_processing, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn)
       expect(localpool.localpool_processing_contract).to be_a Contract::LocalpoolProcessing
-    end
-
-    xit 'creates corrected ÜGZ registers' do
-      expect(localpool.registers.grid_consumption_corrected.size).to eq 1
-      expect(localpool.registers.grid_feeding_corrected.size).to eq 1
     end
 
     describe 'assigning owner' do
