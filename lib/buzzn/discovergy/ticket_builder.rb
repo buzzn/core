@@ -1,7 +1,7 @@
 require_relative '../discovergy'
 require_relative '../types/datasource'
 
-class Discovergy::CurrentBuilder < Discovergy::AbstractBuilder
+class Discovergy::TicketBuilder < Discovergy::AbstractBuilder
 
   BROKEN_REGISTER_RESPONSE = -1
 
