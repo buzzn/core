@@ -30,11 +30,13 @@ namespace :deploy do
 
   include DeploymentSupport
 
+  desc "Deploy to staging"
   task :staging do
     ensure_git_remote_configured!(:staging)
     deploy(:staging)
   end
 
+  desc "Deploy to production"
   task :production do
     ensure_git_remote_configured!(:production)
     if deploy(:production)
