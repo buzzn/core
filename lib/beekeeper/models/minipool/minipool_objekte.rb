@@ -112,6 +112,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     Date.parse(minipool_start)
   end
 
+  # here's how to sync this manually with production: https://github.com/buzzn/scrum/issues/117#issuecomment-361172196
   GROUPS_WITH_DISPLAY_APP_ENABLED = [
     'Bahnhofstr. 21',
     'Fritz-Winter-Straße 3+7 - WA10',
@@ -122,7 +123,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     'WoGe'
   ]
 
-  # This will likely move to a magic Beekeeper field at some point so PhO can control which groups see the display app.
   def show_display_app
     GROUPS_WITH_DISPLAY_APP_ENABLED.include?(minipool_name)
   end
