@@ -131,26 +131,26 @@ class Beekeeper::Importer::PowerTakerContracts
     # key: pattern for kontaktdaten.firma
     # value: account_new.fibunr of the record that should be used for data
     account_new: {
-      /wagnis/i           => 70069,
-      /Cohaus/            => 80792,
-      /IGEWO/             => 80583,
-      /Hans Fischer GmbH/ => 80678,
-      /BEG Remstal/       => 80502,
+      /wagnis/i            => 70069,
+      /Cohaus/i            => 80792,
+      /IGEWO/i             => 80583,
+      /Hans Fischer GmbH/i => 80678,
+      /BEG Remstal/i       => 80502,
     },
 
     # key: pattern for kontaktdaten.firma
     # value: kontaktdaten.kontaktdaten_id of the record that should be used for data
     kontaktdaten: {
-      /Parkgelände GmbH/                         => 624,
-      /Diakonie Stetten/                         => 790,
-      /Gemeinde Hallbergmoos/                    => 777,
-      /IFAGE Grundstücksverwaltungs GmbH/        => 442,
-      /Ritter Baukontor GmbH/                    => 1097,
-      /Umbreit, Olé Madrid/                      => 46,
-      /VR Dachau Immobilien GmbH/                => 894,
-      /WEG Hausverwaltung Alte Rommelshauser St/ => 1070,
-      /WHG Wohnungsbau/                          => 430,
-      /Wogeno München eG/                        => 998,
+      /Parkgelände GmbH/i                         => 624,
+      /Diakonie Stetten/i                         => 790,
+      /Gemeinde Hallbergmoos/i                    => 777,
+      /IFAGE Grundstücksverwaltungs GmbH/i        => 442,
+      /Ritter Baukontor GmbH/i                    => 1097,
+      /Umbreit, Olé Madrid/i                      => 46,
+      /VR Dachau Immobilien GmbH/i                => 894,
+      /WEG Hausverwaltung Alte Rommelshauser St/i => 1070,
+      /WHG Wohnungsbau/i                          => 430,
+      /Wogeno München eG/i                        => 998,
     }
   }
 
