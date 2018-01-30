@@ -35,10 +35,6 @@ module Contract
     NOT_ALLOWED_FOR_OLD_CONTRACT = 'not allowed for old contract'
     MUST_NOT_BE_BUZZN            = 'must not be buzzn'
 
-    class << self
-      private :new
-    end
-
     has_and_belongs_to_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
 
@@ -70,22 +66,6 @@ module Contract
                   end
       where('begin_date <= ?', timestamp)
         .where('end_date > ? OR end_date IS NULL', timestamp + 1.second)
-    end
-
-    def validate_invariants
-      errors.add(:power_of_attorney, MUST_BE_TRUE ) unless power_of_attorney
-      if contractor
-        errors.add(:contractor_bank_account, MUST_MATCH) if contractor_bank_account && ! contractor.bank_accounts.include?(contractor_bank_account)
-        if contractor_is_buzzn?
-          errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.empty?
-          # FIXME: why is at least one payment required?
-          errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.empty?
-        end
-      end
-    end
-
-    def name
-      "TODO {organization.name} {tariff}"
     end
 
     def full_contract_number
