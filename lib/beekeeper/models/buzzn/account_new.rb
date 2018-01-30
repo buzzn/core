@@ -30,6 +30,7 @@ class Beekeeper::Buzzn::AccountNew < Beekeeper::Buzzn::BaseRecord
       email:         email.strip.downcase,
       address:       address,
       bank_accounts: bank_accounts,
+      contact:       contact
     }
   end
 
@@ -46,5 +47,13 @@ class Beekeeper::Buzzn::AccountNew < Beekeeper::Buzzn::BaseRecord
 
   def address
     Address.new(converted_address_attributes)
+  end
+
+  def contact
+    Person.new(kontakt_acc.converted_attributes)
+  end
+
+  def kontakt_acc
+    Beekeeper::Buzzn::KontaktAcc.find_by(fibunr: fibunr)
   end
 end

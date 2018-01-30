@@ -26,8 +26,7 @@ class Beekeeper::Import
 
     Group::Localpool.transaction do
       # need to create localpool with broken invariants
-      localpool = Group::Localpool.create(record.converted_attributes.except(:registers, :powertaker_contracts))
-
+      localpool = Beekeeper::Importer::CreateLocalpool.new(logger).run(record.converted_attributes)
       Beekeeper::Importer::Roles.new(logger).run(localpool)
       registers = Beekeeper::Importer::RegistersAndMeters.new(logger).run(localpool, record.converted_attributes[:registers])
       Beekeeper::Importer::PowerTakerContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], registers)

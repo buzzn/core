@@ -36,7 +36,7 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
       last_name:     nachname.strip,
       email:         email.strip.downcase,
       phone:         telefon.strip,
-      prefix:        prefix.strip,
+      prefix:        prefix&.strip,
       title:         title,
       address:       address
     }
@@ -45,6 +45,7 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
   private
 
   ANREDE_TO_PREFIX_MAP = {
+    nil        => nil,
     ""         => nil,
     "Herr"     => 'M',
     "Herrn"    => 'M',
