@@ -26,7 +26,7 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
   end
 
   # These are not labeled "Privatperson" but actually are.
-  ADDITIONAL_PERSONS = [417, 1201]
+  ADDITIONAL_PERSONS = [1201]
 
   # These are labeled "Privatperson" but actually aren't.
   PERSONS_ACTUALLY_ORGANIZATIONS = [418, 419, 420, 421, 782, 783, 513, 837, 838]
@@ -55,7 +55,7 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
 
   def organization_attributes
     {
-      name:  firma,
+      name:  organization_name,
       email: email.strip,
       phone: telefon.strip,
       fax:   fax.strip,
@@ -80,5 +80,11 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
   # also, we only have the values 'Dr.' and '' in beekeeper.
   def title
     titel =~ /\s*Dr\.\s*/ ? 'Dr.' : nil
+  end
+
+  # This fixes the rows 418-421 which need to be handled as organizations, but firma is "" there.
+  # Fortunately the organization name is in the "nachname" column there.
+  def organization_name
+    firma.present? ? firma : nachname
   end
 end
