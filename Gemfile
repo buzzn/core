@@ -83,7 +83,7 @@ group :production, :staging do
 end
 
 group :development, :test do
-  gem 'byebug'
+  gem 'pry-byebug'
   gem 'awesome_print'
   gem 'brakeman', :require => false
   gem 'listen'
