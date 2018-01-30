@@ -33,7 +33,7 @@ class Discovergy::AbstractBuilder
   def to_watt(response, register)
     val = to_watt_raw(response)
     if register.meter.one_way_meter?
-      val
+      val < 0 ? 0 : val # sometime discovergy delivers negative values: 0 them
     else
       adjust(val, register)
     end
