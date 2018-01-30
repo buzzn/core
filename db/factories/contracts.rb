@@ -13,16 +13,20 @@ FactoryGirl.define do
     metering_point_operator_name  "Generic metering point operator"
 
     after(:build) do |account, transients|
-      # assign customer if not present yet
-      account.customer = transients.customer || FactoryGirl.create(:person, :with_bank_account)
-      # assign contractor if not present yet
-      account.contractor = transients.contractor || FactoryGirl.create(:organization, :with_bank_account)
+      unless account.is_a?(Contract::LocalpoolThirdParty)
+        # assign customer if not present yet
+        account.customer = transients.customer || FactoryGirl.create(:person, :with_bank_account)
+        # assign contractor if not present yet
+        account.contractor = transients.contractor || FactoryGirl.create(:organization, :with_bank_account)
+      end
     end
 
     before(:create) do |contract, _evaluator|
-      %i(customer contractor).each do |identifier|
-        bank_account = contract.send(identifier).bank_accounts.first
-        contract.send("#{identifier}_bank_account=", bank_account) if bank_account.present?
+      unless contract.is_a?(Contract::LocalpoolThirdParty)
+        %i(customer contractor).each do |identifier|
+          bank_account = contract.send(identifier).bank_accounts.first
+          contract.send("#{identifier}_bank_account=", bank_account) if bank_account.present?
+        end
       end
     end
   end
@@ -54,6 +58,17 @@ FactoryGirl.define do
     forecast_kwh_pa 1000
     customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }
     contractor      { FactoryGirl.create(:person, :with_bank_account) }
+    before(:create) do |contract, _evaluator|
+      unless contract.register
+        meter = FactoryGirl.create(:meter, :real, :one_way, group: contract.localpool)
+        contract.register = meter.registers.first
+      end
+    end
+  end
+
+  trait :localpool_third_party do
+    contract_number { generate(:localpool_power_taker_contract_nr) }
+    initialize_with { Contract::LocalpoolThirdParty.new }
     before(:create) do |contract, _evaluator|
       unless contract.register
         meter = FactoryGirl.create(:meter, :real, :one_way, group: contract.localpool)

@@ -75,7 +75,7 @@ class Services::ReadingCalculation
         end_date_query = end_date
       end
       accounted_energy = get_register_energy_for_period(contract.register, begin_date_query, end_date_query, accounting_year)
-      if contract.is_a?(Contract::OtherSupplier)
+      if contract.is_a?(Contract::LocalpoolThirdParty)
         consumption_third_party << accounted_energy
       else
         if contract.full?

@@ -58,7 +58,7 @@ describe "Factories produce valid records" do
       expect(subject.contract_number).to be >= 90_000
       expect(subject.contract_number).to be <= 100_000
     end
-    context "powertaker contract" do
+    context "localpool powertaker contract" do
       subject { create(:contract, :localpool_powertaker) }
       describe "customer" do
         it "has a customer named Powertaker" do
@@ -66,6 +66,20 @@ describe "Factories produce valid records" do
         end
         it "has a customer with a bank_account" do
           expect(subject.customer.bank_accounts.size).to be >= 1
+        end
+      end
+      describe "register" do
+        it { is_expected.to have_association(:register, Register::Input) }
+      end
+    end
+    context "localpool thirdparty" do
+      subject { create(:contract, :localpool_third_party) }
+      describe "customer" do
+        it "has no customer" do
+          expect(subject.customer).to be_nil
+        end
+        it "has no contractor" do
+          expect(subject.contractor).to be_nil
         end
       end
       describe "register" do
