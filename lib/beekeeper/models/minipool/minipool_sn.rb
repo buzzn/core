@@ -60,9 +60,12 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
   private
 
   def powertaker
+    # always return a new, unsaved record. The duplicates from Beekeeper will be removed later on,
+    # when the records and localpool are saved.
     @powertaker ||= if kontaktdaten.person?
       Person.new(kontaktdaten.converted_attributes.merge(address: address))
     else
+      # TODO add contact person
       Organization.new(kontaktdaten.converted_attributes)
     end
   end
@@ -90,7 +93,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
     Date.parse(bezugsbeginn)
   end
 
-  # Even if the contract is not terminated, beekeeper sets and end date (2050-01-01 or later).
+  # Even if the contract is not terminated, beekeeper sets an end date (2050-01-01 or later).
   # So only if the end_date is earlier than 2050-01-01, we take it seriously and import it.
   def end_date
     end_date = Date.parse(bezugsende)
