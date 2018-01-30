@@ -34,7 +34,7 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
     {
       first_name:    first_name,
       last_name:     nachname.strip,
-      email:         email.strip,
+      email:         email.strip.downcase,
       phone:         telefon.strip,
       prefix:        prefix.strip,
       title:         title,

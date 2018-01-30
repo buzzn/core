@@ -48,7 +48,7 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
       prefix:              prefix,
       phone:               telefon.strip,
       fax:                 fax.strip,
-      email:               email.strip,
+      email:               email.strip.downcase,
       preferred_language:  :german
     }
   end
@@ -56,11 +56,10 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
   def organization_attributes
     {
       name:  organization_name,
-      email: email.strip,
+      email: email.strip.downcase,
       phone: telefon.strip,
       fax:   fax.strip,
       # these are fields our Organization model has, which we don't import, yet.
-      # slug,
       # address,
       # legal_representation,
       # contact

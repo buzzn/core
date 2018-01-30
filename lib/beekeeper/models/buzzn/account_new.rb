@@ -27,7 +27,7 @@ class Beekeeper::Buzzn::AccountNew < Beekeeper::Buzzn::BaseRecord
       name:          gesellschafts_name,
       phone:         telefon,
       fax:           fax,
-      email:         email,
+      email:         email.strip.downcase,
       address:       address,
       bank_accounts: bank_accounts,
     }
