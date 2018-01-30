@@ -44,6 +44,6 @@ class Beekeeper::Importer::LogLocalpoolTodos
   private
 
   def buzzn_operator_account
-    @_account ||= Account::Base.find_by_email('dev+ops@buzzn.net')
+    @_account ||= Account::Base.where(email: %w(dev+ops@buzzn.net philipp@buzzn.net)).first
   end
 end
