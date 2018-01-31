@@ -11,10 +11,10 @@ describe Admin::Roda do
     TestAdminRoda # this defines the active application for this test
   end
 
-  entity!(:localpool) { create(:localpool) }
+  entity!(:localpool) { create(:localpool, owner: create(:organization)) }
 
   entity!(:contract) do
-    create(:contract, :localpool_powertaker, localpool: localpool, contractor: create(:organization))
+    create(:contract, :localpool_powertaker, localpool: localpool)
   end
 
   let(:expired_json) do
