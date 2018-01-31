@@ -2159,6 +2159,13 @@ CREATE INDEX index_persons_on_address_id ON persons USING btree (address_id);
 
 
 --
+-- Name: index_persons_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_persons_on_email ON persons USING btree (email);
+
+
+--
 -- Name: index_persons_on_first_name_and_last_name_and_email; Type: INDEX; Schema: public; Owner: -
 --
 

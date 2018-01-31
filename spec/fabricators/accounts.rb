@@ -1,4 +1,3 @@
-
 Fabricator :user, class_name: Account::Base do
   i = 0
   email             { "user.#{i+=1}@buzzn.net" }
@@ -12,6 +11,8 @@ Fabricator :user, class_name: Account::Base do
 end
 
 Fabricator :admin, from: :user do
+  i = 0
+  email             { "admin.#{i+=1}@buzzn.net" }
   after_create { |account| account.person.add_role(Role::BUZZN_OPERATOR) }
 end
 
