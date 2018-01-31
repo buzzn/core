@@ -1,7 +1,12 @@
 def localpool_contract(attrs = {})
   localpool = SampleData.localpools.people_power
-  factory_attributes = attrs.except(:register_readings).merge(localpool: localpool).reverse_merge(contractor: localpool.owner)
-  contract = create(:contract, :localpool_powertaker, factory_attributes)
+  factory_attributes = attrs.except(:register_readings).merge(localpool: localpool)
+  if attrs.key?(:customer)
+    factory_attributes.reverse_merge!(contractor: localpool.owner)
+    contract = create(:contract, :localpool_powertaker, factory_attributes)
+  else
+    contract = create(:contract, :localpool_third_party, factory_attributes)
+  end
   contract.register.readings = attrs[:register_readings] unless attrs.fetch(:register_readings, []).empty?
   if contract.customer.is_a?(Person) # TODO: clarify what to do when it's an Organization?
     contract.customer.add_role(Role::GROUP_MEMBER, localpool)
@@ -115,16 +120,16 @@ SampleData.contracts.pt5b = localpool_contract(
 
 # Drittlieferant
 SampleData.contracts.pt6 = localpool_contract(
-  contractor: Organization.find_by(slug: '3rd-party'),
-  customer: SampleData.persons.pt6
+ # contractor: Organization.find_by(slug: '3rd-party'),
+ # customer: SampleData.persons.pt6
 )
 
 # Drittlieferant, vor Wechsel zu people power
 SampleData.contracts.pt7a = localpool_contract(
   termination_date: Date.parse("2017-2-15"),
   end_date: Date.parse("2017-3-1"),
-  contractor: Organization.find_by(slug: '3rd-party'),
-  customer: SampleData.persons.pt7,
+ # contractor: Organization.find_by(slug: '3rd-party'),
+ # customer: SampleData.persons.pt7,
 )
 
 

@@ -60,30 +60,29 @@ describe Admin::LocalpoolRoda do
     json
   end
 
-  entity(:manager) { Fabricate(:user).person }
+  entity(:manager) { create(:person) }
   entity!(:localpool) do
-    localpool = Fabricate(:localpool)
+    localpool = create(:localpool)
     manager.add_role(Role::GROUP_ADMIN, localpool)
-    3.times do
-      c = Fabricate(:localpool_power_taker_contract)
-      c.localpool = localpool
-      c.save!
-    end
-    Fabricate(:localpool_processing_contract, localpool: localpool)
-    Fabricate(:metering_point_operator_contract, localpool: localpool)
+    c = create(:contract, :localpool_powertaker, localpool: localpool)
+    c.register.update(label: :production_pv)
+    c = create(:contract, :localpool_powertaker, localpool: localpool)
+    c.register.update(label: :production_pv)
+    create(:contract, :localpool_processing, localpool: localpool)
+    create(:contract, :metering_point_operator, localpool: localpool)
     localpool.contracts.each do |c|
       c.customer.update(customer_number: CustomerNumber.create)
     end
+    create(:contract, :localpool_third_party, localpool: localpool)
     localpool.meters.each { |meter| meter.update(group: localpool) }
     $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
     localpool
   end
 
   entity(:localpool_no_contracts) do
-    Fabricate(:localpool,
-              owner: Fabricate(:other_organization),
-              address: Fabricate(:address),
-              bank_account: create(:bank_account)
+    create(:localpool,
+           address: create(:address),
+           bank_account: create(:bank_account)
     )
   end
 
@@ -122,7 +121,7 @@ describe Admin::LocalpoolRoda do
       "name"=>localpool_no_contracts.name,
       "slug"=>localpool_no_contracts.slug,
       "description"=>localpool_no_contracts.description,
-      'start_date' => nil,
+      'start_date' => localpool_no_contracts.start_date.as_json,
       'show_object' => nil,
       'show_production' => nil,
       'show_energy' => nil,
@@ -333,7 +332,7 @@ describe Admin::LocalpoolRoda do
         "deletable"=>true,
         'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => nil,
-        'power_sources' => [],
+        'power_sources' => ['pv'],
         'display_app_url' => nil
       }
     end
@@ -576,17 +575,7 @@ describe Admin::LocalpoolRoda do
           'customer_number' => nil,
           "updatable"=>true,
           "deletable"=>false,
-          "address" => {
-                    "id" => contract.contractor.address.id,
-                  "type" => "address",
-            "updated_at" => contract.contractor.address.updated_at.as_json,
-                "street" => contract.contractor.address.street,
-                  "city" => contract.contractor.address.city,
-                   "zip" => contract.contractor.address.zip,
-               "country" => contract.contractor.address.attributes['country'],
-             "updatable" => true,
-             "deletable" => false
-        }
+          "address" => nil
         },
         "customer"=>{
           "id"=>contract.customer.id,
@@ -654,9 +643,9 @@ describe Admin::LocalpoolRoda do
 
     let(:expected_json) do
       localpool.localpool_power_taker_contracts.collect do |contract|
-        {
+        json = {
           "id"=>contract.id,
-          "type"=>"contract_localpool_power_taker",
+          'type' => 'contract_localpool_power_taker',
           'updated_at'=>contract.updated_at.as_json,
           "full_contract_number"=>"#{contract.contract_number}/#{contract.contract_number_addition}",
           "signing_date"=>contract.signing_date.to_s,
@@ -665,33 +654,43 @@ describe Admin::LocalpoolRoda do
           "end_date"=>nil,
           'status' => contract.status.to_s,
           "updatable"=>true,
-          "deletable"=>false,
-          'forecast_kwh_pa'=>contract.forecast_kwh_pa,
-          'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
-          'third_party_billing_number'=>contract.third_party_billing_number,
-          'third_party_renter_number'=>contract.third_party_renter_number,
-          'old_supplier_name'=>contract.old_supplier_name,
-          'old_customer_number'=>contract.old_customer_number,
-          'old_account_number'=>contract.old_account_number,
-          'mandate_reference' => nil,
-          "customer"=>{
-            "id"=>contract.customer.id,
-            "type"=>"person",
-            'updated_at'=>contract.customer.updated_at.as_json,
-            "prefix"=>contract.customer.attributes['prefix'],
-            "title"=>contract.customer.title,
-            "first_name"=>contract.customer.first_name,
-            "last_name"=>contract.customer.last_name,
-            "phone"=>contract.customer.phone,
-            "fax"=>contract.customer.fax,
-            "email"=>contract.customer.email,
-            "preferred_language"=>contract.customer.attributes['preferred_language'],
-            "image"=>contract.customer.image.medium.url,
-            'customer_number' => contract.customer.customer_number.id,
-            "updatable"=>true,
-            "deletable"=>false,
-          }
+          "deletable"=>false
         }
+        if contract.is_a?(Contract::LocalpoolPowerTaker)
+          json.merge!({
+            'forecast_kwh_pa'=>contract.forecast_kwh_pa,
+            'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
+            'third_party_billing_number'=>contract.third_party_billing_number,
+            'third_party_renter_number'=>contract.third_party_renter_number,
+            'old_supplier_name'=>contract.old_supplier_name,
+            'old_customer_number'=>contract.old_customer_number,
+            'old_account_number'=>contract.old_account_number,
+            'mandate_reference' => nil
+          })
+        else
+          json['type'] = 'contract_localpool_third_party'
+        end
+        json['customer'] =
+          if contract.customer
+            {
+              "id"=>contract.customer.id,
+              "type"=>"person",
+              'updated_at'=>contract.customer.updated_at.as_json,
+              "prefix"=>contract.customer.attributes['prefix'],
+              "title"=>contract.customer.title,
+              "first_name"=>contract.customer.first_name,
+              "last_name"=>contract.customer.last_name,
+              "phone"=>contract.customer.phone,
+              "fax"=>contract.customer.fax,
+              "email"=>contract.customer.email,
+              "preferred_language"=>contract.customer.attributes['preferred_language'],
+              "image"=>contract.customer.image.medium.url,
+              'customer_number' => contract.customer.customer_number.id,
+              "updatable"=>true,
+              "deletable"=>false,
+            }
+          end
+        json
       end
     end
 

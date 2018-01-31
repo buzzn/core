@@ -27,7 +27,7 @@ module Group
     end
 
     def localpool_power_taker_contracts
-      Contract::LocalpoolPowerTaker.where(localpool_id: self)
+      Contract::Base.where(localpool_id: self, type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolThirdParty))
     end
 
     def grid_feeding_register
