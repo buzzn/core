@@ -64,15 +64,13 @@ def get_csv(model_name, options = {})
 end
 
 def import_csv(model_name, options = {})
-  seq = 0
   hashes = get_csv(model_name, options)
   selected_hashes = options[:only] ? hashes.select(&options[:only]) : hashes
-  selected_hashes.each do |hash|
+  selected_hashes.each.with_index do |hash, index|
     label = hash[:name] || "#{hash[:first_name]} #{hash[:last_name]}"
     Buzzn::Logger.root.debug "Loading #{model_name.to_s.singularize} #{label}"
     klass = model_name.to_s.singularize.camelize.constantize
-    hash[:email] = hash[:email].sub(/unknown@/, "unknown#{seq}")
-    seq += 1
+    hash[:email] = hash[:email].sub(/unknown@/, "unknown#{index}")
     record = klass.create(hash)
     unless record.persisted?
       ap record
