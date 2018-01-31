@@ -1,18 +1,17 @@
 describe Contract::BaseResource do
 
-  entity(:admin) { Fabricate(:admin) }
-  entity(:localpool) { Fabricate(:localpool) }
+  entity(:admin) { create(:account, :admin) }
+  entity(:localpool) { create(:localpool) }
 
-  entity!(:metering_point_operator) { Fabricate(:metering_point_operator_contract,
-                                            localpool: localpool) }
-  entity!(:localpool_processing) { Fabricate(:localpool_processing_contract,
-                                            localpool: localpool) }
-  entity!(:localpool_power_taker) do
-    register = create(:meter, :real, group: localpool).input_register
-    Fabricate(:localpool_power_taker_contract, localpool: localpool, register: register)
+  entity!(:metering_point_operator) do
+    create(:contract, :metering_point_operator, localpool: localpool)
   end
-  entity!(:power_taker) { Fabricate(:power_taker_contract_move_in) }
-  entity!(:power_giver) { Fabricate(:power_giver_contract) }
+  entity!(:localpool_processing) do
+    create(:contract, :localpool_processing, localpool: localpool)
+  end
+  entity!(:localpool_power_taker) do
+    create(:contract, :localpool_powertaker, localpool: localpool)
+  end
 
   let(:base_attributes) { ['id', 'type', 'updated_at',
                            'status',

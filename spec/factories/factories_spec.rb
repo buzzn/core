@@ -11,6 +11,10 @@ describe "Factories produce valid records" do
     end
   end
 
+  shared_examples 'has valid invariants' do
+    it { expect(subject.invariant).to be_success }
+  end
+
   context "Account" do
     subject { create(:account, password: "Helloworld") }
     it { is_expected.to be_valid }
@@ -71,7 +75,8 @@ describe "Factories produce valid records" do
       describe "register" do
         it { is_expected.to have_association(:register, Register::Input) }
       end
-    end
+      include_examples 'has valid invariants'
+     end
     context "localpool thirdparty" do
       subject { create(:contract, :localpool_third_party) }
       describe "customer" do
@@ -85,6 +90,7 @@ describe "Factories produce valid records" do
       describe "register" do
         it { is_expected.to have_association(:register, Register::Input) }
       end
+      include_examples 'has valid invariants'
     end
   end
 
