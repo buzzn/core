@@ -8,7 +8,8 @@ describe 'Schemas::Invariants::Contract::Localpool' do
   entity(:localpool)    { create(:localpool) }
 
   entity(:third_party)             { create(:contract, :localpool_third_party,   localpool: localpool) }
-  entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool) }
+  entity(:register) { third_party.register }
+  entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, register: register) }
   entity(:processing)              { create(:contract, :localpool_processing,    localpool: localpool) }
   entity(:metering_point_operator) { create(:contract, :metering_point_operator, localpool: localpool) }
 
@@ -30,6 +31,35 @@ describe 'Schemas::Invariants::Contract::Localpool' do
         contract.localpool = localpool
       end
       it { is_expected.to be_nil }
+    end
+
+    after do
+      contract.localpool = localpool
+    end
+  end
+
+  shared_examples "invariants of register" do |contract|
+
+    let(:tested_invariants) { contract.invariant.errors[:register] }
+
+    subject { tested_invariants }
+
+    context "when there is no register" do
+      before do
+        contract.register = nil
+      end
+      it { is_expected.to eq(['must be filled']) }
+    end
+
+    context "when there is a register" do
+      before do
+        contract.register = register
+      end
+      it { is_expected.to be_nil }
+    end
+
+    after do
+      contract.register = register
     end
   end
 
@@ -82,6 +112,10 @@ describe 'Schemas::Invariants::Contract::Localpool' do
       it_behaves_like "invariants of localpool", powertaker
     end
 
+    describe 'register' do
+      it_behaves_like "invariants of register", powertaker
+    end
+
     describe "customer" do
       it_behaves_like "invariants of contracting party", :customer, powertaker, nil
     end
@@ -104,45 +138,12 @@ describe 'Schemas::Invariants::Contract::Localpool' do
   end
 
   context 'third party contract' do
-    shared_examples "invariants of contracting party" do |label|
-
-      let(:contract) { third_party }
-      let(:tested_invariants) { contract.invariant.errors[:"#{label}"] }
-
-      subject { tested_invariants }
-
-      context "when there is no party" do
-        before do
-          contract.send("#{label}=", nil)
-        end
-        it { is_expected.to be_nil }
-      end
-
-      context "when there is a person party" do
-        before do
-          contract.send("#{label}=", person)
-        end
-        it { is_expected.to eq(['cannot be defined']) }
-      end
-
-      context "when there is a organization party" do
-        before do
-          contract.send("#{label}=", organization)
-        end
-        it { is_expected.to eq(['cannot be defined']) }
-      end
-    end
-
     describe 'localpool' do
       it_behaves_like "invariants of localpool", third_party
     end
 
-    describe "customer" do
-      it_behaves_like "invariants of contracting party", :customer
-    end
-
-    describe "contractor" do
-      it_behaves_like "invariants of contracting party", :contractor
+    describe 'register' do
+      it_behaves_like "invariants of register", third_party
     end
   end
 end
