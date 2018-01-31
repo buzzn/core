@@ -11,9 +11,9 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
 
   def run(unsaved_record)
     if unsaved_record.is_a?(Person)
-      find_or_create_person(unsaved_record)
+      get_unique_person(unsaved_record)
     elsif unsaved_record.is_a?(Organization)
-      find_or_create_organization(unsaved_record)
+      get_unique_organization(unsaved_record)
     else
       raise "Can't handle records of type #{unsaved_record.class}"
     end
@@ -21,7 +21,7 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
 
   private
 
-  def find_or_create_person(unsaved_record)
+  def get_unique_person(unsaved_record)
     # Unfortunately different persons can have the same email address in Beekeeper, so we need to add first and last name.
     uniqueness_attrs = unsaved_record.attributes.slice("email", "first_name", "last_name")
     person = Person.find_by(uniqueness_attrs)
@@ -37,50 +37,38 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
   end
 
   # Deduplication of the beekeeper data
-  def find_or_create_organization(unsaved_record)
-    logger.debug(unsaved_record.name)
-    account_new_fibunr = ORGANIZATION_DATA_LOOKUPS[:account_new].find { |pattern, fibunr| unsaved_record.name =~ pattern }&.at(1)
-    kontaktdaten_id    = ORGANIZATION_DATA_LOOKUPS[:kontaktdaten].find { |pattern, fibunr| unsaved_record.name =~ pattern }&.at(1)
-    org_with_same_slug = Organization.find_by(slug: Buzzn::Slug.new(unsaved_record.name))
+  def get_unique_organization(unsaved_record)
+    logger.debug("xxx #{unsaved_record.name}")
 
-    if account_new_fibunr
-      logger.debug("Taking organization from account_new")
+    if (existing_org = find_organization(unsaved_record.name))
+      logger.debug("xxx Using existing org: #{existing_org.name}")
+      existing_org
+
+    elsif (fibunr = find_account_new_fibunr(unsaved_record.name))
+      logger.debug("xxx Taking organization from account_new")
       # get the data to use for our record
-      source_record = Beekeeper::Buzzn::AccountNew.find_by(fibunr: account_new_fibunr)
-      # check if we already created it
-      slug = Buzzn::Slug.new(source_record.converted_attributes[:name])
-      org = Organization.find_by(slug: slug)
-      if org
-        # if we do, return that record
-        org
-      else
-        # if not, create it and return it
-        Organization.create!(source_record.converted_attributes)
-      end
-    elsif kontaktdaten_id
-      logger.debug("Taking organization from kontaktdaten")
+      source_record = Beekeeper::Buzzn::AccountNew.find_by(fibunr: fibunr)
+      find_or_create_organization(source_record.converted_attributes)
+
+    elsif (kontaktdaten_id = find_kontaktdaten_id(unsaved_record.name))
+      logger.debug("xxx Taking organization from kontaktdaten")
       # get the data to use for our record
       source_record = Beekeeper::Minipool::Kontaktdaten.find_by(kontaktdaten_id: kontaktdaten_id)
-      # check if we already created it
-      slug = Buzzn::Slug.new(source_record.converted_attributes[:name])
-      org = Organization.find_by(slug: slug)
-      if org
-        # if we do, return that record
-        org
-      else
-        # if not, create it and return it
-        Organization.create!(source_record.converted_attributes)
-      end
-    elsif org_with_same_slug
-      logger.debug("Using existing org with same slug")
-      org_with_same_slug
-    else # lookup is configured for this record, import data as is, no deduplication
-      logger.debug("Creating new organization")
-      ap "unsaved_record.contact"
-      ap unsaved_record.contact
+      find_or_create_organization(source_record.converted_attributes)
+
+    else # no lookup is configured, create a new organization record
+      logger.debug("xxx Creating new organization")
       unsaved_record.save!
       unsaved_record
     end
+  end
+
+  def find_account_new_fibunr(organization_name)
+    ORGANIZATION_DATA_LOOKUPS[:account_new].find { |pattern, fibunr| organization_name =~ pattern }&.at(1)
+  end
+
+  def find_kontaktdaten_id(organization_name)
+    ORGANIZATION_DATA_LOOKUPS[:kontaktdaten].find { |pattern, fibunr| organization_name =~ pattern }&.at(1)
   end
 
   def create_address(person, address)
@@ -88,6 +76,15 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
     address.save!
     person.update(address: address)
     logger.debug "#{address}): creating new address for existing person #{person.id}"
+  end
+
+  def find_or_create_organization(attributes)
+    org = find_organization(attributes[:name])
+    org ? org : Organization.create!(attributes)
+  end
+
+  def find_organization(name)
+    Organization.find_by(slug: Buzzn::Slug.new(name))
   end
 
   # Only placed at the end because the regexp patterns as hash keys mess up my syntax highlighting ...
