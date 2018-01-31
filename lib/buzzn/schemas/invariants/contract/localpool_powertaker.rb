@@ -13,6 +13,7 @@ module Schemas
 
         required(:customer).filled
         required(:contractor).filled
+        required(:register).filled
 
         rule(contractor: [:contractor, :localpool]) do |contractor, localpool|
           contractor.localpool_owner?(localpool)
