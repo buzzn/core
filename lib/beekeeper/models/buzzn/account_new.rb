@@ -21,13 +21,14 @@
 
 class Beekeeper::Buzzn::AccountNew < Beekeeper::Buzzn::BaseRecord
   self.table_name = 'buzzndb.account_new'
+  include Beekeeper::StringCleaner
 
   def converted_attributes(bank_accounts = [])
     {
       name:          gesellschafts_name,
       phone:         telefon,
       fax:           fax,
-      email:         email.strip.downcase,
+      email:         clean_string(email, downcase: true),
       address:       address,
       bank_accounts: bank_accounts,
       contact:       contact

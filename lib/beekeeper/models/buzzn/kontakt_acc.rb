@@ -29,12 +29,13 @@
 
 class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
   self.table_name = 'buzzndb.kontakt_acc'
+  include Beekeeper::StringCleaner
 
   def converted_attributes
     {
       first_name:    first_name,
       last_name:     nachname.strip,
-      email:         email.strip.downcase,
+      email:         clean_string(email, downcase: true),
       phone:         telefon.strip,
       prefix:        prefix&.strip,
       title:         title,
