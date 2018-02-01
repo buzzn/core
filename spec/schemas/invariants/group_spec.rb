@@ -4,10 +4,6 @@ describe 'Schemas::Invariants::Group::Localpool' do
 
   entity(:localpool) { create(:localpool) }
 
-  it 'valid on bare localpool' do
-    expect(localpool).to have_valid_invariants
-  end
-
   context 'owner' do
     entity!(:person) { create(:person) }
 
