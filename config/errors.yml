@@ -6,6 +6,8 @@ en:
 
     email?: "must be a valid email"
 
+    url?: "must be a valid URL"
+
     has_owner_role?: "missing GROUP_OWNER role"
 
     metering_point_id?: 'missing metering_point_id'
