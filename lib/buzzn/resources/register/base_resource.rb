@@ -24,6 +24,7 @@ module Register
     has_one :meter
     has_one :group
     has_many! :readings, ReadingResource
+    has_many :contracts
 
     def last_reading
       reading = object.readings.order('date').last

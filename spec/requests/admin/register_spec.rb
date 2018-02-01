@@ -9,9 +9,13 @@ describe Admin::LocalpoolRoda do
 
   entity(:meter) { create(:meter, :real, group: group) }
 
-  entity!(:register) { meter.registers.first }
+  entity!(:real_register) do
+    register = meter.registers.first
+    create(:contract, :localpool_powertaker, register: register, localpool: group)
+    register
+  end
 
-  entity!(:real_register) { create(:register, :output, meter: meter) }
+  entity!(:register) { create(:register, :output, meter: meter) }
 
   entity!(:virtual_register) { create(:meter, :virtual, group: group).register }
 
@@ -279,6 +283,36 @@ describe Admin::LocalpoolRoda do
               }
             end
           end
+          let(:contract_json) do
+            contract = real_register.contracts.first
+            {
+              'contracts' => {
+                'array' => [
+                  {
+                    "id"=>contract.id,
+                    "type"=>"contract_localpool_power_taker",
+                    'updated_at'=>contract.updated_at.as_json,
+                    "full_contract_number"=>contract.full_contract_number,
+                    "signing_date"=>contract.signing_date.to_s,
+                    "begin_date"=>contract.begin_date.to_s,
+                    "termination_date"=>nil,
+                    "end_date"=>nil,
+                    "status"=>contract.status.to_s,
+                    "updatable"=>false,
+                    "deletable"=>false,
+                    'forecast_kwh_pa'=>contract.forecast_kwh_pa,
+                    'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
+                    'third_party_billing_number'=>contract.third_party_billing_number,
+                    'third_party_renter_number'=>contract.third_party_renter_number,
+                    'old_supplier_name'=>contract.old_supplier_name,
+                    'old_customer_number'=>contract.old_customer_number,
+                    'old_account_number'=>contract.old_account_number,
+                    'mandate_reference' => nil,
+                  }
+                ]
+              }
+            }
+          end
 
           it '200 all' do
             register = send "#{type}_register"
@@ -300,6 +334,10 @@ describe Admin::LocalpoolRoda do
             GET "/test/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
+
+            GET "/test/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin, include: :contracts
+            expect(response).to have_http_status(200)
+            expect(json.to_yaml).to eq register_json.merge!(contract_json).to_yaml
           end
         end
       end
