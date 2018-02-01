@@ -38,6 +38,33 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     end
   end
 
+  shared_examples "invariants of register group" do |contract|
+
+    entity(:other) { create(:localpool) }
+
+    let(:tested_invariants) { contract.invariant.errors[:register] }
+
+    subject { tested_invariants }
+
+    context "when register belongs to different group" do
+      before do
+        contract.register.meter.group = other
+      end
+      it { is_expected.to eq(['meter.group must match contract.localpool']) }
+    end
+
+    context "when register belongs to same group" do
+      before do
+        contract.register.meter.group = contract.localpool
+      end
+      it { is_expected.to be_nil }
+    end
+
+    after do
+      contract.register.meter.group = contract.localpool
+    end
+  end
+
   shared_examples "invariants of register" do |contract|
 
     let(:tested_invariants) { contract.invariant.errors[:register] }
@@ -114,6 +141,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
     describe 'register' do
       it_behaves_like "invariants of register", powertaker
+      it_behaves_like "invariants of register group", powertaker
     end
 
     describe "customer" do
@@ -144,6 +172,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
     describe 'register' do
       it_behaves_like "invariants of register", third_party
+      it_behaves_like "invariants of register group", third_party
     end
   end
 end

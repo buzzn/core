@@ -1,9 +1,9 @@
-require_relative 'localpool'
+require_relative 'localpool_register'
 
 module Schemas
   module Invariants
     module Contract
-      LocalpoolPowerTaker = Schemas::Support.Form(Localpool) do
+      LocalpoolPowerTaker = Schemas::Support.Form(LocalpoolRegister) do
 
         configure do
           def localpool_owner?(localpool, input)
@@ -13,7 +13,6 @@ module Schemas
 
         required(:customer).filled
         required(:contractor).filled
-        required(:register).filled
 
         rule(contractor: [:contractor, :localpool]) do |contractor, localpool|
           contractor.localpool_owner?(localpool)

@@ -1,12 +1,11 @@
-require_relative 'localpool'
+require_relative 'localpool_register'
 
 module Schemas
   module Invariants
     module Contract
-      LocalpoolThirdParty = Schemas::Support.Form(Localpool) do
+      LocalpoolThirdParty = Schemas::Support.Form(LocalpoolRegister) do
         required(:customer)                { none? }
         required(:contractor)              { none? }
-        required(:register)                { filled? }
         required(:customer_bank_account)   { none? }
         required(:contractor_bank_account) { none? }
         # empty? does not work - hard to debug these predicates
