@@ -47,4 +47,15 @@ describe 'Contract::Base' do
       expect(contract.tariffs).to eq([tariff])
     end
   end
+
+  context "last_date" do
+    context "when end_date is set" do
+      subject { build(:contract, end_date: Date.parse("2018-01-01")).last_date }
+      it { is_expected.to eq(Date.parse("2017-12-31")) }
+    end
+    context "when end_date is nil" do
+      subject { build(:contract, end_date: nil).last_date }
+      it { is_expected.to be_nil }
+    end
+  end
 end
