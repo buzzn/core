@@ -22,3 +22,4 @@ en:
     at_most_one_register_with_same_label?: 'must not have more than register with this label'
 
     localpool_owner?: 'must be the localpool owner'
+    match_localpool?: 'meter.group must match contract.localpool'
