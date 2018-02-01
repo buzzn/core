@@ -1,4 +1,4 @@
-class Beekeeper::Importer::PowerTakerContracts
+class Beekeeper::Importer::LocalpoolContracts
 
   attr_reader :logger
 
@@ -7,7 +7,7 @@ class Beekeeper::Importer::PowerTakerContracts
     logger.level = Import.global('config.log_level')
   end
 
-  def run(localpool, powertaker_contracts, registers)
+  def run(localpool, powertaker_contracts, third_parties, registers, warnings)
     powertaker_contracts.each do |contract|
       begin
         ActiveRecord::Base.transaction do
@@ -18,17 +18,21 @@ class Beekeeper::Importer::PowerTakerContracts
         logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
       end
     end
+    third_parties.each do |contract|
+      begin
+        ActiveRecord::Base.transaction do
+          create_third_party_contract(localpool, contract, registers, warnings)
+        end
+      rescue => e
+        logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
+      end
+    end
   end
 
   private
 
   def create_contract(localpool, customer, contract, registers)
-    meter    = registers.map(&:meter).find { |m| m.legacy_buzznid == contract[:buzznid] }
-    register = if meter
-      meter.registers.input.first
-    else
-      create_fake_virtual_register(contract[:buzznid])
-    end
+    register = find_or_create_register(contract, registers)
     contract_attributes = contract.except(:powertaker, :buzznid).merge(
       localpool:  localpool,
       register:   register,
@@ -36,6 +40,27 @@ class Beekeeper::Importer::PowerTakerContracts
       contractor: localpool.owner
     )
     Contract::LocalpoolPowerTaker.create!(contract_attributes)
+  end
+
+  def find_or_create_register(contract, registers)
+    meter = registers.collect(&:meter).find { |m| m.legacy_buzznid == contract[:buzznid] }
+    if meter
+      meter.registers.input.first
+    else
+      create_fake_virtual_register(contract[:buzznid]) if contract[:buzznid].present?
+    end
+  end
+
+  def create_third_party_contract(localpool, contract, registers, warnings)
+    if register = find_or_create_register(contract, registers)
+      contract_attributes = contract.except(:powertaker, :buzznid).merge(
+        localpool:  localpool,
+        register:   register
+      )
+      Contract::LocalpoolThirdParty.create!(contract_attributes)
+    else
+      warnings["contract #{contract[:contract_number]}/#{contract[:contract_number_addition]}"] = { :register => 'not found - no buzznid' }
+    end
   end
 
   # As a temporary solution to importing the actual virtual registers (separate story), we create a fake, empty one.
