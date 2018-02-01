@@ -28,5 +28,13 @@ module Contract
         errors.add(:register, MUST_BELONG_TO_LOCALPOOL)
       end
     end
+
+    def begin_reading
+      register.readings.find_by(date: begin_date)
+    end
+
+    def end_reading
+      register.readings.find_by(date: end_date)
+    end
   end
 end
