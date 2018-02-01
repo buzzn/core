@@ -15,7 +15,9 @@ class CreatePersons < ActiveRecord::Migration
 
     add_foreign_key :persons, :addresses, name: :fk_organizations_address
     add_foreign_key :persons, :customer_numbers, name: :fk_persons_customer_number, column: :customer_number
-    add_index :persons, :email, unique: true
+    # Unfortunately we have different persons in the system that use the same email address,
+    # so we can't set a uniqueness constraint. Details: https://goo.gl/Ueqmg7
+    # add_index :persons, :email, unique: true
     add_index :persons, [:first_name, :last_name, :email]
   end
 
