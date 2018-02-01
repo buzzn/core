@@ -1139,8 +1139,8 @@ CREATE TABLE devices (
     commissioning date,
     mobile boolean DEFAULT false,
     metering_point_id uuid,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     register_id uuid
 );
 
@@ -1321,7 +1321,7 @@ CREATE TABLE persons (
     id uuid DEFAULT uuid_generate_v4() NOT NULL,
     first_name character varying(64) NOT NULL,
     last_name character varying(64) NOT NULL,
-    email character varying(64) NOT NULL,
+    email character varying(64),
     phone character varying(64),
     fax character varying(64),
     created_at timestamp without time zone NOT NULL,
@@ -1453,8 +1453,8 @@ CREATE TABLE scores (
     value double precision,
     scoreable_id uuid,
     scoreable_type character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -2156,13 +2156,6 @@ CREATE INDEX index_payments_on_contract_id ON payments USING btree (contract_id)
 --
 
 CREATE INDEX index_persons_on_address_id ON persons USING btree (address_id);
-
-
---
--- Name: index_persons_on_email; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_persons_on_email ON persons USING btree (email);
 
 
 --
