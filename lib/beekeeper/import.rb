@@ -30,7 +30,7 @@ class Beekeeper::Import
       Beekeeper::Importer::Roles.new(logger).run(localpool)
       registers = Beekeeper::Importer::RegistersAndMeters.new(logger).run(localpool, record.converted_attributes[:registers])
       Beekeeper::Importer::PowerTakerContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], registers)
-      Beekeeper::Importer::AdjustContractEndDates.new(logger).run(localpool)
+      Beekeeper::Importer::AdjustContractEndDatesAndReadings.new(logger).run(localpool)
 
       # now we can fail and rollback on broken invariants
       raise ActiveRecord::RecordInvalid.new(localpool) unless localpool.invariant_valid?
