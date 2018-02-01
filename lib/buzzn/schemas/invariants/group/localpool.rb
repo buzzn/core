@@ -1,7 +1,9 @@
+require_relative '../../constraints/group'
+
 module Schemas
   module Invariants
     module Group
-      Localpool = Schemas::Support.Form do
+      Localpool = Schemas::Support.Form(Constraints::Group) do
 
         configure do
           def distribution_system_operator?(input)

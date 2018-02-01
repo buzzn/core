@@ -1,8 +1,13 @@
 require 'buzzn/schemas/invariants/group/localpool'
+require_relative 'name_size_shared'
 
 describe 'Schemas::Invariants::Group::Localpool' do
 
   entity(:localpool) { create(:localpool) }
+
+  context 'name' do
+    it_behaves_like 'invariants of name-size', :localpool
+  end
 
   context 'owner' do
     entity!(:person) { create(:person) }
