@@ -88,7 +88,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       owner:                        owner,
       bank_account:                 bank_accounts.first,
       registers:                    registers,
-      powertaker_contracts:         powertaker_contracts
+      powertaker_contracts:         powertaker_contracts,
+      third_party_contracts:        third_party_contracts
     }
   end
 
