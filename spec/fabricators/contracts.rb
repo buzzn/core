@@ -67,7 +67,7 @@ end
 
 # == Other Supplier Contract ==
 
-Fabricator :other_supplier_contract, class_name: Contract::OtherSupplier do
+Fabricator :other_supplier_contract, class_name: Contract::LocalpoolThirdParty do
   contract_number          { rand(60000) + 1 }
   contract_number_addition { rand(10000) + 1 }
   power_of_attorney        true

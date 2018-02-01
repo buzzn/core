@@ -1,7 +1,7 @@
 require_relative 'localpool'
 
 module Contract
-  class LocalpoolPowerTaker < Localpool
+  class LocalpoolThirdParty < Localpool
 
     belongs_to :register, class_name: 'Register::Input'
 

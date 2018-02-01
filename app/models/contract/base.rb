@@ -7,15 +7,9 @@ module Contract
     self.abstract_class = true
 
     include Filterable
+
     Owner.generate(self, 'customer')
     Owner.generate(self, 'contractor')
-
-    # status consts
-    ONBOARDING = 'onboarding'
-    ACTIVE     = 'active'
-    TERMINATED = 'terminated'
-    ENDED      = 'ended'
-    STATUS     = [ONBOARDING, ACTIVE, TERMINATED, ENDED]
 
     enum renewable_energy_law_taxation: {
            full: 'F',
@@ -23,27 +17,18 @@ module Contract
            null: 'N' # none is not allowed by active-record
          }
 
-    # error messages
-    MUST_BE_TRUE                 = 'must be true'
-    MUST_HAVE_AT_LEAST_ONE       = 'must have at least one'
-    WAS_ALREADY_CANCELLED        = 'was already cancelled'
-    MUST_BE_BUZZN                = 'must be buzzn'
-    MUST_BELONG_TO_LOCALPOOL     = 'must belong to a localpool'
-    MUST_MATCH                   = 'must match'
-    IS_MISSING                   = 'is missing'
-    CAN_NOT_BE_PRESENT           = 'can not be present when there is a '
-    NOT_ALLOWED_FOR_OLD_CONTRACT = 'not allowed for old contract'
-    MUST_NOT_BE_BUZZN            = 'must not be buzzn'
-
-    class << self
-      private :new
-    end
-
     has_and_belongs_to_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
 
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
     belongs_to :customer_bank_account, class_name: 'BankAccount'
+
+    # status consts
+    ONBOARDING = 'onboarding'
+    ACTIVE     = 'active'
+    TERMINATED = 'terminated'
+    ENDED      = 'ended'
+    STATUS     = [ONBOARDING, ACTIVE, TERMINATED, ENDED]
 
     scope :power_givers,             -> { where(type: 'PowerGiver') }
     scope :power_takers,             -> { where(type: 'PowerTaker') }
@@ -70,22 +55,6 @@ module Contract
                   end
       where('begin_date <= ?', timestamp)
         .where('end_date > ? OR end_date IS NULL', timestamp + 1.second)
-    end
-
-    def validate_invariants
-      errors.add(:power_of_attorney, MUST_BE_TRUE ) unless power_of_attorney
-      if contractor
-        errors.add(:contractor_bank_account, MUST_MATCH) if contractor_bank_account && ! contractor.bank_accounts.include?(contractor_bank_account)
-        if contractor_is_buzzn?
-          errors.add(:tariffs, MUST_HAVE_AT_LEAST_ONE) if tariffs.empty?
-          # FIXME: why is at least one payment required?
-          errors.add(:payments, MUST_HAVE_AT_LEAST_ONE) if payments.empty?
-        end
-      end
-    end
-
-    def name
-      "TODO {organization.name} {tariff}"
     end
 
     def full_contract_number
@@ -116,10 +85,9 @@ module Contract
       do_filter(search, *search_attributes)
     end
 
-    private
+    # permissions helpers
 
-    def contractor_is_buzzn?
-      contractor.is_a?(Organization) && contractor.buzzn?
-    end
+    scope :permitted, ->(uuids) { where(id: uuids) }
+
   end
 end

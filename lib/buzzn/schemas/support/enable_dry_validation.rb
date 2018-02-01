@@ -10,14 +10,6 @@ module Schemas::Support
 
   module ValidateInvariant
 
-    def vvalid?(*)
-      invariant_valid?
-    end
-
-    def vvalidate(*)
-      valid?
-    end
-
     def invariant_valid?
       result = invariant
       if result && !result.success?
