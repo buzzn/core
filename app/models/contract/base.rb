@@ -37,6 +37,15 @@ module Contract
 
     class << self
       private :new
+
+      def search_attributes
+        #TODO filtering what ?
+        []
+      end
+
+      def filter(search)
+        do_filter(search, *search_attributes)
+      end
     end
 
     has_and_belongs_to_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
@@ -105,15 +114,6 @@ module Contract
       end
       # wrap the string in ActiveSupport::StringInquirer, which allows status.ended? etc, hiding the string.
       status.inquiry
-    end
-
-    def self.search_attributes
-      #TODO filtering what ?
-      []
-    end
-
-    def self.filter(search)
-      do_filter(search, *search_attributes)
     end
 
     private
