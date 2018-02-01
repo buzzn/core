@@ -56,6 +56,5 @@ module Contract
         end
       end
     end
-
   end
 end
