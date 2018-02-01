@@ -20,7 +20,7 @@ class CreateDevices < ActiveRecord::Migration
 
       t.belongs_to :metering_point, type: :uuid
 
-      t.timestamps
+      t.timestamps null: false
     end
     add_index :devices, :slug, :unique => true
     add_index :devices, :metering_point_id

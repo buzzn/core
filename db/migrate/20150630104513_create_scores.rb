@@ -9,7 +9,7 @@ class CreateScores < ActiveRecord::Migration
       t.float :value
       t.references :scoreable, :polymorphic => true, type: :uuid
 
-      t.timestamps
+      t.timestamps null: false
     end
 
     add_index :scores, :scoreable_id
