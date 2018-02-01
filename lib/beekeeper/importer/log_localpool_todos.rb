@@ -5,10 +5,21 @@ class Beekeeper::Importer::LogLocalpoolTodos
   def initialize(logger)
     @meters = ::Import.global('services.datasource.discovergy.meters')
     @logger = logger
+    @logger.level = Import.global('config.log_level')
   end
 
   def run(localpool_id, warnings)
     resource = Admin::LocalpoolResource.all(buzzn_operator_account).retrieve(localpool_id)
+
+    # Debug the incompleteness
+    logger.debug "owner is a #{resource.owner.class}."
+    logger.debug("Owner email/id: #{resource.owner.email}/#{resource.owner.id}")
+
+    unless resource.owner.is_a?(PersonResource)
+      contact = resource.owner.object.contact
+      logger.debug("contact: #{contact.email}/#{contact.id}")
+    end
+
     incompleteness = if resource.object.start_date.future?
       logger.info("Skipping incompleteness checks, localpool hasn't started yet")
       []
@@ -23,7 +34,7 @@ class Beekeeper::Importer::LogLocalpoolTodos
 
     if incompleteness.present?
       incompleteness.each do |field, messages|
-        logger.info("#{field}: #{messages.join(', ')} (incompleteness)")
+        logger.info("#{field}: #{messages.inspect} (incompleteness)")
       end
     end
 

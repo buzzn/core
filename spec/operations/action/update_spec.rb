@@ -58,12 +58,9 @@ describe Operations::Action::Update do
         input[:updated_at] = resource_with_invariant.updated_at
       end
       it 'leaves with validation errors' do
-        skip('needs a fix on AR model to work with dry-validation')
         result = subject.call(input, resource_with_invariant)
-
         expect(result).to be_a Dry::Monads::Either::Left
-        expect(resource_with_invariant.object).to be_changed
-        expect(resource_with_invariant.object.reload.end_date).to eq nil
+        expect(resource_with_invariant.object).not_to be_changed
         expect(result.value).not_to be_success
       end
     end

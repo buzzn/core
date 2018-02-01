@@ -5,7 +5,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
     extend ActiveSupport::Concern
 
-
     def owner
       owner = if account_new.privat1_gbr2_weg3_else4 == 'privat'
         owner_person
@@ -25,6 +24,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     def owner_organization
       attributes = account_new.converted_attributes(bank_accounts)
       slug = Buzzn::Slug.new(attributes[:name])
+      # FIXME: should not be necessary since the saving code also deduplicates the organizations
       Organization.find_by(slug: slug) || Organization.new(attributes.merge(contact: orga_contact))
     end
 

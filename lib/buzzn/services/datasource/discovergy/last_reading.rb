@@ -31,7 +31,7 @@ class Services::Datasource::Discovergy::LastReading
     query = Types::Discovergy::LastReading::Get.new(meter: register.meter,
                                                     fields: fields,
                                                     each:   each)
-    builder = Discovergy::CurrentBuilder.new(register: register, unit: unit)
+    builder = Discovergy::TicketBuilder.new(register: register, unit: unit)
     api.request(query, builder)
   end
 end

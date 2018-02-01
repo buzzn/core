@@ -1,19 +1,12 @@
 describe "Device Model" do
 
-  entity(:out_device_with_register) do
-    Fabricate(:out_device_with_register)
-  end
-
-  entity(:out_device_with_register_with_tribe) do
-     Fabricate(:out_device_with_register)
-  end
-
-  let!(:devices) do
-    [out_device_with_register, out_device_with_register_with_tribe]
+  before do
+    create(:device)
+    create(:device)
   end
 
   it 'filters device' do
-    device = Fabricate(:bhkw_justus)
+    device = create(:device)
 
     [device.manufacturer_name,
      device.manufacturer_product_name].each do |val|

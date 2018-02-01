@@ -12,7 +12,14 @@ class Beekeeper::Importer::LogImportSummary
     logger.info("Import summary")
     logger.info("-" * 80)
 
-    logger.info("groups                                                   : #{Group::Localpool.count}")
+    logger.info("localpools                                               : #{Group::Localpool.count}")
+    logger.info("organizations                                            : #{Organization.count}")
+    logger.info("persons                                                  : #{Person.count}")
+    logger.info("contracts                                                : #{Contract::Base.count}")
+    logger.info("registers                                                : #{Register::Real.count}")
+    logger.info("readings                                                 : #{Reading::Single.count}")
+    logger.info("meters                                                   : #{Meter::Real.count}")
+    logger.info("-" * 80)
     logger.info("groups distribution_system_operator                      : #{Group::Localpool.where('distribution_system_operator_id IS NOT NULL').count}")
     logger.info("groups transmission_system_operator                      : #{Group::Localpool.where('transmission_system_operator_id IS NOT NULL').count}")
     logger.info("groups electricity_supplier                              : #{Group::Localpool.where('electricity_supplier_id IS NOT NULL').count}")
@@ -33,8 +40,5 @@ class Beekeeper::Importer::LogImportSummary
     powertakers = Organization.where(id: Contract::LocalpoolPowerTaker.all.select(:customer_organization_id))
     logger.info("localpool powertaker organization                        : #{powertakers.count}")
     logger.info("localpool powertaker organization with address           : #{powertakers.where("address_id is not null").count}")
-    logger.info("registers                                                : #{Register::Real.count}")
-    logger.info("readings                                                 : #{Reading::Single.count}")
-    logger.info("meters                                                   : #{Meter::Real.count}")
   end
 end

@@ -8,8 +8,9 @@ describe Buzzn::Pdfs::LSN_A01 do
     contract.customer.update(phone: '089-234432')
     contract.customer_bank_account = Fabricate(:bank_account_mustermann)
     contract.contractor = contractor
+    justus = Person.where(email: 'justus@buzzn.net').first
     contract.contractor.update(phone: '030-1237089432', fax: '030-1237089433',
-                               contact: Fabricate(:justus).person)
+                               contact: justus)
     contract.contractor.address = Fabricate(:address)
     contract.customer.address = Fabricate(:address)
     contract.register = Fabricate(:easymeter_60404849,
