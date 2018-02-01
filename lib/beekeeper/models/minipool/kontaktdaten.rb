@@ -20,6 +20,7 @@
 class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
 
   self.table_name = 'minipooldb.kontaktdaten'
+  include Beekeeper::StringCleaner
 
   def converted_attributes
     person? ? person_attributes : organization_attributes
@@ -48,7 +49,7 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
       prefix:              prefix,
       phone:               telefon.strip,
       fax:                 fax.strip,
-      email:               email.strip.downcase,
+      email:               clean_string(email, downcase: true),
       preferred_language:  :german
     }
   end
@@ -56,7 +57,7 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
   def organization_attributes
     {
       name:  organization_name,
-      email: email.strip.downcase,
+      email: clean_string(email, downcase: true),
       phone: telefon.strip,
       fax:   fax.strip,
       # these are fields our Organization model has, which we don't import, yet.

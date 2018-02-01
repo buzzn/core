@@ -1,4 +1,5 @@
 require_relative '../beekeeper'
+require 'beekeeper/string_cleaner'
 require_relative 'models/minipool'
 require_relative 'models/buzzn'
 
