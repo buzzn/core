@@ -232,16 +232,6 @@ describe Admin::LocalpoolRoda do
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq sort(admin_persons_json).to_yaml
       end
-
-      it '200 all filtered' do
-        GET "/test/#{group.id}/persons", $user, include: :bank_accounts, filter: $admin.person.first_name
-        expect(response).to have_http_status(200)
-        expect(json['array'].to_yaml).to eq empty_json.to_yaml
-
-        GET "/test/#{group.id}/persons", $admin, include: :bank_accounts, filter: person.first_name
-        expect(response).to have_http_status(200)
-        expect(json['array'].to_yaml).to eq filtered_admin_persons_json.to_yaml
-      end
     end
   end
 end
