@@ -9,56 +9,56 @@ describe 'Schemas::Invariants::Contract::LocalpoolThirdParty' do
   entity(:third_party)             { create(:contract, :localpool_third_party,   localpool: localpool) }
   entity(:register) { third_party.register }
 
-    shared_examples "invariants of contracting party" do |label|
+  shared_examples "invariants of contracting party" do |label|
 
-      let(:tested_invariants) { third_party.invariant.errors[:"#{label}"] }
+    let(:tested_invariants) { third_party.invariant.errors[:"#{label}"] }
 
-      subject { tested_invariants }
+    subject { tested_invariants }
 
-      context "when there is no party" do
-        before do
-          third_party.send("#{label}=", nil)
-        end
-        it { is_expected.to be_nil }
+    context "when there is no party" do
+      before do
+        third_party.send("#{label}=", nil)
       end
-
-      context "when there is a person party" do
-        before do
-          third_party.send("#{label}=", person)
-        end
-        it { is_expected.to eq(['cannot be defined']) }
-      end
-
-      context "when there is a organization party" do
-        before do
-          third_party.send("#{label}=", organization)
-        end
-        it { is_expected.to eq(['cannot be defined']) }
-      end
+      it { is_expected.to be_nil }
     end
 
-    shared_examples "invariants of contracting party bank-account" do |label|
-
-      entity(:bank_account) { create(:bank_account) }
-
-      let(:tested_invariants) { third_party.invariant.errors[:"#{label}_bank_account"] }
-
-      subject { tested_invariants }
-
-      context "when there is no bank_account" do
-        before do
-          third_party.send("#{label}_bank_account=", nil)
-        end
-        it { is_expected.to be_nil }
+    context "when there is a person party" do
+      before do
+        third_party.send("#{label}=", person)
       end
-
-      context "when there is a bank-account" do
-        before do
-          third_party.send("#{label}_bank_account=", bank_account)
-        end
-        it { is_expected.to eq(['cannot be defined']) }
-      end
+      it { is_expected.to eq(['cannot be defined']) }
     end
+
+    context "when there is a organization party" do
+      before do
+        third_party.send("#{label}=", organization)
+      end
+      it { is_expected.to eq(['cannot be defined']) }
+    end
+  end
+
+  shared_examples "invariants of contracting party bank-account" do |label|
+
+    entity(:bank_account) { create(:bank_account) }
+
+    let(:tested_invariants) { third_party.invariant.errors[:"#{label}_bank_account"] }
+
+    subject { tested_invariants }
+
+    context "when there is no bank_account" do
+      before do
+        third_party.send("#{label}_bank_account=", nil)
+      end
+      it { is_expected.to be_nil }
+    end
+
+    context "when there is a bank-account" do
+      before do
+        third_party.send("#{label}_bank_account=", bank_account)
+      end
+      it { is_expected.to eq(['cannot be defined']) }
+    end
+  end
 
   shared_examples "invariants of collections" do |label|
 

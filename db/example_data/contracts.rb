@@ -120,16 +120,12 @@ SampleData.contracts.pt5b = localpool_contract(
 
 # Drittlieferant
 SampleData.contracts.pt6 = localpool_contract(
- # contractor: Organization.find_by(slug: '3rd-party'),
- # customer: SampleData.persons.pt6
 )
 
 # Drittlieferant, vor Wechsel zu people power
 SampleData.contracts.pt7a = localpool_contract(
   termination_date: Date.parse("2017-2-15"),
   end_date: Date.parse("2017-3-1"),
- # contractor: Organization.find_by(slug: '3rd-party'),
- # customer: SampleData.persons.pt7,
 )
 
 
