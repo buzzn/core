@@ -11,7 +11,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
   end
 
-  entity(:buzzn_operator)    { create(:account, :admin) }
+  entity(:buzzn_operator)    { create(:account, :buzzn_operator) }
   entity(:localpool_owner)   { create(:account) }
   entity(:localpool_manager) { create(:account) }
   entity(:localpool_member)  { create(:account) }

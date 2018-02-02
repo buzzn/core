@@ -1,6 +1,6 @@
 describe Contract::BaseResource do
 
-  entity(:admin) { create(:account, :admin) }
+  entity(:admin) { create(:account, :buzzn_operator) }
   entity(:localpool) { create(:localpool) }
 
   entity!(:metering_point_operator) do
