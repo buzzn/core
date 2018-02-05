@@ -220,7 +220,6 @@ describe "Factories produce valid records" do
   context "Tariff" do
     subject { create(:tariff) }
     it { is_expected.to be_valid }
-    it { expect(subject.contracts.first).to be_a(Contract::Base) }
     it "can override group" do
       group    = create(:localpool)
       tariff   = create(:tariff, group: group)
