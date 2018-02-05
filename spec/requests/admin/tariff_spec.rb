@@ -34,7 +34,7 @@ describe Admin::LocalpoolRoda do
           {'parameter' => 'name', 'detail' => 'size cannot be greater than 64'},
           {"parameter"=>"begin_date", "detail"=>"must be a date"},
           {"parameter"=>"energyprice_cents_per_kwh", "detail"=>"must be a float"},
-          {"parameter"=>"baseprice_cents_per_month", "detail"=>"must be an integer"}
+          {"parameter"=>"baseprice_cents_per_month", "detail"=>"must be a float"}
         ]
       }
     end
@@ -68,7 +68,7 @@ describe Admin::LocalpoolRoda do
           "begin_date"=>Date.new(2016, 2, 1).to_s,
           "end_date" => nil,
           "energyprice_cents_per_kwh"=>23.66,
-          "baseprice_cents_per_month"=>500,
+          "baseprice_cents_per_month"=>500.0,
           'number_of_contracts' => 0,
           'updatable'=>false,
           'deletable'=>true

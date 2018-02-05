@@ -1449,7 +1449,7 @@ CREATE TABLE tariffs (
     name character varying(64) NOT NULL,
     begin_date date NOT NULL,
     energyprice_cents_per_kwh double precision NOT NULL,
-    baseprice_cents_per_month integer NOT NULL,
+    baseprice_cents_per_month double precision NOT NULL,
     end_date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
