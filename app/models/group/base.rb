@@ -1,4 +1,3 @@
-require 'buzzn/score_calculator'
 require 'buzzn/slug'
 
 module Group
@@ -30,8 +29,6 @@ module Group
       Person.with_roles(self, Role::GROUP_ENERGY_MENTOR)
     end
 
-    has_many :scores, as: :scoreable
-
     scope :permitted, ->(uuids) { where(id: uuids) }
 
     def self.search_attributes
@@ -52,14 +49,6 @@ module Group
       elsif all_labels.include?(Register::Base.labels[:production_pv])
         return PV
       end
-    end
-
-    def self.calculate_scores
-      Sidekiq::Client.push({
-       'class' => CalculateGroupScoresWorker,
-       'queue' => :default,
-       'args' => [ Buzzn::Utils::Chronos.yesterday.to_s ]
-      })
     end
 
     def finalize_registers

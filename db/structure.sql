@@ -1441,24 +1441,6 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: scores; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE scores (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
-    mode character varying,
-    "interval" character varying,
-    interval_beginning timestamp without time zone,
-    interval_end timestamp without time zone,
-    value double precision,
-    scoreable_id uuid,
-    scoreable_type character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
 -- Name: tariffs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1803,14 +1785,6 @@ ALTER TABLE ONLY registers
 
 ALTER TABLE ONLY roles
     ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
-
-
---
--- Name: scores scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY scores
-    ADD CONSTRAINT scores_pkey PRIMARY KEY (id);
 
 
 --
@@ -2205,20 +2179,6 @@ CREATE INDEX index_registers_on_meter_id ON registers USING btree (meter_id);
 --
 
 CREATE UNIQUE INDEX index_registers_on_meter_id_and_direction ON registers USING btree (meter_id, direction);
-
-
---
--- Name: index_scores_on_scoreable_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_scores_on_scoreable_id ON scores USING btree (scoreable_id);
-
-
---
--- Name: index_scores_on_scoreable_id_and_scoreable_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_scores_on_scoreable_id_and_scoreable_type ON scores USING btree (scoreable_id, scoreable_type);
 
 
 --
@@ -2672,8 +2632,6 @@ ALTER TABLE ONLY contract_tax_data
 SET search_path TO "$user", public;
 
 INSERT INTO schema_migrations (version) VALUES ('20140403173451');
-
-INSERT INTO schema_migrations (version) VALUES ('20150630104513');
 
 INSERT INTO schema_migrations (version) VALUES ('20170524090229');
 
