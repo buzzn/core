@@ -75,7 +75,8 @@ describe Admin::LocalpoolResource do
                     'type',
                     'updated_at',
                     'updatable',
-                    'deletable']
+                    'deletable',
+                    'number_of_contracts']
       Fabricate(:tariff, group: localpool)
       result = pools.retrieve(localpool.id).tariffs
       expect(result.size).to eq size + 1
