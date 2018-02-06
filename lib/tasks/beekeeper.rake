@@ -64,7 +64,8 @@ namespace :beekeeper do
       puts
       puts "Attaching person images ..."
       Person.all.each do |person|
-        file_name = person.email.to_s.downcase
+        next unless person.email
+        file_name = person.email.downcase
         local_file_path = Rails.root.join('lib/beekeeper/person_images', "#{file_name}.jpg")
         putc '.'
         if File.exist?(local_file_path)

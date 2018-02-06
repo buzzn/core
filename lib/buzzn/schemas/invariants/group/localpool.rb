@@ -1,7 +1,9 @@
+require_relative '../../constraints/group'
+
 module Schemas
   module Invariants
     module Group
-      Localpool = Schemas::Support.Form do
+      Localpool = Schemas::Support.Form(Constraints::Group) do
 
         configure do
           def distribution_system_operator?(input)
@@ -17,8 +19,8 @@ module Schemas
           end
 
           def has_owner_role?(input)
-            case input
-            when Person
+            case input.class.to_s
+            when 'Person'
               the_role = input.roles.where(name: Role::GROUP_OWNER).detect do |role|
                 localpool = role.resource
                 owner = localpool.owner
@@ -26,12 +28,12 @@ module Schemas
                   (owner.is_a?(::Organization) && owner.contact && input.id == owner.contact.id)
               end
               the_role != nil
-            when Organization
+            when 'Organization'
               has_owner_role?(input.contact)
-            when NilClass
+            when 'NilClass'
               true
             else
-              raise "can not handle #{input.class}"
+              raise "can not handle " + input.class.to_s
             end
           end
 

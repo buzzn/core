@@ -24,19 +24,19 @@ class Beekeeper::Import
     logger.info("Localpool #{record.converted_attributes[:name]} (start: #{record.converted_attributes[:start_date]})")
     logger.info("-" * 80)
 
+    warnings = record.warnings || {}
     Group::Localpool.transaction do
       # need to create localpool with broken invariants
       localpool = Beekeeper::Importer::CreateLocalpool.new(logger).run(record.converted_attributes)
       Beekeeper::Importer::Roles.new(logger).run(localpool)
       registers = Beekeeper::Importer::RegistersAndMeters.new(logger).run(localpool, record.converted_attributes[:registers])
-      Beekeeper::Importer::PowerTakerContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], registers)
+      Beekeeper::Importer::LocalpoolContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], record.converted_attributes[:third_party_contracts], registers, warnings)
       Beekeeper::Importer::AdjustContractEndDatesAndReadings.new(logger).run(localpool)
 
       # now we can fail and rollback on broken invariants
       raise ActiveRecord::RecordInvalid.new(localpool) unless localpool.invariant_valid?
       localpool.save!
 
-      warnings = record.warnings || {}
       unless Import.global?('config.skip_brokers')
         Beekeeper::Importer::Brokers.new(logger).run(localpool, warnings)
         Beekeeper::Importer::OptimizeGroup.new(logger).run(localpool, warnings)

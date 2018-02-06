@@ -13,5 +13,10 @@ FactoryGirl.define do
       password_hash = BCrypt::Password.create(evaluator.password)
       Account::PasswordHash.create(account: account, password_hash: password_hash)
     end
+    trait :buzzn_operator do
+      after(:create) do |account|
+        account.person.add_role(Role::BUZZN_OPERATOR)
+      end
+    end
   end
 end
