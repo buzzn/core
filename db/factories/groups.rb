@@ -19,7 +19,7 @@ FactoryGirl.define do
       person_for_role = group.owner.is_a?(Organization) ? group.owner.contact : group.owner
       person_for_role.add_role(Role::GROUP_OWNER, group)
       evaluator.admins.each { |admin| admin.add_role(Role::GROUP_ADMIN, group) }
-      evaluator.tariffs_attrs.each { |tariff_attrs| build(:tariff, tariff_attrs.merge(group: group)) }
+      evaluator.tariffs_attrs.each { |tariff_attrs| create(:tariff, tariff_attrs.merge(group: group)) }
       group.update(distribution_system_operator: evaluator.distribution_system_operator, transmission_system_operator: evaluator.transmission_system_operator, electricity_supplier: evaluator.electricity_supplier)
     end
   end
