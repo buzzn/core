@@ -39,6 +39,7 @@ class Beekeeper::Importer::LocalpoolContracts
       customer:   customer,
       contractor: localpool.owner
     )
+    register.meter.update(group, localpool) unless register.meter.group
     Contract::LocalpoolPowerTaker.create!(contract_attributes)
   end
 
