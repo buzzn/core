@@ -7,12 +7,12 @@ class Beekeeper::Importer::LocalpoolContracts
     logger.level = Import.global('config.log_level')
   end
 
-  def run(localpool, powertaker_contracts, third_parties, registers, warnings)
+  def run(localpool, powertaker_contracts, third_parties, registers, tariffs, warnings)
     powertaker_contracts.each do |contract|
       begin
         ActiveRecord::Base.transaction do
           customer = find_or_create_customer(contract[:powertaker])
-          create_contract(localpool, customer, contract, registers)
+          create_contract(localpool, customer, contract, registers, tariffs)
         end
       rescue => e
         logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
@@ -31,7 +31,7 @@ class Beekeeper::Importer::LocalpoolContracts
 
   private
 
-  def create_contract(localpool, customer, contract, registers)
+  def create_contract(localpool, customer, contract, registers, tariffs)
     register = find_or_create_register(contract, registers)
     contract_attributes = contract.except(:powertaker, :buzznid).merge(
       localpool:  localpool,
@@ -40,7 +40,26 @@ class Beekeeper::Importer::LocalpoolContracts
       contractor: localpool.owner
     )
     register.meter.update(group, localpool) unless register.meter.group
-    Contract::LocalpoolPowerTaker.create!(contract_attributes)
+    contract = Contract::LocalpoolPowerTaker.create!(contract_attributes)
+    contract.tariffs =
+      if contract.end_date.nil?
+        tariffs_running_contracts(contract, tariffs)
+      else
+        tariffs_ended_contracts(contract, tariffs)
+      end
+    raise ActiveRecord::RecordInvalid.new(contract) unless contract.invariant_valid?
+  end
+
+  def tariffs_running_contracts(contract, tariffs)
+    tariffs.select do |tariff|
+      tariff.end_date.nil? || tariff.end_date > contract.begin_date
+    end
+  end
+
+  def tariffs_ended_contracts(contract, tariffs)
+    tariffs.select do |tariff|
+      tariff.begin_date <= contract.end_date && (tariff.end_date.nil? || tariff.end_date >= contract.begin_date)
+    end
   end
 
   def find_or_create_register(contract, registers)
