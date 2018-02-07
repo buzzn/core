@@ -2,8 +2,8 @@ require 'buzzn/schemas/invariants/group/localpool'
 
 describe Group::Base do
 
-  entity!(:localpool) { Fabricate(:localpool) }
-  entity!(:tribe)     { Fabricate(:tribe) }
+  entity!(:localpool) { create(:localpool) }
+  entity!(:tribe)     { create(:localpool) }
 
   it 'filters group' do
     group = [tribe, localpool].sample

@@ -159,11 +159,31 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     describe 'localpool' do
       it_behaves_like "invariants of localpool", processing
     end
+
+    describe "customer" do
+      it_behaves_like "invariants of contracting party", :customer, processing, 'must be the localpool owner'
+    end
+
+    describe "contractor" do
+      # TODO should actuall check that contractor is Buzzn Organization
+      it_behaves_like "invariants of contracting party", :contractor, processing, nil
+    end
   end
 
   context 'metering point operator contract' do
     describe 'localpool' do
       it_behaves_like "invariants of localpool", metering_point_operator
+    end
+
+    # TODO needs check on register (like power-taker)
+
+    describe "customer" do
+      it_behaves_like "invariants of contracting party", :customer, processing, 'must be the localpool owner'
+    end
+
+    describe "contractor" do
+      # TODO should actuall check that contractor is Buzzn Organization
+      it_behaves_like "invariants of contracting party", :contractor, processing, nil
     end
   end
 

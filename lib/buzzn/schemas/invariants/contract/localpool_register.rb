@@ -6,8 +6,8 @@ module Schemas
       LocalpoolRegister = Schemas::Support.Form(Localpool) do
 
         configure do
-          def match_localpool?(localpool, input)
-            input.meter.group == localpool
+          def match_localpool?(localpool, register)
+            register.meter.group == localpool
           end
         end
 
