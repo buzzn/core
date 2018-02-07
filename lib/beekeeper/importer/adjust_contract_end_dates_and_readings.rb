@@ -13,37 +13,44 @@ class Beekeeper::Importer::AdjustContractEndDatesAndReadings
   def run(localpool)
     localpool.registers.each do |register|
       logger.debug("* Meter: #{register.meter.legacy_buzznid}")
-      ordered_contracts = register.contracts.order(begin_date: :asc).to_a
-      ordered_contracts.each.with_index do |contract, index|
-        next_contract = ordered_contracts[index + 1]
-        gap = gap_in_days(contract, next_contract)
-        if !next_contract
-          comment = "final contract"
-          # we're at the last contract, nothing to do here
-        elsif gap == 0
-          next
-          # that's what we want, nothing to do here
-        elsif gap == 1
-          # move end date one day ahead for the dates to match
-          old_end_date = contract.end_date
-          ActiveRecord::Base.transaction do
-            contract.update_attribute(:end_date, contract.end_date + 1.day)
-            adjust_readings(register, old_end_date)
-          end
-          comment = "1 day gap fixed by moving old end date #{old_end_date} one day ahead"
+      contracts_with_gaps(register).each do |contract, next_contract, gap_in_days|
+        case gap_in_days
+        when 0
+          # data is clean, nothing to do here
+          comment = "all good"
+        when 1
+          # move end date of contract one day ahead for the dates to match
+          adjust_end_date_and_readings(contract, register)
+          comment = "1 day gap fixed by moving old end date #{contract.end_date} one day ahead"
         else
-          # TODO: create gap contract
-          comment = "gap of #{gap} days to next contract will later be filled with a 'Leerstandsvertrag'"
+          create_gap_contract(contract, next_contract)
+          comment = "gap of #{gap_in_days} days filled with a 'Leerstandsvertrag' (gap contract)"
         end
-        logger.info("  #{index + 1}. contract #{contract.contract_number}/#{contract.contract_number_addition}: #{contract.begin_date} - #{contract.end_date} (#{comment})")
+        logger.info("Contract #{contract.contract_number}/#{contract.contract_number_addition}: #{contract.begin_date} - #{contract.end_date} (#{comment})")
       end
     end
   end
 
   private
 
+  def adjust_end_date_and_readings(contract, register)
+    ActiveRecord::Base.transaction do
+      contract.update_attribute(:end_date, contract.end_date + 1.day)
+      adjust_readings(register, contract.end_date)
+    end
+
+  end
+
+  def contracts_with_gaps(register)
+    ordered_contracts = register.contracts.order(begin_date: :asc).to_a
+    ordered_contracts[0...-1].map.with_index do |contract, index|
+      next_contract = ordered_contracts[index + 1]
+      gap = gap_in_days(contract, next_contract)
+      [contract, next_contract, gap]
+    end
+  end
+
   def gap_in_days(current_contract, next_contract)
-    return unless next_contract
     (next_contract.begin_date - current_contract.end_date).to_i
   end
 
@@ -67,6 +74,30 @@ class Beekeeper::Importer::AdjustContractEndDatesAndReadings
       #  so natually there's no reading yet. Nothing to do for that one.
       logger.error("Expected two readings but got #{readings.size}: #{readings.inspect}")
     end
+  end
+
+  def create_gap_contract(previous_contract, next_contract)
+    owner = previous_contract.localpool.owner
+    attributes = {
+      localpool:                     previous_contract.localpool,
+      register:                      previous_contract.register,
+      signing_date:                  previous_contract.end_date,
+      begin_date:                    previous_contract.end_date,
+      termination_date:              next_contract.begin_date,
+      end_date:                      next_contract.begin_date,
+      contract_number:               previous_contract.contract_number,
+      contract_number_addition:      "100#{previous_contract.contract_number_addition}",
+      customer:                      owner,
+      contractor:                    owner,
+      # CLARIFY need to set?
+      # customer_bank_account,
+      # contractor_bank_account,
+      # CLARIFY if this needs special treatment
+      # renewable_energy_law_taxation,
+      # CLARIFY if this attribute is still needed
+      # metering_point_operator_name,
+    }
+    Contract::LocalpoolPowerTaker.create!(attributes)
   end
 
   def handle_two_readings(readings, register)
