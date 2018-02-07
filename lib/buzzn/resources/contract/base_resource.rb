@@ -11,7 +11,7 @@ module Contract
                 :signing_date,
                 :begin_date,
                 :termination_date,
-                :end_date,
+                :last_date,
                 :status
 
     attributes :updatable, :deletable

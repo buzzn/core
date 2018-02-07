@@ -70,7 +70,7 @@ describe Admin::LocalpoolResource do
                     'baseprice_cents_per_month',
                     'energyprice_cents_per_kwh',
                     'begin_date',
-                    'end_date',
+                    'last_date',
                     'id',
                     'type',
                     'updated_at',

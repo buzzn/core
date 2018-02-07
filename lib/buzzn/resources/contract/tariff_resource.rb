@@ -5,7 +5,7 @@ module Contract
 
     attributes  :name,
                 :begin_date,
-                :end_date,
+                :last_date,
                 :energyprice_cents_per_kwh,
                 :baseprice_cents_per_month,
                 :number_of_contracts

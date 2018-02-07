@@ -62,7 +62,7 @@ describe Admin::Roda do
           "signing_date"=>contract.signing_date.to_s,
           "begin_date"=>contract.begin_date.to_s,
           "termination_date"=>nil,
-          "end_date"=>nil,
+          "last_date"=>nil,
           "status"=>contract.status.to_s,
           "updatable"=>false,
           "deletable"=>false,
