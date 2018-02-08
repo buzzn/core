@@ -59,14 +59,6 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     (next_contract.begin_date - current_contract.end_date).to_i
   end
 
-  # We clean up the readings like this:
-  # - if there's a reading for both old and new end date,
-  #   - if the value is the same
-  #     delete reading for old end date
-  #   - if it's different
-  #     clean up the data
-  # - if there's only one reading
-  #   ???
   def adjust_readings(register, old_end_date)
     readings = register.readings.where(date: [old_end_date, old_end_date + 1.day]).order(:date)
     case readings.size
