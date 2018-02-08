@@ -19,7 +19,7 @@ module Contract
 
     class << self
       def search_attributes
-        #TODO filtering what ?
+        # TODO: filtering what ?
         []
       end
 
@@ -87,15 +87,16 @@ module Contract
       status.inquiry
     end
 
-    # permissions helpers
-
-    scope :permitted, ->(uuids) { where(id: uuids) }
-    
     # It order to be continuous, a contract's end_date is the same as the start_date of the following contract.
     # This is technically correct but unexpected by humans. That's why we have the last_date, which will show
     # the human-expected last date of the contract.
     def last_date
       end_date && (end_date - 1.day)
     end
+
+    private
+
+    # permissions helpers
+    scope :permitted, ->(uuids) { where(id: uuids) }
   end
 end
