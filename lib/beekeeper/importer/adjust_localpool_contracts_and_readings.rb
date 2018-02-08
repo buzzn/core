@@ -98,8 +98,8 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   end
 
   def next_contract_number_addition(localpool)
-    max = localpool.localpool_power_taker_contracts.maximum(:contract_number_addition)
-    max + 1
+    current_max = localpool.localpool_power_taker_contracts.maximum(:contract_number_addition)
+    current_max + 1
   end
 
   def handle_two_readings(readings, register)
