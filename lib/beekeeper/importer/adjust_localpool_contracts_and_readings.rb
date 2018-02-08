@@ -43,8 +43,8 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
 
   end
 
-  # Returns pairs of contracts that follow each other.
-  # This data structure simplifies the following iteration and fixing/creation of contracts.
+  # Returns pairs of contracts that chronologically follow each other.
+  # This data structure simplifies the iteration and fixing/creation of contracts.
   def contract_pairs(register)
     ordered_contracts = register.contracts.order(begin_date: :asc).to_a
     ordered_contracts[0...-1].map.with_index do |contract, index|
@@ -54,6 +54,9 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     end
   end
 
+  # In beekeeper, readings for contract changes aren't consistent. Sometimes there's only one for the old contract's
+  # end date, sometimes only one for new contract's start date, sometimes there are both.
+  # This method cleans things up so that only one reading for the date of the contract change remains.
   def adjust_readings(register, old_end_date)
     readings = register.readings.where(date: [old_end_date, old_end_date + 1.day]).order(:date)
     case readings.size
@@ -69,18 +72,20 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   end
 
   def create_gap_contract(previous_contract, next_contract)
-    owner = previous_contract.localpool.owner
     attributes = {
+      # take these from previous contract
       localpool:                     previous_contract.localpool,
       register:                      previous_contract.register,
       signing_date:                  previous_contract.end_date,
       begin_date:                    previous_contract.end_date,
+      contractor:                    previous_contract.localpool.owner,
+      contract_number:               previous_contract.contract_number,
+      # take these from next contract
       termination_date:              next_contract.begin_date,
       end_date:                      next_contract.begin_date,
-      contract_number:               previous_contract.contract_number,
+      # these attributes come from different places ...
       contract_number_addition:      next_contract_number_addition(previous_contract.localpool),
-      customer:                      find_contract_customer(previous_contract.localpool),
-      contractor:                    owner
+      customer:                      find_contract_customer(previous_contract.localpool)
     }
     Contract::LocalpoolPowerTaker.create!(attributes)
   end
@@ -90,7 +95,8 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     current_max + 1
   end
 
-  CUSTOMER_LOOKUP = {
+  GAP_CONTRACT_CUSTOMER_LOOKUP = {
+    # localpool slug => contract number which has the customer to be used
     'cherubinistr'                      => '60009/8',
     'gertrud-grunow-strasse'            => '60030/37',
     'gotthardstrasse'                   => '60010/1',
@@ -102,8 +108,11 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   }
 
   def find_contract_customer(localpool)
-    buzznid = CUSTOMER_LOOKUP[localpool.slug]
-    raise "Customer for gap contract of this localpool is not set: #{localpool.name}" unless buzznid
+    buzznid = GAP_CONTRACT_CUSTOMER_LOOKUP[localpool.slug]
+    unless buzznid
+      logger.error("Customer for localpool '#{localpool.name}' gap contract isn't set, not creating one.")
+      return
+    end
     contract_number, contract_number_addition = buzznid.split('/')
     contract = Contract::LocalpoolPowerTaker.find_by(contract_number: contract_number, contract_number_addition: contract_number_addition)
     contract.customer
@@ -124,13 +133,12 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
         # this one has 12.700 -- must be a bug/manual entry error, technically it's not possible for a reading to go down
         readings.last.update_attribute(:value, 13_000)
       else
-        logger.error("Unexpected readings for register.meter.legacy_buzznid, not modifying any readings.")
+        logger.error("Unexpected readings for #{register.meter.legacy_buzznid}, not modifying any readings.")
       end
     end
   end
 
   def handle_one_reading(reading, old_end_date)
-    # the cases are 90002/14, 90017/8 and 90043/3
     if reading.date == old_end_date
       # shift reading date ahead one day to match the new contract end date
       reading.update_attribute(:date, reading.date + 1.day)
