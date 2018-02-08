@@ -36,8 +36,9 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
 
   def adjust_end_date_and_readings(contract, register)
     ActiveRecord::Base.transaction do
+      old_end_date = contract.end_date
       contract.update_attribute(:end_date, contract.end_date + 1.day)
-      adjust_readings(register, contract.end_date)
+      adjust_readings(register, old_end_date)
     end
 
   end
