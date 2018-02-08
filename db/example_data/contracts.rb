@@ -15,6 +15,10 @@ def localpool_contract(attrs = {})
   contract
 end
 
+def tariffs
+  @_tariffs ||= SampleData.localpools.people_power.tariffs.where(name: 'Hausstrom - Standard')
+end
+
 SampleData.contracts = OpenStruct.new
 
 # FIXME: when https://goo.gl/6pzpFd is implemented, assign the grid in/out registers correctly
@@ -31,8 +35,8 @@ SampleData.contracts.lpp = create(:contract, :localpool_processing,
   contractor: Organization.buzzn,
   payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ],
   tariffs: [
-    build(:tariff, name: "Regular", energyprice_cents_per_kwh: 28.9),
-    build(:tariff, name: "Reduced", energyprice_cents_per_kwh: 25.9)
+    build(:tariff, name: "Regular", energyprice_cents_per_kwh: 28.9, group: SampleData.localpools.people_power),
+    build(:tariff, name: "Reduced", energyprice_cents_per_kwh: 25.9, group: SampleData.localpools.people_power)
   ]
 )
 
@@ -44,7 +48,8 @@ SampleData.contracts.pt1 = localpool_contract(
   ],
   payments: [
     build(:payment, price_cents: 55_00, begin_date: '2016-01-01', cycle: 'monthly')
-  ]
+  ],
+  tariffs: tariffs
 )
 
 SampleData.contracts.pt2 = localpool_contract(
@@ -55,7 +60,8 @@ SampleData.contracts.pt2 = localpool_contract(
   ],
   payments: [
     build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')
-  ]
+  ],
+  tariffs: tariffs
 )
 
 SampleData.contracts.pt3 = localpool_contract(
@@ -67,7 +73,8 @@ SampleData.contracts.pt3 = localpool_contract(
   ],
   payments: [
     build(:payment, price_cents: 67_00, begin_date: '2016-01-01', cycle: 'monthly')
-  ]
+  ],
+  tariffs: tariffs
 )
 SampleData.contracts.pt3.customer.add_role(Role::GROUP_ENERGY_MENTOR, SampleData.contracts.pt3.localpool)
 
@@ -82,7 +89,8 @@ SampleData.contracts.pt4 = localpool_contract(
   ],
   payments: [
    build(:payment, price_cents: 53_00, begin_date: '2016-01-01', cycle: 'monthly')
-  ]
+  ],
+  tariffs: tariffs
 )
 
 # beendet, Auszug
@@ -97,7 +105,8 @@ SampleData.contracts.pt5a = localpool_contract(
   ],
   payments: [
     build(:payment, price_cents: 45_00, begin_date: '2016-01-01', cycle: 'monthly')
-  ]
+  ],
+  tariffs: tariffs
 )
 
 # Leerstand
@@ -116,6 +125,7 @@ SampleData.contracts.pt5b = localpool_contract(
   begin_date: Date.parse("2017-5-1"),
   register: SampleData.contracts.pt5a.register, # important !
   customer: SampleData.persons.pt5b,
+  tariffs: tariffs
 )
 
 # Drittlieferant
@@ -138,11 +148,14 @@ SampleData.contracts.pt7b = localpool_contract(
 )
 
 # English
-SampleData.contracts.pt8 = localpool_contract(customer: SampleData.persons.pt8)
+SampleData.contracts.pt8 = localpool_contract(customer: SampleData.persons.pt8,
+  tariffs: tariffs)
 
 # Two more powertakers to make them 10 ...
-SampleData.contracts.pt9 = localpool_contract(customer: SampleData.persons.pt9)
-SampleData.contracts.pt10 = localpool_contract(customer: SampleData.persons.pt10)
+SampleData.contracts.pt9 = localpool_contract(customer: SampleData.persons.pt9,
+                                              tariffs: tariffs)
+SampleData.contracts.pt10 = localpool_contract(customer: SampleData.persons.pt10,
+  tariffs: tariffs)
 
 # Allgemeinstrom (Hausbeleuchtung etc.)
 SampleData.contracts.common_consumption = localpool_contract(

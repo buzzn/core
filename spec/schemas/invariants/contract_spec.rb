@@ -5,11 +5,13 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
   entity(:person)       { create(:person) }
   entity(:organization) { create(:organization) }
-  entity(:localpool)    { create(:localpool) }
+  entity(:tariff)       { create(:tariff, group: create(:localpool)) }
+  entity(:localpool)    { tariff.group }
+  entity(:other_localpool)    { create(:localpool) }
 
   entity(:third_party)             { create(:contract, :localpool_third_party,   localpool: localpool) }
   entity(:register) { third_party.register }
-  entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, register: register) }
+  entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, register: register, tariffs: [tariff]) }
   entity(:processing)              { create(:contract, :localpool_processing,    localpool: localpool) }
   entity(:metering_point_operator) { create(:contract, :metering_point_operator, localpool: localpool) }
 
@@ -157,11 +159,31 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     describe 'localpool' do
       it_behaves_like "invariants of localpool", processing
     end
+
+    describe "customer" do
+      it_behaves_like "invariants of contracting party", :customer, processing, 'must be the localpool owner'
+    end
+
+    describe "contractor" do
+      # TODO should actuall check that contractor is Buzzn Organization
+      it_behaves_like "invariants of contracting party", :contractor, processing, nil
+    end
   end
 
   context 'metering point operator contract' do
     describe 'localpool' do
       it_behaves_like "invariants of localpool", metering_point_operator
+    end
+
+    # TODO needs check on register (like power-taker)
+
+    describe "customer" do
+      it_behaves_like "invariants of contracting party", :customer, processing, 'must be the localpool owner'
+    end
+
+    describe "contractor" do
+      # TODO should actuall check that contractor is Buzzn Organization
+      it_behaves_like "invariants of contracting party", :contractor, processing, nil
     end
   end
 

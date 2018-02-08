@@ -23,3 +23,7 @@ en:
 
     localpool_owner?: 'must be the localpool owner'
     match_localpool?: 'meter.group must match contract.localpool'
+    localpool_tariffs?: 'all tariff.group must match contract.localpool'
+    cover_beginning_of_contract?: 'tariffs must cover beginning of contract'
+    cover_ending_of_contract?: 'tariffs must cover end of contract'
+    lineup?: 'all tariffs must line up'
