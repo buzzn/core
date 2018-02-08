@@ -1,7 +1,9 @@
-# Iterate all the group's registers and change the end data of each contract as specified in
-# https://github.com/buzzn/scrum/issues/142.
-# This is done to obtain a time-gap-free list of contracts for each register.
-class Beekeeper::Importer::AdjustContractEndDatesAndReadings
+# Iterate all the group's registers and fix up contracts so there's
+#
+# - a time-gap-free list of contracts for every register.
+# - a reading for every contract begin- and end date.
+#
+class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
 
   attr_reader :logger
 
