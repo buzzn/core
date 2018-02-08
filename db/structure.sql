@@ -2182,13 +2182,6 @@ CREATE UNIQUE INDEX index_registers_on_meter_id_and_direction ON registers USING
 
 
 --
--- Name: index_tariffs_on_begin_date_and_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_tariffs_on_begin_date_and_group_id ON tariffs USING btree (begin_date, group_id);
-
-
---
 -- Name: index_tariffs_on_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
