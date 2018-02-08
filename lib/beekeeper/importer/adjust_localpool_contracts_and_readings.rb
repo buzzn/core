@@ -29,7 +29,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
           comment = "gap of #{gap_in_days} days filled with a 'Leerstandsvertrag' (gap contract)"
         end
         comment = " (#{comment})" if comment
-        logger.info("Contract #{contract.contract_number}/#{contract.contract_number_addition}: #{contract.begin_date} - #{contract.end_date}#{comment}")
+        logger.info("Contract #{contract.contract_number}/#{contract.contract_number_addition}: #{contract.end_date} - #{next_contract.begin_date}#{comment}")
       end
     end
   end
@@ -84,7 +84,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       end_date:                      next_contract.begin_date,
       contract_number:               previous_contract.contract_number,
       contract_number_addition:      next_contract_number_addition(previous_contract.localpool),
-      customer:                      owner,
+      customer:                      find_contract_customer(previous_contract.localpool),
       contractor:                    owner
     }
     Contract::LocalpoolPowerTaker.create!(attributes)
@@ -93,6 +93,22 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   def next_contract_number_addition(localpool)
     current_max = localpool.localpool_power_taker_contracts.maximum(:contract_number_addition)
     current_max + 1
+  end
+
+  CUSTOMER_LOOKUP = {
+    'wagnis'                            => '60008/52',
+    'gotthardstrasse'                   => '60010/1',
+    'cherubinistr'                      => '60009/8',
+    'mehrgenerationenplatz-forstenried' => '60015/73',
+    'gertrud-grunow-strasse'            => '60030/37'
+  }
+
+  def find_contract_customer(localpool)
+    buzznid = CUSTOMER_LOOKUP[localpool.slug]
+    raise "Customer for gap contract of this localpool is not set: #{localpool.name}" unless buzznid
+    contract_number, contract_number_addition = buzznid.split('/')
+    contract = Contract::LocalpoolPowerTaker.find_by(contract_number: contract_number, contract_number_addition: contract_number_addition)
+    contract.customer
   end
 
   def handle_two_readings(readings, register)
