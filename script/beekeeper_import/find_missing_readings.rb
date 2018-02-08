@@ -1,3 +1,7 @@
+# Because rails runner <scriptname> doesn't work anymore, you'll have to run this script like this:
+# $ bin/console
+# > load 'script/beekeeper_import/find_missing_readings.rb'
+
 ReadingsCheck = Struct.new(:contract) do
 
   delegate :contract_number, :contract_number_addition, :begin_date, :end_date, to: :contract
