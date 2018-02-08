@@ -70,12 +70,13 @@ describe Admin::LocalpoolResource do
                     'baseprice_cents_per_month',
                     'energyprice_cents_per_kwh',
                     'begin_date',
-                    'end_date',
+                    'last_date',
                     'id',
                     'type',
                     'updated_at',
                     'updatable',
-                    'deletable']
+                    'deletable',
+                    'number_of_contracts']
       Fabricate(:tariff, group: localpool)
       result = pools.retrieve(localpool.id).tariffs
       expect(result.size).to eq size + 1

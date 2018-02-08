@@ -7,8 +7,13 @@ describe Admin::LocalpoolRoda do
 
   context 'tariffs' do
 
-    entity!(:localpool) { Fabricate(:localpool) }
-    entity!(:tariff) { Fabricate(:tariff, group: localpool)}
+    entity!(:localpool) { create(:localpool) }
+    entity!(:tariff) { create(:tariff, group: localpool, contracts: [create(:contract, localpool: localpool)]) }
+
+    entity!(:tariffs) do
+      [create(:tariff, group: localpool, begin_date: Date.new(2016, 1, 1)),
+       tariff]
+    end
 
     let(:expired_json) do
       {"error" => "This session has expired, please login again."}
@@ -29,7 +34,7 @@ describe Admin::LocalpoolRoda do
           {'parameter' => 'name', 'detail' => 'size cannot be greater than 64'},
           {"parameter"=>"begin_date", "detail"=>"must be a date"},
           {"parameter"=>"energyprice_cents_per_kwh", "detail"=>"must be a float"},
-          {"parameter"=>"baseprice_cents_per_month", "detail"=>"must be an integer"}
+          {"parameter"=>"baseprice_cents_per_month", "detail"=>"must be a float"}
         ]
       }
     end
@@ -61,9 +66,10 @@ describe Admin::LocalpoolRoda do
           "type"=>'contract_tariff',
           "name"=>"special",
           "begin_date"=>Date.new(2016, 2, 1).to_s,
-          "end_date" => nil,
+          "last_date" => nil,
           "energyprice_cents_per_kwh"=>23.66,
-          "baseprice_cents_per_month"=>500,
+          "baseprice_cents_per_month"=>500.0,
+          'number_of_contracts' => 0,
           'updatable'=>false,
           'deletable'=>true
         }
@@ -91,11 +97,6 @@ describe Admin::LocalpoolRoda do
 
     context 'GET' do
 
-      entity!(:tariffs) do
-        [Fabricate(:tariff, group: localpool, begin_date: Date.new(2016, 1, 1)),
-         tariff]
-      end
-
       let(:tariff_json) do
         {
           "id"=>tariff.id,
@@ -103,11 +104,12 @@ describe Admin::LocalpoolRoda do
           'updated_at' => tariff.updated_at.as_json,
           "name"=>tariff.name,
           "begin_date"=>tariff.begin_date.to_s,
-          'end_date' => nil,
+          'last_date' => nil,
           "energyprice_cents_per_kwh"=>tariff.energyprice_cents_per_kwh,
           "baseprice_cents_per_month"=>tariff.baseprice_cents_per_month,
+          'number_of_contracts' => 1,
           "updatable"=>false,
-          "deletable"=>true
+          "deletable"=>false
         }
       end
 
@@ -119,11 +121,12 @@ describe Admin::LocalpoolRoda do
             'updated_at' => tariff.updated_at.as_json,
             "name"=>tariff.name,
             "begin_date"=>tariff.begin_date.to_s,
-            'end_date' => nil,
+            'last_date' => nil,
             "energyprice_cents_per_kwh"=>tariff.energyprice_cents_per_kwh,
             "baseprice_cents_per_month"=>tariff.baseprice_cents_per_month,
+            'number_of_contracts' => tariff.contracts.count,
             "updatable"=>false,
-            "deletable"=>true
+            "deletable"=>  tariff.contracts.count == 0
           }
         end
       end
@@ -148,6 +151,7 @@ describe Admin::LocalpoolRoda do
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(tariff_json.to_yaml)
       end
+
       it '200 all' do
         GET "/test/#{localpool.id}/tariffs", $admin
 
@@ -157,8 +161,6 @@ describe Admin::LocalpoolRoda do
     end
 
     context 'DELETE' do
-
-      #let(:tariff) { Fabricate(:tariff, group: localpool)}
 
       it '401' do
         GET "/test/#{localpool.id}/tariffs/#{tariff.id}", $admin
@@ -184,7 +186,7 @@ describe Admin::LocalpoolRoda do
         expect(Contract::Tariff.all.size).to eq size - 1
 
         # recreate deleted
-        Contract::Tariff.create tariff.attributes
+        Contract::Tariff.create(tariff.attributes.merge(contracts: localpool.contracts))
       end
     end
   end

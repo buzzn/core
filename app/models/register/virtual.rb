@@ -3,8 +3,6 @@ require_relative 'base'
 module Register
   class Virtual < Base
 
-    has_many :scores, as: :scoreable
-
     belongs_to :meter, class_name: 'Meter::Virtual', foreign_key: :meter_id
 
     has_many :formula_parts, dependent: :destroy, foreign_key: 'register_id'

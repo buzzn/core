@@ -8,13 +8,11 @@ class CreateTariff < ActiveRecord::Migration
   def up
     SCHEMA.up(:tariffs, self)
     add_belongs_to :tariffs, :group, index: true, null: false, type: :uuid
-    add_index :tariffs, [:begin_date, :group_id], unique: true
     add_foreign_key :tariffs, :groups, name: :fk_tariffs_group, on_delete: :cascade
   end
 
   def down
     remove_reference :tariffs, :localpool
-    remove_index :tariffs, [:begin_date, :localpool_id]
     remove_foreign_key :tariffs, :groups, name: :fk_tariffs_group
     SCHEMA.down(:tariffs, self)
   end

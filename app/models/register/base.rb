@@ -30,7 +30,6 @@ module Register
     has_many :contracts, class_name: 'Contract::Base', dependent: :destroy, foreign_key: 'register_id'
     has_many :devices, foreign_key: 'register_id'
     has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'
-    has_many :scores, as: :scoreable
 
     scope :real,    -> { where(type: [Register::Input, Register::Output]) }
     scope :virtual, -> { where(type: Register::Virtual) }

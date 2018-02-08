@@ -18,7 +18,7 @@ describe Contract::BaseResource do
                            'full_contract_number',
                            'signing_date',
                            'termination_date',
-                           'end_date',
+                           'last_date',
                            'updatable',
                            'deletable'] }
   let!(:all) { [metering_point_operator, localpool_processing, localpool_power_taker] }
@@ -51,7 +51,7 @@ describe Contract::BaseResource do
     end
   end
 
-  it 'constaints' do
+  it 'constraints' do
     resources.each do |contract|
       expect(Schemas::Constraints::Contract::Base.call(contract)).to be_success
     end

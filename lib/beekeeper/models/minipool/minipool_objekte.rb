@@ -89,7 +89,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       bank_account:                 bank_accounts.first,
       registers:                    registers,
       powertaker_contracts:         powertaker_contracts,
-      third_party_contracts:        third_party_contracts
+      third_party_contracts:        third_party_contracts,
+      tariffs:                      tariffs
     }
   end
 
@@ -130,5 +131,17 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
   def address
     Address.new(adresse.converted_attributes)
+  end
+
+  def tariffs
+    end_date = nil
+    Beekeeper::Minipool::MinipoolPreise.where(vertragsnummer: vertragsnummer).order(datum: :desc).collect do |preise|
+      attributes = preise.converted_attributes
+      attributes[:end_date] = end_date
+      end_date = attributes[:begin_date]
+      attributes
+    end.reverse.to_enum.with_index(1) do |attributes, index|
+      attributes[:name] = "Tariff #{index}"
+    end
   end
 end

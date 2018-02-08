@@ -7,7 +7,7 @@ FactoryGirl.define do
 
     after(:build) do |tariff|
       tariff.group = FactoryGirl.build(:localpool) unless tariff.group
-      tariff.contracts << FactoryGirl.build(:contract, localpool: tariff.group) if tariff.contracts.empty?
+      #tariff.contracts << FactoryGirl.build(:contract, localpool: tariff.group) if tariff.contracts.empty?
     end
   end
 end
