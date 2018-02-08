@@ -13,20 +13,21 @@ class Beekeeper::Importer::AdjustContractEndDatesAndReadings
   def run(localpool)
     localpool.registers.each do |register|
       logger.debug("* Meter: #{register.meter.legacy_buzznid}")
-      contracts_with_gaps(register).each do |contract, next_contract, gap_in_days|
+      contract_pairs(register).each do |contract, next_contract, gap_in_days|
         case gap_in_days
         when 0
-          # data is clean, nothing to do here
-          comment = "all good"
+          # data is 0 clean, nothing to do here
+          comment = nil
         when 1
           # move end date of contract one day ahead for the dates to match
           adjust_end_date_and_readings(contract, register)
-          comment = "1 day gap fixed by moving old end date #{contract.end_date} one day ahead"
+          comment = "1 day gap fixed by moving old end date one day ahead"
         else
           create_gap_contract(contract, next_contract)
           comment = "gap of #{gap_in_days} days filled with a 'Leerstandsvertrag' (gap contract)"
         end
-        logger.info("Contract #{contract.contract_number}/#{contract.contract_number_addition}: #{contract.begin_date} - #{contract.end_date} (#{comment})")
+        comment = " (#{comment})" if comment
+        logger.info("Contract #{contract.contract_number}/#{contract.contract_number_addition}: #{contract.begin_date} - #{contract.end_date}#{comment}")
       end
     end
   end
@@ -41,7 +42,9 @@ class Beekeeper::Importer::AdjustContractEndDatesAndReadings
 
   end
 
-  def contracts_with_gaps(register)
+  # Returns pairs of contracts that follow each other.
+  # This data structure simplifies the following iteration and fixing/creation of contracts.
+  def contract_pairs(register)
     ordered_contracts = register.contracts.order(begin_date: :asc).to_a
     ordered_contracts[0...-1].map.with_index do |contract, index|
       next_contract = ordered_contracts[index + 1]
@@ -86,7 +89,7 @@ class Beekeeper::Importer::AdjustContractEndDatesAndReadings
       termination_date:              next_contract.begin_date,
       end_date:                      next_contract.begin_date,
       contract_number:               previous_contract.contract_number,
-      contract_number_addition:      "100#{previous_contract.contract_number_addition}",
+      contract_number_addition:      next_contract_number_addition(previous_contract.localpool),
       customer:                      owner,
       contractor:                    owner,
       # CLARIFY need to set?
@@ -98,6 +101,11 @@ class Beekeeper::Importer::AdjustContractEndDatesAndReadings
       # metering_point_operator_name,
     }
     Contract::LocalpoolPowerTaker.create!(attributes)
+  end
+
+  def next_contract_number_addition(localpool)
+    max = localpool.localpool_power_taker_contracts.maximum(:contract_number_addition)
+    max + 1
   end
 
   def handle_two_readings(readings, register)
