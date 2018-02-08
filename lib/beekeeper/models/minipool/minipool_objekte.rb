@@ -140,8 +140,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       attributes[:end_date] = end_date
       end_date = attributes[:begin_date]
       attributes
-    end.reverse.each_with_index do |attributes, index|
-      attributes[:name] = "Tariff #{index + 1}"
+    end.reverse.to_enum.with_index(1) do |attributes, index|
+      attributes[:name] = "Tariff #{index}"
     end
   end
 end

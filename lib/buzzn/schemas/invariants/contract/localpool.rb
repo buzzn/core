@@ -13,9 +13,8 @@ module Schemas
 
           def lineup?(tariffs)
             end_date = nil
-            tariffs.sort do |m,n|
-              -(m.begin_date <=> n.begin_date) #reverse order
-            end.all? do |tariff|
+            sorted = tariffs.sort_by(&:begin_date).reverse
+            sorted.all? do |tariff|
               result = end_date ? tariff.end_date == end_date : true
               end_date = tariff.begin_date
               result
@@ -23,15 +22,18 @@ module Schemas
           end
 
           def cover_beginning_of_contract?(begin_date, tariffs)
-            first_tariff = tariffs.to_a.min do |m, n|
-              m.begin_date <=> n.begin_date
-            end
+            first_tariff = tariffs.min_by(&:begin_date)
             first_tariff.nil? || first_tariff.begin_date <= begin_date
           end
 
           def cover_ending_of_contract?(end_date, tariffs)
-            last_tariff = tariffs.to_a.max do
-              |m, n| m.end_date <=> n.end_date || (m.end_date ? -1 : 1)
+            last_tariff = tariffs.max do |m,n|
+              result = m.end_date <=> n.end_date
+              if result
+                result
+              else # result is nil, i.e. one end_date is nil
+                m.end_date ? -1 : 1
+              end
             end
             last_date = last_tariff ? last_tariff.end_date : nil
             last_date.nil? || (end_date && last_date >= end_date)

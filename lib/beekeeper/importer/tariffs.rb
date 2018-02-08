@@ -11,7 +11,7 @@ class Beekeeper::Importer::Tariffs
       tariff = Contract::Tariff.new(attributes)
       tariff.group = localpool
       unless tariff.save
-        logger.error("Failed to save register #{tariff.inspect}")
+        logger.error("Failed to save tariff #{tariff.inspect}")
         logger.error("Errors: #{tariff.errors.inspect}")
       end
       tariff
