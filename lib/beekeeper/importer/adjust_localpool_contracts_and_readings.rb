@@ -96,11 +96,14 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   end
 
   CUSTOMER_LOOKUP = {
-    'wagnis'                            => '60008/52',
-    'gotthardstrasse'                   => '60010/1',
     'cherubinistr'                      => '60009/8',
+    'gertrud-grunow-strasse'            => '60030/37',
+    'gotthardstrasse'                   => '60010/1',
+    'hofackerstrasse'                   => '60006/3',
     'mehrgenerationenplatz-forstenried' => '60015/73',
-    'gertrud-grunow-strasse'            => '60030/37'
+    'wachsbleiche'                      => '60014/12',
+    'wagnis'                            => '60008/52',
+    'scheffelstrasse'                   => '60044/7'
   }
 
   def find_contract_customer(localpool)
