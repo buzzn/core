@@ -79,8 +79,7 @@ end
 all_contracts = Contract::LocalpoolPowerTaker
   .joins(:localpool)
   .where("groups.name !~ 'Localpool|Testgruppe'")
-  .order(:contract_number, :contract_number_addition).each do |contract|
-end
+  .order(:contract_number, :contract_number_addition)
 
 last_name = nil
 all_contracts.each do |c|
