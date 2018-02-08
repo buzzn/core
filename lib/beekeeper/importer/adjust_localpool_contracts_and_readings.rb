@@ -85,14 +85,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       contract_number:               previous_contract.contract_number,
       contract_number_addition:      next_contract_number_addition(previous_contract.localpool),
       customer:                      owner,
-      contractor:                    owner,
-      # CLARIFY need to set?
-      # customer_bank_account,
-      # contractor_bank_account,
-      # CLARIFY if this needs special treatment
-      # renewable_energy_law_taxation,
-      # CLARIFY if this attribute is still needed
-      # metering_point_operator_name,
+      contractor:                    owner
     }
     Contract::LocalpoolPowerTaker.create!(attributes)
   end
