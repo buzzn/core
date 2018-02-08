@@ -50,11 +50,9 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       next_contract = ordered_contracts[index + 1]
       gap = gap_in_days(contract, next_contract)
       [contract, next_contract, gap]
+      gap_in_days   = (next_contract.begin_date - contract.end_date).to_i
+      [contract, next_contract, gap_in_days]
     end
-  end
-
-  def gap_in_days(current_contract, next_contract)
-    (next_contract.begin_date - current_contract.end_date).to_i
   end
 
   def adjust_readings(register, old_end_date)
