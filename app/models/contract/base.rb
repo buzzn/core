@@ -98,4 +98,5 @@ module Contract
 
     # permissions helpers
     scope :permitted, ->(uuids) { where(id: uuids) }
+  end
 end
