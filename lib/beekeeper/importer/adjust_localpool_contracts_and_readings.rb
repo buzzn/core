@@ -17,10 +17,9 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       contract_pairs(register).each do |contract, next_contract, gap_in_days|
         case gap_in_days
         when 0
-          # data is 0 clean, nothing to do here
+          # contracts are already continuous --> nothing to do here
           comment = nil
         when 1
-          # move end date of contract one day ahead for the dates to match
           adjust_end_date_and_readings(contract, register)
           comment = "1 day gap fixed by moving old end date one day ahead"
         else
