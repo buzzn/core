@@ -261,8 +261,4 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       delete :managers
     end
   end
-
-  scores do
-    retrieve :all
-  end
 end

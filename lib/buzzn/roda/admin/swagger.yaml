@@ -1499,8 +1499,8 @@ paths:
       - name: baseprice_cents_per_month
         in: formData
         required: true
-        type: integer
-        format: int64
+        type: number
+        format: float
         minimum: 0
         exclusiveMinimum: true
       responses:

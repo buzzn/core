@@ -28,7 +28,4 @@ Display::GroupResource::Permission = Buzzn::Permission.new(Display::GroupResourc
     retrieve :all
   end
 
-  scores do
-    retrieve :all
-  end
 end
