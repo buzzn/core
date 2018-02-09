@@ -1,18 +1,6 @@
 namespace :deploy do
 
   module DeploymentSupport
-    def git_remotes
-      `git remote`.split("\n").map(&:to_sym)
-    end
-
-    def ensure_git_remote_configured!(env)
-      unless git_remotes.include?(env)
-        puts "The remote git repository '#{env}' isn't configured. Add it with the following shell command, then try again."
-        puts "> git remote add #{env} {git-repo-url}"
-        exit
-      end
-    end
-
     def create_and_push_tag(prefix)
       tag = "#{prefix}-#{Time.now.strftime('%Y-%m-%d-%H-%M')}"
       sh "git tag #{tag}"
@@ -24,7 +12,8 @@ namespace :deploy do
     end
 
     def deploy(env)
-      sh "git push #{env} #{current_local_branch}:master"
+      url = "https://git.heroku.com/buzzn-console-#{env}.git"
+      sh "git push #{url} #{current_local_branch}:master"
     end
   end
 
@@ -32,13 +21,11 @@ namespace :deploy do
 
   desc "Deploy to staging"
   task :staging do
-    ensure_git_remote_configured!(:staging)
     deploy(:staging)
   end
 
   desc "Deploy to production"
   task :production do
-    ensure_git_remote_configured!(:production)
     if deploy(:production)
       create_and_push_tag(:production)
     end
