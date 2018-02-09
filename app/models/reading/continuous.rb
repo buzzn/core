@@ -64,10 +64,10 @@ module Reading
     field :state
     field :meter_serialnumber
 
-    index({ register_id: 1 })
-    index({ timestamp: 1 })
-    index({ register_id: 1, timestamp: 1 })
-    index({ register_id: 1, source: 1 })
+    index(register_id: 1)
+    index(timestamp: 1)
+    index(register_id: 1, timestamp: 1)
+    index(register_id: 1, source: 1)
 
     validate :energy_milliwatt_hour_has_to_grow, if: :user_input?
     def user_input?; source == USER_INPUT; end

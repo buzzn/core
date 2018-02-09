@@ -58,7 +58,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
             address = person.address
             expect(address).not_to be_nil
 
-            expect { address.update({updated_at: address.object.updated_at}) }.not_to raise_error
+            expect { address.update(updated_at: address.object.updated_at) }.not_to raise_error
 
             person.object.address = nil
             person.object.save
@@ -72,7 +72,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
             expect(bank_accounts.collect{|b| b.object}).to eq [bank_account]
 
             bank_account = bank_accounts.first
-            expect { bank_account .update({updated_at: bank_account .object.updated_at}) }.not_to raise_error
+            expect { bank_account .update(updated_at: bank_account .object.updated_at) }.not_to raise_error
 
             bank_account.delete
             expect(person.object.reload.bank_accounts.size).to eq 0

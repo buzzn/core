@@ -60,7 +60,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
   it 'create' do
     expect do
-      a = Admin::LocalpoolResource.create(buzzn_operator, {name: 'first'})
+      a = Admin::LocalpoolResource.create(buzzn_operator, name: 'first')
       a.object.delete
     end.not_to raise_error
 

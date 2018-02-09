@@ -130,11 +130,11 @@ module Register
 
     # TODO move me into clockwork
     def self.observe
-      Sidekiq::Client.push({
-         'class' => RegisterObserveWorker,
-         'queue' => :default,
-         'args' => []
-        })
+      Sidekiq::Client.push(
+        'class' => RegisterObserveWorker,
+        'queue' => :default,
+        'args' => []
+      )
     end
 
     def self.create_all_observer_activities

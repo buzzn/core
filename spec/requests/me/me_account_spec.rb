@@ -50,7 +50,7 @@ describe Me::Roda, :skip_nested do
     it '200' do
       expect(authorize(user)).not_to be_nil
 
-      GET '/api/me', user, {}, { 'Origin' => 'http://localhost:2999' }
+      GET '/api/me', user, {}, {'Origin' => 'http://localhost:2999'}
       expect(response.headers['Access-Control-Expose-Headers']).to eq 'Authorization'
       expect(response).to have_http_status(200)
       expect(json['id']).to eq user.person.id

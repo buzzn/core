@@ -21,11 +21,11 @@ class Document < ActiveRecord::Base
     encrypted = Crypto::Encryptor.new.process(data)
     self.encryption_details = encrypted.details
     if valid?
-      storage.files.create({
+      storage.files.create(
         :body         => encrypted.data,
         :key          => self.path,
         :public       => false
-      })
+      )
     end
     self.save!
   end

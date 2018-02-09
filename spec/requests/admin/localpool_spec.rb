@@ -657,7 +657,7 @@ describe Admin::LocalpoolRoda do
           'deletable'=>false
         }
         if contract.is_a?(Contract::LocalpoolPowerTaker)
-          json.merge!({
+          json.merge!(
             'forecast_kwh_pa'=>contract.forecast_kwh_pa,
             'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
             'third_party_billing_number'=>contract.third_party_billing_number,
@@ -666,7 +666,7 @@ describe Admin::LocalpoolRoda do
             'old_customer_number'=>contract.old_customer_number,
             'old_account_number'=>contract.old_account_number,
             'mandate_reference' => nil
-          })
+          )
         else
           json['type'] = 'contract_localpool_third_party'
         end

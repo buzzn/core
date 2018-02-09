@@ -56,4 +56,6 @@ Style/CollectionMethods:
     detect: 'find'
     find_all: 'select'
 Style/BlockDelimiters:
-  EnforcedStyle: line_count_based
+  EnforcedStyle: line_count_basedStyle/BracesAroundHashParameters:
+  EnforcedStyle: context_dependent
+
