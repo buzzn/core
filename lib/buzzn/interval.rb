@@ -76,6 +76,7 @@ module Buzzn
       timespan == 2
     end
 
+    # rubocop:disable Style/MultilineTernaryOperator
     def _duration
       _second? ? :second : (
         _hour? ? :hour : (
@@ -87,6 +88,7 @@ module Buzzn
         )
       )
     end
+    # rubocop:enable Style/MultilineTernaryOperator
 
     class << self
       private :new

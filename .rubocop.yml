@@ -73,3 +73,6 @@ Enabled: false
 
 Style/CaseEquality:
   Enabled: true
+
+Style/MultilineTernaryOperator:
+  Enabled: true
