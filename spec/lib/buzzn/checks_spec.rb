@@ -14,11 +14,11 @@ describe Buzzn::Localpool::Checks do
     end
     expect(date_of_first_reading).to eq reading.timestamp
 
-    expect{
+    expect do
       date_of_first_reading = Buzzn::Localpool::Checks.find_object_or_error('no reading found for register') do
         Reading::Continuous.by_register_id('blabla').sort('timestamp': 1).first.timestamp
       end
-    }.to raise_error Buzzn::Localpool::CheckError
+    end.to raise_error Buzzn::Localpool::CheckError
   end
 
   it 'checks last contract' do
@@ -100,11 +100,11 @@ describe Buzzn::Localpool::Checks do
     all_contracts_on_register = [lptc, lptc_3, lptc_2, lptc_4]
     result = Buzzn::Localpool::MissingLsnCheckResultSet.new()
 
-    expect{
+    expect do
       all_contracts_on_register.size.times do |i|
         Buzzn::Localpool::Checks.check_middle_contract(i, all_contracts_on_register[i].end_date, all_contracts_on_register, result, register)
       end
-    }.to raise_error Buzzn::Localpool::CheckError
+    end.to raise_error Buzzn::Localpool::CheckError
   end
 
   it 'checks first contract' do

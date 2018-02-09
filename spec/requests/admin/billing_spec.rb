@@ -21,10 +21,10 @@ describe Admin::LocalpoolRoda do
                                                           register: group.registers.consumption.first))
     end
 
-    entity!(:other_billing) { Fabricate(:billing,
-                                        billing_cycle: billing_cycle,
-                                        localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
-                                                                                  register: group.registers.consumption[1])) }
+    entity!(:other_billing) do Fabricate(:billing,
+                                         billing_cycle: billing_cycle,
+                                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
+                                                                                   register: group.registers.consumption[1])) end
 
     context 'GET' do
       let(:billings_json) do

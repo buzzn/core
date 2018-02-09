@@ -3,7 +3,7 @@ describe Admin::LocalpoolResource do
   entity(:admin) { Fabricate(:admin) }
   entity!(:localpool) { Fabricate(:localpool, bank_account: create(:bank_account)) }
 
-  let(:base_attributes) { %w(id type updated_at
+  let(:base_attributes) do %w(id type updated_at
                            name
                            description
                            slug
@@ -16,7 +16,7 @@ describe Admin::LocalpoolResource do
                            deletable
                            incompleteness
                            bank_account
-                           power_sources) }
+                           power_sources) end
 
   entity!(:pools) { Admin::LocalpoolResource.all(admin) }
 

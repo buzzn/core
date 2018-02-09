@@ -714,11 +714,11 @@ Fabricator :register_forstenried_erzeugung, from: :output_register do
   name  'Gesamterzeugung'
   meter           nil
   virtual         true
-  formula_parts   {[
+  formula_parts   do [
                     Fabricate(:fp_plus, operand_id: Fabricate(:register_60138947).id),
                     Fabricate(:fp_plus, operand_id: Fabricate(:register_60138943).id),
                     Fabricate(:fp_minus, operand_id: Fabricate(:register_1338000816).id)
-                  ]}
+                  ] end
 end
 
 #virtueller Zählpunkt

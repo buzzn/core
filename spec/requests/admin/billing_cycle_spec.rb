@@ -10,14 +10,14 @@ describe Admin::LocalpoolRoda do
     entity(:group) { Fabricate(:localpool) }
     entity(:billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
     entity!(:other_billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
-    entity!(:billing) { Fabricate(:billing,
-                                  billing_cycle: billing_cycle,
-                                  localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
-                                                                            register: Fabricate.create(:input_meter, group: group).input_register)) }
-    entity!(:other_billing) { Fabricate(:billing,
-                                        billing_cycle: billing_cycle,
-                                        localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
-                                                                                  register:Fabricate.create(:input_meter, group: group).input_register)) }
+    entity!(:billing) do Fabricate(:billing,
+                                   billing_cycle: billing_cycle,
+                                   localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
+                                                                             register: Fabricate.create(:input_meter, group: group).input_register)) end
+    entity!(:other_billing) do Fabricate(:billing,
+                                         billing_cycle: billing_cycle,
+                                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
+                                                                                   register:Fabricate.create(:input_meter, group: group).input_register)) end
 
     let(:wrong_json) do
       {

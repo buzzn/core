@@ -11,9 +11,9 @@ module Buzzn
           define_method :new do |*args, &block|
             result = super(*args, &block)
             names = dependency_map.to_h
-            deps = names.each_with_object({}) { |(name, identifier), obj|
+            deps = names.each_with_object({}) do |(name, identifier), obj|
               obj[name] = container[identifier]
-            }
+            end
             deps.each do |name, dep|
               # not sure why inline string concatation does not work here
               var_name = '@' + name.to_s

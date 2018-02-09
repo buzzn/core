@@ -27,9 +27,9 @@ describe Admin::BankAccountRoda do
     localpool
   end
 
-  entity!(:contract) { Fabricate(:metering_point_operator_contract,
-                                 localpool: localpool,
-                                 contractor: Fabricate(:other_organization)) }
+  entity!(:contract) do Fabricate(:metering_point_operator_contract,
+                                  localpool: localpool,
+                                  contractor: Fabricate(:other_organization)) end
 
   entity!(:person_account) do
     Fabricate(:bank_account, owner: contract.customer)

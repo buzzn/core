@@ -8,8 +8,8 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
     me
   end
 
-  entity!(:bank_account) { Fabricate(:bank_account,
-                                     owner: me.person) }
+  entity!(:bank_account) do Fabricate(:bank_account,
+                                      owner: me.person) end
 
   let(:anonymous) { nil }
 

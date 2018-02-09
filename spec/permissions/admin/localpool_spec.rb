@@ -50,10 +50,10 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   let(:contract) { localpool2.localpool_power_taker_contracts.first }
   let(:register) { localpool2.registers.real.input.first }
 
-  entity!(:mpoc) { Fabricate(:metering_point_operator_contract,
-                             localpool: localpool2) }
-  entity!(:lpc) { Fabricate(:localpool_processing_contract,
-                            localpool: localpool2) }
+  entity!(:mpoc) do Fabricate(:metering_point_operator_contract,
+                              localpool: localpool2) end
+  entity!(:lpc) do Fabricate(:localpool_processing_contract,
+                             localpool: localpool2) end
 
   entity(:tariff) { Fabricate(:tariff, group: localpool2)}
   entity!(:billing_cycle) { Fabricate(:billing_cycle, localpool: localpool2) }

@@ -38,8 +38,8 @@ describe 'Schemas::Invariants::Group::Localpool' do
 
   context 'distribution_system_operator' do
 
-    before(:each) { localpool.update(transmission_system_operator: nil,
-                                     electricity_supplier: nil) }
+    before(:each) do localpool.update(transmission_system_operator: nil,
+                                      electricity_supplier: nil) end
 
     it 'invalid' do
       localpool.update(distribution_system_operator: Organization.transmission_system_operator.first)
@@ -55,8 +55,8 @@ describe 'Schemas::Invariants::Group::Localpool' do
   end
 
   context 'transmission_system_operator' do
-    before(:each) { localpool.update(distribution_system_operator: nil,
-                                     electricity_supplier: nil) }
+    before(:each) do localpool.update(distribution_system_operator: nil,
+                                      electricity_supplier: nil) end
 
     it 'invalid' do
       localpool.update(transmission_system_operator: Organization.distribution_system_operator.first)
@@ -72,8 +72,8 @@ describe 'Schemas::Invariants::Group::Localpool' do
   end
 
   context 'electricity_supplier' do
-    before(:each) { localpool.update(transmission_system_operator: nil,
-                                     distribution_system_operator: nil) }
+    before(:each) do localpool.update(transmission_system_operator: nil,
+                                      distribution_system_operator: nil) end
 
     it 'invalid' do
       localpool.update(electricity_supplier: Organization.transmission_system_operator.first)

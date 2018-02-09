@@ -6,11 +6,11 @@ describe Admin::LocalpoolRoda do
   end
 
   entity!(:address) { create(:address) }
-  entity!(:person) { create(:person, :with_bank_account,
-                           address: address) }
-  entity!(:organization) { create(:organization, :with_bank_account,
+  entity!(:person) do create(:person, :with_bank_account,
+                           address: address) end
+  entity!(:organization) do create(:organization, :with_bank_account,
                                   address: address,
-                                  contact: person) }
+                                  contact: person) end
   entity!(:localpool) { create(:localpool) }
 
   let(:localpool_json) do

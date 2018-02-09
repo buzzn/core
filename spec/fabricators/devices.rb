@@ -18,10 +18,10 @@ Fabricator :out_device, from: :device do
 end
 
 Fabricator :out_device_with_register, from: :out_device do
-  after_create { |device|
+  after_create do |device|
     device.register = Fabricate(:output_meter).output_register
     device.save!
-  }
+  end
 end
 
 Fabricator :auto_justus, from: :in_device do

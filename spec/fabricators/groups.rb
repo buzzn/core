@@ -26,7 +26,7 @@ Fabricator :tribe_readable_by_members, from: :tribe do
 end
 
 Fabricator :tribe_with_two_comments_readable_by_world, from: :tribe do
-  after_create { |group|
+  after_create do |group|
     comment_params  = {
        commentable_id:     group.id,
        commentable_type:   'Group::Base',
@@ -35,7 +35,7 @@ Fabricator :tribe_with_two_comments_readable_by_world, from: :tribe do
     comment         = Fabricate(:comment, comment_params)
     comment_params[:parent_id] = comment.id
     _comment2 = Fabricate(:comment, comment_params)
-  }
+  end
 end
 
 

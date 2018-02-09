@@ -2,12 +2,12 @@ Fabricator :user, class_name: Account::Base do
   i = 0
   email             { "user.#{i+=1}@buzzn.net" }
   person            { Fabricate(:person) }
-  after_create { |account|
+  after_create do |account|
     Account::PasswordHash.create(account: account,
                                  password_hash: BCrypt::Password.create('Example123'))
     account.person.add_role(Role::SELF, account.person)
     account.person.update(email: account.email)
-  }
+  end
 end
 
 Fabricator :admin, from: :user do

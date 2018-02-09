@@ -13,14 +13,14 @@ describe Contract::BaseResource do
     create(:contract, :localpool_powertaker, localpool: localpool)
   end
 
-  let(:base_attributes) { ['id', 'type', 'updated_at',
-                           'status',
-                           'full_contract_number',
-                           'signing_date',
-                           'termination_date',
-                           'last_date',
-                           'updatable',
-                           'deletable'] }
+  let(:base_attributes) do ['id', 'type', 'updated_at',
+                            'status',
+                            'full_contract_number',
+                            'signing_date',
+                            'termination_date',
+                            'last_date',
+                            'updatable',
+                            'deletable'] end
   let!(:all) { [metering_point_operator, localpool_processing, localpool_power_taker] }
 
   let(:resources) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).contracts }

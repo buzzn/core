@@ -18,11 +18,11 @@ describe Services::Datasource::Discovergy::Throughput do
   end
 
   it 'fails when exceeding limit' do
-    expect {
+    expect do
       (max + 1).times do
         subject.increment!
       end
-    }.to raise_error Buzzn::DataSourceError
+    end.to raise_error Buzzn::DataSourceError
     expect(subject.current).to eq max
   end
 end

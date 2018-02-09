@@ -5,10 +5,10 @@ describe Admin::LocalpoolRoda do
     TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
-  entity!(:localpool) { create(:localpool,
-                               distribution_system_operator: Organization.distribution_system_operator.first,
-                               transmission_system_operator: Organization.transmission_system_operator.first,
-                               electricity_supplier: Organization.electricity_supplier.first) }
+  entity!(:localpool) do create(:localpool,
+                                distribution_system_operator: Organization.distribution_system_operator.first,
+                                transmission_system_operator: Organization.transmission_system_operator.first,
+                                electricity_supplier: Organization.electricity_supplier.first) end
 
   let(:localpool_json) do
     json = {

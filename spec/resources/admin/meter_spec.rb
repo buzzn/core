@@ -7,12 +7,12 @@ describe Meter::BaseResource do
 
   let(:resources)    { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).meters }
 
-  let(:base_keys) { ['id', 'type', 'updated_at',
-                     'product_name',
-                     'product_serialnumber',
-                     'sequence_number',
-                     'updatable',
-                     'deletable'] }
+  let(:base_keys) do ['id', 'type', 'updated_at',
+                      'product_name',
+                      'product_serialnumber',
+                      'sequence_number',
+                      'updatable',
+                      'deletable'] end
 
   it 'retrieve' do
     [real, virtual].each do |meter|
