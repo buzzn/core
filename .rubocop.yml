@@ -82,5 +82,9 @@ Layout/EmptyLinesAroundClassBody:
 
 Layout/EmptyLinesAroundModuleBody:
   EnforcedStyle: empty_lines_except_namespace
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: indent
+
 Style/RedundantSelf:
   Enabled: false
