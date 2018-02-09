@@ -75,3 +75,6 @@ Style/BlockDelimiters:
   EnforcedStyle: line_count_basedStyle/BracesAroundHashParameters:
   EnforcedStyle: context_dependent
 
+Style/AsciiComments:
+Enabled: false
+
