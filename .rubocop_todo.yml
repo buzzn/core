@@ -58,27 +58,6 @@ Layout/AlignParameters:
 Layout/BlockEndNewline:
   Enabled: false
 
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IndentOneStep, IndentationWidth.
-# SupportedStyles: case, end
-Layout/CaseIndentation:
-  Exclude:
-    - 'lib/beekeeper/models/minipool/concerns/minipool_objekte/organizations.rb'
-
-# Offense count: 17
-# Cop supports --auto-correct.
-Layout/ClosingParenthesisIndentation:
-  Exclude:
-    - 'db/example_data/contracts.rb'
-    - 'db/example_data/localpools.rb'
-    - 'db/example_data/meters.rb'
-    - 'db/example_data/persons.rb'
-    - 'db/example_data/registers.rb'
-    - 'db/setup_data/common.rb'
-    - 'lib/buzzn/roda/register_roda.rb'
-    - 'spec/requests/admin/localpool_spec.rb'
-
 # Offense count: 12
 # Cop supports --auto-correct.
 Layout/CommentIndentation:

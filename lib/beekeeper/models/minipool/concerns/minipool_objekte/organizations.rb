@@ -42,11 +42,11 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
     def transmission_system_operator
       slug = case uenb
-        when /a(m)?prion/i then 'amprion'
-        when /tennet/i     then 'tennet'
-        when /50 hertz/i   then '50hertz'
-        when /Transnet( )?BW/ then 'transnetbw'
-        else
+             when /a(m)?prion/i then 'amprion'
+             when /tennet/i     then 'tennet'
+             when /50 hertz/i   then '50hertz'
+             when /Transnet( )?BW/ then 'transnetbw'
+             else
           # nothing to do, org_for_slug will print a warning if org not found.
       end
       org_for_slug(slug, uenb, :transmission_system_operator)

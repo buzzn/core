@@ -98,7 +98,9 @@ Layout/EmptyLineBetweenDefs:
 Style/MethodDefParentheses:
   Enabled: true
 
-# Offense count: 49
-# Cop supports --auto-correct.
 Layout/SpaceAfterComma:
   Enabled: true
+
+Layout/CaseIndentation:
+  Enabled: true
+
