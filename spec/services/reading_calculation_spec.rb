@@ -648,7 +648,7 @@ describe Services::ReadingCalculation do
       consumption_corrected, feeding_corrected = subject.calculate_corrected_grid_values(total_accounted_energy, grid_meter.input_register, grid_meter.output_register)
       expect(Reading::Single.all.size).to eq size + 2
       expect(consumption_corrected.value).to eq Buzzn::Utils::Energy::ZERO
-      expect(consumption_corrected.last_reading.corrected_value).to eq  Buzzn::Utils::Energy::ZERO
+      expect(consumption_corrected.last_reading.corrected_value).to eq Buzzn::Utils::Energy::ZERO
       expect(feeding_corrected.value).to eq twelfe
       expect(feeding_corrected.last_reading.corrected_value).to eq twelfe
     end

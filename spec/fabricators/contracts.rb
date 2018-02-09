@@ -13,14 +13,14 @@ Fabricator :tariff, class_name: Contract::Tariff do
 end
 
 Fabricator :tariff_forstenried, from: :tariff do
-  begin_date                { Date.new(2014, 12, 15) }
-  energyprice_cents_per_kwh  { 25.5 }
+  begin_date { Date.new(2014, 12, 15) }
+  energyprice_cents_per_kwh { 25.5 }
   baseprice_cents_per_month { 250 }
 end
 
 Fabricator :tariff_sulz, from: :tariff do
   begin_date                { Date.new(2016, 8, 4) }
-  energyprice_cents_per_kwh  { 23.8 }
+  energyprice_cents_per_kwh { 23.8 }
   baseprice_cents_per_month { 500 }
 end
 
@@ -101,7 +101,7 @@ Fabricator :power_taker_contract, class_name: Contract::PowerTaker do
 end
 
 Fabricator :power_taker_contract_move_in, from: :power_taker_contract do
-  begin_date               { FFaker::Time.date }
+  begin_date { FFaker::Time.date }
 end
 
 Fabricator :power_taker_contract_old_contract, from: :power_taker_contract do
@@ -142,7 +142,7 @@ Fabricator :power_giver_contract, class_name: Contract::PowerGiver do
 end
 
 Fabricator :power_giver_contract_for_organization, from: :power_giver_contract do
-  customer     { Fabricate(:other_organization) }
+  customer { Fabricate(:other_organization) }
 end
 
 # == Localpool Power Taker Contract ==
@@ -159,7 +159,7 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   register                 { Fabricate(:input_register,
                                        meter: Fabricate.build(:output_meter,group: Fabricate(:localpool))) }
   renewable_energy_law_taxation { Contract::Base.renewable_energy_law_taxations[:full] }
-  payments                 { [Fabricate.build(:payment)] }
+  payments { [Fabricate.build(:payment)] }
   after_create do |c|
     Fabricate(:tariff, group: c.localpool) if c.localpool
     c.customer.add_role(Role::CONTRACT, c) if c.customer.is_a? Person
@@ -170,7 +170,7 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
 end
 
 Fabricator :localpool_power_taker_contract_for_organization, from: :localpool_power_taker_contract do
-  customer     { Fabricate(:other_organization) }
+  customer { Fabricate(:other_organization) }
 end
 
 
@@ -196,7 +196,7 @@ Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProces
 end
 
 Fabricator :localpool_processing_contract_for_organization, from: :localpool_processing_contract do
-  customer     { Fabricate(:other_organization) }
+  customer { Fabricate(:other_organization) }
 end
 
 
@@ -527,7 +527,7 @@ Fabricator :lptc_pafi, from: :localpool_power_taker_contract do
   begin_date                      begindate
   end_date                        enddate
   signing_date                    signingdate
-  termination_date               cancellationdate
+  termination_date cancellationdate
   forecast_kwh_pa                 1800
   renewable_energy_law_taxation   Contract::Base.renewable_energy_law_taxations[:full]
   tariffs                         { [Fabricate.build(:tariff_forstenried)] }

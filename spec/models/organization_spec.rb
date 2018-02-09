@@ -1,7 +1,7 @@
 describe 'Organization Model' do
 
   describe 'predefined organizations' do
-    let(:buzzn)  { Organization.find_by(slug: 'buzzn') }
+    let(:buzzn) { Organization.find_by(slug: 'buzzn') }
 
     it 'is available' do
       expect(Organization.buzzn).not_to be_nil

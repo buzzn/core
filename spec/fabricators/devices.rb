@@ -6,7 +6,7 @@ Fabricator :device do
   watt_peak                     49000
   commissioning                 { FFaker::Time.date }
   shop_link                     'http://www.amazon.com'
-  created_at  { (rand*10).days.ago }
+  created_at { (rand*10).days.ago }
 end
 
 Fabricator :in_device, from: :device do

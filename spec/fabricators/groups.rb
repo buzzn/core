@@ -34,13 +34,13 @@ Fabricator :tribe_with_two_comments_readable_by_world, from: :tribe do
      }
     comment         = Fabricate(:comment, comment_params)
     comment_params[:parent_id] = comment.id
-    _comment2        = Fabricate(:comment, comment_params)
+    _comment2 = Fabricate(:comment, comment_params)
   }
 end
 
 
 Fabricator :tribe_hof_butenland, from: :tribe do
-  name  'Hof Butenland'
+  name 'Hof Butenland'
 end
 
 
@@ -52,7 +52,7 @@ Fabricator :localpool_hopf, from: :localpool do
 end
 
 Fabricator :localpool_home_of_the_brave, from: :localpool do
-  name        'Home of the Brave'
+  name 'Home of the Brave'
   after_create do |localpool|
     Fabricate(:mpoc_buzzn_metering, localpool: localpool)
   end

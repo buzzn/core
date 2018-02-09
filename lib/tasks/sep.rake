@@ -19,7 +19,7 @@ namespace :sep do
     bhkw_watt_hour = 0.0
     bhkw_watts = 0.0
 
-    infile.each_line  do |cur_line|
+    infile.each_line do |cur_line|
       date = cur_line.split(',')[0]
       time = cur_line.split(',')[1]
 

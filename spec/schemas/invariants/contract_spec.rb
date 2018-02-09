@@ -7,9 +7,9 @@ describe 'Schemas::Invariants::Contract::Localpool' do
   entity(:organization) { create(:organization) }
   entity(:tariff)       { create(:tariff, group: create(:localpool)) }
   entity(:localpool)    { tariff.group }
-  entity(:other_localpool)    { create(:localpool) }
+  entity(:other_localpool) { create(:localpool) }
 
-  entity(:third_party)             { create(:contract, :localpool_third_party,   localpool: localpool) }
+  entity(:third_party) { create(:contract, :localpool_third_party, localpool: localpool) }
   entity(:register) { third_party.register }
   entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, register: register, tariffs: [tariff]) }
   entity(:processing)              { create(:contract, :localpool_processing,    localpool: localpool) }

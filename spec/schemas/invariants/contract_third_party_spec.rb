@@ -6,7 +6,7 @@ describe 'Schemas::Invariants::Contract::LocalpoolThirdParty' do
   entity(:organization) { create(:organization) }
   entity(:localpool)    { create(:localpool) }
 
-  entity(:third_party)             { create(:contract, :localpool_third_party,   localpool: localpool) }
+  entity(:third_party) { create(:contract, :localpool_third_party, localpool: localpool) }
   entity(:register) { third_party.register }
 
   shared_examples 'invariants of contracting party' do |label|

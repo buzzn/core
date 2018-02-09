@@ -2,7 +2,7 @@ describe Meter::Real do
 
   entity!(:easymeter) { Fabricate(:easy_meter_q3d) }
   entity!(:meter) { Fabricate(:meter, product_serialnumber: '123432345', product_name: 'SomethingComplicated' ) }
-  entity(:second) {  Fabricate(:input_meter) }
+  entity(:second) { Fabricate(:input_meter) }
   entity(:register) { meter.registers.first }
   entity!(:input_meter) { Fabricate(:input_meter) }
   entity!(:group) { Fabricate(:localpool) }

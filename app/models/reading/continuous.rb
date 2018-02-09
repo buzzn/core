@@ -54,7 +54,7 @@ module Reading
 
     field :contract_id
     field :register_id
-    field :timestamp,               type: DateTime
+    field :timestamp, type: DateTime
     field :energy_milliwatt_hour, type: Integer
     field :power_milliwatt,       type: Integer
     field :reason

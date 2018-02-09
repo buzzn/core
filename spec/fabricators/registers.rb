@@ -4,7 +4,7 @@
   klass = "Register::#{klass_type.camelize}".constantize
 
   Fabricator "#{klass_type}_register", class_name: klass do
-    name        { "#{klass_type}_#{FFaker::Name.name[0..20]}" }
+    name { "#{klass_type}_#{FFaker::Name.name[0..20]}" }
     metering_point_id { 'DE' + Random.new_seed.to_s.slice(0, 29) }
     direction   { klass_type == 'virtual' ? ['in', 'out'].sample : klass_type.sub('put','') }
     created_at  { (rand*10).days.ago }
@@ -15,7 +15,7 @@
     end
     share_with_group true
     share_publicly false
-    type        { "Register::#{klass_type.camelize}" }
+    type { "Register::#{klass_type.camelize}" }
   end
 end
 
@@ -30,9 +30,9 @@ end
 
 
 Fabricator :register_z1b, from: :output_register do
-  name        'Netzanschluss Einspeisung'
+  name 'Netzanschluss Einspeisung'
   #address   { Fabricate(:address_luetzowplatz) }
-  label     Register::Base.labels[:grid_feeding]
+  label Register::Base.labels[:grid_feeding]
 end
 
 
@@ -50,15 +50,15 @@ end
 Fabricator :register_z4, from: :output_register do
   name  'BHKW'
   #address   { Fabricate(:address_luetzowplatz) }
-  label     Register::Base.labels[:production_chp]
+  label Register::Base.labels[:production_chp]
 end
 
 
 
 Fabricator :register_z5, from: :output_register do
-  name  'Abgrenzung'
+  name 'Abgrenzung'
   #address   { Fabricate(:address_luetzowplatz) }
-  label     Register::Base.labels[:demarcation_pv]
+  label Register::Base.labels[:demarcation_pv]
 end
 
 
@@ -85,8 +85,8 @@ end
 # stefans bhkw anlage
 Fabricator :register_stefans_bhkw, from: :output_register do
   #address { Fabricate(:address, street: 'Forstenrieder Weg 51', zip: 82065, city: 'Baierbrunn', state: 'DE_BY') }
-  name  'BHKW'
-  label     Register::Base.labels[:production_chp]
+  name 'BHKW'
+  label Register::Base.labels[:production_chp]
 end
 
 
@@ -663,21 +663,21 @@ end
 #bhkw1
 Fabricator :register_60138947, from: :output_register do
   #address        { Fabricate(:address_limmat_3) }
-  name          'BHKW 1'
+  name 'BHKW 1'
   label Register::Base.labels[:production_chp]
 end
 
 #bhkw2
 Fabricator :register_60138943, from: :output_register do
   #address        { Fabricate(:address_limmat_3) }
-  name          'BHKW 2'
+  name 'BHKW 2'
   label Register::Base.labels[:production_chp]
 end
 
 #pv
 Fabricator :register_1338000816, from: :output_register do
   #address        { Fabricate(:address_limmat_3) }
-  name          'PV'
+  name 'PV'
   label Register::Base.labels[:production_pv]
 end
 
@@ -723,8 +723,8 @@ end
 
 #virtueller Zählpunkt
 Fabricator :register_forstenried_bezug, from: :input_register do
-  name  'Gesamtverbrauch'
-  virtual         true
+  name 'Gesamtverbrauch'
+  virtual true
 end
 
 
@@ -735,7 +735,7 @@ Fabricator :register_60300856, from: :input_register do
   #address        { Fabricate(:address_sulz) }
   name  'Netzanschluss Bezug'
   label Register::Base.labels[:grid_consumption]
-  metering_point_id  'DE0005128238000552109002001011500'
+  metering_point_id 'DE0005128238000552109002001011500'
 end
 
 #übergabe out
@@ -743,7 +743,7 @@ Fabricator :register_60300856_out, from: :output_register do
   #address        { Fabricate(:address_sulz) }
   name  'Netzanschluss Einspeisung'
   label Register::Base.labels[:grid_feeding]
-  metering_point_id  'DE0005128238000552109002001011500'
+  metering_point_id 'DE0005128238000552109002001011500'
 end
 
 #Abgrenzung bhkw
@@ -751,7 +751,7 @@ Fabricator :register_60009498, from: :output_register do
   #address        { Fabricate(:address_sulz) }
   name  'Abgrenzung BHKW'
   label Register::Base.labels[:demarcation_chp]
-  metering_point_id  'DE0005128238000552109002001011400'
+  metering_point_id 'DE0005128238000552109002001011400'
 end
 
 #Produktion bhkw
@@ -759,7 +759,7 @@ Fabricator :register_60404855, from: :output_register do
   #address        { Fabricate(:address_sulz) }
   name  'Produktion BHKW'
   label Register::Base.labels[:production_chp]
-  metering_point_id  'DE0005128238000552109002001011200'
+  metering_point_id 'DE0005128238000552109002001011200'
 end
 
 #Produktion pv
@@ -767,7 +767,7 @@ Fabricator :register_60404845, from: :output_register do
   #address        { Fabricate(:address_sulz) }
   name  'Produktion PV'
   label Register::Base.labels[:production_pv]
-  metering_point_id  'DE0005128238000552109002001011100'
+  metering_point_id 'DE0005128238000552109002001011100'
 end
 
 Fabricator :register_60404846, from: :input_register do

@@ -63,7 +63,7 @@ module Me
         if (rodauth.session[rodauth.session_last_activity_session_key] + rodauth.session_inactivity_timeout) < Buzzn::Utils::Chronos.now.to_i
 
           logger.info Time.at(rodauth.session[rodauth.session_last_activity_session_key])
-          logger.info Time.at(rodauth.session[rodauth.session_last_activity_session_key]  + rodauth.session_inactivity_timeout)
+          logger.info Time.at(rodauth.session[rodauth.session_last_activity_session_key] + rodauth.session_inactivity_timeout)
           logger.info Time.at(Buzzn::Utils::Chronos.now.to_i)
 
           r.response.status = 401

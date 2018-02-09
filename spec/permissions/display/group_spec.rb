@@ -12,7 +12,7 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
     group
   end
 
-  entity!(:localpool)  do
+  entity!(:localpool) do
     group = create(:localpool, show_display_app: true)
     create(:meter, :virtual, group: group)
     mentor.person.add_role(Role::GROUP_ENERGY_MENTOR, group)

@@ -99,7 +99,7 @@ get_csv(:organizations, converters: { state: Converters::State }).each do |row|
 end
 
 # Assigning buzzn and germany here is essential for the application to work!
-Organization.buzzn   = Organization.find_by(slug: 'buzzn')
+Organization.buzzn = Organization.find_by(slug: 'buzzn')
 Organization.buzzn.energy_classifications = [ energy_classifications[:buzzn] ]
 Organization.germany = Organization.find_by(slug: 'germany')
 Organization.germany.energy_classifications = [ energy_classifications[:germany] ]

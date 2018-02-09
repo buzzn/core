@@ -44,7 +44,7 @@ module Types
     end
 
     def yearly_euro_netto_smart
-      price.baseprice_euro_year_et  + config.yearly_euro_intern;
+      price.baseprice_euro_year_et + config.yearly_euro_intern;
     end
 
     def yearly_euro_netto

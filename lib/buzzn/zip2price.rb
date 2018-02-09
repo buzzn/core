@@ -82,9 +82,9 @@ module Buzzn
         # using cent prices from here and round as the legacy code did:
         # base- and energy prices are round up to the next 10 cents
         # totalprice rounds the regular way
-        baseprice_cents_per_month   = (baseprice_netto * MWST / 1.2).ceil * 10.0
+        baseprice_cents_per_month = (baseprice_netto * MWST / 1.2).ceil * 10.0
         energyprice_cents_per_kilowatt_hour = (energyprice_netto * MWST * 10.0).ceil * 10.0
-        total_cents_per_month       = (baseprice_cents_per_month + @kwh * energyprice_cents_per_kilowatt_hour / 1200.0).round
+        total_cents_per_month = (baseprice_cents_per_month + @kwh * energyprice_cents_per_kilowatt_hour / 1200.0).round
         Price.new(baseprice_cents_per_month, energyprice_cents_per_kilowatt_hour, total_cents_per_month)
       else
         Price.new(0, 0, 0)

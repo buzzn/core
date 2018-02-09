@@ -22,7 +22,7 @@ guard :rspec, cmd: 'rspec -f doc' do
 
   # Rails config changes
   rails = dsl.rails
-  watch(rails.spec_helper)     { rspec.spec_dir }
+  watch(rails.spec_helper) { rspec.spec_dir }
 
   watch(%r{db/factories/.+\.rb}) { 'spec/factories/factories_spec.rb' }
 end

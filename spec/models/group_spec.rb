@@ -119,7 +119,7 @@ end
 # run it without nested transactions
 describe Group::Localpool, :skip_nested do
 
-  let(:person) {  Fabricate(:person) }
+  let(:person) { Fabricate(:person) }
   let(:organization) { Fabricate(:other_organization) }
   let(:localpool) { Fabricate(:localpool, owner_person: person) }
 

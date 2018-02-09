@@ -3,7 +3,7 @@ class Beekeeper::Importer::LogImportSummary
   attr_reader :logger
 
   def initialize(logger)
-    @logger    = logger
+    @logger = logger
   end
 
   def run

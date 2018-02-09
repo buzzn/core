@@ -174,9 +174,9 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     it 'update' do
       expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).tariffs.first, {}) }.to raise_error Buzzn::PermissionDenied
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.first, {})  }.to raise_error Buzzn::PermissionDenied
+      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.first, {}) }.to raise_error Buzzn::PermissionDenied
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.first, {})  }.to raise_error Buzzn::PermissionDenied
+      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.first, {}) }.to raise_error Buzzn::PermissionDenied
     end
 
     it 'delete' do
