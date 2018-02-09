@@ -55,6 +55,10 @@ Style/CollectionMethods:
     inject: 'reduce'
     detect: 'find'
     find_all: 'select'
+
+Layout/TrailingWhitespace:
+  Enabled: true
+
 Style/BlockDelimiters:
   EnforcedStyle: line_count_basedStyle/BracesAroundHashParameters:
   EnforcedStyle: context_dependent
