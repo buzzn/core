@@ -119,6 +119,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   GROUPS_WITH_DISPLAY_APP_ENABLED = [
     'Bahnhofstr. 21',
     'Fritz-Winter-Straße 3+7 - WA10',
+    'Green warriors (Testgruppe)',
     'Heigelstraße 27',
     'L.O.F.T.',
     'Mehrgenerationenplatz Forstenried',
