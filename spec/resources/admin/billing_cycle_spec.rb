@@ -69,4 +69,3 @@ describe Admin::BillingCycleResource do
     expect(BillingCycle.all.size).to eq size - 1
   end
 end
-

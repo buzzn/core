@@ -12,4 +12,3 @@ module Meter
     attributes :updatable, :deletable
   end
 end
-
