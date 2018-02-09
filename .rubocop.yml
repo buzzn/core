@@ -34,6 +34,10 @@ Bundler/OrderedGems:
 Naming/MethodName:
   # there are methods named PATCH(), def self.Schema, ...
   Enabled: false
+
+Lint/Debugger:
+  Enabled: true
+
 # it's hopeless ...
 Metrics/LineLength:
   Max: 120
