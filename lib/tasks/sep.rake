@@ -57,7 +57,6 @@ namespace :sep do
         reason: Reading::Continuous::OTHER
       )
 
-
       # else
       #   parseString = all_lines[0...posOfSeperator]
       #   all_lines = all_lines[(posOfSeperator + 1)..all_lines.length]

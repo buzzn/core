@@ -24,7 +24,6 @@ module Meter
                :sent_data_dso,
                :data_source
 
-
     has_many :registers
 
     def data_source

@@ -39,7 +39,6 @@ describe Display::GroupResource do
                        'slug',
                        'description'] end
 
-
   it 'retrieve' do
     [tribe, localpool].each do |grp|
       attrs = resources.retrieve(grp.id).to_h

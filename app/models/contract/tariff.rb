@@ -14,7 +14,6 @@ module Contract
     end
     scope :current, ->(now = Time.current) {where('begin_date < ? AND (end_date > ? OR end_date IS NULL)', now, now)}
 
-
     # permissions helpers
     scope :permitted, ->(uuids) { where(group_id: uuids) }
 

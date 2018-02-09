@@ -16,6 +16,7 @@ module Buzzn
       def create_class(clazz, action, user)
         "#{action} #{clazz}: permission denied for User: #{user ? user.id : '--anonymous--'}"
       end
+
       def create_instance(object, action, user)
         "#{action} #{object.class}: #{object.id} permission denied for User: #{user ? user.id : '--anonymous--'}"
       end

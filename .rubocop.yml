@@ -88,3 +88,10 @@ Layout/AccessModifierIndentation:
 
 Style/RedundantSelf:
   Enabled: false
+
+Style/EmptyLines:
+  Enabled: true
+
+Layout/EmptyLineBetweenDefs:
+  Enabled: true
+

@@ -157,12 +157,10 @@ describe BankAccount do
     end
   end
 
-
   it 'can not find anything' do
     bank_accounts = BankAccount.filter('Der Clown ist müde und geht nach Hause.')
     expect(bank_accounts.size).to eq 0
   end
-
 
   it 'filters gives all with no params' do
     bank_accounts = BankAccount.filter(nil)

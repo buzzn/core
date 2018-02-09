@@ -22,7 +22,6 @@ describe Me::Roda, :skip_nested do
 
   entity(:password) { 'Example123' }
 
-
   let(:invalid_password_json) do
     {
       'errors'=>[
@@ -310,7 +309,6 @@ describe Me::Roda, :skip_nested do
            'password': 'YetAnotherExample123'
       expect(response).to have_http_status(422)
       expect(json).to eq no_matching_passwords_json
-
 
       POST '/api/me/reset-password', nil,
            key: "#{user.id}_#{key}",

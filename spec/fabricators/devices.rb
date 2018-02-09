@@ -32,7 +32,6 @@ Fabricator :auto_justus, from: :in_device do
   commissioning                 Date.new(2012,10,1)
 end
 
-
 Fabricator :bhkw_justus, from: :out_device do
   law                           'kwkg'
   manufacturer_name             'Honda'
@@ -64,7 +63,6 @@ Fabricator :carport_pv_justus, from: :device do
   commissioning                 Date.new(2012,1,1)
 end
 
-
 Fabricator :pv_karin, from: :device do
   law                           'eeg'
   mode                          'out'
@@ -76,7 +74,6 @@ Fabricator :pv_karin, from: :device do
   commissioning                 Date.new(2002,11,1)
 end
 
-
 Fabricator :bhkw_stefan, from: :out_device do
   law                           'kwkg'
   manufacturer_name             'Senertec'
@@ -87,8 +84,6 @@ Fabricator :bhkw_stefan, from: :out_device do
   commissioning                 Date.new(1995,11,1)
 end
 
-
-
 Fabricator :hof_butenland_wind, from: :out_device do
   law                           'eeg'
   manufacturer_name             'Enercon'
@@ -98,10 +93,6 @@ Fabricator :hof_butenland_wind, from: :out_device do
   watt_peak                     55000
   commissioning                 Date.new(1989,12,1)
 end
-
-
-
-
 
 Fabricator :gocycle, from: :in_device do
   manufacturer_name             'Gocycle'

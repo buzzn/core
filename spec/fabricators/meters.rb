@@ -67,7 +67,6 @@ Fabricator :easymeter_60051560, from: :easy_meter_q3d do
   registers { [Fabricate.build(:register_z4)] }
 end
 
-
 # Justus Abgrenzung
 Fabricator :easymeter_60051600, from: :easy_meter_q3d do
   product_serialnumber '60051600'
@@ -88,7 +87,6 @@ Fabricator :virtual_meter_fichtenweg8, from: :virtual_meter do
   register { Fabricate.build(:virtual_register, direction: 'in').attributes}
 end
 
-
 # Mustafa verbrauch
 Fabricator :easymeter_60232612, from: :easy_meter_q3d do
   product_serialnumber '60232612'
@@ -101,15 +99,11 @@ Fabricator :easymeter_1024000034, from: :easy_meter_q3d do
   registers { [Fabricate.build(:register_stefans_bhkw)] }
 end
 
-
 # karins meter fur die pv anlange
 Fabricator :easymeter_60051431, from: :easy_meter_q3d do
   product_serialnumber '60051431'
   registers { [Fabricate.build(:register_pv_karin)] }
 end
-
-
-
 
 # Z1  Nr. 60118470 für Hans-Dieter Hopf  (Zweirichtungszähler)
 Fabricator :easymeter_60118470, from: :easy_meter_q3d do
@@ -135,9 +129,6 @@ Fabricator :easymeter_60009348, from: :easy_meter_q3d do
   registers { [Fabricate.build(:register_60009348)] }
 end
 
-
-
-
 # Nr. 60138988 für Christian Widmann (Einrichtungszähler Bezug)
 Fabricator :easymeter_60138988, from: :easy_meter_q3d do
   product_serialnumber '60138988'
@@ -162,7 +153,6 @@ Fabricator :amperix_60232AMPE, from: :meter do
   product_serialnumber   '60232AMPE'
 end
 
-
 # Meter für virtuellen MP für Hopf
 Fabricator :virtual_meter_hopf, from: :virtual_meter do
   product_serialnumber   '123456'
@@ -170,8 +160,6 @@ Fabricator :virtual_meter_hopf, from: :virtual_meter do
   # build VirtualRegister as well
   register { Fabricate.build(:register_hdh).attributes }
 end
-
-
 
 # wagnis 4
 Fabricator :easymeter_60009416, from: :easy_meter_q3d do
@@ -314,20 +302,11 @@ Fabricator :easymeter_60118484, from: :easy_meter_q3d do
   registers { [Fabricate.build(:register_60118484)] }
 end
 
-
-
-
-
 # Pickel
 Fabricator :easymeter_60051562, from: :easy_meter_q3d do
   product_serialnumber '60051562'
   registers { [Fabricate.build(:register_60051562)] }
 end
-
-
-
-
-
 
 #Ab hier: Hell & Warm (Forstenried)
 Fabricator :easymeter_60051595, from: :easy_meter_q3d do
@@ -651,7 +630,6 @@ Fabricator :easymeter_60051575, from: :easy_meter_q3d do
  registers { [Fabricate.build(:register_60051575)] }
 end
 
-
 #abgrenzung pv
 Fabricator :easymeter_60009484, from: :easy_meter_q3d do
   product_serialnumber   '60009484'
@@ -710,16 +688,12 @@ end
 #   product_serialnumber   '12345678'
 # end
 
-
-
-
 Fabricator :ferraris_001_amperix, from: :meter do
   manufacturer_name 'ferraris'
   product_name           'xy'
   product_serialnumber   '001'
   registers { [Fabricate.build(:register_ferraris_001_amperix)] }
 end
-
 
 ### LCP Sulz ###
 

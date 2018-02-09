@@ -142,7 +142,6 @@ describe Buzzn::DataResultSet do
       end
     end
 
-
   end
 
   ['+', '-'].each do |operator|
@@ -280,7 +279,6 @@ def granularity(duration)
     2 # 2 seconds, this is NOT 1 second as there are some readings that differ in more than 2 seconds (like 2.001 seconds)
   end
 end
-
 
 describe Buzzn::DataResultArray do
 

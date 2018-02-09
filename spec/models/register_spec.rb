@@ -21,12 +21,10 @@ describe Register do
     end
   end
 
-
   it 'can not find anything' do
     registers = Register::Base.filter('Der Clown ist müde und geht nach Hause.')
     expect(registers.size).to eq 0
   end
-
 
   it 'filters register with no params' do
     registers = Register::Base.filter(nil)
@@ -48,10 +46,6 @@ describe Register do
     expect(Register::Base.all.by_labels(Register::Base.labels[:grid_feeding], Register::Base.labels[:demarcation_pv]).size).to eq 0
     expect{ Register::Base.all.by_labels('something') }.to raise_error ArgumentError
   end
-
-
-
-
 
   describe 'observers' do
 

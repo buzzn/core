@@ -21,7 +21,6 @@ describe Group::Base do
     expect(groups.size).to eq 0
   end
 
-
   it 'filters group with no params' do
     groups = Group::Base.filter(nil)
     expect(groups.size).to eq Group::Base.count

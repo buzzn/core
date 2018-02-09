@@ -19,7 +19,6 @@
   end
 end
 
-
 # real world registers
 
 Fabricator :register_z1a, from: :input_register do
@@ -28,19 +27,16 @@ Fabricator :register_z1a, from: :input_register do
   label     Register::Base.labels[:grid_consumption]
 end
 
-
 Fabricator :register_z1b, from: :output_register do
   name 'Netzanschluss Einspeisung'
   #address   { Fabricate(:address_luetzowplatz) }
   label Register::Base.labels[:grid_feeding]
 end
 
-
 Fabricator :register_z2, from: :output_register do
   name  'PV'
   #address   { Fabricate(:address_luetzowplatz) }
 end
-
 
 Fabricator :register_z3, from: :input_register do
   name  'Ladestation'
@@ -53,24 +49,17 @@ Fabricator :register_z4, from: :output_register do
   label Register::Base.labels[:production_chp]
 end
 
-
-
 Fabricator :register_z5, from: :output_register do
   name 'Abgrenzung'
   #address   { Fabricate(:address_luetzowplatz) }
   label Register::Base.labels[:demarcation_pv]
 end
 
-
-
 #felix berlin
 Fabricator :register_urbanstr88, from: :input_register do
   #address  { Fabricate(:address, street: 'Urbanstr 88', zip: '81667') }
   name  'Wohnung'
 end
-
-
-
 
 # karins pv anlage
 Fabricator :register_pv_karin, from: :output_register do
@@ -79,9 +68,6 @@ Fabricator :register_pv_karin, from: :output_register do
   devices { [Fabricate(:pv_karin)] }
 end
 
-
-
-
 # stefans bhkw anlage
 Fabricator :register_stefans_bhkw, from: :output_register do
   #address { Fabricate(:address, street: 'Forstenrieder Weg 51', zip: 82065, city: 'Baierbrunn', state: 'DE_BY') }
@@ -89,24 +75,17 @@ Fabricator :register_stefans_bhkw, from: :output_register do
   label Register::Base.labels[:production_chp]
 end
 
-
-
-
 # hof butenland windanlage
 Fabricator :register_hof_butenland_wind, from: :output_register do
   #address  { Fabricate(:address, street: 'Niensweg 1', zip: 26969, city: 'Butjadingen', state: 'Niedersachsen') }
   name  'Windanlage'
 end
 
-
-
 # christian_schuetze verbrauch
 Fabricator :register_cs_1, from: :input_register do
   #address  { Fabricate(:address, street: 'Fichtenweg 8', zip: 82515, city: 'Wolfratshausen', state: 'DE_BY') }
   name  'Wohnung'
 end
-
-
 
 # Nr. 60138988 für Christian Widmann (Einrichtungszähler Bezug)
 Fabricator :register_60138988, from: :input_register do
@@ -134,11 +113,6 @@ Fabricator :register_ferraris_001_amperix, from: :input_register do
   name  'Wohnung'
 end
 
-
-
-
-
-
 Fabricator :register_60118470, from: :output_register do
   name  'Keller'
   label Register::Base.labels[:grid_consumption]
@@ -161,9 +135,6 @@ Fabricator :register_hdh, from: :virtual_register do
   name  'Wohnung'
   direction 'in'
 end
-
-
-
 
 Fabricator :register_60009416, from: :input_register do
   name  'Wohnung'
@@ -208,9 +179,6 @@ end
 Fabricator :register_60118460, from: :output_register do
   name  'PV'
 end
-
-
-
 
 Fabricator :register_60009386, from: :input_register do
   name  'Allgemeinstrom Haus Nord'
@@ -282,16 +250,9 @@ Fabricator :register_60118484, from: :input_register do
   label Register::Base.labels[:grid_consumption]
 end
 
-
-
-
 Fabricator :register_60051562, from: :input_register do
   name  'Wasserkraft'
 end
-
-
-
-
 
 #Ab hier: Hell & Warm (Forstenried)
 Fabricator :register_60051595, from: :input_register do
@@ -646,7 +607,6 @@ Fabricator :register_60051575, from: :input_register do
  label Register::Base.labels[:consumption]
 end
 
-
 # #peter schmidt
 # Fabricator :register_6005195, from: :input_register do
 #   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'DE_BY') }
@@ -726,7 +686,6 @@ Fabricator :register_forstenried_bezug, from: :input_register do
   name 'Gesamtverbrauch'
   virtual true
 end
-
 
 ### LCP Sulz ###
 

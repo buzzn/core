@@ -72,7 +72,6 @@ module Register
       do_filter(value, *search_attributes)
     end
 
-
     def data_source
       Buzzn::MissingDataSource.name
     end
@@ -128,8 +127,6 @@ module Register
 
       end
     end
-
-
 
     # TODO move me into clockwork
     def self.observe

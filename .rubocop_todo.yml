@@ -110,24 +110,6 @@ Layout/EmptyLineAfterMagicComment:
     - 'app/models/register/base.rb'
     - 'app/models/role.rb'
 
-# Offense count: 9
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAdjacentOneLineDefs, NumberOfEmptyLines.
-Layout/EmptyLineBetweenDefs:
-  Exclude:
-    - 'app/models/device.rb'
-    - 'app/models/reading/continuous.rb'
-    - 'app/models/register/base.rb'
-    - 'lib/buzzn.rb'
-    - 'lib/buzzn/boot/init.rb'
-    - 'lib/buzzn/schemas/support/enable_dry_validation.rb'
-    - 'spec/services/data_source_mocks.rb'
-
-# Offense count: 147
-# Cop supports --auto-correct.
-Layout/EmptyLines:
-  Enabled: false
-
 # Offense count: 4
 # Cop supports --auto-correct.
 Layout/EmptyLinesAroundAccessModifier:

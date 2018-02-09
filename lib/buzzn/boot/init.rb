@@ -17,6 +17,7 @@ Import = Dry::AutoInject(Buzzn::Boot::MainContainer)
 def Import.global(key)
   container[key]
 end
+
 def Import.global?(key)
   container.key?(key)
 end

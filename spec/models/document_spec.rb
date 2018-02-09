@@ -26,7 +26,6 @@ describe Document do
       expect(document.read).to eq 'something else'
       expect(File.read('tmp/files/test/me')).not_to eq 'something else'
 
-
       doc = Document.find_by_path('test/me')
       expect(doc.read).to eq 'something else'
     ensure

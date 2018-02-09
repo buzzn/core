@@ -9,13 +9,11 @@ Fabricator :person do
   phone       { FFaker::PhoneNumber.phone_number }
 end
 
-
 Fabricator :person_felix, from: :person do
   first_name  'Felix'
   last_name   'Faerber'
   title       nil
 end
-
 
 Fabricator :person_ralf, from: :person do
   first_name  'Ralf'
@@ -89,8 +87,6 @@ Fabricator :person_kristian, from: :person do
   title       nil
 end
 
-
-
 Fabricator :person_jangerdes, from: :person do
   first_name  'Jan'
   last_name   'Gerdes'
@@ -102,7 +98,6 @@ Fabricator :person_christian_schuetze, from: :person do
   last_name   'Schütze'
   title       nil
 end
-
 
 Fabricator :person_uxtest, from: :person do
   first_name 'Test'

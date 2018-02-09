@@ -94,20 +94,10 @@ Fabricator :kristian, from: :admin do
   person { Fabricate(:person_kristian) }
 end
 
-
 Fabricator :uxtest_user, from: :user do
   email 'ux-test@buzzn.net'
   person             { Fabricate(:person_uxtest) }
 end
-
-
-
-
-
-
-
-
-
 
 #Ab hier: Hell & Warm (Forstenried)
 Fabricator :mabe, from: :user do

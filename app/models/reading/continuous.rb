@@ -133,11 +133,6 @@ module Reading
       end
     end
 
-
-
-
-
-
     def self.all_by_register_id(register_id)
       pipe = [
         { '$match' => {

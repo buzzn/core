@@ -8,7 +8,6 @@
   end
 end
 
-
 Fabricator :tribe_readable_by_world, from: :tribe do
   readable    'world'
 end
@@ -38,11 +37,9 @@ Fabricator :tribe_with_two_comments_readable_by_world, from: :tribe do
   end
 end
 
-
 Fabricator :tribe_hof_butenland, from: :tribe do
   name 'Hof Butenland'
 end
-
 
 Fabricator :localpool_hopf, from: :localpool do
   name 'Hopf'
@@ -71,7 +68,6 @@ Fabricator :localpool_wagnis4, from: :localpool do
     Fabricate(:mpoc_buzzn_metering, localpool: localpool)
   end
 end
-
 
 Fabricator :localpool_forstenried, from: :localpool do
   name        'Mehrgenerationenplatz Forstenried'

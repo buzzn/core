@@ -2,7 +2,6 @@ require 'buzzn/slug'
 
 describe Buzzn::Slug do
 
-
   it 'makes slugs' do
     expect(Buzzn::Slug.new('Häberlstraße 15')).to eq 'haeberlstrasse'
     expect(Buzzn::Slug.new('wagnisART - Europa + Amerika')).to eq 'wagnisart-europa-amerika'

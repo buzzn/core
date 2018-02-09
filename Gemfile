@@ -76,7 +76,6 @@ gem 'pry'
 # Injected by Heroku, we might as well include it here directly
 gem 'rails_12factor'
 
-
 group :production, :staging do
   gem 'sentry-raven' # the Sentry exception notification service
   gem 'newrelic_rpm'

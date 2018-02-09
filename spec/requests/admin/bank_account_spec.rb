@@ -195,7 +195,6 @@ describe Admin::BankAccountRoda do
           parent.bank_accounts.collect {|bank_account| serialized_bank_account(bank_account) }
         end
 
-
         # can not construct users to see parent but not bank_account
         if name == :organization_account
           it '403' do

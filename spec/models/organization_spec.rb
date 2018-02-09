@@ -52,7 +52,6 @@ describe 'Organization Model' do
       expect(organizations).to be_empty
     end
 
-
     it 'filters organization with no params', :retry => 3 do
       other_organizations = Organization.filter(nil)
       expect(other_organizations.size).to eq Organization.count

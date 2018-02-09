@@ -52,7 +52,6 @@ describe Services::ReadingCalculation do
 
   entity!(:meter) { Fabricate(:easymeter_60051609) }
 
-
   [:register_with_regular_readings, :register_with_irregular_readings, :register_with_device_change_at_beginning,
    :register_with_device_change_in_between, :register_with_device_change_at_ending].each do |scenario|
 
@@ -642,7 +641,6 @@ describe Services::ReadingCalculation do
       total_accounted_energy.add(accounted_energy_grid_feeding)
       total_accounted_energy.add(accounted_energy_grid_consumption)
       total_accounted_energy.add(accounted_energy_consumption_third_party_2)
-
 
       size = Reading::Single.all.size
       consumption_corrected, feeding_corrected = subject.calculate_corrected_grid_values(total_accounted_energy, grid_meter.input_register, grid_meter.output_register)

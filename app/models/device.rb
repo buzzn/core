@@ -38,7 +38,6 @@ class Device < ActiveRecord::Base
     "#{self.manufacturer_name} #{self.manufacturer_product_name}"
   end
 
-
   def self.readables
     %w{
       me

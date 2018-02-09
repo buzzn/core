@@ -88,7 +88,6 @@ module Schemas::Support
       self.respond_to?(attr) || object.attributes.key?(attr) || object.respond_to?(attr)
     end
 
-
     def find_completeness(clazz)
       if clazz != Buzzn::Resource::Base
         invariant = "#{::Schemas::Completeness}::#{clazz.to_s.sub(/Resource$/, '')}".safe_constantize

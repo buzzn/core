@@ -24,7 +24,6 @@ Fabricator :tariff_sulz, from: :tariff do
   baseprice_cents_per_month { 500 }
 end
 
-
 # == Metering Point Operator Contract ==
 
 Fabricator :metering_point_operator_contract, class_name: Contract::MeteringPointOperator do
@@ -173,7 +172,6 @@ Fabricator :localpool_power_taker_contract_for_organization, from: :localpool_po
   customer { Fabricate(:other_organization) }
 end
 
-
 # == Localpool Processing Contract ==
 
 Fabricator :localpool_processing_contract, class_name: Contract::LocalpoolProcessing do
@@ -198,7 +196,6 @@ end
 Fabricator :localpool_processing_contract_for_organization, from: :localpool_processing_contract do
   customer { Fabricate(:other_organization) }
 end
-
 
 Fabricator :mpoc_buzzn_metering, from: :metering_point_operator_contract do
   contractor    { Organization.buzzn }
@@ -564,14 +561,9 @@ Fabricator :lptc_raja, from: :localpool_power_taker_contract do
   end
 end
 
-
-
-
 ################
 ### LCP Sulz ###
 ################
-
-
 
 Fabricator :lptc_hafi, from: :localpool_power_taker_contract do
   begindate = Date.new(2016, 8, 4)

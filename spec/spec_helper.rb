@@ -21,13 +21,11 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 I18n.default_locale = :en
 
-
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/vcr_cassettes'
   c.hook_into :faraday, :webmock
   c.default_cassette_options = { :serialize_with => :syck }
 end
-
 
 RSpec.configure do |config|
 

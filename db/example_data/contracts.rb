@@ -138,7 +138,6 @@ SampleData.contracts.pt7a = localpool_contract(
   end_date: Date.parse('2017-3-1'),
 )
 
-
 # Drittlieferant, nach Wechsel zu people power
 SampleData.contracts.pt7b = localpool_contract(
   signing_date: SampleData.contracts.pt7a.termination_date,

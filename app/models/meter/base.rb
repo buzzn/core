@@ -11,7 +11,6 @@ module Meter
     # needed for permitted scope
     has_many :registers, class_name: 'Register::Base', foreign_key: :meter_id
 
-
     before_destroy do
       # TODO need to figure out what to do with the sequence_number
       raise 'can not delete meter with group' if group

@@ -7,7 +7,6 @@ Fabricator :organization do
   website     { "http://www.#{FFaker::Internet.domain_name}" }
 end
 
-
 Fabricator :other_organization, from: :organization do
 end
 

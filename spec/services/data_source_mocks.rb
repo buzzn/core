@@ -13,6 +13,7 @@ class ChartsDummyDataSource < Buzzn::DataSource
     def result.expires_at=(a);end
     result
   end
+
   def aggregated(resource, mode, interval)
     method_missing(:aggregated, resource, mode, interval) unless resource.is_a? Group::Base
   end
@@ -26,6 +27,7 @@ class ChartsMockDataSource < Buzzn::DataSource
   def aggregated(resource, mode, interval)
     mode == 'in' ? @input.shift : @output.shift
   end
+
   def method_missing(method, *args)
     nil
   end
