@@ -4,14 +4,14 @@
 namespace :sep do
   desc 'This adds sep values to the db'
   task :import_pv_bhkw, [:year] => :environment do |t, args|
-    puts "Creating SEP"
+    puts 'Creating SEP'
     if args[:year].nil?
       year = Time.current.year.to_s
     else
       year = args[:year].to_s
     end
 
-    infile = File.open("#{Rails.root}/db/sep/" + year + "/sep_pv_jahresband.csv", "r")
+    infile = File.open("#{Rails.root}/db/sep/" + year + '/sep_pv_jahresband.csv', 'r')
 
     pv_watt_hour = 0.0
     pv_watts = 0.0
@@ -23,21 +23,21 @@ namespace :sep do
       date = cur_line.split(',')[0]
       time = cur_line.split(',')[1]
 
-      dateString = (date + " " + time).delete("\"")
+      dateString = (date + ' ' + time).delete('"')
 
-      if Reading::Continuous.where(source: Reading::Continuous::SEP_PV).where(timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString)).size == 1
-        puts "Data at " + ActiveSupport::TimeZone["Berlin"].parse(dateString).to_s + " already available, trying next."
+      if Reading::Continuous.where(source: Reading::Continuous::SEP_PV).where(timestamp: ActiveSupport::TimeZone['Berlin'].parse(dateString)).size == 1
+        puts 'Data at ' + ActiveSupport::TimeZone['Berlin'].parse(dateString).to_s + ' already available, trying next.'
         next
       end
 
-      add_pv_watt_hour = cur_line.split(',')[2].delete("\"").to_f*1000000 #convert to mWh
-      add_bhkw_watt_hour = cur_line.split(',')[3].delete("\"").to_f*1000000 #convert to mWh
+      add_pv_watt_hour = cur_line.split(',')[2].delete('"').to_f*1000000 #convert to mWh
+      add_bhkw_watt_hour = cur_line.split(',')[3].delete('"').to_f*1000000 #convert to mWh
 
       new_pv_watt_hour = pv_watt_hour + add_pv_watt_hour
       pv_watts = (new_pv_watt_hour - pv_watt_hour)*4
       pv_watt_hour += add_pv_watt_hour
       Reading::Continuous.create(
-        timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
+        timestamp: ActiveSupport::TimeZone['Berlin'].parse(dateString),
         energy_milliwatt_hour: pv_watt_hour,
         power_milliwatt: pv_watts,
         source: Reading::Continuous::SEP_PV,
@@ -49,7 +49,7 @@ namespace :sep do
       bhkw_watts = (new_bhkw_watt_hour - bhkw_watt_hour)*4
       bhkw_watt_hour += add_bhkw_watt_hour
       Reading::Continuous.create(
-        timestamp: ActiveSupport::TimeZone["Berlin"].parse(dateString),
+        timestamp: ActiveSupport::TimeZone['Berlin'].parse(dateString),
         energy_milliwatt_hour: bhkw_watt_hour,
         power_milliwatt: bhkw_watts,
         source: Reading::Continuous::SEP_BHKW,

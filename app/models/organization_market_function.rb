@@ -1,7 +1,7 @@
 class OrganizationMarketFunction < ActiveRecord::Base
 
   belongs_to :organization
-  belongs_to :contact_person, class_name: "Person"
+  belongs_to :contact_person, class_name: 'Person'
   belongs_to :address
 
   enum function: %i(

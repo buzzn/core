@@ -7,10 +7,10 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
         serialNumber: serial,
         # discovergy does create such a location for virtual meters
         # location: { street: "Virtual", streetNumber: "0", zip: "", city: "Virtual", country: "DE"},
-        location: { street: "Forst Weg", streetNumber: "1", zip: "12065", city: "Brunn", country: "DE"},
-        administrationNumber: "",
+        location: { street: 'Forst Weg', streetNumber: '1', zip: '12065', city: 'Brunn', country: 'DE'},
+        administrationNumber: '',
         type: type,
-        measurementType: "ELECTRICITY",
+        measurementType: 'ELECTRICITY',
         scalingFactor: 1,
         currentScalingFactor: 1,
         voltageScalingFactor: 1,
@@ -22,13 +22,13 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
 
   let(:info_result) do
     [
-      serialized_meter("1234567890", "EASYMETER"),
-      serialized_meter("9876543210", "EASYMETER"),
+      serialized_meter('1234567890', 'EASYMETER'),
+      serialized_meter('9876543210', 'EASYMETER'),
     ]
   end
 
   let(:create_result) do
-    serialized_meter("00000104", "VIRTUAL")
+    serialized_meter('00000104', 'VIRTUAL')
   end
 
   class ApiMock

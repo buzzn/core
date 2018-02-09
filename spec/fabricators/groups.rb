@@ -60,13 +60,13 @@ end
 
 Fabricator :tribe_karins_pv_strom, from: :tribe do
   name        'Karins PV Strom'
-  description "Diese Gruppe ist offen für alle, die gerne meinen selbstgemachten PV-Strom von meiner Scheune beziehen möchten."
+  description 'Diese Gruppe ist offen für alle, die gerne meinen selbstgemachten PV-Strom von meiner Scheune beziehen möchten.'
 end
 
 Fabricator :localpool_wagnis4, from: :localpool do
   name        'Wagnis 4'
   website     'http://www.wagnis.org/wagnis/wohnprojekte/wagnis-4.html'
-  description "Dies ist der Localpool von Wagnis 4."
+  description 'Dies ist der Localpool von Wagnis 4.'
   after_create do |localpool|
     Fabricate(:mpoc_buzzn_metering, localpool: localpool)
   end
@@ -76,12 +76,12 @@ end
 Fabricator :localpool_forstenried, from: :localpool do
   name        'Mehrgenerationenplatz Forstenried'
   website     'http://www.energie.wogeno.de/'
-  description { "Dies ist der Localpool des Mehrgenerationenplatzes Forstenried der Freien Waldorfschule München Südwest und Wogeno München eG." }
+  description { 'Dies ist der Localpool des Mehrgenerationenplatzes Forstenried der Freien Waldorfschule München Südwest und Wogeno München eG.' }
 end
 
 Fabricator :localpool_sulz, from: :localpool do
   name        'Localpool Sulz'
-  description { "Dies ist der Localpool Sulz in Preißenberg" }
+  description { 'Dies ist der Localpool Sulz in Preißenberg' }
 end
 
 Fabricator :localpool_sulz_with_registers_and_readings, from: :localpool_sulz do

@@ -28,7 +28,7 @@ class Beekeeper::Importer::LogLocalpoolTodos
     end
 
     unless incompleteness.present? || warnings.present?
-      logger.info("Nothing to do!")
+      logger.info('Nothing to do!')
       return
     end
 

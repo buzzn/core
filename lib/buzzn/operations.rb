@@ -1,3 +1,3 @@
-require "dry/transaction/operation"
+require 'dry/transaction/operation'
 module Operations
 end

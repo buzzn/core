@@ -19,7 +19,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
 
       let(:all) { PersonResource.all(send(user)) }
 
-      it "all" do
+      it 'all' do
         if user != :anonymous
           expect(all.collect { |l| l.object }).to match_array [send(user).person]
         else
@@ -27,7 +27,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
         end
       end
 
-      it "retrieve" do
+      it 'retrieve' do
         case user
         when :anonymous
           expect { all.retrieve(me.person.id) }.to raise_error Buzzn::PermissionDenied

@@ -40,12 +40,12 @@ describe Buzzn::Localpool::TotalAccountedEnergy do
 
   it 'sums by label' do
     expected = {
-      "production_pv"=>watt_hour(15),
-      "production_chp"=>watt_hour(19),
-      "other"=>watt_hour(23),
-      "consumption_lsn_full_eeg"=>watt_hour(27),
-      "consumption_lsn_reduced_eeg"=>watt_hour(31),
-      "consumption_third_party"=>watt_hour(35)
+      'production_pv'=>watt_hour(15),
+      'production_chp'=>watt_hour(19),
+      'other'=>watt_hour(23),
+      'consumption_lsn_full_eeg'=>watt_hour(27),
+      'consumption_lsn_reduced_eeg'=>watt_hour(31),
+      'consumption_third_party'=>watt_hour(35)
     }
     Buzzn::AccountedEnergy::MULTI_LABELS.each do |label|
       expect(total.sum(label)).to eq expected[label]

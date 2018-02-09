@@ -11,7 +11,7 @@ module Contract
       where('begin_date <= ?', timestamp)
         .where('end_date > ? OR end_date IS NULL', timestamp + 1.second)
     end
-    scope :current, ->(now = Time.current) {where("begin_date < ? AND (end_date > ? OR end_date IS NULL)", now, now)}
+    scope :current, ->(now = Time.current) {where('begin_date < ? AND (end_date > ? OR end_date IS NULL)', now, now)}
 
 
     # permissions helpers

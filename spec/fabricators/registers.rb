@@ -5,7 +5,7 @@
 
   Fabricator "#{klass_type}_register", class_name: klass do
     name        { "#{klass_type}_#{FFaker::Name.name[0..20]}" }
-    metering_point_id { "DE" + Random.new_seed.to_s.slice(0, 29) }
+    metering_point_id { 'DE' + Random.new_seed.to_s.slice(0, 29) }
     direction   { klass_type == 'virtual' ? ['in', 'out'].sample : klass_type.sub('put','') }
     created_at  { (rand*10).days.ago }
     if klass_type == 'output'

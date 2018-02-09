@@ -1,9 +1,9 @@
 describe ZipToPrice do
 
   let(:dir) { 'db/csv' }
-  let(:real_file) { File.join(dir, "GET_AG_2017ET_DTdot.csv") }
-  let(:file1) { File.join(dir, "TEST1_GET_AG_2017ET_DTdot.csv") }
-  let(:file2) { File.join(dir, "TEST2_GET_AG_2017ET_DTdot.csv") }
+  let(:real_file) { File.join(dir, 'GET_AG_2017ET_DTdot.csv') }
+  let(:file1) { File.join(dir, 'TEST1_GET_AG_2017ET_DTdot.csv') }
+  let(:file2) { File.join(dir, 'TEST2_GET_AG_2017ET_DTdot.csv') }
 
   before do
   end

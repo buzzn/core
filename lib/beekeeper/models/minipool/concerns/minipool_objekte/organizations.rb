@@ -8,35 +8,35 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     private
 
     ORG_NAME_TO_SLUG_MAP = {
-      "Bayernwerk"               => 'bayernwerk-netz',
-      "Bayernwerke"              => 'bayernwerk-netz',
-      "Bayernwerk AG"            => 'bayernwerk-netz',
-      "E.dis AG"                 => 'e-dis',
-      "Gemeindewerke Peißenberg" => 'gemeindewerke-peissenberg',
-      "LEW"                      => 'lew',
-      "NEW Netz"                 => 'new-netz',
-      "SWM"                      => 'swm-infrastruktur',
-      "Stadtwerke München"       => 'swm-infrastruktur',
-      "M-Strom business Garant"  => 'swm-versorgung',
-      "M-Ökostrom"               => 'swm-versorgung',
-      "Stadtwerke Landshut"      => 'sw-landshut',
-      "Stadtwerke Schorndorf"    => 'sw-schorndorf',
-      "Stadtwerke Waiblingen"    => 'sw-waiblingen',
-      "Syna"                     => 'syna',
-      "Syna GmbH"                => 'syna',
-      "bnNetze"                  => 'bn-netze',
-      "buzzn"                    => 'buzzn',
-      "Lichtblick"               => 'lichtblick',
-      "SW Netz GmbH"             => 'sw-wiesbaden',
-      "Netz Leipzig"             => 'netz-leipzig',
-      "BEG Freising"             => 'sw-freising',
-      "Hamburg Netz"             => 'stromnetz-hamburg',
+      'Bayernwerk'               => 'bayernwerk-netz',
+      'Bayernwerke'              => 'bayernwerk-netz',
+      'Bayernwerk AG'            => 'bayernwerk-netz',
+      'E.dis AG'                 => 'e-dis',
+      'Gemeindewerke Peißenberg' => 'gemeindewerke-peissenberg',
+      'LEW'                      => 'lew',
+      'NEW Netz'                 => 'new-netz',
+      'SWM'                      => 'swm-infrastruktur',
+      'Stadtwerke München'       => 'swm-infrastruktur',
+      'M-Strom business Garant'  => 'swm-versorgung',
+      'M-Ökostrom'               => 'swm-versorgung',
+      'Stadtwerke Landshut'      => 'sw-landshut',
+      'Stadtwerke Schorndorf'    => 'sw-schorndorf',
+      'Stadtwerke Waiblingen'    => 'sw-waiblingen',
+      'Syna'                     => 'syna',
+      'Syna GmbH'                => 'syna',
+      'bnNetze'                  => 'bn-netze',
+      'buzzn'                    => 'buzzn',
+      'Lichtblick'               => 'lichtblick',
+      'SW Netz GmbH'             => 'sw-wiesbaden',
+      'Netz Leipzig'             => 'netz-leipzig',
+      'BEG Freising'             => 'sw-freising',
+      'Hamburg Netz'             => 'stromnetz-hamburg',
       'Vattenfall'               => 'stromnetz-berlin',
       'Stromnetz Berlin'         => 'stromnetz-berlin',
     }
 
     def distribution_system_operator
-      slug = ORG_NAME_TO_SLUG_MAP.fetch(netzbetreiber.strip, "MISSING")
+      slug = ORG_NAME_TO_SLUG_MAP.fetch(netzbetreiber.strip, 'MISSING')
       org_for_slug(slug, netzbetreiber, :distribution_system_operator)
     end
 
@@ -53,7 +53,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     end
 
     def electricity_supplier
-      slug = ORG_NAME_TO_SLUG_MAP.fetch(reststromlieferant.strip, "MISSING")
+      slug = ORG_NAME_TO_SLUG_MAP.fetch(reststromlieferant.strip, 'MISSING')
       org_for_slug(slug, reststromlieferant, :electricity_supplier)
     end
 

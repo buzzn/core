@@ -9,7 +9,7 @@ class CoreRoda < CommonRoda
   include Import.args[:env, 'services.health', 'services.object_space_metric']
 
   # In development, serve uploaded files with rack
-  use Rack::Static, root: "public", urls: ["/uploads"]
+  use Rack::Static, root: 'public', urls: ['/uploads']
 
   use Rack::CommonLogger, logger
 

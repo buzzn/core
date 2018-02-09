@@ -32,7 +32,7 @@ module Buzzn
             logger.info{ errors.to_s }
           else
             logger.error{ "#{e.message}\n\t" + e.backtrace.join("\n\t")}
-            errors = "{\"errors\":[{\"detail\":\"internal server error\"}]}"
+            errors = '{"errors":[{"detail":"internal server error"}]}'
           end
           response.write(errors)
         end

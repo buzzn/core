@@ -29,8 +29,8 @@ module RequestsHelper
 
   def do_it(action, path, params, account, headers = {})
     default_headers = {
-      "Accept"              => "application/json",
-      "Content-Type"        => "application/json",
+      'Accept'              => 'application/json',
+      'Content-Type'        => 'application/json',
     }
     account = account.call if account.is_a? Proc
     case account

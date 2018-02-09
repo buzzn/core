@@ -8,9 +8,9 @@ Sequel.migration do
     end
     Rodauth.create_database_authentication_functions(self)
     user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
-    run "REVOKE ALL ON account_password_hashes FROM public"
-    run "REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public"
-    run "REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public"
+    run 'REVOKE ALL ON account_password_hashes FROM public'
+    run 'REVOKE ALL ON FUNCTION rodauth_get_salt(int8) FROM public'
+    run 'REVOKE ALL ON FUNCTION rodauth_valid_password_hash(int8, text) FROM public'
     run "GRANT INSERT, UPDATE, DELETE ON account_password_hashes TO #{user}"
     run "GRANT SELECT(id) ON account_password_hashes TO #{user}"
     run "GRANT EXECUTE ON FUNCTION rodauth_get_salt(int8) TO #{user}"
@@ -25,9 +25,9 @@ Sequel.migration do
     Rodauth.create_database_previous_password_check_functions(self)
 
     user = get{Sequel.lit('current_user')}.sub(/_password\z/, '')
-    run "REVOKE ALL ON account_previous_password_hashes FROM public"
-    run "REVOKE ALL ON FUNCTION rodauth_get_previous_salt(int8) FROM public"
-    run "REVOKE ALL ON FUNCTION rodauth_previous_password_hash_match(int8, text) FROM public"
+    run 'REVOKE ALL ON account_previous_password_hashes FROM public'
+    run 'REVOKE ALL ON FUNCTION rodauth_get_previous_salt(int8) FROM public'
+    run 'REVOKE ALL ON FUNCTION rodauth_previous_password_hash_match(int8, text) FROM public'
     run "GRANT INSERT, UPDATE, DELETE ON account_previous_password_hashes TO #{user}"
     run "GRANT SELECT(id, account_id) ON account_previous_password_hashes TO #{user}"
     run "GRANT USAGE ON account_previous_password_hashes_id_seq TO #{user}"

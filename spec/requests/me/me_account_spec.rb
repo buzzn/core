@@ -25,16 +25,16 @@ describe Me::Roda, :skip_nested do
 
   let(:invalid_password_json) do
     {
-      "errors"=>[
-        {"parameter"=>"password", "detail"=>"invalid password"}
+      'errors'=>[
+        {'parameter'=>'password', 'detail'=>'invalid password'}
       ]
     }
   end
 
   let(:no_matching_passwords_json) do
     {
-      "errors"=>[
-        {"parameter"=>"password", "detail"=>"passwords do not match"}
+      'errors'=>[
+        {'parameter'=>'password', 'detail'=>'passwords do not match'}
       ]
     }
   end
@@ -43,7 +43,7 @@ describe Me::Roda, :skip_nested do
 
     let(:access_denied_json) do
       {
-        "error" => 'Access Denied'
+        'error' => 'Access Denied'
       }
     end
 
@@ -71,16 +71,16 @@ describe Me::Roda, :skip_nested do
 
     let(:no_matching_new_passwords_json) do
       {
-        "errors"=>[
-          {"parameter"=>"new-password", "detail"=>"passwords do not match"}
+        'errors'=>[
+          {'parameter'=>'new-password', 'detail'=>'passwords do not match'}
         ]
       }
     end
 
     let(:invalid_new_password_json) do
       {
-        "errors"=>[
-          {"parameter"=>"new-password", "detail"=>"invalid password, does not meet requirements (minimum 6 characters)"}
+        'errors'=>[
+          {'parameter'=>'new-password', 'detail'=>'invalid password, does not meet requirements (minimum 6 characters)'}
         ]
       }
     end
@@ -135,18 +135,18 @@ describe Me::Roda, :skip_nested do
 
     let(:invalid_login_json) do
       {
-        "errors"=>[
-          {"parameter"=>"login",
-           "detail"=>"invalid login, minimum 3 characters"}
+        'errors'=>[
+          {'parameter'=>'login',
+           'detail'=>'invalid login, minimum 3 characters'}
         ]
       }
     end
 
     let(:no_matching_logins_json) do
       {
-        "errors"=>[
-          {"parameter"=>"login",
-           "detail"=>"logins do not match"}
+        'errors'=>[
+          {'parameter'=>'login',
+           'detail'=>'logins do not match'}
         ]
       }
     end
@@ -283,17 +283,17 @@ describe Me::Roda, :skip_nested do
 
     let(:invalid_password_same_as_current_json) do
       {
-        "errors"=>[
-          {"parameter"=>"password",
-           "detail"=>"invalid password, same as current password"}
+        'errors'=>[
+          {'parameter'=>'password',
+           'detail'=>'invalid password, same as current password'}
         ]
       }
     end
 
     let(:invalid_password_json) do
       {
-        "errors"=>[
-          {"parameter"=>"password", "detail"=>"invalid password, does not meet requirements (minimum 6 characters)"}
+        'errors'=>[
+          {'parameter'=>'password', 'detail'=>'invalid password, does not meet requirements (minimum 6 characters)'}
         ]
       }
     end

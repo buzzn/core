@@ -176,7 +176,7 @@ module Buzzn::Resource
       def roles_map(user)
         result = {}
         if user
-          user.roles.where("resource_type = ? or resource_type IS NULL", model)
+          user.roles.where('resource_type = ? or resource_type IS NULL', model)
             .select(:resource_id, :name)
             .each do |r|
             (result[r.resource_id || '*'] ||= []) << r.name.to_sym

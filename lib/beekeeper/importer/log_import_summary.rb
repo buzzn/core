@@ -8,9 +8,9 @@ class Beekeeper::Importer::LogImportSummary
 
   def run
     logger.info("\n" * 2)
-    logger.info("-" * 80)
-    logger.info("Import summary")
-    logger.info("-" * 80)
+    logger.info('-' * 80)
+    logger.info('Import summary')
+    logger.info('-' * 80)
 
     logger.info("localpools                                               : #{Group::Localpool.count}")
     logger.info("organizations                                            : #{Organization.count}")
@@ -20,9 +20,9 @@ class Beekeeper::Importer::LogImportSummary
     logger.info("readings                                                 : #{Reading::Single.count}")
     logger.info("meters                                                   : #{Meter::Real.count}")
 
-    logger.info("-" * 80)
-    logger.info("Localpool contracts")
-    logger.info("-" * 80)
+    logger.info('-' * 80)
+    logger.info('Localpool contracts')
+    logger.info('-' * 80)
     logger.info("regular powertakers                                      : #{Contract::LocalpoolPowerTaker.count}")
     logger.info("third-party                                              : #{Contract::LocalpoolThirdParty.count}")
     logger.info("gap                                                      : #{Contract::LocalpoolGap.count}")
@@ -30,9 +30,9 @@ class Beekeeper::Importer::LogImportSummary
     logger.info("powertaker with organization customer                    : #{Contract::LocalpoolPowerTaker.where('customer_organization_id is not null').count}")
     logger.info("groups distribution_system_operator                      : #{Group::Localpool.where('distribution_system_operator_id IS NOT NULL').count}")
 
-    logger.info("-" * 80)
-    logger.info("Other")
-    logger.info("-" * 80)
+    logger.info('-' * 80)
+    logger.info('Other')
+    logger.info('-' * 80)
     logger.info("groups transmission_system_operator                      : #{Group::Localpool.where('transmission_system_operator_id IS NOT NULL').count}")
     logger.info("groups electricity_supplier                              : #{Group::Localpool.where('electricity_supplier_id IS NOT NULL').count}")
     logger.info("group person owners                                      : #{Group::Localpool.where('owner_person_id IS NOT NULL').count}")

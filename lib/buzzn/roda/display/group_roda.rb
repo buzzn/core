@@ -16,7 +16,7 @@ class Display::GroupRoda < BaseRoda
       group = groups.retrieve_with_slug(id)
 
       unless group.object.show_display_app
-        request.halt([403, {'Content-Type' => 'application/json'}, ["{}"]])
+        request.halt([403, {'Content-Type' => 'application/json'}, ['{}']])
       end
 
       r.get! do

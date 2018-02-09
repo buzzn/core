@@ -7,7 +7,7 @@ describe Utils::ZipToPriceRoda do
   end
 
   before :all do
-    file = File.join('db', 'csv', "TEST_MINIMAL_GET_AG_2017ET_DTdot.csv")
+    file = File.join('db', 'csv', 'TEST_MINIMAL_GET_AG_2017ET_DTdot.csv')
     ZipToPrice.from_csv(file)
 
     CoreConfig.store Types::ZipPriceConfig.new(
@@ -28,26 +28,26 @@ describe Utils::ZipToPriceRoda do
 
     let(:wrong_json) do
       {
-        "errors"=>[
-          {"parameter"=>"type",
-           "detail"=>"must be one of: single, double, smart"},
-          {"parameter"=>"zip", "detail"=>"must be an integer"},
-          {"parameter"=>"annual_kwh", "detail"=>"must be an integer"}
+        'errors'=>[
+          {'parameter'=>'type',
+           'detail'=>'must be one of: single, double, smart'},
+          {'parameter'=>'zip', 'detail'=>'must be an integer'},
+          {'parameter'=>'annual_kwh', 'detail'=>'must be an integer'}
         ]
       }
     end
 
     let(:not_found_json) do
       {
-        "errors"=>[{"parameter"=>"zip", "detail"=>"no price for zip found"}]
+        'errors'=>[{'parameter'=>'zip', 'detail'=>'no price for zip found'}]
       }
     end
 
     let(:price_json) do
       {
-        "baseprice_cents_per_month"=>841,
-        "energyprice_cents_per_kilowatt_hour"=>30,
-        "total_cents_per_month"=>3926
+        'baseprice_cents_per_month'=>841,
+        'energyprice_cents_per_kilowatt_hour'=>30,
+        'total_cents_per_month'=>3926
       }
     end
 

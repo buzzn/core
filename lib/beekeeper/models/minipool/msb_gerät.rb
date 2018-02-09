@@ -102,7 +102,7 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   # used directly from MsbZählwerkDaten
   def metering_point_id
     stripped = zpid.strip
-    stripped == "" ? nil : stripped
+    stripped == '' ? nil : stripped
   end
 
   def virtual?
@@ -123,8 +123,8 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
 
   def edifact_cycle_interval
     # we only have these two values
-    return "YEARLY"  if turnusintervall.strip == "jährlich"
-    return "MONTHLY" if turnusintervall.strip == "monatlich"
+    return 'YEARLY'  if turnusintervall.strip == 'jährlich'
+    return 'MONTHLY' if turnusintervall.strip == 'monatlich'
     add_warning(:turnusintervall, %(invalid edifact_cycle_interval "#{turnusintervall.strip}" for zählernummer #{zählernummer}))
     nil
   end
@@ -146,8 +146,8 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   end
 
   def edifact_data_logging
-    return "Z05" if zählerFernauslesung.strip == "Ja"
-    return "Z04" if zählerFernauslesung.strip == "Nein"
+    return 'Z05' if zählerFernauslesung.strip == 'Ja'
+    return 'Z04' if zählerFernauslesung.strip == 'Nein'
     add_warning(:zählerFernauslesung, %(invalid edifact_data_logging "#{zählerFernauslesung.strip}" for zählernummer #{zählernummer}))
     nil
   end

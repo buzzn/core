@@ -16,7 +16,7 @@ class Services::Health
   end
 
   def redis?
-    redis.ping == "PONG" ? 'alive' : 'dead'
+    redis.ping == 'PONG' ? 'alive' : 'dead'
   rescue
     'dead'
   end

@@ -123,10 +123,10 @@ module Reading
       reading_before = last_before_user_input
       reading_after = next_after_user_input
       if !reading_before.nil? && reading_before[:energy_milliwatt_hour] > energy_milliwatt_hour
-        self.errors.add(:energy_milliwatt_hour, "is lower than the last one:" + (reading_before[:energy_milliwatt_hour]/1000000).to_s)
+        self.errors.add(:energy_milliwatt_hour, 'is lower than the last one:' + (reading_before[:energy_milliwatt_hour]/1000000).to_s)
       end
       if !reading_after.nil? && reading_after[:energy_milliwatt_hour] < energy_milliwatt_hour
-        self.errors.add(:energy_milliwatt_hour, "is greater than the next one:" + (reading_after[:energy_milliwatt_hour]/1000000).to_s)
+        self.errors.add(:energy_milliwatt_hour, 'is greater than the next one:' + (reading_after[:energy_milliwatt_hour]/1000000).to_s)
       end
     end
 
@@ -137,13 +137,13 @@ module Reading
 
     def self.all_by_register_id(register_id)
       pipe = [
-        { "$match" => {
+        { '$match' => {
             register_id: {
-              "$in" => [register_id]
+              '$in' => [register_id]
             }
           }
         },
-        { "$sort" => {
+        { '$sort' => {
             timestamp: 1
           }
         }
@@ -153,16 +153,16 @@ module Reading
 
     def self.all_by_register_id_and_source(register_id, source)
       pipe = [
-        { "$match" => {
+        { '$match' => {
             register_id: {
-              "$in" => [register_id]
+              '$in' => [register_id]
             },
             source:{
-              "$in" => [source]
+              '$in' => [source]
             }
           }
         },
-        { "$sort" => {
+        { '$sort' => {
             timestamp: 1
           }
         }
@@ -172,46 +172,46 @@ module Reading
 
     def last_before_user_input
       pipe = [
-        { "$match" => {
+        { '$match' => {
             register_id: {
-              "$in" => [register_id]
+              '$in' => [register_id]
             },
             source:{
-              "$in" => ['user_input']
+              '$in' => ['user_input']
             },
             timestamp: {
-              "$lt"  => timestamp.utc
+              '$lt'  => timestamp.utc
             }
           }
         },
-        { "$sort" => {
+        { '$sort' => {
             timestamp: -1
           }
         },
-        { "$limit" => 1 }
+        { '$limit' => 1 }
       ]
       return Reading::Continuous.collection.aggregate(pipe).first
     end
 
     def next_after_user_input
       pipe = [
-        { "$match" => {
+        { '$match' => {
             register_id: {
-              "$in" => [register_id]
+              '$in' => [register_id]
             },
             source:{
-              "$in" => ['user_input']
+              '$in' => ['user_input']
             },
             timestamp: {
-              "$gt"  => timestamp.utc
+              '$gt'  => timestamp.utc
             }
           }
         },
-        { "$sort" => {
+        { '$sort' => {
             timestamp: -1
           }
         },
-        { "$limit" => 1 }
+        { '$limit' => 1 }
       ]
       return Reading::Continuous.collection.aggregate(pipe).first
     end

@@ -3,7 +3,7 @@ FactoryGirl.define do
   sequence(:localpool_name)                      { |i| "Localpool #{Digest::SHA1.hexdigest i.to_s}"  }
   sequence(:localpool_power_taker_contract_nr)   { |i| i + 66_000 }
   sequence(:market_partner_id)                   { |i| i + 9_911_845_999_000 }
-  sequence(:metering_point_id)                   { |i| "DE" + (i + 26917588246326615503884_000).to_s }
+  sequence(:metering_point_id)                   { |i| 'DE' + (i + 26917588246326615503884_000).to_s }
   sequence(:meter_serial_number)                 { |i| i + 65640_000 }
   sequence(:meter_manufacturer_description)      { |i| "Manufacturer description #{i}" }
   sequence(:meter_location_description)          { |i| "Location description #{i}" }

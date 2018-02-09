@@ -7,6 +7,6 @@ class ContractingParty < ActiveRecord::Base
   has_many :bank_accounts, dependent: :destroy
 
   def contracts
-    Contract::Base.where("contractor_id = ? OR customer_id = ?", self.id, self.id)
+    Contract::Base.where('contractor_id = ? OR customer_id = ?', self.id, self.id)
   end
 end

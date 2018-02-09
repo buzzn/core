@@ -34,7 +34,7 @@ describe Buzzn::DataPoint do
 
     expect(reference.value).to eq 987654332
 
-    expect { reference.add_value("1") }.to raise_error ArgumentError
+    expect { reference.add_value('1') }.to raise_error ArgumentError
   end
 end
 
@@ -260,7 +260,7 @@ describe Buzzn::DataResultSet do
     end
   end
 
-  it "does not add" do
+  it 'does not add' do
     reference = subject.milliwatt('u-i-d')
     other = subject.milliwatt_hour('u-i-d')
     expect { reference.add_all(other) }.to raise_error ArgumentError

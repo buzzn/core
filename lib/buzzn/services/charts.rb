@@ -20,6 +20,6 @@ class Services::Charts
         return cache.put(key, result.to_json, TIME_TO_LIVE)
       end
     end
-    cache.put(key, "{}", TIME_TO_LIVE)
+    cache.put(key, '{}', TIME_TO_LIVE)
   end
 end

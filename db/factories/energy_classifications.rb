@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :energy_classification do
-    tariff_name                      "Generic Mix"
+    tariff_name                      'Generic Mix'
     organization                     { FactoryGirl.create(:organization) }
     nuclear_ratio                    2.1
     coal_ratio                       5.9

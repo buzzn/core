@@ -5,7 +5,7 @@ RSpec.configure do |config|
   #
 
   config.before(:suite) do
-    puts "seeds: for specs"
+    puts 'seeds: for specs'
     require_relative '../../db/support/database_emptier'
     DatabaseEmptier.call
     load 'db/setup_data/specs.rb'

@@ -16,25 +16,25 @@ describe Admin::LocalpoolRoda do
     end
 
     let(:expired_json) do
-      {"error" => "This session has expired, please login again."}
+      {'error' => 'This session has expired, please login again.'}
     end
 
     let(:not_found_json) do
       {
-        "errors" => [
+        'errors' => [
           {
-            "detail"=>"Contract::Tariff: bla-bla-blub not found by User: #{$admin.id}" }
+            'detail'=>"Contract::Tariff: bla-bla-blub not found by User: #{$admin.id}" }
         ]
       }
     end
 
     let(:wrong_json) do
       {
-        "errors"=>[
+        'errors'=>[
           {'parameter' => 'name', 'detail' => 'size cannot be greater than 64'},
-          {"parameter"=>"begin_date", "detail"=>"must be a date"},
-          {"parameter"=>"energyprice_cents_per_kwh", "detail"=>"must be a float"},
-          {"parameter"=>"baseprice_cents_per_month", "detail"=>"must be a float"}
+          {'parameter'=>'begin_date', 'detail'=>'must be a date'},
+          {'parameter'=>'energyprice_cents_per_kwh', 'detail'=>'must be a float'},
+          {'parameter'=>'baseprice_cents_per_month', 'detail'=>'must be a float'}
         ]
       }
     end
@@ -63,12 +63,12 @@ describe Admin::LocalpoolRoda do
 
       let(:created_json) do
         {
-          "type"=>'contract_tariff',
-          "name"=>"special",
-          "begin_date"=>Date.new(2016, 2, 1).to_s,
-          "last_date" => nil,
-          "energyprice_cents_per_kwh"=>23.66,
-          "baseprice_cents_per_month"=>500.0,
+          'type'=>'contract_tariff',
+          'name'=>'special',
+          'begin_date'=>Date.new(2016, 2, 1).to_s,
+          'last_date' => nil,
+          'energyprice_cents_per_kwh'=>23.66,
+          'baseprice_cents_per_month'=>500.0,
           'number_of_contracts' => 0,
           'updatable'=>false,
           'deletable'=>true
@@ -99,34 +99,34 @@ describe Admin::LocalpoolRoda do
 
       let(:tariff_json) do
         {
-          "id"=>tariff.id,
-          "type"=>"contract_tariff",
+          'id'=>tariff.id,
+          'type'=>'contract_tariff',
           'updated_at' => tariff.updated_at.as_json,
-          "name"=>tariff.name,
-          "begin_date"=>tariff.begin_date.to_s,
+          'name'=>tariff.name,
+          'begin_date'=>tariff.begin_date.to_s,
           'last_date' => nil,
-          "energyprice_cents_per_kwh"=>tariff.energyprice_cents_per_kwh,
-          "baseprice_cents_per_month"=>tariff.baseprice_cents_per_month,
+          'energyprice_cents_per_kwh'=>tariff.energyprice_cents_per_kwh,
+          'baseprice_cents_per_month'=>tariff.baseprice_cents_per_month,
           'number_of_contracts' => 1,
-          "updatable"=>false,
-          "deletable"=>false
+          'updatable'=>false,
+          'deletable'=>false
         }
       end
 
       let(:tariffs_json) do
         localpool.tariffs.collect do |tariff|
           {
-            "id"=>tariff.id,
-            "type"=>"contract_tariff",
+            'id'=>tariff.id,
+            'type'=>'contract_tariff',
             'updated_at' => tariff.updated_at.as_json,
-            "name"=>tariff.name,
-            "begin_date"=>tariff.begin_date.to_s,
+            'name'=>tariff.name,
+            'begin_date'=>tariff.begin_date.to_s,
             'last_date' => nil,
-            "energyprice_cents_per_kwh"=>tariff.energyprice_cents_per_kwh,
-            "baseprice_cents_per_month"=>tariff.baseprice_cents_per_month,
+            'energyprice_cents_per_kwh'=>tariff.energyprice_cents_per_kwh,
+            'baseprice_cents_per_month'=>tariff.baseprice_cents_per_month,
             'number_of_contracts' => tariff.contracts.count,
-            "updatable"=>false,
-            "deletable"=>  tariff.contracts.count == 0
+            'updatable'=>false,
+            'deletable'=>  tariff.contracts.count == 0
           }
         end
       end

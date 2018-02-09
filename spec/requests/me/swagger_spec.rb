@@ -59,7 +59,7 @@ describe Me, :swagger, :skip_nested do
 
   post '/change-login', account_change_login, status: 200, description: 'change login key sent via email' do
     description 'change login and verify with key'
-    schema Schemas::Transactions::Me::ChangeLogin, [{"parameter"=>"password", "detail"=>"invalid password"}]
+    schema Schemas::Transactions::Me::ChangeLogin, [{'parameter'=>'password', 'detail'=>'invalid password'}]
   end
 
   post '/verify-login-change', account, status: 200, description: 'login verfied and changed' do

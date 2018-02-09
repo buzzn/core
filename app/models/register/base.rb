@@ -54,7 +54,7 @@ module Register
       if (Register::Base.labels.values & labels).sort != labels.sort
         raise ArgumentError.new("#{labels.inspect} needs to be subset of #{Register::Base.labels.values}")
       end
-      self.where("label in (?)", labels)
+      self.where('label in (?)', labels)
     end
 
     # permissions helpers
@@ -138,7 +138,7 @@ module Register
     end
 
     def self.create_all_observer_activities
-      where("observer_enabled = ? OR observer_offline_monitoring = ?", true, true).each do |register|
+      where('observer_enabled = ? OR observer_offline_monitoring = ?', true, true).each do |register|
         register.create_observer_activities rescue nil
       end
     end

@@ -41,18 +41,18 @@ describe Admin::LocalpoolRoda do
     %w(distribution_system_operator transmission_system_operator electricity_supplier).each do |key|
       organization = localpool.send key
       json[key] = {
-        "id"=>organization.id,
-        "type"=>"organization",
+        'id'=>organization.id,
+        'type'=>'organization',
         'updated_at'=>organization.updated_at.as_json,
-        "name"=>organization.name,
-        "phone"=>organization.phone,
-        "fax"=>organization.fax,
-        "website"=>organization.website,
-        "email"=>organization.email,
-        "description"=>organization.description,
+        'name'=>organization.name,
+        'phone'=>organization.phone,
+        'fax'=>organization.fax,
+        'website'=>organization.website,
+        'email'=>organization.email,
+        'description'=>organization.description,
         'customer_number' => nil,
-        "updatable"=>false,
-        "deletable"=>false,
+        'updatable'=>false,
+        'deletable'=>false,
       }
     end
     json

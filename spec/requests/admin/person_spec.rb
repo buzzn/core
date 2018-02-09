@@ -24,47 +24,47 @@ describe Admin::LocalpoolRoda do
 
     let(:person_json) do
       {
-        "id"=>person.id,
-        "type"=>"person",
+        'id'=>person.id,
+        'type'=>'person',
         'updated_at'=>person.updated_at.as_json,
-        "prefix"=>person.attributes['prefix'],
-        "title"=>person.title,
-        "first_name"=>person.first_name,
-        "last_name"=>person.last_name,
-        "phone"=>person.phone,
-        "fax"=>person.fax,
-        "email"=>person.email,
-        "preferred_language"=>person.attributes['preferred_language'],
-        "image"=>person.image.medium.url,
+        'prefix'=>person.attributes['prefix'],
+        'title'=>person.title,
+        'first_name'=>person.first_name,
+        'last_name'=>person.last_name,
+        'phone'=>person.phone,
+        'fax'=>person.fax,
+        'email'=>person.email,
+        'preferred_language'=>person.attributes['preferred_language'],
+        'image'=>person.image.medium.url,
         'customer_number' => nil,
-        "updatable"=>true,
-        "deletable"=>false,
-        "bank_accounts"=>{
+        'updatable'=>true,
+        'deletable'=>false,
+        'bank_accounts'=>{
           'array'=> person.bank_accounts.collect do |bank_account|
             {
-              "id"=>bank_account.id,
-              "type"=>"bank_account",
+              'id'=>bank_account.id,
+              'type'=>'bank_account',
               'updated_at'=>bank_account.updated_at.as_json,
-              "holder"=>bank_account.holder,
-              "bank_name"=>bank_account.bank_name,
-              "bic"=>bank_account.bic,
-              "iban"=>bank_account.iban,
-              "direct_debit"=>bank_account.direct_debit,
+              'holder'=>bank_account.holder,
+              'bank_name'=>bank_account.bank_name,
+              'bic'=>bank_account.bic,
+              'iban'=>bank_account.iban,
+              'direct_debit'=>bank_account.direct_debit,
               'updatable'=> true,
               'deletable'=> true
             }
           end
         },
         'address'=>{
-          "id"=>person.address.id,
-          "type"=>"address",
+          'id'=>person.address.id,
+          'type'=>'address',
           'updated_at'=>person.address.updated_at.as_json,
-          "street"=>person.address.street,
-          "city"=>person.address.city,
-          "zip"=>person.address.zip,
-          "country"=>person.address.attributes['country'],
-          "updatable"=>true,
-          "deletable"=>true
+          'street'=>person.address.street,
+          'city'=>person.address.city,
+          'zip'=>person.address.zip,
+          'country'=>person.address.attributes['country'],
+          'updatable'=>true,
+          'deletable'=>true
         }
       }
     end
@@ -72,32 +72,32 @@ describe Admin::LocalpoolRoda do
     let(:persons_json) do
       group.persons.collect do |person|
         {
-          "id"=>person.id,
-          "type"=>"person",
+          'id'=>person.id,
+          'type'=>'person',
           'updated_at'=>person.updated_at.as_json,
-          "prefix"=>person.attributes['prefix'],
-          "title"=>person.title,
-          "first_name"=>person.first_name,
-          "last_name"=>person.last_name,
-          "phone"=>person.phone,
-          "fax"=>person.fax,
-          "email"=>person.email,
-          "preferred_language"=>person.attributes['preferred_language'],
-          "image"=>person.image.medium.url,
+          'prefix'=>person.attributes['prefix'],
+          'title'=>person.title,
+          'first_name'=>person.first_name,
+          'last_name'=>person.last_name,
+          'phone'=>person.phone,
+          'fax'=>person.fax,
+          'email'=>person.email,
+          'preferred_language'=>person.attributes['preferred_language'],
+          'image'=>person.image.medium.url,
           'customer_number' => nil,
-          "updatable"=>true,
-          "deletable"=>false,
-          "bank_accounts"=> {
+          'updatable'=>true,
+          'deletable'=>false,
+          'bank_accounts'=> {
             'array'=> person.bank_accounts.collect do |bank_account|
               {
-                "id"=>bank_account.id,
-                "type"=>"bank_account",
+                'id'=>bank_account.id,
+                'type'=>'bank_account',
                 'updated_at'=>bank_account.updated_at.as_json,
-                "holder"=>bank_account.holder,
-                "bank_name"=>bank_account.bank_name,
-                "bic"=>bank_account.bic,
-                "iban"=>bank_account.iban,
-                "direct_debit"=>bank_account.direct_debit,
+                'holder'=>bank_account.holder,
+                'bank_name'=>bank_account.bank_name,
+                'bic'=>bank_account.bic,
+                'iban'=>bank_account.iban,
+                'direct_debit'=>bank_account.direct_debit,
                 'updatable'=> true,
                 'deletable'=> true
               }
@@ -110,32 +110,32 @@ describe Admin::LocalpoolRoda do
     let(:admin_persons_json) do
       group.persons.collect do |person|
         {
-          "id"=>person.id,
-          "type"=>"person",
+          'id'=>person.id,
+          'type'=>'person',
           'updated_at'=>person.updated_at.as_json,
-          "prefix"=>person.attributes['prefix'],
-          "title"=>person.title,
-          "first_name"=>person.first_name,
-          "last_name"=>person.last_name,
-          "phone"=>person.phone,
-          "fax"=>person.fax,
-          "email"=>person.email,
-          "preferred_language"=>person.attributes['preferred_language'],
-          "image"=>person.image.medium.url,
+          'prefix'=>person.attributes['prefix'],
+          'title'=>person.title,
+          'first_name'=>person.first_name,
+          'last_name'=>person.last_name,
+          'phone'=>person.phone,
+          'fax'=>person.fax,
+          'email'=>person.email,
+          'preferred_language'=>person.attributes['preferred_language'],
+          'image'=>person.image.medium.url,
           'customer_number' => nil,
-          "updatable"=>true,
-          "deletable"=>false,
-          "bank_accounts"=> {
+          'updatable'=>true,
+          'deletable'=>false,
+          'bank_accounts'=> {
             'array'=> person.bank_accounts.collect do |bank_account|
               {
-                "id"=>bank_account.id,
-                "type"=>"bank_account",
+                'id'=>bank_account.id,
+                'type'=>'bank_account',
                 'updated_at'=>bank_account.updated_at.as_json,
-                "holder"=>bank_account.holder,
-                "bank_name"=>bank_account.bank_name,
-                "bic"=>bank_account.bic,
-                "iban"=>bank_account.iban,
-                "direct_debit"=>bank_account.direct_debit,
+                'holder'=>bank_account.holder,
+                'bank_name'=>bank_account.bank_name,
+                'bic'=>bank_account.bic,
+                'iban'=>bank_account.iban,
+                'direct_debit'=>bank_account.direct_debit,
                 'updatable'=> true,
                 'deletable'=> true
               }
@@ -148,32 +148,32 @@ describe Admin::LocalpoolRoda do
     let(:filtered_admin_persons_json) do
       [
         {
-          "id"=>person.id,
-          "type"=>"person",
+          'id'=>person.id,
+          'type'=>'person',
           'updated_at'=>person.updated_at.as_json,
-          "prefix"=>person.attributes['prefix'],
-          "title"=>person.title,
-          "first_name"=>person.first_name,
-          "last_name"=>person.last_name,
-          "phone"=>person.phone,
-          "fax"=>person.fax,
-          "email"=>person.email,
-          "preferred_language"=>person.attributes['preferred_language'],
-          "image"=>person.image.medium.url,
+          'prefix'=>person.attributes['prefix'],
+          'title'=>person.title,
+          'first_name'=>person.first_name,
+          'last_name'=>person.last_name,
+          'phone'=>person.phone,
+          'fax'=>person.fax,
+          'email'=>person.email,
+          'preferred_language'=>person.attributes['preferred_language'],
+          'image'=>person.image.medium.url,
           'customer_number' => nil,
-          "updatable"=>true,
-          "deletable"=>false,
-          "bank_accounts"=>{
+          'updatable'=>true,
+          'deletable'=>false,
+          'bank_accounts'=>{
             'array'=>person.bank_accounts.collect do |bank_account|
               {
-                "id"=>bank_account.id,
-                "type"=>"bank_account",
+                'id'=>bank_account.id,
+                'type'=>'bank_account',
                 'updated_at'=>bank_account.updated_at.as_json,
-                "holder"=>bank_account.holder,
-                "bank_name"=>bank_account.bank_name,
-                "bic"=>bank_account.bic,
-                "iban"=>bank_account.iban,
-                "direct_debit"=>bank_account.direct_debit,
+                'holder'=>bank_account.holder,
+                'bank_name'=>bank_account.bank_name,
+                'bic'=>bank_account.bic,
+                'iban'=>bank_account.iban,
+                'direct_debit'=>bank_account.direct_debit,
                 'updatable'=> true,
                 'deletable'=> true
               }

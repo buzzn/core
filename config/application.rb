@@ -5,7 +5,7 @@ require 'rails/all'
 
 ## https://docs.newrelic.com/docs/agents/ruby-agent/features/garbage-collection#gc_setup
 if ENV['GC_PROFILER_ENABLED'] == 'true'
-  puts "Enabling GC profiler"
+  puts 'Enabling GC profiler'
   GC::Profiler.enable
 end
 

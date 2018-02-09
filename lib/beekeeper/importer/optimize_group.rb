@@ -45,7 +45,7 @@ class Beekeeper::Importer::OptimizeGroup
   def process_virtual_list(virtual_list, localpool, warnings)
     case virtual_list.size
     when 0
-      warnings["discovergy"] = 'not all easymeters are in optimized group'
+      warnings['discovergy'] = 'not all easymeters are in optimized group'
     when 1
       serial = virtual_list.first.serialNumber
       if serial.to_i >= 106
@@ -59,7 +59,7 @@ class Beekeeper::Importer::OptimizeGroup
         logger.error("BUG: serial expected to be >= 106, but was #{serial}.")
       end
     else
-      warnings["discovergy"] = "found more than one virtual meter on Discovergy. can not optimized group: #{virtual_list.collect{|v| v.serialNumber}}"
+      warnings['discovergy'] = "found more than one virtual meter on Discovergy. can not optimized group: #{virtual_list.collect{|v| v.serialNumber}}"
     end
   end
 
@@ -78,7 +78,7 @@ class Beekeeper::Importer::OptimizeGroup
       m.registers.detect {|r| r.label.production? }
     end
     if production_meters.empty?
-      warnings["discovergy"] = "there are consumption discovergy meters but no production discovergy"
+      warnings['discovergy'] = 'there are consumption discovergy meters but no production discovergy'
       false
     else
       # one grid_feeding and one grid_consumption in one meter
@@ -89,7 +89,7 @@ class Beekeeper::Importer::OptimizeGroup
   def optimized_groups
     @optimized_groups ||= YAML.load(File.read(OPTIMIZED_GROUPS_YAML))
   rescue
-    logger.info("Unable to find optimized_groups file; it will be recreated.")
+    logger.info('Unable to find optimized_groups file; it will be recreated.')
     @optimized_groups = {}
   end
 

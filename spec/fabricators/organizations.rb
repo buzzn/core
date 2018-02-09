@@ -68,5 +68,5 @@ Fabricator :germany, from: :electricity_supplier do
 end
 
 Fabricator :gemeindewerke_peissenberg, from: :electricity_supplier do
-  name "Gemeindewerke Peißenberg"
+  name 'Gemeindewerke Peißenberg'
 end

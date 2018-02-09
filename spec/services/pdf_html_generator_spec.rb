@@ -20,7 +20,7 @@ describe Services::PdfHtmlGenerator do
     end
   end
 
-  let(:this) { File.expand_path("..", __FILE__) }
+  let(:this) { File.expand_path('..', __FILE__) }
   subject { Services::PdfHtmlGenerator.new(this) }
 
   it 'fails on wrong templates path' do

@@ -532,7 +532,7 @@ describe Services::ReadingCalculation do
   end
 
   it 'gets total energy for localpool' do
-    skip "Broken after Organization --> market partner refactoring."
+    skip 'Broken after Organization --> market partner refactoring.'
     localpool = Fabricate(:localpool_sulz_with_registers_and_readings)
     begin_date = Date.new(2016, 8, 4)
     result = subject.get_all_energy_in_localpool(localpool, begin_date, nil, 2016)
@@ -617,7 +617,7 @@ describe Services::ReadingCalculation do
 
       accounted_energy_consumption_third_party = Buzzn::AccountedEnergy.new(three, sample_reading, sample_reading, sample_reading)
       accounted_energy_consumption_third_party.label = Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY
-      total_accounted_energy = Buzzn::Localpool::TotalAccountedEnergy.new("some-localpool-id")
+      total_accounted_energy = Buzzn::Localpool::TotalAccountedEnergy.new('some-localpool-id')
       total_accounted_energy.add(accounted_energy_grid_feeding)
       total_accounted_energy.add(accounted_energy_grid_consumption)
       total_accounted_energy.add(accounted_energy_consumption_third_party)
@@ -638,7 +638,7 @@ describe Services::ReadingCalculation do
 
       accounted_energy_consumption_third_party_2 = Buzzn::AccountedEnergy.new(twelfe, sample_reading, sample_reading, sample_reading)
       accounted_energy_consumption_third_party_2.label = Buzzn::AccountedEnergy::CONSUMPTION_THIRD_PARTY
-      total_accounted_energy = Buzzn::Localpool::TotalAccountedEnergy.new("some-localpool-id")
+      total_accounted_energy = Buzzn::Localpool::TotalAccountedEnergy.new('some-localpool-id')
       total_accounted_energy.add(accounted_energy_grid_feeding)
       total_accounted_energy.add(accounted_energy_grid_consumption)
       total_accounted_energy.add(accounted_energy_consumption_third_party_2)
@@ -659,7 +659,7 @@ describe Services::ReadingCalculation do
                                           Fabricate.build(:output_register, label: Register::Base.labels[:grid_feeding_corrected])])
     expect{ subject.get_missing_reading(meter.input_register, Date.new(2016, 1, 1)) }.to raise_error ArgumentError
 
-    VCR.use_cassette("lib/buzzn/discovergy/gets_single_reading") do
+    VCR.use_cassette('lib/buzzn/discovergy/gets_single_reading') do
       meter = Fabricate(:input_meter, product_serialnumber: 60009485)
       broker = Fabricate(:discovergy_broker, mode: 'in',
                          resource: meter, external_id: "EASYMETER_#{meter.product_serialnumber}")

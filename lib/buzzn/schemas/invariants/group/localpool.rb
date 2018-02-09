@@ -33,7 +33,7 @@ module Schemas
             when 'NilClass'
               true
             else
-              raise "can not handle " + input.class.to_s
+              raise 'can not handle ' + input.class.to_s
             end
           end
 

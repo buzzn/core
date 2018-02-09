@@ -78,7 +78,7 @@ gem 'rails_12factor'
 
 
 group :production, :staging do
-  gem "sentry-raven" # the Sentry exception notification service
+  gem 'sentry-raven' # the Sentry exception notification service
   gem 'newrelic_rpm'
 end
 

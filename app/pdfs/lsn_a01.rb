@@ -60,15 +60,15 @@ module Buzzn::Pdfs
       when Person
         prefix = case user.prefix
                  when 'female'
-                   "Sehr geehrte Frau"
+                   'Sehr geehrte Frau'
                  when 'male'
-                   "Sehr geehrter Herr"
+                   'Sehr geehrter Herr'
                  else
-                   "Hallo"
+                   'Hallo'
                  end
         "#{prefix} #{user.title} #{power_taker.contractor.name}"
       when Organization
-        "Sehr geehrte Damen und Herren"
+        'Sehr geehrte Damen und Herren'
       else
         raise ArgumentError.new("unknown type of contractor: #{user}")
       end

@@ -47,12 +47,12 @@ FactoryGirl.define do
       manufacturer_description     { generate(:meter_manufacturer_description) }
       location_description         { generate(:meter_location_description) }
       product_serialnumber         { generate(:meter_serial_number) }
-      product_name                 "Q3D"
-      calibrated_until             Date.parse("2027-10-13")
+      product_name                 'Q3D'
+      calibrated_until             Date.parse('2027-10-13')
       converter_constant           1
       ownership                    Meter::Real.ownerships[:buzzn]
       build_year                   2015
-      sent_data_dso                Date.parse("2016-09-17")
+      sent_data_dso                Date.parse('2016-09-17')
       # edifact data
       edifact_metering_type        Meter::Real.edifact_metering_types[:digital_household_meter]
       edifact_meter_size           Meter::Real.edifact_meter_sizes[:edl40]
@@ -68,7 +68,7 @@ FactoryGirl.define do
       initialize_with             { Meter::Virtual.new }
       manufacturer_name           nil
       direction_number            nil
-      product_name                "buzzn virtual meter"
+      product_name                'buzzn virtual meter'
     end
   end
 end

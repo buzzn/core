@@ -1,16 +1,16 @@
 FactoryGirl.define do
   factory :device do
-    manufacturer_name                 "Generic manufacturer name"
-    manufacturer_product_name         "Generic product"
-    manufacturer_product_serialnumber "47-11"
-    mode                              "OUT"
+    manufacturer_name                 'Generic manufacturer name'
+    manufacturer_product_name         'Generic product'
+    manufacturer_product_serialnumber '47-11'
+    mode                              'OUT'
     register                          { FactoryGirl.create(:register, :input) }
-    law                               "KWKG"
-    category                          "Generic category"
+    law                               'KWKG'
+    category                          'Generic category'
     primary_energy                    Device::NATURAL_GAS
     watt_peak                         5_500
     watt_hour_pa                      6_000
-    commissioning                     Date.parse("1995-01-01")
+    commissioning                     Date.parse('1995-01-01')
     mobile                            false
 
     trait :bhkw do

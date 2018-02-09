@@ -30,21 +30,21 @@ describe Admin::LocalpoolRoda do
       let(:billings_json) do
         Billing.all.reload.collect do |billing|
           {
-            "id"=>billing.id,
-            "type"=>"billing",
+            'id'=>billing.id,
+            'type'=>'billing',
             'updated_at'=>billing.updated_at.as_json,
-            "start_reading_id"=>billing.start_reading_id,
-            "end_reading_id"=>billing.end_reading_id,
-            "device_change_reading_1_id"=>nil,
-            "device_change_reading_2_id"=>nil,
-            "total_energy_consumption_kwh"=>1000,
-            "total_price_cents"=>30000,
-            "prepayments_cents"=>29000,
-            "receivables_cents"=>1000,
-            "invoice_number"=>billing.invoice_number,
-            "status"=>"open",
-            "updatable"=>true,
-            "deletable"=>true
+            'start_reading_id'=>billing.start_reading_id,
+            'end_reading_id'=>billing.end_reading_id,
+            'device_change_reading_1_id'=>nil,
+            'device_change_reading_2_id'=>nil,
+            'total_energy_consumption_kwh'=>1000,
+            'total_price_cents'=>30000,
+            'prepayments_cents'=>29000,
+            'receivables_cents'=>1000,
+            'invoice_number'=>billing.invoice_number,
+            'status'=>'open',
+            'updatable'=>true,
+            'deletable'=>true
           }
         end
       end
@@ -77,8 +77,8 @@ describe Admin::LocalpoolRoda do
 
       let(:wrong_json) do
         {
-          "errors"=>[
-            {"parameter"=>"accounting_year", "detail"=>"must be an integer"}
+          'errors'=>[
+            {'parameter'=>'accounting_year', 'detail'=>'must be an integer'}
           ]
         }
       end
@@ -86,21 +86,21 @@ describe Admin::LocalpoolRoda do
       let(:billings_json) do
         Billing.all.reload.collect do |billing|
           {
-            "id"=>billing.id,
-            "type"=>"billing",
+            'id'=>billing.id,
+            'type'=>'billing',
             'updated_at'=>billing.updated_at.as_json,
-            "start_reading_id"=>billing.start_reading_id,
-            "end_reading_id"=>billing.end_reading_id,
-            "device_change_reading_1_id"=>nil,
-            "device_change_reading_2_id"=>nil,
-            "total_energy_consumption_kwh"=>1000,
-            "total_price_cents"=>30000,
-            "prepayments_cents"=>29000,
-            "receivables_cents"=>1000,
-            "invoice_number"=>billing.invoice_number,
-            "status"=>"open",
-            "updatable"=>true,
-            "deletable"=>true
+            'start_reading_id'=>billing.start_reading_id,
+            'end_reading_id'=>billing.end_reading_id,
+            'device_change_reading_1_id'=>nil,
+            'device_change_reading_2_id'=>nil,
+            'total_energy_consumption_kwh'=>1000,
+            'total_price_cents'=>30000,
+            'prepayments_cents'=>29000,
+            'receivables_cents'=>1000,
+            'invoice_number'=>billing.invoice_number,
+            'status'=>'open',
+            'updatable'=>true,
+            'deletable'=>true
           }
         end
       end
@@ -141,34 +141,34 @@ describe Admin::LocalpoolRoda do
 
       entity :updated_json do
         {
-          "id"=>billing.id,
-          "type"=>"billing",
-          "start_reading_id"=>billing.start_reading_id,
-          "end_reading_id"=>billing.end_reading_id,
-          "device_change_reading_1_id"=>nil,
-          "device_change_reading_2_id"=>nil,
-          "total_energy_consumption_kwh"=>1000,
-          "total_price_cents"=>30000,
-          "prepayments_cents"=>29000,
-          "receivables_cents"=>1000,
-          "invoice_number"=>"123-abc",
-          "status"=>"open",
-          "updatable"=>true,
-          "deletable"=>true
+          'id'=>billing.id,
+          'type'=>'billing',
+          'start_reading_id'=>billing.start_reading_id,
+          'end_reading_id'=>billing.end_reading_id,
+          'device_change_reading_1_id'=>nil,
+          'device_change_reading_2_id'=>nil,
+          'total_energy_consumption_kwh'=>1000,
+          'total_price_cents'=>30000,
+          'prepayments_cents'=>29000,
+          'receivables_cents'=>1000,
+          'invoice_number'=>'123-abc',
+          'status'=>'open',
+          'updatable'=>true,
+          'deletable'=>true
         }
       end
 
       let(:wrong_json) do
         {
-          "errors"=>[
-            {"parameter"=>"updated_at",
-             "detail"=>"is missing"},
-            {"parameter"=>"receivables_cents",
-             "detail"=>"must be an integer"},
-            {"parameter"=>"invoice_number",
-             "detail"=>"size cannot be greater than 64"},
-            {"parameter"=>"status",
-             "detail"=>"must be one of: open, calculated, delivered, settled, closed"}
+          'errors'=>[
+            {'parameter'=>'updated_at',
+             'detail'=>'is missing'},
+            {'parameter'=>'receivables_cents',
+             'detail'=>'must be an integer'},
+            {'parameter'=>'invoice_number',
+             'detail'=>'size cannot be greater than 64'},
+            {'parameter'=>'status',
+             'detail'=>'must be one of: open, calculated, delivered, settled, closed'}
           ]
         }
       end

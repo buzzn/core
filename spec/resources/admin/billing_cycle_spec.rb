@@ -1,7 +1,7 @@
 describe Admin::BillingCycleResource do
 
   # FIXME: lpt_contract in billing entity is nil after Organization --> market roles refactoring, causing some tests to fail
-  before { skip "Pending refactoring of fabricators" }
+  before { skip 'Pending refactoring of fabricators' }
 
   entity(:localpool) { Fabricate(:localpool_sulz_with_registers_and_readings) }
   entity(:billing_cycle) { Fabricate(:billing_cycle,

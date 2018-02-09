@@ -23,7 +23,7 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
   end
 
   let(:broken_meter_result) do
-    ""
+    ''
   end
 
   entity(:api) { ApiMock.new }

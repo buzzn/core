@@ -26,13 +26,13 @@ describe 'Schemas::Invariants::Group::Localpool' do
 
     context 'person' do
       before { localpool.update(owner: person) }
-      it_behaves_like "an owner"
+      it_behaves_like 'an owner'
     end
     context 'organization' do
       entity!(:organization) { create(:organization, contact: person) }
 
       before { localpool.update(owner: organization) }
-      it_behaves_like "an owner"
+      it_behaves_like 'an owner'
     end
   end
 
@@ -89,7 +89,7 @@ describe 'Schemas::Invariants::Group::Localpool' do
     end
   end
 
-  shared_examples "invariants of a grid connected register" do |label|
+  shared_examples 'invariants of a grid connected register' do |label|
 
     before { localpool.meters.clear }
 
@@ -105,14 +105,14 @@ describe 'Schemas::Invariants::Group::Localpool' do
       meter.input_register
     end
 
-    context "when there is no such register" do
+    context 'when there is no such register' do
       before do
         expect(tested_register).to be_nil # assert precondition
       end
       it { is_expected.to be_nil }
     end
 
-    context "when there is one such register" do
+    context 'when there is one such register' do
       before do
         make_register(localpool, label: label)
         expect(tested_register).not_to be_nil # assert precondition
@@ -120,7 +120,7 @@ describe 'Schemas::Invariants::Group::Localpool' do
       it { is_expected.to be_nil }
     end
 
-    context "when there are two such registers" do
+    context 'when there are two such registers' do
       before do
         2.times { make_register(localpool, label: label) }
         expect(tested_register).not_to be_nil # assert precondition
@@ -129,12 +129,12 @@ describe 'Schemas::Invariants::Group::Localpool' do
     end
   end
 
-  describe "grid feeding register" do
-    it_behaves_like "invariants of a grid connected register", :grid_feeding
+  describe 'grid feeding register' do
+    it_behaves_like 'invariants of a grid connected register', :grid_feeding
   end
 
-  describe "grid consumption register" do
-    it_behaves_like "invariants of a grid connected register", :grid_consumption
+  describe 'grid consumption register' do
+    it_behaves_like 'invariants of a grid connected register', :grid_consumption
   end
 
 end

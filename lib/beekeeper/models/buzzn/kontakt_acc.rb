@@ -47,10 +47,10 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
 
   ANREDE_TO_PREFIX_MAP = {
     nil        => nil,
-    ""         => nil,
-    "Herr"     => 'M',
-    "Herrn"    => 'M',
-    "Frau"     => 'F'
+    ''         => nil,
+    'Herr'     => 'M',
+    'Herrn'    => 'M',
+    'Frau'     => 'F'
   }
 
   def prefix

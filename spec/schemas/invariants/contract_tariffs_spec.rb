@@ -27,7 +27,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
         tariff.update(group: localpool)
       end
 
-      context "when contract has no localpool" do
+      context 'when contract has no localpool' do
         before do
           contract.update(localpool: nil)
           localpool.tariffs.reload
@@ -35,7 +35,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
         it { is_expected.to be_nil }
       end
 
-      context "when tariffs do not line up" do
+      context 'when tariffs do not line up' do
         before do
           contract.tariffs << tariff2
           localpool.tariffs.reload
@@ -43,7 +43,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
         it { is_expected.to eq(['all tariffs must line up']) }
       end
 
-      context "when tariffs do not cover ending" do
+      context 'when tariffs do not cover ending' do
         before do
           contract.tariffs << tariff2
           contract.tariffs.delete(tariff)
@@ -52,14 +52,14 @@ describe 'Schemas::Invariants::Contract::Localpool' do
         it { is_expected.to eq(['tariffs must cover end of contract']) }
       end
 
-      context "when all tariffs belong to localpool" do
+      context 'when all tariffs belong to localpool' do
         before do
           localpool.tariffs.reload
         end
         it { is_expected.to be_nil }
       end
 
-      context "when tariffs do belong to different localpool" do
+      context 'when tariffs do belong to different localpool' do
         before do
           tariff.update(group: other_localpool)
           localpool.tariffs.reload

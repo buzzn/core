@@ -7,14 +7,14 @@ describe Me::Roda do
   entity(:person) { $user.person.reload }
 
   let(:expired_json) do
-    {"error" => "This session has expired, please login again." }
+    {'error' => 'This session has expired, please login again.' }
   end
 
   let(:denied_json) do
     {
-      "errors" => [
+      'errors' => [
         {
-          "detail"=>"retrieve Person: permission denied for User: --anonymous--"
+          'detail'=>'retrieve Person: permission denied for User: --anonymous--'
         }
       ]
     }
@@ -22,21 +22,21 @@ describe Me::Roda do
 
   let(:person_json) do
     {
-      "id"=>person.id,
-      "type"=>"person",
+      'id'=>person.id,
+      'type'=>'person',
       'updated_at'=>person.updated_at.as_json,
-      "prefix"=>person.attributes['prefix'],
-      "title"=>person.attributes['title'],
-      "first_name"=>person.first_name,
-      "last_name"=>person.last_name,
-      "phone"=>person.phone,
-      "fax"=>person.fax,
-      "email"=>person.email,
+      'prefix'=>person.attributes['prefix'],
+      'title'=>person.attributes['title'],
+      'first_name'=>person.first_name,
+      'last_name'=>person.last_name,
+      'phone'=>person.phone,
+      'fax'=>person.fax,
+      'email'=>person.email,
       'preferred_language'=>person.attributes['preferred_language'],
-      "image"=>person.image.medium.url,
+      'image'=>person.image.medium.url,
       'customer_number' => nil,
-      "updatable"=>true,
-      "deletable"=>false,
+      'updatable'=>true,
+      'deletable'=>false,
     }
   end
 
@@ -90,47 +90,47 @@ describe Me::Roda do
 
     let(:wrong_json) do
       {
-        "errors"=>[
-          {"parameter"=>"updated_at",
-           "detail"=>"is missing"},
-          {"parameter"=>"title",
-           "detail"=>"must be one of: Prof., Dr., Prof. Dr."},
-          {"parameter"=>"prefix",
-           "detail"=>"must be one of: F, M"},
-          {"parameter"=>"first_name",
-           "detail"=>"size cannot be greater than 64"},
-          {"parameter"=>"last_name",
-           "detail"=>"size cannot be greater than 64"},
-          {"parameter"=>"phone", "detail"=>"must be a valid phone-number"},
-          {"parameter"=>"fax", "detail"=>"size cannot be greater than 64"},
-          {"parameter"=>"preferred_language", "detail"=>"must be one of: de, en"}
+        'errors'=>[
+          {'parameter'=>'updated_at',
+           'detail'=>'is missing'},
+          {'parameter'=>'title',
+           'detail'=>'must be one of: Prof., Dr., Prof. Dr.'},
+          {'parameter'=>'prefix',
+           'detail'=>'must be one of: F, M'},
+          {'parameter'=>'first_name',
+           'detail'=>'size cannot be greater than 64'},
+          {'parameter'=>'last_name',
+           'detail'=>'size cannot be greater than 64'},
+          {'parameter'=>'phone', 'detail'=>'must be a valid phone-number'},
+          {'parameter'=>'fax', 'detail'=>'size cannot be greater than 64'},
+          {'parameter'=>'preferred_language', 'detail'=>'must be one of: de, en'}
         ]
       }
     end
 
     let(:updated_json) do
       {
-        "id"=>person.id,
-        "type"=>"person",
-        "prefix"=>"M",
-        "title"=>"Prof.",
-        "first_name"=>"Maxima",
-        "last_name"=>"Toll",
-        "phone"=>"+(0)84.32 123-312 x123 #123",
-        "fax"=>"08191 123312",
-        "email"=>person.email,
-        "preferred_language"=>"de",
-        "image"=>person.image.medium.url,
+        'id'=>person.id,
+        'type'=>'person',
+        'prefix'=>'M',
+        'title'=>'Prof.',
+        'first_name'=>'Maxima',
+        'last_name'=>'Toll',
+        'phone'=>'+(0)84.32 123-312 x123 #123',
+        'fax'=>'08191 123312',
+        'email'=>person.email,
+        'preferred_language'=>'de',
+        'image'=>person.image.medium.url,
         'customer_number' => nil,
-        "updatable"=>true,
-        "deletable"=>false
+        'updatable'=>true,
+        'deletable'=>false
       }
     end
 
     let(:stale_json) do
       {
-        "errors" => [
-          {"detail"=>"Person: #{person.id} was updated at: #{person.updated_at}"}]
+        'errors' => [
+          {'detail'=>"Person: #{person.id} was updated at: #{person.updated_at}"}]
       }
     end
 
@@ -166,7 +166,7 @@ describe Me::Roda do
             fax: '123312' * 40,
             preferred_language: 'none'
       expect(response).to have_http_status(422)
-      expect(json.to_yaml).to eq send("wrong_json").to_yaml
+      expect(json.to_yaml).to eq send('wrong_json').to_yaml
     end
 
     it '200' do

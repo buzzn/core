@@ -1,4 +1,4 @@
-describe "Source File" do
+describe 'Source File' do
 
   (Dir['config/initilaizers/*rb'] + Dir['lib/**/*rb'] + Dir['app/**/*rb']).each do |file|
     it "source code files do not use Time.now in #{file}" do

@@ -55,7 +55,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   end
 
   def obis
-    return '1-1:1.8.0' if ['1-1:1.8.0', "1-1:.8.0"].include?(read_attribute(:obis))
+    return '1-1:1.8.0' if ['1-1:1.8.0', '1-1:.8.0'].include?(read_attribute(:obis))
     return '1-1:2.8.0' if ['1-1:2.8.0', '1-1:2:8.0'].include?(read_attribute(:obis))
     add_warning(:obis, "Unknown obis: #{read_attribute(:obis)} for #{buzznid}")
   end
@@ -70,7 +70,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     stripped = msb_gerät.adresszusatz.strip
     if stripped.empty?
       add_warning(:name, "Missing name for #{buzznid}")
-      "MISSING"
+      'MISSING'
     else
       stripped
     end
@@ -138,7 +138,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   end
 
   def group_power_source_buzznids
-    group_seas = group.attributes.slice("sea_1_buzznid", "sea_2_buzznid", "sea_3_buzznid").values
+    group_seas = group.attributes.slice('sea_1_buzznid', 'sea_2_buzznid', 'sea_3_buzznid').values
     group_seas.select(&:present?)
   end
 

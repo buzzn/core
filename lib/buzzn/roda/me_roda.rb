@@ -67,7 +67,7 @@ module Me
           logger.info Time.at(Buzzn::Utils::Chronos.now.to_i)
 
           r.response.status = 401
-          {"error" => "This session has expired, please login again." }
+          {'error' => 'This session has expired, please login again.' }
         else
           r.response['Content-Type'] = 'text/plain'
           'pong'

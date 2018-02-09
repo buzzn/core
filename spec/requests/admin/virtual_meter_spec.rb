@@ -28,15 +28,15 @@ describe Admin::LocalpoolRoda do
 
     let(:meter_json) do
       {
-        "id"=>meter.id,
-        "type"=>"meter_virtual",
+        'id'=>meter.id,
+        'type'=>'meter_virtual',
         'updated_at'=> meter.updated_at.as_json,
-        "product_name"=>meter.product_name,
-        "product_serialnumber"=>meter.product_serialnumber,
+        'product_name'=>meter.product_name,
+        'product_serialnumber'=>meter.product_serialnumber,
         'sequence_number' => nil,
-        "updatable"=>true,
-        "deletable"=>true,
-        "formula_parts"=> {
+        'updatable'=>true,
+        'deletable'=>true,
+        'formula_parts'=> {
           'array'=> register.formula_parts.collect do |part|
             {
               'id'=>part.id,
@@ -44,26 +44,26 @@ describe Admin::LocalpoolRoda do
               'updated_at'=> part.updated_at.as_json,
               'operator'=>part.attributes['operator'],
               'register'=>{
-                "id"=>part.operand.id,
-                "type"=>"register_real",
+                'id'=>part.operand.id,
+                'type'=>'register_real',
                 'updated_at'=> part.operand.updated_at.as_json,
-                "direction"=>part.operand.attributes['direction'],
-                "name"=>part.operand.name,
-                "pre_decimal_position"=>part.operand.pre_decimal_position,
-                "post_decimal_position"=>part.operand.post_decimal_position,
-                "low_load_ability"=>part.operand.low_load_ability,
-                "label"=>part.operand.attributes['label'],
-                "last_reading"=>0,
+                'direction'=>part.operand.attributes['direction'],
+                'name'=>part.operand.name,
+                'pre_decimal_position'=>part.operand.pre_decimal_position,
+                'post_decimal_position'=>part.operand.post_decimal_position,
+                'low_load_ability'=>part.operand.low_load_ability,
+                'label'=>part.operand.attributes['label'],
+                'last_reading'=>0,
                 'observer_min_threshold'=> part.operand.observer_min_threshold,
                 'observer_max_threshold'=> part.operand.observer_max_threshold,
                 'observer_enabled'=> part.operand.observer_enabled,
                 'observer_offline_monitoring'=> part.operand.observer_offline_monitoring,
                 'meter_id' => part.operand.meter_id,
-                "updatable"=>true,
-                "deletable"=>false,
+                'updatable'=>true,
+                'deletable'=>false,
                 'createables' => ['readings'],
-                "metering_point_id"=>part.operand.metering_point_id,
-                "obis"=>part.operand.obis
+                'metering_point_id'=>part.operand.metering_point_id,
+                'obis'=>part.operand.obis
               }
             }
           end
@@ -105,26 +105,26 @@ describe Admin::LocalpoolRoda do
 
       let(:wrong_json) do
         {
-          "errors"=>[
-            {"parameter"=>"product_name",
-             "detail"=>"size cannot be greater than 64"},
-            {"parameter"=>"product_serialnumber",
-             "detail"=>"size cannot be greater than 128"},
-            {"parameter"=>"updated_at",
-             "detail"=>"is missing"}
+          'errors'=>[
+            {'parameter'=>'product_name',
+             'detail'=>'size cannot be greater than 64'},
+            {'parameter'=>'product_serialnumber',
+             'detail'=>'size cannot be greater than 128'},
+            {'parameter'=>'updated_at',
+             'detail'=>'is missing'}
           ]
         }
       end
 
       let(:updated_json) do
         {
-          "id"=>meter.id,
-          "type"=>"meter_virtual",
-          "product_name"=>'SmartySuper',
-          "product_serialnumber"=>'41234',
+          'id'=>meter.id,
+          'type'=>'meter_virtual',
+          'product_name'=>'SmartySuper',
+          'product_serialnumber'=>'41234',
           'sequence_number' => nil,
-          "updatable"=>true,
-          "deletable"=>true,
+          'updatable'=>true,
+          'deletable'=>true,
         }
       end
 
@@ -235,19 +235,19 @@ describe Admin::LocalpoolRoda do
 
         let(:wrong_json) do
           {
-            "errors"=>[
-              {"parameter"=>"updated_at",
-               "detail"=>"is missing"},
-              {"parameter"=>"operator",
-               "detail"=>"must be one of: +, -"},
+            'errors'=>[
+              {'parameter'=>'updated_at',
+               'detail'=>'is missing'},
+              {'parameter'=>'operator',
+               'detail'=>'must be one of: +, -'},
             ]
           }
         end
 
         let(:updated_json) do
           {
-            "id"=>formula_part.id,
-            "type"=>"meter_formula_part",
+            'id'=>formula_part.id,
+            'type'=>'meter_formula_part',
             'operator'=> '-'
           }
         end

@@ -44,14 +44,14 @@ describe Admin::BankAccountRoda do
 
       def serialized_bank_account(bank_account)
         {
-          "id"=>bank_account.id,
-          "type"=>"bank_account",
+          'id'=>bank_account.id,
+          'type'=>'bank_account',
           'updated_at'=>bank_account.updated_at.as_json,
-          "holder"=>bank_account.holder,
-          "bank_name"=>bank_account.bank_name,
-          "bic"=>bank_account.bic,
-          "iban"=>bank_account.iban,
-          "direct_debit"=>bank_account.direct_debit,
+          'holder'=>bank_account.holder,
+          'bank_name'=>bank_account.bank_name,
+          'bic'=>bank_account.bic,
+          'iban'=>bank_account.iban,
+          'direct_debit'=>bank_account.direct_debit,
           'updatable' => true,
           'deletable' => true
         }
@@ -63,13 +63,13 @@ describe Admin::BankAccountRoda do
 
       let(:wrong_json) do
         {
-          "errors"=>[
-            {"parameter"=>"holder",
-             "detail"=>"size cannot be greater than 64"},
-            {"parameter"=>"iban",
-             "detail"=>"must be a string"},
-            {"parameter"=>"bank_name",
-             "detail"=>"size cannot be greater than 64"},
+          'errors'=>[
+            {'parameter'=>'holder',
+             'detail'=>'size cannot be greater than 64'},
+            {'parameter'=>'iban',
+             'detail'=>'must be a string'},
+            {'parameter'=>'bank_name',
+             'detail'=>'size cannot be greater than 64'},
           ]
         }
       end
@@ -78,9 +78,9 @@ describe Admin::BankAccountRoda do
 
         let(:create_denied_json) do
           {
-            "errors" => [
+            'errors' => [
               {
-                "detail"=>" OrganizationResource: #{parent.id} permission denied for User: #{$user.id}" }
+                'detail'=>" OrganizationResource: #{parent.id} permission denied for User: #{$user.id}" }
             ]
           }
         end
@@ -115,15 +115,15 @@ describe Admin::BankAccountRoda do
 
         let(:wrong_json) do
           {
-            "errors"=>[
-              {"parameter"=>"updated_at",
-               "detail"=>"is missing"},
-              {"parameter"=>"holder",
-               "detail"=>"size cannot be greater than 64"},
-              {"parameter"=>"iban",
-               "detail"=>"must be a valid iban"},
-              {"parameter"=>"bank_name",
-               "detail"=>"size cannot be greater than 64"},
+            'errors'=>[
+              {'parameter'=>'updated_at',
+               'detail'=>'is missing'},
+              {'parameter'=>'holder',
+               'detail'=>'size cannot be greater than 64'},
+              {'parameter'=>'iban',
+               'detail'=>'must be a valid iban'},
+              {'parameter'=>'bank_name',
+               'detail'=>'size cannot be greater than 64'},
             ]
           }
         end
