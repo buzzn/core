@@ -32,14 +32,13 @@ class Beekeeper::Importer::LocalpoolContracts
   private
 
   def create_contract(localpool, customer, contract, registers, tariffs)
-    register = find_or_create_register(contract, registers)
+    register = find_or_create_register(contract, registers, localpool)
     contract_attributes = contract.except(:powertaker, :buzznid).merge(
       localpool:  localpool,
       register:   register,
       customer:   customer,
       contractor: localpool.owner
     )
-    register.meter.update(group, localpool) unless register.meter.group
     contract = Contract::LocalpoolPowerTaker.create!(contract_attributes)
     contract.tariffs =
       if contract.end_date.nil?
@@ -62,12 +61,12 @@ class Beekeeper::Importer::LocalpoolContracts
     end
   end
 
-  def find_or_create_register(contract, registers)
+  def find_or_create_register(contract, registers, localpool)
     meter = registers.collect(&:meter).find { |m| m.legacy_buzznid == contract[:buzznid] }
     if meter
       meter.registers.input.first
     else
-      create_fake_virtual_register(contract[:buzznid]) if contract[:buzznid].present?
+      create_fake_virtual_register(contract[:buzznid], localpool) if contract[:buzznid].present?
     end
   end
 
@@ -84,9 +83,9 @@ class Beekeeper::Importer::LocalpoolContracts
   end
 
   # As a temporary solution to importing the actual virtual registers (separate story), we create a fake, empty one.
-  def create_fake_virtual_register(buzznid)
+  def create_fake_virtual_register(buzznid, localpool)
     logger.error("No meter/register for #{buzznid}, creating a fake temporary one.")
-    meter = Meter::Real.create!(product_serialnumber: 'FAKE-FOR-IMPORT', legacy_buzznid: buzznid)
+    meter = Meter::Real.create!(product_serialnumber: 'FAKE-FOR-IMPORT', legacy_buzznid: buzznid, group: localpool)
     Register::Input.create!(name: "FAKE-FOR-IMPORT", share_with_group: false, meter: meter)
   end
 

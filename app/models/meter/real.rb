@@ -64,8 +64,8 @@ module Meter
       if group_id_changed?
         raise ArgumentError.new('can not change group') unless group_id_was.nil?
         unless sequence_number
-          max = Meter::Base.where(group: group).size
-          self.sequence_number = max
+          max = Meter::Base.where(group: group).maximum(:sequence_number)
+          self.sequence_number = max.to_i + 1
         end
       end
     end
