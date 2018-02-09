@@ -89,9 +89,11 @@ Layout/AccessModifierIndentation:
 Style/RedundantSelf:
   Enabled: false
 
-Style/EmptyLines:
+Layout/EmptyLines:
   Enabled: true
 
 Layout/EmptyLineBetweenDefs:
   Enabled: true
 
+Style/MethodDefParentheses:
+  Enabled: true

@@ -8,7 +8,7 @@ class Crypto::Encryptor
   #      inspired by https://youtu.be/3t3P7kzdP4M?t=2373
   CIPHER_ALGORITHM = 'aes-128-gcm'
 
-  def process data
+  def process(data)
     (cipher, details) = build_cipher
 
     encrypted          = cipher.update(data) + cipher.final

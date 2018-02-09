@@ -996,15 +996,6 @@ Style/MethodCallWithoutArgsParentheses:
     - 'lib/buzzn/localpool/checks.rb'
     - 'spec/lib/buzzn/checks_spec.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: require_parentheses, require_no_parentheses, require_no_parentheses_except_multiline
-Style/MethodDefParentheses:
-  Exclude:
-    - 'lib/buzzn/crypto/decryptor.rb'
-    - 'lib/buzzn/crypto/encryptor.rb'
-
 # Offense count: 11
 Style/MethodMissing:
   Exclude:
