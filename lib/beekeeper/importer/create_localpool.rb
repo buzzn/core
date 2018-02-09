@@ -18,4 +18,5 @@ class Beekeeper::Importer::CreateLocalpool
   def find_or_create_owner(unsaved_record)
     Beekeeper::Importer::FindOrCreatePersonOrOrganization.new(logger).run(unsaved_record)
   end
+
 end

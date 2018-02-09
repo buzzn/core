@@ -14,4 +14,5 @@ class OrganizationMarketFunction < ActiveRecord::Base
     power_taker
     transmission_system_operator
   ).map.with_object({}) { |key, hash| hash[key] = key.to_s }
+
 end

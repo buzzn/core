@@ -18,6 +18,7 @@
 #
 
 class Beekeeper::Buzzn::Konto < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.konto'
 
   def converted_attributes
@@ -55,4 +56,5 @@ class Beekeeper::Buzzn::Konto < Beekeeper::Buzzn::BaseRecord
   def bic
     bank.bic
   end
+
 end

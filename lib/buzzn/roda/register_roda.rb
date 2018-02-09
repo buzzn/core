@@ -48,4 +48,5 @@ class RegisterRoda < BaseRoda
       end
     end
   end
+
 end

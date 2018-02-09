@@ -7,4 +7,5 @@ class SwaggerRoda < BaseRoda
       YAML.load(File.read(r.path.sub(/.api/, 'lib/buzzn/roda').sub('.json', '.yaml')))
     end
   end
+
 end

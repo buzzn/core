@@ -1,6 +1,7 @@
 require_relative '../crypto'
 
 class Crypto::Encryptor
+
   # authenticated encryption
   # see also https://crypto.stanford.edu/RealWorldCrypto/slides/gueron.pdf
   # TODO use AES-SIV from https://github.com/miscreant/miscreant/wiki/Ruby-Documentation
@@ -29,4 +30,5 @@ class Crypto::Encryptor
 
     [cipher, details]
   end
+
 end

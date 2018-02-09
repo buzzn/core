@@ -1,6 +1,9 @@
 module Buzzn::Localpool
+
   class Checks
+
     class << self
+
       # This method iterates over all consumption registers in a LCP and checks if each register has
       # a running contract at each time between the beginning of the LCP and now.
       # input params:
@@ -134,12 +137,14 @@ module Buzzn::Localpool
       end
 
     end
+
   end
 
   class CheckError < StandardError
   end
 
   class MissingLsnCheckResult
+
     attr_reader :register, :begin_date, :end_date
 
     def initialize(register, begin_date, end_date)
@@ -150,9 +155,11 @@ module Buzzn::Localpool
       @begin_date = begin_date
       @end_date = end_date
     end
+
   end
 
   class MissingLsnCheckResultSet
+
     attr_reader :all_results
 
     def initialize()
@@ -165,5 +172,7 @@ module Buzzn::Localpool
       end
       @all_results << missing_lsn_check_result
     end
+
   end
+
 end

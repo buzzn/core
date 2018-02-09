@@ -11,5 +11,7 @@
 #
 
 class Beekeeper::Minipool::Zaehler < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.zaehler'
+
 end

@@ -1,6 +1,7 @@
 describe Services::PdfHtmlGenerator do
 
   class With < Services::PdfHtmlGenerator::Html
+
     include Import.kwargs['services.pdf_html_generator']
 
     def initialize(data = {})
@@ -18,6 +19,7 @@ describe Services::PdfHtmlGenerator do
                         o
                       end
     end
+
   end
 
   let(:this) { File.expand_path('..', __FILE__) }

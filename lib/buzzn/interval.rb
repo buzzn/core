@@ -1,15 +1,16 @@
 module Buzzn
-
   class Interval
 
     attr_reader :from, :to, :duration
 
     class << self
+
       private :new
 
       def create(duration, timestamp)
         send(duration.to_sym, timestamp)
       end
+
     end
 
     def initialize(from, to)
@@ -91,6 +92,7 @@ module Buzzn
     # rubocop:enable Style/MultilineTernaryOperator
 
     class << self
+
       private :new
 
       def year(timestamp = nil)
@@ -151,6 +153,8 @@ module Buzzn
           raise ArgumentError.new('need a Time object')
         end
       end
+
     end
+
   end
 end

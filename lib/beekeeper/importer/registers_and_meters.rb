@@ -16,4 +16,5 @@ class Beekeeper::Importer::RegistersAndMeters
       register
     end
   end
+
 end

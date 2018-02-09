@@ -37,6 +37,7 @@ module Buzzn::Pdfs
       def base_price_euro
         tariff_now.baseprice_cents_per_month.to_f / 100
       end
+
     end
 
     def initialize(localpool_power_taker_contract)
@@ -73,5 +74,6 @@ module Buzzn::Pdfs
         raise ArgumentError.new("unknown type of contractor: #{user}")
       end
     end
+
   end
 end

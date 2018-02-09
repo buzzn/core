@@ -39,4 +39,5 @@ class Beekeeper::Importer::Brokers
   def meter_map
     @meter_map ||= @meters.real
   end
+
 end

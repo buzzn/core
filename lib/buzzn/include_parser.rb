@@ -59,4 +59,5 @@ class Buzzn::IncludeParser
     @current[name] = {}
     accept(remaining)
   end
+
 end

@@ -10,5 +10,6 @@ module Utils
         Transactions::Utils::ZipToPrice.call(r.params)
       end
     end
+
   end
 end

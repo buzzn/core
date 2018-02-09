@@ -3,6 +3,7 @@ require_relative 'context'
 
 module Buzzn::Resource
   class Base
+
     include Schemas::Support::DryValidationForResource
 
     attr_reader :object, :current_user, :current_roles, :permissions
@@ -196,6 +197,7 @@ module Buzzn::Resource
           const
         end
       end
+
     end
 
     def initialize(resource, current_user: nil, current_roles: [], permissions: nil)
@@ -292,5 +294,6 @@ module Buzzn::Resource
         super
       end
     end
+
   end
 end

@@ -86,5 +86,6 @@ module Me
         Transactions::Person::Update.for(person).call(r.params)
       end
     end
+
   end
 end

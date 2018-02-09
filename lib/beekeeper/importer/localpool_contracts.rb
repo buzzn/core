@@ -93,4 +93,5 @@ class Beekeeper::Importer::LocalpoolContracts
   def find_or_create_customer(unsaved_record)
     Beekeeper::Importer::FindOrCreatePersonOrOrganization.new(logger).run(unsaved_record)
   end
+
 end

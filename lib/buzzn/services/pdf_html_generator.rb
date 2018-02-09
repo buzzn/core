@@ -1,6 +1,7 @@
 require_relative '../services'
 
 class Services::PdfHtmlGenerator
+
   include Import.args[path: 'config.templates_path']
 
   class Missing
@@ -16,6 +17,7 @@ class Services::PdfHtmlGenerator
     def to_s
       "__#{@name}__"
     end
+
   end
 
   class Html
@@ -27,6 +29,7 @@ class Services::PdfHtmlGenerator
     def method_missing(method, *args)
       Missing.new(method)
     end
+
   end
 
   def initialize(templates = nil)
@@ -57,4 +60,5 @@ class Services::PdfHtmlGenerator
     file = resolve_template(name)
     html.render(file)
   end
+
 end

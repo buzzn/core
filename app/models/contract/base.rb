@@ -3,6 +3,7 @@ require_relative '../owner'
 
 module Contract
   class Base < ActiveRecord::Base
+
     self.table_name = :contracts
     self.abstract_class = true
 
@@ -18,6 +19,7 @@ module Contract
          }
 
     class << self
+
       def search_attributes
         # TODO: filtering what ?
         []
@@ -26,6 +28,7 @@ module Contract
       def filter(search)
         do_filter(search, *search_attributes)
       end
+
     end
 
     has_and_belongs_to_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
@@ -98,5 +101,6 @@ module Contract
 
     # permissions helpers
     scope :permitted, ->(uuids) { where(id: uuids) }
+
   end
 end

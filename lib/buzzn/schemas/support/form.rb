@@ -2,6 +2,7 @@ require 'dry-validation'
 require_relative 'predicates'
 
 module Schemas::Support
+
   ERRORS = 'config/errors.yml'
   Form = Dry::Validation.Form(build: false) do
     configure do
@@ -27,4 +28,5 @@ module Schemas::Support
     klass = base ? Schema.configure(Class.new(base.class)) : Schema
     Dry::Validation.Schema(klass, options, &block)
   end
+
 end

@@ -32,5 +32,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
         meter
       end
     end
+
   end
 end

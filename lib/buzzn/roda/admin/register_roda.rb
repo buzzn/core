@@ -3,6 +3,7 @@ require_relative '../../transactions/admin/register/update_real'
 require_relative '../../transactions/admin/register/update_virtual'
 
 class Admin::RegisterRoda < BaseRoda
+
   CHILDREN = :registers
 
   plugin :aggregation
@@ -53,4 +54,5 @@ class Admin::RegisterRoda < BaseRoda
       end
     end
   end
+
 end

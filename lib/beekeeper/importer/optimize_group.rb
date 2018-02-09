@@ -100,4 +100,5 @@ class Beekeeper::Importer::OptimizeGroup
   def optimized_map
     @optimized_map ||= @meters.virtual_list
   end
+
 end

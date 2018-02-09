@@ -7,5 +7,7 @@
 #
 
 class Beekeeper::Buzzn::TypeEvu < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.type_evu'
+
 end

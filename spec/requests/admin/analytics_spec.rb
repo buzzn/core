@@ -4,6 +4,7 @@ require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   class MockDatasource4Aggregates
+
     def daily_charts(group)
       {
         value: Time.now.to_f
@@ -20,6 +21,7 @@ describe Admin::LocalpoolRoda do
     def call(*)
       self
     end
+
   end
 
   def app

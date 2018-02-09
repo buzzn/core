@@ -3,6 +3,7 @@ require_relative '../filterable'
 
 module Register
   class Base < ActiveRecord::Base
+
     self.table_name = :registers
 
     include Import.active_record['services.current_power']
@@ -10,11 +11,13 @@ module Register
     include Filterable
 
     class Label < String
+
       ['production', 'consumption', 'demarcation', 'grid'].each do |method|
         define_method "#{method}?" do
           self.to_s.start_with?(method)
         end
       end
+
     end
 
     enum label: %i(consumption consumption_common
@@ -188,5 +191,6 @@ module Register
         raise "unknown direction #{val}"
       end
     end
+
   end
 end

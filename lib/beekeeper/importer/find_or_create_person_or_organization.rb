@@ -116,4 +116,5 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
       /Wogeno München eG/i                        => 998,
     }
   }
+
 end

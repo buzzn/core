@@ -1,5 +1,6 @@
 # inspired by: https://gist.github.com/justinweiss/9065666
 module Filterable
+
   extend ActiveSupport::Concern
 
   module ClassMethods
@@ -40,5 +41,7 @@ module Filterable
       end
       result
     end
+
   end
+
 end

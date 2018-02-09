@@ -1,5 +1,6 @@
 module Buzzn
   class DataResultArray < Array
+
     attr_reader :expires_at
 
     def self.from_json(json)
@@ -42,5 +43,6 @@ module Buzzn
       "#<#{self.class}\:#{object_id.to_s(16)} @expires_at: #{@expires_at}, #{super.inspect}>"
     end
     alias :to_s :inspect
+
   end
 end

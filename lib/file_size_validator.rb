@@ -2,6 +2,7 @@
 # Based on: https://gist.github.com/795665
 
 class FileSizeValidator < ActiveModel::EachValidator
+
   MESSAGES  = { :is => :wrong_size, :minimum => :size_too_small, :maximum => :size_too_big }.freeze
   CHECKS    = { :is => :==, :minimum => :>=, :maximum => :<= }.freeze
 
@@ -62,7 +63,10 @@ class FileSizeValidator < ActiveModel::EachValidator
   end
 
   class Helper
+
     include Singleton
     include ActionView::Helpers::NumberHelper
+
   end
+
 end

@@ -36,5 +36,7 @@
 #
 
 class Beekeeper::Minipool::MsbMessstelle < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.msb_messstelle'
+
 end

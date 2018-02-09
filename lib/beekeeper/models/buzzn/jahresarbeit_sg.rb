@@ -9,5 +9,7 @@
 #
 
 class Beekeeper::Buzzn::JahresarbeitSg < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.jahresarbeit_sg'
+
 end

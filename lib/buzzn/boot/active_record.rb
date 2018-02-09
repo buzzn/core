@@ -3,7 +3,9 @@ require 'dry/auto_inject/strategies/constructor'
 
 module Buzzn
   module Boot
+
     class ActiveRecord < Dry::AutoInject::Strategies::Constructor
+
       private
 
       def define_new
@@ -35,7 +37,9 @@ module Buzzn
           end
         RUBY
       end
+
     end
     Dry::AutoInject::Strategies.register :active_record, ActiveRecord
+
   end
 end

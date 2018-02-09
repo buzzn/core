@@ -1,5 +1,6 @@
 module Buzzn
   class DataPoint
+
     attr_reader :timestamp, :value
 
     def self.from_json(data)
@@ -59,5 +60,6 @@ module Buzzn
     def ==(other)
       @timestamp == other.timestamp && @value == other.value
     end
+
   end
 end

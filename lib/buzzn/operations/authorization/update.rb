@@ -1,6 +1,7 @@
 require_relative '../authorization'
 
 class Operations::Authorization::Update
+
   include Dry::Transaction::Operation
 
   def call(input, resource)
@@ -11,4 +12,5 @@ class Operations::Authorization::Update
       # TODO better a Left Monad and handle on roda
     end
   end
+
 end

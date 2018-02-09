@@ -17,5 +17,6 @@ module Display
         raise "unknown group type: #{object.class}"
       end
     end
+
   end
 end

@@ -11,5 +11,7 @@
 #
 
 class Beekeeper::Minipool::Kommentare < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.kommentare'
+
 end

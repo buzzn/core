@@ -2,6 +2,7 @@ require_relative 'zip_price'
 
 module Types
   class ZipPrices
+
     extend Dry::Initializer
 
     option :zip, Types::Strict::Int
@@ -23,5 +24,6 @@ module Types
       end if @list.size > 1
       result
     end
+
   end
 end

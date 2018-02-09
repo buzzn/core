@@ -15,5 +15,7 @@
 #
 
 class Beekeeper::Buzzn::AllGermanNb < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.all_german_nb'
+
 end

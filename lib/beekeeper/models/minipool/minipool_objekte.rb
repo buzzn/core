@@ -63,6 +63,7 @@ require_relative 'concerns/minipool_objekte/powertaker_contracts'
 #
 
 class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.minipool_objekte'
   self.primary_key = 'vertragsnummer'
 
@@ -144,4 +145,5 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       attributes[:name] = "Tariff #{index}"
     end
   end
+
 end

@@ -3,6 +3,7 @@ require_relative '../owner'
 
 module Group
   class Localpool < Base
+
     include Owner
 
     belongs_to :grid_consumption_register, class_name: 'Register::Input'
@@ -85,5 +86,6 @@ module Group
     def two_way_meters
       meter_without_corrected_registers.where(direction_number: Meter::Real.direction_numbers[:two_way_meter])
     end
+
   end
 end

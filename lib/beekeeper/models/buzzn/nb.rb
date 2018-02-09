@@ -29,5 +29,7 @@
 #
 
 class Beekeeper::Buzzn::Nb < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.nb'
+
 end

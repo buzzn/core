@@ -8,4 +8,5 @@ class CreateRoles < ActiveRecord::Migration
     end
     add_column :roles, :name, :roles_name, null: true, index: true
   end
+
 end

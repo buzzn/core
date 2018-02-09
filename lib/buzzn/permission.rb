@@ -106,5 +106,6 @@ module Buzzn
     def to_s
       'Permissions<' + to_name + '>[' + @perms.keys.join(',') + ']'
     end
+
   end
 end

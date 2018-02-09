@@ -4,6 +4,7 @@ require_relative '../../transactions/admin/tariff/delete'
 
 module Admin
   class TariffRoda < BaseRoda
+
     plugin :shared_vars
 
     route do |r|
@@ -34,5 +35,6 @@ module Admin
         end
       end
     end
+
   end
 end

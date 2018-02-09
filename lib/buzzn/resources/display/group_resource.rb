@@ -11,5 +11,6 @@ module Display
     def self.filter_all(objects)
       objects.where(show_display_app: true)
     end
+
   end
 end

@@ -1,6 +1,9 @@
 module Buzzn
+
   class PermissionDenied < StandardError
+
     class << self
+
       def new(resource, action, user)
         case resource
         when Class
@@ -16,21 +19,31 @@ module Buzzn
       def create_instance(object, action, user)
         "#{action} #{object.class}: #{object.id} permission denied for User: #{user ? user.id : '--anonymous--'}"
       end
+
     end
+
   end
   class RecordNotFound < StandardError
+
     class << self
+
       def new(clazz, id, user = nil)
         super("#{clazz || 'UNKNOWN-CLASS'}: #{id} not found#{user ? ' by User: ' + user.id.to_s : ''}")
       end
+
     end
+
   end
   class StaleEntity < StandardError
+
     class << self
+
       def new(entity)
         super("#{entity.class}: #{entity.id} was updated at: #{entity.updated_at}")
       end
+
     end
+
   end
 
   class GeneralError < StandardError
@@ -44,10 +57,12 @@ module Buzzn
     def message
       @errors.values.inspect
     end
+
   end
   class ValidationError < GeneralError; end
 
   class NestedValidationError < ValidationError
+
     def initialize(key, errors)
       nested_errors = {}
       key = key.to_sym
@@ -56,9 +71,11 @@ module Buzzn
       end
       super(nested_errors)
     end
+
   end
 
   class CascadingValidationError < NestedValidationError
+
     def initialize(key = nil, ar_error)
       @original = ar_error
       errors = {}
@@ -69,6 +86,7 @@ module Buzzn
     def backtrace
       @original.backtrace
     end
+
   end
 
 end

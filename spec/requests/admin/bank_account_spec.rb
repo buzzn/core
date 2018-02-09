@@ -1,6 +1,7 @@
 describe Admin::BankAccountRoda do
 
   class BankAccountParentRoda < BaseRoda
+
     plugin :shared_vars
     route do |r|
       r.on 'test', :id do |id|
@@ -15,6 +16,7 @@ describe Admin::BankAccountRoda do
 
       r.run Me::Roda
     end
+
   end
 
   def app

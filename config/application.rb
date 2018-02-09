@@ -57,5 +57,6 @@ module Buzzn
 
     # details: http://guides.rubyonrails.org/api_app.html
     config.api_only = true
+
   end
 end

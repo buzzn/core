@@ -17,5 +17,7 @@
 #
 
 class Beekeeper::Minipool::Zstand < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.zstand'
+
 end

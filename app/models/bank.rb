@@ -124,4 +124,5 @@ class Bank < ActiveRecord::Base
   def self.not_found(msg)
     raise Buzzn::RecordNotFound.new(self, msg)
   end
+
 end

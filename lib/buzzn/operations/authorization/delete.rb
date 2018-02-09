@@ -1,6 +1,7 @@
 require_relative '../authorization'
 
 class Operations::Authorization::Delete
+
   include Dry::Transaction::Operation
 
   def call(resource)
@@ -11,4 +12,5 @@ class Operations::Authorization::Delete
       # TODO better a Left Monad and handle on roda
     end
   end
+
 end

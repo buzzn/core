@@ -1,4 +1,5 @@
 class CreateZipToPrices < ActiveRecord::Migration
+
   def change
     create_table :zip_to_prices, id: :uuid do |t|
       t.integer :zip, null: false
@@ -19,4 +20,5 @@ class CreateZipToPrices < ActiveRecord::Migration
     end
     add_index :zip_to_prices, :zip
   end
+
 end

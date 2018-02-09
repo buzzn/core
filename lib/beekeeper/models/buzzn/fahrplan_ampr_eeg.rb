@@ -104,5 +104,7 @@
 #
 
 class Beekeeper::Buzzn::FahrplanAmprEeg < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.fahrplan_ampr_eeg'
+
 end

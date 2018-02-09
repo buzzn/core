@@ -177,5 +177,7 @@ module SwaggerHelper
         generic(path, method, user, options, &block) if path
       end
     end
+
   end
+
 end

@@ -87,4 +87,5 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
   def organization_name
     firma.present? ? firma : nachname
   end
+
 end

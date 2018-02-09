@@ -55,6 +55,7 @@ module Buzzn
           result
         end
       end
+
     end
   end
 end

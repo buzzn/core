@@ -3,9 +3,11 @@ ActiveRecord::Base.send(:include, Schemas::Support::ValidateInvariant)
 class Beekeeper::Import
 
   class << self
+
     def run!
       new.run
     end
+
   end
 
   def run
@@ -57,4 +59,5 @@ class Beekeeper::Import
       l
     end
   end
+
 end

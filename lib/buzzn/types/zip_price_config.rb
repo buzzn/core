@@ -18,4 +18,5 @@ class Types::ZipPriceConfig < Dry::Struct
   # value added tax
   attribute :vat, Types::Strict::Float
   attribute :yearly_euro_intern, Types::Strict::Float
+
 end

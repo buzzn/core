@@ -1,5 +1,6 @@
 module Account
   class Base < ActiveRecord::Base
+
     self.table_name = :accounts
 
     belongs_to :person
@@ -38,5 +39,6 @@ module Account
     def person_roles
       person.roles.where('resource_id IS NOT NULL')
     end
+
   end
 end

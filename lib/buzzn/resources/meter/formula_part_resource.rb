@@ -20,5 +20,6 @@ module Meter
     def type
       'meter_formula_part'
     end
+
   end
 end

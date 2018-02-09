@@ -3,6 +3,7 @@ require 'dry/container/stub'
 describe Display::GroupRoda do
 
   class MockDatasource4Aggregates
+
     def daily_charts(group)
       {
         value: Time.now.to_f
@@ -19,6 +20,7 @@ describe Display::GroupRoda do
     def call(*)
       self
     end
+
   end
 
   def app

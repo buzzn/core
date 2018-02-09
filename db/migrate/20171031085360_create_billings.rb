@@ -27,4 +27,5 @@ class CreateBillings < ActiveRecord::Migration
   def down
     SCHEMA.down(:billings, self)
   end
+
 end

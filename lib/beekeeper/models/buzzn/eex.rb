@@ -32,5 +32,7 @@
 #
 
 class Beekeeper::Buzzn::Eex < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.eex'
+
 end

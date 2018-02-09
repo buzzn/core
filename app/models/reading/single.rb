@@ -138,5 +138,6 @@ module Reading
       self.unit = val.unit
       self.value = val.value
     end
+
   end
 end

@@ -45,4 +45,5 @@ class Services::Datasource::Discovergy::Meters
   def process(query)
     api.request(query)
   end
+
 end

@@ -12,5 +12,7 @@
 #
 
 class Beekeeper::Buzzn::ZfaHybridVirtual < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.zfa_hybrid_virtual'
+
 end

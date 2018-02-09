@@ -9,4 +9,5 @@ class Transactions::Bubbles < Transactions::Base
     # TODO check privacy settings here
     Right(group)
   end
+
 end

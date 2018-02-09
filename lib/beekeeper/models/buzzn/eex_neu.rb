@@ -9,5 +9,7 @@
 #
 
 class Beekeeper::Buzzn::EexNeu < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.eex_neu'
+
 end

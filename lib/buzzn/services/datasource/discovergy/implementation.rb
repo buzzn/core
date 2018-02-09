@@ -1,6 +1,7 @@
 require_relative '../discovergy'
 
 class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
+
   extend Dry::DependencyInjection::Eager
 
   include Import['services.datasource.discovergy.last_reading',
@@ -31,4 +32,5 @@ class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
   def aggregated(resource, mode, interval)
     nil
   end
+
 end

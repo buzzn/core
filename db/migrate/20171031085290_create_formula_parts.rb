@@ -17,4 +17,5 @@ class CreateFormulaParts < ActiveRecord::Migration
   def down
     SCHEMA.down(:formula_parts, self)
   end
+
 end

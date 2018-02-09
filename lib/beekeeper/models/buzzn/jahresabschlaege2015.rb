@@ -10,5 +10,7 @@
 #
 
 class Beekeeper::Buzzn::Jahresabschlaege2015 < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.jahresabschlaege2015'
+
 end

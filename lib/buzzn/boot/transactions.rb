@@ -1,6 +1,7 @@
 require_relative 'validation_step_adapter'
 require_relative '../schemas/support/form'
 module Buzzn
+
   class Transaction
 
     def self.transactions
@@ -17,6 +18,7 @@ module Buzzn
     class Transactions
 
       class Resolver < Dry::Container::Resolver
+
         def call(container, key)
           # if key respons to :call then we have a schema and use it as value ;)
           if key.respond_to?(:call)
@@ -25,6 +27,7 @@ module Buzzn
             super
           end
         end
+
       end
 
       attr_reader :container, :steps
@@ -49,6 +52,8 @@ module Buzzn
         end
         @logger.debug { "registered step #{name}" }
       end
+
     end
   end
+
 end

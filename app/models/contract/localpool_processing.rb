@@ -12,5 +12,6 @@ module Contract
              :retailer,
              :provider_permission,
              to: :tax_data, allow_nil: true
+
   end
 end

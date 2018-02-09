@@ -8,5 +8,7 @@
 #
 
 class Beekeeper::Buzzn::PlzNb < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.plz_nb'
+
 end

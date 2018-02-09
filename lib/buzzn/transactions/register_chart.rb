@@ -2,6 +2,7 @@ require_relative 'base'
 require_relative '../schemas/transactions/chart'
 
 class Transactions::RegisterChart < Transactions::Base
+
   def self.for(register)
     super(Schemas::Transactions::Chart, register, :authorize, :chart)
   end
@@ -15,4 +16,5 @@ class Transactions::RegisterChart < Transactions::Base
     # TODO check privacy settings here
     Right(input)
   end
+
 end

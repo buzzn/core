@@ -94,5 +94,6 @@ module Meter
     def output_register=(attr)
       registers << Register::Output.new(attr.merge(meter: self))
     end
+
   end
 end

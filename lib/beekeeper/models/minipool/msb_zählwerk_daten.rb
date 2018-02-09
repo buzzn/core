@@ -14,6 +14,7 @@
 
 # these are the actual registers
 class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.msb_zählwerk_daten'
   self.primary_key = 'vertragsnummer'
 
@@ -161,4 +162,5 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
     uniq_readings.collect { |r| Reading::Single.new(r.converted_attributes) }
   end
+
 end

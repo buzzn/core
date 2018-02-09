@@ -110,5 +110,6 @@ module Buzzn::Resource
     end
 
     attribute :id, :type, :updated_at
+
   end
 end

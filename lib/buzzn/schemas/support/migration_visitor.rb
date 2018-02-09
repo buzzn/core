@@ -67,4 +67,5 @@ class Schemas::Support::MigrationVisitor < Schemas::Support::Visitor
     visit(&processor)
     clazz.drop_table(table)
   end
+
 end

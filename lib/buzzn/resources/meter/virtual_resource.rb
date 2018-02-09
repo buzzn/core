@@ -12,5 +12,6 @@ module Meter
                     permissions.formula_parts,
                     FormulaPartResource)
     end
+
   end
 end

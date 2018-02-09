@@ -6,4 +6,5 @@ class CreateBrokers < ActiveRecord::Migration
       t.string :external_id, null: true, length: 64
     end
   end
+
 end

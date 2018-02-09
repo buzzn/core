@@ -18,5 +18,7 @@
 #
 
 class Beekeeper::Buzzn::NneVnb < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.nne_vnb'
+
 end

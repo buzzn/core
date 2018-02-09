@@ -5,10 +5,12 @@ module RequestsHelper
   end
 
   module ClassMethods
+
     def login_path(path = nil)
       (@login_path ||= path) ||
         (superclass.respond_to?(:login_path) ? superclass.login_path : nil)
     end
+
   end
 
   def login_path
@@ -81,4 +83,5 @@ module RequestsHelper
       yield
     end
   end
+
 end

@@ -23,4 +23,5 @@ class CoreConfig < ActiveRecord::Base
       end
     end
   end
+
 end

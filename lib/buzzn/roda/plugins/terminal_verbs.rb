@@ -1,5 +1,6 @@
 class Roda
   module RodaPlugins
+
     module TerminalVerbs
 
       # Require the all_verbs plugin
@@ -8,6 +9,7 @@ class Roda
       end
 
       module RequestMethods
+
         %w'delete patch put post get'.each do |verb|
           class_eval(<<-END, __FILE__, __LINE__+1)
             def #{verb}!(*args, &block)
@@ -18,9 +20,12 @@ class Roda
             end
           END
         end
+
       end
+
     end
 
     register_plugin(:terminal_verbs, TerminalVerbs)
+
   end
 end

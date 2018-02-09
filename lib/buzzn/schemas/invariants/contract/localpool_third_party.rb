@@ -3,6 +3,7 @@ require_relative 'localpool_register'
 module Schemas
   module Invariants
     module Contract
+
       LocalpoolThirdParty = Schemas::Support.Form(LocalpoolRegister) do
         required(:customer)                { none? }
         required(:contractor)              { none? }
@@ -12,6 +13,7 @@ module Schemas
         required(:tariffs)                 { size?(0) }
         required(:payments)                { size?(0) }
       end
+
     end
   end
 end

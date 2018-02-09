@@ -1,6 +1,7 @@
 require 'mongoid'
 module Reading
   class Continuous
+
     include Mongoid::Document
 
     def self.model_name; ActiveModel::Name.new(self, nil, 'readings'); end
@@ -37,6 +38,7 @@ module Reading
     SEP_BHKW = 'sep_bhkw'
 
     class << self
+
       def reasons
         @reason ||= [DEVICE_SETUP, DEVICE_CHANGE_1, DEVICE_CHANGE_2, DEVICE_REMOVAL, REGULAR_READING,
                      MIDWAY_READING, CONTRACT_CHANGE, DEVICE_PARAMETER_CHANGE, BALANCING_ZONE_CHANGE, OTHER]
@@ -50,6 +52,7 @@ module Reading
       def sources
         @source ||= [BUZZN, CUSTOMER_LSG, LSN, VNB, THIRD_PARTY_MSB_MDL, OTHER, USER_INPUT, SLP, SEP_PV, SEP_BHKW]
       end
+
     end
 
     field :contract_id
@@ -215,5 +218,6 @@ module Reading
       ]
       return Reading::Continuous.collection.aggregate(pipe).first
     end
+
   end
 end

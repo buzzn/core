@@ -3,6 +3,7 @@ require_relative '../../constraints/group'
 module Schemas
   module Invariants
     module Group
+
       Localpool = Schemas::Support.Form(Constraints::Group) do
 
         configure do
@@ -49,6 +50,7 @@ module Schemas
         required(:grid_feeding_register).maybe { at_most_one_register_with_same_label? }
         required(:grid_consumption_register).maybe { at_most_one_register_with_same_label? }
       end
+
     end
   end
 end

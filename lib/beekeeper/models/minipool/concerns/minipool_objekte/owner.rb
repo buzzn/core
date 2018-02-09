@@ -47,5 +47,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       add_warning('bank_accounts', "Unable to find bank data: #{e.message}}")
       []
     end
+
   end
 end

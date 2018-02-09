@@ -1,4 +1,5 @@
 class Device < ActiveRecord::Base
+
   include Filterable
 
   BIO_MASS    = 'bio_mass'
@@ -14,10 +15,12 @@ class Device < ActiveRecord::Base
   OTHER       = 'other'
 
   class << self
+
     def all_primary_energies
       @primary_energy ||= [BIO_MASS, BIO_GAS, NATURAL_GAS, FLUID_GAS, FUEL_OIL,
                             WOOD, VEG_OIL, SUN, WIND, WATER, OTHER]
     end
+
   end
 
   belongs_to :register, class_name: 'Register::Base', foreign_key: :register_id
@@ -73,6 +76,5 @@ class Device < ActiveRecord::Base
   def editable_users
     User.with_role(:manager, self).to_a
   end
-
 
 end

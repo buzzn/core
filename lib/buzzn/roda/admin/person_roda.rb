@@ -2,6 +2,7 @@ require_relative '../admin_roda'
 require_relative 'bank_account_roda'
 module Admin
   class PersonRoda < BaseRoda
+
     plugin :shared_vars
 
     route do |r|
@@ -25,5 +26,6 @@ module Admin
         end
       end
     end
+
   end
 end

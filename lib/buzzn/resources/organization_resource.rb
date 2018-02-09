@@ -21,4 +21,5 @@ class OrganizationResource < Buzzn::Resource::Entity
   def customer_number
     object.customer_number&.id
   end
+
 end

@@ -10,5 +10,6 @@ module Admin
                 :end_date
 
     has_many :billings, BillingResource
+
   end
 end

@@ -20,4 +20,5 @@ class CreateSingleReadings < ActiveRecord::Migration
     remove_reference :readings, :register
     SCHEMA.down(:readings, self)
   end
+
 end

@@ -30,5 +30,6 @@ module Meter
     def data_source
       object.registers.first&.data_source
     end
+
   end
 end

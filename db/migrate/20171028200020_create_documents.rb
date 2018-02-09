@@ -1,4 +1,5 @@
 class CreateDocuments < ActiveRecord::Migration
+
   def change
     create_table :documents, id: :uuid do |t|
       t.string :path, null: false, limit: 128
@@ -8,4 +9,5 @@ class CreateDocuments < ActiveRecord::Migration
     end
     add_index :documents, [:path], unique: true
   end
+
 end

@@ -19,4 +19,5 @@ class Crypto::Decryptor < Struct.new :details
     cipher.auth_tag  = details[:auth_tag]
     cipher
   end
+
 end

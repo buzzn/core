@@ -1,5 +1,6 @@
 module Buzzn
   class InOutDataResults
+
     attr_reader :timestamp, :in, :out, :resource_id
 
     def self.from_json(data)
@@ -31,5 +32,6 @@ module Buzzn
     def to_hash
       { timestamp: @timestamp, in: @in, out: @out, resource_id: @resource_id }
     end
+
   end
 end

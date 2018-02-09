@@ -11,4 +11,5 @@ class ApiMock
     else OpenStruct.new(@result)
     end
   end
+
 end

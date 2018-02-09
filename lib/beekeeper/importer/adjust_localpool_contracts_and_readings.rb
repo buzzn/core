@@ -146,4 +146,5 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       # case: the only reading is on the new contract end date -- that's what we want, nothing to do.
     end
   end
+
 end

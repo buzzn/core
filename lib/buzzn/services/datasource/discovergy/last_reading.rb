@@ -34,4 +34,5 @@ class Services::Datasource::Discovergy::LastReading
     builder = Discovergy::TicketBuilder.new(register: register, unit: unit)
     api.request(query, builder)
   end
+
 end

@@ -37,6 +37,7 @@ module Buzzn
           response.write(errors)
         end
       end
+
     end
   end
 end

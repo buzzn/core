@@ -9,5 +9,7 @@
 #
 
 class Beekeeper::Minipool::P2pPriceBuzzndb < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.p2p_price_buzzndb'
+
 end

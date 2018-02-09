@@ -7,5 +7,7 @@
 #
 
 class Beekeeper::Buzzn::SepSlpNames < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.sep_slp_names'
+
 end

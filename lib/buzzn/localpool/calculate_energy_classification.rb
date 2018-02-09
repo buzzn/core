@@ -1,6 +1,8 @@
 module Buzzn::Localpool
   class CalculateEnergyClassification
+
     class << self
+
       def do_calculation(localpool, total_accounted_energy, full_renewable_energy_law_taxation, reduced_renewable_energy_law_taxation, eeg_ratio_kwh_per_euro)
         # NOTE: The commented strings are references to the Excel Sheet called "Stromkennzeichnung_LCP_berechnen"
 
@@ -145,6 +147,8 @@ module Buzzn::Localpool
                                         co2_emission_gramm_per_kwh: final_co2_emissions.round,
                                         nuclear_waste_miligramm_per_kwh: (final_nuclear_waste * 1000.0).round(6))
       end
+
     end
+
   end
 end

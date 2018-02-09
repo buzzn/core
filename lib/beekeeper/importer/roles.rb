@@ -23,4 +23,5 @@ class Beekeeper::Importer::Roles
       end
     end
   end
+
 end

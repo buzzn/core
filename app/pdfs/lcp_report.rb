@@ -2,6 +2,7 @@ require 'buzzn/pdf_generator'
 
 module Buzzn::Pdfs
   class LCP_Report < Buzzn::PdfGenerator
+
     include Import.kwargs['services.reading_calculation']
 
     TEMPLATE = 'lcp_report.slim'
@@ -225,5 +226,6 @@ module Buzzn::Pdfs
         @total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].first_reading.date,
         @total_accounted_energy[Buzzn::AccountedEnergy::GRID_CONSUMPTION].last_reading.date)
     end
+
   end
 end

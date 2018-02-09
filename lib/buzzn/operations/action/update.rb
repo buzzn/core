@@ -1,6 +1,7 @@
 require_relative '../action'
 
 class Operations::Action::Update
+
   include Dry::Transaction::Operation
 
   def call(input, resource = nil)
@@ -45,4 +46,5 @@ class Operations::Action::Update
       ALWAYS_SUCCESS
     end
   end
+
 end

@@ -7,4 +7,5 @@ class CreateAccountPasswordHashesWithSequel < ActiveRecord::Migration
   def change
     run_sequel_migration(2)
   end
+
 end

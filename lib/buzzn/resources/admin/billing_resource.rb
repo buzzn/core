@@ -15,5 +15,6 @@ module Admin
                 :status
 
     attributes :updatable, :deletable
+
   end
 end

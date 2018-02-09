@@ -31,5 +31,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     def minipool_sns_3
       @minipool_sns_3 ||= Beekeeper::Minipool::MinipoolSn.where(vertragsnummer: vertragsnummer, drittbelieferung: 1)
     end
+
   end
 end

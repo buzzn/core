@@ -2,6 +2,7 @@ require_relative '../admin_roda'
 require_relative '../../transactions/admin/reading/create'
 
 class Admin::ReadingRoda < BaseRoda
+
   plugin :shared_vars
 
   REGISTER = :register
@@ -33,4 +34,5 @@ class Admin::ReadingRoda < BaseRoda
       end
     end
   end
+
 end

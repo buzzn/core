@@ -50,4 +50,5 @@ class Beekeeper::Importer::LogImportSummary
     logger.info("localpool powertaker organization                        : #{powertakers.count}")
     logger.info("localpool powertaker organization with address           : #{powertakers.where("address_id is not null").count}")
   end
+
 end

@@ -18,5 +18,7 @@
 #
 
 class Beekeeper::Buzzn::SepEegMonthly < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.sep_eeg_monthly'
+
 end

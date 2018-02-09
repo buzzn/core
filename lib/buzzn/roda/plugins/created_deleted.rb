@@ -1,5 +1,6 @@
 class Roda
   module RodaPlugins
+
     module CreatedDeleted
       module InstanceMethods
 
@@ -13,9 +14,11 @@ class Roda
           response.status = 201
           yield
         end
+
       end
     end
 
     register_plugin(:created_deleted, CreatedDeleted)
+
   end
 end

@@ -1,4 +1,5 @@
 class CreatePersonsRoles < ActiveRecord::Migration
+
   def change
     create_table :persons_roles, id: false do |t|
       t.uuid :person_id, null: false
@@ -7,4 +8,5 @@ class CreatePersonsRoles < ActiveRecord::Migration
       t.index [:role_id, :person_id]
     end
   end
+
 end

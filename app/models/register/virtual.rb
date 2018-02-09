@@ -34,5 +34,6 @@ module Register
         Buzzn::Virtual::DataSource::NAME
       end
     end
+
   end
 end

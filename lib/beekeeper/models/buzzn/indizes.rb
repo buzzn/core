@@ -11,5 +11,7 @@
 #
 
 class Beekeeper::Buzzn::Indizes < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.indizes'
+
 end

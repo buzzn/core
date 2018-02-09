@@ -24,8 +24,11 @@ end
 module Buzzn
   module Boot
     class Init
+
       class Singletons
+
         include Dry::DependencyInjection::Singletons
+
       end
 
       class << self
@@ -92,7 +95,9 @@ module Buzzn
             end
           end
         end
+
       end
+
     end
   end
 end

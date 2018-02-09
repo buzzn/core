@@ -1,6 +1,7 @@
 module Buzzn
 
   class Price
+
     attr_reader :energyprice_cents_per_kilowatt_hour, :baseprice_cents_per_month, :total_cents_per_month
 
     def initialize(baseprice_cents_per_month, energyprice_cents_per_kilowatt_hour, total_cents_per_month)
@@ -22,6 +23,7 @@ module Buzzn
     def <=>(other)
       self.to_f <=> other.to_f
     end
+
   end
 
   class Zip2Price
@@ -39,6 +41,7 @@ module Buzzn
     DEFAULT_KA       = 0.11
 
     class << self
+
       def type_to_method
         {
           single_tarif_meter: :netto_general,
@@ -52,6 +55,7 @@ module Buzzn
       def types
         type_to_method.keys.collect(&:to_s)
       end
+
     end
 
     def initialize(kwh, zip, type)
@@ -115,5 +119,7 @@ module Buzzn
         result
       end
     end
+
   end
+
 end

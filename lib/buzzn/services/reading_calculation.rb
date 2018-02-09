@@ -415,4 +415,5 @@ class Services::ReadingCalculation
                               quality: Reading::Single::READ_OUT,
                               state: Reading::Single::Z86)
   end
+
 end

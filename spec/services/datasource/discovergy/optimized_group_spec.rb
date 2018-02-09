@@ -44,6 +44,7 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
       else OpenStruct.new(@result)
       end
     end
+
   end
 
   entity(:api) { ApiMock.new }

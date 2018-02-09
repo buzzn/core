@@ -28,6 +28,7 @@
 #
 
 class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.kontakt_acc'
   include Beekeeper::StringCleaner
 
@@ -79,4 +80,5 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
   def address
     Address.new(converted_address_attributes)
   end
+
 end

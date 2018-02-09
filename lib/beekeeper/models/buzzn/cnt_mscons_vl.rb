@@ -8,5 +8,7 @@
 #
 
 class Beekeeper::Buzzn::CntMsconsVl < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.cnt_mscons_vl'
+
 end

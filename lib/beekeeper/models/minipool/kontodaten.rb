@@ -18,6 +18,7 @@
 #
 
 class Beekeeper::Minipool::Kontodaten < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.kontodaten'
 
   def converted_attributes
@@ -54,4 +55,5 @@ class Beekeeper::Minipool::Kontodaten < Beekeeper::Minipool::BaseRecord
   def bic
     bank.bic
   end
+
 end

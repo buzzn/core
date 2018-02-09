@@ -1,4 +1,5 @@
 class CreateBanks < ActiveRecord::Migration
+
   def change
     create_table :banks do |t|
       t.string :blz, null: false, limit: 32
@@ -11,4 +12,5 @@ class CreateBanks < ActiveRecord::Migration
     add_index :banks, :blz, unique: true
     add_index :banks, :bic
   end
+
 end

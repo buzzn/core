@@ -23,4 +23,5 @@ class CreateOrganizationMarketFunctions < ActiveRecord::Migration
 
     SCHEMA.down(:organization_market_functions, self)
   end
+
 end

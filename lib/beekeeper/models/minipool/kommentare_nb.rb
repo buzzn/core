@@ -9,5 +9,7 @@
 #
 
 class Beekeeper::Minipool::KommentareNb < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.kommentare_nb'
+
 end

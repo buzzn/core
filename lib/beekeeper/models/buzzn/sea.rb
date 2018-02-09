@@ -16,5 +16,7 @@
 #
 
 class Beekeeper::Buzzn::Sea < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.sea'
+
 end

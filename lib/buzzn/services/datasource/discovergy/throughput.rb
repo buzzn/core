@@ -40,4 +40,5 @@ class Services::Datasource::Discovergy::Throughput
   def clear
     @redis.set(NAME, 0)
   end
+
 end

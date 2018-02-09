@@ -4,6 +4,7 @@ require_relative '../admin'
 require_relative '../organization'
 require_relative '../person'
 module Schemas::Completeness::Admin
+
   Localpool = Schemas::Support.Schema do
 
     configure do
@@ -32,4 +33,5 @@ module Schemas::Completeness::Admin
     required(:bank_account).filled
     required(:address).filled
   end
+
 end

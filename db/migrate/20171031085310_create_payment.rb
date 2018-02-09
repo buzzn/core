@@ -16,4 +16,5 @@ class CreatePayment < ActiveRecord::Migration
     remove_foreign_key :payments, :contracts, name: :fk_payments_contract
     SCHEMA.down(:payments, self)
   end
+
 end

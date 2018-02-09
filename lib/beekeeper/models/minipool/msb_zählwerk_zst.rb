@@ -16,6 +16,7 @@
 #
 
 class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.msb_zählwerk_zst'
 
   include Beekeeper::ImportWarnings
@@ -88,4 +89,5 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
   def map_read_by
     READ_BY_MAP[ableser.strip]
   end
+
 end

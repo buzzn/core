@@ -72,4 +72,5 @@ class BillingCycle < ActiveRecord::Base
     end
     return result
   end
+
 end

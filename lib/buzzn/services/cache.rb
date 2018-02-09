@@ -30,4 +30,5 @@ class Services::Cache
   def digest_key(key)
     "#{key}.digest"
   end
+
 end

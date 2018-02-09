@@ -104,5 +104,7 @@
 #
 
 class Beekeeper::Buzzn::FahrplanEnbwEeg < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.fahrplan_enbw_eeg'
+
 end

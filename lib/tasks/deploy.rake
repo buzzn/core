@@ -1,6 +1,7 @@
 namespace :deploy do
 
   module DeploymentSupport
+
     def create_and_push_tag(prefix)
       tag = "#{prefix}-#{Time.now.strftime('%Y-%m-%d-%H-%M')}"
       sh "git tag #{tag}"
@@ -15,6 +16,7 @@ namespace :deploy do
       url = "https://git.heroku.com/buzzn-core-#{env}.git"
       sh "git push #{url} #{current_local_branch}:master"
     end
+
   end
 
   include DeploymentSupport

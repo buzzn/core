@@ -13,5 +13,7 @@
 #
 
 class Beekeeper::Buzzn::ArbeitSollObs3 < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.arbeit_soll_obs3'
+
 end

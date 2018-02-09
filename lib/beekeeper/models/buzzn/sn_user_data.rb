@@ -58,5 +58,7 @@
 #
 
 class Beekeeper::Buzzn::SnUserData < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.sn_user_data'
+
 end

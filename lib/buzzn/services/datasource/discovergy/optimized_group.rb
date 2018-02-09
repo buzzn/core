@@ -79,4 +79,5 @@ class Services::Datasource::Discovergy::OptimizedGroup
   def process(query)
     api.request(query)
   end
+
 end

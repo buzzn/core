@@ -9,8 +9,10 @@ require 'rspec/retry'
 
 # no geocoding for tests
 class ::Address
+
   def geocode
   end
+
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -76,6 +78,7 @@ RSpec.configure do |config|
   end
 
   module ClassMethods
+
     def entity_blocks
       @entity_blocks ||= {}
     end
@@ -108,12 +111,15 @@ RSpec.configure do |config|
         result
       end
     end
+
   end
 
   module InstanceMethods
+
     def method_missing(method, *args)
       self.class.setup_entity(method) || super
     end
+
   end
 
   def entity(key, &block)

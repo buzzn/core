@@ -1,5 +1,6 @@
 module Buzzn
   class AccountedEnergy
+
     attr_reader :value, :first_reading, :last_reading, :last_reading_original, :device_change_reading_1, :device_change_reading_2, :device_change
     attr_accessor :label
 
@@ -45,5 +46,6 @@ module Buzzn
       @device_change_reading_2 = device_change_reading_2
       @device_change = device_change
     end
+
   end
 end

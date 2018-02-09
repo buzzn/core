@@ -124,4 +124,5 @@ class Services::Datasource::Discovergy::Oauth
       faraday.adapter :net_http
     end
   end
+
 end

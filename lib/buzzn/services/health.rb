@@ -1,6 +1,7 @@
 require_relative '../services'
 
 class Services::Health
+
   include Import['services.redis',
                  'config.heroku_slug_commit',
                  'config.heroku_release_created_at']
@@ -48,4 +49,5 @@ class Services::Health
     result[:healthy] = result.slice(:database, :redis).values.all? { |v| v == 'alive' }
     result
   end
+
 end

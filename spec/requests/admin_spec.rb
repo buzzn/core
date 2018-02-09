@@ -1,10 +1,12 @@
 describe Admin::Roda do
 
   class TestAdminRoda < BaseRoda
+
     route do |r|
       r.on('test') { r.run Admin::Roda }
       r.run Me::Roda
     end
+
   end
 
   def app

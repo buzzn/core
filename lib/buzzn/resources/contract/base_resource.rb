@@ -22,5 +22,6 @@ module Contract
     has_one :customer
     has_one :customer_bank_account
     has_one :contractor_bank_account
+
   end
 end

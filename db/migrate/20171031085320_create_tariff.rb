@@ -16,4 +16,5 @@ class CreateTariff < ActiveRecord::Migration
     remove_foreign_key :tariffs, :groups, name: :fk_tariffs_group
     SCHEMA.down(:tariffs, self)
   end
+
 end

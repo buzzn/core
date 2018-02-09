@@ -1,5 +1,6 @@
 module Meter
   class Base < ActiveRecord::Base
+
     self.table_name = :meters
     include Filterable
 
@@ -32,5 +33,6 @@ module Meter
     def self.filter(value)
       do_filter(value, *search_attributes)
     end
+
   end
 end

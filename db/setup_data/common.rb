@@ -42,16 +42,22 @@ energy_classifications = {
 require 'smarter_csv'
 
 module Converters
+
   class PreferredLanguage
+
     def self.convert(value)
       { 'DE' => :german, 'EN' => :english }[value]
     end
+
   end
   class State
+
     def self.convert(value)
       "DE_#{value}"
     end
+
   end
+
 end
 
 def get_csv(model_name, options = {})

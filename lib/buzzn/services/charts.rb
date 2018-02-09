@@ -22,4 +22,5 @@ class Services::Charts
     end
     cache.put(key, '{}', TIME_TO_LIVE)
   end
+
 end

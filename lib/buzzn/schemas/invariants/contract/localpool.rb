@@ -55,6 +55,7 @@ module Schemas
           tariffs.lineup?
         end
       end
+
     end
   end
 end

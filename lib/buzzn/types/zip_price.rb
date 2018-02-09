@@ -5,6 +5,7 @@ module Types
   MeterTypes = Types::Strict::String.enum('single', 'double', 'smart')
 
   class ZipPrice
+
     extend Dry::Initializer
 
     option :price
@@ -75,5 +76,7 @@ module Types
     def to_json(*)
       @json ||= '{"baseprice_cents_per_month":' << baseprice_cents_per_month.to_s << ',"energyprice_cents_per_kilowatt_hour":' << energyprice_cents_per_kilowatt_hour.to_s << ',"total_cents_per_month":' << total_cents_per_month.to_s << '}'
     end
+
   end
+
 end

@@ -1,7 +1,9 @@
 require 'dry-transaction'
 module Buzzn
   module Boot
+
     class ValidationStepAdapter
+
       def call(step, *args, input)
         result = step.operation.call input
         if result.success?
@@ -12,7 +14,9 @@ module Buzzn
           #Dry::Monads.Left(result.errors)
         end
       end
+
     end
     Dry::Transaction::StepAdapters.register :validate, ValidationStepAdapter.new
+
   end
 end

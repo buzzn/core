@@ -3,7 +3,9 @@ require 'dry/auto_inject/strategies/constructor'
 
 module Buzzn
   module Boot
+
     class Reader < Dry::AutoInject::Strategies::Constructor
+
       private
 
       def define_new
@@ -26,7 +28,9 @@ module Buzzn
 
       def define_initialize(klass)
       end
+
     end
     Dry::AutoInject::Strategies.register :reader, Reader
+
   end
 end

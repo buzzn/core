@@ -1,6 +1,7 @@
 require_relative '../operations'
 
 class Operations::Validation
+
   include Dry::Transaction::Operation
 
   def call(input, schema)
@@ -13,4 +14,5 @@ class Operations::Validation
       #Left(result.errors)
     end
   end
+
 end

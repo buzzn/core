@@ -9,5 +9,7 @@
 #
 
 class Beekeeper::Buzzn::P2pPrice < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.p2p_price'
+
 end

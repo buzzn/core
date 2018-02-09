@@ -1,4 +1,5 @@
 module ActiveRecordSequelMigrationsAdapter
+
   def config
     config = ActiveRecord::Base.connection_config.dup
     # NOTE the PG_USER is for codeship
@@ -14,4 +15,5 @@ module ActiveRecordSequelMigrationsAdapter
       Sequel::Migrator.run(db, migrations_path, target: number)
     end
   end
+
 end

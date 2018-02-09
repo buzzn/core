@@ -9,5 +9,7 @@
 #
 
 class Beekeeper::Buzzn::FahrplanDates < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.fahrplan_dates'
+
 end

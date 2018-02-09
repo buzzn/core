@@ -2,6 +2,7 @@ require 'buzzn/slug'
 
 module Group
   class Base < ActiveRecord::Base
+
     self.table_name = :groups
     include Filterable
 
@@ -73,5 +74,6 @@ module Group
           register.save
         end
       end
+
   end
 end

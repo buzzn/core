@@ -3,6 +3,7 @@ require_relative '../../transactions/bubbles'
 require_relative '../../transactions/display/daily_charts'
 
 class Display::GroupRoda < BaseRoda
+
   plugin :aggregation
 
   route do |r|
@@ -40,4 +41,5 @@ class Display::GroupRoda < BaseRoda
       end
     end
   end
+
 end

@@ -1,6 +1,7 @@
 require_relative 'organization_market_function'
 
 class Organization < ActiveRecord::Base
+
   self.table_name = :organizations
 
   include Filterable
@@ -57,4 +58,5 @@ class Organization < ActiveRecord::Base
   def to_s
     name
   end
+
 end

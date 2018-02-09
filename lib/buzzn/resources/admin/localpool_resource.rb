@@ -63,5 +63,6 @@ module Admin
         "#{display_url}/#{object.slug}"
       end
     end
+
   end
 end

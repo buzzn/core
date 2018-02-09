@@ -66,6 +66,7 @@
 
 # these are the meters
 class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.msb_gerät'
   self.primary_key = 'vertragsnummer'
 
@@ -236,4 +237,5 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
       nil
     end
   end
+
 end

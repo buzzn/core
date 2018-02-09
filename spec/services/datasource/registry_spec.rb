@@ -4,7 +4,9 @@ describe Services::Datasource::Registry do
 
   module  Buzzn::Test
     class DataSource < Buzzn::DataSource
+
       NAME = 'test'
+
     end
   end
 

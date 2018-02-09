@@ -18,4 +18,5 @@ class Address < ActiveRecord::Base
   def to_s
     "#{street}, #{zip} #{city}"
   end
+
 end

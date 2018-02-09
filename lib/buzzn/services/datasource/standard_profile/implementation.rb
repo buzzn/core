@@ -1,6 +1,7 @@
 require_relative '../standard_profile'
 
 class Services::Datasource::StandardProfile::Implementation < Buzzn::DataSource
+
   extend Dry::DependencyInjection::Eager
 
   include Import['services.datasource.registry']
@@ -27,4 +28,5 @@ class Services::Datasource::StandardProfile::Implementation < Buzzn::DataSource
   def aggregated(resource, mode, interval)
     nil
   end
+
 end

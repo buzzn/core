@@ -44,5 +44,7 @@
 #
 
 class Beekeeper::Buzzn::Es < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.es'
+
 end

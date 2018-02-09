@@ -12,5 +12,7 @@
 #
 
 class Beekeeper::Buzzn::SnTarife < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.sn_tarife'
+
 end

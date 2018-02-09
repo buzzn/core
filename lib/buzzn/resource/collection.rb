@@ -3,6 +3,7 @@ require 'ruby_regex'
 
 module Buzzn::Resource
   class Collection
+
     include Enumerable
 
     attr_reader :current_user, :permisions, :objects, :instance_class
@@ -146,5 +147,6 @@ module Buzzn::Resource
       json << ']}'
       json
     end
+
   end
 end

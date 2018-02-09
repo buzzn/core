@@ -66,4 +66,5 @@ class Discovergy::DailyChartsBuilder < Discovergy::AbstractRegistersBuilder
       previous = value
     end
   end
+
 end

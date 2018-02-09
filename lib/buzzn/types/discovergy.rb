@@ -1,23 +1,31 @@
 require_relative '../types'
 
 module Types::Discovergy
+
   module Get
+
     def http_method
       :get
     end
+
   end
 
   module Post
+
     def http_method
       :post
     end
+
   end
 
   module Delete
+
     def http_method
       :delete
     end
+
   end
+
 end
 
 require_relative 'discovergy/base'

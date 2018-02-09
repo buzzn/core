@@ -1,4 +1,5 @@
 module Tokenable
+
   extend ActiveSupport::Concern
 
   included do
@@ -13,4 +14,5 @@ module Tokenable
       break random_token unless self.class.exists?(token: random_token)
     end
   end
+
 end

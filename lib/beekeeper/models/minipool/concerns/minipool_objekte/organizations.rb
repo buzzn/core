@@ -68,5 +68,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     def starts_in_future?
       start_date > Date.today
     end
+
   end
 end

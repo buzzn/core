@@ -2,6 +2,7 @@ require_relative 'owner_base'
 
 module Transactions::Admin::Localpool
   class CreatePersonOwner < OwnerBase
+
     def self.for(localpool)
       new.with_step_args(
         validate: [Schemas::Transactions::Admin::Person::Create],
@@ -21,5 +22,6 @@ module Transactions::Admin::Localpool
         Right(assign_owner(localpool, person))
       end
     end
+
   end
 end

@@ -11,4 +11,5 @@ class Discovergy::AbstractRegistersBuilder < Discovergy::AbstractBuilder
       map["EASYMETER_#{r.meter.product_serialnumber}"] = r
     end
   end
+
 end
