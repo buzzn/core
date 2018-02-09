@@ -5,7 +5,7 @@ SampleData.localpools = OpenStruct.new(
     description: 'Power to the people!',
     show_display_app: true,
     owner: SampleData.persons.group_owner,
-    admins: [ SampleData.persons.group_admin ],
+    admins: [SampleData.persons.group_admin],
     distribution_system_operator: Organization.distribution_system_operator.first,
     transmission_system_operator: Organization.transmission_system_operator.first,
     electricity_supplier: Organization.electricity_supplier.first,

@@ -21,7 +21,7 @@ class Bank < ActiveRecord::Base
              next_blz: 8,
              iban_rule: 6 }
 
-  FIELDS = [ :blz, :description, :zip, :place, :name, :bic, :id ]
+  FIELDS = [:blz, :description, :zip, :place, :name, :bic, :id]
 
   def self.attributes_protected_by_default
     # default is ["id", "type"]

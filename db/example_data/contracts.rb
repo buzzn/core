@@ -26,14 +26,14 @@ SampleData.contracts.mpo = create(:contract, :metering_point_operator,
   localpool: SampleData.localpools.people_power,
   customer: SampleData.localpools.people_power.owner,
   contractor: Organization.buzzn,
-  payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ]
+  payments: [build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')]
 )
 
 SampleData.contracts.lpp = create(:contract, :localpool_processing,
   localpool: SampleData.localpools.people_power,
   customer: SampleData.localpools.people_power.owner,
   contractor: Organization.buzzn,
-  payments: [ build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly') ],
+  payments: [build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')],
   tariffs: [
     build(:tariff, name: 'Regular', energyprice_cents_per_kwh: 28.9, group: SampleData.localpools.people_power),
     build(:tariff, name: 'Reduced', energyprice_cents_per_kwh: 25.9, group: SampleData.localpools.people_power)

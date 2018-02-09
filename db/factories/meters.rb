@@ -22,7 +22,7 @@ FactoryGirl.define do
         if evaluator.registers.present?
           meter.registers = evaluator.registers
         else
-          meter.registers = [ FactoryGirl.build(:register, evaluator.register_direction, meter: meter) ]
+          meter.registers = [FactoryGirl.build(:register, evaluator.register_direction, meter: meter)]
         end
       end
     end

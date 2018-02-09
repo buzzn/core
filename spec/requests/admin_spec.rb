@@ -105,8 +105,8 @@ describe Admin::Roda do
             'obis'=>register.obis
           }
         }
-        json['contracts'] = { 'array' => [ contract_json ] }
-        [ json ]
+        json['contracts'] = { 'array' => [contract_json] }
+        [json]
       end
 
       let(:expected_person_json) do

@@ -78,7 +78,7 @@ module Reading
            distribution_system_operator: DISTRIBUTION_SYSTEM_OPERATOR
          }
     READ_BY_VALUES = [BUZZN, POWER_TAKER, POWER_GIVER,
-                      DISTRIBUTION_SYSTEM_OPERATOR ].freeze
+                      DISTRIBUTION_SYSTEM_OPERATOR].freeze
 
     # units
     WH = 'Wh'

@@ -83,13 +83,13 @@ FactoryGirl.define do
 
   trait :with_tariff do
     before(:create) do |contract, _evaluator|
-      contract.tariffs = [ build(:tariff) ]
+      contract.tariffs = [build(:tariff)]
     end
   end
 
   trait :with_payment do
     before(:create) do |contract, _evaluator|
-      contract.payments = [ build(:payment) ]
+      contract.payments = [build(:payment)]
     end
   end
 end

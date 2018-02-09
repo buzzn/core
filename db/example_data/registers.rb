@@ -4,15 +4,15 @@
 SampleData.registers = OpenStruct.new(
   ecar: create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:consumption_common],
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
-    devices: [ build(:device, :ecar, commissioning: '2017-04-10', register: nil) ]
+    devices: [build(:device, :ecar, commissioning: '2017-04-10', register: nil)]
   ),
   bhkw: create(:register, :production_bhkw,
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
-    devices: [ build(:device, :bhkw, commissioning: '1995-01-01', register: nil) ]
+    devices: [build(:device, :bhkw, commissioning: '1995-01-01', register: nil)]
   ),
   pv: create(:register, :production_pv,
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
-    devices: [ build(:device, :pv, commissioning: '2017-04-10', register: nil) ]
+    devices: [build(:device, :pv, commissioning: '2017-04-10', register: nil)]
   ),
   water: create(:register, :production_water,
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)
