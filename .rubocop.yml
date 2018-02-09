@@ -136,4 +136,3 @@ Layout/IndentationWidth:
 # in earlier versions as well)
 Lint/UnifiedInteger:
   Enabled: true
-
