@@ -107,3 +107,6 @@ Layout/CaseIndentation:
 Layout/IndentationWidth:
   Enabled: true
 
+Lint/UnifiedInteger:
+  Enabled: true
+

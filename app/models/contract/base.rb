@@ -62,7 +62,7 @@ module Contract
                     timestamp.to_date
                   when Date
                     timestamp
-                  when Fixnum
+                  when Integer
                     Time.at(timestamp).to_date
                   else
                     raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")

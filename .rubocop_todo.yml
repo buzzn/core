@@ -186,12 +186,6 @@ Layout/IndentationConsistency:
     - 'spec/requests/admin/localpool_spec.rb'
     - 'spec/source_file_spec.rb'
 
-# Offense count: 29
-# Cop supports --auto-correct.
-# Configuration parameters: Width, IgnoredPatterns.
-Layout/IndentationWidth:
-  Enabled: false
-
 # Offense count: 2
 # Cop supports --auto-correct.
 Layout/InitialIndentation:
@@ -495,17 +489,6 @@ Lint/ShadowingOuterLocalVariable:
 Lint/UnderscorePrefixedVariableName:
   Exclude:
     - 'script/beekeeper_import/find_missing_readings.rb'
-
-# Offense count: 8
-# Cop supports --auto-correct.
-Lint/UnifiedInteger:
-  Exclude:
-    - 'app/models/contract/base.rb'
-    - 'app/models/contract/payment.rb'
-    - 'app/models/energy_classification.rb'
-    - 'app/models/reading/continuous.rb'
-    - 'lib/buzzn/data_point.rb'
-    - 'lib/buzzn/in_out_data_results.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.

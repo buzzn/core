@@ -17,7 +17,7 @@ module Buzzn
                      timestamp.to_f
                    when String
                      timestamp.to_f
-                   when Fixnum
+                   when Integer
                      timestamp / 1000.0
                    when Float
                      timestamp

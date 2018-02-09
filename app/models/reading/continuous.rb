@@ -94,7 +94,7 @@ module Reading
                     timestamp
                   when Date
                     timestamp.to_time
-                  when Fixnum
+                  when Integer
                     Time.at(timestamp)
                   else
                     raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")
