@@ -28,8 +28,10 @@ Style/StringLiterals:
 Style/Encoding:
   Enabled: true
 
+# it's hopeless ...
 Metrics/LineLength:
   Max: 120
+  Enabled: false
 
 Layout/ExtraSpacing:
   Enabled: true
