@@ -30,7 +30,7 @@ class Organization < ActiveRecord::Base
     market_functions.find_by(function: function)
   end
 
-  scope :permitted, ->(uuids) { where(nil) } # organizations are public
+  scope :permitted, ->(uids) { where(nil) } # organizations are public
 
   # Define some class-accessors for commonly used organizations (example: Organization.buzzn).
   # Note they are nil by default, need to be assigned from init code somewhere.

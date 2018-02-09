@@ -1107,8 +1107,8 @@ paths:
       - name: register_id
         in: formData
         required: false
-        type: string
-        format: ''
+        type: integer
+        format: int64
       responses:
         200:
           description: patched

@@ -12,7 +12,7 @@ module Schemas::Support::Predicates
     ! URI::MailTo::EMAIL_REGEXP.match(value).nil?
   end
 
-  predicate(:uuid?) do |value|
+  predicate(:uid?) do |value|
     ! RubyRegex::UUID.match(value).nil?
   end
 

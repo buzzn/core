@@ -7,9 +7,9 @@ class CreateOrganizationMarketFunctions < ActiveRecord::Migration
   def up
     SCHEMA.up(:organization_market_functions, self)
 
-    add_belongs_to :organization_market_functions, :address, index: true, type: :uuid, null: true
-    add_belongs_to :organization_market_functions, :organization, index: true, type: :uuid, null: true
-    add_belongs_to :organization_market_functions, :contact_person, references: :persons, index: true, type: :uuid, null: true
+    add_belongs_to :organization_market_functions, :address, index: true, null: true
+    add_belongs_to :organization_market_functions, :organization, index: true, null: true
+    add_belongs_to :organization_market_functions, :contact_person, references: :persons, index: true, null: true
 
     add_foreign_key :organization_market_functions, :addresses, name: :fk_organization_market_functions_address
     add_foreign_key :organization_market_functions, :organizations, name: :fk_organization_market_functions_organization

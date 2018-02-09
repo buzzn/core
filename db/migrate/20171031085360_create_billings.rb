@@ -7,12 +7,12 @@ class CreateBillings < ActiveRecord::Migration
   def up
     SCHEMA.up(:billings, self)
 
-    add_belongs_to :billings, :start_reading, references: :readings, type: :uuid#, null: false
-    add_belongs_to :billings, :end_reading, references: :readings, type: :uuid#, null: false
-    add_belongs_to :billings, :device_change_reading_1, references: :readings, type: :uuid, null: true
-    add_belongs_to :billings, :device_change_reading_2, references: :readings, type: :uuid, null: true
-    add_belongs_to :billings, :billing_cycle, type: :uuid, index: true, null: true
-    add_belongs_to :billings, :localpool_power_taker_contract, references: :contract, type: :uuid, index: true, null: false
+    add_belongs_to :billings, :start_reading, references: :readings, null: true
+    add_belongs_to :billings, :end_reading, references: :readings, null: true
+    add_belongs_to :billings, :device_change_reading_1, references: :readings, null: true
+    add_belongs_to :billings, :device_change_reading_2, references: :readings, null: true
+    add_belongs_to :billings, :billing_cycle, index: true, null: true
+    add_belongs_to :billings, :localpool_power_taker_contract, references: :contract, index: true, null: false
 
     add_foreign_key :billings, :readings, name: :fk_billings_start_reading, column: :start_reading_id
     add_foreign_key :billings, :readings, name: :fk_billings_end_reading, column: :end_reading_id

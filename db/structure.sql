@@ -42,20 +42,6 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
---
--- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
-
-
---
--- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
-
-
 SET search_path = public, pg_catalog;
 
 --
@@ -844,7 +830,7 @@ CREATE TABLE accounts (
     id bigint NOT NULL,
     status_id integer DEFAULT 1 NOT NULL,
     email citext NOT NULL,
-    person_id uuid NOT NULL,
+    person_id integer NOT NULL,
     CONSTRAINT valid_email CHECK ((email ~ '^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$'::citext))
 );
 
@@ -873,7 +859,7 @@ ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
 --
 
 CREATE TABLE addresses (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     street character varying(64) NOT NULL,
     zip character varying(16) NOT NULL,
     city character varying(64) NOT NULL,
@@ -885,11 +871,30 @@ CREATE TABLE addresses (
 
 
 --
+-- Name: addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE addresses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE addresses_id_seq OWNED BY addresses.id;
+
+
+--
 -- Name: bank_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE bank_accounts (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     holder character varying(64) NOT NULL,
     iban character varying(32) NOT NULL,
     bank_name character varying(64),
@@ -897,10 +902,29 @@ CREATE TABLE bank_accounts (
     direct_debit boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    owner_person_id uuid,
-    owner_organization_id uuid,
+    owner_person_id integer,
+    owner_organization_id integer,
     CONSTRAINT check_bank_account_owner CHECK (((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))) OR ((owner_person_id IS NULL) AND (owner_organization_id IS NULL))))
 );
+
+
+--
+-- Name: bank_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE bank_accounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: bank_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE bank_accounts_id_seq OWNED BY bank_accounts.id;
 
 
 --
@@ -942,14 +966,33 @@ ALTER SEQUENCE banks_id_seq OWNED BY banks.id;
 --
 
 CREATE TABLE billing_cycles (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     name character varying(64) NOT NULL,
     begin_date date NOT NULL,
     end_date date NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    localpool_id uuid NOT NULL
+    localpool_id integer NOT NULL
 );
+
+
+--
+-- Name: billing_cycles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE billing_cycles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: billing_cycles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE billing_cycles_id_seq OWNED BY billing_cycles.id;
 
 
 --
@@ -957,7 +1000,7 @@ CREATE TABLE billing_cycles (
 --
 
 CREATE TABLE billings (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     total_energy_consumption_kwh integer NOT NULL,
     total_price_cents integer NOT NULL,
     prepayments_cents integer NOT NULL,
@@ -966,13 +1009,32 @@ CREATE TABLE billings (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     status billings_status,
-    start_reading_id uuid,
-    end_reading_id uuid,
-    device_change_reading_1_id uuid,
-    device_change_reading_2_id uuid,
-    billing_cycle_id uuid,
-    localpool_power_taker_contract_id uuid NOT NULL
+    start_reading_id integer,
+    end_reading_id integer,
+    device_change_reading_1_id integer,
+    device_change_reading_2_id integer,
+    billing_cycle_id integer,
+    localpool_power_taker_contract_id integer NOT NULL
 );
+
+
+--
+-- Name: billings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE billings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: billings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE billings_id_seq OWNED BY billings.id;
 
 
 --
@@ -1010,7 +1072,7 @@ ALTER SEQUENCE brokers_id_seq OWNED BY brokers.id;
 --
 
 CREATE TABLE contract_tax_data (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     retailer boolean,
     provider_permission boolean,
     subject_to_tax boolean,
@@ -1020,8 +1082,27 @@ CREATE TABLE contract_tax_data (
     creditor_identification character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    contract_id uuid
+    contract_id integer
 );
+
+
+--
+-- Name: contract_tax_data_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE contract_tax_data_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contract_tax_data_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE contract_tax_data_id_seq OWNED BY contract_tax_data.id;
 
 
 --
@@ -1029,7 +1110,7 @@ CREATE TABLE contract_tax_data (
 --
 
 CREATE TABLE contracts (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     signing_date date NOT NULL,
     begin_date date,
     termination_date date,
@@ -1056,17 +1137,36 @@ CREATE TABLE contracts (
     updated_at timestamp without time zone NOT NULL,
     renewable_energy_law_taxation contracts_renewable_energy_law_taxation,
     type character varying(64) NOT NULL,
-    register_id uuid,
-    localpool_id uuid,
-    customer_bank_account_id uuid,
-    contractor_bank_account_id uuid,
-    customer_person_id uuid,
-    customer_organization_id uuid,
-    contractor_person_id uuid,
-    contractor_organization_id uuid,
+    register_id integer,
+    localpool_id integer,
+    customer_bank_account_id integer,
+    contractor_bank_account_id integer,
+    customer_person_id integer,
+    customer_organization_id integer,
+    contractor_person_id integer,
+    contractor_organization_id integer,
     CONSTRAINT check_contract_contractor CHECK ((NOT ((contractor_person_id IS NOT NULL) AND (contractor_organization_id IS NOT NULL)))),
     CONSTRAINT check_contract_customer CHECK ((NOT ((customer_person_id IS NOT NULL) AND (customer_organization_id IS NOT NULL))))
 );
+
+
+--
+-- Name: contracts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE contracts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contracts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE contracts_id_seq OWNED BY contracts.id;
 
 
 --
@@ -1074,8 +1174,8 @@ CREATE TABLE contracts (
 --
 
 CREATE TABLE contracts_tariffs (
-    tariff_id uuid NOT NULL,
-    contract_id uuid NOT NULL
+    tariff_id integer NOT NULL,
+    contract_id integer NOT NULL
 );
 
 
@@ -1084,11 +1184,30 @@ CREATE TABLE contracts_tariffs (
 --
 
 CREATE TABLE core_configs (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     namespace character varying NOT NULL,
     key character varying NOT NULL,
     value character varying NOT NULL
 );
+
+
+--
+-- Name: core_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE core_configs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: core_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE core_configs_id_seq OWNED BY core_configs.id;
 
 
 --
@@ -1124,7 +1243,7 @@ ALTER SEQUENCE customer_numbers_id_seq OWNED BY customer_numbers.id;
 --
 
 CREATE TABLE devices (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     manufacturer_name character varying,
     manufacturer_product_name character varying,
     manufacturer_product_serialnumber character varying,
@@ -1138,11 +1257,30 @@ CREATE TABLE devices (
     watt_hour_pa integer,
     commissioning date,
     mobile boolean DEFAULT false,
-    metering_point_id uuid,
+    metering_point_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    register_id uuid
+    register_id integer
 );
+
+
+--
+-- Name: devices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE devices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: devices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE devices_id_seq OWNED BY devices.id;
 
 
 --
@@ -1150,7 +1288,7 @@ CREATE TABLE devices (
 --
 
 CREATE TABLE documents (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     path character varying(128) NOT NULL,
     encryption_details character varying(512) NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -1159,11 +1297,30 @@ CREATE TABLE documents (
 
 
 --
+-- Name: documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE documents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE documents_id_seq OWNED BY documents.id;
+
+
+--
 -- Name: energy_classifications; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE energy_classifications (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     tariff_name character varying,
     nuclear_ratio double precision NOT NULL,
     coal_ratio double precision NOT NULL,
@@ -1174,10 +1331,29 @@ CREATE TABLE energy_classifications (
     co2_emission_gramm_per_kwh double precision NOT NULL,
     nuclear_waste_miligramm_per_kwh double precision NOT NULL,
     end_date date,
-    organization_id uuid,
+    organization_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
+
+
+--
+-- Name: energy_classifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE energy_classifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: energy_classifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE energy_classifications_id_seq OWNED BY energy_classifications.id;
 
 
 --
@@ -1185,13 +1361,32 @@ CREATE TABLE energy_classifications (
 --
 
 CREATE TABLE formula_parts (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     operator formula_parts_operator,
-    register_id uuid NOT NULL,
-    operand_id uuid NOT NULL
+    register_id integer NOT NULL,
+    operand_id integer NOT NULL
 );
+
+
+--
+-- Name: formula_parts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE formula_parts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: formula_parts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE formula_parts_id_seq OWNED BY formula_parts.id;
 
 
 --
@@ -1199,7 +1394,7 @@ CREATE TABLE formula_parts (
 --
 
 CREATE TABLE groups (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     name character varying(64) NOT NULL,
     description character varying(256),
     start_date date,
@@ -1212,15 +1407,34 @@ CREATE TABLE groups (
     updated_at timestamp without time zone NOT NULL,
     type character varying(64) NOT NULL,
     slug character varying(64) NOT NULL,
-    address_id uuid,
-    owner_person_id uuid,
-    owner_organization_id uuid,
-    distribution_system_operator_id uuid,
-    transmission_system_operator_id uuid,
-    electricity_supplier_id uuid,
-    bank_account_id uuid,
+    address_id integer,
+    owner_person_id integer,
+    owner_organization_id integer,
+    distribution_system_operator_id integer,
+    transmission_system_operator_id integer,
+    electricity_supplier_id integer,
+    bank_account_id integer,
     CONSTRAINT check_localpool_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
 );
+
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 
 
 --
@@ -1228,7 +1442,7 @@ CREATE TABLE groups (
 --
 
 CREATE TABLE meters (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     product_name character varying(64),
     product_serialnumber character varying(128),
     manufacturer_description character varying,
@@ -1252,10 +1466,29 @@ CREATE TABLE meters (
     edifact_data_logging meters_edifact_data_logging,
     type character varying NOT NULL,
     sequence_number integer,
-    group_id uuid,
+    group_id integer,
     broker_id integer,
     legacy_buzznid character varying
 );
+
+
+--
+-- Name: meters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE meters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: meters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE meters_id_seq OWNED BY meters.id;
 
 
 --
@@ -1263,16 +1496,35 @@ CREATE TABLE meters (
 --
 
 CREATE TABLE organization_market_functions (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     market_partner_id character varying(64) NOT NULL,
     edifact_email character varying(64) NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     function organization_market_functions_function,
-    address_id uuid,
-    organization_id uuid,
-    contact_person_id uuid
+    address_id integer,
+    organization_id integer,
+    contact_person_id integer
 );
+
+
+--
+-- Name: organization_market_functions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE organization_market_functions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_market_functions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE organization_market_functions_id_seq OWNED BY organization_market_functions.id;
 
 
 --
@@ -1280,7 +1532,7 @@ CREATE TABLE organization_market_functions (
 --
 
 CREATE TABLE organizations (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     name character varying(64) NOT NULL,
     description character varying(256),
     email character varying(64),
@@ -1291,10 +1543,29 @@ CREATE TABLE organizations (
     updated_at timestamp without time zone NOT NULL,
     slug character varying(64) NOT NULL,
     customer_number integer,
-    address_id uuid,
-    legal_representation_id uuid,
-    contact_id uuid
+    address_id integer,
+    legal_representation_id integer,
+    contact_id integer
 );
+
+
+--
+-- Name: organizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE organizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE organizations_id_seq OWNED BY organizations.id;
 
 
 --
@@ -1302,15 +1573,34 @@ CREATE TABLE organizations (
 --
 
 CREATE TABLE payments (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     begin_date date NOT NULL,
     price_cents integer NOT NULL,
     end_date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     cycle payments_cycle,
-    contract_id uuid NOT NULL
+    contract_id integer NOT NULL
 );
+
+
+--
+-- Name: payments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE payments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: payments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE payments_id_seq OWNED BY payments.id;
 
 
 --
@@ -1318,7 +1608,7 @@ CREATE TABLE payments (
 --
 
 CREATE TABLE persons (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     first_name character varying(64) NOT NULL,
     last_name character varying(64) NOT NULL,
     email character varying(64),
@@ -1331,8 +1621,27 @@ CREATE TABLE persons (
     title persons_title,
     image character varying(64),
     customer_number integer,
-    address_id uuid
+    address_id integer
 );
+
+
+--
+-- Name: persons_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE persons_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: persons_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE persons_id_seq OWNED BY persons.id;
 
 
 --
@@ -1340,7 +1649,7 @@ CREATE TABLE persons (
 --
 
 CREATE TABLE persons_roles (
-    person_id uuid NOT NULL,
+    person_id integer NOT NULL,
     role_id integer NOT NULL
 );
 
@@ -1350,7 +1659,7 @@ CREATE TABLE persons_roles (
 --
 
 CREATE TABLE readings (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     raw_value double precision NOT NULL,
     value double precision NOT NULL,
     comment character varying(256),
@@ -1363,8 +1672,27 @@ CREATE TABLE readings (
     quality readings_quality,
     source readings_source,
     status readings_status,
-    register_id uuid NOT NULL
+    register_id integer NOT NULL
 );
+
+
+--
+-- Name: readings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE readings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: readings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE readings_id_seq OWNED BY readings.id;
 
 
 --
@@ -1372,7 +1700,7 @@ CREATE TABLE readings (
 --
 
 CREATE TABLE registers (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     metering_point_id character varying(64),
     observer_enabled boolean,
     observer_min_threshold integer,
@@ -1387,8 +1715,27 @@ CREATE TABLE registers (
     direction registers_direction,
     type character varying NOT NULL,
     last_observed timestamp without time zone,
-    meter_id uuid NOT NULL
+    meter_id integer NOT NULL
 );
+
+
+--
+-- Name: registers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE registers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: registers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE registers_id_seq OWNED BY registers.id;
 
 
 --
@@ -1397,7 +1744,7 @@ CREATE TABLE registers (
 
 CREATE TABLE roles (
     id integer NOT NULL,
-    resource_id uuid,
+    resource_id integer,
     resource_type character varying(32),
     name roles_name
 );
@@ -1445,7 +1792,7 @@ CREATE TABLE schema_migrations (
 --
 
 CREATE TABLE tariffs (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     name character varying(64) NOT NULL,
     begin_date date NOT NULL,
     energyprice_cents_per_kwh double precision NOT NULL,
@@ -1453,8 +1800,27 @@ CREATE TABLE tariffs (
     end_date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    group_id uuid NOT NULL
+    group_id integer NOT NULL
 );
+
+
+--
+-- Name: tariffs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE tariffs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tariffs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE tariffs_id_seq OWNED BY tariffs.id;
 
 
 --
@@ -1462,7 +1828,7 @@ CREATE TABLE tariffs (
 --
 
 CREATE TABLE zip_to_prices (
-    id uuid DEFAULT uuid_generate_v4() NOT NULL,
+    id integer NOT NULL,
     zip integer NOT NULL,
     price_euro_year_dt double precision NOT NULL,
     average_price_cents_kwh_dt double precision NOT NULL,
@@ -1482,6 +1848,25 @@ CREATE TABLE zip_to_prices (
 
 
 --
+-- Name: zip_to_prices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE zip_to_prices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: zip_to_prices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE zip_to_prices_id_seq OWNED BY zip_to_prices.id;
+
+
+--
 -- Name: account_previous_password_hashes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1496,10 +1881,38 @@ ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq':
 
 
 --
+-- Name: addresses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY addresses ALTER COLUMN id SET DEFAULT nextval('addresses_id_seq'::regclass);
+
+
+--
+-- Name: bank_accounts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY bank_accounts ALTER COLUMN id SET DEFAULT nextval('bank_accounts_id_seq'::regclass);
+
+
+--
 -- Name: banks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regclass);
+
+
+--
+-- Name: billing_cycles id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_cycles ALTER COLUMN id SET DEFAULT nextval('billing_cycles_id_seq'::regclass);
+
+
+--
+-- Name: billings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billings ALTER COLUMN id SET DEFAULT nextval('billings_id_seq'::regclass);
 
 
 --
@@ -1510,6 +1923,27 @@ ALTER TABLE ONLY brokers ALTER COLUMN id SET DEFAULT nextval('brokers_id_seq'::r
 
 
 --
+-- Name: contract_tax_data id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contract_tax_data ALTER COLUMN id SET DEFAULT nextval('contract_tax_data_id_seq'::regclass);
+
+
+--
+-- Name: contracts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts ALTER COLUMN id SET DEFAULT nextval('contracts_id_seq'::regclass);
+
+
+--
+-- Name: core_configs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY core_configs ALTER COLUMN id SET DEFAULT nextval('core_configs_id_seq'::regclass);
+
+
+--
 -- Name: customer_numbers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1517,10 +1951,108 @@ ALTER TABLE ONLY customer_numbers ALTER COLUMN id SET DEFAULT nextval('customer_
 
 
 --
+-- Name: devices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY devices ALTER COLUMN id SET DEFAULT nextval('devices_id_seq'::regclass);
+
+
+--
+-- Name: documents id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY documents ALTER COLUMN id SET DEFAULT nextval('documents_id_seq'::regclass);
+
+
+--
+-- Name: energy_classifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY energy_classifications ALTER COLUMN id SET DEFAULT nextval('energy_classifications_id_seq'::regclass);
+
+
+--
+-- Name: formula_parts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY formula_parts ALTER COLUMN id SET DEFAULT nextval('formula_parts_id_seq'::regclass);
+
+
+--
+-- Name: groups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
+
+
+--
+-- Name: meters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY meters ALTER COLUMN id SET DEFAULT nextval('meters_id_seq'::regclass);
+
+
+--
+-- Name: organization_market_functions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organization_market_functions ALTER COLUMN id SET DEFAULT nextval('organization_market_functions_id_seq'::regclass);
+
+
+--
+-- Name: organizations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY organizations ALTER COLUMN id SET DEFAULT nextval('organizations_id_seq'::regclass);
+
+
+--
+-- Name: payments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY payments ALTER COLUMN id SET DEFAULT nextval('payments_id_seq'::regclass);
+
+
+--
+-- Name: persons id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY persons ALTER COLUMN id SET DEFAULT nextval('persons_id_seq'::regclass);
+
+
+--
+-- Name: readings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY readings ALTER COLUMN id SET DEFAULT nextval('readings_id_seq'::regclass);
+
+
+--
+-- Name: registers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY registers ALTER COLUMN id SET DEFAULT nextval('registers_id_seq'::regclass);
+
+
+--
 -- Name: roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+
+
+--
+-- Name: tariffs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tariffs ALTER COLUMN id SET DEFAULT nextval('tariffs_id_seq'::regclass);
+
+
+--
+-- Name: zip_to_prices id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY zip_to_prices ALTER COLUMN id SET DEFAULT nextval('zip_to_prices_id_seq'::regclass);
 
 
 --

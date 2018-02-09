@@ -22,13 +22,13 @@ module Buzzn::Resource
       Context.new(@current_user, @unbound_roles, @permissions)
     end
 
-    def current_roles(id)
-      @unbound_roles | (@current_user ? @current_user.uuids_to_rolenames.fetch(id, []) : [])
+    def current_roles(uid)
+      @unbound_roles | (@current_user ? @current_user.uids_to_rolenames.fetch(uid, []) : [])
     end
 
     def each(&block)
       @objects.each do |model|
-        block.call(@to_resource.call(@current_user, current_roles(model.id),
+        block.call(@to_resource.call(@current_user, current_roles(uid(model)),
                                      @permissions, model, @instance_class))
       end
     end
@@ -40,7 +40,7 @@ module Buzzn::Resource
     end
 
     def retrieve_with_slug(id)
-      if id =~ RubyRegex::UUID
+      if id =~ /^[0-9]+$/
         do_retrieve(id, id: id)
       else
         do_retrieve(id, slug: id)
@@ -57,7 +57,8 @@ module Buzzn::Resource
 
     def do_retrieve_or_nil(id, *args)
       if result = @objects.where(*args).first
-        @to_resource.call(@current_user, current_roles(id),
+        @to_resource.call(@current_user,
+                          current_roles("#{clazz}:#{id}"),
                           @permissions, result, @instance_class)
       end
     end
@@ -65,15 +66,10 @@ module Buzzn::Resource
     def do_retrieve(id, *args)
       if result = do_retrieve_or_nil(id, *args)
         result
+      elsif clazz && clazz.where(*args).size > 0
+        raise Buzzn::PermissionDenied.new(clazz.where(*args).first, :retrieve, @current_user)
       else
-        clazz = @objects.class.to_s.sub(/::ActiveRecord_.*/, '').safe_constantize
-        clazz ||= @instance_class && @instance_class.model
-        clazz ||= @objects.first.class if @objects.first
-        if clazz && clazz.where(*args).size > 0
-          raise Buzzn::PermissionDenied.new(clazz.where(*args).first, :retrieve, @current_user)
-        else
-          raise Buzzn::RecordNotFound.new(clazz, id, @current_user)
-        end
+        raise Buzzn::RecordNotFound.new(clazz, id, @current_user)
       end
     end
     private :do_retrieve
@@ -131,9 +127,9 @@ module Buzzn::Resource
       @objects.each do |model|
         if m = cache[model.class]
           m.instance_variable_set(:@object, model)
-          m.instance_variable_set(:@current_roles, current_roles(model.id))
+          m.instance_variable_set(:@current_roles, current_roles(uid(model)))
         else
-          m = @to_resource.call(@current_user, current_roles(model.id),
+          m = @to_resource.call(@current_user, current_roles(uid(model)),
                                 @permissions, model, @instance_class)
           cache[model.class] = m
         end
@@ -146,6 +142,17 @@ module Buzzn::Resource
       end
       json << ']}'
       json
+    end
+
+    private
+
+    def clazz
+      @clazz ||= @objects.class.to_s.sub(/::ActiveRecord_.*/, '').safe_constantize
+      @clazz ||= @instance_class && @instance_class.model
+    end
+
+    def uid(model)
+      "#{model.class}:#{model.id}"
     end
 
   end

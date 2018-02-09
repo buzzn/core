@@ -10,13 +10,13 @@ class CreateGroups < ActiveRecord::Migration
     add_column :groups, :type, :string, null: false, limit: 64
     add_column :groups, :slug, :string, null: false, limit: 64
 
-    add_belongs_to :groups, :address, type: :uuid, index: true, null: true
-    add_belongs_to :groups, :owner_person, reference: :persons, type: :uuid, index: true, null: true
-    add_belongs_to :groups, :owner_organization, reference: :organizations, type: :uuid, index: true, null: true
-    add_belongs_to :groups, :distribution_system_operator, reference: :organizations, type: :uuid, index: true, null: true
-    add_belongs_to :groups, :transmission_system_operator, reference: :organizations, type: :uuid, index: true, null: true
-    add_belongs_to :groups, :electricity_supplier, reference: :organizations, type: :uuid, index: true, null: true
-    add_belongs_to :groups, :bank_account, reference: :bank_accounts, type: :uuid, index: true, null: true
+    add_belongs_to :groups, :address, index: true, null: true
+    add_belongs_to :groups, :owner_person, reference: :persons, index: true, null: true
+    add_belongs_to :groups, :owner_organization, reference: :organizations, index: true, null: true
+    add_belongs_to :groups, :distribution_system_operator, reference: :organizations, index: true, null: true
+    add_belongs_to :groups, :transmission_system_operator, reference: :organizations, index: true, null: true
+    add_belongs_to :groups, :electricity_supplier, reference: :organizations, index: true, null: true
+    add_belongs_to :groups, :bank_account, reference: :bank_accounts, index: true, null: true
 
     add_foreign_key :groups, :addresses, name: :fk_groups_address
     add_foreign_key :groups, :persons, name: :fk_groups_person, column: :owner_person_id
@@ -39,9 +39,9 @@ class CreateGroups < ActiveRecord::Migration
     remove_foreign_key :groups, :persons, name: :fk_groups_person
     remove_foreign_key :groups, :organizations, name: :fk_groups_organization
 
-    remove_belongs_to :groups, :addresses, type: :uuid, index: true
-    remove_belongs_to :groups, :persons, type: :uuid, index: true
-    remove_belongs_to :groups, :organizations, type: :uuid, index: true
+    remove_belongs_to :groups, :addresses, index: true
+    remove_belongs_to :groups, :persons, index: true
+    remove_belongs_to :groups, :organizations, index: true
 
     SCHEMA.down(:groups, self)
   end

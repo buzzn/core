@@ -9,14 +9,14 @@ class CreateContract < ActiveRecord::Migration
     SCHEMA.up(:contracts, self)
     add_column :contracts, :type, :string, null: false, limit: 64
 
-    add_belongs_to :contracts, :register, null: true, index: true, type: :uuid
-    add_belongs_to :contracts, :localpool, reference: :group, null: true, index: true, type: :uuid
-    add_belongs_to :contracts, :customer_bank_account, reference: :bank_account, null: true, index: true, type: :uuid
-    add_belongs_to :contracts, :contractor_bank_account, reference: :bank_account, null: true, index: true, type: :uuid
-    add_belongs_to :contracts, :customer_person, reference: :persons, type: :uuid, index: true, null: true
-    add_belongs_to :contracts, :customer_organization, reference: :organizations, type: :uuid, index: true, null: true
-    add_belongs_to :contracts, :contractor_person, reference: :persons, type: :uuid, index: true, null: true
-    add_belongs_to :contracts, :contractor_organization, reference: :organizations, type: :uuid, index: true, null: true
+    add_belongs_to :contracts, :register, null: true, index: true
+    add_belongs_to :contracts, :localpool, reference: :group, null: true, index: true
+    add_belongs_to :contracts, :customer_bank_account, reference: :bank_account, null: true, index: true
+    add_belongs_to :contracts, :contractor_bank_account, reference: :bank_account, null: true, index: true
+    add_belongs_to :contracts, :customer_person, reference: :persons, index: true, null: true
+    add_belongs_to :contracts, :customer_organization, reference: :organizations, index: true, null: true
+    add_belongs_to :contracts, :contractor_person, reference: :persons, index: true, null: true
+    add_belongs_to :contracts, :contractor_organization, reference: :organizations, index: true, null: true
 
     add_foreign_key :contracts, :registers, name: :fk_contracts_register
     add_foreign_key :contracts, :groups, name: :fk_contracts_localpool, column: :localpool_id

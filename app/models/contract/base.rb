@@ -100,7 +100,7 @@ module Contract
     private
 
     # permissions helpers
-    scope :permitted, ->(uuids) { where(id: uuids) }
+    scope :permitted, ->(uids) { where(id: uids) }
 
   end
 end
