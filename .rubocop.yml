@@ -41,3 +41,17 @@ Style/NumericLiterals:
 
 Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: true
+
+Style/CollectionMethods:
+  # Mapping from undesired method to desired_method
+  # e.g. to use `detect` over `find`:
+  #
+  # CollectionMethods:
+  #   PreferredMethods:
+  #     find: detect
+  PreferredMethods:
+    map: 'collect'
+    map!: 'collect!'
+    inject: 'reduce'
+    detect: 'find'
+    find_all: 'select'

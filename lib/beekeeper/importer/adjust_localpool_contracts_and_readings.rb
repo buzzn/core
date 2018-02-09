@@ -124,7 +124,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       logger.info("Destroyed reading for #{readings.first.date} since both readings have the same value.")
     else
       logger.info('Readings for old contract end and new contract start have different values, this is resolved in code')
-      logger.info('Readings: ' + readings.map { |r| "date: #{r.date}, #{r.value}" }.join(' // ') )
+      logger.info('Readings: ' + readings.collect { |r| "date: #{r.date}, #{r.value}" }.join(' // ') )
       if register.meter.legacy_buzznid == '90057/7'
         # in this case the 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
         readings.first.destroy!

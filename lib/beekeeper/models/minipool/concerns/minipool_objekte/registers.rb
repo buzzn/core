@@ -8,7 +8,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     private
 
     def registers
-      msb_zählwerk_daten.reject(&:skip_import?).map do |zählwerk|
+      msb_zählwerk_daten.reject(&:skip_import?).collect do |zählwerk|
         attrs = zählwerk.converted_attributes
         add_warning("register '#{attrs[:name]}'", zählwerk.warnings) if zählwerk.warnings.present?
         add_warning("meter '#{attrs[:name]}'", zählwerk.msb_gerät.warnings) if zählwerk.msb_gerät.warnings.present?

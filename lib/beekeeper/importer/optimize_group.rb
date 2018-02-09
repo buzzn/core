@@ -75,7 +75,7 @@ class Beekeeper::Importer::OptimizeGroup
 
   def standard?(localpool, warnings)
     production_meters = @optimized.local(localpool).select do |m|
-      m.registers.detect {|r| r.label.production? }
+      m.registers.find {|r| r.label.production? }
     end
     if production_meters.empty?
       warnings['discovergy'] = 'there are consumption discovergy meters but no production discovergy'

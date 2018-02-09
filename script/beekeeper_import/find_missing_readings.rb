@@ -48,7 +48,7 @@ ReadingsCheck = Struct.new(:contract) do
       first_day_in_next_year = Date.new(year + 1, 1, 1)
       actual_readings_dates.include?(last_day_in_year) || actual_readings_dates.include?(first_day_in_next_year)
     end
-    missing_years.map { |year| Date.new(year, 12, 31) }
+    missing_years.collect { |year| Date.new(year, 12, 31) }
   end
 
   LATEST_BILLING_YEAR = 2016

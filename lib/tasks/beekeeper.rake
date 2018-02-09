@@ -45,7 +45,7 @@ namespace :beekeeper do
     # Output a table of current connections to the DB
     conn = ActiveRecord::Base.connection
     query = "SELECT * FROM information_schema.tables WHERE table_schema='#{schema}'"
-    tables = conn.execute(query).map { |row| row['table_name']}
+    tables = conn.execute(query).collect { |row| row['table_name']}
     tables.each do |table|
       p table
       class_definition = <<~CODE

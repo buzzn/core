@@ -53,9 +53,9 @@ class Person < ActiveRecord::Base
   def detect_role(name, resource)
     if resource
       type = resource.class.to_s
-      roles.detect {|r| r.attributes['name'] == name && r.resource_id == resource.id && r.resource_type == type }
+      roles.find {|r| r.attributes['name'] == name && r.resource_id == resource.id && r.resource_type == type }
     else
-      roles.detect {|r| r.attributes['name'] == name }
+      roles.find {|r| r.attributes['name'] == name }
     end
   end
 

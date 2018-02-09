@@ -48,7 +48,7 @@ class Device < ActiveRecord::Base
     %w{
       eeg
       kwkg
-    }.map(&:to_sym)
+    }.collect(&:to_sym)
   end
 
   def self.modes

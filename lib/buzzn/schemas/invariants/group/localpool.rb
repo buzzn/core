@@ -21,7 +21,7 @@ module Schemas
           def has_owner_role?(input)
             case input.class.to_s
             when 'Person'
-              the_role = input.roles.where(name: Role::GROUP_OWNER).detect do |role|
+              the_role = input.roles.where(name: Role::GROUP_OWNER).find do |role|
                 localpool = role.resource
                 owner = localpool.owner
                 (owner.is_a?(Person) && input.id == owner.id) ||

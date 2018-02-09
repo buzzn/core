@@ -159,6 +159,6 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
       end
     end
 
-    uniq_readings.map { |r| Reading::Single.new(r.converted_attributes) }
+    uniq_readings.collect { |r| Reading::Single.new(r.converted_attributes) }
   end
 end
