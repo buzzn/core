@@ -26,6 +26,7 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
   - [Setup the rails Project](#setup-the-rails-project)
   - [Start server in development mode](#start-server-in-development-mode)
   - [Reset and Start Test Environment](#reset-and-start-test-environment)
+  - [Set up rubocop](#set-up-rubocop)
 - [Misc admin info](#misc-admin-info)
   - [Start sidekiq message queue](#start-sidekiq-message-queue)
   - [Stop sidekiq](#stop-sidekiq)
@@ -160,6 +161,18 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
 ## Reset and Start Test Environment
     rake test:prepare
     guard
+
+## Set up rubocop
+
+We run rubocop in CI to ensure consistent coding style and prevent error-prone syntax. Let your editor check
+the rules as well so you don't have to rely on CI. 
+
+Here's how to integrate it into editors:
+- for SublimeText: https://packagecontrol.io/packages/SublimeLinter-rubocop
+- for Atom: https://atom.io/packages/linter-rubocop
+- for Emacs: https://github.com/bbatsov/rubocop-emacs
+
+To run rubocop from the CLI, simply type `rubocop`.
 
 # Misc admin info
 
