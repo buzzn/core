@@ -28,7 +28,7 @@ module Filterable
       filtering_params.each do |param|
         case param
         when Hash
-          param.each do |k,v|
+          param.each do |k, v|
             result = nested(sql, result.joins(k), k.to_s.tableize, v)
           end
         when Array

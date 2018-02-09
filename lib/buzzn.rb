@@ -67,7 +67,7 @@ module Buzzn
     def initialize(key, errors)
       nested_errors = {}
       key = key.to_sym
-      errors.messages.each do |k,v|
+      errors.messages.each do |k, v|
         nested_errors["#{key}.#{k}".to_sym] = v
       end
       super(nested_errors)

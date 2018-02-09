@@ -258,7 +258,7 @@ module Buzzn::Resource
         end
         json << '"' << attr.to_s << '":' << obj.to_json
       end
-      includes.each do |k,v|
+      includes.each do |k, v|
         if self.respond_to?(k)
           if first
             first = false

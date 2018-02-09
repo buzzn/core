@@ -90,8 +90,8 @@ describe Admin::LocalpoolRoda do
 
     context 'POST' do
 
-      let(:begin_date) { Time.find_zone('Berlin').local(2016,1,1).to_datetime }
-      let(:end_date) { Time.find_zone('Berlin').local(2017,1,1) }
+      let(:begin_date) { Time.find_zone('Berlin').local(2016, 1, 1).to_datetime }
+      let(:end_date) { Time.find_zone('Berlin').local(2017, 1, 1) }
       let(:created_json) do
         {
           'type'=>'billing_cycle',

@@ -89,7 +89,7 @@ module Buzzn::Resource
       if allowed?(perms)
         yield
       else
-        raise Buzzn::PermissionDenied.new(self, caller_locations(1,1)[0].label, current_user)
+        raise Buzzn::PermissionDenied.new(self, caller_locations(1, 1)[0].label, current_user)
       end
     rescue ActiveRecord::RecordInvalid => e
       raise Buzzn::CascadingValidationError.new(nil, e)

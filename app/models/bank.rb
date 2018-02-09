@@ -89,7 +89,7 @@ class Bank < ActiveRecord::Base
   end
 
   def self.filter_params(params)
-    params.reject { |k,v| ! FIELDS.include?(k) }
+    params.reject { |k, v| ! FIELDS.include?(k) }
   end
 
   def self.only_create(params)

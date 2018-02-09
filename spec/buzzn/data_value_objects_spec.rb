@@ -44,7 +44,7 @@ describe Buzzn::DataResult do
 
   it 'loads it hash representation' do
     reference = subject.new(Time.new(123456789), 987654331,
-                            'u-i-d',['in', 'out'].sample,
+                            'u-i-d', ['in', 'out'].sample,
                             Time.current.to_f)
     other = subject.from_hash(reference.to_hash)
     expect(reference.resource_id).to eq other.resource_id
@@ -55,7 +55,7 @@ describe Buzzn::DataResult do
 
   it 'round-trip via json' do
     reference = subject.new(Time.new(123456789), 987654331,
-                            'u-i-d',['in', 'out'].sample,
+                            'u-i-d', ['in', 'out'].sample,
                             Time.current.to_f)
     other = subject.from_json(reference.to_json)
     expect(reference.resource_id).to eq other.resource_id
@@ -289,7 +289,7 @@ describe Buzzn::DataResultArray do
     4.times do
       reference << Buzzn::DataResult.new(Time.new(rand(123456789)),
                                          rand(987654331),
-                                         'u-i-d',['in', 'out'].sample,
+                                         'u-i-d', ['in', 'out'].sample,
                                          Time.current.to_f)
     end
     other = subject.from_hash(reference.to_hash)
@@ -302,7 +302,7 @@ describe Buzzn::DataResultArray do
     4.times do
       reference << Buzzn::DataResult.new(Time.new(rand(123456789)),
                                          rand(987654331),
-                                         'u-i-d',['in', 'out'].sample,
+                                         'u-i-d', ['in', 'out'].sample,
                                          Time.current.to_f)
     end
     other = subject.from_json(reference.to_json)

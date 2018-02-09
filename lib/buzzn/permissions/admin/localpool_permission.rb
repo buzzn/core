@@ -8,7 +8,7 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
   # get the roles from the 'operators' group and add Role::GROUP_OWNER
   define_group(:owners, *(get(:operators) + [Role::GROUP_OWNER]))
   # get the roles from the 'owners' group and add Role::GROUP_ADMIN
-  define_group(:managers,*(get(:owners) + [Role::GROUP_ADMIN]))
+  define_group(:managers, *(get(:owners) + [Role::GROUP_ADMIN]))
   define_group(:managers_contract, *(get(:managers) + [Role::CONTRACT]))
   define_group(:managers_organization, *(get(:managers) + [Role::ORGANIZATION]))
   define_group(:managers_organization_self, *(get(:managers_organization) + [Role::SELF]))

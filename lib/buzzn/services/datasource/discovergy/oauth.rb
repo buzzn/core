@@ -119,7 +119,7 @@ class Services::Datasource::Discovergy::Oauth
     Faraday.new(options) do |faraday|
       faraday.request  :url_encoded
       faraday.response :logger, @logger do |logger|
-        logger.filter(/(password=)(\w+)/,'\1[FILTERED]')
+        logger.filter(/(password=)(\w+)/, '\1[FILTERED]')
       end
       faraday.adapter :net_http
     end

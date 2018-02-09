@@ -42,7 +42,7 @@ describe Admin::BankAccountRoda do
   end
 
   [:person_account, :organization_account].each do |name|
-    context "#{name.to_s.sub(/_.*/,'')} parent" do
+    context "#{name.to_s.sub(/_.*/, '')} parent" do
 
       def serialized_bank_account(bank_account)
         {

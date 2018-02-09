@@ -49,7 +49,7 @@ describe Register do
 
   describe 'observers' do
 
-    let(:now) { Time.find_zone('Berlin').local(2016,2,1, 1,30,1) }
+    let(:now) { Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1) }
 
     before do
       register.update(observer_enabled: false, observer_offline_monitoring: false)
@@ -86,7 +86,7 @@ describe Register do
     end
 
     xit 'offline' do |spec|
-      now = Time.find_zone('Berlin').local(2016,3,1, 1,30,1)
+      now = Time.find_zone('Berlin').local(2016, 3, 1, 1, 30, 1)
       Timecop.freeze(now) do
         VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}_first") do
           register.update observer_offline_monitoring: true, last_observed: now.utc

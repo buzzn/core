@@ -156,7 +156,7 @@ Fabricator :localpool_power_taker_contract, class_name: Contract::LocalpoolPower
   customer                 { Fabricate(:person) }
   contractor               { Fabricate(:person) }
   register                 do Fabricate(:input_register,
-                                       meter: Fabricate.build(:output_meter,group: Fabricate(:localpool))) end
+                                       meter: Fabricate.build(:output_meter, group: Fabricate(:localpool))) end
   renewable_energy_law_taxation { Contract::Base.renewable_energy_law_taxations[:full] }
   payments { [Fabricate.build(:payment)] }
   after_create do |c|

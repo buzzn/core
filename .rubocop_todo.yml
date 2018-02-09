@@ -307,11 +307,6 @@ Layout/SpaceAfterColon:
     - 'app/models/reading/continuous.rb'
     - 'spec/requests/admin/billing_cycle_spec.rb'
 
-# Offense count: 49
-# Cop supports --auto-correct.
-Layout/SpaceAfterComma:
-  Enabled: false
-
 # Offense count: 12
 # Cop supports --auto-correct.
 Layout/SpaceAfterNot:

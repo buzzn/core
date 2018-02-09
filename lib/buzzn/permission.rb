@@ -20,7 +20,7 @@ module Buzzn
     def freeze
       @groups.freeze
       @perms.freeze
-      @perms.each do |k,v|
+      @perms.each do |k, v|
         v.freeze
       end
     end

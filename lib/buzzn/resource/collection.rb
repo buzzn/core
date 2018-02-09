@@ -66,7 +66,7 @@ module Buzzn::Resource
       if result = do_retrieve_or_nil(id, *args)
         result
       else
-        clazz = @objects.class.to_s.sub(/::ActiveRecord_.*/,'').safe_constantize
+        clazz = @objects.class.to_s.sub(/::ActiveRecord_.*/, '').safe_constantize
         clazz ||= @instance_class && @instance_class.model
         clazz ||= @objects.first.class if @objects.first
         if clazz && clazz.where(*args).size > 0
