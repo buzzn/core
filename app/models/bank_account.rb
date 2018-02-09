@@ -10,7 +10,10 @@ class BankAccount < ActiveRecord::Base
 
   # permissions helpers
 
-  scope :permitted, ->(uuids) { where(id: uuids) }
+  scope(:permitted, lambda do |uids|
+    ids = uids.collect { |u| u.start_with?('BankAccount') ? u.sub('BankAccount:', '') : nil }
+    where(id: ids)
+  end)
 
   def self.search_attributes
     [:holder, :bank_name]

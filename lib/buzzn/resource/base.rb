@@ -122,7 +122,7 @@ module Buzzn::Resource
         elsif allowed?(ANONYMOUS | roles | user.unbound_rolenames, perms)
           enum
         else
-          enum.permitted(user.uuids_for(perms)) rescue enum.restricted(user.uuids_for(perms))
+          enum.permitted(user.uids_for(perms)) rescue enum.restricted(user.uids_for(perms))
         end
       end
 
@@ -152,9 +152,9 @@ module Buzzn::Resource
 
       private
 
-      def allowed_roles(user, perms, id = nil)
+      def allowed_roles(user, perms)
         return false unless user
-        roles = id ? user.rolenames_for(id) : user.unbound_rolenames
+        roles = user.unbound_rolenames
         if (roles & perms).empty?
           false
         else

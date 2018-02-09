@@ -1,7 +1,7 @@
 class CreateEnergyClassifications < ActiveRecord::Migration
 
   def change
-    create_table :energy_classifications, id: :uuid do |t|
+    create_table :energy_classifications do |t|
       t.string :tariff_name
       t.float :nuclear_ratio, null: false
       t.float :coal_ratio, null: false
@@ -13,7 +13,7 @@ class CreateEnergyClassifications < ActiveRecord::Migration
       t.float :nuclear_waste_miligramm_per_kWh, null: false
       t.date :end_date
 
-      t.belongs_to :organization, type: :uuid
+      t.belongs_to :organization
 
       t.timestamps null: false
     end

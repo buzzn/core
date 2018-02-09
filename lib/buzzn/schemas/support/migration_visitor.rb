@@ -9,7 +9,7 @@ class Schemas::Support::MigrationVisitor < Schemas::Support::Visitor
   end
 
   def create_table(table, clazz)
-    clazz.create_table(table, id: :uuid) do |t|
+    clazz.create_table(table) do |t|
       change(t)
 
       t.timestamps null: false

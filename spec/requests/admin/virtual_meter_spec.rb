@@ -267,8 +267,8 @@ describe Admin::LocalpoolRoda do
           PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
                 $admin,
                 updated_at: DateTime.now,
-                register_id: 'bla-blub'
-          expect(response).to be_not_found_json(404, Register::Base)
+                register_id: 123
+          expect(response).to be_not_found_json(404, Register::Base, 123)
         end
 
         it '403' do

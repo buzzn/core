@@ -19,7 +19,7 @@ module Meter
     scope :real,      -> {where(type: Real)}
     scope :virtual,   -> {where(type: Virtual)}
     scope :real_or_virtual, -> {where(type: [Real, Virtual])}
-    scope :restricted, ->(uuids) { joins(registers: :contracts).where('contracts.id': uuids) }
+    scope :restricted, ->(uids) { joins(registers: :contracts).where('contracts.id': uids) }
 
     def name
       "#{manufacturer_name} #{product_serialnumber}"

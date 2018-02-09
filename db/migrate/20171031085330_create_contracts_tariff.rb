@@ -2,8 +2,8 @@ class CreateContractsTariff < ActiveRecord::Migration
 
   def change
     create_table :contracts_tariffs, id: false do |t|
-      t.uuid :tariff_id, null: false
-      t.uuid :contract_id, null: false
+      t.integer :tariff_id, null: false
+      t.integer :contract_id, null: false
       t.index [:contract_id, :tariff_id], unique: true
       t.index [:tariff_id, :contract_id], unique: true
     end

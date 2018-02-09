@@ -18,7 +18,7 @@ Sequel.migration do
       citext :email, :null=>false
       constraint :valid_email, :email=>/^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$/
       index :email, :unique=>true, :where=>{:status_id=>[1, 2]}
-      foreign_key :person_id, :persons, null: false, type: :uuid
+      foreign_key :person_id, :persons, null: false
     end
 
     deadline_opts = proc do |days|

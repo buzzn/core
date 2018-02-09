@@ -15,7 +15,7 @@ class BillingCycle < ActiveRecord::Base
 
   # permissions helpers
 
-  scope :restricted, ->(uuids) { where(localpool_id: uuids) }
+  scope :restricted, ->(uids) { where(localpool_id: uids) }
 
   def validate_invariants
     if begin_date && end_date && begin_date >= end_date

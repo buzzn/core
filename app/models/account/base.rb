@@ -9,30 +9,30 @@ module Account
       @unbound_rolenames ||= person.roles.where(resource_id: nil).collect { |r| r.attributes['name'] }
     end
 
-    def uuids_to_rolenames
-      @_uuids_to_rolenames ||= begin
+    def uids_to_rolenames
+      @_uids_to_rolenames ||= begin
         person_roles.each_with_object({}) do |r, obj|
-          (obj[r.resource_id] ||= []) << r.attributes['name']
+          (obj[uid(r)] ||= []) << r.attributes['name']
         end
       end
     end
 
-    def rolenames_for(uuid)
-      unbound_rolenames + uuids_to_rolenames.fetch(uuid, [])
-    end
-
-    def uuids_for(rolenames)
-      map = rolename_to_uuids
+    def uids_for(rolenames)
+      map = rolename_to_uids
       map.values_at(*(rolenames & map.keys)).flatten
     end
 
     private
 
-    def rolename_to_uuids
-      @_rolename_to_uuids ||= begin
+    def uid(resource)
+      "#{resource.resource_type}:#{resource.resource_id}"
+    end
+
+    def rolename_to_uids
+      @_rolename_to_uids ||= begin
         person_roles.each_with_object({}) do |r, obj|
-        (obj[r.attributes['name']] ||= []) << r.resource_id
-      end
+          (obj[r.attributes['name']] ||= []) << uid(r)
+        end
       end
     end
 

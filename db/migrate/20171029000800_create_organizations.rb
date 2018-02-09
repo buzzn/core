@@ -10,9 +10,9 @@ class CreateOrganizations < ActiveRecord::Migration
     add_column :organizations, :slug, :string, null: false, limit: 64
     add_column :organizations, :customer_number, :integer, null: true
 
-    add_belongs_to :organizations, :address, index: true, type: :uuid, null: true
-    add_belongs_to :organizations, :legal_representation, references: :persons, index: true, type: :uuid, null: true
-    add_belongs_to :organizations, :contact, references: :persons, index: true, type: :uuid, null: true
+    add_belongs_to :organizations, :address, index: true, null: true
+    add_belongs_to :organizations, :legal_representation, references: :persons, index: true, null: true
+    add_belongs_to :organizations, :contact, references: :persons, index: true, null: true
 
     add_foreign_key :organizations, :addresses, name: :fk_organizations_address
     add_foreign_key :organizations, :persons, column: :legal_representation_id, name: :fk_organizations_legal_representation

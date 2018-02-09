@@ -7,8 +7,8 @@ class CreateFormulaParts < ActiveRecord::Migration
   def up
     SCHEMA.up(:formula_parts, self)
 
-    add_belongs_to :formula_parts, :register, type: :uuid, index: true, null: false
-    add_belongs_to :formula_parts, :operand, reference: :register, type: :uuid, index: true, null: false
+    add_belongs_to :formula_parts, :register, index: true, null: false
+    add_belongs_to :formula_parts, :operand, reference: :register, index: true, null: false
 
     add_foreign_key :formula_parts, :registers, name: :fk_formula_parts_register
     add_foreign_key :formula_parts, :registers, name: :fk_formula_parts_operand, column: :operand_id

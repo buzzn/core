@@ -7,7 +7,7 @@ class CreateTaxData < ActiveRecord::Migration
 
   def up
     SCHEMA.up(:contract_tax_data, self)
-    add_belongs_to :contract_tax_data, :contract, index: true, type: :uuid
+    add_belongs_to :contract_tax_data, :contract, index: true
     add_foreign_key :contract_tax_data, :contracts, name: :fk_tax_data_contract, on_delete: :cascade
   end
 

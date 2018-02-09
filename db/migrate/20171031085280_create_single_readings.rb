@@ -8,7 +8,7 @@ class CreateSingleReadings < ActiveRecord::Migration
   def up
     SCHEMA.up(:readings, self)
 
-    add_belongs_to :readings, :register, type: :uuid, index: true, null: false
+    add_belongs_to :readings, :register, index: true, null: false
 
     add_foreign_key :readings, :registers, name: :fk_readings_register
 

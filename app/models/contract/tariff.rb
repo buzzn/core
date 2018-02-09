@@ -15,7 +15,7 @@ module Contract
     scope :current, ->(now = Time.current) {where('begin_date < ? AND (end_date > ? OR end_date IS NULL)', now, now)}
 
     # permissions helpers
-    scope :permitted, ->(uuids) { where(group_id: uuids) }
+    scope :permitted, ->(uids) { where(group_id: uids) }
 
     # It order to be continuous, a contract's end_date is the same as the start_date of the following contract.
     # This is technically correct but unexpected by humans. That's why we have the last_date, which will show

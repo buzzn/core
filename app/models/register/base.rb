@@ -62,7 +62,7 @@ module Register
 
     # permissions helpers
 
-    scope :permitted, ->(uuids) { joins(:contracts).where('contracts.id': uuids) }
+    scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
 
     def self.search_attributes
       [:name]

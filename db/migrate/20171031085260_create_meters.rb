@@ -10,7 +10,7 @@ class CreateMeters < ActiveRecord::Migration
     add_column :meters, :type, :string, null: false
     add_column :meters, :sequence_number, :integer, null: true
 
-    add_belongs_to :meters, :group, type: :uuid, index: true, null: true
+    add_belongs_to :meters, :group, index: true, null: true
     add_belongs_to :meters, :broker, index: true, null: true
 
     add_foreign_key :meters, :groups, name: :fk_meters_group
@@ -20,7 +20,7 @@ class CreateMeters < ActiveRecord::Migration
   end
 
   def down
-    drop_belongs_to :meters, :group, type: :uuid, index: true, null: true
+    drop_belongs_to :meters, :group, index: true, null: true
 
     drop_foreign_key :meters, :groups, name: :fk_meters_group
 
