@@ -87,7 +87,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       contract_number_addition:      next_contract_number_addition(previous_contract.localpool),
       customer:                      find_contract_customer(previous_contract.localpool)
     }
-    Contract::LocalpoolPowerTaker.create!(attributes)
+    Contract::LocalpoolGap.create!(attributes)
   end
 
   def next_contract_number_addition(localpool)
