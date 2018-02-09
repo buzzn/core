@@ -28,6 +28,9 @@ Style/StringLiterals:
 Style/Encoding:
   Enabled: true
 
+Bundler/OrderedGems:
+  Enabled: false
+
 # it's hopeless ...
 Metrics/LineLength:
   Max: 120
