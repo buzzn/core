@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Contract::TariffResource do
 
   entity(:admin) { Fabricate(:admin) }

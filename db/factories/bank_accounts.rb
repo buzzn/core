@@ -1,4 +1,3 @@
-# coding: utf-8
 FactoryGirl.define do
   factory :bank_account do
     transient do
