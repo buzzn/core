@@ -77,7 +77,6 @@ describe 'Schemas::Invariants::Group::Localpool' do
 
     it 'invalid' do
       localpool.update(electricity_supplier: Organization.transmission_system_operator.first)
-      binding.pry unless localpool.invariant.errors[:electricity_supplier]
       expect(localpool.invariant.errors[:electricity_supplier]).not_to be_nil
       expect(localpool.electricity_supplier).not_to be_nil
     end

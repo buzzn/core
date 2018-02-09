@@ -16,13 +16,4 @@ describe 'Source File' do
       end
     end
   end
-
-   (Dir['lib/**/*rb'] + Dir['app/**/*rb'] + Dir['app/**/*rb']).each do |file|
-     it "source code files do not use binding.pry in #{file}" do
-       content = File.read(file)
-       content.each_line do |line|
-         expect(line).not_to match /binding.pry/
-       end
-     end
-   end
 end
