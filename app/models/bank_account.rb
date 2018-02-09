@@ -6,6 +6,7 @@ class BankAccount < ActiveRecord::Base
   include Filterable
   include Owner
 
+
   has_many :contracts, class_name: 'Contract::Base'
 
   # permissions helpers
