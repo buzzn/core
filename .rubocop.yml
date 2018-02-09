@@ -1,0 +1,43 @@
+AllCops:
+  TargetRubyVersion: 2.3
+  # Exclude:
+  # - "bin/**/*"
+  # - "ember_apps/**/*"
+  # - "config/**/*"
+  # - "**/routes.rb"
+  # - "vendor/**/*"
+  # - "**/db/schema.rb"
+  # - "db/schema.rb"
+  # - "tmp/**/*"
+  # - ".vagrant/**/*"
+  # - ".git/**/*"
+  # - "site-cookbooks/**/*"
+  # # Settings required to cache rubocop's results on Travis as well as locally.
+  # # FIXME: disabled for now because we get fails in CI when it works locally, which we think
+  # # are related to buggy caching. The CI run takes ~25s longer without caching, though.
+  # UseCache: false
+  # # CacheRootDirectory: $HOME/.cache
+  # # AllowSymlinksInCacheRootDirectory: true
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: true
+
+Style/Encoding:
+  Enabled: true
+
+Metrics/LineLength:
+  Max: 120
+
+Layout/ExtraSpacing:
+  Enabled: true
+
+# Separating numbers by underscores to make them more readable (10_123_555 instead of 10123555) is nice but
+# sometimes not desired; disabling this cop.
+Style/NumericLiterals:
+  Enabled: false
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: true
