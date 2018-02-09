@@ -93,6 +93,7 @@ group :development, :test do
   gem 'guard-brakeman'
   gem 'guard-rspec'
   gem 'fog-local'
+  gem 'rubocop', require: false
 end
 
 group :development do
