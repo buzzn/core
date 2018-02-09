@@ -12,7 +12,7 @@ namespace :deploy do
     end
 
     def deploy(env)
-      url = "https://git.heroku.com/buzzn-console-#{env}.git"
+      url = "https://git.heroku.com/buzzn-core-#{env}.git"
       sh "git push #{url} #{current_local_branch}:master"
     end
   end
