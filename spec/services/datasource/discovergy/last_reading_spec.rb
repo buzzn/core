@@ -32,7 +32,7 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
   entity(:register) { meter.input_register }
 
   entity(:last_readings) do
-     Services::Datasource::Discovergy::LastReading.new(api: api)
+    Services::Datasource::Discovergy::LastReading.new(api: api)
   end
 
   context 'one-way-meter' do

@@ -83,7 +83,7 @@ describe Admin::LocalpoolRoda do
     create(:localpool,
            address: create(:address),
            bank_account: create(:bank_account)
-    )
+          )
   end
 
   let(:empty_json) { [] }
@@ -283,30 +283,30 @@ describe Admin::LocalpoolRoda do
 
   context 'PATCH' do
 
-    let(:wrong_json) do
-      {
-        'errors'=>[
-          {'parameter'=>'updated_at',
-           'detail'=>'is missing'},
-          {'parameter'=>'name',
-           'detail'=>'size cannot be greater than 64'},
-          {'parameter'=>'description',
-           'detail'=>'size cannot be greater than 256'},
-          {'parameter' => 'start_date',
-           'detail' => 'must be a date'},
-          {'parameter' => 'show_object',
-           'detail' => 'must be boolean'},
-          {'parameter' => 'show_production',
-           'detail' => 'must be boolean'},
-          {'parameter' => 'show_energy',
-           'detail' => 'must be boolean'},
-          {'parameter' => 'show_contact',
-           'detail' => 'must be boolean'},
-          {'parameter' => 'show_display_app',
-           'detail' => 'must be boolean'}
-        ]
-      }
-    end
+      let(:wrong_json) do
+        {
+          'errors'=>[
+            {'parameter'=>'updated_at',
+             'detail'=>'is missing'},
+            {'parameter'=>'name',
+             'detail'=>'size cannot be greater than 64'},
+            {'parameter'=>'description',
+             'detail'=>'size cannot be greater than 256'},
+            {'parameter' => 'start_date',
+             'detail' => 'must be a date'},
+            {'parameter' => 'show_object',
+             'detail' => 'must be boolean'},
+            {'parameter' => 'show_production',
+             'detail' => 'must be boolean'},
+            {'parameter' => 'show_energy',
+             'detail' => 'must be boolean'},
+            {'parameter' => 'show_contact',
+             'detail' => 'must be boolean'},
+            {'parameter' => 'show_display_app',
+             'detail' => 'must be boolean'}
+          ]
+        }
+      end
 
     let(:stale_json) do
       {
@@ -374,7 +374,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200' do
-        old = localpool.updated_at
+         old = localpool.updated_at
         PATCH "/test/#{localpool.id}", $admin,
               updated_at: localpool.updated_at,
               name: 'a b c d',

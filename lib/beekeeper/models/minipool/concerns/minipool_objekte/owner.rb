@@ -7,7 +7,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
     def owner
       owner = if account_new.privat1_gbr2_weg3_else4 == 'privat'
-        owner_person
+                owner_person
       else
         owner_organization
       end

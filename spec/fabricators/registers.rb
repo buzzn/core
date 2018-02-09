@@ -596,15 +596,15 @@ end
 
 Fabricator :register_60051579, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'DE_BY') }
- name  'N 01'
- label Register::Base.labels[:consumption]
+  name  'N 01'
+  label Register::Base.labels[:consumption]
 end
 
 #third party supplied
 Fabricator :register_60051575, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'DE_BY') }
- name  'N 42'
- label Register::Base.labels[:consumption]
+  name  'N 42'
+  label Register::Base.labels[:consumption]
 end
 
 # #peter schmidt

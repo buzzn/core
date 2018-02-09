@@ -104,3 +104,6 @@ Layout/SpaceAfterComma:
 Layout/CaseIndentation:
   Enabled: true
 
+Layout/IndentationWidth:
+  Enabled: true
+

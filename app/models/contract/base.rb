@@ -78,7 +78,7 @@ module Contract
     def status
       today = Date.today
       status = if end_date && end_date <= today
-        ENDED
+                 ENDED
       elsif termination_date
         TERMINATED
       elsif begin_date && begin_date <= today

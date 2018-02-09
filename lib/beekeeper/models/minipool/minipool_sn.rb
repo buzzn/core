@@ -64,7 +64,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
     # always return a new, unsaved record. The duplicates from Beekeeper will be removed later on,
     # when the records and localpool are saved.
     @powertaker ||= if kontaktdaten.person?
-      Person.new(kontaktdaten.converted_attributes.merge(address: address))
+                      Person.new(kontaktdaten.converted_attributes.merge(address: address))
     else
       # TODO add contact person
       Organization.new(kontaktdaten.converted_attributes)

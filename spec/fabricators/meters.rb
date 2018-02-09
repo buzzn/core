@@ -620,7 +620,7 @@ end
 # end
 
 Fabricator :easymeter_60051579, from: :easy_meter_q3d do
- product_serialnumber '60051579'
+  product_serialnumber '60051579'
  registers { [Fabricate.build(:register_60051579)] }
 end
 

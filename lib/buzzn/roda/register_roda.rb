@@ -30,7 +30,7 @@ class RegisterRoda < BaseRoda
           Transactions::RegisterChart
             .for(register)
             .call(r.params).value
-          )
+        )
       end
 
       r.get! 'ticker' do

@@ -30,9 +30,9 @@ module Account
 
     def rolename_to_uuids
       @_rolename_to_uuids ||= begin
-          person_roles.each_with_object({}) do |r, obj|
-          (obj[r.attributes['name']] ||= []) << r.resource_id
-        end
+        person_roles.each_with_object({}) do |r, obj|
+        (obj[r.attributes['name']] ||= []) << r.resource_id
+      end
       end
     end
 

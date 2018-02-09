@@ -27,7 +27,7 @@ SampleData.contracts.mpo = create(:contract, :metering_point_operator,
   customer: SampleData.localpools.people_power.owner,
   contractor: Organization.buzzn,
   payments: [build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')]
-)
+                                 )
 
 SampleData.contracts.lpp = create(:contract, :localpool_processing,
   localpool: SampleData.localpools.people_power,
@@ -38,7 +38,7 @@ SampleData.contracts.lpp = create(:contract, :localpool_processing,
     build(:tariff, name: 'Regular', energyprice_cents_per_kwh: 28.9, group: SampleData.localpools.people_power),
     build(:tariff, name: 'Reduced', energyprice_cents_per_kwh: 25.9, group: SampleData.localpools.people_power)
   ]
-)
+                                 )
 
 SampleData.contracts.pt1 = localpool_contract(
   customer: SampleData.persons.pt1,
@@ -130,7 +130,7 @@ SampleData.contracts.pt5b = localpool_contract(
 
 # Drittlieferant
 SampleData.contracts.pt6 = localpool_contract(
-)
+                                             )
 
 # Drittlieferant, vor Wechsel zu people power
 SampleData.contracts.pt7a = localpool_contract(
@@ -163,5 +163,5 @@ SampleData.contracts.common_consumption = localpool_contract(
   register: create(:register, :consumption_common,
     name: 'Allgemeinstrom',
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)
-  )
+                  )
 )

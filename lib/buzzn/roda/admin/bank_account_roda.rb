@@ -14,9 +14,9 @@ class Admin::BankAccountRoda < BaseRoda
     parent = shared[PARENT]
 
     r.post! do
-        Transactions::Admin::BankAccount::Create
-          .for(parent)
-          .call(r.params)
+      Transactions::Admin::BankAccount::Create
+        .for(parent)
+        .call(r.params)
     end
 
     bank_accounts = parent.bank_accounts

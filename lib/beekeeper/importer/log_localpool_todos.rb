@@ -21,8 +21,8 @@ class Beekeeper::Importer::LogLocalpoolTodos
     end
 
     incompleteness = if resource.object.start_date.future?
-      logger.info("Skipping incompleteness checks, localpool hasn't started yet")
-      []
+                       logger.info("Skipping incompleteness checks, localpool hasn't started yet")
+                       []
     else
       resource.incompleteness
     end

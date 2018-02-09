@@ -63,7 +63,7 @@ describe 'Factories produce valid records' do
       expect(subject.contract_number).to be <= 100_000
     end
     context 'localpool powertaker contract' do
-      subject { create(:contract, :localpool_powertaker) }
+       subject { create(:contract, :localpool_powertaker) }
       describe 'customer' do
         it 'has a customer named Powertaker' do
           expect(subject.customer.last_name).to match(/^Powertaker/)

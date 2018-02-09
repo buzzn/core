@@ -66,7 +66,7 @@ class Services::Datasource::Discovergy::OptimizedGroup
 
   def local(group)
     group.registers.consumption_production.collect do |register|
-       register.meter if register.meter.broker
+      register.meter if register.meter.broker
     end.compact.uniq
   end
 

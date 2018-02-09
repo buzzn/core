@@ -66,7 +66,7 @@ def get_csv(model_name, options = {})
     col_sep: ',',
     convert_values_to_numeric: false,
     value_converters: options[:converters]
-  )
+                    )
 end
 
 def import_csv(model_name, options = {})

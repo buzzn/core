@@ -5,18 +5,18 @@ SampleData.registers = OpenStruct.new(
   ecar: create(:register, :input, name: 'Ladestation eAuto', label: Register::Base.labels[:consumption_common],
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
     devices: [build(:device, :ecar, commissioning: '2017-04-10', register: nil)]
-  ),
+              ),
   bhkw: create(:register, :production_bhkw,
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
     devices: [build(:device, :bhkw, commissioning: '1995-01-01', register: nil)]
-  ),
+              ),
   pv: create(:register, :production_pv,
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
     devices: [build(:device, :pv, commissioning: '2017-04-10', register: nil)]
-  ),
+            ),
   water: create(:register, :production_water,
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)
-  ),
+               ),
   # This virtual register sums up the consumption of all powertakers supplied by buzzn.
   # That's why the formula parts subtract powertaker 6's register, since he is supplied by a third party.
 
