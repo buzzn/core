@@ -82,3 +82,5 @@ Layout/EmptyLinesAroundClassBody:
 
 Layout/EmptyLinesAroundModuleBody:
   EnforcedStyle: empty_lines_except_namespace
+Style/RedundantSelf:
+  Enabled: false
