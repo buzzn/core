@@ -71,7 +71,7 @@ class Beekeeper::Importer::LocalpoolContracts
   end
 
   def create_third_party_contract(localpool, contract, registers, warnings)
-    if register = find_or_create_register(contract, registers)
+    if register = find_or_create_register(contract, registers, localpool)
       contract_attributes = contract.except(:powertaker, :buzznid).merge(
         localpool:  localpool,
         register:   register
