@@ -174,6 +174,24 @@ Here's how to integrate it into editors:
 
 To run rubocop from the CLI, simply type `rubocop`.
 
+### How to auto-corrrect rule offenses
+
+Rubocop is smart enough to auto-corrrect most offenses by running `rubocop -a`
+
+### How to disable checking a rule locally
+
+* For a section of code:
+
+```ruby
+# rubocop:disable RuleName
+some = Exception(to, the, rule)
+# rubocop:enable Style/MultilineTernaryOperator
+```
+
+* For the whole file: 
+ 
+Place the `rubocop:disable` comment at the top of the file.
+
 # Misc admin info
 
 ## Start sidekiq message queue
