@@ -192,15 +192,9 @@ some = Exception(to, the, rule)
  
 Place the `rubocop:disable` comment at the top of the file.
 
-### How to run rubocop before every push
+### How to run rubocop before every push automatically
 
-Install the overcommit gem and add the following config file:
-
-```yml
-PrePush:
-  RuboCop:
-    enabled: true
-```
+Install the [overcommit gem](https://github.com/brigade/overcommit); it'll then use the [.overcommit.yml] file that's already checked in to run rubocop before pushing.
 
 # Misc admin info
 
