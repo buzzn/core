@@ -10,22 +10,6 @@ describe Register do
     easymeter_60051560.output_register
   end
 
-  it 'filters register' do
-    register = urbanstr
-
-    [register.name].each do |val|
-      [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
-        registers = Register::Base.filter(value)
-        expect(registers).to include register
-      end
-    end
-  end
-
-  it 'can not find anything' do
-    registers = Register::Base.filter('Der Clown ist müde und geht nach Hause.')
-    expect(registers.size).to eq 0
-  end
-
   it 'filters register with no params' do
     registers = Register::Base.filter(nil)
     expect(registers).to match_array Register::Base.all
