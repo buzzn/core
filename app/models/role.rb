@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class Role < ActiveRecord::Base
+
   belongs_to :resource, :polymorphic => true
   has_and_belongs_to_many :persons, :join_table => :persons_roles
 
@@ -37,4 +38,5 @@ class Role < ActiveRecord::Base
               CONTRACT,
               ORGANIZATION].freeze
   ROLES = (ROLES_DB + [ANONYMOUS]).freeze
+
 end

@@ -1,4 +1,3 @@
-# coding: utf-8
 describe Register do
 
   entity!(:urbanstr) do
@@ -22,12 +21,10 @@ describe Register do
     end
   end
 
-
   it 'can not find anything' do
     registers = Register::Base.filter('Der Clown ist müde und geht nach Hause.')
     expect(registers.size).to eq 0
   end
-
 
   it 'filters register with no params' do
     registers = Register::Base.filter(nil)
@@ -50,13 +47,9 @@ describe Register do
     expect{ Register::Base.all.by_labels('something') }.to raise_error ArgumentError
   end
 
-
-
-
-
   describe 'observers' do
 
-    let(:now) { Time.find_zone('Berlin').local(2016,2,1, 1,30,1) }
+    let(:now) { Time.find_zone('Berlin').local(2016, 2, 1, 1, 30, 1) }
 
     before do
       register.update(observer_enabled: false, observer_offline_monitoring: false)
@@ -93,7 +86,7 @@ describe Register do
     end
 
     xit 'offline' do |spec|
-      now = Time.find_zone('Berlin').local(2016,3,1, 1,30,1)
+      now = Time.find_zone('Berlin').local(2016, 3, 1, 1, 30, 1)
       Timecop.freeze(now) do
         VCR.use_cassette("models/observe #{spec.metadata[:description].downcase}_first") do
           register.update observer_offline_monitoring: true, last_observed: now.utc
@@ -111,40 +104,40 @@ describe Register do
     end
   end
 
-  describe "obis" do
-    context "when register is base" do
+  describe 'obis' do
+    context 'when register is base' do
       it { expect(Register::Base.new.obis).to be_nil }
     end
-    context "when register is real" do
+    context 'when register is real' do
       it { expect { Register::Real.new.obis }.to raise_error(RuntimeError, 'not implemented') }
     end
-    context "when register is input" do
-      it { expect(Register::Input.new.obis).to eq("1-0:1.8.0") }
+    context 'when register is input' do
+      it { expect(Register::Input.new.obis).to eq('1-0:1.8.0') }
     end
-    context "when register is output" do
-      it { expect(Register::Output.new.obis).to eq("1-0:2.8.0") }
+    context 'when register is output' do
+      it { expect(Register::Output.new.obis).to eq('1-0:2.8.0') }
     end
   end
 
-  describe "low_load_ability" do
+  describe 'low_load_ability' do
     [Register::Base, Register::Real, Register::Input, Register::Output].each do |klass|
-      it "is false" do
+      it 'is false' do
         expect(klass.new.low_load_ability).to be(false)
       end
     end
   end
 
-  describe "pre_decimal_position" do
+  describe 'pre_decimal_position' do
     [Register::Base, Register::Real, Register::Input, Register::Output].each do |klass|
-      it "is 6" do
+      it 'is 6' do
         expect(klass.new.pre_decimal_position).to eq(6)
       end
     end
   end
 
-  describe "post_decimal_position" do
+  describe 'post_decimal_position' do
     [Register::Base, Register::Real, Register::Input, Register::Output].each do |klass|
-      it "is 1" do
+      it 'is 1' do
         expect(klass.new.post_decimal_position).to eq(1)
       end
     end

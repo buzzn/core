@@ -6,11 +6,11 @@ describe Admin::LocalpoolRoda do
   end
 
   entity!(:address) { create(:address) }
-  entity!(:person) { create(:person, :with_bank_account,
-                           address: address) }
-  entity!(:organization) { create(:organization, :with_bank_account,
+  entity!(:person) do create(:person, :with_bank_account,
+                           address: address) end
+  entity!(:organization) do create(:organization, :with_bank_account,
                                   address: address,
-                                  contact: person) }
+                                  contact: person) end
   entity!(:localpool) { create(:localpool) }
 
   let(:localpool_json) do
@@ -45,35 +45,35 @@ describe Admin::LocalpoolRoda do
 
   let(:address_json) do
     {
-      "id"=>address.id,
-      "type"=>"address",
+      'id'=>address.id,
+      'type'=>'address',
       'updated_at'=>address.updated_at.as_json,
-      "street"=>address.street,
-      "city"=>address.city,
-      "zip"=>address.zip,
-      "country"=>address.attributes['country'],
-      "updatable"=>true,
-      "deletable"=>true
+      'street'=>address.street,
+      'city'=>address.city,
+      'zip'=>address.zip,
+      'country'=>address.attributes['country'],
+      'updatable'=>true,
+      'deletable'=>true
     }
   end
 
   let(:person_json) do
     {
-      "id"=>person.id,
-      "type"=>"person",
+      'id'=>person.id,
+      'type'=>'person',
       'updated_at'=>person.updated_at.as_json,
-      "prefix"=>person.attributes['prefix'],
-      "title"=>person.title,
-      "first_name"=>person.first_name,
-      "last_name"=>person.last_name,
-      "phone"=>person.phone,
-      "fax"=>person.fax,
-      "email"=>person.email,
-      "preferred_language"=>person.attributes['preferred_language'],
-      "image"=>person.image.medium.url,
+      'prefix'=>person.attributes['prefix'],
+      'title'=>person.title,
+      'first_name'=>person.first_name,
+      'last_name'=>person.last_name,
+      'phone'=>person.phone,
+      'fax'=>person.fax,
+      'email'=>person.email,
+      'preferred_language'=>person.attributes['preferred_language'],
+      'image'=>person.image.medium.url,
       'customer_number' => nil,
-      "updatable"=>true,
-      "deletable"=>false,
+      'updatable'=>true,
+      'deletable'=>false,
       'address' => address_json,
     }
   end
@@ -87,14 +87,14 @@ describe Admin::LocalpoolRoda do
       owner_json['bank_accounts'] = {
         'array'=> person.bank_accounts.collect do |bank_account|
           {
-            "id"=>bank_account.id,
-            "type"=>"bank_account",
+            'id'=>bank_account.id,
+            'type'=>'bank_account',
             'updated_at'=>bank_account.updated_at.as_json,
-            "holder"=>bank_account.holder,
-            "bank_name"=>bank_account.bank_name,
-            "bic"=>bank_account.bic,
-            "iban"=>bank_account.iban,
-            "direct_debit"=>bank_account.direct_debit,
+            'holder'=>bank_account.holder,
+            'bank_name'=>bank_account.bank_name,
+            'bic'=>bank_account.bic,
+            'iban'=>bank_account.iban,
+            'direct_debit'=>bank_account.direct_debit,
             'updatable'=> true,
             'deletable'=> true
           }
@@ -119,29 +119,29 @@ describe Admin::LocalpoolRoda do
       localpool.update(owner: organization)
 #      localpool_json['incompleteness']['owner'] = ['BUG: missing GROUP_ADMIN role']
       localpool_json['owner'] = {
-        "id"=>organization.id,
-        "type"=>"organization",
+        'id'=>organization.id,
+        'type'=>'organization',
         'updated_at'=>organization.updated_at.as_json,
-        "name"=>organization.name,
-        "phone"=>organization.phone,
-        "fax"=>organization.fax,
-        "website"=>organization.website,
-        "email"=>organization.email,
-        "description"=>organization.description,
+        'name'=>organization.name,
+        'phone'=>organization.phone,
+        'fax'=>organization.fax,
+        'website'=>organization.website,
+        'email'=>organization.email,
+        'description'=>organization.description,
         'customer_number' => nil,
-        "updatable"=>true,
-        "deletable"=>false,
-        "bank_accounts"=>{
+        'updatable'=>true,
+        'deletable'=>false,
+        'bank_accounts'=>{
           'array'=> organization.bank_accounts.collect do |bank_account|
             {
-              "id"=>bank_account.id,
-              "type"=>"bank_account",
+              'id'=>bank_account.id,
+              'type'=>'bank_account',
               'updated_at'=>bank_account.updated_at.as_json,
-              "holder"=>bank_account.holder,
-              "bank_name"=>bank_account.bank_name,
-              "bic"=>bank_account.bic,
-              "iban"=>bank_account.iban,
-              "direct_debit"=>bank_account.direct_debit,
+              'holder'=>bank_account.holder,
+              'bank_name'=>bank_account.bank_name,
+              'bic'=>bank_account.bic,
+              'iban'=>bank_account.iban,
+              'direct_debit'=>bank_account.direct_debit,
               'updatable'=> true,
               'deletable'=> true
             }

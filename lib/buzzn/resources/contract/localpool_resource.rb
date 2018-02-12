@@ -5,5 +5,6 @@ module Contract
   class LocalpoolResource < BaseResource
 
     has_one :localpool, GroupResource
+
   end
 end

@@ -1,6 +1,7 @@
 require_relative '../services'
 
 class Services::ObjectSpaceMetric
+
   extend Dry::DependencyInjection::Eager
   include Import['services.metrics']
 
@@ -31,4 +32,5 @@ class Services::ObjectSpaceMetric
   ensure
     @semaphore.release(permits)
   end
+
 end

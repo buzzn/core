@@ -7,10 +7,13 @@ class Types::Discovergy::VirtualMeter < Types::Discovergy::Meter
   def to_path; :virtual_meter; end
 
   class Get < Types::Discovergy::VirtualMeter
+
     include Types::Discovergy::Get
+
   end
 
   class Post < Types::Discovergy::Base
+
     extend Dry::Initializer
     include Types::Discovergy::Post
 
@@ -22,9 +25,13 @@ class Types::Discovergy::VirtualMeter < Types::Discovergy::Meter
     def to_query
       { meterIdsPlus: meter_ids_plus, meterIdsMinus: meter_ids_minus }.compact
     end
+
   end
 
   class Delete < Types::Discovergy::VirtualMeter
+
     include Types::Discovergy::Delete
+
   end
+
 end

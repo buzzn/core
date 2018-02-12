@@ -2,6 +2,7 @@
 # Based on: https://gist.github.com/795665
 
 class FileSizeValidator < ActiveModel::EachValidator
+
   MESSAGES  = { :is => :wrong_size, :minimum => :size_too_small, :maximum => :size_too_big }.freeze
   CHECKS    = { :is => :==, :minimum => :>=, :maximum => :<= }.freeze
 
@@ -10,7 +11,7 @@ class FileSizeValidator < ActiveModel::EachValidator
 
   def initialize(options)
     if range = (options.delete(:in) || options.delete(:within))
-      raise ArgumentError, ":in and :within must be a Range" unless range.is_a?(Range)
+      raise ArgumentError, ':in and :within must be a Range' unless range.is_a?(Range)
       options[:minimum], options[:maximum] = range.begin, range.end
       options[:maximum] -= 1 if range.exclude_end?
     end
@@ -35,7 +36,7 @@ class FileSizeValidator < ActiveModel::EachValidator
   end
 
   def validate_each(record, attribute, value)
-    raise(ArgumentError, "A CarrierWave::Uploader::Base object was expected") unless value.kind_of? CarrierWave::Uploader::Base
+    raise(ArgumentError, 'A CarrierWave::Uploader::Base object was expected') unless value.kind_of? CarrierWave::Uploader::Base
 
     value = (options[:tokenizer] || DEFAULT_TOKENIZER).call(value) if value.kind_of?(String)
 
@@ -62,7 +63,10 @@ class FileSizeValidator < ActiveModel::EachValidator
   end
 
   class Helper
+
     include Singleton
     include ActionView::Helpers::NumberHelper
+
   end
+
 end

@@ -104,5 +104,7 @@
 #
 
 class Beekeeper::Buzzn::PoolStatus < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.pool_status'
+
 end

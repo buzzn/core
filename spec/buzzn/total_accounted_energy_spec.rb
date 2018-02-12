@@ -40,12 +40,12 @@ describe Buzzn::Localpool::TotalAccountedEnergy do
 
   it 'sums by label' do
     expected = {
-      "production_pv"=>watt_hour(15),
-      "production_chp"=>watt_hour(19),
-      "other"=>watt_hour(23),
-      "consumption_lsn_full_eeg"=>watt_hour(27),
-      "consumption_lsn_reduced_eeg"=>watt_hour(31),
-      "consumption_third_party"=>watt_hour(35)
+      'production_pv'=>watt_hour(15),
+      'production_chp'=>watt_hour(19),
+      'other'=>watt_hour(23),
+      'consumption_lsn_full_eeg'=>watt_hour(27),
+      'consumption_lsn_reduced_eeg'=>watt_hour(31),
+      'consumption_third_party'=>watt_hour(35)
     }
     Buzzn::AccountedEnergy::MULTI_LABELS.each do |label|
       expect(total.sum(label)).to eq expected[label]
@@ -53,47 +53,47 @@ describe Buzzn::Localpool::TotalAccountedEnergy do
   end
 
   it 'total production' do
-     expect(total.total_production).to eq watt_hour(34)
+    expect(total.total_production).to eq watt_hour(34)
   end
 
   it 'production pv' do
-     expect(total.production_pv).to eq watt_hour(15)
+    expect(total.production_pv).to eq watt_hour(15)
   end
 
   it 'production chp' do
-     expect(total.production_chp).to eq watt_hour(19)
+    expect(total.production_chp).to eq watt_hour(19)
   end
 
   it 'total consumption by power taker' do
-     expect(total.total_consumption_power_taker).to eq watt_hour(58)
+    expect(total.total_consumption_power_taker).to eq watt_hour(58)
   end
 
   it 'consumption power taker full eeg' do
-     expect(total.consumption_power_taker_full_eeg).to eq watt_hour(27)
+    expect(total.consumption_power_taker_full_eeg).to eq watt_hour(27)
   end
 
   it 'consumption power taker reduced eeg' do
-     expect(total.consumption_power_taker_reduced_eeg).to eq watt_hour(31)
+    expect(total.consumption_power_taker_reduced_eeg).to eq watt_hour(31)
   end
 
   it 'consumption third party' do
-     expect(total.consumption_third_party).to eq watt_hour(35)
+    expect(total.consumption_third_party).to eq watt_hour(35)
   end
 
   it 'count power-taker full eeg' do
-     expect(total.count_power_taker_full_eeg).to eq 2
+    expect(total.count_power_taker_full_eeg).to eq 2
   end
 
   it 'count power-taker reduced eeg' do
-     expect(total.count_power_taker_reduced_eeg).to eq 2
+    expect(total.count_power_taker_reduced_eeg).to eq 2
   end
 
   it 'count third party' do
-     expect(total.count_third_party).to eq 2
+    expect(total.count_third_party).to eq 2
   end
 
   it 'own consumption' do
-     expect(total.own_consumption).to eq watt_hour(30)
+    expect(total.own_consumption).to eq watt_hour(30)
   end
 
   it 'grid feeding corrected' do

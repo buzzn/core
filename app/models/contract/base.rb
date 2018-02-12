@@ -3,6 +3,7 @@ require_relative '../owner'
 
 module Contract
   class Base < ActiveRecord::Base
+
     self.table_name = :contracts
     self.abstract_class = true
 
@@ -18,6 +19,7 @@ module Contract
          }
 
     class << self
+
       def search_attributes
         # TODO: filtering what ?
         []
@@ -26,6 +28,7 @@ module Contract
       def filter(search)
         do_filter(search, *search_attributes)
       end
+
     end
 
     has_and_belongs_to_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
@@ -47,7 +50,7 @@ module Contract
     scope :localpool_processing,     -> { where(type: 'LocalpoolProcessing') }
     scope :metering_point_operators, -> { where(type: 'MeteringPointOperator') }
     scope :other_suppliers,          -> { where(type: 'OtherSupplier') }
-    scope :localpool_power_takers_and_other_suppliers, ->  {where('type in (?)', %w(LocalpoolPowerTaker OtherSupplier))}
+    scope :localpool_power_takers_and_other_suppliers, -> {where('type in (?)', %w(LocalpoolPowerTaker OtherSupplier))}
 
     scope :running_in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                           .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
@@ -59,7 +62,7 @@ module Contract
                     timestamp.to_date
                   when Date
                     timestamp
-                  when Fixnum
+                  when Integer
                     Time.at(timestamp).to_date
                   else
                     raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")
@@ -75,7 +78,7 @@ module Contract
     def status
       today = Date.today
       status = if end_date && end_date <= today
-        ENDED
+                 ENDED
       elsif termination_date
         TERMINATED
       elsif begin_date && begin_date <= today
@@ -98,5 +101,6 @@ module Contract
 
     # permissions helpers
     scope :permitted, ->(uuids) { where(id: uuids) }
+
   end
 end

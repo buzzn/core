@@ -1,6 +1,7 @@
 require_relative '../services'
 
 class Services::Health
+
   include Import['services.redis',
                  'config.heroku_slug_commit',
                  'config.heroku_release_created_at']
@@ -16,7 +17,7 @@ class Services::Health
   end
 
   def redis?
-    redis.ping == "PONG" ? 'alive' : 'dead'
+    redis.ping == 'PONG' ? 'alive' : 'dead'
   rescue
     'dead'
   end
@@ -48,4 +49,5 @@ class Services::Health
     result[:healthy] = result.slice(:database, :redis).values.all? { |v| v == 'alive' }
     result
   end
+
 end

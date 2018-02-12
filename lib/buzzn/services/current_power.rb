@@ -37,4 +37,5 @@ class Services::CurrentPower
     end
     cache.put(key, bubbles.to_json, time_to_live)
   end
+
 end

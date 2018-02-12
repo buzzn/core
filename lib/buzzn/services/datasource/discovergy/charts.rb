@@ -33,4 +33,5 @@ class Services::Datasource::Discovergy::Charts
     today -= 15.minutes # using 'fifteen_minutes' intervals
     (1000 * today.to_f).to_i
   end
+
 end

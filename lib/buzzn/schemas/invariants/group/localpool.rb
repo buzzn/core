@@ -3,6 +3,7 @@ require_relative '../../constraints/group'
 module Schemas
   module Invariants
     module Group
+
       Localpool = Schemas::Support.Form(Constraints::Group) do
 
         configure do
@@ -21,7 +22,7 @@ module Schemas
           def has_owner_role?(input)
             case input.class.to_s
             when 'Person'
-              the_role = input.roles.where(name: Role::GROUP_OWNER).detect do |role|
+              the_role = input.roles.where(name: Role::GROUP_OWNER).find do |role|
                 localpool = role.resource
                 owner = localpool.owner
                 (owner.is_a?(Person) && input.id == owner.id) ||
@@ -33,7 +34,7 @@ module Schemas
             when 'NilClass'
               true
             else
-              raise "can not handle " + input.class.to_s
+              raise 'can not handle ' + input.class.to_s
             end
           end
 
@@ -49,6 +50,7 @@ module Schemas
         required(:grid_feeding_register).maybe { at_most_one_register_with_same_label? }
         required(:grid_consumption_register).maybe { at_most_one_register_with_same_label? }
       end
+
     end
   end
 end

@@ -4,6 +4,7 @@ require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
   class MockDatasource4Aggregates
+
     def daily_charts(group)
       {
         value: Time.now.to_f
@@ -20,6 +21,7 @@ describe Admin::LocalpoolRoda do
     def call(*)
       self
     end
+
   end
 
   def app
@@ -36,11 +38,11 @@ describe Admin::LocalpoolRoda do
   entity!(:localpool) { Fabricate(:localpool) }
 
   before do
-    container.stub("discovergy", MockDatasource4Aggregates.new)
+    container.stub('discovergy', MockDatasource4Aggregates.new)
   end
 
   after do
-    container.unstub("discovergy")
+    container.unstub('discovergy')
   end
 
   context 'GET' do
@@ -52,7 +54,7 @@ describe Admin::LocalpoolRoda do
         expect(response).to have_http_status(200)
         headers = response.headers
         expect(headers['ETag']).not_to be_nil
-        expect(headers['Cache-Control']).to eq "private, max-age=15"
+        expect(headers['Cache-Control']).to eq 'private, max-age=15'
         expect(DateTime.parse(headers['Expires'])).to be > (DateTime.now + 14.seconds)
         expect(DateTime.parse(headers['Expires'])).to be < (DateTime.now + 16.seconds)
 

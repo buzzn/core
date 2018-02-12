@@ -3,6 +3,7 @@ require 'dry/container/stub'
 describe Display::GroupRoda do
 
   class MockDatasource4Aggregates
+
     def daily_charts(group)
       {
         value: Time.now.to_f
@@ -19,6 +20,7 @@ describe Display::GroupRoda do
     def call(*)
       self
     end
+
   end
 
   def app
@@ -35,11 +37,11 @@ describe Display::GroupRoda do
   entity!(:localpool) { Fabricate(:localpool, show_display_app: true) }
 
   before do
-    container.stub("discovergy", MockDatasource4Aggregates.new)
+    container.stub('discovergy', MockDatasource4Aggregates.new)
   end
 
   after do
-    container.unstub("discovergy")
+    container.unstub('discovergy')
   end
 
   context 'GET' do
@@ -50,7 +52,7 @@ describe Display::GroupRoda do
         expect(response).to have_http_status(200)
         headers = response.headers
         expect(headers['ETag']).not_to be_nil
-        expect(headers['Cache-Control']).to eq "public, max-age=900"
+        expect(headers['Cache-Control']).to eq 'public, max-age=900'
         expect(DateTime.parse(headers['Expires'])).to be > (DateTime.now + 14.minutes)
         expect(DateTime.parse(headers['Expires'])).to be < (DateTime.now + 16.minutes)
 
@@ -69,7 +71,7 @@ describe Display::GroupRoda do
         expect(response).to have_http_status(200)
         headers = response.headers
         expect(headers['ETag']).not_to be_nil
-        expect(headers['Cache-Control']).to eq "public, max-age=15"
+        expect(headers['Cache-Control']).to eq 'public, max-age=15'
         expect(DateTime.parse(headers['Expires'])).to be > (DateTime.now + 14.seconds)
         expect(DateTime.parse(headers['Expires'])).to be < (DateTime.now + 16.seconds)
 

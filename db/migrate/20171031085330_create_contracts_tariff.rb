@@ -1,4 +1,5 @@
 class CreateContractsTariff < ActiveRecord::Migration
+
   def change
     create_table :contracts_tariffs, id: false do |t|
       t.uuid :tariff_id, null: false
@@ -9,4 +10,5 @@ class CreateContractsTariff < ActiveRecord::Migration
     add_foreign_key :contracts_tariffs, :tariffs, name: :fk_contracts_tariffs_tariff
     add_foreign_key :contracts_tariffs, :contracts, name: :fk_contracts_tariffs_contract
   end
+
 end

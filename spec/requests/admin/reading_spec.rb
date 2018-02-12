@@ -1,4 +1,3 @@
-# coding: utf-8
 require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda do
 
@@ -15,16 +14,16 @@ describe Admin::LocalpoolRoda do
 
     let(:wrong_json) do
       {
-        "errors"=>[
-          {"parameter"=>"raw_value", "detail"=>"must be a float"},
-          {"parameter"=>"value", "detail"=>"must be a float"},
-          {"parameter"=>"unit", "detail"=>"must be one of: Wh, W, m³"},
-          {"parameter"=>"reason", "detail"=>"must be one of: IOM, COM1, COM2, ROM, PMR, COT, COS, CMP, COB"},
-          {"parameter"=>"read_by", "detail"=>"must be one of: BN, SN, SG, VNB"},
-          {"parameter"=>"quality", "detail"=>"must be one of: 20, 67, 79, 187, 220, 201"},
-          {"parameter"=>"source", "detail"=>"must be one of: SM, MAN"},
-          {"parameter"=>"status", "detail"=>"must be one of: Z83, Z84, Z86"},
-          {"parameter"=>"date", "detail"=>"must be a date"}
+        'errors'=>[
+          {'parameter'=>'raw_value', 'detail'=>'must be a float'},
+          {'parameter'=>'value', 'detail'=>'must be a float'},
+          {'parameter'=>'unit', 'detail'=>'must be one of: Wh, W, m³'},
+          {'parameter'=>'reason', 'detail'=>'must be one of: IOM, COM1, COM2, ROM, PMR, COT, COS, CMP, COB'},
+          {'parameter'=>'read_by', 'detail'=>'must be one of: BN, SN, SG, VNB'},
+          {'parameter'=>'quality', 'detail'=>'must be one of: 20, 67, 79, 187, 220, 201'},
+          {'parameter'=>'source', 'detail'=>'must be one of: SM, MAN'},
+          {'parameter'=>'status', 'detail'=>'must be one of: Z83, Z84, Z86'},
+          {'parameter'=>'date', 'detail'=>'must be a date'}
         ]
       }
     end
@@ -58,11 +57,11 @@ describe Admin::LocalpoolRoda do
 
       let(:created_json) do
         {
-          "type"=>'reading',
-          "date"=>Date.new(2016, 2, 1).to_s,
-          "raw_value"=>23.66,
-          "value"=>500.0,
-          "unit"=>'m³',
+          'type'=>'reading',
+          'date'=>Date.new(2016, 2, 1).to_s,
+          'raw_value'=>23.66,
+          'value'=>500.0,
+          'unit'=>'m³',
           'reason'=>'IOM',
           'read_by'=>'BN',
           'source'=>'MAN',
@@ -99,42 +98,42 @@ describe Admin::LocalpoolRoda do
       let(:readings_json) do
         register.readings.collect do |reading|
           {
-            "id"=>reading.id,
-            "type"=>"reading",
+            'id'=>reading.id,
+            'type'=>'reading',
             'updated_at'=>reading.updated_at.as_json,
-            "date"=>reading.date.to_s,
-            "raw_value"=>reading.raw_value,
-            "value"=>reading.value,
-            "unit"=>reading.attributes['unit'],
+            'date'=>reading.date.to_s,
+            'raw_value'=>reading.raw_value,
+            'value'=>reading.value,
+            'unit'=>reading.attributes['unit'],
             'reason'=>reading.attributes['reason'],
             'read_by'=>reading.attributes['read_by'],
             'source'=>reading.attributes['source'],
             'quality'=>reading.attributes['quality'],
             'status'=>reading.attributes['status'],
-            "comment"=>reading.comment,
-            "updatable"=>false,
-            "deletable"=>true
+            'comment'=>reading.comment,
+            'updatable'=>false,
+            'deletable'=>true
           }
         end
       end
 
       let(:reading_json) do
         {
-          "id"=>reading.id,
-          "type"=>"reading",
+          'id'=>reading.id,
+          'type'=>'reading',
           'updated_at'=>reading.updated_at.as_json,
-          "date"=>reading.date.to_s,
-          "raw_value"=>reading.raw_value,
-          "value"=>reading.value,
-          "unit"=>reading.attributes['unit'],
+          'date'=>reading.date.to_s,
+          'raw_value'=>reading.raw_value,
+          'value'=>reading.value,
+          'unit'=>reading.attributes['unit'],
           'reason'=>reading.attributes['reason'],
           'read_by'=>reading.attributes['read_by'],
           'source'=>reading.attributes['source'],
           'quality'=>reading.attributes['quality'],
           'status'=>reading.attributes['status'],
-          "comment"=>reading.comment,
-          "updatable"=>false,
-          "deletable"=>true
+          'comment'=>reading.comment,
+          'updatable'=>false,
+          'deletable'=>true
         }
       end
 

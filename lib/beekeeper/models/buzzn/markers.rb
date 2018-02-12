@@ -17,5 +17,7 @@
 #
 
 class Beekeeper::Buzzn::Markers < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.markers'
+
 end

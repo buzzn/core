@@ -13,7 +13,7 @@ FactoryGirl.define do
     description { |attrs| "#{attrs[:name]} description" }
     owner       { FactoryGirl.create(:person) }
     address
-    start_date  { Date.parse("2016-01-01") }
+    start_date { Date.parse('2016-01-01') }
 
     after(:create) do |group, evaluator|
       person_for_role = group.owner.is_a?(Organization) ? group.owner.contact : group.owner

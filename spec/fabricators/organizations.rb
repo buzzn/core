@@ -7,7 +7,6 @@ Fabricator :organization do
   website     { "http://www.#{FFaker::Internet.domain_name}" }
 end
 
-
 Fabricator :other_organization, from: :organization do
 end
 
@@ -68,5 +67,5 @@ Fabricator :germany, from: :electricity_supplier do
 end
 
 Fabricator :gemeindewerke_peissenberg, from: :electricity_supplier do
-  name "Gemeindewerke Peißenberg"
+  name 'Gemeindewerke Peißenberg'
 end

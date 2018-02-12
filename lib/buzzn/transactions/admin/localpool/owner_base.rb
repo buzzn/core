@@ -36,4 +36,5 @@ class Transactions::Admin::Localpool::OwnerBase < Transactions::Base
     end
   end
   private :setup_roles
+
 end

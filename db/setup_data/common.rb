@@ -1,4 +1,4 @@
-Buzzn::Logger.root.info "seeds: loading common setup data"
+Buzzn::Logger.root.info 'seeds: loading common setup data'
 
 #
 # Account statuses
@@ -12,7 +12,7 @@ end
 #
 energy_classifications = {
   buzzn: EnergyClassification.create!(
-    tariff_name:                      "Buzzn GmbH",
+    tariff_name:                      'Buzzn GmbH',
     nuclear_ratio:                    2.1,
     coal_ratio:                       5.9,
     gas_ratio:                        40.9,
@@ -42,25 +42,31 @@ energy_classifications = {
 require 'smarter_csv'
 
 module Converters
+
   class PreferredLanguage
+
     def self.convert(value)
       { 'DE' => :german, 'EN' => :english }[value]
     end
+
   end
   class State
+
     def self.convert(value)
       "DE_#{value}"
     end
+
   end
+
 end
 
 def get_csv(model_name, options = {})
   file_name = "db/setup_data/csv/#{model_name}.csv"
   SmarterCSV.process(file_name,
-    col_sep: ",",
+    col_sep: ',',
     convert_values_to_numeric: false,
     value_converters: options[:converters]
-  )
+                    )
 end
 
 def import_csv(model_name, options = {})
@@ -99,10 +105,10 @@ get_csv(:organizations, converters: { state: Converters::State }).each do |row|
 end
 
 # Assigning buzzn and germany here is essential for the application to work!
-Organization.buzzn   = Organization.find_by(slug: "buzzn")
-Organization.buzzn.energy_classifications = [ energy_classifications[:buzzn] ]
-Organization.germany = Organization.find_by(slug: "germany")
-Organization.germany.energy_classifications = [ energy_classifications[:germany] ]
+Organization.buzzn = Organization.find_by(slug: 'buzzn')
+Organization.buzzn.energy_classifications = [energy_classifications[:buzzn]]
+Organization.germany = Organization.find_by(slug: 'germany')
+Organization.germany.energy_classifications = [energy_classifications[:germany]]
 
 get_csv(:organization_market_functions).each do |row|
   begin

@@ -9,4 +9,5 @@ class Transactions::Ticker < Transactions::Base
     # TODO check privacy settings here
     Right(register)
   end
+
 end

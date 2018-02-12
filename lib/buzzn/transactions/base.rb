@@ -1,6 +1,7 @@
 require_relative '../transactions'
 
 class Transactions::Base
+
   include Dry::Transaction(container: Buzzn::Boot::MainContainer)
 
   class << self
@@ -26,5 +27,7 @@ class Transactions::Base
       end
       new.with_step_args(args)
     end
+
   end
+
 end

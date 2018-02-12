@@ -10,6 +10,6 @@ module Meter
                :sequence_number
 
     attributes :updatable, :deletable
+
   end
 end
-

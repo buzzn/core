@@ -32,6 +32,7 @@
 #
 
 class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.minipool_sn'
   include Beekeeper::ImportWarnings
 
@@ -63,7 +64,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
     # always return a new, unsaved record. The duplicates from Beekeeper will be removed later on,
     # when the records and localpool are saved.
     @powertaker ||= if kontaktdaten.person?
-      Person.new(kontaktdaten.converted_attributes.merge(address: address))
+                      Person.new(kontaktdaten.converted_attributes.merge(address: address))
     else
       # TODO add contact person
       Organization.new(kontaktdaten.converted_attributes)
@@ -97,7 +98,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
   # So only if the end_date is earlier than 2050-01-01, we take it seriously and import it.
   def end_date
     end_date = Date.parse(bezugsende)
-    end_date < Date.parse("2050-01-01") ? end_date : nil
+    end_date < Date.parse('2050-01-01') ? end_date : nil
   end
 
   def termination_date
@@ -105,6 +106,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
   end
 
   def eeg_umlage_reduced?
-    eeg_umlage == "-1"
+    eeg_umlage == '-1'
   end
+
 end

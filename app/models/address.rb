@@ -6,7 +6,7 @@ class Address < ActiveRecord::Base
   # ...
   ISO3166::Country.all.tap do |countries|
     map = countries.each_with_object({}) do |country, object|
-      object[country.name.gsub(/[().,]/,'').gsub(/ /, '_').downcase] = country.alpha2
+      object[country.name.gsub(/[().,]/, '').gsub(/ /, '_').downcase] = country.alpha2
     end
     enum country: map
   end
@@ -18,4 +18,5 @@ class Address < ActiveRecord::Base
   def to_s
     "#{street}, #{zip} #{city}"
   end
+
 end

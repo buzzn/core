@@ -6,7 +6,7 @@ namespace :db do
     DatabaseEmptier.call
   end
 
-  Rake::Task["seed"].clear
+  Rake::Task['seed'].clear
   task seed: 'seed:setup_data'
 
   namespace :seed do
@@ -20,7 +20,7 @@ namespace :db do
       require_relative '../../db/example_data'
     end
 
-    desc "Create the buzzn operator account for Philipp Oswald"
+    desc 'Create the buzzn operator account for Philipp Oswald'
     task pho_user: :environment do
       require_relative '../../db/support/create_buzzn_operator'
       create_buzzn_operator(
@@ -31,7 +31,7 @@ namespace :db do
       )
     end
 
-    desc "Create a generic buzzn operator account"
+    desc 'Create a generic buzzn operator account'
     task buzzn_operator: :environment do
       require_relative '../../db/support/create_buzzn_operator'
       create_buzzn_operator(

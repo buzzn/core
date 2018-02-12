@@ -1,6 +1,7 @@
 require_relative '../types'
 
 class Types::CacheItem
+
   extend Dry::Initializer
 
   option :json, Types::Strict::String
@@ -18,4 +19,5 @@ class Types::CacheItem
   end
 
   def to_json(*); json; end
+
 end

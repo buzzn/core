@@ -6,5 +6,6 @@ module Contract
     model LocalpoolThirdParty
 
     has_one :register
+
   end
 end

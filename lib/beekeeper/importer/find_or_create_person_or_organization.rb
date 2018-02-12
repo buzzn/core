@@ -23,7 +23,7 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
 
   def get_unique_person(unsaved_record)
     # Unfortunately different persons can have the same email address in Beekeeper, so we need to add first and last name.
-    uniqueness_attrs = unsaved_record.attributes.slice("email", "first_name", "last_name")
+    uniqueness_attrs = unsaved_record.attributes.slice('email', 'first_name', 'last_name')
     person = Person.find_by(uniqueness_attrs)
     if person
       logger.debug "#{unsaved_record.name} (#{unsaved_record.email}): using existing person #{person.id}"
@@ -45,19 +45,19 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
       existing_org
 
     elsif (fibunr = find_account_new_fibunr(unsaved_record.name))
-      logger.debug("xxx Taking organization from account_new")
+      logger.debug('xxx Taking organization from account_new')
       # get the data to use for our record
       source_record = Beekeeper::Buzzn::AccountNew.find_by(fibunr: fibunr)
       find_or_create_organization(source_record.converted_attributes)
 
     elsif (kontaktdaten_id = find_kontaktdaten_id(unsaved_record.name))
-      logger.debug("xxx Taking organization from kontaktdaten")
+      logger.debug('xxx Taking organization from kontaktdaten')
       # get the data to use for our record
       source_record = Beekeeper::Minipool::Kontaktdaten.find_by(kontaktdaten_id: kontaktdaten_id)
       find_or_create_organization(source_record.converted_attributes)
 
     else # no lookup is configured, create a new organization record
-      logger.debug("xxx Creating new organization")
+      logger.debug('xxx Creating new organization')
       unsaved_record.save!
       unsaved_record
     end
@@ -116,4 +116,5 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
       /Wogeno München eG/i                        => 998,
     }
   }
+
 end

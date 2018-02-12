@@ -16,4 +16,5 @@ class GroupResource < Buzzn::Resource::Entity
       raise "unknown group type: #{object.class}"
     end
   end
+
 end

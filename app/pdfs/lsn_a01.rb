@@ -37,6 +37,7 @@ module Buzzn::Pdfs
       def base_price_euro
         tariff_now.baseprice_cents_per_month.to_f / 100
       end
+
     end
 
     def initialize(localpool_power_taker_contract)
@@ -60,18 +61,19 @@ module Buzzn::Pdfs
       when Person
         prefix = case user.prefix
                  when 'female'
-                   "Sehr geehrte Frau"
+                   'Sehr geehrte Frau'
                  when 'male'
-                   "Sehr geehrter Herr"
+                   'Sehr geehrter Herr'
                  else
-                   "Hallo"
+                   'Hallo'
                  end
         "#{prefix} #{user.title} #{power_taker.contractor.name}"
       when Organization
-        "Sehr geehrte Damen und Herren"
+        'Sehr geehrte Damen und Herren'
       else
         raise ArgumentError.new("unknown type of contractor: #{user}")
       end
     end
+
   end
 end

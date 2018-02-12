@@ -3,6 +3,7 @@ require_relative '../../transactions/bubbles'
 require_relative '../../transactions/display/daily_charts'
 
 class Display::GroupRoda < BaseRoda
+
   plugin :aggregation
 
   route do |r|
@@ -16,7 +17,7 @@ class Display::GroupRoda < BaseRoda
       group = groups.retrieve_with_slug(id)
 
       unless group.object.show_display_app
-        request.halt([403, {'Content-Type' => 'application/json'}, ["{}"]])
+        request.halt([403, {'Content-Type' => 'application/json'}, ['{}']])
       end
 
       r.get! do
@@ -40,4 +41,5 @@ class Display::GroupRoda < BaseRoda
       end
     end
   end
+
 end

@@ -1,6 +1,7 @@
 require_relative 'unit'
 
 class Types::Datasource::Bubble
+
   extend Dry::Initializer
 
   option :value, Types::Strict::Int
@@ -14,4 +15,5 @@ class Types::Datasource::Bubble
   def as_json(*)
     { id: register.id, label: register.label, name: register.name, value: value }
   end
+
 end

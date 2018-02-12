@@ -1,4 +1,5 @@
 class CreateEnergyClassifications < ActiveRecord::Migration
+
   def change
     create_table :energy_classifications, id: :uuid do |t|
       t.string :tariff_name
@@ -18,4 +19,5 @@ class CreateEnergyClassifications < ActiveRecord::Migration
     end
     add_index :energy_classifications, :organization_id
   end
+
 end

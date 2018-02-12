@@ -3,6 +3,7 @@ require_relative 'localpool'
 module Schemas
   module Invariants
     module Contract
+
       LocalpoolRegister = Schemas::Support.Form(Localpool) do
 
         configure do
@@ -17,6 +18,7 @@ module Schemas
           register.match_localpool?(localpool)
         end
       end
+
     end
   end
 end

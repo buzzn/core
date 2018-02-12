@@ -2,10 +2,10 @@ FactoryGirl.define do
   factory :organization do
     name             { generate(:organization_name) }
     slug             { Buzzn::Slug.new(name).to_s }
-    description      "Description of the generic organization"
-    email            "dev+generic-organization@buzzn.net"
-    phone            "089 / 32 16 8"
-    website          "www.generic-organization.com"
+    description      'Description of the generic organization'
+    email            'dev+generic-organization@buzzn.net'
+    phone            '089 / 32 16 8'
+    website          'www.generic-organization.com'
     contact          { FactoryGirl.create(:person, :organization_contact) }
 
     trait :with_bank_account do

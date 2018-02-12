@@ -12,7 +12,7 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
     group
   end
 
-  entity!(:localpool)  do
+  entity!(:localpool) do
     group = create(:localpool, show_display_app: true)
     create(:meter, :virtual, group: group)
     mentor.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
@@ -22,7 +22,7 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
   %i(admin mentor other anonymous).each do |user|
     context "user<#{user}>" do
       let(:all) { Display::GroupResource.all(send(user)) }
-      it "all - groups" do
+      it 'all - groups' do
         expect(all.collect { |l| l.object }).to match_array [tribe, localpool]
       end
 
@@ -30,7 +30,7 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
         context "group<#{type}>" do
           let(:group) { all.retrieve(send(type).id) }
 
-          it "retrieve" do
+          it 'retrieve' do
             expect(group.object).to eq send(type)
           end
 
@@ -50,7 +50,7 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
             end
             let(:register) { registers.retrieve(registers.first.id) }
 
-            it "retrieve" do
+            it 'retrieve' do
               expect(register.object).to eq registers.first.object
             end
 
@@ -71,7 +71,7 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
             end
             let(:actual_mentor) { mentors.retrieve(mentors.first.id) }
 
-            it "retrieve" do
+            it 'retrieve' do
               expect(actual_mentor.object).to eq mentors.first.object
             end
 

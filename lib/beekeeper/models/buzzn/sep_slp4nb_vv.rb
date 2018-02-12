@@ -7,5 +7,7 @@
 #
 
 class Beekeeper::Buzzn::SepSlp4nbVv < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.sep_slp4nb_vv'
+
 end

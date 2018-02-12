@@ -29,7 +29,7 @@ namespace :beekeeper do
     end
   end
 
-  desc "Run the beekeeper import from the Beekeeper to our native DB"
+  desc 'Run the beekeeper import from the Beekeeper to our native DB'
   task import: :environment do
     # load the beekeeper stuff lazy on demand
     require 'lib/beekeeper/init'
@@ -45,7 +45,7 @@ namespace :beekeeper do
     # Output a table of current connections to the DB
     conn = ActiveRecord::Base.connection
     query = "SELECT * FROM information_schema.tables WHERE table_schema='#{schema}'"
-    tables = conn.execute(query).map { |row| row['table_name']}
+    tables = conn.execute(query).collect { |row| row['table_name']}
     tables.each do |table|
       p table
       class_definition = <<~CODE
@@ -59,10 +59,10 @@ namespace :beekeeper do
   end
 
   namespace :person_images do
-    desc "Attach images in lib/beekeeper/person_images to the person records, uploads them to S3 if configured."
+    desc 'Attach images in lib/beekeeper/person_images to the person records, uploads them to S3 if configured.'
     task attach: :environment do
       puts
-      puts "Attaching person images ..."
+      puts 'Attaching person images ...'
       Person.all.each do |person|
         next unless person.email
         file_name = person.email.downcase

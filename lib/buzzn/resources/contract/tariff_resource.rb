@@ -19,5 +19,6 @@ module Contract
     def number_of_contracts
       object.contracts.count
     end
+
   end
 end

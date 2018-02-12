@@ -9,5 +9,7 @@
 #
 
 class Beekeeper::Buzzn::KommentareAc < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.kommentare_ac'
+
 end

@@ -10,5 +10,6 @@ module Meter
       super
       register.meter = self if register
     end
+
   end
 end

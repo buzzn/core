@@ -1,7 +1,9 @@
 describe Services::CurrentPower do
 
   class MockRegister < Register::Input
+
     def data_source; 'mock'; end
+
   end
 
   class MockDataSource < Buzzn::DataSource
@@ -28,6 +30,7 @@ describe Services::CurrentPower do
     def daily_charts(group)
       nil
     end
+
   end
 
   entity!(:mock) { MockDataSource.new }

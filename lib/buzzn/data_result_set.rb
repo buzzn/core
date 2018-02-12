@@ -1,9 +1,11 @@
 module Buzzn
   class DataResultSet
+
     attr_reader :resource_id, :in, :out, :units
     attr_accessor :expires_at
 
     class << self
+
       private :new
 
       def from_json(data)
@@ -177,5 +179,6 @@ module Buzzn
       (@in.collect { |i| i.timestamp } +
          @out.collect { |i| i.timestamp }).max || 0
     end
+
   end
 end

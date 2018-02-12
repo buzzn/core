@@ -119,8 +119,8 @@ describe BankAccount do
     it "does not create BankAccount of contract with #{u}" do
       user = send(u) if u != :anonymous
 
-      expect { BankAccount.guarded_create(user, params,
-                                          member_group_contract) }.to raise_error Buzzn::PermissionDenied
+      expect do BankAccount.guarded_create(user, params,
+                                           member_group_contract) end.to raise_error Buzzn::PermissionDenied
     end
 
     it "does not retrieve BankAccount of contract with #{u}" do
@@ -132,8 +132,8 @@ describe BankAccount do
     it "does not update BankAccount of contract with #{u}" do
       user = send(u) if u != :anonymous
 
-      expect { BankAccount.guarded_update(user, member_group_bank_account.id,
-                                          holder: 'Me') }.to raise_error Buzzn::PermissionDenied
+      expect do BankAccount.guarded_update(user, member_group_bank_account.id,
+                                           holder: 'Me') end.to raise_error Buzzn::PermissionDenied
     end
 
     it "does not delete BankAccount of contract with #{u}" do
@@ -157,12 +157,10 @@ describe BankAccount do
     end
   end
 
-
   it 'can not find anything' do
     bank_accounts = BankAccount.filter('Der Clown ist müde und geht nach Hause.')
     expect(bank_accounts.size).to eq 0
   end
-
 
   it 'filters gives all with no params' do
     bank_accounts = BankAccount.filter(nil)

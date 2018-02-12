@@ -4,6 +4,7 @@ require_relative '../../transactions/admin/meter/update_virtual'
 
 module Admin
   class MeterRoda < BaseRoda
+
     plugin :shared_vars
 
     route do |r|
@@ -46,5 +47,6 @@ module Admin
         end
       end
     end
+
   end
 end

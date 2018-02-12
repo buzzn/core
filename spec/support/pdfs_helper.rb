@@ -2,6 +2,7 @@ require 'slim'
 
 Slim::Engine.options[:pretty] = true
 module PdfsHelper
+
   def print_html(name, content)
     FileUtils.mkdir_p('tmp/pdfs')
     file = "tmp/pdfs/#{name.sub('slim', 'html')}"
@@ -25,4 +26,5 @@ module PdfsHelper
   def logger
     @logger ||= Buzzn::Logger.new(self)
   end
+
 end

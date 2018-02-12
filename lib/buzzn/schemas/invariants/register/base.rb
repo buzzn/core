@@ -3,6 +3,7 @@ require_relative '../../constraints/register/base'
 module Schemas
   module Invariants
     module Register
+
       Base = Schemas::Support.Form(Schemas::Constraints::Register::Base) do
         required(:observer_enabled).maybe
         required(:observer_min_threshold).maybe
@@ -12,6 +13,7 @@ module Schemas
           observer_enabled.true?.then(observer_max_threshold.filled?.and(observer_min_threshold.filled?).and(observer_max_threshold.gteq?(value(:observer_min_threshold))))
         end
       end
+
     end
   end
 end

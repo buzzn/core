@@ -1,6 +1,7 @@
 require_relative '../support'
 
 module Schemas::Support::Predicates
+
   include Dry::Logic::Predicates
 
   predicate(:iban?) do |value|
@@ -22,4 +23,5 @@ module Schemas::Support::Predicates
   predicate(:phone_number?) do |value|
     ! /^[0-9+\(\)#\.\s\/ext-]+$/.match(value).nil?
   end
+
 end

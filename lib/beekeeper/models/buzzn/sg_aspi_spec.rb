@@ -10,5 +10,7 @@
 #
 
 class Beekeeper::Buzzn::SgAspiSpec < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.sg_aspi_spec'
+
 end

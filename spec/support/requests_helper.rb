@@ -5,10 +5,12 @@ module RequestsHelper
   end
 
   module ClassMethods
+
     def login_path(path = nil)
       (@login_path ||= path) ||
         (superclass.respond_to?(:login_path) ? superclass.login_path : nil)
     end
+
   end
 
   def login_path
@@ -29,8 +31,8 @@ module RequestsHelper
 
   def do_it(action, path, params, account, headers = {})
     default_headers = {
-      "Accept"              => "application/json",
-      "Content-Type"        => "application/json",
+      'Accept'              => 'application/json',
+      'Content-Type'        => 'application/json',
     }
     account = account.call if account.is_a? Proc
     case account
@@ -73,12 +75,13 @@ module RequestsHelper
   end
 
   def sort(hash, id = 'id')
-    hash.sort{|n,m| m[id] <=> n[id]}
+    hash.sort{|n, m| m[id] <=> n[id]}
   end
 
   def expire_admin_session
-    Timecop.travel(Time.now +  60 * 60) do
+    Timecop.travel(Time.now + 60 * 60) do
       yield
     end
   end
+
 end

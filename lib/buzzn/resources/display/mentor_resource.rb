@@ -11,5 +11,6 @@ module Display
     def image
       object.image.medium.url
     end
+
   end
 end

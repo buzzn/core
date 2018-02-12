@@ -34,7 +34,7 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
 
   def person?
     is_additional_person           = ADDITIONAL_PERSONS.include?(kontaktdaten_id)
-    rechtsform_private             = rechtsform.strip == "Privatperson"
+    rechtsform_private             = rechtsform.strip == 'Privatperson'
     is_organization                = PERSONS_ACTUALLY_ORGANIZATIONS.include?(kontaktdaten_id)
     is_additional_person || (rechtsform_private && !is_organization)
   end
@@ -87,4 +87,5 @@ class Beekeeper::Minipool::Kontaktdaten < Beekeeper::Minipool::BaseRecord
   def organization_name
     firma.present? ? firma : nachname
   end
+
 end

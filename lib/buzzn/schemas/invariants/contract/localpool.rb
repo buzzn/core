@@ -27,7 +27,7 @@ module Schemas
           end
 
           def cover_ending_of_contract?(end_date, tariffs)
-            last_tariff = tariffs.max do |m,n|
+            last_tariff = tariffs.max do |m, n|
               result = m.end_date <=> n.end_date
               if result
                 result
@@ -55,6 +55,7 @@ module Schemas
           tariffs.lineup?
         end
       end
+
     end
   end
 end

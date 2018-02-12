@@ -3,6 +3,7 @@ require 'buzzn/crypto/decryptor'
 require 'buzzn/crypto/encryptor'
 
 class Document < ActiveRecord::Base
+
   include Import.active_record['services.storage']
 
   serialize :encryption_details, Security::SecureHashSerializer.new
@@ -21,11 +22,11 @@ class Document < ActiveRecord::Base
     encrypted = Crypto::Encryptor.new.process(data)
     self.encryption_details = encrypted.details
     if valid?
-      storage.files.create({
+      storage.files.create(
         :body         => encrypted.data,
         :key          => self.path,
         :public       => false
-      })
+      )
     end
     self.save!
   end
@@ -40,4 +41,5 @@ class Document < ActiveRecord::Base
     document.store(data)
     document
   end
+
 end

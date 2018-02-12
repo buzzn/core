@@ -9,5 +9,6 @@ module Contract
                 :cycle
 
     def updated_at; nil; end
+
   end
 end

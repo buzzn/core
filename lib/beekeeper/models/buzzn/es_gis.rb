@@ -44,5 +44,7 @@
 #
 
 class Beekeeper::Buzzn::EsGis < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.es_gis'
+
 end

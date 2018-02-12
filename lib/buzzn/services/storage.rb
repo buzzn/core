@@ -1,6 +1,7 @@
 require_relative '../services'
 
 class Services::Storage
+
   include Import['config.fog']
 
   def create

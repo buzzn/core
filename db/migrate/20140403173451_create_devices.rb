@@ -1,4 +1,5 @@
 class CreateDevices < ActiveRecord::Migration
+
   def change
     enable_extension 'uuid-ossp'
     create_table :devices, id: :uuid do |t|
@@ -26,4 +27,5 @@ class CreateDevices < ActiveRecord::Migration
     add_index :devices, :metering_point_id
     add_index :devices, :readable
   end
+
 end

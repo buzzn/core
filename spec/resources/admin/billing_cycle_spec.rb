@@ -1,32 +1,32 @@
 describe Admin::BillingCycleResource do
 
   # FIXME: lpt_contract in billing entity is nil after Organization --> market roles refactoring, causing some tests to fail
-  before { skip "Pending refactoring of fabricators" }
+  before { skip 'Pending refactoring of fabricators' }
 
   entity(:localpool) { Fabricate(:localpool_sulz_with_registers_and_readings) }
-  entity(:billing_cycle) { Fabricate(:billing_cycle,
+  entity(:billing_cycle) do Fabricate(:billing_cycle,
                                   localpool: localpool,
                                   begin_date: Date.new(2016, 8, 4),
-                                  end_date: Date.new(2016, 12, 31)) }
-  entity!(:other_billing_cycle) { Fabricate(:billing_cycle,
+                                  end_date: Date.new(2016, 12, 31)) end
+  entity!(:other_billing_cycle) do Fabricate(:billing_cycle,
                                   localpool: localpool,
                                   begin_date: Date.new(2015, 8, 4),
-                                  end_date: Date.new(2015, 12, 31)) }
+                                  end_date: Date.new(2015, 12, 31)) end
 
   entity!(:billing) do
     lpt_contract = localpool.registers.consumption.first.contracts.localpool_power_takers.first
     Fabricate(:billing, billing_cycle: billing_cycle, localpool_power_taker_contract: lpt_contract)
   end
-  entity(:other_billing) { Fabricate(:billing,
+  entity(:other_billing) do Fabricate(:billing,
                             billing_cycle: billing_cycle,
-                            localpool_power_taker_contract: localpool.registers.by_label(Register::Base::CONSUMPTION)[1].contracts.localpool_power_takers.first) }
+                            localpool_power_taker_contract: localpool.registers.by_label(Register::Base::CONSUMPTION)[1].contracts.localpool_power_takers.first) end
 
   entity(:admin) { Fabricate(:admin) }
 
-  entity(:base_attributes) { [ 'id', 'type', 'updated_at',
+  entity(:base_attributes) do ['id', 'type', 'updated_at',
                                'name',
                                'begin_date',
-                               'end_date' ] }
+                               'end_date'] end
 
   let(:billing_cycles) do
     Admin::LocalpoolResource.all(admin).retrieve(localpool.id).billing_cycles
@@ -69,4 +69,3 @@ describe Admin::BillingCycleResource do
     expect(BillingCycle.all.size).to eq size - 1
   end
 end
-

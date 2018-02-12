@@ -7,4 +7,5 @@ class CreateAccountsWithSequel < ActiveRecord::Migration
   def up
     run_sequel_migration(1)
   end
+
 end

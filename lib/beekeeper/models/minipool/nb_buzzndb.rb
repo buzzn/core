@@ -28,5 +28,7 @@
 #
 
 class Beekeeper::Minipool::NbBuzzndb < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.nb_buzzndb'
+
 end

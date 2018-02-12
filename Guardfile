@@ -6,8 +6,8 @@
 #                          installed the spring binstubs per the docs)
 #  * zeus: 'zeus rspec' (requires the server to be started separately)
 #  * 'just' rspec: 'rspec'
-guard :rspec, cmd: "rspec -f doc" do
-  require "guard/rspec/dsl"
+guard :rspec, cmd: 'rspec -f doc' do
+  require 'guard/rspec/dsl'
   dsl = Guard::RSpec::Dsl.new(self)
 
   # RSpec files
@@ -22,7 +22,7 @@ guard :rspec, cmd: "rspec -f doc" do
 
   # Rails config changes
   rails = dsl.rails
-  watch(rails.spec_helper)     { rspec.spec_dir }
+  watch(rails.spec_helper) { rspec.spec_dir }
 
   watch(%r{db/factories/.+\.rb}) { 'spec/factories/factories_spec.rb' }
 end

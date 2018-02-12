@@ -25,5 +25,7 @@
 #
 
 class Beekeeper::Buzzn::Slp2016Part6 < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.slp2016_part6'
+
 end

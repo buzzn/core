@@ -1,6 +1,7 @@
 require 'buzzn/schemas/constraints/register/base'
 
 class CreateRegisters < ActiveRecord::Migration
+
   SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Register::Base)
 
   def up
@@ -22,4 +23,5 @@ class CreateRegisters < ActiveRecord::Migration
   def down
     SCHEMA.down(:registers, self)
   end
+
 end

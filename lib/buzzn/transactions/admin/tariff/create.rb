@@ -2,6 +2,7 @@ require_relative '../tariff'
 require_relative '../../../schemas/transactions/admin/tariff/create'
 
 class Transactions::Admin::Tariff::Create < Transactions::Base
+
   def self.for(localpool)
     new.with_step_args(
       validate: [Schemas::Transactions::Admin::Tariff::Create],
@@ -17,4 +18,5 @@ class Transactions::Admin::Tariff::Create < Transactions::Base
   def persist(input, tariffs)
     Right(Contract::TariffResource.new(tariffs.objects.create!(input), tariffs.context))
   end
+
 end

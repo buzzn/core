@@ -32,7 +32,7 @@ module Buzzn
           end
         end
         request.response.status = ErrorHandler::ERRORS[value.class] || 500
-        "{\"errors\":" << errors.to_json << "}"
+        '{"errors":' << errors.to_json << '}'
       end
 
       def call(object, request)
@@ -55,6 +55,7 @@ module Buzzn
           result
         end
       end
+
     end
   end
 end

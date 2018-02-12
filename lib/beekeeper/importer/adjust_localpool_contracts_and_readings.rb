@@ -21,7 +21,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
           comment = nil
         when 1
           adjust_end_date_and_readings(contract, register)
-          comment = "1 day gap fixed by moving old end date one day ahead"
+          comment = '1 day gap fixed by moving old end date one day ahead'
         else
           create_gap_contract(contract, next_contract)
           comment = "gap of #{gap_in_days} days filled with a 'Leerstandsvertrag' (gap contract)"
@@ -123,12 +123,12 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       readings.first.destroy!
       logger.info("Destroyed reading for #{readings.first.date} since both readings have the same value.")
     else
-      logger.info("Readings for old contract end and new contract start have different values, this is resolved in code")
-      logger.info("Readings: " + readings.map { |r| "date: #{r.date}, #{r.value}" }.join(' // ') )
-      if register.meter.legacy_buzznid == "90057/7"
+      logger.info('Readings for old contract end and new contract start have different values, this is resolved in code')
+      logger.info('Readings: ' + readings.collect { |r| "date: #{r.date}, #{r.value}" }.join(' // ') )
+      if register.meter.legacy_buzznid == '90057/7'
         # in this case the 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
         readings.first.destroy!
-      elsif register.meter.legacy_buzznid == "90067/18"
+      elsif register.meter.legacy_buzznid == '90067/18'
         readings.first.destroy! # this one has a value of 13.000
         # this one has 12.700 -- must be a bug/manual entry error, technically it's not possible for a reading to go down
         readings.last.update_attribute(:value, 13_000)
@@ -146,4 +146,5 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       # case: the only reading is on the new contract end date -- that's what we want, nothing to do.
     end
   end
+
 end

@@ -2,7 +2,7 @@ require_relative '../crypto'
 
 class Crypto::Decryptor < Struct.new :details
 
-  def process data
+  def process(data)
     cipher    = build_cipher(self.details)
     decrypted = cipher.update(data) + cipher.final
     decrypted.force_encoding(Encoding::UTF_8)
@@ -19,4 +19,5 @@ class Crypto::Decryptor < Struct.new :details
     cipher.auth_tag  = details[:auth_tag]
     cipher
   end
+
 end

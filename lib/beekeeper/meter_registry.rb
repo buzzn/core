@@ -4,6 +4,7 @@ module Beekeeper
   class MeterRegistry
 
     class << self
+
       def set(buzznid, meter_instance)
         @meters ||= {}
         verify!(buzznid)
@@ -21,8 +22,10 @@ module Beekeeper
       end
 
       def verify!(buzznid)
-        raise "buzznid unreliable!!" if buzznid !~ /^([0-9])+\/([0-9])+$/
+        raise 'buzznid unreliable!!' if buzznid !~ /^([0-9])+\/([0-9])+$/
       end
+
     end
+
   end
 end

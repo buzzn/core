@@ -86,11 +86,12 @@ class Beekeeper::Importer::LocalpoolContracts
   def create_fake_virtual_register(buzznid, localpool)
     logger.error("No meter/register for #{buzznid}, creating a fake temporary one.")
     meter = Meter::Real.create!(product_serialnumber: 'FAKE-FOR-IMPORT', legacy_buzznid: buzznid, group: localpool)
-    Register::Input.create!(name: "FAKE-FOR-IMPORT", share_with_group: false, meter: meter)
+    Register::Input.create!(name: 'FAKE-FOR-IMPORT', share_with_group: false, meter: meter)
   end
 
   # Make sure we don't create the same person or organization twice.
   def find_or_create_customer(unsaved_record)
     Beekeeper::Importer::FindOrCreatePersonOrOrganization.new(logger).run(unsaved_record)
   end
+
 end

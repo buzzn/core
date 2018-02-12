@@ -27,5 +27,7 @@
 #
 
 class Beekeeper::Buzzn::NbSync < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.nb_sync'
+
 end

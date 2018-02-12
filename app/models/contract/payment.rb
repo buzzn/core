@@ -21,7 +21,7 @@ module Contract
                     timestamp
                   when Date
                     timestamp.to_time
-                  when Fixnum
+                  when Integer
                     Time.at(timestamp)
                   else
                     raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")
@@ -30,7 +30,7 @@ module Contract
           .where('end_date >= ? OR end_date IS NULL', timestamp + 1.second)
     end
 
-    scope :current, ->(now = Time.current) {where("begin_date < ? AND (end_date > ? OR end_date IS NULL)", now, now)}
+    scope :current, ->(now = Time.current) {where('begin_date < ? AND (end_date > ? OR end_date IS NULL)', now, now)}
 
   end
 end

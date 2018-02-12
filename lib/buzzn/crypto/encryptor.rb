@@ -1,13 +1,14 @@
 require_relative '../crypto'
 
 class Crypto::Encryptor
+
   # authenticated encryption
   # see also https://crypto.stanford.edu/RealWorldCrypto/slides/gueron.pdf
   # TODO use AES-SIV from https://github.com/miscreant/miscreant/wiki/Ruby-Documentation
   #      inspired by https://youtu.be/3t3P7kzdP4M?t=2373
   CIPHER_ALGORITHM = 'aes-128-gcm'
 
-  def process data
+  def process(data)
     (cipher, details) = build_cipher
 
     encrypted          = cipher.update(data) + cipher.final
@@ -29,4 +30,5 @@ class Crypto::Encryptor
 
     [cipher, details]
   end
+
 end

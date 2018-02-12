@@ -1,13 +1,12 @@
-# coding: utf-8
 describe Contract::TariffResource do
 
   entity(:admin) { Fabricate(:admin) }
   entity(:localpool) { Fabricate(:localpool) }
   entity(:tariff) { Fabricate(:tariff, group: localpool) }
 
-  entity(:localpool_processing) { Fabricate(:localpool_processing_contract,
-                                            localpool: localpool,
-                                            tariffs: [tariff]) }
+  entity(:localpool_processing) do Fabricate(:localpool_processing_contract,
+                                             localpool: localpool,
+                                             tariffs: [tariff]) end
 
   let(:tariff_resource) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).tariffs.first }
 

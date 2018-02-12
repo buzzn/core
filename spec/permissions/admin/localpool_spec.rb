@@ -50,17 +50,17 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   let(:contract) { localpool2.localpool_power_taker_contracts.first }
   let(:register) { localpool2.registers.real.input.first }
 
-  entity!(:mpoc) { Fabricate(:metering_point_operator_contract,
-                             localpool: localpool2) }
-  entity!(:lpc) { Fabricate(:localpool_processing_contract,
-                            localpool: localpool2) }
+  entity!(:mpoc) do Fabricate(:metering_point_operator_contract,
+                              localpool: localpool2) end
+  entity!(:lpc) do Fabricate(:localpool_processing_contract,
+                             localpool: localpool2) end
 
   entity(:tariff) { Fabricate(:tariff, group: localpool2)}
   entity!(:billing_cycle) { Fabricate(:billing_cycle, localpool: localpool2) }
 
   it 'create' do
     expect do
-      a = Admin::LocalpoolResource.create(buzzn_operator, {name: 'first'})
+      a = Admin::LocalpoolResource.create(buzzn_operator, name: 'first')
       a.object.delete
     end.not_to raise_error
 
@@ -174,9 +174,9 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     it 'update' do
       expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).tariffs.first, {}) }.to raise_error Buzzn::PermissionDenied
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.first, {})  }.to raise_error Buzzn::PermissionDenied
+      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.first, {}) }.to raise_error Buzzn::PermissionDenied
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.first, {})  }.to raise_error Buzzn::PermissionDenied
+      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.first, {}) }.to raise_error Buzzn::PermissionDenied
     end
 
     it 'delete' do

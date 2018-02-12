@@ -17,4 +17,5 @@ class Buzzn::Slug < String
            )
     end
   end
+
 end

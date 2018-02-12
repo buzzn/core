@@ -8,8 +8,8 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
     me
   end
 
-  entity!(:bank_account) { Fabricate(:bank_account,
-                                     owner: me.person) }
+  entity!(:bank_account) do Fabricate(:bank_account,
+                                      owner: me.person) end
 
   let(:anonymous) { nil }
 
@@ -19,7 +19,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
 
       let(:all) { PersonResource.all(send(user)) }
 
-      it "all" do
+      it 'all' do
         if user != :anonymous
           expect(all.collect { |l| l.object }).to match_array [send(user).person]
         else
@@ -27,7 +27,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
         end
       end
 
-      it "retrieve" do
+      it 'retrieve' do
         case user
         when :anonymous
           expect { all.retrieve(me.person.id) }.to raise_error Buzzn::PermissionDenied
@@ -58,7 +58,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
             address = person.address
             expect(address).not_to be_nil
 
-            expect { address.update({updated_at: address.object.updated_at}) }.not_to raise_error
+            expect { address.update(updated_at: address.object.updated_at) }.not_to raise_error
 
             person.object.address = nil
             person.object.save
@@ -72,7 +72,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
             expect(bank_accounts.collect{|b| b.object}).to eq [bank_account]
 
             bank_account = bank_accounts.first
-            expect { bank_account .update({updated_at: bank_account .object.updated_at}) }.not_to raise_error
+            expect { bank_account .update(updated_at: bank_account .object.updated_at) }.not_to raise_error
 
             bank_account.delete
             expect(person.object.reload.bank_accounts.size).to eq 0

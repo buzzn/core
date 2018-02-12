@@ -27,5 +27,7 @@
 #
 
 class Beekeeper::Buzzn::EsZfa < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.es_zfa'
+
 end

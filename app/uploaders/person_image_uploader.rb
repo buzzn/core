@@ -31,4 +31,5 @@ class PersonImageUploader < CarrierWave::Uploader::Base
       @name ||= Digest::MD5.hexdigest(original_filename) + File.extname(original_filename)
     end
   end
+
 end

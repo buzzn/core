@@ -89,4 +89,5 @@ class Services::Datasource::Discovergy::Api
       raise Buzzn::DataSourceError.new('unable to get data from discovergy: ' + response.body)
     end
   end
+
 end

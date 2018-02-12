@@ -8,5 +8,7 @@
 #
 
 class Beekeeper::Buzzn::BdewSlpZuordnung < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.bdew_slp_zuordnung'
+
 end

@@ -9,6 +9,7 @@ module Buzzn
       attr_reader :value, :unit
 
       class << self
+
         def create(clazz, unit, short)
           UNITS[unit] = short
           clazz.define_singleton_method :new do |val|
@@ -23,6 +24,7 @@ module Buzzn
         def zero
           @zero ||= new(0)
         end
+
       end
 
       def initialize(value, unit)
@@ -82,6 +84,7 @@ module Buzzn
         val = @value * 1000 ** ord
         "#{val} #{ORDERS[order]}#{UNITS[unit]}"
       end
+
     end
   end
 end

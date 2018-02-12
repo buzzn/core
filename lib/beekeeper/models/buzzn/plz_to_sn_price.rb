@@ -18,5 +18,7 @@
 #
 
 class Beekeeper::Buzzn::PlzToSnPrice < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.plz_to_sn_price'
+
 end

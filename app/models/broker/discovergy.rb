@@ -14,4 +14,5 @@ class Broker::Discovergy < Broker::Base
       "VIRTUAL_#{meter.product_serialnumber}"
     end
   end
+
 end

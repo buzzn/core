@@ -5,10 +5,10 @@ describe Admin::LocalpoolRoda do
     TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
-  entity!(:localpool) { create(:localpool,
-                               distribution_system_operator: Organization.distribution_system_operator.first,
-                               transmission_system_operator: Organization.transmission_system_operator.first,
-                               electricity_supplier: Organization.electricity_supplier.first) }
+  entity!(:localpool) do create(:localpool,
+                                distribution_system_operator: Organization.distribution_system_operator.first,
+                                transmission_system_operator: Organization.transmission_system_operator.first,
+                                electricity_supplier: Organization.electricity_supplier.first) end
 
   let(:localpool_json) do
     json = {
@@ -41,18 +41,18 @@ describe Admin::LocalpoolRoda do
     %w(distribution_system_operator transmission_system_operator electricity_supplier).each do |key|
       organization = localpool.send key
       json[key] = {
-        "id"=>organization.id,
-        "type"=>"organization",
+        'id'=>organization.id,
+        'type'=>'organization',
         'updated_at'=>organization.updated_at.as_json,
-        "name"=>organization.name,
-        "phone"=>organization.phone,
-        "fax"=>organization.fax,
-        "website"=>organization.website,
-        "email"=>organization.email,
-        "description"=>organization.description,
+        'name'=>organization.name,
+        'phone'=>organization.phone,
+        'fax'=>organization.fax,
+        'website'=>organization.website,
+        'email'=>organization.email,
+        'description'=>organization.description,
         'customer_number' => nil,
-        "updatable"=>false,
-        "deletable"=>false,
+        'updatable'=>false,
+        'deletable'=>false,
       }
     end
     json

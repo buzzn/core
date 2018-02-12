@@ -1,8 +1,8 @@
 describe Bank, slow: true do
 
   let(:dir) { 'db/banks' }
-  let(:first_file) { File.join(dir, "BLZ_20160606.txt") }
-  let(:second_file) { File.join(dir, "BLZ_20160905.txt") }
+  let(:first_file) { File.join(dir, 'BLZ_20160606.txt') }
+  let(:second_file) { File.join(dir, 'BLZ_20160905.txt') }
 
   before do
     Bank.update_from_file(first_file)
@@ -27,8 +27,8 @@ describe Bank, slow: true do
   it 'finds bank' do
     # via bic
     bank = Bank.find_by_bic('FDDODEMM')
-    expect(bank.zip).to eq "80335"
-    expect(bank.place).to eq "München"
+    expect(bank.zip).to eq '80335'
+    expect(bank.place).to eq 'München'
 
     second = Bank.find_by_bic(' FDDODEMM')
     expect(second).to eq bank
@@ -42,8 +42,8 @@ describe Bank, slow: true do
 
     # mutliple bic entries
     bank = Bank.find_by_bic('COBADEBBXXX')
-    expect(bank.zip).to eq "10891"
-    expect(bank.place).to eq "Berlin"
+    expect(bank.zip).to eq '10891'
+    expect(bank.place).to eq 'Berlin'
 
     second = Bank.find_by_bic('COBADEBB')
     expect(second).to eq bank

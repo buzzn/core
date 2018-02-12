@@ -2,7 +2,7 @@ describe Meter::Real do
 
   entity!(:easymeter) { Fabricate(:easy_meter_q3d) }
   entity!(:meter) { Fabricate(:meter, product_serialnumber: '123432345', product_name: 'SomethingComplicated' ) }
-  entity(:second) {  Fabricate(:input_meter) }
+  entity(:second) { Fabricate(:input_meter) }
   entity(:register) { meter.registers.first }
   entity!(:input_meter) { Fabricate(:input_meter) }
   entity!(:group) { Fabricate(:localpool) }
@@ -11,7 +11,7 @@ describe Meter::Real do
     [meter.product_serialnumber, meter.product_name].each do |val|
       [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
         meters = Meter::Real.filter(value)
-        expect(meters.detect{|m| m == meter}).to eq meter
+        expect(meters.find{|m| m == meter}).to eq meter
       end
     end
   end

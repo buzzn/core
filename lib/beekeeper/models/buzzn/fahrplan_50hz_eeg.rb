@@ -104,5 +104,7 @@
 #
 
 class Beekeeper::Buzzn::Fahrplan50hzEeg < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.fahrplan_50hz_eeg'
+
 end

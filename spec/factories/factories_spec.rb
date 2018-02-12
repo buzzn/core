@@ -1,6 +1,6 @@
 FactoryGirl.definition_file_paths = %w(db/factories)
 
-describe "Factories produce valid records" do
+describe 'Factories produce valid records' do
 
   matcher :have_association do |association_accessor, association_klass|
     match do |actual|
@@ -15,31 +15,31 @@ describe "Factories produce valid records" do
     it { expect(subject.invariant).to be_success }
   end
 
-  context "Account" do
-    subject { create(:account, password: "Helloworld") }
+  context 'Account' do
+    subject { create(:account, password: 'Helloworld') }
     it { is_expected.to be_valid }
-    it "has the same email as the person it belongs to" do
+    it 'has the same email as the person it belongs to' do
       expect(subject.email).to eq(subject.person.email)
     end
-    it "has set the password correctly" do
+    it 'has set the password correctly' do
       password_record = Account::PasswordHash.find_by(account: subject)
       actual          = BCrypt::Password.new(password_record.password_hash)
-      expect(actual).to eq("Helloworld")
+      expect(actual).to eq('Helloworld')
     end
   end
 
-  context "Address" do
+  context 'Address' do
     subject { create(:address) }
     it { is_expected.to be_valid }
   end
 
-  context "Energy classification" do
+  context 'Energy classification' do
     subject { create(:energy_classification) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:organization, Organization) }
   end
 
-  context "Bank account" do
+  context 'Bank account' do
     subject { create(:bank_account) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:owner, Person) }
@@ -48,86 +48,86 @@ describe "Factories produce valid records" do
     end
   end
 
-  context "Contract" do
+  context 'Contract' do
     subject { create(:contract) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:localpool, Group::Localpool) }
     it { is_expected.to have_association(:contractor, Organization) }
-    it "has bank account" do
+    it 'has bank account' do
       is_expected.to have_association(:contractor_bank_account, BankAccount)
     end
     it { is_expected.to have_association(:customer, Person) }
     it { is_expected.to have_association(:customer_bank_account, BankAccount) }
-    it "has correctly generated contract numbers" do
+    it 'has correctly generated contract numbers' do
       expect(subject.contract_number).to be >= 90_000
       expect(subject.contract_number).to be <= 100_000
     end
-    context "localpool powertaker contract" do
-      subject { create(:contract, :localpool_powertaker) }
-      describe "customer" do
-        it "has a customer named Powertaker" do
+    context 'localpool powertaker contract' do
+       subject { create(:contract, :localpool_powertaker) }
+      describe 'customer' do
+        it 'has a customer named Powertaker' do
           expect(subject.customer.last_name).to match(/^Powertaker/)
         end
-        it "has a customer with a bank_account" do
+        it 'has a customer with a bank_account' do
           expect(subject.customer.bank_accounts.size).to be >= 1
         end
       end
-      describe "register" do
+      describe 'register' do
         it { is_expected.to have_association(:register, Register::Input) }
       end
       include_examples 'has valid invariants'
      end
-    context "localpool thirdparty" do
+    context 'localpool thirdparty' do
       subject { create(:contract, :localpool_third_party) }
-      describe "customer" do
-        it "has no customer" do
+      describe 'customer' do
+        it 'has no customer' do
           expect(subject.customer).to be_nil
         end
-        it "has no contractor" do
+        it 'has no contractor' do
           expect(subject.contractor).to be_nil
         end
       end
-      describe "register" do
+      describe 'register' do
         it { is_expected.to have_association(:register, Register::Input) }
       end
       include_examples 'has valid invariants'
     end
   end
 
-  context "Device" do
+  context 'Device' do
     subject { create(:device) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:register, Register::Input) }
   end
 
-  context "FormulaPart" do
+  context 'FormulaPart' do
     subject { create(:formula_part) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:register, Register::Input) }
     it { is_expected.to have_association(:operand, Register::Input) }
   end
 
-  context "Localpool" do
+  context 'Localpool' do
     subject { create(:localpool) }
     it { is_expected.to have_valid_invariants }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:address, Address) }
   end
 
-  context "Broker" do
+  context 'Broker' do
     subject { create(:broker, meter: create(:meter, :real)) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:meter, Meter::Real) }
   end
 
-  context "Meter::Real" do
+  context 'Meter::Real' do
     subject { create(:meter, :real) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:group, Group::Localpool) }
-    it "has a register" do
+    it 'has a register' do
       expect(subject.registers.first).to be_instance_of(Register::Input)
     end
-    it "can override registers" do
+    it 'can override registers' do
       register = create(:register, :input)
       meter    = create(:meter, :real, registers: [register])
       expect(meter.registers).to eq([register])
@@ -135,71 +135,71 @@ describe "Factories produce valid records" do
     end
   end
 
-  context "Organization" do
+  context 'Organization' do
     subject { create(:organization) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:contact, Person) }
-    context "Trait with address" do
+    context 'Trait with address' do
       subject { create(:organization, :with_address) }
       it { is_expected.to have_association(:address, Address) }
     end
-    context "Trait with bank_account" do
+    context 'Trait with bank_account' do
       subject { create(:organization, :with_bank_account) }
-      it "has a bank_account" do
+      it 'has a bank_account' do
         expect(subject.bank_accounts.size).to eq(1)
       end
     end
   end
 
-  context "OrganizationMarketFunction" do
+  context 'OrganizationMarketFunction' do
     subject { create(:organization_market_function) }
     it { is_expected.to be_valid }
   end
 
-  context "Payment" do
+  context 'Payment' do
     subject { create(:payment) }
     it { is_expected.to be_valid }
   end
 
-  context "Person" do
+  context 'Person' do
     subject { create(:person) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:address, Address) }
     it { expect(subject.bank_accounts).to be_empty }
-    context "Trait with bank_account" do
+    context 'Trait with bank_account' do
       subject { create(:person, :with_bank_account) }
-      it "has a bank_account" do
+      it 'has a bank_account' do
         expect(subject.bank_accounts.size).to eq(1)
       end
     end
   end
 
-  context "Tariff" do
+  context 'Tariff' do
     subject { create(:tariff) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:group, Group::Localpool) }
   end
 
-  context "Reading" do
+  context 'Reading' do
     subject { create(:reading) }
     it { is_expected.to be_valid }
   end
 
-  context "Register" do
+  context 'Register' do
 
     shared_examples 'a valid register' do |expected_meter_class|
       it { is_expected.to be_valid }
       it { is_expected.to have_association(:meter, expected_meter_class.constantize) }
-       it "has a valid and persisted meter" do
+       it 'has a valid and persisted meter' do
         expect(subject.meter).to be_valid
         expect(subject.meter).to be_persisted
       end
     end
 
-    context "Input" do
+    context 'Input' do
       subject { create(:register, :input) }
       include_examples 'a valid register', 'Meter::Real'
-      it "can override meter" do
+      it 'can override meter' do
         # it is not possible to rewire meter and registers and
         # meters and registers can only exists in combination
         meter    = create(:meter, :real)
@@ -211,16 +211,16 @@ describe "Factories produce valid records" do
       end
     end
 
-    context "Virtual input" do
+    context 'Virtual input' do
       subject { create(:register, :virtual_input) }
       include_examples 'a valid register', 'Meter::Virtual'
     end
   end
 
-  context "Tariff" do
+  context 'Tariff' do
     subject { create(:tariff) }
     it { is_expected.to be_valid }
-    it "can override group" do
+    it 'can override group' do
       group    = create(:localpool)
       tariff   = create(:tariff, group: group)
       expect(tariff.group).to eq(group)

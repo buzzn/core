@@ -21,7 +21,6 @@ describe Group::Base do
     expect(groups.size).to eq 0
   end
 
-
   it 'filters group with no params' do
     groups = Group::Base.filter(nil)
     expect(groups.size).to eq Group::Base.count
@@ -86,29 +85,29 @@ describe Group::Base do
     end
   end
 
-  context "mentors" do
+  context 'mentors' do
     let(:group) { create(:localpool) }
 
-    context "Group has no energy mentor" do
-      it "returns an empty array" do
+    context 'Group has no energy mentor' do
+      it 'returns an empty array' do
         expect(group.mentors).to eq([])
       end
     end
 
-    context "Group has one energy mentor" do
+    context 'Group has one energy mentor' do
       let(:person) { create(:person) }
       before { person.add_role(Role::GROUP_ENERGY_MENTOR, group) }
 
-      it "returns the person" do
+      it 'returns the person' do
         expect(group.mentors).to eq([person])
       end
     end
 
-    context "Group has two energy mentors" do
+    context 'Group has two energy mentors' do
       let(:persons) { create_list(:person, 2) }
       before { persons.each { |person| person.add_role(Role::GROUP_ENERGY_MENTOR, group) } }
 
-      it "returns both persons" do
+      it 'returns both persons' do
         expect(group.mentors).to match_array(persons)
       end
     end
@@ -119,7 +118,7 @@ end
 # run it without nested transactions
 describe Group::Localpool, :skip_nested do
 
-  let(:person) {  Fabricate(:person) }
+  let(:person) { Fabricate(:person) }
   let(:organization) { Fabricate(:other_organization) }
   let(:localpool) { Fabricate(:localpool, owner_person: person) }
 

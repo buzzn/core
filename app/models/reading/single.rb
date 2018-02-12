@@ -78,7 +78,7 @@ module Reading
            distribution_system_operator: DISTRIBUTION_SYSTEM_OPERATOR
          }
     READ_BY_VALUES = [BUZZN, POWER_TAKER, POWER_GIVER,
-                      DISTRIBUTION_SYSTEM_OPERATOR ].freeze
+                      DISTRIBUTION_SYSTEM_OPERATOR].freeze
 
     # units
     WH = 'Wh'
@@ -93,22 +93,10 @@ module Reading
 
     belongs_to :register, class_name: 'Register::Base'
 
-
-    scope :in_year, -> (year) {
-      where('date >= ? AND date < ?', Date.new(year), Date.new(year + 1))
-    }
-
-    scope :between, ->(begin_date, end_date) {
-      where('date >= ? AND date < ?', begin_date, end_date)
-    }
-
-    scope :with_reason, lambda {|*reasons|
-      where(reason: reasons)
-    }
-
-    scope :without_reason, lambda {|*reasons|
-      where('reason NOT IN (?)', reasons)
-    }
+    scope :in_year, -> (year) { where('date >= ? AND date < ?', Date.new(year), Date.new(year + 1)) }
+    scope :between, ->(begin_date, end_date) { where('date >= ? AND date < ?', begin_date, end_date) }
+    scope :with_reason, lambda { |*reasons| where(reason: reasons) }
+    scope :without_reason, lambda { |*reasons| where('reason NOT IN (?)', reasons) }
 
     validate :validate_invariants
 
@@ -138,5 +126,6 @@ module Reading
       self.unit = val.unit
       self.value = val.value
     end
+
   end
 end

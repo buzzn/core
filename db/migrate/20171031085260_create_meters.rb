@@ -1,6 +1,7 @@
 require 'buzzn/schemas/constraints/meter/base'
 
 class CreateMeters < ActiveRecord::Migration
+
   SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::Meter::Base)
 
   def up
@@ -27,4 +28,5 @@ class CreateMeters < ActiveRecord::Migration
 
     SCHEMA.down(:meters, self)
   end
+
 end

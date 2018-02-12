@@ -1,12 +1,11 @@
-# coding: utf-8
 FactoryGirl.define do
   factory :bank_account do
     transient do
       owner nil
     end
-    holder                  "Hans Holder"
-    iban                    { "DE89370400440532013000" } # taken from https://goo.gl/Ga6573
-    bic                     { "BYLADEM1001" }
+    holder                  'Hans Holder'
+    iban                    { 'DE89370400440532013000' } # taken from https://goo.gl/Ga6573
+    bic                     { 'BYLADEM1001' }
     bank_name               { ['GLS Bank', 'Sparkasse München', 'Berliner Volksbank', 'UniCredit HypoVereinsbank'].sample }
     direct_debit            true
 

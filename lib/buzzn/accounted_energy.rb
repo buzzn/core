@@ -1,5 +1,6 @@
 module Buzzn
   class AccountedEnergy
+
     attr_reader :value, :first_reading, :last_reading, :last_reading_original, :device_change_reading_1, :device_change_reading_2, :device_change
     attr_accessor :label
 
@@ -13,9 +14,9 @@ module Buzzn
     GRID_CONSUMPTION_CORRECTED = 'grid_consumption_corrected'
     GRID_FEEDING_CORRECTED = 'grid_feeding_corrected'
     OTHER = 'other'
-    CONSUMPTION_LSN_FULL_EEG = "consumption_lsn_full_eeg"
-    CONSUMPTION_LSN_REDUCED_EEG = "consumption_lsn_reduced_eeg"
-    CONSUMPTION_THIRD_PARTY = "consumption_third_party"
+    CONSUMPTION_LSN_FULL_EEG = 'consumption_lsn_full_eeg'
+    CONSUMPTION_LSN_REDUCED_EEG = 'consumption_lsn_reduced_eeg'
+    CONSUMPTION_THIRD_PARTY = 'consumption_third_party'
 
     SINGLE_LABELS = [DEMARCATION_PV,
                      DEMARCATION_CHP,
@@ -45,5 +46,6 @@ module Buzzn
       @device_change_reading_2 = device_change_reading_2
       @device_change = device_change
     end
+
   end
 end

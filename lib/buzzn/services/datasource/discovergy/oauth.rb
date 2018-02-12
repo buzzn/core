@@ -31,9 +31,9 @@ class Services::Datasource::Discovergy::Oauth
         token_hash = {
           # old code claims both are needed
           :oauth_token          => @access_token.token,
-          "oauth_token"         => @access_token.token,
+          'oauth_token'         => @access_token.token,
           :oauth_token_secret   => @access_token.secret,
-          "oauth_token_secret"  => @access_token.secret
+          'oauth_token_secret'  => @access_token.secret
         }
         OAuth::AccessToken.from_hash(consumer, token_hash)
       else
@@ -119,9 +119,10 @@ class Services::Datasource::Discovergy::Oauth
     Faraday.new(options) do |faraday|
       faraday.request  :url_encoded
       faraday.response :logger, @logger do |logger|
-        logger.filter(/(password=)(\w+)/,'\1[FILTERED]')
+        logger.filter(/(password=)(\w+)/, '\1[FILTERED]')
       end
       faraday.adapter :net_http
     end
   end
+
 end

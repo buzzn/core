@@ -18,4 +18,5 @@ class Discovergy::BubbleBuilder < Discovergy::AbstractRegistersBuilder
   def build_bubble(register, values)
     Bubble.new(value: to_watt(values, register), register: register)
   end
+
 end

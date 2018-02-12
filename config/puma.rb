@@ -30,7 +30,7 @@ lowlevel_error_handler do |ex, env|
     ex,
     message: ex.message,
     extra: { puma: env },
-    transaction: "Puma"
+    transaction: 'Puma'
   )
   # note the below is just a Rack response
   [500, {'Content-Type'=> 'application/json'}, ['{"errors":["An error has occurred."]}']]

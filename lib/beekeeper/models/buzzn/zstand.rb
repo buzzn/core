@@ -14,5 +14,7 @@
 #
 
 class Beekeeper::Buzzn::Zstand < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.zstand'
+
 end

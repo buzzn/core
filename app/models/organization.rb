@@ -1,6 +1,7 @@
 require_relative 'organization_market_function'
 
 class Organization < ActiveRecord::Base
+
   self.table_name = :organizations
 
   include Filterable
@@ -12,7 +13,7 @@ class Organization < ActiveRecord::Base
 
   has_many :bank_accounts, foreign_key: :owner_organization_id
   has_many :energy_classifications
-  has_many :market_functions, dependent: :destroy, class_name: "OrganizationMarketFunction"
+  has_many :market_functions, dependent: :destroy, class_name: 'OrganizationMarketFunction'
 
   before_create do
     self.slug ||= Buzzn::Slug.new(self.name)
@@ -57,4 +58,5 @@ class Organization < ActiveRecord::Base
   def to_s
     name
   end
+
 end

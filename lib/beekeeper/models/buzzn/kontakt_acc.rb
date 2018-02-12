@@ -28,6 +28,7 @@
 #
 
 class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.kontakt_acc'
   include Beekeeper::StringCleaner
 
@@ -47,10 +48,10 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
 
   ANREDE_TO_PREFIX_MAP = {
     nil        => nil,
-    ""         => nil,
-    "Herr"     => 'M',
-    "Herrn"    => 'M',
-    "Frau"     => 'F'
+    ''         => nil,
+    'Herr'     => 'M',
+    'Herrn'    => 'M',
+    'Frau'     => 'F'
   }
 
   def prefix
@@ -79,4 +80,5 @@ class Beekeeper::Buzzn::KontaktAcc < Beekeeper::Buzzn::BaseRecord
   def address
     Address.new(converted_address_attributes)
   end
+
 end

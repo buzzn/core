@@ -2,6 +2,7 @@ require 'dry-initializer'
 
 module Buzzn::Resource
   class Context
+
     extend Dry::Initializer
 
     param :current_user
@@ -23,5 +24,6 @@ module Buzzn::Resource
     def to_h
       self.class.dry_initializer.attributes(self)
     end
+
   end
 end

@@ -3,6 +3,7 @@ require_relative 'context'
 
 module Buzzn::Resource
   class Base
+
     include Schemas::Support::DryValidationForResource
 
     attr_reader :object, :current_user, :current_roles, :permissions
@@ -176,7 +177,7 @@ module Buzzn::Resource
       def roles_map(user)
         result = {}
         if user
-          user.roles.where("resource_type = ? or resource_type IS NULL", model)
+          user.roles.where('resource_type = ? or resource_type IS NULL', model)
             .select(:resource_id, :name)
             .each do |r|
             (result[r.resource_id || '*'] ||= []) << r.name.to_sym
@@ -196,6 +197,7 @@ module Buzzn::Resource
           const
         end
       end
+
     end
 
     def initialize(resource, current_user: nil, current_roles: [], permissions: nil)
@@ -256,7 +258,7 @@ module Buzzn::Resource
         end
         json << '"' << attr.to_s << '":' << obj.to_json
       end
-      includes.each do |k,v|
+      includes.each do |k, v|
         if self.respond_to?(k)
           if first
             first = false
@@ -292,5 +294,6 @@ module Buzzn::Resource
         super
       end
     end
+
   end
 end

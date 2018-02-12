@@ -1,6 +1,7 @@
 require_relative 'base'
 
 class Types::Discovergy::Meter < Types::Discovergy::Base
+
   extend Dry::Initializer
 
   option :meter
@@ -27,4 +28,5 @@ class Types::Discovergy::Meter < Types::Discovergy::Base
       raise "can not handle: #{meter}"
     end
   end
+
 end

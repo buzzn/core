@@ -58,7 +58,7 @@ class Discovergy::DailyChartsBuilder < Discovergy::AbstractRegistersBuilder
   end
 
   def build_charts(sums)
-    previous =  sums.values.first
+    previous = sums.values.first
     return {} unless previous
     sums.entries[1..-1].each_with_object({}) do |entry, result|
       value = entry[1]
@@ -66,4 +66,5 @@ class Discovergy::DailyChartsBuilder < Discovergy::AbstractRegistersBuilder
       previous = value
     end
   end
+
 end

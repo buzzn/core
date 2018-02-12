@@ -17,4 +17,5 @@ class Beekeeper::Importer::Tariffs
       tariff
     end
   end
+
 end

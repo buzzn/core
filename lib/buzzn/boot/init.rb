@@ -17,6 +17,7 @@ Import = Dry::AutoInject(Buzzn::Boot::MainContainer)
 def Import.global(key)
   container[key]
 end
+
 def Import.global?(key)
   container.key?(key)
 end
@@ -24,8 +25,11 @@ end
 module Buzzn
   module Boot
     class Init
+
       class Singletons
+
         include Dry::DependencyInjection::Singletons
+
       end
 
       class << self
@@ -92,7 +96,9 @@ module Buzzn
             end
           end
         end
+
       end
+
     end
   end
 end

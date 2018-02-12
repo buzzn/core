@@ -4,19 +4,19 @@
 namespace :slp do
   desc 'This adds slp values to the db'
   task :import_h0, [:year] => :environment do |t, args|
-    puts "Creating SLP"
+    puts 'Creating SLP'
     if args[:year].nil?
       year = Time.current.year.to_s
     else
       year = args[:year].to_s
     end
 
-    infile = File.new("#{Rails.root}/db/slp/" + year + "/h0.txt", "r")
+    infile = File.new("#{Rails.root}/db/slp/" + year + '/h0.txt', 'r')
     all_lines = infile.readline
     infile.close
     watt_hour = 0.0
     watts = 0.0
-    berlin = ActiveSupport::TimeZone["Berlin"]
+    berlin = ActiveSupport::TimeZone['Berlin']
     while true do
       posOfSeperator = all_lines.index("'")
       if posOfSeperator == nil
@@ -24,7 +24,7 @@ namespace :slp do
       else
         parseString = all_lines[0...posOfSeperator]
         all_lines = all_lines[(posOfSeperator + 1)..all_lines.length]
-        if parseString.include? "DTM+163"
+        if parseString.include? 'DTM+163'
           remString = parseString[8..parseString.length]
           dateString = "#{remString[0..3]}-#{remString[4..5]}-#{remString[6..7]} #{remString[8..9]}:#{remString[10..11]}"
           date = berlin.parse(dateString)
@@ -35,12 +35,12 @@ namespace :slp do
               timestamp: date,
               energy_milliwatt_hour: watt_hour,
               power_milliwatt: watts,
-              source: "slp",
+              source: 'slp',
               quality: Reading::Continuous::SUBSTITUE_VALUE,
               reason: Reading::Continuous::OTHER
             )
           end
-        elsif parseString.include? "QTY"
+        elsif parseString.include? 'QTY'
           additional_watt_hour = parseString[8...parseString.length].to_f*1000 #convert to mWh
           new_watt_hour = watt_hour + additional_watt_hour
           watts = (new_watt_hour - watt_hour)*4

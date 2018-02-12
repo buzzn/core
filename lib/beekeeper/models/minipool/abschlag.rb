@@ -13,5 +13,7 @@
 #
 
 class Beekeeper::Minipool::Abschlag < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.abschlag'
+
 end

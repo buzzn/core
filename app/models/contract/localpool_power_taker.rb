@@ -12,5 +12,6 @@ module Contract
     def end_reading
       register.readings.find_by(date: end_date)
     end
+
   end
 end

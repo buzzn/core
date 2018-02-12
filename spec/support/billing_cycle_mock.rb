@@ -10,4 +10,5 @@ class BillingCycle
   def create_regular_billings(*args)
     self.class.billings || create_regular_billings_old(*args)
   end
+
 end

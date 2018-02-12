@@ -14,12 +14,12 @@ namespace :zip2price do
   end
 
   desc 'Import plz_vnb.csv'
-  task :zip_vnb => :environment  do
+  task :zip_vnb => :environment do
     ZipVnb.from_csv(data('plz_vnb.csv'))
   end
 
   desc 'Import nne_vnb.csv'
-  task :nne_vnb => :environment  do
+  task :nne_vnb => :environment do
     NneVnb.from_csv(data('nne_vnb.csv'))
   end
 

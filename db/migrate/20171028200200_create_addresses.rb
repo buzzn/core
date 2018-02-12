@@ -11,4 +11,5 @@ class CreateAddresses < ActiveRecord::Migration
   def down
     SCHEMA.down(:addresses, self)
   end
+
 end

@@ -1,5 +1,6 @@
 module Buzzn
   class DataPoint
+
     attr_reader :timestamp, :value
 
     def self.from_json(data)
@@ -16,7 +17,7 @@ module Buzzn
                      timestamp.to_f
                    when String
                      timestamp.to_f
-                   when Fixnum
+                   when Integer
                      timestamp / 1000.0
                    when Float
                      timestamp
@@ -34,7 +35,7 @@ module Buzzn
     end
 
     def add_value(value)
-      raise ArgumentError.new('wrong value type') unless value.is_a?(Fixnum) || value.is_a?(Float)
+      raise ArgumentError.new('wrong value type') unless value.is_a?(Integer) || value.is_a?(Float)
       @value += value
     end
 
@@ -44,7 +45,7 @@ module Buzzn
     end
 
     def subtract_value(value)
-      raise ArgumentError.new('wrong value type') unless value.is_a?(Fixnum) || value.is_a?(Float)
+      raise ArgumentError.new('wrong value type') unless value.is_a?(Integer) || value.is_a?(Float)
       @value -= value
     end
 
@@ -59,5 +60,6 @@ module Buzzn
     def ==(other)
       @timestamp == other.timestamp && @value == other.value
     end
+
   end
 end

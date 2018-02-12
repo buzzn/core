@@ -63,11 +63,11 @@ module Me
         if (rodauth.session[rodauth.session_last_activity_session_key] + rodauth.session_inactivity_timeout) < Buzzn::Utils::Chronos.now.to_i
 
           logger.info Time.at(rodauth.session[rodauth.session_last_activity_session_key])
-          logger.info Time.at(rodauth.session[rodauth.session_last_activity_session_key]  + rodauth.session_inactivity_timeout)
+          logger.info Time.at(rodauth.session[rodauth.session_last_activity_session_key] + rodauth.session_inactivity_timeout)
           logger.info Time.at(Buzzn::Utils::Chronos.now.to_i)
 
           r.response.status = 401
-          {"error" => "This session has expired, please login again." }
+          {'error' => 'This session has expired, please login again.' }
         else
           r.response['Content-Type'] = 'text/plain'
           'pong'
@@ -86,5 +86,6 @@ module Me
         Transactions::Person::Update.for(person).call(r.params)
       end
     end
+
   end
 end

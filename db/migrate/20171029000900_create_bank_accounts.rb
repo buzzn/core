@@ -27,4 +27,5 @@ class CreateBankAccounts < ActiveRecord::Migration
 
     SCHEMA.down(:bank_accounts, self)
   end
+
 end

@@ -21,4 +21,5 @@ class Services::Datasource::Registry
       block.call(@container[key])
     end
   end
+
 end

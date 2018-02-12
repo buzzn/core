@@ -5,6 +5,7 @@ require_relative '../../transactions/admin/billing_cycle/delete'
 
 module Admin
   class BillingCycleRoda < BaseRoda
+
     plugin :shared_vars
 
     route do |r|
@@ -46,5 +47,6 @@ module Admin
         end
       end
     end
+
   end
 end

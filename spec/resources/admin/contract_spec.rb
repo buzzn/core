@@ -13,14 +13,14 @@ describe Contract::BaseResource do
     create(:contract, :localpool_powertaker, localpool: localpool)
   end
 
-  let(:base_attributes) { ['id', 'type', 'updated_at',
-                           'status',
-                           'full_contract_number',
-                           'signing_date',
-                           'termination_date',
-                           'last_date',
-                           'updatable',
-                           'deletable'] }
+  let(:base_attributes) do ['id', 'type', 'updated_at',
+                            'status',
+                            'full_contract_number',
+                            'signing_date',
+                            'termination_date',
+                            'last_date',
+                            'updatable',
+                            'deletable'] end
   let!(:all) { [metering_point_operator, localpool_processing, localpool_power_taker] }
 
   let(:resources) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).contracts }
@@ -80,7 +80,7 @@ describe Contract::BaseResource do
         resources.each do |contract|
           contract.object.update begin_date: nil, termination_date: nil, end_date: Date.today
           expect(contract).not_to have_valid_invariants Schemas::Invariants::Contract::Base
-          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq({:begin_date=>["must be filled"], :termination_date=>["must be filled"]})
+          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq(:begin_date=>['must be filled'], :termination_date=>['must be filled'])
         end
       end
 
@@ -88,7 +88,7 @@ describe Contract::BaseResource do
         resources.each do |contract|
           contract.object.update begin_date: nil, termination_date: Date.today, end_date: Date.today
           expect(contract).not_to have_valid_invariants Schemas::Invariants::Contract::Base
-          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq({:begin_date=>["must be filled"]})
+          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq(:begin_date=>['must be filled'])
         end
       end
 
@@ -96,7 +96,7 @@ describe Contract::BaseResource do
         resources.each do |contract|
           contract.object.update begin_date: Date.today, termination_date: nil, end_date: Date.today
           expect(contract).not_to have_valid_invariants Schemas::Invariants::Contract::Base
-          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq({:termination_date=>["must be filled"]})
+          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq(:termination_date=>['must be filled'])
         end
       end
     end

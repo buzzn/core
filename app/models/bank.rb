@@ -21,11 +21,11 @@ class Bank < ActiveRecord::Base
              next_blz: 8,
              iban_rule: 6 }
 
-  FIELDS = [ :blz, :description, :zip, :place, :name, :bic, :id ]
+  FIELDS = [:blz, :description, :zip, :place, :name, :bic, :id]
 
   def self.attributes_protected_by_default
     # default is ["id", "type"]
-    ["type"]
+    ['type']
   end
 
   def self.find_by_bic(bic)
@@ -89,7 +89,7 @@ class Bank < ActiveRecord::Base
   end
 
   def self.filter_params(params)
-    params.reject { |k,v| ! FIELDS.include?(k) }
+    params.reject { |k, v| ! FIELDS.include?(k) }
   end
 
   def self.only_create(params)
@@ -124,4 +124,5 @@ class Bank < ActiveRecord::Base
   def self.not_found(msg)
     raise Buzzn::RecordNotFound.new(self, msg)
   end
+
 end

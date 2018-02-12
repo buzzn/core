@@ -15,6 +15,7 @@
 #
 
 class Beekeeper::Minipool::Adresse < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.adresse'
 
   def converted_attributes
@@ -26,4 +27,5 @@ class Beekeeper::Minipool::Adresse < Beekeeper::Minipool::BaseRecord
       country:  'DE',
     }
   end
+
 end

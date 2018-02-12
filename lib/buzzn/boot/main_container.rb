@@ -3,8 +3,8 @@ require_relative 'transactions'
 
 module Buzzn
   module Boot
-
     class MainContainer
+
       extend Dry::Container::Mixin
 
       def self.register_config(key, value)
@@ -28,6 +28,7 @@ module Buzzn
       end
 
       class Resolver < Dry::Container::Resolver
+
         def call(container, key)
           if k = MainContainer.env_key(key)
             get_env(k) || super
@@ -47,6 +48,7 @@ module Buzzn
       configure do|config|
         config.resolver = Resolver.new
       end
+
     end
   end
 end

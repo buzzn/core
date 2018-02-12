@@ -11,5 +11,7 @@
 #
 
 class Beekeeper::Minipool::AbschlagVergleich < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.abschlag_vergleich'
+
 end

@@ -58,7 +58,7 @@ gem 'redis'
 gem 'rack-cors', require: 'rack/cors'
 gem 'clockwork'
 gem 'money-rails'
-gem 'redis-namespace'             # ???
+gem 'redis-namespace' # ???
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
 gem 'mini_magick'
 gem 'carrierwave'
@@ -76,9 +76,8 @@ gem 'pry'
 # Injected by Heroku, we might as well include it here directly
 gem 'rails_12factor'
 
-
 group :production, :staging do
-  gem "sentry-raven" # the Sentry exception notification service
+  gem 'sentry-raven' # the Sentry exception notification service
   gem 'newrelic_rpm'
 end
 
@@ -93,6 +92,7 @@ group :development, :test do
   gem 'guard-brakeman'
   gem 'guard-rspec'
   gem 'fog-local'
+  gem 'rubocop', require: false
 end
 
 group :development do

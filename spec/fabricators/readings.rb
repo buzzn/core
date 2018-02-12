@@ -1,5 +1,5 @@
 Fabricator :reading, class_name: Reading::Continuous do
-  timestamp { Time.at(sequence(:timestamp, 1451602802))  }
+  timestamp { Time.at(sequence(:timestamp, 1451602802)) }
   energy_milliwatt_hour { sequence(:energy_milliwatt_hour, 271000000) }
   power_milliwatt { 900*1000 }
   quality { Reading::Continuous::READ_OUT }
@@ -12,7 +12,7 @@ end
 Fabricator :single_reading, class_name: Reading::Single do
   i = Kernel.rand(2000)
   date { i += 1; Date.today - i.days }
-  raw_value { rand(2173123)  }
+  raw_value { rand(2173123) }
   value { sequence(:value, 27100) }
   unit { Reading::Single::WH }
   quality { Reading::Single::READ_OUT }

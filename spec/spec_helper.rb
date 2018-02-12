@@ -1,7 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RACK_ENV"] = 'test'
+ENV['RACK_ENV'] = 'test'
 ENV['LOG_LEVEL'] ||= 'warn' # can not set it in rails env as it is always 'error'
-require File.expand_path("../../config/environment", __FILE__)
+require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'vcr'
 require 'webmock/rspec'
@@ -9,23 +9,23 @@ require 'rspec/retry'
 
 # no geocoding for tests
 class ::Address
+
   def geocode
   end
+
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 I18n.default_locale = :en
 
-
 VCR.configure do |c|
-  c.cassette_library_dir = "spec/vcr_cassettes"
+  c.cassette_library_dir = 'spec/vcr_cassettes'
   c.hook_into :faraday, :webmock
   c.default_cassette_options = { :serialize_with => :syck }
 end
-
 
 RSpec.configure do |config|
 
@@ -62,7 +62,7 @@ RSpec.configure do |config|
   # order dependency and want to debug it, you can fix the order by providing
   # the seed, which is printed after each run.
   #     --seed 1234
-  config.order = "random"
+  config.order = 'random'
 
   # In Rspec 3.x the spec type is not automatically inferred from a file location, and you must manually set it
   config.infer_spec_type_from_file_location!
@@ -76,6 +76,7 @@ RSpec.configure do |config|
   end
 
   module ClassMethods
+
     def entity_blocks
       @entity_blocks ||= {}
     end
@@ -108,12 +109,15 @@ RSpec.configure do |config|
         result
       end
     end
+
   end
 
   module InstanceMethods
+
     def method_missing(method, *args)
       self.class.setup_entity(method) || super
     end
+
   end
 
   def entity(key, &block)

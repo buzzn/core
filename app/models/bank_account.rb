@@ -2,6 +2,7 @@ require_relative 'filterable'
 require_relative 'owner'
 
 class BankAccount < ActiveRecord::Base
+
   include Filterable
   include Owner
 

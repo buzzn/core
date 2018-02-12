@@ -2,6 +2,7 @@ require_relative '../billing'
 require_relative '../../../schemas/transactions/admin/billing/create_regular'
 
 class Transactions::Admin::Billing::CreateRegular < Transactions::Base
+
   def self.for(billing_cycle)
     new.with_step_args(
       validate: [Schemas::Transactions::Admin::Billing::CreateRegular],
@@ -19,4 +20,5 @@ class Transactions::Admin::Billing::CreateRegular < Transactions::Base
     result = billing_cycle.object.create_regular_billings(input[:account_year])
     Right(billing_cycle.all(billing_cycle.permissions.billings, result, Admin::BillingResource))
   end
+
 end

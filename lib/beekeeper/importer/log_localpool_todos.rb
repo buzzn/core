@@ -21,14 +21,14 @@ class Beekeeper::Importer::LogLocalpoolTodos
     end
 
     incompleteness = if resource.object.start_date.future?
-      logger.info("Skipping incompleteness checks, localpool hasn't started yet")
-      []
+                       logger.info("Skipping incompleteness checks, localpool hasn't started yet")
+                       []
     else
       resource.incompleteness
     end
 
     unless incompleteness.present? || warnings.present?
-      logger.info("Nothing to do!")
+      logger.info('Nothing to do!')
       return
     end
 
@@ -57,4 +57,5 @@ class Beekeeper::Importer::LogLocalpoolTodos
   def buzzn_operator_account
     @_account ||= Account::Base.where(email: %w(dev+ops@buzzn.net philipp@buzzn.net)).first
   end
+
 end

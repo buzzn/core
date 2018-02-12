@@ -7,7 +7,7 @@ SampleData.persons = OpenStruct.new(
   group_owner: person(first_name: 'Wolfgang', last_name: 'Owner', title: 'Dr.', email: 'dev+owner@buzzn.net'),
   group_admin:   person(first_name: 'Adrian', last_name: 'Admin', prefix: 'F', email: 'dev+mgr@buzzn.net',
                       roles: { Role::ORGANIZATION => Organization.find_by(slug: 'people-power-group-testgruppe') }
-  ),
+                       ),
   pt1:  person(first_name: 'Sabine', last_name: 'Powertaker1', title: 'Prof.', prefix: 'F', email: 'dev+pt1@buzzn.net'),
   pt2:  person(first_name: 'Carla', last_name: 'Powertaker2', title: 'Prof. Dr.', prefix: 'F', email: 'dev+pt2@buzzn.net'),
   pt3:  person(first_name: 'Maria', last_name: 'Mentor', prefix: 'F', email: 'dev+pt3@buzzn.net'),

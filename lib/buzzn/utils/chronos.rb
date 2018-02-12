@@ -1,7 +1,9 @@
 module Buzzn
   module Utils
     class Chronos
+
       class << self
+
         private :new
 
         def current_millis
@@ -46,7 +48,9 @@ module Buzzn
           end
           years * 12 + months + half_rounded
         end
+
       end
+
     end
   end
 end

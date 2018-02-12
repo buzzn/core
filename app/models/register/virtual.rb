@@ -19,7 +19,7 @@ module Register
     end
 
     def formula
-      result = ""
+      result = ''
       self.formula_parts.each do |formula_part|
         result += "#{formula_part.operator} #{formula_part.operand_id} "
       end
@@ -34,5 +34,6 @@ module Register
         Buzzn::Virtual::DataSource::NAME
       end
     end
+
   end
 end

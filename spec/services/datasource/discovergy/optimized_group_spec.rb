@@ -3,32 +3,32 @@ require_relative 'api_mock'
 describe Services::Datasource::Discovergy::OptimizedGroup do
 
   def serialized_meter(serial, type)
-      {
-        serialNumber: serial,
-        # discovergy does create such a location for virtual meters
-        # location: { street: "Virtual", streetNumber: "0", zip: "", city: "Virtual", country: "DE"},
-        location: { street: "Forst Weg", streetNumber: "1", zip: "12065", city: "Brunn", country: "DE"},
-        administrationNumber: "",
-        type: type,
-        measurementType: "ELECTRICITY",
-        scalingFactor: 1,
-        currentScalingFactor: 1,
-        voltageScalingFactor: 1,
-        internalMeters: 1,
-        firstMeasurementTime: 1453902166771,
-        lastMeasurementTime: 1513098129911
-      }
+    {
+      serialNumber: serial,
+      # discovergy does create such a location for virtual meters
+      # location: { street: "Virtual", streetNumber: "0", zip: "", city: "Virtual", country: "DE"},
+      location: { street: 'Forst Weg', streetNumber: '1', zip: '12065', city: 'Brunn', country: 'DE'},
+      administrationNumber: '',
+      type: type,
+      measurementType: 'ELECTRICITY',
+      scalingFactor: 1,
+      currentScalingFactor: 1,
+      voltageScalingFactor: 1,
+      internalMeters: 1,
+      firstMeasurementTime: 1453902166771,
+      lastMeasurementTime: 1513098129911
+    }
   end
 
   let(:info_result) do
     [
-      serialized_meter("1234567890", "EASYMETER"),
-      serialized_meter("9876543210", "EASYMETER"),
+      serialized_meter('1234567890', 'EASYMETER'),
+      serialized_meter('9876543210', 'EASYMETER'),
     ]
   end
 
   let(:create_result) do
-    serialized_meter("00000104", "VIRTUAL")
+    serialized_meter('00000104', 'VIRTUAL')
   end
 
   class ApiMock
@@ -44,6 +44,7 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
       else OpenStruct.new(@result)
       end
     end
+
   end
 
   entity(:api) { ApiMock.new }

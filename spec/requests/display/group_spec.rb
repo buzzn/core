@@ -6,9 +6,9 @@ describe Display::GroupRoda do
 
   let(:not_found_json) do
     {
-      "errors" => [
+      'errors' => [
         {
-          "detail"=>"Group::Base: bla-blub not found"
+          'detail'=>'Group::Base: bla-blub not found'
         }
       ]
     }
@@ -30,22 +30,22 @@ describe Display::GroupRoda do
 
     let(:group_json) do
       {
-        "id"=>group.id,
-        "type"=>"group_localpool",
+        'id'=>group.id,
+        'type'=>'group_localpool',
         'updated_at'=>group.updated_at.as_json,
-        "name"=>group.name,
-        "slug"=>group.slug,
-        "description"=>group.description,
-        "mentors"=> {
-          "array" => group.mentors.collect do |manager|
+        'name'=>group.name,
+        'slug'=>group.slug,
+        'description'=>group.description,
+        'mentors'=> {
+          'array' => group.mentors.collect do |manager|
             {
-              "id"=>manager.id,
-              "type"=>"person",
+              'id'=>manager.id,
+              'type'=>'person',
               'updated_at'=>manager.updated_at.as_json,
-              "title"=>manager.attributes['title'],
-              "first_name"=>manager.first_name,
-              "last_name"=>manager.last_name,
-              "image"=>manager.image.medium.url
+              'title'=>manager.attributes['title'],
+              'first_name'=>manager.first_name,
+              'last_name'=>manager.last_name,
+              'image'=>manager.image.medium.url
             }
           end
         }
@@ -60,22 +60,22 @@ describe Display::GroupRoda do
           type = :localpool
         end
         {
-          "id"=>group.id,
-          "type"=>"group_#{type}",
+          'id'=>group.id,
+          'type'=>"group_#{type}",
           'updated_at'=>group.updated_at.as_json,
-          "name"=>group.name,
-          "slug"=>group.slug,
-          "description"=>group.description,
-          "mentors"=> {
+          'name'=>group.name,
+          'slug'=>group.slug,
+          'description'=>group.description,
+          'mentors'=> {
             'array' => group.mentors.collect do |manager|
               {
-                "id"=>manager.id,
-                "type"=>"person",
+                'id'=>manager.id,
+                'type'=>'person',
                 'updated_at'=>manager.updated_at.as_json,
-                "title"=>manager.attributes['title'],
-                "first_name"=>manager.first_name,
-                "last_name"=>manager.last_name,
-                "image"=>manager.image.medium.url
+                'title'=>manager.attributes['title'],
+                'first_name'=>manager.first_name,
+                'last_name'=>manager.last_name,
+                'image'=>manager.image.medium.url
               }
             end
           }
@@ -84,7 +84,7 @@ describe Display::GroupRoda do
     end
 
     it '404' do
-      GET "/bla-blub", nil
+      GET '/bla-blub', nil
       expect(response).to have_http_status(404)
       expect(json).to eq not_found_json
 
@@ -113,7 +113,7 @@ describe Display::GroupRoda do
     end
 
     it '200 all' do
-      GET "", nil, include: :mentors
+      GET '', nil, include: :mentors
       expect(response).to have_http_status(200)
       expect(sort(json['array']).to_yaml).to eq sort(groups_json).to_yaml
     end
@@ -124,7 +124,7 @@ describe Display::GroupRoda do
     context 'GET' do
 
       it '404' do
-        GET "/bla-blub/mentors", nil
+        GET '/bla-blub/mentors', nil
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
@@ -140,18 +140,18 @@ describe Display::GroupRoda do
       let(:mentors_json) do
         [
           {
-            "id"=>mentor.id,
-            "type"=>"person",
+            'id'=>mentor.id,
+            'type'=>'person',
             'updated_at'=>mentor.updated_at.as_json,
-            "title"=>mentor.attributes['title'],
-            "first_name"=>mentor.first_name,
-            "last_name"=>mentor.last_name,
-            "image"=>mentor.image.medium.url,
+            'title'=>mentor.attributes['title'],
+            'first_name'=>mentor.first_name,
+            'last_name'=>mentor.last_name,
+            'image'=>mentor.image.medium.url,
           }
         ]
       end
 
-      it "200" do
+      it '200' do
         GET "/#{group.id}/mentors", nil
 
         expect(response).to have_http_status(200)

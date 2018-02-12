@@ -1,5 +1,6 @@
 module Buzzn
   class DataResult < DataPoint
+
     attr_reader :resource_id, :mode, :expires_at
 
     def self.from_json(json)
@@ -42,5 +43,6 @@ module Buzzn
     def to_json(*args)
       @json || '{"timestamp":' << @timestamp.to_s << ',"value":' << @value.to_s << ',"resource_id":"' << @resource_id << '","mode":"' << @mode << '","expires_at":' << expires_at.to_s << '}'
     end
+
   end
 end

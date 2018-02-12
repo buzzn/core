@@ -34,7 +34,7 @@ describe Buzzn::DataPoint do
 
     expect(reference.value).to eq 987654332
 
-    expect { reference.add_value("1") }.to raise_error ArgumentError
+    expect { reference.add_value('1') }.to raise_error ArgumentError
   end
 end
 
@@ -44,7 +44,7 @@ describe Buzzn::DataResult do
 
   it 'loads it hash representation' do
     reference = subject.new(Time.new(123456789), 987654331,
-                            'u-i-d',['in', 'out'].sample,
+                            'u-i-d', ['in', 'out'].sample,
                             Time.current.to_f)
     other = subject.from_hash(reference.to_hash)
     expect(reference.resource_id).to eq other.resource_id
@@ -55,7 +55,7 @@ describe Buzzn::DataResult do
 
   it 'round-trip via json' do
     reference = subject.new(Time.new(123456789), 987654331,
-                            'u-i-d',['in', 'out'].sample,
+                            'u-i-d', ['in', 'out'].sample,
                             Time.current.to_f)
     other = subject.from_json(reference.to_json)
     expect(reference.resource_id).to eq other.resource_id
@@ -141,7 +141,6 @@ describe Buzzn::DataResultSet do
         expect(r.value).to eq 987654331
       end
     end
-
 
   end
 
@@ -260,7 +259,7 @@ describe Buzzn::DataResultSet do
     end
   end
 
-  it "does not add" do
+  it 'does not add' do
     reference = subject.milliwatt('u-i-d')
     other = subject.milliwatt_hour('u-i-d')
     expect { reference.add_all(other) }.to raise_error ArgumentError
@@ -281,7 +280,6 @@ def granularity(duration)
   end
 end
 
-
 describe Buzzn::DataResultArray do
 
   subject { Buzzn::DataResultArray }
@@ -291,7 +289,7 @@ describe Buzzn::DataResultArray do
     4.times do
       reference << Buzzn::DataResult.new(Time.new(rand(123456789)),
                                          rand(987654331),
-                                         'u-i-d',['in', 'out'].sample,
+                                         'u-i-d', ['in', 'out'].sample,
                                          Time.current.to_f)
     end
     other = subject.from_hash(reference.to_hash)
@@ -304,7 +302,7 @@ describe Buzzn::DataResultArray do
     4.times do
       reference << Buzzn::DataResult.new(Time.new(rand(123456789)),
                                          rand(987654331),
-                                         'u-i-d',['in', 'out'].sample,
+                                         'u-i-d', ['in', 'out'].sample,
                                          Time.current.to_f)
     end
     other = subject.from_json(reference.to_json)

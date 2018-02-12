@@ -9,5 +9,7 @@
 #
 
 class Beekeeper::Buzzn::PlzVnb < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.plz_vnb'
+
 end

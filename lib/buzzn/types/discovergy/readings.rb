@@ -16,8 +16,11 @@ module Types::Discovergy
     def to_path; :readings; end
 
     class Get < Types::Discovergy::Readings
+
       include Types::Discovergy::Get
+
     end
 
   end
+
 end

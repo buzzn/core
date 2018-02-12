@@ -6,7 +6,7 @@ Fabricator :device do
   watt_peak                     49000
   commissioning                 { FFaker::Time.date }
   shop_link                     'http://www.amazon.com'
-  created_at  { (rand*10).days.ago }
+  created_at { (rand*10).days.ago }
 end
 
 Fabricator :in_device, from: :device do
@@ -18,10 +18,10 @@ Fabricator :out_device, from: :device do
 end
 
 Fabricator :out_device_with_register, from: :out_device do
-  after_create { |device|
+  after_create do |device|
     device.register = Fabricate(:output_meter).output_register
     device.save!
-  }
+  end
 end
 
 Fabricator :auto_justus, from: :in_device do
@@ -29,9 +29,8 @@ Fabricator :auto_justus, from: :in_device do
   manufacturer_product_name     'i-MiEV'
   category                      'Elektroauto'
   watt_peak                     49000
-  commissioning                 Date.new(2012,10,1)
+  commissioning                 Date.new(2012, 10, 1)
 end
-
 
 Fabricator :bhkw_justus, from: :out_device do
   law                           'kwkg'
@@ -40,7 +39,7 @@ Fabricator :bhkw_justus, from: :out_device do
   category                      'Blockheizkraftwerk'
   primary_energy                Device::NATURAL_GAS
   watt_peak                     1000
-  commissioning                 Date.new(2012,10,1)
+  commissioning                 Date.new(2012, 10, 1)
 end
 
 Fabricator :dach_pv_justus, from: :out_device do
@@ -50,7 +49,7 @@ Fabricator :dach_pv_justus, from: :out_device do
   category                      'Photovoltaikanlage'
   primary_energy                Device::SUN
   watt_peak                     8510
-  commissioning                 Date.new(2012,3,31)
+  commissioning                 Date.new(2012, 3, 31)
 end
 
 Fabricator :carport_pv_justus, from: :device do
@@ -61,9 +60,8 @@ Fabricator :carport_pv_justus, from: :device do
   category                      'Photovoltaikanlage'
   primary_energy                Device::SUN
   watt_peak                     5300
-  commissioning                 Date.new(2012,1,1)
+  commissioning                 Date.new(2012, 1, 1)
 end
-
 
 Fabricator :pv_karin, from: :device do
   law                           'eeg'
@@ -73,9 +71,8 @@ Fabricator :pv_karin, from: :device do
   category                      'Photovoltaikanlage'
   primary_energy                Device::SUN
   watt_peak                     2160
-  commissioning                 Date.new(2002,11,1)
+  commissioning                 Date.new(2002, 11, 1)
 end
-
 
 Fabricator :bhkw_stefan, from: :out_device do
   law                           'kwkg'
@@ -84,10 +81,8 @@ Fabricator :bhkw_stefan, from: :out_device do
   category                      'Blockheizkraftwerk'
   primary_energy                Device::NATURAL_GAS
   watt_peak                     5500
-  commissioning                 Date.new(1995,11,1)
+  commissioning                 Date.new(1995, 11, 1)
 end
-
-
 
 Fabricator :hof_butenland_wind, from: :out_device do
   law                           'eeg'
@@ -96,17 +91,13 @@ Fabricator :hof_butenland_wind, from: :out_device do
   category                      'Windkraftanlage'
   primary_energy                Device::WIND
   watt_peak                     55000
-  commissioning                 Date.new(1989,12,1)
+  commissioning                 Date.new(1989, 12, 1)
 end
-
-
-
-
 
 Fabricator :gocycle, from: :in_device do
   manufacturer_name             'Gocycle'
   manufacturer_product_name     'GR2'
   category                      'Pedelec'
   watt_peak                     250
-  commissioning                 Date.new(2014,6,1)
+  commissioning                 Date.new(2014, 6, 1)
 end

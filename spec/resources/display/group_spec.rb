@@ -9,7 +9,7 @@ describe Display::GroupResource do
     group
   end
 
-  entity!(:localpool)  do
+  entity!(:localpool) do
     group = create(:localpool, show_display_app: true)
     create(:meter, :virtual, group: group)
     admin.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
@@ -32,13 +32,12 @@ describe Display::GroupResource do
 
   let(:resources) { Display::GroupResource.all(admin) }
 
-  let(:attributes) { ['id',
-                      'type',
-                      'updated_at',
-                      'name',
-                      'slug',
-                      'description'] }
-
+  let(:attributes) do ['id',
+                       'type',
+                       'updated_at',
+                       'name',
+                       'slug',
+                       'description'] end
 
   it 'retrieve' do
     [tribe, localpool].each do |grp|
@@ -57,12 +56,12 @@ describe Display::GroupResource do
   end
 
   describe 'registers' do
-    let(:attributes) { ['id',
-                        'type',
-                        'updated_at',
-                        'direction',
-                        'name',
-                        'label'] }
+    let(:attributes) do ['id',
+                         'type',
+                         'updated_at',
+                         'direction',
+                         'name',
+                         'label'] end
     it 'retrieve' do
       [:tribe, :localpool].each do |type|
         group = send(type)
@@ -94,13 +93,13 @@ describe Display::GroupResource do
   end
 
   describe 'mentors' do
-    let(:attributes) { ['id',
-                        'type',
-                        'updated_at',
-                        'title',
-                        'first_name',
-                        'last_name',
-                        'image'] }
+    let(:attributes) do ['id',
+                         'type',
+                         'updated_at',
+                         'title',
+                         'first_name',
+                         'last_name',
+                         'image'] end
 
     it 'retrieve' do
       expect(resource.mentors.retrieve(admin.person.id).object).to eq admin.person

@@ -20,6 +20,7 @@
 #
 
 class Beekeeper::Buzzn::AccountNew < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.account_new'
   include Beekeeper::StringCleaner
 
@@ -57,4 +58,5 @@ class Beekeeper::Buzzn::AccountNew < Beekeeper::Buzzn::BaseRecord
   def kontakt_acc
     Beekeeper::Buzzn::KontaktAcc.find_by(fibunr: fibunr)
   end
+
 end

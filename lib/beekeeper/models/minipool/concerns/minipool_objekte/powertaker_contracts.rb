@@ -8,7 +8,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     private
 
     def powertaker_contracts
-      minipool_sns.map(&:converted_attributes)
+      minipool_sns.collect(&:converted_attributes)
     end
 
     def third_party_contracts
@@ -31,5 +31,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     def minipool_sns_3
       @minipool_sns_3 ||= Beekeeper::Minipool::MinipoolSn.where(vertragsnummer: vertragsnummer, drittbelieferung: 1)
     end
+
   end
 end

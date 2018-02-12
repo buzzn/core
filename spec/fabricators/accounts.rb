@@ -2,17 +2,17 @@ Fabricator :user, class_name: Account::Base do
   i = 0
   email             { "user.#{i+=1}@buzzn.net" }
   person            { Fabricate(:person) }
-  after_create { |account|
+  after_create do |account|
     Account::PasswordHash.create(account: account,
                                  password_hash: BCrypt::Password.create('Example123'))
     account.person.add_role(Role::SELF, account.person)
     account.person.update(email: account.email)
-  }
+  end
 end
 
 Fabricator :admin, from: :user do
   i = 0
-  email             { "admin.#{i+=1}@buzzn.net" }
+  email { "admin.#{i+=1}@buzzn.net" }
   after_create { |account| account.person.add_role(Role::BUZZN_OPERATOR) }
 end
 
@@ -21,93 +21,83 @@ Fabricator :buzzn_operator, from: :user do
 end
 
 Fabricator :felix, from: :admin do
-  email               'felix@buzzn.net'
-  person             { Fabricate(:person_felix) }
+  email 'felix@buzzn.net'
+  person { Fabricate(:person_felix) }
 end
 
 Fabricator :ralf, from: :admin do
-  email               'ralf@buzzn.net'
-  person             { Fabricate(:person_ralf) }
+  email 'ralf@buzzn.net'
+  person { Fabricate(:person_ralf) }
 end
 
 Fabricator :justus, from: :admin do
-  email       'justus@buzzn.net'
-  person     { Fabricate(:person_justus) }
+  email 'justus@buzzn.net'
+  person { Fabricate(:person_justus) }
 end
 
 Fabricator :danusch, from: :admin do
-  email       'danusch@buzzn.net'
-  person     { Fabricate(:person_danusch) }
+  email 'danusch@buzzn.net'
+  person { Fabricate(:person_danusch) }
 end
 
 Fabricator :thomas, from: :admin do
-  email       'thomas@buzzn.net'
-  person     { Fabricate(:person_thomas) }
+  email 'thomas@buzzn.net'
+  person { Fabricate(:person_thomas) }
 end
 
 Fabricator :eva, from: :admin do
-  email       'eva@buzzn.net'
-  person     { Fabricate(:person_eva) }
+  email 'eva@buzzn.net'
+  person { Fabricate(:person_eva) }
 end
 
 Fabricator :stefan, from: :admin do
-  email       'stefan@buzzn.net'
-  person     { Fabricate(:person_stefan) }
+  email 'stefan@buzzn.net'
+  person { Fabricate(:person_stefan) }
 end
 Fabricator :karin, from: :admin do
-  email       'karin.smith@solfux.de'
-  person     { Fabricate(:person_karin) }
+  email 'karin.smith@solfux.de'
+  person { Fabricate(:person_karin) }
 end
 
 Fabricator :pavel, from: :admin do
-  email       'pavel@buzzn.net'
-  person     { Fabricate(:person_pavel) }
+  email 'pavel@buzzn.net'
+  person { Fabricate(:person_pavel) }
 end
 
 Fabricator :philipp, from: :admin do
-  email       'philipp@buzzn.net'
-  person     { Fabricate(:person_philipp) }
+  email 'philipp@buzzn.net'
+  person { Fabricate(:person_philipp) }
 end
 
 Fabricator :christian, from: :user do
-  email       'christian@buzzn.net'
-  person     { Fabricate(:person_christian) }
+  email 'christian@buzzn.net'
+  person { Fabricate(:person_christian) }
 end
 
 Fabricator :jan_gerdes, from: :user do
-  email     'jangerdes@stiftung-fuer-tierschutz.de'
-  person   { Fabricate(:person_jangerdes) }
+  email 'jangerdes@stiftung-fuer-tierschutz.de'
+  person { Fabricate(:person_jangerdes) }
 end
 
 Fabricator :christian_schuetze, from: :admin do
-  email     'christian@schuetze.de'
-  person   { Fabricate(:person_christian_schuetze) }
+  email 'christian@schuetze.de'
+  person { Fabricate(:person_christian_schuetze) }
 end
 
 Fabricator :mustafa, from: :user do
-  email       'mustafaakman@ymail.de'
-  person     { Fabricate(:person_mustafa) }
+  email 'mustafaakman@ymail.de'
+  person { Fabricate(:person_mustafa) }
 end
 
 Fabricator :kristian, from: :admin do
-  email       'm.kristian@web.de'
-  person     { Fabricate(:person_kristian) }
+  email 'm.kristian@web.de'
+  person { Fabricate(:person_kristian) }
 end
-
 
 Fabricator :uxtest_user, from: :user do
-  email               'ux-test@buzzn.net'
+  email 'ux-test@buzzn.net'
   person             { Fabricate(:person_uxtest) }
 end
-
-
-
-
-
-
-
-
-
 
 #Ab hier: Hell & Warm (Forstenried)
 Fabricator :mabe, from: :user do

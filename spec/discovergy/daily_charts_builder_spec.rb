@@ -51,7 +51,7 @@ describe Discovergy::DailyChartsBuilder do
     last = easy.last
 
     begin
-      easy << { "time" => last['time'] + 18000, "values" => { "energyOut" => 0, "energy" => last['values']['energy'] + 123 } }
+      easy << { 'time' => last['time'] + 18000, 'values' => { 'energyOut' => 0, 'energy' => last['values']['energy'] + 123 } }
 
       result = subject.build(response)
 

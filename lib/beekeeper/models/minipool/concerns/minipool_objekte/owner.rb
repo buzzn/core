@@ -7,7 +7,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
 
     def owner
       owner = if account_new.privat1_gbr2_weg3_else4 == 'privat'
-        owner_person
+                owner_person
       else
         owner_organization
       end
@@ -44,8 +44,9 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       konto = Beekeeper::Minipool::Kontodaten.where(vertragsnummer: vertragsnummer, nummernzusatz: 0).first
       [BankAccount.new(konto.converted_attributes)]
     rescue Buzzn::RecordNotFound => e
-      add_warning("bank_accounts", "Unable to find bank data: #{e.message}}")
+      add_warning('bank_accounts', "Unable to find bank data: #{e.message}}")
       []
     end
+
   end
 end

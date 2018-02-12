@@ -2,6 +2,7 @@ require_relative '../reading'
 require_relative '../../../schemas/transactions/admin/reading/create'
 
 class Transactions::Admin::Reading::Create < Transactions::Base
+
   def self.for(register)
     new.with_step_args(
       validate: [Schemas::Transactions::Admin::Reading::Create],
@@ -17,4 +18,5 @@ class Transactions::Admin::Reading::Create < Transactions::Base
   def persist(input, readings)
     Right(ReadingResource.new(readings.objects.create!(input), readings.context))
   end
+
 end

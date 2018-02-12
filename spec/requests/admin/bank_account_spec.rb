@@ -1,6 +1,7 @@
 describe Admin::BankAccountRoda do
 
   class BankAccountParentRoda < BaseRoda
+
     plugin :shared_vars
     route do |r|
       r.on 'test', :id do |id|
@@ -15,6 +16,7 @@ describe Admin::BankAccountRoda do
 
       r.run Me::Roda
     end
+
   end
 
   def app
@@ -27,9 +29,9 @@ describe Admin::BankAccountRoda do
     localpool
   end
 
-  entity!(:contract) { Fabricate(:metering_point_operator_contract,
-                                 localpool: localpool,
-                                 contractor: Fabricate(:other_organization)) }
+  entity!(:contract) do Fabricate(:metering_point_operator_contract,
+                                  localpool: localpool,
+                                  contractor: Fabricate(:other_organization)) end
 
   entity!(:person_account) do
     Fabricate(:bank_account, owner: contract.customer)
@@ -40,18 +42,18 @@ describe Admin::BankAccountRoda do
   end
 
   [:person_account, :organization_account].each do |name|
-    context "#{name.to_s.sub(/_.*/,'')} parent" do
+    context "#{name.to_s.sub(/_.*/, '')} parent" do
 
       def serialized_bank_account(bank_account)
         {
-          "id"=>bank_account.id,
-          "type"=>"bank_account",
+          'id'=>bank_account.id,
+          'type'=>'bank_account',
           'updated_at'=>bank_account.updated_at.as_json,
-          "holder"=>bank_account.holder,
-          "bank_name"=>bank_account.bank_name,
-          "bic"=>bank_account.bic,
-          "iban"=>bank_account.iban,
-          "direct_debit"=>bank_account.direct_debit,
+          'holder'=>bank_account.holder,
+          'bank_name'=>bank_account.bank_name,
+          'bic'=>bank_account.bic,
+          'iban'=>bank_account.iban,
+          'direct_debit'=>bank_account.direct_debit,
           'updatable' => true,
           'deletable' => true
         }
@@ -63,13 +65,13 @@ describe Admin::BankAccountRoda do
 
       let(:wrong_json) do
         {
-          "errors"=>[
-            {"parameter"=>"holder",
-             "detail"=>"size cannot be greater than 64"},
-            {"parameter"=>"iban",
-             "detail"=>"must be a string"},
-            {"parameter"=>"bank_name",
-             "detail"=>"size cannot be greater than 64"},
+          'errors'=>[
+            {'parameter'=>'holder',
+             'detail'=>'size cannot be greater than 64'},
+            {'parameter'=>'iban',
+             'detail'=>'must be a string'},
+            {'parameter'=>'bank_name',
+             'detail'=>'size cannot be greater than 64'},
           ]
         }
       end
@@ -78,9 +80,9 @@ describe Admin::BankAccountRoda do
 
         let(:create_denied_json) do
           {
-            "errors" => [
+            'errors' => [
               {
-                "detail"=>" OrganizationResource: #{parent.id} permission denied for User: #{$user.id}" }
+                'detail'=>" OrganizationResource: #{parent.id} permission denied for User: #{$user.id}" }
             ]
           }
         end
@@ -115,15 +117,15 @@ describe Admin::BankAccountRoda do
 
         let(:wrong_json) do
           {
-            "errors"=>[
-              {"parameter"=>"updated_at",
-               "detail"=>"is missing"},
-              {"parameter"=>"holder",
-               "detail"=>"size cannot be greater than 64"},
-              {"parameter"=>"iban",
-               "detail"=>"must be a valid iban"},
-              {"parameter"=>"bank_name",
-               "detail"=>"size cannot be greater than 64"},
+            'errors'=>[
+              {'parameter'=>'updated_at',
+               'detail'=>'is missing'},
+              {'parameter'=>'holder',
+               'detail'=>'size cannot be greater than 64'},
+              {'parameter'=>'iban',
+               'detail'=>'must be a valid iban'},
+              {'parameter'=>'bank_name',
+               'detail'=>'size cannot be greater than 64'},
             ]
           }
         end
@@ -192,7 +194,6 @@ describe Admin::BankAccountRoda do
         let(:bank_accounts_json) do
           parent.bank_accounts.collect {|bank_account| serialized_bank_account(bank_account) }
         end
-
 
         # can not construct users to see parent but not bank_account
         if name == :organization_account

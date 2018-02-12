@@ -10,6 +10,7 @@
 #
 
 class Beekeeper::Minipool::MinipoolPreise < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.minipool_preise'
 
   def converted_attributes
@@ -19,4 +20,5 @@ class Beekeeper::Minipool::MinipoolPreise < Beekeeper::Minipool::BaseRecord
       begin_date: datum
     }
   end
+
 end

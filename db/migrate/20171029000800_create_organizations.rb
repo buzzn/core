@@ -29,4 +29,5 @@ class CreateOrganizations < ActiveRecord::Migration
 
     SCHEMA.down(:organizations, self)
   end
+
 end

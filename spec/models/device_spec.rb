@@ -1,4 +1,4 @@
-describe "Device Model" do
+describe 'Device Model' do
 
   before do
     create(:device)

@@ -23,12 +23,12 @@ FactoryGirl.define do
 
     trait :virtual_input do
       virtual
-      direction       Register::Base.directions[:input]
+      direction Register::Base.directions[:input]
     end
 
     trait :virtual_output do
       virtual
-      direction       Register::Base.directions[:output]
+      direction Register::Base.directions[:output]
     end
 
     trait :input do

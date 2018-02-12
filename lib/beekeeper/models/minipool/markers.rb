@@ -17,5 +17,7 @@
 #
 
 class Beekeeper::Minipool::Markers < Beekeeper::Minipool::BaseRecord
+
   self.table_name = 'minipooldb.markers'
+
 end

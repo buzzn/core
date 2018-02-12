@@ -34,4 +34,5 @@ class CreateContract < ActiveRecord::Migration
   def down
     SCHEMA.down(:contracts, self)
   end
+
 end

@@ -1,5 +1,6 @@
 class Roda
   module RodaPlugins
+
     module Aggregation
 
       # Require the caching plugin
@@ -32,9 +33,12 @@ class Roda
         def error_response(monad)
           raise monad.value
         end
+
       end
+
     end
 
     register_plugin(:aggregation, Aggregation)
+
   end
 end

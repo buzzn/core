@@ -7,7 +7,7 @@ class Beekeeper::Importer::RegistersAndMeters
   end
 
   def run(localpool, registers)
-    registers.map do |register|
+    registers.collect do |register|
       register.meter.group = localpool
       unless register.save
         logger.error("Failed to save register #{register.inspect}")
@@ -16,4 +16,5 @@ class Beekeeper::Importer::RegistersAndMeters
       register
     end
   end
+
 end

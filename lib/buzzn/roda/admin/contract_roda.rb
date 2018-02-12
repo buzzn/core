@@ -1,6 +1,7 @@
 require_relative '../admin_roda'
 module Admin
   class ContractRoda < BaseRoda
+
     plugin :shared_vars
 
     route do |r|
@@ -27,5 +28,6 @@ module Admin
         end
       end
     end
+
   end
 end

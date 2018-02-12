@@ -2,7 +2,6 @@ require_relative 'base_roda'
 require_relative '../transactions/ticker'
 require_relative '../transactions/register_chart'
 
-
 class RegisterRoda < BaseRoda
 
   plugin :aggregation
@@ -31,7 +30,7 @@ class RegisterRoda < BaseRoda
           Transactions::RegisterChart
             .for(register)
             .call(r.params).value
-          )
+        )
       end
 
       r.get! 'ticker' do
@@ -48,4 +47,5 @@ class RegisterRoda < BaseRoda
       end
     end
   end
+
 end

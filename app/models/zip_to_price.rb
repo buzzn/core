@@ -49,4 +49,5 @@ class ZipToPrice < ActiveRecord::Base
   private
 
   def self.logger; @_logger ||= Buzzn::Logger.new(self); end
+
 end

@@ -1,6 +1,7 @@
 require_relative '../security'
 
 class Security::SecureHashSerializerCore
+
   include Import['services.message_encryptor']
 
   def load(encrypted)
@@ -18,6 +19,7 @@ class Security::SecureHashSerializerCore
       message_encryptor.encrypt_and_sign(string)
     end
   end
+
 end
 class Security::SecureHashSerializer
 
@@ -32,4 +34,5 @@ class Security::SecureHashSerializer
   def dump(hash)
     core.dump(hash)
   end
+
 end

@@ -31,5 +31,7 @@
 #
 
 class Beekeeper::Buzzn::Slps < Beekeeper::Buzzn::BaseRecord
+
   self.table_name = 'buzzndb.slps'
+
 end

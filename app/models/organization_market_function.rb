@@ -1,7 +1,7 @@
 class OrganizationMarketFunction < ActiveRecord::Base
 
   belongs_to :organization
-  belongs_to :contact_person, class_name: "Person"
+  belongs_to :contact_person, class_name: 'Person'
   belongs_to :address
 
   enum function: %i(
@@ -14,4 +14,5 @@ class OrganizationMarketFunction < ActiveRecord::Base
     power_taker
     transmission_system_operator
   ).map.with_object({}) { |key, hash| hash[key] = key.to_s }
+
 end

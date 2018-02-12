@@ -1,6 +1,7 @@
 require_relative 'base_roda'
 module Admin
   class Roda < ::BaseRoda
+
     plugin :run_handler
 
     route do |r|
@@ -30,5 +31,6 @@ module Admin
         admin.organizations
       end
     end
+
   end
 end

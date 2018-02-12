@@ -23,4 +23,3 @@ describe Buzzn::Utils::Chronos do
     end
   end
 end
-

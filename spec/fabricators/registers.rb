@@ -4,9 +4,9 @@
   klass = "Register::#{klass_type.camelize}".constantize
 
   Fabricator "#{klass_type}_register", class_name: klass do
-    name        { "#{klass_type}_#{FFaker::Name.name[0..20]}" }
-    metering_point_id { "DE" + Random.new_seed.to_s.slice(0, 29) }
-    direction   { klass_type == 'virtual' ? ['in', 'out'].sample : klass_type.sub('put','') }
+    name { "#{klass_type}_#{FFaker::Name.name[0..20]}" }
+    metering_point_id { 'DE' + Random.new_seed.to_s.slice(0, 29) }
+    direction   { klass_type == 'virtual' ? ['in', 'out'].sample : klass_type.sub('put', '') }
     created_at  { (rand*10).days.ago }
     if klass_type == 'output'
       label     Register::Base.labels[:production_pv]
@@ -15,10 +15,9 @@
     end
     share_with_group true
     share_publicly false
-    type        { "Register::#{klass_type.camelize}" }
+    type { "Register::#{klass_type.camelize}" }
   end
 end
-
 
 # real world registers
 
@@ -28,19 +27,16 @@ Fabricator :register_z1a, from: :input_register do
   label     Register::Base.labels[:grid_consumption]
 end
 
-
 Fabricator :register_z1b, from: :output_register do
-  name        'Netzanschluss Einspeisung'
+  name 'Netzanschluss Einspeisung'
   #address   { Fabricate(:address_luetzowplatz) }
-  label     Register::Base.labels[:grid_feeding]
+  label Register::Base.labels[:grid_feeding]
 end
-
 
 Fabricator :register_z2, from: :output_register do
   name  'PV'
   #address   { Fabricate(:address_luetzowplatz) }
 end
-
 
 Fabricator :register_z3, from: :input_register do
   name  'Ladestation'
@@ -50,27 +46,20 @@ end
 Fabricator :register_z4, from: :output_register do
   name  'BHKW'
   #address   { Fabricate(:address_luetzowplatz) }
-  label     Register::Base.labels[:production_chp]
+  label Register::Base.labels[:production_chp]
 end
-
-
 
 Fabricator :register_z5, from: :output_register do
-  name  'Abgrenzung'
+  name 'Abgrenzung'
   #address   { Fabricate(:address_luetzowplatz) }
-  label     Register::Base.labels[:demarcation_pv]
+  label Register::Base.labels[:demarcation_pv]
 end
-
-
 
 #felix berlin
 Fabricator :register_urbanstr88, from: :input_register do
   #address  { Fabricate(:address, street: 'Urbanstr 88', zip: '81667') }
   name  'Wohnung'
 end
-
-
-
 
 # karins pv anlage
 Fabricator :register_pv_karin, from: :output_register do
@@ -79,18 +68,12 @@ Fabricator :register_pv_karin, from: :output_register do
   devices { [Fabricate(:pv_karin)] }
 end
 
-
-
-
 # stefans bhkw anlage
 Fabricator :register_stefans_bhkw, from: :output_register do
   #address { Fabricate(:address, street: 'Forstenrieder Weg 51', zip: 82065, city: 'Baierbrunn', state: 'DE_BY') }
-  name  'BHKW'
-  label     Register::Base.labels[:production_chp]
+  name 'BHKW'
+  label Register::Base.labels[:production_chp]
 end
-
-
-
 
 # hof butenland windanlage
 Fabricator :register_hof_butenland_wind, from: :output_register do
@@ -98,15 +81,11 @@ Fabricator :register_hof_butenland_wind, from: :output_register do
   name  'Windanlage'
 end
 
-
-
 # christian_schuetze verbrauch
 Fabricator :register_cs_1, from: :input_register do
   #address  { Fabricate(:address, street: 'Fichtenweg 8', zip: 82515, city: 'Wolfratshausen', state: 'DE_BY') }
   name  'Wohnung'
 end
-
-
 
 # Nr. 60138988 für Christian Widmann (Einrichtungszähler Bezug)
 Fabricator :register_60138988, from: :input_register do
@@ -134,11 +113,6 @@ Fabricator :register_ferraris_001_amperix, from: :input_register do
   name  'Wohnung'
 end
 
-
-
-
-
-
 Fabricator :register_60118470, from: :output_register do
   name  'Keller'
   label Register::Base.labels[:grid_consumption]
@@ -161,9 +135,6 @@ Fabricator :register_hdh, from: :virtual_register do
   name  'Wohnung'
   direction 'in'
 end
-
-
-
 
 Fabricator :register_60009416, from: :input_register do
   name  'Wohnung'
@@ -208,9 +179,6 @@ end
 Fabricator :register_60118460, from: :output_register do
   name  'PV'
 end
-
-
-
 
 Fabricator :register_60009386, from: :input_register do
   name  'Allgemeinstrom Haus Nord'
@@ -282,16 +250,9 @@ Fabricator :register_60118484, from: :input_register do
   label Register::Base.labels[:grid_consumption]
 end
 
-
-
-
 Fabricator :register_60051562, from: :input_register do
   name  'Wasserkraft'
 end
-
-
-
-
 
 #Ab hier: Hell & Warm (Forstenried)
 Fabricator :register_60051595, from: :input_register do
@@ -635,17 +596,16 @@ end
 
 Fabricator :register_60051579, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'DE_BY') }
- name  'N 01'
- label Register::Base.labels[:consumption]
+  name  'N 01'
+  label Register::Base.labels[:consumption]
 end
 
 #third party supplied
 Fabricator :register_60051575, from: :input_register do
   #address        { Fabricate(:address, street_name: 'Limmatstraße', street_number: '3', zip: 81476, city: 'München', state: 'DE_BY') }
- name  'N 42'
- label Register::Base.labels[:consumption]
+  name  'N 42'
+  label Register::Base.labels[:consumption]
 end
-
 
 # #peter schmidt
 # Fabricator :register_6005195, from: :input_register do
@@ -663,21 +623,21 @@ end
 #bhkw1
 Fabricator :register_60138947, from: :output_register do
   #address        { Fabricate(:address_limmat_3) }
-  name          'BHKW 1'
+  name 'BHKW 1'
   label Register::Base.labels[:production_chp]
 end
 
 #bhkw2
 Fabricator :register_60138943, from: :output_register do
   #address        { Fabricate(:address_limmat_3) }
-  name          'BHKW 2'
+  name 'BHKW 2'
   label Register::Base.labels[:production_chp]
 end
 
 #pv
 Fabricator :register_1338000816, from: :output_register do
   #address        { Fabricate(:address_limmat_3) }
-  name          'PV'
+  name 'PV'
   label Register::Base.labels[:production_pv]
 end
 
@@ -714,19 +674,18 @@ Fabricator :register_forstenried_erzeugung, from: :output_register do
   name  'Gesamterzeugung'
   meter           nil
   virtual         true
-  formula_parts   {[
+  formula_parts   do [
                     Fabricate(:fp_plus, operand_id: Fabricate(:register_60138947).id),
                     Fabricate(:fp_plus, operand_id: Fabricate(:register_60138943).id),
                     Fabricate(:fp_minus, operand_id: Fabricate(:register_1338000816).id)
-                  ]}
+                  ] end
 end
 
 #virtueller Zählpunkt
 Fabricator :register_forstenried_bezug, from: :input_register do
-  name  'Gesamtverbrauch'
-  virtual         true
+  name 'Gesamtverbrauch'
+  virtual true
 end
-
 
 ### LCP Sulz ###
 
@@ -735,7 +694,7 @@ Fabricator :register_60300856, from: :input_register do
   #address        { Fabricate(:address_sulz) }
   name  'Netzanschluss Bezug'
   label Register::Base.labels[:grid_consumption]
-  metering_point_id  'DE0005128238000552109002001011500'
+  metering_point_id 'DE0005128238000552109002001011500'
 end
 
 #übergabe out
@@ -743,7 +702,7 @@ Fabricator :register_60300856_out, from: :output_register do
   #address        { Fabricate(:address_sulz) }
   name  'Netzanschluss Einspeisung'
   label Register::Base.labels[:grid_feeding]
-  metering_point_id  'DE0005128238000552109002001011500'
+  metering_point_id 'DE0005128238000552109002001011500'
 end
 
 #Abgrenzung bhkw
@@ -751,7 +710,7 @@ Fabricator :register_60009498, from: :output_register do
   #address        { Fabricate(:address_sulz) }
   name  'Abgrenzung BHKW'
   label Register::Base.labels[:demarcation_chp]
-  metering_point_id  'DE0005128238000552109002001011400'
+  metering_point_id 'DE0005128238000552109002001011400'
 end
 
 #Produktion bhkw
@@ -759,7 +718,7 @@ Fabricator :register_60404855, from: :output_register do
   #address        { Fabricate(:address_sulz) }
   name  'Produktion BHKW'
   label Register::Base.labels[:production_chp]
-  metering_point_id  'DE0005128238000552109002001011200'
+  metering_point_id 'DE0005128238000552109002001011200'
 end
 
 #Produktion pv
@@ -767,7 +726,7 @@ Fabricator :register_60404845, from: :output_register do
   #address        { Fabricate(:address_sulz) }
   name  'Produktion PV'
   label Register::Base.labels[:production_pv]
-  metering_point_id  'DE0005128238000552109002001011100'
+  metering_point_id 'DE0005128238000552109002001011100'
 end
 
 Fabricator :register_60404846, from: :input_register do

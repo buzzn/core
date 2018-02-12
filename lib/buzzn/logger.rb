@@ -1,5 +1,6 @@
 module Buzzn
   class Logger
+
     def self.root=(root)
       @root = root
       @loggers ||= {}
@@ -38,5 +39,6 @@ module Buzzn
     def <<(msg)
       @root.<< msg if @root.info? rescue nil
     end
+
   end
 end

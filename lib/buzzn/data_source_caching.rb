@@ -13,7 +13,7 @@ module Buzzn
             raw_initialize(*args)
             @logger = Buzzn::Logger.new(self)
             # use redis from args if there is
-            @redis = args.detect { |a| a.is_a? Redis } || Redis.current
+            @redis = args.find { |a| a.is_a? Redis } || Redis.current
             @lock = RemoteLock.new(RemoteLock::Adapters::Redis.new(@redis))
           end
 
@@ -56,6 +56,7 @@ module Buzzn
           end
         end
       end
+
     end
   end
 end

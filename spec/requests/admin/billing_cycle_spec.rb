@@ -10,21 +10,21 @@ describe Admin::LocalpoolRoda do
     entity(:group) { Fabricate(:localpool) }
     entity(:billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
     entity!(:other_billing_cycle) { Fabricate(:billing_cycle, localpool: group) }
-    entity!(:billing) { Fabricate(:billing,
-                                  billing_cycle: billing_cycle,
-                                  localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
-                                                                            register: Fabricate.create(:input_meter, group: group).input_register)) }
-    entity!(:other_billing) { Fabricate(:billing,
-                                        billing_cycle: billing_cycle,
-                                        localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
-                                                                                  register:Fabricate.create(:input_meter, group: group).input_register)) }
+    entity!(:billing) do Fabricate(:billing,
+                                   billing_cycle: billing_cycle,
+                                   localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
+                                                                             register: Fabricate.create(:input_meter, group: group).input_register)) end
+    entity!(:other_billing) do Fabricate(:billing,
+                                         billing_cycle: billing_cycle,
+                                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
+                                                                                   register:Fabricate.create(:input_meter, group: group).input_register)) end
 
     let(:wrong_json) do
       {
-        "errors"=>[
-          {"parameter"=>"name", "detail"=>"size cannot be greater than 64"},
-          {"parameter"=>"begin_date", "detail"=>"must be a date"},
-          {"parameter"=>"end_date", "detail"=>"must be a date"}
+        'errors'=>[
+          {'parameter'=>'name', 'detail'=>'size cannot be greater than 64'},
+          {'parameter'=>'begin_date', 'detail'=>'must be a date'},
+          {'parameter'=>'end_date', 'detail'=>'must be a date'}
         ]
       }
     end
@@ -34,30 +34,30 @@ describe Admin::LocalpoolRoda do
       let(:cycles_json) do
         BillingCycle.all.collect do |cycle|
           {
-            "id"=>cycle.id,
-            "type"=>"billing_cycle",
+            'id'=>cycle.id,
+            'type'=>'billing_cycle',
             'updated_at'=>cycle.updated_at.as_json,
-            "name"=>cycle.name,
-            "begin_date"=>cycle.begin_date.as_json,
-            "end_date"=>cycle.end_date.as_json,
-            "billings"=>{
+            'name'=>cycle.name,
+            'begin_date'=>cycle.begin_date.as_json,
+            'end_date'=>cycle.end_date.as_json,
+            'billings'=>{
               'array'=> cycle.billings.collect do |billing|
                 {
-                  "id"=>billing.id,
-                  "type"=>"billing",
+                  'id'=>billing.id,
+                  'type'=>'billing',
                   'updated_at'=>billing.updated_at.as_json,
-                  "start_reading_id"=>billing.start_reading_id,
-                  "end_reading_id"=>billing.end_reading_id,
-                  "device_change_reading_1_id"=>nil,
-                  "device_change_reading_2_id"=>nil,
-                  "total_energy_consumption_kwh"=>1000,
-                  "total_price_cents"=>30000,
-                  "prepayments_cents"=>29000,
-                  "receivables_cents"=>1000,
-                  "invoice_number"=>billing.invoice_number,
-                  "status"=>"open",
-                  "updatable"=>true,
-                  "deletable"=>true
+                  'start_reading_id'=>billing.start_reading_id,
+                  'end_reading_id'=>billing.end_reading_id,
+                  'device_change_reading_1_id'=>nil,
+                  'device_change_reading_2_id'=>nil,
+                  'total_energy_consumption_kwh'=>1000,
+                  'total_price_cents'=>30000,
+                  'prepayments_cents'=>29000,
+                  'receivables_cents'=>1000,
+                  'invoice_number'=>billing.invoice_number,
+                  'status'=>'open',
+                  'updatable'=>true,
+                  'deletable'=>true
                 }
               end
             }
@@ -90,15 +90,15 @@ describe Admin::LocalpoolRoda do
 
     context 'POST' do
 
-      let(:begin_date) { Time.find_zone('Berlin').local(2016,1,1).to_datetime }
-      let(:end_date) { Time.find_zone('Berlin').local(2017,1,1) }
+      let(:begin_date) { Time.find_zone('Berlin').local(2016, 1, 1).to_datetime }
+      let(:end_date) { Time.find_zone('Berlin').local(2017, 1, 1) }
       let(:created_json) do
         {
-          "type"=>"billing_cycle",
-          "name"=>"mine",
-          "begin_date"=>'2016-01-01',
-          "end_date"=>'2017-01-01',
-          "billings"=>{'array'=>[]}
+          'type'=>'billing_cycle',
+          'name'=>'mine',
+          'begin_date'=>'2016-01-01',
+          'end_date'=>'2017-01-01',
+          'billings'=>{'array'=>[]}
         }
       end
 
@@ -131,40 +131,40 @@ describe Admin::LocalpoolRoda do
 
       let(:wrong_json) do
         {
-          "errors"=>[
-            {"parameter"=>"updated_at", "detail"=>"is missing"},
-            {"parameter"=>"name", "detail"=>"size cannot be greater than 64"},
-            {"parameter"=>"begin_date", "detail"=>"must be a date"},
-            {"parameter"=>"end_date", "detail"=>"must be a date"}
+          'errors'=>[
+            {'parameter'=>'updated_at', 'detail'=>'is missing'},
+            {'parameter'=>'name', 'detail'=>'size cannot be greater than 64'},
+            {'parameter'=>'begin_date', 'detail'=>'must be a date'},
+            {'parameter'=>'end_date', 'detail'=>'must be a date'}
           ]
         }
       end
 
       entity :updated_json do
         {
-          "id"=>billing_cycle.id,
-          "type"=>"billing_cycle",
-          "name"=>"abcd",
-          "begin_date"=>billing_cycle.begin_date.to_s,
-          "end_date"=>billing_cycle.end_date.to_s,
-          "billings"=>{
+          'id'=>billing_cycle.id,
+          'type'=>'billing_cycle',
+          'name'=>'abcd',
+          'begin_date'=>billing_cycle.begin_date.to_s,
+          'end_date'=>billing_cycle.end_date.to_s,
+          'billings'=>{
             'array'=> billing_cycle.billings.collect do |billing|
               {
-                "id"=>billing.id,
-                "type"=>"billing",
+                'id'=>billing.id,
+                'type'=>'billing',
                 'updated_at'=>billing.updated_at.as_json,
-                "start_reading_id"=>billing.start_reading_id,
-                "end_reading_id"=>billing.end_reading_id,
-                "device_change_reading_1_id"=>nil,
-                "device_change_reading_2_id"=>nil,
-                "total_energy_consumption_kwh"=>1000,
-                "total_price_cents"=>30000,
-                "prepayments_cents"=>29000,
-                "receivables_cents"=>1000,
-                "invoice_number"=>billing.invoice_number,
-                "status"=>"open",
-                "updatable"=>true,
-                "deletable"=>true
+                'start_reading_id'=>billing.start_reading_id,
+                'end_reading_id'=>billing.end_reading_id,
+                'device_change_reading_1_id'=>nil,
+                'device_change_reading_2_id'=>nil,
+                'total_energy_consumption_kwh'=>1000,
+                'total_price_cents'=>30000,
+                'prepayments_cents'=>29000,
+                'receivables_cents'=>1000,
+                'invoice_number'=>billing.invoice_number,
+                'status'=>'open',
+                'updatable'=>true,
+                'deletable'=>true
               }
             end
           }

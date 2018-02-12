@@ -300,7 +300,7 @@ class Services::ReadingCalculation
   #   reading: the reading, that is closer to the desired_date than the other one. If the distance is equal, reading_before is returned.
   def select_closest_reading(desired_date, reading_before, reading_behind)
     if reading_before && reading_behind
-      if (reading_before.date  - desired_date).abs > (desired_date - reading_behind.date).abs
+      if (reading_before.date - desired_date).abs > (desired_date - reading_behind.date).abs
         reading_behind
       else
         reading_before
@@ -415,4 +415,5 @@ class Services::ReadingCalculation
                               quality: Reading::Single::READ_OUT,
                               state: Reading::Single::Z86)
   end
+
 end

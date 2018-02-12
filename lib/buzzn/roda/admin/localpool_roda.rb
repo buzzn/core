@@ -7,6 +7,7 @@ require_relative '../../transactions/admin/localpool/update'
 
 module Admin
   class LocalpoolRoda < BaseRoda
+
     PARENT = :localpool
 
     plugin :shared_vars
@@ -135,5 +136,6 @@ module Admin
           .call(r.params)
       end
     end
+
   end
 end

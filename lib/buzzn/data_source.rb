@@ -1,5 +1,4 @@
 module Buzzn
-
   class DataSource
 
     # retrieves power data of all registers of group or virtual_register

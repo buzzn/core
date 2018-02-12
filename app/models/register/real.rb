@@ -57,5 +57,6 @@ module Register
         raise ArgumentError.new('need a Time object at beginning of day')
       end
     end
+
   end
 end

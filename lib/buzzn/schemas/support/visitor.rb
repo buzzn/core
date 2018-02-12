@@ -80,4 +80,5 @@ class Schemas::Support::Visitor
     end
     result
   end
+
 end

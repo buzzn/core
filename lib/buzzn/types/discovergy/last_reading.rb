@@ -10,6 +10,9 @@ class Types::Discovergy::LastReading < Types::Discovergy::Meter
   def to_path; :last_reading; end
 
   class Get < Types::Discovergy::LastReading
+
     include Types::Discovergy::Get
+
   end
+
 end

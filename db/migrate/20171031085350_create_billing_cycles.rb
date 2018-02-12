@@ -17,4 +17,5 @@ class CreateBillingCycles < ActiveRecord::Migration
     remove_belongs_to :billing_cycles, :localpool, references: :group, type: :uuid, index: true, null: false
     SCHEMA.down(:billing_cycles, self)
   end
+
 end

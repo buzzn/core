@@ -3,6 +3,7 @@ require_relative 'localpool'
 module Schemas
   module Invariants
     module Contract
+
       LocalpoolProcessing = Schemas::Support.Form(Localpool) do
 
         required(:customer).filled
@@ -16,6 +17,7 @@ module Schemas
           tariffs.cover_beginning_of_contract?(begin_date).and(tariffs.cover_ending_of_contract?(end_date))
         end
       end
+
     end
   end
 end

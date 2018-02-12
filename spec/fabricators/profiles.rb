@@ -11,14 +11,12 @@ Fabricator :profile do
   created_at  { (rand*10).days.ago }
 end
 
-
 Fabricator :profile_felix, from: :profile do
   user_name   'ffaerber'
   first_name  'Felix'
   last_name   'Faerber'
   website     'http://www.ffaerber.com'
 end
-
 
 Fabricator :profile_ralf, from: :profile do
   user_name   'rschroeder'

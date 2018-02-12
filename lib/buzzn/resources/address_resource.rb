@@ -8,4 +8,5 @@ class AddressResource < Buzzn::Resource::Entity
               :country
 
   attributes :updatable, :deletable
+
 end

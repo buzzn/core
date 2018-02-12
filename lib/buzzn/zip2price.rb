@@ -1,6 +1,7 @@
 module Buzzn
 
   class Price
+
     attr_reader :energyprice_cents_per_kilowatt_hour, :baseprice_cents_per_month, :total_cents_per_month
 
     def initialize(baseprice_cents_per_month, energyprice_cents_per_kilowatt_hour, total_cents_per_month)
@@ -22,6 +23,7 @@ module Buzzn
     def <=>(other)
       self.to_f <=> other.to_f
     end
+
   end
 
   class Zip2Price
@@ -39,6 +41,7 @@ module Buzzn
     DEFAULT_KA       = 0.11
 
     class << self
+
       def type_to_method
         {
           single_tarif_meter: :netto_general,
@@ -52,6 +55,7 @@ module Buzzn
       def types
         type_to_method.keys.collect(&:to_s)
       end
+
     end
 
     def initialize(kwh, zip, type)
@@ -82,9 +86,9 @@ module Buzzn
         # using cent prices from here and round as the legacy code did:
         # base- and energy prices are round up to the next 10 cents
         # totalprice rounds the regular way
-        baseprice_cents_per_month   = (baseprice_netto * MWST / 1.2).ceil * 10.0
+        baseprice_cents_per_month = (baseprice_netto * MWST / 1.2).ceil * 10.0
         energyprice_cents_per_kilowatt_hour = (energyprice_netto * MWST * 10.0).ceil * 10.0
-        total_cents_per_month       = (baseprice_cents_per_month + @kwh * energyprice_cents_per_kilowatt_hour / 1200.0).round
+        total_cents_per_month = (baseprice_cents_per_month + @kwh * energyprice_cents_per_kilowatt_hour / 1200.0).round
         Price.new(baseprice_cents_per_month, energyprice_cents_per_kilowatt_hour, total_cents_per_month)
       else
         Price.new(0, 0, 0)
@@ -115,5 +119,7 @@ module Buzzn
         result
       end
     end
+
   end
+
 end

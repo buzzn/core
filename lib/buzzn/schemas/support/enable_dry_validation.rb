@@ -1,11 +1,14 @@
 require_relative '../support'
 
 module Schemas::Support
+
   module DryValidation
+
     def is_a?(clazz)
       # for dry-validation we say we are a Hash
       super || clazz == Hash
     end
+
   end
 
   module ValidateInvariant
@@ -21,6 +24,7 @@ module Schemas::Support
         true
       end
     end
+
   end
 
   module DryValidationForActiveRecord
@@ -37,9 +41,11 @@ module Schemas::Support
         ActiveRecordValidator.new(self).validate(invariant)
       end
     end
+
   end
 
   class ActiveRecordValidator
+
     include DryValidation
 
     def initialize(model)
@@ -62,9 +68,11 @@ module Schemas::Support
     def validate(schema)
       schema.call(self)
     end
+
   end
 
   module DryValidationForResource
+
     include DryValidation
 
     def get(attr)
@@ -80,7 +88,6 @@ module Schemas::Support
       self.respond_to?(attr) || object.attributes.key?(attr) || object.respond_to?(attr)
     end
 
-
     def find_completeness(clazz)
       if clazz != Buzzn::Resource::Base
         invariant = "#{::Schemas::Completeness}::#{clazz.to_s.sub(/Resource$/, '')}".safe_constantize
@@ -95,5 +102,7 @@ module Schemas::Support
         raise "could not find #{::Schemas::Completeness}::#{self.class}"
       end
     end
+
   end
+
 end

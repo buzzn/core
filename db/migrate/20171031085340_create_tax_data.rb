@@ -16,4 +16,5 @@ class CreateTaxData < ActiveRecord::Migration
     remove_foreign_key :contract_tax_data, :contracts, name: :fk_payments_contract
     SCHEMA.down(:contract_tax_data, self)
   end
+
 end

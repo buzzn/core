@@ -3,6 +3,7 @@ require_relative '../filterable'
 
 module Register
   class Base < ActiveRecord::Base
+
     self.table_name = :registers
 
     include Import.active_record['services.current_power']
@@ -10,11 +11,13 @@ module Register
     include Filterable
 
     class Label < String
+
       ['production', 'consumption', 'demarcation', 'grid'].each do |method|
         define_method "#{method}?" do
           self.to_s.start_with?(method)
         end
       end
+
     end
 
     enum label: %i(consumption consumption_common
@@ -54,7 +57,7 @@ module Register
       if (Register::Base.labels.values & labels).sort != labels.sort
         raise ArgumentError.new("#{labels.inspect} needs to be subset of #{Register::Base.labels.values}")
       end
-      self.where("label in (?)", labels)
+      self.where('label in (?)', labels)
     end
 
     # permissions helpers
@@ -68,7 +71,6 @@ module Register
     def self.filter(value)
       do_filter(value, *search_attributes)
     end
-
 
     def data_source
       Buzzn::MissingDataSource.name
@@ -126,19 +128,17 @@ module Register
       end
     end
 
-
-
     # TODO move me into clockwork
     def self.observe
-      Sidekiq::Client.push({
-         'class' => RegisterObserveWorker,
-         'queue' => :default,
-         'args' => []
-        })
+      Sidekiq::Client.push(
+        'class' => RegisterObserveWorker,
+        'queue' => :default,
+        'args' => []
+      )
     end
 
     def self.create_all_observer_activities
-      where("observer_enabled = ? OR observer_offline_monitoring = ?", true, true).each do |register|
+      where('observer_enabled = ? OR observer_offline_monitoring = ?', true, true).each do |register|
         register.create_observer_activities rescue nil
       end
     end
@@ -188,5 +188,6 @@ module Register
         raise "unknown direction #{val}"
       end
     end
+
   end
 end

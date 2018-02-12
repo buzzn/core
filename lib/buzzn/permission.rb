@@ -20,7 +20,7 @@ module Buzzn
     def freeze
       @groups.freeze
       @perms.freeze
-      @perms.each do |k,v|
+      @perms.each do |k, v|
         v.freeze
       end
     end
@@ -106,5 +106,6 @@ module Buzzn
     def to_s
       'Permissions<' + to_name + '>[' + @perms.keys.join(',') + ']'
     end
+
   end
 end

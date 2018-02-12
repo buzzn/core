@@ -45,4 +45,5 @@ class CreateGroups < ActiveRecord::Migration
 
     SCHEMA.down(:groups, self)
   end
+
 end

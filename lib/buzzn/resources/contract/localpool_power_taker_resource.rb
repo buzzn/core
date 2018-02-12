@@ -15,5 +15,6 @@ module Contract
                 :mandate_reference
 
     has_one :register
+
   end
 end

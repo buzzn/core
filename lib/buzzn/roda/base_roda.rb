@@ -48,4 +48,5 @@ class BaseRoda < CommonRoda
     jwt_secret Import.global('config.jwt_secret')
     json_response_error_status 401
   end
+
 end

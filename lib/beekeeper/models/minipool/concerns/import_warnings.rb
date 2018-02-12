@@ -12,4 +12,5 @@ module Beekeeper::ImportWarnings
   def add_warning(attribute, data)
     warnings[attribute] = data
   end
+
 end

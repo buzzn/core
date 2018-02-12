@@ -13,4 +13,5 @@ class AdminResource < Buzzn::Resource::Base
           current_roles: permissions.retrieve,
           permissions: permissions)
   end
+
 end

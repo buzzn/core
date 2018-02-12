@@ -20,7 +20,9 @@ SAMPLES_TO_LOAD = %i(
 # Examples: SampleData.localpools.people_power, SampleData.meters.grid, etc.
 #
 module SampleData
+
   SAMPLES_TO_LOAD.each { |type| mattr_accessor type }
+
 end
 
 # load files

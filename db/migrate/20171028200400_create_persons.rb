@@ -27,4 +27,5 @@ class CreatePersons < ActiveRecord::Migration
     remove_index :persons, [:first_name, :last_name, :email]
     SCHEMA.down(:persons, self)
   end
+
 end
