@@ -64,12 +64,30 @@ module Register
 
     scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
 
-    def self.search_attributes
-      [:name]
-    end
+    class << self
 
-    def self.filter(value)
-      do_filter(value, *search_attributes)
+      def search_attributes
+        []
+      end
+
+      def filter(value)
+        do_filter(value, *search_attributes)
+      end
+
+      # TODO move me into clockwork
+      def observe
+        Sidekiq::Client.push(
+          'class' => RegisterObserveWorker,
+          'queue' => :default,
+          'args' => []
+        )
+      end
+
+      def create_all_observer_activities
+        where('observer_enabled = ? OR observer_offline_monitoring = ?', true, true).each do |register|
+          register.create_observer_activities rescue nil
+        end
+      end
     end
 
     def data_source
@@ -125,21 +143,6 @@ module Register
           self.save
         end
 
-      end
-    end
-
-    # TODO move me into clockwork
-    def self.observe
-      Sidekiq::Client.push(
-        'class' => RegisterObserveWorker,
-        'queue' => :default,
-        'args' => []
-      )
-    end
-
-    def self.create_all_observer_activities
-      where('observer_enabled = ? OR observer_offline_monitoring = ?', true, true).each do |register|
-        register.create_observer_activities rescue nil
       end
     end
 
