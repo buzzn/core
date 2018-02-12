@@ -20,6 +20,7 @@ class CreateContract < ActiveRecord::Migration
 
     add_foreign_key :contracts, :registers, name: :fk_contracts_register
     add_foreign_key :contracts, :groups, name: :fk_contracts_localpool, column: :localpool_id
+    add_foreign_key :contracts, :market_locations, name: :fk_contracts_market_location, column: :market_location_id
     add_foreign_key :contracts, :bank_accounts, name: :fk_contracts_customer_bank_account, column: :customer_bank_account_id
     add_foreign_key :contracts, :bank_accounts, name: :fk_contracts_contractor_bank_account, column: :contractor_bank_account_id
     add_foreign_key :contracts, :persons, name: :fk_contracts_customer_person, column: :customer_person_id

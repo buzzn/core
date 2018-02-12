@@ -36,6 +36,7 @@ module Contract
 
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
     belongs_to :customer_bank_account, class_name: 'BankAccount'
+    belongs_to :market_location
 
     # status consts
     ONBOARDING = 'onboarding'

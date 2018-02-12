@@ -1117,6 +1117,7 @@ CREATE TABLE contracts (
     end_date date,
     contract_number integer,
     contract_number_addition integer,
+    market_location_id integer,
     forecast_kwh_pa integer,
     original_signing_user character varying,
     mandate_reference character varying,
@@ -2990,6 +2991,14 @@ ALTER TABLE ONLY contracts
 
 
 --
+-- Name: contracts fk_contracts_market_location; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contracts
+    ADD CONSTRAINT fk_contracts_market_location FOREIGN KEY (market_location_id) REFERENCES market_locations(id);
+
+
+--
 -- Name: contracts fk_contracts_register; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3257,6 +3266,8 @@ INSERT INTO schema_migrations (version) VALUES ('20171031085280');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085290');
 
+INSERT INTO schema_migrations (version) VALUES ('20171031085295');
+
 INSERT INTO schema_migrations (version) VALUES ('20171031085300');
 
 INSERT INTO schema_migrations (version) VALUES ('20171031085310');
@@ -3276,6 +3287,4 @@ INSERT INTO schema_migrations (version) VALUES ('20171115086500');
 INSERT INTO schema_migrations (version) VALUES ('20171207154218');
 
 INSERT INTO schema_migrations (version) VALUES ('20180112000000');
-
-INSERT INTO schema_migrations (version) VALUES ('20180212000000');
 
