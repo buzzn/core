@@ -1739,6 +1739,7 @@ CREATE TABLE registers (
     observer_max_threshold integer,
     observer_offline_monitoring boolean,
     market_location_id integer,
+    name character varying(64) NOT NULL,
     share_with_group boolean NOT NULL,
     share_publicly boolean,
     created_at timestamp without time zone NOT NULL,
