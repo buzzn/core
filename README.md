@@ -192,6 +192,16 @@ some = Exception(to, the, rule)
  
 Place the `rubocop:disable` comment at the top of the file.
 
+### How to run rubocop before every push
+
+Install the overcommit gem and add the following config file:
+
+```yml
+PrePush:
+  RuboCop:
+    enabled: true
+```
+
 # Misc admin info
 
 ## Start sidekiq message queue
