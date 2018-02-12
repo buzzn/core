@@ -1,0 +1,5 @@
+# configures git hooks using https://github.com/brigade/overcommit
+PrePush:
+  RuboCop:
+    enabled: true
+    command: ['bundle', 'exec', 'rubocop'] # Invoke within Bundler context
