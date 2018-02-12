@@ -7,4 +7,5 @@ Schemas::Constraints::Register::Common = Schemas::Support.Form do
   optional(:observer_min_threshold).filled(:int?, gteq?: 0)
   optional(:observer_max_threshold).filled(:int?, gteq?: 0)
   optional(:observer_offline_monitoring).filled(:bool?)
+  optional(:market_location_id).filled(:int?, gteq?: 1)
 end
