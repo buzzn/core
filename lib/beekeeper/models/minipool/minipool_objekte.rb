@@ -118,6 +118,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   GROUPS_WITH_DISPLAY_APP_ENABLED = [
     'Bahnhofstr. 21',
     'Fritz-Winter-Straße 3+7 - WA10',
+    'Green warriors (Testgruppe)',
     'Heigelstraße 27',
     'L.O.F.T.',
     'Mehrgenerationenplatz Forstenried',
@@ -141,7 +142,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       end_date = attributes[:begin_date]
       attributes
     end.reverse.to_enum.with_index(1) do |attributes, index|
-      attributes[:name] = "Tariff #{index}"
+      attributes[:name] = "Tarif #{index}"
     end
   end
 end
