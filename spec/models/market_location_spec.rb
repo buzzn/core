@@ -1,0 +1,2 @@
+describe MarketLocation do
+end

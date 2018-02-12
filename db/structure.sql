@@ -1438,6 +1438,38 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 
 
 --
+-- Name: market_locations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE market_locations (
+    id integer NOT NULL,
+    name character varying(64) NOT NULL,
+    market_location_id character varying(11),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: market_locations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE market_locations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: market_locations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE market_locations_id_seq OWNED BY market_locations.id;
+
+
+--
 -- Name: meters; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1706,7 +1738,6 @@ CREATE TABLE registers (
     observer_min_threshold integer,
     observer_max_threshold integer,
     observer_offline_monitoring boolean,
-    name character varying(64) NOT NULL,
     share_with_group boolean NOT NULL,
     share_publicly boolean,
     created_at timestamp without time zone NOT NULL,
@@ -1986,6 +2017,13 @@ ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::reg
 
 
 --
+-- Name: market_locations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY market_locations ALTER COLUMN id SET DEFAULT nextval('market_locations_id_seq'::regclass);
+
+
+--
 -- Name: meters id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2253,6 +2291,14 @@ ALTER TABLE ONLY formula_parts
 
 ALTER TABLE ONLY groups
     ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: market_locations market_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY market_locations
+    ADD CONSTRAINT market_locations_pkey PRIMARY KEY (id);
 
 
 --
@@ -2574,6 +2620,13 @@ CREATE UNIQUE INDEX index_market_functions_on_organization_id_function ON organi
 
 
 --
+-- Name: index_market_locations_on_market_location_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_market_locations_on_market_location_id ON market_locations USING btree (market_location_id);
+
+
+--
 -- Name: index_meters_on_broker_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2839,11 +2892,11 @@ ALTER TABLE ONLY billings
 
 
 --
--- Name: billings fk_billings_contracs; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: billings fk_billings_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY billings
-    ADD CONSTRAINT fk_billings_contracs FOREIGN KEY (localpool_power_taker_contract_id) REFERENCES contracts(id);
+    ADD CONSTRAINT fk_billings_contracts FOREIGN KEY (localpool_power_taker_contract_id) REFERENCES contracts(id);
 
 
 --
@@ -3221,4 +3274,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171115086500');
 INSERT INTO schema_migrations (version) VALUES ('20171207154218');
 
 INSERT INTO schema_migrations (version) VALUES ('20180112000000');
+
+INSERT INTO schema_migrations (version) VALUES ('20180212000000');
 
