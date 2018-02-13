@@ -1749,7 +1749,8 @@ CREATE TABLE registers (
     direction registers_direction,
     type character varying NOT NULL,
     last_observed timestamp without time zone,
-    meter_id integer NOT NULL
+    meter_id integer NOT NULL,
+    market_location_id integer
 );
 
 
@@ -2763,6 +2764,13 @@ CREATE UNIQUE INDEX index_readings_on_register_id_and_date_and_reason ON reading
 
 
 --
+-- Name: index_registers_on_market_location_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registers_on_market_location_id ON registers USING btree (market_location_id);
+
+
+--
 -- Name: index_registers_on_meter_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3203,6 +3211,14 @@ ALTER TABLE ONLY persons
 
 ALTER TABLE ONLY readings
     ADD CONSTRAINT fk_readings_register FOREIGN KEY (register_id) REFERENCES registers(id);
+
+
+--
+-- Name: registers fk_registers_market_location; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY registers
+    ADD CONSTRAINT fk_registers_market_location FOREIGN KEY (market_location_id) REFERENCES market_locations(id);
 
 
 --
