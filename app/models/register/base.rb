@@ -65,33 +65,6 @@ module Register
 
     scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
 
-    class << self
-
-      def search_attributes
-        []
-      end
-
-      def filter(value)
-        do_filter(value, *search_attributes)
-      end
-
-      # TODO move me into clockwork
-      def observe
-        Sidekiq::Client.push(
-          'class' => RegisterObserveWorker,
-          'queue' => :default,
-          'args' => []
-        )
-      end
-
-      def create_all_observer_activities
-        where('observer_enabled = ? OR observer_offline_monitoring = ?', true, true).each do |register|
-          register.create_observer_activities rescue nil
-        end
-      end
-
-    end
-
     def data_source
       Buzzn::MissingDataSource.name
     end
@@ -116,82 +89,6 @@ module Register
 
     def post_decimal_position
       1
-    end
-
-    # not used anymore
-    def calculate_forecast
-      readings = readings.user_input
-      if readings.size > 1
-        last_timestamp = readings.last[:timestamp].to_i
-        last_value = readings.last[:energy_milliwatt_hour]/1000000.0
-        another_timestamp = readings[readings.size - 2][:timestamp].to_i
-        another_value = readings[readings.size - 2][:energy_milliwatt_hour]/1000000.0
-        i = 3
-        while last_timestamp - another_timestamp < 2592000 do # difference must at least be 30 days = 2592000 seconds
-          if i > readings.size
-            return
-          end
-          another_timestamp = readings[readings.size - i][:timestamp].to_i
-          another_value = readings[readings.size - i][:energy_milliwatt_hour]/1000000.0
-          i += 1
-        end
-        if last_timestamp - another_timestamp >= 2592000
-          count_days_in_year = (Time.at(last_timestamp).end_of_year - Time.at(last_timestamp).beginning_of_year)/(3600*24)
-          count_past_days = ((Time.at(last_timestamp) - Time.at(another_timestamp))/3600/24).to_i
-          count_watt_hour = last_value - another_value
-          yearly_consumption = (count_watt_hour / (count_past_days * 1.0)) * count_days_in_year
-
-          self.forecast_kwh_pa = yearly_consumption
-          self.save
-        end
-
-      end
-    end
-
-    UNDERSHOOTS = :undershoots
-    EXCEEDS     = :exceeds
-    OFFLINE     = :offline
-    NONE        = :none
-
-    def create_observer_activities
-      if (last_reading = current_power.for_register(self)).nil?
-        return NONE
-      end
-
-      # last readings are in milliwatt
-      power = last_reading.value / 1000.0
-
-      if Time.new.to_i - last_reading.timestamp.to_i >= 5.minutes
-        if observer_offline_monitoring
-          if Time.new.to_i - last_reading.timestamp.to_i < 10.minutes
-            OFFLINE
-          else
-            NONE
-          end
-        end
-      elsif observer_enabled
-        update(last_observed: Time.at(last_reading.timestamp/1000.0).utc)
-        if power < observer_min_threshold && power >= 0
-          UNDERSHOOTS
-        elsif power >= observer_max_threshold
-          EXCEEDS
-        else
-          NONE
-        end
-      else
-        NONE
-      end
-    end
-
-    def direction?(val)
-      case val.to_s.downcase.sub(/put/, '').to_sym
-      when :in
-        input?
-      when :out
-        output?
-      else
-        raise "unknown direction #{val}"
-      end
     end
 
   end
