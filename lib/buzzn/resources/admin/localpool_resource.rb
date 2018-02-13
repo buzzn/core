@@ -34,6 +34,7 @@ module Admin
     has_many :tariffs, Contract::TariffResource
     has_many :billing_cycles, BillingCycleResource
     has_one :owner
+    has_one :gap_contract_customer
     has_one :address
     has_one :distribution_system_operator
     has_one :transmission_system_operator
@@ -52,12 +53,15 @@ module Admin
       all(permissions.meters, object.meters.real_or_virtual)
     end
 
+    # list of all possible powersources (production) on the group,
+    # i.e. pv, chp, wind, water
     def power_sources
       object.registers.select(:label).production.collect do |register|
         register.label.sub('production_', '')
       end.uniq
     end
 
+    # absolute display app url
     def display_app_url
       if object.show_display_app
         "#{display_url}/#{object.slug}"

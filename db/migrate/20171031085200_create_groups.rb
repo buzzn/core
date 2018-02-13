@@ -11,16 +11,26 @@ class CreateGroups < ActiveRecord::Migration
     add_column :groups, :slug, :string, null: false, limit: 64
 
     add_belongs_to :groups, :address, index: true, null: true
+
     add_belongs_to :groups, :owner_person, reference: :persons, index: true, null: true
     add_belongs_to :groups, :owner_organization, reference: :organizations, index: true, null: true
+    add_belongs_to :groups, :gap_contract_customer_person, reference: :persons, index: true, null: true
+    add_belongs_to :groups, :gap_contract_customer_organization, reference: :organizations, index: true, null: true
+
     add_belongs_to :groups, :distribution_system_operator, reference: :organizations, index: true, null: true
     add_belongs_to :groups, :transmission_system_operator, reference: :organizations, index: true, null: true
     add_belongs_to :groups, :electricity_supplier, reference: :organizations, index: true, null: true
+
     add_belongs_to :groups, :bank_account, reference: :bank_accounts, index: true, null: true
 
     add_foreign_key :groups, :addresses, name: :fk_groups_address
-    add_foreign_key :groups, :persons, name: :fk_groups_person, column: :owner_person_id
-    add_foreign_key :groups, :organizations, name: :fk_groups_organization, column: :owner_organization_id
+
+    add_foreign_key :groups, :persons, name: :fk_groups_owner_person, column: :owner_person_id
+    add_foreign_key :groups, :organizations, name: :fk_groups_owner_organization, column: :owner_organization_id
+
+    add_foreign_key :groups, :persons, name: :fk_groups_gap_contract_customer_person, column: :gap_contract_customer_person_id
+    add_foreign_key :groups, :organizations, name: :fk_groups_gap_contract_customer_organization, column: :gap_contract_customer_organization_id
+
     add_foreign_key :groups, :organizations, name: :fk_groups_distribution_system_operator, column: :distribution_system_operator_id
     add_foreign_key :groups, :organizations, name: :fk_groups_transmission_system_operator, column: :transmission_system_operator_id
     add_foreign_key :groups, :organizations, name: :fk_groups_electricity_supplier, column: :electricity_supplier_id

@@ -1,11 +1,15 @@
 def localpool_contract(attrs = {})
   localpool = SampleData.localpools.people_power
   factory_attributes = attrs.except(:register_readings).merge(localpool: localpool)
+  is_gap_contract = factory_attributes.delete(:gap_contract)
   if attrs.key?(:customer)
     factory_attributes.reverse_merge!(contractor: localpool.owner)
     contract = create(:contract, :localpool_powertaker, factory_attributes)
   else
     contract = create(:contract, :localpool_third_party, factory_attributes)
+  end
+  if is_gap_contract
+    contract.localpool.update(gap_contract_customer: contract.customer)
   end
   contract.register.readings = attrs[:register_readings] unless attrs.fetch(:register_readings, []).empty?
   if contract.customer.is_a?(Person) # TODO: clarify what to do when it's an Organization?
@@ -111,6 +115,7 @@ SampleData.contracts.pt5a = localpool_contract(
 
 # Leerstand
 SampleData.contracts.pt5_empty = localpool_contract(
+  gap_contract: true,
   signing_date: SampleData.contracts.pt5a.termination_date,
   begin_date: SampleData.contracts.pt5a.end_date,
   termination_date: Date.parse('2017-4-30'),

@@ -70,6 +70,8 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     bank_accounts :address
   end
 
+  gap_contract_customer '/owner'
+
   energy_consumers do
     retrieve :managers
   end
