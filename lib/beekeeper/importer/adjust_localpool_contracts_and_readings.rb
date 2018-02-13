@@ -85,7 +85,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       end_date:                      next_contract.begin_date,
       # these attributes come from different places ...
       contract_number_addition:      next_contract_number_addition(previous_contract.localpool),
-      customer:                      find_contract_customer(previous_contract.localpool)
+      customer:                      find_gap_contract_customer(previous_contract.localpool)
     }
     Contract::LocalpoolGap.create!(attributes)
   end
@@ -95,27 +95,9 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     current_max + 1
   end
 
-  GAP_CONTRACT_CUSTOMER_LOOKUP = {
-    # localpool slug => contract number which has the customer to be used
-    'cherubinistr'                      => '60009/8',
-    'gertrud-grunow-strasse'            => '60030/37',
-    'gotthardstrasse'                   => '60010/1',
-    'hofackerstrasse'                   => '60006/3',
-    'mehrgenerationenplatz-forstenried' => '60015/73',
-    'wachsbleiche'                      => '60014/12',
-    'wagnis'                            => '60008/52',
-    'scheffelstrasse'                   => '60044/7'
-  }
-
-  def find_contract_customer(localpool)
-    buzznid = GAP_CONTRACT_CUSTOMER_LOOKUP[localpool.slug]
-    unless buzznid
-      logger.error("Customer for localpool '#{localpool.name}' gap contract isn't set, not creating one.")
-      return
-    end
-    contract_number, contract_number_addition = buzznid.split('/')
-    contract = Contract::LocalpoolPowerTaker.find_by(contract_number: contract_number, contract_number_addition: contract_number_addition)
-    contract.customer
+  def find_gap_contract_customer(localpool)
+    customer = Beekeeper::Importer::GapContractCustomer.find_by_localpool(localpool)
+    customer ? customer : raise('No customer for gap contract found!')
   end
 
   def handle_two_readings(readings, register)
