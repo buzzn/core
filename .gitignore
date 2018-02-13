@@ -25,3 +25,4 @@ dump.rdb
 .rspec-local
 *.local
 public/uploads
+uploads
