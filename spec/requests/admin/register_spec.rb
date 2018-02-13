@@ -119,7 +119,7 @@ describe Admin::LocalpoolRoda do
                 observer_offline_monitoring: true
           expect(response).to have_http_status(200)
           register.reload
-          expect(register.metering_point_id).to eq'123456'
+          expect(register.metering_point_id).to eq '123456'
           expect(register.name).to eq 'Smarty'
           expect(register.label).to eq 'demarcation_pv'
           expect(register.observer_enabled).to eq true
@@ -366,8 +366,7 @@ describe Admin::LocalpoolRoda do
 
             let(:register) { send "#{type}_register" }
             let!(:readings_json) do
-              readings = 2.times
-                           .collect { Fabricate(:single_reading, register: register) }
+              2.times { Fabricate(:single_reading, register: register) }
               register.readings.collect do |r|
                 {
                   'id'=>r.id,
