@@ -1445,10 +1445,10 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 CREATE TABLE market_locations (
     id integer NOT NULL,
     name character varying(64) NOT NULL,
-    group_id integer NOT NULL,
     market_location_id character varying(11),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    group_id integer NOT NULL
 );
 
 
@@ -3094,6 +3094,14 @@ ALTER TABLE ONLY groups
 
 
 --
+-- Name: market_locations fk_market_locations_group; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY market_locations
+    ADD CONSTRAINT fk_market_locations_group FOREIGN KEY (group_id) REFERENCES groups(id);
+
+
+--
 -- Name: meters fk_meters_broker; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3187,14 +3195,6 @@ ALTER TABLE ONLY payments
 
 ALTER TABLE ONLY persons
     ADD CONSTRAINT fk_persons_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
-
-
---
--- Name: market_locations fk_rails_6a09c3b799; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY market_locations
-    ADD CONSTRAINT fk_rails_6a09c3b799 FOREIGN KEY (group_id) REFERENCES groups(id);
 
 
 --

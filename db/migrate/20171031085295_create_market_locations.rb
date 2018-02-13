@@ -7,11 +7,13 @@ class CreateMarketLocations < ActiveRecord::Migration
   def up
     SCHEMA.up(:market_locations, self)
 
-    add_foreign_key :market_locations, :groups
-    # add_foreign_key :market_locations, :contracts
+    add_belongs_to :market_locations, :group, index: true, null: false
+    #add_belongs_to :market_locations, :contract, index: true, null: false
+
+    add_foreign_key :market_locations, :groups, name: :fk_market_locations_group
+    # add_foreign_key :market_locations, :contracts, name: :fk_market_locations_contract
 
     add_index :market_locations, :market_location_id, unique: true
-    add_index :market_locations, :group_id
   end
 
   def down
