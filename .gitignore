@@ -23,5 +23,5 @@ dump.rdb
 
 .byebug_history
 .rspec-local
-.env.local
+*.local
 public/uploads
