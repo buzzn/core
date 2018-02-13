@@ -16,7 +16,7 @@ class Beekeeper::Importer::GapContractCustomer
 
     def find_by_localpool(localpool)
       buzznid = LOOKUP[localpool.slug]
-      contract_customer_for_buzznid(buzznid)
+      contract_customer_for_buzznid(buzznid) if buzznid
     end
 
     def contract_customer_for_buzznid(buzznid)
