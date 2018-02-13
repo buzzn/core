@@ -27,6 +27,7 @@ paths:
         type: string
         format: ''
         maxLength: 64
+        minLength: 4
       - name: description
         in: formData
         required: false
@@ -786,6 +787,7 @@ paths:
         type: string
         format: ''
         maxLength: 128
+        minLength: 4
       - name: manufacturer_name
         in: formData
         required: false
@@ -1027,6 +1029,7 @@ paths:
         type: string
         format: ''
         maxLength: 128
+        minLength: 4
       - name: updated_at
         in: formData
         required: true
