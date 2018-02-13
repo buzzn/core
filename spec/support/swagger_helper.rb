@@ -57,7 +57,8 @@ module SwaggerHelper
       when :string
         sparam.type = 'string'
         sparam.format = options[:format] || ''
-        sparam.maxLength = options[:max_size] if options[:max_size]
+        sparam.maxLength = options[:max_size]
+        sparam.minLength = options[:min_size]
       when :enum
         sparam.type = 'string'
         sparam.enum = options[:values]

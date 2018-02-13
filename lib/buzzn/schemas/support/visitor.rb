@@ -41,7 +41,7 @@ class Schemas::Support::Visitor
         type = rule.predicate.to_s.gsub(/.*#|\?>$/, '')
         case type
         when 'filled'
-          result[:min_size] = 1
+          nil # nothing to do here
         when 'bool'
           result[:type] = :boolean
         when 'int'
@@ -55,6 +55,8 @@ class Schemas::Support::Visitor
         when 'included_in'
           result[:type] = :enum
           result[:values] = rule.options[:args].flatten
+        when 'size'
+          result[:max_size] = result[:min_size] = rule.options[:args].first
         when 'max_size'
           result[:max_size] = rule.options[:args].first
         when 'min_size'

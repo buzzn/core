@@ -17,6 +17,7 @@ class CreateContract < ActiveRecord::Migration
     add_belongs_to :contracts, :customer_organization, reference: :organizations, index: true, null: true
     add_belongs_to :contracts, :contractor_person, reference: :persons, index: true, null: true
     add_belongs_to :contracts, :contractor_organization, reference: :organizations, index: true, null: true
+    add_belongs_to :contracts, :market_location, index: true, null: true
 
     add_foreign_key :contracts, :registers, name: :fk_contracts_register
     add_foreign_key :contracts, :groups, name: :fk_contracts_localpool, column: :localpool_id

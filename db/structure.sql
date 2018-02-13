@@ -1117,7 +1117,6 @@ CREATE TABLE contracts (
     end_date date,
     contract_number integer,
     contract_number_addition integer,
-    market_location_id integer,
     forecast_kwh_pa integer,
     original_signing_user character varying,
     mandate_reference character varying,
@@ -1146,6 +1145,7 @@ CREATE TABLE contracts (
     customer_organization_id integer,
     contractor_person_id integer,
     contractor_organization_id integer,
+    market_location_id integer,
     CONSTRAINT check_contract_contractor CHECK ((NOT ((contractor_person_id IS NOT NULL) AND (contractor_organization_id IS NOT NULL)))),
     CONSTRAINT check_contract_customer CHECK ((NOT ((customer_person_id IS NOT NULL) AND (customer_organization_id IS NOT NULL))))
 );
@@ -1445,10 +1445,10 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 CREATE TABLE market_locations (
     id integer NOT NULL,
     name character varying(64) NOT NULL,
-    group_id integer NOT NULL,
     market_location_id character varying(11),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    group_id integer NOT NULL
 );
 
 
@@ -1749,7 +1749,8 @@ CREATE TABLE registers (
     direction registers_direction,
     type character varying NOT NULL,
     last_observed timestamp without time zone,
-    meter_id integer NOT NULL
+    meter_id integer NOT NULL,
+    market_location_id integer
 );
 
 
@@ -2504,6 +2505,13 @@ CREATE INDEX index_contracts_on_localpool_id ON contracts USING btree (localpool
 
 
 --
+-- Name: index_contracts_on_market_location_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contracts_on_market_location_id ON contracts USING btree (market_location_id);
+
+
+--
 -- Name: index_contracts_on_register_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2760,6 +2768,13 @@ CREATE INDEX index_readings_on_register_id ON readings USING btree (register_id)
 --
 
 CREATE UNIQUE INDEX index_readings_on_register_id_and_date_and_reason ON readings USING btree (register_id, date, reason);
+
+
+--
+-- Name: index_registers_on_market_location_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_registers_on_market_location_id ON registers USING btree (market_location_id);
 
 
 --
@@ -3094,6 +3109,14 @@ ALTER TABLE ONLY groups
 
 
 --
+-- Name: market_locations fk_market_locations_group; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY market_locations
+    ADD CONSTRAINT fk_market_locations_group FOREIGN KEY (group_id) REFERENCES groups(id);
+
+
+--
 -- Name: meters fk_meters_broker; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3190,19 +3213,19 @@ ALTER TABLE ONLY persons
 
 
 --
--- Name: market_locations fk_rails_6a09c3b799; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY market_locations
-    ADD CONSTRAINT fk_rails_6a09c3b799 FOREIGN KEY (group_id) REFERENCES groups(id);
-
-
---
 -- Name: readings fk_readings_register; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY readings
     ADD CONSTRAINT fk_readings_register FOREIGN KEY (register_id) REFERENCES registers(id);
+
+
+--
+-- Name: registers fk_registers_market_location; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY registers
+    ADD CONSTRAINT fk_registers_market_location FOREIGN KEY (market_location_id) REFERENCES market_locations(id);
 
 
 --
