@@ -34,10 +34,12 @@ class Beekeeper::Importer::LocalpoolContracts
   def create_contract(localpool, customer, contract, registers, tariffs)
     register = find_or_create_register(contract, registers, localpool)
     contract_attributes = contract.except(:powertaker, :buzznid).merge(
-      localpool:  localpool,
-      register:   register,
-      customer:   customer,
-      contractor: localpool.owner
+      localpool:       localpool,
+      # TODO: remove the association contract <--> register
+      register:        register,
+      market_location: register.market_location,
+      customer:        customer,
+      contractor:      localpool.owner
     )
     contract = Contract::LocalpoolPowerTaker.create!(contract_attributes)
     contract.tariffs =
@@ -73,8 +75,10 @@ class Beekeeper::Importer::LocalpoolContracts
   def create_third_party_contract(localpool, contract, registers, warnings)
     if register = find_or_create_register(contract, registers, localpool)
       contract_attributes = contract.except(:powertaker, :buzznid).merge(
-        localpool:  localpool,
-        register:   register
+        localpool:       localpool,
+        # TODO: remove the association contract <--> register
+        register:        register,
+        market_location: register.market_location
       )
       Contract::LocalpoolThirdParty.create!(contract_attributes)
     else
