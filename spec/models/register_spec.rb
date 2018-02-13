@@ -65,24 +65,23 @@ describe Register do
     end
   end
 
-  describe 'name' do
-    pending "Not yet implemented"
+  describe 'name', :skip do
     let(:register) { create(:register, :real) }
     context 'when register has a market location' do
-      before { register.create_market_location!(name: "1.OG links vorn") }
-      it "returns the name of the market location" do
-        expect(register.name).to eq("1.OG links vorn")
+      before { register.create_market_location!(name: '1.OG links vorn') }
+      it 'returns the name of the market location' do
+        expect(register.name).to eq('1.OG links vorn')
       end
     end
     context 'when register has no market location' do
       context 'when register is persisted' do
-        it "returns the id" do
+        it 'returns the id' do
           expect(register.name).to eq("Register #{register.id}")
         end
       end
       context 'when register is not persisted' do
-        it "returns some info" do
-          expect(build(:register, :real).name).to eq("Register (not persisted)")
+        it 'returns some info' do
+          expect(build(:register, :real).name).to eq('Register (not persisted)')
         end
       end
     end
