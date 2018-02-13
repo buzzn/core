@@ -1,5 +1,6 @@
 class MarketLocation < ActiveRecord::Base
 
+  belongs_to :group
   has_many :contracts
 
   # Fully implementing 1:n, i.e. that a market location has many current and past registers is a future story.

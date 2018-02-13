@@ -1445,6 +1445,7 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 CREATE TABLE market_locations (
     id integer NOT NULL,
     name character varying(64) NOT NULL,
+    group_id integer NOT NULL,
     market_location_id character varying(11),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -1739,7 +1740,6 @@ CREATE TABLE registers (
     observer_min_threshold integer,
     observer_max_threshold integer,
     observer_offline_monitoring boolean,
-    market_location_id integer,
     name character varying(64) NOT NULL,
     share_with_group boolean NOT NULL,
     share_publicly boolean,
@@ -2623,6 +2623,13 @@ CREATE UNIQUE INDEX index_market_functions_on_organization_id_function ON organi
 
 
 --
+-- Name: index_market_locations_on_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_market_locations_on_group_id ON market_locations USING btree (group_id);
+
+
+--
 -- Name: index_market_locations_on_market_location_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3180,6 +3187,14 @@ ALTER TABLE ONLY payments
 
 ALTER TABLE ONLY persons
     ADD CONSTRAINT fk_persons_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
+
+
+--
+-- Name: market_locations fk_rails_6a09c3b799; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY market_locations
+    ADD CONSTRAINT fk_rails_6a09c3b799 FOREIGN KEY (group_id) REFERENCES groups(id);
 
 
 --
