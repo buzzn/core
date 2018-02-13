@@ -3,7 +3,6 @@ require_relative 'base'
 Schemas::Constraints::Contract::Common = Schemas::Support.Form(Schemas::Constraints::Contract::Base) do
   optional(:contract_number).filled(:int?)
   optional(:contract_number_addition).filled(:int?)
-  optional(:market_location_id).filled(:int?)
 
   optional(:renewable_energy_law_taxation).value(included_in?: Contract::Base.renewable_energy_law_taxations.values)
 

@@ -1117,7 +1117,6 @@ CREATE TABLE contracts (
     end_date date,
     contract_number integer,
     contract_number_addition integer,
-    market_location_id integer,
     forecast_kwh_pa integer,
     original_signing_user character varying,
     mandate_reference character varying,
@@ -1146,6 +1145,7 @@ CREATE TABLE contracts (
     customer_organization_id integer,
     contractor_person_id integer,
     contractor_organization_id integer,
+    market_location_id integer,
     CONSTRAINT check_contract_contractor CHECK ((NOT ((contractor_person_id IS NOT NULL) AND (contractor_organization_id IS NOT NULL)))),
     CONSTRAINT check_contract_customer CHECK ((NOT ((customer_person_id IS NOT NULL) AND (customer_organization_id IS NOT NULL))))
 );
@@ -2502,6 +2502,13 @@ CREATE INDEX index_contracts_on_customer_person_id ON contracts USING btree (cus
 --
 
 CREATE INDEX index_contracts_on_localpool_id ON contracts USING btree (localpool_id);
+
+
+--
+-- Name: index_contracts_on_market_location_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_contracts_on_market_location_id ON contracts USING btree (market_location_id);
 
 
 --
