@@ -1137,7 +1137,6 @@ CREATE TABLE contracts (
     updated_at timestamp without time zone NOT NULL,
     renewable_energy_law_taxation contracts_renewable_energy_law_taxation,
     type character varying(64) NOT NULL,
-    register_id integer,
     localpool_id integer,
     customer_bank_account_id integer,
     contractor_bank_account_id integer,
@@ -2515,13 +2514,6 @@ CREATE INDEX index_contracts_on_market_location_id ON contracts USING btree (mar
 
 
 --
--- Name: index_contracts_on_register_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_contracts_on_register_id ON contracts USING btree (register_id);
-
-
---
 -- Name: index_contracts_tariffs_on_contract_id_and_tariff_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3035,14 +3027,6 @@ ALTER TABLE ONLY contracts
 
 ALTER TABLE ONLY contracts
     ADD CONSTRAINT fk_contracts_market_location FOREIGN KEY (market_location_id) REFERENCES market_locations(id);
-
-
---
--- Name: contracts fk_contracts_register; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY contracts
-    ADD CONSTRAINT fk_contracts_register FOREIGN KEY (register_id) REFERENCES registers(id);
 
 
 --
