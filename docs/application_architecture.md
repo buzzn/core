@@ -59,11 +59,13 @@ Are deprecated, see the validations section on this page for how to do them inst
 
 ### What about Rails?
 
-The Rails framework does [a lot of useful things](https://github.com/rails-api/rails-api#handled-at-the-middleware-layer), but some of that we want do to differently. Details:
+At the time of writing Rails is a legacy dependency and almost removed. Details:
 
-- we don't use controllers, they are replaced by the Roda tree.
-- we don't use views and the asset pipeline, they are in the process of being removed. Check branch remove-assets for current status.
-- the Rails logging mechanism will be replaced by our own logging (Buzzn::Logger)
-- Rails environments will be discontinued. The application will only be configured through environment variables. See http://12factor.net/config for the reasoning.
-- tests: the tests inherit from Rack::Test
-- mid-term the rails gem should be removed, and replaced with the gems we still want to use (like activerecord, activesupport, rack, rack-test, bundler)
+- currently Rails is only needed because we still have some gem dependencies to it, like rspec-rails, money-rails, dotenv-rails. The Rails dependencies we'll continue to use (activerecord, activesupport, rack, rack-test, bundler, ...) will then become direct dependencies
+- instead of Rails controllers, we use Roda tree procs.
+- instead of ActiveRecord validations, we use dry-schema; see "How & where do we validate stuff?" for details.
+- instead of the views and the asset pipeline, we use the homemade `Buzzn::Resource::*` objects to render the JSON (the application is API-only).
+- instead of the Rails logger, we use `Buzzn::Logger`. 
+- Rails environments are deprecated. The application should only be configured through environment variables. See http://12factor.net/config for the reasoning.
+- tests: the tests inherit from Rack::Test.
+- the `rails server` and `rails console` tasks have been replaced by `bin/server` and `bin/console`.
