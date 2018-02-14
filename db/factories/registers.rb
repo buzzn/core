@@ -45,6 +45,12 @@ FactoryGirl.define do
       name            { generate(:register_output_name) }
     end
 
+    trait :with_market_location do
+      before(:create) do |register, evaluator|
+        create(:market_location, register: register)
+      end
+    end
+
     # This register is publicly connected. Only those have a metering point id
     trait :grid_connected do
       metering_point_id # uses sequence
