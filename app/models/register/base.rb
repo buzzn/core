@@ -75,10 +75,6 @@ module Register
       end
     end
 
-    def name=(new_name)
-      # FIXME: remove and adapt all tests not to set the register name.
-    end
-
     def data_source
       Buzzn::MissingDataSource.name
     end
