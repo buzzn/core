@@ -65,15 +65,16 @@ describe Register do
     end
   end
 
-  describe 'name', :skip do
-    let(:register) { create(:register, :real) }
+  describe 'name' do
     context 'when register has a market location' do
-      before { register.create_market_location!(name: '1.OG links vorn') }
+      let(:register) { create(:register, :real, :with_market_location) }
       it 'returns the name of the market location' do
-        expect(register.name).to eq('1.OG links vorn')
+        expect(register.name).to eq(register.market_location.name)
+        expect(register.name).not_to be_nil
       end
     end
     context 'when register has no market location' do
+      let(:register) { create(:register, :real) }
       context 'when register is persisted' do
         it 'returns the id' do
           expect(register.name).to eq("Register #{register.id}")

@@ -65,6 +65,20 @@ module Register
 
     scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
 
+    def name
+      if market_location
+        market_location.name
+      elsif persisted?
+        "Register #{id}"
+      else
+        'Register (not persisted)'
+      end
+    end
+
+    def name=(new_name)
+      # FIXME: remove and adapt all tests not to set the register name.
+    end
+
     def data_source
       Buzzn::MissingDataSource.name
     end
