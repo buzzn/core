@@ -211,7 +211,6 @@ describe Admin::LocalpoolRoda do
             'type'=>'register_real',
             'updated_at'=>contract.register.updated_at.as_json,
             'direction'=>'in',
-            'name'=>contract.register.name,
             'pre_decimal_position'=>6,
             'post_decimal_position'=>1,
             'low_load_ability'=>false,

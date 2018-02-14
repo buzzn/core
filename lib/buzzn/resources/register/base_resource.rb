@@ -8,7 +8,6 @@ module Register
     model Base
 
     attributes :direction,
-               :name,
                :pre_decimal_position,
                :post_decimal_position,
                :low_load_ability,

@@ -58,7 +58,6 @@ describe Admin::LocalpoolRoda do
               'type'=>'register_real',
               'updated_at'=> meter.input_register.updated_at.as_json,
               'direction'=>meter.input_register.attributes['direction'],
-              'name'=>meter.input_register.name,
               'pre_decimal_position'=>6,
               'post_decimal_position'=>meter.input_register.post_decimal_position,
               'low_load_ability'=>false,

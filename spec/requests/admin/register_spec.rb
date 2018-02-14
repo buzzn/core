@@ -29,7 +29,6 @@ describe Admin::LocalpoolRoda do
             'id'=>register.id,
             'type'=>'register_real',
             'direction'=>register.attributes['direction'],
-            'name'=>'Smarty',
             'pre_decimal_position'=>6,
             'post_decimal_position'=>1,
             'low_load_ability'=>false,
@@ -63,8 +62,6 @@ describe Admin::LocalpoolRoda do
                'detail'=>'must be an integer'},
               {'parameter'=>'observer_offline_monitoring',
                'detail'=>'must be boolean'},
-              {'parameter'=>'name',
-               'detail'=>'size cannot be greater than 64'},
               {'parameter'=>'updated_at',
                'detail'=>'is missing'},
             ]
@@ -93,7 +90,6 @@ describe Admin::LocalpoolRoda do
         it '422' do
           PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                 metering_point_id: '123321' * 20,
-                name: 'Smarty' * 20,
                 label: 'grid',
                 pre_decimal_position: 'pre',
                 post_decimal_position: 'post',
@@ -111,7 +107,6 @@ describe Admin::LocalpoolRoda do
           PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                 updated_at: register.updated_at,
                 metering_point_id: '123456',
-                name: 'Smarty',
                 label: Register::Base.labels[:demarcation_pv],
                 observer_enabled: true,
                 observer_min_threshold: 10,
@@ -120,7 +115,6 @@ describe Admin::LocalpoolRoda do
           expect(response).to have_http_status(200)
           register.reload
           expect(register.metering_point_id).to eq '123456'
-          expect(register.name).to eq 'Smarty'
           expect(register.label).to eq 'demarcation_pv'
           expect(register.observer_enabled).to eq true
           expect(register.observer_min_threshold).to eq 10
@@ -147,7 +141,6 @@ describe Admin::LocalpoolRoda do
           'type'=>'register_real',
           'updated_at'=>real_register.updated_at.as_json,
           'direction'=>real_register.attributes['direction'],
-          'name'=>real_register.name,
           'pre_decimal_position'=>6,
           'post_decimal_position'=>real_register.post_decimal_position,
           'low_load_ability'=>false,
@@ -173,7 +166,6 @@ describe Admin::LocalpoolRoda do
           'type'=>'register_virtual',
           'updated_at'=>virtual_register.updated_at.as_json,
           'direction'=>virtual_register.attributes['direction'],
-          'name'=>virtual_register.name,
           'pre_decimal_position'=>6,
           'post_decimal_position'=>2,
           'low_load_ability'=>false,
@@ -198,7 +190,6 @@ describe Admin::LocalpoolRoda do
             'type'=>"register_#{register.is_a?(Register::Real) ? 'real': 'virtual'}",
             'updated_at'=>register.updated_at.as_json,
             'direction'=>register.attributes['direction'],
-            'name'=>register.name,
             'pre_decimal_position'=>register.pre_decimal_position,
             'post_decimal_position'=>register.post_decimal_position,
             'low_load_ability'=>register.low_load_ability,
@@ -251,7 +242,6 @@ describe Admin::LocalpoolRoda do
         expect(sort(json['array']).to_yaml).to eq sort(registers_json).to_yaml
       end
 
-#      [:real, :virtual].each do |type|
       [:real].each do |type|
 
         context "as #{type}" do
@@ -264,7 +254,6 @@ describe Admin::LocalpoolRoda do
                 'type'=>'register_real',
                 'updated_at'=>register.updated_at.as_json,
                 'direction'=>register.attributes['direction'],
-                'name'=>register.name,
                 'pre_decimal_position'=>register.pre_decimal_position,
                 'post_decimal_position'=>register.post_decimal_position,
                 'low_load_ability'=>register.low_load_ability,

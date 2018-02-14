@@ -48,7 +48,6 @@ describe Admin::LocalpoolRoda do
                 'type'=>'register_real',
                 'updated_at'=> part.operand.updated_at.as_json,
                 'direction'=>part.operand.attributes['direction'],
-                'name'=>part.operand.name,
                 'pre_decimal_position'=>part.operand.pre_decimal_position,
                 'post_decimal_position'=>part.operand.post_decimal_position,
                 'low_load_ability'=>part.operand.low_load_ability,

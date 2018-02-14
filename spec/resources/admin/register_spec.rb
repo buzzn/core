@@ -7,22 +7,14 @@ describe Register::BaseResource do
 
   let(:resources)    { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).registers }
 
-  let(:base_keys) do ['id', 'type', 'updated_at',
-                      'label',
-                      'name',
-                      'direction',
-                      'last_reading',
-                      'low_load_ability',
-                      'observer_enabled',
-                      'observer_max_threshold',
-                      'observer_min_threshold',
-                      'observer_offline_monitoring',
-                      'post_decimal_position',
-                      'pre_decimal_position',
-                      'meter_id',
-                      'updatable',
-                      'deletable',
-                      'createables'] end
+  let(:base_keys) do
+    %w(id type updated_at label direction last_reading low_load_ability
+       observer_enabled observer_max_threshold observer_min_threshold observer_offline_monitoring
+       post_decimal_position pre_decimal_position
+       meter_id
+       updatable deletable createables
+    )
+  end
 
   it 'retrieve' do
     [real, virtual].each do |register|

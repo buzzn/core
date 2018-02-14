@@ -89,7 +89,6 @@ describe Admin::Roda do
             'type'=>'register_real',
             'updated_at'=>register.updated_at.as_json,
             'direction'=>register.attributes['direction'],
-            'name'=>register.name,
             'pre_decimal_position'=>register.pre_decimal_position,
             'post_decimal_position'=>register.post_decimal_position,
             'low_load_ability'=>register.low_load_ability,
