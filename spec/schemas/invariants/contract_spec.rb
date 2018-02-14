@@ -17,9 +17,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
   shared_examples 'invariants of localpool' do |contract|
 
-    let(:tested_invariants) { contract.invariant.errors[:localpool] }
-
-    subject { tested_invariants }
+    subject { contract.invariant.errors[:localpool] }
 
     context 'when there is no localpool' do
       before do
@@ -44,9 +42,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
     entity(:other) { create(:localpool) }
 
-    let(:tested_invariants) { contract.invariant.errors[:register] }
-
-    subject { tested_invariants }
+    subject { contract.invariant.errors[:register] }
 
     context 'when register belongs to different group' do
       before do
@@ -69,9 +65,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
   shared_examples 'invariants of register' do |contract|
 
-    let(:tested_invariants) { contract.invariant.errors[:register] }
-
-    subject { tested_invariants }
+    subject { contract.invariant.errors[:register] }
 
     context 'when there is no register' do
       before do
@@ -94,9 +88,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
   shared_examples 'invariants of contracting party' do |label, contract, expected|
 
-    let(:tested_invariants) { contract.invariant.errors[:"#{label}"] }
-
-    subject { tested_invariants }
+    subject { contract.invariant.errors[:"#{label}"] }
 
     before { contract.localpool = localpool }
 
