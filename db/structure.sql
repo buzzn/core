@@ -1743,7 +1743,6 @@ CREATE TABLE registers (
     observer_min_threshold integer,
     observer_max_threshold integer,
     observer_offline_monitoring boolean,
-    name character varying(64) NOT NULL,
     share_with_group boolean NOT NULL,
     share_publicly boolean,
     created_at timestamp without time zone NOT NULL,
