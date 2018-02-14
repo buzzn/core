@@ -122,6 +122,10 @@ module Admin
               .call(localpool.organizations.retrieve(id))
           end
         end
+
+        r.on 'market_locations' do
+          r.run MarketLocationRoda
+        end
       end
 
       rodauth.check_session_expiration

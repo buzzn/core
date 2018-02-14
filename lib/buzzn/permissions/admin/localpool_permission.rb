@@ -112,10 +112,14 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     end
   end
 
-  registers do
+  market_locations do
     retrieve :managers_contract
     update :managers
     delete :none
+
+    register do
+      retrieve :managers_contract
+    end
 
     ticker do
       retrieve :managers
@@ -136,6 +140,8 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       delete :managers
     end
   end
+
+  registers '/market_locations'
 
   contracts do
     retrieve :managers_contract

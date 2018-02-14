@@ -26,4 +26,6 @@ class MarketLocation < ActiveRecord::Base
     self.registers = new_register ? [new_register] : []
   end
 
+  scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
+
 end

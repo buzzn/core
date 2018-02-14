@@ -30,6 +30,7 @@ module Admin
     has_many :organizations
     has_many :contracts
     has_many :registers
+    has_many :market_locations
     has_many :persons
     has_many :tariffs, Contract::TariffResource
     has_many :billing_cycles, BillingCycleResource
