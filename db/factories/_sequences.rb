@@ -17,8 +17,6 @@ FactoryGirl.define do
   sequence(:powertaker_last_name)                { |i| "Powertaker #{i}" }
   sequence(:price_name)                          { |i| "Generic price #{i}" }
   sequence(:register_uid)                        { |i| i + 90688251510000000000002677_000 }
-  sequence(:register_input_name)                 { |i| "Wohnung #{i}" }
-  sequence(:register_output_name)                { |i| "Output #{i}" }
   sequence(:tariff_name)                         { |i| "Generic tariff #{i}" }
   sequence(:edifact_email)                       { |i| "dev+edifact#{i}@buzzn.net" }
 end
