@@ -99,6 +99,7 @@ describe Admin::Roda do
             'observer_enabled'=>register.observer_enabled,
             'observer_offline_monitoring'=>register.observer_offline_monitoring,
             'meter_id' => register.meter_id,
+            'kind' => 'consumption',
             'updatable'=> false,
             'deletable'=> false,
             'createables'=>['readings'],

@@ -18,6 +18,7 @@ module Register
                :observer_enabled,
                :observer_offline_monitoring,
                :meter_id,
+               :kind,
                :updatable, :deletable, :createables
 
     has_one :meter
@@ -28,6 +29,16 @@ module Register
     def last_reading
       reading = object.readings.order('date').last
       reading ? reading.corrected_value.value : 0
+    end
+
+    def kind
+      if object.label.production?
+        :production
+      elsif object.label.consumption?
+        :consumption
+      else
+        :system
+      end
     end
 
   end

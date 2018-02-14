@@ -221,6 +221,7 @@ describe Admin::LocalpoolRoda do
             'observer_enabled'=>nil,
             'observer_offline_monitoring'=>nil,
             'meter_id' => contract.register.meter_id,
+            'kind' => 'consumption',
             'updatable'=> true,
             'deletable'=> false,
             'createables'=>['readings'],
