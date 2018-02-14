@@ -7,10 +7,10 @@ describe Admin::LocalpoolRoda do
 
   entity!(:address) { create(:address) }
   entity!(:person) do create(:person, :with_bank_account,
-                           address: address) end
+                             address: address) end
   entity!(:organization) do create(:organization, :with_bank_account,
-                                  address: address,
-                                  contact: person) end
+                                   address: address,
+                                   contact: person) end
   entity!(:localpool) { create(:localpool) }
 
   let(:localpool_json) do
@@ -78,13 +78,12 @@ describe Admin::LocalpoolRoda do
     }
   end
 
-  context :person do
+  shared_examples 'nested person' do |key|
 
     before do
-      localpool.update(owner: person)
-#      localpool_json['incompleteness']['owner'] = ['BUG: missing GROUP_ADMIN role']
-      owner_json = person_json.dup
-      owner_json['bank_accounts'] = {
+      localpool.update(key => person)
+      json = person_json.dup
+      json['bank_accounts'] = {
         'array'=> person.bank_accounts.collect do |bank_account|
           {
             'id'=>bank_account.id,
@@ -100,25 +99,24 @@ describe Admin::LocalpoolRoda do
           }
         end
       }
-      localpool_json['owner'] = owner_json
+      localpool_json[key] = json
     end
 
     context 'GET' do
 
       it '200' do
-        GET "/test/#{localpool.id}", $admin, include: 'owner:[address, bank_accounts, contact:[address]]'
+        GET "/test/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq localpool_json.to_yaml
       end
     end
   end
 
-  context :organization do
+  shared_examples 'nested organization' do |key|
 
     before do
-      localpool.update(owner: organization)
-#      localpool_json['incompleteness']['owner'] = ['BUG: missing GROUP_ADMIN role']
-      localpool_json['owner'] = {
+      localpool.update(key => organization)
+      localpool_json[key] = {
         'id'=>organization.id,
         'type'=>'organization',
         'updated_at'=>organization.updated_at.as_json,
@@ -155,10 +153,17 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
 
       it '200' do
-        GET "/test/#{localpool.id}", $admin, include: 'owner:[address, bank_accounts, contact:[address]]'
+        GET "/test/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
         expect(response).to have_http_status(200)
         expect(json).to eq localpool_json
       end
     end
   end
+
+  it_behaves_like 'nested person', 'owner'
+  it_behaves_like 'nested organization', 'owner'
+
+  it_behaves_like 'nested person', 'gap_contract_customer'
+  it_behaves_like 'nested organization', 'gap_contract_customer'
+
 end

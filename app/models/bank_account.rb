@@ -1,10 +1,11 @@
 require_relative 'filterable'
-require_relative 'owner'
+require_relative 'concerns/person_organization_relation'
 
 class BankAccount < ActiveRecord::Base
 
   include Filterable
-  include Owner
+
+  PersonOrganizationRelation.generate(self, 'owner')
 
   has_many :contracts, class_name: 'Contract::Base'
 

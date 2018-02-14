@@ -1,8 +1,4 @@
-module Owner
-
-  def self.included(model)
-    generate(model, self.to_s.downcase)
-  end
+module PersonOrganizationRelation
 
   def self.generate(model, name)
     model.belongs_to :"#{name}_person", class_name: 'Person', foreign_key: :"#{name}_person_id"

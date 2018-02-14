@@ -1411,10 +1411,13 @@ CREATE TABLE groups (
     address_id integer,
     owner_person_id integer,
     owner_organization_id integer,
+    gap_contract_customer_person_id integer,
+    gap_contract_customer_organization_id integer,
     distribution_system_operator_id integer,
     transmission_system_operator_id integer,
     electricity_supplier_id integer,
     bank_account_id integer,
+    CONSTRAINT check_localpool_gap_contract_customer CHECK ((NOT ((gap_contract_customer_person_id IS NOT NULL) AND (gap_contract_customer_organization_id IS NOT NULL)))),
     CONSTRAINT check_localpool_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
 );
 
@@ -2596,6 +2599,20 @@ CREATE INDEX index_groups_on_electricity_supplier_id ON groups USING btree (elec
 
 
 --
+-- Name: index_groups_on_gap_contract_customer_organization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_gap_contract_customer_organization_id ON groups USING btree (gap_contract_customer_organization_id);
+
+
+--
+-- Name: index_groups_on_gap_contract_customer_person_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_groups_on_gap_contract_customer_person_id ON groups USING btree (gap_contract_customer_person_id);
+
+
+--
 -- Name: index_groups_on_owner_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3085,19 +3102,35 @@ ALTER TABLE ONLY groups
 
 
 --
--- Name: groups fk_groups_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: groups fk_groups_gap_contract_customer_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_organization FOREIGN KEY (owner_organization_id) REFERENCES organizations(id);
+    ADD CONSTRAINT fk_groups_gap_contract_customer_organization FOREIGN KEY (gap_contract_customer_organization_id) REFERENCES organizations(id);
 
 
 --
--- Name: groups fk_groups_person; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: groups fk_groups_gap_contract_customer_person; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_person FOREIGN KEY (owner_person_id) REFERENCES persons(id);
+    ADD CONSTRAINT fk_groups_gap_contract_customer_person FOREIGN KEY (gap_contract_customer_person_id) REFERENCES persons(id);
+
+
+--
+-- Name: groups fk_groups_owner_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_owner_organization FOREIGN KEY (owner_organization_id) REFERENCES organizations(id);
+
+
+--
+-- Name: groups fk_groups_owner_person; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY groups
+    ADD CONSTRAINT fk_groups_owner_person FOREIGN KEY (owner_person_id) REFERENCES persons(id);
 
 
 --
@@ -3262,13 +3295,9 @@ INSERT INTO schema_migrations (version) VALUES ('20140403173451');
 
 INSERT INTO schema_migrations (version) VALUES ('20170524090229');
 
-INSERT INTO schema_migrations (version) VALUES ('20170712163547');
-
 INSERT INTO schema_migrations (version) VALUES ('20170909015357');
 
 INSERT INTO schema_migrations (version) VALUES ('20171010075030');
-
-INSERT INTO schema_migrations (version) VALUES ('20171028142114');
 
 INSERT INTO schema_migrations (version) VALUES ('20171028200020');
 
