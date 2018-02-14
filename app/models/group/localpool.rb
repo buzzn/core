@@ -1,11 +1,11 @@
 require_relative 'base'
-require_relative '../concerns/person_organization'
+require_relative '../concerns/person_organization_relation'
 
 module Group
   class Localpool < Base
 
-    PersonOrganization.generate(self, 'owner')
-    PersonOrganization.generate(self, 'gap_contract_customer')
+    PersonOrganizationRelation.generate(self, 'owner')
+    PersonOrganizationRelation.generate(self, 'gap_contract_customer')
 
     belongs_to :grid_consumption_register, class_name: 'Register::Input'
     belongs_to :grid_feeding_register, class_name: 'Register::Output'

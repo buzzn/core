@@ -53,13 +53,13 @@ module Admin
       all(permissions.meters, object.meters.real_or_virtual)
     end
 
-    # list of all possible powersources (production) on the group,
-    # i.e. pv, chp, wind, water
-    def power_sources
-      object.registers.select(:label).production.collect do |register|
-        register.label.sub('production_', '')
-      end.uniq
+    # pv, chp, wind, water, etc
+    def all_power_sources
+      prodcution_registers = object.registers.select(:label).production
+      labels = prodcution_registers.collect { |register| register.label.sub('production_', '') }
+      labels.uniq
     end
+    alias power_sources all_power_sources
 
     # absolute display app url
     def display_app_url

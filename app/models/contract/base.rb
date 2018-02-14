@@ -1,5 +1,5 @@
 require_relative '../filterable'
-require_relative '../concerns/person_organization'
+require_relative '../concerns/person_organization_relation'
 
 module Contract
   class Base < ActiveRecord::Base
@@ -9,8 +9,8 @@ module Contract
 
     include Filterable
 
-    PersonOrganization.generate(self, 'customer')
-    PersonOrganization.generate(self, 'contractor')
+    PersonOrganizationRelation.generate(self, 'customer')
+    PersonOrganizationRelation.generate(self, 'contractor')
 
     enum renewable_energy_law_taxation: {
            full: 'F',

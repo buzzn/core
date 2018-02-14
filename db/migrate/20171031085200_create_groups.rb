@@ -38,6 +38,7 @@ class CreateGroups < ActiveRecord::Migration
     add_index :groups, [:slug], unique: true
 
     execute 'ALTER TABLE groups ADD CONSTRAINT check_localpool_owner CHECK (NOT (owner_person_id IS NOT NULL AND owner_organization_id IS NOT NULL))'
+    execute 'ALTER TABLE groups ADD CONSTRAINT check_localpool_gap_contract_customer CHECK (NOT (gap_contract_customer_person_id IS NOT NULL AND gap_contract_customer_organization_id IS NOT NULL))'
   end
 
   def down

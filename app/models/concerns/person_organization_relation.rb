@@ -1,4 +1,4 @@
-module PersonOrganization
+module PersonOrganizationRelation
 
   def self.generate(model, name)
     model.belongs_to :"#{name}_person", class_name: 'Person', foreign_key: :"#{name}_person_id"

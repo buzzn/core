@@ -1417,6 +1417,7 @@ CREATE TABLE groups (
     transmission_system_operator_id integer,
     electricity_supplier_id integer,
     bank_account_id integer,
+    CONSTRAINT check_localpool_gap_contract_customer CHECK ((NOT ((gap_contract_customer_person_id IS NOT NULL) AND (gap_contract_customer_organization_id IS NOT NULL)))),
     CONSTRAINT check_localpool_owner CHECK ((NOT ((owner_person_id IS NOT NULL) AND (owner_organization_id IS NOT NULL))))
 );
 
