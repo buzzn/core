@@ -123,7 +123,7 @@ describe Admin::LocalpoolRoda do
         expect(json.to_yaml).to eq wrong_json.to_yaml
       end
 
-      it '200' do
+      xit '200' do
         begin
           BillingCycle.billings(Billing.all)
 
