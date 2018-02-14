@@ -13,12 +13,8 @@ describe Register do
   it 'returns registers by label' do
     consumption = Register::Base.all.consumption.size
     production = Register::Base.all.production_pv.size
-    3.times do
-      Fabricate(:input_meter)
-    end
-    3.times do
-      Fabricate(:output_meter)
-    end
+    3.times { Fabricate(:input_meter) }
+    3.times { Fabricate(:output_meter) }
     expect(Register::Base.all.consumption.size).to eq consumption + 3
     expect(Register::Base.all.production_pv.size).to eq production + 3
     expect(Register::Base.all.by_labels(Register::Base.labels[:consumption], Register::Base.labels[:production_pv]).size).to eq consumption + production + 6

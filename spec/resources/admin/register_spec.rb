@@ -12,8 +12,7 @@ describe Register::BaseResource do
        observer_enabled observer_max_threshold observer_min_threshold observer_offline_monitoring
        post_decimal_position pre_decimal_position
        meter_id
-       updatable deletable createables
-    )
+       updatable deletable createables)
   end
 
   it 'retrieve' do
