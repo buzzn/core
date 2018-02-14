@@ -9,9 +9,9 @@ describe 'Schemas::Invariants::Contract::Localpool' do
   entity(:localpool)    { tariff.group }
   entity(:other_localpool) { create(:localpool) }
 
-  entity(:third_party) { create(:contract, :localpool_third_party, localpool: localpool) }
-  entity(:register) { third_party.register }
-  entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, register: register, tariffs: [tariff]) }
+  entity(:third_party)             { create(:contract, :localpool_third_party, localpool: localpool) }
+  # entity(:register)                { third_party.register }
+  entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, tariffs: [tariff]) }
   entity(:processing)              { create(:contract, :localpool_processing,    localpool: localpool) }
   entity(:metering_point_operator) { create(:contract, :metering_point_operator, localpool: localpool) }
 
@@ -38,53 +38,53 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     end
   end
 
-  shared_examples 'invariants of register group' do |contract|
+  # shared_examples 'invariants of register group' do |contract|
 
-    entity(:other) { create(:localpool) }
+  #   entity(:other) { create(:localpool) }
 
-    subject { contract.invariant.errors[:register] }
+  #   subject { contract.invariant.errors[:register] }
 
-    context 'when register belongs to different group' do
-      before do
-        contract.register.meter.group = other
-      end
-      it { is_expected.to eq(['meter.group must match contract.localpool']) }
-    end
+  #   context 'when register belongs to different group' do
+  #     before do
+  #       contract.register.meter.group = other
+  #     end
+  #     it { is_expected.to eq(['meter.group must match contract.localpool']) }
+  #   end
 
-    context 'when register belongs to same group' do
-      before do
-        contract.register.meter.group = contract.localpool
-      end
-      it { is_expected.to be_nil }
-    end
+  #   context 'when register belongs to same group' do
+  #     before do
+  #       contract.register.meter.group = contract.localpool
+  #     end
+  #     it { is_expected.to be_nil }
+  #   end
 
-    after do
-      contract.register.meter.group = contract.localpool
-    end
-  end
+  #   after do
+  #     contract.register.meter.group = contract.localpool
+  #   end
+  # end
 
-  shared_examples 'invariants of register' do |contract|
+  # shared_examples 'invariants of register' do |contract|
 
-    subject { contract.invariant.errors[:register] }
+  #   subject { contract.invariant.errors[:register] }
 
-    context 'when there is no register' do
-      before do
-        contract.register = nil
-      end
-      it { is_expected.to eq(['must be filled']) }
-    end
+  #   context 'when there is no register' do
+  #     before do
+  #       contract.register = nil
+  #     end
+  #     it { is_expected.to eq(['must be filled']) }
+  #   end
 
-    context 'when there is a register' do
-      before do
-        contract.register = register
-      end
-      it { is_expected.to be_nil }
-    end
+  #   context 'when there is a register' do
+  #     before do
+  #       contract.register = register
+  #     end
+  #     it { is_expected.to be_nil }
+  #   end
 
-    after do
-      contract.register = register
-    end
-  end
+  #   after do
+  #     contract.register = register
+  #   end
+  # end
 
   shared_examples 'invariants of contracting party' do |label, contract, expected|
 
@@ -133,10 +133,10 @@ describe 'Schemas::Invariants::Contract::Localpool' do
       it_behaves_like 'invariants of localpool', powertaker
     end
 
-    describe 'register' do
-      it_behaves_like 'invariants of register', powertaker
-      it_behaves_like 'invariants of register group', powertaker
-    end
+    # describe 'register' do
+    #   it_behaves_like 'invariants of register', powertaker
+    #   it_behaves_like 'invariants of register group', powertaker
+    # end
 
     describe 'customer' do
       it_behaves_like 'invariants of contracting party', :customer, powertaker, nil
@@ -184,9 +184,9 @@ describe 'Schemas::Invariants::Contract::Localpool' do
       it_behaves_like 'invariants of localpool', third_party
     end
 
-    describe 'register' do
-      it_behaves_like 'invariants of register', third_party
-      it_behaves_like 'invariants of register group', third_party
-    end
+    # describe 'register' do
+    #   it_behaves_like 'invariants of register', third_party
+    #   it_behaves_like 'invariants of register group', third_party
+    # end
   end
 end
