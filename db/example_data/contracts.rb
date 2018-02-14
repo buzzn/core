@@ -166,7 +166,6 @@ SampleData.contracts.common_consumption = localpool_contract(
   contractor: SampleData.localpools.people_power.owner,
   customer: SampleData.localpools.people_power.owner,
   register: create(:register, :consumption_common,
-    name: 'Allgemeinstrom',
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)
                   )
 )
