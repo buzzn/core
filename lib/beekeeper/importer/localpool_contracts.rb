@@ -16,7 +16,7 @@ class Beekeeper::Importer::LocalpoolContracts
         end
       rescue => e
         logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
-        e.backtrace.each { |row| logger.error(row) }
+        e.backtrace.each { |row| logger.error("  #{row}") }
       end
     end
     third_parties.each do |contract|
@@ -26,7 +26,7 @@ class Beekeeper::Importer::LocalpoolContracts
         end
       rescue => e
         logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
-        e.backtrace.each { |row| logger.error(row) }
+        e.backtrace.each { |row| logger.error("  #{row}") }
       end
     end
   end
@@ -92,7 +92,7 @@ class Beekeeper::Importer::LocalpoolContracts
   def create_fake_virtual_register(buzznid, localpool)
     logger.warn("No meter/register for #{buzznid}, creating a fake temporary one.")
     meter = Meter::Real.create!(product_serialnumber: 'FAKE-FOR-IMPORT', legacy_buzznid: buzznid, group: localpool)
-    Register::Input.create!(name: 'FAKE-FOR-IMPORT', share_with_group: false, meter: meter)
+    Register::Input.create!(share_with_group: false, meter: meter)
   end
 
   # Make sure we don't create the same person or organization twice.
