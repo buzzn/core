@@ -60,8 +60,7 @@ FactoryGirl.define do
     contract_number { generate(:localpool_power_taker_contract_nr) }
     initialize_with { Contract::LocalpoolPowerTaker.new }
     forecast_kwh_pa 1000
-    customer        { FactoryGirl.create(:person, :powertaker,
-                                         :with_bank_account) }
+    customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }
     before(:create) do |contract, _evaluator|
       contract.contractor = contract.localpool.owner
       unless contract.market_location

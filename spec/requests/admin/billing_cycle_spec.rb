@@ -13,11 +13,11 @@ describe Admin::LocalpoolRoda do
     entity!(:billing) do Fabricate(:billing,
                                    billing_cycle: billing_cycle,
                                    localpool_power_taker_contract: create(:contract, :localpool_powertaker,
-                                                                             market_location: create(:market_location, register: Fabricate.create(:input_meter, group: group).input_register))) end
+                                                                          market_location: create(:market_location, register: Fabricate.create(:input_meter, group: group).input_register))) end
     entity!(:other_billing) do Fabricate(:billing,
                                          billing_cycle: billing_cycle,
                                          localpool_power_taker_contract: create(:contract, :localpool_powertaker,
-                                                                                   market_location: create(:market_location, register:Fabricate.create(:input_meter, group: group).input_register))) end
+                                                                                market_location: create(:market_location, register:Fabricate.create(:input_meter, group: group).input_register))) end
 
     let(:wrong_json) do
       {
