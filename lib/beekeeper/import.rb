@@ -54,8 +54,8 @@ class Beekeeper::Import
   def logger
     @logger ||= begin
       l = Logger.new(STDOUT)
-      l.formatter = proc do |_severity, _datetime, _progname, msg|
-        "#{msg}\n"
+      l.formatter = proc do |severity, _datetime, _progname, msg|
+        "[#{severity.upcase}] #{msg}\n"
       end
       l
     end
