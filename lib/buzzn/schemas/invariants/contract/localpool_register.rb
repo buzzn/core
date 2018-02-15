@@ -7,15 +7,15 @@ module Schemas
       LocalpoolRegister = Schemas::Support.Form(Localpool) do
 
         configure do
-          def match_localpool?(localpool, register)
-            register.meter.group == localpool
+          def match_localpool?(localpool, market_location)
+            market_location.register.meter.group == localpool
           end
         end
 
-        required(:register).filled
+        required(:market_location).filled
 
-        rule(register: [:register, :localpool]) do |register, localpool|
-          register.match_localpool?(localpool)
+        rule(market_location: [:market_location, :localpool]) do |market_location, localpool|
+          market_location.match_localpool?(localpool)
         end
       end
 

@@ -65,9 +65,9 @@ describe Admin::LocalpoolRoda do
     localpool = create(:localpool)
     manager.add_role(Role::GROUP_ADMIN, localpool)
     c = create(:contract, :localpool_powertaker, localpool: localpool)
-    c.register.update(label: :production_pv)
+    c.market_location.register.update(label: :production_pv)
     c = create(:contract, :localpool_powertaker, localpool: localpool)
-    c.register.update(label: :production_pv)
+    c.market_location.register.update(label: :production_pv)
     create(:contract, :localpool_processing, localpool: localpool)
     create(:contract, :metering_point_operator, localpool: localpool)
     localpool.contracts.each do |c|

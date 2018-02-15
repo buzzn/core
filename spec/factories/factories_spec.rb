@@ -72,8 +72,8 @@ describe 'Factories produce valid records' do
           expect(subject.customer.bank_accounts.size).to be >= 1
         end
       end
-      describe 'register' do
-        it { is_expected.to have_association(:register, Register::Input) }
+      describe 'market_location' do
+        it { is_expected.to have_association(:market_location, MarketLocation) }
       end
       include_examples 'has valid invariants'
      end
@@ -87,8 +87,8 @@ describe 'Factories produce valid records' do
           expect(subject.contractor).to be_nil
         end
       end
-      describe 'register' do
-        it { is_expected.to have_association(:register, Register::Input) }
+      describe 'market_location' do
+        it { is_expected.to have_association(:market_location, MarketLocation) }
       end
       include_examples 'has valid invariants'
     end

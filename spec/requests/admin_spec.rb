@@ -55,7 +55,7 @@ describe Admin::Roda do
 
       let(:expected_persons_with_nested_json) do
         json = expected_persons_json.first.dup
-        register = contract.register
+        register = contract.market_location.register
         contract_json = {
           'id'=>contract.id,
           'type'=>'contract_localpool_power_taker',
@@ -84,27 +84,35 @@ describe Admin::Roda do
             'slug'=>localpool.slug,
             'description'=>localpool.description,
           },
-          'register' => {
-            'id'=>register.id,
-            'type'=>'register_real',
-            'updated_at'=>register.updated_at.as_json,
-            'direction'=>register.attributes['direction'],
-            'pre_decimal_position'=>register.pre_decimal_position,
-            'post_decimal_position'=>register.post_decimal_position,
-            'low_load_ability'=>register.low_load_ability,
-            'label'=>register.attributes['label'],
-            'last_reading'=> 0,
-            'observer_min_threshold'=>register.observer_min_threshold,
-            'observer_max_threshold'=>register.observer_max_threshold,
-            'observer_enabled'=>register.observer_enabled,
-            'observer_offline_monitoring'=>register.observer_offline_monitoring,
-            'meter_id' => register.meter_id,
-            'kind' => 'consumption',
-            'updatable'=> false,
-            'deletable'=> false,
-            'createables'=>['readings'],
-            'metering_point_id'=>register.metering_point_id,
-            'obis'=>register.obis
+          'market_location' => {
+            'id' => contract.market_location.id,
+            'type' => 'market_location',
+            'updated_at'=> contract.market_location.updated_at.as_json,
+            'name' => contract.market_location.name,
+            'updatable' => false,
+            'deletable' => false,
+            'register' => {
+              'id'=>register.id,
+              'type'=>'register_real',
+              'updated_at'=>register.updated_at.as_json,
+              'direction'=>register.attributes['direction'],
+              'pre_decimal_position'=>register.pre_decimal_position,
+              'post_decimal_position'=>register.post_decimal_position,
+              'low_load_ability'=>register.low_load_ability,
+              'label'=>register.attributes['label'],
+              'last_reading'=> 0,
+              'observer_min_threshold'=>register.observer_min_threshold,
+              'observer_max_threshold'=>register.observer_max_threshold,
+              'observer_enabled'=>register.observer_enabled,
+              'observer_offline_monitoring'=>register.observer_offline_monitoring,
+              'meter_id' => register.meter_id,
+              'kind' => 'consumption',
+              'updatable'=> false,
+              'deletable'=> false,
+              'createables'=>['readings'],
+              'metering_point_id'=>register.metering_point_id,
+              'obis'=>register.obis
+            }
           }
         }
         json['contracts'] = { 'array' => [contract_json] }
@@ -135,14 +143,14 @@ describe Admin::Roda do
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(expected_persons_json.to_yaml)
 
-        GET '/test/persons', $admin, include: 'contracts:[localpool,register]'
+        GET '/test/persons', $admin, include: 'contracts:[localpool,market_location:register]'
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(expected_persons_with_nested_json.to_yaml)
       end
 
       it '200' do
-        GET "/test/persons/#{person.id}", $admin, include: 'address,contracts:[localpool,register]'
+        GET "/test/persons/#{person.id}", $admin, include: 'address,contracts:[localpool,market_location:register]'
 
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(expected_person_json.to_yaml)

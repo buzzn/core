@@ -251,7 +251,7 @@ describe Admin::LocalpoolRoda do
         context "as #{type}" do
           let(:virtual_registers_json) { [virtual_register_json] }
           let(:real_registers_json) do
-            Register::Real.all.collect do |register|
+            real_register.meter.registers.collect do |register|
               last = register.readings.order('date').last
               {
                 'id'=>register.id,

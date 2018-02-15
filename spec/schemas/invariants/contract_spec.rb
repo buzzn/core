@@ -9,9 +9,9 @@ describe 'Schemas::Invariants::Contract::Localpool' do
   entity(:localpool)    { tariff.group }
   entity(:other_localpool) { create(:localpool) }
 
-  entity(:third_party) { create(:contract, :localpool_third_party, localpool: localpool) }
-  entity(:register) { third_party.register }
-  entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, register: register, tariffs: [tariff]) }
+  entity(:third_party)  { create(:contract, :localpool_third_party, localpool: localpool) }
+  entity(:market_location)         { third_party.market_location }
+  entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, market_location: market_location, tariffs: [tariff]) }
   entity(:processing)              { create(:contract, :localpool_processing,    localpool: localpool) }
   entity(:metering_point_operator) { create(:contract, :metering_point_operator, localpool: localpool) }
 
@@ -40,55 +40,55 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     end
   end
 
-  shared_examples 'invariants of register group' do |contract|
+  shared_examples 'invariants of market_location group' do |contract|
 
     entity(:other) { create(:localpool) }
 
-    let(:tested_invariants) { contract.invariant.errors[:register] }
+    let(:tested_invariants) { contract.invariant.errors[:market_location] }
 
     subject { tested_invariants }
 
-    context 'when register belongs to different group' do
+    context 'when market_location belongs to different group' do
       before do
-        contract.register.meter.group = other
+        contract.market_location.register.meter.group = other
       end
       it { is_expected.to eq(['meter.group must match contract.localpool']) }
     end
 
-    context 'when register belongs to same group' do
+    context 'when market_location belongs to same group' do
       before do
-        contract.register.meter.group = contract.localpool
+        contract.market_location.register.meter.group = contract.localpool
       end
       it { is_expected.to be_nil }
     end
 
     after do
-      contract.register.meter.group = contract.localpool
+      contract.market_location.register.meter.group = contract.localpool
     end
   end
 
-  shared_examples 'invariants of register' do |contract|
+  shared_examples 'invariants of market_location' do |contract|
 
-    let(:tested_invariants) { contract.invariant.errors[:register] }
+    let(:tested_invariants) { contract.invariant.errors[:market_location] }
 
     subject { tested_invariants }
 
-    context 'when there is no register' do
+    context 'when there is no market_location' do
       before do
-        contract.register = nil
+        contract.market_location = nil
       end
       it { is_expected.to eq(['must be filled']) }
     end
 
-    context 'when there is a register' do
+    context 'when there is a market_location' do
       before do
-        contract.register = register
+        contract.market_location = market_location
       end
       it { is_expected.to be_nil }
     end
 
     after do
-      contract.register = register
+      contract.market_location = market_location
     end
   end
 
@@ -141,9 +141,9 @@ describe 'Schemas::Invariants::Contract::Localpool' do
       it_behaves_like 'invariants of localpool', powertaker
     end
 
-    describe 'register' do
-      it_behaves_like 'invariants of register', powertaker
-      it_behaves_like 'invariants of register group', powertaker
+    describe 'market_location' do
+      it_behaves_like 'invariants of market_location', powertaker
+      it_behaves_like 'invariants of market_location group', powertaker
     end
 
     describe 'customer' do
@@ -192,9 +192,9 @@ describe 'Schemas::Invariants::Contract::Localpool' do
       it_behaves_like 'invariants of localpool', third_party
     end
 
-    describe 'register' do
-      it_behaves_like 'invariants of register', third_party
-      it_behaves_like 'invariants of register group', third_party
+    describe 'market_location' do
+      it_behaves_like 'invariants of market_location', third_party
+      it_behaves_like 'invariants of market_location group', third_party
     end
   end
 end

@@ -5,7 +5,7 @@ module Contract
 
     model LocalpoolThirdParty
 
-    has_one :register
+    has_one :market_location
 
   end
 end

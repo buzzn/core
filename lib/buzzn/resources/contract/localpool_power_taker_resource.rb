@@ -14,7 +14,7 @@ module Contract
                 :old_account_number,
                 :mandate_reference
 
-    has_one :register
+    has_one :market_location
 
   end
 end

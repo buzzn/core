@@ -7,22 +7,12 @@ describe Admin::LocalpoolRoda do
 
   context 'contracts' do
 
-    entity(:localpool) { Fabricate(:localpool) }
+    entity(:person) { create(:person, :with_bank_account) }
 
-    entity(:person) do
-      person = Fabricate(:person)
-      Fabricate(:bank_account, owner: person)
-      person.update(address: Fabricate(:address))
-      person.reload
-      person
-    end
+    entity(:localpool) { create(:localpool, owner: person) }
 
     entity(:organization) do
-      orga = Fabricate(:metering_point_operator, contact: person)
-      Fabricate(:bank_account, owner: orga)
-      orga.update(address: Fabricate(:address))
-      orga.reload
-      orga
+      create(:organization, :with_bank_account, :with_address, contact: person)
     end
 
     before do
@@ -30,20 +20,15 @@ describe Admin::LocalpoolRoda do
     end
 
     entity(:metering_point_operator_contract) do
-      Fabricate(:metering_point_operator_contract,
-                localpool: localpool,
-                contractor: organization,
-                customer: person)
+      create(:contract, :metering_point_operator,
+             localpool: localpool,
+             contractor: organization)
     end
 
     entity(:localpool_power_taker_contract) do
-      Fabricate(:localpool_power_taker_contract,
-                customer: person,
-                contractor: organization,
-                localpool: localpool,
-                register: Fabricate(:input_register,
-                                    meter: Fabricate.create(:output_meter,
-                                                            group: localpool)))
+      create(:contract, :localpool_powertaker,
+             customer: organization,
+             localpool: localpool)
     end
 
     let(:person_json) do
@@ -122,7 +107,8 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
       let(:localpool_power_taker_contract_json) do
         contract = localpool_power_taker_contract
-        meter = contract.register.meter
+        register = contract.market_location.register
+        meter = register.meter
         {
           'id'=>contract.id,
           'type'=>'contract_localpool_power_taker',
@@ -180,8 +166,8 @@ describe Admin::LocalpoolRoda do
               }
             end
           },
-          'contractor'=>organization_json.dup,
-          'customer'=>person_json.dup,
+          'contractor'=>person_json.dup,
+          'customer'=>organization_json.dup,
           'customer_bank_account'=>{
             'id'=>contract.customer_bank_account.id,
             'type'=>'bank_account',
@@ -206,54 +192,62 @@ describe Admin::LocalpoolRoda do
             'updatable'=> true,
             'deletable'=> false,
           },
-          'register'=> {
-            'id'=>contract.register.id,
-            'type'=>'register_real',
-            'updated_at'=>contract.register.updated_at.as_json,
-            'direction'=>'in',
-            'pre_decimal_position'=>6,
-            'post_decimal_position'=>1,
-            'low_load_ability'=>false,
-            'label'=>'CONSUMPTION',
-            'last_reading'=>0,
-            'observer_min_threshold'=>nil,
-            'observer_max_threshold'=>nil,
-            'observer_enabled'=>nil,
-            'observer_offline_monitoring'=>nil,
-            'meter_id' => contract.register.meter_id,
-            'kind' => 'consumption',
-            'updatable'=> true,
-            'deletable'=> false,
-            'createables'=>['readings'],
-            'metering_point_id'=>contract.register.metering_point_id,
-            'obis'=>contract.register.obis,
-            'meter' => {
-              'id'=>meter.id,
-              'type'=>'meter_real',
-              'updated_at'=> meter.updated_at.as_json,
-              'product_name'=>meter.product_name,
-              'product_serialnumber'=>meter.product_serialnumber,
-              'sequence_number' => meter.sequence_number,
-              'updatable'=>false,
-              'deletable'=>false,
-              'manufacturer_name'=>meter.attributes['manufacturer_name'],
-              'manufacturer_description'=>meter.attributes['manufacturer_description'],
-              'location_description'=>meter.attributes['location_description'],
-              'direction_number'=>meter.attributes['direction_number'],
-              'converter_constant'=>meter.converter_constant,
-              'ownership'=>meter.attributes['ownership'],
-              'build_year'=>meter.build_year,
-              'calibrated_until'=>meter.calibrated_until ? meter.calibrated_until.to_s : nil,
-              'edifact_metering_type'=>meter.attributes['edifact_metering_type'],
-              'edifact_meter_size'=>meter.attributes['edifact_meter_size'],
-              'edifact_tariff'=>meter.attributes['edifact_tariff'],
-              'edifact_measurement_method'=>meter.attributes['edifact_measurement_method'],
-              'edifact_mounting_method'=>meter.attributes['edifact_mounting_method'],
-              'edifact_voltage_level'=>meter.attributes['edifact_voltage_level'],
-              'edifact_cycle_interval'=>meter.attributes['edifact_cycle_interval'],
-              'edifact_data_logging'=>meter.attributes['edifact_data_logging'],
-              'sent_data_dso'=>nil,
-              'data_source'=>meter.registers.first.data_source.to_s,
+          'market_location' => {
+            'id' => contract.market_location.id,
+            'type' => 'market_location',
+            'updated_at'=> contract.market_location.updated_at.as_json,
+            'name' => contract.market_location.name,
+            'updatable' => false,
+            'deletable' => false,
+            'register' => {
+              'id'=>register.id,
+              'type'=>'register_real',
+              'updated_at'=>register.updated_at.as_json,
+              'direction'=>'in',
+              'pre_decimal_position'=>6,
+              'post_decimal_position'=>1,
+              'low_load_ability'=>false,
+              'label'=>'CONSUMPTION',
+              'last_reading'=>0,
+              'observer_min_threshold'=>nil,
+              'observer_max_threshold'=>nil,
+              'observer_enabled'=>nil,
+              'observer_offline_monitoring'=>nil,
+              'meter_id' => meter.id,
+              'kind' => 'consumption',
+              'updatable'=> true,
+              'deletable'=> false,
+              'createables'=>['readings'],
+              'metering_point_id'=>register.metering_point_id,
+              'obis'=>register.obis,
+              'meter' => {
+                'id'=>meter.id,
+                'type'=>'meter_real',
+                'updated_at'=> meter.updated_at.as_json,
+                'product_name'=>meter.product_name,
+                'product_serialnumber'=>meter.product_serialnumber,
+                'sequence_number' => meter.sequence_number,
+                'updatable'=>false,
+                'deletable'=>false,
+                'manufacturer_name'=>meter.attributes['manufacturer_name'],
+                'manufacturer_description'=>meter.attributes['manufacturer_description'],
+                'location_description'=>meter.attributes['location_description'],
+                'direction_number'=>meter.attributes['direction_number'],
+                'converter_constant'=>meter.converter_constant,
+                'ownership'=>meter.attributes['ownership'],
+                'build_year'=>meter.build_year,
+                'calibrated_until'=>meter.calibrated_until ? meter.calibrated_until.to_s : nil,
+                'edifact_metering_type'=>meter.attributes['edifact_metering_type'],
+                'edifact_meter_size'=>meter.attributes['edifact_meter_size'],
+                'edifact_tariff'=>meter.attributes['edifact_tariff'],
+                'edifact_measurement_method'=>meter.attributes['edifact_measurement_method'],
+                'edifact_mounting_method'=>meter.attributes['edifact_mounting_method'],
+                'edifact_voltage_level'=>meter.attributes['edifact_voltage_level'],
+                'edifact_cycle_interval'=>meter.attributes['edifact_cycle_interval'],
+                'edifact_data_logging'=>meter.attributes['edifact_data_logging'],
+                'sent_data_dso'=> meter.sent_data_dso.to_s,
+                'data_source'=>meter.registers.first.data_source.to_s,
+              }
             }
           }
         }
@@ -372,7 +366,7 @@ describe Admin::LocalpoolRoda do
           let(:contract_json) { send "#{type}_contract_json" }
 
           it '200' do
-            GET "/test/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register:meter'
+            GET "/test/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,market_location:[register:meter]'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end
@@ -384,7 +378,7 @@ describe Admin::LocalpoolRoda do
 
       context 'GET' do
 
-        let('contract') { [metering_point_operator_contract, localpool_power_taker_contract].sample }
+        let('contract') { metering_point_operator_contract }
 
         let('customer_json') do
           json = person_json.dup
@@ -412,7 +406,7 @@ describe Admin::LocalpoolRoda do
 
       context 'GET' do
 
-        let('contract') { [metering_point_operator_contract, localpool_power_taker_contract].sample }
+        let('contract') { metering_point_operator_contract }
 
         let('contractor_json') do
           json = organization_json.dup
