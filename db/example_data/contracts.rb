@@ -185,13 +185,7 @@ SampleData.contracts.pt7b = SampleData::ContractFactory.create(
   signing_date: SampleData.contracts.pt7a.termination_date,
   begin_date: SampleData.contracts.pt7a.end_date,
   customer: SampleData.persons.pt7,
-<<<<<<< HEAD
-  # TODO: this should later be removed
-  register: SampleData.contracts.pt7a.register, # important !
   market_location: SampleData.market_locations.wohnung_7
-=======
-  market_location: create(:market_location, register: SampleData.contracts.pt7a.register), # important !
->>>>>>> remove register_id from contract
 )
 
 # English language speaker
@@ -217,8 +211,5 @@ SampleData.contracts.pt10 = SampleData::ContractFactory.create(
 SampleData.contracts.common_consumption = SampleData::ContractFactory.create(
   contractor: SampleData.localpools.people_power.owner,
   customer: SampleData.localpools.people_power.owner,
-  register: create(:register, :consumption_common,
-    meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)
-                  ),
   market_location: SampleData.market_locations.common_consumption
 )
