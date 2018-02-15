@@ -18,14 +18,14 @@ end
 
 all_groups = Group::Base
              .where("name !~ 'Localpool|Testgruppe'")
-             .where("start_date <= ?", Date.today)
+             .where('start_date <= ?', Date.today)
              .where(gap_contract_customer_person_id: nil, gap_contract_customer_organization_id: nil)
              .order(:start_date, :name)
 
 all_groups.each do |group|
   puts
   print group.name
-  print ": "
+  print ': '
   customers_and_contracts = common_consumption_contracts_with_customers(group)
   case customers_and_contracts.size
   when 0
@@ -39,15 +39,4 @@ all_groups.each do |group|
   else
     print 'More than one customer for common consumption contracts!'
   end
-  # customers_and_contracts.each do |customer, contracts|
-  #   p customer
-  #   p contracts
-  # end
-  # contracts = common_consumption_contracts_of_group_owner(group)
-  # if contracts.empty?
-  #   puts "#{group.name}: ----"
-  # else
-  #   c = contracts.min_by(&:contract_number_addition)
-  #   puts "#{group.name}: #{c.contract_number}/#{c.contract_number_addition}"
-  # end
 end
