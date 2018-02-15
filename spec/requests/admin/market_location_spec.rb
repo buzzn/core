@@ -51,6 +51,7 @@ describe Admin::LocalpoolRoda do
             'createables' => ['readings'],
             'metering_point_id' => register.metering_point_id,
             'obis' => register.obis,
+            'meter' => nil
           }
         }
       end
@@ -74,7 +75,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200' do
-        GET "/test/#{group.id}/market-locations/#{market_location.id}", $admin, include: 'register'
+        GET "/test/#{group.id}/market-locations/#{market_location.id}", $admin, include: 'register:meter'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq expected_json.to_yaml
       end
