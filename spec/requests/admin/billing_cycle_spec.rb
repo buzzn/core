@@ -66,23 +66,23 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+        GET "/localpools/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
         Timecop.travel(Time.now + 30 * 60) do
-          GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+          GET "/localpools/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
           expect(response).to be_session_expired_json(401)
 
-          GET "/test/#{group.id}/billing-cycles", $admin
+          GET "/localpools/#{group.id}/billing-cycles", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '404' do
-        GET "/test/#{group.id}/billing-cycles/bla-blub", $admin
+        GET "/localpools/#{group.id}/billing-cycles/bla-blub", $admin
         expect(response).to be_not_found_json(404, BillingCycle)
       end
 
       it '200 all' do
-        GET "/test/#{group.id}/billing-cycles?include=billings", $admin
+        GET "/localpools/#{group.id}/billing-cycles?include=billings", $admin
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq sort(cycles_json).to_yaml
       end
@@ -103,21 +103,21 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+        GET "/localpools/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
         expire_admin_session do
-          POST "/test/#{group.id}/billing-cycles", $admin
+          POST "/localpools/#{group.id}/billing-cycles", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '422' do
-        POST "/test/#{group.id}/billing-cycles", $admin, begin_date: 'blablu', end_date: 'blubla', name: 'something'*10
+        POST "/localpools/#{group.id}/billing-cycles", $admin, begin_date: 'blablu', end_date: 'blubla', name: 'something'*10
         expect(response).to have_http_status(422)
         expect(json.to_yaml).to eq wrong_json.to_yaml
       end
 
       it '201' do
-        POST "/test/#{group.id}/billing-cycles", $admin, begin_date: begin_date, end_date: end_date, name: 'mine', include: :billings
+        POST "/localpools/#{group.id}/billing-cycles", $admin, begin_date: begin_date, end_date: end_date, name: 'mine', include: :billings
         expect(response).to have_http_status(201)
         result = json
         id = result.delete('id')
@@ -172,26 +172,26 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+        GET "/localpools/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
         expire_admin_session do
-          PATCH "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+          PATCH "/localpools/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '404' do
-        PATCH "/test/#{group.id}/billing-cycles/bla-blub", $admin
+        PATCH "/localpools/#{group.id}/billing-cycles/bla-blub", $admin
         expect(response).to be_not_found_json(404, BillingCycle)
       end
 
       it '409' do
-        PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
+        PATCH "/localpools/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
               updated_at: DateTime.now
         expect(response).to be_stale_json(409, billing_cycle)
       end
 
       it '422' do
-        PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
+        PATCH "/localpools/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
               begin_date: 'blablu',
               end_date: 'blubla',
               name: 'hello mister' * 20
@@ -201,7 +201,7 @@ describe Admin::LocalpoolRoda do
 
       it '200' do
         old = billing_cycle.updated_at
-        PATCH "/test/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
+        PATCH "/localpools/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
               updated_at: billing_cycle.updated_at,
               name: 'abcd',
               begin_date: Date.today,
@@ -225,9 +225,9 @@ describe Admin::LocalpoolRoda do
     context 'DELETE' do
 
       it '401' do
-        GET "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+        GET "/localpools/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
         expire_admin_session do
-          DELETE "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+          DELETE "/localpools/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
@@ -235,7 +235,7 @@ describe Admin::LocalpoolRoda do
       it '204' do
         size = BillingCycle.all.size
 
-        DELETE "/test/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
+        DELETE "/localpools/#{group.id}/billing-cycles/#{other_billing_cycle.id}", $admin
         expect(response).to have_http_status(204)
         expect(BillingCycle.all.size).to eq size - 1
 

@@ -70,26 +70,26 @@ describe Admin::LocalpoolRoda do
         end
 
         it '401' do
-          GET "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
+          GET "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
           expire_admin_session do
-            PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
+            PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
             expect(response).to be_session_expired_json(401)
           end
         end
 
         it '404' do
-          PATCH "/test/#{group.id}/meters/#{meter.id}/registers/bla-blub", $admin
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/bla-blub", $admin
           expect(response).to be_not_found_json(404, Register::Real)
         end
 
         it '409' do
-          PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                 updated_at: DateTime.now
           expect(response).to be_stale_json(409, register)
         end
 
         it '422' do
-          PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                 metering_point_id: '123321' * 20,
                 label: 'grid',
                 pre_decimal_position: 'pre',
@@ -105,7 +105,7 @@ describe Admin::LocalpoolRoda do
 
         it '200' do
           old = register.updated_at
-          PATCH "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                 updated_at: register.updated_at,
                 metering_point_id: '123456',
                 label: Register::Base.labels[:demarcation_pv],
@@ -218,32 +218,10 @@ describe Admin::LocalpoolRoda do
 
       # NOTE picking a sample register is enough for the 404 tests
 
-      let(:register) do
+      let(:regixster) do
         register = [real_register, virtual_register].sample
         Fabricate(:single_reading, register: register)
         register
-      end
-
-      it '401' do
-        GET "/test/#{group.id}/registers/#{register.id}", $admin
-        expire_admin_session do
-          GET "/test/#{group.id}/registers/#{register.id}", $admin
-          expect(response).to be_session_expired_json(401)
-
-          GET "/test/#{group.id}/registers", $admin
-          expect(response).to be_session_expired_json(401)
-        end
-      end
-
-      it '404' do
-        GET "/test/#{group.id}/registers/bla-blub", $admin
-        expect(response).to be_not_found_json(404, Register::Base)
-      end
-
-      it '200 all' do
-        GET "/test/#{group.id}/registers", $admin
-        expect(response).to have_http_status(200)
-        expect(sort(json['array']).to_yaml).to eq sort(registers_json).to_yaml
       end
 
       [:real].each do |type|
@@ -282,7 +260,7 @@ describe Admin::LocalpoolRoda do
             register = send "#{type}_register"
             registers_json = send("#{type}_registers_json")
 
-            GET "/test/#{group.id}/meters/#{register.meter.id}/registers", $admin
+            GET "/localpools/#{group.id}/meters/#{register.meter.id}/registers", $admin
             expect(response).to have_http_status(200)
             expect(sort(json['array']).to_yaml).to eq sort(registers_json).to_yaml
           end
@@ -291,7 +269,7 @@ describe Admin::LocalpoolRoda do
             register = send "#{type}_register"
             register_json = send "#{type}_register_json"
 
-            GET "/test/#{group.id}/registers/#{register.id}", $admin
+            GET "/localpools/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
 

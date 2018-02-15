@@ -61,7 +61,7 @@ describe Admin::LocalpoolRoda do
   context 'GET' do
 
     it '200' do
-      GET "/test/#{localpool.id}", $admin, include: 'distribution_system_operator, transmission_system_operator, electricity_supplier'
+      GET "/localpools/#{localpool.id}", $admin, include: 'distribution_system_operator, transmission_system_operator, electricity_supplier'
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq localpool_json.to_yaml
     end

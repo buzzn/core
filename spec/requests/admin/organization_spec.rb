@@ -92,12 +92,12 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/test/#{group.id}/organizations/#{organization.id}", $admin
+        GET "/localpools/#{group.id}/organizations/#{organization.id}", $admin
         expire_admin_session do
-          GET "/test/#{group.id}/organizations", $admin
+          GET "/localpools/#{group.id}/organizations", $admin
           expect(response).to be_session_expired_json(401)
 
-          GET "/test/#{group.id}/organizations/#{organization.id}", $admin
+          GET "/localpools/#{group.id}/organizations/#{organization.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
@@ -107,12 +107,12 @@ describe Admin::LocalpoolRoda do
       end
 
       it '404' do
-        GET "/test/#{group.id}/organizations/bla-blub", $admin
+        GET "/localpools/#{group.id}/organizations/bla-blub", $admin
         expect(response).to be_not_found_json(404, Organization)
       end
 
       it '200' do
-        GET "/test/#{group.id}/organizations/#{organization.id}", $admin, include: 'bank_accounts, contact, legal_representation'
+        GET "/localpools/#{group.id}/organizations/#{organization.id}", $admin, include: 'bank_accounts, contact, legal_representation'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq organization_json.to_yaml
       end
@@ -156,9 +156,9 @@ describe Admin::LocalpoolRoda do
       context 'GET' do
 
         it '401' do
-          GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
+          GET "/localpools/#{group.id}/organizations/#{organization.id}/address", $admin
           expire_admin_session do
-            GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
+            GET "/localpools/#{group.id}/organizations/#{organization.id}/address", $admin
             expect(response).to be_session_expired_json(401)
           end
         end
@@ -170,7 +170,7 @@ describe Admin::LocalpoolRoda do
         it '404' do
           organization.update(address: nil)
           begin
-            GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
+            GET "/localpools/#{group.id}/organizations/#{organization.id}/address", $admin
             expect(response).to be_not_found_json(404, OrganizationResource, :address)
           ensure
             organization.update(address: address)
@@ -178,11 +178,11 @@ describe Admin::LocalpoolRoda do
         end
 
         it '200' do
-          GET "/test/#{group.id}/organizations/#{organization.id}/address", $admin
+          GET "/localpools/#{group.id}/organizations/#{organization.id}/address", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq address_json.to_yaml
 
-          GET "/test/#{group.id}/organizations/#{organization.id}", $admin, include: 'address'
+          GET "/localpools/#{group.id}/organizations/#{organization.id}", $admin, include: 'address'
           expect(response).to have_http_status(200)
           expect(json).to eq organization_json
 

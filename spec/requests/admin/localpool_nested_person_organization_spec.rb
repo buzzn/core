@@ -105,7 +105,7 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
 
       it '200' do
-        GET "/test/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
+        GET "/localpools/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq localpool_json.to_yaml
       end
@@ -153,7 +153,7 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
 
       it '200' do
-        GET "/test/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
+        GET "/localpools/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
         expect(response).to have_http_status(200)
         expect(json).to eq localpool_json
       end

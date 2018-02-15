@@ -31,15 +31,15 @@ describe Admin::LocalpoolRoda do
     context 'POST' do
 
       it '401' do
-        GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
+        GET "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
         expire_admin_session do
-          POST "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
+          POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '422' do
-        POST "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin,
+        POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin,
              date: 'today',
              raw_value: 'unknown',
              value: 'infinity',
@@ -82,7 +82,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '201' do
-        POST "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin, new_reading
+        POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin, new_reading
 
         expect(response).to have_http_status(201)
         result = json
@@ -138,38 +138,38 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200 all' do
-        GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
+        GET "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(readings_json.to_yaml)
       end
 
       it '401' do
-        GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
+        GET "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
         expire_admin_session do
-          GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
+          GET "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
           expect(response).to be_session_expired_json(401)
 
-          GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
+          GET "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       xit '403' do
         # TODO need user which can access localpool > meter > register but nor reading
-        GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $user
+        GET "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $user
 
         expect(response).to have_http_status(403)
         expect(json.to_yaml).to eq(denied_json.to_yaml)
       end
 
       it '404' do
-        GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/bla-blub", $admin
+        GET "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/bla-blub", $admin
         expect(response).to be_not_found_json(404, Reading::Single)
       end
 
       it '200' do
-        GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
+        GET "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
 
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(reading_json.to_yaml)
@@ -179,9 +179,9 @@ describe Admin::LocalpoolRoda do
     context 'DELETE' do
 
       it '401' do
-        GET "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
+        GET "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
         expire_admin_session do
-          DELETE "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
+          DELETE "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
@@ -195,7 +195,7 @@ describe Admin::LocalpoolRoda do
         reading = create(:reading, register: register, date: Date.today)
         expect(Reading::Single.count).to eq count + 1
 
-        DELETE "/test/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
+        DELETE "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
 
         expect(response).to have_http_status(200)
         expect(Reading::Single.count).to eq count

@@ -85,25 +85,25 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/test/#{group.id}/market-locations/#{market_location.id}", $admin
+        GET "/localpools/#{group.id}/market-locations/#{market_location.id}", $admin
         expire_admin_session do
-          GET "/test/#{group.id}/market_locations/#{market_location.id}", $admin
+          GET "/localpools/#{group.id}/market_locations/#{market_location.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
-        GET "/test/#{group.id}/market-locations/#{market_location.id}", $user
+        GET "/localpools/#{group.id}/market-locations/#{market_location.id}", $user
         expect(response).to be_denied_json(403, market_location)
       end
 
       it '404' do
-        GET "/test/#{group.id}/market-locations/bla-blub", $admin
+        GET "/localpools/#{group.id}/market-locations/bla-blub", $admin
         expect(response).to be_not_found_json(404, MarketLocation)
       end
 
       it '200' do
-        GET "/test/#{group.id}/market-locations/#{market_location.id}", $admin, include: 'register:meter'
+        GET "/localpools/#{group.id}/market-locations/#{market_location.id}", $admin, include: 'register:meter'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq expected_json.to_yaml
       end

@@ -42,9 +42,9 @@ describe Admin::LocalpoolRoda do
     context 'POST' do
 
       it '401' do
-        GET "/test/#{localpool.id}/tariffs", $admin
+        GET "/localpools/#{localpool.id}/tariffs", $admin
         Timecop.travel(Time.now + 30 * 60) do
-          POST "/test/#{localpool.id}/tariffs", $admin
+          POST "/localpools/#{localpool.id}/tariffs", $admin
 
           expect(response).to have_http_status(401)
           expect(json).to eq(expired_json)
@@ -52,7 +52,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '422' do
-        POST "/test/#{localpool.id}/tariffs", $admin,
+        POST "/localpools/#{localpool.id}/tariffs", $admin,
              name: 'Max Mueller' * 10,
              begin_date: 'heute-hier-morgen-dort',
              energyprice_cents_per_kwh: 'not so much',
@@ -84,7 +84,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '201' do
-        POST "/test/#{localpool.id}/tariffs", $admin, new_tariff
+        POST "/localpools/#{localpool.id}/tariffs", $admin, new_tariff
 
         expect(response).to have_http_status(201)
         result = json
@@ -132,13 +132,13 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/test/#{localpool.id}/tariffs", $admin
+        GET "/localpools/#{localpool.id}/tariffs", $admin
         Timecop.travel(Time.now + 30 * 60) do
-          GET "/test/#{localpool.id}/tariffs", $admin
+          GET "/localpools/#{localpool.id}/tariffs", $admin
 
           expect(response).to have_http_status(401)
           expect(json).to eq(expired_json)
-          GET "/test/#{localpool.id}/tariffs/#{tariff.id}", $admin
+          GET "/localpools/#{localpool.id}/tariffs/#{tariff.id}", $admin
 
           expect(response).to have_http_status(401)
           expect(json).to eq(expired_json)
@@ -146,14 +146,14 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200' do
-        GET "/test/#{localpool.id}/tariffs/#{tariff.id}", $admin
+        GET "/localpools/#{localpool.id}/tariffs/#{tariff.id}", $admin
 
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(tariff_json.to_yaml)
       end
 
       it '200 all' do
-        GET "/test/#{localpool.id}/tariffs", $admin
+        GET "/localpools/#{localpool.id}/tariffs", $admin
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(tariffs_json.to_yaml)
@@ -163,9 +163,9 @@ describe Admin::LocalpoolRoda do
     context 'DELETE' do
 
       it '401' do
-        GET "/test/#{localpool.id}/tariffs/#{tariff.id}", $admin
+        GET "/localpools/#{localpool.id}/tariffs/#{tariff.id}", $admin
         Timecop.travel(Time.now + 30 * 60) do
-          DELETE "/test/#{localpool.id}/tariffs/#{tariff.id}", $admin
+          DELETE "/localpools/#{localpool.id}/tariffs/#{tariff.id}", $admin
 
           expect(response).to have_http_status(401)
           expect(json).to eq(expired_json)
@@ -173,7 +173,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '404' do
-        DELETE "/test/#{localpool.id}/tariffs/bla-bla-blub", $admin
+        DELETE "/localpools/#{localpool.id}/tariffs/bla-bla-blub", $admin
         expect(response).to have_http_status(404)
         expect(json).to eq not_found_json
       end
@@ -181,7 +181,7 @@ describe Admin::LocalpoolRoda do
       it '204' do
         size = Contract::Tariff.all.size
 
-        DELETE "/test/#{localpool.id}/tariffs/#{tariff.id}", $admin
+        DELETE "/localpools/#{localpool.id}/tariffs/#{tariff.id}", $admin
         expect(response).to have_http_status(204)
         expect(Contract::Tariff.all.size).to eq size - 1
 
