@@ -1,7 +1,7 @@
 class MarketLocation < ActiveRecord::Base
 
   belongs_to :group, class_name: 'Group::Base'
-  has_many :contracts
+  has_many :contracts, class_name: 'Contract::Base'
 
   # Fully implementing 1:n, i.e. that a market location has many current and past registers is a future story.
   # I'm already setting things up 1:n on the DB and association level, hopefully that'll make implementation
