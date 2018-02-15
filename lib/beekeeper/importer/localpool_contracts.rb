@@ -16,6 +16,7 @@ class Beekeeper::Importer::LocalpoolContracts
         end
       rescue => e
         logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
+        e.backtrace.each { |row| logger.error(row) }
       end
     end
     third_parties.each do |contract|
@@ -25,6 +26,7 @@ class Beekeeper::Importer::LocalpoolContracts
         end
       rescue => e
         logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
+        e.backtrace.each { |row| logger.error(row) }
       end
     end
   end
