@@ -65,9 +65,10 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     when 1
       handle_one_reading(readings.first, old_end_date)
     else
-      # In the beekeeper dump 2018-01-25 there's one case with 0 readings, but that contract ended on 2018-02-01
-      #  so natually there's no reading yet. Nothing to do for that one.
-      logger.error("Expected two readings but got #{readings.size}: #{readings.inspect}")
+      logger.warn("Expected two readings but got #{readings.size}. Readings are")
+      readings.each do |r|
+        logger.warn(r.attributes.slice('date', 'value', 'reason', 'comment', 'id').inspect)
+      end
     end
   end
 
