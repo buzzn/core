@@ -1,6 +1,6 @@
-# Because rails runner <scriptname> doesn't work anymore, you'll have to run this script like this:
+# Because 'rails runner <scriptname>' doesn't work anymore, you'll have to run this script like this:
 # $ bin/console
-# > load 'script/beekeeper_import/find_missing_readings.rb'
+# > load '<scriptname>'
 
 ReadingsCheck = Struct.new(:contract) do
 
