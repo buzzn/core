@@ -95,7 +95,7 @@ module Admin
           localpool.managers
         end
 
-        r.on 'person_owner' do
+        r.on 'person-owner' do
           r.post! do
             Transactions::Admin::Localpool::CreatePersonOwner
               .for(localpool)
@@ -109,7 +109,7 @@ module Admin
           end
         end
 
-        r.on 'organization_owner' do
+        r.on 'organization-owner' do
           r.post! do
             Transactions::Admin::Localpool::CreateOrganizationOwner
               .for(localpool)
@@ -123,7 +123,7 @@ module Admin
           end
         end
 
-        r.on 'market_locations' do
+        r.on 'market-locations' do
           r.run MarketLocationRoda
         end
       end

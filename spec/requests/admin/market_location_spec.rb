@@ -35,7 +35,6 @@ describe Admin::LocalpoolRoda do
             'type' => 'register_real',
             'updated_at'=> register.updated_at.as_json,
             'direction' => register.attributes['direction'],
-            'name' => register.name,
             'pre_decimal_position' => 6,
             'post_decimal_position' => register.post_decimal_position,
             'low_load_ability' => false,
@@ -57,7 +56,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/test/#{group.id}/market_locations/#{market_location.id}", $admin
+        GET "/test/#{group.id}/market-locations/#{market_location.id}", $admin
         expire_admin_session do
           GET "/test/#{group.id}/market_locations/#{market_location.id}", $admin
           expect(response).to be_session_expired_json(401)
@@ -65,17 +64,17 @@ describe Admin::LocalpoolRoda do
       end
 
       it '403' do
-        GET "/test/#{group.id}/market_locations/#{market_location.id}", $user
+        GET "/test/#{group.id}/market-locations/#{market_location.id}", $user
         expect(response).to be_denied_json(403, market_location)
       end
 
       it '404' do
-        GET "/test/#{group.id}/market_locations/bla-blub", $admin
+        GET "/test/#{group.id}/market-locations/bla-blub", $admin
         expect(response).to be_not_found_json(404, MarketLocation)
       end
 
       it '200' do
-        GET "/test/#{group.id}/market_locations/#{market_location.id}", $admin, include: 'register'
+        GET "/test/#{group.id}/market-locations/#{market_location.id}", $admin, include: 'register'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq expected_json.to_yaml
       end
