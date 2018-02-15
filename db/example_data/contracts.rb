@@ -155,9 +155,6 @@ SampleData.contracts.pt5_empty = SampleData::ContractFactory.create(
   begin_date: SampleData.contracts.pt5a.end_date,
   termination_date: Date.parse('2017-4-30'),
   end_date: Date.parse('2017-5-1'),
-  # TODO: this should later be removed
-  register: SampleData.contracts.pt5a.register, # important !
-  contractor: SampleData.localpools.people_power.owner,
   customer: Organization.find_by(slug: 'hv-schneider'),
   market_location: SampleData.market_locations.wohnung_5
 )
@@ -166,8 +163,6 @@ SampleData.contracts.pt5_empty = SampleData::ContractFactory.create(
 SampleData.contracts.pt5b = SampleData::ContractFactory.create(
   signing_date: Date.parse('2017-4-10'),
   begin_date: Date.parse('2017-5-1'),
-  # TODO: this should later be removed
-  register: SampleData.contracts.pt5a.register, # important !
   customer: SampleData.persons.pt5b,
   tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_5
@@ -190,9 +185,13 @@ SampleData.contracts.pt7b = SampleData::ContractFactory.create(
   signing_date: SampleData.contracts.pt7a.termination_date,
   begin_date: SampleData.contracts.pt7a.end_date,
   customer: SampleData.persons.pt7,
+<<<<<<< HEAD
   # TODO: this should later be removed
   register: SampleData.contracts.pt7a.register, # important !
   market_location: SampleData.market_locations.wohnung_7
+=======
+  market_location: create(:market_location, register: SampleData.contracts.pt7a.register), # important !
+>>>>>>> remove register_id from contract
 )
 
 # English language speaker

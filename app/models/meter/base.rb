@@ -8,7 +8,6 @@ module Meter
     belongs_to :address
     belongs_to :broker, class_name: 'Broker::Base'
 
-    # needed for permitted scope
     has_many :registers, class_name: 'Register::Base', foreign_key: :meter_id
 
     before_destroy do
@@ -19,7 +18,7 @@ module Meter
     scope :real,      -> {where(type: Real)}
     scope :virtual,   -> {where(type: Virtual)}
     scope :real_or_virtual, -> {where(type: [Real, Virtual])}
-    scope :restricted, ->(uids) { joins(registers: :contracts).where('contracts.id': uids) }
+    scope :restricted, ->(uids) { joins(registers: { market_location: :contracts}).where('contracts.id': uids) }
 
     def name
       "#{manufacturer_name} #{product_serialnumber}"

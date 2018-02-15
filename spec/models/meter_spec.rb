@@ -1,70 +1,10 @@
 describe Meter::Real do
 
-  entity!(:easymeter) { Fabricate(:easy_meter_q3d) }
-  entity!(:meter) { Fabricate(:meter, product_serialnumber: '123432345', product_name: 'SomethingComplicated' ) }
-  entity(:second) { Fabricate(:input_meter) }
-  entity(:register) { meter.registers.first }
-  entity!(:input_meter) { Fabricate(:input_meter) }
-  entity!(:group) { Fabricate(:localpool) }
-
-  it 'filters meter' do
-    [meter.product_serialnumber, meter.product_name].each do |val|
-      [val, val.upcase, val.downcase, val[0..4], val[-4..-1]].each do |value|
-        meters = Meter::Real.filter(value)
-        expect(meters.find{|m| m == meter}).to eq meter
-      end
-    end
-  end
-
-  it 'can not find anything' do
-    meters = Meter::Real.filter('Der Clown ist müde und geht nach Hause.')
-    expect(meters.size).to eq 0
-  end
-
-  it 'filters meter with no params' do
-    meters = Meter::Real.filter(nil)
-    expect(meters.size).to eq Meter::Real.count
-  end
-
-  it 'deletes a single meter including its register' do
-    rcount = Register::Base.count
-    count = Meter::Base.count
-    input_meter.destroy
-    expect(Register::Base.all.size).to eq rcount - 1
-    expect(Meter::Base.all.size).to eq count - 1
-  end
-
-  it 'deletes a two way meter including its registers' do
-    meter = Fabricate(:easymeter_60139082)
-    rcount = Register::Base.count
-    count = Meter::Base.count
-    meter.destroy
-    expect(Register::Base.all.size).to eq rcount - 2
-    expect(Meter::Base.all.size).to eq count - 1
-  end
-
-  it 'deletes one register of a two way meter' do
-    begin
-      meter = Fabricate(:easymeter_60139082)
-      rcount = Register::Base.count
-      count = Meter::Base.count
-      meter.registers.first.destroy
-      expect(Register::Base.all.size).to eq rcount - 1
-      expect(Meter::Base.all.size).to eq count
-    ensure
-      meter.destroy
-    end
-  end
-
-  it 'does not delete register or meter' do
-    skip('the register gets deleted despit the error raised')
-    expect { meter.registers.first.destroy }.to raise_error Buzzn::NestedValidationError
-    meter.reload
-    expect(meter.valid?).to eq true
-    expect(meter.registers).not_to eq []
-  end
+  entity!(:meter) { create(:meter, :real, group: nil) }
+  entity!(:group) { create(:localpool) }
 
   it 'gets a sequence_number if added to a group' do
+    expect(meter.group).to eq nil
     expect(meter.sequence_number).to be_nil
     meter.update(group: group)
     expect(meter.reload.sequence_number).to eq 1
@@ -72,7 +12,7 @@ describe Meter::Real do
 
     expect { meter.update(group: Fabricate(:localpool)) }.to raise_error ArgumentError
 
-    easymeter.update(group: group)
-    expect(easymeter.reload.sequence_number).to eq 2
+    second_meter = create(:meter, :real, group: group)
+    expect(second_meter.reload.sequence_number).to eq 2
   end
 end

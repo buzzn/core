@@ -6,9 +6,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   end
 
   def all(user)
-    Admin::LocalpoolResource.all(user).collect do |l|
-      l.object
-    end
+    Admin::LocalpoolResource.all(user).objects
   end
 
   entity(:buzzn_operator)    { create(:account, :buzzn_operator) }
@@ -38,7 +36,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     create(:contract, :localpool_powertaker,
            localpool: pool,
            customer: localpool_member3.person,
-           register: meter.input_register)
+           market_location: create(:market_location, register: meter.input_register, group: pool))
     pool.registers.each do |r|
       r.update(address: create(:address)) unless r.valid?
     end
@@ -357,50 +355,6 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contract.delete }.to raise_error Buzzn::PermissionDenied
 
       expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contract.delete }.to raise_error Buzzn::PermissionDenied
-    end
-  end
-
-  context 'registers' do
-
-    def registers(user, id)
-      Admin::LocalpoolResource.all(user).retrieve(id).registers.objects
-    end
-
-    it 'all' do
-      expect(registers(buzzn_operator, localpool1.id)).to match_array localpool1.registers.reload
-      expect(registers(buzzn_operator, localpool2.id)).to match_array localpool2.registers.reload
-
-      expect(registers(localpool_owner, localpool2.id)).to match_array localpool2.registers.reload
-      expect(registers(localpool_manager, localpool2.id)).to match_array localpool2.registers.reload
-      expect(registers(localpool_member, localpool1.id)).to match_array []
-
-      # TODO not sure what GROUP_MEMBER means - outdated concept
-      #expect(registers(localpool_member3, localpool2.id)).to match_array localpool2.registers.input.real
-
-      expect(registers(localpool_member4, localpool2.id)).to match_array []
-
-      expect{ registers(localpool_member, localpool2.id) }.to raise_error Buzzn::PermissionDenied
-    end
-
-    it 'update' do
-      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).registers.first) }.not_to raise_error
-
-      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).registers.first) }.not_to raise_error
-
-      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).registers.first) }.not_to raise_error
-    end
-
-    it 'retrieve' do
-      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).registers.retrieve(register.id).object).to eq register
-
-      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).registers.retrieve(register.id).object).to eq register
-
-      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).registers.retrieve(register.id).object).to eq register
-
-      # TODO not sure what GROUP_MEMBER means - outdated concept
-      #expect(Admin::LocalpoolResource.all(localpool_member3).retrieve(localpool2.id).registers.retrieve(register.id).object).to eq register
-
-      expect{ Admin::LocalpoolResource.all(localpool_member4).retrieve(localpool2.id).registers.retrieve(register.id) }.to raise_error Buzzn::PermissionDenied
     end
   end
 

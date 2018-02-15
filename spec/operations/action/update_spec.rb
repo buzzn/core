@@ -4,15 +4,9 @@ require 'buzzn/schemas/invariants/contract/base'
 describe Operations::Action::Update do
 
   entity(:session) { Buzzn::Resource::Context.new(nil, [], nil) }
-  entity(:resource_with_invariant) { Contract::LocalpoolPowerTakerResource.new(Fabricate(:localpool_power_taker_contract), session) }
-  entity(:resource_without_invariant) { PersonResource.new(Fabricate(:person), session) }
+  entity(:resource_with_invariant) { Contract::LocalpoolPowerTakerResource.new(create(:contract, :localpool_powertaker), session) }
+  entity(:resource_without_invariant) { PersonResource.new(create(:person), session) }
   let(:input) { {} }
-
-  # it 'finds invariant' do
-  #   expect(subject.find_invariant(Register::Input)).to eq Schemas::Invariants::Register::Base
-  #   expect(subject.find_invariant(Register::Base)).to eq Schemas::Invariants::Register::Base
-  #   expect(subject.find_invariant(Person)).to eq nil
-  # end
 
   context 'stale' do
     before { input[:updated_at] = Time.now }

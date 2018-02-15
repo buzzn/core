@@ -22,5 +22,9 @@ FactoryGirl.define do
       evaluator.tariffs_attrs.each { |tariff_attrs| create(:tariff, tariff_attrs.merge(group: group)) }
       group.update(distribution_system_operator: evaluator.distribution_system_operator, transmission_system_operator: evaluator.transmission_system_operator, electricity_supplier: evaluator.electricity_supplier)
     end
+
+    trait :with_address do
+      address
+    end
   end
 end

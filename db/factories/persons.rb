@@ -42,6 +42,10 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_address do
+      address
+    end
+
     trait :powertaker do
       last_name { generate(:powertaker_last_name) }
       email     { generate(:powertaker_email) }

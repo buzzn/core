@@ -17,14 +17,14 @@ describe Admin::LocalpoolRoda do
     entity!(:billing) do
       Fabricate(:billing,
                 billing_cycle: billing_cycle,
-                localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
-                                                          register: group.registers.consumption.first))
+                localpool_power_taker_contract: create(:contract, :localpool_powertaker,
+                                                       market_location: create(:market_location, register: group.registers.consumption.first)))
     end
 
     entity!(:other_billing) do Fabricate(:billing,
                                          billing_cycle: billing_cycle,
-                                         localpool_power_taker_contract: Fabricate(:localpool_power_taker_contract,
-                                                                                   register: group.registers.consumption[1])) end
+                                         localpool_power_taker_contract: create(:contract, :localpool_powertaker,
+                                                                                   market_location: create(:market_location, register: group.registers.consumption[1]))) end
 
     context 'GET' do
       let(:billings_json) do

@@ -6,8 +6,6 @@ describe Transactions::Admin::Localpool::OwnerBase do
 
   entity(:account) { Account::Base.where(person_id: user).first }
 
-#  entity!(:localpool) { Fabricate(:localpool) }
-
   entity!(:pools) do
     create(:localpool)
     Admin::LocalpoolResource.all(account)

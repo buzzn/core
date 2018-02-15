@@ -8,7 +8,7 @@ describe Admin::LocalpoolRoda do
   context 'meters as real' do
 
     entity(:group) do
-      group = Fabricate(:localpool)
+      group = create(:localpool)
       $user.person.reload.add_role(Role::GROUP_MEMBER, group)
       group
     end
@@ -20,7 +20,8 @@ describe Admin::LocalpoolRoda do
     end
 
     entity(:real_meter) do
-      Fabricate(:output_meter, group: group)
+      create(:meter, :real,
+             group: group)
     end
 
     let(:meter_json) do

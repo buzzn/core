@@ -26,7 +26,7 @@ describe Admin, :swagger do
     localpool = create(:localpool)
     person.add_role(Role::GROUP_OWNER, localpool)
     Fabricate(:localpool_processing_contract, localpool: localpool, customer: organization)
-    Fabricate(:metering_point_operator_contract, localpool: localpool)
+    create(:contract, :metering_point_operator, localpool: localpool)
     localpool
   end
 
@@ -58,14 +58,14 @@ describe Admin, :swagger do
 
   entity!(:register) { meter.registers.first }
 
-  entity!(:reading) { Fabricate(:single_reading, register: register) }
-  entity!(:reading_2) { Fabricate(:single_reading, register: register) }
+  entity!(:reading) { create(:reading, register: register) }
+  entity!(:reading_2) { create(:reading, register: register, date: Date.today) }
 
   entity!(:localpool_power_taker_contract) do
     register = create(:meter, :real, group: localpool).input_register
-    Fabricate(:localpool_power_taker_contract,
-              localpool: localpool,
-              register: register)
+    create(:contract, :localpool_powertaker,
+           localpool: localpool,
+           market_location: create(:market_location, register: register))
   end
 
   entity!(:billing_1) do
