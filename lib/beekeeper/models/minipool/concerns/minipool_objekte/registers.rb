@@ -13,7 +13,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
         add_warning("register '#{attrs[:name]}'", zählwerk.warnings) if zählwerk.warnings.present?
         add_warning("meter '#{attrs[:name]}'", zählwerk.msb_gerät.warnings) if zählwerk.msb_gerät.warnings.present?
         register_class = attrs[:type].constantize
-        register       = register_class.new(attrs.except(:type, :meter_attributes))
+        register       = register_class.new(attrs.except(:type, :meter_attributes, :name))
         register.meter = find_or_build_meter(attrs[:meter_attributes])
         # debug = "#{zählwerk.buzznid}: #{register.label} (#{register.name})"
         # debug << " MPID #{register.metering_point_id}" if register.metering_point_id

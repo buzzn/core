@@ -9,7 +9,11 @@ class Beekeeper::Importer::SetLocalpoolGapContractCustomer
 
   def run(localpool)
     customer = Beekeeper::Importer::GapContractCustomer.find_by_localpool(localpool)
-    localpool.update_attributes(gap_contract_customer: customer) if customer
+    if customer
+      localpool.update_attributes(gap_contract_customer: customer)
+    else
+      logger.warn('No gap contract customer found.')
+    end
   end
 
 end

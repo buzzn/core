@@ -51,11 +51,16 @@ class Beekeeper::Import
 
   private
 
+  # How to use the log levels:
+  # DEBUG          debugging and technical details not relevant/comprehensible by PhO
+  # INFO (default) PhO should see and review this before the final import
+  # WARN           should be fixed in the final import, but we can live with it for now
+  # ERROR          something went wrong (like exceptions), should be investigated immediately
   def logger
     @logger ||= begin
       l = Logger.new(STDOUT)
-      l.formatter = proc do |_severity, _datetime, _progname, msg|
-        "#{msg}\n"
+      l.formatter = proc do |severity, _datetime, _progname, msg|
+        "[#{severity.upcase}] #{msg}\n"
       end
       l
     end
