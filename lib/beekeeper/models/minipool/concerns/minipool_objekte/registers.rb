@@ -15,6 +15,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
         register_class = attrs[:type].constantize
         register       = register_class.new(attrs.except(:type, :meter_attributes, :name))
         register.meter = find_or_build_meter(attrs[:meter_attributes])
+        register.build_market_location(name: register.name)
         # debug = "#{zählwerk.buzznid}: #{register.label} (#{register.name})"
         # debug << " MPID #{register.metering_point_id}" if register.metering_point_id
         # puts debug
