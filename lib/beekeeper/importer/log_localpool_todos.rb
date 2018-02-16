@@ -34,7 +34,7 @@ class Beekeeper::Importer::LogLocalpoolTodos
 
     if incompleteness.present?
       incompleteness.each do |field, messages|
-        logger.info("#{field}: #{messages.inspect} (incompleteness)")
+        logger.warn("#{field}: #{messages.inspect} (incompleteness)")
       end
     end
 
@@ -42,11 +42,11 @@ class Beekeeper::Importer::LogLocalpoolTodos
       warnings.each do |field, message|
         if message.is_a?(Hash)
           message.each do |subfield, submessage|
-            logger.info("#{field}:")
-            logger.info("- #{subfield}: #{submessage} (warning)")
+            logger.warn("#{field}:")
+            logger.warn("- #{subfield}: #{submessage}")
           end
         else
-          logger.info("#{field}: #{message} (warning)")
+          logger.warn("#{field}: #{message}")
         end
       end
     end

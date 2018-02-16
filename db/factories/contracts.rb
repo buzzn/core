@@ -81,6 +81,17 @@ FactoryGirl.define do
     end
   end
 
+  trait :localpool_gap do
+    contract_number { generate(:localpool_power_taker_contract_nr) }
+    initialize_with { Contract::LocalpoolGap.new }
+    before(:create) do |contract, _evaluator|
+      unless contract.register
+        meter = FactoryGirl.create(:meter, :real, :one_way, group: contract.localpool)
+        contract.register = meter.registers.first
+      end
+    end
+  end
+
   trait :with_tariff do
     before(:create) do |contract, _evaluator|
       contract.tariffs = [build(:tariff)]

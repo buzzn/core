@@ -1,22 +1,55 @@
-def localpool_contract(attrs = {})
-  localpool = SampleData.localpools.people_power
-  factory_attributes = attrs.except(:register_readings).merge(localpool: localpool)
-  is_gap_contract = factory_attributes.delete(:gap_contract)
-  if attrs.key?(:customer)
-    factory_attributes.reverse_merge!(contractor: localpool.owner)
-    contract = create(:contract, :localpool_powertaker, factory_attributes)
-  else
-    contract = create(:contract, :localpool_third_party, factory_attributes)
+module SampleData::ContractFactory
+
+  class << self
+
+    def create(attrs = {})
+      contract = create_contract(attrs.except(:register_readings))
+      create_register_readings(contract, attrs[:register_readings])
+      create_roles(contract)
+      create_market_location(contract)
+      contract
+    end
+
+    private
+
+    def create_contract(attrs)
+      all_attrs = attrs.merge(localpool: localpool)
+      if all_attrs.delete(:gap_contract)
+        contract = FactoryGirl.create(:contract, :localpool_gap, all_attrs)
+        contract.localpool.update(gap_contract_customer: contract.customer)
+        contract
+      elsif attrs.key?(:customer)
+        all_attrs.reverse_merge!(contractor: localpool.owner)
+        FactoryGirl.create(:contract, :localpool_powertaker, all_attrs)
+      else
+        FactoryGirl.create(:contract, :localpool_third_party, all_attrs)
+      end
+    end
+
+    def create_register_readings(contract, register_readings)
+      return if register_readings.blank? # blank? works for both nil and []
+      contract.register.readings = register_readings
+    end
+
+    def create_roles(contract)
+      return unless contract.customer.is_a?(Person) # TODO: clarify what to do when it's an Organization?
+      contract.customer.add_role(Role::GROUP_MEMBER, localpool)
+      contract.customer.add_role(Role::CONTRACT, contract)
+    end
+
+    def create_market_location(contract)
+      MarketLocation.create!(name: contract.register.name,
+                             group: localpool,
+                             register: contract.register,
+                             contracts: [contract])
+    end
+
+    def localpool
+      SampleData.localpools.people_power
+    end
+
   end
-  if is_gap_contract
-    contract.localpool.update(gap_contract_customer: contract.customer)
-  end
-  contract.register.readings = attrs[:register_readings] unless attrs.fetch(:register_readings, []).empty?
-  if contract.customer.is_a?(Person) # TODO: clarify what to do when it's an Organization?
-    contract.customer.add_role(Role::GROUP_MEMBER, localpool)
-    contract.customer.add_role(Role::CONTRACT, contract)
-  end
-  contract
+
 end
 
 def tariffs
@@ -44,7 +77,7 @@ SampleData.contracts.lpp = create(:contract, :localpool_processing,
   ]
                                  )
 
-SampleData.contracts.pt1 = localpool_contract(
+SampleData.contracts.pt1 = SampleData::ContractFactory.create(
   customer: SampleData.persons.pt1,
   register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
@@ -56,7 +89,7 @@ SampleData.contracts.pt1 = localpool_contract(
   tariffs: tariffs
 )
 
-SampleData.contracts.pt2 = localpool_contract(
+SampleData.contracts.pt2 = SampleData::ContractFactory.create(
   customer: SampleData.persons.pt2,
   register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
@@ -68,7 +101,7 @@ SampleData.contracts.pt2 = localpool_contract(
   tariffs: tariffs
 )
 
-SampleData.contracts.pt3 = localpool_contract(
+SampleData.contracts.pt3 = SampleData::ContractFactory.create(
   signing_date: (Date.today - 5.days),
   begin_date: Date.today + 1.month,
   customer: SampleData.persons.pt3,
@@ -82,7 +115,7 @@ SampleData.contracts.pt3 = localpool_contract(
 )
 SampleData.contracts.pt3.customer.add_role(Role::GROUP_ENERGY_MENTOR, SampleData.contracts.pt3.localpool)
 
-SampleData.contracts.pt4 = localpool_contract(
+SampleData.contracts.pt4 = SampleData::ContractFactory.create(
   signing_date: Date.parse('2017-1-10'),
   begin_date: Date.parse('2017-2-1'),
   termination_date: Date.yesterday,
@@ -98,7 +131,7 @@ SampleData.contracts.pt4 = localpool_contract(
 )
 
 # beendet, Auszug
-SampleData.contracts.pt5a = localpool_contract(
+SampleData.contracts.pt5a = SampleData::ContractFactory.create(
   termination_date: Date.parse('2017-3-10'),
   end_date: Date.parse('2017-4-1'),
   customer: SampleData.persons.pt5a,
@@ -114,7 +147,7 @@ SampleData.contracts.pt5a = localpool_contract(
 )
 
 # Leerstand
-SampleData.contracts.pt5_empty = localpool_contract(
+SampleData.contracts.pt5_empty = SampleData::ContractFactory.create(
   gap_contract: true,
   signing_date: SampleData.contracts.pt5a.termination_date,
   begin_date: SampleData.contracts.pt5a.end_date,
@@ -125,7 +158,7 @@ SampleData.contracts.pt5_empty = localpool_contract(
 )
 
 # zieht ein
-SampleData.contracts.pt5b = localpool_contract(
+SampleData.contracts.pt5b = SampleData::ContractFactory.create(
   signing_date: Date.parse('2017-4-10'),
   begin_date: Date.parse('2017-5-1'),
   register: SampleData.contracts.pt5a.register, # important !
@@ -134,17 +167,16 @@ SampleData.contracts.pt5b = localpool_contract(
 )
 
 # Drittlieferant
-SampleData.contracts.pt6 = localpool_contract(
-                                             )
+SampleData.contracts.pt6 = SampleData::ContractFactory.create
 
 # Drittlieferant, vor Wechsel zu people power
-SampleData.contracts.pt7a = localpool_contract(
+SampleData.contracts.pt7a = SampleData::ContractFactory.create(
   termination_date: Date.parse('2017-2-15'),
   end_date: Date.parse('2017-3-1'),
 )
 
 # Drittlieferant, nach Wechsel zu people power
-SampleData.contracts.pt7b = localpool_contract(
+SampleData.contracts.pt7b = SampleData::ContractFactory.create(
   signing_date: SampleData.contracts.pt7a.termination_date,
   begin_date: SampleData.contracts.pt7a.end_date,
   customer: SampleData.persons.pt7,
@@ -152,17 +184,17 @@ SampleData.contracts.pt7b = localpool_contract(
 )
 
 # English
-SampleData.contracts.pt8 = localpool_contract(customer: SampleData.persons.pt8,
+SampleData.contracts.pt8 = SampleData::ContractFactory.create(customer: SampleData.persons.pt8,
   tariffs: tariffs)
 
 # Two more powertakers to make them 10 ...
-SampleData.contracts.pt9 = localpool_contract(customer: SampleData.persons.pt9,
+SampleData.contracts.pt9 = SampleData::ContractFactory.create(customer: SampleData.persons.pt9,
                                               tariffs: tariffs)
-SampleData.contracts.pt10 = localpool_contract(customer: SampleData.persons.pt10,
+SampleData.contracts.pt10 = SampleData::ContractFactory.create(customer: SampleData.persons.pt10,
   tariffs: tariffs)
 
 # Allgemeinstrom (Hausbeleuchtung etc.)
-SampleData.contracts.common_consumption = localpool_contract(
+SampleData.contracts.common_consumption = SampleData::ContractFactory.create(
   contractor: SampleData.localpools.people_power.owner,
   customer: SampleData.localpools.people_power.owner,
   register: create(:register, :consumption_common,
