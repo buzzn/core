@@ -8,8 +8,8 @@ class Beekeeper::Importer::RegistersAndMeters
 
   def run(localpool, registers)
     registers.collect do |register|
-      register.meter.group = localpool
-      register.create_market_location!(name: register.name, group: localpool)
+      register.meter.group           = localpool
+      register.market_location.group = localpool
       unless register.save
         logger.error("Failed to save register #{register.inspect}")
         logger.error("Errors: #{register.errors.inspect}")
