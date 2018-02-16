@@ -1,3 +1,12 @@
+#
+# Represents a physical point of energy consumption or production, independently of the energy metering
+# hardware and contracts (which both can change over time). Examples are a flat, an office.
+#
+# "Marktlokation" is a term defined in German energy legislation as well, see for details:
+# https://de.wikipedia.org/wiki/Marktlokations-Identifikationsnummer
+#
+# When a "Marktlokation" is for consumed energy, we use the less nerdy term "Entnahmestelle".
+#
 class MarketLocation < ActiveRecord::Base
 
   belongs_to :group, class_name: 'Group::Base'
