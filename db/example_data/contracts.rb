@@ -5,6 +5,7 @@ module SampleData::ContractFactory
     def create(attrs = {})
       contract = create_contract(attrs.except(:register_readings))
       create_register_readings(contract, attrs[:register_readings])
+      link_market_location_and_register(contract, attrs[:market_location])
       create_roles(contract)
       contract
     end
@@ -34,6 +35,10 @@ module SampleData::ContractFactory
       return unless contract.customer.is_a?(Person) # TODO: clarify what to do when it's an Organization?
       contract.customer.add_role(Role::GROUP_MEMBER, localpool)
       contract.customer.add_role(Role::CONTRACT, contract)
+    end
+
+    def link_market_location_and_register(contract, market_location)
+      market_location.update_attribute(:register, contract.register)
     end
 
     def localpool
