@@ -51,10 +51,10 @@ describe Admin::LocalpoolRoda do
         let(:wrong_json) do
           {
             'errors'=>[
-              {'parameter'=>'metering_point_id',
-               'detail'=>'size cannot be greater than 64'},
               {'parameter'=>'label',
                'detail'=>'must be one of: CONSUMPTION, CONSUMPTION_COMMON, DEMARCATION_PV, DEMARCATION_CHP, DEMARCATION_WIND, DEMARCATION_WATER, PRODUCTION_PV, PRODUCTION_CHP, PRODUCTION_WIND, PRODUCTION_WATER, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER'},
+              {'parameter'=>'metering_point_id',
+               'detail'=>'size cannot be greater than 64'},
               {'parameter'=>'observer_enabled',
                'detail'=>'must be boolean'},
               {'parameter'=>'observer_min_threshold',
