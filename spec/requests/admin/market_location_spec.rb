@@ -23,6 +23,7 @@ describe Admin::LocalpoolRoda do
 
       let(:expected_json) do
         register = market_location.register
+        meter = register.meter
         {
           'id' => market_location.id,
           'type' => 'market_location',
@@ -51,7 +52,34 @@ describe Admin::LocalpoolRoda do
             'createables' => ['readings'],
             'metering_point_id' => register.metering_point_id,
             'obis' => register.obis,
-            'meter' => nil
+            'meter' => {
+              'id'=>meter.id,
+              'type'=>'meter_real',
+              'updated_at'=> meter.updated_at.as_json,
+              'product_name'=>meter.product_name,
+              'product_serialnumber'=>meter.product_serialnumber,
+              'sequence_number' => meter.sequence_number,
+              'updatable'=>false,
+              'deletable'=>false,
+              'manufacturer_name'=>meter.attributes['manufacturer_name'],
+              'manufacturer_description'=>meter.attributes['manufacturer_description'],
+              'location_description'=>meter.attributes['location_description'],
+              'direction_number'=>meter.attributes['direction_number'],
+              'converter_constant'=>meter.converter_constant,
+              'ownership'=>meter.attributes['ownership'],
+              'build_year'=>meter.build_year,
+              'calibrated_until'=>meter.calibrated_until ? meter.calibrated_until.to_s : nil,
+              'edifact_metering_type'=>meter.attributes['edifact_metering_type'],
+              'edifact_meter_size'=>meter.attributes['edifact_meter_size'],
+              'edifact_tariff'=>meter.attributes['edifact_tariff'],
+              'edifact_measurement_method'=>meter.attributes['edifact_measurement_method'],
+              'edifact_mounting_method'=>meter.attributes['edifact_mounting_method'],
+              'edifact_voltage_level'=>meter.attributes['edifact_voltage_level'],
+              'edifact_cycle_interval'=>meter.attributes['edifact_cycle_interval'],
+              'edifact_data_logging'=>meter.attributes['edifact_data_logging'],
+              'sent_data_dso'=>meter.sent_data_dso.to_s,
+              'data_source'=>meter.registers.first.data_source.to_s
+            }
           }
         }
       end
