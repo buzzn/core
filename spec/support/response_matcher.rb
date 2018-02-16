@@ -52,7 +52,7 @@ RSpec::Matchers.define :be_not_found_json do |expected, clazz, method = nil|
   end
 end
 
-RSpec::Matchers.define :be_stale_json do |expected, instance|
+RSpec::Matchers.define :be_stale_json do |expected_code, instance|
   match do |actual|
     JSON.parse(actual.body) == {
       'errors' => [
@@ -60,7 +60,11 @@ RSpec::Matchers.define :be_stale_json do |expected, instance|
           'detail'=>"#{instance.class}: #{instance.id} was updated at: #{instance.updated_at}"
         }
       ]
-    } && actual.status == expected
+    } && actual.status == expected_code
+  end
+
+  failure_message do |response|
+    "Expected status code #{expected_code} but was #{response.status}. Response body is: #{JSON.parse(actual.body)}"
   end
 end
 
