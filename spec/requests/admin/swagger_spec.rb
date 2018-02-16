@@ -135,26 +135,6 @@ describe Admin, :swagger do
     description 'returns the customer of the contract'
   end
 
-  # registers
-
-  get '/localpools/{localpool.id}/registers' do
-    description 'returns all registers'
-  end
-
-  get '/localpools/{localpool.id}/registers/{register.id}' do
-    description 'returns the register for given ID'
-  end
-
-  # return status 404 as is so it always fails
-  # get '/localpools/{localpool.id}/registers/{register.id}/ticker' do
-  #  description 'returns the power ticker of the register'
-  # end
-
-  get '/localpools/{localpool.id}/registers/{register.id}/charts' do
-    description 'returns the charts of the localpool'
-    schema Schemas::Transactions::Chart
-  end
-
   # meters
 
   get '/localpools/{localpool.id}/meters' do

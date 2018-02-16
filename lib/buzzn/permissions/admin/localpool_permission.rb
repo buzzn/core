@@ -42,6 +42,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     retrieve :managers
   end
 
+  registers do
+    crud :managers
+  end
+
   persons do
     create :managers
     retrieve :managers_self
@@ -90,7 +94,7 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       retrieve :managers_organization
       update :managers_organization
       delete :none
-      address do # TODO Ralf: is the address of the contact of an organization of any relevance ?
+      address do
         retrieve :managers_organization
         update :managers_organization
         delete :none
@@ -124,10 +128,6 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       end
     end
 
-    ticker do
-      retrieve :managers
-    end
-
     contracts do
       retrieve :managers_contract
 
@@ -136,15 +136,7 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       end
     end
 
-    readings do
-      create :managers
-      retrieve :managers_contract
-      update :none
-      delete :managers
-    end
   end
-
-  registers '/market_locations'
 
   contracts do
     retrieve :managers_contract
@@ -232,8 +224,20 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       delete :managers
     end
 
-    # reuse permissions from 'registers'
-    registers '/registers'
+    registers do
+      retrieve :managers
+      update :managers
+      delete :operators
+
+      market_location '/market_locations'
+
+      readings do
+        create :managers
+        retrieve :managers_contract
+        update :none
+        delete :managers
+      end
+    end
 
     formula_parts do
       create :managers
@@ -241,8 +245,9 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       update :managers
       delete :none
 
-      # reuse permissions from 'registers'
-      register '/registers'
+      register do
+        retrieve :managers
+      end
     end
   end
 

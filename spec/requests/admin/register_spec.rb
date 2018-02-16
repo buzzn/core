@@ -41,7 +41,7 @@ describe Admin::LocalpoolRoda do
             'meter_id' => register.meter_id,
             'kind' => 'system',
             'updatable'=> true,
-            'deletable'=> false,
+            'deletable'=> true,
             'createables'=>['readings'],
             'metering_point_id'=>'123456',
             'obis'=>register.obis,
@@ -154,7 +154,7 @@ describe Admin::LocalpoolRoda do
           'meter_id' => real_register.meter_id,
           'kind' => 'consumption',
           'updatable'=> true,
-          'deletable'=> false,
+          'deletable'=> true,
           'createables'=>['readings'],
           'metering_point_id'=>real_register.metering_point_id,
           'obis'=>real_register.obis,
@@ -180,7 +180,7 @@ describe Admin::LocalpoolRoda do
           'meter_id' => virtual_register.meter_id,
           'kind' => 'consumption',
           'updatable'=> true,
-          'deletable'=> false,
+          'deletable'=> true,
           'createables'=>['readings'],
         }
       end
@@ -205,7 +205,7 @@ describe Admin::LocalpoolRoda do
             'meter_id' => register.meter_id,
             'kind' => register.label.consumption? ? 'consumption' : 'system',
             'updatable'=> true,
-            'deletable'=> false,
+            'deletable'=> true,
             'createables'=>['readings']
           }
           if register.is_a? Register::Real
@@ -270,42 +270,12 @@ describe Admin::LocalpoolRoda do
                 'meter_id' => register.meter_id,
                 'kind' => register.label.consumption? ? 'consumption' : 'system',
                 'updatable'=> true,
-                'deletable'=> false,
+                'deletable'=> true,
                 'createables'=>['readings'],
                 'metering_point_id'=>register.metering_point_id,
                 'obis'=>register.obis
               }
             end
-          end
-          let(:contract_json) do
-            contract = real_register.contracts.first
-            {
-              'contracts' => {
-                'array' => [
-                  {
-                    'id'=>contract.id,
-                    'type'=>'contract_localpool_power_taker',
-                    'updated_at'=>contract.updated_at.as_json,
-                    'full_contract_number'=>contract.full_contract_number,
-                    'signing_date'=>contract.signing_date.to_s,
-                    'begin_date'=>contract.begin_date.to_s,
-                    'termination_date'=>nil,
-                    'last_date'=>nil,
-                    'status'=>contract.status.to_s,
-                    'updatable'=>false,
-                    'deletable'=>false,
-                    'forecast_kwh_pa'=>contract.forecast_kwh_pa,
-                    'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
-                    'third_party_billing_number'=>contract.third_party_billing_number,
-                    'third_party_renter_number'=>contract.third_party_renter_number,
-                    'old_supplier_name'=>contract.old_supplier_name,
-                    'old_customer_number'=>contract.old_customer_number,
-                    'old_account_number'=>contract.old_account_number,
-                    'mandate_reference' => nil,
-                  }
-                ]
-              }
-            }
           end
 
           it '200 all' do
@@ -329,65 +299,14 @@ describe Admin::LocalpoolRoda do
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
 
-#            GET "/test/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin, include: :contracts
- #           expect(response).to have_http_status(200)
-  #          expect(json.to_yaml).to eq register_json.merge!(contract_json).to_yaml
-          end
-        end
-      end
-    end
+            GET "/test/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin, include: 'market_location:contracts'
+            expect(response).to have_http_status(200)
 
-    context 'readings' do
-      context 'GET' do
+            expect(json).to has_nested_json(:market_location, :contracts, :array, :id)
 
-        # NOTE picking a sample register is enough for the 404 and 403 tests
-
-        let(:register) do
-          [real_register, virtual_register].sample
-        end
-
-        # note can not test 403 as we do need a user which has access to
-        # the regsiter but not to the readings
-
-        it '404' do
-          GET "/test/#{group.id}/registers/bla-blub/readings", $admin
-          expect(response).to be_not_found_json(404, Register::Base)
-        end
-
-        [:real, :virtual].each do |type|
-
-          context "as #{type}" do
-
-            let(:register) { send "#{type}_register" }
-            let!(:readings_json) do
-              2.times { Fabricate(:single_reading, register: register) }
-              register.readings.collect do |r|
-                {
-                  'id'=>r.id,
-                  'type'=>'reading',
-                  'updated_at'=> r.updated_at.as_json,
-                  'date'=>r.date.as_json,
-                  'raw_value'=>r.raw_value,
-                  'value'=>r.value,
-                  'unit'=>r.attributes['unit'],
-                  'reason'=>r.attributes['reason'],
-                  'read_by'=>r.attributes['read_by'],
-                  'source'=>r.attributes['source'],
-                  'quality'=>r.attributes['quality'],
-                  'status'=>r.attributes['status'],
-                  'comment'=>nil,
-                  'updatable'=>false,
-                  'deletable'=>true
-                }
-              end
-            end
-
-            it '200' do
-              GET "/test/#{group.id}/registers/#{register.id}/readings", $admin
-
-              expect(response).to have_http_status(200)
-              expect(sort(json['array']).to_yaml).to eq sort(readings_json).to_yaml
-            end
+            result = json
+            result.delete('market_location')
+            expect(result.to_yaml).to eq register_json.to_yaml
           end
         end
       end

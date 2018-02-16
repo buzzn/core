@@ -1,5 +1,37 @@
 require 'rspec/expectations'
 
+RSpec::Matchers.define :has_nested_json do |*attrs|
+  match do |actual|
+    current = actual
+    attrs.all? do |attr|
+      current = current[attr.to_s]
+      if attr.to_sym == :array
+        array = current
+        current = array ? array.first : nil
+        !array.nil? && !current.nil?
+      else
+        !current.nil?
+      end
+    end
+  end
+
+  failure_message do |actual|
+    current = actual
+    path = attrs.select do |attr|
+      current = current[attr.to_s] if current
+      if attr.to_sym == :array
+        array = current
+        current = array ? array.first : nil
+        !array.nil? && !current.nil?
+      else
+        !current.nil?
+      end
+    end
+    path << (attrs - path).first
+    "expected #{attrs.join('->')} to have nested element but missing: #{path.join('->')}"
+  end
+end
+
 RSpec::Matchers.define :be_session_expired_json do |expected|
   match do |actual|
     JSON.parse(actual.body) == {

@@ -88,78 +88,34 @@ describe Admin::LocalpoolRoda do
 
   let(:empty_json) { [] }
 
-  let(:localpools_json) do
-    Group::Localpool.all.collect do |localpool|
-      {
-        'id'=>localpool.id,
-        'type'=>'group_localpool',
-        'updated_at'=>localpool.updated_at.as_json,
-        'name'=>localpool.name,
-        'slug'=>localpool.slug,
-        'description'=>localpool.description,
-        'start_date' => localpool.start_date.as_json,
-        'show_object' => localpool.show_object,
-        'show_production' => localpool.show_production,
-        'show_energy' => localpool.show_energy,
-        'show_contact' => localpool.show_contact,
-        'show_display_app' => localpool.show_display_app,
-        'updatable'=>true,
-        'deletable'=>true,
-        'incompleteness' => serialized_incompleteness(localpool),
-        'bank_account' => serialized_bank_account(localpool.bank_account),
-        'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
-        'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil)
-      }
-    end
-  end
-
-  let(:localpool_json) do
+  def serialize(localpool)
     {
-      'id'=>localpool_no_contracts.id,
+      'id'=>localpool.id,
       'type'=>'group_localpool',
-      'updated_at'=>localpool_no_contracts.updated_at.as_json,
-      'name'=>localpool_no_contracts.name,
-      'slug'=>localpool_no_contracts.slug,
-      'description'=>localpool_no_contracts.description,
-      'start_date' => localpool_no_contracts.start_date.as_json,
-      'show_object' => nil,
-      'show_production' => nil,
-      'show_energy' => nil,
-      'show_contact' => nil,
-      'show_display_app' => nil,
+      'updated_at'=>localpool.updated_at.as_json,
+      'name'=>localpool.name,
+      'slug'=>localpool.slug,
+      'description'=>localpool.description,
+      'start_date' => localpool.start_date.as_json,
+      'show_object' => localpool.show_object,
+      'show_production' => localpool.show_production,
+      'show_energy' => localpool.show_energy,
+      'show_contact' => localpool.show_contact,
+      'show_display_app' => localpool.show_display_app,
       'updatable'=>true,
       'deletable'=>true,
-      'incompleteness' => serialized_incompleteness(localpool_no_contracts),
-      'bank_account' => serialized_bank_account(localpool_no_contracts.bank_account),
-      'power_sources' => [],
-      'display_app_url' => nil,
-      'meters'=>{
-        'array'=> localpool_no_contracts.meters.collect do |meter|
-          {
-            'id'=>meter.id,
-            'type'=>'meter_virtual',
-            'updated_at'=>meter.updated_at.as_json,
-            'product_name'=>meter.product_name,
-            'product_serialnumber'=>meter.product_serialnumber,
-            'sequence_number' => meter.sequence_number,
-            'updatable'=>true,
-            'deletable'=>true
-          }
-        end
-      },
-      'address' => {
-        'id'=>localpool_no_contracts.address.id,
-        'type'=>'address',
-        'updated_at'=>localpool_no_contracts.address.updated_at.as_json,
-        'street'=>localpool_no_contracts.address.street,
-        'city'=>localpool_no_contracts.address.city,
-        'zip'=>localpool_no_contracts.address.zip,
-        'country'=>localpool_no_contracts.address.attributes['country'],
-        'updatable'=>true,
-        'deletable'=>false
-      }
+      'incompleteness' => serialized_incompleteness(localpool),
+      'bank_account' => serialized_bank_account(localpool.bank_account),
+      'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
+      'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil)
     }
   end
+
+  let(:localpools_json) do
+    Group::Localpool.all.collect { |localpool| serialize(localpool) }
+  end
+
+  let(:localpool_json) { serialize(localpool_no_contracts) }
 
   context 'GET' do
 
@@ -187,7 +143,14 @@ describe Admin::LocalpoolRoda do
     it '200' do
       GET "/test/#{localpool_no_contracts.id}", $admin, include: 'meters, address'
       expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq localpool_json.to_yaml
+
+      result = json
+      expect(result).to has_nested_json(:meters)
+      result.delete('meters')
+      expect(result).to has_nested_json(:address, :id)
+      result.delete('address')
+
+      expect(result.to_yaml).to eq localpool_json.to_yaml
     end
 
     it '200 all' do
@@ -670,6 +633,38 @@ describe Admin::LocalpoolRoda do
         else
           json['type'] = 'contract_localpool_third_party'
         end
+        market_location = contract.market_location
+        register = market_location.register
+        json['market_location'] = {
+          'id' => market_location.id,
+          'type' => 'market_location',
+          'updated_at' => market_location.updated_at.as_json,
+          'name' => market_location.name,
+          'updatable' => false,
+          'deletable' => false,
+          'register' => {
+            'id' => register.id,
+            'type' => 'register_real',
+            'updated_at'=> register.updated_at.as_json,
+            'direction' => register.attributes['direction'],
+            'pre_decimal_position' => 6,
+            'post_decimal_position' => register.post_decimal_position,
+            'low_load_ability' => false,
+            'label' => register.attributes['label'],
+            'last_reading' => 0,
+            'observer_min_threshold' => nil,
+            'observer_max_threshold' => nil,
+            'observer_enabled'=> nil,
+            'observer_offline_monitoring' => nil,
+            'meter_id' => register.meter.id,
+            'kind' => register.label.production? ? 'production' : 'consumption',
+            'updatable' => true,
+            'deletable' => false,
+            'createables' => ['readings'],
+            'metering_point_id' => register.metering_point_id,
+            'obis' => register.obis
+          }
+        }
         json['customer'] =
           if contract.customer
             {
@@ -708,7 +703,7 @@ describe Admin::LocalpoolRoda do
         expect(json['array'].to_yaml).to eq empty_json.to_yaml
         expect(response).to have_http_status(200)
 
-        GET "/test/#{localpool.id}/power-taker-contracts", $admin, include: :customer
+        GET "/test/#{localpool.id}/power-taker-contracts", $admin, include: 'market_location:register,customer'
         expect(json['array'].to_yaml).to eq expected_json.to_yaml
         expect(response).to have_http_status(200)
       end

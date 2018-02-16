@@ -166,6 +166,11 @@ describe 'Factories produce valid records' do
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:address, Address) }
     it { expect(subject.bank_accounts).to be_empty }
+    context 'Trait with address' do
+      subject { create(:person, :with_address) }
+      it { is_expected.to have_association(:address, Address) }
+    end
+
     context 'Trait with bank_account' do
       subject { create(:person, :with_bank_account) }
       it 'has a bank_account' do

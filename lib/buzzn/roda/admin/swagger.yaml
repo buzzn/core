@@ -1394,69 +1394,6 @@ paths:
       responses:
         200:
           description: success
-  "/localpools/{localpool_id}/registers":
-    get:
-      description: returns all registers
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/localpools/{localpool_id}/registers/{register_id}":
-    get:
-      description: returns the register for given ID
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: register_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/localpools/{localpool_id}/registers/{register_id}/charts":
-    get:
-      description: returns the charts of the localpool
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: register_id
-        in: path
-        required: true
-        type: string
-      - name: duration
-        in: formData
-        required: true
-        type: string
-        enum:
-        - year
-        - month
-        - day
-        - hour
-      - name: timestamp
-        in: formData
-        required: false
-        type: string
-        format: date-time
-      responses:
-        200:
-          description: success
   "/localpools/{localpool_id}/tariffs":
     get:
       description: returns all the tariffs of the localpool
