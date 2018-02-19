@@ -5,8 +5,7 @@ FactoryGirl.define do
       register_direction :input
     end
 
-    group                        { FactoryGirl.create(:localpool) }
-    direction_number             Meter::Real.direction_numbers[:one_way_meter]
+    group { FactoryGirl.create(:localpool) }
 
     before(:create) do |meter, evaluator|
       case meter
@@ -48,6 +47,7 @@ FactoryGirl.define do
       location_description         { generate(:meter_location_description) }
       product_serialnumber         { generate(:meter_serial_number) }
       product_name                 'Q3D'
+      direction_number             Meter::Real.direction_numbers[:one_way_meter]
       calibrated_until             Date.parse('2027-10-13')
       converter_constant           1
       ownership                    Meter::Real.ownerships[:buzzn]
@@ -65,10 +65,7 @@ FactoryGirl.define do
     end
 
     trait :virtual do
-      initialize_with             { Meter::Virtual.new }
-      manufacturer_name           nil
-      direction_number            nil
-      product_name                'buzzn virtual meter'
+      initialize_with { Meter::Virtual.new }
     end
   end
 end

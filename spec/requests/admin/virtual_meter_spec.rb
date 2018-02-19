@@ -31,7 +31,6 @@ describe Admin::LocalpoolRoda do
         'id'=>meter.id,
         'type'=>'meter_virtual',
         'updated_at'=> meter.updated_at.as_json,
-        'product_name'=>meter.product_name,
         'product_serialnumber'=>meter.product_serialnumber,
         'sequence_number' => nil,
         'updatable'=>true,
@@ -47,10 +46,6 @@ describe Admin::LocalpoolRoda do
                 'id'=>part.operand.id,
                 'type'=>'register_real',
                 'updated_at'=> part.operand.updated_at.as_json,
-                'direction'=>part.operand.attributes['direction'],
-                'pre_decimal_position'=>part.operand.pre_decimal_position,
-                'post_decimal_position'=>part.operand.post_decimal_position,
-                'low_load_ability'=>part.operand.low_load_ability,
                 'label'=>part.operand.attributes['label'],
                 'last_reading'=>0,
                 'observer_min_threshold'=> part.operand.observer_min_threshold,
@@ -62,6 +57,10 @@ describe Admin::LocalpoolRoda do
                 'updatable'=>false,
                 'deletable'=>false,
                 'createables' => ['readings'],
+                'direction'=>part.operand.attributes['direction'],
+                'pre_decimal_position'=>part.operand.pre_decimal_position,
+                'post_decimal_position'=>part.operand.post_decimal_position,
+                'low_load_ability'=>part.operand.low_load_ability,
                 'metering_point_id'=>part.operand.metering_point_id,
                 'obis'=>part.operand.obis
               }
@@ -106,8 +105,6 @@ describe Admin::LocalpoolRoda do
       let(:wrong_json) do
         {
           'errors'=>[
-            {'parameter'=>'product_name',
-             'detail'=>'size cannot be greater than 64'},
             {'parameter'=>'product_serialnumber',
              'detail'=>'size cannot be greater than 128'},
             {'parameter'=>'updated_at',
@@ -120,7 +117,6 @@ describe Admin::LocalpoolRoda do
         {
           'id'=>meter.id,
           'type'=>'meter_virtual',
-          'product_name'=>'SmartySuper',
           'product_serialnumber'=>'41234',
           'sequence_number' => nil,
           'updatable'=>true,
@@ -155,7 +151,6 @@ describe Admin::LocalpoolRoda do
       it '422' do
         PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               manufacturer_name: 'Maxima' * 20,
-              product_name: 'SmartyMeter' * 10,
               product_serialnumber: '12341234' * 20
 
         expect(response).to have_http_status(422)
@@ -167,12 +162,10 @@ describe Admin::LocalpoolRoda do
         sleep 1
         PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: meter.updated_at,
-              product_name: 'SmartySuper',
               product_serialnumber: '41234'
 
         expect(response).to have_http_status(200)
         meter.reload
-        expect(meter.product_name).to eq 'SmartySuper'
         expect(meter.product_serialnumber).to eq 'VM-1'
 
         result = json

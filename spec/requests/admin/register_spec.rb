@@ -28,10 +28,6 @@ describe Admin::LocalpoolRoda do
           {
             'id'=>register.id,
             'type'=>'register_real',
-            'direction'=>register.attributes['direction'],
-            'pre_decimal_position'=>6,
-            'post_decimal_position'=>1,
-            'low_load_ability'=>false,
             'label'=>'DEMARCATION_PV',
             'last_reading'=>last ? last.value : 0,
             'observer_min_threshold'=>10,
@@ -43,6 +39,10 @@ describe Admin::LocalpoolRoda do
             'updatable'=> true,
             'deletable'=> true,
             'createables'=>['readings'],
+            'direction'=>register.attributes['direction'],
+            'pre_decimal_position'=>6,
+            'post_decimal_position'=>1,
+            'low_load_ability'=>false,
             'metering_point_id'=>'123456',
             'obis'=>register.obis,
           }
@@ -141,10 +141,6 @@ describe Admin::LocalpoolRoda do
           'id'=>real_register.id,
           'type'=>'register_real',
           'updated_at'=>real_register.updated_at.as_json,
-          'direction'=>real_register.attributes['direction'],
-          'pre_decimal_position'=>6,
-          'post_decimal_position'=>real_register.post_decimal_position,
-          'low_load_ability'=>false,
           'label'=>real_register.attributes['label'],
           'last_reading'=>last ? last.value : 0,
           'observer_min_threshold'=>nil,
@@ -156,6 +152,10 @@ describe Admin::LocalpoolRoda do
           'updatable'=> true,
           'deletable'=> true,
           'createables'=>['readings'],
+          'direction'=>real_register.attributes['direction'],
+          'pre_decimal_position'=>6,
+          'post_decimal_position'=>real_register.post_decimal_position,
+          'low_load_ability'=>false,
           'metering_point_id'=>real_register.metering_point_id,
           'obis'=>real_register.obis,
         }
@@ -167,10 +167,6 @@ describe Admin::LocalpoolRoda do
           'id'=>virtual_register.id,
           'type'=>'register_virtual',
           'updated_at'=>virtual_register.updated_at.as_json,
-          'direction'=>virtual_register.attributes['direction'],
-          'pre_decimal_position'=>6,
-          'post_decimal_position'=>2,
-          'low_load_ability'=>false,
           'label'=>virtual_register.attributes['label'],
           'last_reading'=>last ? last.value : 0,
           'observer_min_threshold'=>100,
@@ -182,6 +178,7 @@ describe Admin::LocalpoolRoda do
           'updatable'=> true,
           'deletable'=> true,
           'createables'=>['readings'],
+          'direction'=>virtual_register.attributes['direction'],
         }
       end
 
@@ -192,10 +189,6 @@ describe Admin::LocalpoolRoda do
             'id'=>register.id,
             'type'=>"register_#{register.is_a?(Register::Real) ? 'real': 'virtual'}",
             'updated_at'=>register.updated_at.as_json,
-            'direction'=>register.attributes['direction'],
-            'pre_decimal_position'=>register.pre_decimal_position,
-            'post_decimal_position'=>register.post_decimal_position,
-            'low_load_ability'=>register.low_load_ability,
             'label'=>register.attributes['label'],
             'last_reading'=>last ? last.value : 0,
             'observer_min_threshold'=>register.observer_min_threshold,
@@ -205,10 +198,14 @@ describe Admin::LocalpoolRoda do
             'meter_id' => register.meter_id,
             'kind' => register.label.consumption? ? 'consumption' : 'system',
             'updatable'=> true,
-            'deletable'=> true,
-            'createables'=>['readings']
+            'deletable'=> false,
+            'createables'=>['readings'],
           }
           if register.is_a? Register::Real
+            json['direction'] = register.attributes['direction']
+            json['pre_decimal_position'] = register.pre_decimal_position
+            json['post_decimal_position'] = register.post_decimal_position
+            json['low_load_ability'] = register.low_load_ability
             json['metering_point_id'] = register.metering_point_id
             json['obis'] = register.obis
           end
@@ -235,10 +232,6 @@ describe Admin::LocalpoolRoda do
                 'id'=>register.id,
                 'type'=>'register_real',
                 'updated_at'=>register.updated_at.as_json,
-                'direction'=>register.attributes['direction'],
-                'pre_decimal_position'=>register.pre_decimal_position,
-                'post_decimal_position'=>register.post_decimal_position,
-                'low_load_ability'=>register.low_load_ability,
                 'label'=>register.attributes['label'],
                 'last_reading'=> last ? last.value : 0,
                 'observer_min_threshold'=>register.observer_min_threshold,
@@ -250,6 +243,10 @@ describe Admin::LocalpoolRoda do
                 'updatable'=> true,
                 'deletable'=> true,
                 'createables'=>['readings'],
+                'direction'=>register.attributes['direction'],
+                'pre_decimal_position'=>register.pre_decimal_position,
+                'post_decimal_position'=>register.post_decimal_position,
+                'low_load_ability'=>register.low_load_ability,
                 'metering_point_id'=>register.metering_point_id,
                 'obis'=>register.obis
               }

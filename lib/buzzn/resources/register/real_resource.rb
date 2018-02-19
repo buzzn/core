@@ -5,7 +5,12 @@ module Register
 
     model Real
 
-    attributes :metering_point_id, :obis
+    attributes :direction,
+               :pre_decimal_position,
+               :post_decimal_position,
+               :low_load_ability,
+               :metering_point_id,
+               :obis
 
     has_many :devices
 

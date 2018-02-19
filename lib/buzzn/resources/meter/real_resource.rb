@@ -5,7 +5,8 @@ module Meter
 
     model Real
 
-    attributes :manufacturer_name,
+    attributes :product_name,
+               :manufacturer_name,
                :manufacturer_description,
                :location_description,
                :direction_number,
@@ -23,8 +24,6 @@ module Meter
                :edifact_data_logging,
                :sent_data_dso,
                :data_source
-
-    has_many :registers
 
     def data_source
       object.registers.first&.data_source

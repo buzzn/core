@@ -7,11 +7,7 @@ module Register
 
     model Base
 
-    attributes :direction,
-               :pre_decimal_position,
-               :post_decimal_position,
-               :low_load_ability,
-               :label,
+    attributes :label,
                :last_reading,
                :observer_min_threshold,
                :observer_max_threshold,

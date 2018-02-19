@@ -33,12 +33,12 @@ module Admin
           end
         end
 
+        r.on 'registers' do
+          shared[RegisterRoda::CHILDREN] = meter.registers
+          r.run RegisterRoda
+        end
+
         case meter.object
-        when Meter::Real
-          r.on 'registers' do
-            shared[RegisterRoda::CHILDREN] = meter.registers
-            r.run RegisterRoda
-          end
         when Meter::Virtual
           r.on 'formula-parts' do
             shared[FormulaPartRoda::CHILDREN] = meter.formula_parts

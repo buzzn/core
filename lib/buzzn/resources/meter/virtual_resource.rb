@@ -5,6 +5,7 @@ module Meter
 
     model Virtual
 
+    # TODO this is wrong here as not all virtual-meters will have formula-parts, i.e. wrong abstraction
     # TODO use something like this
     # has_many :formula_parts, FormulaPartResource { object.register.formula_parts }
     def formula_parts

@@ -12,10 +12,18 @@ FactoryGirl.define do
       end
     end
 
+    trait :substitute do
+      initialize_with { Register::Substitute.new }
+      before(:create) do |register, evaluator|
+        register.meter = evaluator.meter || FactoryGirl.build(:meter, :virtual, registers: [])
+        register.meter.registers << register
+      end
+    end
+
     trait :virtual do
       initialize_with { Register::Virtual.new }
       before(:create) do |register, evaluator|
-        register.meter = evaluator.meter || FactoryGirl.build(:meter, :virtual, register: register)
+        register.meter = evaluator.meter || FactoryGirl.build(:meter, :virtual, registers: [])
         register.meter.registers << register
       end
     end
