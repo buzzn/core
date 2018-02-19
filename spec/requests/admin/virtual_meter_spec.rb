@@ -173,7 +173,7 @@ describe Admin::LocalpoolRoda do
         expect(response).to have_http_status(200)
         meter.reload
         expect(meter.product_name).to eq 'SmartySuper'
-        expect(meter.product_serialnumber).to eq '41234'
+        expect(meter.product_serialnumber).to eq 'VM-1'
 
         result = json
         # TODO fix it: our time setup does not allow

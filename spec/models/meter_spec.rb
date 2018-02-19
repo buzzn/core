@@ -15,4 +15,15 @@ describe Meter::Real do
     second_meter = create(:meter, :real, group: group)
     expect(second_meter.reload.sequence_number).to eq 2
   end
+
+  it 'generates unique immutable serial numbers for Meter::Virtual' do
+    meter1 = create(:meter, :virtual)
+    meter2 = create(:meter, :virtual)
+    expect(meter1.product_serialnumber).to eq 'VM-1'
+    expect(meter2.product_serialnumber).to eq 'VM-2'
+
+    meter1.update(product_serialnumber: 'something')
+    meter1.reload
+    expect(meter1.product_serialnumber).to eq 'VM-1'
+  end
 end
