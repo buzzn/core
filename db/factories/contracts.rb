@@ -63,10 +63,10 @@ FactoryGirl.define do
     customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }
     before(:create) do |contract, _evaluator|
       contract.contractor = contract.localpool.owner
-      unless contract.register
-        meter = FactoryGirl.create(:meter, :real, :one_way, group: contract.localpool)
-        contract.register = meter.registers.first
-      end
+      # unless contract.register
+      #   meter = FactoryGirl.create(:meter, :real, :one_way, group: contract.localpool)
+      #   contract.register = meter.registers.first
+      # end
     end
   end
 
@@ -74,10 +74,10 @@ FactoryGirl.define do
     contract_number { generate(:localpool_power_taker_contract_nr) }
     initialize_with { Contract::LocalpoolThirdParty.new }
     before(:create) do |contract, _evaluator|
-      unless contract.register
-        meter = FactoryGirl.create(:meter, :real, :one_way, group: contract.localpool)
-        contract.register = meter.registers.first
-      end
+      # unless contract.register
+      #   meter = FactoryGirl.create(:meter, :real, :one_way, group: contract.localpool)
+      #   contract.register = meter.registers.first
+      # end
     end
   end
 
