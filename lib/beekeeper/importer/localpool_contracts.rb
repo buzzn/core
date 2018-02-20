@@ -37,8 +37,6 @@ class Beekeeper::Importer::LocalpoolContracts
     register = find_or_create_register(contract, registers, localpool)
     contract_attributes = contract.except(:powertaker, :buzznid).merge(
       localpool:       localpool,
-      # TODO: remove the association contract <--> register
-      register:        register,
       market_location: register.market_location,
       customer:        customer,
       contractor:      localpool.owner
@@ -76,10 +74,9 @@ class Beekeeper::Importer::LocalpoolContracts
 
   def create_third_party_contract(localpool, contract, registers, warnings)
     if register = find_or_create_register(contract, registers, localpool)
+
       contract_attributes = contract.except(:powertaker, :buzznid).merge(
         localpool:       localpool,
-        # TODO: remove the association contract <--> register
-        register:        register,
         market_location: register.market_location
       )
       Contract::LocalpoolThirdParty.create!(contract_attributes)
@@ -91,8 +88,14 @@ class Beekeeper::Importer::LocalpoolContracts
   # As a temporary solution to importing the actual virtual registers (separate story), we create a fake, empty one.
   def create_fake_register(buzznid, localpool)
     logger.warn("No meter/register for #{buzznid}, creating a fake temporary one.")
-    meter = Meter::Real.create!(product_serialnumber: 'FAKE-FOR-IMPORT', legacy_buzznid: buzznid, group: localpool)
-    Register::Input.create!(share_with_group: false, meter: meter, label: :other)
+    meter = Meter::Real.create!(product_serialnumber: "FAKE-FOR-IMPORT-#{counter}", legacy_buzznid: buzznid, group: localpool)
+    register = Register::Input.create!(share_with_group: false, meter: meter, label: :other)
+    MarketLocation.create!(group: localpool, name: 'FAKE-FOR-IMPORT', register: register)
+    register
+  end
+
+  def counter
+    $counter = $counter.to_i + 1
   end
 
   # Make sure we don't create the same person or organization twice.

@@ -46,7 +46,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   # Returns pairs of contracts that chronologically follow each other.
   # This data structure simplifies the iteration and fixing/creation of contracts.
   def contract_pairs(register)
-    ordered_contracts = register.contracts.order(begin_date: :asc).to_a
+    ordered_contracts = register.market_location.contracts.order(begin_date: :asc).to_a
     ordered_contracts[0...-1].map.with_index do |contract, index|
       next_contract = ordered_contracts[index + 1]
       gap_in_days   = (next_contract.begin_date - contract.end_date).to_i
@@ -76,7 +76,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     attributes = {
       # take these from previous contract
       localpool:                     previous_contract.localpool,
-      register:                      previous_contract.register,
+      market_location:               previous_contract.market_location,
       signing_date:                  previous_contract.end_date,
       begin_date:                    previous_contract.end_date,
       contractor:                    previous_contract.localpool.owner,
