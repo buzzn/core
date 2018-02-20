@@ -2674,13 +2674,6 @@ CREATE UNIQUE INDEX index_meters_on_group_id_and_sequence_number ON meters USING
 
 
 --
--- Name: index_meters_on_product_serialnumber; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_meters_on_product_serialnumber ON meters USING btree (product_serialnumber);
-
-
---
 -- Name: index_organization_market_functions_on_address_id; Type: INDEX; Schema: public; Owner: -
 --
 
