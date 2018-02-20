@@ -941,12 +941,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: metering_point_id
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
       - name: label
         in: formData
         required: false
@@ -967,6 +961,12 @@ paths:
         - GRID_CONSUMPTION_CORRECTED
         - GRID_FEEDING_CORRECTED
         - OTHER
+      - name: metering_point_id
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: observer_enabled
         in: formData
         required: false
