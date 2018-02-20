@@ -3,9 +3,9 @@ module SampleData::ContractFactory
   class << self
 
     def create(attrs = {})
-      contract = create_contract(attrs.except(:register_readings))
+      contract = create_contract(attrs.except(:register_readings, :register))
+      link_register(contract, attrs[:register])
       create_register_readings(contract, attrs[:register_readings])
-      link_market_location_and_register(contract, attrs[:market_location])
       create_roles(contract)
       contract
     end
@@ -26,19 +26,26 @@ module SampleData::ContractFactory
       end
     end
 
+    def link_register(contract, register)
+      contract.market_location.register = register if register
+    end
+
     def create_register_readings(contract, register_readings)
       return if register_readings.blank? # blank? works for both nil and []
-      contract.register.readings = register_readings
+      contract.market_location.register.readings = register_readings
     end
 
     def create_roles(contract)
-      return unless contract.customer.is_a?(Person) # TODO: clarify what to do when it's an Organization?
-      contract.customer.add_role(Role::GROUP_MEMBER, localpool)
-      contract.customer.add_role(Role::CONTRACT, contract)
-    end
-
-    def link_market_location_and_register(contract, market_location)
-      market_location.update_attribute(:register, contract.register)
+      person =
+        if contract.customer.is_a?(Person)
+          contract.customer
+        elsif contract.customer.is_a?(Organization)
+          contract.customer.contact
+        end
+      if person
+        person.add_role(Role::GROUP_MEMBER, localpool)
+        person.add_role(Role::CONTRACT, contract)
+      end
     end
 
     def localpool
@@ -155,6 +162,9 @@ SampleData.contracts.pt5_empty = SampleData::ContractFactory.create(
   begin_date: SampleData.contracts.pt5a.end_date,
   termination_date: Date.parse('2017-4-30'),
   end_date: Date.parse('2017-5-1'),
+  # TODO: this should later be removed
+  register: SampleData.contracts.pt5a.market_location.register, # important !
+  contractor: SampleData.localpools.people_power.owner,
   customer: Organization.find_by(slug: 'hv-schneider'),
   market_location: SampleData.market_locations.wohnung_5
 )
@@ -163,6 +173,8 @@ SampleData.contracts.pt5_empty = SampleData::ContractFactory.create(
 SampleData.contracts.pt5b = SampleData::ContractFactory.create(
   signing_date: Date.parse('2017-4-10'),
   begin_date: Date.parse('2017-5-1'),
+  # TODO: this should later be removed
+  register: SampleData.contracts.pt5a.market_location.register, # important !
   customer: SampleData.persons.pt5b,
   tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_5
@@ -185,6 +197,8 @@ SampleData.contracts.pt7b = SampleData::ContractFactory.create(
   signing_date: SampleData.contracts.pt7a.termination_date,
   begin_date: SampleData.contracts.pt7a.end_date,
   customer: SampleData.persons.pt7,
+  # TODO: this should later be removed
+  register: SampleData.contracts.pt7a.market_location.register, # important !
   market_location: SampleData.market_locations.wohnung_7
 )
 
@@ -211,5 +225,8 @@ SampleData.contracts.pt10 = SampleData::ContractFactory.create(
 SampleData.contracts.common_consumption = SampleData::ContractFactory.create(
   contractor: SampleData.localpools.people_power.owner,
   customer: SampleData.localpools.people_power.owner,
+  register: create(:register, :consumption_common,
+    meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)
+                  ),
   market_location: SampleData.market_locations.common_consumption
 )

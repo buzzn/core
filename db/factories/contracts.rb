@@ -64,11 +64,13 @@ FactoryGirl.define do
     before(:create) do |contract, _evaluator|
       contract.contractor = contract.localpool.owner
       unless contract.market_location
+        contract.market_location = create(:market_location,
+                                          group: contract.localpool)
+      end
+      unless contract.market_location.register
         meter = FactoryGirl.create(:meter, :real, :one_way,
                                    group: contract.localpool)
-        contract.market_location = create(:market_location,
-                                          group: contract.localpool,
-                                          register: meter.registers.first)
+        contract.market_location.register = meter.registers.first
       end
     end
   end
@@ -78,10 +80,13 @@ FactoryGirl.define do
     initialize_with { Contract::LocalpoolThirdParty.new }
     before(:create) do |contract, _evaluator|
       unless contract.market_location
-        meter = FactoryGirl.create(:meter, :real, :one_way, group: contract.localpool)
         contract.market_location = create(:market_location,
-                                          group: contract.localpool,
-                                          register: meter.registers.first)
+                                          group: contract.localpool)
+      end
+      unless contract.market_location.register
+        meter = FactoryGirl.create(:meter, :real, :one_way,
+                                   group: contract.localpool)
+        contract.market_location.register = meter.registers.first
       end
     end
   end
@@ -90,9 +95,14 @@ FactoryGirl.define do
     contract_number { generate(:localpool_power_taker_contract_nr) }
     initialize_with { Contract::LocalpoolGap.new }
     before(:create) do |contract, _evaluator|
-      unless contract.register
-        meter = FactoryGirl.create(:meter, :real, :one_way, group: contract.localpool)
-        contract.register = meter.registers.first
+      unless contract.market_location
+        contract.market_location = create(:market_location,
+                                          group: contract.localpool)
+      end
+      unless contract.market_location.register
+        meter = FactoryGirl.create(:meter, :real, :one_way,
+                                   group: contract.localpool)
+        contract.market_location.register = meter.registers.first
       end
     end
   end
