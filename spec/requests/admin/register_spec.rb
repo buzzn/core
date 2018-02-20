@@ -273,11 +273,11 @@ describe Admin::LocalpoolRoda do
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
 
-            GET "/test/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin
+            GET "/localpools/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
 
-            GET "/test/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin, include: 'market_location:contracts'
+            GET "/localpools/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin, include: 'market_location:contracts'
             expect(response).to have_http_status(200)
 
             expect(json).to has_nested_json(:market_location, :contracts, :array, :id)

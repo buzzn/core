@@ -631,6 +631,26 @@ describe Admin::LocalpoolRoda do
         end
         market_location = contract.market_location
         register = market_location.register
+        json['customer'] =
+          if contract.customer
+            {
+              'id'=>contract.customer.id,
+              'type'=>'person',
+              'updated_at'=>contract.customer.updated_at.as_json,
+              'prefix'=>contract.customer.attributes['prefix'],
+              'title'=>contract.customer.title,
+              'first_name'=>contract.customer.first_name,
+              'last_name'=>contract.customer.last_name,
+              'phone'=>contract.customer.phone,
+              'fax'=>contract.customer.fax,
+              'email'=>contract.customer.email,
+              'preferred_language'=>contract.customer.attributes['preferred_language'],
+              'image'=>contract.customer.image.medium.url,
+              'customer_number' => contract.customer.customer_number.id,
+              'updatable'=>true,
+              'deletable'=>false,
+            }
+          end
         json['market_location'] = {
           'id' => market_location.id,
           'type' => 'market_location',
@@ -661,26 +681,6 @@ describe Admin::LocalpoolRoda do
             'obis' => register.obis
           }
         }
-        json['customer'] =
-          if contract.customer
-            {
-              'id'=>contract.customer.id,
-              'type'=>'person',
-              'updated_at'=>contract.customer.updated_at.as_json,
-              'prefix'=>contract.customer.attributes['prefix'],
-              'title'=>contract.customer.title,
-              'first_name'=>contract.customer.first_name,
-              'last_name'=>contract.customer.last_name,
-              'phone'=>contract.customer.phone,
-              'fax'=>contract.customer.fax,
-              'email'=>contract.customer.email,
-              'preferred_language'=>contract.customer.attributes['preferred_language'],
-              'image'=>contract.customer.image.medium.url,
-              'customer_number' => contract.customer.customer_number.id,
-              'updatable'=>true,
-              'deletable'=>false,
-            }
-          end
         json
       end
     end
@@ -699,7 +699,7 @@ describe Admin::LocalpoolRoda do
         expect(json['array'].to_yaml).to eq empty_json.to_yaml
         expect(response).to have_http_status(200)
 
-        GET "/localpools/#{localpool.id}/power-taker-contracts", $admin, include: :customer
+        GET "/localpools/#{localpool.id}/power-taker-contracts", $admin, include: 'customer,market_location:register'
         expect(json['array'].to_yaml).to eq expected_json.to_yaml
         expect(response).to have_http_status(200)
       end

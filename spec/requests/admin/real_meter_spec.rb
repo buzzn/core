@@ -55,14 +55,15 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
 
       it '401' do
-        GET "/test/#{group.id}/meters/#{meter.id}", $admin
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $admin
         expire_admin_session do
+          GET "/localpools/#{group.id}/meters/#{meter.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
-        GET "/test/#{group.id}/meters/#{meter.id}", $user
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $user
         expect(response).to be_denied_json(403, meter)
       end
 
@@ -72,7 +73,7 @@ describe Admin::LocalpoolRoda do
       end
 
       it '200' do
-        GET "/test/#{group.id}/meters/#{meter.id}", $admin, include: 'registers:[market_location:[contracts:[customer]]]'
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $admin, include: 'registers:[market_location:[contracts:[customer]]]'
 
         expect(json).to has_nested_json(:registers, :array, :market_location, :contracts, :array, :customer, :id)
 
