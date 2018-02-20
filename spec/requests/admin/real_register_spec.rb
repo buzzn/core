@@ -17,7 +17,7 @@ describe Register::RealResource do
 
   context 'localpools/<id>/meters/<id>/registers' do
 
-    let(:path) { "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}" }
+    let(:path) { "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}" }
 
     let(:expected_json) do
       last = register.readings.order('date').last
@@ -32,8 +32,9 @@ describe Register::RealResource do
         'observer_enabled'=>nil,
         'observer_offline_monitoring'=>nil,
         'meter_id' => register.meter_id,
+        'kind' => 'consumption',
         'updatable'=> true,
-        'deletable'=> false,
+        'deletable'=> true,
         'createables'=>['readings'],
         'direction'=>register.attributes['direction'],
         'pre_decimal_position'=>6,

@@ -1,4 +1,5 @@
 require_relative 'test_admin_localpool_roda'
+
 describe Admin::LocalpoolRoda do
 
   def app
@@ -700,7 +701,7 @@ describe Admin::LocalpoolRoda do
         expect(response).to have_http_status(200)
 
         GET "/localpools/#{localpool.id}/power-taker-contracts", $admin, include: 'customer,market_location:register'
-        expect(json['array'].to_yaml).to eq expected_json.to_yaml
+        expect(sort_hash(json['array']).to_yaml).to eq sort_hash(expected_json).to_yaml
         expect(response).to have_http_status(200)
       end
     end

@@ -28,14 +28,15 @@ describe Register::SubstituteResource do
         'observer_enabled'=>nil,
         'observer_offline_monitoring'=>nil,
         'meter_id' => register.meter_id,
+        'kind' => 'consumption',
         'updatable'=> true,
-        'deletable'=> false,
+        'deletable'=> true,
         'createables'=>['readings'],
         'direction'=>register.attributes['direction'],
       }
     end
 
-    let(:path) { "/test/#{group.id}/meters/#{meter.id}/registers/#{register.id}" }
+    let(:path) { "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}" }
 
     it_behaves_like 'GET resource', :register
     it_behaves_like 'GET resources'

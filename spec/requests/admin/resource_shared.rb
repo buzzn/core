@@ -17,7 +17,12 @@ shared_examples 'GET resource' do |object_name|
   it '403' do
     GET path
     expect(response.status).to eq(403)
-    expect(errors_detail).to eq('permission denied for User: --anonymous--')
+    # this comes from the me_roda mounted in TestAdminLocalpoolRoda
+    expect(errors_detail).to eq('retrieve Person: permission denied for User: --anonymous--')
+
+    GET path, $user
+    expect(response.status).to eq(403)
+    expect(errors_detail).to eq("permission denied for User: #{$user.id}")
   end
 
   it '404' do
@@ -53,7 +58,8 @@ shared_examples 'GET resources' do
   it '403' do
     GET all_path
     expect(response.status).to eq(403)
-    expect(errors_detail).to eq('permission denied for User: --anonymous--')
+    # this comes from the me_roda mounted in TestAdminLocalpoolRoda
+    expect(errors_detail).to eq('retrieve Person: permission denied for User: --anonymous--')
 
     GET all_path, $user
     expect(response.status).to eq(403)

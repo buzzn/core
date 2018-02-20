@@ -74,13 +74,44 @@ module RequestsHelper
     JSON.parse(response.body)
   end
 
-  def sort(hash, id = 'id')
-    hash.sort{|n, m| m[id] <=> n[id]}
-  end
-
   def expire_admin_session
     Timecop.travel(Time.now + 60 * 60) do
       yield
+    end
+  end
+
+  def sort_array_of_hash(array, id = 'id')
+    array.sort{|n, m| m[id] <=> n[id]}
+  end
+  alias sort sort_array_of_hash
+
+  def sort_hash(h)
+    case h
+    when Array
+      sort_array(h)
+    when Hash
+      h.each { |k, v| h[k] = sort_element(v) }
+      Hash[h.sort]
+    end
+  end
+
+  private
+
+  def sort_element(v)
+    case v
+    when Hash
+      sort_hash(v)
+    when Array
+      sort_array(v)
+    end
+  end
+
+  def sort_array(a)
+    case a.first
+    when Hash
+      a.collect {|h| sort_hash(h)}
+    else
+      a.sort
     end
   end
 

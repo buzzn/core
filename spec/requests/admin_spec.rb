@@ -95,10 +95,6 @@ describe Admin::Roda do
               'id'=>register.id,
               'type'=>'register_real',
               'updated_at'=>register.updated_at.as_json,
-              'direction'=>register.attributes['direction'],
-              'pre_decimal_position'=>register.pre_decimal_position,
-              'post_decimal_position'=>register.post_decimal_position,
-              'low_load_ability'=>register.low_load_ability,
               'label'=>register.attributes['label'],
               'last_reading'=> 0,
               'observer_min_threshold'=>register.observer_min_threshold,
@@ -110,6 +106,10 @@ describe Admin::Roda do
               'updatable'=> false,
               'deletable'=> false,
               'createables'=>['readings'],
+              'direction'=>register.attributes['direction'],
+              'pre_decimal_position'=>register.pre_decimal_position,
+              'post_decimal_position'=>register.post_decimal_position,
+              'low_load_ability'=>register.low_load_ability,
               'metering_point_id'=>register.metering_point_id,
               'obis'=>register.obis
             }
