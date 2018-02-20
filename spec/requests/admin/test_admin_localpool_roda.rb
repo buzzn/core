@@ -1,8 +1,10 @@
 class TestAdminLocalpoolRoda < BaseRoda
 
+  plugin :run_handler
+
   route do |r|
-    r.on('test') { r.run Admin::LocalpoolRoda }
-    r.run Me::Roda
+    r.run Me::Roda, :not_found=>:pass
+    r.run Admin::Roda
   end
 
 end

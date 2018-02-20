@@ -8,11 +8,11 @@ module Admin
 
       r.run SwaggerRoda, :not_found=>:pass
 
+      rodauth.check_session_expiration
+
       r.on 'localpools' do
         r.run LocalpoolRoda
       end
-
-      rodauth.check_session_expiration
 
       admin = AdminResource.new(current_user)
 

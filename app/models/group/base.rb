@@ -53,20 +53,6 @@ module Group
       end
     end
 
-    def finalize_registers
-      # TODO: check data source if other organization than discovergy
-      if self.registers.size < 3
-        return false
-      end
-      #TODO ideally the discovergy_data_source gets passed in from outside here
-      data_source = Buzzn::Application.config.data_source_registry.get(:discovergy)
-      brokers = data_source.create_virtual_meters_for_group(self)
-      if brokers.any?
-        return true
-      end
-      return false
-    end
-
     private
 
       def destroy_content

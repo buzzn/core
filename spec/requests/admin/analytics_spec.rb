@@ -50,7 +50,7 @@ describe Admin::LocalpoolRoda do
     context 'bubbles' do
 
       it '200' do
-        GET "/test/#{localpool.id}/bubbles", $admin
+        GET "/localpools/#{localpool.id}/bubbles", $admin
         expect(response).to have_http_status(200)
         headers = response.headers
         expect(headers['ETag']).not_to be_nil
@@ -61,7 +61,7 @@ describe Admin::LocalpoolRoda do
         first = json
 
         sleep(0.5)
-        GET "/test/#{localpool.id}/bubbles", $admin
+        GET "/localpools/#{localpool.id}/bubbles", $admin
         expect(json).to eq first
       end
     end

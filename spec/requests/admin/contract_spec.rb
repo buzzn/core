@@ -337,23 +337,23 @@ describe Admin::LocalpoolRoda do
       # NOTE picking a sample contract is enough for the 404 and 403 tests
 
       it '401' do
-        GET "/test/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $admin
+        GET "/localpools/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $admin
         expire_admin_session do
-          GET "/test/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $admin
+          GET "/localpools/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $admin
           expect(response).to be_session_expired_json(401)
 
-          GET "/test/#{localpool.id}/contracts", $admin
+          GET "/localpools/#{localpool.id}/contracts", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
-        GET "/test/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $user
+        GET "/localpools/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $user
         expect(response).to be_denied_json(403, metering_point_operator_contract)
       end
 
       it '404' do
-        GET "/test/#{localpool.id}/contracts/bla-blub", $admin
+        GET "/localpools/#{localpool.id}/contracts/bla-blub", $admin
         expect(response).to be_not_found_json(404, Contract::Localpool)
       end
 
@@ -366,7 +366,7 @@ describe Admin::LocalpoolRoda do
           let(:contract_json) { send "#{type}_contract_json" }
 
           it '200' do
-            GET "/test/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,market_location:[register:meter]'
+            GET "/localpools/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,market_location:[register:meter]'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end
@@ -387,15 +387,15 @@ describe Admin::LocalpoolRoda do
         end
 
         it '401' do
-          GET "/test/#{localpool.id}/contracts/#{contract.id}/customer", $admin
+          GET "/localpools/#{localpool.id}/contracts/#{contract.id}/customer", $admin
           expire_admin_session do
-            GET "/test/#{localpool.id}/contracts/#{contract.id}/customer", $admin
+            GET "/localpools/#{localpool.id}/contracts/#{contract.id}/customer", $admin
             expect(response).to be_session_expired_json(401)
           end
         end
 
         it '200' do
-          GET "/test/#{localpool.id}/contracts/#{contract.id}/customer", $admin
+          GET "/localpools/#{localpool.id}/contracts/#{contract.id}/customer", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq(customer_json.to_yaml)
         end
@@ -416,15 +416,15 @@ describe Admin::LocalpoolRoda do
         end
 
         it '401' do
-          GET "/test/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
+          GET "/localpools/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
           expire_admin_session do
-            GET "/test/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
+            GET "/localpools/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
             expect(response).to be_session_expired_json(401)
           end
         end
 
         it '200' do
-          GET "/test/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
+          GET "/localpools/#{localpool.id}/contracts/#{contract.id}/contractor", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq(contractor_json.to_yaml)
         end

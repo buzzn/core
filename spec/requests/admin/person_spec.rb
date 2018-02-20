@@ -193,42 +193,42 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/test/#{group.id}/persons/#{person.id}", $admin
+        GET "/localpools/#{group.id}/persons/#{person.id}", $admin
         expire_admin_session do
-          GET "/test/#{group.id}/persons", $admin
+          GET "/localpools/#{group.id}/persons", $admin
           expect(response).to be_session_expired_json(401)
 
-          GET "/test/#{group.id}/persons/#{person.id}", $admin
+          GET "/localpools/#{group.id}/persons/#{person.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
-        GET "/test/#{group.id}/persons/#{person.id}", $other
+        GET "/localpools/#{group.id}/persons/#{person.id}", $other
         expect(response).to be_denied_json(403, person, user: $other)
       end
 
       it '404' do
-        GET "/test/#{group.id}/persons/bla-blub", $admin
+        GET "/localpools/#{group.id}/persons/bla-blub", $admin
         expect(response).to be_not_found_json(404, Person)
       end
 
       it '200' do
-        GET "/test/#{group.id}/persons/#{person.id}", $user, include: 'bank_accounts, address'
+        GET "/localpools/#{group.id}/persons/#{person.id}", $user, include: 'bank_accounts, address'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq person_json.to_yaml
 
-        GET "/test/#{group.id}/persons/#{person.id}", $admin, include: :bank_accounts
+        GET "/localpools/#{group.id}/persons/#{person.id}", $admin, include: :bank_accounts
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq admin_person_json.to_yaml
       end
 
       it '200 all' do
-        GET "/test/#{group.id}/persons", $user, include: :bank_accounts
+        GET "/localpools/#{group.id}/persons", $user, include: :bank_accounts
         expect(response).to have_http_status(200)
         expect(json['array']).to eq persons_json
 
-        GET "/test/#{group.id}/persons", $admin, include: :bank_accounts
+        GET "/localpools/#{group.id}/persons", $admin, include: :bank_accounts
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq sort(admin_persons_json).to_yaml
       end

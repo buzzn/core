@@ -55,25 +55,25 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
 
       it '401' do
-        GET "/test/#{group.id}/meters/#{meter.id}", $admin
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $admin
         expire_admin_session do
-          GET "/test/#{group.id}/meters/#{meter.id}", $admin
+          GET "/localpools/#{group.id}/meters/#{meter.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
-        GET "/test/#{group.id}/meters/#{meter.id}", $user
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $user
         expect(response).to be_denied_json(403, meter)
       end
 
       it '404' do
-        GET "/test/#{group.id}/meters/bla-blub", $admin
+        GET "/localpools/#{group.id}/meters/bla-blub", $admin
         expect(response).to be_not_found_json(404, Meter::Base)
       end
 
       it '200' do
-        GET "/test/#{group.id}/meters/#{meter.id}", $admin, include: 'registers:[market_location:[contracts:[customer]]]'
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $admin, include: 'registers:[market_location:[contracts:[customer]]]'
 
         expect(json).to has_nested_json(:registers, :array, :market_location, :contracts, :array, :customer, :id)
 
@@ -161,33 +161,33 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/test/#{group.id}/meters/#{real_meter.id}", $admin
+        GET "/localpools/#{group.id}/meters/#{real_meter.id}", $admin
         expire_admin_session do
-          PATCH "/test/#{group.id}/meters/#{real_meter.id}", $admin
+          PATCH "/localpools/#{group.id}/meters/#{real_meter.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
-        PATCH "/test/#{group.id}/meters/#{real_meter.id}", $user
+        PATCH "/localpools/#{group.id}/meters/#{real_meter.id}", $user
         expect(response).to be_denied_json(403, real_meter)
       end
 
       it '404' do
-        PATCH "/test/#{group.id}/meters/bla-blub", $admin
+        PATCH "/localpools/#{group.id}/meters/bla-blub", $admin
         expect(response).to be_not_found_json(404, Meter::Base)
       end
 
       it '409' do
         meter = real_meter
-        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
+        PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: DateTime.now
         expect(response).to be_stale_json(409, meter)
       end
 
       it '422' do
         meter = real_meter
-        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
+        PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               manufacturer_name: 'Maxima' * 20,
               product_name: 'SmartyMeter' * 10,
               product_serialnumber: '12341234' * 20,
@@ -213,7 +213,7 @@ describe Admin::LocalpoolRoda do
       it '200' do
         meter = real_meter
         old = meter.updated_at
-        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
+        PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: meter.updated_at,
               manufacturer_name: Meter::Real.manufacturer_names[:other],
               manufacturer_description: 'Manufacturer description',

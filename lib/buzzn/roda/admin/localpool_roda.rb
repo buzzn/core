@@ -21,13 +21,6 @@ module Admin
 
         shared[PARENT] = localpool = localpools.retrieve(id)
 
-        # NOTE: registers does not check on session expiration
-        #       as it is used by bubbles and charts
-        r.on 'registers' do
-          shared[:registers] = localpool.registers
-          r.run ::RegisterRoda
-        end
-
         r.get! 'charts' do
           aggregated(
             Transactions::GroupChart
@@ -42,8 +35,6 @@ module Admin
               .call(localpool).value
           )
         end
-
-        rodauth.check_session_expiration
 
         r.patch! do
           Transactions::Admin::Localpool::Update

@@ -74,28 +74,28 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
 
       it '401' do
-        GET "/test/#{group.id}/meters/#{meter.id}", $admin
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $admin
         expire_admin_session do
-          GET "/test/#{group.id}/meters/#{meter.id}", $admin
+          GET "/localpools/#{group.id}/meters/#{meter.id}", $admin
           expect(response).to be_session_expired_json(401)
 
-          GET "/test/#{group.id}/meters", $admin
+          GET "/localpools/#{group.id}/meters", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
-        GET "/test/#{group.id}/meters/#{meter.id}", $user
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $user
         expect(response).to be_denied_json(403, meter)
       end
 
       it '404' do
-        GET "/test/#{group.id}/meters/bla-blub", $admin
+        GET "/localpools/#{group.id}/meters/bla-blub", $admin
         expect(response).to be_not_found_json(404, Meter::Base)
       end
 
       it '200' do
-        GET "/test/#{group.id}/meters/#{meter.id}", $admin, include: 'formula_parts: register'
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $admin, include: 'formula_parts: register'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq meter_json.to_yaml
       end
@@ -129,31 +129,31 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/test/#{group.id}/meters/#{meter.id}", $admin
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $admin
         expire_admin_session do
-          PATCH "/test/#{group.id}/meters/#{meter.id}", $admin
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
 
       it '403' do
-        PATCH "/test/#{group.id}/meters/#{meter.id}", $user
+        PATCH "/localpools/#{group.id}/meters/#{meter.id}", $user
         expect(response).to be_denied_json(403, meter)
       end
 
       it '404' do
-        PATCH "/test/#{group.id}/meters/bla-blub", $admin
+        PATCH "/localpools/#{group.id}/meters/bla-blub", $admin
         expect(response).to be_not_found_json(404, Meter::Base)
       end
 
       it '409' do
-        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
+        PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: DateTime.now
         expect(response).to be_stale_json(409, meter)
       end
 
       it '422' do
-        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
+        PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               manufacturer_name: 'Maxima' * 20,
               product_name: 'SmartyMeter' * 10,
               product_serialnumber: '12341234' * 20
@@ -165,7 +165,7 @@ describe Admin::LocalpoolRoda do
       it '200' do
         old = meter.updated_at
         sleep 1
-        PATCH "/test/#{group.id}/meters/#{meter.id}", $admin,
+        PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: meter.updated_at,
               product_name: 'SmartySuper',
               product_serialnumber: '41234'
@@ -203,29 +203,29 @@ describe Admin::LocalpoolRoda do
         end
 
         it '401' do
-          GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
+          GET "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
           expire_admin_session do
-            GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
+            GET "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
             expect(response).to be_session_expired_json(401)
 
-            GET "/test/#{group.id}/meters/#{meter.id}/formula-parts", $admin
+            GET "/localpools/#{group.id}/meters/#{meter.id}/formula-parts", $admin
             expect(response).to be_session_expired_json(401)
           end
         end
 
         it '404' do
-          GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
+          GET "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
           expect(response).to be_not_found_json(404, Register::FormulaPart)
         end
 
         it '200 all' do
-          GET "/test/#{group.id}/meters/#{meter.id}/formula-parts", $admin
+          GET "/localpools/#{group.id}/meters/#{meter.id}/formula-parts", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq parts_json.to_yaml
         end
 
         it '200' do
-          GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
+          GET "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq part_json.to_yaml
         end
@@ -253,18 +253,18 @@ describe Admin::LocalpoolRoda do
         end
 
         it '401' do
-          GET "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
+          GET "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
           expire_admin_session do
-            PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
+            PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin
             expect(response).to be_session_expired_json(401)
           end
         end
 
         it '404' do
-          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
           expect(response).to be_not_found_json(404, Register::FormulaPart)
 
-          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
                 $admin,
                 updated_at: DateTime.now,
                 register_id: 123
@@ -272,18 +272,18 @@ describe Admin::LocalpoolRoda do
         end
 
         it '403' do
-          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $user
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $user
           expect(response).to be_denied_json(403, meter)
         end
 
         it '409' do
-          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
                 updated_at: DateTime.now
           expect(response).to be_stale_json(409, formula_part)
         end
 
         it '422' do
-          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
                 operator: '+/-'
 
           expect(response).to have_http_status(422)
@@ -292,7 +292,7 @@ describe Admin::LocalpoolRoda do
 
         it '200' do
           old = meter.updated_at
-          PATCH "/test/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
                 updated_at: formula_part.updated_at,
                 operator: '-',
                 register_id: register2.id
