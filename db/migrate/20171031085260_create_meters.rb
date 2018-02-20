@@ -17,7 +17,7 @@ class CreateMeters < ActiveRecord::Migration
     add_foreign_key :meters, :brokers, name: :fk_meters_broker
 
     add_index :meters, [:group_id, :sequence_number], unique: true
-#    add_index :meters, [:product_serialnumber], unique: true
+    #add_index :meters, [:product_serialnumber], unique: true
   end
 
   def down
