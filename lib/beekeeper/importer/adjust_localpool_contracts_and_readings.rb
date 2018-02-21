@@ -108,13 +108,17 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     else
       logger.info('Readings for old contract end and new contract start have different values, this is resolved in code')
       logger.info('Readings: ' + readings.collect { |r| "date: #{r.date}, #{r.value}" }.join(' // ') )
-      if register.meter.legacy_buzznid == '90057/7'
+      case register.meter.legacy_buzznid
+      when '90057/7'
         # in this case the 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
         readings.first.destroy!
-      elsif register.meter.legacy_buzznid == '90067/18'
+      when '90067/18'
         readings.first.destroy! # this one has a value of 13.000
         # this one has 12.700 -- must be a bug/manual entry error, technically it's not possible for a reading to go down
         readings.last.update_attribute(:value, 13_000)
+      when '90053/38'
+        logger.error('90053/38')
+        exit
       else
         logger.error("Unexpected readings for #{register.meter.legacy_buzznid}, not modifying any readings.")
       end
