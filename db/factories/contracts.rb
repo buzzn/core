@@ -68,9 +68,15 @@ FactoryGirl.define do
         contract.market_location.register = meter.registers.first
       end
     end
-    # makes sure all contracts of a localpool get the same contract nr
+    # makes sure all contracts of a localpool get the same contract nr but a sequential addition
     after(:create) do |contract, _evaluator|
-      contract.update(contract_number: contract.localpool.id + 66_000)
+      # FIXME: clarify why LocalpoolGap isn't in Contract::Base#localpool_power_taker_contracts
+      localpool_contracts = Contract::Base.where(localpool_id: contract.localpool.id,
+                                                 type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty))
+      max_contract_number_addition = localpool_contracts.maximum(:contract_number_addition)
+      contract.update(contract_number: contract.localpool.id + 66_000,
+                      contract_number_addition: max_contract_number_addition + 1
+      )
     end
   end
 
