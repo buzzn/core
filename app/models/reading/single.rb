@@ -106,6 +106,13 @@ module Reading
       end
     end
 
+    # WARNING: as of now, our readings don't always grow over time. Reason:
+    # beekeeper had no notion of metering locations, and thus couldn't model a register changes.
+    # Thus all imported readings are stored on the current (and only) register of a metering location, even when
+    # the register was swapped at some point. And the readings of a new register typically start much lower.
+    #
+    # Btw. design-wise, this check should be in the transaction object or at least the market location model.
+    # A register model should not load it's adjacent models.
     def value_has_to_grow
       readings = register.readings.manual.order(:date)
       reading_before = readings.where('date < ?', date).last
