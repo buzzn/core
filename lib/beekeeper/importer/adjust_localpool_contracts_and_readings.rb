@@ -66,9 +66,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       handle_one_reading(readings.first, old_end_date)
     else
       logger.warn("Expected two readings but got #{readings.size}. Readings are")
-      readings.each do |r|
-        logger.warn(r.attributes.slice('date', 'value', 'reason', 'comment', 'id').inspect)
-      end
+      readings.each { |r| logger.warn(inspect_reading(r)) }
     end
   end
 
@@ -107,18 +105,19 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       logger.info("Destroyed reading for #{readings.first.date} since both readings have the same value.")
     else
       logger.info('Readings for old contract end and new contract start have different values, this is resolved in code')
-      logger.info('Readings: ' + readings.collect { |r| "date: #{r.date}, #{r.value}" }.join(' // ') )
+      logger.info('Readings: ' + readings.collect { |r| inspect_reading(r) }.join(' // ') )
       case register.meter.legacy_buzznid
       when '90057/7'
-        # in this case the 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
+        # 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
         readings.first.destroy!
       when '90067/18'
         readings.first.destroy! # this one has a value of 13.000
         # this one has 12.700 -- must be a bug/manual entry error, technically it's not possible for a reading to go down
         readings.last.update_attribute(:value, 13_000)
-      when '90053/38'
-        logger.error('90053/38')
-        exit
+      when '90067/6'
+        # [INFO] Readings: date: 2018-01-14, 2122400.0, contract_change // date: 2018-01-15, 2132100.0, contract_change
+        # 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
+        readings.first.destroy!
       else
         logger.error("Unexpected readings for #{register.meter.legacy_buzznid}, not modifying any readings.")
       end
@@ -132,6 +131,10 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     else
       # case: the only reading is on the new contract end date -- that's what we want, nothing to do.
     end
+  end
+
+  def inspect_reading(reading)
+    reading.attributes.slice('date', 'value', 'reason', 'comment', 'id').inspect
   end
 
 end
