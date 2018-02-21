@@ -11,21 +11,20 @@ class Discovergy::AbstractBuilder
   def to_watt_hour(response, register)
     values = response['values']
     value =
-      if register.meter.two_way_meter?
-        two_way_meter_value(values, register)
-      else
+      if one_way_meter?(register)
         values['energy']
+      else
+        two_way_meter_value(values, register)
       end
     # ENERGY/ENERGYOUT resolution is 10^-10 kWh
     value / 10_000_000.0
   end
 
   def two_way_meter_value(values, register)
-    case register.direction
-    when 'output'
-      values['energyOut']
-    when 'input'
+    if production?(register)
       values['energy']
+    elsif consumption?(register)
+      values['energyOut']
     else
       raise "unknown direction: #{register.direction}"
     end
@@ -33,7 +32,7 @@ class Discovergy::AbstractBuilder
 
   def to_watt(response, register)
     val = to_watt_raw(response)
-    if register.meter.one_way_meter?
+    if one_way_meter?(register)
       val < 0 ? 0 : val # sometime discovergy delivers negative values: 0 them
     else
       adjust(val, register)
@@ -42,20 +41,31 @@ class Discovergy::AbstractBuilder
 
   private
 
+  def one_way_meter?(register)
+    register.meter.registers.size == 1
+  end
+
+  def production?(register)
+    register.label.production? || register.grid_consumption?
+  end
+
+  def consumption?(register)
+    register.label.consumption? || register.grid_feeding?
+  end
+
   def adjust(val, register)
-    case register
-    when Register::Output
+    if consumption?(register)
       val > 0 ? 0 : -val
-    when Register::Input
+    elsif production?(register)
       val < 0 ? 0 : val
     else
-      raise "Not implemented for #{register}"
+      raise "Not implemented for #{register} with label #{register.label}"
     end
   end
 
   def to_watt_raw(response)
     # power in 10^-3 W
-    response.nil? ? 0 : response['values']['power'] / 1000
+    response.nil? ? 0 : response['values']['power'] / 1000.0
   end
 
 end

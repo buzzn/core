@@ -6,6 +6,8 @@ describe Discovergy::DailyChartsBuilder do
     JSON.parse(File.read(File.join(File.dirname(__FILE__), 'daily_charts_three.json')))
   end
 
+  entity(:group) { create(:localpool) }
+
   entity(:registers) do
     response.collect do |id, _|
       direction, label =
@@ -15,6 +17,7 @@ describe Discovergy::DailyChartsBuilder do
           [:input, Register::Base.labels['consumption']]
         end
       meter = create(:meter, :real,
+                     group: group,
                      register_direction: direction,
                      product_serialnumber: id.sub('EASYMETER_', ''))
       register = meter.registers.first
