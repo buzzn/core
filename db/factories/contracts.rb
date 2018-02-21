@@ -56,55 +56,42 @@ FactoryGirl.define do
     end
   end
 
+  trait :is_localpool_powertaker_contract do
+    before(:create) do |contract, _evaluator|
+      unless contract.market_location
+        contract.market_location = create(:market_location,
+                                          group: contract.localpool)
+      end
+      unless contract.market_location.register
+        meter = FactoryGirl.create(:meter, :real, :one_way,
+                                   group: contract.localpool)
+        contract.market_location.register = meter.registers.first
+      end
+    end
+    # makes sure all contracts of a localpool get the same contract nr
+    after(:create) do |contract, _evaluator|
+      contract.update(contract_number: contract.localpool.id + 66_000)
+    end
+  end
+
   trait :localpool_powertaker do
-    contract_number { generate(:localpool_power_taker_contract_nr) }
+    is_localpool_powertaker_contract
     initialize_with { Contract::LocalpoolPowerTaker.new }
     forecast_kwh_pa 1000
     customer        { FactoryGirl.create(:person, :powertaker, :with_bank_account) }
     before(:create) do |contract, _evaluator|
       contract.contractor = contract.localpool.owner
-      unless contract.market_location
-        contract.market_location = create(:market_location,
-                                          group: contract.localpool)
-      end
-      unless contract.market_location.register
-        meter = FactoryGirl.create(:meter, :real, :one_way,
-                                   group: contract.localpool)
-        contract.market_location.register = meter.registers.first
-      end
     end
   end
 
   trait :localpool_third_party do
-    contract_number { generate(:localpool_power_taker_contract_nr) }
+    is_localpool_powertaker_contract
     initialize_with { Contract::LocalpoolThirdParty.new }
-    before(:create) do |contract, _evaluator|
-      unless contract.market_location
-        contract.market_location = create(:market_location,
-                                          group: contract.localpool)
-      end
-      unless contract.market_location.register
-        meter = FactoryGirl.create(:meter, :real, :one_way,
-                                   group: contract.localpool)
-        contract.market_location.register = meter.registers.first
-      end
-    end
   end
 
   trait :localpool_gap do
-    contract_number { generate(:localpool_power_taker_contract_nr) }
+    is_localpool_powertaker_contract
     initialize_with { Contract::LocalpoolGap.new }
-    before(:create) do |contract, _evaluator|
-      unless contract.market_location
-        contract.market_location = create(:market_location,
-                                          group: contract.localpool)
-      end
-      unless contract.market_location.register
-        meter = FactoryGirl.create(:meter, :real, :one_way,
-                                   group: contract.localpool)
-        contract.market_location.register = meter.registers.first
-      end
-    end
   end
 
   trait :with_tariff do
