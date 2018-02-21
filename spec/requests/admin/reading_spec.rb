@@ -15,8 +15,8 @@ describe Admin::LocalpoolRoda do
     let(:wrong_json) do
       {
         'errors'=>[
-          {'parameter'=>'raw_value', 'detail'=>'must be a float'},
-          {'parameter'=>'value', 'detail'=>'must be a float'},
+          {'parameter'=>'raw_value', 'detail'=>'must be an integer'},
+          {'parameter'=>'value', 'detail'=>'must be an integer'},
           {'parameter'=>'unit', 'detail'=>'must be one of: Wh, W, m³'},
           {'parameter'=>'reason', 'detail'=>'must be one of: IOM, COM1, COM2, ROM, PMR, COT, COS, CMP, COB'},
           {'parameter'=>'read_by', 'detail'=>'must be one of: BN, SN, SG, VNB'},
@@ -59,7 +59,7 @@ describe Admin::LocalpoolRoda do
         {
           'type'=>'reading',
           'date'=>Date.new(2016, 2, 1).to_s,
-          'raw_value'=>23.66,
+          'raw_value'=>23,
           'value'=>500.0,
           'unit'=>'m³',
           'reason'=>'IOM',

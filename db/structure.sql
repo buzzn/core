@@ -1696,8 +1696,8 @@ CREATE TABLE persons_roles (
 
 CREATE TABLE readings (
     id integer NOT NULL,
-    raw_value double precision NOT NULL,
-    value double precision NOT NULL,
+    raw_value integer NOT NULL,
+    value integer NOT NULL,
     comment character varying(256),
     date date,
     created_at timestamp without time zone NOT NULL,

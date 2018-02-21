@@ -23,8 +23,8 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
 
   def converted_attributes
     @converted_attributes ||= {
-      raw_value: messwert * 1000,
-      value:     messwert * 1000,
+      raw_value: value,
+      value:     value,
       comment:   comment,
       date:      Date.parse(ablesezeitpunkt),
       unit:      'Wh',
@@ -88,6 +88,13 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
 
   def map_read_by
     READ_BY_MAP[ableser.strip]
+  end
+
+  # beekeeper stores the value in kWh (as double), we store it in Wh (as integer). So if we just multiply the beekeeper
+  # value by 1000, we sometimes get floating point math errors like these:
+  # 132479.2 * 1000 = 132479200.00000001
+  def value
+    (BigDecimal.new(messwert.to_s) * 1000).round
   end
 
 end
