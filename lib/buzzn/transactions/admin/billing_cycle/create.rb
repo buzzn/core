@@ -15,6 +15,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   step :validate, with: :'operations.validation'
   step :authorize, with: :'operations.authorization.generic'
   step :begin_date
+  step :end_date, with: :'operations.end_date'
   step :persist
 
   def begin_date(input, localpool)

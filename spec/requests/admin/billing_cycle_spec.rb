@@ -21,62 +21,63 @@ describe Admin::BillingCycleResource do
         'updated_at'=>billing_cycle.updated_at.as_json,
         'name'=>billing_cycle.name,
         'begin_date'=>billing_cycle.begin_date.as_json,
-        'end_date'=>billing_cycle.end_date.as_json
+        'last_date'=>billing_cycle.last_date.as_json
       }
     end
 
     it_behaves_like 'GET resource', :billing_cycle
     it_behaves_like 'GET resources', :billing_cycle
-
   end
-    context 'POST' do
 
-      let(:wrong_json) do
-        {
-          'errors'=>[
-            {'parameter'=>'name', 'detail'=>'size cannot be greater than 64'},
-            {'parameter'=>'end_date', 'detail'=>'must be a date'}
-          ]
-        }
-      end
+  context 'POST' do
 
-      let(:end_date) { Date.parse('2018-03-01') }
-      let(:created_json) do
-        {
-          'type'=>'billing_cycle',
-          'name'=>'mine',
-          'begin_date'=> billing_cycle.end_date.as_json,
-          'end_date'=> end_date.as_json
-        }
-      end
+    let(:wrong_json) do
+      {
+        'errors'=>[
+          {'parameter'=>'name', 'detail'=>'size cannot be greater than 64'},
+          {'parameter'=>'last_date', 'detail'=>'must be a date'}
+        ]
+      }
+    end
 
-      it '401' do
-        GET "/localpools/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin
-        expire_admin_session do
-          POST "/localpools/#{group.id}/billing-cycles", $admin
-          expect(response).to be_session_expired_json(401)
-        end
-      end
+    let(:end_date) { Date.parse('2018-03-01') }
+    let(:created_json) do
+      {
+        'type'=>'billing_cycle',
+        'name'=>'mine',
+        'begin_date'=> billing_cycle.end_date.as_json,
+        'last_date'=> end_date.as_json
+      }
+    end
 
-      it '422' do
-        POST "/localpools/#{group.id}/billing-cycles", $admin, end_date: 'blubla', name: 'something'*10
-        expect(response).to have_http_status(422)
-        expect(json.to_yaml).to eq wrong_json.to_yaml
-      end
-
-      it '201' do
-        POST "/localpools/#{group.id}/billing-cycles", $admin,
-             end_date: end_date,
-             name: 'mine'
-        expect(response).to have_http_status(201)
-        result = json
-        id = result.delete('id')
-        expect(result.delete('updated_at')).not_to eq nil
-        expect(BillingCycle.find(id)).not_to be_nil
-        expect(result.to_yaml).to eq created_json.to_yaml
+    it '401' do
+      GET "/localpools/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin
+      expire_admin_session do
+        POST "/localpools/#{group.id}/billing-cycles", $admin
+        expect(response).to be_session_expired_json(401)
       end
     end
 
+    it '422' do
+      POST "/localpools/#{group.id}/billing-cycles", $admin, last_date: 'blubla', name: 'something'*10
+      expect(response).to have_http_status(422)
+      expect(json.to_yaml).to eq wrong_json.to_yaml
+    end
+
+    it '201' do
+      POST "/localpools/#{group.id}/billing-cycles", $admin,
+           last_date: end_date,
+           name: 'mine'
+      expect(response).to have_http_status(201)
+      result = json
+      id = result.delete('id')
+      expect(result.delete('updated_at')).not_to eq nil
+      expect(BillingCycle.find(id)).not_to be_nil
+      expect(result.to_yaml).to eq created_json.to_yaml
+
+      BillingCycle.delete(id)
+    end
+  end
 
   context 'PATCH' do
 
@@ -85,7 +86,7 @@ describe Admin::BillingCycleResource do
         'errors'=>[
           {'parameter'=>'updated_at', 'detail'=>'is missing'},
           {'parameter'=>'name', 'detail'=>'size cannot be greater than 64'},
-          {'parameter'=>'end_date', 'detail'=>'must be a date'}
+          {'parameter'=>'last_date', 'detail'=>'must be a date'}
         ]
       }
     end
@@ -96,7 +97,7 @@ describe Admin::BillingCycleResource do
         'type'=>'billing_cycle',
         'name'=>'abcd',
         'begin_date'=>billing_cycle.begin_date.to_s,
-        'end_date'=>billing_cycle.end_date.to_s
+        'last_date'=>billing_cycle.last_date.to_s
       }
     end
 
@@ -121,8 +122,7 @@ describe Admin::BillingCycleResource do
 
     it '422' do
       PATCH "/localpools/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
-            begin_date: 'blablu',
-            end_date: 'blubla',
+            last_date: 'blubla',
             name: 'hello mister' * 20
       expect(response).to have_http_status(422)
       expect(json.to_yaml).to eq wrong_json.to_yaml
@@ -133,12 +133,12 @@ describe Admin::BillingCycleResource do
       PATCH "/localpools/#{group.id}/billing-cycles/#{billing_cycle.id}", $admin,
             updated_at: billing_cycle.updated_at,
             name: 'abcd',
-            end_date: '2018-2-1'
+            last_date: '2018-2-1'
 
       expect(response).to have_http_status(200)
       billing_cycle.reload
       expect(billing_cycle.name).to eq 'abcd'
-      expect(billing_cycle.end_date).to eq Date.parse('2018-2-1')
+      expect(billing_cycle.last_date).to eq Date.parse('2018-2-1')
 
       result = json
       # TODO fix it: our time setup does not allow

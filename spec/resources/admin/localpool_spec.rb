@@ -3,32 +3,7 @@ describe Admin::LocalpoolResource do
   entity(:admin) { Fabricate(:admin) }
   entity!(:localpool) { Fabricate(:localpool, bank_account: create(:bank_account)) }
 
-  let(:base_attributes) do %w(id type updated_at
-                           name
-                           description
-                           slug
-                           start_date
-                           show_object
-                           show_production
-                           show_energy
-                           show_contact
-                           updatable
-                           deletable
-                           incompleteness
-                           bank_account
-                           power_sources) end
-
   entity!(:pools) { Admin::LocalpoolResource.all(admin) }
-
-  it 'retrieve all - ids + types' do
-    expected = Group::Localpool.all.collect do |l|
-      ['group_localpool', l.id]
-    end
-    result = pools.collect do |r|
-      [r.type, r.id]
-    end
-    expect(result.sort).to eq expected.sort
-  end
 
   context 'power_sources' do
 
@@ -60,48 +35,6 @@ describe Admin::LocalpoolResource do
         add_register_with_label(pool, :production_water)
       end
       it { is_expected.to eq ['wind', 'water'] }
-    end
-  end
-
-  context 'tariffs' do
-    it 'retrieve all' do
-      size = localpool.tariffs.size
-      attributes = ['name',
-                    'baseprice_cents_per_month',
-                    'energyprice_cents_per_kwh',
-                    'begin_date',
-                    'last_date',
-                    'id',
-                    'type',
-                    'updated_at',
-                    'updatable',
-                    'deletable',
-                    'number_of_contracts']
-      Fabricate(:tariff, group: localpool)
-      result = pools.retrieve(localpool.id).tariffs
-      expect(result.size).to eq size + 1
-      expect(result.first.to_hash.keys).to match_array attributes
-    end
-
-  end
-
-  context 'billing cycles' do
-
-    it 'retrieve all' do
-      size = localpool.billing_cycles.size
-      Fabricate(:billing_cycle, localpool: localpool)
-      Fabricate(:billing_cycle, localpool: localpool)
-
-      attributes = ['name',
-                    'begin_date',
-                    'end_date',
-                    'id',
-                    'type',
-                    'updated_at']
-
-      result = pools.retrieve(localpool.id).billing_cycles
-      expect(result.size).to eq size + 2
-      expect(result.first.to_hash.keys).to match_array attributes
     end
   end
 

@@ -161,7 +161,7 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: end_date
+      - name: last_date
         in: formData
         required: true
         type: string
@@ -228,7 +228,7 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: end_date
+      - name: last_date
         in: formData
         required: false
         type: string

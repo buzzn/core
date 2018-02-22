@@ -1,6 +1,7 @@
 require_relative '../constraints/billing_cycle'
 module Schemas
   module Invariants
+
     BillingCycle = Schemas::Support.Form(Schemas::Constraints::BillingCycle) do
 
       configure do
@@ -13,5 +14,6 @@ module Schemas
         end_date.after?(begin_date)
       end
     end
+
   end
 end

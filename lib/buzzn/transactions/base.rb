@@ -33,7 +33,7 @@ class Transactions::Base
   def do_persist(&block)
     entity = nil
     ActiveRecord::Base.transaction(requires_new: true) do
-      entity = block.call
+      entity = yield
       unless entity.invariant.success?
         raise ActiveRecord::Rollback
       end

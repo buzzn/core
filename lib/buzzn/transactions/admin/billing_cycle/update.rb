@@ -9,6 +9,7 @@ class Transactions::Admin::BillingCycle::Update < Transactions::Base
 
   step :validate, with: :'operations.validation'
   step :authorize, with: :'operations.authorization.update'
+  step :end_date, with: :'operations.end_date'
   step :persist, with: :'operations.action.update'
 
 end
