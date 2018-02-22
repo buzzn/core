@@ -15,10 +15,14 @@ class Beekeeper::Minipool::MinipoolPreise < Beekeeper::Minipool::BaseRecord
 
   def converted_attributes
     {
-      baseprice_cents_per_month: grundpreis * 100,
+      baseprice_cents_per_month: baseprice_cents_per_month,
       energyprice_cents_per_kwh: bezugspreis,
       begin_date: datum
     }
+  end
+
+  def baseprice_cents_per_month
+    (BigDecimal.new(grundpreis.to_s) * 100).round(2)
   end
 
 end
