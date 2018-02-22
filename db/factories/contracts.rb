@@ -75,8 +75,7 @@ FactoryGirl.define do
                                                  type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty))
       max_contract_number_addition = localpool_contracts.maximum(:contract_number_addition)
       contract.update(contract_number: contract.localpool.id + 66_000,
-                      contract_number_addition: max_contract_number_addition + 1
-      )
+                      contract_number_addition: max_contract_number_addition + 1)
     end
   end
 
