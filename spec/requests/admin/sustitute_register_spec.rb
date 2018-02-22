@@ -28,7 +28,6 @@ describe Register::SubstituteResource do
         'observer_enabled'=>nil,
         'observer_offline_monitoring'=>nil,
         'meter_id' => register.meter_id,
-        'kind' => 'consumption',
         'updatable'=> true,
         'deletable'=> true,
         'createables'=>['readings'],

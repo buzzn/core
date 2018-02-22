@@ -53,7 +53,6 @@ describe Admin::LocalpoolRoda do
                 'observer_enabled'=> part.operand.observer_enabled,
                 'observer_offline_monitoring'=> part.operand.observer_offline_monitoring,
                 'meter_id' => part.operand.meter_id,
-                'kind' => part.operand.label.production? ? 'production' : 'consumption',
                 'updatable'=>false,
                 'deletable'=>false,
                 'createables' => ['readings'],

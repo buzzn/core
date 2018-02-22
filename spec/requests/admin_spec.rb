@@ -89,6 +89,7 @@ describe Admin::Roda do
             'type' => 'market_location',
             'updated_at'=> contract.market_location.updated_at.as_json,
             'name' => contract.market_location.name,
+            'kind' => 'consumption',
             'updatable' => false,
             'deletable' => false,
             'register' => {
@@ -102,7 +103,6 @@ describe Admin::Roda do
               'observer_enabled'=>register.observer_enabled,
               'observer_offline_monitoring'=>register.observer_offline_monitoring,
               'meter_id' => register.meter_id,
-              'kind' => 'consumption',
               'updatable'=> false,
               'deletable'=> false,
               'createables'=>['readings'],
