@@ -17,4 +17,5 @@ class ReadingResource < Buzzn::Resource::Entity
   attributes :updatable, :deletable
 
   def type; 'reading'; end
+
 end
