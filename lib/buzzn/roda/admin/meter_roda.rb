@@ -1,6 +1,5 @@
 require_relative '../admin_roda'
 require_relative '../../transactions/admin/meter/update_real'
-require_relative '../../transactions/admin/meter/update_virtual'
 
 module Admin
   class MeterRoda < BaseRoda
@@ -22,15 +21,15 @@ module Admin
           meter
         end
 
-        r.patch! do
-          case meter.object
-          when Meter::Real
+        case meter.object
+        when Meter::Real
+          r.patch! do
             Transactions::Admin::Meter::UpdateReal.for(meter).call(r.params)
-          when Meter::Virtual
-            Transactions::Admin::Meter::UpdateVirtual.for(meter).call(r.params)
-          else
-            raise "can not handle model: #{meter.class.model}"
           end
+        when Meter::Virtual
+          nil # nothing to patch
+        else
+          raise "can not handle model: #{meter.class.model}"
         end
 
         r.on 'registers' do
