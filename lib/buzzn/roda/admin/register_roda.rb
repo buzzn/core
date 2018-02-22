@@ -40,7 +40,6 @@ class Admin::RegisterRoda < BaseRoda
         end
       end
 
-      # FIXME for the time being until we make an analytics path
       r.get! 'ticker' do
         aggregated(
           Transactions::Ticker

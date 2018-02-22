@@ -22,8 +22,6 @@ describe Meter::Real do
     expect(meter1.product_serialnumber).to eq 'VM-1'
     expect(meter2.product_serialnumber).to eq 'VM-2'
 
-    meter1.update(product_serialnumber: 'something')
-    meter1.reload
-    expect(meter1.product_serialnumber).to eq 'VM-1'
+    expect { meter1.update(product_serialnumber: 'something') }.to raise_error ActiveRecord::ReadOnlyRecord
   end
 end
