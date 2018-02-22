@@ -150,11 +150,6 @@ describe Admin, :swagger do
     schema Schemas::Transactions::Admin::Meter::UpdateReal
   end
 
-  patch '/localpools/{localpool.id}/meters/{virtual_meter.id}' do
-    description 'updates the virtual meter for the given IDs'
-    schema Schemas::Transactions::Admin::Meter::UpdateVirtual
-  end
-
   # virtual_meters > formula_parts
 
   get '/localpools/{localpool.id}/meters/{virtual_meter.id}/formula-parts' do

@@ -41,7 +41,7 @@ end
 
 shared_examples 'GET resources' do
 
-  let(:all_path) { path.sub(%r(/.[0-9]+$), '') }
+  let(:all_path) { path.sub(%r(/[0-9]+$), '') }
 
   def errors_detail
     json['errors'].first['detail'].sub(/.*[0-9]+ /, '')

@@ -657,6 +657,7 @@ describe Admin::LocalpoolRoda do
           'type' => 'market_location',
           'updated_at' => market_location.updated_at.as_json,
           'name' => market_location.name,
+          'kind' => register.label.production? ? 'production' : 'consumption',
           'updatable' => false,
           'deletable' => false,
           'register' => {
@@ -674,7 +675,6 @@ describe Admin::LocalpoolRoda do
             'observer_enabled'=> nil,
             'observer_offline_monitoring' => nil,
             'meter_id' => register.meter.id,
-            'kind' => register.label.production? ? 'production' : 'consumption',
             'updatable' => true,
             'deletable' => false,
             'createables' => ['readings'],

@@ -775,12 +775,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: product_name
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
       - name: product_serialnumber
         in: formData
         required: false
@@ -788,6 +782,12 @@ paths:
         format: ''
         maxLength: 128
         minLength: 4
+      - name: product_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: manufacturer_name
         in: formData
         required: false
@@ -993,43 +993,6 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
-      responses:
-        200:
-          description: patched
-  "/localpools/{localpool_id}/meters/{virtual_meter_id}":
-    patch:
-      description: updates the virtual meter for the given IDs
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: virtual_meter_id
-        in: path
-        required: true
-        type: string
-      - name: product_name
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
-      - name: product_serialnumber
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 128
-        minLength: 4
       - name: updated_at
         in: formData
         required: true

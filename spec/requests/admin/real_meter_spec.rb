@@ -91,10 +91,10 @@ describe Admin::LocalpoolRoda do
       let(:wrong_json) do
         {
           'errors'=>[
-            {'parameter'=>'product_name',
-             'detail'=>'size cannot be greater than 64'},
             {'parameter'=>'product_serialnumber',
              'detail'=>'size cannot be greater than 128'},
+            {'parameter'=>'product_name',
+             'detail'=>'size cannot be greater than 64'},
             {'parameter'=>'manufacturer_name',
              'detail'=>'must be one of: easy_meter, other'},
             {'parameter'=>'build_year',

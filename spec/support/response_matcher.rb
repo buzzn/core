@@ -1,31 +1,29 @@
 require 'rspec/expectations'
 
 RSpec::Matchers.define :has_nested_json do |*attrs|
+
+  def next_current(current, attr)
+    current = current[attr.to_s]
+    if attr.to_sym == :array && current
+      current.first
+    else
+      current
+    end
+  end
+
   match do |actual|
     current = actual
     attrs.all? do |attr|
-      current = current[attr.to_s]
-      if attr.to_sym == :array
-        array = current
-        current = array ? array.first : nil
-        !array.nil? && !current.nil?
-      else
-        !current.nil?
-      end
+      current = next_current(current, attr)
+      !current.nil?
     end
   end
 
   failure_message do |actual|
     current = actual
-    path = attrs.select do |attr|
-      current = current[attr.to_s] if current
-      if attr.to_sym == :array
-        array = current
-        current = array ? array.first : nil
-        !array.nil? && !current.nil?
-      else
-        !current.nil?
-      end
+    path = attrs.reject do |attr|
+      current = next_current(current, attr) if current
+      current.nil?
     end
     path << (attrs - path).first
     "expected #{attrs.join('->')} to have nested element but missing: #{path.join('->')}"
