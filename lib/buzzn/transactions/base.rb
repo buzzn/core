@@ -30,4 +30,21 @@ class Transactions::Base
 
   end
 
+  def do_persist(&block)
+    entity = nil
+    ActiveRecord::Base.transaction(requires_new: true) do
+      entity = block.call
+      unless entity.invariant.success?
+        raise ActiveRecord::Rollback
+      end
+    end
+    if entity.invariant.success?
+      Right(entity)
+    else
+      raise Buzzn::ValidationError.new(entity.invariant.errors)
+      # TODO better use this and handle on roda - see operations/validation
+      #Left(entity.invariant.errors)
+    end
+  end
+
 end

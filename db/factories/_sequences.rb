@@ -1,5 +1,6 @@
 FactoryGirl.define do
   # Please keep sequences ordered alphabetically
+  sequence(:billing_cycle_name)                  { |i| "Cycle #{i}" }
   sequence(:localpool_name)                      { |i| "Localpool #{Digest::SHA1.hexdigest i.to_s}" }
   sequence(:market_partner_id)                   { |i| i + 9_911_845_999_000 }
   sequence(:metering_point_id)                   { |i| 'DE' + (i + 26917588246326615503884_000).to_s }

@@ -10,7 +10,7 @@ class Operations::Validation
       Right(result.output)
     else
       raise Buzzn::ValidationError.new(result.errors)
-      # TODO better use this and handle on roda
+      # TODO better use this and handle on roda - see transactions/base
       #Left(result.errors)
     end
   end

@@ -1,4 +1,5 @@
 require_relative '../filterable'
+require_relative '../concerns/last_date'
 require_relative '../concerns/person_organization_relation'
 
 module Contract
@@ -8,6 +9,7 @@ module Contract
     self.abstract_class = true
 
     include Filterable
+    include LastDate
 
     PersonOrganizationRelation.generate(self, 'customer')
     PersonOrganizationRelation.generate(self, 'contractor')
@@ -89,13 +91,6 @@ module Contract
       end
       # wrap the string in ActiveSupport::StringInquirer, which allows status.ended? etc, hiding the string.
       status.inquiry
-    end
-
-    # It order to be continuous, a contract's end_date is the same as the start_date of the following contract.
-    # This is technically correct but unexpected by humans. That's why we have the last_date, which will show
-    # the human-expected last date of the contract.
-    def last_date
-      end_date && (end_date - 1.day)
     end
 
     private

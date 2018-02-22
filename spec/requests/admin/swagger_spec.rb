@@ -306,30 +306,6 @@ describe Admin, :swagger do
     description 'deletes the billing-cycles of the localpool'
   end
 
-  # billing-cycles > billings
-
-  get '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings' do
-    description 'returns all billings of the billing-cycles for the given IDs'
-  end
-
-  post '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/regular' do
-    description 'creates a regular billings for billing-cycles'
-    schema Schemas::Transactions::Admin::Billing::CreateRegular
-  end
-
-  get '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_1.id}' do
-    description 'returns the billing of the billing-cycle for the given IDs'
-  end
-
-  patch '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_1.id}' do
-    description 'updates the billing of the billing-cycles for the given IDs'
-    schema Schemas::Transactions::Admin::Billing::Update
-  end
-
-  delete '/localpools/{localpool.id}/billing-cycles/{billing_cycle_1.id}/billings/{billing_2.id}' do
-    description 'deletes the billing of the billing-cycles for the given IDs'
-  end
-
   # localpool-processing-contract
 
   get '/localpools/{localpool.id}/localpool-processing-contract' do

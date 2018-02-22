@@ -161,11 +161,6 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: begin_date
-        in: formData
-        required: true
-        type: string
-        format: date
       - name: end_date
         in: formData
         required: true
@@ -233,146 +228,11 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: begin_date
-        in: formData
-        required: false
-        type: string
-        format: date
       - name: end_date
         in: formData
         required: false
         type: string
         format: date
-      responses:
-        200:
-          description: patched
-  "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}/billings":
-    get:
-      description: returns all billings of the billing-cycles for the given IDs
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: billing_cycle_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}/billings/regular":
-    post:
-      description: creates a regular billings for billing-cycles
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: billing_cycle_id
-        in: path
-        required: true
-        type: string
-      - name: accounting_year
-        in: formData
-        required: true
-        type: integer
-        format: int64
-      responses:
-        201:
-          description: created
-  "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}/billings/{billing_id}":
-    get:
-      description: returns the billing of the billing-cycle for the given IDs
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: billing_cycle_id
-        in: path
-        required: true
-        type: string
-      - name: billing_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-    delete:
-      description: deletes the billing of the billing-cycles for the given IDs
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: billing_cycle_id
-        in: path
-        required: true
-        type: string
-      - name: billing_id
-        in: path
-        required: true
-        type: string
-      responses:
-        204:
-          description: deleted
-    patch:
-      description: updates the billing of the billing-cycles for the given IDs
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: billing_cycle_id
-        in: path
-        required: true
-        type: string
-      - name: billing_id
-        in: path
-        required: true
-        type: string
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
-      - name: receivables_cents
-        in: formData
-        required: false
-        type: integer
-        format: int64
-      - name: invoice_number
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
-      - name: status
-        in: formData
-        required: false
-        type: string
-        enum:
-        - open
-        - calculated
-        - delivered
-        - settled
-        - closed
       responses:
         200:
           description: patched

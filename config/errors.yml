@@ -27,3 +27,4 @@ en:
     cover_beginning_of_contract?: 'tariffs must cover beginning of contract'
     cover_ending_of_contract?: 'tariffs must cover end of contract'
     lineup?: 'all tariffs must line up'
+    after?: 'end_date must be after begin_date'
