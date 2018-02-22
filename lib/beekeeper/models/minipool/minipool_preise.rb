@@ -22,7 +22,7 @@ class Beekeeper::Minipool::MinipoolPreise < Beekeeper::Minipool::BaseRecord
   end
 
   def baseprice_cents_per_month
-    (BigDecimal.new(grundpreis.to_s) * 100).round(2)
+    (BigDecimal.new(grundpreis.to_s) * 100).round(2).to_f
   end
 
 end
