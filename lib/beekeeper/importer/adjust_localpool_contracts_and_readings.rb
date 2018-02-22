@@ -54,6 +54,11 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     end
   end
 
+  # By default, we expect a register in beekeeper to have one or two readings when contracts change.
+  # The registers listed here have more than that, but we still allow that, because those readings are unrelated
+  # to the contract change.
+  REGISTERS_WITH_IGNORED_MULTIPLE_READINGS = %w(90031/27 90053/44 90075/10)
+
   # In beekeeper, readings for contract changes aren't consistent. Sometimes there's only one for the old contract's
   # end date, sometimes only one for new contract's start date, sometimes there are both.
   # This method cleans things up so that only one reading for the date of the contract change remains.
@@ -65,8 +70,10 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     when 1
       handle_one_reading(readings.first, old_end_date)
     else
-      logger.warn("Expected two readings but got #{readings.size}. Readings are")
-      readings.each { |r| logger.warn(inspect_reading(r)) }
+      unless REGISTERS_WITH_IGNORED_MULTIPLE_READINGS.include?(register.meter.legacy_buzznid)
+        logger.warn("Expected two readings on #{register.meter.legacy_buzznid} but got #{readings.size}. Readings are")
+        readings.each { |r| logger.warn(inspect_reading(r)) }
+      end
     end
   end
 
