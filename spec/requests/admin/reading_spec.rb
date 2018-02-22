@@ -60,7 +60,7 @@ describe Admin::LocalpoolRoda do
           'type'=>'reading',
           'date'=>Date.new(2016, 2, 1).to_s,
           'raw_value'=>23,
-          'value'=>500.0,
+          'value'=>500,
           'unit'=>'m³',
           'reason'=>'IOM',
           'read_by'=>'BN',
