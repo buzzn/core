@@ -19,7 +19,8 @@ module Admin
                :incompleteness,
                :bank_account,
                :power_sources,
-               :display_app_url
+               :display_app_url,
+               :next_billing_cycle_begin_date
 
     has_one :localpool_processing_contract
     has_one :metering_point_operator_contract
@@ -66,6 +67,14 @@ module Admin
     def display_app_url
       if object.show_display_app
         "#{display_url}/#{object.slug}"
+      end
+    end
+
+    def next_billing_cycle_begin_date
+      if object.billing_cycles.empty?
+        object.start_date
+      else
+        object.billing_cycles.order(:begin_date).last.end_date
       end
     end
 

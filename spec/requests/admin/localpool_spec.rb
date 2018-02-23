@@ -108,7 +108,8 @@ describe Admin::LocalpoolRoda do
       'incompleteness' => serialized_incompleteness(localpool),
       'bank_account' => serialized_bank_account(localpool.bank_account),
       'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
-      'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil)
+      'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil),
+      'next_billing_cycle_begin_date' => localpool.start_date.as_json
     }
   end
 
@@ -218,6 +219,7 @@ describe Admin::LocalpoolRoda do
         'bank_account' => nil,
         'power_sources' => [],
         'display_app_url' => 'https://display.buzzn.io/super-duper',
+        'next_billing_cycle_begin_date' => Date.today.as_json,
       }
     end
 
@@ -293,7 +295,8 @@ describe Admin::LocalpoolRoda do
         'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => nil,
         'power_sources' => ['pv'],
-        'display_app_url' => nil
+        'display_app_url' => nil,
+        'next_billing_cycle_begin_date' => Date.yesterday.as_json
       }
     end
 

@@ -34,6 +34,7 @@ describe Admin::LocalpoolRoda do
       'bank_account' => nil,
       'power_sources' => [],
       'display_app_url' => nil,
+      'next_billing_cycle_begin_date' => '2016-01-01',
       'distribution_system_operator' => nil,
       'transmission_system_operator' => nil,
       'electricity_supplier' => nil

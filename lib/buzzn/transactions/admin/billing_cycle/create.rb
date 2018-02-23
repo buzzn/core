@@ -19,12 +19,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   step :persist
 
   def begin_date(input, localpool)
-    input[:begin_date] =
-      if localpool.billing_cycles.objects.empty?
-        localpool.start_date
-      else
-        localpool.billing_cycles.objects.order(:begin_date).last.end_date
-      end
+    input[:begin_date] = localpool.next_billing_cycle_begin_date
     Right(input)
   end
 
