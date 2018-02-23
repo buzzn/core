@@ -2,7 +2,7 @@ class MarketLocationResource < Buzzn::Resource::Entity
 
   model MarketLocation
 
-  attributes :name, :kind
+  attributes :name, :kind, :market_location_id
 
   attributes :updatable, :deletable
 

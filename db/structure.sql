@@ -1479,8 +1479,8 @@ ALTER SEQUENCE market_locations_id_seq OWNED BY market_locations.id;
 
 CREATE TABLE meters (
     id integer NOT NULL,
-    product_name character varying(64),
     product_serialnumber character varying(128),
+    product_name character varying(64),
     manufacturer_description character varying,
     location_description character varying,
     build_year integer,

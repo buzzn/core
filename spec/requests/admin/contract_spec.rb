@@ -198,6 +198,7 @@ describe Admin::LocalpoolRoda do
             'updated_at'=> contract.market_location.updated_at.as_json,
             'name' => contract.market_location.name,
             'kind' => 'consumption',
+            'market_location_id' => nil,
             'updatable' => false,
             'deletable' => false,
             'register' => {

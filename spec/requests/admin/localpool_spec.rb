@@ -658,6 +658,7 @@ describe Admin::LocalpoolRoda do
           'updated_at' => market_location.updated_at.as_json,
           'name' => market_location.name,
           'kind' => register.label.production? ? 'production' : 'consumption',
+          'market_location_id' => nil,
           'updatable' => false,
           'deletable' => false,
           'register' => {

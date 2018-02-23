@@ -30,6 +30,7 @@ describe Admin::LocalpoolRoda do
           'updated_at' => market_location.updated_at.as_json,
           'name' => market_location.name,
           'kind' => 'consumption',
+          'market_location_id' => nil,
           'updatable' => true,
           'deletable' => false,
           'register' => {
