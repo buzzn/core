@@ -4,8 +4,8 @@ namespace :deploy do
 
     def create_and_push_tag(prefix)
       tag = "#{prefix}-#{Time.now.strftime('%Y-%m-%d-%H-%M')}"
-      sh "git tag #{tag}"
-      sh 'git push --tags'
+      sh "OVERCOMMIT_DISABLE=1 git tag #{tag}"
+      sh 'OVERCOMMIT_DISABLE=1 git push --tags'
     end
 
     def current_local_branch
@@ -14,7 +14,7 @@ namespace :deploy do
 
     def deploy(env)
       url = "https://git.heroku.com/buzzn-core-#{env}.git"
-      sh "git push #{url} #{current_local_branch}:master"
+      sh "OVERCOMMIT_DISABLE=1 git push #{url} #{current_local_branch}:master"
     end
 
   end
