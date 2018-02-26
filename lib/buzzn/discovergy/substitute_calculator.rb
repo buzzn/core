@@ -18,7 +18,12 @@ class Discovergy::SubstituteCalculator
   end
 
   def value
-    @substitute.to_i
+    value = @substitute.to_i
+    if value <= 0
+      0
+    else
+      value
+    end
   end
 
   private
