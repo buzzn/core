@@ -11,9 +11,7 @@ class Services::BillingBricksFactory
   #   { name: 'Market location 2', bricks: [ ... ] }
   # ]
   def bricks_by_market_location
-    market_locations.map do |location|
-      { name: location.name, bricks: bricks_for_location(location) }
-    end
+    market_locations.map { |location| { name: location.name, bricks: bricks_for_location(location) } }
   end
 
   private
@@ -23,10 +21,43 @@ class Services::BillingBricksFactory
     group.market_locations.order(:name).to_a.select(&:consumption?)
   end
 
-  # a brick is defined by having the same tariff, contract and register.
-  # As soon as one of those changes in the date range we're looking at, we need to generate a new brick.
+  # A brick is defined by having the same tariff, contract and register.
+  # As soon as one of those changes, we make a new brick.
   def bricks_for_location(location)
-    [BillingBrick.new(start_date: start_date, end_date: end_date, market_location: location, type: :powertaker)]
+    contracts_for_location(location).map { |contract| new_brick(contract, location) }
+    # [BillingBrick.new(begin_date: begin_date, end_date: end_date, market_location: location, type: :power_taker)]
+  end
+
+  def contracts_for_location(location)
+    location.billable_contracts_for_period(begin_date, end_date)
+  end
+
+  # TODO: move this to a BrickFactory or the brick itself
+  def new_brick(contract, location)
+    BillingBrick.new(
+      type:            brick_type(contract),
+      begin_date:      brick_begin_date(contract),
+      end_date:        brick_end_date(contract),
+      market_location: location
+    )
+  end
+
+  # TODO: consider moving the type code into the brick; pass in contract instead.
+  # Example: Contract::LocalpoolPowerTaker => 'power_taker'
+  def brick_type(contract)
+    contract.model_name.name.sub('Contract::Localpool', '').underscore.to_sym
+  end
+
+  def brick_begin_date(contract)
+    if contract.begin_date < begin_date
+      begin_date
+    else
+      contract.begin_date
+    end
+  end
+
+  def brick_end_date(contract)
+    contract.end_date || end_date
   end
 
 end

@@ -10,13 +10,21 @@
 class MarketLocation < ActiveRecord::Base
 
   belongs_to :group, class_name: 'Group::Base'
-  has_many :contracts, class_name: 'Contract::Base'
+  has_many :contracts, -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty)) }, class_name: 'Contract::Base'
 
   # Fully implementing 1:n, i.e. that a market location has many current and past registers is a future story.
   # I'm already setting things up 1:n on the DB and association level, hopefully that'll make implementation
   # easier later on.
   has_many :registers, class_name: 'Register::Base'
   private :registers
+
+  # TODO: move this to a dedicated Billing object.
+  def billable_contracts_for_period(begin_date, end_date)
+    contracts
+      .where('end_date IS NULL OR end_date >= ?', end_date) # fetch contracts running or ended in the period
+      .where.not('begin_date > ?', begin_date) # don't fetch contracts starting after the period
+      .order(:begin_date) # ensure chronological order to ease testing
+  end
 
   def register
     registers.first
