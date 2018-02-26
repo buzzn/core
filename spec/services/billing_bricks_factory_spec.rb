@@ -1,7 +1,7 @@
 describe 'Services::BillingBricksFactory' do
 
   let(:group)            { build(:localpool) }
-  let(:args)             { { start_date: Date.new(2018, 1, 1), end_date: Date.new(2018, 12, 31), group: group } }
+  let(:args)             { { begin_date: Date.new(2018, 1, 1), end_date: Date.new(2018, 12, 31), group: group } }
   let(:factory)          { Services::BillingBricksFactory.new(args) }
 
   it 'can be initialized' do
@@ -32,7 +32,7 @@ describe 'Services::BillingBricksFactory' do
           data = factory.bricks_by_market_location
           expect(data.first[:bricks].size).to equal(1)
           expected_brick = BillingBrick.new(
-            start_date: args[:start_date],
+            begin_date: args[:begin_date],
             end_date: args[:end_date],
             status: :open,
             type: :powertaker,

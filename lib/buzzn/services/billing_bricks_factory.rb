@@ -1,7 +1,7 @@
 class Services::BillingBricksFactory
 
   extend Dry::Initializer
-  option :start_date
+  option :begin_date
   option :end_date
   option :group
 

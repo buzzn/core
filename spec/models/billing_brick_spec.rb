@@ -1,7 +1,7 @@
 describe 'BillingBrick' do
 
   it 'can be initialized with values' do
-    attrs = { status: :open, type: :mickey, start_date: Date.new(2018, 1, 1), end_date: Date.new(2018, 12, 31) }
+    attrs = { status: :open, type: :mickey, begin_date: Date.new(2018, 1, 1), end_date: Date.new(2018, 12, 31) }
     brick = BillingBrick.new(attrs)
     attrs.each { |key, value| expect(brick.send(key)).to equal(value) }
   end
@@ -10,7 +10,7 @@ describe 'BillingBrick' do
     let(:attrs) do
       { market_location: build(:market_location),
         type: :power_taker,
-        start_date: Date.new(2018, 1, 1),
+        begin_date: Date.new(2018, 1, 1),
         end_date: Date.new(2018, 12, 31) }
     end
 
@@ -22,7 +22,7 @@ describe 'BillingBrick' do
     end
 
     context 'when other billing brick has different attributes' do
-      let(:other_brick) { BillingBrick.new(attrs.except(:start_date)) }
+      let(:other_brick) { BillingBrick.new(attrs.except(:begin_date)) }
       it { is_expected.not_to eq(other_brick) }
     end
   end
