@@ -7,4 +7,8 @@ FactoryGirl.define do
   trait :with_market_location_id do
     market_location_id { generate(:market_location_id) }
   end
+
+  trait :with_contract do
+    contracts { [create(:contract, :localpool_powertaker)] }
+  end
 end

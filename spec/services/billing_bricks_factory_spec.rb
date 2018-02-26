@@ -1,9 +1,6 @@
 describe 'Services::BillingBricksFactory' do
 
-  let(:contracts)        { [create(:contract, :localpool_powertaker)] }
-  let(:register)         { create(:register, :consumption, :with_market_location) }
-  let(:market_locations) { [register.market_location] }
-  let(:group)            { create(:localpool, market_locations: market_locations) }
+  let(:group)            { build(:localpool) }
   let(:args)             { { start_date: Date.new(2018, 1, 1), end_date: Date.new(2018, 12, 31), group: group } }
   let(:factory)          { Services::BillingBricksFactory.new(args) }
 
@@ -13,18 +10,29 @@ describe 'Services::BillingBricksFactory' do
 
   describe 'bricks_by_market_location' do
     context 'when group has no market locations' do
-      let(:market_locations) { [] }
+      let(:group) { create(:localpool, market_locations: []) }
       it 'returns an empty array' do
         expect(factory.bricks_by_market_location).to eq([])
       end
     end
 
-    context 'when group has a market location' do
-      it 'returns the bricks for that location' do
-        data = factory.bricks_by_market_location
-        expect(data.first[:name]).to eq(market_locations.first.name)
-        expect(data.first[:bricks].size).to equal(1)
-        expect(data.first[:bricks].first).to be_instance_of(BillingBrick)
+    context 'when group has one market location' do
+      context 'when market location has one contract and register' do
+        let(:register)        { create(:register, :consumption, :with_market_location) }
+        let(:market_location) { create(:market_location, :with_contract, register: register) }
+        let(:group)           { create(:localpool, market_locations: [market_location]) }
+
+        it 'returns the market location line' do
+          data = factory.bricks_by_market_location
+          expect(data.first[:name]).to eq(market_location.name)
+          expect(data.size).to eq(1)
+        end
+
+        it 'returns one brick' do
+          data = factory.bricks_by_market_location
+          expect(data.first[:bricks].first).to be_instance_of(BillingBrick)
+          expect(data.first[:bricks].size).to equal(1)
+        end
       end
     end
   end
