@@ -23,8 +23,10 @@ class Services::BillingBricksFactory
     group.market_locations.order(:name).to_a.select(&:consumption?)
   end
 
+  # a brick is defined by having the same tariff, contract and register.
+  # As soon as one of those changes in the date range we're looking at, we need to generate a new brick.
   def bricks_for_location(location)
-    [BillingBrick.new]
+    [BillingBrick.new(start_date: start_date, end_date: end_date, market_location: location, type: :powertaker)]
   end
 
 end

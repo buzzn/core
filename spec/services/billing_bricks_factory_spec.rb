@@ -30,8 +30,16 @@ describe 'Services::BillingBricksFactory' do
 
         it 'returns one brick' do
           data = factory.bricks_by_market_location
-          expect(data.first[:bricks].first).to be_instance_of(BillingBrick)
           expect(data.first[:bricks].size).to equal(1)
+          expected_brick = BillingBrick.new(
+            start_date: args[:start_date],
+            end_date: args[:end_date],
+            status: :open,
+            type: :powertaker,
+            market_location: market_location
+          )
+          expect(data.first[:bricks].size).to eq(1)
+          expect(data.first[:bricks].first).to eq(expected_brick)
         end
       end
     end

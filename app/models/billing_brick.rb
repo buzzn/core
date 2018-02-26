@@ -13,10 +13,13 @@ class BillingBrick
   # can be :power_taker, :third_party or :gap.
   # TODO: put it in an enum
   option :type, default: proc { nil }
-  option :status, default: proc { 'open' } # can also be 'closed'
+  # can be :open or :closed
+  option :status, default: proc { :open }
 
   def ==(other)
-    %i(market_location start_date end_date type status).all? { |attr| send(attr) == other.send(attr) }
+    same_simple_attrs = %i(start_date end_date type status).all? { |attr| send(attr) == other.send(attr) }
+    same_market_location = market_location.id == other.market_location.id
+    same_simple_attrs && same_market_location
   end
 
 end
