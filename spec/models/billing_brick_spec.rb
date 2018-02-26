@@ -6,4 +6,25 @@ describe 'BillingBrick' do
     attrs.each { |key, value| expect(brick.send(key)).to equal(value) }
   end
 
+  describe '==' do
+    let(:attrs) do
+      { market_location: build(:market_location),
+        type: :power_taker,
+        start_date: Date.new(2018, 1, 1),
+        end_date: Date.new(2018, 12, 31) }
+    end
+
+    subject { BillingBrick.new(attrs) }
+
+    context 'when other billing brick has same attributes' do
+      let(:other_brick) { BillingBrick.new(attrs) }
+      it { is_expected.to eq(other_brick) }
+    end
+
+    context 'when other billing brick has different attributes' do
+      let(:other_brick) { BillingBrick.new(attrs.except(:start_date)) }
+      it { is_expected.not_to eq(other_brick) }
+    end
+  end
+
 end

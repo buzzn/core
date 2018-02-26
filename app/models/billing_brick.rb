@@ -7,9 +7,16 @@
 class BillingBrick
 
   extend Dry::Initializer
+  option :market_location, default: proc { nil }
   option :start_date, default: proc { nil }
   option :end_date, default: proc { nil }
+  # can be :power_taker, :third_party or :gap.
+  # TODO: put it in an enum
   option :type, default: proc { nil }
   option :status, default: proc { 'open' } # can also be 'closed'
+
+  def ==(other)
+    %i(market_location start_date end_date type status).all? { |attr| send(attr) == other.send(attr) }
+  end
 
 end
