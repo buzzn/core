@@ -22,7 +22,7 @@ describe 'BillingBrick' do
     end
 
     context 'when other billing brick has different attributes' do
-      let(:other_brick) { BillingBrick.new(attrs.except(:begin_date)) }
+      let(:other_brick) { BillingBrick.new(attrs.merge(begin_date: attrs[:begin_date] - 1.day)) }
       it { is_expected.not_to eq(other_brick) }
     end
   end
