@@ -7,7 +7,7 @@
 class BillingBrick
 
   extend Dry::Initializer
-  option :market_location, default: proc { nil }
+  option :market_location
   option :begin_date, Types::Strict::Date
   option :end_date, Types::Strict::Date
   option :type, Types::Strict::Symbol.enum(:power_taker, :third_party, :gap)
