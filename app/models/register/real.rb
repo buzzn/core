@@ -9,16 +9,12 @@ module Register
 
     delegate :address, to: :meter, allow_nil: true
 
-    def obis
-      raise 'not implemented'
+    def datasource
+      Services::Datasource::Discovergy::Implementation::NAME
     end
 
-    def data_source
-      if self.broker.is_a? Broker::Discovergy
-        Services::Datasource::Discovergy::Implementation::NAME
-      else
-        Services::Datasource::StandardProfile::Implementation::NAME
-      end
+    def obis
+      raise 'not implemented'
     end
 
     # tested but unused

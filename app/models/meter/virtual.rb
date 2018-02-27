@@ -14,5 +14,9 @@ module Meter
       self.product_serialnumber = "VM-#{Meter::Virtual.count + 1}"
     end
 
+    def datasource
+      register.is_a?(Register::Substitute) ? :discovergy : :virtual
+    end
+
   end
 end

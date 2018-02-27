@@ -41,14 +41,16 @@ module Register
     scope :consumption_production, -> do
       by_labels(*Register::Base.labels.select { |label, _| label.production? || label.consumption? }.values)
     end
-
-    scope :production_consumption, -> do
-      consumption_production
-    end
+    scope :production_consumption, -> { consumption_production }
 
     scope :production, -> do
       by_labels(*Register::Base.labels.select { |label, _| label.production? }.values)
     end
+
+    scope :grid_consumption_production, -> do
+      by_labels(*Register::Base.labels.select { |label, _| label.production? || label.consumption? | label.grid? }.values)
+    end
+    scope :grid_production_consumption, -> { grid_consumption_production }
 
     scope :by_group, -> (group) do
       group ? self.where(group: group.id) : self.where(group: nil)
@@ -73,14 +75,6 @@ module Register
       else
         'Register (not persisted)'
       end
-    end
-
-    def data_source
-      Buzzn::MissingDataSource.name
-    end
-
-    def broker
-      meter.broker
     end
 
     # FIXME: it would be best to raise an exception here (and even define this class as abstract as well)

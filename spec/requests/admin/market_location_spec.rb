@@ -79,7 +79,7 @@ describe Admin::LocalpoolRoda do
               'edifact_cycle_interval'=>meter.attributes['edifact_cycle_interval'],
               'edifact_data_logging'=>meter.attributes['edifact_data_logging'],
               'sent_data_dso'=>meter.sent_data_dso.to_s,
-              'data_source'=>meter.registers.first.data_source.to_s
+              'data_source'=>meter.datasource.to_s
             }
           }
         }

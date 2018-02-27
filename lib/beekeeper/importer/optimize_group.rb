@@ -14,27 +14,38 @@ class Beekeeper::Importer::OptimizeGroup
   def run(localpool, warnings)
     if optimized_groups.key?(localpool.slug)
       setup_optimized_groups(localpool, optimized_groups[localpool.slug])
-      return warnings
+      return
     end
-    list = @optimized.local(localpool).collect do |m|
+
+    all_virtual_discovergy_meters = @optimized.local(localpool).collect do |m|
       optimized_map[m.product_serialnumber]
     end
 
-    virtual_list = nil
-    list.each do |item|
-      corrected = item.select { |i| !OMIT_VIRTUAL_IDS.include?(i.serialNumber.to_i) }.uniq if item
-      virtual_list = virtual_list ? (virtual_list | corrected) : corrected if corrected && !corrected.empty?
+    virtual_discovergy_meters = allowed_virtual_discovergy_meters(all_virtual_discovergy_meters)
+    if virtual_discovergy_meters
+      process_virtual_list(virtual_discovergy_meters, localpool, warnings)
+    else
+      create_optimized_group(localpool, warnings)
     end
 
-    if virtual_list
-      process_virtual_list(virtual_list, localpool, warnings)
-    else
-      add_optimized_group(localpool, warnings)
-    end
     persist_optimized_groups
   end
 
   private
+
+  def allowed_virtual_discovergy_meters(all_meters_list)
+    all_meters_list
+      .compact
+      .collect { |meters| allowed_discovergy_ids(meters) }
+      .select { |meters| !meters.empty? }
+      .reduce(&:|)
+  end
+
+  def allowed_discovergy_ids(discovergy_virtual_meters)
+    discovergy_virtual_meters.reject do |i|
+      OMIT_VIRTUAL_IDS.include?(i.serialNumber.to_i)
+    end
+  end
 
   def setup_optimized_groups(localpool, serial)
     if serial
@@ -48,24 +59,20 @@ class Beekeeper::Importer::OptimizeGroup
       warnings['discovergy'] = 'not all easymeters are in optimized group'
     when 1
       serial = virtual_list.first.serialNumber
-      if serial.to_i >= 106
-        Broker::Discovergy.create(meter: Meter::Discovergy.create(product_serialnumber: serial, group: localpool))
-        puts "found optimized group #{serial}"
-        optimized_groups[localpool.slug] = serial
-        unless @optimized.verify(localpool)
-          logger.error("BUG: list of local and remote meters doesn't match.")
-        end
-      else
-        logger.error("BUG: serial expected to be >= 106, but was #{serial}.")
+      Broker::Discovergy.create(meter: Meter::Discovergy.create(product_serialnumber: serial, group: localpool))
+      logger.info "found optimized group #{serial}"
+      optimized_groups[localpool.slug] = serial
+      unless @optimized.verify(localpool)
+        warnings['discovergy'] = 'list of local and remote meters mismatch.'
       end
     else
       warnings['discovergy'] = "found more than one virtual meter on Discovergy. can not optimized group: #{virtual_list.collect{|v| v.serialNumber}}"
     end
   end
 
-  def add_optimized_group(localpool, warnings)
-    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && standard?(localpool, warnings)
-      puts 'create optimized group'
+  def create_optimized_group(localpool, warnings)
+    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings)
+      warnings['discovergy.optimized_group'] = "need to create optimized group for #{localpool.slug}"
       # meter = @optimized.create(localpool)
       # optimized_groups[localpool.slug] = meter.product_serialnumber
     else
@@ -73,17 +80,11 @@ class Beekeeper::Importer::OptimizeGroup
     end
   end
 
-  def standard?(localpool, warnings)
-    production_meters = @optimized.local(localpool).select do |m|
-      m.registers.find {|r| r.label.production? }
-    end
-    if production_meters.empty?
-      warnings['discovergy'] = 'there are consumption discovergy meters but no production discovergy'
-      false
-    else
-      # one grid_feeding and one grid_consumption in one meter
-      localpool.meters.count == @optimized.local(localpool).count + 1
-    end
+  def discovergy_only?(localpool, warnings)
+    discovergy_meters = Set.new(@optimized.local(localpool))
+    localpool_meters = Set.new(localpool.registers.grid_production_consumption.collect {|r| r.meter})
+
+    discovergy_meters == localpool_meters
   end
 
   def optimized_groups
@@ -98,7 +99,7 @@ class Beekeeper::Importer::OptimizeGroup
   end
 
   def optimized_map
-    @optimized_map ||= @meters.virtual_list
+    @meter_to_virtual_map ||= @meters.meter_to_virtual_map
   end
 
 end
