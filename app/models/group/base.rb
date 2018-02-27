@@ -21,7 +21,11 @@ module Group
 
     has_many :meters, class_name: 'Meter::Base', foreign_key: :group_id
     has_many :registers, class_name: 'Register::Base', through: :meters
-    has_many :market_locations, foreign_key: :group_id
+    has_many :market_locations, foreign_key: :group_id do
+      def consumption
+        order(:name).to_a.select(&:consumption?)
+      end
+    end
 
     def managers
       Person.with_roles(self, Role::GROUP_ADMIN)

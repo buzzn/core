@@ -18,6 +18,8 @@ class MarketLocation < ActiveRecord::Base
   has_many :registers, class_name: 'Register::Base'
   private :registers
 
+  delegate :consumption?, to: :register
+
   def register
     registers.first
   end
