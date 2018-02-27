@@ -16,6 +16,7 @@ class Services::BillingBricksFactory
 
   private
 
+  # TODO: use group.market_locations.consumption which is still on the branch create-billings-on-import
   # TODO: discuss moving the consumption/production info to the market location.
   # Then we could easily make a MarketLocation.consumption scope and use that here.
   def market_locations
