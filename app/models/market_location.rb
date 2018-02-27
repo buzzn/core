@@ -18,12 +18,10 @@ class MarketLocation < ActiveRecord::Base
   has_many :registers, class_name: 'Register::Base'
   private :registers
 
-  # TODO: move this to a dedicated Billing object.
-  # Billing::Billing.new(malo: ..., date_range: ...).contracts
-  def billable_contracts_for_period(begin_date, end_date)
+  def billable_contracts_for_range(date_range)
     contracts
-      .where('end_date IS NULL OR end_date > ?', begin_date) # fetch contracts running or ended in the period
-      .where.not('begin_date > ?', end_date) # don't fetch contracts starting after the period
+      .where('end_date IS NULL OR end_date > ?', date_range.first) # fetch contracts running or ended in the period
+      .where.not('begin_date >= ?', date_range.last) # don't fetch contracts starting after the period
       .order(:begin_date) # ensure chronological order to ease testing
   end
 
