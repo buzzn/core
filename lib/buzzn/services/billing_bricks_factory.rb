@@ -24,7 +24,7 @@ class Services::BillingBricksFactory
   # A brick is defined by having the same tariff, contract and register.
   # As soon as one of those changes, we make a new brick.
   def bricks_for_location(location)
-    contracts_for_location(location).map { |contract| new_brick(contract, location) }
+    contracts_for_location(location).map { |contract| new_brick(contract) }
     # [BillingBrick.new(begin_date: begin_date, end_date: end_date, market_location: location, type: :power_taker)]
   end
 
@@ -33,12 +33,12 @@ class Services::BillingBricksFactory
   end
 
   # TODO: move this to a BrickFactory or the brick itself
-  def new_brick(contract, location)
+  def new_brick(contract)
     BillingBrick.new(
       type:            brick_type(contract),
       begin_date:      brick_begin_date(contract),
       end_date:        brick_end_date(contract),
-      market_location: location
+      market_location: contract.market_location
     )
   end
 
