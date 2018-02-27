@@ -17,9 +17,9 @@ class BillingBrick
   option :status, default: proc { :open }
 
   def ==(other)
-    same_simple_attrs = %i(begin_date end_date type status).all? { |attr| send(attr) == other.send(attr) }
-    same_market_location = market_location.id == other.market_location.id
-    same_simple_attrs && same_market_location
+    equal_simple_attrs = %i(begin_date end_date type status).all? { |attr| send(attr) == other.send(attr) }
+    equal_market_location = market_location.id == other.market_location.id
+    equal_simple_attrs && equal_market_location
   end
 
 end
