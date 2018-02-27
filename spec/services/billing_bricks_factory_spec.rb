@@ -24,10 +24,10 @@ describe 'Services::BillingBricksFactory' do
         let(:market_location) { create(:market_location, :with_contract, register: register) }
         let(:group)           { create(:localpool, market_locations: [market_location]) }
 
-        it 'returns one item' do
+        it 'returns one market location' do
           data = factory.bricks_by_market_location
-          expect(data.first[:name]).to eq(market_location.name)
           expect(data.size).to eq(1)
+          expect(data.first[:name]).to eq(market_location.name)
         end
 
         it 'contains one brick for the whole date range' do
@@ -45,24 +45,20 @@ describe 'Services::BillingBricksFactory' do
         end
 
         # NOTE: be aware this case will have to create two billings. Probably best to redesign from the top.
-        context 'when market location has two contracts of different types', :skip do
-          # gap contract that started 1 month before to the billing period
-          let!(:contract_1) do
-            create(:contract, :localpool_gap, begin_date: begin_date - 1.month, end_date: begin_date + 1.month)
+        context 'when market location has two contracts' do
+          let(:contracts) do
+            [create(:contract, :localpool_gap, begin_date: begin_date - 1.month, end_date: begin_date + 1.month),
+             create(:contract, :localpool_powertaker, begin_date: begin_date + 1.month, end_date: nil)]
           end
-          # regular powertaker that started 1 month into the billing period and is still running
-          let!(:contract_2) do
-            create(:contract, :localpool_powertaker, begin_date: begin_date + 1.month, end_date: nil)
-          end
-          let!(:market_location) { create(:market_location, contracts: [contract_1, contract_2], register: register) }
+          let(:market_location) { create(:market_location, contracts: contracts, register: register) }
 
-          it 'returns one item' do
+          it 'returns one market location' do
             data = factory.bricks_by_market_location
-            expect(data.first[:name]).to eq(market_location.name)
             expect(data.size).to eq(1)
+            expect(data.first[:name]).to eq(market_location.name)
           end
 
-          it 'contains two bricks, one for each contract, with correct type and date range' do
+          it 'returns two bricks' do
             data = factory.bricks_by_market_location
             expect(data.first[:bricks].size).to eq(2)
           end
