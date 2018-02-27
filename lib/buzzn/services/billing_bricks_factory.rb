@@ -32,32 +32,8 @@ class Services::BillingBricksFactory
     location.billable_contracts_for_period(begin_date, end_date)
   end
 
-  # TODO: move this to a BrickFactory or the brick itself
   def new_brick(contract)
-    BillingBrick.new(
-      type:            brick_type(contract),
-      begin_date:      brick_begin_date(contract),
-      end_date:        brick_end_date(contract),
-      market_location: contract.market_location
-    )
-  end
-
-  # TODO: consider moving the type code into the brick; pass in contract instead.
-  # Example: Contract::LocalpoolPowerTaker => 'power_taker'
-  def brick_type(contract)
-    contract.model_name.name.sub('Contract::Localpool', '').underscore.to_sym
-  end
-
-  def brick_begin_date(contract)
-    if contract.begin_date < begin_date
-      begin_date
-    else
-      contract.begin_date
-    end
-  end
-
-  def brick_end_date(contract)
-    contract.end_date || end_date
+    BillingBrick.from_contract(contract, begin_date, end_date)
   end
 
 end
