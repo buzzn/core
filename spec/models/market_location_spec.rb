@@ -26,12 +26,12 @@ describe MarketLocation do
     end
   end
 
-  describe 'billable_contracts_for_range' do
+  describe 'contracts_for_range' do
     let(:billing_date_range) { Date.new(2018, 1, 1)..Date.new(2019, 1, 1) }
     let(:contract)           { create(:contract, :localpool_powertaker, begin_date: contract_date_range.first, end_date: contract_date_range.last) }
     let(:contracts)          { [contract] }
     let(:market_location)    { create(:market_location, contracts: contracts) }
-    subject                  { market_location.billable_contracts_for_range(billing_date_range) }
+    subject                  { market_location.contracts_for_range(billing_date_range) }
 
     context 'when market location has one contract' do
       #

@@ -18,7 +18,7 @@ class MarketLocation < ActiveRecord::Base
   has_many :registers, class_name: 'Register::Base'
   private :registers
 
-  def billable_contracts_for_range(date_range)
+  def contracts_for_range(date_range)
     contracts
       .where('end_date IS NULL OR end_date > ?', date_range.first) # fetch contracts running or ended in the period
       .where.not('begin_date >= ?', date_range.last) # don't fetch contracts starting after the period

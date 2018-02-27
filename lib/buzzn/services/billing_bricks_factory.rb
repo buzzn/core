@@ -29,7 +29,7 @@ class Services::BillingBricksFactory
   end
 
   def contracts_for_market_location(location)
-    location.billable_contracts_for_range(begin_date..end_date)
+    location.contracts_for_range(begin_date..end_date)
   end
 
   def new_brick(contract)
