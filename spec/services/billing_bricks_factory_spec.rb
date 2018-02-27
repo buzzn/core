@@ -2,7 +2,7 @@ describe 'Services::BillingBricksFactory' do
 
   let(:group)            { build(:localpool) }
   let(:begin_date)       { Date.new(2018, 1, 1) }
-  let(:end_date)         { Date.new(2018, 12, 31) }
+  let(:end_date)         { Date.new(2019, 1, 1) }
   let(:args)             { { begin_date: begin_date, end_date: end_date, group: group } }
   let(:factory)          { Services::BillingBricksFactory.new(args) }
 
