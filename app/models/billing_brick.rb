@@ -39,9 +39,19 @@ class BillingBrick
     end
 
     def brick_end_date(contract, max_end_date)
-      contract.end_date || max_end_date
+      if !contract.end_date
+        max_end_date
+      elsif contract.end_date >= max_end_date
+        max_end_date
+      else
+        contract.end_date
+      end
     end
 
+  end
+
+  def date_range
+    begin_date..end_date
   end
 
   def ==(other)
