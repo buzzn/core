@@ -114,6 +114,7 @@ SampleData.contracts.pt3gap = SampleData::ContractFactory.create(
   begin_date: SampleData.localpools.people_power.start_date,
   termination_date: Date.today,
   end_date: Date.today + 1.month,
+  contractor: SampleData.localpools.people_power.owner,
   customer: Organization.find_by(slug: 'hv-schneider'),
   tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_3
