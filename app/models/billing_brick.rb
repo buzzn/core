@@ -1,5 +1,5 @@
 #
-# A billing brick stores a part of the energy consumption and price of a market location.
+# A billing brick stores a part of the energy consumption within a billing.
 #
 # NOTICE: it's a simple value object for now, but will likely become an ActiveRecord model
 # to be persisted along with the completed billings. Not using dry-struct here because of that.
