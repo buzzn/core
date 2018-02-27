@@ -60,5 +60,20 @@ describe 'BillingBrick' do
         expect(brick.date_range).to eq(contract.begin_date..period.last)
       end
     end
+    describe 'type' do
+      context 'when initialized with a third party contract' do
+        let(:contract) { create(:contract, :localpool_third_party) }
+        it 'has the type third_party' do
+          expect(brick.type).to eq(:third_party)
+        end
+      end
+    end
+    describe 'status' do
+      let(:contract) { create(:contract, :localpool_third_party) }
+      it 'is open' do
+        skip 'status isn\'t implemented yet.'
+        expect(brick.status).to eq(:open)
+      end
+    end
   end
 end
