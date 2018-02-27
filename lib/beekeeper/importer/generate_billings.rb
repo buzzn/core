@@ -1,6 +1,6 @@
 #
 # Generate closed billings for contracts that have ended and have been billed in beekeeper.
-# We need them so we know which is energy consumption is still unbilled when we do our billing.
+# When we do _our_ billing, we need those so we know which energy consumption is already billed.
 #
 class Beekeeper::Importer::GenerateBillings
 
