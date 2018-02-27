@@ -44,7 +44,6 @@ describe 'Services::BillingBricksFactory' do
           expect(data.first[:bricks].first).to eq(expected_brick)
         end
 
-        # NOTE: be aware this case will have to create two billings. Probably best to redesign from the top.
         context 'when market location has two contracts' do
           let(:contracts) do
             [create(:contract, :localpool_gap, begin_date: begin_date - 1.month, end_date: begin_date + 1.month),
