@@ -23,7 +23,7 @@ module Group
     has_many :registers, class_name: 'Register::Base', through: :meters
     has_many :market_locations, foreign_key: :group_id do
       def consumption
-        order(:name).to_a.select(&:consumption?)
+        includes(:registers).order(:name).to_a.select(&:consumption?)
       end
     end
 

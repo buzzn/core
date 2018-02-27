@@ -19,6 +19,7 @@ class Beekeeper::Importer::LogImportSummary
     logger.info("registers                                                : #{Register::Real.count}")
     logger.info("readings                                                 : #{Reading::Single.count}")
     logger.info("meters                                                   : #{Meter::Real.count}")
+    logger.info("billings                                                 : #{Billing.count}")
 
     logger.info('-' * 80)
     logger.info('Localpool contracts')

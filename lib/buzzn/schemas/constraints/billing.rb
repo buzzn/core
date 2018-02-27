@@ -7,5 +7,7 @@ Schemas::Constraints::Billing = Schemas::Support.Form do
   required(:prepayments_cents).filled(:int?, gteq?: 0)
   #may be negative if LSG has to pay back money
   required(:receivables_cents).filled(:int?)
+  required(:begin_date).filled(:date?)
+  required(:end_date).filled(:date?)
   optional(:invoice_number).filled(:str?, max_size?: 64)
 end

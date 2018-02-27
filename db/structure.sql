@@ -1005,6 +1005,8 @@ CREATE TABLE billings (
     total_price_cents integer NOT NULL,
     prepayments_cents integer NOT NULL,
     receivables_cents integer NOT NULL,
+    begin_date date NOT NULL,
+    end_date date NOT NULL,
     invoice_number character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
