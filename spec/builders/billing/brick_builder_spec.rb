@@ -45,7 +45,6 @@ describe 'Billing::BrickBuilder' do
     describe 'status' do
       let(:contract) { create(:contract, :localpool_third_party) }
       it 'is open' do
-        skip 'status isn\'t implemented yet.'
         expect(brick.status).to eq(:open)
       end
     end

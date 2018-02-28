@@ -8,7 +8,8 @@ class Billing < ActiveRecord::Base
         attrs = {
           type:            type(contract),
           date_range:      date_range(contract, max_date_range),
-          market_location: contract.market_location
+          market_location: contract.market_location,
+          status:          status(contract)
         }
         BillingBrick.new(attrs)
       end
@@ -42,6 +43,10 @@ class Billing < ActiveRecord::Base
         else
           contract.end_date
         end
+      end
+
+      def status(contract)
+        :open
       end
 
     end
