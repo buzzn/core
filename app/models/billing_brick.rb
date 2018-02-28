@@ -16,7 +16,9 @@ class BillingBrick
   class << self
 
     # Factory method; for now in the brick itself.
-    def from_contract(contract, min_begin_date, max_end_date)
+    def from_contract(contract, date_range)
+      min_begin_date = date_range.first
+      max_end_date   = date_range.last
       new(type:            brick_type(contract),
           begin_date:      brick_begin_date(contract, min_begin_date),
           end_date:        brick_end_date(contract, max_end_date),
