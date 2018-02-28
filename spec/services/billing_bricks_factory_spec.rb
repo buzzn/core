@@ -1,20 +1,17 @@
 describe 'Services::BillingBricksFactory' do
 
-  let(:group)            { build(:localpool) }
-  let(:begin_date)       { Date.new(2018, 1, 1) }
-  let(:end_date)         { Date.new(2019, 1, 1) }
-  let(:args)             { { begin_date: begin_date, end_date: end_date, group: group } }
-  let(:factory)          { Services::BillingBricksFactory.new(args) }
-
-  it 'can be initialized' do
-    expect(factory).to be_instance_of(Services::BillingBricksFactory)
-  end
-
   describe 'bricks_by_market_location' do
+
+    let(:group)      { build(:localpool) }
+    let(:begin_date) { Date.new(2018, 1, 1) }
+    let(:end_date)   { Date.new(2019, 1, 1) }
+    let(:args)       { { date_range: begin_date..end_date, group: group } }
+    subject          { Services::BillingBricksFactory.bricks_by_market_location(args) }
+
     context 'when group has no market locations' do
       let(:group) { create(:localpool, market_locations: []) }
       it 'returns an empty array' do
-        expect(factory.bricks_by_market_location).to eq([])
+        expect(subject).to eq([])
       end
     end
 
@@ -25,23 +22,22 @@ describe 'Services::BillingBricksFactory' do
         let(:group)           { create(:localpool, market_locations: [market_location]) }
 
         it 'returns one market location' do
-          data = factory.bricks_by_market_location
-          expect(data.size).to eq(1)
-          expect(data.first[:name]).to eq(market_location.name)
+          expect(subject.size).to eq(1)
+          expect(subject.first[:name]).to eq(market_location.name)
         end
 
         it 'contains one brick for the whole date range' do
-          data = factory.bricks_by_market_location
-          expect(data.first[:bricks].size).to equal(1)
+
+          expect(subject.first[:bricks].size).to equal(1)
           expected_brick = BillingBrick.new(
-            begin_date: args[:begin_date],
-            end_date: args[:end_date],
+            begin_date: args[:date_range].first,
+            end_date: args[:date_range].last,
             status: :open,
             type: :power_taker,
             market_location: market_location
           )
-          expect(data.first[:bricks].size).to eq(1)
-          expect(data.first[:bricks].first).to eq(expected_brick)
+          expect(subject.first[:bricks].size).to eq(1)
+          expect(subject.first[:bricks].first).to eq(expected_brick)
         end
 
         context 'when market location has two contracts' do
@@ -52,14 +48,12 @@ describe 'Services::BillingBricksFactory' do
           let(:market_location) { create(:market_location, contracts: contracts, register: register) }
 
           it 'returns one market location' do
-            data = factory.bricks_by_market_location
-            expect(data.size).to eq(1)
-            expect(data.first[:name]).to eq(market_location.name)
+            expect(subject.size).to eq(1)
+            expect(subject.first[:name]).to eq(market_location.name)
           end
 
           it 'returns two bricks' do
-            data = factory.bricks_by_market_location
-            expect(data.first[:bricks].size).to eq(2)
+            expect(subject.first[:bricks].size).to eq(2)
           end
         end
       end
