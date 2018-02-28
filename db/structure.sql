@@ -3274,67 +3274,67 @@ ALTER TABLE ONLY contract_tax_data
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20140403173451');
+INSERT INTO schema_migrations (version) VALUES ('1');
 
-INSERT INTO schema_migrations (version) VALUES ('20170524090229');
+INSERT INTO schema_migrations (version) VALUES ('10');
 
-INSERT INTO schema_migrations (version) VALUES ('20170909015357');
+INSERT INTO schema_migrations (version) VALUES ('11');
 
-INSERT INTO schema_migrations (version) VALUES ('20171010075030');
+INSERT INTO schema_migrations (version) VALUES ('12');
 
-INSERT INTO schema_migrations (version) VALUES ('20171028200020');
+INSERT INTO schema_migrations (version) VALUES ('13');
 
-INSERT INTO schema_migrations (version) VALUES ('20171028200030');
+INSERT INTO schema_migrations (version) VALUES ('14');
 
-INSERT INTO schema_migrations (version) VALUES ('20171028200040');
+INSERT INTO schema_migrations (version) VALUES ('15');
 
-INSERT INTO schema_migrations (version) VALUES ('20171028200050');
+INSERT INTO schema_migrations (version) VALUES ('16');
 
-INSERT INTO schema_migrations (version) VALUES ('20171028200100');
+INSERT INTO schema_migrations (version) VALUES ('17');
 
-INSERT INTO schema_migrations (version) VALUES ('20171028200200');
+INSERT INTO schema_migrations (version) VALUES ('18');
 
-INSERT INTO schema_migrations (version) VALUES ('20171028200400');
+INSERT INTO schema_migrations (version) VALUES ('19');
 
-INSERT INTO schema_migrations (version) VALUES ('20171028200600');
+INSERT INTO schema_migrations (version) VALUES ('2');
 
-INSERT INTO schema_migrations (version) VALUES ('20171029000000');
+INSERT INTO schema_migrations (version) VALUES ('20');
 
-INSERT INTO schema_migrations (version) VALUES ('20171029000100');
+INSERT INTO schema_migrations (version) VALUES ('21');
 
-INSERT INTO schema_migrations (version) VALUES ('20171029000800');
+INSERT INTO schema_migrations (version) VALUES ('22');
 
-INSERT INTO schema_migrations (version) VALUES ('20171029000900');
+INSERT INTO schema_migrations (version) VALUES ('23');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085200');
+INSERT INTO schema_migrations (version) VALUES ('24');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085260');
+INSERT INTO schema_migrations (version) VALUES ('25');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085270');
+INSERT INTO schema_migrations (version) VALUES ('26');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085280');
+INSERT INTO schema_migrations (version) VALUES ('27');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085290');
+INSERT INTO schema_migrations (version) VALUES ('28');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085295');
+INSERT INTO schema_migrations (version) VALUES ('29');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085300');
+INSERT INTO schema_migrations (version) VALUES ('3');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085310');
+INSERT INTO schema_migrations (version) VALUES ('30');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085320');
+INSERT INTO schema_migrations (version) VALUES ('31');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085330');
+INSERT INTO schema_migrations (version) VALUES ('32');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085340');
+INSERT INTO schema_migrations (version) VALUES ('4');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085350');
+INSERT INTO schema_migrations (version) VALUES ('5');
 
-INSERT INTO schema_migrations (version) VALUES ('20171031085360');
+INSERT INTO schema_migrations (version) VALUES ('6');
 
-INSERT INTO schema_migrations (version) VALUES ('20171115086500');
+INSERT INTO schema_migrations (version) VALUES ('7');
 
-INSERT INTO schema_migrations (version) VALUES ('20171207154218');
+INSERT INTO schema_migrations (version) VALUES ('8');
 
-INSERT INTO schema_migrations (version) VALUES ('20180112000000');
+INSERT INTO schema_migrations (version) VALUES ('9');
 
