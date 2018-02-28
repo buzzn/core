@@ -8,10 +8,14 @@ module Schemas
         def after?(begin_date, end_date)
           begin_date < end_date
         end
+
+        def not_in_future?(end_date)
+          end_date <= Date.today
+        end
       end
 
-      rule(end_date: [:begin_date, :end_date]) do |begin_date, end_date|
-        end_date.after?(begin_date)
+      rule(last_date: [:begin_date, :end_date]) do |begin_date, end_date|
+        end_date.after?(begin_date).and(end_date.not_in_future?)
       end
     end
 
