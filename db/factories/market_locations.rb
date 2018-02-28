@@ -18,11 +18,11 @@ FactoryGirl.define do
     end
 
     after(:build) do |market_location, evaluator|
-      if evaluator.register.is_a?(Symbol)
-        market_location.register = FactoryGirl.create(:register, :real, evaluator.register)
-      else
-        market_location.register = evaluator.register
-      end
+      market_location.register = if evaluator.register.is_a?(Symbol)
+                                   FactoryGirl.create(:register, :real, evaluator.register)
+                                 else
+                                   market_location.register = evaluator.register
+                                 end
       evaluator.contracts.each { |c| market_location.contracts << c }
     end
   end

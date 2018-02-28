@@ -38,4 +38,5 @@ class MarketLocation < ActiveRecord::Base
   def consumption?
     register.label.consumption?
   end
+
 end
