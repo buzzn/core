@@ -4,8 +4,8 @@ class Services::BillingBricksFactory
 
     # This is the object structure we're returning
     # [
-    #   { name: 'Market location 1', bricks: [ Brick.new(...), ...] },
-    #   { name: 'Market location 2', bricks: [ ... ] }
+    #   { market_location: <MarketLocation instance 1>, bricks: [ Brick.new(...), ...] },
+    #   { market_location: <MarketLocation instance 2>, bricks: [ ... ] }
     # ]
     def bricks_by_market_location(group:, date_range:)
       market_locations_for(group).map do |location|
