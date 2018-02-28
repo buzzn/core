@@ -962,6 +962,39 @@ ALTER SEQUENCE banks_id_seq OWNED BY banks.id;
 
 
 --
+-- Name: billing_bricks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE billing_bricks (
+    id integer NOT NULL,
+    begin_date date NOT NULL,
+    end_date date NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    billing_id integer NOT NULL
+);
+
+
+--
+-- Name: billing_bricks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE billing_bricks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: billing_bricks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE billing_bricks_id_seq OWNED BY billing_bricks.id;
+
+
+--
 -- Name: billing_cycles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1940,6 +1973,13 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 
 
 --
+-- Name: billing_bricks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_bricks ALTER COLUMN id SET DEFAULT nextval('billing_bricks_id_seq'::regclass);
+
+
+--
 -- Name: billing_cycles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2205,6 +2245,14 @@ ALTER TABLE ONLY banks
 
 
 --
+-- Name: billing_bricks billing_bricks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_bricks
+    ADD CONSTRAINT billing_bricks_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: billing_cycles billing_cycles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2421,6 +2469,13 @@ CREATE INDEX index_banks_on_bic ON banks USING btree (bic);
 --
 
 CREATE UNIQUE INDEX index_banks_on_blz ON banks USING btree (blz);
+
+
+--
+-- Name: index_billing_bricks_on_billing_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_billing_bricks_on_billing_id ON billing_bricks USING btree (billing_id);
 
 
 --
@@ -3339,4 +3394,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171115086500');
 INSERT INTO schema_migrations (version) VALUES ('20171207154218');
 
 INSERT INTO schema_migrations (version) VALUES ('20180112000000');
+
+INSERT INTO schema_migrations (version) VALUES ('20180112000001');
 

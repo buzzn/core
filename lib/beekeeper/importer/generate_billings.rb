@@ -23,7 +23,9 @@ class Beekeeper::Importer::GenerateBillings
           total_price_cents: 0,
           prepayments_cents: 0,
           receivables_cents: 0,
-          localpool_power_taker_contract_id: contract.id
+          localpool_power_taker_contract_id: contract.id,
+          bricks: [BillingBrick.new(begin_date: contract.begin_date,
+                                    end_date: contract.end_date)]
         }
         if Billing.create!(attrs)
           logger.info("Created billing for ended contract #{contract.id} (#{contract.begin_date}..#{contract.end_date})")
