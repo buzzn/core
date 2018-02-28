@@ -16,8 +16,7 @@ describe 'Services::BillingBricksFactory' do
 
     context 'when group has one market location' do
       context 'when market location has one contract and register' do
-        let(:register)        { create(:register, :consumption, :with_market_location) }
-        let(:market_location) { create(:market_location, :with_contract, register: register) }
+        let(:market_location) { create(:market_location, :with_contract, register: :consumption) }
         let(:group)           { create(:localpool, market_locations: [market_location]) }
 
         it 'returns one market location' do
@@ -43,7 +42,7 @@ describe 'Services::BillingBricksFactory' do
             [create(:contract, :localpool_gap, begin_date: date_range.first - 1.month, end_date: date_range.first + 1.month),
              create(:contract, :localpool_powertaker, begin_date: date_range.first + 1.month, end_date: nil)]
           end
-          let(:market_location) { create(:market_location, contracts: contracts, register: register) }
+          let(:market_location) { create(:market_location, contracts: contracts, register: :consumption) }
 
           it 'returns one market location' do
             expect(subject.size).to eq(1)
