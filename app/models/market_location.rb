@@ -21,7 +21,7 @@ class MarketLocation < ActiveRecord::Base
   def contracts_for_range(date_range)
     contracts
       .where('end_date IS NULL OR end_date > ?', date_range.first) # fetch contracts running or ended in the period
-      .where.not('begin_date >= ?', date_range.last) # don't fetch contracts starting after the period
+      .where('begin_date < ?', date_range.last) # don't fetch contracts starting after the period
       .order(:begin_date) # ensure chronological order to ease testing
   end
 
