@@ -34,7 +34,7 @@ class Services::BillingBricksFactory
 
     def new_brick(contract, date_range)
       # TODO: adapt method to work with a date_range as well
-      BillingBrick.from_contract(contract, date_range.first, date_range.last)
+      BillingBrick.from_contract(contract, date_range)
     end
 
   end

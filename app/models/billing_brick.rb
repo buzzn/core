@@ -8,20 +8,16 @@ class BillingBrick
 
   extend Dry::Initializer
   option :market_location
-  option :begin_date, Types::Strict::Date
-  option :end_date, Types::Strict::Date
+  option :date_range, Types.Instance(Range)
   option :type, Types::Strict::Symbol.enum(:power_taker, :third_party, :gap)
   option :status, Types::Strict::Symbol.enum(:open, :closed), default: proc { :open }
 
   class << self
 
     # Factory method; for now in the brick itself.
-    def from_contract(contract, date_range)
-      min_begin_date = date_range.first
-      max_end_date   = date_range.last
+    def from_contract(contract, max_date_range)
       new(type:            brick_type(contract),
-          begin_date:      brick_begin_date(contract, min_begin_date),
-          end_date:        brick_end_date(contract, max_end_date),
+          date_range:      brick_date_range(contract, max_date_range),
           market_location: contract.market_location)
     end
 
@@ -30,6 +26,12 @@ class BillingBrick
     # Example: Contract::LocalpoolPowerTaker => 'power_taker'
     def brick_type(contract)
       contract.model_name.name.sub('Contract::Localpool', '').underscore.to_sym
+    end
+
+    def brick_date_range(contract, max_date_range)
+      begin_date = brick_begin_date(contract, max_date_range.first)
+      end_date   = brick_end_date(contract, max_date_range.last)
+      begin_date..end_date
     end
 
     def brick_begin_date(contract, min_begin_date)
@@ -52,12 +54,8 @@ class BillingBrick
 
   end
 
-  def date_range
-    begin_date..end_date
-  end
-
   def ==(other)
-    equal_simple_attrs = %i(begin_date end_date type status).all? { |attr| send(attr) == other.send(attr) }
+    equal_simple_attrs = %i(date_range type status).all? { |attr| send(attr) == other.send(attr) }
     equal_market_location = market_location.id == other.market_location.id
     equal_simple_attrs && equal_market_location
   end
