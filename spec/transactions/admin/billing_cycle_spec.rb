@@ -11,7 +11,7 @@ describe Transactions::Admin::BillingCycle::Create do
   entity(:member)   { create(:person, :with_account, :with_self_role, roles: { Role::GROUP_MEMBER => localpool }) }
   entity(:operator) { create(:person, :with_account, :with_self_role, roles: { Role::BUZZN_OPERATOR => nil }) }
 
-  let(:input) { {name: 'route-66', last_date: Date.today} }
+  let(:input) { {name: 'route-66', last_date: Date.today - 5.day} }
 
   subject(:transaction) { Transactions::Admin::BillingCycle::Create.for(localpool_resource) }
 
@@ -44,7 +44,7 @@ describe Transactions::Admin::BillingCycle::Create do
       end
 
       it 'succeeds' do
-        input[:last_date] = Date.today + 1
+        input[:last_date] = Date.today - 1.day
         result = transaction.call(input)
         expect(result).to be_a Dry::Monads::Either::Right
         expect(result.value).to be_a Admin::BillingCycleResource
