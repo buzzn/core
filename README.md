@@ -17,7 +17,6 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
 - [Beekeeper import](#beekeeper-import)
   - [How to run it](#how-to-run-it)
 - [How to deploy](#how-to-deploy)
-  - [One-time setup](#one-time-setup)
   - [Deploy staging](#deploy-staging)
   - [Deploy production](#deploy-production)
 - [How to set up a development environment](#how-to-set-up-a-development-environment)
@@ -119,12 +118,6 @@ So if you know what you are doing, run `rake db:empty` first, to completely dele
 # How to deploy
 
 We're running on Heroku, so you can deploy from Heroku's web interface if you want. To do it from the command line:
-
-## One-time setup
-
-- `git remote add staging https://git.heroku.com/buzzn-core-staging.git`
-- `git remote add production https://git.heroku.com/buzzn-core-production.git`
-- `heroku login` (make sure it succeeds and you are a collaborator on the app)
 
 ## Deploy staging
 
