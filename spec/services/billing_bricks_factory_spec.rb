@@ -23,7 +23,7 @@ describe 'Services::BillingBricksFactory' do
 
         it 'returns one market location' do
           expect(subject.size).to eq(1)
-          expect(subject.first[:name]).to eq(market_location.name)
+          expect(subject.first[:market_location]).to eq(market_location)
         end
 
         it 'contains one brick for the whole date range' do
@@ -49,7 +49,7 @@ describe 'Services::BillingBricksFactory' do
 
           it 'returns one market location' do
             expect(subject.size).to eq(1)
-            expect(subject.first[:name]).to eq(market_location.name)
+            expect(subject.first[:market_location]).to eq(market_location)
           end
 
           it 'returns two bricks' do

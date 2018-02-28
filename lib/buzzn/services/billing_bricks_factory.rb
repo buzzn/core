@@ -8,7 +8,9 @@ class Services::BillingBricksFactory
     #   { name: 'Market location 2', bricks: [ ... ] }
     # ]
     def bricks_by_market_location(group:, date_range:)
-      market_locations(group).map { |location| { name: location.name, bricks: bricks_for_market_location(location, date_range) } }
+      market_locations_for(group).map do |location|
+        { market_location: location, bricks: bricks_for_market_location(location, date_range) }
+      end
     end
 
     private
@@ -16,7 +18,7 @@ class Services::BillingBricksFactory
     # TODO: use group.market_locations.consumption which is still on the branch create-billings-on-import
     # TODO: discuss moving the consumption/production info to the market location.
     # Then we could easily make a MarketLocation.consumption scope and use that here.
-    def market_locations(group)
+    def market_locations_for(group)
       group.market_locations.order(:name).to_a.select(&:consumption?)
     end
 
