@@ -1,3 +1,5 @@
+require_relative '../builders/billing/brick_builder'
+
 class Services::BillingBricksFactory
 
   class << self
@@ -33,8 +35,8 @@ class Services::BillingBricksFactory
     end
 
     def new_brick(contract, date_range)
-      # TODO: adapt method to work with a date_range as well
-      BillingBrick.from_contract(contract, date_range)
+      # TODO: inject dependency
+      Billing::BrickBuilder.from_contract(contract, date_range)
     end
 
   end
