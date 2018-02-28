@@ -17,7 +17,7 @@ FactoryGirl.define do
       contracts { [create(:contract, :localpool_powertaker)] }
     end
 
-    before(:create) do |market_location, evaluator|
+    after(:build) do |market_location, evaluator|
       if evaluator.register.is_a?(Symbol)
         market_location.register = FactoryGirl.create(:register, :real, evaluator.register)
       else

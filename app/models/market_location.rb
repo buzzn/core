@@ -33,9 +33,9 @@ class MarketLocation < ActiveRecord::Base
     self.registers = new_register ? [new_register] : []
   end
 
-  # TODO: when merging into master, ensure there's no duplication. I added this on the branch create-billings-on-import as well.
-  delegate :consumption?, to: :register
-
   scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
 
+  def consumption?
+    register.label.consumption?
+  end
 end

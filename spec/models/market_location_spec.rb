@@ -86,5 +86,23 @@ describe MarketLocation do
       end
 
     end
+
+    describe 'consumption?' do
+      let(:market_location) { build(:market_location, register: register_trait) }
+      subject               { market_location.consumption? }
+      context 'when register has label consumption' do
+        let(:register_trait) { :consumption }
+        it { is_expected.to eq(true) }
+      end
+      context 'when register has label consumption_common' do
+        let(:register_trait) { :consumption_common }
+        it { is_expected.to eq(true) }
+      end
+      context 'when register has label production_water' do
+        let(:register_trait) { :production_water }
+        it { is_expected.to eq(false) }
+      end
+    end
+
   end
 end
