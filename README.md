@@ -31,7 +31,6 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
   - [Stop sidekiq](#stop-sidekiq)
   - [Find missing Indexes](#find-missing-indexes)
   - [Run analysis of security vulnerabilities](#run-analysis-of-security-vulnerabilities)
-- [Troubleshooting](#troubleshooting)
 - [Further links & documentation](#further-links--documentation)
 
 <!-- /MarkdownTOC -->
@@ -178,12 +177,8 @@ Rubocop is smart enough to auto-corrrect most offenses by running `rubocop -a`
 ```ruby
 # rubocop:disable RuleName
 some = Exception(to, the, rule)
-# rubocop:enable Style/MultilineTernaryOperator
+# rubocop:enable RuleName
 ```
-
-* For the whole file: 
- 
-Place the `rubocop:disable` comment at the top of the file.
 
 ### How to run rubocop before every push automatically
 
@@ -206,11 +201,6 @@ The (very useful) Sidekiq Admin interface currently isn't set up. See [Sidekiq's
 
 ## Run analysis of security vulnerabilities
     brakeman
-
-# Troubleshooting
-
-    delete folder vendor/bundle
-    bundle install
 
 # Further links & documentation
 
