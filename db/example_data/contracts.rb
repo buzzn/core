@@ -107,6 +107,19 @@ SampleData.contracts.pt2 = SampleData::ContractFactory.create(
   market_location: SampleData.market_locations.wohnung_2
 )
 
+# terminated gap contract
+SampleData.contracts.pt3gap = SampleData::ContractFactory.create(
+  gap_contract: true,
+  signing_date: SampleData.localpools.people_power.start_date - 25.days,
+  begin_date: SampleData.localpools.people_power.start_date,
+  termination_date: Date.today,
+  end_date: Date.today + 1.month,
+  contractor: SampleData.localpools.people_power.owner,
+  customer: Organization.find_by(slug: 'hv-schneider'),
+  tariffs: tariffs,
+  market_location: SampleData.market_locations.wohnung_3
+)
+
 SampleData.contracts.pt3 = SampleData::ContractFactory.create(
   signing_date: (Date.today - 5.days),
   begin_date: Date.today + 1.month,

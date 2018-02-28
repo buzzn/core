@@ -10,7 +10,7 @@
 class MarketLocation < ActiveRecord::Base
 
   belongs_to :group, class_name: 'Group::Base'
-  has_many :contracts, class_name: 'Contract::Base'
+  has_many :contracts, -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty)) }, class_name: 'Contract::Base'
 
   # Fully implementing 1:n, i.e. that a market location has many current and past registers is a future story.
   # I'm already setting things up 1:n on the DB and association level, hopefully that'll make implementation
@@ -18,7 +18,12 @@ class MarketLocation < ActiveRecord::Base
   has_many :registers, class_name: 'Register::Base'
   private :registers
 
-  delegate :consumption?, to: :register
+  def contracts_for_range(date_range)
+    contracts
+      .where('end_date IS NULL OR end_date > ?', date_range.first) # fetch contracts running or ended in the period
+      .where('begin_date < ?', date_range.last) # don't fetch contracts starting after the period
+      .order(:begin_date) # ensure chronological order to ease testing
+  end
 
   def register
     registers.first
@@ -29,5 +34,9 @@ class MarketLocation < ActiveRecord::Base
   end
 
   scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
+
+  def consumption?
+    register.label.consumption?
+  end
 
 end

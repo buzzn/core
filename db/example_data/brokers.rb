@@ -31,7 +31,7 @@ SampleData.brokers = OpenStruct.new(
   pt8:  broker(external_id: 'EASYMETER_60327606', resource: SampleData.contracts.pt8.market_location.register.meter),
   pt9:  broker(external_id: 'EASYMETER_60327607', resource: SampleData.contracts.pt9.market_location.register.meter),
   pt10: broker(external_id: 'EASYMETER_60327608', resource: SampleData.contracts.pt10.market_location.register.meter),
-  ecar: broker(external_id: 'EASYMETER_60327605', resource: SampleData.registers.ecar.market_location.register.meter),
+  ecar: broker(external_id: 'EASYMETER_60327605', resource: SampleData.registers.ecar.meter),
 
   pv:   broker(external_id: 'EASYMETER_60327687', resource: SampleData.registers.pv.meter),
   grid: broker(external_id: 'EASYMETER_60300855', mode: :in_out, resource: SampleData.meters.grid)

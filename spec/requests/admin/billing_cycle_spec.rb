@@ -40,7 +40,7 @@ describe Admin::BillingCycleResource do
       }
     end
 
-    let(:end_date) { Date.parse('2018-03-01') }
+    let(:end_date) { Date.parse('2018-02-01') }
     let(:created_json) do
       {
         'type'=>'billing_cycle',
