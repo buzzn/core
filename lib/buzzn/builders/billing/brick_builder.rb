@@ -6,8 +6,8 @@ class Billing < ActiveRecord::Base
 
       def from_contract(contract, max_date_range)
         attrs = {
-          type: brick_type(contract),
-          date_range:      brick_date_range(contract, max_date_range),
+          type:            type(contract),
+          date_range:      date_range(contract, max_date_range),
           market_location: contract.market_location
         }
         BillingBrick.new(attrs)
@@ -16,17 +16,17 @@ class Billing < ActiveRecord::Base
       private
 
       # Example: Contract::LocalpoolPowerTaker => 'power_taker'
-      def brick_type(contract)
+      def type(contract)
         contract.model_name.name.sub('Contract::Localpool', '').underscore.to_sym
       end
 
-      def brick_date_range(contract, max_date_range)
-        begin_date = brick_begin_date(contract, max_date_range.first)
-        end_date   = brick_end_date(contract, max_date_range.last)
+      def date_range(contract, max_date_range)
+        begin_date = begin_date(contract, max_date_range.first)
+        end_date   = end_date(contract, max_date_range.last)
         begin_date..end_date
       end
 
-      def brick_begin_date(contract, min_begin_date)
+      def begin_date(contract, min_begin_date)
         if contract.begin_date < min_begin_date
           min_begin_date
         else
@@ -34,7 +34,7 @@ class Billing < ActiveRecord::Base
         end
       end
 
-      def brick_end_date(contract, max_end_date)
+      def end_date(contract, max_end_date)
         if !contract.end_date
           max_end_date
         elsif contract.end_date >= max_end_date
