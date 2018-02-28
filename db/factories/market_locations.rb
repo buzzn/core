@@ -17,7 +17,6 @@ FactoryGirl.define do
     end
 
     before(:create) do |market_location, evaluator|
-      evaluator.contracts.each { |c| market_location.contracts << c }
     end
   end
 end
