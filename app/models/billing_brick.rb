@@ -14,8 +14,8 @@ class BillingBrick < ActiveRecord::Base
   enum type: %i(power_taker third_party gap).each_with_object({}).each { |k, map| map[k] = k.to_s }
 
   def date_range=(new_range)
-    self[:begin_date] = new_range.first
-    self[:end_date]   = new_range.last
+    self.begin_date = new_range.first
+    self.end_date   = new_range.last
   end
 
   def date_range
