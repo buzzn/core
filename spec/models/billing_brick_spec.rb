@@ -1,9 +1,9 @@
 describe 'BillingBrick' do
 
   it 'can be initialized and stores the constructor values' do
-    attrs = { status: :closed, type: :gap, date_range: Date.new(2018, 1, 1)..Date.new(2019, 1, 1), market_location: 'A market location' }
+    attrs = { status: 'closed', type: :gap, date_range: Date.new(2018, 1, 1)..Date.new(2019, 1, 1), market_location: 'A market location' }
     brick = BillingBrick.new(attrs)
-    attrs.each { |key, value| expect(brick.send(key)).to equal(value) }
+    attrs.each { |key, value| expect(brick.send(key)).to eq(value) }
   end
 
   describe '==' do
