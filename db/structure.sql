@@ -992,7 +992,7 @@ CREATE TABLE billing_bricks (
     end_date date NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    status billing_bricks_status,
+    status billing_bricks_status DEFAULT 'open'::billing_bricks_status,
     type billing_bricks_type,
     billing_id integer NOT NULL
 );
