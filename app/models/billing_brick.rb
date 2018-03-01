@@ -10,7 +10,9 @@ class BillingBrick < ActiveRecord::Base
 
   belongs_to :billing
 
-  attr_accessor :market_location, :date_range
+  # clarify if this will stay here (it can be inferred through the billing)
+  attr_accessor :market_location
+
   enum status: %i(open closed).each_with_object({}).each {|k, map| map[k] = k.to_s }
   enum type: %i(power_taker third_party gap).each_with_object({}).each {|k, map| map[k] = k.to_s }
 
@@ -24,27 +26,19 @@ class BillingBrick < ActiveRecord::Base
   # [x] - billing_brick --> billing
   # [x] - billing --> billing_brick
   # Implement date range
-  # [ ] set with range
-  # [ ] set with dates
+  # [x] set with range
+  # [x] set with dates
   # -----
   # [ ] set status from billing in brickbuilder
 
-  # TODO
-  # def begin_date
-  #   date_range.first
-  # end
+  def date_range=(new_range)
+    self[:begin_date] = new_range.first
+    self[:end_date]   = new_range.last
+  end
 
-  # def end_date
-  #   date_range.last
-  # end
-
-  # def end_date=(new_end_date)
-  #   date_range = date_range.first..new_end_date
-  # end
-
-  # def begin_date=(new_begin_date)
-  #   date_range = new_begin_date..date_range.last
-  # end
+  def date_range
+    begin_date..end_date
+  end
 
   def ==(other)
     equal_simple_attrs = %i(date_range type status).all? { |attr| send(attr) == other.send(attr) }
