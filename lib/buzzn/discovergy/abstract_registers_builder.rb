@@ -8,7 +8,8 @@ class Discovergy::AbstractRegistersBuilder < Discovergy::AbstractBuilder
 
   def map
     @map ||= registers.each_with_object({}) do |r, map|
-      map["EASYMETER_#{r.meter.product_serialnumber}"] = r
+      list = map["EASYMETER_#{r.meter.product_serialnumber}"] ||= []
+      list << r
     end
   end
 

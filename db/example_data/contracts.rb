@@ -228,9 +228,12 @@ SampleData.contracts.pt9 = SampleData::ContractFactory.create(
   tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_9
 )
+# a substitute meter/register
 SampleData.contracts.pt10 = SampleData::ContractFactory.create(
   customer: SampleData.persons.pt10,
   tariffs: tariffs,
+  register: FactoryGirl.create(:register, :substitute,
+    meter: build(:meter, :virtual, group: SampleData.localpools.people_power)),
   market_location: SampleData.market_locations.wohnung_10
 )
 
