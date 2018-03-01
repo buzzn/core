@@ -15,29 +15,32 @@ describe Register::SubstituteResource do
 
   context 'localpools/<id>/meters/<id>/registers' do
 
-    let(:expected_json) do
-      last = register.readings.order('date').last
-      {
-        'id'=>register.id,
-        'type'=>'register_substitute',
-        'updated_at'=>register.updated_at.as_json,
-        'label'=>register.attributes['label'],
-        'last_reading'=>last ? last.value : 0,
-        'observer_min_threshold'=>nil,
-        'observer_max_threshold'=>nil,
-        'observer_enabled'=>nil,
-        'observer_offline_monitoring'=>nil,
-        'meter_id' => register.meter_id,
-        'updatable'=> true,
-        'deletable'=> true,
-        'createables'=>['readings'],
-        'direction'=>register.attributes['direction'],
-      }
+    context 'GET' do
+
+      let(:expected_json) do
+        last = register.readings.order('date').last
+        {
+          'id'=>register.id,
+          'type'=>'register_substitute',
+          'updated_at'=>register.updated_at.as_json,
+          'label'=>register.attributes['label'],
+          'last_reading'=>last ? last.value : 0,
+          'observer_min_threshold'=>nil,
+          'observer_max_threshold'=>nil,
+          'observer_enabled'=>nil,
+          'observer_offline_monitoring'=>nil,
+          'meter_id' => register.meter_id,
+          'updatable'=> true,
+          'deletable'=> true,
+          'createables'=>['readings'],
+          'direction'=>register.attributes['direction'],
+        }
+      end
+
+      let(:path) { "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}" }
+
+      it_behaves_like 'single', :register
+      it_behaves_like 'all'
     end
-
-    let(:path) { "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}" }
-
-    it_behaves_like 'GET resource', :register
-    it_behaves_like 'GET resources'
   end
 end

@@ -161,10 +161,14 @@ describe Admin::LocalpoolRoda do
     end
   end
 
-  it_behaves_like 'nested person', 'owner'
-  it_behaves_like 'nested organization', 'owner'
+  context 'owner' do
+    it_behaves_like 'nested person', 'owner'
+    it_behaves_like 'nested organization', 'owner'
+  end
 
-  it_behaves_like 'nested person', 'gap_contract_customer'
-  it_behaves_like 'nested organization', 'gap_contract_customer'
+  context 'gap_contract_customer' do
+    it_behaves_like 'nested person', 'gap_contract_customer'
+    it_behaves_like 'nested organization', 'gap_contract_customer'
+  end
 
 end

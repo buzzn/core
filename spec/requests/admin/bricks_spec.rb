@@ -15,26 +15,28 @@ describe Admin::BillingCycleResource do
 
   context 'localpools/<id>/billing-cycles/<id>/bricks' do
 
-    let(:path) { "/localpools/#{localpool.id}/billing-cycles/#{billing_cycle.id}/bricks" }
+    context 'GET' do
+      let(:path) { "/localpools/#{localpool.id}/billing-cycles/#{billing_cycle.id}/bricks" }
 
-    let(:expected_json) do
-      {
-        'id' => market_location.id,
-        'type' => 'market_location',
-        'name' => market_location.name,
-        'bricks' => {
-          'array' => [
-            {
-              'classifier' => 'power_taker',
-              'begin_date' => contract.begin_date.as_json,
-              'end_date' => billing_cycle.end_date.as_json,
-              'status' => 'open'
-            }
-          ]
+      let(:expected_json) do
+        {
+          'id' => market_location.id,
+          'type' => 'market_location',
+          'name' => market_location.name,
+          'bricks' => {
+            'array' => [
+              {
+                'classifier' => 'power_taker',
+                'begin_date' => contract.begin_date.as_json,
+                'end_date' => billing_cycle.end_date.as_json,
+                'status' => 'open'
+              }
+            ]
+          }
         }
-      }
-    end
+      end
 
-    it_behaves_like 'GET resources'
+      it_behaves_like 'all'
+    end
   end
 end
