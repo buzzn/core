@@ -69,6 +69,7 @@ shared_examples 'GET resources' do
   it '200' do
     GET all_path, $admin
     expect(response).to have_http_status(200)
-    expect(json['array'].to_yaml).to eq [expected_json].to_yaml
+    array = json.is_a?(Array) ? json : json['array']
+    expect(array.to_yaml).to eq [expected_json].to_yaml
   end
 end

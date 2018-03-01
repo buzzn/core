@@ -45,6 +45,6 @@ describe Register::RealResource do
     end
 
     it_behaves_like 'GET resource', :register
-    it_behaves_like 'GET resources', :register
+    it_behaves_like 'GET resources'
   end
 end
