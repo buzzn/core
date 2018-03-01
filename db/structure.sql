@@ -2985,6 +2985,14 @@ ALTER TABLE ONLY bank_accounts
 
 
 --
+-- Name: billing_bricks fk_billing_bricks_billing; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_bricks
+    ADD CONSTRAINT fk_billing_bricks_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
+
+
+--
 -- Name: billing_cycles fk_billing_cycles_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
