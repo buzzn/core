@@ -19,7 +19,7 @@ class Beekeeper::Importer::GenerateBillings
       ended_contracts.each do |contract|
         attrs = {
           status: :closed,
-          invoice_number: next_invoice_number,
+          invoice_number: next_invoice_number(localpool),
           begin_date: contract.begin_date,
           end_date: contract.end_date,
           total_energy_consumption_kwh: 0,
@@ -40,7 +40,7 @@ class Beekeeper::Importer::GenerateBillings
     Billing::BrickBuilder.from_contract(contract, MAX_DATE_RANGE)
   end
 
-  def next_invoice_number
+  def next_invoice_number(localpool)
     @invoice_number_suffix ||= 0
     @invoice_number_suffix += 1
     "BK-IMPORT-LP#{localpool.id}-#{@invoice_number_suffix}"
