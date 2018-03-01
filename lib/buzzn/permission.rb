@@ -95,7 +95,7 @@ module Buzzn
       end
     end
 
-    def respond_to?(method)
+    def respond_to?(method, *)
       ! @perms[method].nil? || super
     end
 
