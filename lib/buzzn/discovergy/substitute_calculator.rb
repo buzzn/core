@@ -19,23 +19,15 @@ class Discovergy::SubstituteCalculator
 
   def value
     value = @substitute.to_i
-    if value <= 0
-      0
-    else
-      value
-    end
+    [0, value].max
   end
 
   private
 
   def add(substitute, value, register)
-    if register.label.consumption?
+    if register.label.consumption? || register.grid_feeding?
       substitute - value
-    elsif register.label.production?
-      substitute + value
-    elsif register.grid_feeding?
-      substitute - value
-    elsif register.grid_consumption?
+    elsif register.label.production? || register.grid_consumption?
       substitute + value
     else
       raise "can not handle #{register.class}"

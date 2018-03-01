@@ -30,8 +30,6 @@ SampleData.brokers = OpenStruct.new(
   pt7a: broker(external_id: 'EASYMETER_60327605', resource: SampleData.contracts.pt7a.market_location.register.meter),
   pt8:  broker(external_id: 'EASYMETER_60327606', resource: SampleData.contracts.pt8.market_location.register.meter),
   pt9:  broker(external_id: 'EASYMETER_60327607', resource: SampleData.contracts.pt9.market_location.register.meter),
-  # using substitute here
-  # pt10: broker(external_id: 'EASYMETER_60327608', resource: SampleData.contracts.pt10.market_location.register.meter),
   ecar: broker(external_id: 'EASYMETER_60327608', resource: SampleData.registers.ecar.meter),
 
   pv:   broker(external_id: 'EASYMETER_60327687', resource: SampleData.registers.pv.meter),

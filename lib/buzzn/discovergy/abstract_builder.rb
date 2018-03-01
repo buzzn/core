@@ -42,7 +42,7 @@ class Discovergy::AbstractBuilder
   private
 
   def one_way_meter?(register)
-    register.meter.registers.size == 1
+    register.meter.one_way_meter?
   end
 
   def production?(register)
