@@ -5,8 +5,6 @@ Fabricator :billing do
   prepayments_cents             29000
   receivables_cents             1000
   invoice_number                '12345678-987'
-  begin_date                    Date.today
-  end_date                      Date.today + 1.year
-#  start_reading_id              { Fabricate(:reading).id }
-#  end_reading_id                { Fabricate(:reading).id }
+  begin_date                    { Date.today }
+  end_date                      { Date.today + 1.year }
 end

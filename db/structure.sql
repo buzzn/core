@@ -1067,10 +1067,6 @@ CREATE TABLE billings (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     status billings_status,
-    start_reading_id integer,
-    end_reading_id integer,
-    device_change_reading_1_id integer,
-    device_change_reading_2_id integer,
     billing_cycle_id integer,
     localpool_power_taker_contract_id integer NOT NULL
 );
@@ -3013,38 +3009,6 @@ ALTER TABLE ONLY billings
 
 
 --
--- Name: billings fk_billings_device_change_1; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY billings
-    ADD CONSTRAINT fk_billings_device_change_1 FOREIGN KEY (device_change_reading_1_id) REFERENCES readings(id);
-
-
---
--- Name: billings fk_billings_device_change_2; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY billings
-    ADD CONSTRAINT fk_billings_device_change_2 FOREIGN KEY (device_change_reading_2_id) REFERENCES readings(id);
-
-
---
--- Name: billings fk_billings_end_reading; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY billings
-    ADD CONSTRAINT fk_billings_end_reading FOREIGN KEY (end_reading_id) REFERENCES readings(id);
-
-
---
--- Name: billings fk_billings_start_reading; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY billings
-    ADD CONSTRAINT fk_billings_start_reading FOREIGN KEY (start_reading_id) REFERENCES readings(id);
-
-
---
 -- Name: contracts fk_contracts_contractor_bank_account; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3406,6 +3370,8 @@ INSERT INTO schema_migrations (version) VALUES ('31');
 
 INSERT INTO schema_migrations (version) VALUES ('32');
 
+INSERT INTO schema_migrations (version) VALUES ('33');
+
 INSERT INTO schema_migrations (version) VALUES ('4');
 
 INSERT INTO schema_migrations (version) VALUES ('5');
@@ -3417,6 +3383,4 @@ INSERT INTO schema_migrations (version) VALUES ('7');
 INSERT INTO schema_migrations (version) VALUES ('8');
 
 INSERT INTO schema_migrations (version) VALUES ('9');
-
-INSERT INTO schema_migrations (version) VALUES ('20180112000001');
 
