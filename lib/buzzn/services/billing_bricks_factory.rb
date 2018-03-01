@@ -20,15 +20,37 @@ class Services::BillingBricksFactory
     # We don't handle register and tariff changes in the first billing story.
     # So we can keep it simple -- each contract will result in one brick.
     def bricks_for_market_location(location, date_range)
-      contracts_for_market_location(location, date_range).map { |contract| new_brick(contract, date_range) }
+      # 1. get billed bricks for MaLo
+      billed_bricks = find_billed_bricks(location, date_range)
+      unbilled_date_range = if billed_bricks.empty?
+                              date_range
+                            else
+                              billed_bricks.last.end_date..date_range.last
+                            end
+
+      # 2. generate unbilled bricks for date_range
+      #   - get bricks which lie in the date_range from DB
+      #   - get end date of last brick
+      #   - if end date doesn't equal date_range end date
+      #     - generate bricks for remaining date range
+      #       - get contracts for that period
+      #       - generate a brick for each contract
+      unbilled_bricks = build_unbilled_bricks(location, unbilled_date_range)
+
+      # 3. merge and return results
+      # billed_bricks + unbilled_bricks
     end
 
-    def contracts_for_market_location(location, date_range)
-      location.contracts_for_range(date_range)
+    def find_billed_bricks(location, date_range)
+      billings = location.billings_in_date_range(date_range)
+      (billings.map(&:bricks).flatten || []).sort_by(&:begin_date)
     end
 
-    def new_brick(contract, date_range)
-      # TODO: inject dependency
+    def build_unbilled_bricks(location, date_range)
+      location.contracts_in_date_range(date_range).map { |contract| build_brick(contract, date_range) }
+    end
+
+    def build_brick(contract, date_range)
       Billing::BrickBuilder.from_contract(contract, date_range)
     end
 
