@@ -1,5 +1,6 @@
 require_relative '../filterable'
 require_relative '../concerns/last_date'
+require_relative '../concerns/in_date_range_scope'
 require_relative '../concerns/person_organization_relation'
 
 module Contract
@@ -10,6 +11,7 @@ module Contract
 
     include Filterable
     include LastDate
+    include InDateRangeScope
 
     PersonOrganizationRelation.generate(self, 'customer')
     PersonOrganizationRelation.generate(self, 'contractor')

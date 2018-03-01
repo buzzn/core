@@ -1,4 +1,8 @@
+require_relative 'concerns/in_date_range_scope'
+
 class Billing < ActiveRecord::Base
+
+  include InDateRangeScope
 
   enum status: %i(open calculated delivered settled closed).each_with_object({}) { |i, o| o[i] = i.to_s }
 

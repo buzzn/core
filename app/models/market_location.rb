@@ -19,10 +19,12 @@ class MarketLocation < ActiveRecord::Base
   has_many :registers, class_name: 'Register::Base'
   private :registers
 
-  include ItemsInDateRangeFinder
+  def contracts_in_date_range(date_range)
+    contracts.in_date_range(date_range)
+  end
 
-  def contracts_for_date_range(date_range)
-    find_items_in_date_range(contracts, date_range)
+  def billings_in_date_range(date_range)
+    billings.in_date_range(date_range)
   end
 
   def register
