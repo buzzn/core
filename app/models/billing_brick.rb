@@ -8,23 +8,22 @@ class BillingBrick < ActiveRecord::Base
 
   belongs_to :billing
 
-  # Generate minimal table
-  # OK - begin_date
-  # OK - end_date
-  # - add type
-  # - add status
-  # - create PG enum
-  # Add associations
-  # OK - billing_brick --> billing
-  # OK - billing --> billing_brick
+  attr_accessor :market_location, :type, :date_range
+
+  # Minimal table
+  # [x] - begin_date
+  # [x] - end_date
+  # [ ] - type (with enum) # (power_taker third_party gap)
+  # [ ] - status (from billing)  (with enum)
+  # [ ] - create PG enum
+  # Associations
+  # [x] - billing_brick --> billing
+  # [x] - billing --> billing_brick
   # Implement date range
+  # [ ] set with range
+  # [ ] set with dates
   # set up enums
 
-  # attr_accessor :date_range
-
-  # extend Dry::Initializer
-  # option :market_location
-  # option :date_range, Types.Instance(Range)
   # enum type: %i(power_taker third_party gap).each_with_object({}).each {|k, map| map[k] = k.to_s }
   # enum status: %i(open closed).each_with_object({}).each {|k, map| map[k] = k.to_s }
 

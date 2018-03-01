@@ -17,7 +17,6 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
 - [Beekeeper import](#beekeeper-import)
   - [How to run it](#how-to-run-it)
 - [How to deploy](#how-to-deploy)
-  - [One-time setup](#one-time-setup)
   - [Deploy staging](#deploy-staging)
   - [Deploy production](#deploy-production)
 - [How to set up a development environment](#how-to-set-up-a-development-environment)
@@ -32,7 +31,6 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
   - [Stop sidekiq](#stop-sidekiq)
   - [Find missing Indexes](#find-missing-indexes)
   - [Run analysis of security vulnerabilities](#run-analysis-of-security-vulnerabilities)
-- [Troubleshooting](#troubleshooting)
 - [Further links & documentation](#further-links--documentation)
 
 <!-- /MarkdownTOC -->
@@ -120,12 +118,6 @@ So if you know what you are doing, run `rake db:empty` first, to completely dele
 
 We're running on Heroku, so you can deploy from Heroku's web interface if you want. To do it from the command line:
 
-## One-time setup
-
-- `git remote add staging https://git.heroku.com/buzzn-core-staging.git`
-- `git remote add production https://git.heroku.com/buzzn-core-production.git`
-- `heroku login` (make sure it succeeds and you are a collaborator on the app)
-
 ## Deploy staging
 
 Staging is deployed automatically for every green CI build on `master`.
@@ -185,12 +177,8 @@ Rubocop is smart enough to auto-corrrect most offenses by running `rubocop -a`
 ```ruby
 # rubocop:disable RuleName
 some = Exception(to, the, rule)
-# rubocop:enable Style/MultilineTernaryOperator
+# rubocop:enable RuleName
 ```
-
-* For the whole file: 
- 
-Place the `rubocop:disable` comment at the top of the file.
 
 ### How to run rubocop before every push automatically
 
@@ -213,11 +201,6 @@ The (very useful) Sidekiq Admin interface currently isn't set up. See [Sidekiq's
 
 ## Run analysis of security vulnerabilities
     brakeman
-
-# Troubleshooting
-
-    delete folder vendor/bundle
-    bundle install
 
 # Further links & documentation
 
