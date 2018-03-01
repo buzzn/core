@@ -13,16 +13,18 @@ class Transactions::Admin::BillingCycle::Bricks < Transactions::Base
   step :result_builder
 
   def result_builder(data)
-    result = data.collect do |item|
-      build_bricks_location(item[:market_location], item[:bricks])
-    end
+    result = {
+      array: data.collect do |item|
+        build_bricks_location(item[:market_location], item[:bricks])
+      end
+    }
     Right(result)
   end
 
   private
 
   def build_bricks_location(market_location, bricks)
-    { id: market_location.id, type: 'market_location', name: market_location.name, bricks: build_bricks(bricks) }
+    { id: market_location.id, type: 'market_location', name: market_location.name, bricks: { array: build_bricks(bricks) } }
   end
 
   def build_bricks(bricks)

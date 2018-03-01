@@ -17,20 +17,22 @@ describe Transactions::Admin::BillingCycle::Bricks do
     context 'without market_location' do
 
       it { is_expected.to be_a(Dry::Monads::Either::Right) }
-      it { expect(subject.value).to be_empty }
+      it { expect(subject.value[:array]).to be_empty }
 
       context 'with market_location without bricks' do
 
+        let(:first_location) { subject.value[:array].first }
+
         entity!(:market_location) { create(:market_location, group: localpool, register: register) }
         it { is_expected.to be_a(Dry::Monads::Either::Right) }
-        it { expect(subject.value.first.keys).to eq(%i(id type name bricks)) }
+        it { expect(first_location.keys).to eq(%i(id type name bricks)) }
 
         context 'with brick' do
 
           entity!(:contract) { create(:contract, :localpool_powertaker, market_location: market_location) }
           it { is_expected.to be_a(Dry::Monads::Either::Right) }
-          it { expect(subject.value.first.keys).to eq(%i(id type name bricks)) }
-          it { expect(subject.value.first[:bricks].first.keys).to eq(%i(classifier begin_date end_date status)) }
+          it { expect(first_location.keys).to eq(%i(id type name bricks)) }
+          it { expect(first_location[:bricks][:array].first.keys).to eq(%i(classifier begin_date end_date status)) }
 
         end
       end

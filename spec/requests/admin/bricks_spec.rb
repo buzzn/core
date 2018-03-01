@@ -22,14 +22,16 @@ describe Admin::BillingCycleResource do
         'id' => market_location.id,
         'type' => 'market_location',
         'name' => market_location.name,
-        'bricks' => [
-          {
-            'classifier' => 'power_taker',
-            'begin_date' => contract.begin_date.as_json,
-            'end_date' => billing_cycle.end_date.as_json,
-            'status' => 'open'
-          }
-        ]
+        'bricks' => {
+          'array' => [
+            {
+              'classifier' => 'power_taker',
+              'begin_date' => contract.begin_date.as_json,
+              'end_date' => billing_cycle.end_date.as_json,
+              'status' => 'open'
+            }
+          ]
+        }
       }
     end
 
