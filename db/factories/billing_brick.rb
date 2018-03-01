@@ -1,7 +1,9 @@
 FactoryGirl.define do
   factory :billing_brick do
+    status     'open'
     billing    { FactoryGirl.build(:billing) }
-    begin_date { billing.begin_date }
-    end_date   { billing.end_date }
+    # can't set this dependent on the billing ... need to investigate
+    # begin_date { billing.begin_date }
+    # end_date   { billing.end_date }
   end
 end

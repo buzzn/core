@@ -26,6 +26,7 @@ class BillingBrick < ActiveRecord::Base
   # [ ] set with dates
   # -----
   # [ ] set status from billing in brickbuilder
+  # [ ] create enum in db; set default
 
   # TODO
   # def begin_date
