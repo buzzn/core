@@ -1,4 +1,4 @@
- require 'buzzn/schemas/constraints/group'
+require 'buzzn/schemas/constraints/group'
 
 class CreateGroups < ActiveRecord::Migration
 

@@ -1,4 +1,4 @@
- require 'buzzn/schemas/constraints/bank_account'
+require 'buzzn/schemas/constraints/bank_account'
 
 class CreateBankAccounts < ActiveRecord::Migration
 

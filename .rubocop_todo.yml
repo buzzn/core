@@ -125,7 +125,6 @@ Layout/EmptyLinesAroundExceptionHandlingKeywords:
 # Cop supports --auto-correct.
 Layout/EmptyLinesAroundMethodBody:
   Exclude:
-    - 'db/migrate/20171115086500_create_organization_market_functions.rb'
     - 'lib/beekeeper/importer/adjust_localpool_contracts_and_readings.rb'
     - 'lib/buzzn/boot/init.rb'
 
@@ -177,21 +176,12 @@ Layout/IndentationConsistency:
   Exclude:
     - 'app/models/contract/payment.rb'
     - 'app/models/group/base.rb'
-    - 'db/migrate/20171029000900_create_bank_accounts.rb'
-    - 'db/migrate/20171031085200_create_groups.rb'
     - 'lib/buzzn/services/reading_calculation.rb'
     - 'spec/fabricators/meters.rb'
     - 'spec/factories/factories_spec.rb'
     - 'spec/models/document_spec.rb'
     - 'spec/requests/admin/localpool_spec.rb'
     - 'spec/source_file_spec.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Layout/InitialIndentation:
-  Exclude:
-    - 'db/migrate/20171029000900_create_bank_accounts.rb'
-    - 'db/migrate/20171031085200_create_groups.rb'
 
 # Offense count: 236
 # Cop supports --auto-correct.
@@ -337,7 +327,6 @@ Layout/SpaceBeforeComment:
   Exclude:
     - 'app/models/contract/power_taker.rb'
     - 'app/models/document.rb'
-    - 'db/migrate/20171031085360_create_billings.rb'
     - 'spec/spec_helper.rb'
 
 # Offense count: 1
