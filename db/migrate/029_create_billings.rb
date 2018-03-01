@@ -8,12 +8,13 @@ class CreateBillings < ActiveRecord::Migration
     SCHEMA.up(:billings, self)
 
     add_belongs_to :billings, :billing_cycle, index: true, null: true
-    add_belongs_to :billings, :localpool_power_taker_contract, references: :contract, index: true, null: false
+    add_belongs_to :billings, :contract, references: :contract, index: true, null: false
 
     add_foreign_key :billings, :billing_cycles, name: :fk_billings_billing_cycles
-    add_foreign_key :billings, :contracts, name: :fk_billings_contracts, column: :localpool_power_taker_contract_id
+    add_foreign_key :billings, :contracts, name: :fk_billings_contracts, column: :contract_id
 
     add_index :billings, [:billing_cycle_id, :status]
+    add_index :billings, :invoice_number, unique: true
   end
 
   def down

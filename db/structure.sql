@@ -1068,7 +1068,7 @@ CREATE TABLE billings (
     updated_at timestamp without time zone NOT NULL,
     status billings_status,
     billing_cycle_id integer,
-    localpool_power_taker_contract_id integer NOT NULL
+    contract_id integer NOT NULL
 );
 
 
@@ -2519,10 +2519,17 @@ CREATE INDEX index_billings_on_billing_cycle_id_and_status ON billings USING btr
 
 
 --
--- Name: index_billings_on_localpool_power_taker_contract_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_billings_on_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billings_on_localpool_power_taker_contract_id ON billings USING btree (localpool_power_taker_contract_id);
+CREATE INDEX index_billings_on_contract_id ON billings USING btree (contract_id);
+
+
+--
+-- Name: index_billings_on_invoice_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_billings_on_invoice_number ON billings USING btree (invoice_number);
 
 
 --
@@ -3013,7 +3020,7 @@ ALTER TABLE ONLY billings
 --
 
 ALTER TABLE ONLY billings
-    ADD CONSTRAINT fk_billings_contracts FOREIGN KEY (localpool_power_taker_contract_id) REFERENCES contracts(id);
+    ADD CONSTRAINT fk_billings_contracts FOREIGN KEY (contract_id) REFERENCES contracts(id);
 
 
 --

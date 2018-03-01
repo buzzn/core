@@ -14,19 +14,19 @@ class Beekeeper::Importer::GenerateBillings
   end
 
   def run(localpool)
-    localpool.market_locations.consumption.each.with_index(1) do |ml, index|
+    localpool.market_locations.consumption.each do |ml|
       ended_contracts = ml.contracts.to_a.select { |c| c.status.ended? }
       ended_contracts.each do |contract|
         attrs = {
           status: :closed,
-          invoice_number: "BK-IMPORT-LP#{localpool.id}-#{index}",
+          invoice_number: next_invoice_number,
           begin_date: contract.begin_date,
           end_date: contract.end_date,
           total_energy_consumption_kwh: 0,
           total_price_cents: 0,
           prepayments_cents: 0,
           receivables_cents: 0,
-          localpool_power_taker_contract_id: contract.id,
+          contract: contract,
           bricks: [brick_for_contract(contract)]
         }
         if Billing.create!(attrs)
@@ -40,4 +40,9 @@ class Beekeeper::Importer::GenerateBillings
     Billing::BrickBuilder.from_contract(contract, MAX_DATE_RANGE)
   end
 
+  def next_invoice_number
+    @invoice_number_suffix ||= 0
+    @invoice_number_suffix += 1
+    "BK-IMPORT-LP#{localpool.id}-#{@invoice_number_suffix}"
+  end
 end
