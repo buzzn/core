@@ -11,6 +11,7 @@ class MarketLocation < ActiveRecord::Base
 
   belongs_to :group, class_name: 'Group::Base'
   has_many :contracts, -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty)) }, class_name: 'Contract::Base'
+  has_many :billings, through: :contracts
 
   # Fully implementing 1:n, i.e. that a market location has many current and past registers is a future story.
   # I'm already setting things up 1:n on the DB and association level, hopefully that'll make implementation
