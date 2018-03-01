@@ -7,6 +7,7 @@ class Beekeeper::Importer::GenerateBillings
   attr_reader :logger
 
   MAX_DATE_RANGE = Date.new(2000, 1, 1)..Date.new(2020, 1, 1)
+
   def initialize(logger)
     @logger = logger
     logger.level = Import.global('config.log_level')
