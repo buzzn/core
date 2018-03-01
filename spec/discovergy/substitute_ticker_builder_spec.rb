@@ -44,7 +44,7 @@ describe Discovergy::SubstituteTickerBuilder do
     it 'grid-feeding' do
       result = builder.build(response)
       # these are real numbers and timestamps are not uniform, i.e. some
-      # small value close tozero is OK
+      # small value close to zero is OK
       expect(result.value).to eq 21
     end
 
