@@ -312,6 +312,17 @@ CREATE TYPE billing_bricks_status AS ENUM (
 
 
 --
+-- Name: billing_bricks_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE billing_bricks_type AS ENUM (
+    'power_taker',
+    'third_party',
+    'gap'
+);
+
+
+--
 -- Name: billings_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -982,6 +993,7 @@ CREATE TABLE billing_bricks (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     status billing_bricks_status,
+    type billing_bricks_type,
     billing_id integer NOT NULL
 );
 

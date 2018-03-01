@@ -6,18 +6,20 @@
 #
 class BillingBrick < ActiveRecord::Base
 
+  self.inheritance_column = '_type' # we use type as a regular attribute, not for STI
+
   belongs_to :billing
 
-  attr_accessor :market_location, :type, :date_range
+  attr_accessor :market_location, :date_range
   enum status: %i(open closed).each_with_object({}).each {|k, map| map[k] = k.to_s }
-  # enum type: %i(power_taker third_party gap).each_with_object({}).each {|k, map| map[k] = k.to_s }
+  enum type: %i(power_taker third_party gap).each_with_object({}).each {|k, map| map[k] = k.to_s }
 
   # Minimal table
   # [x] - begin_date
   # [x] - end_date
   # [x] - status (with enum)
-  # [ ] - type (with enum) # (power_taker third_party gap)
-  # [ ] - create PG enum
+  # [x] - type (with enum)
+  # [x] - create PG enum
   # Associations
   # [x] - billing_brick --> billing
   # [x] - billing --> billing_brick
