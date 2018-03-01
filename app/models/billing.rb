@@ -11,4 +11,5 @@ class Billing < ActiveRecord::Base
   belongs_to :device_change_2_reading, class_name: 'Reading::Single', foreign_key: :device_change_2_reading_id
 
   has_many :bricks, class_name: 'BillingBrick'
+
 end

@@ -55,19 +55,25 @@ describe 'Billing::BrickBuilder' do
 
       EXPECTATIONS = {
         open:       'open',
-        calculated: "open",
+        calculated: 'open',
         delivered:  'closed',
         settled:    'closed',
         closed:     'closed'
       }
 
+      # rubocop:disable Performance/HashEachMethods
       EXPECTATIONS.each do |billing_status, expected_brick_status|
         context "when brick has a billing with status #{billing_status}" do
           let(:billing) { build(:billing, status: billing_status) }
           subject       { build(:billing_brick, billing: billing).status }
-          it            { skip('To be implemented'); is_expected.to eq(expected_brick_status) }
+          it            do
+            skip('To be implemented')
+            # is_expected.to eq(expected_brick_status)
+          end
         end
       end
+      # rubocop:enable Performance/HashEachMethods
+
     end
 
   end
