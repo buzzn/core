@@ -47,6 +47,11 @@ class Billing < ActiveRecord::Base
 
       def status(contract)
         :open
+        # if billing
+        #   %i(open calculated).include?(billing.status.to_sym) ? :open : :closed
+        # else
+        #   :open
+        # end
       end
 
     end
