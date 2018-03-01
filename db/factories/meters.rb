@@ -20,6 +20,7 @@ FactoryGirl.define do
         # registers
         if evaluator.registers.present?
           meter.registers = evaluator.registers
+          meter.direction_number = meter.registers.size == 1 ? :one_way_meter : :two_way_meter
         else
           meter.registers = [FactoryGirl.build(:register, evaluator.register_direction, meter: meter)]
         end
@@ -36,6 +37,7 @@ FactoryGirl.define do
     end
 
     trait :two_way do
+      # TODO this trait produces inconsistent meter with only one register
       direction_number           Meter::Real.direction_numbers[:two_way_meter]
       converter_constant         40
     end
