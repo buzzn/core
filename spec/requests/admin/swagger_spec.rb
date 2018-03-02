@@ -25,16 +25,14 @@ describe Admin, :swagger do
   entity!(:localpool) do
     localpool = create(:localpool)
     person.add_role(Role::GROUP_OWNER, localpool)
-    Fabricate(:localpool_processing_contract, localpool: localpool, customer: organization)
+    create(:contract, :localpool_processing, localpool: localpool, customer: organization)
     create(:contract, :metering_point_operator, localpool: localpool)
     localpool
   end
 
-  entity!(:billing_cycle_1) do
-    Fabricate(:billing_cycle, localpool: localpool)
-  end
+  entity!(:billing_cycle_1) { create(:billing_cycle, localpool: localpool) }
 
-  entity!(:billing_cycle_2) { Fabricate(:billing_cycle, localpool: localpool) }
+  entity!(:billing_cycle_2) { create(:billing_cycle, localpool: localpool) }
 
   entity!(:tariff) { create(:tariff, group: localpool) }
 

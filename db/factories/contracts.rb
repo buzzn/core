@@ -34,8 +34,8 @@ FactoryGirl.define do
   trait :metering_point_operator do
     contract_number { generate(:metering_point_operator_contract_nr) }
     initialize_with { Contract::MeteringPointOperator.new }
-    before(:create) do |contract, _evaluator|
-      contract.customer = contract.localpool.owner
+    before(:create) do |contract, evaluator|
+      contract.customer = evaluator.customer ? evaluator.customer : contract.localpool.owner
     end
   end
 
@@ -50,8 +50,8 @@ FactoryGirl.define do
   trait :localpool_processing do
     contract_number { generate(:localpool_processing_contract_nr) }
     initialize_with { Contract::LocalpoolProcessing.new }
-    before(:create) do |contract, _evaluator|
-      contract.customer = contract.localpool.owner
+    before(:create) do |contract, evaluator|
+      contract.customer = evaluator.customer ? evaluator.customer : contract.localpool.owner
       contract.tax_data = FactoryGirl.build(:tax_data)
     end
   end
