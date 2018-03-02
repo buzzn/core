@@ -18,6 +18,10 @@ AllCops:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+# allow multi-line -> {} blocks.
+Style/Lambda:
+  Enabled: false
+
 Bundler/OrderedGems:
   Enabled: false
 
