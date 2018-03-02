@@ -2,6 +2,20 @@ describe 'Services::BillingBricksFactory' do
 
   describe 'bricks_by_market_location' do
 
+    # RSpec::Matchers.define :equal_brick do |expected|
+    #   match do |actual|
+    #     actual.invariant.success?
+    #   end
+
+    #   failure_message do |actual|
+    #     "expected #{actual.class}##{actual.id} to have valid invariants: #{actual.invariant.errors.keys.join(',')}"
+    #   end
+
+    #   failure_message_when_negated do |actual|
+    #     "expected #{actual.class}##{actual.id} to have valid invariants: #{actual.invariant.errors.keys.join(',')}"
+    #   end
+    # end
+
     let(:group)      { build(:localpool) }
     let(:date_range) { Date.new(2018, 1, 1)...Date.new(2019, 1, 1) }
     let(:args)       { { date_range: date_range, group: group } }
@@ -30,14 +44,13 @@ describe 'Services::BillingBricksFactory' do
           it 'contains one brick for the whole date range' do
 
             expect(subject.first[:bricks].size).to equal(1)
-            expected_brick = BillingBrick.new(
+            expect(subject.first[:bricks].size).to eq(1)
+            expect(subject.first[:bricks].first).to have_attributes(
               date_range:      args[:date_range],
-              status:          :open,
-              contract_type:   :power_taker,
+              status:          'open',
+              contract_type:   'power_taker',
               market_location: market_location
             )
-            expect(subject.first[:bricks].size).to eq(1)
-            expect(subject.first[:bricks].first).to eq(expected_brick)
           end
         end
 
@@ -74,12 +87,18 @@ describe 'Services::BillingBricksFactory' do
         it 'returns two bricks' do
           expect(subject.first[:bricks].size).to eq(2)
           brick1, brick2 = subject.first[:bricks]
-          expect(brick1.date_range).to eq(date_range.first...(date_range.first + 1.month))
-          expect(brick1.status).to eq('open')
-          expect(brick1.contract_type).to eq('gap')
-          expect(brick2.date_range).to eq((date_range.first + 1.month)...date_range.last)
-          expect(brick2.status).to eq('open')
-          expect(brick2.contract_type).to eq('power_taker')
+          expect(brick1).to have_attributes(
+            date_range: date_range.first...(date_range.first + 1.month),
+            status: 'open',
+            contract_type: 'gap',
+            market_location: market_location
+          )
+          expect(brick2).to have_attributes(
+            date_range: (date_range.first + 1.month)...date_range.last,
+            status: 'open',
+            contract_type: 'power_taker',
+            market_location: market_location
+          )
         end
       end
     end
