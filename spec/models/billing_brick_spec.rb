@@ -16,24 +16,4 @@ describe 'BillingBrick' do
     end
   end
 
-  describe '==' do
-    let(:attrs) do
-      { market_location: build(:market_location),
-        contract_type: 'power_taker',
-        date_range: Date.new(2018, 1, 1)...Date.new(2019, 1, 1) }
-    end
-
-    subject { BillingBrick.new(attrs) }
-
-    context 'when other billing brick has same attributes' do
-      let(:other_brick) { BillingBrick.new(attrs) }
-      it { is_expected.to eq(other_brick) }
-    end
-
-    context 'when other billing brick has different attributes' do
-      let(:other_brick) { BillingBrick.new(attrs.merge(contract_type: 'third_party')) }
-      it { is_expected.not_to eq(other_brick) }
-    end
-  end
-
 end

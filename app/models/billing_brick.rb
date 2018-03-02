@@ -15,10 +15,4 @@ class BillingBrick < ActiveRecord::Base
   enum status: %i(open closed).each_with_object({}).each { |k, map| map[k] = k.to_s }
   enum type: %i(power_taker third_party gap).each_with_object({}).each { |k, map| map[k] = k.to_s }
 
-  def ==(other)
-    equal_simple_attrs = %i(date_range contract_type status).all? { |attr| send(attr) == other.send(attr) }
-    equal_market_location = market_location.id == other.market_location.id
-    equal_simple_attrs && equal_market_location
-  end
-
 end
