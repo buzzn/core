@@ -47,6 +47,8 @@ module Contract
     ENDED      = 'ended'
     STATUS     = [ONBOARDING, ACTIVE, TERMINATED, ENDED]
 
+    STATUS.each { |s| delegate "#{s}?", to: :status } # adds status query methods like contract.active?
+
     scope :power_givers,             -> { where(type: 'PowerGiver') }
     scope :power_takers,             -> { where(type: 'PowerTaker') }
     scope :localpool_power_takers,   -> { where(type: 'LocalpoolPowerTaker') }
