@@ -234,7 +234,7 @@ describe 'Factories produce valid records' do
   end
 
   context 'BillingBrick' do
-    context "brick has billing" do
+    context 'brick has billing' do
       subject { build(:billing_brick) }
       it { is_expected.to be_valid }
       it 'has the same begin and end dates as the billing' do
@@ -242,7 +242,7 @@ describe 'Factories produce valid records' do
         expect(subject.end_date).to eq(subject.billing.end_date)
       end
     end
-    context "brick has no billing" do
+    context 'brick has no billing' do
       subject { build(:billing_brick, billing: nil) }
       it { is_expected.to be_valid }
       it 'has a begin and end date' do
