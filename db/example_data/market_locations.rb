@@ -17,7 +17,7 @@ names = [
   'Apartment 10'
 ]
 names.each.with_index(1) do |name, index|
-  SampleData.market_locations.send("wohnung_#{index}=", create_market_location(name))
+  SampleData.market_locations.send("apartment_#{index}=", create_market_location(name))
 end
 
 SampleData.market_locations.common_consumption = create_market_location('Allgemeinstrom')
