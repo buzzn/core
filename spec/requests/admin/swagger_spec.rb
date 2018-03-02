@@ -30,7 +30,9 @@ describe Admin, :swagger do
     localpool
   end
 
-  entity!(:billing_cycle_1) { Fabricate(:billing_cycle, localpool: localpool) }
+  entity!(:billing_cycle_1) do
+    Fabricate(:billing_cycle, localpool: localpool)
+  end
 
   entity!(:billing_cycle_2) { Fabricate(:billing_cycle, localpool: localpool) }
 
@@ -69,13 +71,13 @@ describe Admin, :swagger do
   end
 
   entity!(:billing_1) do
-    Fabricate(:billing, billing_cycle: billing_cycle_1,
-              localpool_power_taker_contract: localpool_power_taker_contract)
+    create(:billing, billing_cycle: billing_cycle_1,
+              contract: localpool_power_taker_contract)
   end
 
   entity!(:billing_2) do
-    Fabricate(:billing, billing_cycle: billing_cycle_1,
-              localpool_power_taker_contract: localpool_power_taker_contract)
+    create(:billing, billing_cycle: billing_cycle_1,
+              contract: localpool_power_taker_contract)
   end
 
   swagger do |s|

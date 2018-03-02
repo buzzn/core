@@ -7,5 +7,6 @@ FactoryGirl.define do
     total_price_cents            { total_energy_consumption_kwh * 25.5 }
     prepayments_cents            { total_price_cents * 0.80 }
     receivables_cents            { total_price_cents * 0.20 }
+    invoice_number               { generate(:billing_invoice_number) }
   end
 end

@@ -1,6 +1,7 @@
 FactoryGirl.define do
   # Please keep sequences ordered alphabetically
   sequence(:billing_cycle_name)                  { |i| "Cycle #{i}" }
+  sequence(:billing_invoice_number)              { |i| "BZ-#{format('%05d', i)}" }
   sequence(:localpool_name)                      { |i| "Localpool #{Digest::SHA1.hexdigest i.to_s}" }
   # Note: generated id is not technically correct as described in https://goo.gl/BsYqKR
   sequence(:market_location_id)                  { |i| i + 12_345_678_000 }
