@@ -6,7 +6,6 @@ class CreateBillingBricks < ActiveRecord::Migration
 
   def up
     SCHEMA.up(:billing_bricks, self)
-    change_column_default :billing_bricks, :status, :open
     add_belongs_to :billing_bricks, :billing, references: :billing, index: true, null: false
     add_foreign_key :billing_bricks, :billings, name: :fk_billing_bricks_billing, column: :billing_id
   end

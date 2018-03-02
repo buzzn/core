@@ -8,8 +8,7 @@ class Billing < ActiveRecord::Base
         attrs = {
           contract_type:   contract_type(contract),
           date_range:      date_range(contract, max_date_range),
-          market_location: contract.market_location,
-          status:          status(contract)
+          market_location: contract.market_location
         }
         BillingBrick.new(attrs)
       end
@@ -43,15 +42,6 @@ class Billing < ActiveRecord::Base
         else
           contract.end_date
         end
-      end
-
-      def status(contract)
-        :open
-        # if billing
-        #   %i(open calculated).include?(billing.status.to_sym) ? :open : :closed
-        # else
-        #   :open
-        # end
       end
 
     end

@@ -12,7 +12,14 @@ class BillingBrick < ActiveRecord::Base
   # clarify if this will stay here (it can be inferred through the billing)
   attr_accessor :market_location
 
-  enum status: %i(open closed).each_with_object({}).each { |k, map| map[k] = k.to_s }
   enum type: %i(power_taker third_party gap).each_with_object({}).each { |k, map| map[k] = k.to_s }
+
+  def status
+    if billing
+      %w(open calculated).include?(billing.status.to_s) ? 'open' : 'closed'
+    else
+      'open'
+    end
+  end
 
 end

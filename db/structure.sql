@@ -313,16 +313,6 @@ CREATE TYPE billing_bricks_contract_type AS ENUM (
 
 
 --
--- Name: billing_bricks_status; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE billing_bricks_status AS ENUM (
-    'open',
-    'closed'
-);
-
-
---
 -- Name: billings_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -992,7 +982,6 @@ CREATE TABLE billing_bricks (
     end_date date NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    status billing_bricks_status DEFAULT 'open'::billing_bricks_status,
     contract_type billing_bricks_contract_type,
     billing_id integer NOT NULL
 );

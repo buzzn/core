@@ -46,35 +46,6 @@ describe 'Billing::BrickBuilder' do
         end
       end
     end
-
-    describe 'status' do
-      context 'when brick has no billing' do
-        subject       { build(:billing_brick, billing: nil).status }
-        it            { is_expected.to eq('open') }
-      end
-
-      context 'when brick has a billing' do
-        EXPECTATIONS = {
-          open:       'open',
-          calculated: 'open',
-          delivered:  'closed',
-          settled:    'closed',
-          closed:     'closed'
-        }
-
-        EXPECTATIONS.each do |billing_status, expected_brick_status|
-          context "when billing status is #{billing_status}" do
-            let(:billing) { build(:billing, status: billing_status) }
-            subject       { build(:billing_brick, billing: billing).status }
-            it "is_expected.to eq #{expected_brick_status}", :skip do
-              is_expected.to eq(expected_brick_status)
-            end
-          end
-        end
-      end
-
-    end
-
   end
 
 end
