@@ -20,25 +20,10 @@ class Services::BillingBricksFactory
     # We don't handle register and tariff changes in the first billing story.
     # So we can keep it simple -- each contract will result in one brick.
     def bricks_for_market_location(location, date_range)
-      # 1. get billed bricks for MaLo
-      billed_bricks = find_billed_bricks(location, date_range)
-      unbilled_date_range = if billed_bricks.empty?
-                              date_range
-                            else
-                              billed_bricks.last.end_date..date_range.last
-                            end
-
-      # 2. generate unbilled bricks for date_range
-      #   - get bricks which lie in the date_range from DB
-      #   - get end date of last brick
-      #   - if end date doesn't equal date_range end date
-      #     - generate bricks for remaining date range
-      #       - get contracts for that period
-      #       - generate a brick for each contract
-      unbilled_bricks = build_unbilled_bricks(location, unbilled_date_range)
-
-      # 3. merge and return results
-      # billed_bricks + unbilled_bricks
+      billed_bricks       = find_billed_bricks(location, date_range)
+      unbilled_date_range = billed_bricks.empty? ? date_range : billed_bricks.last.end_date..date_range.last
+      unbilled_bricks     = build_unbilled_bricks(location, unbilled_date_range)
+      billed_bricks + unbilled_bricks
     end
 
     def find_billed_bricks(location, date_range)
@@ -46,6 +31,13 @@ class Services::BillingBricksFactory
       (billings.map(&:bricks).flatten || []).sort_by(&:begin_date)
     end
 
+    # Generate unbilled bricks for date_range
+    #   - get bricks which lie in the date_range from DB
+    #   - get end date of last brick
+    #   - if end date doesn't equal date_range end date
+    #     - generate bricks for remaining date range
+    #       - get contracts for that period
+    #       - generate a brick for each contract
     def build_unbilled_bricks(location, date_range)
       location.contracts_in_date_range(date_range).map { |contract| build_brick(contract, date_range) }
     end
