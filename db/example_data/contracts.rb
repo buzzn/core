@@ -13,7 +13,7 @@ module SampleData::ContractFactory
     private
 
     def create_contract(attrs)
-      all_attrs = attrs.merge(localpool: localpool)
+      all_attrs = attrs.merge(localpool: localpool).reverse_merge(tariffs: tariffs)
       if all_attrs.delete(:gap_contract)
         contract = FactoryGirl.create(:contract, :localpool_gap, all_attrs)
         contract.localpool.update(gap_contract_customer: contract.customer)
@@ -52,12 +52,12 @@ module SampleData::ContractFactory
       SampleData.localpools.people_power
     end
 
+    def tariffs
+      SampleData.localpools.people_power.tariffs.where(name: 'Hausstrom - Standard')
+    end
+
   end
 
-end
-
-def tariffs
-  @_tariffs ||= SampleData.localpools.people_power.tariffs.where(name: 'Hausstrom - Standard')
 end
 
 SampleData.contracts = OpenStruct.new
@@ -90,7 +90,6 @@ SampleData.contracts.pt1 = SampleData::ContractFactory.create(
   payments: [
     build(:payment, price_cents: 55_00, begin_date: '2016-01-01', cycle: 'monthly')
   ],
-  tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_1
 )
 
@@ -103,7 +102,6 @@ SampleData.contracts.pt2 = SampleData::ContractFactory.create(
   payments: [
     build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')
   ],
-  tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_2
 )
 
@@ -116,7 +114,6 @@ SampleData.contracts.pt3gap = SampleData::ContractFactory.create(
   end_date: Date.today + 1.month,
   contractor: SampleData.localpools.people_power.owner,
   customer: Organization.find_by(slug: 'hv-schneider'),
-  tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_3
 )
 
@@ -130,7 +127,6 @@ SampleData.contracts.pt3 = SampleData::ContractFactory.create(
   payments: [
     build(:payment, price_cents: 67_00, begin_date: '2016-01-01', cycle: 'monthly')
   ],
-  tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_3
 )
 SampleData.contracts.pt3.customer.add_role(Role::GROUP_ENERGY_MENTOR, SampleData.contracts.pt3.localpool)
@@ -147,7 +143,6 @@ SampleData.contracts.pt4 = SampleData::ContractFactory.create(
   payments: [
    build(:payment, price_cents: 53_00, begin_date: '2016-01-01', cycle: 'monthly')
   ],
-  tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_4
 )
 
@@ -165,7 +160,6 @@ SampleData.contracts.pt5a = SampleData::ContractFactory.create(
   payments: [
     build(:payment, price_cents: 45_00, begin_date: '2016-01-01', cycle: 'monthly')
   ],
-  tariffs: tariffs
 )
 
 # Leerstand
@@ -189,7 +183,6 @@ SampleData.contracts.pt5b = SampleData::ContractFactory.create(
   # TODO: this should later be removed
   register: SampleData.contracts.pt5a.market_location.register, # important !
   customer: SampleData.persons.pt5b,
-  tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_5
 )
 
@@ -218,20 +211,17 @@ SampleData.contracts.pt7b = SampleData::ContractFactory.create(
 # English language speaker
 SampleData.contracts.pt8 = SampleData::ContractFactory.create(
   customer: SampleData.persons.pt8,
-  tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_8
 )
 
 # Two more powertakers to make them 10 ...
 SampleData.contracts.pt9 = SampleData::ContractFactory.create(
   customer: SampleData.persons.pt9,
-  tariffs: tariffs,
   market_location: SampleData.market_locations.wohnung_9
 )
 # a substitute meter/register
 SampleData.contracts.pt10 = SampleData::ContractFactory.create(
   customer: SampleData.persons.pt10,
-  tariffs: tariffs,
   register: FactoryGirl.create(:register, :substitute,
     meter: build(:meter, :virtual, group: SampleData.localpools.people_power)),
   market_location: SampleData.market_locations.wohnung_10
