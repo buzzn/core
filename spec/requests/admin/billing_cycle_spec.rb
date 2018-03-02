@@ -64,7 +64,7 @@ describe Admin::BillingCycleResource do
       expect(json.to_yaml).to eq wrong_json.to_yaml
     end
 
-    it '201' do
+    it '201', :pending do
       POST "/localpools/#{group.id}/billing-cycles", $admin,
            last_date: end_date,
            name: 'mine'
