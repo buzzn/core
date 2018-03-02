@@ -30,7 +30,7 @@ class Transactions::Admin::BillingCycle::Bricks < Transactions::Base
   def build_bricks(bricks)
     return [] unless bricks
     bricks.collect do |brick|
-      { classifier: brick.type, begin_date: brick.date_range.first.as_json, end_date: brick.date_range.last.as_json, status: brick.status }
+      { contract_type: brick.contract_type, begin_date: brick.date_range.first.as_json, end_date: brick.date_range.last.as_json, status: brick.status }
     end
   end
 

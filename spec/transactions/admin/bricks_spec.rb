@@ -32,7 +32,7 @@ describe Transactions::Admin::BillingCycle::Bricks do
           entity!(:contract) { create(:contract, :localpool_powertaker, market_location: market_location) }
           it { is_expected.to be_a(Dry::Monads::Either::Right) }
           it { expect(first_location.keys).to eq(%i(id type name bricks)) }
-          it { expect(first_location[:bricks][:array].first.keys).to eq(%i(classifier begin_date end_date status)) }
+          it { expect(first_location[:bricks][:array].first.keys).to eq(%i(contract_type begin_date end_date status)) }
 
         end
       end

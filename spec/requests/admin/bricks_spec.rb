@@ -26,7 +26,7 @@ describe Admin::BillingCycleResource do
           'bricks' => {
             'array' => [
               {
-                'classifier' => 'power_taker',
+                'contract_type' => 'power_taker',
                 'begin_date' => contract.begin_date.as_json,
                 'end_date' => billing_cycle.end_date.as_json,
                 'status' => 'open'
