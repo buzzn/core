@@ -1,5 +1,6 @@
-# FIXME: Billing should become a module, so we don't have to add < ActiveRecord::Base here
-class Billing < ActiveRecord::Base
+require_relative '../billing'
+
+module Builders::Billing
   class BrickBuilder
 
     class << self

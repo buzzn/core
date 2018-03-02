@@ -46,5 +46,5 @@ class Services::BillingBricksFactory
   def date_range_zero?(date_range)
     date_range.last == date_range.first
   end
-
+  
 end
