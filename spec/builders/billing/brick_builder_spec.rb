@@ -39,6 +39,12 @@ describe 'Billing::BrickBuilder' do
     end
 
     describe 'type' do
+      context 'when initialized with a regular powertaker contract' do
+        let(:contract) { create(:contract, :localpool_powertaker) }
+        it 'has the type power_taker' do
+          expect(brick.contract_type).to eq('power_taker')
+        end
+      end
       context 'when initialized with a third party contract' do
         let(:contract) { create(:contract, :localpool_third_party) }
         it 'has the type third_party' do

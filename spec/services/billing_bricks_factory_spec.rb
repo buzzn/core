@@ -48,8 +48,7 @@ describe 'Services::BillingBricksFactory' do
             expect(subject.first[:bricks].first).to have_attributes(
               date_range:      args[:date_range],
               status:          'open',
-              contract_type:   'power_taker',
-              market_location: market_location
+              contract_type:   'power_taker'
             )
           end
         end
@@ -90,14 +89,12 @@ describe 'Services::BillingBricksFactory' do
           expect(brick1).to have_attributes(
             date_range: date_range.first...(date_range.first + 1.month),
             status: 'open',
-            contract_type: 'gap',
-            market_location: market_location
+            contract_type: 'gap'
           )
           expect(brick2).to have_attributes(
             date_range: (date_range.first + 1.month)...date_range.last,
             status: 'open',
-            contract_type: 'power_taker',
-            market_location: market_location
+            contract_type: 'power_taker'
           )
         end
       end

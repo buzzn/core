@@ -7,8 +7,7 @@ class Billing < ActiveRecord::Base
       def from_contract(contract, max_date_range)
         attrs = {
           contract_type:   contract_type(contract),
-          date_range:      date_range(contract, max_date_range),
-          market_location: contract.market_location
+          date_range:      date_range(contract, max_date_range)
         }
         BillingBrick.new(attrs)
       end

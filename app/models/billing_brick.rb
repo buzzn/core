@@ -9,9 +9,6 @@ class BillingBrick < ActiveRecord::Base
 
   belongs_to :billing
 
-  # clarify if this will stay here (it can be inferred through the billing)
-  attr_accessor :market_location
-
   enum type: %i(power_taker third_party gap).each_with_object({}).each { |k, map| map[k] = k.to_s }
 
   def status
