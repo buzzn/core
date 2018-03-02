@@ -1,7 +1,11 @@
 #
 # A billing brick stores a part of the energy consumption within a billing.
 #
+require_relative 'concerns/with_date_range'
+
 class BillingBrick < ActiveRecord::Base
+
+  include WithDateRange
 
   belongs_to :billing
 
@@ -10,15 +14,6 @@ class BillingBrick < ActiveRecord::Base
 
   enum status: %i(open closed).each_with_object({}).each { |k, map| map[k] = k.to_s }
   enum type: %i(power_taker third_party gap).each_with_object({}).each { |k, map| map[k] = k.to_s }
-
-  def date_range=(new_range)
-    self.begin_date = new_range.first
-    self.end_date   = new_range.last
-  end
-
-  def date_range
-    begin_date..end_date
-  end
 
   def ==(other)
     equal_simple_attrs = %i(date_range contract_type status).all? { |attr| send(attr) == other.send(attr) }
