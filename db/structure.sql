@@ -302,23 +302,23 @@ CREATE TYPE addresses_country AS ENUM (
 
 
 --
+-- Name: billing_bricks_contract_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE billing_bricks_contract_type AS ENUM (
+    'power_taker',
+    'third_party',
+    'gap'
+);
+
+
+--
 -- Name: billing_bricks_status; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE billing_bricks_status AS ENUM (
     'open',
     'closed'
-);
-
-
---
--- Name: billing_bricks_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE billing_bricks_type AS ENUM (
-    'power_taker',
-    'third_party',
-    'gap'
 );
 
 
@@ -993,7 +993,7 @@ CREATE TABLE billing_bricks (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     status billing_bricks_status DEFAULT 'open'::billing_bricks_status,
-    type billing_bricks_type,
+    contract_type billing_bricks_contract_type,
     billing_id integer NOT NULL
 );
 

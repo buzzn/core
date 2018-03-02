@@ -6,7 +6,7 @@ class Billing < ActiveRecord::Base
 
       def from_contract(contract, max_date_range)
         attrs = {
-          type:            type(contract),
+          contract_type:   contract_type(contract),
           date_range:      date_range(contract, max_date_range),
           market_location: contract.market_location,
           status:          status(contract)
@@ -17,7 +17,7 @@ class Billing < ActiveRecord::Base
       private
 
       # Example: Contract::LocalpoolPowerTaker => 'power_taker'
-      def type(contract)
+      def contract_type(contract)
         contract.model_name.name.sub('Contract::Localpool', '').underscore.to_sym
       end
 

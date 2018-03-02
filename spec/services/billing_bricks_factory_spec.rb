@@ -28,9 +28,9 @@ describe 'Services::BillingBricksFactory' do
 
           expect(subject.first[:bricks].size).to equal(1)
           expected_brick = BillingBrick.new(
-            date_range: args[:date_range],
-            status: :open,
-            type: :power_taker,
+            date_range:       args[:date_range],
+            status:          :open,
+            contract_type:   :power_taker,
             market_location: market_location
           )
           expect(subject.first[:bricks].size).to eq(1)
