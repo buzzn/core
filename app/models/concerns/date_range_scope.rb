@@ -1,4 +1,4 @@
-module InDateRangeScope
+module DateRangeScope
 
   extend ActiveSupport::Concern
 

@@ -1,8 +1,12 @@
-require_relative 'concerns/in_date_range_scope'
+require_relative 'concerns/last_date'
+require_relative 'concerns/with_date_range'
+require_relative 'concerns/date_range_scope'
 
 class Billing < ActiveRecord::Base
 
-  include InDateRangeScope
+  include LastDate
+  include WithDateRange
+  include DateRangeScope
 
   enum status: %i(open calculated delivered settled closed).each_with_object({}) { |i, o| o[i] = i.to_s }
 
@@ -10,15 +14,5 @@ class Billing < ActiveRecord::Base
   belongs_to :contract, -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty)) }, class_name: 'Contract::Base'
 
   has_many :bricks, class_name: 'BillingBrick'
-
-  # TODO: DRY this up when Christian has created the module for date ranges
-  def date_range=(new_range)
-    self.begin_date = new_range.first
-    self.end_date   = new_range.last
-  end
-
-  def date_range
-    begin_date..end_date
-  end
 
 end

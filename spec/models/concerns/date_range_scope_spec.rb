@@ -1,5 +1,5 @@
 # Testing this scope separately with the example of contract.
-describe 'InDateRangeScope' do
+describe 'DateRangeScope' do
 
   let(:queried_range)      { Date.new(2018, 1, 1)..Date.new(2019, 1, 1) }
   let!(:contract)          { create(:contract, begin_date: contract_range.first, end_date: contract_range.last) }
