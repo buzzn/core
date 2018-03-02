@@ -73,6 +73,13 @@ describe 'Services::BillingBricksFactory' do
 
         it 'returns two bricks' do
           expect(subject.first[:bricks].size).to eq(2)
+          brick1, brick2 = subject.first[:bricks]
+          expect(brick1.date_range).to eq(date_range.first...(date_range.first + 1.month))
+          expect(brick1.status).to eq('open')
+          expect(brick1.contract_type).to eq('gap')
+          expect(brick2.date_range).to eq((date_range.first + 1.month)...date_range.last)
+          expect(brick2.status).to eq('open')
+          expect(brick2.contract_type).to eq('power_taker')
         end
       end
     end
