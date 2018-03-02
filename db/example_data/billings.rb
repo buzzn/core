@@ -8,8 +8,8 @@ def billing_from_contract(contract)
     date_range:                   date_range,
     contract:                     contract,
     status:                       'closed',
-    invoice_number:               "BZ-#{format('%0d5', Billing.count)}",
-    bricks: [Billing::BrickBuilder.from_contract(contract, Date.new(2000, 1, 1)...Date.new(2100, 1,1))]
+    invoice_number:               "BZ-#{format('%05d', Billing.count + 1)}",
+    bricks: [Billing::BrickBuilder.from_contract(contract, Date.new(2000, 1, 1)...Date.new(2100, 1, 1))]
  )
 end
 

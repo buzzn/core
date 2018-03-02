@@ -6,8 +6,9 @@ FactoryGirl.define do
     end
     localpool                     { FactoryGirl.build(:localpool) }
     contract_number               { generate(:metering_point_operator_contract_nr) }
-    signing_date                  Date.parse('2015-10-11')
-    begin_date                    Date.parse('2016-01-01')
+    signing_date                  { begin_date - 3.weeks }
+    begin_date                    { Date.new(2016, 1, 1) }
+    termination_date              { end_date.present? ? end_date - 3.months : nil }
     contract_number_addition      1
     power_of_attorney             true
     metering_point_operator_name  'Generic metering point operator'
