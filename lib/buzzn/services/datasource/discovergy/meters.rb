@@ -14,6 +14,13 @@ class Services::Datasource::Discovergy::Meters
     end
   end
 
+  def check(serial)
+    meter = ::Meter::Real.new(product_serialnumber: serial,
+                              broker: Broker::Discovergy.new)
+    meter.broker.meter = meter
+    process(LastReading::Get.new(meter: meter, fields: [:power]))
+  end
+
   def real
     filter('EASYMETER')
   end
@@ -22,11 +29,12 @@ class Services::Datasource::Discovergy::Meters
     filter('VIRTUAL')
   end
 
-  def virtual_list
+  def meter_to_virtual_map
     virtual.each_with_object({}) do |entry, map|
       collect_entries(entry[1], map)
     end
   end
+  alias virtual_list meter_to_virtual_map
 
   private
 

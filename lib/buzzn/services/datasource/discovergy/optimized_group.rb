@@ -7,27 +7,37 @@ class Services::Datasource::Discovergy::OptimizedGroup
   include Import['services.datasource.discovergy.api']
   include Types::Discovergy
 
+  def initialize(**)
+    super
+    @logger = Buzzn::Logger.new(self)
+  end
+
   def verify(group)
     local  = local(group).collect { |m| m.product_serialnumber }.sort.uniq
     remote = remote(group).collect { |m| m.serialNumber }.sort.uniq
     if local == remote
       true
     else
-      diff = local - remote
-      puts "Verifying the optimized group failed, there's a difference between Discovergy's and our list: #{diff}"
+      diff_left = local - remote
+      diff_right = remote - local
+      @logger.warn { "Verifying the optimized group failed, there's a difference between Discovergy's #{diff_right} and our list #{diff_left}" }
       false
     end
+  end
+
+  def discovergy_id(meter)
+    "EASYMETER_#{meter.product_serialnumber}"
   end
 
   def create(group)
     plus = []
     minus = []
     group.registers.consumption_production.each do |r|
-      next unless r.meter.broker
+      next if r.datasource != :discovergy
       if r.label.production?
-        plus << r.meter.broker.external_id
+        plus << discovergy_id(r.meter)
       else
-        minus << r.meter.broker.external_id
+        minus << discovergy_id(r.meter)
       end
     end
 
@@ -65,9 +75,8 @@ class Services::Datasource::Discovergy::OptimizedGroup
   end
 
   def local(group)
-    group.registers.consumption_production.collect do |register|
-      register.meter if register.meter.broker
-    end.compact.uniq
+    meters = group.meters.where(id: Register::Base.grid_production_consumption.where('meter_id = meters.id').select(:meter_id))
+    meters.select { |meter| meter.datasource == :discovergy }
   end
 
   private

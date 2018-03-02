@@ -23,7 +23,7 @@ class Beekeeper::Importer::Brokers
     end
     without_broker.each do |meter|
       meter.registers.each do |register|
-        warnings["register '#{register.name}'"] = 'is not on Discovergy'
+        warnings["register '#{register.meter.legacy_buzznid}'"] = 'is not on Discovergy'
       end
     end
     warnings

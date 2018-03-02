@@ -16,9 +16,11 @@ class Beekeeper::Importer::LogImportSummary
     logger.info("organizations                                            : #{Organization.count}")
     logger.info("persons                                                  : #{Person.count}")
     logger.info("contracts                                                : #{Contract::Base.count}")
-    logger.info("registers                                                : #{Register::Real.count}")
+    logger.info("registers (real)                                         : #{Register::Real.count}")
+    logger.info("registers (substitute)                                   : #{Register::Substitute.count}")
     logger.info("readings                                                 : #{Reading::Single.count}")
-    logger.info("meters                                                   : #{Meter::Real.count}")
+    logger.info("meters (real)                                            : #{Meter::Real.count}")
+    logger.info("meters (virtual)                                         : #{Meter::Virtual.count}")
     logger.info("billings                                                 : #{Billing.count}")
     logger.info("billing bricks                                           : #{BillingBrick.count}")
 

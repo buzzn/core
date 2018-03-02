@@ -32,5 +32,9 @@ module Meter
       do_filter(value, *search_attributes)
     end
 
+    def datasource
+      broker ? :discovergy : :manual
+    end
+
   end
 end

@@ -48,7 +48,7 @@ describe Admin::LocalpoolRoda do
         'edifact_cycle_interval'=>meter.attributes['edifact_cycle_interval'],
         'edifact_data_logging'=>meter.attributes['edifact_data_logging'],
         'sent_data_dso'=>meter.sent_data_dso.to_s,
-        'data_source'=>meter.registers.first.data_source.to_s
+        'data_source'=>meter.datasource.to_s
       }
     end
 
@@ -156,7 +156,7 @@ describe Admin::LocalpoolRoda do
           'edifact_cycle_interval'=>'QUARTERLY',
           'edifact_data_logging'=>'Z04',
           'sent_data_dso'=>'2010-01-01',
-          'data_source'=>'standard_profile'
+          'data_source'=>'manual'
         }
       end
 
@@ -234,7 +234,7 @@ describe Admin::LocalpoolRoda do
               edifact_cycle_interval: Meter::Real.edifact_cycle_intervals[:quarterly],
               edifact_data_logging: Meter::Real.edifact_data_loggings[:analog],
               direction_number: Meter::Real.direction_numbers[:two_way_meter],
-              data_source: 'standard_profile'
+              data_source: 'manual'
 
         expect(response).to have_http_status(200)
         meter.reload

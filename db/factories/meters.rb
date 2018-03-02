@@ -58,7 +58,7 @@ FactoryGirl.define do
       # edifact data
       edifact_metering_type        Meter::Real.edifact_metering_types[:digital_household_meter]
       edifact_meter_size           Meter::Real.edifact_meter_sizes[:edl40]
-      edifact_measurement_method   Meter::Real.edifact_measurement_methods[:remote]
+      edifact_measurement_method   Meter::Real.edifact_measurement_methods[:manual]
       edifact_mounting_method      Meter::Real.edifact_mounting_methods[:three_point_mounting]
       edifact_voltage_level        Meter::Real.edifact_voltage_levels[:low_level]
       edifact_cycle_interval       Meter::Real.edifact_cycle_intervals[:yearly]

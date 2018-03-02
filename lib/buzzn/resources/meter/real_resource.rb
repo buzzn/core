@@ -26,7 +26,7 @@ module Meter
                :data_source
 
     def data_source
-      object.registers.first&.data_source
+      object.datasource
     end
 
   end

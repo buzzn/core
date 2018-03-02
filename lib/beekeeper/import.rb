@@ -63,6 +63,7 @@ class Beekeeper::Import
       l.formatter = proc do |severity, _datetime, _progname, msg|
         "[#{severity.upcase}] #{msg}\n"
       end
+      Buzzn::Logger.root = l
       l
     end
   end
