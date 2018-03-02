@@ -1,4 +1,6 @@
-module Discovergy
+require_relative '../builders'
+
+module Builders::Discovergy
 end
 
 require_relative 'discovergy/bubble_builder'

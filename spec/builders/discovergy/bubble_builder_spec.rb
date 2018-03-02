@@ -1,6 +1,6 @@
-require 'buzzn/discovergy/bubble_builder'
+require 'buzzn/builders/discovergy/bubble_builder'
 
-describe Discovergy::BubbleBuilder do
+describe Builders::Discovergy::BubbleBuilder do
 
   def self.load_json(file)
     JSON.parse(File.read(File.join(File.dirname(__FILE__), file)))
@@ -32,7 +32,7 @@ describe Discovergy::BubbleBuilder do
 
   context 'without substitute' do
 
-    subject(:builder) { Discovergy::BubbleBuilder.new(registers: registers) }
+    subject(:builder) { Builders::Discovergy::BubbleBuilder.new(registers: registers) }
 
     let(:expected_values) { [190, 58, 0, 9, 3957, 157, 14] }
 
@@ -44,7 +44,7 @@ describe Discovergy::BubbleBuilder do
 
     context 'with substitute' do
 
-      subject(:builder) { Discovergy::BubbleBuilder.new(registers: group.registers.reload) }
+      subject(:builder) { Builders::Discovergy::BubbleBuilder.new(registers: group.registers.reload) }
 
       before do
         meter = create(:meter, :virtual,

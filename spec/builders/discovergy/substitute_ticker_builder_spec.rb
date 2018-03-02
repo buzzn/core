@@ -1,6 +1,6 @@
-require 'buzzn/discovergy/substitute_ticker_builder'
+require 'buzzn/builders/discovergy/substitute_ticker_builder'
 
-describe Discovergy::SubstituteTickerBuilder do
+describe Builders::Discovergy::SubstituteTickerBuilder do
 
   def self.load_json(file)
     JSON.parse(File.read(File.join(File.dirname(__FILE__), file)))
@@ -39,7 +39,7 @@ describe Discovergy::SubstituteTickerBuilder do
   end
 
   context 'watt' do
-    subject(:builder) { Discovergy::SubstituteTickerBuilder.new(register: substitute, unit: :W, registers: registers) }
+    subject(:builder) { Builders::Discovergy::SubstituteTickerBuilder.new(register: substitute, unit: :W, registers: registers) }
 
     it 'grid-feeding' do
       result = builder.build(response)
@@ -64,7 +64,7 @@ describe Discovergy::SubstituteTickerBuilder do
     end
   end
   context 'watt-hour' do
-    subject(:builder) { Discovergy::SubstituteTickerBuilder.new(register: substitute, unit: :Wh, registers: registers) }
+    subject(:builder) { Builders::Discovergy::SubstituteTickerBuilder.new(register: substitute, unit: :Wh, registers: registers) }
 
     it do
       result = builder.build(response)

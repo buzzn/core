@@ -1,7 +1,7 @@
 require_relative 'abstract_registers_builder'
 require_relative 'substitute_calculator'
 
-module Discovergy
+module Builders::Discovergy
   class BubbleBuilder < AbstractRegistersBuilder
 
     def unit

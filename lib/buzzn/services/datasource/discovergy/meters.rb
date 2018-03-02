@@ -1,6 +1,5 @@
 require_relative '../discovergy'
 require_relative '../../../types/discovergy'
-require_relative '../../../discovergy'
 
 class Services::Datasource::Discovergy::Meters
 

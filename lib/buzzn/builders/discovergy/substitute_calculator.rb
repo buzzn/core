@@ -1,6 +1,6 @@
 require_relative '../discovergy'
 
-class Discovergy::SubstituteCalculator
+class Builders::Discovergy::SubstituteCalculator
 
   attr_reader :time
 
