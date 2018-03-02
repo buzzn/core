@@ -15,7 +15,7 @@ class Beekeeper::Importer::GenerateBillings
 
   def run(localpool)
     localpool.market_locations.consumption.each.with_index(1) do |ml, index|
-      ended_contracts = ml.contracts.to_a.select { |c| c.status.ended? }
+      ended_contracts = ml.contracts.to_a.select(&:ended?)
       ended_contracts.each do |contract|
         attrs = {
           status: :closed,
