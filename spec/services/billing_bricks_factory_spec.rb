@@ -5,7 +5,7 @@ describe 'Services::BillingBricksFactory' do
     let(:group)      { build(:localpool) }
     let(:date_range) { Date.new(2018, 1, 1)..Date.new(2019, 1, 1) }
     let(:args)       { { date_range: date_range, group: group } }
-    subject          { Services::BillingBricksFactory.bricks_by_market_location(args) }
+    subject          { Services::BillingBricksFactory.new.bricks_by_market_location(args) }
 
     context 'when group has no market locations' do
       let(:group) { create(:localpool, market_locations: []) }

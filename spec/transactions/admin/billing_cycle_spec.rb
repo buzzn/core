@@ -2,8 +2,7 @@ require 'buzzn/transactions/admin/billing_cycle/create'
 
 describe Transactions::Admin::BillingCycle::Create do
 
-  entity!(:localpool)         { create(:localpool) }
-  entity(:person)             { create(:person) }
+  entity!(:localpool) { create(:localpool) }
 
   let(:account)            { Account::Base.where(person_id: user).first }
   let(:localpool_resource) { Admin::LocalpoolResource.all(account).first }

@@ -22,7 +22,7 @@ module Beekeeper
       end
 
       def verify!(buzznid)
-        raise 'buzznid unreliable!!' if buzznid !~ /^([0-9])+\/([0-9])+$/
+        raise "buzznid '#{buzznid}' unreliable!!" if buzznid !~ /^([0-9])+\/([0-9])+$/
       end
 
     end

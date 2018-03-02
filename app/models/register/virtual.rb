@@ -15,13 +15,8 @@ module Register
       return result
     end
 
-    def data_source
-      # give preference to discovergy
-      if self.broker.is_a? Broker::Discovergy
-        Buzzn::Discovergy::DataSource::NAME
-      else
-        Buzzn::Virtual::DataSource::NAME
-      end
+    def datasource
+      raise 'not implemented'
     end
 
   end
