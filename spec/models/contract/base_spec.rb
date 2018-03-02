@@ -8,7 +8,7 @@ describe 'Contract::Base' do
         expect(contract.status).to be_onboarding
         expect(contract.status).to eq('onboarding') # string still works
         contract.update_attribute(:begin_date, Date.tomorrow)
-        expect(contract.status).to be_onboarding
+        expect(contract).to be_onboarding
       end
     end
 
@@ -16,14 +16,15 @@ describe 'Contract::Base' do
       let(:contract) { Fabricate.build(:metering_point_operator_contract, begin_date: Date.yesterday) }
       it 'is active' do
         expect(contract.status).to be_active
+        expect(contract).to be_active
         contract.update_attribute(:end_date, Date.tomorrow)
-        expect(contract.status).to be_active
       end
 
       context 'when contract also has end date' do
         before { contract.update_attribute(:end_date, Date.today) }
         it 'is ended' do
           expect(contract.status).to be_ended
+          expect(contract).to be_ended
         end
       end
 
@@ -31,6 +32,7 @@ describe 'Contract::Base' do
         before { contract.update_attribute(:termination_date, Date.today) }
         it 'is terminated' do
           expect(contract.status).to be_terminated
+          expect(contract).to be_terminated
         end
       end
     end

@@ -42,7 +42,7 @@ describe 'Billing::BrickBuilder' do
       context 'when initialized with a third party contract' do
         let(:contract) { create(:contract, :localpool_third_party) }
         it 'has the type third_party' do
-          expect(brick.type).to eq('third_party')
+          expect(brick.contract_type).to eq('third_party')
         end
       end
     end

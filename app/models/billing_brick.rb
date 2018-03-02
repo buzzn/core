@@ -3,8 +3,6 @@
 #
 class BillingBrick < ActiveRecord::Base
 
-  self.inheritance_column = '_type' # we use type as a regular attribute, not for STI
-
   belongs_to :billing
 
   # clarify if this will stay here (it can be inferred through the billing)
@@ -23,7 +21,7 @@ class BillingBrick < ActiveRecord::Base
   end
 
   def ==(other)
-    equal_simple_attrs = %i(date_range type status).all? { |attr| send(attr) == other.send(attr) }
+    equal_simple_attrs = %i(date_range contract_type status).all? { |attr| send(attr) == other.send(attr) }
     equal_market_location = market_location.id == other.market_location.id
     equal_simple_attrs && equal_market_location
   end

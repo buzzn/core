@@ -45,4 +45,5 @@ class Beekeeper::Importer::GenerateBillings
     @invoice_number_suffix += 1
     "BK-IMPORT-LP#{localpool.id}-#{@invoice_number_suffix}"
   end
+
 end
