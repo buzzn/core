@@ -32,9 +32,9 @@ module Builders::Discovergy
       substitute = response.find do |id, _|
         map[id].is_a?(Register::Substitute)
       end
-      if substitute && substitute.label.consumption?
+      if substitute&.label&.consumption?
         method(:build_sum_with_consumption_substitute)
-      elsif substitute && substitute.label.production?
+      elsif substitute&.label&.production?
         method(:build_sum_with_production_substitute)
       else
         method(:build_sum)

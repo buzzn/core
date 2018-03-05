@@ -38,7 +38,7 @@ class Services::BillingBricksFactory
   end
 
   def build_brick(contract, date_range)
-    Billing::BrickBuilder.from_contract(contract, date_range)
+    Builders::Billing::BrickBuilder.from_contract(contract, date_range)
   end
 
   # Ruby can't calculate the length (in days) of a range object when the range is defined with dates -- it always returns nil.
@@ -46,5 +46,5 @@ class Services::BillingBricksFactory
   def date_range_zero?(date_range)
     date_range.last == date_range.first
   end
-  
+
 end

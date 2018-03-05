@@ -71,12 +71,6 @@ module Meter
       end
     end
 
-    def initialize(attr = {})
-      super
-      # TODO really needed ? too hacky !
-      attr[:registers].each { |r| r.meter = self } if attr.key?(:registers)
-    end
-
     def input_register=(attr)
       registers << Register::Input.new(attr.merge(meter: self))
     end

@@ -18,14 +18,13 @@ class Builders::Discovergy::SubstituteCalculator
   end
 
   def value(substitute)
-      value =
-        if substitute.label.production?
-          -@substitute.to_i
-        elsif substitute.label.consumption?
-          @substitute.to_i
-        else
-          raise 'BUG: can handle only production and consuption subsitute registers'
-        end
+    value = if substitute.label.production?
+              -@substitute.to_i
+            elsif substitute.label.consumption?
+              @substitute.to_i
+            else
+              raise 'BUG: can handle only production and consuption subsitute registers'
+            end
     [0, value].max
   end
 
