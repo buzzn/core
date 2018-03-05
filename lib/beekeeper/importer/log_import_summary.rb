@@ -21,6 +21,7 @@ class Beekeeper::Importer::LogImportSummary
     logger.info("readings                                                 : #{Reading::Single.count}")
     logger.info("meters (real)                                            : #{Meter::Real.count}")
     logger.info("meters (virtual)                                         : #{Meter::Virtual.count}")
+    logger.info("billing cycles                                           : #{BillingCycle.count}")
     logger.info("billings                                                 : #{Billing.count}")
     logger.info("billing bricks                                           : #{BillingBrick.count}")
 

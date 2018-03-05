@@ -7,6 +7,7 @@ class BillingCycle < ActiveRecord::Base
   include WithDateRange
 
   belongs_to :localpool, class_name: 'Group::Localpool'
+  has_many :billings
 
   def status
     :open
