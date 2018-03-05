@@ -48,8 +48,8 @@ class Beekeeper::Importer::GenerateBillings
   end
 
   def range_spans_one_year?(date_range)
-    [date_range.first.month, date_range.first.day] == [1, 1] &&
-      [date_range.last.month, date_range.last.day] == [12, 31]
+    ((date_range.first.year + 1) == date_range.last.year) &&
+    [date_range.first.month, date_range.first.day, date_range.last.month, date_range.last.day].all? { |nr| nr == 1}
   end
 
   def create_billings(localpool, billing_cycle, only_bill_ended_contracts: false)
