@@ -29,8 +29,13 @@ module Builders::Discovergy
     private
 
     def build_method(response)
-      if response.find { |id, data| map[id].is_a?(Register::Substitute) }
-        method(:build_sum_with_substitute)
+      substitute = response.find do |id, _|
+        map[id].is_a?(Register::Substitute)
+      end
+      if substitute && substitute.label.consumption?
+        method(:build_sum_with_consumption_substitute)
+      elsif substitute && substitute.label.production?
+        method(:build_sum_with_production_substitute)
       else
         method(:build_sum)
       end
@@ -59,12 +64,23 @@ module Builders::Discovergy
       end
     end
 
-    def build_sum_with_substitute(register, consumption, production, data)
+    def build_sum_with_consumption_substitute(register, consumption, production, data)
       if register.grid_consumption?
         do_sum(register, consumption, data)
       elsif register.grid_feeding?
         do_sum(register, consumption, data, method(:substract))
       elsif register.label.production?
+        do_sum(register, consumption, data)
+        do_sum(register, production, data)
+      end
+    end
+
+    def build_sum_with_production_substitute(register, consumption, production, data)
+      if register.grid_consumption?
+        do_sum(register, production, data)
+      elsif register.grid_feeding?
+        do_sum(register, production, data, method(:substract))
+      elsif register.label.consumption?
         do_sum(register, consumption, data)
         do_sum(register, production, data)
       end

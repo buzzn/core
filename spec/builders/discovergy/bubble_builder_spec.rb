@@ -44,19 +44,24 @@ describe Builders::Discovergy::BubbleBuilder do
 
     context 'with substitute' do
 
-      subject(:builder) { Builders::Discovergy::BubbleBuilder.new(registers: group.registers.reload) }
+      let(:builder) { Builders::Discovergy::BubbleBuilder.new(registers: group.registers.reload) }
 
-      before do
-        meter = create(:meter, :virtual,
-                       group: group,
-                       registers: [build(:register, :substitute)])
-        meter.registers.first
+      entity!(:meter) do
+        create(:meter, :virtual,
+               group: group,
+               registers: [build(:register, :substitute)])
       end
+      subject(:result) { builder.build(response) }
 
-      it do
-        result = builder.build(response)
-        expect(result.size).to eq 8
-        expect(result.collect(&:value)).to eq(expected_values + [21])
+      it { expect(result.size).to eq(8) }
+
+      context 'consumption' do
+        before { meter.registers.first.consumption! }
+        it { expect(result.collect(&:value)).to eq(expected_values + [21]) }
+      end
+      context 'production' do
+        before { meter.registers.first.production_pv! }
+        it { expect(result.collect(&:value)).to eq(expected_values + [0]) }
       end
     end
   end
