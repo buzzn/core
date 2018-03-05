@@ -14,46 +14,76 @@ class Beekeeper::Importer::GenerateBillings
   end
 
   def run(localpool)
-    begin_year = localpool.start_date.year
-    # we assume all billing including 2017 has been done in beekeeper.
-    end_year   = LAST_BEEKEEPER_BILLING_CYCLE_YEAR
-    (begin_year..end_year).each do |year|
-      billing_cycle = create_localpool_billing_cycle(localpool, year)
-      create_annual_billings(localpool, billing_cycle)
+    # First, create the billing cycles with their different ranges (initial, yearly and final).
+    # That way the following code can be written (almost) without special cases.
+    billing_cycles = create_billing_cycles(localpool)
+    # then run them
+    billing_cycles.each do |billing_cycle|
+      only_bill_ended_contracts = (billing_cycle == billing_cycles.last) # only bill ended contracts on the last cycle
+      created_billings = create_billings(localpool, billing_cycle, only_bill_ended_contracts: only_bill_ended_contracts)
+      billing_cycle.destroy! if created_billings.size == 0 # quick and dirty
     end
   end
 
   private
 
-  def create_annual_billings(localpool, billing_cycle)
-    localpool.market_locations.consumption.each do |market_location|
-      contracts_to_bill(billing_cycle.date_range, market_location).each do |contract|
-        create_billing(localpool, contract, billing_cycle)
-      end
+  def create_billing_cycles(localpool)
+    return [] if localpool.start_date.year == Date.today.year # nothing to do for those
+    date_ranges = []
+    # range for localpool start year
+    date_ranges << (localpool.start_date...Date.new(localpool.start_date.year + 1, 1, 1))
+    # yearly ranges since then
+    ((localpool.start_date.year + 1)..LAST_BEEKEEPER_BILLING_CYCLE_YEAR).each do |year|
+      date_ranges << (Date.new(year, 1, 1)...Date.new(year + 1, 1, 1))
     end
+    # final range to already bill *ended* contracts
+    date_ranges << (Date.new(LAST_BEEKEEPER_BILLING_CYCLE_YEAR + 1, 1, 1)...Date.today)
+    date_ranges.map { |date_range| create_billing_cycle(localpool, date_range) }
   end
 
-  def contracts_to_bill(date_range, market_location)
-    market_location.contracts_in_date_range(date_range).where.not(type: 'Contract::LocalpoolThirdParty')
+  def create_billing_cycle(localpool, date_range)
+    name = range_spans_one_year?(date_range) ? date_range.first.year : "#{date_range.first} - #{date_range.last}"
+    logger.info("Creating billing cycle #{name}")
+    BillingCycle.create!(localpool: localpool, date_range: date_range, name: name)
+  end
+
+  def range_spans_one_year?(date_range)
+    [date_range.first.month, date_range.first.day] == [1, 1] &&
+      [date_range.last.month, date_range.last.day] == [12, 31]
+  end
+
+  def create_billings(localpool, billing_cycle, only_bill_ended_contracts: false)
+    billings = []
+    localpool.market_locations.consumption.each do |market_location|
+      contracts_to_bill(market_location, billing_cycle.date_range, only_bill_ended_contracts).each do |contract|
+        billings << create_billing(localpool, contract, billing_cycle)
+      end
+    end
+    billings.flatten
+  end
+
+  def contracts_to_bill(market_location, date_range, only_bill_ended_contracts)
+    contracts = market_location.contracts_in_date_range(date_range).without_third_party
+    contracts = contracts.to_a.select(&:ended?) if only_bill_ended_contracts
+    contracts
   end
 
   def create_billing(localpool, contract, billing_cycle)
     date_range = billing_date_range(contract, billing_cycle)
-    attrs = {
+    Billing.create!(
       status: :closed, # closed means paid so we don't have to track payments/settling in our system any more.
       invoice_number: next_invoice_number(localpool),
-      total_energy_consumption_kwh: 0,
-      total_price_cents: 0,
-      prepayments_cents: 0,
-      receivables_cents: 0,
       contract: contract,
       billing_cycle: billing_cycle,
       bricks: [brick_for_contract(contract, date_range)],
-      date_range: date_range
-    }
-    if Billing.create!(attrs)
-      logger.info("Created billing for contract #{contract.id} (#{date_range})")
-    end
+      date_range: date_range,
+      # DUMMY data, may be filled in later, or not.
+      total_energy_consumption_kwh: 0,
+      total_price_cents: 0,
+      prepayments_cents: 0,
+      receivables_cents: 0
+    )
+    logger.debug("Created billing for contract #{contract.id} (#{date_range})")
   end
 
   def billing_date_range(contract, billing_cycle)
@@ -70,23 +100,6 @@ class Beekeeper::Importer::GenerateBillings
     @@global_invoice_number ||= 0
     @@global_invoice_number += 1
     "BEE-#{format('%05d', @@global_invoice_number)}"
-  end
-
-  def create_localpool_billing_cycle(localpool, year)
-    begin_date = (year == localpool.start_date.year) ? localpool.start_date : Date.new(year, 1, 1)
-    end_date   = Date.new(year + 1, 1, 1)
-    date_range = begin_date...end_date
-
-    billing_cycle = BillingCycle.create!(
-      localpool: localpool,
-      date_range: date_range,
-      name: date_range.first.year
-    )
-
-    if billing_cycle
-      logger.debug("Created billing cycle #{billing_cycle.name}")
-    end
-    billing_cycle
   end
 
 end

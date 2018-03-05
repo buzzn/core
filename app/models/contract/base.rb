@@ -79,6 +79,8 @@ module Contract
         .where('end_date > ? OR end_date IS NULL', timestamp + 1.second)
     end
 
+    scope :without_third_party, -> { where.not(type: 'Contract::LocalpoolThirdParty') }
+
     def full_contract_number
       "#{contract_number}/#{contract_number_addition}"
     end
