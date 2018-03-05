@@ -21,7 +21,7 @@ class Beekeeper::Importer::GenerateBillings
     billing_cycles.each do |billing_cycle|
       only_bill_ended_contracts = (billing_cycle == billing_cycles.last) # only bill ended contracts on the last cycle
       created_billings = create_billings(localpool, billing_cycle, only_bill_ended_contracts: only_bill_ended_contracts)
-      billing_cycle.destroy! if created_billings.size == 0 # quick and dirty
+      billing_cycle.destroy! if created_billings.size.zero? # quick and dirty
     end
   end
 
@@ -96,10 +96,12 @@ class Beekeeper::Importer::GenerateBillings
     Billing::BrickBuilder.from_contract(contract, date_range)
   end
 
+  # rubocop:disable Style/ClassVars
   def next_invoice_number(localpool)
     @@global_invoice_number ||= 0
     @@global_invoice_number += 1
     "BEE-#{format('%05d', @@global_invoice_number)}"
   end
+  # rubocop:enable Style/ClassVars
 
 end
