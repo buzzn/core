@@ -15,8 +15,6 @@ class Services::BillingBricksFactory
 
   private
 
-  # We don't handle register and tariff changes in the first billing story.
-  # So we can keep it simple -- each contract will result in one brick.
   def bricks_for_market_location(location, date_range)
     billed_bricks       = find_billed_bricks(location, date_range)
     unbilled_date_range = billed_bricks.empty? ? date_range : billed_bricks.last.end_date..date_range.last
@@ -29,6 +27,8 @@ class Services::BillingBricksFactory
     (billings.map(&:bricks).flatten || []).sort_by(&:begin_date)
   end
 
+  # We don't handle register and tariff changes in the first billing story.
+  # So we can keep it simple -- each contract will result in one brick.
   def build_unbilled_bricks(location, date_range)
     location.contracts_in_date_range(date_range).map { |contract| build_brick(contract, date_range) }
   end

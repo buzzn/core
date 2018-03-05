@@ -2,20 +2,6 @@ describe 'Services::BillingBricksFactory' do
 
   describe 'bricks_by_market_location' do
 
-    # RSpec::Matchers.define :equal_brick do |expected|
-    #   match do |actual|
-    #     actual.invariant.success?
-    #   end
-
-    #   failure_message do |actual|
-    #     "expected #{actual.class}##{actual.id} to have valid invariants: #{actual.invariant.errors.keys.join(',')}"
-    #   end
-
-    #   failure_message_when_negated do |actual|
-    #     "expected #{actual.class}##{actual.id} to have valid invariants: #{actual.invariant.errors.keys.join(',')}"
-    #   end
-    # end
-
     let(:group)      { build(:localpool) }
     let(:date_range) { Date.new(2018, 1, 1)...Date.new(2019, 1, 1) }
     let(:args)       { { date_range: date_range, group: group } }
