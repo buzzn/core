@@ -19,7 +19,7 @@ describe 'Reading::Continuous' do
     end
   end
 
-  describe "legacy tests" do
+  describe 'legacy tests' do
     entity(:reading_1) { Fabricate(:reading, register_id: 'some-id', timestamp: Time.new(2015, 6, 1), energy_milliwatt_hour: 5000, reason: Reading::Continuous::DEVICE_SETUP, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN, meter_serialnumber: 'some-number', state: 'Z86') }
     entity(:reading_2) { Fabricate(:reading, register_id: 'some-id', timestamp: Time.new(2015, 12, 29), energy_milliwatt_hour: 237000, reason: Reading::Continuous::REGULAR_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN, meter_serialnumber: 'some-number', state: 'Z86') }
     entity(:reading_3) { Fabricate(:reading, register_id: 'some-id', timestamp: Time.new(2016, 6, 27), energy_milliwatt_hour: 1239000, reason: Reading::Continuous::MIDWAY_READING, quality: Reading::Continuous::READ_OUT, source: Reading::Continuous::BUZZN, meter_serialnumber: 'some-number', state: 'Z86') }

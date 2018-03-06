@@ -23,7 +23,7 @@ module ReadingEnums
   SUBSTITUTE_VALUE           = 'substitute_value'
   ENERGY_QUANTITY_SUMMARIZED = 'energy_quantity_summarized'
   FORECAST_VALUE             = 'forecast_value'
-  READ_OUT                   = 'read_out'                   # abgelesen
+  READ_OUT                   = 'read_out' # abgelesen
   PROPOSED_VALUE             = 'proposed_value'
 
   # source constants
@@ -41,12 +41,12 @@ module ReadingEnums
 
     def reasons
       [DEVICE_SETUP, DEVICE_CHANGE_1, DEVICE_CHANGE_2, DEVICE_REMOVAL, REGULAR_READING,
-        MIDWAY_READING, CONTRACT_CHANGE, DEVICE_PARAMETER_CHANGE, BALANCING_ZONE_CHANGE, OTHER]
+       MIDWAY_READING, CONTRACT_CHANGE, DEVICE_PARAMETER_CHANGE, BALANCING_ZONE_CHANGE, OTHER]
     end
 
     def qualities
       [UNUSABLE, SUBSTITUTE_VALUE, ENERGY_QUANTITY_SUMMARIZED, FORECAST_VALUE, READ_OUT,
-        PROPOSED_VALUE]
+       PROPOSED_VALUE]
     end
 
     def sources
