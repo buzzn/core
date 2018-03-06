@@ -42,4 +42,14 @@ describe 'BillingBrick' do
 
   end
 
+  describe "consumed_energy_kwh" do
+    let(:brick) { build(:billing_brick) }
+    it "returns the difference" do
+      brick.end_reading   = build(:reading, raw_value: 200_500)
+      brick.begin_reading = build(:reading, raw_value: 100_000)
+      expect(brick.consumed_energy_kwh).to eq(100.5)
+    end
+  end
+
+
 end
