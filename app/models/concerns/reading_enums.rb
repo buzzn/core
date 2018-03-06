@@ -1,3 +1,7 @@
+#
+# WARNING: these constants are currently only used in Reading::Continuous and are *different* from the ones
+# used in Reading::Single. It's unclear if we'll keep around Reading::Continuous, so I didn't DRY it up, yet.
+#
 module ReadingEnums
 
   extend ActiveSupport::Concern
