@@ -22,6 +22,7 @@ class BillingBrick < ActiveRecord::Base
   end
 
   def consumed_energy_kwh
+    return unless end_reading && begin_reading
     (end_reading.value - begin_reading.value) / 1_000.0
   end
 end
