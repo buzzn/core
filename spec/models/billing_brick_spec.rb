@@ -60,4 +60,19 @@ describe 'BillingBrick' do
     end
   end
 
+  describe "energy_price_cents" do
+    let(:brick) { build(:billing_brick, :with_readings, tariff: nil) }
+    context 'when it has no tariff' do
+      it "returns nil" do
+        expect(brick.energy_price_cents).to be_nil
+      end
+    end
+    context 'when it has a tariff' do
+      before { brick.tariff = build(:tariff, energyprice_cents_per_kwh: 30) }
+      it "calculates the price correctly" do
+        expect(brick.energy_price_cents).to eq(100 * 30)
+      end
+    end
+  end
+
 end

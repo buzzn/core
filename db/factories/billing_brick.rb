@@ -11,5 +11,10 @@ FactoryGirl.define do
         billing_brick.end_date   = Date.new(2017, 12, 31)
       end
     end
+
+    trait :with_readings do
+      begin_reading { FactoryGirl.build(:reading, raw_value: 100_000) }
+      end_reading   { FactoryGirl.build(:reading, raw_value: 200_000) }
+    end
   end
 end

@@ -985,7 +985,8 @@ CREATE TABLE billing_bricks (
     contract_type billing_bricks_contract_type,
     billing_id integer NOT NULL,
     begin_reading_id integer NOT NULL,
-    end_reading_id integer NOT NULL
+    end_reading_id integer NOT NULL,
+    tariff_id integer NOT NULL
 );
 
 
@@ -2499,6 +2500,13 @@ CREATE INDEX index_billing_bricks_on_end_reading_id ON billing_bricks USING btre
 
 
 --
+-- Name: index_billing_bricks_on_tariff_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_billing_bricks_on_tariff_id ON billing_bricks USING btree (tariff_id);
+
+
+--
 -- Name: index_billing_cycles_on_localpool_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3014,6 +3022,14 @@ ALTER TABLE ONLY billing_bricks
 
 ALTER TABLE ONLY billing_bricks
     ADD CONSTRAINT fk_billing_bricks_end_reading FOREIGN KEY (end_reading_id) REFERENCES readings(id);
+
+
+--
+-- Name: billing_bricks fk_billing_bricks_tariff; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_bricks
+    ADD CONSTRAINT fk_billing_bricks_tariff FOREIGN KEY (tariff_id) REFERENCES tariffs(id);
 
 
 --
