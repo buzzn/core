@@ -4,92 +4,50 @@ module Reading
 
     self.table_name = :readings
 
-    # reason constants
-    DEVICE_SETUP = 'IOM'
-    DEVICE_CHANGE_1 = 'COM1'
-    DEVICE_CHANGE_2 = 'COM2'
-    DEVICE_REMOVAL = 'ROM'
-    REGULAR_READING = 'PMR' #Turnusablesung
-    MIDWAY_READING = 'COT' #Zwischenablesung
-    CONTRACT_CHANGE = 'COS'
-    DEVICE_PARAMETER_CHANGE = 'CMP'
-    BALANCING_ZONE_CHANGE = 'COB'
     enum reason: {
-           device_setup: DEVICE_SETUP,
-           device_change_1: DEVICE_CHANGE_1,
-           device_change_2: DEVICE_CHANGE_2,
-           device_removal: DEVICE_REMOVAL,
-           regular_reading: REGULAR_READING,
-           midway_reading: MIDWAY_READING,
-           contract_change: CONTRACT_CHANGE,
-           device_parameter_change: DEVICE_PARAMETER_CHANGE,
-           balancing_zone_change: BALANCING_ZONE_CHANGE,
-         }
-    REASONS = [DEVICE_SETUP, DEVICE_CHANGE_1, DEVICE_CHANGE_2, DEVICE_REMOVAL,
-               REGULAR_READING, MIDWAY_READING, CONTRACT_CHANGE,
-               DEVICE_PARAMETER_CHANGE, BALANCING_ZONE_CHANGE].freeze
+       device_setup:            'IOM',  # "installation of meter"
+       device_change_1:         'COM1', # "change of meter 1"
+       device_change_2:         'COM2', # "change of meter 2"
+       device_removal:          'ROM',  # "removal of meter"
+       regular_reading:         'PMR',  # ?
+       midway_reading:          'COT',  # "change of terms"
+       contract_change:         'COS',  # "change of service"
+       device_parameter_change: 'CMP',  # "changed meter parameters"
+       balancing_zone_change:   'COB',  # "change of balancing zone"
+     }
 
-    # quality constants
-    UNUSABLE = '20'
-    SUBSTITUE_VALUE = '67'
-    ENERGY_QUANTITY_SUMMARIZED = '79'
-    FORECAST_VALUE = '187'
-    READ_OUT = '220' # abgelesen
-    PROPOSED_VALUE = '201'
     enum quality: {
-           unusable: UNUSABLE,
-           substitude_value: SUBSTITUE_VALUE,
-           energy_quantity_summarized: ENERGY_QUANTITY_SUMMARIZED,
-           forecast_value: FORECAST_VALUE,
-           read_out: READ_OUT,
-           proposed_Value: PROPOSED_VALUE,
-         }
-    QUALITIES = [UNUSABLE, SUBSTITUE_VALUE, ENERGY_QUANTITY_SUMMARIZED, FORECAST_VALUE, READ_OUT, PROPOSED_VALUE].freeze
+      unusable:                   '20',
+      substitute_value:           '67',
+      energy_quantity_summarized: '79',
+      forecast_value:             '187',
+      read_out:                   '220',
+      proposed_value:             '201'
+    }
 
-    # source constants
-    SMART = 'SM'
-    MANUAL = 'MAN'
     enum source: {
-           smart: SMART,
-           manual: MANUAL
-         }
-    SOURCES = [SMART, MANUAL].freeze
+      smart:  'SM',
+      manual: 'MAN'
+    }
 
-    # status
-    Z86 = 'Z86'
-    Z84 = 'Z84'
-    Z83 = 'Z83'
     enum status: {
-           z83: Z83,
-           z84: Z84,
-           z86: Z86
-         }
-    STATUS = [Z83, Z84, Z86].freeze
+      z83: 'Z83',
+      z84: 'Z84',
+      z86: 'Z86'
+    }
 
-    # read_by
-    BUZZN = 'BN'
-    POWER_TAKER = 'SN'
-    POWER_GIVER = 'SG'
-    DISTRIBUTION_SYSTEM_OPERATOR = 'VNB'
     enum read_by: {
-           buzzn: BUZZN,
-           power_taker: POWER_TAKER,
-           power_giver: POWER_GIVER,
-           distribution_system_operator: DISTRIBUTION_SYSTEM_OPERATOR
-         }
-    READ_BY_VALUES = [BUZZN, POWER_TAKER, POWER_GIVER,
-                      DISTRIBUTION_SYSTEM_OPERATOR].freeze
+      buzzn:                        'BN',
+      power_taker:                  'SN', # Stromnehmer
+      power_giver:                  'SG', # Stromgeber
+      distribution_system_operator: 'VNB' # Verteilnetzbetreiber
+    }
 
-    # units
-    WH = 'Wh'
-    W = 'W'
-    M3 = 'm³'
     enum unit: {
-           watt_hour: WH,
-           watt: W,
-           cubic_meter: M3
-         }
-    UNITS = [WH, W, M3].freeze
+      watt_hour:   'Wh',
+      watt:        'W',
+      cubic_meter: 'm³'
+    }
 
     belongs_to :register, class_name: 'Register::Base'
 
