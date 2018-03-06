@@ -33,16 +33,20 @@ class BillingBrick < ActiveRecord::Base
   end
 
   def base_price_cents
-    length_in_days * daily_base_price
+    return unless length_in_days && baseprice_cents_per_day
+    length_in_days * baseprice_cents_per_day
   end
 
   private
 
-  def daily_base_price
+  def baseprice_cents_per_day
+    return unless tariff
     (tariff.baseprice_cents_per_month * 12) / 365.0
   end
 
   def length_in_days
+    return unless end_date && begin_date
     (end_date - begin_date).to_i
   end
+
 end
