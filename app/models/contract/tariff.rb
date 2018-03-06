@@ -21,5 +21,9 @@ module Contract
     # permissions helpers
     scope :permitted, ->(uids) { where(group_id: uids) }
 
+    # persisted tariffs are referenced in billings and must not be changed.
+    def readonly?
+      !new_record?
+    end
   end
 end
