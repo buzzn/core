@@ -9,7 +9,7 @@ describe 'Reading::Continuous' do
     end
     describe 'qualities' do
       it 'contain all expected values' do
-        expect(subject.qualities).to eq(%w(not_usable substitue_value energy_quantity_summarized forecast_value read_out proposed_value))
+        expect(subject.qualities).to eq(%w(unusable substitute_value energy_quantity_summarized forecast_value read_out proposed_value))
       end
     end
     describe 'sources' do

@@ -19,8 +19,8 @@ module ReadingEnums
   OTHER                   = 'other'                   # also used four source
 
   # quality constants
-  NOT_USABLE                 = 'not_usable'
-  SUBSTITUE_VALUE            = 'substitue_value'
+  UNUSABLE                   = 'unusable'
+  SUBSTITUTE_VALUE           = 'substitute_value'
   ENERGY_QUANTITY_SUMMARIZED = 'energy_quantity_summarized'
   FORECAST_VALUE             = 'forecast_value'
   READ_OUT                   = 'read_out'                   # abgelesen
@@ -45,7 +45,7 @@ module ReadingEnums
     end
 
     def qualities
-      [NOT_USABLE, SUBSTITUE_VALUE, ENERGY_QUANTITY_SUMMARIZED, FORECAST_VALUE, READ_OUT,
+      [UNUSABLE, SUBSTITUTE_VALUE, ENERGY_QUANTITY_SUMMARIZED, FORECAST_VALUE, READ_OUT,
         PROPOSED_VALUE]
     end
 
