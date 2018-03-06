@@ -1046,10 +1046,6 @@ ALTER SEQUENCE billing_cycles_id_seq OWNED BY billing_cycles.id;
 
 CREATE TABLE billings (
     id integer NOT NULL,
-    total_energy_consumption_kwh integer NOT NULL,
-    total_price_cents integer NOT NULL,
-    prepayments_cents integer NOT NULL,
-    receivables_cents integer NOT NULL,
     begin_date date NOT NULL,
     end_date date NOT NULL,
     invoice_number character varying(64),

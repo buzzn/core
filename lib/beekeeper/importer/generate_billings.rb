@@ -76,12 +76,7 @@ class Beekeeper::Importer::GenerateBillings
       contract: contract,
       billing_cycle: billing_cycle,
       bricks: [brick_for_contract(contract, date_range)],
-      date_range: date_range,
-      # DUMMY data, may be filled in later, or not.
-      total_energy_consumption_kwh: 0,
-      total_price_cents: 0,
-      prepayments_cents: 0,
-      receivables_cents: 0
+      date_range: date_range
     )
     logger.debug("Created billing for contract #{contract.id} (#{date_range})")
   end
