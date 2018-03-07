@@ -60,16 +60,6 @@ module Meter
 
     enum ownership: %i(buzzn foreign_ownership customer leased bought).each_with_object({}).each { |item, map| map[item] = item.to_s.upcase }
 
-    before_save do
-      if group_id_changed?
-        raise ArgumentError.new('can not change group') unless group_id_was.nil?
-        unless sequence_number
-          max = Meter::Base.where(group: group).maximum(:sequence_number)
-          self.sequence_number = max.to_i + 1
-        end
-      end
-    end
-
     before_destroy do
       # we can't use registers.delete_all here because ActiveRecord translates this into a wrong SQL query.
       Register::Real.where(meter_id: self.id).delete_all

@@ -206,6 +206,7 @@ describe Admin::LocalpoolRoda do
               'type'=>'register_real',
               'updated_at'=>register.updated_at.as_json,
               'label'=>'CONSUMPTION',
+              'direction'=>'in',
               'last_reading'=>0,
               'observer_min_threshold'=>nil,
               'observer_max_threshold'=>nil,
@@ -215,7 +216,6 @@ describe Admin::LocalpoolRoda do
               'updatable'=> true,
               'deletable'=> false,
               'createables'=>['readings'],
-              'direction'=>'in',
               'pre_decimal_position'=>6,
               'post_decimal_position'=>1,
               'low_load_ability'=>false,
@@ -227,6 +227,7 @@ describe Admin::LocalpoolRoda do
                 'updated_at'=> meter.updated_at.as_json,
                 'product_serialnumber'=>meter.product_serialnumber,
                 'sequence_number' => meter.sequence_number,
+                'datasource'=>meter.datasource.to_s,
                 'updatable'=>false,
                 'deletable'=>false,
                 'product_name'=>meter.product_name,
@@ -247,7 +248,6 @@ describe Admin::LocalpoolRoda do
                 'edifact_cycle_interval'=>meter.attributes['edifact_cycle_interval'],
                 'edifact_data_logging'=>meter.attributes['edifact_data_logging'],
                 'sent_data_dso'=> meter.sent_data_dso.to_s,
-                'data_source'=>meter.datasource.to_s,
               }
             }
           }

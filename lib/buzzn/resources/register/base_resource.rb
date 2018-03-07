@@ -7,7 +7,7 @@ module Register
 
     model Base
 
-    attributes :label,
+    attributes :label, :direction,
                :last_reading,
                :observer_min_threshold,
                :observer_max_threshold,
@@ -25,6 +25,11 @@ module Register
     def last_reading
       reading = object.readings.order('date').last
       reading ? reading.corrected_value.value : 0
+    end
+
+    # hardcode the direction for the time being
+    def direction
+      object.label.consumption? ? 'in' : 'out'
     end
 
   end
