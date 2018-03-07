@@ -25,5 +25,6 @@ module Contract
     def readonly?
       !new_record?
     end
+
   end
 end
