@@ -983,7 +983,10 @@ CREATE TABLE billing_bricks (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     contract_type billing_bricks_contract_type,
-    billing_id integer NOT NULL
+    billing_id integer NOT NULL,
+    begin_reading_id integer NOT NULL,
+    end_reading_id integer NOT NULL,
+    tariff_id integer NOT NULL
 );
 
 
@@ -2476,10 +2479,31 @@ CREATE UNIQUE INDEX index_banks_on_blz ON banks USING btree (blz);
 
 
 --
+-- Name: index_billing_bricks_on_begin_reading_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_billing_bricks_on_begin_reading_id ON billing_bricks USING btree (begin_reading_id);
+
+
+--
 -- Name: index_billing_bricks_on_billing_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_billing_bricks_on_billing_id ON billing_bricks USING btree (billing_id);
+
+
+--
+-- Name: index_billing_bricks_on_end_reading_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_billing_bricks_on_end_reading_id ON billing_bricks USING btree (end_reading_id);
+
+
+--
+-- Name: index_billing_bricks_on_tariff_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_billing_bricks_on_tariff_id ON billing_bricks USING btree (tariff_id);
 
 
 --
@@ -2977,11 +3001,35 @@ ALTER TABLE ONLY bank_accounts
 
 
 --
+-- Name: billing_bricks fk_billing_bricks_begin_reading; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_bricks
+    ADD CONSTRAINT fk_billing_bricks_begin_reading FOREIGN KEY (begin_reading_id) REFERENCES readings(id);
+
+
+--
 -- Name: billing_bricks fk_billing_bricks_billing; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY billing_bricks
     ADD CONSTRAINT fk_billing_bricks_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
+
+
+--
+-- Name: billing_bricks fk_billing_bricks_end_reading; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_bricks
+    ADD CONSTRAINT fk_billing_bricks_end_reading FOREIGN KEY (end_reading_id) REFERENCES readings(id);
+
+
+--
+-- Name: billing_bricks fk_billing_bricks_tariff; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_bricks
+    ADD CONSTRAINT fk_billing_bricks_tariff FOREIGN KEY (tariff_id) REFERENCES tariffs(id);
 
 
 --

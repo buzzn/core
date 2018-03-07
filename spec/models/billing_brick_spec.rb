@@ -47,4 +47,52 @@ describe 'BillingBrick' do
 
   end
 
+  describe 'consumed_energy_kwh' do
+    let(:brick) { build(:billing_brick) }
+    context 'when it has no readings' do
+      it 'returns nil' do
+        expect(brick.consumed_energy_kwh).to be_nil
+      end
+    end
+    context 'when it has readings' do
+      before do
+        brick.end_reading   = build(:reading, raw_value: 200_500)
+        brick.begin_reading = build(:reading, raw_value: 100_000)
+      end
+      it 'returns the difference' do
+        expect(brick.consumed_energy_kwh).to eq(100.5)
+      end
+    end
+  end
+
+  describe 'energy_price_cents' do
+    let(:brick) { build(:billing_brick, :with_readings, tariff: nil) }
+    context 'when it has no tariff' do
+      it 'returns nil' do
+        expect(brick.energy_price_cents).to be_nil
+      end
+    end
+    context 'when it has a tariff' do
+      before { brick.tariff = build(:tariff, energyprice_cents_per_kwh: 30) }
+      it 'calculates the price correctly' do
+        expect(brick.energy_price_cents).to eq(100 * 30)
+      end
+    end
+  end
+
+  describe 'base_price_cents' do
+    let(:brick) { build(:billing_brick, end_date: Date.today, begin_date: Date.today - 50.days) }
+    context 'when it has no tariff' do
+      it 'returns nil' do
+        expect(brick.base_price_cents).to be_nil
+      end
+    end
+    context 'when it has a tariff' do
+      before { brick.tariff = build(:tariff, baseprice_cents_per_month: 100) }
+      it 'calculates the price correctly' do
+        baseprice_cents_per_day = (50 * 12) / 365.0
+        expect(brick.base_price_cents).to eq(baseprice_cents_per_day * 100)
+      end
+    end
+  end
 end
