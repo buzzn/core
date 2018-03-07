@@ -92,10 +92,5 @@ module Reading
       self.value = val.value
     end
 
-    # persisted readings are referenced in billings and must not be changed.
-    def readonly?
-      !new_record?
-    end
-
   end
 end
