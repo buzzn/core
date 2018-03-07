@@ -984,9 +984,9 @@ CREATE TABLE billing_bricks (
     updated_at timestamp without time zone NOT NULL,
     contract_type billing_bricks_contract_type,
     billing_id integer NOT NULL,
-    begin_reading_id integer NOT NULL,
-    end_reading_id integer NOT NULL,
-    tariff_id integer NOT NULL
+    begin_reading_id integer,
+    end_reading_id integer,
+    tariff_id integer
 );
 
 
@@ -3001,35 +3001,11 @@ ALTER TABLE ONLY bank_accounts
 
 
 --
--- Name: billing_bricks fk_billing_bricks_begin_reading; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY billing_bricks
-    ADD CONSTRAINT fk_billing_bricks_begin_reading FOREIGN KEY (begin_reading_id) REFERENCES readings(id);
-
-
---
 -- Name: billing_bricks fk_billing_bricks_billing; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY billing_bricks
     ADD CONSTRAINT fk_billing_bricks_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
-
-
---
--- Name: billing_bricks fk_billing_bricks_end_reading; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY billing_bricks
-    ADD CONSTRAINT fk_billing_bricks_end_reading FOREIGN KEY (end_reading_id) REFERENCES readings(id);
-
-
---
--- Name: billing_bricks fk_billing_bricks_tariff; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY billing_bricks
-    ADD CONSTRAINT fk_billing_bricks_tariff FOREIGN KEY (tariff_id) REFERENCES tariffs(id);
 
 
 --
