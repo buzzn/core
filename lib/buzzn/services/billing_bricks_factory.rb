@@ -44,7 +44,7 @@ class Services::BillingBricksFactory
   # Ruby can't calculate the length (in days) of a range object when the range is defined with dates -- it always returns nil.
   # TODO: use exclude_end? to prevent one-off errors
   def date_range_zero?(date_range)
-    (date_range.last - date_range.first).to_i.zero?
+    date_range.last == date_range.first
   end
 
 end
