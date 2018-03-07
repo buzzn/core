@@ -67,6 +67,10 @@ module Register
 
     scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
 
+    def reading_at(date)
+      readings.find_by(date: date)
+    end
+
     def name
       if market_location
         market_location.name

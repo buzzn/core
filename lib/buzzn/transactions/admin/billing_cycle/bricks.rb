@@ -27,10 +27,11 @@ class Transactions::Admin::BillingCycle::Bricks < Transactions::Base
     { id: market_location.id, type: 'market_location', name: market_location.name, bricks: { array: build_bricks(bricks) } }
   end
 
+  BRICK_FIELDS = %i(contract_type begin_date end_date status consumed_energy_kwh energy_price_cents base_price_cents)
   def build_bricks(bricks)
     return [] unless bricks
     bricks.collect do |brick|
-      { contract_type: brick.contract_type, begin_date: brick.date_range.first.as_json, end_date: brick.date_range.last.as_json, status: brick.status }
+      BRICK_FIELDS.each.with_object({}) { |field, hash| hash[field] = brick.send(field).as_json }
     end
   end
 

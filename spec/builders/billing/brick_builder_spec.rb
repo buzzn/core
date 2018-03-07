@@ -52,6 +52,64 @@ describe 'Billing::BrickBuilder' do
         end
       end
     end
+
+    describe 'tariff' do
+      context 'contract has no tariffs' do
+        let(:contract) { create(:contract, :localpool_powertaker, tariffs: []) }
+        it 'has no tariff' do
+          expect(brick.tariff).to be_nil
+        end
+      end
+      context 'contract has tariffs' do
+        let(:contract) { create(:contract, :localpool_powertaker, :with_tariff) }
+        it 'has the last tariff' do
+          expect(brick.tariff).to eq(contract.tariffs.last)
+          expect(brick.tariff).not_to be_nil
+        end
+      end
+    end
+
+    describe 'begin_reading' do
+
+      let(:register)        { create(:register, :real, readings: readings) }
+      let(:market_location) { create(:market_location, :with_contract, register: register) }
+      let(:contract)        { market_location.contracts.last }
+
+      context 'register has no reading for brick begin date' do
+        let(:readings) { [] }
+        it 'has no begin_reading' do
+          expect(brick.begin_reading).to be_nil
+        end
+      end
+
+      context 'register has a reading for brick begin date' do
+        let(:readings) { [build(:reading, date: date_range.first)] }
+        it 'has a begin_reading' do
+          expect(brick.begin_reading).to eq(readings.first)
+        end
+      end
+    end
+
+    describe 'end_reading' do
+
+      let(:register)        { create(:register, :real, readings: readings) }
+      let(:market_location) { create(:market_location, :with_contract, register: register) }
+      let(:contract)        { market_location.contracts.last }
+
+      context 'register has no reading for brick end date' do
+        let(:readings) { [] }
+        it 'has no end_reading' do
+          expect(brick.end_reading).to be_nil
+        end
+      end
+
+      context 'register has a reading for brick end date' do
+        let(:readings) { [build(:reading, date: date_range.last)] }
+        it 'has an end_reading' do
+          expect(brick.end_reading).to eq(readings.first)
+        end
+      end
+    end
   end
 
 end
