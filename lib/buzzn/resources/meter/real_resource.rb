@@ -22,12 +22,7 @@ module Meter
                :edifact_voltage_level,
                :edifact_cycle_interval,
                :edifact_data_logging,
-               :sent_data_dso,
-               :data_source
-
-    def data_source
-      object.datasource
-    end
+               :sent_data_dso
 
   end
 end

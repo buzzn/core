@@ -5,8 +5,7 @@ module Register
 
     model Real
 
-    attributes :direction,
-               :pre_decimal_position,
+    attributes :pre_decimal_position,
                :post_decimal_position,
                :low_load_ability,
                :metering_point_id,

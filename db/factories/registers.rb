@@ -47,6 +47,7 @@ FactoryGirl.define do
     trait :output do
       real
       initialize_with { Register::Output.new }
+      label           Register::Base.labels[:production_pv]
       direction       Register::Base.directions[:output]
     end
 

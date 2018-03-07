@@ -28,6 +28,7 @@ describe Admin::LocalpoolRoda do
         'updated_at'=> meter.updated_at.as_json,
         'product_serialnumber'=>meter.product_serialnumber,
         'sequence_number' => meter.sequence_number,
+        'datasource'=>meter.datasource.to_s,
         'updatable'=>true,
         'deletable'=>true,
         'product_name'=>meter.product_name,
@@ -48,7 +49,6 @@ describe Admin::LocalpoolRoda do
         'edifact_cycle_interval'=>meter.attributes['edifact_cycle_interval'],
         'edifact_data_logging'=>meter.attributes['edifact_data_logging'],
         'sent_data_dso'=>meter.sent_data_dso.to_s,
-        'data_source'=>meter.datasource.to_s
       }
     end
 
@@ -136,6 +136,7 @@ describe Admin::LocalpoolRoda do
           'type'=>'meter_real',
           'product_serialnumber'=>'12341234',
           'sequence_number' => meter.sequence_number,
+          'datasource'=>'standard_profile',
           'updatable'=>true,
           'deletable'=>true,
           'product_name'=>'Smarty Super Meter',
@@ -155,8 +156,7 @@ describe Admin::LocalpoolRoda do
           'edifact_voltage_level'=>'E04',
           'edifact_cycle_interval'=>'QUARTERLY',
           'edifact_data_logging'=>'Z04',
-          'sent_data_dso'=>'2010-01-01',
-          'data_source'=>'manual'
+          'sent_data_dso'=>'2010-01-01'
         }
       end
 
@@ -233,8 +233,7 @@ describe Admin::LocalpoolRoda do
               edifact_voltage_level: Meter::Real.edifact_voltage_levels[:high_level],
               edifact_cycle_interval: Meter::Real.edifact_cycle_intervals[:quarterly],
               edifact_data_logging: Meter::Real.edifact_data_loggings[:analog],
-              direction_number: Meter::Real.direction_numbers[:two_way_meter],
-              data_source: 'manual'
+              direction_number: Meter::Real.direction_numbers[:two_way_meter]
 
         expect(response).to have_http_status(200)
         meter.reload

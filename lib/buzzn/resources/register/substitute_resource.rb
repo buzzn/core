@@ -5,12 +5,5 @@ module Register
 
     model Substitute
 
-    attributes :direction
-
-    # hardcode the direction for the time being
-    def direction
-      'in'
-    end
-
   end
 end

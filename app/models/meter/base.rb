@@ -15,6 +15,8 @@ module Meter
       raise 'can not delete meter with group' if group
     end
 
+    before_save { maybe_create_sequence_number }
+
     scope :real,      -> {where(type: Real)}
     scope :virtual,   -> {where(type: Virtual)}
     scope :real_or_virtual, -> {where(type: [Real, Virtual])}
@@ -33,7 +35,19 @@ module Meter
     end
 
     def datasource
-      broker ? :discovergy : :manual
+      broker ? :discovergy : :standard_profile
+    end
+
+    private
+
+    def maybe_create_sequence_number
+      if group_id_changed?
+        raise ArgumentError.new('can not change group') unless group_id_was.nil?
+        unless sequence_number
+          max = Meter::Base.where(group: group).maximum(:sequence_number)
+          self.sequence_number = max.to_i + 1
+        end
+      end
     end
 
   end

@@ -69,5 +69,9 @@ FactoryGirl.define do
     trait :virtual do
       initialize_with { Meter::Virtual.new }
     end
+
+    trait :discovergy do
+      initialize_with { Meter::Discovergy.new }
+    end
   end
 end
