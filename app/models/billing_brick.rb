@@ -9,13 +9,14 @@ class BillingBrick < ActiveRecord::Base
 
   belongs_to :billing
 
-  enum type: %i(power_taker third_party gap).each_with_object({}).each { |k, map| map[k] = k.to_s }
+  enum contract_type: %i(power_taker third_party gap).each_with_object({}).each { |k, map| map[k] = k.to_s }
 
   def status
     if billing
       %w(open calculated).include?(billing.status.to_s) ? 'open' : 'closed'
     else
-      'open'
+      # we can't say if a third_party contract is paid, and we don't need to know, either.
+      contract_type == 'third_party' ? nil : 'open'
     end
   end
 

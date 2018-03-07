@@ -20,6 +20,11 @@ describe 'BillingBrick' do
     context 'when brick has no billing' do
       subject { build(:billing_brick, billing: nil).status }
       it      { is_expected.to eq('open') }
+
+      context 'when brick is of type third_party' do
+        subject { build(:billing_brick, billing: nil, contract_type: 'third_party').status }
+        it      { is_expected.to be_nil }
+      end
     end
 
     context 'when brick has a billing' do
