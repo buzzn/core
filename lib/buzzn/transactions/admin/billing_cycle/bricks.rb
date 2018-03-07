@@ -28,6 +28,7 @@ class Transactions::Admin::BillingCycle::Bricks < Transactions::Base
   end
 
   BRICK_FIELDS = %i(contract_type begin_date end_date status consumed_energy_kwh energy_price_cents base_price_cents)
+
   def build_bricks(bricks)
     return [] unless bricks
     bricks.collect do |brick|
