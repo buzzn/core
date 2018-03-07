@@ -17,7 +17,7 @@ class Services::BillingBricksFactory
 
   def bricks_for_market_location(location, date_range)
     billed_bricks       = find_billed_bricks(location, date_range)
-    unbilled_date_range = billed_bricks.empty? ? date_range : billed_bricks.last.end_date..date_range.last
+    unbilled_date_range = billed_bricks.empty? ? date_range : billed_bricks.last.end_date...date_range.last
     unbilled_bricks     = build_unbilled_bricks(location, unbilled_date_range)
     billed_bricks + unbilled_bricks
   end
@@ -30,11 +30,21 @@ class Services::BillingBricksFactory
   # We don't handle register and tariff changes in the first billing story.
   # So we can keep it simple -- each contract will result in one brick.
   def build_unbilled_bricks(location, date_range)
-    location.contracts_in_date_range(date_range).map { |contract| build_brick(contract, date_range) }
+    if date_range_zero?(date_range)
+      []
+    else
+      location.contracts_in_date_range(date_range).map { |contract| build_brick(contract, date_range) }
+    end
   end
 
   def build_brick(contract, date_range)
     Billing::BrickBuilder.from_contract(contract, date_range)
+  end
+
+  # Ruby can't calculate the length (in days) of a range object when the range is defined with dates -- it always returns nil.
+  # TODO: use exclude_end? to prevent one-off errors
+  def date_range_zero?(date_range)
+    (date_range.last - date_range.first).to_i.zero?
   end
 
 end
