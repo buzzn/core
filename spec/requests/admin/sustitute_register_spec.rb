@@ -24,6 +24,7 @@ describe Register::SubstituteResource do
           'type'=>'register_substitute',
           'updated_at'=>register.updated_at.as_json,
           'label'=>register.attributes['label'],
+          'direction'=>register.attributes['direction'],
           'last_reading'=>last ? last.value : 0,
           'observer_min_threshold'=>nil,
           'observer_max_threshold'=>nil,
@@ -33,7 +34,6 @@ describe Register::SubstituteResource do
           'updatable'=> true,
           'deletable'=> true,
           'createables'=>['readings'],
-          'direction'=>register.attributes['direction'],
         }
       end
 

@@ -6,8 +6,8 @@ module Meter
     model Base
 
     attributes :product_serialnumber,
-               :sequence_number
-
+               :sequence_number,
+               :datasource
     attributes :updatable, :deletable
 
     has_many :registers
