@@ -56,11 +56,11 @@ describe 'BillingBrick' do
     end
     context 'when it has readings' do
       before do
-        brick.end_reading   = build(:reading, raw_value: 200_500)
+        brick.end_reading   = build(:reading, raw_value: 200_600)
         brick.begin_reading = build(:reading, raw_value: 100_000)
       end
-      it 'returns the difference' do
-        expect(brick.consumed_energy_kwh).to eq(100.5)
+      it 'returns the rounded difference' do
+        expect(brick.consumed_energy_kwh).to eq(101)
       end
     end
   end
