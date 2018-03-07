@@ -1,4 +1,4 @@
-module SampleData::ContractFactory
+module SampleData::PTContractFactory
 
   class << self
 
@@ -13,11 +13,9 @@ module SampleData::ContractFactory
     private
 
     def create_contract(attrs)
-      all_attrs = attrs.merge(localpool: localpool).reverse_merge(tariffs: tariffs, begin_date: default_begin_date)
+      all_attrs = attrs.reverse_merge(default_attrs)
       if all_attrs.delete(:gap_contract)
-        contract = FactoryGirl.create(:contract, :localpool_gap, all_attrs)
-        contract.localpool.update(gap_contract_customer: contract.customer)
-        contract
+        FactoryGirl.create(:contract, :localpool_gap, all_attrs.merge(gap_contract_customer_and_contractor))
       elsif attrs.key?(:customer)
         all_attrs.reverse_merge!(contractor: localpool.owner)
         FactoryGirl.create(:contract, :localpool_powertaker, all_attrs)
@@ -52,12 +50,19 @@ module SampleData::ContractFactory
       SampleData.localpools.people_power
     end
 
-    def default_begin_date
-      localpool.start_date
+    def default_attrs
+      {
+        localpool:  localpool,
+        begin_date: localpool.start_date,
+        tariffs:    SampleData.localpools.people_power.tariffs.where(name: 'Hausstrom - Standard')
+      }
     end
 
-    def tariffs
-      SampleData.localpools.people_power.tariffs.where(name: 'Hausstrom - Standard')
+    def gap_contract_customer_and_contractor
+      {
+        contractor: localpool.owner,
+        customer: localpool.gap_contract_customer
+      }
     end
 
   end
@@ -85,7 +90,7 @@ SampleData.contracts.lpp = create(:contract, :localpool_processing,
   ]
                                  )
 
-SampleData.contracts.pt1 = SampleData::ContractFactory.create(
+SampleData.contracts.pt1 = SampleData::PTContractFactory.create(
   customer: SampleData.persons.pt1,
   register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
@@ -97,7 +102,7 @@ SampleData.contracts.pt1 = SampleData::ContractFactory.create(
   market_location: SampleData.market_locations.apartment_1
 )
 
-SampleData.contracts.pt2 = SampleData::ContractFactory.create(
+SampleData.contracts.pt2 = SampleData::PTContractFactory.create(
   customer: SampleData.persons.pt2,
   register_readings: [
     build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
@@ -110,18 +115,14 @@ SampleData.contracts.pt2 = SampleData::ContractFactory.create(
 )
 
 # terminated gap contract
-SampleData.contracts.pt3gap = SampleData::ContractFactory.create(
+SampleData.contracts.pt3gap = SampleData::PTContractFactory.create(
   gap_contract: true,
-  signing_date: SampleData.localpools.people_power.start_date - 25.days,
   termination_date: Date.today,
   end_date: Date.today + 1.month,
-  contractor: SampleData.localpools.people_power.owner,
-  customer: Organization.find_by(slug: 'hv-schneider'),
   market_location: SampleData.market_locations.apartment_3
 )
 
-SampleData.contracts.pt3 = SampleData::ContractFactory.create(
-  signing_date: (Date.today - 5.days),
+SampleData.contracts.pt3 = SampleData::PTContractFactory.create(
   begin_date: Date.today + 1.month,
   customer: SampleData.persons.pt3,
   register_readings: [
@@ -134,8 +135,7 @@ SampleData.contracts.pt3 = SampleData::ContractFactory.create(
 )
 SampleData.contracts.pt3.customer.add_role(Role::GROUP_ENERGY_MENTOR, SampleData.contracts.pt3.localpool)
 
-SampleData.contracts.pt4 = SampleData::ContractFactory.create(
-  signing_date: Date.new(2017, 1, 10),
+SampleData.contracts.pt4 = SampleData::PTContractFactory.create(
   begin_date: Date.new(2017, 2, 1),
   termination_date: Date.yesterday,
   end_date: Date.today + 1.month,
@@ -149,8 +149,16 @@ SampleData.contracts.pt4 = SampleData::ContractFactory.create(
   market_location: SampleData.market_locations.apartment_4
 )
 
+# terminated gap contract
+SampleData.contracts.pt4gap = SampleData::PTContractFactory.create(
+  gap_contract: true,
+  termination_date: SampleData.contracts.pt4.begin_date,
+  end_date: SampleData.contracts.pt4.begin_date,
+  market_location: SampleData.market_locations.apartment_4
+)
+
 # beendet, Auszug
-SampleData.contracts.pt5a = SampleData::ContractFactory.create(
+SampleData.contracts.pt5a = SampleData::PTContractFactory.create(
   termination_date: Date.new(2017, 3, 10),
   end_date: Date.new(2017, 4, 1),
   customer: SampleData.persons.pt5a,
@@ -166,22 +174,18 @@ SampleData.contracts.pt5a = SampleData::ContractFactory.create(
 )
 
 # Leerstand
-SampleData.contracts.pt5_empty = SampleData::ContractFactory.create(
+SampleData.contracts.pt5_empty = SampleData::PTContractFactory.create(
   gap_contract: true,
-  signing_date: SampleData.contracts.pt5a.termination_date,
   begin_date: SampleData.contracts.pt5a.end_date,
   termination_date: Date.new(2017, 4, 30),
   end_date: Date.new(2017, 5, 1),
   # TODO: this should later be removed
   register: SampleData.contracts.pt5a.market_location.register, # important !
-  contractor: SampleData.localpools.people_power.owner,
-  customer: Organization.find_by(slug: 'hv-schneider'),
   market_location: SampleData.market_locations.apartment_5
 )
 
 # zieht ein
-SampleData.contracts.pt5b = SampleData::ContractFactory.create(
-  signing_date: Date.new(2017, 4, 10),
+SampleData.contracts.pt5b = SampleData::PTContractFactory.create(
   begin_date: Date.new(2017, 5, 1),
   # TODO: this should later be removed
   register: SampleData.contracts.pt5a.market_location.register, # important !
@@ -190,20 +194,19 @@ SampleData.contracts.pt5b = SampleData::ContractFactory.create(
 )
 
 # Drittlieferant
-SampleData.contracts.pt6 = SampleData::ContractFactory.create(
+SampleData.contracts.pt6 = SampleData::PTContractFactory.create(
   market_location: SampleData.market_locations.apartment_6
 )
 
 # Drittlieferant, vor Wechsel zu people power
-SampleData.contracts.pt7a = SampleData::ContractFactory.create(
+SampleData.contracts.pt7a = SampleData::PTContractFactory.create(
   termination_date: Date.new(2017, 2, 15),
   end_date: Date.new(2017, 3, 1),
   market_location: SampleData.market_locations.apartment_7
 )
 
 # Drittlieferant, nach Wechsel zu people power
-SampleData.contracts.pt7b = SampleData::ContractFactory.create(
-  signing_date: SampleData.contracts.pt7a.termination_date,
+SampleData.contracts.pt7b = SampleData::PTContractFactory.create(
   begin_date: SampleData.contracts.pt7a.end_date,
   customer: SampleData.persons.pt7,
   # TODO: this should later be removed
@@ -212,25 +215,25 @@ SampleData.contracts.pt7b = SampleData::ContractFactory.create(
 )
 
 # English language speaker
-SampleData.contracts.pt8 = SampleData::ContractFactory.create(
+SampleData.contracts.pt8 = SampleData::PTContractFactory.create(
   customer: SampleData.persons.pt8,
   market_location: SampleData.market_locations.apartment_8
 )
 
 # A regular move out/move in. This will result in a closed billing for the first contract.
-SampleData.contracts.pt9a = SampleData::ContractFactory.create(
+SampleData.contracts.pt9a = SampleData::PTContractFactory.create(
   end_date: Date.new(Date.today.year, 2, 1),
   customer: SampleData.persons.pt9a,
   market_location: SampleData.market_locations.apartment_9
 )
-SampleData.contracts.pt9b = SampleData::ContractFactory.create(
+SampleData.contracts.pt9b = SampleData::PTContractFactory.create(
   begin_date: SampleData.contracts.pt9a.end_date,
   customer: SampleData.persons.pt9b,
   market_location: SampleData.market_locations.apartment_9
 )
 
 # a substitute meter/register
-SampleData.contracts.pt10 = SampleData::ContractFactory.create(
+SampleData.contracts.pt10 = SampleData::PTContractFactory.create(
   customer: SampleData.persons.pt10,
   register: FactoryGirl.create(:register, :substitute,
     meter: build(:meter, :virtual, group: SampleData.localpools.people_power)),
@@ -238,11 +241,21 @@ SampleData.contracts.pt10 = SampleData::ContractFactory.create(
 )
 
 # Allgemeinstrom (Hausbeleuchtung etc.)
-SampleData.contracts.common_consumption = SampleData::ContractFactory.create(
+SampleData.contracts.common_consumption = SampleData::PTContractFactory.create(
   contractor: SampleData.localpools.people_power.owner,
   customer: SampleData.localpools.people_power.owner,
   register: create(:register, :consumption_common,
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)
                   ),
   market_location: SampleData.market_locations.common_consumption
+)
+
+SampleData.contracts.ecar = SampleData::PTContractFactory.create(
+  contractor: SampleData.localpools.people_power.owner,
+  customer: SampleData.localpools.people_power.owner,
+  register: create(:register, :consumption_common,
+    meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
+    devices: [build(:device, :ecar, commissioning: SampleData.localpools.people_power.start_date, register: nil)],
+                  ),
+  market_location: SampleData.market_locations.ladestation_eauto
 )

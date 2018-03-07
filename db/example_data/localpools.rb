@@ -12,7 +12,8 @@ SampleData.localpools = OpenStruct.new(
     tariffs_attrs: [
       { name: 'Hausstrom - Standard' },
       { name: 'Hausstrom - Reduziert', energyprice_cents_per_kwh: 24.9 },
-    ]
+    ],
+    gap_contract_customer_organization: Organization.find_by(slug: 'hv-schneider')
                       ),
   green_warriors: create(:localpool,
     name: 'Green warriors (Testgruppe)',
@@ -24,6 +25,7 @@ SampleData.localpools = OpenStruct.new(
     tariffs_attrs: [
       { name: 'Hausstrom - Standard' },
       { name: 'Hausstrom - Reduziert', energyprice_cents_per_kwh: 24.9 },
-    ]
+    ],
+    gap_contract_customer_organization: Organization.find_by(slug: 'hv-schneider')
                         )
 )

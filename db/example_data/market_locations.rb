@@ -14,10 +14,14 @@ names = [
   'Apartment 7 (customer changed to us)',
   'Apartment 8 (English speaker)',
   'Apartment 9',
-  'Apartment 10'
+  'Apartment 10',
+  'Ladestation eAuto'
 ]
 names.each.with_index(1) do |name, index|
-  SampleData.market_locations.send("apartment_#{index}=", create_market_location(name))
+  # Apartment 10      => apartment_10
+  # Ladestation eAuto => ladestation_eauto
+  var_name = name.split(' (').first.downcase.tr(' ', '_')
+  SampleData.market_locations.send("#{var_name}=", create_market_location(name))
 end
 
 SampleData.market_locations.common_consumption = create_market_location('Allgemeinstrom')

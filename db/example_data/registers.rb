@@ -6,11 +6,6 @@ end
 # More registers (without powertakers & contracts)
 #
 SampleData.registers = OpenStruct.new(
-  ecar: create(:register, :input, label: Register::Base.labels[:consumption_common],
-    meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
-    devices: [build(:device, :ecar, commissioning: '2017-04-10', register: nil)],
-    market_location: create_market_location('Ladestation eAuto')
-              ),
   bhkw: create(:register, :production_bhkw,
     meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
     devices: [build(:device, :bhkw, commissioning: '1995-01-01', register: nil)],
