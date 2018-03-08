@@ -39,12 +39,8 @@ class Transactions::Admin::BillingCycle::Bricks < Transactions::Base
     returned_hash.merge(errors(brick)).as_json
   end
 
-  # TODO: move this to a validation schema
   def errors(brick)
-    errors = {}
-    errors[:begin_reading] = ['No reading for begin date'] unless brick.begin_reading.present?
-    errors[:end_reading]   = ['No reading for end date'] unless brick.end_reading.present?
-    errors[:tariff]        = ['No tariff'] unless brick.tariff.present?
+    errors = brick.invariant.errors.each.with_object({}) { |(key, value), hash| hash[key.to_s.gsub('_id', '')] = value }
     errors.empty? ? {} : { errors: errors }
   end
 

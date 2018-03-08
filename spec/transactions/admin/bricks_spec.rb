@@ -38,6 +38,17 @@ describe Transactions::Admin::BillingCycle::Bricks do
 
           it { expect(first_location[:bricks][:array].first.keys).to eq(expected_brick_keys) }
 
+          context 'with errors' do
+            it 'JSON has all errors and messages' do
+              errors = first_location[:bricks][:array].first['errors']
+              expect(errors).to eq(
+                'begin_reading' => ['must be filled'],
+                'end_reading' => ['must be filled'],
+                'tariff' => ['must be filled']
+              )
+            end
+          end
+
         end
       end
     end
