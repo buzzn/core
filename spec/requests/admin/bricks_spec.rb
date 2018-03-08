@@ -29,7 +29,15 @@ describe Admin::BillingCycleResource do
                 'contract_type' => 'power_taker',
                 'begin_date' => contract.begin_date.as_json,
                 'end_date' => billing_cycle.end_date.as_json,
-                'status' => 'open'
+                'status' => 'open',
+                'consumed_energy_kwh' => nil,
+                'energy_price_cents' => nil,
+                'base_price_cents' => nil,
+                'errors' => {
+                  'begin_reading' => ['No reading for begin date'],
+                  'end_reading' => ['No reading for end date'],
+                  'tariff' => ['No tariff']
+                }
               }
             ]
           }
