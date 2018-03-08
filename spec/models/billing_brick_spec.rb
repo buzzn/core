@@ -73,9 +73,9 @@ describe 'BillingBrick' do
       end
     end
     context 'when it has a tariff' do
-      before { brick.tariff = build(:tariff, energyprice_cents_per_kwh: 25.99999) }
+      before { brick.tariff = build(:tariff, energyprice_cents_per_kwh: 25.999) }
       it 'calculates the price correctly' do
-        expected_price = (100 * 25.99999).round(2)
+        expected_price = (100 * 25.999)
         expect(brick.energy_price_cents).to eq(expected_price)
       end
     end
@@ -92,8 +92,23 @@ describe 'BillingBrick' do
       before { brick.tariff = build(:tariff, baseprice_cents_per_month: 100) }
       it 'calculates the price correctly' do
         baseprice_cents_per_day = (50 * 12) / 365.0
-        expected_price          = (baseprice_cents_per_day * 100).round(2)
+        expected_price          = (baseprice_cents_per_day * 100)
         expect(brick.base_price_cents).to eq(expected_price)
+      end
+    end
+  end
+
+  describe 'price_cents' do
+    let(:brick) { build(:billing_brick, :with_readings, end_date: Date.today, begin_date: Date.today - 50.days) }
+    context 'when it has no tariff' do
+      it 'returns nil' do
+        expect(brick.price_cents).to be_nil
+      end
+    end
+    context 'when it has a tariff' do
+      before { brick.tariff = build(:tariff, energyprice_cents_per_kwh: 25.999, baseprice_cents_per_month: 100) }
+      it 'calculates the price correctly' do
+        expect(brick.price_cents).to eq(2764.28)
       end
     end
   end
