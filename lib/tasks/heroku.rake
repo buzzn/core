@@ -26,7 +26,7 @@ namespace :heroku do
     end
 
     desc 'Run the beekeeper import and push the result to production'
-    task production: %i(reset_db db:seed:example_data db:seed:pho_user import) do
+    task production: %i(reset_db db:seed:setup_data db:seed:pho_user import) do
       push_local_db_to_heroku(:production)
     end
   end
