@@ -27,7 +27,7 @@ class Transactions::Admin::BillingCycle::Bricks < Transactions::Base
     { id: market_location.id, type: 'market_location', name: market_location.name, bricks: { array: build_bricks(bricks) } }
   end
 
-  BRICK_FIELDS = %i(contract_type begin_date end_date status consumed_energy_kwh energy_price_cents base_price_cents)
+  BRICK_FIELDS = %i(contract_type begin_date end_date status consumed_energy_kwh price_cents)
 
   def build_bricks(bricks)
     return [] unless bricks
