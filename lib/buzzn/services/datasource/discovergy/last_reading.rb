@@ -37,7 +37,7 @@ class Services::Datasource::Discovergy::LastReading
       builder = Builders::Discovergy::TicketBuilder.new(register: register, unit: unit)
       api_call(meter, fields, true, builder)
     else
-      raise "unknown regiter type: #{register.class}"
+      raise "unknown register type: #{register.class}"
     end
   end
 

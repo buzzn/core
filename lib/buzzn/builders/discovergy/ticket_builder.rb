@@ -14,7 +14,7 @@ module Builders::Discovergy
       when Register::Real
         build_easymeter(response)
       else
-        raise "unknown regiter type: #{register.class}"
+        raise "unknown register type: #{register.class}"
       end
     end
 
