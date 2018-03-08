@@ -30,12 +30,12 @@ class BillingBrick < ActiveRecord::Base
 
   def energy_price_cents
     return unless consumed_energy_kwh && tariff
-    (consumed_energy_kwh * tariff.energyprice_cents_per_kwh).round
+    (consumed_energy_kwh * tariff.energyprice_cents_per_kwh).round(2)
   end
 
   def base_price_cents
     return unless length_in_days && baseprice_cents_per_day
-    (length_in_days * baseprice_cents_per_day).round
+    (length_in_days * baseprice_cents_per_day).round(2)
   end
 
   private

@@ -73,9 +73,9 @@ describe 'BillingBrick' do
       end
     end
     context 'when it has a tariff' do
-      before { brick.tariff = build(:tariff, energyprice_cents_per_kwh: 25.999) }
+      before { brick.tariff = build(:tariff, energyprice_cents_per_kwh: 25.99999) }
       it 'calculates the price correctly' do
-        expected_price = (100 * 25.999).round
+        expected_price = (100 * 25.99999).round(2)
         expect(brick.energy_price_cents).to eq(expected_price)
       end
     end
@@ -92,7 +92,7 @@ describe 'BillingBrick' do
       before { brick.tariff = build(:tariff, baseprice_cents_per_month: 100) }
       it 'calculates the price correctly' do
         baseprice_cents_per_day = (50 * 12) / 365.0
-        expected_price          = (baseprice_cents_per_day * 100).round
+        expected_price          = (baseprice_cents_per_day * 100).round(2)
         expect(brick.base_price_cents).to eq(expected_price)
       end
     end
