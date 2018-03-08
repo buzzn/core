@@ -1,6 +1,5 @@
 require_relative '../discovergy'
 require_relative '../../../types/discovergy'
-require_relative '../../../discovergy'
 
 class Services::Datasource::Discovergy::OptimizedGroup
 
@@ -32,11 +31,12 @@ class Services::Datasource::Discovergy::OptimizedGroup
   def create(group)
     plus = []
     minus = []
-    group.registers.consumption_production.each do |r|
+    group.registers.each do |r|
       next if r.datasource != :discovergy
-      if r.label.production?
+      next if r.is_a?(Register::Substitute)
+      if r.label.production? || r.grid_consumption?
         plus << discovergy_id(r.meter)
-      else
+      elsif r.label.consumption? || r.grid_feeding?
         minus << discovergy_id(r.meter)
       end
     end
@@ -75,7 +75,7 @@ class Services::Datasource::Discovergy::OptimizedGroup
   end
 
   def local(group)
-    meters = group.meters.where(id: Register::Base.grid_production_consumption.where('meter_id = meters.id').select(:meter_id))
+    meters = group.meters.where(id: Register::Base.grid_production_consumption.where('meter_id = meters.id').where.not(type: Register::Substitute).select(:meter_id))
     meters.select { |meter| meter.datasource == :discovergy }
   end
 

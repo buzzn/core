@@ -1,6 +1,6 @@
 require_relative '../discovergy'
 require_relative '../../../types/discovergy'
-require_relative '../../../discovergy'
+require_relative '../../../builders/discovergy'
 
 class Services::Datasource::Discovergy::LastReading
 
@@ -16,7 +16,7 @@ class Services::Datasource::Discovergy::LastReading
 
   def power_collection(group)
     registers = group.registers.consumption_production.includes(:meter)
-    builder = Discovergy::BubbleBuilder.new(registers: registers)
+    builder = Builders::Discovergy::BubbleBuilder.new(registers: registers)
     collection(group, builder, :power)
   end
 
@@ -31,13 +31,13 @@ class Services::Datasource::Discovergy::LastReading
   def process(register, unit, *fields)
     case register
     when Register::Real
-      builder = Discovergy::TicketBuilder.new(register: register, unit: unit)
+      builder = Builders::Discovergy::TicketBuilder.new(register: register, unit: unit)
       api_call(register.meter, fields, false, builder)
     when Register::Substitute
-      builder = Discovergy::TicketBuilder.new(register: register, unit: unit)
+      builder = Builders::Discovergy::TicketBuilder.new(register: register, unit: unit)
       api_call(meter, fields, true, builder)
     else
-      raise "unknown regiter type: #{register.class}"
+      raise "unknown register type: #{register.class}"
     end
   end
 

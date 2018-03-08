@@ -88,7 +88,7 @@ class Beekeeper::Importer::GenerateBillings
   end
 
   def brick_for_contract(contract, date_range)
-    Billing::BrickBuilder.from_contract(contract, date_range)
+    Builders::Billing::BrickBuilder.from_contract(contract, date_range)
   end
 
   # rubocop:disable Style/ClassVars

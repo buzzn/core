@@ -1,7 +1,7 @@
 require_relative '../discovergy'
-require_relative '../types/datasource'
+require_relative '../../types/datasource'
 
-class Discovergy::AbstractBuilder
+class Builders::Discovergy::AbstractBuilder
 
   extend Dry::Initializer
   include Types::Datasource
@@ -33,7 +33,7 @@ class Discovergy::AbstractBuilder
   def to_watt(response, register)
     val = to_watt_raw(response)
     if one_way_meter?(register)
-      val < 0 ? 0 : val # sometime discovergy delivers negative values: 0 them
+      [0, val].max # sometime discovergy delivers negative values: 0 them
     else
       adjust(val, register)
     end
@@ -55,9 +55,9 @@ class Discovergy::AbstractBuilder
 
   def adjust(val, register)
     if consumption?(register)
-      val > 0 ? 0 : -val
+      [0, -val].max
     elsif production?(register)
-      val < 0 ? 0 : val
+      [0, val].max
     else
       raise "Not implemented for #{register} with label #{register.label}"
     end

@@ -1,7 +1,7 @@
 require_relative 'abstract_registers_builder'
 require_relative 'substitute_calculator'
 
-module Discovergy
+module Builders::Discovergy
   class BubbleBuilder < AbstractRegistersBuilder
 
     def unit
@@ -42,7 +42,8 @@ module Discovergy
     def build_substitute(calculator)
       substitute = registers.find {|r| r.is_a?(Register::Substitute)}
       if substitute
-        Bubble.new(value: calculator.value, register: substitute)
+        value = calculator.value(substitute)
+        Bubble.new(value: value, register: substitute)
       end
     end
 

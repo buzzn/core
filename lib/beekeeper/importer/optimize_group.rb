@@ -2,7 +2,7 @@ class Beekeeper::Importer::OptimizeGroup
 
   attr_reader :logger
 
-  OMIT_VIRTUAL_IDS      = (0..105).to_a + [107, 121, 9999997]
+  OMIT_VIRTUAL_IDS      = (0..127).to_a + [9999997]
   OPTIMIZED_GROUPS_YAML = 'config/optimized_groups.yaml'
 
   def initialize(logger)
@@ -72,9 +72,9 @@ class Beekeeper::Importer::OptimizeGroup
 
   def create_optimized_group(localpool, warnings)
     if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings)
-      warnings['discovergy.optimized_group'] = "need to create optimized group for #{localpool.slug}"
-      # meter = @optimized.create(localpool)
-      # optimized_groups[localpool.slug] = meter.product_serialnumber
+      warnings['discovergy.optimized_group'] = "create optimized group for #{localpool.slug}"
+      #meter = @optimized.create(localpool)
+      #optimized_groups[localpool.slug] = meter.product_serialnumber
     else
       optimized_groups[localpool.slug] = nil
     end

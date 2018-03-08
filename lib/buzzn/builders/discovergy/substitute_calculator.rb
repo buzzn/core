@@ -1,6 +1,6 @@
 require_relative '../discovergy'
 
-class Discovergy::SubstituteCalculator
+class Builders::Discovergy::SubstituteCalculator
 
   attr_reader :time
 
@@ -17,8 +17,14 @@ class Discovergy::SubstituteCalculator
     @time = [values['time'], @time].max
   end
 
-  def value
-    value = @substitute.to_i
+  def value(substitute)
+    value = if substitute.label.production?
+              -@substitute.to_i
+            elsif substitute.label.consumption?
+              @substitute.to_i
+            else
+              raise 'BUG: can handle only production and consuption subsitute registers'
+            end
     [0, value].max
   end
 

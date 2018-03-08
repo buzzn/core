@@ -1,6 +1,6 @@
-require 'buzzn/discovergy/daily_charts_builder'
+require 'buzzn/builders/discovergy/daily_charts_builder'
 
-describe Discovergy::DailyChartsBuilder do
+describe Builders::Discovergy::DailyChartsBuilder do
 
   entity(:response) do
     JSON.parse(File.read(File.join(File.dirname(__FILE__), 'daily_charts_three.json')))
@@ -26,7 +26,7 @@ describe Discovergy::DailyChartsBuilder do
     end
   end
 
-  let(:subject) { Discovergy::DailyChartsBuilder.new(registers: registers) }
+  let(:subject) { Builders::Discovergy::DailyChartsBuilder.new(registers: registers) }
 
   let(:expected_production) do
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 65, 67, 71, 62, 91, 128, 114, 114, 109, 101, 98, 99, 113, 138, 164, 195, 177, 194, 256, 277, 287, 307, 335, 333, 388, 370, 355, 351, 350, 396, 438, 473, 485, 468, 429, 435, 393, 393, 368, 340, 334, 298, 288, 288, 308, 307, 331, 316, 310, 307, 303, 315, 348, 378, 386, 394, 402, 395, 428, 444, 444, 441, 470, 472, 450, 432, 417, 406, 370, 333, 306, 290, 292, 264, 248, 238, 232, 243, 271, 309, 341, 336, 287, 262, 229, 212, 223, 223, 251, 270, 271, 245, 226, 204, 166, 161, 189, 240, 305, 344, 392, 399, 381, 347, 307, 278, 290, 264, 257, 326, 357, 335, 361, 357, 327, 328, 261, 186, 165, 153, 146, 145, 131, 105, 124, 113, 86, 44, 39, 43, 33, 31, 16, 8, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -57,7 +57,6 @@ describe Discovergy::DailyChartsBuilder do
       easy << { 'time' => last['time'] + 18000, 'values' => { 'energyOut' => 0, 'energy' => last['values']['energy'] + 123 } }
 
       result = subject.build(response)
-
     ensure
       easy.delete(easy.last)
     end

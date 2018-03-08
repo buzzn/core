@@ -1,6 +1,6 @@
 require_relative '../discovergy'
 require_relative '../../../types/discovergy'
-require_relative '../../../discovergy'
+require_relative '../../../builders/discovergy'
 
 class Services::Datasource::Discovergy::Charts
 
@@ -14,7 +14,7 @@ class Services::Datasource::Discovergy::Charts
                                                    from:   beginning_of_today,
                                                    resolution: :fifteen_minutes )
       registers = group.registers.production_consumption.includes(:meter)
-      builder = Discovergy::DailyChartsBuilder.new(registers: registers)
+      builder = Builders::Discovergy::DailyChartsBuilder.new(registers: registers)
       api.request(query, builder)
     end
   end

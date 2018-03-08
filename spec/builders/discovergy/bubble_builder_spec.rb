@@ -1,6 +1,6 @@
-require 'buzzn/discovergy/bubble_builder'
+require 'buzzn/builders/discovergy/bubble_builder'
 
-describe Discovergy::BubbleBuilder do
+describe Builders::Discovergy::BubbleBuilder do
 
   def self.load_json(file)
     JSON.parse(File.read(File.join(File.dirname(__FILE__), file)))
@@ -32,7 +32,7 @@ describe Discovergy::BubbleBuilder do
 
   context 'without substitute' do
 
-    subject(:builder) { Discovergy::BubbleBuilder.new(registers: registers) }
+    subject(:builder) { Builders::Discovergy::BubbleBuilder.new(registers: registers) }
 
     let(:expected_values) { [190, 58, 0, 9, 3957, 157, 14] }
 
@@ -44,19 +44,24 @@ describe Discovergy::BubbleBuilder do
 
     context 'with substitute' do
 
-      subject(:builder) { Discovergy::BubbleBuilder.new(registers: group.registers.reload) }
+      let(:builder) { Builders::Discovergy::BubbleBuilder.new(registers: group.registers.reload) }
 
-      before do
-        meter = create(:meter, :virtual,
-                       group: group,
-                       registers: [build(:register, :substitute)])
-        meter.registers.first
+      entity!(:meter) do
+        create(:meter, :virtual,
+               group: group,
+               registers: [build(:register, :substitute)])
       end
+      subject(:result) { builder.build(response) }
 
-      it do
-        result = builder.build(response)
-        expect(result.size).to eq 8
-        expect(result.collect(&:value)).to eq(expected_values + [21])
+      it { expect(result.size).to eq(8) }
+
+      context 'consumption' do
+        before { meter.registers.first.consumption! }
+        it { expect(result.collect(&:value)).to eq(expected_values + [21]) }
+      end
+      context 'production' do
+        before { meter.registers.first.production_pv! }
+        it { expect(result.collect(&:value)).to eq(expected_values + [0]) }
       end
     end
   end
