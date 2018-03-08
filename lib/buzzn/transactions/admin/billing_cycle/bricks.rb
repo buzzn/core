@@ -31,9 +31,21 @@ class Transactions::Admin::BillingCycle::Bricks < Transactions::Base
 
   def build_bricks(bricks)
     return [] unless bricks
-    bricks.collect do |brick|
-      BRICK_FIELDS.each.with_object({}) { |field, hash| hash[field] = brick.send(field).as_json }
-    end
+    bricks.collect { |brick| brick_as_json(brick, BRICK_FIELDS) }
+  end
+
+  def brick_as_json(brick, fields)
+    returned_hash = fields.each.with_object({}) { |field, hash| hash[field.to_s] = brick.send(field) }
+    returned_hash.merge(errors(brick)).as_json
+  end
+
+  # TODO: move this to a validation schema
+  def errors(brick)
+    errors = {}
+    errors[:begin_reading] = ['No reading for begin date'] unless brick.begin_reading.present?
+    errors[:end_reading]   = ['No reading for end date'] unless brick.end_reading.present?
+    errors[:tariff]        = ['No tariff'] unless brick.tariff.present?
+    errors.empty? ? {} : { errors: errors }
   end
 
 end

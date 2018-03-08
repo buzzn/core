@@ -30,9 +30,13 @@ describe Transactions::Admin::BillingCycle::Bricks do
         context 'with brick' do
 
           entity!(:contract) { create(:contract, :localpool_powertaker, market_location: market_location) }
+          let(:expected_brick_keys) do
+            %i(contract_type begin_date end_date status consumed_energy_kwh energy_price_cents base_price_cents)
+          end
           it { is_expected.to be_a(Dry::Monads::Either::Right) }
           it { expect(first_location.keys).to eq(%i(id type name bricks)) }
-          it { expect(first_location[:bricks][:array].first.keys).to eq(%i(contract_type begin_date end_date status)) }
+
+          it { expect(first_location[:bricks][:array].first.keys).to eq(expected_brick_keys) }
 
         end
       end
