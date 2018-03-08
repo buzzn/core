@@ -7,5 +7,6 @@ module Schemas
       required(:begin_reading_id).filled(:int?)
       required(:end_reading_id).filled(:int?)
     end
+
   end
 end
