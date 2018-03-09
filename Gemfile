@@ -53,7 +53,6 @@ gem 'concurrent-ruby-ext'
 # Backend
 gem 'puma'
 gem 'rails', '< 5'
-gem 'mongoid'
 gem 'redis'
 gem 'rack-cors', require: 'rack/cors'
 gem 'clockwork'

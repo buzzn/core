@@ -137,7 +137,7 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
     The required version number is found in file .ruby-version
 
 ## Install required software
-    imagemagick, mongodb, postgresql, redis
+    imagemagick, postgresql, redis
     use homebrew on a Mac
 
 ## Setup the rails Project
