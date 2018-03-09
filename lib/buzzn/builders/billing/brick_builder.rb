@@ -11,8 +11,8 @@ module Builders::Billing
           contract_type:   contract_type(contract),
           date_range:      date_range,
           tariff:          tariff(contract),
-          begin_reading:   reading_at(contract, date_range.first),
-          end_reading:     reading_at(contract, date_range.last)
+          begin_reading:   reading_close_to(contract, date_range.first),
+          end_reading:     reading_close_to(contract, date_range.last)
         }
         BillingBrick.new(attrs)
       end
@@ -54,8 +54,10 @@ module Builders::Billing
         contract.tariffs.last
       end
 
-      def reading_at(contract, date)
-        contract.market_location.register.reading_at(date)
+      def reading_close_to(contract, date)
+        query_date_range = (date - 1.day)..(date + 1.day)
+        readings = contract.market_location.register.readings.where(date: query_date_range)
+        readings.to_a.max_by(&:value) # if there's more than one reading, take the highest one.
       end
 
     end
