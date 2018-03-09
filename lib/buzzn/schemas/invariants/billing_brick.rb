@@ -3,9 +3,9 @@ module Schemas
   module Invariants
 
     BillingBrick = Schemas::Support.Form(Schemas::Constraints::BillingBrick) do
-      required(:tariff).filled(:int?)
-      required(:begin_reading).filled(:int?)
-      required(:end_reading).filled(:int?)
+      required(:tariff).value(:filled?)
+      required(:begin_reading).value(:filled?)
+      required(:end_reading).value(:filled?)
     end
 
   end

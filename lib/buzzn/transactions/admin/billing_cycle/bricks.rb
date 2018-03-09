@@ -40,7 +40,7 @@ class Transactions::Admin::BillingCycle::Bricks < Transactions::Base
   end
 
   def errors(brick)
-    brick.invariant.errors.empty? ? {} : { errors: brick.invariant.errors }
+    brick.invariant.errors.empty? ? {} : { errors: brick.invariant.errors(full: true) }
   end
 
 end
