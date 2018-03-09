@@ -22,17 +22,6 @@ class Services::Health
     'dead'
   end
 
-  def mongo?
-    # use connection from one of our mongo model
-    if Reading::Continuous.mongo_client.cluster.servers.first.connectable?
-      'alive'
-    else
-      'dead'
-    end
-  rescue
-    'errored'
-  end
-
   def build_info
     {
       version: heroku_slug_commit,
