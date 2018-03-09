@@ -662,7 +662,7 @@ CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt
+SELECT substr(password_hash, 0, 30) INTO salt 
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -680,7 +680,7 @@ CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt
+SELECT substr(password_hash, 0, 30) INTO salt 
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -698,7 +698,7 @@ CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) 
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid
+SELECT password_hash = hash INTO valid 
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -716,7 +716,7 @@ CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS b
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid
+SELECT password_hash = hash INTO valid 
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -973,6 +973,40 @@ ALTER SEQUENCE banks_id_seq OWNED BY banks.id;
 
 
 --
+-- Name: billing_cycles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE billing_cycles (
+    id integer NOT NULL,
+    name character varying(64) NOT NULL,
+    begin_date date NOT NULL,
+    end_date date NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    localpool_id integer NOT NULL
+);
+
+
+--
+-- Name: billing_cycles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE billing_cycles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: billing_cycles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE billing_cycles_id_seq OWNED BY billing_cycles.id;
+
+
+--
 -- Name: billing_items; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1007,40 +1041,6 @@ CREATE SEQUENCE billing_items_id_seq
 --
 
 ALTER SEQUENCE billing_items_id_seq OWNED BY billing_items.id;
-
-
---
--- Name: billing_cycles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE billing_cycles (
-    id integer NOT NULL,
-    name character varying(64) NOT NULL,
-    begin_date date NOT NULL,
-    end_date date NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    localpool_id integer NOT NULL
-);
-
-
---
--- Name: billing_cycles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE billing_cycles_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: billing_cycles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE billing_cycles_id_seq OWNED BY billing_cycles.id;
 
 
 --
@@ -1980,17 +1980,17 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 
 
 --
--- Name: billing_items id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY billing_items ALTER COLUMN id SET DEFAULT nextval('billing_items_id_seq'::regclass);
-
-
---
 -- Name: billing_cycles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY billing_cycles ALTER COLUMN id SET DEFAULT nextval('billing_cycles_id_seq'::regclass);
+
+
+--
+-- Name: billing_items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_items ALTER COLUMN id SET DEFAULT nextval('billing_items_id_seq'::regclass);
 
 
 --
@@ -2252,19 +2252,19 @@ ALTER TABLE ONLY banks
 
 
 --
--- Name: billing_items billing_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY billing_items
-    ADD CONSTRAINT billing_items_pkey PRIMARY KEY (id);
-
-
---
 -- Name: billing_cycles billing_cycles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY billing_cycles
     ADD CONSTRAINT billing_cycles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: billing_items billing_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_items
+    ADD CONSTRAINT billing_items_pkey PRIMARY KEY (id);
 
 
 --
@@ -2479,6 +2479,13 @@ CREATE UNIQUE INDEX index_banks_on_blz ON banks USING btree (blz);
 
 
 --
+-- Name: index_billing_cycles_on_localpool_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_billing_cycles_on_localpool_id ON billing_cycles USING btree (localpool_id);
+
+
+--
 -- Name: index_billing_items_on_begin_reading_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2504,13 +2511,6 @@ CREATE INDEX index_billing_items_on_end_reading_id ON billing_items USING btree 
 --
 
 CREATE INDEX index_billing_items_on_tariff_id ON billing_items USING btree (tariff_id);
-
-
---
--- Name: index_billing_cycles_on_localpool_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_billing_cycles_on_localpool_id ON billing_cycles USING btree (localpool_id);
 
 
 --
@@ -3001,19 +3001,19 @@ ALTER TABLE ONLY bank_accounts
 
 
 --
--- Name: billing_items fk_billing_items_billing; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY billing_items
-    ADD CONSTRAINT fk_billing_items_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
-
-
---
 -- Name: billing_cycles fk_billing_cycles_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY billing_cycles
     ADD CONSTRAINT fk_billing_cycles_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
+
+
+--
+-- Name: billing_items fk_billing_items_billing; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_items
+    ADD CONSTRAINT fk_billing_items_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
 
 
 --
