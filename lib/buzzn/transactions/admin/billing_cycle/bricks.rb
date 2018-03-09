@@ -40,8 +40,7 @@ class Transactions::Admin::BillingCycle::Bricks < Transactions::Base
   end
 
   def errors(brick)
-    errors = brick.invariant.errors.each.with_object({}) { |(key, value), hash| hash[key.to_s.gsub('_id', '')] = value }
-    errors.empty? ? {} : { errors: errors }
+    brick.invariant.errors.empty? ? {} : { errors: brick.invariant.errors }
   end
 
 end
