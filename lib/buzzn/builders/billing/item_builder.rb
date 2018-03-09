@@ -1,7 +1,7 @@
 require_relative '../billing'
 
 module Builders::Billing
-  class BrickBuilder
+  class ItemBuilder
 
     class << self
 
@@ -14,7 +14,7 @@ module Builders::Billing
           begin_reading:   reading_close_to(contract, date_range.first),
           end_reading:     reading_close_to(contract, date_range.last)
         }
-        BillingBrick.new(attrs)
+        BillingItem.new(attrs)
       end
 
       private

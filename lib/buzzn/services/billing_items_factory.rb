@@ -1,6 +1,6 @@
 require_relative '../builders/billing/brick_builder'
 
-class Services::BillingBricksFactory
+class Services::BillingItemsFactory
 
   # This is the object structure we're returning
   # [
@@ -38,7 +38,7 @@ class Services::BillingBricksFactory
   end
 
   def build_brick(contract, date_range)
-    Builders::Billing::BrickBuilder.from_contract(contract, date_range)
+    Builders::Billing::ItemBuilder.from_contract(contract, date_range)
   end
 
   # Ruby can't calculate the length (in days) of a range object when the range is defined with dates -- it always returns nil.

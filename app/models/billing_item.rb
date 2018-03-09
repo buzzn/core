@@ -3,7 +3,7 @@
 #
 require_relative 'concerns/with_date_range'
 
-class BillingBrick < ActiveRecord::Base
+class BillingItem < ActiveRecord::Base
 
   include WithDateRange
 

@@ -1,6 +1,6 @@
 require_relative '../operations'
 
-class Operations::Bricks
+class Operations::Items
 
   include Dry::Transaction::Operation
   include Import[factory: 'services.billing_bricks_factory']

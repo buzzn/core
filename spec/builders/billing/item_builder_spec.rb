@@ -1,9 +1,9 @@
-describe 'Builders::Billing::BrickBuilder' do
+describe 'Builders::Billing::ItemBuilder' do
 
   describe 'from_contract' do
 
     let(:date_range) { Date.new(2018, 1, 1)...Date.new(2019, 1, 1) }
-    let(:brick)      { Builders::Billing::BrickBuilder.from_contract(contract, date_range) }
+    let(:brick)      { Builders::Billing::ItemBuilder.from_contract(contract, date_range) }
 
     describe 'date_range' do
       context 'when contract starts before date_range and hasn\'t ended' do

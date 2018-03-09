@@ -43,7 +43,7 @@ module Admin
         end
 
         r.get! 'bricks' do
-          Transactions::Admin::BillingCycle::Bricks
+          Transactions::Admin::BillingCycle::Items
             .for(billing_cycle)
             .call(billing_cycle)
         end

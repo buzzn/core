@@ -233,7 +233,7 @@ describe 'Factories produce valid records' do
     end
   end
 
-  context 'BillingBrick' do
+  context 'BillingItem' do
     context 'brick has billing' do
       subject { build(:billing_brick) }
       it { is_expected.to be_valid }

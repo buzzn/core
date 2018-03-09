@@ -1,6 +1,6 @@
 require 'buzzn/transactions/admin/billing_cycle/bricks'
 
-describe Transactions::Admin::BillingCycle::Bricks do
+describe Transactions::Admin::BillingCycle::Items do
 
   entity(:localpool)      { create(:localpool) }
   entity(:register)       { create(:register, :consumption) }
@@ -9,7 +9,7 @@ describe Transactions::Admin::BillingCycle::Bricks do
   entity(:account)        { Account::Base.where(person_id: operator).first }
 
   entity(:billing_cycle_resource) { Admin::LocalpoolResource.all(account).first.billing_cycles.first }
-  entity(:transaction) { Transactions::Admin::BillingCycle::Bricks.for(billing_cycle_resource) }
+  entity(:transaction) { Transactions::Admin::BillingCycle::Items.for(billing_cycle_resource) }
 
   context 'result' do
     subject { transaction.call(billing_cycle_resource) }

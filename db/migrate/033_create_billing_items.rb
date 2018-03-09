@@ -1,8 +1,8 @@
 require 'buzzn/schemas/constraints/billing_cycle'
 
-class CreateBillingBricks < ActiveRecord::Migration
+class CreateBillingItems < ActiveRecord::Migration
 
-  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::BillingBrick)
+  SCHEMA = Schemas::Support::MigrationVisitor.new(Schemas::Constraints::BillingItem)
 
   def up
     SCHEMA.up(:billing_bricks, self)
