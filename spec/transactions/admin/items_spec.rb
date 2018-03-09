@@ -42,9 +42,9 @@ describe Transactions::Admin::BillingCycle::Items do
             it 'JSON has all errors and messages' do
               errors = first_location[:items][:array].first['errors']
               expect(errors).to eq(
-                'begin_reading' => ['must be filled'],
-                'end_reading' => ['must be filled'],
-                'tariff' => ['must be filled']
+                'begin_reading' => ['begin_reading must be filled'],
+                'end_reading' => ['end_reading must be filled'],
+                'tariff' => ['tariff must be filled']
               )
             end
           end

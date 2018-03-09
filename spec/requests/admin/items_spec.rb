@@ -33,9 +33,9 @@ describe Admin::BillingCycleResource do
                 'consumed_energy_kwh' => nil,
                 'price_cents' => nil,
                 'errors' => {
-                  'tariff' => ['must be filled'],
-                  'begin_reading' => ['must be filled'],
-                  'end_reading' => ['must be filled']
+                  'tariff' => ['tariff must be filled'],
+                  'begin_reading' => ['begin_reading must be filled'],
+                  'end_reading' => ['end_reading must be filled']
                 }
               }
             ]
