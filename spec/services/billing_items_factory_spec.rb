@@ -44,7 +44,7 @@ describe 'Services::BillingItemsFactory' do
           let(:group)                     { create(:localpool, market_locations: [market_location]) }
           let(:already_billed_date_range) { date_range.first...date_range.last - 2.months }
           let(:existing_billing)          { create(:billing, date_range: already_billed_date_range, contract: market_location.contracts.last) }
-          let!(:existing_item)           { create(:billing_item, billing: existing_billing) }
+          let!(:existing_item) { create(:billing_item, billing: existing_billing) }
 
           it 'contains one item for the existing billing and a new one' do
             expect(subject.first[:items].size).to eq(2)

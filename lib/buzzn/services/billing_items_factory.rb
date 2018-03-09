@@ -16,9 +16,9 @@ class Services::BillingItemsFactory
   private
 
   def items_for_market_location(location, date_range)
-    billed_items       = find_billed_items(location, date_range)
+    billed_items = find_billed_items(location, date_range)
     unbilled_date_range = billed_items.empty? ? date_range : billed_items.last.end_date...date_range.last
-    unbilled_items     = build_unbilled_items(location, unbilled_date_range)
+    unbilled_items = build_unbilled_items(location, unbilled_date_range)
     billed_items + unbilled_items
   end
 

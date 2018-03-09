@@ -3,7 +3,7 @@ describe 'Builders::Billing::ItemBuilder' do
   describe 'from_contract' do
 
     let(:date_range) { Date.new(2018, 1, 1)...Date.new(2019, 1, 1) }
-    let(:item)      { Builders::Billing::ItemBuilder.from_contract(contract, date_range) }
+    let(:item) { Builders::Billing::ItemBuilder.from_contract(contract, date_range) }
 
     describe 'date_range' do
       context 'when contract starts before date_range and hasn\'t ended' do
