@@ -2,8 +2,8 @@ require 'buzzn/transactions/admin/billing_cycle/items'
 
 describe Transactions::Admin::BillingCycle::Items do
 
-  entity(:localpool)      { create(:localpool) }
   entity(:register)       { create(:register, :consumption) }
+  entity(:localpool)      { register.meter.group }
   entity!(:billing_cycle) { create(:billing_cycle, localpool: localpool, begin_date: Date.parse('2000-1-1'), end_date: Date.today) }
   entity(:operator)       { create(:person, :with_account, :with_self_role, roles: { Role::BUZZN_OPERATOR => nil }) }
   entity(:account)        { Account::Base.where(person_id: operator).first }

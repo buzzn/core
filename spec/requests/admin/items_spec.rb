@@ -7,10 +7,10 @@ describe Admin::BillingCycleResource do
     TestAdminLocalpoolRoda
   end
 
-  entity(:localpool)        { create(:localpool) }
   entity(:register)         { create(:register, :consumption) }
+  entity!(:market_location) { create(:market_location, :with_contract, register: register) }
+  entity(:localpool)        { market_location.group }
   entity!(:billing_cycle)   { create(:billing_cycle, localpool: localpool, begin_date: Date.parse('2000-1-1'), end_date: Date.today) }
-  entity!(:market_location) { create(:market_location, :with_contract, group: localpool, register: register) }
   entity(:contract) { market_location.contracts.first }
 
   context 'localpools/<id>/billing-cycles/<id>/items' do

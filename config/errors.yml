@@ -29,3 +29,4 @@ en:
     lineup?: 'all tariffs must line up'
     after?: 'must be after begin_date'
     not_in_future?: 'must not be in the future'
+    single_substitute?: 'there can be only one substitute register per group'

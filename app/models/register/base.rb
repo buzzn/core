@@ -32,6 +32,7 @@ module Register
 
     has_many :contracts, class_name: 'Contract::Base', dependent: :destroy, foreign_key: 'register_id'
     belongs_to :market_location
+    has_one :group, through: :market_location
     has_many :devices, foreign_key: 'register_id'
     has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'
 
