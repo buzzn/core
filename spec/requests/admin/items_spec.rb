@@ -13,17 +13,17 @@ describe Admin::BillingCycleResource do
   entity!(:market_location) { create(:market_location, :with_contract, group: localpool, register: register) }
   entity(:contract) { market_location.contracts.first }
 
-  context 'localpools/<id>/billing-cycles/<id>/bricks' do
+  context 'localpools/<id>/billing-cycles/<id>/items' do
 
     context 'GET' do
-      let(:path) { "/localpools/#{localpool.id}/billing-cycles/#{billing_cycle.id}/bricks" }
+      let(:path) { "/localpools/#{localpool.id}/billing-cycles/#{billing_cycle.id}/items" }
 
       let(:expected_json) do
         {
           'id' => market_location.id,
           'type' => 'market_location',
           'name' => market_location.name,
-          'bricks' => {
+          'items' => {
             'array' => [
               {
                 'contract_type' => 'power_taker',

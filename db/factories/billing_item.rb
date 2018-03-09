@@ -1,15 +1,15 @@
 FactoryGirl.define do
-  factory :billing_brick do
+  factory :billing_item do
     billing { FactoryGirl.build(:billing) }
 
-    after(:build) do |billing_brick, evaluator|
-      unless billing_brick.begin_date && billing_brick.end_date
+    after(:build) do |billing_item, evaluator|
+      unless billing_item.begin_date && billing_item.end_date
         if evaluator.billing
-          billing_brick.begin_date = evaluator.billing.begin_date
-          billing_brick.end_date = evaluator.billing.end_date
+          billing_item.begin_date = evaluator.billing.begin_date
+          billing_item.end_date = evaluator.billing.end_date
         else
-          billing_brick.begin_date = Date.new(2017, 1, 1)
-          billing_brick.end_date   = Date.new(2017, 12, 31)
+          billing_item.begin_date = Date.new(2017, 1, 1)
+          billing_item.end_date   = Date.new(2017, 12, 31)
         end
       end
     end

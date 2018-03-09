@@ -1,4 +1,4 @@
-require_relative '../constraints/billing_brick'
+require_relative '../constraints/billing_item'
 module Schemas
   module Invariants
 

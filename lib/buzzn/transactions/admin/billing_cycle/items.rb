@@ -9,13 +9,13 @@ class Transactions::Admin::BillingCycle::Items < Transactions::Base
   end
 
   step :authorize, with: :'operations.authorization.generic'
-  step :bricks, with: :'operations.bricks'
+  step :items, with: :'operations.items'
   step :result_builder
 
   def result_builder(data)
     result = {
       array: data.collect do |item|
-        build_bricks_location(item[:market_location], item[:bricks])
+        build_items_location(item[:market_location], item[:items])
       end
     }
     Right(result)
@@ -23,24 +23,24 @@ class Transactions::Admin::BillingCycle::Items < Transactions::Base
 
   private
 
-  def build_bricks_location(market_location, bricks)
-    { id: market_location.id, type: 'market_location', name: market_location.name, bricks: { array: build_bricks(bricks) } }
+  def build_items_location(market_location, items)
+    { id: market_location.id, type: 'market_location', name: market_location.name, items: { array: build_items(items) } }
   end
 
   BRICK_FIELDS = %i(contract_type begin_date end_date status consumed_energy_kwh price_cents)
 
-  def build_bricks(bricks)
-    return [] unless bricks
-    bricks.collect { |brick| brick_as_json(brick, BRICK_FIELDS) }
+  def build_items(items)
+    return [] unless items
+    items.collect { |item| item_as_json(item, BRICK_FIELDS) }
   end
 
-  def brick_as_json(brick, fields)
-    returned_hash = fields.each.with_object({}) { |field, hash| hash[field.to_s] = brick.send(field) }
-    returned_hash.merge(errors(brick)).as_json
+  def item_as_json(item, fields)
+    returned_hash = fields.each.with_object({}) { |field, hash| hash[field.to_s] = item.send(field) }
+    returned_hash.merge(errors(item)).as_json
   end
 
-  def errors(brick)
-    brick.invariant.errors.empty? ? {} : { errors: brick.invariant.errors(full: true) }
+  def errors(item)
+    item.invariant.errors.empty? ? {} : { errors: item.invariant.errors(full: true) }
   end
 
 end

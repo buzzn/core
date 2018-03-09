@@ -2,7 +2,7 @@ require_relative '../admin_roda'
 require_relative '../../transactions/admin/billing_cycle/create'
 require_relative '../../transactions/admin/billing_cycle/update'
 require_relative '../../transactions/admin/billing_cycle/delete'
-require_relative '../../transactions/admin/billing_cycle/bricks'
+require_relative '../../transactions/admin/billing_cycle/items'
 
 module Admin
   class BillingCycleRoda < BaseRoda
@@ -42,7 +42,7 @@ module Admin
             .call(billing_cycle)
         end
 
-        r.get! 'bricks' do
+        r.get! 'items' do
           Transactions::Admin::BillingCycle::Items
             .for(billing_cycle)
             .call(billing_cycle)

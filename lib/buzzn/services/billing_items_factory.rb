@@ -1,43 +1,43 @@
-require_relative '../builders/billing/brick_builder'
+require_relative '../builders/billing/item_builder'
 
 class Services::BillingItemsFactory
 
   # This is the object structure we're returning
   # [
-  #   { market_location: <MarketLocation instance 1>, bricks: [ Brick.new(...), ...] },
-  #   { market_location: <MarketLocation instance 2>, bricks: [ ... ] }
+  #   { market_location: <MarketLocation instance 1>, items: [ Brick.new(...), ...] },
+  #   { market_location: <MarketLocation instance 2>, items: [ ... ] }
   # ]
-  def bricks_by_market_location(group:, date_range:)
+  def items_by_market_location(group:, date_range:)
     group.market_locations.consumption.map do |location|
-      { market_location: location, bricks: bricks_for_market_location(location, date_range) }
+      { market_location: location, items: items_for_market_location(location, date_range) }
     end
   end
 
   private
 
-  def bricks_for_market_location(location, date_range)
-    billed_bricks       = find_billed_bricks(location, date_range)
-    unbilled_date_range = billed_bricks.empty? ? date_range : billed_bricks.last.end_date...date_range.last
-    unbilled_bricks     = build_unbilled_bricks(location, unbilled_date_range)
-    billed_bricks + unbilled_bricks
+  def items_for_market_location(location, date_range)
+    billed_items       = find_billed_items(location, date_range)
+    unbilled_date_range = billed_items.empty? ? date_range : billed_items.last.end_date...date_range.last
+    unbilled_items     = build_unbilled_items(location, unbilled_date_range)
+    billed_items + unbilled_items
   end
 
-  def find_billed_bricks(location, date_range)
+  def find_billed_items(location, date_range)
     billings = location.billings_in_date_range(date_range)
-    (billings.map(&:bricks).flatten || []).sort_by(&:begin_date)
+    (billings.map(&:items).flatten || []).sort_by(&:begin_date)
   end
 
   # We don't handle register and tariff changes in the first billing story.
-  # So we can keep it simple -- each contract will result in one brick.
-  def build_unbilled_bricks(location, date_range)
+  # So we can keep it simple -- each contract will result in one item.
+  def build_unbilled_items(location, date_range)
     if date_range_zero?(date_range)
       []
     else
-      location.contracts_in_date_range(date_range).map { |contract| build_brick(contract, date_range) }
+      location.contracts_in_date_range(date_range).map { |contract| build_item(contract, date_range) }
     end
   end
 
-  def build_brick(contract, date_range)
+  def build_item(contract, date_range)
     Builders::Billing::ItemBuilder.from_contract(contract, date_range)
   end
 

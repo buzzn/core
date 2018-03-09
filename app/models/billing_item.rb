@@ -1,5 +1,5 @@
 #
-# A billing brick stores a part of the energy consumption within a billing.
+# A billing item stores a part of the energy consumption within a billing.
 #
 require_relative 'concerns/with_date_range'
 

@@ -302,10 +302,10 @@ CREATE TYPE addresses_country AS ENUM (
 
 
 --
--- Name: billing_bricks_contract_type; Type: TYPE; Schema: public; Owner: -
+-- Name: billing_items_contract_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE billing_bricks_contract_type AS ENUM (
+CREATE TYPE billing_items_contract_type AS ENUM (
     'power_taker',
     'third_party',
     'gap'
@@ -662,7 +662,7 @@ CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -680,7 +680,7 @@ CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
     AS $$
 DECLARE salt text;
 BEGIN
-SELECT substr(password_hash, 0, 30) INTO salt 
+SELECT substr(password_hash, 0, 30) INTO salt
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN salt;
@@ -698,7 +698,7 @@ CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) 
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_previous_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -716,7 +716,7 @@ CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS b
     AS $$
 DECLARE valid boolean;
 BEGIN
-SELECT password_hash = hash INTO valid 
+SELECT password_hash = hash INTO valid
 FROM account_password_hashes
 WHERE acct_id = id;
 RETURN valid;
@@ -973,16 +973,16 @@ ALTER SEQUENCE banks_id_seq OWNED BY banks.id;
 
 
 --
--- Name: billing_bricks; Type: TABLE; Schema: public; Owner: -
+-- Name: billing_items; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE billing_bricks (
+CREATE TABLE billing_items (
     id integer NOT NULL,
     begin_date date NOT NULL,
     end_date date NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    contract_type billing_bricks_contract_type,
+    contract_type billing_items_contract_type,
     billing_id integer NOT NULL,
     begin_reading_id integer,
     end_reading_id integer,
@@ -991,10 +991,10 @@ CREATE TABLE billing_bricks (
 
 
 --
--- Name: billing_bricks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: billing_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE billing_bricks_id_seq
+CREATE SEQUENCE billing_items_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1003,10 +1003,10 @@ CREATE SEQUENCE billing_bricks_id_seq
 
 
 --
--- Name: billing_bricks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: billing_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE billing_bricks_id_seq OWNED BY billing_bricks.id;
+ALTER SEQUENCE billing_items_id_seq OWNED BY billing_items.id;
 
 
 --
@@ -1980,10 +1980,10 @@ ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regcl
 
 
 --
--- Name: billing_bricks id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: billing_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billing_bricks ALTER COLUMN id SET DEFAULT nextval('billing_bricks_id_seq'::regclass);
+ALTER TABLE ONLY billing_items ALTER COLUMN id SET DEFAULT nextval('billing_items_id_seq'::regclass);
 
 
 --
@@ -2252,11 +2252,11 @@ ALTER TABLE ONLY banks
 
 
 --
--- Name: billing_bricks billing_bricks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: billing_items billing_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billing_bricks
-    ADD CONSTRAINT billing_bricks_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY billing_items
+    ADD CONSTRAINT billing_items_pkey PRIMARY KEY (id);
 
 
 --
@@ -2479,31 +2479,31 @@ CREATE UNIQUE INDEX index_banks_on_blz ON banks USING btree (blz);
 
 
 --
--- Name: index_billing_bricks_on_begin_reading_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_billing_items_on_begin_reading_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_bricks_on_begin_reading_id ON billing_bricks USING btree (begin_reading_id);
-
-
---
--- Name: index_billing_bricks_on_billing_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_billing_bricks_on_billing_id ON billing_bricks USING btree (billing_id);
+CREATE INDEX index_billing_items_on_begin_reading_id ON billing_items USING btree (begin_reading_id);
 
 
 --
--- Name: index_billing_bricks_on_end_reading_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_billing_items_on_billing_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_bricks_on_end_reading_id ON billing_bricks USING btree (end_reading_id);
+CREATE INDEX index_billing_items_on_billing_id ON billing_items USING btree (billing_id);
 
 
 --
--- Name: index_billing_bricks_on_tariff_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_billing_items_on_end_reading_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_bricks_on_tariff_id ON billing_bricks USING btree (tariff_id);
+CREATE INDEX index_billing_items_on_end_reading_id ON billing_items USING btree (end_reading_id);
+
+
+--
+-- Name: index_billing_items_on_tariff_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_billing_items_on_tariff_id ON billing_items USING btree (tariff_id);
 
 
 --
@@ -3001,11 +3001,11 @@ ALTER TABLE ONLY bank_accounts
 
 
 --
--- Name: billing_bricks fk_billing_bricks_billing; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: billing_items fk_billing_items_billing; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billing_bricks
-    ADD CONSTRAINT fk_billing_bricks_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
+ALTER TABLE ONLY billing_items
+    ADD CONSTRAINT fk_billing_items_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
 
 
 --

@@ -277,7 +277,7 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     update :managers
     delete :managers
 
-    bricks do
+    items do
       retrieve :managers
     end
 

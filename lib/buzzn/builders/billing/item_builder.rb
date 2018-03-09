@@ -49,7 +49,7 @@ module Builders::Billing
       end
 
       # TODO: right now we don't handle tariff changes, so we can always take the latest tariff.
-      # Later on we'll need to find the tariff that was active on the contract at the begin and end dates of the brick
+      # Later on we'll need to find the tariff that was active on the contract at the begin and end dates of the item
       def tariff(contract)
         contract.tariffs.last
       end

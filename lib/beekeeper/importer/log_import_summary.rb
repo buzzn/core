@@ -23,7 +23,7 @@ class Beekeeper::Importer::LogImportSummary
     logger.info("meters (virtual)                                         : #{Meter::Virtual.count}")
     logger.info("billing cycles                                           : #{BillingCycle.count}")
     logger.info("billings                                                 : #{Billing.count}")
-    logger.info("billing bricks                                           : #{BillingItem.count}")
+    logger.info("billing items                                           : #{BillingItem.count}")
 
     logger.info('-' * 80)
     logger.info('Localpool contracts')

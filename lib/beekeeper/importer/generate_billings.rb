@@ -75,7 +75,7 @@ class Beekeeper::Importer::GenerateBillings
       invoice_number: next_invoice_number(localpool),
       contract: contract,
       billing_cycle: billing_cycle,
-      bricks: [brick_for_contract(contract, date_range)],
+      items: [item_for_contract(contract, date_range)],
       date_range: date_range
     )
     logger.debug("Created billing for contract #{contract.id} (#{date_range})")
@@ -87,7 +87,7 @@ class Beekeeper::Importer::GenerateBillings
     begin_date...end_date
   end
 
-  def brick_for_contract(contract, date_range)
+  def item_for_contract(contract, date_range)
     Builders::Billing::ItemBuilder.from_contract(contract, date_range)
   end
 
