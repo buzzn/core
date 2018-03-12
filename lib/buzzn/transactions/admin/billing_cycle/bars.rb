@@ -1,6 +1,6 @@
 require_relative '../billing_cycle'
 
-class Transactions::Admin::BillingCycle::Items < Transactions::Base
+class Transactions::Admin::BillingCycle::Bars < Transactions::Base
 
   def self.for(billing_cycle)
     new.with_step_args(
