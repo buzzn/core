@@ -72,7 +72,7 @@ class Beekeeper::Importer::GenerateBillings
     date_range = billing_date_range(contract, billing_cycle)
     Billing.create!(
       status: :closed, # closed means paid so we don't have to track payments/settling in our system any more.
-      invoice_number: next_invoice_number(localpool),
+      invoice_number: next_invoice_number,
       contract: contract,
       billing_cycle: billing_cycle,
       items: [item_for_contract(contract, date_range)],
@@ -92,7 +92,7 @@ class Beekeeper::Importer::GenerateBillings
   end
 
   # rubocop:disable Style/ClassVars
-  def next_invoice_number(localpool)
+  def next_invoice_number
     @@global_invoice_number ||= 0
     @@global_invoice_number += 1
     "BEE-#{format('%05d', @@global_invoice_number)}"
