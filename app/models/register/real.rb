@@ -16,5 +16,6 @@ module Register
     def obis
       raise 'not implemented'
     end
+
   end
 end
