@@ -67,6 +67,8 @@ DISCOVERGY_PASSWORD=<password from lastpass>
 | `rake db:seed:example_data` | Load an example localpool into the DB.<br />It does not prepare/empty the DB, run `rake db:empty` beforehands if required. | Buzzn custom
 | `rake deploy:staging` | Deploy the application to staging. | Buzzn custom
 | `rake deploy:production` | Deploy the application to production and create a new release tag. | Buzzn custom
+| `rake heroku:update_db:staging` | Import the beekeeper dump locally and push it to staging.  | Buzzn custom
+| `rake heroku:update_db:production` | Import the beekeeper dump locally and push it to production.  | Buzzn custom
 
 ## Common testing workflow - after checking out a remote branch
 
