@@ -53,11 +53,9 @@ module Register
     end
     scope :grid_production_consumption, -> { grid_consumption_production }
 
-    scope :by_group, -> (group) do
-      group ? self.where(group: group.id) : self.where(group: nil)
-    end
+    scope :by_group, ->(group) { group ? self.where(group: group.id) : self.where(group: nil) }
 
-    scope :by_labels, -> (*labels) do
+    scope :by_labels, ->(*labels) do
       if (Register::Base.labels.values & labels).sort != labels.sort
         raise ArgumentError.new("#{labels.inspect} needs to be subset of #{Register::Base.labels.values}")
       end

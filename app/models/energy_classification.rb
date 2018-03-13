@@ -17,8 +17,8 @@ class EnergyClassification < ActiveRecord::Base
 
   validate :validate_invariants
 
-  scope :by_tariff, -> (tariff) { where(tariff_name: tariff) }
-  scope :valid_at, ->  (timestamp) do
+  scope :by_tariff, ->(tariff) { where(tariff_name: tariff) }
+  scope :valid_at, ->(timestamp) do
     timestamp = case timestamp
                 when DateTime
                   timestamp.to_date

@@ -333,19 +333,6 @@ Layout/SpaceBeforeFirstArg:
   Exclude:
     - 'spec/requests/admin/register_spec.rb'
 
-# Offense count: 14
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: require_no_space, require_space
-Layout/SpaceInLambdaLiteral:
-  Exclude:
-    - 'app/models/contract/base.rb'
-    - 'app/models/contract/payment.rb'
-    - 'app/models/contract/tariff.rb'
-    - 'app/models/energy_classification.rb'
-    - 'app/models/reading/single.rb'
-    - 'app/models/register/base.rb'
-
 # Offense count: 93
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
