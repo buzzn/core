@@ -1,3 +1,5 @@
+require 'sentry-raven'
+
 # https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server
 
 workers Integer(ENV['WEB_CONCURRENCY'] || 2)
