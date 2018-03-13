@@ -13,15 +13,6 @@ port        ENV['PORT']     || 3000
 environment ENV['RACK_ENV'] || 'development'
 
 on_worker_boot do |index|
-  require 'leafy/core/console_reporter'
-  reporter = Leafy::Core::ConsoleReporter::Builder.for_registry(Import.global('services.metrics')) do
-    output_to STDERR
-    shutdown_executor_on_stop true
-  end
-  offset = 10 / @options[:workers]
-  reporter.start((index + 1) * offset, 10) # report every 10 seconds
-  puts("started: #{reporter}\n")
-
   # Worker specific setup for Rails 4.1+
   # See: https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#on-worker-boot
   ActiveRecord::Base.establish_connection
