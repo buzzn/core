@@ -91,7 +91,8 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       end_date:                      next_contract.begin_date,
       # these attributes come from different places ...
       contract_number_addition:      next_contract_number_addition(previous_contract.localpool),
-      customer:                      find_gap_contract_customer(previous_contract.localpool)
+      customer:                      find_gap_contract_customer(previous_contract.localpool),
+      tariffs:                       previous_contract.localpool.tariffs.at(previous_contract.end_date)
     }
     Contract::LocalpoolGap.create!(attributes)
   end
@@ -143,5 +144,4 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   def inspect_reading(reading)
     reading.attributes.slice('date', 'value', 'reason', 'comment', 'id').inspect
   end
-
 end
