@@ -12,7 +12,7 @@ namespace :db do
   namespace :seed do
 
     task :print_warning do
-      unless ENV['RACK_ENV'] == 'test'
+      unless ENV['RACK_ENV'] == 'test' || ENV['CI']
         puts 'The local database will be dropped by this task.'
         puts 'Press Ctrl-C to abort, Enter to continue.'
         $stdin.gets
