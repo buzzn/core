@@ -62,8 +62,6 @@ DISCOVERGY_PASSWORD=<password from lastpass>
 
 | task name            | description   | source
 |----------------------|---------------|----------------
-| `rake`               | Run all tests | Rails default
-| `rake test:prepare`      | Prepare the DB for testing, i.e. drop and recreate it, and load the schema | Buzzn custom
 | `rake db:reset`      | Drop and recreate the DB, load schema and setup data | Rails default
 | `rake db:empty` | Resets the database without dropping the DB.<br />Useful to reset DB when it has open connections. | Buzzn custom
 | `rake db:seed:example_data` | Load an example localpool into the DB.<br />It does not prepare/empty the DB, run `rake db:empty` beforehands if required. | Buzzn custom
@@ -74,7 +72,7 @@ DISCOVERGY_PASSWORD=<password from lastpass>
 
 - checkout the branch
 - run `RAILS_ENV=test rake db:reset` once to ensure DB is prepared
-- run `rake`
+- run `rspec`
 
 ## Common testing workflow - to run one test file
 
