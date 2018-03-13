@@ -4,27 +4,27 @@ FactoryGirl.define do
     date        Date.parse('2017-09-28')
     raw_value   1_234
     value       { raw_value }
-    unit        Reading::Single.units[:watt_hour]
-    reason      Reading::Single.reasons[:device_setup]
-    read_by     Reading::Single.read_by[:buzzn]
-    quality     Reading::Single.qualities[:read_out]
-    source      Reading::Single.sources[:smart]
-    status      Reading::Single.status[:z86]
+    unit        :watt_hour
+    reason      :device_setup
+    read_by     :buzzn
+    quality     :read_out
+    source      :smart
+    status      :z86
     comment     'Generic reading'
 
     trait :setup do
-      reason    Reading::Single.reasons[:device_setup]
+      reason    :device_setup
       comment   'Ablesung bei Einbau'
     end
 
     trait :regular do
-      reason    Reading::Single.reasons[:regular_reading]
+      reason    :regular_reading
       comment   'Turnusablesung'
     end
 
     trait :contract_change do
-      read_by   Reading::Single.read_by[:power_taker]
-      reason    Reading::Single.reasons[:contract_change]
+      read_by   :power_taker
+      reason    :contract_change
       comment   'Versorgerwechsel'
     end
   end

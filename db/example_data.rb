@@ -11,9 +11,10 @@ SAMPLES_TO_LOAD = %i(
   localpools
   market_locations
   contracts
-  billings
   meters
   registers
+  readings
+  billings
   brokers
 )
 
