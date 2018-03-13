@@ -1,3 +1,4 @@
+require 'active_support/string_inquirer'
 require_relative '../filterable'
 require_relative '../concerns/last_date'
 require_relative '../concerns/date_range_scope'
@@ -97,7 +98,7 @@ module Contract
         ONBOARDING
       end
       # wrap the string in ActiveSupport::StringInquirer, which allows status.ended? etc, hiding the string.
-      status.inquiry
+      ActiveSupport::StringInquirer.new(status)
     end
 
     private
