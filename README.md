@@ -22,9 +22,9 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
 - [How to set up a development environment](#how-to-set-up-a-development-environment)
   - [Setup Ruby \(using rbenv\)](#setup-ruby-using-rbenv)
   - [Install required software](#install-required-software)
-  - [Setup the rails Project](#setup-the-rails-project)
+  - [Set up the project](#set-up-the-project)
   - [Start server in development mode](#start-server-in-development-mode)
-  - [Reset and Start Test Environment](#reset-and-start-test-environment)
+  - [Reset and start test environment](#reset-and-start-test-environment)
   - [Set up rubocop](#set-up-rubocop)
 - [Misc admin info \(may be outdated\)](#misc-admin-info-may-be-outdated)
   - [Start sidekiq message queue](#start-sidekiq-message-queue)
@@ -73,12 +73,12 @@ DISCOVERGY_PASSWORD=<password from lastpass>
 ## Common testing workflow - after checking out a remote branch
 
 - checkout the branch
-- run `RAILS_ENV=test rake db:reset` once to ensure DB is prepared
+- run `RACK_ENV=test rake db:reset` once to ensure DB is prepared
 - run `rspec`
 
 ## Common testing workflow - to run one test file
 
-- run `RAILS_ENV=test rake db:reset` once to ensure DB is prepared
+- run `RACK_ENV=test rake db:reset` once to ensure DB is prepared
 - run `rspec path/to/spec_file`
 
 ## Loading setup and example data ("seeds")
@@ -140,7 +140,7 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
     imagemagick, postgresql, redis
     use homebrew on a Mac
 
-## Setup the rails Project
+## Set up the project
     git clone https://github.com/buzzn/core.git
     cd core
     gem install bundler
@@ -150,8 +150,8 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
 ## Start server in development mode
     bin/server
 
-## Reset and Start Test Environment
-    rake test:prepare
+## Reset and start test environment
+    RACK_ENV=test rake db:reset
     guard
 
 ## Set up rubocop
