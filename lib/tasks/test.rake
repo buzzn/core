@@ -6,6 +6,6 @@ namespace :test do
   desc 'Prepare the test DB for running the tests'
   task :prepare do
     # reset DB and load schema, but don't load any seed data, the test setup will take care of that.
-    `RACK_ENV=test rake db:drop db:create db:structure:load`
+    `RACK_ENV=test rake db:reset`
   end
 end
