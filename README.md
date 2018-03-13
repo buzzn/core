@@ -26,7 +26,7 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
   - [Start server in development mode](#start-server-in-development-mode)
   - [Reset and Start Test Environment](#reset-and-start-test-environment)
   - [Set up rubocop](#set-up-rubocop)
-- [Misc admin info](#misc-admin-info)
+- [Misc admin info \(may be outdated\)](#misc-admin-info-may-be-outdated)
   - [Start sidekiq message queue](#start-sidekiq-message-queue)
   - [Stop sidekiq](#stop-sidekiq)
   - [Find missing Indexes](#find-missing-indexes)
@@ -145,7 +145,7 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
     cd core
     gem install bundler
     bundle install
-    rake db:create db:structure:load db:seed:example_data
+    rake application:init
 
 ## Start server in development mode
     bin/server
@@ -184,7 +184,7 @@ some = Exception(to, the, rule)
 
 Install the [overcommit gem](https://github.com/brigade/overcommit); it'll then use the [.overcommit.yml](.overcommit.yml) file that's already checked in to run rubocop before pushing.
 
-# Misc admin info
+# Misc admin info (may be outdated)
 
 ## Start sidekiq message queue
     redis-server
