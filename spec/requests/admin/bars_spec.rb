@@ -23,7 +23,7 @@ describe Admin::BillingCycleResource do
           'id' => market_location.id,
           'type' => 'market_location',
           'name' => market_location.name,
-          'items' => {
+          'bars' => {
             'array' => [
               {
                 'contract_type' => 'power_taker',
