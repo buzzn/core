@@ -5,6 +5,7 @@ describe Bank, slow: true do
   let(:second_file) { File.join(dir, 'BLZ_20160905.txt') }
 
   before do
+    Bank.delete_all
     Bank.update_from_file(first_file)
   end
 
