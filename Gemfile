@@ -68,6 +68,7 @@ gem 'fabrication'
 gem 'factory_girl'
 gem 'dotenv-rails'
 gem 'smarter_csv'
+gem 'sentry-raven' # the Sentry exception notification service
 
 # bin/console
 gem 'pry'
@@ -76,7 +77,6 @@ gem 'pry'
 gem 'rails_12factor'
 
 group :production, :staging do
-  gem 'sentry-raven' # the Sentry exception notification service
   gem 'newrelic_rpm'
 end
 

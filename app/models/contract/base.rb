@@ -1,3 +1,4 @@
+require 'active_support/string_inquirer'
 require_relative '../filterable'
 require_relative '../concerns/last_date'
 require_relative '../concerns/date_range_scope'
@@ -60,9 +61,10 @@ module Contract
     scope :other_suppliers,          -> { where(type: 'OtherSupplier') }
     scope :for_market_locations,     -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty))}
     scope :localpool_power_takers_and_other_suppliers, -> {where('type in (?)', %w(LocalpoolPowerTaker OtherSupplier))}
-    scope :running_in_year,   -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
-                                          .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
-    scope :at, -> (timestamp) do
+    scope :running_in_year, ->(year) do
+      where('begin_date <= ?', Date.new(year, 12, 31)).where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1))
+    end
+    scope :at, ->(timestamp) do
       timestamp = case timestamp
                   when DateTime
                     timestamp.to_date
@@ -97,7 +99,7 @@ module Contract
         ONBOARDING
       end
       # wrap the string in ActiveSupport::StringInquirer, which allows status.ended? etc, hiding the string.
-      status.inquiry
+      ActiveSupport::StringInquirer.new(status)
     end
 
     private

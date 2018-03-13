@@ -32,6 +32,7 @@ module Register
 
     has_many :contracts, class_name: 'Contract::Base', dependent: :destroy, foreign_key: 'register_id'
     belongs_to :market_location
+    has_one :group, through: :market_location
     has_many :devices, foreign_key: 'register_id'
     has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'
 
@@ -52,11 +53,9 @@ module Register
     end
     scope :grid_production_consumption, -> { grid_consumption_production }
 
-    scope :by_group, -> (group) do
-      group ? self.where(group: group.id) : self.where(group: nil)
-    end
+    scope :by_group, ->(group) { group ? self.where(group: group.id) : self.where(group: nil) }
 
-    scope :by_labels, -> (*labels) do
+    scope :by_labels, ->(*labels) do
       if (Register::Base.labels.values & labels).sort != labels.sort
         raise ArgumentError.new("#{labels.inspect} needs to be subset of #{Register::Base.labels.values}")
       end

@@ -51,10 +51,10 @@ module Reading
 
     belongs_to :register, class_name: 'Register::Base'
 
-    scope :in_year, -> (year) { where('date >= ? AND date < ?', Date.new(year), Date.new(year + 1)) }
+    scope :in_year, ->(year) { where('date >= ? AND date < ?', Date.new(year), Date.new(year + 1)) }
     scope :between, ->(begin_date, end_date) { where('date >= ? AND date < ?', begin_date, end_date) }
-    scope :with_reason, lambda { |*reasons| where(reason: reasons) }
-    scope :without_reason, lambda { |*reasons| where('reason NOT IN (?)', reasons) }
+    scope :with_reason, ->(*reasons) { where(reason: reasons) }
+    scope :without_reason, ->(*reasons) { where('reason NOT IN (?)', reasons) }
 
     validate :validate_invariants
 

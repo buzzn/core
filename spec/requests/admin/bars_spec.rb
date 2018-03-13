@@ -7,23 +7,23 @@ describe Admin::BillingCycleResource do
     TestAdminLocalpoolRoda
   end
 
-  entity(:localpool)        { create(:localpool) }
   entity(:register)         { create(:register, :consumption) }
+  entity!(:market_location) { create(:market_location, :with_contract, register: register) }
+  entity(:localpool)        { market_location.group }
   entity!(:billing_cycle)   { create(:billing_cycle, localpool: localpool, begin_date: Date.parse('2000-1-1'), end_date: Date.today) }
-  entity!(:market_location) { create(:market_location, :with_contract, group: localpool, register: register) }
   entity(:contract) { market_location.contracts.first }
 
-  context 'localpools/<id>/billing-cycles/<id>/items' do
+  context 'localpools/<id>/billing-cycles/<id>/bars' do
 
     context 'GET' do
-      let(:path) { "/localpools/#{localpool.id}/billing-cycles/#{billing_cycle.id}/items" }
+      let(:path) { "/localpools/#{localpool.id}/billing-cycles/#{billing_cycle.id}/bars" }
 
       let(:expected_json) do
         {
           'id' => market_location.id,
           'type' => 'market_location',
           'name' => market_location.name,
-          'items' => {
+          'bars' => {
             'array' => [
               {
                 'contract_type' => 'power_taker',

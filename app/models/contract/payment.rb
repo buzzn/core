@@ -11,9 +11,9 @@ module Contract
 
     belongs_to :contract, class_name: 'Contract::Base', foreign_key: :contract_id
 
-    scope :in_year, -> (year) { where('begin_date <= ?', Date.new(year, 12, 31))
+    scope :in_year, ->(year) { where('begin_date <= ?', Date.new(year, 12, 31))
                                   .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
-    scope :at, -> (timestamp) do
+    scope :at, ->(timestamp) do
       timestamp = case timestamp
                   when DateTime
                     timestamp.to_time

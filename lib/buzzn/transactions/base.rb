@@ -38,7 +38,7 @@ class Transactions::Base
         raise ActiveRecord::Rollback
       end
     end
-    if entity.invariant.success?
+    if entity.persisted?
       Right(entity)
     else
       raise Buzzn::ValidationError.new(entity.invariant.errors)
