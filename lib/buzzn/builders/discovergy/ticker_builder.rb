@@ -2,7 +2,7 @@ require_relative '../discovergy'
 require_relative '../../types/datasource'
 
 module Builders::Discovergy
-  class TicketBuilder < AbstractBuilder
+  class TickerBuilder < AbstractBuilder
 
     BROKEN_REGISTER_RESPONSE = -1
 
