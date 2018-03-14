@@ -26,6 +26,7 @@ describe Admin::BillingCycleResource do
           'bars' => {
             'array' => [
               {
+                'billing_id' => nil,
                 'contract_type' => 'power_taker',
                 'begin_date' => contract.begin_date.as_json,
                 'end_date' => billing_cycle.end_date.as_json,

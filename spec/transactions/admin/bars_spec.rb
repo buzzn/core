@@ -31,7 +31,7 @@ describe Transactions::Admin::BillingCycle::Bars do
 
           entity!(:contract) { create(:contract, :localpool_powertaker, market_location: market_location) }
           let(:expected_bar_keys) do
-            %w(contract_type begin_date end_date status consumed_energy_kwh price_cents errors)
+            %w(billing_id contract_type begin_date end_date status consumed_energy_kwh price_cents errors)
           end
           it { is_expected.to be_a(Dry::Monads::Either::Right) }
           it { expect(first_location.keys).to eq(%i(id type name bars)) }
