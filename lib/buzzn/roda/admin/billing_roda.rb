@@ -9,15 +9,8 @@ class Admin::BillingRoda < BaseRoda
 
   route do |r|
 
-    billing_cycle = shared[:billing_cycle]
+    billings = shared[:billings]
 
-    r.post! 'regular' do
-      Transactions::Admin::Billing::CreateRegular
-          .for(billing_cycle)
-          .call(r.params)
-    end
-
-    billings = billing_cycle.billings
     r.get! do
       billings
     end
