@@ -27,11 +27,11 @@ class Transactions::Admin::BillingCycle::Bars < Transactions::Base
     { id: market_location.id, type: 'market_location', name: market_location.name, bars: { array: build_bars(bars) } }
   end
 
-  BRICK_FIELDS = %i(contract_type begin_date end_date status consumed_energy_kwh price_cents)
+  BAR_FIELDS = %i(contract_type begin_date end_date status consumed_energy_kwh price_cents)
 
   def build_bars(bars)
     return [] unless bars
-    bars.collect { |bar| bar_as_json(bar, BRICK_FIELDS) }
+    bars.collect { |bar| bar_as_json(bar, BAR_FIELDS) }
   end
 
   def bar_as_json(bar, fields)
