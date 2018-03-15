@@ -16,11 +16,11 @@ module Admin
     has_one :meter
 
     def begin_reading_kwh
-      begin_reading.value / 1000
+      begin_reading.value / 1000 if begin_reading
     end
 
     def end_reading_kwh
-      end_reading.value / 1000
+      end_reading.value / 1000 if end_reading
     end
 
     def begin_date
