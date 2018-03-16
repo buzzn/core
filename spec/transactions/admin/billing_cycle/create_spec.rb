@@ -14,6 +14,11 @@ describe Transactions::Admin::BillingCycle::Create do
 
   subject(:transaction) { Transactions::Admin::BillingCycle::Create.for(localpool_resource) }
 
+  # Consider moving this to a common file to abstract the checking for success
+  matcher :be_success do
+    match { |actual| actual.is_a?(Dry::Monads::Either::Right) }
+  end
+
   context 'authorize' do
 
     let(:user) { member }
@@ -30,7 +35,7 @@ describe Transactions::Admin::BillingCycle::Create do
 
     it 'succeeds' do
       result = transaction.call(input)
-      expect(result).to be_a Dry::Monads::Either::Right
+      expect(result).to be_success
       expect(result.value).to be_a Admin::BillingCycleResource
       expect(result.value.object).to eq(localpool.billing_cycles.first)
       expect(result.value.begin_date).to eq(localpool.start_date)
@@ -47,6 +52,7 @@ describe Transactions::Admin::BillingCycle::Create do
 
         it 'succeeds' do
           result = transaction.call(new_input)
+          expect(result).to be_success
           expect(result).to be_a Dry::Monads::Either::Right
           expect(result.value).to be_a Admin::BillingCycleResource
           expect(result.value.object).to eq(localpool.billing_cycles.last)
