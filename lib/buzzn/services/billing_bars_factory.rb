@@ -4,7 +4,7 @@ class Services::BillingBarsFactory
 
   # This is the object structure we're returning
   # [
-  #   { market_location: <MarketLocation instance 1>, items: [ Brick.new(...), ...] },
+  #   { market_location: <MarketLocation instance 1>, items: [ Item.new(...), ...] },
   #   { market_location: <MarketLocation instance 2>, items: [ ... ] }
   # ]
   def bars_by_market_location(group:, date_range:)
