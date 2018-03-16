@@ -7,31 +7,35 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
     new.with_step_args(
       validate: [Schemas::Transactions::Admin::BillingCycle::Create],
       authorize: [localpool, *localpool.permissions.billing_cycles.create],
-      begin_date: [localpool],
-      persist: [localpool.billing_cycles]
+      date_range: [localpool],
+      make_bars: [localpool],
+      persist: [localpool, localpool.billing_cycles]
     )
   end
 
   step :validate, with: :'operations.validation'
   step :authorize, with: :'operations.authorization.generic'
-  step :begin_date
   step :end_date, with: :'operations.end_date'
+  step :date_range
+  step :make_bars, with: :'operations.bars'
   step :persist
 
-  def begin_date(input, localpool)
-    input[:begin_date] = localpool.next_billing_cycle_begin_date
-    Right(input)
+  def date_range(input, localpool)
+    begin_date = localpool.next_billing_cycle_begin_date
+    Right(input.merge(date_range: begin_date...input[:end_date]).except(:end_date))
   end
 
-  def persist(input, billing_cycles)
+  def persist(input, localpool, billing_cycles)
     do_persist do
-      create_items
-      Admin::BillingCycleResource.new(billing_cycles.objects.create!(input), billing_cycles.context)
+      persist_bars(input[:bars], localpool)
+      billing_cycle_attrs = input.slice(:date_range, :name).merge(localpool: localpool.object)
+      Admin::BillingCycleResource.new(billing_cycles.objects.create!(billing_cycle_attrs), billing_cycles.context)
     end
   end
 
-  def create_items
-    # ...
+  private
+
+  def persist_bars(bars, localpool)
   end
 
 end

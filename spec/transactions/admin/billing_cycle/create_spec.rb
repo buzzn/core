@@ -56,7 +56,7 @@ describe Transactions::Admin::BillingCycle::Create do
           expect(result).to be_a Dry::Monads::Either::Right
           expect(result.value).to be_a Admin::BillingCycleResource
           expect(result.value.object).to eq(localpool.billing_cycles.last)
-          expect(result.value.begin_date).to eq(localpool.billing_cycles.first.end_date)
+          expect(result.value.date_range).to eq(localpool.billing_cycles.last.date_range)
         end
       end
     end
