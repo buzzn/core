@@ -12,8 +12,6 @@ module Schemas
           end
         end
 
-        required(:group).maybe
-
         rule(group: [:group]) do |group|
           group.filled?.then(group.single_substitute?)
         end

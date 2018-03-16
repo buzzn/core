@@ -30,3 +30,4 @@ en:
     after?: 'must be after begin_date'
     not_in_future?: 'must not be in the future'
     single_substitute?: 'there can be only one substitute register per group'
+    match_group?: 'BUG: group and deep nested group must match'

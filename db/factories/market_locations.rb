@@ -19,12 +19,15 @@ FactoryGirl.define do
 
     after(:build) do |market_location, evaluator|
       register = evaluator.register
-      market_location.register = if register.is_a?(Symbol)
-                                   FactoryGirl.create(:register, :real, register)
-                                 else
-                                   register
-                                 end
-      if register.is_a?(Register::Base) && market_location.group != register.meter.group
+      market_location.register =
+        if register.is_a?(Symbol)
+          model = FactoryGirl.create(:meter, :real, group: market_location.group).registers.first
+          model.send("#{register}!")
+          model
+        else
+          register
+        end
+      if register.is_a?(Register::Base) && market_location.group != register.meter.group && register.meter.group
         market_location.group = register.meter.group
       end
       evaluator.contracts.each { |c| market_location.contracts << c }
