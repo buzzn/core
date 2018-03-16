@@ -1,3 +1,6 @@
+require 'slim'
+require 'wicked_pdf'
+
 require_relative '../services'
 
 class Services::PdfHtmlGenerator
