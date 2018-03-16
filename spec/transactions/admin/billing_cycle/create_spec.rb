@@ -24,7 +24,7 @@ describe Transactions::Admin::BillingCycle::Create do
 
   end
 
-  context 'first' do
+  context 'first call' do
 
     let(:user) { operator }
 
@@ -36,19 +36,22 @@ describe Transactions::Admin::BillingCycle::Create do
       expect(result.value.begin_date).to eq(localpool.start_date)
     end
 
-    context 'second' do
+    context 'second call' do
 
       it 'fails' do
         expect { transaction.call(input) }.to raise_error Buzzn::ValidationError
       end
 
-      it 'succeeds' do
-        input[:last_date] = Date.today - 1.day
-        result = transaction.call(input)
-        expect(result).to be_a Dry::Monads::Either::Right
-        expect(result.value).to be_a Admin::BillingCycleResource
-        expect(result.value.object).to eq(localpool.billing_cycles.last)
-        expect(result.value.begin_date).to eq(localpool.billing_cycles.first.end_date)
+      context 'when last date is different' do
+        let(:new_input) { input.merge(last_date: Date.today - 1.day) }
+
+        it 'succeeds' do
+          result = transaction.call(new_input)
+          expect(result).to be_a Dry::Monads::Either::Right
+          expect(result.value).to be_a Admin::BillingCycleResource
+          expect(result.value.object).to eq(localpool.billing_cycles.last)
+          expect(result.value.begin_date).to eq(localpool.billing_cycles.first.end_date)
+        end
       end
     end
   end
