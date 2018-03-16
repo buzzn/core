@@ -55,11 +55,36 @@ module Builders::Billing
       end
 
       def reading_close_to(contract, date)
+        find_reading(contract, date) || create_reading(contract, date)
+      end
+
+      # Find reading in DB
+      def find_reading(contract, date)
         query_date_range = (date - 1.day)..(date + 1.day)
         readings = contract.market_location.register.readings.where(date: query_date_range)
         readings.to_a.max_by(&:value) # if there's more than one reading, take the highest one.
       end
 
+      # get reading from Discovergy and store it
+      def create_reading(contract, date)
+        register = contract.market_location.register
+        value    = fetch_reading(register, date)
+        Reading::Single.create!(
+          register:  register,
+          date:      date,
+          reason:    :regular_reading,
+          raw_value: value,
+          value:     value,
+          unit:      :watt_hour,
+          quality:   :read_out,
+          source:    :smart,
+          status:    :z86
+        )
+      end
+
+      def fetch_reading(register, date)
+        rand(1_000_000)
+      end
     end
 
   end

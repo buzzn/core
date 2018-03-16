@@ -18,7 +18,7 @@ class Services::BillingBarsFactory
   def bars_for_market_location(location, date_range)
     billed_bars = find_billed_bars(location, date_range)
     unbilled_date_range = billed_bars.empty? ? date_range : billed_bars.last.end_date...date_range.last
-    unbilled_bars = build_unbilled_bars(location, unbilled_date_range)
+    unbilled_bars = create_unbilled_bars(location, unbilled_date_range)
     billed_bars + unbilled_bars
   end
 
@@ -29,7 +29,7 @@ class Services::BillingBarsFactory
 
   # We don't handle register and tariff changes in the first billing story.
   # So we can keep it simple -- each contract will result in one bar.
-  def build_unbilled_bars(location, date_range)
+  def create_unbilled_bars(location, date_range)
     if date_range_zero?(date_range)
       []
     else
@@ -38,7 +38,9 @@ class Services::BillingBarsFactory
   end
 
   def build_bar(contract, date_range)
-    Builders::Billing::ItemBuilder.from_contract(contract, date_range)
+    item = Builders::Billing::ItemBuilder.from_contract(contract, date_range)
+    item.save!
+    item
   end
 
   # Ruby can't calculate the length (in days) of a range object when the range is defined with dates -- it always returns nil.

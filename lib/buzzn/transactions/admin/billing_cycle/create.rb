@@ -25,8 +25,13 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
 
   def persist(input, billing_cycles)
     do_persist do
+      create_items
       Admin::BillingCycleResource.new(billing_cycles.objects.create!(input), billing_cycles.context)
     end
+  end
+
+  def create_items
+    # ...
   end
 
 end
