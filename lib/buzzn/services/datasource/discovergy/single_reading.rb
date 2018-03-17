@@ -21,4 +21,5 @@ class Services::Datasource::Discovergy::SingleReading
     builder = Builders::Discovergy::SingleReadingsBuilder.new(registers: group.registers)
     api.request(query, builder)
   end
+
 end

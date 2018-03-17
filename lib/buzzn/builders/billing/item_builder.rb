@@ -89,6 +89,7 @@ module Builders::Billing
       def fetch_reading(register, date)
         rand(1_000_000)
       end
+
     end
 
   end
