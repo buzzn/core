@@ -14,6 +14,9 @@ class BillingItem < ActiveRecord::Base
 
   enum contract_type: %i(power_taker third_party gap).each_with_object({}).each { |k, map| map[k] = k.to_s }
 
+  # Transiently adding the contract to pass it on in Transactions
+  attr_accessor :contract
+
   def status
     if billing
       %w(open calculated).include?(billing.status.to_s) ? 'open' : 'closed'

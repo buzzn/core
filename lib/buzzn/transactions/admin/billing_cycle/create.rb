@@ -35,13 +35,24 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
     Right(input.merge(billing_cycle: resource))
   end
 
+  # TODO:
+  # - validate stuff
+  # - don't create billings for bars that are already closed. Yes, we get them here because operations.bars still
+  #   returns the already saved billings as well.
+  # - handle errors with Left(), not with exceptions
+  # - make status of billing open per default, without having to assign it on creation
+  # - don't pass through contract on the billing item
   def create_billings(input)
-    input[:bars].each do |_market_location, items|
-      Billing.create!(
-        date_range:    input[:date_range],
-        billing_cycle: input[:billing_cycle],
-        items:         items # passing in unsaved BillingItem instances (built in :make_bars step)
-      )
+    input[:bars].each do |row|
+      row[:bars].each do |bar|
+        Billing.create!(
+          status:        'open',
+          billing_cycle: input[:billing_cycle].object,
+          contract:      bar.contract,
+          date_range:    bar.date_range,
+          items:         [bar]
+        )
+      end
     end
     Right(input[:billing_cycle])
   end

@@ -12,7 +12,8 @@ module Builders::Billing
           date_range:      date_range,
           tariff:          tariff(contract),
           begin_reading:   reading_close_to(contract, date_range.first),
-          end_reading:     reading_close_to(contract, date_range.last)
+          end_reading:     reading_close_to(contract, date_range.last),
+          contract:        contract # transiently adding the contract to pass it on
         }
         BillingItem.new(attrs)
       end
@@ -82,6 +83,9 @@ module Builders::Billing
         )
       end
 
+      # TODO
+      # - get real values via discovergy API (use Services::Datasource::Discovergy::SingleReading)
+      # - optimize call to only be done once
       def fetch_reading(register, date)
         rand(1_000_000)
       end
