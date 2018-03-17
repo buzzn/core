@@ -38,9 +38,7 @@ class Services::BillingBarsFactory
   end
 
   def build_bar(contract, date_range)
-    item = Builders::Billing::ItemBuilder.from_contract(contract, date_range)
-    item.save!
-    item
+    Builders::Billing::ItemBuilder.from_contract(contract, date_range)
   end
 
   # Ruby can't calculate the length (in days) of a range object when the range is defined with dates -- it always returns nil.
