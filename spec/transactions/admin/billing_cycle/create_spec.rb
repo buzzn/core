@@ -19,46 +19,69 @@ describe Transactions::Admin::BillingCycle::Create do
     match { |actual| actual.is_a?(Dry::Monads::Either::Right) }
   end
 
-  context 'authorize' do
+  describe 'authorization' do
 
     let(:user) { member }
 
     it 'fails' do
       expect { transaction.call(input) }.to raise_error Buzzn::PermissionDenied
     end
-
   end
 
-  context 'first call' do
+  describe 'repeated calls' do
+    context 'first call' do
 
-    let(:user) { operator }
+      let(:user) { operator }
 
-    it 'succeeds' do
-      result = transaction.call(input)
-      expect(result).to be_success
-      expect(result.value).to be_a Admin::BillingCycleResource
-      expect(result.value.object).to eq(localpool.billing_cycles.first)
-      expect(result.value.begin_date).to eq(localpool.start_date)
-    end
-
-    context 'second call' do
-
-      it 'fails' do
-        expect { transaction.call(input) }.to raise_error Buzzn::ValidationError
+      it 'succeeds' do
+        result = transaction.call(input)
+        expect(result).to be_success
+        expect(result.value).to be_a Admin::BillingCycleResource
+        expect(result.value.object).to eq(localpool.billing_cycles.first)
+        expect(result.value.begin_date).to eq(localpool.start_date)
       end
 
-      context 'when last date is different' do
-        let(:new_input) { input.merge(last_date: Date.today - 1.day) }
+      context 'second call' do
 
-        it 'succeeds' do
-          result = transaction.call(new_input)
-          expect(result).to be_success
-          expect(result).to be_a Dry::Monads::Either::Right
-          expect(result.value).to be_a Admin::BillingCycleResource
-          expect(result.value.object).to eq(localpool.billing_cycles.last)
-          expect(result.value.date_range).to eq(localpool.billing_cycles.last.date_range)
+        it 'fails' do
+          expect { transaction.call(input) }.to raise_error Buzzn::ValidationError
+        end
+
+        context 'when last date is different' do
+          let(:new_input) { input.merge(last_date: Date.today - 1.day) }
+
+          it 'succeeds' do
+            result = transaction.call(new_input)
+            expect(result).to be_success
+            expect(result.value).to be_a Admin::BillingCycleResource
+            billing_cycle_model = result.value.object
+            expect(billing_cycle_model).to eq(localpool.billing_cycles.last)
+            expect(billing_cycle_model.date_range).to eq(localpool.billing_cycles.last.date_range)
+          end
         end
       end
     end
   end
+
+  describe 'generating bricks' do
+    let(:user) { operator }
+    before     { BillingCycle.delete_all }
+    after      { BillingCycle.delete_all }
+
+    it 'works' do
+      result = transaction.call(input)
+      expect(result).to be_success
+      billing_cycle = result.value.object
+      billings      = result.value.object.billings
+
+      expect(billings.count).to eq(1)
+      expect(billings.first).to have_attributes(
+        date_range:      billing_cycle.date_range,
+        status:          'open',
+        contract_type:   'power_taker'
+      )
+    end
+
+  end
+
 end
