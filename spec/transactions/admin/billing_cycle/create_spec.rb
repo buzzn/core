@@ -65,10 +65,16 @@ describe Transactions::Admin::BillingCycle::Create do
 
   describe 'generating bricks' do
     let(:user) { operator }
-    before     { BillingCycle.delete_all }
-    after      { BillingCycle.delete_all }
 
-    it 'works' do
+    after      { BillingCycle.delete_all }
+    before     { BillingCycle.delete_all }
+
+    before do
+      contract = create(:contract, :localpool_powertaker, begin_date: (Date.today - 10.years))
+      localpool.market_locations << contract.market_location
+    end
+
+    it 'works', :focus do
       result = transaction.call(input)
       expect(result).to be_success
       billing_cycle = result.value.object
