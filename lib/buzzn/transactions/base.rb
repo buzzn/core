@@ -30,6 +30,7 @@ class Transactions::Base
 
   end
 
+  # TODO: consider replacing this with http://dry-rb.org/gems/dry-transaction/around-steps/
   def do_persist(&block)
     entity = nil
     ActiveRecord::Base.transaction(requires_new: true) do

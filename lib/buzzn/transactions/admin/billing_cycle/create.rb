@@ -9,33 +9,34 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
       authorize: [localpool, *localpool.permissions.billing_cycles.create],
       date_range: [localpool],
       make_bars: [localpool],
-      persist: [localpool, localpool.billing_cycles]
+      persist_billings: [],
+      persist_billing_cycle: [localpool, localpool.billing_cycles]
     )
   end
 
+  # FIXME: use an around step to wrap everythnig in a transaction http://dry-rb.org/gems/dry-transaction/around-steps/
   step :validate, with: :'operations.validation'
   step :authorize, with: :'operations.authorization.generic'
   step :end_date, with: :'operations.end_date'
   step :date_range
   step :make_bars, with: :'operations.bars'
-  step :persist
+  step :persist_billings
+  step :persist_billing_cycle
 
   def date_range(input, localpool)
     begin_date = localpool.next_billing_cycle_begin_date
     Right(input.merge(date_range: begin_date...input[:end_date]).except(:end_date))
   end
 
-  def persist(input, localpool, billing_cycles)
-    do_persist do
-      persist_bars(input[:bars], localpool)
-      billing_cycle_attrs = input.slice(:date_range, :name).merge(localpool: localpool.object)
-      Admin::BillingCycleResource.new(billing_cycles.objects.create!(billing_cycle_attrs), billing_cycles.context)
-    end
+  def persist_billings(input)
+    input[:bars].each(&:save!)
+    Right(input)
   end
 
-  private
-
-  def persist_bars(bars, localpool)
+  def persist_billing_cycle(input, localpool, billing_cycles)
+    attrs = input.slice(:date_range, :name).merge(localpool: localpool.object)
+    resource = Admin::BillingCycleResource.new(billing_cycles.objects.create!(attrs), billing_cycles.context)
+    Right(resource)
   end
 
 end
