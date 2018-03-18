@@ -14,11 +14,6 @@ describe Transactions::Admin::BillingCycle::Create do
 
   subject(:transaction) { Transactions::Admin::BillingCycle::Create.for(localpool_resource) }
 
-  # Consider moving this to a common file to abstract the checking for success
-  matcher :be_success do
-    match { |actual| actual.is_a?(Dry::Monads::Either::Right) }
-  end
-
   describe 'authorization' do
 
     let(:user) { member }
