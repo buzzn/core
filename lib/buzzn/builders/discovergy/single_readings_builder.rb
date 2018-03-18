@@ -1,14 +1,21 @@
 require_relative 'abstract_registers_builder'
+require 'awesome_print'
 
 module Builders::Discovergy
   class SingleReadingsBuilder < AbstractRegistersBuilder
 
     def build(response)
-      response.each.with_object({}) do |(meter_id, data), hash|
-        registers       = map[meter_id]
-        hash[meter_id]  = registers.map { |register| to_watt_hour(data.first, register) }
+      registers.each.with_object({}) do |register, hash|
+        hash[register.id] = find_reading(response, register)
       end
     end
 
+    private
+
+    def find_reading(response, register)
+      register_identifier = "EASYMETER_#{register.meter.product_serialnumber}"
+      all_readings = response[register_identifier]
+      to_watt_hour(all_readings.first, register)
+    end
   end
 end
