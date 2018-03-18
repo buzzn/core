@@ -14,14 +14,20 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
     )
   end
 
-  # FIXME: use an around step to wrap everything in a transaction http://dry-rb.org/gems/dry-transaction/around-steps/
   step :validate, with: :'operations.validation'
   step :authorize, with: :'operations.authorization.generic'
   step :end_date, with: :'operations.end_date'
   step :date_range
+  # TODO: start transaction
+  # TODO: get discovergy readings for all consumption registers in group
+  # TODO: create reading objects (associate to registers)
+  step :fetch_readings, with: :'operations.fetch_readings'
+  # TODO: create billing items
+  # TODO: create billings
   step :build_bars, with: :'operations.bars'
+  # TODO: create billing cycle
   step :create_billing_cycle
-  step :create_billings
+  step :create_billings # use a billing builder; will get the readings
 
   def date_range(input, localpool)
     begin_date = localpool.next_billing_cycle_begin_date
@@ -36,6 +42,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   end
 
   # TODO:
+  # identify and parts that can be built and tested individually
   # - validate stuff
   # - don't create billings for bars that are already closed. Yes, we get them here because operations.bars still
   #   returns the already saved billings as well.
