@@ -13,7 +13,6 @@ module Builders::Billing
           tariff:          tariff(contract),
           begin_reading:   reading_close_to(contract, date_range.first),
           end_reading:     reading_close_to(contract, date_range.last),
-          contract:        contract # transiently adding the contract to pass it on
         }
         BillingItem.new(attrs)
       end
