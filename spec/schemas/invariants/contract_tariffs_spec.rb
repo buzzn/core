@@ -41,7 +41,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
           contract.tariffs << tariff2
           localpool.tariffs.reload
         end
-        it { is_expected.to eq(['all tariffs must line up']) }
+        it { is_expected.to eq(['must line up']) }
       end
 
       context 'when tariffs do not cover ending' do
