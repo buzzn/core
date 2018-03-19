@@ -4,22 +4,24 @@ require 'awesome_print'
 #
 # Fetch readings from Discovergy and create Reading objects for the every meter passed in
 #
-class Operations::FetchReadingsForGroup
+class Operations::CreateReadingsForGroup
 
   include Dry::Transaction::Operation
+
+  include Import['services.datasource.discovergy.single_reading']
 
   def call(group:, date_time:)
     readings = request_readings(group, date_time)
     Left('Couldn\'t fetch readings') unless readings
-    readings.each { |register_id, reading_value| create_reading(register_id, reading_value, date_time) }
-    Right("input")
+    result = readings.map { |register_id, reading_value| create_reading(register_id, reading_value, date_time) }
+    Right(result)
   end
 
   private
 
-  # returns hash of register_id -> reading values
+  # returns a hash of register_id -> reading values
   def request_readings(group, date_time)
-    Services::Datasource::Discovergy::SingleReading.new.all(group, date_time)
+    single_reading.all(group, date_time)
   end
 
   def create_reading(register_id, reading_value, date_time)
