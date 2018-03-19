@@ -25,3 +25,13 @@ names.each.with_index(1) do |name, index|
 end
 
 SampleData.market_locations.common_consumption = create_market_location('Allgemeinstrom')
+
+SampleData.market_locations.ladestation_eauto.register = create(:register, :consumption_common,
+                                                                meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
+                                                                devices: [build(:device, :ecar, commissioning: SampleData.localpools.people_power.start_date, register: nil)])
+
+SampleData.market_locations.common_consumption.register = create(:register, :consumption_common,
+                                                                 meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power))
+
+SampleData.market_locations.apartment_10.register = create(:register, :substitute,
+                                                           meter: build(:meter, :virtual, group: SampleData.localpools.people_power))

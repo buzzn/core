@@ -154,16 +154,12 @@ SampleData.contracts.pt5_empty = SampleData::PTContractFactory.create(
   begin_date: SampleData.contracts.pt5a.end_date,
   termination_date: Date.new(2017, 4, 30),
   end_date: Date.new(2017, 5, 1),
-  # TODO: this should later be removed
-  register: SampleData.contracts.pt5a.market_location.register, # important !
   market_location: SampleData.market_locations.apartment_5
 )
 
 # zieht ein
 SampleData.contracts.pt5b = SampleData::PTContractFactory.create(
   begin_date: Date.new(2017, 5, 1),
-  # TODO: this should later be removed
-  register: SampleData.contracts.pt5a.market_location.register, # important !
   customer: SampleData.persons.pt5b,
   market_location: SampleData.market_locations.apartment_5
 )
@@ -184,8 +180,6 @@ SampleData.contracts.pt7a = SampleData::PTContractFactory.create(
 SampleData.contracts.pt7b = SampleData::PTContractFactory.create(
   begin_date: SampleData.contracts.pt7a.end_date,
   customer: SampleData.persons.pt7,
-  # TODO: this should later be removed
-  register: SampleData.contracts.pt7a.market_location.register, # important !
   market_location: SampleData.market_locations.apartment_7
 )
 
@@ -210,8 +204,6 @@ SampleData.contracts.pt9b = SampleData::PTContractFactory.create(
 # a substitute meter/register
 SampleData.contracts.pt10 = SampleData::PTContractFactory.create(
   customer: SampleData.persons.pt10,
-  register: FactoryGirl.create(:register, :substitute,
-    meter: build(:meter, :virtual, group: SampleData.localpools.people_power)),
   market_location: SampleData.market_locations.apartment_10
 )
 
@@ -219,18 +211,11 @@ SampleData.contracts.pt10 = SampleData::PTContractFactory.create(
 SampleData.contracts.common_consumption = SampleData::PTContractFactory.create(
   contractor: SampleData.localpools.people_power.owner,
   customer: SampleData.localpools.people_power.owner,
-  register: create(:register, :consumption_common,
-    meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)
-                  ),
   market_location: SampleData.market_locations.common_consumption
 )
 
 SampleData.contracts.ecar = SampleData::PTContractFactory.create(
   contractor: SampleData.localpools.people_power.owner,
   customer: SampleData.localpools.people_power.owner,
-  register: create(:register, :consumption_common,
-    meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
-    devices: [build(:device, :ecar, commissioning: SampleData.localpools.people_power.start_date, register: nil)],
-                  ),
   market_location: SampleData.market_locations.ladestation_eauto
 )
