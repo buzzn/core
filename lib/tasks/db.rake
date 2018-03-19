@@ -10,13 +10,22 @@ namespace :db do
   task seed: 'seed:setup_data'
 
   namespace :seed do
+
+    task :print_warning do
+      unless ENV['RACK_ENV'] == 'test' || ENV['CI']
+        puts 'The local database will be dropped by this task.'
+        puts 'Press Ctrl-C to abort, Enter to continue.'
+        $stdin.gets
+      end
+    end
+
     desc 'Loads essential data into the application'
-    task setup_data: :environment do
+    task setup_data: %w(print_warning db:reset) do
       require_relative '../../db/setup_data'
     end
 
-    desc 'Loads an example localpool with users etc. into the application'
-    task example_data: 'db:seed:setup_data' do
+    desc 'Loads an example localpool with users etc. into the application. It requires a seeded/set up database.'
+    task example_data: %w(setup_data) do
       require_relative '../../db/example_data'
     end
 

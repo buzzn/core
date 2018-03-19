@@ -109,7 +109,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
 
   def handle_two_readings(readings, register)
     if readings.first.value == readings.last.value
-      readings.first.destroy!
+      readings.first.delete
       logger.info("Destroyed reading for #{readings.first.date} since both readings have the same value.")
     else
       logger.info('Readings for old contract end and new contract start have different values, this is resolved in code')
@@ -117,15 +117,15 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       case register.meter.legacy_buzznid
       when '90057/7'
         # 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
-        readings.first.destroy!
+        readings.first.delete
       when '90067/18'
-        readings.first.destroy! # this one has a value of 13.000
+        readings.first.delete # this one has a value of 13.000
         # this one has 12.700 -- must be a bug/manual entry error, technically it's not possible for a reading to go down
-        readings.last.update_attribute(:value, 13_000)
+        readings.last.update_column(:value, 13_000)
       when '90067/6'
         # [INFO] Readings: date: 2018-01-14, 2122400.0, contract_change // date: 2018-01-15, 2132100.0, contract_change
         # 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
-        readings.first.destroy!
+        readings.first.delete
       else
         logger.error("Unexpected readings for #{register.meter.legacy_buzznid}, not modifying any readings.")
       end
@@ -135,7 +135,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   def handle_one_reading(reading, old_end_date)
     if reading.date == old_end_date
       # shift reading date ahead one day to match the new contract end date
-      reading.update_attribute(:date, reading.date + 1.day)
+      reading.update_column(:date, reading.date + 1.day)
     else
       # case: the only reading is on the new contract end date -- that's what we want, nothing to do.
     end

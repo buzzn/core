@@ -27,7 +27,7 @@ class Transactions::Admin::BillingCycle::Bars < Transactions::Base
     { id: market_location.id, type: 'market_location', name: market_location.name, bars: { array: build_bars(bars) } }
   end
 
-  BAR_FIELDS = %i(contract_type begin_date end_date status consumed_energy_kwh price_cents)
+  BAR_FIELDS = %i(billing_id contract_type begin_date end_date status consumed_energy_kwh price_cents)
 
   def build_bars(bars)
     return [] unless bars

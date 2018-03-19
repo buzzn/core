@@ -1,9 +1,17 @@
 FactoryGirl.define do
   factory :register, class: 'Register::Input' do
+    transient do
+      readings nil
+    end
+
     direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]
     share_with_group      true
     share_publicly        false
+
+    after(:create) do |register, transients|
+      register.readings = transients.readings if transients.readings
+    end
 
     trait :real do
       before(:create) do |register, evaluator|

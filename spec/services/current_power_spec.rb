@@ -2,7 +2,7 @@ describe Services::CurrentPower do
 
   class MockRegister < Register::Input
 
-    def data_source; 'mock'; end
+    def datasource; 'mock'; end
 
   end
 

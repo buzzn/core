@@ -23,7 +23,7 @@ class Services::CurrentPower
   end
 
   def cached_ticker(key, register)
-    if result = registry.get(register.data_source).ticker(register)
+    if result = registry.get(register.datasource).ticker(register)
       cache.put(key, result.to_json, time_to_live)
     end
   end
