@@ -9,17 +9,34 @@ class Services::Datasource::Discovergy::SingleReading
   def all(group, date)
     meter = Meter::Discovergy.find_by(group: group)
     return unless meter
-    # get a bunch of values around the requested one, in case those exactly on the date aren't
-    from  = (date - 1.hours).to_i * 1_000 # Discovergy requires an UNIX timestamp in ms
-    to    = (date + 1.hours).to_i * 1_000
-    query = Types::Discovergy::Readings::Get.new(meter: meter,
-                                                 fields: [:energy, :energyOut],
-                                                 each:   true,
-                                                 from:   from,
-                                                 to:     to,
-                                                 resolution: :fifteen_minutes)
-    builder = Builders::Discovergy::SingleReadingsBuilder.new(registers: group.registers)
-    api.request(query, builder)
+    api.request(
+      query(meter, date),
+      builder(group.registers)
+    )
+  end
+
+  private
+
+  def query(meter, date)
+    params = {
+      meter:  meter,
+      fields: [:energy, :energyOut],
+      each:   true,
+      # get a bunch of values around the requested date, in case those exactly on the date aren't available
+      from:   as_unix_timestamp_ms(date - 1.hours),
+      to:     as_unix_timestamp_ms(date + 1.hours),
+      resolution: :fifteen_minutes
+    }
+    Types::Discovergy::Readings::Get.new(params)
+  end
+
+  def builder(registers)
+    Builders::Discovergy::SingleReadingsBuilder.new(registers: registers)
+  end
+
+  # Discovergy requires an UNIX timestamp in ms
+  def as_unix_timestamp_ms(date)
+    date.to_i * 1_000
   end
 
 end

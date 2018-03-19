@@ -12,6 +12,7 @@ module Builders::Discovergy
     private
 
     def find_reading(response, register)
+      # FIXME: use register.meter.broker.external_id.
       register_identifier = "EASYMETER_#{register.meter.product_serialnumber}"
       all_readings = response[register_identifier]
       to_watt_hour(all_readings.first, register)
