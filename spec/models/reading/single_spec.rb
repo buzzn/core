@@ -39,4 +39,23 @@ describe 'Reading::Single' do
       end
     end
   end
+
+  describe 'readonly?' do
+    context 'when reading is new record' do
+      let(:reading) { build(:reading) }
+      it 'is false' do
+        expect(reading).not_to be_readonly
+        expect { reading.save! }.not_to raise_error
+      end
+    end
+
+    context 'when reading is saved record' do
+      let(:reading) { create(:reading) }
+      it 'is true' do
+        expect(reading).to be_readonly
+        expect { reading.save! }.to raise_error(ActiveRecord::ReadOnlyRecord)
+      end
+    end
+  end
+
 end

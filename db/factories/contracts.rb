@@ -100,7 +100,7 @@ FactoryGirl.define do
 
   trait :with_tariff do
     before(:create) do |contract, _evaluator|
-      contract.tariffs = [build(:tariff)]
+      contract.tariffs = [build(:tariff, group: contract.localpool)]
     end
   end
 

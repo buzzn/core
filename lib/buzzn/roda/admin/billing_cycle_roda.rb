@@ -49,7 +49,7 @@ module Admin
         end
 
         r.on 'billings' do
-          shared[:billing_cycle] = billing_cycle
+          shared[:billings] = billing_cycle.billings
           r.run BillingRoda
         end
       end

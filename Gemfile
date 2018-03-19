@@ -32,6 +32,7 @@ gem 'jwt'
 # postgres
 gem 'schema_plus_enums'
 gem 'pg', '0.20.0'
+gem 'pgreset' # Automatically kill postgres connections during db:reset
 
 # json
 gem 'multi_json'

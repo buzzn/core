@@ -31,10 +31,12 @@ class Services::Datasource::Discovergy::LastReading
   def process(register, unit, *fields)
     case register
     when Register::Real
-      builder = Builders::Discovergy::TicketBuilder.new(register: register, unit: unit)
+      builder = Builders::Discovergy::TickerBuilder.new(register: register, unit: unit)
       api_call(register.meter, fields, false, builder)
     when Register::Substitute
-      builder = Builders::Discovergy::TicketBuilder.new(register: register, unit: unit)
+      builder = Builders::Discovergy::SubstituteTickerBuilder.new(registers: register.group.registers, register: register, unit: unit)
+      meter = register.group.meters.where(type: Meter::Discovergy).first
+      return nil unless meter
       api_call(meter, fields, true, builder)
     else
       raise "unknown register type: #{register.class}"

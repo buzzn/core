@@ -1,0 +1,63 @@
+#!/usr/bin/env ruby
+require 'optparse'
+
+options = {}
+$opts = OptionParser.new do |opts|
+  opts.banner = "Usage: #{$PROGRAM_NAME} [options] <file> # minimal example is app/pdfs/minimal.slim"
+  opts.on('--pdf', 'Render as PDF instead of HTML') do |opt|
+    options[:pdf] = true
+  end
+  opts.on_tail('-h', '--help', 'Show this message') do |opt|
+    usage
+  end
+end
+
+# display command-line usage, with optional message
+def usage(message = nil)
+  unless message.nil?
+    STDERR.puts "ERROR: #{message}"
+  end
+  puts $opts
+  exit 1
+end
+
+# process command-line
+begin $opts.parse! ARGV
+rescue OptionParser::ParseError => e
+  usage e.message
+end.parse!
+
+# when no file argument is given display usage
+if ARGV.empty?
+  usage
+  exit 1
+end
+
+puts 'starting app ....'
+
+def write(file, extension, content)
+  File.open("#{file}.#{extension}", 'wb') do |f|
+    f.print(content)
+  end
+end
+
+file = ARGV[0]
+ENV['SLIM_FILE'] = file
+
+require 'bundler/setup'
+require './config/buzzn'
+
+generator = Buzzn::Pdfs::Minimal.new
+
+type = options[:pdf] ? 'pdf' : 'html'
+
+print "rendering #{type} ... "
+
+filename = File.basename(file).sub('slim', type)
+content = generator.send("to_#{type}")
+
+File.open(filename, 'wb') do |f|
+  f.print(content)
+end
+
+puts filename

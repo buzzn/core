@@ -24,7 +24,8 @@ describe 'Schemas::Invariants::Contract::Localpool' do
         contract.update(localpool: localpool)
         contract.tariffs << tariff unless contract.tariffs.include?(tariff)
         contract.tariffs.delete(tariff2)
-        tariff.update(group: localpool)
+        # just update tariff for this test
+        tariff.update_column(:group_id, localpool.id)
       end
 
       context 'when contract has no localpool' do
@@ -61,7 +62,8 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
       context 'when tariffs do belong to different localpool' do
         before do
-          tariff.update(group: other_localpool)
+          # just update tariff for this test
+          tariff.update_column(:group_id, other_localpool.id)
           localpool.tariffs.reload
         end
         it { is_expected.to eq(['all tariff.group must match contract.localpool']) }
