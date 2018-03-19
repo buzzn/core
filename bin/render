@@ -41,11 +41,12 @@ def write(file, extension, content)
   end
 end
 
+file = ARGV[0]
+ENV['SLIM_FILE'] = file
+
 require 'bundler/setup'
 require './config/buzzn'
 
-file = ARGV[0]
-ENV['SLIM_FILE'] = file
 generator = Buzzn::Pdfs::Minimal.new
 
 type = options[:pdf] ? 'pdf' : 'html'
