@@ -16,5 +16,6 @@ module Builders::Discovergy
       all_readings = response[register_identifier]
       to_watt_hour(all_readings.first, register)
     end
+
   end
 end

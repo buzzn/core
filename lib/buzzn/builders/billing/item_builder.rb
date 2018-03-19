@@ -65,6 +65,7 @@ module Builders::Billing
         readings = contract.market_location.register.readings.where(date: query_date_range)
         readings.to_a.max_by(&:value) # if there's more than one reading, take the highest one.
       end
+
     end
 
   end
