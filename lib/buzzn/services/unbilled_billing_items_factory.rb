@@ -2,24 +2,49 @@ require_relative '../builders/billing/item_builder'
 
 class Services::UnbilledBillingItemsFactory
 
-  def call(group:, date_range:)
-    group.market_locations.consumption.map do |market_location|
-      billing_items_for_market_location(market_location, date_range)
+  # Returns this structure:
+  # [
+  #   {
+  #    market_location: <MaLo id:5>
+  #    contracts: [
+  #      {
+  #        contract: <Contract id:5>
+  #        billing_items: [
+  #          <BillingItem (not persisted)>
+  #        ]
+  #      }
+  #    ]
+  #
+  #   }
+  # ]
+  def call(market_locations:, date_range:)
+    market_locations.each.with_object([]) do |market_location, array|
+      array << {
+        market_location: market_location,
+        contracts: contracts_with_items(market_location, date_range)
+      }
     end
   end
 
   private
 
-  def billing_items_for_market_location(market_location, date_range)
-    unbilled_date_range = unbilled_date_range(market_location, date_range)
-    build_unbilled_items(market_location, unbilled_date_range)
+  def contracts_with_items(market_location, date_range)
+    contracts, unbilled_date_range = unbilled_contracts(market_location, date_range)
+    contracts.map.with_object([]) do |contract, array|
+      array << {
+        contract: contract,
+        # We don't handle register and tariff changes yet, so we always return an array with one item, rather than 2+
+        # later (register and tariff changes will cause new items).
+        items: [build_item(contract, unbilled_date_range)]
+      }
+    end
   end
 
-  def build_unbilled_items(market_location, date_range)
+  def unbilled_contracts(market_location, date_range)
     return [] if date_range_zero?(date_range)
-    # We don't handle register and tariff changes in the first billing story.
-    # So we can keep it simple -- each contract will result in one item.
-    market_location.contracts_in_date_range(date_range).map { |contract| build_item(contract, date_range) }
+    unbilled_date_range = unbilled_date_range(market_location, date_range)
+    contracts = market_location.contracts_in_date_range(unbilled_date_range)
+    [contracts, unbilled_date_range]
   end
 
   def build_item(contract, date_range)
