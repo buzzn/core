@@ -144,4 +144,5 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   def inspect_reading(reading)
     reading.attributes.slice('date', 'value', 'reason', 'comment', 'id').inspect
   end
+
 end
