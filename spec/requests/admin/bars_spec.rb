@@ -35,8 +35,8 @@ describe Admin::BillingCycleResource do
                 'price_cents' => nil,
                 'errors' => {
                   'tariff' => ['tariff must be filled'],
-                  'begin_reading' => ['begin_reading must be filled'],
-                  'end_reading' => ['end_reading must be filled']
+                  'billing' => ['billing must be filled'],
+                  'register' => ['register must be filled']
                 }
               }
             ]

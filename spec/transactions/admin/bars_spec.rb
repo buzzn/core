@@ -42,8 +42,8 @@ describe Transactions::Admin::BillingCycle::Bars do
             it 'JSON has all errors and messages' do
               errors = first_location[:bars][:array].first['errors']
               expect(errors).to eq(
-                'begin_reading' => ['begin_reading must be filled'],
-                'end_reading' => ['end_reading must be filled'],
+                'billing' => ['billing must be filled'],
+                'register' => ['register must be filled'],
                 'tariff' => ['tariff must be filled']
               )
             end
