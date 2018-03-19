@@ -9,7 +9,6 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
       authorize: [group, *group.permissions.billing_cycles.create],
       set_date_range: [group],
       create_readings: [group],
-      build_bars: [group],
       create_billing_cycle: [group, group.billing_cycles],
       create_billings: [group]
     )
