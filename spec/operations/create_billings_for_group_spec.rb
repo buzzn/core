@@ -31,7 +31,7 @@ describe Operations::CreateBillingsForGroup do
   let(:group)         { create(:localpool) }
   let(:op)            { Operations::CreateBillingsForGroup.new(factory: factory) }
 
-  it 'works', :focus do
+  it 'works' do
     expect(op.call({ billing_cycle: billing_cycle, date_range: date_range }, group)).to be_success
   end
 
