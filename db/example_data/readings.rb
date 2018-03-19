@@ -12,9 +12,8 @@ def all_reading_dates(localpool)
       dates << [market_location.register, contract.end_date, :contract_change]
     end
   end
-  # remove possible duplicates
   dates
-    .uniq { |register, date, reason| "#{register.id}-#{date}-#{reason}" }
+    .uniq { |register, date, reason| "#{register.id}-#{date}-#{reason}" } # remove possible duplicates
     .sort_by { |register, date, reason| date } # sort to the created readings increase over time
 end
 
