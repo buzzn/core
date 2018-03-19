@@ -13,7 +13,9 @@ def all_reading_dates(localpool)
     end
   end
   # remove possible duplicates
-  dates.uniq { |register, date, reason| "#{register.id}-#{date}-#{reason}" }
+  dates
+    .uniq { |register, date, reason| "#{register.id}-#{date}-#{reason}" }
+    .sort_by { |register, date, reason| date } # sort to the created readings increase over time
 end
 
 def previous_reading_value(register, date)

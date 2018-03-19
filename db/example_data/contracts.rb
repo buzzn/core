@@ -3,9 +3,8 @@ module SampleData::PTContractFactory
   class << self
 
     def create(attrs = {})
-      contract = create_contract(attrs.except(:register_readings, :register))
+      contract = create_contract(attrs.except(:register))
       link_register(contract, attrs[:register])
-      create_register_readings(contract, attrs[:register_readings])
       create_roles(contract)
       contract
     end
@@ -26,11 +25,6 @@ module SampleData::PTContractFactory
 
     def link_register(contract, register)
       contract.market_location.register = register if register
-    end
-
-    def create_register_readings(contract, register_readings)
-      return if register_readings.blank? # blank? works for both nil and []
-      contract.market_location.register.readings = register_readings
     end
 
     def create_roles(contract)
@@ -92,10 +86,6 @@ SampleData.contracts.lpp = create(:contract, :localpool_processing,
 
 SampleData.contracts.pt1 = SampleData::PTContractFactory.create(
   customer: SampleData.persons.pt1,
-  register_readings: [
-    build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
-    build(:reading, :regular, date: '2016-12-31', raw_value: 2_400_000, register: nil)
-  ],
   payments: [
     build(:payment, price_cents: 55_00, begin_date: '2016-01-01', cycle: 'monthly')
   ],
@@ -104,10 +94,6 @@ SampleData.contracts.pt1 = SampleData::PTContractFactory.create(
 
 SampleData.contracts.pt2 = SampleData::PTContractFactory.create(
   customer: SampleData.persons.pt2,
-  register_readings: [
-    build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
-    build(:reading, :regular, date: '2016-12-31', raw_value: 4_500_000, register: nil)
-  ],
   payments: [
     build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')
   ],
@@ -125,9 +111,6 @@ SampleData.contracts.pt3gap = SampleData::PTContractFactory.create(
 SampleData.contracts.pt3 = SampleData::PTContractFactory.create(
   begin_date: Date.today + 1.month,
   customer: SampleData.persons.pt3,
-  register_readings: [
-    build(:reading, :setup, date: '2017-10-01', raw_value: 1_000, register: nil)
-  ],
   payments: [
     build(:payment, price_cents: 67_00, begin_date: '2016-01-01', cycle: 'monthly')
   ],
@@ -140,9 +123,6 @@ SampleData.contracts.pt4 = SampleData::PTContractFactory.create(
   termination_date: Date.yesterday,
   end_date: Date.today + 1.month,
   customer: SampleData.persons.pt4,
-  register_readings: [
-    build(:reading, :setup, date: '2017-02-01', raw_value: 1_000, register: nil)
-  ],
   payments: [
    build(:payment, price_cents: 53_00, begin_date: '2016-01-01', cycle: 'monthly')
   ],
@@ -162,11 +142,6 @@ SampleData.contracts.pt5a = SampleData::PTContractFactory.create(
   termination_date: Date.new(2017, 3, 10),
   end_date: Date.new(2017, 4, 1),
   customer: SampleData.persons.pt5a,
-  register_readings: [
-    build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, register: nil),
-    build(:reading, :regular, date: '2016-12-31', raw_value: 1_300_000, register: nil),
-    build(:reading, :contract_change, date: '2017-04-01', raw_value: 1_765_000, register: nil)
-  ],
   market_location: SampleData.market_locations.apartment_5,
   payments: [
     build(:payment, price_cents: 45_00, begin_date: '2016-01-01', cycle: 'monthly')
