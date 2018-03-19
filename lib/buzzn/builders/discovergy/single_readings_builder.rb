@@ -1,5 +1,4 @@
 require_relative 'abstract_registers_builder'
-require 'awesome_print'
 
 module Builders::Discovergy
   class SingleReadingsBuilder < AbstractRegistersBuilder

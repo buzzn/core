@@ -1,5 +1,4 @@
 require_relative '../operations'
-require 'awesome_print'
 
 #
 # Fetch readings from Discovergy and create Reading objects for the every meter passed in
