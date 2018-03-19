@@ -9,7 +9,6 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
       authorize: [group, *group.permissions.billing_cycles.create],
       set_date_range: [group],
       create_readings: [group],
-      build_bars: [group],
       create_billing_cycle: [group, group.billing_cycles],
       create_billings: [group]
     )
@@ -38,10 +37,11 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   # So I'm wrapping the operation to decouple the arguments.
   def create_readings(input, group)
     super(group: group, date_time: input[:date_range].last.at_beginning_of_day)
+    Right(input)
   end
 
   def create_billing_cycle(input, group, billing_cycles)
-    attrs = input.slice(:date_range, :name).merge(group: group.object)
+    attrs = input.slice(:date_range, :name).merge(localpool: group.object) # FIXME: call it group in DB!
     resource = Admin::BillingCycleResource.new(billing_cycles.objects.create!(attrs), billing_cycles.context)
     Right(input.merge(billing_cycle: resource))
   end
