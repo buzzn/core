@@ -6,14 +6,6 @@ require 'rspec/rails'
 require 'vcr'
 require 'webmock/rspec'
 require 'rspec/retry'
-
-# no geocoding for tests
-class ::Address
-
-  def geocode
-  end
-
-end
 require 'awesome_print'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
