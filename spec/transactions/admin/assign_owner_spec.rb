@@ -25,7 +25,7 @@ describe Transactions::Admin::Localpool::OwnerBase do
 
     it 'succeeds' do
       result = transaction.call(person_resource)
-      expect(result).to be_a Dry::Monads::Either::Right
+      expect(result).to be_success
       expect(result.value).to be_a PersonResource
       expect(result.value.object).to eq(person)
     end

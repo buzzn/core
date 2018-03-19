@@ -8,7 +8,7 @@ describe Operations::Authorization::Delete do
     before { resource.send 'deletable?=', true }
     it 'passes given resource' do
       result = subject.call(resource)
-      expect(result).to be_a Dry::Monads::Either::Right
+      expect(result).to be_success
       expect(result.value).to eq resource
     end
   end

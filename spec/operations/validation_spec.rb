@@ -5,7 +5,7 @@ describe Operations::Validation do
   it 'validates input successfully' do
     input = {a: 123}
     result = subject.call(input, schema)
-    expect(result).to be_a Dry::Monads::Either::Right
+    expect(result).to be_success
     expect(result.value).to eq input
   end
 

@@ -9,7 +9,7 @@ describe Operations::Authorization::Update do
     before { resource.send 'updatable?=', true }
     it 'passes input' do
       result = subject.call(input, resource)
-      expect(result).to be_a Dry::Monads::Either::Right
+      expect(result).to be_success
       expect(result.value).to eq input
     end
   end

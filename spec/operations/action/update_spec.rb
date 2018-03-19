@@ -27,7 +27,7 @@ describe Operations::Action::Update do
       it 'acts' do
         result = subject.call(input, resource_without_invariant)
 
-        expect(result).to be_a Dry::Monads::Either::Right
+        expect(result).to be_success
         expect(result.value).to be_persisted
         expect(result.value.updated_at).not_to eq updated_at
       end
@@ -39,7 +39,7 @@ describe Operations::Action::Update do
       it 'keeps as is' do
         result = subject.call(input, resource_without_invariant)
 
-        expect(result).to be_a Dry::Monads::Either::Right
+        expect(result).to be_success
         expect(result.value).to be_persisted
         expect(result.value.updated_at).to eq updated_at
       end
