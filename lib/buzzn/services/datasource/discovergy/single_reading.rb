@@ -7,11 +7,11 @@ class Services::Datasource::Discovergy::SingleReading
   include Import['services.datasource.discovergy.api']
 
   def all(group, date)
-    meter = Meter::Discovergy.find_by(group: group.object)
+    meter = Meter::Discovergy.find_by(group: group)
     return unless meter
     api.request(
       query(meter, date),
-      builder(group.object.registers)
+      builder(group.registers)
     )
   end
 

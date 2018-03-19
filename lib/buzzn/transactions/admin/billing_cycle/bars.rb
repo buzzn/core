@@ -4,19 +4,18 @@ class Transactions::Admin::BillingCycle::Bars < Transactions::Base
 
   def self.for(billing_cycle)
     new.with_step_args(
-      authorize: [billing_cycle, *billing_cycle.permissions.retrieve],
-      load_billings: [billing_cycle]
+      authorize: [billing_cycle, *billing_cycle.permissions.retrieve]
     )
   end
 
   step :authorize, with: :'operations.authorization.generic'
-  step :load_billings
+  step :bars, with: :'operations.bars'
   step :result_builder
 
   def result_builder(data)
     result = {
-      array: data.collect do |market_location, billings|
-        build_bars_location(market_location, billings)
+      array: data.collect do |item|
+        build_bars_location(item[:market_location], item[:bars])
       end
     }
     Right(result)
@@ -24,20 +23,15 @@ class Transactions::Admin::BillingCycle::Bars < Transactions::Base
 
   private
 
-  def load_billings(_inputs, billing_cycle)
-    billings = billing_cycle.billings.includes(contract: :market_location)
-    grouped = billings.group_by { |billing| billing.contract.market_location }
-    Right(grouped)
+  def build_bars_location(market_location, bars)
+    { id: market_location.id, type: 'market_location', name: market_location.name, bars: { array: build_bars(bars) } }
   end
 
-  def build_bars_location(market_location, billings)
-    { id: market_location.id, type: 'market_location', name: market_location.name, bars: { array: build_bars(billings) } }
-  end
+  BAR_FIELDS = %i(billing_id contract_type begin_date end_date status consumed_energy_kwh price_cents)
 
-  FIELDS = %i(billing_id contract_type begin_date end_date status consumed_energy_kwh price_cents)
-
-  def build_bars(billings = [])
-    billings.collect { |billing| bar_as_json(billing, FIELDS) }
+  def build_bars(bars)
+    return [] unless bars
+    bars.collect { |bar| bar_as_json(bar, BAR_FIELDS) }
   end
 
   def bar_as_json(bar, fields)
