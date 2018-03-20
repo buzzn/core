@@ -1,0 +1,163 @@
+doctype html
+html
+  head
+    title = "#{title_text}"
+    meta charset='utf-8'
+    link href="https://fonts.googleapis.com/css?family=Asap:400,400i,700,700i" rel="stylesheet"
+
+    css:
+      body {font-size: 16px; font-family: 'Asap', sans-serif; font-weight: 400}
+      div.alwaysbreak {page-break-before: always;}
+      h2 {font-size: 1.09em; font-weight: 700}
+      th {background: #eeeeee; text-align: center;}
+      table {font-size: .72em;}
+      .wrapper {width: 100%; height: 77em; position: relative;}
+      .footer {width: 100%; height: 4em; position: absolute; bottom: 0; background: #eeeeee;}
+      .is-small {font-size: .73em;}
+      .is-smaller {font-size: .54em;}
+      .is-col-3rd {width: 30%;}
+      .is-pull-right {float: right;}
+      .is-pull-left {float: left;}
+      .is-full-width {width: 100%;}
+      .clear {clear: both;}
+      .logo {width: 20em; height: 8em; background: #eeeeee;}
+
+  body
+    div.wrapper
+      / div.footer Buzzn 1
+
+      div.logo.is-pull-left
+
+      div.info-lsg.is-pull-right.is-col-3rd
+        p.is-small #{lsg_V_Partner} <br>
+          - Energiegruppe #{lp_Name} -<br>
+          #{lsg_Kontakt}<br>
+          #{lsg_Straße} #{lsg_HausNr}<br>
+          #{lsg_PLZ} #{lsg_Ort}
+
+        p.is-small T:  #{lsg_Tel}<br>
+          F: #{lsg_Fax}<br>
+          Email: #{lsg_Email}
+
+        p.is-small #{lsg_V_Partner}<br>
+          #{lsg_IBAN}<br>
+          #{lsg_BIC}<br>
+          #{lsg_Bank}
+
+        p.is-small Steuernummer: #{steuerNr}
+
+      p.is-smaller.clear #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+
+      p #{lsn_Anrede}<br>
+        #{lsn_Titel}<br>
+        #{lsn_Vorname} #{lsn_Name}<br>
+        #{lsn_Straße} #{lsn_HausNr}<br>
+        #{lsn_PLZ} #{lsn_Ort}
+
+      p
+        i #{lsn_per_EMail}
+
+      p.is-pull-right #{lsg_Ort}, den #{r_Datum}
+
+      h2.clear Turnusabrechnung - Lokale Energiegruppe #{lp_Name}<br>
+        Rechnungsnummer: #{r_Nummer}
+
+      table
+        tr
+          td Vertragsnummer:
+          td #{lsn_Vertragsnummer}
+        tr
+          td Bezugsstelle:
+          td #{lsn_Straße_b} #{lsn_HausNr_b}, #{lsn_Adresszusatz_b}
+        tr
+          td Zählernummer:
+          td #{mpsn_ZählerNr_alt}
+        tr
+          td Prognose Jahresbezug:
+          td #{verbrauch_Jahr} kWh (#{abrechnungsjahr})
+        tr
+          td Abrechnungsjahr
+          td #{abrechnungsjahr}
+
+      p Sehr #{lsn_Andrede_r} #{lsn_Anrede_Name},
+      p vielen Dank, dass Sie als Lokaler Stromnehmer aus der Energiegruppe #{lp_Name} Strom beziehen. Nachfolgend erhalten Sie Ihre Turnusabrechnung.
+
+      h2 Bezugsmenge
+      table.is-full-width
+        tr
+          th
+          th Ablesedatum
+          th
+          th kWh
+        tr
+          td Beginn Abrechnungszeitraum
+          td #{datum_1}
+          td Zählerstand
+          td #{zSt_1}
+        tr
+          td Ende Abrechnungszeitraum
+          td #{datum_4}
+          td Zählerstand
+          td #{zSt_4}
+        tr
+          td colspan=3
+            b Bezug Abrechnungszeitraum
+          td
+            b #{zSt_Diff}
+
+      h2 Abrechnung
+      table.is-full-width
+        tr
+          th Position
+          th Zeitraum
+          th Menge
+          th Preis je Einheit
+          th Betrag
+        tr
+          td Arbeitspreis
+          td #{datum_1} - #{datum_4}
+          td #{zSt_Diff} kWh
+          td #{bezugspreis_netto} Ct/kWh
+          td #{bezugspreis_Produkt} €
+        tr
+          td Grundpreis
+          td #{datum_1} - #{datum_4}
+          td #{zeitraum} Monate
+          td #{grundpreis_netto} €/Monat
+          td #{grundpreis_Produkt} €
+        tr
+          td colspan=4 Zwischensumme (netto)
+          td #{zwSumme} €
+        tr
+          td colspan=4 Umsatzsteuer (#{steuersatz}%)
+          td #{uSt} €
+        tr
+          td colspan=4
+            b Rechnungsbetrag (brutto)
+          td
+            b #{betrag_brutto} €
+        tr
+          td colspan=4 Abzüglich Abschläge (brutto)
+          td #{abschlag_produkt} €
+        tr
+          td colspan=4
+            b #{forderung}
+          td
+            b #{rest_Summe} €
+      div.footer Buzzn 1
+
+    / page 2
+
+    div.alwaysbreak
+    div.wrapper
+      h2 #{page_two.header}
+      p #{page_two.paragraph}
+      div.footer Buzzn 2
+
+    / page 3
+
+    div.alwaysbreak
+    div.wrapper
+      h2 #{page_three.header}
+      p #{page_three.paragraph}
+      div.footer Buzzn 3
