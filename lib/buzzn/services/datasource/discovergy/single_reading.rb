@@ -11,7 +11,7 @@ class Services::Datasource::Discovergy::SingleReading
     return unless meter
     api.request(
       query(meter, date),
-      builder(group.registers)
+      builder(group)
     )
   end
 
@@ -30,8 +30,9 @@ class Services::Datasource::Discovergy::SingleReading
     Types::Discovergy::Readings::Get.new(params)
   end
 
-  def builder(registers)
-    Builders::Discovergy::SingleReadingsBuilder.new(registers: registers)
+  def builder(group)
+    consumption_registers = group.registers.select { |register| register.label.consumption? }
+    Builders::Discovergy::SingleReadingsBuilder.new(registers: consumption_registers)
   end
 
   # Discovergy requires an UNIX timestamp in ms

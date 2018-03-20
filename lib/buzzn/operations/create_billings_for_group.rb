@@ -13,7 +13,7 @@ class Operations::CreateBillingsForGroup
     unsaved_billing_items = factory.call(market_locations: market_locations, date_range: input[:date_range])
     billings = unsaved_billing_items.map do |market_location|
       market_location[:contracts].map do |contract|
-        create_billing(contract[:contract], contract[:items], input[:billing_cycle])
+        create_billing(contract[:contract], contract[:items], input[:billing_cycle].object)
       end
     end
     billings.flatten!

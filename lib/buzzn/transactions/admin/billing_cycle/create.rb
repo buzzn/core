@@ -3,14 +3,15 @@ require_relative '../../../schemas/transactions/admin/billing_cycle/create'
 
 class Transactions::Admin::BillingCycle::Create < Transactions::Base
 
-  def self.for(group)
+  def self.for(group_resource)
+    group_model = group_resource.object
     new.with_step_args(
       validate: [Schemas::Transactions::Admin::BillingCycle::Create],
-      authorize: [group, *group.permissions.billing_cycles.create],
-      set_date_range: [group],
-      create_readings: [group],
-      create_billing_cycle: [group, group.billing_cycles],
-      create_billings: [group]
+      authorize: [group_resource, *group_resource.permissions.billing_cycles.create],
+      set_date_range: [group_resource],
+      create_readings: [group_model],
+      create_billing_cycle: [group_model, group_resource.billing_cycles],
+      create_billings: [group_model]
     )
   end
 
@@ -37,10 +38,11 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   # So I'm wrapping the operation to decouple the arguments.
   def create_readings(input, group)
     super(group: group, date_time: input[:date_range].last.at_beginning_of_day)
+    Right(input)
   end
 
   def create_billing_cycle(input, group, billing_cycles)
-    attrs = input.slice(:date_range, :name).merge(group: group.object)
+    attrs = input.slice(:date_range, :name).merge(localpool: group)
     resource = Admin::BillingCycleResource.new(billing_cycles.objects.create!(attrs), billing_cycles.context)
     Right(input.merge(billing_cycle: resource))
   end
