@@ -43,6 +43,7 @@ describe Transactions::Admin::BillingCycle::Bars do
               errors = first_location[:bars][:array].first['errors']
               expect(errors).to eq(
                 'billing' => ['billing must be filled'],
+                'contract' => ['contract must be filled'],
                 'register' => ['register must be filled'],
                 'tariff' => ['tariff must be filled']
               )

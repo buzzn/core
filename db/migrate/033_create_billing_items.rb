@@ -20,6 +20,9 @@ class CreateBillingItems < ActiveRecord::Migration
     # They are the reason this can't be enabled, because they don't have a tariff.
     add_belongs_to :billing_items, :tariff, references: :tariff, index: true #, null: false
     # add_foreign_key :billing_items, :tariffs, name: :fk_billing_items_tariff, column: :tariff_id
+
+    add_belongs_to :billing_items, :register, references: :register, index: true , null: false
+    add_foreign_key :billing_items, :registers, name: :fk_billing_items_register, column: :register_id
   end
 
   def down

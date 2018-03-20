@@ -5,31 +5,27 @@ module Schemas
     BillingItem = Schemas::Support.Form(Schemas::Constraints::BillingItem) do
       configure do
         def in_contract_tariffs?(contract, tariff)
-          binding.pry
-          contract.tariffs.contains?(tariff)
+          contract.tariffs.include?(tariff)
         end
 
-        def match_contract?(contract, billing)
-          billing.contract == contract
-        end
-
-        def in_registers?(register, contract)
+        def belongs_to_contract?(contract, register)
           contract.market_location.register == register
         end
 
-        def match_register?(reading, register)
+        def match_register?(register, reading)
           reading.register == register
         end
 
         def inside_period?(date_range, thing)
-          thing.begin_date <= date_range.begin_date && (thing.end_date.nil? || thing.end_date >= date_range.end_date )
+          thing.begin_date <= date_range.first && (thing.end_date.nil? || thing.end_date >= date_range.last )
         end
       end
 
-      required(:tariff).filled
       required(:billing).filled
-      required(:begin_date).filled
+      required(:tariff).filled
+      required(:contract).filled
       required(:register).filled
+      required(:date_range).filled
       required(:begin_reading).maybe
       required(:end_reading).maybe
 
@@ -38,11 +34,11 @@ module Schemas
       end
 
       rule(register: [:register, :contract, :date_range]) do |register, contract, date_range|
-        contract.in_registers?(register)
+        register.belongs_to_contract?(contract)
       end
 
       rule(contract: [:contract, :billing, :date_range]) do |contract, billing, date_range|
-        billing.match_contract?(contract).and(contract.inside_period?(date_range))
+        contract.inside_period?(date_range)
       end
 
       rule(begin_reading: [:register, :begin_reading]) do |register, begin_reading|

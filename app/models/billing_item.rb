@@ -8,11 +8,12 @@ class BillingItem < ActiveRecord::Base
   include WithDateRange
 
   belongs_to :billing
+  belongs_to :register, class_name: 'Register::Base'
   belongs_to :tariff, class_name: 'Contract::Tariff'
   belongs_to :begin_reading, class_name: 'Reading::Single'
   belongs_to :end_reading, class_name: 'Reading::Single'
 
-  has_one :register, through: :begin_reading
+  has_one :contract, through: :billing
   has_one :meter, through: :register, foreign_key: :meter_id
 
   enum contract_type: %i(power_taker third_party gap).each_with_object({}).each { |k, map| map[k] = k.to_s }
