@@ -1,6 +1,6 @@
 require_relative '../billing_cycle'
 
-class Transactions::Admin::BillingCycle::Bars < Transactions::Base
+class Transactions::Admin::BillingCycle::ReadBillingBars < Transactions::Base
 
   def self.for(billing_cycle)
     new.with_step_args(
@@ -9,10 +9,14 @@ class Transactions::Admin::BillingCycle::Bars < Transactions::Base
   end
 
   step :authorize, with: :'operations.authorization.generic'
-  step :bars, with: :'operations.bars'
-  step :result_builder
+  step :load_billings
+  step :build_result
 
-  def result_builder(data)
+  def load_billings(billing_cycle)
+    Right(billing_cycle.billings)
+  end
+
+  def build_result(data)
     result = {
       array: data.collect do |item|
         build_bars_location(item[:market_location], item[:bars])
