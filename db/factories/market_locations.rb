@@ -17,6 +17,12 @@ FactoryGirl.define do
       contracts { [create(:contract, :localpool_powertaker)] }
     end
 
+    trait :consumption do
+      after(:build) do |market_location, evaluator|
+        create(:register, :consumption, market_location: market_location)
+      end
+    end
+
     after(:build) do |market_location, evaluator|
       register = evaluator.register
       market_location.register = if register.is_a?(Symbol)
