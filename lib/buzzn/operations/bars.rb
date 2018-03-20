@@ -10,7 +10,7 @@ class Operations::Bars
     localpool = cycle.localpool
     range = cycle.begin_date...cycle.end_date
     result = factory.bars_by_market_location(group: localpool, date_range: range)
-    Right(result)
+    Success(result)
   end
 
 end

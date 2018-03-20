@@ -22,7 +22,7 @@ class Operations::Action::Update
       result = check_invariant(resource.object)
       if result.success?
         persist(resource.object)
-        Right(resource)
+        Success(resource)
       else
         resource.object.reload
         Left(result)

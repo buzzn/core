@@ -18,7 +18,7 @@ class Transactions::Admin::BillingCycle::Bars < Transactions::Base
         build_bars_location(item[:market_location], item[:bars])
       end
     }
-    Right(result)
+    Success(result)
   end
 
   private

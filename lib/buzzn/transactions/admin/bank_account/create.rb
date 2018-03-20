@@ -16,7 +16,7 @@ class Transactions::Admin::BankAccount::Create < Transactions::Base
   step :persist
 
   def persist(input, bank_accounts)
-    Right(BankAccountResource.new(bank_accounts.objects.create!(input), bank_accounts.context))
+    Success(BankAccountResource.new(bank_accounts.objects.create!(input), bank_accounts.context))
   end
 
 end

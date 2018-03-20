@@ -15,7 +15,7 @@ module Transactions::Admin::Localpool
 
     def persist(input, localpool)
       Group::Localpool.transaction do
-        Right(assign_owner(localpool, input))
+        Success(assign_owner(localpool, input))
       end
     end
 

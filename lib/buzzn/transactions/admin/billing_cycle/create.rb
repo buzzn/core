@@ -12,6 +12,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
     )
   end
 
+  around :db_transaction
   step :validate, with: :'operations.validation'
   step :authorize, with: :'operations.authorization.generic'
   step :begin_date
@@ -20,13 +21,11 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
 
   def begin_date(input, localpool)
     input[:begin_date] = localpool.next_billing_cycle_begin_date
-    Right(input)
+    Success(input)
   end
 
   def persist(input, billing_cycles)
-    do_persist do
-      Admin::BillingCycleResource.new(billing_cycles.objects.create!(input), billing_cycles.context)
-    end
+    Success(Admin::BillingCycleResource.new(billing_cycles.objects.create!(input), billing_cycles.context))
   end
 
 end

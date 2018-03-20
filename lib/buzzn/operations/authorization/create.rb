@@ -6,7 +6,7 @@ class Operations::Authorization::Create
 
   def call(input, resources)
     if resources.createable?
-      Dry::Monads.Right(input)
+      Dry::Monads.Success(input)
     else
       raise Buzzn::PermissionDenied.new(resources.instance_class, :create, resources.current_user)
       # TODO better a Left Monad and handle on roda

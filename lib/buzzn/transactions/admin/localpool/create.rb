@@ -12,7 +12,7 @@ class Transactions::Admin::Localpool::Create < Transactions::Base
   step :persist
 
   def persist(input, localpools)
-    Right(localpools.instance_class.create(localpools.current_user, input))
+    Success(localpools.instance_class.create(localpools.current_user, input))
   end
 
 end

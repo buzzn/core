@@ -14,9 +14,9 @@ class Transactions::Utils::ZipToPrice < Transactions::Base
   def zip_to_price(input)
     prices = Types::ZipPrices.new(input)
     if result = prices.max_price
-      Dry::Monads.Right(result)
+      Success(result)
     else
-      Dry::Monads.Left(Buzzn::GeneralError.new(zip: ['no price for zip found']))
+      Failure(Buzzn::GeneralError.new(zip: ['no price for zip found']))
     end
   end
 

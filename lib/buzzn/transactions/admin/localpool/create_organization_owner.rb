@@ -19,7 +19,7 @@ module Transactions::Admin::Localpool
       Group::Localpool.transaction do
         context = localpool.context.owner
         organization = OrganizationResource.new(Organization.create!(input.merge(mode: :other), context))
-        Right(assign_owner(localpool, organization))
+        Success(assign_owner(localpool, organization))
       end
     end
 

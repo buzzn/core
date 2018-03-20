@@ -6,7 +6,7 @@ class Operations::Bubbles
   include Import['services.current_power']
 
   def call(group)
-    Right(current_power.bubbles(group.object))
+    Success(current_power.bubbles(group.object))
   end
 
 end

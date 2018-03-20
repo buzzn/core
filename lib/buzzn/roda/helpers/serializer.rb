@@ -38,9 +38,9 @@ module Buzzn
       def call(object, request)
         options = {include: Buzzn::IncludeParser.parse(request.params['include'])}
         case object
-        when Dry::Monads::Either::Right
+        when Dry::Monads::Result::Success
           handle_right(object.value, request).to_json(options)
-        when Dry::Monads::Either::Left
+        when Dry::Monads::Result::Failure
           handle_left(object.value, request)
         when NilClass
           # response with 404 unless otherwise set

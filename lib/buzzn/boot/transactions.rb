@@ -1,4 +1,3 @@
-require_relative 'validation_step_adapter'
 require_relative '../schemas/support/form'
 module Buzzn
 
