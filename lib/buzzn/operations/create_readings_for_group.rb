@@ -11,7 +11,11 @@ class Operations::CreateReadingsForGroup
 
   def call(group:, date_time:)
     readings = request_readings(group, date_time)
-    Left('Couldn\'t fetch readings') unless readings
+    if readings.nil? || readings.empty?
+      msg = "No readings from Discovergy (result was #{readings})"
+      Buzzn::Logger.root.error(msg)
+      return Left(msg)
+    end
     result = readings.map { |register_id, reading_value| create_reading(register_id, reading_value, date_time) }
     Right(result)
   end

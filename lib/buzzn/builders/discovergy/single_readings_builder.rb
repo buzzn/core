@@ -4,8 +4,10 @@ module Builders::Discovergy
   class SingleReadingsBuilder < AbstractRegistersBuilder
 
     def build(response)
-      registers.each.with_object({}) do |register, hash|
-        hash[register.id] = find_reading(response, register)
+      smart_registers = registers.to_a.select { |register| register.meter.datasource == :discovergy }
+      smart_registers.each.with_object({}) do |register, hash|
+        reading = find_reading(response, register)
+        hash[register.id] = reading if reading
       end
     end
 
@@ -15,7 +17,12 @@ module Builders::Discovergy
       # FIXME: use register.meter.broker.external_id.
       register_identifier = "EASYMETER_#{register.meter.product_serialnumber}"
       all_readings = response[register_identifier]
-      to_watt_hour(all_readings.first, register)
+      reading = all_readings.first
+      unless reading
+        Buzzn::Logger.root.error("No reading for #{register} #{register_identifier}, returning 0")
+        return
+      end
+      to_watt_hour(reading, register)
     end
 
   end
