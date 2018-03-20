@@ -10,12 +10,17 @@ module Schemas
           def match_group?(group, meter)
             meter.group && meter.group == group
           end
+
+          def grow_in_time?(readings)
+            readings.sort_by(&:date) == readings.sort_by(&:value)
+          end
         end
 
         required(:observer_enabled).maybe
         required(:observer_min_threshold).maybe
         required(:observer_max_threshold).maybe
         required(:group).maybe
+        required(:readings).filled
         required(:meter).filled
 
         rule(observer_enabled: [:observer_enabled, :observer_min_threshold, :observer_max_threshold]) do |observer_enabled, observer_min_threshold, observer_max_threshold|
