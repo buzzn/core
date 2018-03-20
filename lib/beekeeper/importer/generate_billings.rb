@@ -88,7 +88,10 @@ class Beekeeper::Importer::GenerateBillings
   end
 
   def item_for_contract(contract, date_range)
-    Builders::Billing::ItemBuilder.from_contract(contract, date_range)
+    item = Builders::Billing::ItemBuilder.from_contract(contract, date_range)
+    # TODO make contract.register
+    item.register = contract.market_location.register
+    item
   end
 
   # rubocop:disable Style/ClassVars
