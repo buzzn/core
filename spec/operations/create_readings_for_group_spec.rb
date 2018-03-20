@@ -3,7 +3,7 @@ describe Operations::CreateReadingsForGroup do
   # TODO discuss if/how to stub the call
   class ReadingsStub
 
-    def initialize(result = {})
+    def initialize(result)
       @result = result
     end
 
@@ -19,10 +19,11 @@ describe Operations::CreateReadingsForGroup do
   let(:create_readings) { Operations::CreateReadingsForGroup.new(single_reading: readings_stub) }
 
   context 'no readings returned' do
-    let(:readings_stub) { ReadingsStub.new }
-    it 'doesn\'t create readings' do
+    let(:readings_stub) { ReadingsStub.new({}) }
+    it 'doesn\'t create readings, returns an error' do
       expect do
-        expect(create_readings.call(group: group, date_time: date_time)).to be_success
+        # For some reason the be_error matcher doesn't work
+        expect(create_readings.call(group: group, date_time: date_time)).to be_instance_of(Dry::Monads::Either::Left)
       end.not_to change(Reading::Single, :count)
     end
   end
