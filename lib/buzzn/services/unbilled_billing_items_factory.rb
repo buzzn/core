@@ -1,5 +1,10 @@
 require_relative '../builders/billing/item_builder'
 
+#
+# Returns all unbilled billing items for a list of market locations and a date range.
+# The unbilled billing items are unsaved, so that they can be used for display only or persistance within
+# a Billing and maybe BillingCycle.
+#
 class Services::UnbilledBillingItemsFactory
 
   # Returns this structure:
