@@ -30,7 +30,7 @@ class Transactions::Admin::BillingCycle::ReadBillings < Transactions::Base
   step :build_result
 
   def find_relevant_market_locations(billing_cycle)
-    market_locations = billing_cycle.object.localpool.market_locations.order(:name).to_a.select { |ml| ml.consumption? }
+    market_locations = billing_cycle.object.localpool.market_locations.order(:name).to_a.select(&:consumption?)
     Success(market_locations: market_locations, billing_cycle: billing_cycle)
   end
 

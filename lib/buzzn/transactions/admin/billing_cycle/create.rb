@@ -11,7 +11,6 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
       set_date_range: [group_resource],
       create_readings: [group_model],
       create_billing_cycle: [group_model, group_resource.billing_cycles]
-
     )
   end
 
