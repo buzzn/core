@@ -1,7 +1,7 @@
 require_relative '../operations'
 
 #
-# Fetch readings from Discovergy and create Reading objects for the every meter passed in
+# Fetch readings from Discovergy and create Reading objects for every meter passed in
 #
 class Operations::CreateReadingsForGroup
 

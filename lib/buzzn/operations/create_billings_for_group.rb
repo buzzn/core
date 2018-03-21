@@ -24,15 +24,17 @@ class Operations::CreateBillingsForGroup
 
   private
 
-  # TODO: validate attributes before saving
   def create_billing(contract, billing_items, billing_cycle)
-    Billing.create!(
+    attrs = {
       status:        'open',
       billing_cycle: billing_cycle,
       contract:      contract,
       date_range:    billing_items.first.date_range.first...billing_items.last.date_range.last,
       items:         billing_items
-    )
+    }
+    billing = Billing.new(attrs)
+    billing.save!(attrs) if billing.invariant.errors.empty?
+    billing
   end
 
 end
