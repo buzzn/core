@@ -25,7 +25,7 @@ class Operations::Action::Update
         Success(resource)
       else
         resource.object.reload
-        Left(result)
+        Error(result)
       end
     end
   end
