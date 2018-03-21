@@ -56,7 +56,7 @@ class Transactions::Admin::BillingCycle::ReadBillings < Transactions::Base
 
   def billings_as_json(billings)
     return [] unless billings
-    billings.collect { |billing| billing_as_json(billing) }
+    billings.sort_by(&:begin_date).collect { |billing| billing_as_json(billing) }
   end
 
   FIELDS = %i(billing_id contract_type begin_date end_date status consumed_energy_kwh price_cents)
