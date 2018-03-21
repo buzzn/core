@@ -1,5 +1,4 @@
 require_relative '../admin_roda'
-require_relative '../../transactions/admin/billing/create_regular'
 require_relative '../../transactions/admin/billing/update'
 require_relative '../../transactions/admin/billing/delete'
 
