@@ -56,33 +56,6 @@ module Reading
     scope :with_reason, ->(*reasons) { where(reason: reasons) }
     scope :without_reason, ->(*reasons) { where('reason NOT IN (?)', reasons) }
 
-    validate :validate_invariants
-
-    def validate_invariants
-      if manual? && watt_hour?
-        # TODO value_has_to_grow
-      end
-    end
-
-    # WARNING: as of now, our readings don't always grow over time. Reason:
-    # beekeeper had no notion of metering locations, and thus couldn't model it's register changes.
-    # Thus all imported readings are stored on the current (and only) register of a metering location, even when
-    # the register was swapped at some point. And the readings of a new register typically start much lower.
-    #
-    # Btw. design-wise, this check should be in the transaction object or at least the market location model.
-    # A register model should not load it's adjacent models.
-    def value_has_to_grow
-      readings = register.readings.manual.order(:date)
-      reading_before = readings.where('date < ?', date).last
-      reading_after = readings.where('date > ?', date).first
-      if !reading_before.nil? && reading_before.value > value
-        self.errors.add(:value, "is lower than the last one: #{reading_before.value}")
-      end
-      if !reading_after.nil? && reading_after.value < value
-        self.errors.add(:value, "is greater than the next one: #{reading_after.value}")
-      end
-    end
-
     def corrected_value
       Buzzn::Utils::Number.send(unit, value)
     end

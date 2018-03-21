@@ -20,7 +20,7 @@ module Schemas
         required(:observer_min_threshold).maybe
         required(:observer_max_threshold).maybe
         required(:group).maybe
-        required(:readings).filled
+        required(:readings).filled { grow_in_time? }
         required(:meter).filled
 
         rule(observer_enabled: [:observer_enabled, :observer_min_threshold, :observer_max_threshold]) do |observer_enabled, observer_min_threshold, observer_max_threshold|

@@ -38,3 +38,4 @@ en:
     in_contract_tariffs?: 'must be in contract tariffs'
     belongs_to_contract?: 'must belong to contract'
     match_register?: 'must match register'
+    grow_in_time?: 'must grow in time'
