@@ -55,8 +55,7 @@ class Services::PdfHtmlGenerator
   end
 
   def generate_pdf(name, html)
-    WickedPdf.new.pdf_from_string(render_html(name, html),
-                                  footer: { left: 'Seite [page] von [topage]' })
+    WickedPdf.new.pdf_from_string(render_html(name, html))
   end
 
   def render_html(name, html)
