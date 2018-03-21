@@ -19,7 +19,7 @@ module Builders::Discovergy
       all_readings = response[register_identifier]
       reading = all_readings.first
       unless reading
-        Buzzn::Logger.root.error("No reading for #{register} #{register_identifier}, returning 0")
+        Buzzn::Logger.root.error("No reading for #{register} #{register_identifier}")
         return
       end
       to_watt_hour(reading, register)
