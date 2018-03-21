@@ -5,18 +5,22 @@ html
     title = "#{title_text}"
     meta charset='utf-8'
     link href="https://fonts.googleapis.com/css?family=Asap:400,400i,700,700i" rel="stylesheet"
+    link href='https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.0/chartist.min.css' rel='stylesheet'
+    / script src='https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js'
+    script src='https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.0/chartist.min.js'
     css:
-      html {font-size: 16pt;}
+      html {font-size: 16pt;line-height: 1.1;}
       body {font-size: 0.6875rem; font-family: 'Asap', sans-serif; font-weight: 400}
-      div.alwaysbreak {page-break-before: always;}
       p {margin: .375rem 0;}
-      h2 {font-size: .75rem; font-weight: 700}
+      h2 {font-size: .75rem; font-weight: 700; margin: .75rem 0 .375rem;}
+      table {border-collapse: collapse;border: 1px solid #999;}
+      td, th {padding: .25rem;}
       th {background: #eeeeee; text-align: left;}
+      td {border-bottom: 1px solid #999;}
       footer {width: 100%; height: 1rem; position: absolute; bottom: 0;}
+      div.alwaysbreak {page-break-before: always;}
 
-      .test {background: url('/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png'); width: 25%; height: 20%}
       .wrapper {width: 100%; height: 1000px; position: relative;}
-
       .row {margin: 0 -.375rem;}
       .is-col-3rd {width: 25%; margin: .375rem .375rem; float: left;}
 
@@ -25,14 +29,16 @@ html
       .is-medium {font-size: .625rem;}
       .is-small {font-size: .5rem;}
       .is-smaller {font-size: .375rem;}
-
       .is-pull-right {float: right;}
       .is-pull-left {float: left;}
       .is-full-width {width: 100%;}
       .is-text-right {text-align: right;}
       .is-text-left {text-align: left;}
       .is-text-center {text-align: center;}
-      .has-no-margin {margin: 0;}
+
+      .no-margin {margin: 0;}
+      .no-padding {padding: 0;}
+      .no-border {border-color: transparent;}
 
       .card {padding: .5rem 1rem; min-height: 6rem; position: relative;}
       .card p:last-child {position: absolute; bottom: .375rem;}
@@ -58,7 +64,7 @@ html
 
       div.logo.is-pull-left
 
-      div.is-small.is-col-3rd.is-pull-right.has-no-margin
+      div.is-small.is-col-3rd.is-pull-right.no-margin
         p #{lsg_V_Partner} <br>
           - Energiegruppe #{lp_Name} -<br>
           #{lsg_Kontakt}<br>
@@ -92,22 +98,22 @@ html
       h2.clear Turnusabrechnung - Lokale Energiegruppe #{lp_Name}<br>
         Rechnungsnummer: #{r_Nummer}
 
-      table
+      table.no-border
         tr
-          td Vertragsnummer:
-          td #{lsn_Vertragsnummer}
+          td.no-border.no-padding Vertragsnummer:
+          td.no-border.no-padding #{lsn_Vertragsnummer}
         tr
-          td Bezugsstelle:
-          td #{lsn_Straße_b} #{lsn_HausNr_b}, #{lsn_Adresszusatz_b}
+          td.no-border.no-padding Bezugsstelle:
+          td.no-border.no-padding #{lsn_Straße_b} #{lsn_HausNr_b}, #{lsn_Adresszusatz_b}
         tr
-          td Zählernummer:
-          td #{mpsn_ZählerNr_alt}
+          td.no-border.no-padding Zählernummer:
+          td.no-border.no-padding #{mpsn_ZählerNr_alt}
         tr
-          td Prognose Jahresbezug:
-          td #{verbrauch_Jahr} kWh (#{abrechnungsjahr})
+          td.no-border.no-padding Prognose Jahresbezug:
+          td.no-border.no-padding #{verbrauch_Jahr} kWh (#{abrechnungsjahr})
         tr
-          td Abrechnungsjahr
-          td #{abrechnungsjahr}
+          td.no-border.no-padding Abrechnungsjahr
+          td.no-border.no-padding #{abrechnungsjahr}
 
       p Sehr #{lsn_Andrede_r} #{lsn_Anrede_Name},
       p vielen Dank, dass Sie als Lokaler Stromnehmer aus der Energiegruppe #{lp_Name} Strom beziehen. Nachfolgend erhalten Sie Ihre Turnusabrechnung.
@@ -118,12 +124,12 @@ html
           th
           th Ablesedatum
           th
-          th kWh
+          th.is-text-right kWh
         tr
-          td Beginn Abrechnungszeitraum
-          td #{datum_1}
-          td Zählerstand
-          td.is-text-right #{zSt_1}
+          td.no-border Beginn Abrechnungszeitraum
+          td.no-border #{datum_1}
+          td.no-border Zählerstand
+          td.no-border.is-text-right #{zSt_1}
         tr
           td Ende Abrechnungszeitraum
           td #{datum_4}
@@ -142,13 +148,13 @@ html
           th Zeitraum
           th Menge
           th Preis je Einheit
-          th Betrag
+          th.is-text-right Betrag
         tr
-          td Arbeitspreis
-          td #{datum_1} - #{datum_4}
-          td #{zSt_Diff} kWh
-          td #{bezugspreis_netto} Ct/kWh
-          td.is-text-right #{bezugspreis_Produkt} €
+          td.no-border Arbeitspreis
+          td.no-border #{datum_1} - #{datum_4}
+          td.no-border #{zSt_Diff} kWh
+          td.no-border #{bezugspreis_netto} Ct/kWh
+          td.no-border.is-text-right #{bezugspreis_Produkt} €
         tr
           td Grundpreis
           td #{datum_1} - #{datum_4}
@@ -156,22 +162,27 @@ html
           td #{grundpreis_netto} €/Monat
           td.is-text-right #{grundpreis_Produkt} €
         tr
-          td colspan=4 Zwischensumme (netto)
-          td.is-text-right #{zwSumme} €
+          td.no-border Zwischensumme (netto)
+          td.no-border colspan=3
+          td.no-border.is-text-right #{zwSumme} €
         tr
-          td colspan=4 Umsatzsteuer (#{steuersatz}%)
+          td Umsatzsteuer (#{steuersatz}%)
+          td colspan=3
           td.is-text-right #{uSt} €
         tr
-          td colspan=4
+          td.no-border
             b Rechnungsbetrag (brutto)
-          td.is-text-right
+          td.no-border colspan=3
+          td.no-border.is-text-right
             b #{betrag_brutto} €
         tr
-          td colspan=4 Abzüglich Abschläge (brutto)
+          td Abzüglich Abschläge (brutto)
+          td colspan=3
           td.is-text-right #{abschlag_produkt} €
         tr
-          td colspan=4
+          td
             b #{forderung}
+          td colspan=3
           td.is-text-right
             b #{rest_Summe} €
 
@@ -203,9 +214,9 @@ html
       h2 Verbrauchsvergleich
       p Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist. Dieser Vergleich, den Sie der Grafik entnehmen können, hinkt natürlich, da er die äußeren Gegebenheiten eines Haushaltes, zum Beispiel elektrische Warmwasserbereitung, nicht berücksichtigt.
 
-      div.chart.ash
+      div#chart.chart.ct-chart.ct-perfect-fourth
 
-      p.is-smaller Quelle: Statistisches Bundesamt<br>
+      p.is-small Quelle: Statistisches Bundesamt<br>
         <sup>1.</sup> Sofern kein volles Jahr Strom bezogen wurde, wird die Strommenge auf ein ganzes Jahr hochgerechnet<br>
         <sup>2.</sup> Sofern im Vorjahr noch kein Strom bezogen wurde, ist dies ein Prognosewert
 
@@ -267,3 +278,16 @@ html
       footer.is-small
         div.footer-logo powered by <img src='#{Dir.pwd}/public/assets/logo.png' />
         span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+
+    / chart
+    javascript:
+      var data = {
+        // A labels array that can contain any sort of values
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+        // Our series array that contains series objects or in this case series data arrays
+        series: [
+          [5, 2, 4, 2, 0]
+        ]
+      };
+      new Chartist.Line('#chart', data);
+      // document.addEventListener('created',function(){alert('created')})
