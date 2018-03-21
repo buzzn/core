@@ -6,7 +6,7 @@ class Operations::Authorization::Update
 
   def call(input, resource)
     if resource.updatable?
-      Dry::Monads.Success(input)
+      Success(input)
     else
       raise Buzzn::PermissionDenied.new(resource, :update, resource.current_user)
       # TODO better a Left Monad and handle on roda
