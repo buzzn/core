@@ -30,7 +30,6 @@ module Register
 
     enum direction: { input: 'in', output: 'out' }
 
-    has_many :contracts, class_name: 'Contract::Base', dependent: :destroy, foreign_key: 'register_id'
     belongs_to :market_location
     belongs_to :meter, class_name: 'Meter::Base', foreign_key: :meter_id
 
