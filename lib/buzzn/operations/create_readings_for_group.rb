@@ -17,7 +17,7 @@ class Operations::CreateReadingsForGroup
       # We still want the creation of the billing cycle to succeed, so that manual
       # readings can be created.
       msg = "No readings from Discovergy (result was #{readings.inspect})"
-      Success(msg)
+      return Success(msg)
     end
     result = readings.map { |register_id, reading_value| create_reading(register_id, reading_value, date_time) }
     Success(result)
