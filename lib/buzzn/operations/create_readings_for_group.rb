@@ -17,7 +17,7 @@ class Operations::CreateReadingsForGroup
       return Left(msg)
     end
     result = readings.map { |register_id, reading_value| create_reading(register_id, reading_value, date_time) }
-    Right(result)
+    Success(result)
   end
 
   private
