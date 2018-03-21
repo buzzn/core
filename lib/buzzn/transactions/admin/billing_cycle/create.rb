@@ -20,9 +20,6 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   step :authorize, with: :'operations.authorization.generic'
   step :end_date, with: :'operations.end_date'
   step :set_date_range
-
-  # TODO
-  # around :do_persist
   step :create_readings, with: :'operations.create_readings_for_group'
   step :create_billing_cycle
   step :create_billings, with: :'operations.create_billings_for_group'
