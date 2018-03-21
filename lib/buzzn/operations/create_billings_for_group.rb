@@ -8,16 +8,18 @@ class Operations::CreateBillingsForGroup
   include Dry::Transaction::Operation
   include Import[factory: 'services.unbilled_billing_items_factory']
 
-  def call(input, group)
+  def call(billing_cycle)
+    group                 = billing_cycle.localpool
+    date_range            = billing_cycle.date_range
     market_locations      = group.market_locations.consumption
-    unsaved_billing_items = factory.call(market_locations: market_locations, date_range: input[:date_range])
+    unsaved_billing_items = factory.call(market_locations: market_locations, date_range: date_range)
     billings = unsaved_billing_items.map do |market_location|
       market_location[:contracts].map do |contract|
-        create_billing(contract[:contract], contract[:items], input[:billing_cycle].object)
+        create_billing(contract[:contract], contract[:items], billing_cycle)
       end
     end
     billings.flatten!
-    billings.all?(&:persisted?) ? Success(input[:billing_cycle]) : Failure('Failed to save all billings')
+    billings.all?(&:persisted?) ? Success(billing_cycle) : Failure('Failed to save all billings')
   end
 
   private
