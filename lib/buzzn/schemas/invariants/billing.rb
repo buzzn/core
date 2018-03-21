@@ -1,4 +1,4 @@
-require_relative '../constraints/market_location'
+require_relative '../constraints/billing'
 
 module Schemas
   module Invariants

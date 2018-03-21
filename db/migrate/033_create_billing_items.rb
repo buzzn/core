@@ -21,7 +21,7 @@ class CreateBillingItems < ActiveRecord::Migration
     add_belongs_to :billing_items, :tariff, references: :tariff, index: true #, null: false
     # add_foreign_key :billing_items, :tariffs, name: :fk_billing_items_tariff, column: :tariff_id
 
-    add_belongs_to :billing_items, :register, references: :register, index: true , null: false
+    add_belongs_to :billing_items, :register, references: :register, index: true, null: false
     add_foreign_key :billing_items, :registers, name: :fk_billing_items_register, column: :register_id
   end
 
