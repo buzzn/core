@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :billing_item do
-    billing { FactoryGirl.build(:billing) }
+    billing             { FactoryGirl.build(:billing) }
+    contract_type       'power_taker'
 
     after(:build) do |billing_item, evaluator|
       unless billing_item.begin_date && billing_item.end_date
