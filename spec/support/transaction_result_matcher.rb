@@ -4,8 +4,8 @@ RSpec::Matchers.define :transaction_result do |*attrs|
     match { |actual| actual.is_a?(Dry::Monads::Either::Success) }
   end
 
-  matcher :be_error do
-    match { |actual| actual.is_a?(Dry::Monads::Either::Error) }
+  matcher :be_failure do
+    match { |actual| actual.is_a?(Dry::Monads::Either::Failure) }
   end
 
 end
