@@ -20,11 +20,13 @@ describe Operations::CreateReadingsForGroup do
 
   context 'no readings returned' do
     let(:readings_stub) { ReadingsStub.new({}) }
-    it 'doesn\'t create readings, returns an error' do
+    it 'doesn\'t create readings' do
       expect do
-        # For some reason the be_error matcher doesn't work
-        expect(create_readings.call(group: group, date_time: date_time)).to be_instance_of(Dry::Monads::Either::Left)
+        create_readings.call(group: group, date_time: date_time)
       end.not_to change(Reading::Single, :count)
+    end
+    it 'still returns success. It\'s Ok for some readings to be missing' do
+      expect(create_readings.call(group: group, date_time: date_time)).to be_success
     end
   end
 

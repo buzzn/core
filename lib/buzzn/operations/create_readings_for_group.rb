@@ -12,9 +12,12 @@ class Operations::CreateReadingsForGroup
   def call(group:, date_time:)
     readings = request_readings(group, date_time)
     if readings.nil? || readings.empty?
+      # It's Ok(ish) if there are no readings from Discovergy, we realized.
+      # Mixed groups and those without smart meters won't have some.
+      # We still want the creation of the billing cycle to succeed, so that manual
+      # readings can be created.
       msg = "No readings from Discovergy (result was #{readings.inspect})"
-      Buzzn::Logger.root.error(msg)
-      raise msg
+      Success(msg)
     end
     result = readings.map { |register_id, reading_value| create_reading(register_id, reading_value, date_time) }
     Success(result)
