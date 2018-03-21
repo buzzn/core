@@ -43,7 +43,7 @@ class Transactions::Base
     else
       raise Buzzn::ValidationError.new(result.value.invariant.errors)
       # TODO better use this and handle on roda - see operations/validation
-      #Error(entity.invariant.errors)
+      #Failure(entity.invariant.errors)
     end
   end
 

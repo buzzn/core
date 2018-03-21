@@ -11,7 +11,7 @@ class Operations::Validation
     else
       raise Buzzn::ValidationError.new(result.errors)
       # TODO better use this and handle on roda - see transactions/base
-      #Error(result.errors)
+      #Failure(result.errors)
     end
   end
 

@@ -17,7 +17,7 @@ class Operations::CreateBillingsForGroup
       end
     end
     billings.flatten!
-    billings.all?(&:persisted?) ? Success(input[:billing_cycle]) : Error('Failed to save all billings')
+    billings.all?(&:persisted?) ? Success(input[:billing_cycle]) : Failure('Failed to save all billings')
   end
 
   private
