@@ -39,5 +39,14 @@ describe Operations::CreateReadingsForGroup do
       end.to change(Reading::Single, :count)
       expect(Reading::Single.last.value).to eq(42_000)
     end
+
+    context 'reading with same date, register and reason already exists' do
+      before { create(:reading, :regular, register: register, date: date_time.to_date) }
+      it 'doesn\'t create readings' do
+        expect do
+          expect(create_readings.call(group: group, date_time: date_time)).to be_success
+        end.not_to change(Reading::Single, :count)
+      end
+    end
   end
 end

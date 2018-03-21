@@ -31,7 +31,7 @@ class Operations::CreateReadingsForGroup
   end
 
   def create_reading(register_id, reading_value, date_time)
-    Reading::Single.create!(
+    attrs = {
       register_id:  register_id,
       date:         date_time.to_date,
       raw_value:    reading_value,
@@ -42,7 +42,9 @@ class Operations::CreateReadingsForGroup
       read_by:      :buzzn,
       source:       :smart,
       status:       :z86
-    )
+    }
+    existing_reading = Reading::Single.find_by(attrs.slice(:date, :register_id))
+    existing_reading ? existing_reading : Reading::Single.create!(attrs)
   end
 
 end
