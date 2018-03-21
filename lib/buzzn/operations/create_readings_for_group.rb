@@ -36,6 +36,7 @@ class Operations::CreateReadingsForGroup
       reason:       :regular_reading,
       unit:         :watt_hour,
       quality:      :read_out,
+      read_by:      :buzzn,
       source:       :smart,
       status:       :z86
     )
