@@ -10,7 +10,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
       authorize: [group_resource, *group_resource.permissions.billing_cycles.create],
       set_date_range: [group_resource],
       create_readings: [group_model],
-      create_billing_cycle: [group_model, group_resource.billing_cycles]
+      create_billing_cycle: [group_model]
     )
   end
 
@@ -22,6 +22,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   step :create_readings, with: :'operations.create_readings_for_group'
   step :create_billing_cycle
   step :create_billings, with: :'operations.create_billings_for_group'
+  step :build_response
 
   def set_date_range(input, group)
     begin_date = group.next_billing_cycle_begin_date
@@ -38,10 +39,13 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
     Success(input)
   end
 
-  def create_billing_cycle(input, group, billing_cycles)
+  def create_billing_cycle(input, group)
     attrs = input.slice(:date_range, :name).merge(localpool: group)
-    resource = Admin::BillingCycleResource.new(billing_cycles.objects.create!(attrs), billing_cycles.context)
-    Success(resource.object)
+    Success(BillingCycle.create!(attrs))
+  end
+
+  def build_response(billing_cycle)
+    Success(Admin::BillingCycleResource.new(billing_cycle))
   end
 
 end

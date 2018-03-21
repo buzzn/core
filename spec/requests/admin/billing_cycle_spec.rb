@@ -55,7 +55,7 @@ describe Admin::BillingCycleResource do
 
       it_behaves_like 'create',
                       BillingCycle,
-                      { last_date: 'blubla', name: 'something' * 10},
+                      { last_date: 'blubla', name: 'something' * 10 },
                       { last_date: Date.parse('2018-02-01'), name: 'mine' }
     end
   end
