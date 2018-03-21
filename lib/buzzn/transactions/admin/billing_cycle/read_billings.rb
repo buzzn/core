@@ -75,4 +75,5 @@ class Transactions::Admin::BillingCycle::ReadBillings < Transactions::Base
     item = billing.items.first
     item.invariant.errors.empty? ? {} : { errors: item.invariant.errors(full: true) }
   end
+
 end
