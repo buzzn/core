@@ -6,7 +6,7 @@ class Operations::Authorization::Generic
 
   def call(input, resource, *allowed_roles)
     if resource.allowed?(allowed_roles)
-      Dry::Monads.Success(input)
+      Success(input)
     else
       raise Buzzn::PermissionDenied.new(resource, nil, resource.current_user)
       # TODO better a Left Monad and handle on roda
