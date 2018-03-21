@@ -14,7 +14,7 @@ class Operations::CreateReadingsForGroup
     if readings.nil? || readings.empty?
       msg = "No readings from Discovergy (result was #{readings.inspect})"
       Buzzn::Logger.root.error(msg)
-      return Error(msg)
+      raise msg
     end
     result = readings.map { |register_id, reading_value| create_reading(register_id, reading_value, date_time) }
     Success(result)
