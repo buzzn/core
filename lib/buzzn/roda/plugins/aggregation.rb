@@ -12,9 +12,9 @@ class Roda
 
         def aggregated(object)
           case object
-          when Dry::Monads::Either::Left
+          when Dry::Monads::Result::Failure
             error_response(object)
-          when Dry::Monads::Either::Right
+          when Dry::Monads::Result::Success
             result = object.value
           else
             result = object

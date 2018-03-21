@@ -31,7 +31,7 @@ class Transactions::Admin::BillingCycle::ReadBillings < Transactions::Base
 
   def find_relevant_market_locations(billing_cycle)
     market_locations = billing_cycle.object.localpool.market_locations.order(:name).to_a.select { |ml| ml.consumption? }
-    Right(market_locations: market_locations, billing_cycle: billing_cycle)
+    Success(market_locations: market_locations, billing_cycle: billing_cycle)
   end
 
   def build_result(input)
@@ -40,7 +40,7 @@ class Transactions::Admin::BillingCycle::ReadBillings < Transactions::Base
       billings = all_billings.select { |billing| billing.contract.market_location == market_location }
       build_market_location_row(market_location, billings)
     end
-    Right(array: result_array)
+    Success(array: result_array)
   end
 
   private

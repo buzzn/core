@@ -6,7 +6,7 @@ class Operations::Action::Delete
 
   def call(resource)
     resource.object.destroy
-    Right(resource)
+    Success(resource)
   end
 
 end

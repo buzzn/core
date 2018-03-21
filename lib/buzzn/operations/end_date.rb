@@ -6,7 +6,7 @@ class Operations::EndDate
 
   def call(input)
     input[:end_date] = input.delete(:last_date) + 1.day if input.key?(:last_date)
-    Right(input)
+    Success(input)
   end
 
 end

@@ -30,19 +30,18 @@ class Transactions::Base
 
   end
 
-  # TODO: consider replacing this with http://dry-rb.org/gems/dry-transaction/around-steps/
-  def do_persist(&block)
-    entity = nil
+  def db_transaction(input)
+    result = nil
     ActiveRecord::Base.transaction(requires_new: true) do
-      entity = yield
-      unless entity.invariant.success?
+      result = yield(Success(input))
+      unless result.value.invariant.success?
         raise ActiveRecord::Rollback
       end
     end
-    if entity.persisted?
-      Right(entity)
+    if result.value.persisted?
+      result
     else
-      raise Buzzn::ValidationError.new(entity.invariant.errors)
+      raise Buzzn::ValidationError.new(result.value.invariant.errors)
       # TODO better use this and handle on roda - see operations/validation
       #Left(entity.invariant.errors)
     end

@@ -19,7 +19,7 @@ module Transactions::Admin::Localpool
       Group::Localpool.transaction do
         context = localpool.context.owner
         person = PersonResource.new(Person.create!(input), context)
-        Right(assign_owner(localpool, person))
+        Success(assign_owner(localpool, person))
       end
     end
 

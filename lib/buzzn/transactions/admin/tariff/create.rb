@@ -16,7 +16,7 @@ class Transactions::Admin::Tariff::Create < Transactions::Base
   step :persist
 
   def persist(input, tariffs)
-    Right(Contract::TariffResource.new(tariffs.objects.create!(input), tariffs.context))
+    Success(Contract::TariffResource.new(tariffs.objects.create!(input), tariffs.context))
   end
 
 end

@@ -20,7 +20,7 @@ class Transactions::Admin::Register::UpdateFormulaPart < Transactions::Base
   def process(input, registers)
     # adds the right register as operand in the input
     input[:operand] = registers.retrieve(input.delete(:register_id)).object if input[:register_id]
-    Dry::Monads.Right(input)
+    Success(input)
   end
 
 end

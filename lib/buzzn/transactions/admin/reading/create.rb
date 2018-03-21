@@ -16,7 +16,7 @@ class Transactions::Admin::Reading::Create < Transactions::Base
   step :persist
 
   def persist(input, readings)
-    Right(ReadingResource.new(readings.objects.create!(input), readings.context))
+    Success(ReadingResource.new(readings.objects.create!(input), readings.context))
   end
 
 end

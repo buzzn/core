@@ -14,7 +14,7 @@ class Transactions::GroupChart < Transactions::Base
   def authorize(input, group)
     # TODO needs to distinguish between admin and display
     # TODO check privacy settings here
-    Right(input)
+    Success(input)
   end
 
 end

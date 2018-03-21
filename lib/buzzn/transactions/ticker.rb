@@ -7,7 +7,7 @@ class Transactions::Ticker < Transactions::Base
 
   def authorize(register)
     # TODO check privacy settings here
-    Right(register)
+    Success(register)
   end
 
 end

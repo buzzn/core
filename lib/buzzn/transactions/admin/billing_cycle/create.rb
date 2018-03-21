@@ -15,6 +15,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
     )
   end
 
+  around :db_transaction
   step :validate, with: :'operations.validation'
   step :authorize, with: :'operations.authorization.generic'
   step :end_date, with: :'operations.end_date'
@@ -29,7 +30,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   def set_date_range(input, group)
     begin_date = group.next_billing_cycle_begin_date
     date_range = begin_date...input.delete(:end_date)
-    Right(input.merge(date_range: date_range))
+    Success(input.merge(date_range: date_range))
   end
 
   # I'm not convinced passing a big input hash from one operation to other is a good idea:
@@ -38,13 +39,13 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   # So I'm wrapping the operation to decouple the arguments.
   def create_readings(input, group)
     super(group: group, date_time: input[:date_range].last.at_beginning_of_day)
-    Right(input)
+    Success(input)
   end
 
   def create_billing_cycle(input, group, billing_cycles)
     attrs = input.slice(:date_range, :name).merge(localpool: group)
     resource = Admin::BillingCycleResource.new(billing_cycles.objects.create!(attrs), billing_cycles.context)
-    Right(input.merge(billing_cycle: resource))
+    Success(input.merge(billing_cycle: resource))
   end
 
 end

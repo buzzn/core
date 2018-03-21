@@ -7,7 +7,7 @@ class Transactions::Display::DailyCharts < Transactions::Base
 
   def authorize(group)
     # TODO check privacy settings here
-    Right(group)
+    Success(group)
   end
 
 end
