@@ -55,7 +55,7 @@ class Services::PdfHtmlGenerator
   end
 
   def generate_pdf(name, html)
-    WickedPdf.new.pdf_from_string(render_html(name, html))
+    WickedPdf.new.pdf_from_string(render_html(name, html), javascript_delay: 1000, show_as_html: true)
   end
 
   def render_html(name, html)
