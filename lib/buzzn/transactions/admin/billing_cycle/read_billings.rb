@@ -1,4 +1,5 @@
 require_relative '../billing_cycle'
+require 'awesome_print'
 
 #
 # Returns a hash of (consumption) market locations with the billings for each:
@@ -35,7 +36,8 @@ class Transactions::Admin::BillingCycle::ReadBillings < Transactions::Base
   end
 
   def build_result(input)
-    all_billings = input[:billing_cycle].object.billings.includes(:items, :contract).to_a
+    billing_cycle = input[:billing_cycle].object
+    all_billings = Billing.for_group(billing_cycle.localpool).in_date_range(billing_cycle.date_range)
     result_array = input[:market_locations].map do |market_location|
       billings = all_billings.select { |billing| billing.contract.market_location == market_location }
       build_market_location_row(market_location, billings)
