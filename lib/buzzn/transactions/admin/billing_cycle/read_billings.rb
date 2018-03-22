@@ -1,5 +1,4 @@
 require_relative '../billing_cycle'
-require 'awesome_print'
 
 #
 # Returns a hash of (consumption) market locations with the billings for each:
