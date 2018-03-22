@@ -19,7 +19,7 @@ describe Transactions::Admin::BillingCycle::ReadBillings do
 
       context 'with market_location' do
         let!(:market_location) { create(:market_location, :consumption, group: localpool) }
-        let(:last_location)   { subject.value[:array].last }
+        let(:last_location) { subject.value[:array].last }
 
         context 'without billing' do
           it { is_expected.to be_success }
@@ -43,10 +43,10 @@ describe Transactions::Admin::BillingCycle::ReadBillings do
               it 'JSON has all errors and messages' do
                 errors = last_location[:bars][:array].first['errors']
                 expect(errors).to eq(
-                                    'begin_reading' => ['begin_reading must be filled'],
-                                    'end_reading' => ['end_reading must be filled'],
-                                    'tariff' => ['tariff must be filled']
-                                  )
+                  'begin_reading' => ['begin_reading must be filled'],
+                  'end_reading' => ['end_reading must be filled'],
+                  'tariff' => ['tariff must be filled']
+                )
               end
             end
 
