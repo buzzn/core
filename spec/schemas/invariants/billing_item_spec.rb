@@ -9,7 +9,7 @@ describe 'Schemas::Invariants::BillingItem' do
   entity(:reading) { create(:reading, register: register) }
 
   entity!(:item) do
-    create(:billing_item, billing: billing, begin_date: billing.begin_date + 1.day, end_date: billing.end_date - 1.day)
+    create(:billing_item, billing: billing, date_range: (billing.begin_date + 1.day)...(billing.end_date - 1.day))
   end
 
   context 'contract' do

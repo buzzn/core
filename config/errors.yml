@@ -33,7 +33,6 @@ en:
     lineup?: 'must line up'
     covers_beginning?: 'must cover begin date'
     covers_ending?: 'must cover end date'
-    covers_ending?: 'must cover end date'
     inside_period?: 'must inside period'
     in_contract_tariffs?: 'must be in contract tariffs'
     belongs_to_contract?: 'must belong to contract'

@@ -11,6 +11,12 @@ module Schemas
             meter.group && meter.group == group
           end
 
+          # WARNING: as of now, our readings don't always grow over time. Reason:
+          # beekeeper had no notion of metering locations, and thus couldn't model it's register changes.
+          # Thus all imported readings are stored on the current (and only) register of a metering location, even when
+          # the register was swapped at some point. And the readings of a new register typically start much lower.
+
+          # NOTE: if this really create problems with legacy data we can disable this.
           def grow_in_time?(readings)
             readings.sort_by(&:date) == readings.sort_by(&:value)
           end
