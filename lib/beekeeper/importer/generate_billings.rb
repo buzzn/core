@@ -37,8 +37,6 @@ class Beekeeper::Importer::GenerateBillings
     ((localpool.start_date.year + 1)..LAST_BEEKEEPER_BILLING_CYCLE_YEAR).each do |year|
       date_ranges << (Date.new(year, 1, 1)...Date.new(year + 1, 1, 1))
     end
-    # final range to already bill *ended* contracts
-    # date_ranges << (Date.new(LAST_BEEKEEPER_BILLING_CYCLE_YEAR + 1, 1, 1)...Date.today)
     date_ranges.map { |date_range| create_billing_cycle(localpool, date_range) }
   end
 
