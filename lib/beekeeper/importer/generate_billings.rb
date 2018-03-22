@@ -23,6 +23,7 @@ class Beekeeper::Importer::GenerateBillings
       created_billings = create_billings(localpool, billing_cycle, only_bill_ended_contracts: only_bill_ended_contracts)
       billing_cycle.destroy! if created_billings.size.zero? # quick and dirty
     end
+    create_billings_for_current_year(localpool)
   end
 
   private
@@ -37,7 +38,7 @@ class Beekeeper::Importer::GenerateBillings
       date_ranges << (Date.new(year, 1, 1)...Date.new(year + 1, 1, 1))
     end
     # final range to already bill *ended* contracts
-    date_ranges << (Date.new(LAST_BEEKEEPER_BILLING_CYCLE_YEAR + 1, 1, 1)...Date.today)
+    # date_ranges << (Date.new(LAST_BEEKEEPER_BILLING_CYCLE_YEAR + 1, 1, 1)...Date.today)
     date_ranges.map { |date_range| create_billing_cycle(localpool, date_range) }
   end
 
@@ -56,7 +57,8 @@ class Beekeeper::Importer::GenerateBillings
     billings = []
     localpool.market_locations.consumption.each do |market_location|
       contracts_to_bill(market_location, billing_cycle.date_range, only_bill_ended_contracts).each do |contract|
-        billings << create_billing(localpool, contract, billing_cycle)
+        date_range = billing_date_range(contract, billing_cycle)
+        billings << create_billing(localpool, contract, date_range, billing_cycle)
       end
     end
     billings.flatten
@@ -68,8 +70,7 @@ class Beekeeper::Importer::GenerateBillings
     contracts
   end
 
-  def create_billing(localpool, contract, billing_cycle)
-    date_range = billing_date_range(contract, billing_cycle)
+  def create_billing(localpool, contract, date_range, billing_cycle = nil)
     Billing.create!(
       status: :closed, # closed means paid so we don't have to track payments/settling in our system any more.
       invoice_number: next_invoice_number,
@@ -99,4 +100,12 @@ class Beekeeper::Importer::GenerateBillings
   end
   # rubocop:enable Style/ClassVars
 
+  def create_billings_for_current_year(localpool)
+    contracts_ended_this_year = localpool.contracts.where('end_date BETWEEN ? AND ?', Date.today.at_beginning_of_year, Date.today)
+    contracts_ended_this_year.each do |contract|
+      logger.debug("Creating billing for contract that ended this year:")
+      date_range = Date.today.at_beginning_of_year...contract.end_date
+      create_billing(localpool, contract, date_range)
+    end
+  end
 end
