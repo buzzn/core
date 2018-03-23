@@ -44,7 +44,6 @@ describe Transactions::Admin::BillingCycle::Bars do
               expect(errors).to eq(
                 'billing' => ['billing must be filled'],
                 'contract' => ['contract must be filled'],
-                'register' => ['register must be filled'],
                 'tariff' => ['tariff must be filled']
               )
             end

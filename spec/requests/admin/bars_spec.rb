@@ -36,8 +36,7 @@ describe Admin::BillingCycleResource do
                 'errors' => {
                   'billing' => ['billing must be filled'],
                   'tariff' => ['tariff must be filled'],
-                  'contract' => ['contract must be filled'],
-                  'register' => ['register must be filled']
+                  'contract' => ['contract must be filled']
                 }
               }
             ]
