@@ -12,7 +12,8 @@ module Builders::Billing
           date_range:      date_range,
           tariff:          tariff(contract),
           begin_reading:   reading_close_to(contract, date_range.first),
-          end_reading:     reading_close_to(contract, date_range.last)
+          end_reading:     reading_close_to(contract, date_range.last),
+          register:        contract.market_location.register
         }
         BillingItem.new(attrs)
       end
