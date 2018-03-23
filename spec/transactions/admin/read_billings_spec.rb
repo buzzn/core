@@ -27,7 +27,7 @@ describe Transactions::Admin::BillingCycle::ReadBillings do
 
           context 'with billing' do
 
-            let!(:contract)     { create(:contract, :localpool_powertaker, market_location: market_location) }
+            let!(:contract)     { create(:contract, :localpool_powertaker, market_location: market_location, localpool: localpool) }
             let!(:billing)      { create(:billing, contract: contract, billing_cycle: billing_cycle) }
             let!(:billing_item) { create(:billing_item, billing: billing, contract_type: :power_taker) }
 
@@ -43,9 +43,8 @@ describe Transactions::Admin::BillingCycle::ReadBillings do
               it 'JSON has all errors and messages' do
                 errors = last_location[:bars][:array].first['errors']
                 expect(errors).to eq(
-                  'begin_reading' => ['begin_reading must be filled'],
-                  'end_reading' => ['end_reading must be filled'],
-                  'tariff' => ['tariff must be filled']
+                  'register' => ['register must belong to contract'],
+                  'tariff'   => ['tariff must be filled']
                 )
               end
             end
@@ -55,9 +54,7 @@ describe Transactions::Admin::BillingCycle::ReadBillings do
               let!(:billing)      { create(:billing, contract: contract, date_range: billing_cycle.date_range) }
               let!(:billing_item) { create(:billing_item, billing: billing, contract_type: :power_taker, date_range: billing_cycle.date_range) }
 
-              # The implementation is working but the test doesn't pass yet
-              it 'is returned', :skip do
-                ap localpool.market_locations.first.contracts
+              it 'is returned' do
                 expect(last_location[:bars][:array].size).to eq(1)
                 expect(last_location[:bars][:array].first.keys).to eq(expected_keys)
               end

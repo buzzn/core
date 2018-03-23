@@ -1020,7 +1020,8 @@ CREATE TABLE billing_items (
     billing_id integer NOT NULL,
     begin_reading_id integer,
     end_reading_id integer,
-    tariff_id integer
+    tariff_id integer,
+    register_id integer NOT NULL
 );
 
 
@@ -2507,6 +2508,13 @@ CREATE INDEX index_billing_items_on_end_reading_id ON billing_items USING btree 
 
 
 --
+-- Name: index_billing_items_on_register_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_billing_items_on_register_id ON billing_items USING btree (register_id);
+
+
+--
 -- Name: index_billing_items_on_tariff_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3014,6 +3022,14 @@ ALTER TABLE ONLY billing_cycles
 
 ALTER TABLE ONLY billing_items
     ADD CONSTRAINT fk_billing_items_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
+
+
+--
+-- Name: billing_items fk_billing_items_register; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY billing_items
+    ADD CONSTRAINT fk_billing_items_register FOREIGN KEY (register_id) REFERENCES registers(id);
 
 
 --

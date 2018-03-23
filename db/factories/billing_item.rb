@@ -13,6 +13,9 @@ FactoryGirl.define do
           billing_item.end_date   = Date.new(2017, 12, 31)
         end
       end
+      if evaluator.billing&.contract
+        evaluator.register = evaluator.billing.contract.market_location.register
+      end
     end
 
     trait :with_readings do

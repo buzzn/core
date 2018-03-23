@@ -39,7 +39,10 @@ describe Admin::BillingCycleResource do
                 'consumed_energy_kwh' => billing.items.first.consumed_energy_kwh,
                 'price_cents' => nil,
                 'errors' => {
+                  'billing' => ['billing must be filled'],
                   'tariff' => ['tariff must be filled'],
+                  'contract' => ['contract must be filled'],
+                  'register' => ['register must be filled']
                 }
               }
             ]

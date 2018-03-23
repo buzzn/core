@@ -16,4 +16,9 @@ class Billing < ActiveRecord::Base
   has_many :items, class_name: 'BillingItem', dependent: :destroy
 
   scope :for_group, ->(group) { includes(:contract).where(contracts: { localpool_id: group.id }) }
+
+  def localpool
+    contract.localpool
+  end
+
 end
