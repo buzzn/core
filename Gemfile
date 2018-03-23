@@ -1,6 +1,9 @@
 source 'https://rubygems.org'
 ruby '2.3.1'
 
+# transient dependency of rails with security issue, pick secure one
+gem 'loofah', '~> 2.2.1'
+
 # infrastructure
 gem 'dry-auto_inject'
 gem 'dry-validation'
