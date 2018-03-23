@@ -12,6 +12,13 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   end
 
   def run(localpool)
+    fix_gaps_between_contracts(localpool)
+    fix_initial_gap(localpool)
+  end
+
+  private
+
+  def fix_gaps_between_contracts(localpool)
     localpool.registers.each do |register|
       logger.debug("* Meter: #{register.meter.legacy_buzznid}")
       contract_pairs(register).each do |contract, next_contract, gap_in_days|
@@ -32,7 +39,18 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     end
   end
 
-  private
+  # On some localpools (Heigelstraße, for example) the first contract of a market location doesn't start with
+  # the start of the localpool. So we create a gap contract for that.
+  def fix_initial_gap(localpool)
+    localpool.registers.each do |register|
+      first_contract = register.market_location.contracts.order(begin_date: :asc).first
+      next unless first_contract
+      next if (first_contract.begin_date - localpool.start_date).to_i == 0
+      logger.info("Creating initial gap contract for market location #{register.market_location.name}")
+      fake_initial_contract = OpenStruct.new(end_date: localpool.start_date)
+      create_gap_contract(fake_initial_contract, first_contract)
+    end
+  end
 
   def adjust_end_date_and_readings(contract, register)
     ActiveRecord::Base.transaction do
@@ -78,21 +96,22 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   end
 
   def create_gap_contract(previous_contract, next_contract)
+    localpool = next_contract.localpool
     attributes = {
       # take these from previous contract
-      localpool:                     previous_contract.localpool,
-      market_location:               previous_contract.market_location,
       signing_date:                  previous_contract.end_date,
       begin_date:                    previous_contract.end_date,
-      contractor:                    previous_contract.localpool.owner,
-      contract_number:               previous_contract.contract_number,
       # take these from next contract
+      localpool:                     localpool,
+      market_location:               next_contract.market_location,
+      contractor:                    localpool.owner,
+      contract_number:               next_contract.contract_number,
       termination_date:              next_contract.begin_date,
       end_date:                      next_contract.begin_date,
       # these attributes come from different places ...
-      contract_number_addition:      next_contract_number_addition(previous_contract.localpool),
-      customer:                      find_gap_contract_customer(previous_contract.localpool),
-      tariffs:                       previous_contract.localpool.tariffs.at(previous_contract.end_date)
+      contract_number_addition:      next_contract_number_addition(localpool),
+      customer:                      find_gap_contract_customer(localpool),
+      tariffs:                       localpool.tariffs.at(previous_contract.end_date)
     }
     Contract::LocalpoolGap.create!(attributes)
   end
