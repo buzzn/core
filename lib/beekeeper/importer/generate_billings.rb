@@ -19,8 +19,7 @@ class Beekeeper::Importer::GenerateBillings
     billing_cycles = create_billing_cycles(localpool)
     # then run them
     billing_cycles.each do |billing_cycle|
-      only_bill_ended_contracts = (billing_cycle == billing_cycles.last) # only bill ended contracts on the last cycle
-      created_billings = create_billings(localpool, billing_cycle, only_bill_ended_contracts: only_bill_ended_contracts)
+      created_billings = create_billings(localpool, billing_cycle)
       billing_cycle.destroy! if created_billings.size.zero? # quick and dirty
     end
     create_billings_for_current_year(localpool)
@@ -51,10 +50,10 @@ class Beekeeper::Importer::GenerateBillings
       [date_range.first.month, date_range.first.day, date_range.last.month, date_range.last.day].all? { |nr| nr == 1 }
   end
 
-  def create_billings(localpool, billing_cycle, only_bill_ended_contracts: false)
+  def create_billings(localpool, billing_cycle)
     billings = []
     localpool.market_locations.consumption.each do |market_location|
-      contracts_to_bill(market_location, billing_cycle.date_range, only_bill_ended_contracts).each do |contract|
+      contracts_to_bill(market_location, billing_cycle.date_range).each do |contract|
         date_range = billing_date_range(contract, billing_cycle)
         billings << create_billing(localpool, contract, date_range, billing_cycle)
       end
@@ -62,10 +61,10 @@ class Beekeeper::Importer::GenerateBillings
     billings.flatten
   end
 
-  def contracts_to_bill(market_location, date_range, only_bill_ended_contracts)
-    contracts = market_location.contracts_in_date_range(date_range).without_third_party
-    contracts = contracts.to_a.select(&:ended?) if only_bill_ended_contracts
-    contracts
+  def contracts_to_bill(market_location, date_range)
+    #market_location.contracts_in_date_range(date_range).without_third_party
+    # FIXME: create fake billings for third party contracts; right now that's the only way to show them on the the billing cycle page
+    market_location.contracts_in_date_range(date_range)
   end
 
   def create_billing(localpool, contract, date_range, billing_cycle = nil)
