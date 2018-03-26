@@ -349,12 +349,6 @@ html
         div.bc-bar
         div.bc-bar
         div.bc-bar
-        div.bc-tick.is-small
-        div.bc-tick.is-small
-        div.bc-tick.is-small
-        div.bc-tick.is-small
-        div.bc-tick.is-small
-        div.bc-tick.is-small
 
 
       footer.is-small
@@ -370,7 +364,7 @@ html
       #chart-one .bc-tick::before{position: absolute; top: -15px; left: 40%; content:'|';}
 
       #chart-two.bc-chart{width: 49%; height: 24rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
-      #chart-two .bc-bar{max-width: 16rem; background: blue; padding: 1rem; margin: 0 0 0 .5rem; position: relative;}
+      #chart-two .bc-bar{background: blue; padding: 1rem; margin: 0 0 0 .5rem; position: relative;}
       #chart-two .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
       #chart-two .bc-tick{position: absolute; bottom: 0; left: 10px}
       #chart-two .bc-tick::before{position: absolute; top: -15px; left: 40%; content:'|';}
@@ -398,7 +392,7 @@ html
 
       $(function(){
         $('#chart-two .bc-bar').each(function(i){
-          $(this).html(labels[i]+': <span>'+data[i]+' kWh</span>').css({'background-color': colors[i], 'height': barHeight[i]+'px'});
+          $(this).html(labels[i]+': <span>'+((data[i]/sum)*100).toFixed(1)+' %</span>').css({'background-color': colors[i], 'height': barHeight[i]+'px'});
         });
         // $('#chart-two .bc-tick').each(function(i){
         //   $(this).html(ticks[i]).css({'top': $('.bc-chart').height()+15+'px', 'left': 20*i+'%', 'transform': 'translateX(-'+$(this).width()/2+'px)'});
