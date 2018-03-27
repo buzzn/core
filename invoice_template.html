@@ -1,4 +1,34 @@
-<!DOCTYPE html><html><head><title>__title_text__</title><meta charset="utf-8" /><link href="https://fonts.googleapis.com/css?family=Asap:400,400i,700,700i" rel="stylesheet" /><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script><style type="text/css">* {box-sizing: border-box;}
+<!DOCTYPE html><html><head><title>#{title_text}</title><meta charset="utf-8" /><link href="https://fonts.googleapis.com/css?family=Asap:400,400i,700,700i" rel="stylesheet" /><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script><style type="text/css">* {box-sizing: border-box;}
+
+/*
+@font-face {
+  font-family: 'Asap';
+  font-weight: 400;
+  font-style: normal;
+  src: font-url('/Users/pla/SourceTree/buzzn/buzzn/public/assets/fonts/Asap/Asap-Regular.ttf' format('truetype'));
+};
+
+@font-face {
+  font-family: 'Asap';
+  font-weight: 700;
+  font-style: normal;
+  src: font-url('/Users/pla/SourceTree/buzzn/buzzn/public/assets/fonts/Asap/Asap-Bold.ttf' format('truetype'));
+};
+
+@font-face {
+  font-family: 'Asap';
+  font-weight: 400;
+  font-style: italic;
+  src: font-url('/Users/pla/SourceTree/buzzn/buzzn/public/assets/fonts/Asap/Asap-Italic.ttf' format('truetype'));
+};
+
+@font-face {
+  font-family: 'Asap';
+  font-weight: 700;
+  font-style: italic;
+  src: font-url('/Users/pla/SourceTree/buzzn/buzzn/public/assets/fonts/Asap/Asap-BoldItalic.ttf' format('truetype'));
+};
+*/
 
 html {font-size: 16pt;line-height: 1.1;}
 body {font-size: 0.6875rem; font-family: 'Asap', sans-serif; font-weight: 400}
@@ -13,7 +43,8 @@ div.alwaysbreak {page-break-before: always;}
 
 .wrapper {width: 100%; height: 1000px; position: relative;}
 .row {margin: 0 -.375rem;}
-.is-col-3rd {width: 30%; margin: .375rem .375rem; float: left;}
+.col-3rd {width: 30%; margin: .375rem .375rem; float: left;}
+.col-half {width: 40%; margin: .375rem .375rem; float: left;}
 
 .is-larger {font-size: 1.125rem;}
 .is-large {font-size: .75rem;}
@@ -50,7 +81,7 @@ div.alwaysbreak {page-break-before: always;}
 .salmon {background: #E66C6C;}
 .glass {background: transparent;}
 
-.bar-chart{width: __value__}</style></head><body><div class="wrapper"><div class="logo is-pull-left"></div><div class="is-small is-col-3rd is-pull-right no-margin"><p>__lsg_V_Partner__ <br>
+.bar-chart{width: __value__}</style></head><body><div class="wrapper"><div class="logo is-pull-left"></div><div class="is-small col-3rd is-pull-right no-margin"><p>__lsg_V_Partner__ <br>
 - Energiegruppe __lp_Name__ -<br>
 __lsg_Kontakt__<br>
 __lsg_Straße__ __lsg_HausNr__<br>
@@ -66,29 +97,57 @@ __lsn_Straße__ __lsn_HausNr__<br>
 __lsn_PLZ__ __lsn_Ort__</p><p><i>__lsn_per_EMail__</i></p><p class="is-pull-right">__lsg_Ort__, den __r_Datum__</p><h2 class="clear">Turnusabrechnung - Lokale Energiegruppe __lp_Name__<br>
 Rechnungsnummer: __r_Nummer__</h2><table class="no-border"><tr><td class="no-border no-padding">Vertragsnummer:</td><td class="no-border no-padding">__lsn_Vertragsnummer__</td></tr><tr><td class="no-border no-padding">Bezugsstelle:</td><td class="no-border no-padding">__lsn_Straße_b__ __lsn_HausNr_b__, __lsn_Adresszusatz_b__</td></tr><tr><td class="no-border no-padding">Zählernummer:</td><td class="no-border no-padding">__mpsn_ZählerNr_alt__</td></tr><tr><td class="no-border no-padding">Prognose Jahresbezug:</td><td class="no-border no-padding">__verbrauch_Jahr__ kWh (__abrechnungsjahr__)</td></tr><tr><td class="no-border no-padding">Abrechnungsjahr</td><td class="no-border no-padding">__abrechnungsjahr__</td></tr></table><p>Sehr __lsn_Andrede_r__ __lsn_Anrede_Name__,</p><p>vielen Dank, dass Sie als Lokaler Stromnehmer aus der Energiegruppe __lp_Name__ Strom beziehen. Nachfolgend erhalten Sie Ihre Turnusabrechnung.</p><h2>Bezugsmenge</h2><table class="is-full-width is-small"><tr><th></th><th>Ablesedatum</th><th></th><th class="is-text-right">kWh</th></tr><tr><td class="no-border">Beginn Abrechnungszeitraum</td><td class="no-border">__datum_1__</td><td class="no-border">Zählerstand</td><td class="no-border is-text-right">__zSt_1__</td></tr><tr><td>Ende Abrechnungszeitraum</td><td>__datum_4__</td><td>Zählerstand</td><td class="is-text-right">__zSt_4__</td></tr><tr><td colspan="3"><b>Bezug Abrechnungszeitraum</b></td><td class="is-text-right"><b>__zSt_Diff__</b></td></tr></table><h2>Abrechnung</h2><table class="is-full-width is-small"><tr><th>Position</th><th>Zeitraum</th><th>Menge</th><th>Preis je Einheit</th><th class="is-text-right">Betrag</th></tr><tr><td class="no-border">Arbeitspreis</td><td class="no-border">__datum_1__ - __datum_4__</td><td class="no-border">__zSt_Diff__ kWh</td><td class="no-border">__bezugspreis_netto__ Ct/kWh</td><td class="no-border is-text-right">__bezugspreis_Produkt__ €</td></tr><tr><td>Grundpreis</td><td>__datum_1__ - __datum_4__</td><td>__zeitraum__ Monate</td><td>__grundpreis_netto__ €/Monat</td><td class="is-text-right">__grundpreis_Produkt__ €</td></tr><tr><td class="no-border">Zwischensumme (netto)</td><td class="no-border" colspan="3"></td><td class="no-border is-text-right">__zwSumme__ €</td></tr><tr><td>Umsatzsteuer (__steuersatz__%)</td><td colspan="3"></td><td class="is-text-right">__uSt__ €</td></tr><tr><td class="no-border"><b>Rechnungsbetrag (brutto)</b></td><td class="no-border" colspan="3"></td><td class="no-border is-text-right"><b>__betrag_brutto__ €</b></td></tr><tr><td>Abzüglich Abschläge (brutto)</td><td colspan="3"></td><td class="is-text-right">__abschlag_produkt__ €</td></tr><tr><td><b>__forderung__</b></td><td colspan="3"></td><td class="is-text-right"><b>__rest_Summe__ €</b></td></tr></table><p>Aus der Turnusabrechnung ergibt sich eine <b>__rueck_nach__zahlung</b> von <b>__rest_Summe__ €.</b></p><p>__satz_forderung__</p><footer class="is-small"><div class="footer-logo">powered by <img src='/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png' /></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></footer></div><div class="alwaysbreak"></div><div class="wrapper"><h2>Ihre Vertragskonditionen</h2><p>Die aktuellen Preise in der Energiegruppe __lp_Name__ betragen:<br>
 <b>Grundpreis,</b> (Grundpreis netto): <b>__grundpreis_brutto_neu__ €/Monat,</b> (__grundpreis_netto_neu__ €/Monat)<br>
-<b>Bezugspreis,</b> (Bezugspreis netto): <b>__bezugspreis_brutto_neu__ Cent/kWh,</b> (__bezugspreis_netto_neu__ Cent/kWh)</p><p><b>__abschlag_neu_Satz__</b></p><p>Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.</p><p>Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.</p><p>Mit freundlichen Grüßen,</p><p>__lsg_Kontakt__</p><h2>Verbrauchsvergleich</h2><p>Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist. Dieser Vergleich, den Sie der Grafik entnehmen können, hinkt natürlich, da er die äußeren Gegebenheiten eines Haushaltes, zum Beispiel elektrische Warmwasserbereitung, nicht berücksichtigt.</p><p class="is-small">Quelle: Statistisches Bundesamt<br>
+<b>Bezugspreis,</b> (Bezugspreis netto): <b>__bezugspreis_brutto_neu__ Cent/kWh,</b> (__bezugspreis_netto_neu__ Cent/kWh)</p><p><b>__abschlag_neu_Satz__</b></p><p>Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.</p><p>Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.</p><p>Mit freundlichen Grüßen,</p><p>__lsg_Kontakt__</p><h2>Verbrauchsvergleich</h2><p>Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist. Dieser Vergleich, den Sie der Grafik entnehmen können, hinkt natürlich, da er die äußeren Gegebenheiten eines Haushaltes, zum Beispiel elektrische Warmwasserbereitung, nicht berücksichtigt.</p><div class="bc-chart horizontal" id="chart-one"></div><p class="is-small">Quelle: Statistisches Bundesamt<br>
 <sup>1.</sup> Sofern kein volles Jahr Strom bezogen wurde, wird die Strommenge auf ein ganzes Jahr hochgerechnet<br>
-<sup>2.</sup> Sofern im Vorjahr noch kein Strom bezogen wurde, ist dies ein Prognosewert</p><footer class="is-small"><div class="footer-logo">powered by <img src='/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png' /></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></footer></div><div class="alwaysbreak"></div><div class="wrapper"><h2>Energiereport</h2><p>Die echte Energiewende ist demokratisch, dezentral und direkt von Mensch zu Mensch.</p><p>Nachfolgend einige Fakten und Kennzahlen zu Ihrer Energiegruppe Heigelstraße 27 für das Jahr 2017:</p><div class="row"><div class="is-col-3rd card sand"><p>Autarkiegrad <span class='is-medium'>(wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span></p><p class="is-larger">24 %</p></div><div class="is-col-3rd card mint"><p>Lokalität <span class='is-medium'>(wie groß ist die Entfernung zwischen Stromerzeugungsanlage[n] und  Verbrauchsstellen?)</span></p><p class="is-larger">O km</p></div><div class="is-col-3rd card custard"><p>Nutzungsgrad <span class='is-medium'>wieviel des lokal produzierten Stroms wurde vor Ort verbraucht?)</span></p><p class="is-larger">59 %</p></div></div><div class="row"><div class="is-col-3rd card sky"><p>Primärenergie <span class='is-medium'>(aus welchen Quellen wurde der Eigenstrom Strom erzeugt?)</span></p><p class="is-larger">Sonne 22 %</p></div><div class="is-col-3rd card pork"><p>Netzverluste <span class='is-medium'>(wie hoch waren die Übertragungsverluste für den Strom?)</span></p><p class="is-larger">< 1 %</p></div><div class="is-col-3rd card peach"><p>Technologie <span class='is-medium'>(mit welchen Verfahren wurde der Eigenstrom erzeugt?)</span></p><p class="is-medium">Kraft-Wärme-Kopplung mit Blockheizkraftwerk (7,5 kW)<br>Photovoltaik (25,95 kWp)</p></div></div><div class="row"><div class="is-col-3rd card cornflower"><p>Reststrom <span class='is-medium'>(von welchem Lieferant stammt der Reststrom über das öffentliche Netz?)</span></p><p class="is-medium">BUZZN GmbH</p></div><div class="is-col-3rd card glass"></div><div class="is-col-3rd card salmon"><p>Eigentumsverhältnisse <span class='is-medium'>(wem gehört die Stromerzeugungsanlage?)</span></p><p class="is-medium">__lsg_V_Partner__</p></div></div><footer class="is-small"><div class="footer-logo">powered by <img src='/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png' /></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></footer></div><div class="alwaysbreak"></div><div class="wrapper"><div class="bc-chart"><div class="bc-bar"></div><div class="bc-bar"></div><div class="bc-bar"></div><div class="bc-bar"></div><div class="bc-bar"></div><div class="bc-tick is-small"></div><div class="bc-tick is-small"></div><div class="bc-tick is-small"></div><div class="bc-tick is-small"></div><div class="bc-tick is-small"></div><div class="bc-tick is-small"></div></div><footer class="is-small"><div class="footer-logo">powered by <img src='/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png' /></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></footer></div><style type="text/css">.bc-chart{width: 99%; min-height: 4rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
-.bc-bar{max-height: 4rem; background: yellow; padding: 1rem; margin: 0 0 .5rem 0; position: relative;}
-.bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
-.bc-tick{position: absolute; bottom: 0; left: 10px}
-.bc-tick::before{position: absolute; top: -16px; left: 40%; content:'|';}</style><script>var data = [0,0,0,0,0].map(function(){return Math.round(Math.random()*100)+50});
-var colors = ['#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee'];
-var labels = ['__label_1__','__label_2__','__label_3__','__label_4__','__label_5__','__label_6__'];
-var maxvalue = data.reduce(function(a,b){return Math.max(a,b)});
-var barLength = data.map(function(e){return(e/maxvalue)*100});
-var ticks = [0,1,2,3,4,5].map(function(e){
-  return Math.round((maxvalue/5)*e);
+<sup>2.</sup> Sofern im Vorjahr noch kein Strom bezogen wurde, ist dies ein Prognosewert</p><footer class="is-small"><div class="footer-logo">powered by <img src='/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png' /></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></footer></div><div class="alwaysbreak"></div><div class="wrapper"><h2>Energiereport</h2><p>Die echte Energiewende ist demokratisch, dezentral und direkt von Mensch zu Mensch.</p><p>Nachfolgend einige Fakten und Kennzahlen zu Ihrer Energiegruppe Heigelstraße 27 für das Jahr 2017:</p><div class="row"><div class="col-3rd card sand"><p>Autarkiegrad <span class='is-medium'>(wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span></p><p class="is-larger">24 %</p></div><div class="col-3rd card mint"><p>Lokalität <span class='is-medium'>(wie groß ist die Entfernung zwischen Stromerzeugungsanlage[n] und  Verbrauchsstellen?)</span></p><p class="is-larger">O km</p></div><div class="col-3rd card custard"><p>Nutzungsgrad <span class='is-medium'>wieviel des lokal produzierten Stroms wurde vor Ort verbraucht?)</span></p><p class="is-larger">59 %</p></div></div><div class="row"><div class="col-3rd card sky"><p>Primärenergie <span class='is-medium'>(aus welchen Quellen wurde der Eigenstrom Strom erzeugt?)</span></p><p class="is-larger">Sonne 22 %</p></div><div class="col-3rd card pork"><p>Netzverluste <span class='is-medium'>(wie hoch waren die Übertragungsverluste für den Strom?)</span></p><p class="is-larger">< 1 %</p></div><div class="col-3rd card peach"><p>Technologie <span class='is-medium'>(mit welchen Verfahren wurde der Eigenstrom erzeugt?)</span></p><p class="is-medium">Kraft-Wärme-Kopplung mit Blockheizkraftwerk (7,5 kW)<br>Photovoltaik (25,95 kWp)</p></div></div><div class="row"><div class="col-3rd card cornflower"><p>Reststrom <span class='is-medium'>(von welchem Lieferant stammt der Reststrom über das öffentliche Netz?)</span></p><p class="is-medium">BUZZN GmbH</p></div><div class="col-3rd card glass"></div><div class="col-3rd card salmon"><p>Eigentumsverhältnisse <span class='is-medium'>(wem gehört die Stromerzeugungsanlage?)</span></p><p class="is-medium">__lsg_V_Partner__</p></div></div><footer class="is-small"><div class="footer-logo">powered by <img src='/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png' /></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></footer></div><div class="alwaysbreak"></div><div class="wrapper"><h2>Kritische Anmerkungen zur Stromkennzeichnung</h2><p>Das deutsche Energiewirtschaftsgesetz verpflichtet jeden Stromlieferanten, den Letztverbrauchern die Herkunft seines Stroms über eine Kennzeichnung nachzuweisen. Dies soll mehr Transparenz und bewusstere Kaufentscheidungen in Richtung „Ökostrom“ bewirken.</p><p>Die gesetzliche Stromkennzeichnung steht jedoch in der Kritik, manche nennen sie sogar eine Farce. Sie gibt zwar teilweise Auskunft darüber, aus welcher Primärenergie der Strom produziert wurde. Andere wichtige Informationen sind jedoch nicht enthalten, zum Beispiel:</p><ul><li>Wem gehören die Kraftwerke, die ich als Letztverbraucher mit meinem „Stromgeld“ finanziere?</li><li>Wie groß sind diese Kraftwerke?</li><li>Wo stehen diese Kraftwerke und wie hoch sind die Übertragungsverluste beim Transport des Stroms bis zu mir?</li></ul><p>Bei der Kennzeichnung von Strom aus lokalen Energiegruppen wie Ihrer, führt die Stromkennzeichnung sogar in die Irre. Ihr Strom wird lokal produziert. In einem kleinen Blockheizkraftwerk, einer Sonnenstrom-, Wasser- oder Windkraftanlage. Ökologisch ist das aber nicht nur aufgrund der Effizienz und des Primärenergieeinsatzes, sondern auch aufgrund der Tatsache, dass Strom dezentral dort erzeugt wird, wo er gebraucht wird. Dies reduziert Netzverluste und hilft, den Neubau von Stromtrassen zu vermeiden. Hinzu kommt, dass lokaler Strom von Menschen aus der Nähe erzeugt wird und nicht von Konzernen. Diese Vorteile finden bei der Stromkennzeichnung keine Berücksichtigung.</p><p>Noch verrückter: Um beispielsweise die in einer Energiegruppe kleinteilig produzierte Sonnen-, Wasser- oder Windkraft als „Erneuerbare Energie“ kennzeichnen zu dürfen, müsste sie in einem aufwendigen und bürokratischen Prozess zertifiziert werden, der für diese Kleinanlagen völlig überzogen ist. Da wir das nicht mitmachen, wird aus Sonnen- und Wasserkraft eben mal Strom aus Atom, Kohle und sonstigen fossilen Energieträgern (siehe Grafik unten).</p><p>Deshalb die Bitte an Sie: Nehmen Sie die nachfolgende Grafik nicht allzu ernst!</p><p>Für weitergehende Informationen finden Sie hier einen ausführlichen Blogbeitrag zum Thema: <a href="http://www.buzzn.net/2017/01/13/hokuspokus-stromkennzeichnung/">http://www.buzzn.net/2017/01/13/hokuspokus-stromkennzeichnung/</a></p><p>Wenn Sie sonst noch eine Frage oder Anmerkung haben, senden Sie uns bitte eine Nachricht an <a href="mailto:team@buzzn.net">team@buzzn.net</a>. Vielen Dank!</p></div><div class="alwaysbreak"></div><div class="wrapper"><h2>Stromkennzeichnung 2016</h2><p>Stromkennzeichnung gemäß § 42 Energiewirtschaftsgesetz vom 7. Juli 2005, geändert 2017)</p><div class="row"><div class="bc-chart vertical col-half" id="chart-two"></div><div class="bc-chart vertical col-half" id="chart-three"></div></div><div class="clear"></div><h2>Umweltauswirkungen je Kilowattstunde</h2><p>Lorem ipsum...</p><p class="is-small"><sup>1.</sup> Enthält nicht zertifizierte Mengen aus erneuerbarer Stromgeberproduktion<br>
+<sup>2.</sup> Zur ökologisch sinnvollen gleichzeitigen Produktion von Strom und Wärme in den Häusern der Stromgeber<br>
+<sup>3.</sup> Enthält Heizöl zur ökologisch sinnvollen gleichzeitigen Produktion von Strom und Wärme in den Häusern der Stromgeber</p><footer class="is-small"><div class="footer-logo">powered by <img src='/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png' /></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></footer></div><style type="text/css">.bc-chart{margin-bottom: 2rem;}
+
+.bc-chart.horizontal {width: 99%; min-height: 4rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
+.bc-chart.horizontal .bc-bar{max-height: 4rem; background: yellow; padding: 1rem; margin: 0 0 .5rem 0; position: relative;}
+.bc-chart.horizontal .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
+.bc-chart.horizontal .bc-tick{position: absolute; bottom: 0; left: 10px}
+.bc-chart.horizontal .bc-tick::before{position: absolute; top: -15px; left: 40%; content:'|';}
+
+.bc-chart.vertical {margin-bottom: 2rem;height: 24rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
+.bc-chart.vertical .bc-bar{background: blue; padding: 1rem; margin: 0 0 0 .5rem; position: relative;}
+.bc-chart.vertical .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
+.bc-chart.vertical .bc-tick{position: absolute; bottom: 0; left: 10px}
+.bc-chart.vertical .bc-tick::before{position: absolute; top: -15px; left: 40%; content:'|';}</style><script>$(function(){
+  var data = function(){return[0,0,0,0,0].map(function(){return Math.round(Math.random()*100)+50})};
+  bcChart('#chart-one', data());
+  bcChart('#chart-two', data(),'Deutschland');
+  bcChart('#chart-three', data(),'Lokale Energiegruppe __lp_Name__');
 });
 
-$(function(){
-  $('.bc-bar').each(function(i){
-    $(this).html(labels[i]+': <span>'+data[i]+' kWh</span>').css({'background-color': colors[i], 'width': barLength[i]+'%'});
-  });
-  $('.bc-tick').each(function(i){
-    $(this).html(ticks[i]).css({'top': $('.bc-chart').height()+15+'px', 'left': 20*i+'%', 'transform': 'translateX(-'+$(this).width()/2+'px)'});
-  });
-});
+function bcChart (id, data, label) {
+  var colors = ['#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee'];
+  var labels = ['__label_1__','__label_2__','__label_3__','__label_4__','__label_5__','__label_6__'];
+  var sum = data.reduce(function(a,b){return a+b});
+  var maxvalue = data.reduce(function(a,b){return Math.max(a,b)});
+  var barLength = data.map(function(e){return(e/maxvalue)*100});
+  var barHeight = data.map(function(e){return e/sum*$('#chart-two').height()});
+  var ticks = [0,1,2,3,4,5].map(function(e){return Math.round((maxvalue/5)*e);});
+  var elem = $(id);
+  var isHoriz = elem.hasClass('horizontal');
+  if(isHoriz){
+    elem.append(data.map(function(e){return'<div class="bc-bar" data-value'+e+'></div>'}));
+    elem.append(data.map(function(e){return'<div class="bc-tick is-small" data-value'+e+'></div>'}));
+    elem.children('.bc-bar').each(function(i){
+      $(this).html(labels[i]+': <span>'+data[i]+' kWh</span>').css({'background-color': colors[i], 'width': barLength[i]+'%'});
+    });
+    elem.children('.bc-tick').each(function(i){
+      $(this).html(ticks[i]).css({'top': $('.bc-chart').height()+15+'px', 'left': 20*i+'%', 'transform': 'translateX(-'+$(this).width()/2+'px)'});
+    });
+    if(label) elem.append('<h4>'+label+'</h4>')
+  } else {
+    elem.append(data.map(function(e){return'<div class="bc-bar" data-value'+e+'></div>'}));
+    elem.children('.bc-bar').each(function(i){
+      $(this).html(labels[i]+': <span>'+((data[i]/sum)*100).toFixed(1)+' %</span>').css({'background-color': colors[i], 'height': barHeight[i]+'px'});
+    });
+    if(label) elem.append('<h4>'+label+'</h4>')
+  }
+}
 
 // var bars = document.querySelectorAll('.bc-bar');
 //
