@@ -13,10 +13,9 @@ describe Admin::BillingCycleResource do
   entity!(:billing_cycle)   { create(:billing_cycle, localpool: localpool, date_range: Date.new(2016, 1, 1)...Date.new(2017, 1, 1)) }
   entity(:contract)         { market_location.contracts.first }
   entity!(:billing) do
-    item = FactoryGirl.build(:billing_item, :with_readings, date_range: billing_cycle.date_range)
+    item = FactoryGirl.build(:billing_item, :with_readings, date_range: billing_cycle.date_range, register: register)
     create(:billing, items: [item], billing_cycle: billing_cycle, contract: contract, date_range: billing_cycle.date_range)
   end
-  entity(:bi)
 
   context 'localpools/<id>/billing-cycles/<id>/bars' do
 
@@ -39,9 +38,9 @@ describe Admin::BillingCycleResource do
                 'consumed_energy_kwh' => billing.items.first.consumed_energy_kwh,
                 'price_cents' => nil,
                 'errors' => {
-                  'billing' => ['billing must be filled'],
                   'tariff' => ['tariff must be filled'],
-                  'contract' => ['contract must be filled']
+                  'begin_reading' => ['begin_reading must match register'],
+                  'end_reading' => ['end_reading must match register']
                 }
               }
             ]

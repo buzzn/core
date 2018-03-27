@@ -19,7 +19,7 @@ class Operations::CreateBillingsForGroup
       end
     end
     billings.flatten!
-    billings.all?(&:persisted?) ? Success(billing_cycle) : Failure('Failed to save all billings')
+    billings.all?(&:persisted?) ? Success(billing_cycle) : Failure("Failed to save all billings: #{billings.collect {|b| b.invariant.errors }.inspect}")
   end
 
   private

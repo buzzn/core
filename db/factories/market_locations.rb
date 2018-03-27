@@ -14,7 +14,9 @@ FactoryGirl.define do
     end
 
     trait :with_contract do
-      contracts { [create(:contract, :localpool_powertaker)] }
+      after(:build) do |market_location|
+        market_location.contracts = [create(:contract, :localpool_powertaker, localpool: market_location.group, market_location: market_location)]
+      end
     end
 
     trait :consumption do

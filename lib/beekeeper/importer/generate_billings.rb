@@ -103,9 +103,10 @@ class Beekeeper::Importer::GenerateBillings
   def create_billings_for_current_year(localpool)
     contracts_ended_this_year = localpool.contracts.where('end_date BETWEEN ? AND ?', Date.today.at_beginning_of_year, Date.today)
     contracts_ended_this_year.each do |contract|
-      logger.debug("Creating billing for contract that ended this year:")
+      logger.debug('Creating billing for contract that ended this year:')
       date_range = Date.today.at_beginning_of_year...contract.end_date
       create_billing(localpool, contract, date_range)
     end
   end
+
 end

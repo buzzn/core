@@ -60,10 +60,9 @@ describe Transactions::Admin::BillingCycle::Create do
 
   describe 'generating bricks' do
     let(:user)      { operator }
-    let!(:contract) { create(:contract, :localpool_powertaker, begin_date: (Date.today - 10.years)) }
+    let!(:contract) { create(:contract, :localpool_powertaker, begin_date: (Date.today - 10.years), localpool: localpool) }
 
     before     { BillingCycle.destroy_all }
-    before     { localpool.market_locations << contract.market_location }
     after      { BillingCycle.destroy_all }
 
     it 'works' do

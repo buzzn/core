@@ -34,6 +34,7 @@ class Transactions::Base
     result = nil
     ActiveRecord::Base.transaction(requires_new: true) do
       result = yield(Success(input))
+      return result if result.is_a?(Dry::Monads::Result::Failure)
       unless result.value.invariant.success?
         raise ActiveRecord::Rollback
       end

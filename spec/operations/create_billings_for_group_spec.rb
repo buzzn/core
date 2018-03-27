@@ -12,7 +12,7 @@ describe Operations::CreateBillingsForGroup do
 
   end
 
-  let(:billing_item) { build(:billing_item, date_range: date_range) }
+  let(:billing_item) { build(:billing_item, date_range: date_range, register: contract.market_location.register, contract: contract) }
   let(:factory) do
     result = [{
       market_location: 'Market location 1',
@@ -28,7 +28,7 @@ describe Operations::CreateBillingsForGroup do
   let(:date_range)    { Date.new(2017, 1, 1)...Date.new(2018, 1, 1) }
   let(:group)         { create(:localpool) }
   let(:billing_cycle) { create(:billing_cycle, date_range: date_range, localpool: group) }
-  let(:contract)      { create(:contract, :localpool_powertaker) }
+  let(:contract)      { create(:contract, :localpool_powertaker, localpool: group) }
   let(:op)            { Operations::CreateBillingsForGroup.new(factory: factory) }
 
   it 'works' do
