@@ -50,7 +50,7 @@ html
       footer {width: 100%; height: 1rem; position: absolute; bottom: 0;}
       div.alwaysbreak {page-break-before: always;}
 
-      .wrapper {width: 100%; height: 1000px; position: relative;}
+      .wrapper {width: 100%; min-height: 1000px; position: relative;padding-bottom: 2rem;}
       .row {margin: 0 -.375rem;}
       .col-3rd {width: 30%; margin: .375rem .375rem; float: left;}
       .col-half {width: 40%; margin: .375rem .375rem; float: left;}
@@ -90,10 +90,21 @@ html
       .salmon {background: #E66C6C;}
       .glass {background: transparent;}
 
-      .bar-chart{width: #{value}}
+      .bc-chart{margin-bottom: 2rem;}
+      .bc-chart.horizontal {width: 99%; min-height: 4rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
+      .bc-chart.horizontal .bc-bar{max-height: 4rem; background: yellow; padding: 1rem; margin: 0 0 .5rem 0; position: relative;}
+      .bc-chart.horizontal .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
+      .bc-chart.horizontal .bc-tick{position: absolute; bottom: 0; left: 10px}
+      .bc-chart.horizontal .bc-tick::before{position: absolute; top: -15px; left: 40%; content:'|';}
+      .bc-chart.vertical {margin-bottom: 2rem;height: 24rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
+      .bc-chart.vertical .bc-bar{background: blue; padding: 1rem; margin: 0 0 0 .5rem; position: relative;}
+      .bc-chart.vertical .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
+      .bc-chart.vertical .bc-tick{position: absolute; bottom: 0; left: 10px}
+      .bc-chart.vertical .bc-tick::before{position:absolute;top:-14px;left:-9px;content:'_';}
+
   body
+
     div.wrapper
-      / div.footer Buzzn 1
 
       div.logo.is-pull-left
 
@@ -150,87 +161,141 @@ html
 
       p Sehr #{lsn_Andrede_r} #{lsn_Anrede_Name},
       p vielen Dank, dass Sie als Lokaler Stromnehmer aus der Energiegruppe #{lp_Name} Strom beziehen. Nachfolgend erhalten Sie Ihre Turnusabrechnung.
-
-      h2 Bezugsmenge
-      table.is-full-width.is-small
-        tr
-          th
-          th Ablesedatum
-          th
-          th.is-text-right kWh
-        tr
-          td.no-border Beginn Abrechnungszeitraum
-          td.no-border #{datum_1}
-          td.no-border Zählerstand
-          td.no-border.is-text-right #{zSt_1}
-        tr
-          td Ende Abrechnungszeitraum
-          td #{datum_4}
-          td Zählerstand
-          td.is-text-right #{zSt_4}
-        tr
-          td colspan=3
-            b Bezug Abrechnungszeitraum
-          td.is-text-right
-            b #{zSt_Diff}
-
-      h2 Abrechnung
-      table.is-full-width.is-small
-        tr
-          th Position
-          th Zeitraum
-          th Menge
-          th Preis je Einheit
-          th.is-text-right Betrag
-        tr
-          td.no-border Arbeitspreis
-          td.no-border #{datum_1} - #{datum_4}
-          td.no-border #{zSt_Diff} kWh
-          td.no-border #{bezugspreis_netto} Ct/kWh
-          td.no-border.is-text-right #{bezugspreis_Produkt} €
-        tr
-          td Grundpreis
-          td #{datum_1} - #{datum_4}
-          td #{zeitraum} Monate
-          td #{grundpreis_netto} €/Monat
-          td.is-text-right #{grundpreis_Produkt} €
-        tr
-          td.no-border Zwischensumme (netto)
-          td.no-border colspan=3
-          td.no-border.is-text-right #{zwSumme} €
-        tr
-          td Umsatzsteuer (#{steuersatz}%)
-          td colspan=3
-          td.is-text-right #{uSt} €
-        tr
-          td.no-border
-            b Rechnungsbetrag (brutto)
-          td.no-border colspan=3
-          td.no-border.is-text-right
-            b #{betrag_brutto} €
-        tr
-          td Abzüglich Abschläge (brutto)
-          td colspan=3
-          td.is-text-right #{abschlag_produkt} €
-        tr
-          td
-            b #{forderung}
-          td colspan=3
-          td.is-text-right
-            b #{rest_Summe} €
-
-      p
-        | Aus der Turnusabrechnung ergibt sich eine <b>#{rueck_nach}zahlung</b> von <b>#{rest_Summe} €.</b>
+      div
+        h2 Bezugsmenge
+        table.is-full-width.is-small
+          tr
+            th
+            th Ablesedatum
+            th
+            th.is-text-right kWh
+          tr
+            td.no-border Beginn Abrechnungszeitraum
+            td.no-border #{datum_1}
+            td.no-border Zählerstand
+            td.no-border.is-text-right #{zSt_1}
+          tr
+            td Ende Abrechnungszeitraum
+            td #{datum_4}
+            td Zählerstand
+            td.is-text-right #{zSt_4}
+          tr
+            td.no-border Beginn Abrechnungszeitraum
+            td.no-border #{datum_1}
+            td.no-border Zählerstand
+            td.no-border.is-text-right #{zSt_1}
+          tr
+            td Ende Abrechnungszeitraum
+            td #{datum_4}
+            td Zählerstand
+            td.is-text-right #{zSt_4}
+          tr
+            td.no-border Beginn Abrechnungszeitraum
+            td.no-border #{datum_1}
+            td.no-border Zählerstand
+            td.no-border.is-text-right #{zSt_1}
+          tr
+            td Ende Abrechnungszeitraum
+            td #{datum_4}
+            td Zählerstand
+            td.is-text-right #{zSt_4}
+          tr
+            td.no-border Beginn Abrechnungszeitraum
+            td.no-border #{datum_1}
+            td.no-border Zählerstand
+            td.no-border.is-text-right #{zSt_1}
+          tr
+            td Ende Abrechnungszeitraum
+            td #{datum_4}
+            td Zählerstand
+            td.is-text-right #{zSt_4}
+          tr
+            td.no-border Beginn Abrechnungszeitraum
+            td.no-border #{datum_1}
+            td.no-border Zählerstand
+            td.no-border.is-text-right #{zSt_1}
+          tr
+            td Ende Abrechnungszeitraum
+            td #{datum_4}
+            td Zählerstand
+            td.is-text-right #{zSt_4}
+          tr
+            td colspan=3
+              b Bezug Abrechnungszeitraum
+            td.is-text-right
+              b #{zSt_Diff}
+      div
+        h2 Abrechnung
+        table.is-full-width.is-small
+          tr
+            th Position
+            th Zeitraum
+            th Menge
+            th Preis je Einheit
+            th.is-text-right Betrag
+          tr
+            td.no-border Arbeitspreis
+            td.no-border #{datum_1} - #{datum_4}
+            td.no-border #{zSt_Diff} kWh
+            td.no-border #{bezugspreis_netto} Ct/kWh
+            td.no-border.is-text-right #{bezugspreis_Produkt} €
+          tr
+            td Grundpreis
+            td #{datum_1} - #{datum_4}
+            td #{zeitraum} Monate
+            td #{grundpreis_netto} €/Monat
+            td.is-text-right #{grundpreis_Produkt} €
+          tr
+            td.no-border Arbeitspreis
+            td.no-border #{datum_1} - #{datum_4}
+            td.no-border #{zSt_Diff} kWh
+            td.no-border #{bezugspreis_netto} Ct/kWh
+            td.no-border.is-text-right #{bezugspreis_Produkt} €
+          tr
+            td Grundpreis
+            td #{datum_1} - #{datum_4}
+            td #{zeitraum} Monate
+            td #{grundpreis_netto} €/Monat
+            td.is-text-right #{grundpreis_Produkt} €
+          tr
+            td.no-border Arbeitspreis
+            td.no-border #{datum_1} - #{datum_4}
+            td.no-border #{zSt_Diff} kWh
+            td.no-border #{bezugspreis_netto} Ct/kWh
+            td.no-border.is-text-right #{bezugspreis_Produkt} €
+          tr
+            td Grundpreis
+            td #{datum_1} - #{datum_4}
+            td #{zeitraum} Monate
+            td #{grundpreis_netto} €/Monat
+            td.is-text-right #{grundpreis_Produkt} €
+          tr
+            td.no-border Zwischensumme (netto)
+            td.no-border colspan=3
+            td.no-border.is-text-right #{zwSumme} €
+          tr
+            td Umsatzsteuer (#{steuersatz}%)
+            td colspan=3
+            td.is-text-right #{uSt} €
+          tr
+            td.no-border
+              b Rechnungsbetrag (brutto)
+            td.no-border colspan=3
+            td.no-border.is-text-right
+              b #{betrag_brutto} €
+          tr
+            td Abzüglich Abschläge (brutto)
+            td colspan=3
+            td.is-text-right #{abschlag_produkt} €
+          tr
+            td
+              b #{forderung}
+            td colspan=3
+            td.is-text-right
+              b #{rest_Summe} €
+      p Aus der Turnusabrechnung ergibt sich eine <b>#{rueck_nach}zahlung</b> von <b>#{rest_Summe} €.</b>
       p #{satz_forderung}
 
-      footer.is-small
-        div.footer-logo powered by <img src='#{Dir.pwd}/public/assets/logo.png' />
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
-
-
-    div.alwaysbreak
-
-    / page 2
     div.wrapper
 
       h2 Ihre Vertragskonditionen
@@ -249,30 +314,11 @@ html
 
       / chart goes here
       div#chart-one.bc-chart.horizontal
-        div.bc-bar
-        div.bc-bar
-        div.bc-bar
-        div.bc-bar
-        div.bc-bar
-        div.bc-tick.is-small
-        div.bc-tick.is-small
-        div.bc-tick.is-small
-        div.bc-tick.is-small
-        div.bc-tick.is-small
-        div.bc-tick.is-small
 
       p.is-small Quelle: Statistisches Bundesamt<br>
         <sup>1.</sup> Sofern kein volles Jahr Strom bezogen wurde, wird die Strommenge auf ein ganzes Jahr hochgerechnet<br>
         <sup>2.</sup> Sofern im Vorjahr noch kein Strom bezogen wurde, ist dies ein Prognosewert
 
-      footer.is-small
-        div.footer-logo powered by <img src='#{Dir.pwd}/public/assets/logo.png' />
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
-
-
-    div.alwaysbreak
-
-    / page 3
     div.wrapper
       h2 Energiereport
       p Die echte Energiewende ist demokratisch, dezentral und direkt von Mensch zu Mensch.
@@ -320,12 +366,6 @@ html
             | Eigentumsverhältnisse <span class='is-medium'>(wem gehört die Stromerzeugungsanlage?)</span>
           p.is-medium #{lsg_V_Partner}
 
-      footer.is-small
-        div.footer-logo powered by <img src='#{Dir.pwd}/public/assets/logo.png' />
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
-
-    / page 4
-    div.alwaysbreak
     div.wrapper
       h2 Kritische Anmerkungen zur Stromkennzeichnung
       p Das deutsche Energiewirtschaftsgesetz verpflichtet jeden Stromlieferanten, den Letztverbrauchern die Herkunft seines Stroms über eine Kennzeichnung nachzuweisen. Dies soll mehr Transparenz und bewusstere Kaufentscheidungen in Richtung „Ökostrom“ bewirken.
@@ -340,28 +380,13 @@ html
       p Für weitergehende Informationen finden Sie hier einen ausführlichen Blogbeitrag zum Thema: <a href="http://www.buzzn.net/2017/01/13/hokuspokus-stromkennzeichnung/">http://www.buzzn.net/2017/01/13/hokuspokus-stromkennzeichnung/</a>
       p Wenn Sie sonst noch eine Frage oder Anmerkung haben, senden Sie uns bitte eine Nachricht an <a href="mailto:team@buzzn.net">team@buzzn.net</a>. Vielen Dank!
 
-    / page 5
-    div.alwaysbreak
     div.wrapper
       h2 Stromkennzeichnung 2016
       p Stromkennzeichnung gemäß § 42 Energiewirtschaftsgesetz vom 7. Juli 2005, geändert 2017)
 
       div.row
         div#chart-two.bc-chart.vertical.col-half
-          div.bc-bar
-          div.bc-bar
-          div.bc-bar
-          div.bc-bar
-          div.bc-bar
-          h4 Deutschland
-
         div#chart-three.bc-chart.vertical.col-half
-          div.bc-bar
-          div.bc-bar
-          div.bc-bar
-          div.bc-bar
-          div.bc-bar
-          h4 Lokale Energiegruppe #{lp_Name}
 
       div.clear
       h2 Umweltauswirkungen je Kilowattstunde
@@ -371,63 +396,79 @@ html
         <sup>2.</sup> Zur ökologisch sinnvollen gleichzeitigen Produktion von Strom und Wärme in den Häusern der Stromgeber<br>
         <sup>3.</sup> Enthält Heizöl zur ökologisch sinnvollen gleichzeitigen Produktion von Strom und Wärme in den Häusern der Stromgeber
 
-
-      footer.is-small
-        div.footer-logo powered by <img src='#{Dir.pwd}/public/assets/logo.png' />
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
-
-    / chart
-    css:
-      .bc-chart{margin-bottom: 2rem;}
-
-      .bc-chart.horizontal {width: 99%; min-height: 4rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
-      .bc-chart.horizontal .bc-bar{max-height: 4rem; background: yellow; padding: 1rem; margin: 0 0 .5rem 0; position: relative;}
-      .bc-chart.horizontal .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
-      .bc-chart.horizontal .bc-tick{position: absolute; bottom: 0; left: 10px}
-      .bc-chart.horizontal .bc-tick::before{position: absolute; top: -15px; left: 40%; content:'|';}
-
-      .bc-chart.vertical {margin-bottom: 2rem;height: 24rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
-      .bc-chart.vertical .bc-bar{background: blue; padding: 1rem; margin: 0 0 0 .5rem; position: relative;}
-      .bc-chart.vertical .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
-      .bc-chart.vertical .bc-tick{position: absolute; bottom: 0; left: 10px}
-      .bc-chart.vertical .bc-tick::before{position: absolute; top: -15px; left: 40%; content:'|';}
-
     javascript:
+
+      Function.prototype.bind = Function.prototype.bind || function (thisp) {
+          var fn = this;
+          return function () {
+              return fn.apply(thisp, arguments);
+          };
+      };
 
       $(function(){
         var data = function(){return[0,0,0,0,0].map(function(){return Math.round(Math.random()*100)+50})};
         bcChart('#chart-one', data());
-        bcChart('#chart-two', data());
-        bcChart('#chart-three', data());
+        bcChart('#chart-two', data(),'Deutschland');
+        bcChart('#chart-three', data(),'Lokale Energiegruppe #{lp_Name}');
+        setPageBreaks();
       });
 
-      function bcChart (id, data) {
+      function bcChart (id, data, label) {
+        // list of colours and labels, feel free to add as many, as requred
         var colors = ['#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee'];
         var labels = ['#{label_1}','#{label_2}','#{label_3}','#{label_4}','#{label_5}','#{label_6}'];
+        // calculate horizontal/vertical bar length
         var sum = data.reduce(function(a,b){return a+b});
         var maxvalue = data.reduce(function(a,b){return Math.max(a,b)});
         var barLength = data.map(function(e){return(e/maxvalue)*100});
         var barHeight = data.map(function(e){return e/sum*$('#chart-two').height()});
+        // calculate tick positions and values
         var ticks = [0,1,2,3,4,5].map(function(e){return Math.round((maxvalue/5)*e);});
+        // create child elements
+        var html = data.reduce(function(a,e){return a + '<div class="bc-bar"></div>'},'');
+        html += data.reduce(function(a,e){return a + '<div class="bc-tick"></div>'},'<div class="bc-tick"></div>');
+        html += label ? '<h4>'+label+'</h4>':'';
         var elem = $(id);
         var isHoriz = elem.hasClass('horizontal');
-        if(isHoriz){
-          elem.children('.bc-bar').each(function(i){
-            $(this).html(labels[i]+': <span>'+data[i]+' kWh</span>').css({'background-color': colors[i], 'width': barLength[i]+'%'});
-          });
-          elem.children('.bc-tick').each(function(i){
-            $(this).html(ticks[i]).css({'top': $('.bc-chart').height()+15+'px', 'left': 20*i+'%', 'transform': 'translateX(-'+$(this).width()/2+'px)'});
-          });
-        } else {
-          elem.children('.bc-bar').each(function(i){
-            $(this).html(labels[i]+': <span>'+((data[i]/sum)*100).toFixed(1)+' %</span>').css({'background-color': colors[i], 'height': barHeight[i]+'px'});
-          });
-        }
+        // Workaround: add child elements as html to elem. Note: elem.addChild() won't work (https://github.com/wkhtmltopdf/wkhtmltopdf/issues/3731)
+        elem.html(html);
+        elem.children('.bc-bar').each(function(i){
+          var html = isHoriz ? labels[i]+': <span>'+data[i]+' kWh</span>' : labels[i]+': <span>'+((data[i]/sum)*100).toFixed(1)+' %</span>';
+          var css = isHoriz ? {'background-color': colors[i], 'width': barLength[i]+'%'} : {'background-color': colors[i], 'height': barHeight[i]+'px'};
+          $(this).html(html).css(css);
+        });
+        elem.children('.bc-tick').each(function(i){
+          var html = isHoriz ? ticks[i] : '';
+          var css = isHoriz ? {'top': $('.bc-chart').height()+15+'px', 'left': 20*i+'%', 'transform': 'translateX(-'+$(this).width()/2+'px)'} : {'left':0, 'top': 20*i+'%'};
+          $(this).html(html).css(css);
+        });
       }
 
-      // var bars = document.querySelectorAll('.bc-bar');
-      //
-      // bars.forEach(function(e,i){
-      //   e.style.width = data[i]+'%';
-      //   e.style.backgroundColor = colors[i];
-      // })
+      function setPageBreaks(){
+        var isQt = /Qt/.test(navigator.userAgent);
+        var pageSplitThreshold = isQt ? 2200 : 1000;
+        var pages = '';
+        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png"></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></footer>';
+        var pageOverset = $('.wrapper').filter(function(){return $(this).height() > pageSplitThreshold});
+        $('.wrapper').each(function(){
+          var isTall = $(this).height() > pageSplitThreshold;
+          var normalChildren = isTall ? $(this).children().filter(function(){return $(this).offset().top+$(this).height() < pageSplitThreshold}) : 'fityula';
+          var oversetChildren = isTall ? $(this).children().filter(function(){return $(this).offset().top+$(this).height() >= pageSplitThreshold}) : 'mityula';
+          if (isTall) {
+            normalChildren.css('border','1px solid lime');
+            oversetChildren.css({'border':'1px solid magenta'});
+            pages += '<div class="wrapper">';
+            pages += normalChildren.toArray().reduce(function(a,e){return a+e.outerHTML}, '') + footer;
+            pages += '</div>';
+            pages += '<div class="alwaysbreak"></div>';
+            pages += '<div class="wrapper">';
+            pages += oversetChildren.toArray().reduce(function(a,e){return a+e.outerHTML}, '') + footer ;
+            pages += '</div>';
+          } else {
+            pages += '<div class="wrapper">';
+            pages += $(this).html() + footer;
+            pages += '</div>';
+          }
+        });
+        $('body').html(pages);
+      }
