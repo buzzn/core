@@ -7,37 +7,8 @@ html
     link href='https://fonts.googleapis.com/css?family=Asap:400,400i,700,700i' rel='stylesheet'
     script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js'
     css:
-      * {box-sizing: border-box;}
+      * {box-sizing: border-box;padding:0;margin:0}
 
-      /*
-      @font-face {
-        font-family: 'Asap';
-        font-weight: 400;
-        font-style: normal;
-        src: font-url('#{Dir.pwd}/public/assets/fonts/Asap/Asap-Regular.ttf' format('truetype'));
-      };
-
-      @font-face {
-        font-family: 'Asap';
-        font-weight: 700;
-        font-style: normal;
-        src: font-url('#{Dir.pwd}/public/assets/fonts/Asap/Asap-Bold.ttf' format('truetype'));
-      };
-
-      @font-face {
-        font-family: 'Asap';
-        font-weight: 400;
-        font-style: italic;
-        src: font-url('#{Dir.pwd}/public/assets/fonts/Asap/Asap-Italic.ttf' format('truetype'));
-      };
-
-      @font-face {
-        font-family: 'Asap';
-        font-weight: 700;
-        font-style: italic;
-        src: font-url('#{Dir.pwd}/public/assets/fonts/Asap/Asap-BoldItalic.ttf' format('truetype'));
-      };
-      */
 
       html {font-size: 16pt;line-height: 1.1;}
       body {font-size: 0.6875rem; font-family: 'Asap', sans-serif; font-weight: 400}
@@ -50,7 +21,7 @@ html
       footer {width: 100%; height: 1rem; position: absolute; bottom: 0;}
       div.alwaysbreak {page-break-before: always;}
 
-      .wrapper {width: 100%; min-height: 1000px; position: relative;padding-bottom: 2rem;}
+      .wrapper {width: 100%; height: auto; min-height: 27cm; position: relative; padding-bottom: 2rem; border: 1px solid blue;}
       .row {margin: 0 -.375rem;}
       .col-3rd {width: 30%; margin: .375rem .375rem; float: left;}
       .col-half {width: 40%; margin: .375rem .375rem; float: left;}
@@ -102,65 +73,69 @@ html
       .bc-chart.vertical .bc-tick{position: absolute; bottom: 0; left: 10px}
       .bc-chart.vertical .bc-tick::before{position:absolute;top:-14px;left:-9px;content:'_';}
 
+      .log{position: absolute; top: 0; right: 0; padding: 3px; border-radius: 3px;}
+
   body
 
-    div.wrapper
+    div.wrapper.tall
+      div.log
+      div
+        div.logo.is-pull-left
 
-      div.logo.is-pull-left
+        div.is-small.col-3rd.is-pull-right.no-margin
+          p #{lsg_V_Partner} <br>
+            - Energiegruppe #{lp_Name} -<br>
+            #{lsg_Kontakt}<br>
+            #{lsg_Straße} #{lsg_HausNr}<br>
+            #{lsg_PLZ} #{lsg_Ort}
 
-      div.is-small.col-3rd.is-pull-right.no-margin
-        p #{lsg_V_Partner} <br>
-          - Energiegruppe #{lp_Name} -<br>
-          #{lsg_Kontakt}<br>
-          #{lsg_Straße} #{lsg_HausNr}<br>
-          #{lsg_PLZ} #{lsg_Ort}
+          p T:  #{lsg_Tel}<br>
+            F: #{lsg_Fax}<br>
+            Email: #{lsg_Email}
 
-        p T:  #{lsg_Tel}<br>
-          F: #{lsg_Fax}<br>
-          Email: #{lsg_Email}
+          p #{lsg_V_Partner}<br>
+            #{lsg_IBAN}<br>
+            #{lsg_BIC}<br>
+            #{lsg_Bank}
 
-        p #{lsg_V_Partner}<br>
-          #{lsg_IBAN}<br>
-          #{lsg_BIC}<br>
-          #{lsg_Bank}
+          p Steuernummer: #{steuerNr}
 
-        p Steuernummer: #{steuerNr}
+        p.is-smaller.clear #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
 
-      p.is-smaller.clear #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        p #{lsn_Anrede}<br>
+          #{lsn_Titel}<br>
+          #{lsn_Vorname} #{lsn_Name}<br>
+          #{lsn_Straße} #{lsn_HausNr}<br>
+          #{lsn_PLZ} #{lsn_Ort}
 
-      p #{lsn_Anrede}<br>
-        #{lsn_Titel}<br>
-        #{lsn_Vorname} #{lsn_Name}<br>
-        #{lsn_Straße} #{lsn_HausNr}<br>
-        #{lsn_PLZ} #{lsn_Ort}
+        p
+          i #{lsn_per_EMail}
 
-      p
-        i #{lsn_per_EMail}
+        p.is-pull-right #{lsg_Ort}, den #{r_Datum}
 
-      p.is-pull-right #{lsg_Ort}, den #{r_Datum}
+        h2.clear Turnusabrechnung - Lokale Energiegruppe #{lp_Name}<br>
+          Rechnungsnummer: #{r_Nummer}
 
-      h2.clear Turnusabrechnung - Lokale Energiegruppe #{lp_Name}<br>
-        Rechnungsnummer: #{r_Nummer}
+        table.no-border
+          tr
+            td.no-border.no-padding Vertragsnummer:
+            td.no-border.no-padding #{lsn_Vertragsnummer}
+          tr
+            td.no-border.no-padding Bezugsstelle:
+            td.no-border.no-padding #{lsn_Straße_b} #{lsn_HausNr_b}, #{lsn_Adresszusatz_b}
+          tr
+            td.no-border.no-padding Zählernummer:
+            td.no-border.no-padding #{mpsn_ZählerNr_alt}
+          tr
+            td.no-border.no-padding Prognose Jahresbezug:
+            td.no-border.no-padding #{verbrauch_Jahr} kWh (#{abrechnungsjahr})
+          tr
+            td.no-border.no-padding Abrechnungsjahr
+            td.no-border.no-padding #{abrechnungsjahr}
 
-      table.no-border
-        tr
-          td.no-border.no-padding Vertragsnummer:
-          td.no-border.no-padding #{lsn_Vertragsnummer}
-        tr
-          td.no-border.no-padding Bezugsstelle:
-          td.no-border.no-padding #{lsn_Straße_b} #{lsn_HausNr_b}, #{lsn_Adresszusatz_b}
-        tr
-          td.no-border.no-padding Zählernummer:
-          td.no-border.no-padding #{mpsn_ZählerNr_alt}
-        tr
-          td.no-border.no-padding Prognose Jahresbezug:
-          td.no-border.no-padding #{verbrauch_Jahr} kWh (#{abrechnungsjahr})
-        tr
-          td.no-border.no-padding Abrechnungsjahr
-          td.no-border.no-padding #{abrechnungsjahr}
+        p Sehr #{lsn_Andrede_r} #{lsn_Anrede_Name},
+        p vielen Dank, dass Sie als Lokaler Stromnehmer aus der Energiegruppe #{lp_Name} Strom beziehen. Nachfolgend erhalten Sie Ihre Turnusabrechnung.
 
-      p Sehr #{lsn_Andrede_r} #{lsn_Anrede_Name},
-      p vielen Dank, dass Sie als Lokaler Stromnehmer aus der Energiegruppe #{lp_Name} Strom beziehen. Nachfolgend erhalten Sie Ihre Turnusabrechnung.
       div
         h2 Bezugsmenge
         table.is-full-width.is-small
@@ -297,29 +272,31 @@ html
       p #{satz_forderung}
 
     div.wrapper
+      div.log
+      div
+        h2 Ihre Vertragskonditionen
+        p Die aktuellen Preise in der Energiegruppe #{lp_Name} betragen:<br>
+          <b>Grundpreis,</b> (Grundpreis netto): <b>#{grundpreis_brutto_neu} €/Monat,</b> (#{grundpreis_netto_neu} €/Monat)<br>
+          <b>Bezugspreis,</b> (Bezugspreis netto): <b>#{bezugspreis_brutto_neu} Cent/kWh,</b> (#{bezugspreis_netto_neu} Cent/kWh)
+        p
+          b #{abschlag_neu_Satz}
+        p Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.
+        p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.
+        p Mit freundlichen Grüßen,
+        p #{lsg_Kontakt}
 
-      h2 Ihre Vertragskonditionen
-      p Die aktuellen Preise in der Energiegruppe #{lp_Name} betragen:<br>
-        <b>Grundpreis,</b> (Grundpreis netto): <b>#{grundpreis_brutto_neu} €/Monat,</b> (#{grundpreis_netto_neu} €/Monat)<br>
-        <b>Bezugspreis,</b> (Bezugspreis netto): <b>#{bezugspreis_brutto_neu} Cent/kWh,</b> (#{bezugspreis_netto_neu} Cent/kWh)
-      p
-        b #{abschlag_neu_Satz}
-      p Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.
-      p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.
-      p Mit freundlichen Grüßen,
-      p #{lsg_Kontakt}
+        h2 Verbrauchsvergleich
+        p Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist. Dieser Vergleich, den Sie der Grafik entnehmen können, hinkt natürlich, da er die äußeren Gegebenheiten eines Haushaltes, zum Beispiel elektrische Warmwasserbereitung, nicht berücksichtigt.
 
-      h2 Verbrauchsvergleich
-      p Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist. Dieser Vergleich, den Sie der Grafik entnehmen können, hinkt natürlich, da er die äußeren Gegebenheiten eines Haushaltes, zum Beispiel elektrische Warmwasserbereitung, nicht berücksichtigt.
+        / chart goes here
+        div#chart-one.bc-chart.horizontal
 
-      / chart goes here
-      div#chart-one.bc-chart.horizontal
-
-      p.is-small Quelle: Statistisches Bundesamt<br>
-        <sup>1.</sup> Sofern kein volles Jahr Strom bezogen wurde, wird die Strommenge auf ein ganzes Jahr hochgerechnet<br>
-        <sup>2.</sup> Sofern im Vorjahr noch kein Strom bezogen wurde, ist dies ein Prognosewert
+        p.is-small Quelle: Statistisches Bundesamt<br>
+          <sup>1.</sup> Sofern kein volles Jahr Strom bezogen wurde, wird die Strommenge auf ein ganzes Jahr hochgerechnet<br>
+          <sup>2.</sup> Sofern im Vorjahr noch kein Strom bezogen wurde, ist dies ein Prognosewert
 
     div.wrapper
+      div.log
       h2 Energiereport
       p Die echte Energiewende ist demokratisch, dezentral und direkt von Mensch zu Mensch.
       p Nachfolgend einige Fakten und Kennzahlen zu Ihrer Energiegruppe Heigelstraße 27 für das Jahr 2017:
@@ -367,20 +344,23 @@ html
           p.is-medium #{lsg_V_Partner}
 
     div.wrapper
-      h2 Kritische Anmerkungen zur Stromkennzeichnung
-      p Das deutsche Energiewirtschaftsgesetz verpflichtet jeden Stromlieferanten, den Letztverbrauchern die Herkunft seines Stroms über eine Kennzeichnung nachzuweisen. Dies soll mehr Transparenz und bewusstere Kaufentscheidungen in Richtung „Ökostrom“ bewirken.
-      p Die gesetzliche Stromkennzeichnung steht jedoch in der Kritik, manche nennen sie sogar eine Farce. Sie gibt zwar teilweise Auskunft darüber, aus welcher Primärenergie der Strom produziert wurde. Andere wichtige Informationen sind jedoch nicht enthalten, zum Beispiel:
-      ul
-        li Wem gehören die Kraftwerke, die ich als Letztverbraucher mit meinem „Stromgeld“ finanziere?
-        li Wie groß sind diese Kraftwerke?
-        li Wo stehen diese Kraftwerke und wie hoch sind die Übertragungsverluste beim Transport des Stroms bis zu mir?
-      p Bei der Kennzeichnung von Strom aus lokalen Energiegruppen wie Ihrer, führt die Stromkennzeichnung sogar in die Irre. Ihr Strom wird lokal produziert. In einem kleinen Blockheizkraftwerk, einer Sonnenstrom-, Wasser- oder Windkraftanlage. Ökologisch ist das aber nicht nur aufgrund der Effizienz und des Primärenergieeinsatzes, sondern auch aufgrund der Tatsache, dass Strom dezentral dort erzeugt wird, wo er gebraucht wird. Dies reduziert Netzverluste und hilft, den Neubau von Stromtrassen zu vermeiden. Hinzu kommt, dass lokaler Strom von Menschen aus der Nähe erzeugt wird und nicht von Konzernen. Diese Vorteile finden bei der Stromkennzeichnung keine Berücksichtigung.
-      p Noch verrückter: Um beispielsweise die in einer Energiegruppe kleinteilig produzierte Sonnen-, Wasser- oder Windkraft als „Erneuerbare Energie“ kennzeichnen zu dürfen, müsste sie in einem aufwendigen und bürokratischen Prozess zertifiziert werden, der für diese Kleinanlagen völlig überzogen ist. Da wir das nicht mitmachen, wird aus Sonnen- und Wasserkraft eben mal Strom aus Atom, Kohle und sonstigen fossilen Energieträgern (siehe Grafik unten).
-      p Deshalb die Bitte an Sie: Nehmen Sie die nachfolgende Grafik nicht allzu ernst!
-      p Für weitergehende Informationen finden Sie hier einen ausführlichen Blogbeitrag zum Thema: <a href="http://www.buzzn.net/2017/01/13/hokuspokus-stromkennzeichnung/">http://www.buzzn.net/2017/01/13/hokuspokus-stromkennzeichnung/</a>
-      p Wenn Sie sonst noch eine Frage oder Anmerkung haben, senden Sie uns bitte eine Nachricht an <a href="mailto:team@buzzn.net">team@buzzn.net</a>. Vielen Dank!
+      div.log
+      div
+        h2 Kritische Anmerkungen zur Stromkennzeichnung
+        p Das deutsche Energiewirtschaftsgesetz verpflichtet jeden Stromlieferanten, den Letztverbrauchern die Herkunft seines Stroms über eine Kennzeichnung nachzuweisen. Dies soll mehr Transparenz und bewusstere Kaufentscheidungen in Richtung „Ökostrom“ bewirken.
+        p Die gesetzliche Stromkennzeichnung steht jedoch in der Kritik, manche nennen sie sogar eine Farce. Sie gibt zwar teilweise Auskunft darüber, aus welcher Primärenergie der Strom produziert wurde. Andere wichtige Informationen sind jedoch nicht enthalten, zum Beispiel:
+        ul
+          li Wem gehören die Kraftwerke, die ich als Letztverbraucher mit meinem „Stromgeld“ finanziere?
+          li Wie groß sind diese Kraftwerke?
+          li Wo stehen diese Kraftwerke und wie hoch sind die Übertragungsverluste beim Transport des Stroms bis zu mir?
+        p Bei der Kennzeichnung von Strom aus lokalen Energiegruppen wie Ihrer, führt die Stromkennzeichnung sogar in die Irre. Ihr Strom wird lokal produziert. In einem kleinen Blockheizkraftwerk, einer Sonnenstrom-, Wasser- oder Windkraftanlage. Ökologisch ist das aber nicht nur aufgrund der Effizienz und des Primärenergieeinsatzes, sondern auch aufgrund der Tatsache, dass Strom dezentral dort erzeugt wird, wo er gebraucht wird. Dies reduziert Netzverluste und hilft, den Neubau von Stromtrassen zu vermeiden. Hinzu kommt, dass lokaler Strom von Menschen aus der Nähe erzeugt wird und nicht von Konzernen. Diese Vorteile finden bei der Stromkennzeichnung keine Berücksichtigung.
+        p Noch verrückter: Um beispielsweise die in einer Energiegruppe kleinteilig produzierte Sonnen-, Wasser- oder Windkraft als „Erneuerbare Energie“ kennzeichnen zu dürfen, müsste sie in einem aufwendigen und bürokratischen Prozess zertifiziert werden, der für diese Kleinanlagen völlig überzogen ist. Da wir das nicht mitmachen, wird aus Sonnen- und Wasserkraft eben mal Strom aus Atom, Kohle und sonstigen fossilen Energieträgern (siehe Grafik unten).
+        p Deshalb die Bitte an Sie: Nehmen Sie die nachfolgende Grafik nicht allzu ernst!
+        p Für weitergehende Informationen finden Sie hier einen ausführlichen Blogbeitrag zum Thema: <a href="http://www.buzzn.net/2017/01/13/hokuspokus-stromkennzeichnung/">http://www.buzzn.net/2017/01/13/hokuspokus-stromkennzeichnung/</a>
+        p Wenn Sie sonst noch eine Frage oder Anmerkung haben, senden Sie uns bitte eine Nachricht an <a href="mailto:team@buzzn.net">team@buzzn.net</a>. Vielen Dank!
 
     div.wrapper
+      div.log
       h2 Stromkennzeichnung 2016
       p Stromkennzeichnung gemäß § 42 Energiewirtschaftsgesetz vom 7. Juli 2005, geändert 2017)
 
@@ -446,29 +426,40 @@ html
 
       function setPageBreaks(){
         var isQt = /Qt/.test(navigator.userAgent);
-        var pageSplitThreshold = isQt ? 2200 : 1000;
+        var pageSplitThreshold = isQt ? 2000 : 1100;
         var pages = '';
-        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png"></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></footer>';
-        var pageOverset = $('.wrapper').filter(function(){return $(this).height() > pageSplitThreshold});
+        var pageCount;
+        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png"></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></div><div class="pagination is-small">Page number: <span class="page-number">0</span> of <span class="page-total-number">0</span></div></footer>';
         $('.wrapper').each(function(){
-          var isTall = $(this).height() > pageSplitThreshold;
-          var normalChildren = isTall ? $(this).children().filter(function(){return $(this).offset().top+$(this).height() < pageSplitThreshold}) : 'fityula';
-          var oversetChildren = isTall ? $(this).children().filter(function(){return $(this).offset().top+$(this).height() >= pageSplitThreshold}) : 'mityula';
+          var self = $(this);
+          var isTall = isQt ? self.hasClass('tall') && self.outerHeight() > pageSplitThreshold : self.outerHeight() > pageSplitThreshold;
+          var wrapperTop = self.offset().top;
           if (isTall) {
+            var normalChildren = self.children().filter(function(){var applies = $(this).offset().top + $(this).outerHeight() < wrapperTop + pageSplitThreshold; return applies});
+            var oversetChildren = self.children().filter(function(){var applies = $(this).offset().top + $(this).outerHeight() >= wrapperTop + pageSplitThreshold; return applies});
             normalChildren.css('border','1px solid lime');
             oversetChildren.css({'border':'1px solid magenta'});
             pages += '<div class="wrapper">';
+            pages += '<div class="log mint">' + isTall + ' ' + self.outerHeight() +'px </div>';
             pages += normalChildren.toArray().reduce(function(a,e){return a+e.outerHTML}, '') + footer;
             pages += '</div>';
             pages += '<div class="alwaysbreak"></div>';
             pages += '<div class="wrapper">';
+            pages += '<div class="log pork">' + isTall + ' ' + self.outerHeight() +'px </div>';
             pages += oversetChildren.toArray().reduce(function(a,e){return a+e.outerHTML}, '') + footer ;
             pages += '</div>';
+            pages += '<div class="alwaysbreak"></div>';
           } else {
             pages += '<div class="wrapper">';
-            pages += $(this).html() + footer;
+            pages += '<div class="log mint">' + isTall + ' ' + self.outerHeight() +'px </div>';
+            pages += self.html() + footer;
             pages += '</div>';
+            pages += '<div class="alwaysbreak"></div>';
           }
         });
         $('body').html(pages);
+        var pagination = $('.pagination');
+        pageCount = pagination.toArray().length;
+        pagination.find('.page-total-number').html(pageCount);
+        pagination.each(function(i){$(this).find('.page-number').html(i+1)})
       }
