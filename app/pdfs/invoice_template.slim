@@ -371,7 +371,24 @@ html
 
       div.clear
       h2 Umweltauswirkungen je Kilowattstunde
-      p Lorem ipsum...
+      table.no-border
+        tr
+          td.no-border.ash #{gl_radioactiver_abfall}
+          td.no-border Radioaktiver Abfall (g/kWh)
+          td.no-border.ash #{lp_radioactiver_abfall}
+          td.no-border
+        tr
+          td.no-border.ash #{gl_c02_emissionen}
+          td.no-border CO2 Emissionen (g/kWh)
+          td.no-border.ash #{lp_c02_emissionen}
+          td.no-border
+        tr
+          td
+          td
+            h3 Deutschland
+          td
+          td
+            h3 Deutschland
 
       p.is-small <sup>1.</sup> Enthält nicht zertifizierte Mengen aus erneuerbarer Stromgeberproduktion<br>
         <sup>2.</sup> Zur ökologisch sinnvollen gleichzeitigen Produktion von Strom und Wärme in den Häusern der Stromgeber<br>
@@ -432,16 +449,29 @@ html
 
       $(function(){
         var data = function(){return[0,0,0,0,0].map(function(){return Math.round(Math.random()*100)+50})};
-        bcChart('#chart-one', data());
-        bcChart('#chart-two', data(),'Deutschland');
-        bcChart('#chart-three', data(),'Lokale Energiegruppe #{lp_Name}');
+        var labels1 = [
+          'Ihr Jahresverbrauch in #{dieses_jahr} (1)',
+          'Ihr Jahresverbrauch in #{letzes_jahr} (2)',
+          'Referenz 1-Personen-Haushalt',
+          'Referenz 2-Personen-Haushalt',
+          'Referenz 3 und mehr Personen-Haushalt'
+        ];
+        var labels2 = [
+          'Atom',
+          'Kohle',
+          'Erdgas',
+          'Sonstige fossile Energieträge',
+          'Sonstige ernauerbare Energieträge',
+          'Erneuerbare Energie gefördert nach EEG'
+        ];
+        bcChart('#chart-one', labels1, data());
+        bcChart('#chart-two', labels2, data(),'Deutschland');
+        bcChart('#chart-three', labels2, data(),'Lokale Energiegruppe #{lp_Name}');
         setPageBreaks();
       });
 
-      function bcChart (id, data, label) {
-        // list of colours and labels, feel free to add as many, as requred
+      function bcChart (id, labels, data, title) {
         var colors = ['#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee'];
-        var labels = ['#{label_1}','#{label_2}','#{label_3}','#{label_4}','#{label_5}','#{label_6}'];
         // calculate horizontal/vertical bar length
         var sum = data.reduce(function(a,b){return a+b});
         var maxvalue = data.reduce(function(a,b){return Math.max(a,b)});
@@ -452,10 +482,10 @@ html
         // create child elements
         var html = data.reduce(function(a,e){return a + '<div class="bc-bar"></div>'},'');
         html += data.reduce(function(a,e){return a + '<div class="bc-tick"></div>'},'<div class="bc-tick"></div>');
-        html += label ? '<h4>'+label+'</h4>':'';
+        html += title ? '<h4>'+title+'</h4>':'';
         var elem = $(id);
         var isHoriz = elem.hasClass('horizontal');
-        // Workaround: add child elements as html to elem. Note: elem.addChild() won't work (https://github.com/wkhtmltopdf/wkhtmltopdf/issues/3731)
+        // Workaround: add child elements as html to elem as elem.addChild() won't work (https://github.com/wkhtmltopdf/wkhtmltopdf/issues/3731)
         elem.html(html);
         elem.children('.bc-bar').each(function(i){
           var html = isHoriz ? labels[i]+': <span>'+data[i]+' kWh</span>' : labels[i]+': <span>'+((data[i]/sum)*100).toFixed(1)+' %</span>';
@@ -474,7 +504,7 @@ html
         var pageSplitThreshold = isQt ? 2000 : 1100;
         var pages = '';
         var pageCount;
-        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png"></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></div><div class="pagination is-small">Page number: <span class="page-number">0</span> of <span class="page-total-number">0</span></div></footer>';
+        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png"></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></div><div class="pagination is-small">Seite <span class="page-number">0</span> von <span class="page-total-number">0</span></div></footer>';
         $('.wrapper').each(function(){
           var self = $(this);
           var isTall = isQt ? self.hasClass('tall') && self.outerHeight() > pageSplitThreshold : self.outerHeight() > pageSplitThreshold;
