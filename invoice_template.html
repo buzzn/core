@@ -56,8 +56,9 @@ div.alwaysbreak {page-break-before: always;}
 .bc-chart{margin-bottom: 2rem;}
 .bc-chart .col-half{margin: 0;width: 50%}
 .bc-chart.horizontal {width: 99%; min-height: 4rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
-.bc-chart.horizontal .bc-bar{max-height: 4rem; background: yellow; padding: 1rem; margin: 0 0 .5rem 0; position: relative;}
+.bc-chart.horizontal .bc-bar{max-height: 4rem; background: yellow; padding: 1.25rem; margin: 0; position: relative;}
 .bc-chart.horizontal .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
+.bc-chart.horizontal .bc-tick-container{width: 50%;margin-left: 39%;position: absolute;top: 0;}
 .bc-chart.horizontal .bc-tick{position: absolute; bottom: 0; left: 10px}
 .bc-chart.horizontal .bc-tick::before{position: absolute; top: -15px; left: 40%; content:'|';}
 .bc-chart.vertical {margin-bottom: 2rem;height: 24rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
@@ -65,9 +66,10 @@ div.alwaysbreak {page-break-before: always;}
 .bc-chart.vertical .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
 .bc-chart.vertical .bc-tick{position: absolute; bottom: 0; left: 10px}
 .bc-chart.vertical .bc-tick::before{position:absolute;top:-14px;left:-9px;content:'_';}
-.legend{margin-left: 1rem; position: relative}
-.legend-indicator{position: absolute; left: -.725rem; content:''; width: .5rem; height: .5rem; background: red}
-
+.bc-legend{margin-left: 1rem; position: relative}
+.bc-legend-indicator{position: absolute; left: -.725rem; content:''; width: .5rem; height: .5rem; background: red}
+.bc-label{width: 39%; text-align: right; padding-right: .5rem;vertical-align: top;padding-top: 1rem;}
+.bc-value{width: 9%; padding-left: .5rem; vertical-align: top;padding-top: 1rem;}
 .log{position: absolute; top: 0; right: 0; padding: 3px; border-radius: 3px;}</style></head><body><div class="wrapper tall"><div class="log"></div><div><div class="logo is-pull-left"></div><div class="is-small col-3rd is-pull-right no-margin"><p>__lsg_V_Partner__ <br>
 - Energiegruppe __lp_Name__ - <br>
 __lsg_Kontakt__<br>
@@ -133,10 +135,11 @@ function bcChart (id, labels, data, title) {
   var ticks = [0,1,2,3,4,5].map(function(e){return Math.round((maxvalue/5)*e);});
   // create child elements
   var barsHtml = !isHoriz ? data.reduce(function(a,e){return a + '<div class="bc-bar"></div>'},'') : data.reduce(function(a,e){return a + '<div><div class="bc-label is-inline-block">label</div><div class="bc-bar is-inline-block"></div><div class="bc-value is-inline-block">value</div></div>'},'');
-  barsHtml += data.reduce(function(a,e){return a + '<div class="bc-tick"></div>'},'<div class="bc-tick"></div>');
+  barsHtml += data.reduce(function(a,e){return a + '<div class="bc-tick"></div>'},'<div class="bc-tick-container"><div class="bc-tick"></div>');
+  barsHtml += '</div>'
   barsHtml += title ? '<h4>'+title+'</h4>':'';
   var legendHtml = data.reduce(function(a,e,i){
-    return a + '<p class="legend"><span class="legend-indicator"></span>' + labels[i]+': '+((e/sum)*100).toFixed(1)+' %</p>';
+    return a + '<p class="bc-legend"><span class="bc-legend-indicator"></span>' + labels[i]+': '+((e/sum)*100).toFixed(1)+' %</p>';
   }, '')
   // Workaround: add child elements as html to chartContainer as chartContainer.addChild() won't work (https://github.com/wkhtmltopdf/wkhtmltopdf/issues/3731)
   chartContainer.html(barsHtml);
@@ -146,22 +149,29 @@ function bcChart (id, labels, data, title) {
       var css = {'background-color': colors[i], 'width' : barLength[i]/2+'%'};
       $(this).html('').css(css);
     });
-    chartContainer.children('.bc-tick').each(function(i){
-      var html = ticks[i];
+    chartContainer.find('.bc-tick').each(function(i){
       var css = {'top': $('.bc-chart').height()+15+'px', 'left': 20*i+'%', 'transform': 'translateX(-'+$(this).width()/2+'px)'};
-      $(this).html(html).css(css);
+      $(this).css(css);
+    });
+    chartContainer.find('.bc-label').each(function(i){
+      var html = labels[i];
+      $(this).html(html);
+    });
+    chartContainer.find('.bc-value').each(function(i){
+      var html = '<span>'+data[i]+' kWh</span>';
+      $(this).html(html);
     });
   } else {
     chartContainer.children('.bc-bar').each(function(i){
       var css = {'background-color': colors[i], 'height': barHeight[i]+'px'};
       $(this).css(css);
     });
-    chartContainer.children('.bc-tick').each(function(i){
+    chartContainer.find('.bc-tick').each(function(i){
       var css = {'left':0, 'top': 20*i+'%'};
       $(this).css(css);
     });
     legendContainer.html(legendHtml);
-    $(id + ' .legend-indicator').each(function(i){$(this).css({'background': colors[i]})});
+    $(id + ' .bc-legend-indicator').each(function(i){$(this).css({'background': colors[i]})});
   }
 }
 
