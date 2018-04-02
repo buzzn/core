@@ -55,18 +55,18 @@ div.alwaysbreak {page-break-before: always;}
 
 .bc-chart{margin-bottom: 2rem;}
 .bc-chart .col-half{margin: 0;width: 50%}
-.bc-chart.horizontal {width: 99%; min-height: 4rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
+.bc-chart.horizontal {width: 99%; min-height: 4rem; background: #fff; position: relative;}
 .bc-chart.horizontal .bc-bar{max-height: 4rem; background: yellow; padding: 1.25rem; margin: 0; position: relative;}
 .bc-chart.horizontal .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
-.bc-chart.horizontal .bc-tick-container{width: 50%;margin-left: 39%;position: absolute;bottom: -15px;}
-.bc-chart.horizontal .bc-tick{position: absolute; bottom: 0; left: 10px}
+.bc-chart.horizontal .bc-tick-container{width: 50%;margin-left: 39%;position: absolute;bottom:0;top:0;border-bottom: 1px solid grey;border-left: 1px solid grey;}
+.bc-chart.horizontal .bc-tick{position: absolute; bottom:-15px; transform: translateX(-2px);}
 .bc-chart.horizontal .bc-tick::before{position: absolute; top: -15px; left: 40%; content:'|';}
 .bc-chart.vertical {margin-bottom: 2rem;height: 12rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
 .bc-chart.vertical .bc-bar{background: blue; margin: 0 0 0 .5rem; position: relative;}
 .bc-chart.vertical .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
-.bc-chart.vertical .bc-tick{position: absolute; bottom: 0; left: 10px}
-.bc-chart.vertical .bc-tick::before{position:absolute;top:-14px;left:-9px;content:'_';}
-.bc-legend{margin-left: 1rem; position: relative}
+.bc-chart.vertical .bc-tick{position: absolute; bottom: 0; left: 10px;}
+.bc-chart.vertical .bc-tick::before{position:absolute;top:-10px;left:-7px;content:'_';}
+.bc-legend{margin-left: 1rem; position: relative;}
 .bc-legend-indicator{position: absolute; left: -.725rem; content:''; width: .5rem; height: .5rem; background: red}
 .bc-label{width: 39%; text-align: right; padding-right: .5rem;vertical-align: top;padding-top: 1rem;}
 .bc-value{width: 9%; padding-left: .5rem; vertical-align: top;padding-top: 1rem;}
@@ -150,7 +150,7 @@ function bcChart (id, labels, data, title) {
       $(this).html('').css(css);
     });
     chartContainer.find('.bc-tick').each(function(i){
-      var css = {'left': 20*i+'%', 'transform': 'translateX(-'+$(this).width()/2+'px)'};
+      var css = {'left': 20*i+'%'};
       $(this).css(css);
     });
     chartContainer.find('.bc-label').each(function(i){
