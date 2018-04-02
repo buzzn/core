@@ -541,7 +541,7 @@ html
         var pageSplitThreshold = isQt ? 2000 : 1100;
         var pages = '';
         var pageCount;
-        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png"></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span></div><div class="pagination is-small">Seite <span class="page-number">0</span> von <span class="page-total-number">0</span></div></footer>';
+        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="/Users/pla/SourceTree/buzzn/buzzn/public/assets/logo.png" /></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span><div class="pagination is-small">Seite <span class="page-number">0</span> von <span class="page-total-number">0</span></div></footer>';
         $('.wrapper').each(function(){
           var self = $(this);
           var isTall = isQt ? self.hasClass('tall') && self.outerHeight() > pageSplitThreshold : self.outerHeight() > pageSplitThreshold;
@@ -552,18 +552,18 @@ html
             normalChildren.css('border','1px solid lime');
             oversetChildren.css({'border':'1px solid magenta'});
             pages += '<div class="wrapper">';
-            pages += '<div class="log mint">' + isTall + ' ' + self.outerHeight() +'px </div>';
+            // pages += '<div class="log mint">' + isTall + ' ' + self.outerHeight() +'px </div>';
             pages += normalChildren.toArray().reduce(function(a,e){return a+e.outerHTML}, '') + footer;
             pages += '</div>';
             pages += '<div class="alwaysbreak"></div>';
             pages += '<div class="wrapper">';
-            pages += '<div class="log pork">' + isTall + ' ' + self.outerHeight() +'px </div>';
+            // pages += '<div class="log pork">' + isTall + ' ' + self.outerHeight() +'px </div>';
             pages += oversetChildren.toArray().reduce(function(a,e){return a+e.outerHTML}, '') + footer ;
             pages += '</div>';
             pages += '<div class="alwaysbreak"></div>';
           } else {
             pages += '<div class="wrapper">';
-            pages += '<div class="log mint">' + isTall + ' ' + self.outerHeight() +'px </div>';
+            // pages += '<div class="log mint">' + isTall + ' ' + self.outerHeight() +'px </div>';
             pages += self.html() + footer;
             pages += '</div>';
             pages += '<div class="alwaysbreak"></div>';
