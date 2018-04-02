@@ -38,6 +38,7 @@ html
       .is-text-right {text-align: right;}
       .is-text-left {text-align: left;}
       .is-text-center {text-align: center;}
+      .is-inline-block{display: inline-block;}
 
       .no-margin {margin: 0;}
       .no-padding {padding: 0;}
@@ -49,8 +50,6 @@ html
       .logo {width: 10rem; height: 4rem; background: #eeeeee;}
       .footer-logo {width: auto; float: right;}
       .footer-logo img {width: 2.5rem; height: auto;}
-      .legend{margin-left: 1rem; position: relative}
-      .legend-indicator{position: absolute; left: -.725rem; content:''; width: .5rem; height: .5rem; background: red}
 
       .ash {background: #eeeeee;}
       .sand {background: #DBD7C1;}
@@ -75,6 +74,8 @@ html
       .bc-chart.vertical .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
       .bc-chart.vertical .bc-tick{position: absolute; bottom: 0; left: 10px}
       .bc-chart.vertical .bc-tick::before{position:absolute;top:-14px;left:-9px;content:'_';}
+      .legend{margin-left: 1rem; position: relative}
+      .legend-indicator{position: absolute; left: -.725rem; content:''; width: .5rem; height: .5rem; background: red}
 
       .log{position: absolute; top: 0; right: 0; padding: 3px; border-radius: 3px;}
 
@@ -479,6 +480,10 @@ html
       });
 
       function bcChart (id, labels, data, title) {
+        var chart = $(id);
+        var chartContainer = $(id + ' .bc-chart-container');
+        var legendContainer = !isHoriz ? $(id + ' .bc-legend-container') : null;
+        var isHoriz = chart.hasClass('horizontal');
         var colors = ['#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee'];
         // calculate horizontal/vertical bar length
         var sum = data.reduce(function(a,b){return a+b});
@@ -488,23 +493,19 @@ html
         // calculate tick positions and values
         var ticks = [0,1,2,3,4,5].map(function(e){return Math.round((maxvalue/5)*e);});
         // create child elements
-        var barsHtml = data.reduce(function(a,e){return a + '<div class="bc-bar"></div>'},'');
+        var barsHtml = !isHoriz ? data.reduce(function(a,e){return a + '<div class="bc-bar"></div>'},'') : data.reduce(function(a,e){return a + '<div><div class="bc-label is-inline-block">label</div><div class="bc-bar is-inline-block"></div><div class="bc-value is-inline-block">value</div></div>'},'');
         barsHtml += data.reduce(function(a,e){return a + '<div class="bc-tick"></div>'},'<div class="bc-tick"></div>');
         barsHtml += title ? '<h4>'+title+'</h4>':'';
         var legendHtml = data.reduce(function(a,e,i){
           return a + '<p class="legend"><span class="legend-indicator"></span>' + labels[i]+': '+((e/sum)*100).toFixed(1)+' %</p>';
         }, '')
-        var chart = $(id);
-        var chartContainer = $(id + ' .bc-chart-container');
-        var legendContainer = !isHoriz ? $(id + ' .bc-legend-container') : null;
-        var isHoriz = chart.hasClass('horizontal');
         // Workaround: add child elements as html to chartContainer as chartContainer.addChild() won't work (https://github.com/wkhtmltopdf/wkhtmltopdf/issues/3731)
         chartContainer.html(barsHtml);
         if(isHoriz) {
-          chartContainer.children('.bc-bar').each(function(i){
+          chartContainer.find('.bc-bar').each(function(i){
             var html = labels[i]+': <span>'+data[i]+' kWh</span>';
-            var css = {'background-color': colors[i], 'width' : barLength[i]+'%'};
-            $(this).html(html).css(css);
+            var css = {'background-color': colors[i], 'width' : barLength[i]/2+'%'};
+            $(this).html('').css(css);
           });
           chartContainer.children('.bc-tick').each(function(i){
             var html = ticks[i];
