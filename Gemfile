@@ -17,7 +17,7 @@ gem 'dry-dependency-injection'
 # pdf
 gem 'slim'
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'
+gem 'wkhtmltopdf-binary-edge'
 
 # storage
 gem 'fog-aws'
