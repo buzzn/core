@@ -1,0 +1,81 @@
+/*reset*/
+* {box-sizing: border-box;padding:0;margin:0}
+/*fonts*/
+@font-face{font-family:'Asap';font-weight:400;font-style:normal;src:url('#{Dir.pwd}/public/assets/fonts/Asap/Asap-Regular.ttf')}
+@font-face{font-family:'Asap';font-weight:400;font-style:italic;src:url('#{Dir.pwd}/public/assets/fonts/Asap/Asap-Italic.ttf')}
+@font-face{font-family:'Asap';font-weight:700;font-style:normal;src:url('#{Dir.pwd}/public/assets/fonts/Asap/Asap-Bold.ttf')}
+@font-face{font-family:'Asap';font-weight:700;font-style:italic;src:url('#{Dir.pwd}/public/assets/fonts/Asap/Asap-BoldItalic.ttf')}
+/*basics*/
+html {font-size: 16pt;line-height: 1.1;}
+body {font-size: 0.6875rem; font-family: 'Asap', sans-serif; font-weight: 400}
+p {margin: 0.375rem 0;}
+h2 {font-size: 0.75rem; font-weight: 700; margin: 0.75rem 0 0.375rem;}
+h3 {font-size: 0.6875rem; font-weight: 700; margin: 0.75rem 0 0.375rem;}
+table {border-collapse: collapse;border: 1px solid #999;}
+td, th {padding: 0.25rem;}
+th {background: #eeeeee; text-align: left;}
+td {border-bottom: 1px solid #999;}
+footer {width: 100%; height: 1.5rem; position: absolute; bottom: 0;}
+strong { display: inline-block;}
+/*page break*/
+div.alwaysbreak {page-break-before: always;}
+/*format classes*/
+.wrapper {width: 100%; height: auto; min-height: 1000px; position: relative; padding-bottom: 2rem;}
+.row {margin: 0 -0.375rem;}
+.col-3rd {width: 30%; margin: 0.375rem 0.375rem; float: left;}
+.col-half {width: 47%; margin: 0.375rem 0.375rem; float: left;}
+/*modifiers*/
+.is-larger {font-size: 1.125rem;}
+.is-large {font-size: 0.75rem;}
+.is-medium {font-size: 0.625rem;}
+.is-small {font-size: 0.5rem;}
+.is-smaller {font-size: 0.375rem;}
+.is-pull-right {float: right;}
+.is-pull-left {float: left;}
+.is-full-width {width: 100%;}
+.is-text-right {text-align: right;}
+.is-text-left {text-align: left;}
+.is-text-center {text-align: center;}
+.is-inline-block {display: inline-block;}
+.no-margin {margin: 0;}
+.no-padding {padding: 0;}
+.no-border {border-color: transparent;}
+.clear {clear: both;}
+/*components*/
+.card {padding: 0.5rem 1rem; min-height: 6rem; position: relative;}
+.card p:last-child {position: absolute; bottom: 0.375rem;}
+.logo {width: 10rem; height: 4rem; background: #eeeeee;}
+.footer-logo {width: auto; float: right;}
+.footer-logo img {width: 2.5rem; height: auto;}
+/*colors*/
+.ash {background: #eeeeee;}
+.sand {background: #DBD7C1;}
+.mint {background: #BDFFDE;}
+.custard {background: #FEFE99;}
+.sky {background: #65CCFF;}
+.pork {background: #FCD0F4;}
+.peach {background: #FAC294;}
+.cornflower {background: #548ED4;}
+.salmon {background: #E66C6C;}
+.glass {background: transparent;}
+/*charts*/
+.bc-chart{margin-bottom: 2rem;}
+.bc-chart .col-half{margin: 0;width: 50%}
+.bc-chart.horizontal {width: 99%; min-height: 4rem; background: #fff; position: relative;}
+.bc-chart.horizontal .bc-bar{max-height: 4rem; background: yellow; padding: 1.25rem; margin: 0; position: relative;}
+.bc-chart.horizontal .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
+.bc-chart.horizontal .bc-tick-container{width: 50%;margin-left: 39%;position: absolute;bottom:0;top:0;border-bottom: 1px solid grey;border-left: 1px solid grey;}
+.bc-chart.horizontal .bc-tick{position: absolute; bottom:-15px; transform: translateX(-2px);}
+.bc-chart.horizontal .bc-tick::before{position: absolute; top: -15px; left: 40%; content:'|';}
+.bc-chart.vertical {margin-bottom: 2rem;height: 12rem; background: #fff; border-left: 1px solid grey; border-bottom: 1px solid grey; position: relative;}
+.bc-chart.vertical .bc-bar{background: blue; margin: 0 0 0 0.5rem; position: relative;}
+.bc-chart.vertical .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
+.bc-chart.vertical .bc-tick{position: absolute; bottom: 0; left: 10px;}
+.bc-chart.vertical .bc-tick::before{position:absolute;top:-10px;left:-7px;content:'_';}
+.bc-legend{margin-left: 1rem; position: relative;}
+.bc-legend-indicator{position: absolute; left: -0.725rem; content:''; width: 0.5rem; height: 0.5rem; background: red}
+.bc-label{width: 39%; text-align: right; padding-right: 0.5rem;vertical-align: top;padding-top: 1rem;}
+.bc-value{width: 9%; padding-left: 0.5rem; vertical-align: top;padding-top: 1rem;}
+/*debug*/
+.user-message{width:66%;margin:0 auto 1rem;border:10px black solid;padding:.375rem;font-weight:400;font-size:1rem;text-align:center;}
+.log{position: absolute; top: 0; right: 0; padding: 3px; border-radius: 3px;opacity: 0.5;}

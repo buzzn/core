@@ -13,8 +13,8 @@ Function.prototype.bind = Function.prototype.bind || function (thisp) {
 function bcChart (id, labels, data, title) {
   var chart = $(id);
   var chartContainer = $(id + ' .bc-chart-container');
-  var legendContainer = !isHorizontal ? $(id + ' .bc-legend-container') : null;
   var isHorizontal = chart.hasClass('horizontal');
+  var legendContainer = !isHorizontal ? $(id + ' .bc-legend-container') : null;
   var colors = ['#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee'];
   var data = data.map(function(e){return parseInt(e)})
   // calculate horizontal/vertical bar length
@@ -82,12 +82,13 @@ function fixPdfDimensions() {
 // function setPageBreaks()
 // @param {String} footer - HTML
 function setPageBreaks(footer){
+  footer = footer || '<footer><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>'
   var pageSplitThreshold = isQt() ? 2000 : 1000;
   var pages = '';
   var pageCount;
   $('.wrapper').each(function(){
     var self = $(this);
-    var isTall = isQt() ? self.hasClass('tall') && self.height() > pageSplitThreshold : self.height() > pageSplitThreshold;
+    var isTall = isQt() ? self.hasClass('breakable') && self.height() > pageSplitThreshold : self.height() > pageSplitThreshold;
     var wrapperTop = self.offset().top;
     if (isTall) {
       var normalChildren = self.children().filter(function(){var applies = $(this).offset().top + $(this).outerHeight() < wrapperTop + pageSplitThreshold; return applies});
