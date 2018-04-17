@@ -1,0 +1,20 @@
+<!DOCTYPE html><html><head><title>#{title_text}</title><meta charset="utf-8" /><link href="/Users/pla/SourceTree/buzzn/buzzn/public/css/pdf-creation.css" rel="stylesheet" /><script src="/Users/pla/SourceTree/buzzn/buzzn/public/scripts/jquery-3.3.1.slim.min.js"></script><script src="/Users/pla/SourceTree/buzzn/buzzn/public/scripts/pdf-creation.js"></script></head><body><div class="wrapper breakable"><h1 class="is-text-center">Messvertrag</h1><p class="is-text-center">__lsg_V_Partner__<br>
+- Energiegruppe __lp_Name__ - <br>
+__lsg_Kontakt__<br>
+__lsg_Straße__ __lsg_HausNr__<br>
+__lsg_PLZ__ __lsg_Ort__</p><p class="is-text-center">T:  __lsg_Tel__<br>
+F: __lsg_Fax__<br>
+Email: __lsg_Email__</p><p class="is-text-center">__lsg_V_Partner__<br>
+__lsg_IBAN__<br>
+__lsg_BIC__<br>
+__lsg_Bank__</p><p class="is-text-center">Steuernummer: __steuerNr__</p><p class="is-text-center">__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</p><p class="is-text-center">__lsn_Anrede__<br>
+__lsn_Titel__<br>
+__lsn_Vorname__ __lsn_Name__<br>
+__lsn_Straße__ __lsn_HausNr__<br>
+__lsn_PLZ__ __lsn_Ort__</p><p class="is-text-center"><i>__lsn_per_EMail__</i></p><p class="is-text-center">__lsg_Ort__, den __r_Datum__</p><h2>1. Vertragsgegenstand und Definition „Messstelle“</h2><p>Dieser Vertrag regelt als Rahmenvertrag den Messstellenbetrieb und die Messung (nachfolgend zusammenfassend „Messstellenbetrieb“) für die Strom-Messstelle(n) des Kunden im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort» (nachfolgend „Objekt“).</p><p>Der Begriff „Messstelle“ bezeichnet den Zähler (direkt ab-/auslesbar oder berechnet), mit dem die Messung erfolgt, einschließlich der Gesamtheit der rund um den Zähler im Objekt des Kunden eingebauten weiteren technischen Einrichtungen, die der Messung dienen. Dazu zählen insbesondere</p></div><script>// initiate charts & page break
+$(function(){
+  var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="/Users/pla/SourceTree/buzzn/buzzn/public/assets/images/logo.png" /></div><span>__lsg_V_Partner__ • __lsg_Straße__ __lsg_HausNr__ • __lsg_PLZ__ __lsg_Ort__</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
+  // page breaks require the presence of at least one .wrapper container
+  setPageBreaks(footer);
+  fixPdfDimensions();
+});</script></body></html>
