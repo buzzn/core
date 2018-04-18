@@ -41,7 +41,7 @@ module Buzzn::Pdfs
     def name(person_or_organization)
       case person_or_organization
       when Person
-        person_or_organization.first_name + " " + person_or_organization.last_name
+        person_or_organization.first_name + ' ' + person_or_organization.last_name
       when Organization
         person_or_organization.name
       else
