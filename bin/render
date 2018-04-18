@@ -43,7 +43,9 @@ require './config/buzzn'
 generator =
   case file
   when /invoice.slim$/
-    Buzzn::Pdfs::Invoice.new(Billing.first)
+    billing = Billing.all.detect { |b| !b.items.first.end_reading.nil? && !b.items.first.begin_reading.nil? }
+    raise 'could not find valid billing' unless billing
+    Buzzn::Pdfs::Invoice.new(billing)
   else
     Buzzn::Pdfs::Minimal.new(file)
   end
