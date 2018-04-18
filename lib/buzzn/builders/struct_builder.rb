@@ -8,9 +8,9 @@ class Builders::StructBuilder
 
   def build(data)
     case data
-    when Array; process_array(data)
-    when Hash;  process_hash(data)
-    else        raise 'not implemented'
+    when Array then process_array(data)
+    when Hash then process_hash(data)
+    else raise 'not implemented'
     end
   end
 
@@ -19,9 +19,9 @@ class Builders::StructBuilder
   def process_hash(hash)
     hash.each do |key, value|
       case value
-      when Hash;  hash[key] = process_hash(value)
-      when Array; hash[key] = process_array(value)
-      else        value
+      when Hash then hash[key] = process_hash(value)
+      when Array then hash[key] = process_array(value)
+      else value
       end
     end
     @clazz.new(hash)
@@ -29,9 +29,9 @@ class Builders::StructBuilder
 
   def process_array(array)
     case array.first
-    when NilClass; []
-    when Hash;     array.collect { |v| process_hash(v) }
-    else           array
+    when NilClass then []
+    when Hash then array.collect { |v| process_hash(v) }
+    else array
     end
   end
 

@@ -4,7 +4,7 @@ require_relative 'builders/struct_builder'
 require_relative 'services/pdf_html_generator'
 
 module Buzzn
-  class PdfGenerator #< ::Services::PdfHtmlGenerator::Html
+  class PdfGenerator
 
     class PdfStruct < OpenStruct
 
@@ -14,8 +14,12 @@ module Buzzn
           @name = name
         end
 
-        def method_missing(method, *args)
-          "__#{@name}.#{method}__"
+        def method_missing(method, *args, &block)
+          "__#{@name}.#{method}__" || super # hack to satisfy rubocop
+        end
+
+        def respond_to_missing?(method)
+          true
         end
 
         def to_s
@@ -30,6 +34,10 @@ module Buzzn
         else
           Missing.new(method)
         end
+      end
+
+      def respond_to_missing?(method)
+        true
       end
 
     end
@@ -63,7 +71,7 @@ module Buzzn
     end
 
     def template
-      method(:initialize).source_location[0].sub(/rb$/, 'slim').sub(/.*\//, '')
+      method(:initialize).source_location[0].sub(/rb$/, 'slim').sub(%r(.*/), '')
     end
 
     private
