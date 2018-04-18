@@ -11,28 +11,6 @@ html
   body
     div.wrapper
       h1.is-text-center Messvertrag
-      / p.is-text-center #{lsg_V_Partner}<br>
-      /   - Energiegruppe #{lp_Name} - <br>
-      /   #{lsg_Kontakt}<br>
-      /   #{lsg_Straße} #{lsg_HausNr}<br>
-      /   #{lsg_PLZ} #{lsg_Ort}
-      / p.is-text-center T:  #{lsg_Tel}<br>
-      /   F: #{lsg_Fax}<br>
-      /   Email: #{lsg_Email}
-      / p.is-text-center #{lsg_V_Partner}<br>
-      /   #{lsg_IBAN}<br>
-      /   #{lsg_BIC}<br>
-      /   #{lsg_Bank}
-      / p.is-text-center Steuernummer: #{steuerNr}
-      / p.is-text-center #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
-      / p.is-text-center #{lsn_Anrede}<br>
-      /   #{lsn_Titel}<br>
-      /   #{lsn_Vorname} #{lsn_Name}<br>
-      /   #{lsn_Straße} #{lsn_HausNr}<br>
-      /   #{lsn_PLZ} #{lsn_Ort}
-      / p.is-text-center
-      /   i #{lsn_per_EMail}
-      / p.is-text-center #{lsg_Ort}, den #{r_Datum}
       p.is-text-center zwischen
       p.is-text-center  BUZZN GmbH <br>
         Adams-Lehmann-Straße 56, 80797 München <br>
@@ -63,7 +41,17 @@ html
       p Der Kunde beauftragt BUZZN damit, an der/den Messstelle(n) des Kunden gemäß den gesetzlichen und behördlichen Anforderungen die offiziellen Rollen des Messstellenbetreibers (MSB) sowie Messdienstleisters (MDL) zu übernehmen (siehe Anlage 1.
       p Der Kunde sichert als Anschlussnehmer eine wie in Anlage 2 beschriebene Zählerkonfiguration zu, einschließlich der baulichen Voraussetzungen für die technischen Einrichtungen.
       p BUZZN verpflichtet sich, den freien Lieferanten- und/oder Abnehmerwechsel des Kunden an der/den von ihr betriebenen Messstelle(n) nicht zu beeinträchtigen.
-
+      footer.is-small
+      .footer-logo
+        | powered by
+        img src="#{Dir.pwd}/public/assets/images/logo.png"
+      span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+      p.pagination.is-small
+        | Seite&nbsp;
+        span.page-number 1&nbsp;
+        | von&nbsp;
+        span.page-total-number 11
+    div.alwaysbreak
     div.wrapper
       h2 3	Technische Ausstattung der Messstelle(n)
       p BUZZN bestimmt Art, Zahl und Größe der Zähler sowie weiteren technischen Einrichtungen.
@@ -138,18 +126,18 @@ html
       div.row
         div.col-half
           p.has-dotted-underline.has-space-above
-          p |
-            (Ort), (Datum)
+          p
+            |(Ort), (Datum)
           p.has-dotted-underline.has-space-above
-          p |
-            (Unterschrift BUZZN)
+          p
+            |(Unterschrift BUZZN)
         div.col-half
           p.has-dotted-underline.has-space-above
-          p |
-            (Ort), (Datum)
+          p
+            |(Ort), (Datum)
           p.has-dotted-underline.has-space-above
-          p |
-            (Unterschrift Kunde)
+          p
+            |(Unterschrift Kunde)
 
     div.wrapper
       h2 Auftrag und Vollmacht (Anlage 1 zum Messvertrag Nr. «Mess_Vertr_Nr»)
@@ -175,15 +163,17 @@ html
       p Diese Vollmacht erstreckt sich auch auf Dritte, die der Bevollmächtigte mit der Erledigung der vorgenannten Aufgaben beauftragt hat.
       p Soweit ich nicht selbst Anschlussnutzer bin, versichere ich, dass ich im Auftrag des/der Anschlussnutzer(n) handle.
       p.has-dotted-underline.has-space-above
-      p | (Ort), (Datum)
+      p
+        |(Ort), (Datum)
       p.has-dotted-underline.has-space-above
-      p | (Unterschrift)
+      p
+        |(Unterschrift)
 
     javascript:
       // initiate charts & page break
       $(function(){
-        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
+        // var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
         // page breaks require the presence of at least one .wrapper container
-        setPageBreaks(footer);
+        // setPageBreaks(footer);
         fixPdfDimensions();
       });

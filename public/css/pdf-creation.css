@@ -24,7 +24,7 @@ div.alwaysbreak {page-break-before: always;}
 .row {margin: 0 -0.375rem;}
 .col-3rd {width: 30%; margin: 0.375rem 0.375rem; float: left;}
 .col-half {width: 47%; margin: 0.375rem 0.375rem; float: left;}
-/*modifiers*/
+/*modifiers is*/
 .is-larger {font-size: 1.125rem;}
 .is-large {font-size: 0.75rem;}
 .is-medium {font-size: 0.625rem;}
@@ -39,11 +39,14 @@ div.alwaysbreak {page-break-before: always;}
 .is-inline-block {display: inline-block;}
 .is-indented{padding-left: 2rem;}
 .is-styled-list li {list-style: disc; margin-left: 2rem;}
-.has-dotted-underline{border-bottom: 1px dotted black;}
-.has-space-above{margin-top: 1rem;}
+/*has*/
+.has-dotted-underline{border-bottom: .125rem dotted black;}
+.has-space-above{margin-top: 2rem;}
+/*no*/
 .no-margin {margin: 0;}
 .no-padding {padding: 0;}
 .no-border {border-color: transparent;}
+/**/
 .clear {clear: both;}
 /*components*/
 .card {padding: 0.5rem 1rem; min-height: 6rem; position: relative;}
