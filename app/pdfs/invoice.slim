@@ -105,8 +105,8 @@ html
         p #{contractor.name}<br>
           #{contractor.iban}<br>
           #{contractor.bic}<br>
-          #{contractor.bankname}
-        p Steuernummer: #{steuerNr}
+          #{contractor.bank_name}
+        p Steuernummer: #{contract.tax_number}
       p.is-smaller.clear #{contractor.name} • #{contractor.street} #{contractor.HausNr} • #{contractor.zip} #{contractor.city}
       p #{powertaker.title}<br>
         #{powertaker.first_name} #{powertaker.last_name}<br>
@@ -123,7 +123,7 @@ html
           td.no-border.no-padding #{contract.number}
         tr
           td.no-border.no-padding Bezugsstelle:
-          td.no-border.no-padding #{powertaker.street}, #{powertaker.Adresszusatz_b}
+          td.no-border.no-padding #{powertaker.street}, #{powertaker.addition}
         tr
           td.no-border.no-padding Zählernummer:
           td.no-border.no-padding #{mpsn_ZählerNr_alt}
@@ -146,59 +146,19 @@ html
             th.is-text-right kWh
           tr
             td.no-border Beginn Abrechnungszeitraum
-            td.no-border #{datum_1}
+            td.no-border #{item.begin_date}
             td.no-border Zählerstand
-            td.no-border.is-text-right #{zSt_1}
+            td.no-border.is-text-right #{item.begin_kwh}
           tr
             td Ende Abrechnungszeitraum
-            td #{datum_4}
+            td #{item.last_date}
             td Zählerstand
-            td.is-text-right #{zSt_4}
-          tr
-            td.no-border Beginn Abrechnungszeitraum
-            td.no-border #{datum_1}
-            td.no-border Zählerstand
-            td.no-border.is-text-right #{zSt_1}
-          tr
-            td Ende Abrechnungszeitraum
-            td #{datum_4}
-            td Zählerstand
-            td.is-text-right #{zSt_4}
-          tr
-            td.no-border Beginn Abrechnungszeitraum
-            td.no-border #{datum_1}
-            td.no-border Zählerstand
-            td.no-border.is-text-right #{zSt_1}
-          tr
-            td Ende Abrechnungszeitraum
-            td #{datum_4}
-            td Zählerstand
-            td.is-text-right #{zSt_4}
-          tr
-            td.no-border Beginn Abrechnungszeitraum
-            td.no-border #{datum_1}
-            td.no-border Zählerstand
-            td.no-border.is-text-right #{zSt_1}
-          tr
-            td Ende Abrechnungszeitraum
-            td #{datum_4}
-            td Zählerstand
-            td.is-text-right #{zSt_4}
-          tr
-            td.no-border Beginn Abrechnungszeitraum
-            td.no-border #{datum_1}
-            td.no-border Zählerstand
-            td.no-border.is-text-right #{zSt_1}
-          tr
-            td Ende Abrechnungszeitraum
-            td #{datum_4}
-            td Zählerstand
-            td.is-text-right #{zSt_4}
+            td.is-text-right #{item.last_kwh}
           tr
             td colspan=3
               strong Bezug Abrechnungszeitraum
             td.is-text-right
-              strong #{zSt_Diff}
+              strong #{billing.consumed_energy_kwh}
       div
         h2 Abrechnung
         table.is-full-width.is-small
@@ -210,40 +170,16 @@ html
             th.is-text-right Betrag
           tr
             td.no-border Arbeitspreis
-            td.no-border #{datum_1} - #{datum_4}
-            td.no-border #{zSt_Diff} kWh
-            td.no-border #{bezugspreis_netto} Ct/kWh
-            td.no-border.is-text-right #{bezugspreis_Produkt} €
+            td.no-border #{item.begin_date} - #{item.last_date}
+            td.no-border #{item.consumed_energy_kwh} kWh
+            td.no-border #{item.energy_price_cents_per_kwh} Ct/kWh
+            td.no-border.is-text-right #{item.energy_price_euros} €
           tr
             td Grundpreis
-            td #{datum_1} - #{datum_4}
-            td #{zeitraum} Monate
-            td #{grundpreis_netto} €/Monat
-            td.is-text-right #{grundpreis_Produkt} €
-          tr
-            td.no-border Arbeitspreis
-            td.no-border #{datum_1} - #{datum_4}
-            td.no-border #{zSt_Diff} kWh
-            td.no-border #{bezugspreis_netto} Ct/kWh
-            td.no-border.is-text-right #{bezugspreis_Produkt} €
-          tr
-            td Grundpreis
-            td #{datum_1} - #{datum_4}
-            td #{zeitraum} Monate
-            td #{grundpreis_netto} €/Monat
-            td.is-text-right #{grundpreis_Produkt} €
-          tr
-            td.no-border Arbeitspreis
-            td.no-border #{datum_1} - #{datum_4}
-            td.no-border #{zSt_Diff} kWh
-            td.no-border #{bezugspreis_netto} Ct/kWh
-            td.no-border.is-text-right #{bezugspreis_Produkt} €
-          tr
-            td Grundpreis
-            td #{datum_1} - #{datum_4}
-            td #{zeitraum} Monate
-            td #{grundpreis_netto} €/Monat
-            td.is-text-right #{grundpreis_Produkt} €
+            td #{item.begin_date} - #{item.last_date}
+            td #{item.length_in_days} Tage
+            td #{item.base_price_euros_per_day} €/Tag
+            td.is-text-right #{item.base_price_euros} €
           tr
             td.no-border Zwischensumme (netto)
             td.no-border colspan=3
@@ -274,8 +210,8 @@ html
       div.log
       h2 Ihre Vertragskonditionen
       p Die aktuellen Preise in der Energiegruppe #{localpool.name} betragen:<br>
-        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{grundpreis_brutto_neu} €/Monat,</strong> (#{grundpreis_netto_neu} €/Monat)<br>
-        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{bezugspreis_brutto_neu} Cent/kWh,</strong> (#{bezugspreis_netto_neu} Cent/kWh)
+        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{grundpreis_brutto_neu} €/Monat,</strong> (#{billing.baseprice} €/Monat)<br>
+        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{bezugspreis_brutto_neu} Cent/kWh,</strong> (#{billing.energyprice} Cent/kWh)
       p <strong>#{abschlag_neu_Satz}</strong>
       p Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.
       p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.

@@ -16,7 +16,10 @@ module Buzzn::Pdfs
         powertaker: build_powertaker,
         localpool: build_localpool,
         billing: build_billing,
-        contract: { number: contract.full_contract_number }
+        item: build_billing_items.first,
+        contract: {
+          number: contract.full_contract_number,
+        }
       }
     end
 
@@ -79,6 +82,22 @@ module Buzzn::Pdfs
       end
     end
 
+    def last_tariff
+      @tariff ||= @billing.items.last.tariff
+    end
+
+    def to_kwh(value)
+      (value / 1000).round
+    end
+
+    def to_date(date)
+      date.to_s
+    end
+
+    def to_euro(cents)
+      (cents/100.0).round(2)
+    end
+
     def build_contractor
       data = {
         name: name(contractor),
@@ -110,7 +129,7 @@ module Buzzn::Pdfs
         end
       end
       powertaker.address.tap do |address|
-        %i(street zip city).each do |field|
+        %i(street zip city addition).each do |field|
           data[field] = address.send(field)
         end
       end
@@ -120,7 +139,10 @@ module Buzzn::Pdfs
     def build_billing
       {
         date: @billing.last_date,
-        number: @billing.invoice_number
+        number: @billing.invoice_number,
+        baseprice: to_euro(last_tariff.baseprice_cents_per_month),
+        energyprice: to_euro(last_tariff.energyprice_cents_per_kwh),
+        consumed_energy_kwh: @billing.items.first.consumed_energy_kwh
       }
     end
 
@@ -128,6 +150,23 @@ module Buzzn::Pdfs
       {
         name: contract.localpool.name
       }
+    end
+
+    def build_billing_items
+      @billing.items.collect do |item|
+        {
+          begin_date: to_date(item.begin_date),
+          last_date: to_date(item.last_date),
+          begin_kwh: to_kwh(item.begin_reading.value),
+          last_kwh: to_kwh(item.end_reading.value),
+          consumed_energy_kwh: item.consumed_energy_kwh,
+          energy_price_cents_per_kwh: item.tariff.energyprice_cents_per_kwh,
+          energy_price_euros: to_euro(item.energy_price_cents),
+          length_in_days: item.length_in_days,
+          base_price_euros_per_day: to_euro(item.baseprice_cents_per_day),
+          base_price_euros: to_euro(item.base_price_cents)
+        }
+      end
     end
 
   end
