@@ -54,13 +54,13 @@ class Services::PdfHtmlGenerator
     file
   end
 
-  def generate_pdf(name, html)
-    WickedPdf.new.pdf_from_string(render_html(name, html), javascript_delay: 0, extra: '--enable-forms')
+  def generate_pdf(name, struct)
+    WickedPdf.new.pdf_from_string(render_html(name, struct), javascript_delay: 0, extra: '--enable-forms')
   end
 
-  def render_html(name, html)
+  def render_html(name, struct)
     file = resolve_template(name)
-    html.render(file)
+    Slim::Template.new(file).render(struct)
   end
 
 end

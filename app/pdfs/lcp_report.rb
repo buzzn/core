@@ -5,8 +5,6 @@ module Buzzn::Pdfs
 
     include Import.kwargs['services.reading_calculation']
 
-    TEMPLATE = 'lcp_report.slim'
-
     def initialize(total_accounted_energy:, **kwargs)
       super(**kwargs)
       @total_accounted_energy = total_accounted_energy
