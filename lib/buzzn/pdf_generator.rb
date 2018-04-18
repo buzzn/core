@@ -18,7 +18,7 @@ module Buzzn
           "__#{@name}.#{method}__" || super # hack to satisfy rubocop
         end
 
-        def respond_to_missing?(method)
+        def respond_to_missing?(*)
           true
         end
 
@@ -36,8 +36,8 @@ module Buzzn
         end
       end
 
-      def respond_to_missing?(method)
-        true
+      def respond_to_missing?(*)
+        super
       end
 
     end

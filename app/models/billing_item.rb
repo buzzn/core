@@ -2,6 +2,7 @@
 # A billing item stores a part of the energy consumption within a billing.
 #
 require_relative 'concerns/with_date_range'
+require_relative 'concerns/last_date'
 
 class BillingItem < ActiveRecord::Base
 
@@ -48,16 +49,14 @@ class BillingItem < ActiveRecord::Base
     (length_in_days * baseprice_cents_per_day)
   end
 
-  private
+  def length_in_days
+    return unless end_date && begin_date
+    (end_date - begin_date).to_i
+  end
 
   def baseprice_cents_per_day
     return unless tariff
     (tariff.baseprice_cents_per_month * 12) / 365.0
-  end
-
-  def length_in_days
-    return unless end_date && begin_date
-    (end_date - begin_date).to_i
   end
 
 end
