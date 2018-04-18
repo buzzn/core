@@ -3,11 +3,20 @@ require 'buzzn/pdf_generator'
 module Buzzn::Pdfs
   class Minimal < Buzzn::PdfGenerator
 
-    TEMPLATE = if Import.global?('config.slim_file')
-                 Import.global('config.slim_file').sub('app/pdfs/', '')
-               else
-                 'minimal.slim'
-               end
+    def initialize(template = nil, **kwargs)
+      super(kwargs)
+      @template = template.sub('app/pdfs/', '') if template
+    end
+
+    protected
+
+    def template
+      @template || super
+    end
+
+    def build_struct
+      {}
+    end
 
   end
 end

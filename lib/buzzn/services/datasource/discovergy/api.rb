@@ -1,4 +1,5 @@
 require_relative '../discovergy'
+require_relative '../../../builders/struct_builder'
 
 class Services::Datasource::Discovergy::Api
 
@@ -16,46 +17,15 @@ class Services::Datasource::Discovergy::Api
     monitored_request(query)
   end
 
-  def request(query, builder = nil)
+  def request(query, builder = Builder::StructBuilder.new)
     payload = monitored_request(query)
     return if payload.empty?
     result = MultiJson.load(payload)
 
-    if builder
-      builder.build(result)
-    else
-      build(result)
-    end
+    builder.build(result)
   end
 
   private
-
-  def build(result)
-    case result
-    when Array; process_array(result)
-    when Hash;  process_hash(result)
-    else        raise 'not implemented'
-    end
-  end
-
-  def process_hash(hash)
-    hash.each do |key, value|
-      case value
-      when Hash;  hash[key] = process_hash(value)
-      when Array; hash[key] = process_array(value)
-      else        value
-      end
-    end
-    OpenStruct.new(hash)
-  end
-
-  def process_array(array)
-    case array.first
-    when NilClass; []
-    when Hash;     array.collect { |v| process_hash(v) }
-    else           array
-    end
-  end
 
   def monitored_request(query)
     begin
