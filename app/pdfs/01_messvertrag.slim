@@ -7,7 +7,8 @@ html
     link href='#{Dir.pwd}/public/css/pdf-creation.css' rel='stylesheet'
     script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
     script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
-
+  css:
+    html{line-height:1.4}
   body
     div.wrapper
       h1.is-text-center Messvertrag
@@ -18,7 +19,7 @@ html
         Telefon: 089-4161714-10 <br>
         Fax: 089-4161714-99 <br>
         E-Mail: team@buzzn.net <br>
-        nachfolgend „BUZZN“
+        nachfolgend <b>„BUZZN“</b>
       p.is-text-center und
       p.is-text-center «LSG_V.-Partner» <br>
         «LSG_Straße» «LSG_HausNr», «LSG_PLZ» «LSG_Ort» <br>
@@ -26,9 +27,9 @@ html
         Telefon: «LSG_Tel» <br>
         Fax: «LSG_Fax» <br>
         E‑Mail: «LSG_Email» <br>
-        strong nachfolgend „Kunde“
+        nachfolgend <b>„Kunde“</b>
       p.is-text-center
-        strong (Vertragsnummer «Mess_Vertr_Nr»)
+        <b>(Vertragsnummer «Mess_Vertr_Nr»)</b>
 
       h2 1 Vertragsgegenstand und Definition „Messstelle“
       p Dieser Vertrag regelt als Rahmenvertrag den Messstellenbetrieb und die Messung (nachfolgend zusammenfassend „Messstellenbetrieb“) für die Strom-Messstelle(n) des Kunden im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort» (nachfolgend „Objekt“).
@@ -45,7 +46,7 @@ html
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
           span.page-number 1&nbsp;
@@ -76,10 +77,10 @@ html
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 1&nbsp;
+          span.page-number 2&nbsp;
           | von&nbsp;
           span.page-total-number 11
     div.alwaysbreak
@@ -106,10 +107,10 @@ html
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 1&nbsp;
+          span.page-number 3&nbsp;
           | von&nbsp;
           span.page-total-number 11
     div.alwaysbreak
@@ -130,10 +131,10 @@ html
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 1&nbsp;
+          span.page-number 4&nbsp;
           | von&nbsp;
           span.page-total-number 11
     div.alwaysbreak
@@ -167,10 +168,10 @@ html
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 1&nbsp;
+          span.page-number 5&nbsp;
           | von&nbsp;
           span.page-total-number 11
     div.alwaysbreak
@@ -207,157 +208,201 @@ html
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 1&nbsp;
+          span.page-number 6&nbsp;
           | von&nbsp;
           span.page-total-number 11
-      div.alwaysbreak
-      div.wrapper
-        h2 Zählerkonfiguration (Anlage 2 zum Messvertrag Nr. «Mess_Vertr_Nr»)
-        img.is-responsive src="#{Dir.pwd}/public/assets/images/buzzn_messvertrag_img_1.png"
-        footer.is-small
-          .footer-logo
-            | powered by
-            img src="#{Dir.pwd}/public/assets/images/logo.png"
-          span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
-          p.pagination.is-small
-            | Seite&nbsp;
-            span.page-number 1&nbsp;
-            | von&nbsp;
-            span.page-total-number 11
-      div.alwaysbreak
-      div.wrapper
-        h2 Anmeldung Messstelle (Anlage 3 zum Messvertrag Nr. «Mess_Vertr_Nr»)
-        p Hinweis für Lokale Stromgeber: Als Anmeldung im Sinne dieser Anlage 1 gilt auch jede Übermittlung eines Stromvertrags zwischen einem Lokalen Stromgeber und einem Lokalen Stromnehmer. In diesem Fall muss die jeweilige Messstelle <u>nicht</u> erneut mit dem nachfolgenden Formular angemeldet werden.
-        table.is-full-width.is-verticalalign-top.has-td-fix-height
-          tr
-            td.is-huge.is-bold 1
-            td Zählernummer: <br>
-            td Messlokation-ID (33-stellig, falls bekannt): <br>DE
-          tr
-            td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
-            td Anschlussnutzer:
-            td Adresszusatz (z. B. „2. OG links“):
-          tr
-            td colspan="2" Lieferant (bisher):
-            td Messstellenbetreiber (bisher):
-        table.is-full-width.is-verticalalign-top.has-td-fix-height
-          tr
-            td.is-huge.is-bold 2
-            td Zählernummer: <br>
-            td Messlokation-ID (33-stellig, falls bekannt): <br>DE
-          tr
-            td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
-            td Anschlussnutzer:
-            td Adresszusatz (z. B. „2. OG links“):
-          tr
-            td colspan="2" Lieferant (bisher):
-            td Messstellenbetreiber (bisher):
-        table.is-full-width.is-verticalalign-top.has-td-fix-height
-          tr
-            td.is-huge.is-bold 3
-            td Zählernummer: <br>
-            td Messlokation-ID (33-stellig, falls bekannt): <br>DE
-          tr
-            td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
-            td Anschlussnutzer:
-            td Adresszusatz (z. B. „2. OG links“):
-          tr
-            td colspan="2" Lieferant (bisher):
-            td Messstellenbetreiber (bisher):
-        footer.is-small
-          .footer-logo
-            | powered by
-            img src="#{Dir.pwd}/public/assets/images/logo.png"
-          span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
-          p.pagination.is-small
-            | Seite&nbsp;
-            span.page-number 1&nbsp;
-            | von&nbsp;
-            span.page-total-number 11
-      div.alwaysbreak
-      div.wrapper
-        h2 Abmeldung Messstelle (Anlage 4 zum Messvertrag Nr. «Mess_Vertr_Nr»)
-        table.is-full-width.is-verticalalign-top.has-td-fix-height
-          tr
-            td.is-huge.is-bold 1
-            td Zählernummer: <br>
-            td Messlokation-ID (33-stellig, falls bekannt): <br>DE
-          tr
-            td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
-            td Anschlussnutzer:
-            td Adresszusatz (z. B. „2. OG links“):
-        table.is-full-width.is-verticalalign-top.has-td-fix-height
-          tr
-            td.is-huge.is-bold 2
-            td Zählernummer: <br>
-            td Messlokation-ID (33-stellig, falls bekannt): <br>DE
-          tr
-            td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
-            td Anschlussnutzer:
-            td Adresszusatz (z. B. „2. OG links“):
-        table.is-full-width.is-verticalalign-top.has-td-fix-height
-          tr
-            td.is-huge.is-bold 3
-            td Zählernummer: <br>
-            td Messlokation-ID (33-stellig, falls bekannt): <br>DE
-          tr
-            td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
-            td Anschlussnutzer:
-            td Adresszusatz (z. B. „2. OG links“):
-        footer.is-small
-          .footer-logo
-            | powered by
-            img src="#{Dir.pwd}/public/assets/images/logo.png"
-          span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
-          p.pagination.is-small
-            | Seite&nbsp;
-            span.page-number 1&nbsp;
-            | von&nbsp;
-            span.page-total-number 11
-      div.alwaysbreak
-      div.wrapper
-        h2 SEPA Lastschrift-Mandat (Anlage 5 zum Messvertrag Nr. «Mess_Vertr_Nr»)
-        p Fällige Zahlungen aufgrund dieses Messvertrags werden per SEPA-Basis-Lastschriftverfahren eingezogen.
-        p Die Gläubiger-Identifikationsnummer von BUZZN ist DE64ZZZ00000588286.
-        p Die Mandatsreferenz lautet «Mess_Vertr_Nr».
-        p Hiermit ermächtige ich BUZZN GmbH, Adams-Lehmann-Straße 56, 80797 München, widerruflich, fällige Zahlungen aufgrund dieses Messvertrages von nachstehendem Bankkonto mittels SEPA Basislastschrift einzuziehen. Zugleich weise ich meine Bank an, die durch BUZZN GmbH von meinem Konto gezogenen Lastschriften einzulösen. Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es gelten dabei die mit meiner Bank vereinbarten Bedingungen.
-        p.has-dotted-underline.has-space-above.col-half.float-none
-        p
-          |(Kontoinhaber)
-        p.has-dotted-underline.has-space-above.col-half.float-none
-        p
-          |(IBAN)
-        p.has-dotted-underline.has-space-above.col-half.float-none
-        p
-          |(BIC)
-        p.has-dotted-underline.has-space-above.col-half.float-none
-        p
-          |(Name der Bank)
-        p.has-dotted-underline.has-space-above.col-half.float-none
-        p
-          |(Ort), (Datum)
-        p.has-dotted-underline.has-space-above.col-half.float-none
-        p
-          |(Unterschrift Kontoinhaber)
-        footer.is-small
-          .footer-logo
-            | powered by
-            img src="#{Dir.pwd}/public/assets/images/logo.png"
-          span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
-          p.pagination.is-small
-            | Seite&nbsp;
-            span.page-number 1&nbsp;
-            | von&nbsp;
-            span.page-total-number 11
-      div.alwaysbreak
-    javascript:
-      // initiate charts & page break
-      $(function(){
-        // var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
-        // page breaks require the presence of at least one .wrapper container
-        // setPageBreaks(footer);
-        // fixPdfDimensions();
-      });
+    div.alwaysbreak
+    div.wrapper
+      h2 Zählerkonfiguration (Anlage 2 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      img.is-responsive src="#{Dir.pwd}/public/assets/images/buzzn_messvertrag_img_1.png"
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span Version: #{version}
+        p.pagination.is-small
+          | Seite&nbsp;
+          span.page-number 7&nbsp;
+          | von&nbsp;
+          span.page-total-number 11
+    div.alwaysbreak
+    div.wrapper
+      h2 Anmeldung Messstelle (Anlage 3 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      p Hinweis für Lokale Stromgeber: Als Anmeldung im Sinne dieser Anlage 1 gilt auch jede Übermittlung eines Stromvertrags zwischen einem Lokalen Stromgeber und einem Lokalen Stromnehmer. In diesem Fall muss die jeweilige Messstelle <u>nicht</u> erneut mit dem nachfolgenden Formular angemeldet werden.
+      table.is-full-width.is-verticalalign-top.has-td-fix-height
+        tr
+          td.is-huge.is-bold 1
+          td Zählernummer: <br>
+          td Messlokation-ID (33-stellig, falls bekannt): <br>DE
+        tr
+          td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
+          td Anschlussnutzer:
+          td Adresszusatz (z. B. „2. OG links“):
+        tr
+          td colspan="2" Lieferant (bisher):
+          td Messstellenbetreiber (bisher):
+      table.is-full-width.is-verticalalign-top.has-td-fix-height
+        tr
+          td.is-huge.is-bold 2
+          td Zählernummer: <br>
+          td Messlokation-ID (33-stellig, falls bekannt): <br>DE
+        tr
+          td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
+          td Anschlussnutzer:
+          td Adresszusatz (z. B. „2. OG links“):
+        tr
+          td colspan="2" Lieferant (bisher):
+          td Messstellenbetreiber (bisher):
+      table.is-full-width.is-verticalalign-top.has-td-fix-height
+        tr
+          td.is-huge.is-bold 3
+          td Zählernummer: <br>
+          td Messlokation-ID (33-stellig, falls bekannt): <br>DE
+        tr
+          td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
+          td Anschlussnutzer:
+          td Adresszusatz (z. B. „2. OG links“):
+        tr
+          td colspan="2" Lieferant (bisher):
+          td Messstellenbetreiber (bisher):
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span Version: #{version}
+        p.pagination.is-small
+          | Seite&nbsp;
+          span.page-number 8&nbsp;
+          | von&nbsp;
+          span.page-total-number 11
+    div.alwaysbreak
+    div.wrapper
+      h2 Abmeldung Messstelle (Anlage 4 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      table.is-full-width.is-verticalalign-top.has-td-fix-height
+        tr
+          td.is-huge.is-bold 1
+          td Zählernummer: <br>
+          td Messlokation-ID (33-stellig, falls bekannt): <br>DE
+        tr
+          td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
+          td Anschlussnutzer:
+          td Adresszusatz (z. B. „2. OG links“):
+      table.is-full-width.is-verticalalign-top.has-td-fix-height
+        tr
+          td.is-huge.is-bold 2
+          td Zählernummer: <br>
+          td Messlokation-ID (33-stellig, falls bekannt): <br>DE
+        tr
+          td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
+          td Anschlussnutzer:
+          td Adresszusatz (z. B. „2. OG links“):
+      table.is-full-width.is-verticalalign-top.has-td-fix-height
+        tr
+          td.is-huge.is-bold 3
+          td Zählernummer: <br>
+          td Messlokation-ID (33-stellig, falls bekannt): <br>DE
+        tr
+          td Zählerfunktion: <br>□ Übergabe<br> □ Bezug<br> □ Abgrenzung<br> □ Erzeugung
+          td Anschlussnutzer:
+          td Adresszusatz (z. B. „2. OG links“):
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span Version: #{version}
+        p.pagination.is-small
+          | Seite&nbsp;
+          span.page-number 9&nbsp;
+          | von&nbsp;
+          span.page-total-number 11
+    div.alwaysbreak
+    div.wrapper
+      h2 SEPA Lastschrift-Mandat (Anlage 5 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      p Fällige Zahlungen aufgrund dieses Messvertrags werden per SEPA-Basis-Lastschriftverfahren eingezogen.
+      p Die Gläubiger-Identifikationsnummer von BUZZN ist DE64ZZZ00000588286.
+      p Die Mandatsreferenz lautet «Mess_Vertr_Nr».
+      p Hiermit ermächtige ich BUZZN GmbH, Adams-Lehmann-Straße 56, 80797 München, widerruflich, fällige Zahlungen aufgrund dieses Messvertrages von nachstehendem Bankkonto mittels SEPA Basislastschrift einzuziehen. Zugleich weise ich meine Bank an, die durch BUZZN GmbH von meinem Konto gezogenen Lastschriften einzulösen. Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es gelten dabei die mit meiner Bank vereinbarten Bedingungen.
+      p.has-dotted-underline.has-space-above.col-half.float-none
+      p
+        |(Kontoinhaber)
+      p.has-dotted-underline.has-space-above.col-half.float-none
+      p
+        |(IBAN)
+      p.has-dotted-underline.has-space-above.col-half.float-none
+      p
+        |(BIC)
+      p.has-dotted-underline.has-space-above.col-half.float-none
+      p
+        |(Name der Bank)
+      p.has-dotted-underline.has-space-above.col-half.float-none
+      p
+        |(Ort), (Datum)
+      p.has-dotted-underline.has-space-above.col-half.float-none
+      p
+        |(Unterschrift Kontoinhaber)
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span Version: #{version}
+        p.pagination.is-small
+          | Seite&nbsp;
+          span.page-number 10&nbsp;
+          | von&nbsp;
+          span.page-total-number 11
+    div.alwaysbreak
+    div.wrapper
+      h2 Preisliste (Anlage 6 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      p Alle Preisangaben verstehen sich netto (zzgl. Umsatzsteuer) je Messstelle. Preisliste gültig ab 01.01.2018.
+      table.is-full-width.is-verticalalign-top.has-td-fix-height
+        tr
+          th Titel
+          th Beschreibung
+          th Einmalige Vergütung (€)
+          th Laufende Vergütung (€/Monat)
+        tr
+          td Einrichtung und Administration pauschal
+          td Einmalige und laufende Prozesse: Stromverträge, Auftragsbestätigungen, Abrechnungen, Wechselprozesse, Meldewesen bei Übertragungsnetzbetreiber, Bundesnetzagentur, Hauptzollamt
+          td 1.000,00
+          td 25,00
+        tr
+          td 1 und 2-Richtungszähler als Bezugszähler, Produktionszähler, Abgrenzungszähler, Übergabezähler
+          td Wechsel- od. Drehstromzähler direktmessend (bis  100 A) oder als Wandlermesszähler ausgeführt sekundengenaue Messung und Anzeige von Wirkarbeit und Leistung fernauslesbar über vom Kunden gestellten Internetanschluss (LAN) Visualisierung per BUZZN App
+          td 250,00
+          td 3,00 <sup>1</sup><br>(6,00 <sup>2</sup>) <br>(12,00 <sup>3</sup>)<br> (36,00 <sup>4</sup>)
+        tr
+          td 4-Quadrantenzähler als Übergabezähler für Bezugsstellen mit Verbrauch > 100.000 kWh/Jahr für Einspeisestellen mit Erzeugungsanlage > 100 kWp geeignet für EEG-Direktvermarktung
+          td RLM-Drehstromzähler als Wandlermesszähler ausgeführt sekundengenaue und Viertelstundenmessung  von Wirkarbeit, Blindarbeit,  Leistungsspitzen in Bezugs- und Einspeiserichtung sowie der Wirk- und Blindleistung fernauslesbar über vom Kunden gestellten Internetanschluss (LAN) Visualisierung per BUZZN App
+          td 900,00
+          td 30,00 <sup>1</sup><br>(33,00 <sup>2</sup>) <br>(39,00 <sup>3</sup>) <br>(63,00 <sup>4</sup>)
+        tr
+          td Zahlungsweise
+          td
+          td Rechnung
+          td Lastschrift
+      p.is-small <sup>1</sup> Inklusive einer Turnusabrechnung durch BUZZN pro Jahr. 
+      p.is-small <sup>2</sup> Inklusive einer halbjährlichen Turnusabrechnung durch BUZZN, fällig ab Beginn der vom Kunden gewünschten Turnusumstellung. 
+      p.is-small <sup>3</sup> Inklusive einer vierteljährlichen Turnusabrechnung durch BUZZN, fällig ab Beginn der vom Kunden gewünschten Turnusumstellung. 
+      p.is-small <sup>4</sup> Inklusive einer monatlichen Turnusabrechnung durch BUZZN, fällig ab Beginn der vom Kunden gewünschten Turnusumstellung.
+      p Preise für Steuereinrichtungen, Tarifeinrichtungen, Zusatzeinrichtungen, Wandler, Telekommunikationseinrichtungen auf Anfrage.
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span Version: #{version}
+        p.pagination.is-small
+          | Seite&nbsp;
+          span.page-number 11&nbsp;
+          | von&nbsp;
+          span.page-total-number 11
+  javascript:
+    // initiate charts & page break
+    $(function(){
+      // var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
+      // page breaks require the presence of at least one .wrapper container
+      // setPageBreaks(footer);
+      // fixPdfDimensions();
+    });
