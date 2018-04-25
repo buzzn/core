@@ -1,0 +1,96 @@
+/ Wird zwingend für LCP Abwicklung benötigt. Vertrag wird zwischen bS und Kunden geschlossen. Hier ist auch die Preisliste für die LCP Dienstleistung verankert
+doctype html
+html
+  head
+    title = '#{title_text}'
+    meta charset='utf-8'
+    link href='#{Dir.pwd}/public/css/pdf-creation.css' rel='stylesheet'
+    script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
+    script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
+
+  body
+    div.wrapper
+      h1.is-text-center Auftrag zur Stromlieferung
+      p zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_Kontakt», im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort».
+      p Auszufüllen vom zukünftigen Lokalen Stromnehmer und unterschrieben zurückzureichen an den Lokalen Stromgeber.
+      p Pflichtfelder sind mit *gekennzeichnet. Vielen Dank!
+      h2 1 Kontaktperson
+      p
+        span.is-mandatory Anrede:&nbsp;
+        label Frau <input type="radio" name="frauherrsonstige"> /
+        label Herr <input type="radio" name="frauherrsonstige"> /
+        label Sonstige: <input type="radio" name="frauherrsonstige">: <input type="text">
+      p
+        span.is-mandatory Name (Vorname/Nachname):
+        input[type="text"]
+      p
+        span.is-mandatory Telefon:
+        input[type="text"]
+      p
+        span.is-mandatory E-Mail:
+        input[type="text"]
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        p.pagination.is-small
+          | Seite&nbsp;
+          span.page-number 1&nbsp;
+          | von&nbsp;
+          span.page-total-number 4
+    div.alwaysbreak
+
+    div.wrapper
+      h2 Ipsum
+      p Lorem
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        p.pagination.is-small
+          | Seite&nbsp;
+          span.page-number 2&nbsp;
+          | von&nbsp;
+          span.page-total-number 4
+    div.alwaysbreak
+
+    div.wrapper
+      h2 Ipsum
+      p Lorem
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        p.pagination.is-small
+          | Seite&nbsp;
+          span.page-number 3&nbsp;
+          | von&nbsp;
+          span.page-total-number 4
+    div.alwaysbreak
+
+    div.wrapper
+      h2 Ipsum
+      p Lorem
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        p.pagination.is-small
+          | Seite&nbsp;
+          span.page-number 4&nbsp;
+          | von&nbsp;
+          span.page-total-number 4
+    div.alwaysbreak
+
+  javascript:
+    // initiate charts & page break
+    $(function(){
+      // var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
+      // page breaks require the presence of at least one .wrapper container
+      // setPageBreaks(footer);
+      // fixPdfDimensions();
+    });
