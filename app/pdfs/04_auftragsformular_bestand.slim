@@ -20,17 +20,19 @@ html
         label Herr <input type="radio" name="frauherrsonstige"> /
         label Sonstige: <input type="radio" name="frauherrsonstige">: <input type="text">
       p
-        span.is-mandatory Name (Vorname/Nachname):
+        span.is-mandatory
+        | Name (Vorname/Nachname): &nbsp;
         input[type="text"]
       p
-        span.is-mandatory Telefon:
+        span.is-mandatory
+        | Telefon: &nbsp;
         input[type="text"]
-      p
-        span.is-mandatory E-Mail:
+        span.is-mandatory
+        | E-Mail: &nbsp;
         input[type="text"]
       footer.is-small
         .footer-logo
-          | powered by
+          | powered by&nbsp;
           img src="#{Dir.pwd}/public/assets/images/logo.png"
         span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
         p.pagination.is-small

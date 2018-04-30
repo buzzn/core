@@ -17,73 +17,174 @@ html
       h2 1 Kontaktperson
       p
         span.is-mandatory Anrede:&nbsp;
-        label Frau <input type="radio" name="frauherrsonstige"> /
-        label Herr <input type="radio" name="frauherrsonstige"> /
-        label Sonstige: <input type="radio" name="frauherrsonstige">: <input type="text">
+        label Frau <input type="checkbox" name="frau1"> /
+        label Herr <input type="checkbox" name="herr1"> /
+        label Sonstige: <input type="checkbox" name="sonstige1">: <input type="text">
       p
-        span.is-mandatory Name (Vorname/Nachname):
+        span.is-mandatory Name (Vorname/Nachname):&nbsp;
         input[type="text"]
       p
-        span.is-mandatory Telefon:
+        span.is-mandatory Telefon:&nbsp;
+        input[type="text"]
+        span.is-mandatory E-Mail:&nbsp;
+        input[type="text"]
+      h2 2	Vertragspartner
+      p Bitte teilen Sie mit, wer Vertragspartner und Rechnungsempfänger sein soll.
+      p
+        span.is-mandatory Anrede:&nbsp;
+        label Frau <input type="checkbox" name="frau2"> /
+        label Herr <input type="checkbox" name="herr2"> /
+        label Sonstige: <input type="checkbox" name="sonstige2">: <input type="text">
+      p
+        span.is-mandatory Name (Vorname/Nachname bzw. Firmierung):&nbsp;
         input[type="text"]
       p
-        span.is-mandatory E-Mail:
+        span.is-mandatory Straße/Hausnummer:&nbsp;
         input[type="text"]
+      p
+        span Adresszusatz (z. B. „2. OG links“):&nbsp;
+        input[type="text"]
+      p
+        span.is-mandatory PLZ/Ort:&nbsp;
+        input[type="text"]
+      p
+        input type="checkbox" name="consent" Nur bei juristischen Personen: Ich bin als gesetzlicher Vertreter berechtigt, diesen Auftrag zu erteilen.
+      h2 3	Bezugsstelle: «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort»
+      p
+        span.is-mandatory Voraussichtliches Einzugsdatum:&nbsp;
+        input[type="text"]
+      p
+        span Wie hoch schätzen Sie Ihren jährlichen Stromverbrauch (in kWh)?&nbsp;
+        input[type="text"]
+      p
+        span Zählernummer (falls schon vergeben):&nbsp;
+        input[type="text"]
+      h2 4	Preise, Abrechnung & Bezahlung
+      p Alle nachgenannten Preise sind Endpreise und enthalten die gesetzliche Umsatzsteuer sowie alle sonstigen Preisbestandteile; zusätzliche Liefer- oder Versandkosten fallen nicht an.
+      p Als Lokaler Stromnehmer zahlen Sie einen Grundpreis und einen Bezugspreis.
+      p Der <b>Grundpreis</b> beträgt derzeit «Grundpreis_brutto_neu» € pro Monat bei Erteilung eines SEPA-Lastschriftmandats, sonst «Grundpreis_brutto_neu» pro Monat.
+      p Der <b>Bezugspreis</b> beträgt derzeit «Bezugspreis_brutto_neu» Cent pro Kilowattstunde (Ct/kWh).
+      p Ihr Strom wird einmal im Jahr abgerechnet. Davor werden monatliche Abschlagszahlungen fällig. Zur Abbuchung Ihrer Abschläge werden Sie um Teilnahme am SEPA-Basis-Lastschriftverfahren gebeten (siehe Anlage 1).
       footer.is-small
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
-          | Seite&nbsp;
-          span.page-number 1&nbsp;
-          | von&nbsp;
-          span.page-total-number 4
+           1 von 4
     div.alwaysbreak
 
     div.wrapper
-      h2 Ipsum
-      p Lorem
+      h2 5	Zustandekommen des Vertrags sowie Allgemeine Geschäftsbedingungen (AGB)
+      p Der Vertrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber kommt zustande, sobald der Lokale Stromgeber Ihnen dies bestätigt. Diese Bestätigung muss binnen zwei Monaten nach Zugang dieses Auftrags beim Lokalen Stromgeber erfolgen. Erfolgt innerhalb dieser Frist keine Bestätigung, erlischt dieser Auftrag automatisch mit Ablauf der vorgenannten Frist; hierüber informiert der Lokale Stromgeber Sie.
+      p Der Beginn Ihrer Belieferung mit Strom hängt davon ab, zu welchem Zeitpunkt der Netzanschluss des Objekts sowie das Setzen der Stromzähler erfolgen kann. Der Lokale Stromgeber informiert Sie unverzüglich über den Zeitpunkt des Lieferbeginns.
+      p Ansonsten gelten die AGB für Lokale Stromnehmer. Hiermit bestätigen Sie, dass sie diese erhalten haben und mit ihnen einverstanden sind.
+      p.has-dotted-underline.has-space-above.col-half.float-none
+      p
+        |(Ort), (Datum)
+      p.has-dotted-underline.has-space-above.col-half.float-none
+      p
+        |(Unterschrift Kontoinhaber)
+      h2 Feedback
+      p Falls Sie noch Fragen oder Anmerkungen haben, schreiben Sie bitte hier Ihre Nachricht:
+      p
+        textarea.is-full-width rows="5"
       footer.is-small
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
-          | Seite&nbsp;
-          span.page-number 2&nbsp;
-          | von&nbsp;
-          span.page-total-number 4
+           2 von 4
     div.alwaysbreak
-
+    / new page
     div.wrapper
-      h2 Ipsum
-      p Lorem
+      h2 SEPA Lastschrift-Mandat
+      p
+        i
+          Anlage 1 zum Auftrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_Kontakt».
+      p Ihr Strom wird einmal im Jahr abgerechnet. Davor werden monatliche Abschlagszahlungen fällig. Zur Abbuchung Ihrer Abschläge werden Sie um Teilnahme am SEPA-Basis-Lastschriftverfahren gebeten.
+      p Die Gläubiger-Identifikationsnummer des Lokalen Stromgebers ist: «Sepa_Mand_Ref»
+      p Ihre Mandatsreferenz wird Ihnen separat mitgeteilt.
+      p
+        span.is-mandatory Kontoinhaber (Vor-/Nachname bzw. Firmierung):&nbsp;
+        input[type="text"]
+      p.is-indented falls abweichend vom Strom-Auftraggeber:
+      p.is-indented
+        span Straße/Hausnummer:&nbsp;
+        input[type="text"]
+      p.is-indented
+        span PLZ/Ort: &nbsp;
+        input[type="text"]
+      p
+        span.is-mandatory IBAN: DE&nbsp;
+        input[type="text"]
+      p
+        span.is-mandatory Name der Bank:&nbsp;
+        input[type="text"]
+      p
+        span.is-mandatory BIC:&nbsp;
+        input[type="text"]
+      h3 SEPA Lastschrift-Mandat
+      p.is-mandatory
+        input type="checkbox" name="consent2" &nbsp; Als Kontoinhaber erlaube ich «LSG_Kontakt» widerruflich, Zahlungen von oben stehendem Konto mittels SEPA-Basislastschrift einzuziehen. Zugleich weise ich meine Bank an, die von «LSG_Kontakt» von meinem Konto gezogenen Lastschriften einzulösen. Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meiner Bank vereinbarten Bedingungen.
+      div.row
+        div.col-half
+          p.has-dotted-underline.has-space-above
+          p
+            |(Ort), (Datum)
+        div.col-half
+          p.has-dotted-underline.has-space-above
+          p
+            |(Unterschrift Kontoinhaber)
+      / footer
       footer.is-small
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
-          | Seite&nbsp;
-          span.page-number 3&nbsp;
-          | von&nbsp;
-          span.page-total-number 4
+           3 von 4
     div.alwaysbreak
-
+    / new page
     div.wrapper
-      h2 Ipsum
-      p Lorem
+      h2 Vollmacht
+      p
+        i
+        Anlage 2 zum Auftrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_V.-Partner» im Neubau-Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort».
+      p.has-space-above Als Stromkunde/Anschlussnutzer an der Bezugsstelle
+      p.is-indented «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort»
+      p bevollmächtige(n) und beauftrage(n) ich/wir,
+      .is-indented
+        p.has-dotted-underline.has-space-above.col-half.float-none
+        p Name (Vorname/Nachname bzw. Firmenname)
+        p.has-dotted-underline.has-space-above.col-half.float-none
+        p vertreten durch Vorname/Nachname (nur bei Firma)
+        p.has-dotted-underline.has-space-above.col-half.float-none
+        p
+          | (Straße Hausnummer, PLZ Ort)
+      p
+      p.has-space-above hiermit
+      p.is-indented «LSG_Kontakt»
+      p.is-indented «LSG_Straße» «LSG_HausNr», «LSG_PLZ» «LSG_Ort»
+      p in meinem/unserem Namen alle Handlungen vorzunehmen, Erklärungen abzugeben und entgegenzunehmen, die notwendig sind, um an der oben genannten Bezugsstelle den Messstellenbetrieb und die Messung zu übernehmen oder durch einen Dritten übernehmen zu lassen.
+      p Diese Vollmacht erstreckt sich auch auf Dritte, die der Bevollmächtigte mit der Erledigung der vorgenannten Aufgaben beauftragt hat.
+      div.row
+        div.col-half
+          p.has-dotted-underline.has-space-above
+          p
+            |(Ort), (Datum)
+        div.col-half
+          p.has-dotted-underline.has-space-above
+          p
+            |(Unterschrift Kontoinhaber)
       footer.is-small
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
-          | Seite&nbsp;
-          span.page-number 4&nbsp;
-          | von&nbsp;
-          span.page-total-number 4
+           4 von 4
     div.alwaysbreak
 
   javascript:
