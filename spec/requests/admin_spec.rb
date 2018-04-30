@@ -159,6 +159,10 @@ describe Admin::Roda do
 
       it '401' do
         GET '/test/persons', $admin
+
+        GET '/test/organizations', nil
+        expect(response).to have_http_status(401)
+
         Timecop.travel(Time.now + 30 * 60) do
           GET '/test/persons', $admin
 
@@ -205,8 +209,31 @@ describe Admin::Roda do
 
       it '401' do
         GET '/test/organizations', $admin
+
+        GET '/test/organizations', nil
+        expect(response).to have_http_status(401)
+
         Timecop.travel(Time.now + 30 * 60) do
           GET '/test/organizations', $admin
+
+          expect(response).to have_http_status(401)
+          expect(json).to eq(expired_json)
+        end
+      end
+    end
+  end
+
+  context 'localpools' do
+
+    context 'GET' do
+      it '401' do
+        GET '/test/localpools', $admin
+
+        GET '/test/localpools', nil
+        expect(response).to have_http_status(401)
+
+        Timecop.travel(Time.now + 30 * 60) do
+          GET '/test/localpools', $admin
 
           expect(response).to have_http_status(401)
           expect(json).to eq(expired_json)
