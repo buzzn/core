@@ -10,6 +10,11 @@ module Admin
 
       rodauth.check_session_expiration
 
+      if current_user.nil?
+        r.response.status = 401
+        r.halt
+      end
+
       r.on 'localpools' do
         r.run LocalpoolRoda
       end
