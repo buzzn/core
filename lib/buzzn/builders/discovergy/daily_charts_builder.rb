@@ -30,11 +30,9 @@ module Builders::Discovergy
 
     def build_method(response)
       substitute = substitute_register(response)
-      if substitute&.label&.consumption?
-        method(:build_sum_with_consumption_substitute)
-      elsif substitute&.label&.production?
+      if substitute&.label&.production?
         method(:build_sum_with_production_substitute)
-      elsif has_virtual?
+      elsif substitute&.label&.consumption? || virtual?
         method(:build_sum_with_consumption_substitute)
       else
         method(:build_sum)
@@ -48,7 +46,7 @@ module Builders::Discovergy
     end
 
     BAD_METERS = %w(60009408 60009426 60009392 60009436 60009414 60009421 60009412 60009396 60009394 60009391 60009399 60009433 60009427 60009403 60009398 60009397 60009428 60009389 60009388 60009443 60009401 60009439 60009434 60009424 60009430 60009406 60009417 60009432 60009431 60009400 60009437 60300725 60668496 60668498 60668494 60668497 60668493 60668495 60668492)
-    def has_virtual?
+    def virtual?
       registers.find do |register|
         BAD_METERS.include?(register.meter.product_serialnumber) &&
           register.label.consumption?
@@ -75,8 +73,6 @@ module Builders::Discovergy
         do_sum(register, production, data)
       elsif register.label.consumption?
         do_sum(register, consumption, data)
-      else
-        # ignored
       end
     end
 
