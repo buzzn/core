@@ -17,13 +17,13 @@ class Builders::Discovergy::SubstituteCalculator
       value = @to_value.call(values, register)
       @substitute = add(@substitute, value, register)
       @time = [values['time'], @time].max
-    else
-      @missing_registers << register if register.label.consumption?
+    elsif register.label.consumption?
+      @missing_registers << register
     end
   end
 
   def virtual_value
-    (@substitute / @missing_registers.size).to_i if @missing_registers.size > 0
+    (@substitute / @missing_registers.size).to_i unless @missing_registers.empty?
   end
 
   def value(register)
