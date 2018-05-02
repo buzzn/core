@@ -18,7 +18,9 @@ module Builders::Discovergy
         next unless registers
         process_entry(registers, values, calculator)
       end
+      log_network_loss(calculator)
       result << build_substitute(calculator)
+      result << build_virtual(calculator)
       result.flatten!
       result.compact!
       result
@@ -39,11 +41,25 @@ module Builders::Discovergy
       Bubble.new(value: to_watt(values, register).to_i, register: register)
     end
 
+    def log_network_loss(calculator)
+      if calculator.virtual_value.nil?
+        logger.info { "network_loss/error #{calculator.substitute.round(2)} W" }
+      end
+    end
+
     def build_substitute(calculator)
       substitute = registers.find {|r| r.is_a?(Register::Substitute)}
       if substitute
         value = calculator.value(substitute)
         Bubble.new(value: value, register: substitute)
+      end
+    end
+
+    def build_virtual(calculator)
+      if value = calculator.virtual_value
+        calculator.missing_registers.collect do |register|
+          Bubble.new(value: value, register: register)
+        end
       end
     end
 
