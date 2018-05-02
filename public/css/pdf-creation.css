@@ -52,6 +52,7 @@ div.alwaysbreak {page-break-before: always;}
 .has-dotted-underline{border-bottom: .0625rem dotted black;}
 .has-space-above{margin-top: 2rem;}
 .has-td-fix-height td{height: 3rem;}
+.has-alternate-rows tr:nth-child(odd){background-color: #eeeeee}
 /*no*/
 .no-margin {margin: 0;}
 .no-padding {padding: 0;}
