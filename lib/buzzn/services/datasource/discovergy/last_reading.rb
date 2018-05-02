@@ -16,7 +16,7 @@ class Services::Datasource::Discovergy::LastReading
 
   # this returns the bubbles for the group in one call
   def power_collection(group)
-    registers = group.registers.consumption_production.includes(:meter)
+    registers = group.registers.grid_consumption_production.includes(:meter)
     builder = Builders::Discovergy::BubbleBuilder.new(registers: registers)
     collection(group, builder, :power)
   end

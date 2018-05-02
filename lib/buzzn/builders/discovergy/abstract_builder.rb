@@ -8,6 +8,10 @@ class Builders::Discovergy::AbstractBuilder
 
   protected
 
+  def logger
+    @logger ||= Buzzn::Logger.new(self)
+  end
+
   def to_watt_hour(response, register)
     values = response['values']
     value =
