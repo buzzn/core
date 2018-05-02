@@ -1,0 +1,378 @@
+
+doctype html
+html
+  head
+    title = '#{title_text}'
+    meta charset='utf-8'
+    link href='#{Dir.pwd}/public/css/pdf-creation.css' rel='stylesheet'
+    link href='#{Dir.pwd}/public/css/bc-chart.css' rel='stylesheet'
+    script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
+    script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
+    script src='#{Dir.pwd}/public/scripts/bc-chart.js'
+
+  body
+    div.wrapper.breakable
+      div.log
+      div.logo.is-pull-left
+      div.is-small.col-3rd.is-pull-right.no-margin
+        p #{lsg_V_Partner}<br>
+          - Energiegruppe #{lp_Name} - <br>
+          #{lsg_Kontakt}<br>
+          #{lsg_Straße} #{lsg_HausNr}<br>
+          #{lsg_PLZ} #{lsg_Ort}
+        p T:  #{lsg_Tel}<br>
+          F: #{lsg_Fax}<br>
+          Email: #{lsg_Email}
+        p #{lsg_V_Partner}<br>
+          #{lsg_IBAN}<br>
+          #{lsg_BIC}<br>
+          #{lsg_Bank}
+        p Steuernummer: #{steuerNr}
+      p.is-smaller.clear #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+      p #{lsn_Anrede}<br>
+        #{lsn_Titel}<br>
+        #{lsn_Vorname} #{lsn_Name}<br>
+        #{lsn_Straße} #{lsn_HausNr}<br>
+        #{lsn_PLZ} #{lsn_Ort}
+      p
+        i #{lsn_per_EMail}
+      p.is-pull-right #{lsg_Ort}, den #{r_Datum}
+      h2.clear Turnusabrechnung - Lokale Energiegruppe #{lp_Name}<br>
+        Rechnungsnummer: #{r_Nummer}
+      table.no-border
+        tr
+          td.no-border.no-padding Vertragsnummer:
+          td.no-border.no-padding #{lsn_Vertragsnummer}
+        tr
+          td.no-border.no-padding Bezugsstelle:
+          td.no-border.no-padding #{lsn_Straße_b} #{lsn_HausNr_b}, #{lsn_Adresszusatz_b}
+        tr
+          td.no-border.no-padding Zählernummer:
+          td.no-border.no-padding #{mpsn_ZählerNr_alt}
+        tr
+          td.no-border.no-padding Prognose Jahresbezug:
+          td.no-border.no-padding #{verbrauch_Jahr} kWh (#{abrechnungsjahr})
+        tr
+          td.no-border.no-padding Abrechnungsjahr
+          td.no-border.no-padding #{abrechnungsjahr}
+
+      p Sehr #{lsn_Andrede_r} #{lsn_Anrede_Name},
+      p vielen Dank, dass Sie als Lokaler Stromnehmer aus der Energiegruppe #{lp_Name} Strom beziehen. Nachfolgend erhalten Sie Ihre Turnusabrechnung.
+      div
+        h2 Bezugsmenge
+        table.is-full-width.is-small
+          tr
+            th
+            th Ablesedatum
+            th
+            th.is-text-right kWh
+          tr
+            td.no-border Beginn Abrechnungszeitraum
+            td.no-border #{datum_1}
+            td.no-border Zählerstand
+            td.no-border.is-text-right #{zSt_1}
+          tr
+            td Ende Abrechnungszeitraum
+            td #{datum_4}
+            td Zählerstand
+            td.is-text-right #{zSt_4}
+          tr
+            td.no-border Beginn Abrechnungszeitraum
+            td.no-border #{datum_1}
+            td.no-border Zählerstand
+            td.no-border.is-text-right #{zSt_1}
+          tr
+            td Ende Abrechnungszeitraum
+            td #{datum_4}
+            td Zählerstand
+            td.is-text-right #{zSt_4}
+          tr
+            td.no-border Beginn Abrechnungszeitraum
+            td.no-border #{datum_1}
+            td.no-border Zählerstand
+            td.no-border.is-text-right #{zSt_1}
+          tr
+            td Ende Abrechnungszeitraum
+            td #{datum_4}
+            td Zählerstand
+            td.is-text-right #{zSt_4}
+          tr
+            td.no-border Beginn Abrechnungszeitraum
+            td.no-border #{datum_1}
+            td.no-border Zählerstand
+            td.no-border.is-text-right #{zSt_1}
+          tr
+            td Ende Abrechnungszeitraum
+            td #{datum_4}
+            td Zählerstand
+            td.is-text-right #{zSt_4}
+          tr
+            td.no-border Beginn Abrechnungszeitraum
+            td.no-border #{datum_1}
+            td.no-border Zählerstand
+            td.no-border.is-text-right #{zSt_1}
+          tr
+            td Ende Abrechnungszeitraum
+            td #{datum_4}
+            td Zählerstand
+            td.is-text-right #{zSt_4}
+          tr
+            td colspan=3
+              strong Bezug Abrechnungszeitraum
+            td.is-text-right
+              strong #{zSt_Diff}
+      div
+        h2 Abrechnung
+        table.is-full-width.is-small
+          tr
+            th Position
+            th Zeitraum
+            th Menge
+            th Preis je Einheit
+            th.is-text-right Betrag
+          tr
+            td.no-border Arbeitspreis
+            td.no-border #{datum_1} - #{datum_4}
+            td.no-border #{zSt_Diff} kWh
+            td.no-border #{bezugspreis_netto} Ct/kWh
+            td.no-border.is-text-right #{bezugspreis_Produkt} €
+          tr
+            td Grundpreis
+            td #{datum_1} - #{datum_4}
+            td #{zeitraum} Monate
+            td #{grundpreis_netto} €/Monat
+            td.is-text-right #{grundpreis_Produkt} €
+          tr
+            td.no-border Arbeitspreis
+            td.no-border #{datum_1} - #{datum_4}
+            td.no-border #{zSt_Diff} kWh
+            td.no-border #{bezugspreis_netto} Ct/kWh
+            td.no-border.is-text-right #{bezugspreis_Produkt} €
+          tr
+            td Grundpreis
+            td #{datum_1} - #{datum_4}
+            td #{zeitraum} Monate
+            td #{grundpreis_netto} €/Monat
+            td.is-text-right #{grundpreis_Produkt} €
+          tr
+            td.no-border Arbeitspreis
+            td.no-border #{datum_1} - #{datum_4}
+            td.no-border #{zSt_Diff} kWh
+            td.no-border #{bezugspreis_netto} Ct/kWh
+            td.no-border.is-text-right #{bezugspreis_Produkt} €
+          tr
+            td Grundpreis
+            td #{datum_1} - #{datum_4}
+            td #{zeitraum} Monate
+            td #{grundpreis_netto} €/Monat
+            td.is-text-right #{grundpreis_Produkt} €
+          tr
+            td.no-border Zwischensumme (netto)
+            td.no-border colspan=3
+            td.no-border.is-text-right #{zwSumme} €
+          tr
+            td Umsatzsteuer (#{steuersatz}%)
+            td colspan=3
+            td.is-text-right #{uSt} €
+          tr
+            td.no-border
+              strong Rechnungsbetrag (brutto)
+            td.no-border colspan=3
+            td.no-border.is-text-right
+              strong #{betrag_brutto} €
+          tr
+            td Abzüglich Abschläge (brutto)
+            td colspan=3
+            td.is-text-right #{abschlag_produkt} €
+          tr
+            td
+              strong #{forderung}
+            td colspan=3
+            td.is-text-right
+              strong #{rest_Summe} €
+      p Aus der Turnusabrechnung ergibt sich eine <strong>#{rueck_nach}zahlung</strong> von <strong>#{rest_Summe} €.</strong>
+      p #{satz_forderung}
+    div.wrapper
+      div.log
+      h2 Ihre Vertragskonditionen
+      p Die aktuellen Preise in der Energiegruppe #{lp_Name} betragen:<br>
+        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{grundpreis_brutto_neu} €/Monat,</strong> (#{grundpreis_netto_neu} €/Monat)<br>
+        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{bezugspreis_brutto_neu} Cent/kWh,</strong> (#{bezugspreis_netto_neu} Cent/kWh)
+      p <strong>#{abschlag_neu_Satz}</strong>
+      p Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.
+      p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.
+      p Mit freundlichen Grüßen,
+      p #{lsg_Kontakt}
+      h2 Verbrauchsvergleich
+      p Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist. Dieser Vergleich, den Sie der Grafik entnehmen können, hinkt natürlich, da er die äußeren Gegebenheiten eines Haushaltes, zum Beispiel elektrische Warmwasserbereitung, nicht berücksichtigt.
+      / chart goes here
+      div#chart-one.bc-chart.horizontal.is-small
+        div.bc-chart-container
+      p.is-small Quelle: Statistisches Bundesamt<br>
+        <sup>1.</sup> Sofern kein volles Jahr Strom bezogen wurde, wird die Strommenge auf ein ganzes Jahr hochgerechnet<br>
+        <sup>2.</sup> Sofern im Vorjahr noch kein Strom bezogen wurde, ist dies ein Prognosewert
+    div.wrapper
+      div.log
+      h2 Energiereport
+      p Die echte Energiewende ist demokratisch, dezentral und direkt von Mensch zu Mensch.
+      p Nachfolgend einige Fakten und Kennzahlen zu Ihrer Energiegruppe Heigelstraße 27 für das Jahr #{dieses_jahr}:
+      div.row
+        div.col-3rd.card.sand
+          p
+            | Autarkiegrad <span class='is-medium'>(wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
+          p.is-larger 24 %
+        div.col-3rd.card.mint
+          p
+            | Lokalität <span class='is-medium'>(wie groß ist die Entfernung zwischen Stromerzeugungsanlage[n] und  Verbrauchsstellen?)</span>
+          p.is-larger O km
+        div.col-3rd.card.custard
+          p
+            | Nutzungsgrad <span class='is-medium'>wieviel des lokal produzierten Stroms wurde vor Ort verbraucht?)</span>
+          p.is-larger 59 %
+      div.row
+        div.col-3rd.card.sky
+          p
+            | Primärenergie <span class='is-medium'>(aus welchen Quellen wurde der Eigenstrom Strom erzeugt?)</span>
+          p.is-larger Sonne 22 %
+        div.col-3rd.card.pork
+          p
+            | Netzverluste <span class='is-medium'>(wie hoch waren die Übertragungsverluste für den Strom?)</span>
+          p.is-larger < 1 %
+        div.col-3rd.card.peach
+          p
+            | Technologie <span class='is-medium'>(mit welchen Verfahren wurde der Eigenstrom erzeugt?)</span>
+          p.is-medium Kraft-Wärme-Kopplung mit Blockheizkraftwerk (7,5 kW)<br>Photovoltaik (25,95 kWp)
+      div.row
+        div.col-3rd.card.cornflower
+          p
+            | Reststrom <span class='is-medium'>(von welchem Lieferant stammt der Reststrom über das öffentliche Netz?)</span>
+          p.is-medium BUZZN GmbH
+        div.col-3rd.card.glass
+          / p
+          /   | Autarkiegrad <span class='is-small'> (wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
+          / p.is-large 24 %
+        div.col-3rd.card.salmon
+          p
+            | Eigentumsverhältnisse <span class='is-medium'>(wem gehört die Stromerzeugungsanlage?)</span>
+          p.is-medium #{lsg_V_Partner}
+    div.wrapper
+      div.log
+      h2 Kritische Anmerkungen zur Stromkennzeichnung
+      p Das deutsche Energiewirtschaftsgesetz verpflichtet jeden Stromlieferanten, den Letztverbrauchern die Herkunft seines Stroms über eine Kennzeichnung nachzuweisen. Dies soll mehr Transparenz und bewusstere Kaufentscheidungen in Richtung „Ökostrom“ bewirken.
+      p Die gesetzliche Stromkennzeichnung steht jedoch in der Kritik, manche nennen sie sogar eine Farce. Sie gibt zwar teilweise Auskunft darüber, aus welcher Primärenergie der Strom produziert wurde. Andere wichtige Informationen sind jedoch nicht enthalten, zum Beispiel:
+      ul
+        li Wem gehören die Kraftwerke, die ich als Letztverbraucher mit meinem „Stromgeld“ finanziere?
+        li Wie groß sind diese Kraftwerke?
+        li Wo stehen diese Kraftwerke und wie hoch sind die Übertragungsverluste beim Transport des Stroms bis zu mir?
+      p Bei der Kennzeichnung von Strom aus lokalen Energiegruppen wie Ihrer, führt die Stromkennzeichnung sogar in die Irre. Ihr Strom wird lokal produziert. In einem kleinen Blockheizkraftwerk, einer Sonnenstrom-, Wasser- oder Windkraftanlage. Ökologisch ist das aber nicht nur aufgrund der Effizienz und des Primärenergieeinsatzes, sondern auch aufgrund der Tatsache, dass Strom dezentral dort erzeugt wird, wo er gebraucht wird. Dies reduziert Netzverluste und hilft, den Neubau von Stromtrassen zu vermeiden. Hinzu kommt, dass lokaler Strom von Menschen aus der Nähe erzeugt wird und nicht von Konzernen. Diese Vorteile finden bei der Stromkennzeichnung keine Berücksichtigung.
+      p Noch verrückter: Um beispielsweise die in einer Energiegruppe kleinteilig produzierte Sonnen-, Wasser- oder Windkraft als „Erneuerbare Energie“ kennzeichnen zu dürfen, müsste sie in einem aufwendigen und bürokratischen Prozess zertifiziert werden, der für diese Kleinanlagen völlig überzogen ist. Da wir das nicht mitmachen, wird aus Sonnen- und Wasserkraft eben mal Strom aus Atom, Kohle und sonstigen fossilen Energieträgern (siehe Grafik unten).
+      p Deshalb die Bitte an Sie: Nehmen Sie die nachfolgende Grafik nicht allzu ernst!
+      p Für weitergehende Informationen finden Sie hier einen ausführlichen Blogbeitrag zum Thema: <a href="http://www.buzzn.net/2017/01/13/hokuspokus-stromkennzeichnung/">http://www.buzzn.net/2017/01/13/hokuspokus-stromkennzeichnung/</a>
+      p Wenn Sie sonst noch eine Frage oder Anmerkung haben, senden Sie uns bitte eine Nachricht an <a href="mailto:team@buzzn.net">team@buzzn.net</a>. Vielen Dank!
+    div.wrapper
+      div.log
+      div.user-message
+        | Bei genauem Hinschauen kann diese gesetzlich vorgeschriebene Stromkennzeichnung zu Verwirrung, Kopfschütteln oder Empörung führen.
+      h2 Stromkennzeichnung #{letztes_jahr}
+      p
+        | (Stromkennzeichnung gemäß § 42 Energiewirtschaftsgesetz vom 7. Juli 2005, geändert 2017)
+      div.row
+        div#chart-two.bc-chart.vertical.col-half.is-small
+          div.bc-chart-container.col-half
+          div.bc-legend-container.col-half
+
+        div#chart-three.bc-chart.vertical.col-half.is-small
+          div.bc-chart-container.col-half
+          div.bc-legend-container.col-half
+      div.clear
+      h2 Umweltauswirkungen je Kilowattstunde
+      table.no-border
+        tr
+          td.no-border.ash #{gl_radioactiver_abfall}
+          td.no-border Radioaktiver Abfall (g/kWh)
+          td.no-border.ash #{lp_radioactiver_abfall}
+          td.no-border
+        tr
+          td.no-border.ash #{gl_c02_emissionen}
+          td.no-border CO2 Emissionen (g/kWh)
+          td.no-border.ash #{lp_c02_emissionen}
+          td.no-border
+        tr
+          td
+          td
+            h3 Deutschland
+          td
+          td
+            h3 Deutschland
+      p.is-small <sup>1.</sup> Enthält nicht zertifizierte Mengen aus erneuerbarer Stromgeberproduktion<br>
+        <sup>2.</sup> Zur ökologisch sinnvollen gleichzeitigen Produktion von Strom und Wärme in den Häusern der Stromgeber<br>
+        <sup>3.</sup> Enthält Heizöl zur ökologisch sinnvollen gleichzeitigen Produktion von Strom und Wärme in den Häusern der Stromgeber
+    div.wrapper
+      div.log
+      h2 Service
+      p <i>Pflichtangaben zur Bundesnetzagentur und zur Schlichtungsstelle Energie:</i>
+      p Bundesnetzagentur für Elektrizität, Erdgas, Telekommunikation, Post und Eisenbahnen 
+      h3 Verbraucherservice
+      p Postfach 8001 / 53105 Bonn
+      table.no-border
+        tr
+          td.no-border.no-padding Telefon:
+          td.no-border.no-padding Mo.-Fr. von 09:00 Uhr bis 15:00 Uhr
+        tr
+          td.no-border.no-padding
+          td.no-border.no-padding 030 / 22480-500 oder 01805 / 101000 - Bundesweites Infotelefon
+        tr
+          td.no-border.no-padding
+          td.no-border.no-padding
+            | (Festnetzpreis 14 ct/min; Mobilfunkpreise maximal 42 ct/min)
+        tr
+          td.no-border.no-padding Telefax:
+          td.no-border.no-padding 030 / 22480-323
+        tr
+          td.no-border.no-padding E-Mail:
+          td.no-border.no-padding
+            a href="mailto:verbraucherservice-energie@bnetza.de" verbraucherservice-energie@bnetza.de
+      h3 Schlichtungsstelle Energie e. V.
+      p Friedrichstraße 133, 10117 Berlin
+      table.no-border
+        tr
+          td.no-border.no-padding Telefon:
+          td.no-border.no-padding 030 / 27 57 240 – 0
+        tr
+          td.no-border.no-padding Internet:
+          td.no-border.no-padding
+            a href="http://www.schlichtungsstelle-energie.de" www.schlichtungsstelle-energie.de
+        tr
+          td.no-border.no-padding E-Mail:
+          td.no-border.no-padding
+            a href="mailto:info@schlichtungsstelle-energie.de" info@schlichtungsstelle-energie.de
+      p Informationen zu Anbietern von wirksamen Maßnahmen zur Energieeffizienzverbesserung und Energieeinsparung sowie ihren Angeboten finden Sie auf einer bei der Bundesstelle für Energieeffizienz (BfEE) öffentlich geführten Anbieterliste unter <a href="http://www.bfee-online.de"> www.bfee-online.de</a>
+
+    javascript:
+      // initiate charts & page break
+      $(function(){
+        var data = function(){return[0,0,0,0,0].map(function(){return Math.round(Math.random()*100)+50})};
+        var labels1 = [
+          'Ihr Jahresverbrauch in #{dieses_jahr} (1)',
+          'Ihr Jahresverbrauch in #{letztes_jahr} (2)',
+          'Referenz 1-Personen-Haushalt',
+          'Referenz 2-Personen-Haushalt',
+          'Referenz 3 und mehr Personen-Haushalt'
+        ];
+        var labels2 = [
+          'Atom',
+          'Kohle',
+          'Erdgas',
+          'Sonstige fossile Energieträge',
+          'Sonstige ernauerbare Energieträge',
+          'Erneuerbare Energie gefördert nach EEG'
+        ];
+        // footer HTML required
+        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
+        bcChart('#chart-one', labels1, data());
+        bcChart('#chart-two', labels2, data(),'Deutschland');
+        bcChart('#chart-three', labels2, data(),'Lokale Energiegruppe #{lp_Name}');
+        // page breaks require the presence of at least one .wrapper container
+        // setPageBreaks(footer);
+        // fixPdfDimensions();
+      });
