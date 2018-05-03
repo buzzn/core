@@ -3,41 +3,53 @@ class Beekeeper::Importer::Brokers
   attr_reader :logger
 
   def initialize(logger)
-    @meters = ::Import.global('services.datasource.discovergy.meters')
+    @discovergy = ::Import.global('services.datasource.discovergy.meters')
     @logger = logger
   end
 
   def run(localpool, warnings)
-    without_broker = localpool.meters.real.select do |meter|
-      if meter.easy_meter?
-        if meter_on_discovergy?(meter.product_serialnumber)
-          meter.update!(datasource: :discovergy)
-          false
-        else
-          # these are the ones we have, but are not on Discovergy.
-          true
+    meters = localpool.meters.real
+    meters.each do |meter|
+      meter.standard_profile!
+      meter.manual!
+      if easymeter?(meter.product_serialnumber)
+        meter.easy_meter!
+        if connected?(meter.product_serialnumber)
+          meter.discovergy!
+          meter.remote!
         end
-      else
-        false # non-easymeters are not smart and thus not connectable to Discovergy
+      #else
+      #  meter.other!
       end
+      meter.easy_meter? && !meter.discovergy?
     end
-    without_broker.each do |meter|
-      meter.registers.each do |register|
-        warnings["register '#{register.meter.legacy_buzznid}'"] = 'is not on Discovergy'
+
+    if meters.all? { |m| m.discovergy? }
+      logger.info 'All meters connected with Discovergy'
+    elsif meters.all? { |m| m.other? || m.standard_profile? }
+      logger.info 'All meters are Standard-Profile'
+    else
+      meters.each do |meter|
+        meter.registers.each do |register|
+          warnings["register '#{register.meter.legacy_buzznid}' (#{register.meter.manufacturer_name} : #{register.meter.product_serialnumber} : #{register.label})"] = register.meter.datasource
+        end
       end
     end
     warnings
-    #without_meter = map.select { |serial, _| !Meter::Real.where(product_serialnumber: serial).exists? }
   end
 
   private
 
-  def meter_on_discovergy?(serialnumber)
-    meter_map.key?(serialnumber)
+  def easymeter?(serialnumber)
+    discovergy_easymeters.key?(serialnumber)
   end
 
-  def meter_map
-    @meter_map ||= @meters.real
+  def connected?(serialnumber)
+    @discovergy.connected?(serialnumber)
+  end
+
+  def discovergy_easymeters
+    $discovergy_easymeters ||= @discovergy.easymeters
   end
 
 end

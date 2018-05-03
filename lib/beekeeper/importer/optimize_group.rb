@@ -37,7 +37,7 @@ class Beekeeper::Importer::OptimizeGroup
     all_meters_list
       .compact
       .collect { |meters| allowed_discovergy_ids(meters) }
-      .select { |meters| !meters.empty? }
+      .select { |meters| !meters.empty? && !meters.registers.first.other? }
       .reduce(&:|)
   end
 
@@ -60,7 +60,7 @@ class Beekeeper::Importer::OptimizeGroup
     when 1
       serial = virtual_list.first.serialNumber
       Broker::Discovergy.create(meter: Meter::Discovergy.create(product_serialnumber: serial, group: localpool))
-      logger.info "found optimized group #{serial}"
+      logger.info "Found optimized group #{serial}"
       optimized_groups[localpool.slug] = serial
       unless @optimized.verify(localpool)
         warnings['discovergy'] = 'list of local and remote meters mismatch.'
@@ -71,8 +71,9 @@ class Beekeeper::Importer::OptimizeGroup
   end
 
   def create_optimized_group(localpool, warnings)
-    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings)
+    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings) && complete?(localpool)
       warnings['discovergy.optimized_group'] = "create optimized group for #{localpool.slug}"
+      binding.pry
       #meter = @optimized.create(localpool)
       #optimized_groups[localpool.slug] = meter.product_serialnumber
     else
@@ -83,8 +84,17 @@ class Beekeeper::Importer::OptimizeGroup
   def discovergy_only?(localpool, warnings)
     discovergy_meters = Set.new(@optimized.local(localpool))
     localpool_meters = Set.new(localpool.registers.grid_production_consumption.collect {|r| r.meter})
+    all_registers = discovergy_meters.collect { |m| m.registers }.flatten
 
     discovergy_meters == localpool_meters
+  end
+
+  def complete?(localpool)
+    registers = @optimized.local(localpool).collect { |m| m.registers }.flatten
+    registers.one? { |r| r.grid_consumption? } &&
+      registers.one? { |r| r.grid_feeding? } &&
+      registers.one? { |r| r.label.production? } &&
+      registers.one? { |r| r.label.consumption? }
   end
 
   def optimized_groups
