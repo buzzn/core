@@ -20,7 +20,7 @@ namespace :db do
     end
 
     desc 'Loads essential data into the application'
-    task setup_data: %w(print_warning db:reset) do
+    task :setup_data do
       require_relative '../../db/setup_data'
     end
 
