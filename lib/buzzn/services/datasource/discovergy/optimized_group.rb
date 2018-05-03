@@ -32,7 +32,7 @@ class Services::Datasource::Discovergy::OptimizedGroup
     plus = []
     minus = []
     group.registers.each do |r|
-      next if r.datasource != :discovergy
+      next unless r.meter.discovergy?
       next if r.is_a?(Register::Substitute)
       if r.label.production? || r.grid_consumption?
         plus << discovergy_id(r.meter)
@@ -76,7 +76,7 @@ class Services::Datasource::Discovergy::OptimizedGroup
 
   def local(group)
     meters = group.meters.where(id: Register::Base.grid_production_consumption.where('meter_id = meters.id').where.not(type: Register::Substitute).select(:meter_id))
-    meters.select { |meter| meter.datasource == :discovergy }
+    meters.select { |meter| meter.discovergy? }
   end
 
   private

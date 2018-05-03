@@ -1,6 +1,7 @@
 require_relative 'common'
 
 Schemas::Constraints::Meter::Base = Schemas::Support.Form(Schemas::Constraints::Meter::Common) do
+  optional(:datasource).value(included_in?: Meter::Real.datasources.values)
   optional(:product_name).filled(:str?, max_size?: 64)
   optional(:manufacturer_name).value(included_in?: Meter::Real.manufacturer_names.values)
   optional(:manufacturer_description).value(:str?)

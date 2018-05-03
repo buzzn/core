@@ -4,6 +4,8 @@ module Meter
     self.table_name = :meters
     include Filterable
 
+    enum datasource: [:standard_profile, :discovergy, :virtual].each_with_object({}).each {|k, map| map[k] = k.to_s }
+
     belongs_to :group, class_name: 'Group::Base'
     belongs_to :address
     belongs_to :broker, class_name: 'Broker::Base'
@@ -32,10 +34,6 @@ module Meter
 
     def self.filter(value)
       do_filter(value, *search_attributes)
-    end
-
-    def datasource
-      broker ? :discovergy : :standard_profile
     end
 
     private

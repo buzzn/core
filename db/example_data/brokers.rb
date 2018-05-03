@@ -12,11 +12,7 @@
 def broker(attributes)
   external_id = attributes.delete(:external_id)
   meter = attributes.delete(:resource)
-  Meter::Base.transaction do
-    meter.update(broker: create(:broker, :discovergy),
-                 product_serialnumber: external_id.sub(/EASYMETER_/, ''))
-  end
-  meter.broker
+  meter.update(product_serialnumber: external_id.sub(/EASYMETER_/, ''))
 end
 
 SampleData.brokers = OpenStruct.new(

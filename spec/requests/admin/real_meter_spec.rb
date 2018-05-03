@@ -93,6 +93,8 @@ describe Admin::LocalpoolRoda do
           'errors'=>[
             {'parameter'=>'product_serialnumber',
              'detail'=>'size cannot be greater than 128'},
+            {'parameter'=>'datasource',
+             'detail'=>'must be one of: discovergy, virtual, standard_profile'},
             {'parameter'=>'product_name',
              'detail'=>'size cannot be greater than 64'},
             {'parameter'=>'manufacturer_name',
@@ -188,6 +190,7 @@ describe Admin::LocalpoolRoda do
       it '422' do
         meter = real_meter
         PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
+              datasource: 'mysmartgrid',
               manufacturer_name: 'Maxima' * 20,
               product_name: 'SmartyMeter' * 10,
               product_serialnumber: '12341234' * 20,
@@ -215,6 +218,7 @@ describe Admin::LocalpoolRoda do
         old = meter.updated_at
         PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: meter.updated_at,
+              datasource: 'standard_profile',
               manufacturer_name: Meter::Real.manufacturer_names[:other],
               manufacturer_description: 'Manufacturer description',
               location_description: 'Location description',
