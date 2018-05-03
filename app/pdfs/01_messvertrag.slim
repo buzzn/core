@@ -1,4 +1,3 @@
-/ Wird zwingend für LCP Abwicklung benötigt. Vertrag wird zwischen bS und Kunden geschlossen. Hier ist auch die Preisliste für die LCP Dienstleistung verankert
 doctype html
 html
   head
@@ -148,7 +147,7 @@ html
       p Der Kunde informiert BUZZN unaufgefordert und unverzüglich über jegliche Änderung von vertragsrelevanten Daten (insbesondere Kontaktdaten, Rechnungsanschrift, Bankverbindung). Sofern BUZZN durch eine unterbliebene oder verzögerte Meldung Kosten entstehen (z. B. durch Lastschriftrückbuchung), ist BUZZN berechtigt, diese Kosten an den Kunden weiterzugeben.
       p BUZZN ist berechtigt, Dritte mit der Erfüllung ihrer Pflichten aus diesem Vertrag zu beauftragen.
       p Sollten einzelne Bestimmungen dieses Vertrages unwirksam oder undurchführbar sein oder werden, so bleibt der Vertrag im Übrigen davon unberührt. BUZZN und der Kunde werden die unwirksame oder undurchführbare Bestimmung durch eine wirksame bzw. durchführbare, in ihrem wirtschaftlichen Ergebnis möglichst gleichkommende Bestimmung ersetzen. Entsprechendes gilt für eine Lücke im Vertrag.
-      Änderungen oder Ergänzungen des Vertrages bedürfen zu ihrer Wirksamkeit der Schriftform. Gleiches gilt für die Änderung der Schriftformklausel.
+      p Änderungen oder Ergänzungen des Vertrages bedürfen zu ihrer Wirksamkeit der Schriftform. Gleiches gilt für die Änderung der Schriftformklausel.
       div.row
         div.col-half
           p.has-dotted-underline.has-space-above
@@ -189,12 +188,12 @@ html
       p.is-indented
         storng BUZZN GmbH<br>
           Adams-Lehmann-Straße 56<br>
-          80797 München 
+          80797 München  <br>
           nachfolgend „BUZZN“
       p als neuen
       p.is-indented
-        Messstellenbetreiber (Marktpartner-ID-Nummer 9910960000001) und <br>
-        Messdienstleister (Marktpartner-ID-Nummer 9910963000008).
+        | Messstellenbetreiber (Marktpartner-ID-Nummer 9910960000001) und <br>
+        | Messdienstleister (Marktpartner-ID-Nummer 9910963000008).
       p Dazu bevollmächtige ich BUZZN, in meinem Namen alle Handlungen vorzunehmen, Erklärungen abzugeben und entgegenzunehmen, die zur Erfüllung des vorgenannten Auftrags notwendig sind, insbesondere sämtliche Vorgänge rund um den Wechsel der Messstellen.
       p Diese Vollmacht erstreckt sich auch auf Dritte, die der Bevollmächtigte mit der Erledigung der vorgenannten Aufgaben beauftragt hat.
       p Soweit ich nicht selbst Anschlussnutzer bin, versichere ich, dass ich im Auftrag des/der Anschlussnutzer(n) handle.
@@ -365,7 +364,7 @@ html
           th Laufende Vergütung (€/Monat)
         tr
           td Einrichtung und Administration pauschal
-          td Einmalige und laufende Prozesse: Stromverträge, Auftragsbestätigungen, Abrechnungen, Wechselprozesse, Meldewesen bei Übertragungsnetzbetreiber, Bundesnetzagentur, Hauptzollamt
+          td Einmalige und laufende Prozesse:  Stromverträge, Auftragsbestätigungen, Abrechnungen, Wechselprozesse, Meldewesen bei Übertragungsnetzbetreiber, Bundesnetzagentur, Hauptzollamt
           td 1.000,00
           td 25,00
         tr
@@ -393,16 +392,4 @@ html
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
         span Version: #{version}
-        p.pagination.is-small
-          | Seite&nbsp;
-          span.page-number 11&nbsp;
-          | von&nbsp;
-          span.page-total-number 11
-  javascript:
-    // initiate charts & page break
-    $(function(){
-      // var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
-      // page breaks require the presence of at least one .wrapper container
-      // setPageBreaks(footer);
-      // fixPdfDimensions();
-    });
+        p.pagination.is-small Seite 11 von 11

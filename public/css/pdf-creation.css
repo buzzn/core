@@ -45,6 +45,7 @@ div.alwaysbreak {page-break-before: always;}
 .is-inline-block {display: inline-block;}
 .is-indented{padding-left: 2rem;}
 .is-styled-list li {list-style: disc; margin-left: 2rem;}
+.is-styled-lower-alpha li{list-style: lower-alpha; margin-left: 2rem;}
 .is-responsive {max-width:100%;height:auto;}
 .is-verticalalign-top td{vertical-align: top;}
 .is-mandatory::before{content:"*";color:red}

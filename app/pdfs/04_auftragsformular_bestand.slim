@@ -1,4 +1,3 @@
-/ Wird zwingend für LCP Abwicklung benötigt. Vertrag wird zwischen bS und Kunden geschlossen. Hier ist auch die Preisliste für die LCP Dienstleistung verankert
 doctype html
 html
   head
@@ -13,6 +12,7 @@ html
       h1.is-text-center Auftrag zur Stromlieferung
       p zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_Kontakt», im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort».
       p Auszufüllen vom zukünftigen Lokalen Stromnehmer und unterschrieben zurückzureichen an den Lokalen Stromgeber.
+      p Beim Ausfüllen des Auftrags bitte die letzte Stromrechnung zur Hand haben, dann sollte es nicht länger als fünf Minuten dauern.
       p Pflichtfelder sind mit *gekennzeichnet. Vielen Dank!
       h2 1 Kontaktperson
       p
@@ -51,13 +51,48 @@ html
         input type="checkbox" name="consent" Nur bei juristischen Personen: Ich bin als gesetzlicher Vertreter berechtigt, diesen Auftrag zu erteilen.
       h2 3	Bezugsstelle: «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort»
       p
-        span.is-mandatory Voraussichtliches Einzugsdatum:&nbsp;
+        span.is-mandatory Ziehen Sie dort neu ein?&nbsp;
+        label ja <input type="checkbox" name="ja1"> /
+        label nein <input type="checkbox" name="nein1">
+      p.is-indented
+        span.is-mandatory Falls ja: Gewünschtes Datum der Erstbelieferung:&nbsp;
+        input[type="text"]
+      p.is-indented
+        span Falls ja: Prognose Strombezug (in kWh):&nbsp;
+        input[type="text"]
+      p Die folgenden Angaben erleichtern Ihren Wechsel in die Lokale Energiegruppe erheblich. Sollten Sie sie nicht wissen und auch auf Ihrer letzten Stromrechnung/Kontoauszug nicht finden, lassen Sie die Felder einfach leer.
+      p.is-mandatory
+        span Von welchem Lieferanten kommt bisher Ihr Strom?&nbsp;
         input[type="text"]
       p
-        span Wie hoch schätzen Sie Ihren jährlichen Stromverbrauch (in kWh)?&nbsp;
+        span Wie lautet Ihre Kundennummer beim bisherigen Lieferanten?&nbsp;
         input[type="text"]
       p
-        span Zählernummer (falls schon vergeben):&nbsp;
+        span Wie lautet Ihre Vertragskontonummer beim bisherigen Lieferanten?&nbsp;
+        input[type="text"]
+      p
+        span Wie hoch war Ihr Stromverbrauch im letzten Jahr (in kWh)?&nbsp;
+        input[type="text"]
+      p
+        span Wie hoch ist derzeit Ihre monatliche Strom-Abschlagszahlung (inkl. Umsatzsteuer)?&nbsp;
+        input[type="text"]
+
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span Version: #{version}
+        p.pagination.is-small
+           | 1 von 4
+    div.alwaysbreak
+
+    div.wrapper
+      p.is-mandatory Welche Nummer hat Ihr Stromzähler (das sehen Sie auf der letzten Stromrechnung; falls dort eine 33-stellige Kennung steht, die mit "DE" beginnt, ist das die Zählpunktbezeichnung. Falls nicht, steht dort irgendwo die Zählernummer als einfache Zahl)?
+      p
+        span Zählpunktbezeichnung: DE&nbsp;
+        input[type="text"]
+      p
+        span oder Zählernummer: DE&nbsp;
         input[type="text"]
       h2 4	Preise, Abrechnung & Bezahlung
       p Alle nachgenannten Preise sind Endpreise und enthalten die gesetzliche Umsatzsteuer sowie alle sonstigen Preisbestandteile; zusätzliche Liefer- oder Versandkosten fallen nicht an.
@@ -65,18 +100,9 @@ html
       p Der <b>Grundpreis</b> beträgt derzeit «Grundpreis_brutto_neu» € pro Monat bei Erteilung eines SEPA-Lastschriftmandats, sonst «Grundpreis_brutto_neu» pro Monat.
       p Der <b>Bezugspreis</b> beträgt derzeit «Bezugspreis_brutto_neu» Cent pro Kilowattstunde (Ct/kWh).
       p Ihr Strom wird einmal im Jahr abgerechnet. Davor werden monatliche Abschlagszahlungen fällig. Zur Abbuchung Ihrer Abschläge werden Sie um Teilnahme am SEPA-Basis-Lastschriftverfahren gebeten (siehe Anlage 1).
-      footer.is-small
-        .footer-logo
-          | powered by
-          img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span Version: #{version}
-        p.pagination.is-small
-           1 von 4
-    div.alwaysbreak
 
-    div.wrapper
       h2 5	Zustandekommen des Vertrags sowie Allgemeine Geschäftsbedingungen (AGB)
-      p Der Vertrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber kommt zustande, sobald der Lokale Stromgeber Ihnen dies bestätigt. Diese Bestätigung muss binnen zwei Monaten nach Zugang dieses Auftrags beim Lokalen Stromgeber erfolgen. Erfolgt innerhalb dieser Frist keine Bestätigung, erlischt dieser Auftrag automatisch mit Ablauf der vorgenannten Frist; hierüber informiert der Lokale Stromgeber Sie.
+      p Der Vertrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber kommt zustande, sobald der Lokale Stromgeber Ihnen dies bestätigt. Im Falle einer neu einzurichtenden Energiegruppe muss die Bestätigung muss binnen zwei Monaten nach Zugang dieses Auftrags beim Lokalen Stromgeber erfolgen. Erfolgt innerhalb dieser Frist keine Bestätigung, erlischt dieser Auftrag automatisch mit Ablauf der vorgenannten Frist; hierüber informiert der Lokale Stromgeber Sie.
       p Der Beginn Ihrer Belieferung mit Strom hängt davon ab, zu welchem Zeitpunkt der Netzanschluss des Objekts sowie das Setzen der Stromzähler erfolgen kann. Der Lokale Stromgeber informiert Sie unverzüglich über den Zeitpunkt des Lieferbeginns.
       p Ansonsten gelten die AGB für Lokale Stromnehmer. Hiermit bestätigen Sie, dass sie diese erhalten haben und mit ihnen einverstanden sind.
       p.has-dotted-underline.has-space-above.col-half.float-none
@@ -85,7 +111,7 @@ html
       p.has-dotted-underline.has-space-above.col-half.float-none
       p
         |(Unterschrift Kontoinhaber)
-      h2 Feedback
+      h2 6 Feedback
       p Falls Sie noch Fragen oder Anmerkungen haben, schreiben Sie bitte hier Ihre Nachricht:
       p
         textarea.is-full-width rows="5"
@@ -95,21 +121,21 @@ html
           img src="#{Dir.pwd}/public/assets/images/logo.png"
         span Version: #{version}
         p.pagination.is-small
-           2 von 4
+           | 2 von 4
     div.alwaysbreak
     / new page
     div.wrapper
       h2 SEPA Lastschrift-Mandat
       p
         i
-          Anlage 1 zum Auftrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_Kontakt».
+          Anlage 1 zum Auftrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_Kontakt» im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort».
       p Ihr Strom wird einmal im Jahr abgerechnet. Davor werden monatliche Abschlagszahlungen fällig. Zur Abbuchung Ihrer Abschläge werden Sie um Teilnahme am SEPA-Basis-Lastschriftverfahren gebeten.
       p Die Gläubiger-Identifikationsnummer des Lokalen Stromgebers ist: «Sepa_Mand_Ref»
       p Ihre Mandatsreferenz wird Ihnen separat mitgeteilt.
       p
         span.is-mandatory Kontoinhaber (Vor-/Nachname bzw. Firmierung):&nbsp;
         input[type="text"]
-      p.is-indented falls abweichend vom Strom-Auftraggeber:
+      p.is-indented falls abweichend vom Auftraggeber:
       p.is-indented
         span Straße/Hausnummer:&nbsp;
         input[type="text"]
@@ -144,14 +170,14 @@ html
           img src="#{Dir.pwd}/public/assets/images/logo.png"
         span Version: #{version}
         p.pagination.is-small
-           3 von 4
+          | 3 von 4
     div.alwaysbreak
     / new page
     div.wrapper
       h2 Vollmacht
       p
         i
-        Anlage 2 zum Auftrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_V.-Partner» im Neubau-Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort».
+        Anlage 2 zum Auftrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_V.-Partner» im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort».
       p.has-space-above Als Stromkunde/Anschlussnutzer an der Bezugsstelle
       p.is-indented «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort»
       p bevollmächtige(n) und beauftrage(n) ich/wir,
@@ -167,7 +193,10 @@ html
       p.has-space-above hiermit
       p.is-indented «LSG_Kontakt»
       p.is-indented «LSG_Straße» «LSG_HausNr», «LSG_PLZ» «LSG_Ort»
-      p in meinem/unserem Namen alle Handlungen vorzunehmen, Erklärungen abzugeben und entgegenzunehmen, die notwendig sind, um an der oben genannten Bezugsstelle den Messstellenbetrieb und die Messung zu übernehmen oder durch einen Dritten übernehmen zu lassen.
+      p in meinem/unserem Namen alle Handlungen vorzunehmen, Erklärungen abzugeben und entgegenzunehmen, die notwendig sind, um
+      ol.is-styled-lower-alpha
+        li meinen/unseren aktuellen Stromliefervertrag zum nächstmöglichen Zeitpunkt zu kündigen,
+        li an der oben genannten Bezugsstelle den Messstellenbetrieb und die Messung zu übernehmen oder durch einen Dritten übernehmen zu lassen.
       p Diese Vollmacht erstreckt sich auch auf Dritte, die der Bevollmächtigte mit der Erledigung der vorgenannten Aufgaben beauftragt hat.
       div.row
         div.col-half
@@ -184,14 +213,5 @@ html
           img src="#{Dir.pwd}/public/assets/images/logo.png"
         span Version: #{version}
         p.pagination.is-small
-           4 von 4
+          | 4 von 4
     div.alwaysbreak
-
-  javascript:
-    // initiate charts & page break
-    $(function(){
-      // var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
-      // page breaks require the presence of at least one .wrapper container
-      // setPageBreaks(footer);
-      // fixPdfDimensions();
-    });

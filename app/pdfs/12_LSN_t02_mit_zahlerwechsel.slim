@@ -35,7 +35,7 @@ html
       p
         i #{powertaker.email}
       p.is-pull-right #{contractor.city}, den #{billing.date}
-      h2.clear Turnusabrechnung - Lokale Energiegruppe #{localpool.name}<br>
+      h2.clear Schlussabrechnung - Lokale Energiegruppe #{localpool.name}<br>
         Rechnungsnummer: #{billing.number}
       table.no-border
         tr
@@ -55,20 +55,41 @@ html
           td.no-border.no-padding #{abrechnungsjahr}
 
       p #{powertaker.addressing},
-      p vielen Dank, dass Sie als Lokaler Stromnehmer aus der Energiegruppe #{localpool.name} Strom beziehen. Nachfolgend erhalten Sie Ihre Turnusabrechnung.
+      p vielen Dank, dass Sie als Stromnehmer aus der Lokalen Energiegruppe #{localpool.name} Strom bezogen haben. Nachfolgend erhalten Sie Ihre Schlussrechnung.
       div
         h2 Bezugsmenge
         table.is-full-width.is-small
           tr
-            th
+            th Zählernummer
             th Ablesedatum
             th
             th.is-text-right kWh
           tr
-            td.no-border Beginn Abrechnungszeitraum
+            td.no-border «LSN_ZählerNr_1»
             td.no-border #{item.begin_date}
             td.no-border Zählerstand
             td.no-border.is-text-right #{item.begin_kwh}
+          tr
+            td.no-border «LSN_ZählerNr_2»
+            td.no-border «Datum_2»
+            td.no-border Zählerstand
+            td.no-border.is-text-right «zst-2»
+          tr
+            td
+              b Zählerwechsel
+            td
+            td
+            td
+          tr
+            td.no-border «LSN_ZählerNr_3»
+            td.no-border #{item.begin_date}
+            td.no-border Zählerstand
+            td.no-border.is-text-right «zst-3»
+          tr
+            td.no-border «LSN_ZählerNr_4»
+            td.no-border «Datum_2»
+            td.no-border Zählerstand
+            td.no-border.is-text-right «zst-4»
           tr
             td Ende Abrechnungszeitraum
             td #{item.last_date}
@@ -78,7 +99,7 @@ html
             td colspan=3
               strong Bezug Abrechnungszeitraum
             td.is-text-right
-              strong #{billing.consumed_energy_kwh}
+              strong «ZSt_Sum_Diff»
       div
         h2 Abrechnung
         table.is-full-width.is-small
@@ -91,13 +112,13 @@ html
           tr
             td.no-border Arbeitspreis
             td.no-border #{item.begin_date} - #{item.last_date}
-            td.no-border #{item.consumed_energy_kwh} kWh
+            td.no-border «ZSt_Sum_Dif» kWh
             td.no-border #{item.energy_price_cents_per_kwh} Ct/kWh
             td.no-border.is-text-right #{item.energy_price_euros} €
           tr
             td Grundpreis
             td #{item.begin_date} - #{item.last_date}
-            td #{item.length_in_days} Tage
+            td «Zeitraum_zw» Tage
             td #{item.base_price_euros_per_day} €/Tag
             td.is-text-right #{item.base_price_euros} €
           tr
@@ -124,16 +145,9 @@ html
             td colspan=3
             td.is-text-right
               strong #{rest_Summe} €
-      p Aus der Turnusabrechnung ergibt sich eine <strong>#{rueck_nach}zahlung</strong> von <strong>#{rest_Summe} €.</strong>
+      p Aus der Schlussabrechnung ergibt sich eine <strong>#{rueck_nach}zahlung</strong> von <strong>#{rest_Summe} €.</strong>
       p #{satz_forderung}
     div.wrapper
-      div.log
-      h2 Ihre Vertragskonditionen
-      p Die aktuellen Preise in der Energiegruppe #{localpool.name} betragen:<br>
-        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{grundpreis_brutto_neu} €/Monat,</strong> (#{billing.baseprice} €/Monat)<br>
-        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{bezugspreis_brutto_neu} Cent/kWh,</strong> (#{billing.energyprice} Cent/kWh)
-      p <strong>#{abschlag_neu_Satz}</strong>
-      p Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.
       p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.
       p Mit freundlichen Grüßen,
       p #{contractor.contact}

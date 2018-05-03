@@ -60,15 +60,36 @@ html
         h2 Bezugsmenge
         table.is-full-width.is-small
           tr
-            th
+            th Zählernummer
             th Ablesedatum
             th
             th.is-text-right kWh
           tr
-            td.no-border Beginn Abrechnungszeitraum
+            td.no-border «LSN_ZählerNr_1»
             td.no-border #{item.begin_date}
             td.no-border Zählerstand
             td.no-border.is-text-right #{item.begin_kwh}
+          tr
+            td.no-border «LSN_ZählerNr_2»
+            td.no-border «Datum_2»
+            td.no-border Zählerstand
+            td.no-border.is-text-right «zst-2»
+          tr
+            td
+              b Zählerwechsel
+            td
+            td
+            td
+          tr
+            td.no-border «LSN_ZählerNr_3»
+            td.no-border #{item.begin_date}
+            td.no-border Zählerstand
+            td.no-border.is-text-right «zst-3»
+          tr
+            td.no-border «LSN_ZählerNr_4»
+            td.no-border «Datum_2»
+            td.no-border Zählerstand
+            td.no-border.is-text-right «zst-4»
           tr
             td Ende Abrechnungszeitraum
             td #{item.last_date}
@@ -78,7 +99,7 @@ html
             td colspan=3
               strong Bezug Abrechnungszeitraum
             td.is-text-right
-              strong #{billing.consumed_energy_kwh}
+              strong «ZSt_Sum_Diff»
       div
         h2 Abrechnung
         table.is-full-width.is-small
@@ -91,13 +112,13 @@ html
           tr
             td.no-border Arbeitspreis
             td.no-border #{item.begin_date} - #{item.last_date}
-            td.no-border #{item.consumed_energy_kwh} kWh
+            td.no-border «ZSt_Sum_Dif» kWh
             td.no-border #{item.energy_price_cents_per_kwh} Ct/kWh
             td.no-border.is-text-right #{item.energy_price_euros} €
           tr
             td Grundpreis
             td #{item.begin_date} - #{item.last_date}
-            td #{item.length_in_days} Tage
+            td «Zeitraum_zw» Tage
             td #{item.base_price_euros_per_day} €/Tag
             td.is-text-right #{item.base_price_euros} €
           tr
