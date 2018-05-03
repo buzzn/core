@@ -23,7 +23,9 @@ class Builders::Discovergy::SubstituteCalculator
   end
 
   def virtual_value
-    (@substitute / @missing_registers.size).to_i unless @missing_registers.empty?
+    unless @missing_registers.empty?
+      (@substitute / @missing_registers.size).to_i
+    end
   end
 
   def value(register)

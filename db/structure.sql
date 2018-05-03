@@ -347,6 +347,17 @@ CREATE TYPE formula_parts_operator AS ENUM (
 
 
 --
+-- Name: meters_datasource; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE meters_datasource AS ENUM (
+    'standard_profile',
+    'discovergy',
+    'virtual'
+);
+
+
+--
 -- Name: meters_direction_number; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1532,6 +1543,7 @@ CREATE TABLE meters (
     calibrated_until date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
+    datasource meters_datasource,
     manufacturer_name meters_manufacturer_name,
     ownership meters_ownership,
     direction_number meters_direction_number,

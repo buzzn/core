@@ -642,6 +642,14 @@ paths:
         format: ''
         maxLength: 128
         minLength: 4
+      - name: datasource
+        in: formData
+        required: false
+        type: string
+        enum:
+        - discovergy
+        - virtual
+        - standard_profile
       - name: product_name
         in: formData
         required: false

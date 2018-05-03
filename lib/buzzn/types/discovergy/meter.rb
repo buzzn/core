@@ -20,8 +20,10 @@ class Types::Discovergy::Meter < Types::Discovergy::Base
 
   def meter_id
     case meter
+    when Meter::Discovergy
+      "VIRTUAL_#{meter.product_serialnumber}"
     when Meter::Base
-      meter.broker.external_id
+      "EASYMETER_#{meter.product_serialnumber}"
     when OpenStruct
       "#{meter.type}_#{meter.serialNumber}"
     else

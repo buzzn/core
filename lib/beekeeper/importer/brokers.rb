@@ -11,7 +11,7 @@ class Beekeeper::Importer::Brokers
     without_broker = localpool.meters.real.select do |meter|
       if meter.easy_meter?
         if meter_on_discovergy?(meter.product_serialnumber)
-          Broker::Discovergy.create!(meter: meter)
+          meter.update!(datasource: :discovergy)
           false
         else
           # these are the ones we have, but are not on Discovergy.
