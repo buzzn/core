@@ -647,9 +647,9 @@ paths:
         required: false
         type: string
         enum:
+        - standard_profile
         - discovergy
         - virtual
-        - standard_profile
       - name: product_name
         in: formData
         required: false

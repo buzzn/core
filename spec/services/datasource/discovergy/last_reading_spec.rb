@@ -28,7 +28,7 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
 
   entity(:api) { ApiMock.new }
 
-  entity(:meter) { create(:meter, :real, :with_broker) }
+  entity(:meter) { create(:meter, :real, :connected_to_discovergy) }
   entity(:register) { meter.input_register }
 
   entity(:last_readings) do

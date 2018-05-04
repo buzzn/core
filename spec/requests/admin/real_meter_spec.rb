@@ -94,7 +94,7 @@ describe Admin::LocalpoolRoda do
             {'parameter'=>'product_serialnumber',
              'detail'=>'size cannot be greater than 128'},
             {'parameter'=>'datasource',
-             'detail'=>'must be one of: discovergy, virtual, standard_profile'},
+             'detail'=>'must be one of: standard_profile, discovergy, virtual'},
             {'parameter'=>'product_name',
              'detail'=>'size cannot be greater than 64'},
             {'parameter'=>'manufacturer_name',

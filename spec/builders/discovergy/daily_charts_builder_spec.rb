@@ -16,7 +16,7 @@ describe Builders::Discovergy::DailyChartsBuilder do
         else
           [:input, Register::Base.labels['consumption']]
         end
-      meter = create(:meter, :real,
+      meter = create(:meter, :real, :connected_to_discovergy,
                      group: group,
                      register_direction: direction,
                      product_serialnumber: id.sub('EASYMETER_', ''))
