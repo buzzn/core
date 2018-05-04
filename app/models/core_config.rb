@@ -4,7 +4,7 @@ class CoreConfig < ActiveRecord::Base
     params =
       self.where(namespace: clazz.name)
         .select(:key, :value)
-        .collect { |e| [e.key.to_sym, e.value.to_f] }
+        .collect { |e| [e.key.to_sym, e.value] }
     clazz.new Hash[params]
   end
 
