@@ -118,6 +118,20 @@ So if you know what you are doing, run `rake db:empty` first, to completely dele
 
 We're running on Heroku, so you can deploy from Heroku's web interface if you want. To do it from the command line:
 
+## Maintenance Mode
+
+to switch maintenance mode off/on execute the rake tasks on heroku for staging
+
+    `heroku run rake maintenance:on --remote staging`
+    `heroku run rake maintenance:on --remote staging`
+
+or for production
+
+    `heroku run rake maintenance:on --remote production`
+    `heroku run rake maintenance:off --remote production`
+
+this is important when the DB structure changes and the code and DB have mismatch for some time during deployment.
+
 ## Deploy staging
 
 Staging is deployed automatically for every green CI build on `master`.
@@ -157,7 +171,7 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
 ## Set up rubocop
 
 We run rubocop in CI to ensure consistent coding style and prevent error-prone syntax. Let your editor check
-the rules as well so you don't have to rely on CI. 
+the rules as well so you don't have to rely on CI.
 
 Here's how to integrate it into editors:
 - for SublimeText: https://packagecontrol.io/packages/SublimeLinter-rubocop
