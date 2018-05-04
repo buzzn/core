@@ -37,7 +37,7 @@ class Beekeeper::Importer::OptimizeGroup
     all_meters_list
       .compact
       .collect { |meters| allowed_discovergy_ids(meters) }
-      .select { |meters| !meters.empty? && !meters.registers.first.other? }
+      .select { |meters| !meters.empty? && !meters.all?{ |m| m.registers&.first&.other? } }
       .reduce(&:|)
   end
 
@@ -49,6 +49,7 @@ class Beekeeper::Importer::OptimizeGroup
 
   def setup_optimized_groups(localpool, serial)
     if serial
+      logger.info "Setup optimized group #{serial}"
       Broker::Discovergy.create(meter: Meter::Discovergy.create(product_serialnumber: serial, group: localpool))
     end
   end
@@ -71,7 +72,7 @@ class Beekeeper::Importer::OptimizeGroup
   end
 
   def create_optimized_group(localpool, warnings)
-    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings) && complete?(localpool)
+    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings) && complete?(localpool) && !others?(localpool)
       warnings['discovergy.optimized_group'] = "create optimized group for #{localpool.slug}"
       binding.pry
       #meter = @optimized.create(localpool)
@@ -86,7 +87,16 @@ class Beekeeper::Importer::OptimizeGroup
     localpool_meters = Set.new(localpool.registers.grid_production_consumption.collect {|r| r.meter})
     all_registers = discovergy_meters.collect { |m| m.registers }.flatten
 
-    discovergy_meters == localpool_meters
+    all_discovergy_but_consumption = (localpool_meters - discovergy_meters)
+       .collect { |m| m.registers }
+       .flatten
+       .all? { |r| r.label.consumption? }
+
+    all_covered = (discovergy_meters - localpool_meters).empty?
+    #p discovergy_meters == localpool_meters
+
+    # discovergy_meters == localpool_meters
+    all_discovergy_but_consumption  && all_covered
   end
 
   def complete?(localpool)
@@ -97,19 +107,23 @@ class Beekeeper::Importer::OptimizeGroup
       registers.one? { |r| r.label.consumption? }
   end
 
+  def others?(localpool)
+    !localpool.registers.other.empty?
+  end
+
   def optimized_groups
-    @optimized_groups ||= YAML.load(File.read(OPTIMIZED_GROUPS_YAML))
+    $optimized_groups ||= YAML.load(File.read(OPTIMIZED_GROUPS_YAML))
   rescue
     logger.info('Unable to find optimized_groups file; it will be recreated.')
-    @optimized_groups = {}
+    $optimized_groups = {}
   end
 
   def persist_optimized_groups
-    File.write(OPTIMIZED_GROUPS_YAML, Hash[@optimized_groups.sort].to_yaml)
+    File.write(OPTIMIZED_GROUPS_YAML, Hash[$optimized_groups.sort].to_yaml)
   end
 
   def optimized_map
-    @meter_to_virtual_map ||= @meters.meter_to_virtual_map
+    $meter_to_virtual_map ||= @meters.meter_to_virtual_map
   end
 
 end
