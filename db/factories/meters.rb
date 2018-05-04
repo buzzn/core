@@ -5,7 +5,7 @@ FactoryGirl.define do
       register_direction :input
     end
 
-    datasource                :standard_profile
+    datasource :standard_profile
     group { FactoryGirl.create(:localpool) }
 
     before(:create) do |meter, evaluator|
@@ -29,7 +29,7 @@ FactoryGirl.define do
     end
 
     trait :with_broker do
-      datasource                :discovergy
+      datasource :discovergy
     end
 
     trait :one_way do

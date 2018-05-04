@@ -72,11 +72,12 @@ class Beekeeper::Importer::OptimizeGroup
   end
 
   def create_optimized_group(localpool, warnings)
-    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings) && complete?(localpool) && !others?(localpool)
-      warnings['discovergy.optimized_group'] = "create optimized group for #{localpool.slug}"
-      binding.pry
-      #meter = @optimized.create(localpool)
-      #optimized_groups[localpool.slug] = meter.product_serialnumber
+    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings) && complete?(localpool) && no_others?(localpool)
+      localpool.registers.reload
+      puts "create optimized group for #{localpool.slug} and execute:\n\n"
+      puts 'meter = @optimized.create(localpool)'
+      puts 'optimized_groups[localpool.slug] = meter.product_serialnumber'
+      binding.send(:pry)
     else
       optimized_groups[localpool.slug] = nil
     end
@@ -85,30 +86,28 @@ class Beekeeper::Importer::OptimizeGroup
   def discovergy_only?(localpool, warnings)
     discovergy_meters = Set.new(@optimized.local(localpool))
     localpool_meters = Set.new(localpool.registers.grid_production_consumption.collect {|r| r.meter})
-    all_registers = discovergy_meters.collect { |m| m.registers }.flatten
-
     all_discovergy_but_consumption = (localpool_meters - discovergy_meters)
-       .collect { |m| m.registers }
-       .flatten
-       .all? { |r| r.label.consumption? }
+                                     .collect { |m| m.registers }
+                                     .flatten
+                                     .all? { |r| r.label.consumption? }
 
-    all_covered = (discovergy_meters - localpool_meters).empty?
-    #p discovergy_meters == localpool_meters
-
-    # discovergy_meters == localpool_meters
-    all_discovergy_but_consumption  && all_covered
+    p "all meters but consumption are connected to discovergy: #{all_discovergy_but_consumption}"
+    all_discovergy_but_consumption
   end
 
   def complete?(localpool)
     registers = @optimized.local(localpool).collect { |m| m.registers }.flatten
+    p "has grid_consumpion on discovergy: #{registers.one? { |r| r.grid_consumption? }}"
+    p "has grid_feeding on discovergy: #{registers.one? { |r| r.grid_feeding? }}"
+    p "has all production on discovergy: #{registers.any? { |r| r.label.production? }}"
     registers.one? { |r| r.grid_consumption? } &&
       registers.one? { |r| r.grid_feeding? } &&
-      registers.one? { |r| r.label.production? } &&
-      registers.one? { |r| r.label.consumption? }
+      registers.any? { |r| r.label.production? }
   end
 
-  def others?(localpool)
-    !localpool.registers.other.empty?
+  def no_others?(localpool)
+    p "has no register labeled 'other': #{localpool.registers.other.empty?}"
+    localpool.registers.other.empty?
   end
 
   def optimized_groups

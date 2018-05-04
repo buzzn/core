@@ -18,7 +18,7 @@ class Beekeeper::Importer::Brokers
     end
 
     logged = false
-    if meters.all? { |m| m.discovergy? }
+    if meters.all?(&:discovergy?)
       logger.info 'All meters connected with Discovergy'
     elsif meters.all? { |m| m.other? || m.standard_profile? }
       logger.info 'All meters are Standard-Profile or not connected to Discovergy'
