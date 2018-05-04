@@ -28,8 +28,10 @@ FactoryGirl.define do
       end
     end
 
-    trait :with_broker do
+    trait :connected_to_discovergy do
       datasource :discovergy
+      edifact_measurement_method :remote
+      manufacturer_name :easy_meter
     end
 
     trait :one_way do
