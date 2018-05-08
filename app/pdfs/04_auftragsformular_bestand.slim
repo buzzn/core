@@ -30,10 +30,12 @@ html
         input[type="text"]
       h2 2	Vertragspartner
       p Bitte teilen Sie mit, wer Vertragspartner und Rechnungsempfänger sein soll.
+      p Achtung: Falls Sie nicht neu einziehen, stellen Sie bitte sicher, dass nachfolgende Angaben identisch mit denen Ihrer letzten Stromrechnung sind. Ansonsten kann es zu Verzögerungen beim Wechsel kommen!
       p
         span.is-mandatory Anrede:&nbsp;
         label Frau <input type="checkbox" name="frau2"> /
         label Herr <input type="checkbox" name="herr2"> /
+        label Firma <input type="checkbox" name="firma2"> /
         label Sonstige: <input type="checkbox" name="sonstige2">: <input type="text">
       p
         span.is-mandatory Name (Vorname/Nachname bzw. Firmierung):&nbsp;
@@ -42,7 +44,7 @@ html
         span.is-mandatory Straße/Hausnummer:&nbsp;
         input[type="text"]
       p
-        span Adresszusatz (z. B. „2. OG links“):&nbsp;
+        span.is-mandatory Adresszusatz (z. B. „2. OG links“):&nbsp;
         input[type="text"]
       p
         span.is-mandatory PLZ/Ort:&nbsp;
@@ -58,7 +60,7 @@ html
         span.is-mandatory Falls ja: Gewünschtes Datum der Erstbelieferung:&nbsp;
         input[type="text"]
       p.is-indented
-        span Falls ja: Prognose Strombezug (in kWh):&nbsp;
+        span.is-mandatory Falls ja: Prognose Strombezug (in kWh):&nbsp;
         input[type="text"]
       p Die folgenden Angaben erleichtern Ihren Wechsel in die Lokale Energiegruppe erheblich. Sollten Sie sie nicht wissen und auch auf Ihrer letzten Stromrechnung/Kontoauszug nicht finden, lassen Sie die Felder einfach leer.
       p.is-mandatory
@@ -92,29 +94,32 @@ html
         span Zählpunktbezeichnung: DE&nbsp;
         input[type="text"]
       p
-        span oder Zählernummer: DE&nbsp;
+        span oder Zählernummer: &nbsp;
         input[type="text"]
       h2 4	Preise, Abrechnung & Bezahlung
       p Alle nachgenannten Preise sind Endpreise und enthalten die gesetzliche Umsatzsteuer sowie alle sonstigen Preisbestandteile; zusätzliche Liefer- oder Versandkosten fallen nicht an.
       p Als Lokaler Stromnehmer zahlen Sie einen Grundpreis und einen Bezugspreis.
-      p Der <b>Grundpreis</b> beträgt derzeit «Grundpreis_brutto_neu» € pro Monat bei Erteilung eines SEPA-Lastschriftmandats, sonst «Grundpreis_brutto_neu» pro Monat.
+      p Der <b>Grundpreis</b> beträgt derzeit «Grundpreis_brutto_neu» € pro Monat bei Erteilung eines SEPA-Lastschriftmandats, sonst «Grundpreis_brutto_neu» € pro Monat.
       p Der <b>Bezugspreis</b> beträgt derzeit «Bezugspreis_brutto_neu» Cent pro Kilowattstunde (Ct/kWh).
       p Ihr Strom wird einmal im Jahr abgerechnet. Davor werden monatliche Abschlagszahlungen fällig. Zur Abbuchung Ihrer Abschläge werden Sie um Teilnahme am SEPA-Basis-Lastschriftverfahren gebeten (siehe Anlage 1).
 
       h2 5	Zustandekommen des Vertrags sowie Allgemeine Geschäftsbedingungen (AGB)
-      p Der Vertrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber kommt zustande, sobald der Lokale Stromgeber Ihnen dies bestätigt. Im Falle einer neu einzurichtenden Energiegruppe muss die Bestätigung muss binnen zwei Monaten nach Zugang dieses Auftrags beim Lokalen Stromgeber erfolgen. Erfolgt innerhalb dieser Frist keine Bestätigung, erlischt dieser Auftrag automatisch mit Ablauf der vorgenannten Frist; hierüber informiert der Lokale Stromgeber Sie.
-      p Der Beginn Ihrer Belieferung mit Strom hängt davon ab, zu welchem Zeitpunkt der Netzanschluss des Objekts sowie das Setzen der Stromzähler erfolgen kann. Der Lokale Stromgeber informiert Sie unverzüglich über den Zeitpunkt des Lieferbeginns.
+      p Der Vertrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber kommt zustande, sobald der Lokale Stromgeber Ihnen dies bestätigt. Im Falle einer neu einzurichtenden Energiegruppe muss die Bestätigung binnen zwei Monaten nach Zugang dieses Auftrags beim Lokalen Stromgeber erfolgen. Erfolgt innerhalb dieser Frist keine Bestätigung, erlischt dieser Auftrag automatisch mit Ablauf der vorgenannten Frist; hierüber informiert der Lokale Stromgeber Sie. Bei einer bereits eingerichteten Lokalen Stromgruppe gilt die gesetzliche Annahmefrist des § 147 Abs. 2 BGB.
+      p Der Beginn Ihrer Belieferung mit Strom hängt davon ab, zu welchem Zeitpunkt die Abmeldung bei Ihrem bisherigen Lieferanten erfolgen kann. Der Lokale Stromgeber informiert Sie unverzüglich über den Zeitpunkt des Lieferbeginns.
       p Ansonsten gelten die AGB für Lokale Stromnehmer. Hiermit bestätigen Sie, dass sie diese erhalten haben und mit ihnen einverstanden sind.
-      p.has-dotted-underline.has-space-above.col-half.float-none
-      p
-        |(Ort), (Datum)
-      p.has-dotted-underline.has-space-above.col-half.float-none
-      p
-        |(Unterschrift Kontoinhaber)
+      div.row
+        div.col-half
+          p.has-dotted-underline.has-space-above
+          p
+            |(Ort), (Datum)
+        div.col-half
+          p.has-dotted-underline.has-space-above
+          p
+            |(Unterschrift)
       h2 6 Feedback
       p Falls Sie noch Fragen oder Anmerkungen haben, schreiben Sie bitte hier Ihre Nachricht:
       p
-        textarea.is-full-width rows="5"
+        textarea.is-full-width rows="4"
       footer.is-small
         .footer-logo
           | powered by
@@ -128,10 +133,11 @@ html
       h2 SEPA Lastschrift-Mandat
       p
         i
-          Anlage 1 zum Auftrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_Kontakt» im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort».
+          | Anlage 1 zum Auftrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_Kontakt» im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort».
       p Ihr Strom wird einmal im Jahr abgerechnet. Davor werden monatliche Abschlagszahlungen fällig. Zur Abbuchung Ihrer Abschläge werden Sie um Teilnahme am SEPA-Basis-Lastschriftverfahren gebeten.
       p Die Gläubiger-Identifikationsnummer des Lokalen Stromgebers ist: «Sepa_Mand_Ref»
       p Ihre Mandatsreferenz wird Ihnen separat mitgeteilt.
+      p Bitte teilen Sie uns mit, von welchem Bankkonto die Zahlungen eingezogen werden können.
       p
         span.is-mandatory Kontoinhaber (Vor-/Nachname bzw. Firmierung):&nbsp;
         input[type="text"]
@@ -177,10 +183,14 @@ html
       h2 Vollmacht
       p
         i
-        Anlage 2 zum Auftrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_V.-Partner» im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort».
+          | Anlage 2 zum Auftrag zur Stromvollversorgung, zum Messstellenbetrieb und zur Messung durch den Lokalen Stromgeber «LSG_V.-Partner» im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort».
       p.has-space-above Als Stromkunde/Anschlussnutzer an der Bezugsstelle
       p.is-indented «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort»
-      p bevollmächtige(n) und beauftrage(n) ich/wir,
+      .is-indented
+        p.has-dotted-underline.has-space-above.col-half.float-none
+        p
+          | (Zählernummer oder Zählpunktbezeichnung)
+      p.has-space-above bevollmächtige(n) und beauftrage(n) ich/wir,
       .is-indented
         p.has-dotted-underline.has-space-above.col-half.float-none
         p Name (Vorname/Nachname bzw. Firmenname)
@@ -206,7 +216,7 @@ html
         div.col-half
           p.has-dotted-underline.has-space-above
           p
-            |(Unterschrift Kontoinhaber)
+            |(Unterschrift)
       footer.is-small
         .footer-logo
           | powered by

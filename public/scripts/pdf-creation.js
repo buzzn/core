@@ -22,7 +22,7 @@ function fixPdfDimensions() {
 // @param {String} footer - HTML
 function setPageBreaks(footer){
   footer = footer || '<footer><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>'
-  var pageSplitThreshold = isQt() ? 2000 : 1000;
+  var pageSplitThreshold = isQt() ? 1500 : 1000;
   var pages = '';
   var pageCount;
   $('.wrapper').each(function(){

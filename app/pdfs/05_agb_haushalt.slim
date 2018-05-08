@@ -21,8 +21,7 @@ html
           p 1.5 Die Lokale Stromgruppe ist mit dem allgemeinen Stromnetz verbunden. Dadurch ist die Stromversorgung der LSN auch dann gesichert, wenn intern kein oder zu wenig Strom erzeugt wird.
           h3 2	Messung und Ablesung
           p 2.1 Der LSG sorgt dafür, dass die gelieferte Strommenge an der Bezugsstelle des LSN durch einen geeichten Stromzähler erfasst wird. Um dem LSN die Visualisierung und Auswertung seiner Messdaten mittels geeigneter Software zu ermöglichen sowie zu Zwecken der Abrechnung, der energetischen Optimierung der Lokalen Stromgruppe sowie der Erfüllung gesetzlicher Auflagen, kann  der LSG einen digitalen fernauslesbaren Stromzähler („Smart Meter“) verwenden.
-          p 2.2
-            b Der LSN ist damit einverstanden, dass der LSG oder ein hiermit beauftragter Dritter die Messdaten eines Smart Meters nach Ziffer 2.1 – in anonymisierter Form – auch für den Vergleich mit Stromverbräuchen anderer LSN oder den Vergleich von Erzeugungs- und Verbrauchsmengen in der Lokalen Stromgruppe im Rahmen von Internet- oder mobilen Softwareanwendungen („Apps“) verarbeitet. Der LSN kann diese Einwilligung jederzeit gegenüber dem LSG widerrufen.
+          p 2.2 <b>Der LSN ist damit einverstanden, dass der LSG oder ein hiermit beauftragter Dritter die Messdaten eines Smart Meters nach Ziffer 2.1 – in anonymisierter Form – auch für den Vergleich mit Stromverbräuchen anderer LSN oder den Vergleich von Erzeugungs- und Verbrauchsmengen in der Lokalen Stromgruppe im Rahmen von Internet- oder mobilen Softwareanwendungen („Apps“) verarbeitet. Der LSN kann diese Einwilligung jederzeit gegenüber dem LSG widerrufen.</b>
           p 2.3 Der LSN hat dem LSG oder von diesem Beauftragten, die sich entsprechend ausweisen können, nach vorheriger Benachrichtigung Zutritt zu den Räumen des LSN zu verschaffen, soweit dies für Installation, Wartung, Betrieb und Ablesung des Zählers und aller zugehörigen technischen Einrichtungen erforderlich ist. Die Benachrichtigung muss – außer bei Sicherheitsgefahren, die von dem Zähler oder den zugehörigen technischen Einrichtungen ausgehen – mindestens eine Woche vor dem Betretungstermin erfolgen. Sie kann durch Mitteilung an den LSN oder durch Aushang im Objekt erfolgen und muss mindestens einen Ersatztermin vorsehen.
         div.col-half.is-small
           p 2.4 Der LSG kann den Stromzähler selbst ablesen oder verlangen, dass diese vom LSN abgelesen werden, wenn dies zum Zwecke einer Abrechnung nach Ziffer 4, anlässlich eines Lieferantenwechsels oder bei einem berechtigten Interesse des LSG an einer Überprüfung der Ablesung erfolgt. Der LSN kann einer Selbstablesung im Einzelfall widersprechen, wenn diese ihm nicht zumutbar ist. Der LSG darf bei einem berechtigten Widerspruch nach Satz 2 für eine eigene Ablesung kein gesondertes Entgelt verlangen. Die Ablesung erfolgt am Ende des Jahres, bzw. in dem Fall, dass der LSN unterjährige Abrechnungen wünscht, am Ende des Monats, Viertel- oder Halbjahres. Wenn der LSG die Räume des LSN nicht zum Zwecke der Ablesung betreten kann, obwohl er die Voraussetzungen der Ziffer 2.2 einhält, oder der LSN eine vereinbarte Selbstablesung nicht oder verspätet vornimmt, darf der LSG den Verbrauch auf der Grundlage der letzten Ablesung oder bei einem neuen Lokalen Stromnehmer nach dem Verbrauch vergleichbarer Lokaler Stromnehmer unter angemessener Berücksichtigung der tatsächlichen Verhältnisse schätzen.
@@ -37,12 +36,12 @@ html
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
           span.page-number 1&nbsp;
           | von&nbsp;
-          span.page-total-number 4
+          span.page-total-number 5
     div.alwaysbreak
 
     div.wrapper
@@ -68,20 +67,20 @@ html
           h3 7	Änderungen dieser AGB
           p 7.1 Der LSG behält sich vor, diese AGB zu ändern. Beabsichtigte Änderungen dieser AGB werden dem LSN mindestens zwei Monate vor Inkrafttreten der Änderung in Textform mitgeteilt. Der LSG wird nur dann Änderungen dieser AGB vornehmen, wenn dies für den LSN zumutbar ist, insbesondere, um Veränderungen von Umständen zu berücksichtigen, auf die der LSG keinen Einfluss hatte oder um eine im Vertrag aufgetretene Regelungslücke zu schließen.
           p 7.2
-            b Ist der LSN mit der Änderung nicht einverstanden, kann er den Vertrag ohne Einhaltung einer Kündigungsfrist auf den Zeitpunkt des Wirksamwerdens der angekündigten Änderung kündigen; kündigt er nicht, gelten die neuen AGB als vereinbart. Hierauf wird der LSN von dem LSG in der Mitteilung gesondert hingewiesen. Sonstige Kündigungsrechte des LSN bleiben unberührt.
+            <b>Ist der LSN mit der Änderung nicht einverstanden, kann er den Vertrag ohne Einhaltung einer Kündigungsfrist auf den Zeitpunkt des Wirksamwerdens der angekündigten Änderung kündigen; kündigt er nicht, gelten die neuen AGB als vereinbart. Hierauf wird der LSN von dem LSG in der Mitteilung gesondert hingewiesen. Sonstige Kündigungsrechte des LSN bleiben unberührt.</b>
           h3 8	Streitbeilegungsverfahren
-          Sofern der LSN Verbraucher im Sinne von § 13 des Bürgerlichen Gesetzbuchs ist, wird der LSG Beanstandungen des LSN, etwa zum Vertragsabschluss und zur Qualität von Leistungen des LSG, innerhalb einer Frist von vier Wochen ab Zugang der Beanstandung bei dem LSG beantworten. Hilft der LSG der Verbraucherbeschwerde nicht ab, steht dem LSN – unbeschadet weiterer Rechte – die Möglichkeit offen, sich an die Schlichtungsstelle Energie e. V., Friedrichstraße 133, 10117 Berlin (Telefon: 030 27 57 240-0, Telefax: 030 27 57 240-69, Internet: www.schlichtungsstelle-energie.de, E-Mail: info@schlichtungsstelle-energie.de) zu wenden.
+          p Sofern der LSN Verbraucher im Sinne von § 13 des Bürgerlichen Gesetzbuchs ist, wird der LSG Beanstandungen des LSN, etwa zum Vertragsabschluss und zur Qualität von Leistungen des LSG, innerhalb einer Frist von vier Wochen ab Zugang der Beanstandung bei dem LSG beantworten. Hilft der LSG der Verbraucherbeschwerde nicht ab, steht dem LSN – unbeschadet weiterer Rechte – die Möglichkeit offen, sich an die Schlichtungsstelle Energie e. V., Friedrichstraße 133, 10117 Berlin (Telefon: 030 27 57 240-0, Telefax: 030 27 57 240-69, Internet: www.schlichtungsstelle-energie.de, E-Mail: info@schlichtungsstelle-energie.de) zu wenden.
 
       footer.is-small
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
           span.page-number 2&nbsp;
           | von&nbsp;
-          span.page-total-number 4
+          span.page-total-number 5
     div.alwaysbreak
 
     div.wrapper
@@ -100,17 +99,18 @@ html
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
           span.page-number 3&nbsp;
           | von&nbsp;
-          span.page-total-number 4
+          span.page-total-number 5
     div.alwaysbreak
 
     div.wrapper
-      h2 Widerrufsrecht
-      h3 Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen.
+      h2 Widerrufsbelehrung
+      h3 Widerrufsrecht
+      p Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen.
       p Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsabschlusses.
       p Um Ihr Widerrufsrecht auszuüben, müssen Sie uns («LSG_V.-Partner», «LSG_Straße» «LSG_HausNr», «LSG_PLZ» «LSG_Ort», vertreten durch «LSG_Kontakt», Telefon: «LSG_Tel», Fax: «LSG_Fax», E-Mail: «LSG_Email») mittels einer eindeutigen Erklärung (z. B. ein mit der Post versandter Brief, Telefax oder E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren. Sie können dafür das beigefügte Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist.
       p Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.
@@ -121,12 +121,12 @@ html
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
           span.page-number 4&nbsp;
           | von&nbsp;
-          span.page-total-number 4
+          span.page-total-number 5
     div.alwaysbreak
 
     div.wrapper
@@ -148,10 +148,10 @@ html
         .footer-logo
           | powered by
           img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
+        span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 4&nbsp;
+          span.page-number 5&nbsp;
           | von&nbsp;
-          span.page-total-number 4
+          span.page-total-number 5
     div.alwaysbreak
