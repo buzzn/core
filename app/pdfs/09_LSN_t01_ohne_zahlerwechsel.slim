@@ -8,14 +8,15 @@ html
     script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
     script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
     script src='#{Dir.pwd}/public/scripts/bc-chart.js'
-
+  css:
+    html{line-height:1.1}
   body
     div.wrapper.breakable
       div.log
       div.logo.is-pull-left
       div.is-small.col-3rd.is-pull-right.no-margin
         p #{contractor.name}<br>
-          - Energiegruppce #{localpool.name} - <br>
+          - Energiegruppe #{localpool.name} - <br>
           #{contractor.contact}<br>
           #{contractor.street}<br>
           #{contractor.zip} #{contractor.city}
@@ -194,7 +195,7 @@ html
       h2 Kritische Anmerkungen zur Stromkennzeichnung
       p Das deutsche Energiewirtschaftsgesetz verpflichtet jeden Stromlieferanten, den Letztverbrauchern die Herkunft seines Stroms über eine Kennzeichnung nachzuweisen. Dies soll mehr Transparenz und bewusstere Kaufentscheidungen in Richtung „Ökostrom“ bewirken.
       p Die gesetzliche Stromkennzeichnung steht jedoch in der Kritik, manche nennen sie sogar eine Farce. Sie gibt zwar teilweise Auskunft darüber, aus welcher Primärenergie der Strom produziert wurde. Andere wichtige Informationen sind jedoch nicht enthalten, zum Beispiel:
-      ul
+      ul.is-styled-list 
         li Wem gehören die Kraftwerke, die ich als Letztverbraucher mit meinem „Stromgeld“ finanziere?
         li Wie groß sind diese Kraftwerke?
         li Wo stehen diese Kraftwerke und wie hoch sind die Übertragungsverluste beim Transport des Stroms bis zu mir?

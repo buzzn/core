@@ -14,22 +14,17 @@ html
       div.logo.is-pull-left
       div.is-small.col-3rd.is-pull-right.no-margin
         p #{lsg_V_Partner}<br>
-          - Energiegruppe #{lp_Name} - <br>
+          - Lokale Energiegruppe #{lp_Name} - <br>
           #{lsg_Kontakt}<br>
           #{lsg_Straße} #{lsg_HausNr}<br>
           #{lsg_PLZ} #{lsg_Ort}
         p T:  #{lsg_Tel}<br>
           F: #{lsg_Fax}<br>
           Email: #{lsg_Email}
-        p #{lsg_V_Partner}<br>
-          #{lsg_IBAN}<br>
-          #{lsg_BIC}<br>
-          #{lsg_Bank}
-        p Steuernummer: #{steuerNr}
+
       p.is-smaller.clear #{lsg_V_Partner} • #{lsg_Straße} #{lsg_HausNr} • #{lsg_PLZ} #{lsg_Ort}
       p #{lsn_Anrede}<br>
-        #{lsn_Titel}<br>
-        #{lsn_Vorname} #{lsn_Name}<br>
+        #{lsn_Titel} #{lsn_Vorname} #{lsn_Name}<br>
         #{lsn_Straße} #{lsn_HausNr}<br>
         #{lsn_PLZ} #{lsn_Ort}
       p
@@ -53,8 +48,9 @@ html
 
       p Sehr #{lsn_Andrede_r} #{lsn_Anrede_Name},
       p wir freuen uns sehr, Ihnen mitteilen zu können, dass Sie ab dem «erstbelieferung» als Stromnehmer aus der Lokalen Energiegruppe «LP_Name» mit hausgemachtem Strom versorgt werden. Damit leisten Sie einen aktiven Beitrag zum Aufbau einer ökologischen, sozialen und direkten Energieversorgung von Mensch zu Mensch innerhalb der Hausgemeinschaft.
-      p Anhand Ihres vorliegenden Jahresverbrauchs wurde Ihr Abschlag wie folgt berechnet: «MPSN_AbschlagNetto» € (netto) + «MPSN_AbschlagMwSt» € (19% MwSt.) = «Abschlag» € (brutto).
+      p Anhand Ihres vorliegenden Jahresverbrauchs wurde Ihr Abschlag wie folgt berechnet: «MPSN_AbschlagNetto» € (netto) + «MPSN_AbschlagMwSt» € (19% MwSt.) = <b>«Abschlag» € (brutto)</b>.
       p Der Betrag wird zum Anfang eines jeden Monats von Ihrem Konto abgebucht. Bei Änderung Ihrer Bankverbindung informieren Sie uns bitte rechtzeitig.
+      p Ihr bisheriger Stromlieferant sollte nach dem «erstbelieferung» zeitnah eine Endabrechnung schicken und den Lastschrifteinzug einstellen. Geben Sie uns bitte Bescheid, falls dies nicht binnen acht Wochen nach dem «erstbelieferung» passiert ist.
       p Haben Sie noch Fragen? Dann stehen wir Ihnen gerne unter den oben genannten Kontaktdaten telefonisch oder per E-Mail zur Verfügung.
       p Mit freundlichen Grüßen,
       p «LSG_Kontakt»
@@ -101,22 +97,22 @@ html
           td «erstbelieferung»
         tr
           td Vorlieferant
-          td -
+          td «MPSN_LFA»
         tr
           td Kundennummer Vorlieferant
-          td -
+          td «MPSN_LFA_KundenNr»
         tr
           td Vertragskontonummer Vorlieferant
-          td -
+          td «MPSN_LFA_VertragskontoNr»
         tr
-          td Stromverbrauch Prognose
+          td Stromverbrauch letztes Jahr
           td «Verbrauch_Jahr» kWh
         tr
           td Monatlicher Abschlag (Strom)
           td «Abschlag_neu» €
         tr
           td Zählpunktbezeichnung
-          td -
+          td «MPSN_Zählpunkt_ID»
         tr
           td Zählernummer
           td «MPSN_ZählerNr_alt»
