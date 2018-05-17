@@ -13,8 +13,13 @@ class Services::Datasource::Discovergy::Meters
     end
   end
 
-  def connected?(serial)
-    meter = ::Meter::Real.new(product_serialnumber: serial)
+  def connected?(meter_or_serial)
+    meter =
+      case meter_or_serial
+      when ::Meter::Base then _
+      else
+        ::Meter::Real.new(product_serialnumber: serial)
+      end
     !process(LastReading::Get.new(meter: meter, fields: [:power])).nil?
   end
 
