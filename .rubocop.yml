@@ -22,6 +22,9 @@ Style/FrozenStringLiteralComment:
 Style/Lambda:
   Enabled: false
 
+Style/LambdaCall:
+  Enabled: false
+
 Bundler/OrderedGems:
   Enabled: false
 
