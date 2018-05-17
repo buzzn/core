@@ -8,8 +8,7 @@ describe Operations::Authorization::Delete do
     before { resource.send 'deletable?=', true }
     it 'passes given resource' do
       result = subject.call(resource)
-      expect(result).to be_success
-      expect(result.value).to eq resource
+      expect(result).to be true
     end
   end
 

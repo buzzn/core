@@ -2,11 +2,8 @@ require_relative '../operations'
 
 class Operations::EndDate
 
-  include Dry::Transaction::Operation
-
-  def call(input)
-    input[:end_date] = input.delete(:last_date) + 1.day if input.key?(:last_date)
-    Success(input)
+  def call(params:, **)
+    params[:end_date] = params.delete(:last_date) + 1.day if params.key?(:last_date)
   end
 
 end

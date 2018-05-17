@@ -1,17 +1,16 @@
 require_relative '../operations'
 
-class Operations::CheckDiscovergy
+class Operations::Discovergy
 
   include Dry::Transaction::Operation
   include Import['services.datasource.discovergy.meters']
 
-  def call(resource)
+  def call(resource:, **)
     meter = resource.object
     if meter.discovergy? && !meters.connected?(meter)
-      Failure("meter #{meter} is not connected with discovergy")
-    else
-      Success(resource)
+      raise Buzzn::ValidationError.new(datasource: "meter nust be connected with discovergy")
     end
+    true
   end
 
 end

@@ -24,9 +24,11 @@ module Admin
         end
 
         r.patch! do
-          Transactions::Admin::Register::UpdateFormulaPart
-            .for(shared[LocalpoolRoda::PARENT].registers, part)
-            .call(r.params)
+          Transactions::Admin::Register::UpdateFormulaPart.(
+            resource: part,
+            params: r.params,
+            registers: shared[LocalpoolRoda::PARENT].registers
+          )
         end
       end
     end

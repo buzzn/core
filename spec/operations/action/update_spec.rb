@@ -12,7 +12,7 @@ describe Operations::Action::Update do
     before { input[:updated_at] = Time.now }
     let(:resource) { [resource_with_invariant, resource_without_invariant].sample }
     it 'leaves with error' do
-      expect{ subject.call(input, resource) }.to raise_error Buzzn::StaleEntity
+      expect{ subject.call(params: input, resource: resource) }.to raise_error Buzzn::StaleEntity
     end
   end
 
@@ -25,11 +25,11 @@ describe Operations::Action::Update do
     context 'change' do
       before {input[:first_name] = 'Hektor'}
       it 'acts' do
-        result = subject.call(input, resource_without_invariant)
+        result = subject.call(params: input, resource: resource_without_invariant)
 
-        expect(result).to be_success
-        expect(result.value).to be_persisted
-        expect(result.value.updated_at).not_to eq updated_at
+        expect(result).to be_a(PersonResource)
+        expect(result).to be_persisted
+        expect(result.updated_at).not_to eq updated_at
       end
     end
 
@@ -37,11 +37,11 @@ describe Operations::Action::Update do
       let!(:updated_at) { resource_without_invariant.updated_at }
       before {input.delete(:first_name)}
       it 'keeps as is' do
-        result = subject.call(input, resource_without_invariant)
+        result = subject.call(params: input, resource: resource_without_invariant)
 
-        expect(result).to be_success
-        expect(result.value).to be_persisted
-        expect(result.value.updated_at).to eq updated_at
+        expect(result).to be_a(PersonResource)
+        expect(result).to be_persisted
+        expect(result.updated_at).to eq updated_at
       end
     end
 
@@ -52,10 +52,8 @@ describe Operations::Action::Update do
         input[:updated_at] = resource_with_invariant.updated_at
       end
       it 'leaves with validation errors' do
-        result = subject.call(input, resource_with_invariant)
-        expect(result).to be_a Dry::Monads::Either::Left
+        expect { subject.call(params: input, resource: resource_with_invariant) }.to raise_error Buzzn::ValidationError
         expect(resource_with_invariant.object).not_to be_changed
-        expect(result.value).not_to be_success
       end
     end
   end

@@ -4,28 +4,27 @@ class Operations::Action::Assign
 
   include Dry::Transaction::Operation
 
-  def call(input, resource = nil)
+  def call(params:, resource: nil, **)
     raise ArgumentError.new('missing resource') unless resource
 
     # we deliver only millis to client and have to nil the nanos
-    if (resource.object.updated_at.to_f * 1000).to_i != (input.delete(:updated_at).to_f * 1000).to_i
+    if (resource.object.updated_at.to_f * 1000).to_i != (params.delete(:updated_at).to_f * 1000).to_i
       # TODO better a Left Monad and handle on roda
       raise Buzzn::StaleEntity.new(resource.object)
     else
-      assign(input, resource)
+      assign(params, resource)
     end
   end
 
   private
 
-  def assign(input, resource)
-    resource.object.attributes = input
+  def assign(params, resource)
+    resource.object.attributes = params
     result = invariant(resource.object)
-    if result.success?
-      Success(resource)
-    else
+    unless result.success?
       resource.object.reload
-      Failure(result)
+      p result.errors
+      raise Buzzn::ValidationError.new(result.errors)
     end
   end
 

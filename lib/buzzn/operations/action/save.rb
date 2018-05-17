@@ -4,9 +4,9 @@ class Operations::Action::Save
 
   include Dry::Transaction::Operation
 
-  def call(resource)
+  def call(resource:, **)
     persist(resource.object)
-    Success(resource)
+    resource
   end
 
   private
