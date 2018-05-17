@@ -28,9 +28,9 @@ class Admin::RegisterRoda < BaseRoda
       r.patch! do
         case register.object
         when Register::Real
-          Transactions::Admin::Register::UpdateReal
-            .for(register)
-            .call(r.params)
+          Transactions::Admin::Register::UpdateReal.(
+            resource: register, params: r.params
+          )
         when Register::Virtual
           Transactions::Admin::Register::UpdateVirtual
             .for(register)
@@ -42,8 +42,7 @@ class Admin::RegisterRoda < BaseRoda
 
       r.get! 'ticker' do
         aggregated(
-          Transactions::Ticker
-            .call(register).value
+          Transactions::Ticker.(register).value
         )
       end
 

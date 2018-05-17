@@ -34,9 +34,9 @@ class Admin::BankAccountRoda < BaseRoda
       end
 
       r.patch! do
-        Transactions::Admin::BankAccount::Update
-          .for(bank_account)
-          .call(r.params)
+        Transactions::Admin::BankAccount::Update.(
+          resource: bank_account, params:r.params
+        )
       end
 
       r.delete! do

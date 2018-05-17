@@ -12,14 +12,14 @@ class Transactions::Admin::Reading::Create < Transactions::Base
 
   validate :schema
   step :authorize, with: :'operations.authorization.generic'
-  step :persist
+  map :persist
 
   def schema
     Schemas::Transactions::Admin::Reading::Create
   end
 
   def persist(input, readings)
-    Success(ReadingResource.new(readings.objects.create!(input), readings.context))
+    ReadingResource.new(readings.objects.create!(input), readings.context)
   end
 
 end

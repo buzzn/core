@@ -3,14 +3,10 @@ require_relative '../../../schemas/transactions/admin/billing_cycle/update'
 
 class Transactions::Admin::BillingCycle::Update < Transactions::Base
 
-  def self.for(billing_cycle)
-    super(billing_cycle, :authorize, :persist)
-  end
-
   validate :schema
-  step :authorize, with: :'operations.authorization.update'
-  step :end_date, with: :'operations.end_date'
-  step :persist, with: :'operations.action.update'
+  check :authorize, with: :'operations.authorization.update_ng'
+  tee :end_date, with: :'operations.end_date_ng'
+  step :persist, with: :'operations.action.update_ng'
 
   def schema
     Schemas::Transactions::Admin::BillingCycle::Update

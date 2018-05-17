@@ -7,7 +7,7 @@ module Utils
     route do |r|
 
       r.post! do
-        Transactions::Utils::ZipToPrice.call(r.params)
+        Transactions::Utils::ZipToPrice.(params: r.params)
       end
     end
 

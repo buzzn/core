@@ -7,14 +7,6 @@ class Transactions::Base
 
   class << self
 
-    def nnew(**)
-      if ['call', 'for', 'with_step_args'].include? caller_locations[0].label
-        super
-      else
-        raise NoMethodError.new("#{caller_locations[0]}: semi private method 'new' called for #{self}")
-      end
-    end
-
     def call(*args)
       new.call(*args)
     end
@@ -35,7 +27,7 @@ class Transactions::Base
     ActiveRecord::Base.transaction(requires_new: true) do
       result = yield(Success(input))
       return result if result.is_a?(Dry::Monads::Result::Failure)
-      unless result.value.invariant.success?
+      if result.value.invariant && result.value.invariant.failure?
         raise ActiveRecord::Rollback
       end
     end

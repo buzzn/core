@@ -3,13 +3,9 @@ require_relative '../../../schemas/transactions/admin/localpool/update'
 
 class Transactions::Admin::Localpool::Update < Transactions::Base
 
-  def self.for(localpool)
-    super(localpool, :authorize, :persist)
-  end
-
   validate :schema
-  step :authorize, with: :'operations.authorization.update'
-  step :persist, with: :'operations.action.update'
+  check :authorize, with: :'operations.authorization.update_ng'
+  step :persist, with: :'operations.action.update_ng'
 
   def schema
     Schemas::Transactions::Admin::Localpool::Update

@@ -10,11 +10,17 @@ class Transactions::StepAdapters < Dry::Transaction::StepAdapters
 #    unless kwargs[:params]
 #      raise ArgumentError.new("step +#{options[:step_name]}+ requires input provided via +params:+")
     #    end
-    # TODO help with transition to more intiutive transaction setup
+    # FIXME help with transition to more intiutive transaction setup
     params = kwargs[:params] || kwargs
     result = schema.call(params)
     if result.success?
-      Success(result.output)
+     # FIXME help with transition to more intiutive transaction setup
+      if kwargs.key?(:params)
+        kwargs[:params] = result.output
+        Success(kwargs)
+      else
+        Success(result.output)
+      end
     else
       raise Buzzn::ValidationError.new(result.errors)
       # TODO better use this and handle on roda - see transactions/base

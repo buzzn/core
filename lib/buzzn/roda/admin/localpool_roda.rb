@@ -21,25 +21,16 @@ module Admin
 
         shared[PARENT] = localpool = localpools.retrieve(id)
 
-        r.get! 'charts' do
-          aggregated(
-            Transactions::GroupChart
-              .for(localpool)
-              .call(r.params).value
-          )
-        end
-
         r.get! 'bubbles' do
           aggregated(
-            Transactions::Bubbles
-              .call(localpool).value
+            Transactions::Bubbles.(localpool).value
           )
         end
 
         r.patch! do
-          Transactions::Admin::Localpool::Update
-            .for(localpool)
-            .call(r.params)
+          Transactions::Admin::Localpool::Update.(
+            resource: localpool, params: r.params
+          )
         end
 
         r.on 'contracts' do

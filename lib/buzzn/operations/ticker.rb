@@ -6,7 +6,7 @@ class Operations::Ticker
   include Import['services.current_power']
 
   def call(register)
-    Success(current_power.ticker(register.object))
+    current_power.ticker(register.object)
   end
 
 end

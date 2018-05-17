@@ -6,7 +6,7 @@ class Operations::DailyCharts
   include Import['services.charts']
 
   def call(group)
-    Success(charts.daily(group.object))
+    charts.daily(group.object)
   end
 
 end

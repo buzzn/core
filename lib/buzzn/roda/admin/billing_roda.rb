@@ -22,9 +22,9 @@ class Admin::BillingRoda < BaseRoda
       end
 
       r.patch! do
-        Transactions::Admin::Billing::Update
-          .for(billing)
-          .call(r.params)
+        Transactions::Admin::Billing::Update.(
+          resource: billing, params: r.params
+        )
       end
 
       r.delete! do

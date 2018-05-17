@@ -12,18 +12,17 @@ module Transactions::Admin::Localpool
 
     validate :schema
     step :authorize, with: :'operations.authorize.generic'
-    step :persist
+    around :db_transaction
+    map :persist
 
     def schema
       Schemas::Transactions::Admin::Person::Create
     end
 
     def persist(input, localpool)
-      Group::Localpool.transaction do
-        context = localpool.context.owner
-        person = PersonResource.new(Person.create!(input), context)
-        Success(assign_owner(localpool, person))
-      end
+      context = localpool.context.owner
+      person = PersonResource.new(Person.create!(input), context)
+      assign_owner(localpool, person)
     end
 
   end

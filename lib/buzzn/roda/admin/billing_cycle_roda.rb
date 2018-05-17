@@ -32,9 +32,9 @@ module Admin
         end
 
         r.patch! do
-          Transactions::Admin::BillingCycle::Update
-            .for(billing_cycle)
-            .call(r.params)
+          Transactions::Admin::BillingCycle::Update.(
+            resource: billing_cycle, params: r.params
+          )
         end
 
         r.delete! do

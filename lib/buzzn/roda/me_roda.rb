@@ -83,7 +83,7 @@ module Me
       end
 
       r.patch! do
-        Transactions::Person::Update.for(person).call(r.params)
+        Transactions::Person::Update.(resource: person, params: r.params)
       end
     end
 
