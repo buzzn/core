@@ -24,7 +24,9 @@ module Admin
         case meter.object
         when Meter::Real
           r.patch! do
-            Transactions::Admin::Meter::UpdateReal.for(meter).call(r.params)
+            Transactions::Admin::Meter::UpdateReal.(
+              resource: meter, params: r.params
+            )
           end
         when Meter::Virtual
           nil # nothing to patch

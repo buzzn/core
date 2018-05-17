@@ -32,9 +32,9 @@ class Admin::RegisterRoda < BaseRoda
             resource: register, params: r.params
           )
         when Register::Virtual
-          Transactions::Admin::Register::UpdateVirtual
-            .for(register)
-            .call(r.params)
+          Transactions::Admin::Register::UpdateVirtual.(
+            resource: register, params: r.params
+          )
         else
           raise "unknown model: #{register.class.model}"
         end

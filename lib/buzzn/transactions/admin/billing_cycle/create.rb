@@ -16,12 +16,17 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   around :db_transaction
   validate :schema
   step :authorize, with: :'operations.authorization.generic'
-  step :end_date, with: :'operations.end_date'
+  step :end_date
   step :set_date_range
   step :create_readings, with: :'operations.create_readings_for_group'
   step :create_billing_cycle
   step :create_billings, with: :'operations.create_billings_for_group'
   step :build_response
+
+  def end_date(input)
+    input[:end_date] = input.delete(:last_date) + 1.day if input.key?(:last_date)
+    Success(input)
+  end
 
   def schema
     Schemas::Transactions::Admin::BillingCycle::Create
