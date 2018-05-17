@@ -112,11 +112,6 @@ describe Admin, :swagger do
     description 'returns the bubbles of the localpool'
   end
 
-  get '/localpools/{localpool.id}/charts' do
-    description 'returns the charts of the localpool'
-    schema Schemas::Transactions::Chart
-  end
-
   # contracts
 
   get '/localpools/{localpool.id}/contracts' do
