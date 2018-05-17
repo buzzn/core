@@ -4,11 +4,7 @@ require_relative '../../types/zip_prices'
 
 class Transactions::Utils::ZipToPrice < Transactions::Base
 
-  def self.call(input)
-    self.for(Schemas::Transactions::Utils::ZipToPrice).call(input)
-  end
-
-  step :validate, with: :'operations.validation'
+  validate :schema
   step :zip_to_price
 
   def zip_to_price(input)
@@ -18,6 +14,10 @@ class Transactions::Utils::ZipToPrice < Transactions::Base
     else
       Failure(Buzzn::GeneralError.new(zip: ['no price for zip found']))
     end
+  end
+
+  def schema
+    Schemas::Transactions::Utils::ZipToPrice
   end
 
 end

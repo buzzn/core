@@ -4,11 +4,15 @@ require_relative '../../../schemas/transactions/bank_account/update'
 class Transactions::Admin::BankAccount::Update < Transactions::Base
 
   def self.for(bank_account)
-    super(Schemas::Transactions::BankAccount::Update, bank_account, :authorize, :persist)
+    super(bank_account, :authorize, :persist)
   end
 
-  step :validate, with: :'operations.validation'
+  validate :schema
   step :authorize, with: :'operations.authorization.update'
   step :persist, with: :'operations.action.update'
+
+  def schema
+    Schemas::Transactions::BankAccount::Update
+  end
 
 end

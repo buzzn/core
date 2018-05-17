@@ -5,15 +5,18 @@ class Transactions::Admin::Reading::Create < Transactions::Base
 
   def self.for(register)
     new.with_step_args(
-      validate: [Schemas::Transactions::Admin::Reading::Create],
       authorize: [register, *register.permissions.readings.create],
       persist: [register.readings]
     )
   end
 
-  step :validate, with: :'operations.validation'
+  validate :schema
   step :authorize, with: :'operations.authorization.generic'
   step :persist
+
+  def schema
+    Schemas::Transactions::Admin::Reading::Create
+  end
 
   def persist(input, readings)
     Success(ReadingResource.new(readings.objects.create!(input), readings.context))

@@ -1,12 +1,13 @@
 require_relative '../transactions'
+require_relative 'step_adapters'
 
 class Transactions::Base
 
-  include Dry::Transaction(container: Buzzn::Boot::MainContainer)
+  include Dry::Transaction(container: Buzzn::Boot::MainContainer, step_adapters: Transactions::StepAdapters)
 
   class << self
 
-    def new(**)
+    def nnew(**)
       if ['call', 'for', 'with_step_args'].include? caller_locations[0].label
         super
       else
@@ -18,9 +19,8 @@ class Transactions::Base
       new.call(*args)
     end
 
-    def for(schema = nil, subject = nil, *steps)
+    def for(subject = nil, *steps)
       args = {}
-      args[:validate] = [schema] if schema
       if subject
         arg = [subject]
         steps.each { |s| args[s] = arg }
