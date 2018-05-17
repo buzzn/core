@@ -4,10 +4,10 @@ require_relative '../schemas/transactions/chart'
 class Transactions::GroupChart < Transactions::Base
 
   def self.for(group)
-    super(Schemas::Transactions::Chart, group, :authorize, :chart)
+    super(group, :authorize, :chart)
   end
 
-  step :validate, with: :'operations.validation'
+  validate :schema
   step :authorize
   step :chart, with: :'operations.group_chart'
 
@@ -15,6 +15,10 @@ class Transactions::GroupChart < Transactions::Base
     # TODO needs to distinguish between admin and display
     # TODO check privacy settings here
     Success(input)
+  end
+
+  def schema
+    Schemas::Transactions::Chart
   end
 
 end

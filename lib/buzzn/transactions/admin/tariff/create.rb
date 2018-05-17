@@ -5,15 +5,18 @@ class Transactions::Admin::Tariff::Create < Transactions::Base
 
   def self.for(localpool)
     new.with_step_args(
-      validate: [Schemas::Transactions::Admin::Tariff::Create],
       authorize: [localpool, *localpool.permissions.tariffs.create],
       persist: [localpool.tariffs]
     )
   end
 
-  step :validate, with: :'operations.validation'
+  validate :schema
   step :authorize, with: :'operations.authorization.generic'
   step :persist
+
+  def schema
+    Schemas::Transactions::Admin::Tariff::Create
+  end
 
   def persist(input, tariffs)
     Success(Contract::TariffResource.new(tariffs.objects.create!(input), tariffs.context))

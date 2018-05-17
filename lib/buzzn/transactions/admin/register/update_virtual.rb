@@ -4,11 +4,15 @@ require_relative '../../../schemas/transactions/admin/register/update_virtual'
 class Transactions::Admin::Register::UpdateVirtual < Transactions::Base
 
   def self.for(register)
-    super(Schemas::Transactions::Admin::Register::UpdateVirtual, register, :authorize, :persist)
+    super(register, :authorize, :persist)
   end
 
-  step :validate, with: :'operations.validation'
+  validate :schema
   step :authorize, with: :'operations.authorization.update'
   step :persist, with: :'operations.action.update'
+
+  def schema
+    Schemas::Transactions::Admin::Register::UpdateVirtual
+  end
 
 end

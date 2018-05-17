@@ -6,7 +6,6 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   def self.for(group_resource)
     group_model = group_resource.object
     new.with_step_args(
-      validate: [Schemas::Transactions::Admin::BillingCycle::Create],
       authorize: [group_resource, *group_resource.permissions.billing_cycles.create],
       set_date_range: [group_resource],
       create_readings: [group_model],
@@ -15,7 +14,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   end
 
   around :db_transaction
-  step :validate, with: :'operations.validation'
+  validate :schema
   step :authorize, with: :'operations.authorization.generic'
   step :end_date, with: :'operations.end_date'
   step :set_date_range
@@ -23,6 +22,10 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   step :create_billing_cycle
   step :create_billings, with: :'operations.create_billings_for_group'
   step :build_response
+
+  def schema
+    Schemas::Transactions::Admin::BillingCycle::Create
+  end
 
   def set_date_range(input, group)
     begin_date = group.next_billing_cycle_begin_date

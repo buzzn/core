@@ -5,15 +5,18 @@ module Transactions::Admin::Localpool
 
     def self.for(localpool)
       new.with_step_args(
-        validate: [Schemas::Transactions::Admin::Person::Create],
         authorize: [localpool, localpool.permissions.owner.create],
         persist: [localpool]
       )
     end
 
-    step :validate, with: 'operations.validation'
+    validate :schema
     step :authorize, with: :'operations.authorize.generic'
     step :persist
+
+    def schema
+      Schemas::Transactions::Admin::Person::Create
+    end
 
     def persist(input, localpool)
       Group::Localpool.transaction do
