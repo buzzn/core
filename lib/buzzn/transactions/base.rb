@@ -27,7 +27,7 @@ class Transactions::Base
     ActiveRecord::Base.transaction(requires_new: true) do
       result = yield(Success(input))
       return result if result.is_a?(Dry::Monads::Result::Failure)
-      if result.value.invariant && result.value.invariant.failure?
+      if result.value.invariant&.failure?
         raise ActiveRecord::Rollback
       end
     end

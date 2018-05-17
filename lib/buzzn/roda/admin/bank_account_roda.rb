@@ -35,7 +35,7 @@ class Admin::BankAccountRoda < BaseRoda
 
       r.patch! do
         Transactions::Admin::BankAccount::Update.(
-          resource: bank_account, params:r.params
+          resource: bank_account, params: r.params
         )
       end
 
