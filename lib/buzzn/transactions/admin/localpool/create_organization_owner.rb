@@ -6,24 +6,23 @@ module Transactions::Admin::Localpool
     def self.for(localpool)
       new.with_step_args(
         authorize: [localpool, localpool.permissions.owner.create],
-        persist: [localpool]
+        create: [localpool]
       )
     end
 
     validate :schema
     step :authorize, with: :'operations.authorize.generic'
-    step :persist
+    around :db_transaction
+    map :create
 
     def schema
       Schemas::Transactions::Admin::Organization::Create
     end
 
-    def persist(input, localpools)
-      Group::Localpool.transaction do
-        context = localpool.context.owner
-        organization = OrganizationResource.new(Organization.create!(input.merge(mode: :other), context))
-        Success(assign_owner(localpool, organization))
-      end
+    def create(input, localpool)
+      context = localpool.context.owner
+      organization = OrganizationResource.new(Organization.create!(input.merge(mode: :other), context))
+      assign_owner(localpool, organization)
     end
 
   end

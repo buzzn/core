@@ -7,17 +7,17 @@ class Transactions::Utils::ZipToPrice < Transactions::Base
   validate :schema
   step :zip_to_price
 
-  def zip_to_price(input)
-    prices = Types::ZipPrices.new(input)
+  def schema
+    Schemas::Transactions::Utils::ZipToPrice
+  end
+
+  def zip_to_price(params:)
+    prices = Types::ZipPrices.new(params)
     if result = prices.max_price
       Success(result)
     else
       Failure(Buzzn::GeneralError.new(zip: ['no price for zip found']))
     end
-  end
-
-  def schema
-    Schemas::Transactions::Utils::ZipToPrice
   end
 
 end

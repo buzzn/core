@@ -11,12 +11,11 @@ module Transactions::Admin::Localpool
     end
 
     step :authorize, with: :'operations.authorization.generic'
-    step :persist
+    around :db_transaction
+    map :persist
 
     def persist(input, localpool)
-      Group::Localpool.transaction do
-        Success(assign_owner(localpool, input))
-      end
+      assign_owner(localpool, input)
     end
 
   end

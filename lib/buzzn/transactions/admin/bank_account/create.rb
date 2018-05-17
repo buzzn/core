@@ -12,14 +12,14 @@ class Transactions::Admin::BankAccount::Create < Transactions::Base
 
   validate :schema
   step :authorize, with: :'operations.authorization.generic'
-  step :persist
+  map :persist
 
   def schema
     Schemas::Transactions::BankAccount::Create
   end
 
   def persist(input, bank_accounts)
-    Success(BankAccountResource.new(bank_accounts.objects.create!(input), bank_accounts.context))
+    BankAccountResource.new(bank_accounts.objects.create!(input), bank_accounts.context)
   end
 
 end

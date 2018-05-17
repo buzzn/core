@@ -12,14 +12,14 @@ class Transactions::Admin::Tariff::Create < Transactions::Base
 
   validate :schema
   step :authorize, with: :'operations.authorization.generic'
-  step :persist
+  map :persist
 
   def schema
     Schemas::Transactions::Admin::Tariff::Create
   end
 
   def persist(input, tariffs)
-    Success(Contract::TariffResource.new(tariffs.objects.create!(input), tariffs.context))
+    Contract::TariffResource.new(tariffs.objects.create!(input), tariffs.context)
   end
 
 end
