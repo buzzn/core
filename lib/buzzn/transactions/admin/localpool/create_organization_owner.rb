@@ -6,7 +6,8 @@ module Transactions::Admin::Localpool
     def self.for(localpool)
       new.with_step_args(
         authorize: [localpool, localpool.permissions.owner.create],
-        create: [localpool]
+        create: [localpool],
+        assign_owner: [localpool]
       )
     end
 
@@ -14,6 +15,7 @@ module Transactions::Admin::Localpool
     step :authorize, with: :'operations.authorize.generic'
     around :db_transaction
     map :create
+    map :assign_owner
 
     def schema
       Schemas::Transactions::Admin::Organization::Create
@@ -21,8 +23,7 @@ module Transactions::Admin::Localpool
 
     def create(input, localpool)
       context = localpool.context.owner
-      organization = OrganizationResource.new(Organization.create!(input.merge(mode: :other), context))
-      assign_owner(localpool, organization)
+      OrganizationResource.new(Organization.create!(input.merge(mode: :other), context))
     end
 
   end

@@ -34,7 +34,7 @@ describe Transactions::Admin::Localpool::OwnerBase do
   context Person do
 
     it 'unassign' do
-      subject.assign_owner(pool, nil)
+      subject.assign_owner(nil, pool)
 
       expect(organization.contact.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
       expect(organization.contact.object.roles.size).to eq 0
@@ -43,7 +43,7 @@ describe Transactions::Admin::Localpool::OwnerBase do
 
     it 'assign' do
       pool.object.update(owner: nil)
-      subject.assign_owner(pool, person)
+      subject.assign_owner(person, pool)
 
       expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
       expect(person.object.roles.size).to eq 1
@@ -53,7 +53,7 @@ describe Transactions::Admin::Localpool::OwnerBase do
     context 'change' do
 
       it Person do
-        subject.assign_owner(pool, person2)
+        subject.assign_owner(person2, pool)
 
         expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
         expect(person.object.roles.size).to eq 0
@@ -64,7 +64,7 @@ describe Transactions::Admin::Localpool::OwnerBase do
       end
 
       it Organization do
-        subject.assign_owner(pool, organization)
+        subject.assign_owner(organization, pool)
 
         expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
         expect(person.object.roles.size).to eq 0
@@ -79,7 +79,7 @@ describe Transactions::Admin::Localpool::OwnerBase do
   context Organization do
 
     it 'unassign' do
-      subject.assign_owner(pool, nil)
+      subject.assign_owner(nil, pool)
 
       expect(organization.contact.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
       expect(organization.contact.object.roles.size).to eq 0
@@ -87,7 +87,7 @@ describe Transactions::Admin::Localpool::OwnerBase do
     end
 
     it 'assign' do
-      subject.assign_owner(pool, organization)
+      subject.assign_owner(organization, pool)
 
       expect(organization.contact.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
       expect(organization.contact.object.roles.size).to eq 1
@@ -97,7 +97,7 @@ describe Transactions::Admin::Localpool::OwnerBase do
     context 'change' do
 
       it Person do
-        subject.assign_owner(pool, person)
+        subject.assign_owner(person, pool)
 
         expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq true
         expect(person.object.roles.size).to eq 1
@@ -109,7 +109,7 @@ describe Transactions::Admin::Localpool::OwnerBase do
       end
 
       it Organization do
-        subject.assign_owner(pool, organization2)
+        subject.assign_owner(organization2, pool)
 
         expect(person.object.has_role?(Role::GROUP_OWNER, pool.object)).to eq false
         expect(person.object.roles.size).to eq 0

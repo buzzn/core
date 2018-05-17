@@ -6,17 +6,13 @@ module Transactions::Admin::Localpool
     def self.for(localpool)
       new.with_step_args(
         authorize: [localpool, *localpool.permissions.owner.update],
-        persist: [localpool]
+        assign_owner: [localpool]
       )
     end
 
     step :authorize, with: :'operations.authorization.generic'
     around :db_transaction
-    map :persist
-
-    def persist(input, localpool)
-      assign_owner(localpool, input)
-    end
+    map :assign_owner
 
   end
 end
