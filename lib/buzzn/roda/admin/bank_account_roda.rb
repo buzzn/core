@@ -15,8 +15,8 @@ class Admin::BankAccountRoda < BaseRoda
 
     r.post! do
       Transactions::Admin::BankAccount::Create.(
-          resource: parent, params: r.params
-        )
+        resource: parent, params: r.params
+      )
     end
 
     bank_accounts = parent.bank_accounts
