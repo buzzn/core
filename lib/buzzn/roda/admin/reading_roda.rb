@@ -12,9 +12,10 @@ class Admin::ReadingRoda < BaseRoda
     register = shared[REGISTER]
 
     r.post! do
-      Transactions::Admin::Reading::Create
-        .for(register)
-        .call(r.params)
+      Transactions::Admin::Reading::Create.(
+        resource: register,
+        params: r.params
+      )
     end
 
     readings = register.readings

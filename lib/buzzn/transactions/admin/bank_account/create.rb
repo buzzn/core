@@ -3,23 +3,22 @@ require_relative '../../../schemas/transactions/bank_account/create'
 
 class Transactions::Admin::BankAccount::Create < Transactions::Base
 
-  def self.for(parent)
-    new.with_step_args(
-      authorize: [parent, *parent.permissions.bank_accounts.create],
-      persist: [parent.bank_accounts]
-    )
-  end
-
   validate :schema
-  step :authorize, with: :'operations.authorization.generic'
-  map :persist
+  authorize :allowed_roles
+  map :create_bank_account, with: :'operations.action.create_item'
 
   def schema
     Schemas::Transactions::BankAccount::Create
   end
 
-  def persist(input, bank_accounts)
-    BankAccountResource.new(bank_accounts.objects.create!(input), bank_accounts.context)
+  def allowed_roles(permission_context:)
+    permission_context.bank_accounts.create
+  end
+
+  def create_bank_account(params:, resource:)
+    BankAccountResource.new(
+      resource.bank_accounts, params
+    )
   end
 
 end

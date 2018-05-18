@@ -11,6 +11,7 @@ module Buzzn::Resource
     def context
       Context.new(current_user, current_roles, permissions)
     end
+    alias security_context context
 
     class << self
 
