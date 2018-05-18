@@ -2,7 +2,6 @@ require_relative '../admin_roda'
 require_relative '../../transactions/admin/billing_cycle/create'
 require_relative '../../transactions/admin/billing_cycle/update'
 require_relative '../../transactions/admin/billing_cycle/delete'
-require_relative '../../transactions/admin/billing_cycle/read_billings'
 
 module Admin
   class BillingCycleRoda < BaseRoda
@@ -39,12 +38,6 @@ module Admin
 
         r.delete! do
           Transactions::Admin::BillingCycle::Delete
-            .call(billing_cycle)
-        end
-
-        r.get! 'bars' do
-          Transactions::Admin::BillingCycle::ReadBillings
-            .for(billing_cycle)
             .call(billing_cycle)
         end
 

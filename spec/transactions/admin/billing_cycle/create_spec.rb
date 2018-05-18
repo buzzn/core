@@ -38,7 +38,7 @@ describe Transactions::Admin::BillingCycle::Create do
 
       context 'second call' do
 
-        it 'fails', :skip do
+        it 'fails' do
           expect { transaction.call(input) }.to raise_error Buzzn::ValidationError
         end
 
@@ -58,14 +58,14 @@ describe Transactions::Admin::BillingCycle::Create do
     end
   end
 
-  describe 'generating bricks' do
+  describe 'generating bars' do
     let(:user)      { operator }
     let!(:contract) { create(:contract, :localpool_powertaker, begin_date: (Date.today - 10.years), localpool: localpool) }
 
     before     { BillingCycle.destroy_all }
     after      { BillingCycle.destroy_all }
 
-    it 'works' do
+    it 'works', :skip do
       result = transaction.call(input)
       expect(result).to be_success
       billing_cycle = result.value.object
