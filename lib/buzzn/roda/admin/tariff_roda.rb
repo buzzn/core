@@ -31,8 +31,9 @@ module Admin
         end
 
         r.delete! do
-          Transactions::Admin::Tariff::Delete
-            .call(tariff)
+          Transactions::Admin::Tariff::Delete.(
+            resource: tariff
+          )
         end
       end
     end

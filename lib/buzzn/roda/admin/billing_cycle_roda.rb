@@ -38,8 +38,9 @@ module Admin
         end
 
         r.delete! do
-          Transactions::Admin::BillingCycle::Delete
-            .call(billing_cycle)
+          Transactions::Admin::BillingCycle::Delete.(
+            resource: billing_cycle
+          )
         end
 
         r.on 'billings' do
