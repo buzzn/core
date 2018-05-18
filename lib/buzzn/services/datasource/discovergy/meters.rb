@@ -18,7 +18,7 @@ class Services::Datasource::Discovergy::Meters
       case meter_or_serial
       when ::Meter::Base then _
       else
-        ::Meter::Real.new(product_serialnumber: serial)
+        ::Meter::Real.new(product_serialnumber: meter_or_serial)
       end
     !process(LastReading::Get.new(meter: meter, fields: [:power])).nil?
   end
