@@ -2,8 +2,6 @@ require_relative '../authorization'
 
 class Operations::Authorization::Update
 
-  include Dry::Transaction::Operation
-
   def call(resource:, **)
     unless resource.updatable?
       raise Buzzn::PermissionDenied.new(resource, :update,

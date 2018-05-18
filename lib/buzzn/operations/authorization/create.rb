@@ -2,15 +2,12 @@ require_relative '../authorization'
 
 class Operations::Authorization::Create
 
-  include Dry::Transaction::Operation
-
-  def call(input, resources)
-    if resources.createable?
-      Success(input)
-    else
-      raise Buzzn::PermissionDenied.new(resources.instance_class, :create, resources.security_context.current_user)
+  def call(resource:, **)
+    unless resource.createable?
+      raise Buzzn::PermissionDenied.new(resource.instance_class, :create, resource.security_context.current_user)
       # TODO better a Left Monad and handle on roda
     end
+    true
   end
 
 end

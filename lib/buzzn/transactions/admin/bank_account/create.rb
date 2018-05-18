@@ -17,7 +17,7 @@ class Transactions::Admin::BankAccount::Create < Transactions::Base
 
   def create_bank_account(params:, resource:)
     BankAccountResource.new(
-      resource.bank_accounts, params
+      *super(resource.bank_accounts, params)
     )
   end
 
