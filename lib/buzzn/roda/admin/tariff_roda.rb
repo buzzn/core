@@ -12,9 +12,10 @@ module Admin
       localpool = shared[LocalpoolRoda::PARENT]
 
       r.post! do
-        Transactions::Admin::Tariff::Create
-          .for(localpool)
-          .call(r.params)
+        Transactions::Admin::Tariff::Create.(
+          resource: localpool,
+          params: r.params
+        )
       end
 
       tariffs = localpool.tariffs

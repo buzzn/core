@@ -2,6 +2,18 @@ class Transactions::StepAdapters < Dry::Transaction::StepAdapters
 
   extend Dry::Monads::Result::Mixin
 
+  register :authorize, ->(operation, options, args) {
+    kwargs = args[0]
+    resource = kwargs[:resource]
+    security = resource.security_context
+    allowed_roles = *operation.(permission_context: security.permissions)
+    unless resource.allowed?(allowed_roles)
+      raise Buzzn::PermissionDenied.new(resource, nil, security.current_user)
+      # TODO better a Left Monad and handle on roda
+    end
+    Success(kwargs)
+  }
+
   register :validate, ->(operation, options, args) {
     schema = operation.()
     unless schema.is_a? Dry::Validation::Schema

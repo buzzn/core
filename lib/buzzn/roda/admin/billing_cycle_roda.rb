@@ -13,9 +13,10 @@ module Admin
       localpool = shared[LocalpoolRoda::PARENT]
 
       r.post! do
-        Transactions::Admin::BillingCycle::Create
-          .for(localpool)
-          .call(r.params)
+        Transactions::Admin::BillingCycle::Create.(
+          resource: localpool,
+          params: r.params
+        )
       end
 
       billing_cycles = localpool.billing_cycles

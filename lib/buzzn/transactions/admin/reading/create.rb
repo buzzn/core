@@ -3,23 +3,22 @@ require_relative '../../../schemas/transactions/admin/reading/create'
 
 class Transactions::Admin::Reading::Create < Transactions::Base
 
-  def self.for(register)
-    new.with_step_args(
-      authorize: [register, *register.permissions.readings.create],
-      persist: [register.readings]
-    )
-  end
-
   validate :schema
-  step :authorize, with: :'operations.authorization.generic'
-  map :persist
+  authorize :allowed_roles
+  map :create_reading, with: :'operations.action.create_item'
 
   def schema
     Schemas::Transactions::Admin::Reading::Create
   end
 
-  def persist(input, readings)
-    ReadingResource.new(readings.objects.create!(input), readings.context)
+  def allowed_roles(permission_context:)
+    permission_context.readings.create
+  end
+
+  def create_reading(params:, resource:)
+    ReadingResource.new(
+      *super(resource.readings, params)
+    )
   end
 
 end

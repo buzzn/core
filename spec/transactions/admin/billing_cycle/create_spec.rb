@@ -19,7 +19,7 @@ describe Transactions::Admin::BillingCycle::Create do
     let(:user) { member }
 
     it 'fails' do
-      expect { transaction.call(input) }.to raise_error Buzzn::PermissionDenied
+      expect { transaction.call(params: input, resource: localpool_resource) }.to raise_error Buzzn::PermissionDenied
     end
   end
 
@@ -29,7 +29,7 @@ describe Transactions::Admin::BillingCycle::Create do
       let(:user) { operator }
 
       it 'succeeds' do
-        result = transaction.call(input)
+        result = transaction.call(params: input, resource: localpool_resource)
         expect(result).to be_success
         expect(result.value).to be_a Admin::BillingCycleResource
         expect(result.value.object).to eq(localpool.billing_cycles.first)
@@ -39,14 +39,14 @@ describe Transactions::Admin::BillingCycle::Create do
       context 'second call' do
 
         it 'fails' do
-          expect { transaction.call(input) }.to raise_error Buzzn::ValidationError
+          expect { transaction.call(params: input, resource: localpool_resource) }.to raise_error Buzzn::ValidationError
         end
 
         context 'when last date is different' do
           let(:new_input) { input.merge(last_date: Date.today - 1.day) }
 
           it 'succeeds' do
-            result = transaction.call(new_input)
+            result = transaction.call(params: new_input, resource: localpool_resource)
             expect(result).to be_success
             expect(result.value).to be_a Admin::BillingCycleResource
             billing_cycle_model = result.value.object
@@ -66,7 +66,7 @@ describe Transactions::Admin::BillingCycle::Create do
     after      { BillingCycle.destroy_all }
 
     it 'works', :skip do
-      result = transaction.call(input)
+      result = transaction.call(params: input, resource: resource)
       expect(result).to be_success
       billing_cycle = result.value.object
       billings      = result.value.object.billings
