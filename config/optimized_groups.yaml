@@ -8,7 +8,7 @@ cerveteristrasse:
 cherubinistr: 
 fritz-winter-strasse: '00000133'
 gertrud-grunow-strasse: '00000134'
-gotthardstrasse: 
+gotthardstrasse: '00000155'
 haeberlstrasse: 
 heigelstrasse: '00000143'
 helbigstrasse: 
@@ -20,7 +20,7 @@ kaspar-spaeth-str:
 kopperpahler-allee: 
 landsbergerstrasse: '00000142'
 ligsalzstr: '00000154'
-lindenstrasse: 
+lindenstrasse: '00000156'
 lissi-kaeser-strasse: '00000152'
 loft: '00000140'
 marktplatz: '00000145'
@@ -37,9 +37,9 @@ reinmarplatz: '00000132'
 ruhensdorf: 
 scheffelstrasse: '00000137'
 schweigerweg: 
-sulz: 
+sulz: 00000158
 tassiloweg: 
-ude: 
+ude: '00000157'
 wachsbleiche: 
 wagnis: 00000128
 wagnisart-afrika: 00000139

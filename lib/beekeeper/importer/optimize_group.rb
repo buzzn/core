@@ -72,7 +72,7 @@ class Beekeeper::Importer::OptimizeGroup
   end
 
   def create_optimized_group(localpool, warnings)
-    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings) && complete?(localpool) && no_others?(localpool)
+    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings) && complete?(localpool) # && no_others?(localpool)
       localpool.registers.reload
       puts "create optimized group for #{localpool.slug} and execute:\n\n"
       puts 'meter = @optimized.create(localpool)'
