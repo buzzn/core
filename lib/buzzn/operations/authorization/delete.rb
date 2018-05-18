@@ -4,9 +4,10 @@ class Operations::Authorization::Delete
 
   include Dry::Transaction::Operation
 
-  def call(resource)
+  def call(resource:)
     unless resource.deletable?
-      raise Buzzn::PermissionDenied.new(resource, :delete, resource.current_user)
+      raise Buzzn::PermissionDenied.new(resource, :delete,
+                                        resource.secutiry_context.current_user)
       # TODO better a Left Monad and handle on roda
     end
     true

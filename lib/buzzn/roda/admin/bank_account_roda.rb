@@ -40,8 +40,9 @@ class Admin::BankAccountRoda < BaseRoda
       end
 
       r.delete! do
-        Transactions::Admin::BankAccount::Delete
-          .call(bank_account)
+        Transactions::Admin::BankAccount::Delete.(
+          resource: bank_account
+        )
       end
     end
   end
