@@ -79,29 +79,33 @@ module Admin
 
         r.on 'person-owner' do
           r.post! do
-            Transactions::Admin::Localpool::CreatePersonOwner
-              .for(localpool)
-              .call(r.params)
+            Transactions::Admin::Localpool::CreatePersonOwner.(
+              resource: localpool,
+              params: r.params
+            )
           end
 
           r.post! :id do |id|
-            Transactions::Admin::Localpool::AssignOwner
-              .for(localpool)
-              .call(localpool.persons.retrieve(id))
+            Transactions::Admin::Localpool::AssignOwner.(
+              resource: localpool,
+              new_owner: localpool.persons.retrieve(id)
+            )
           end
         end
 
         r.on 'organization-owner' do
           r.post! do
-            Transactions::Admin::Localpool::CreateOrganizationOwner
-              .for(localpool)
-              .call(r.params)
+            Transactions::Admin::Localpool::CreateOrganizationOwner.(
+              resource: localpool,
+              params: r.params
+            )
           end
 
           r.post! :id do |id|
-            Transactions::Admin::Localpool::AssignOwner
-              .for(localpool)
-              .call(localpool.organizations.retrieve(id))
+            Transactions::Admin::Localpool::AssignOwner.(
+              resource: localpool,
+              new_owner: localpool.organizations.retrieve(id)
+            )
           end
         end
 
@@ -117,9 +121,10 @@ module Admin
       end
 
       r.post! do
-        Transactions::Admin::Localpool::Create
-          .for(localpools)
-          .call(r.params)
+        Transactions::Admin::Localpool::Create.(
+          resource: localpools,
+          params: r.params
+        )
       end
     end
 

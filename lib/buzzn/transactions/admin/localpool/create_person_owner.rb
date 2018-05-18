@@ -12,18 +12,23 @@ module Transactions::Admin::Localpool
     end
 
     validate :schema
-    step :authorize, with: :'operations.authorize.generic'
+    authorize :allowed_roles
     around :db_transaction
-    map :persist
+    map :create_person, with: :'operations.action.create_item'
     map :assign_owner
 
     def schema
       Schemas::Transactions::Admin::Person::Create
     end
 
-    def create(input, localpool)
-      context = localpool.context.owner
-      PersonResource.new(Person.create!(input), context)
+    def allowed_roles(permission_context:)
+      permission_context.owner.create
+    end
+
+    def create_person(params:, resource:)
+      PersonResource.new(
+        *super(resource.persons, params)
+      )
     end
 
   end

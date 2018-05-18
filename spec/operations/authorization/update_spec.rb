@@ -2,7 +2,7 @@ require 'ostruct'
 
 describe Operations::Authorization::Update do
 
-  let(:resource) { OpenStruct.new(instance_class: Person) }
+  let(:resource) { OpenStruct.new(instance_class: Person, security_context: OpenStruct.new(current_user: nil)) }
   let(:input) { {a: 123} }
 
   context 'allowed' do
