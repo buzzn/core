@@ -7,7 +7,6 @@ class Transactions::Admin::Tariff::Create < Transactions::Base
   authorize :allowed_roles
   map :create_tariff, with: :'operations.action.create_item'
 
-
   def schema
     Schemas::Transactions::Admin::Tariff::Create
   end
