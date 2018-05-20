@@ -56,7 +56,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   entity(:tariff) { Fabricate(:tariff, group: localpool2)}
   entity!(:billing_cycle) { Fabricate(:billing_cycle, localpool: localpool2) }
 
-  it 'create' do
+  xit 'create' do
     expect do
       a = Admin::LocalpoolResource.create(buzzn_operator, name: 'first')
       a.object.delete
@@ -103,37 +103,26 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   end
 
   it 'update' do
-    expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id)) }.not_to raise_error
-    expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id)) }.not_to raise_error
+    expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).updatable?).to be true
+    expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).updatable?).to be true
 
-    expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id)) }.not_to raise_error
+    expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).updatable?).to be true
 
-    expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id)) }.not_to raise_error
+    expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).updatable?).to be true
 
-    expect{ update(Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id)) }.to raise_error Buzzn::PermissionDenied
+    expect(Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).updatable?).to be false
   end
 
   it 'delete' do
-    begin
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).delete }.not_to raise_error
-      expect(Group::Localpool.where(id: localpool1.id)).to eq []
-    ensure
-      Group::Localpool.create(localpool1.attributes)
-    end
+    expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).deletable?).to be true
 
-    # note this also deletes the tariffs of the localpool
-    begin
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool3.id).delete }.not_to raise_error
-      expect(Group::Localpool.where(id: localpool3.id)).to eq []
-    ensure
-      Group::Localpool.create(localpool3.attributes)
-    end
+    expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool3.id).deletable?).to be true
 
-    expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).delete }.to raise_error Buzzn::PermissionDenied
+    expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).deletable?).to be false
 
-    expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).delete }.to raise_error Buzzn::PermissionDenied
+    expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).deletable?).to be false
 
-    expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).delete }.to raise_error Buzzn::PermissionDenied
+    expect(Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).deletable?).to be false
   end
 
   context 'tariffs' do
@@ -170,27 +159,19 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
 
     it 'update' do
-      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).tariffs.first, {}) }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).tariffs.first.updatable?).to be false
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.first, {}) }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.first.updatable?).to be false
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.first, {}) }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.first.updatable?).to be false
     end
 
     it 'delete' do
-      tariffs = localpool2.tariffs.all.reject{|t| t == tariff}
-      begin
-        expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).tariffs.retrieve(tariff.id).delete }.not_to raise_error
-        expect(localpool2.tariffs.reload).to match_array tariffs
-      ensure
-        Contract::Tariff.create(tariff.attributes)
-      end
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).tariffs.retrieve(tariff.id).deletable?).to be true
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.retrieve(tariff.id).delete }.to raise_error Buzzn::PermissionDenied
-      expect(localpool2.tariffs.reload).to match_array localpool2.tariffs.all
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.retrieve(tariff.id).deletable?).to be false
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.retrieve(tariff.id).delete }.to raise_error Buzzn::PermissionDenied
-      expect(localpool2.tariffs.reload).to match_array localpool2.tariffs.all
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.retrieve(tariff.id).deletable?).to be false
     end
   end
 
@@ -225,34 +206,19 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
 
     it 'update' do
-      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).billing_cycles.first) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).billing_cycles.first.updatable?).to be true
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).billing_cycles.first) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).billing_cycles.first.updatable?).to be true
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).billing_cycles.first) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).billing_cycles.first.updatable?).to be true
     end
 
     it 'delete' do
-      begin
-        expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).billing_cycles.retrieve(billing_cycle.id).delete }.not_to raise_error
-        expect(localpool2.billing_cycles.reload).to eq []
-      ensure
-        BillingCycle.create(billing_cycle.attributes)
-      end
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).billing_cycles.retrieve(billing_cycle.id).deletable?).to be true
 
-      begin
-        expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).billing_cycles.retrieve(billing_cycle.id).delete }.not_to raise_error
-        expect(localpool2.billing_cycles.reload).to eq []
-      ensure
-        BillingCycle.create(billing_cycle.attributes)
-      end
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).billing_cycles.retrieve(billing_cycle.id).deletable?).to be true
 
-      begin
-        expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).billing_cycles.retrieve(billing_cycle.id).delete }.not_to raise_error
-        expect(localpool2.billing_cycles.reload).to eq []
-      ensure
-        BillingCycle.create(billing_cycle.attributes)
-      end
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).billing_cycles.retrieve(billing_cycle.id).deletable?).to be true
     end
   end
 
@@ -274,26 +240,20 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
 
     it 'update' do
-      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).persons.first) }.not_to raise_error
-      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).persons.first) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).persons.first.updatable?).to be true
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).persons.first.updatable?).to be true
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).persons.first) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).persons.first.updatable?).to be true
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).persons.first) }.not_to raise_error
-
-      # TODO not sure what GROUP_MEMBER means - outdated concept
-      #expect{ update(Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).persons.first) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).persons.first.updatable?).to be true
     end
 
     it 'delete' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).persons.retrieve(localpool_member2.person.id).delete }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).persons.retrieve(localpool_member2.person.id).deletable?).to be false
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).persons.first.delete }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).persons.first.deletable?).to be false
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).persons.first.delete }.to raise_error Buzzn::PermissionDenied
-
-      # TODO not sure what GROUP_MEMBER means - outdated concept
-      #expect{ Admin::LocalpoolResource.all(localpool_member).retrieve(localpool1.id).persons.first.delete }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).persons.first.deletable?).to be false
     end
   end
 
@@ -314,16 +274,16 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     it 'update' do
       [buzzn_operator, localpool_owner, localpool_manager].each do |role|
         contract = Admin::LocalpoolResource.all(role).retrieve(localpool2.id).localpool_processing_contract
-        expect { update(contract) }.not_to raise_error
+        expect(contract.updatable?).to be true
       end
     end
 
     it 'delete' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).metering_point_operator_contract.delete }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).metering_point_operator_contract.deletable?).to be false
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).metering_point_operator_contract.delete }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).metering_point_operator_contract.deletable?).to be false
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).metering_point_operator_contract.delete }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).metering_point_operator_contract.deletable?).to be false
     end
   end
 
@@ -342,19 +302,19 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
 
     it 'update' do
-      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_processing_contract) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_processing_contract.updatable?).to be true
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contract) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contract.updatable?).to be true
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contract) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contract.updatable?).to be true
     end
 
     it 'delete' do
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_processing_contract.delete }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_processing_contract.deletable?).to be false
 
-      expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contract.delete }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contract.deletable?).to be false
 
-      expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contract.delete }.to raise_error Buzzn::PermissionDenied
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contract.deletable?).to be false
     end
   end
 
@@ -372,20 +332,17 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       expect(localpool_power_taker_contracts(localpool_manager, localpool2.id)).to match_array localpool2.localpool_power_taker_contracts.reload
       expect(localpool_power_taker_contracts(localpool_member, localpool1.id)).to match_array []
 
-      # TODO not sure what GROUP_MEMBER means - outdated concept
-      #expect(localpool_power_taker_contracts(localpool_member3, localpool2.id)).to match_array localpool2.localpool_power_taker_contracts
-
       expect(localpool_power_taker_contracts(localpool_member4, localpool2.id)).to match_array []
 
       expect{ localpool_power_taker_contracts(localpool_member, localpool2.id) }.to raise_error Buzzn::PermissionDenied
     end
 
     it 'update' do
-      expect{ update(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_power_taker_contracts.first) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_power_taker_contracts.first.updatable?).to be true
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_power_taker_contracts.first) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_power_taker_contracts.first.updatable?).to be true
 
-      expect{ update(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_power_taker_contracts.first) }.not_to raise_error
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_power_taker_contracts.first.updatable?).to be true
     end
 
     it 'retrieve' do
@@ -394,9 +351,6 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_power_taker_contracts.retrieve(contract.id).object).to eq contract
 
       expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_power_taker_contracts.retrieve(contract.id).object).to eq contract
-
-      # TODO not sure what GROUP_MEMBER means - outdated concept
-      #expect(Admin::LocalpoolResource.all(localpool_member3).retrieve(localpool2.id).localpool_power_taker_contracts.retrieve(contract.id).object).to eq contract
 
       expect{ Admin::LocalpoolResource.all(localpool_member4).retrieve(localpool2.id).localpool_power_taker_contracts.retrieve(contract.id) }.to raise_error Buzzn::PermissionDenied
     end

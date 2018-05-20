@@ -18,10 +18,9 @@ module Buzzn::Resource
       @meta = {}
     end
 
-    def context
+    def security_context
       Context.new(@current_user, @unbound_roles, @permissions)
     end
-    alias security_context context
 
     def current_roles(uid)
       @unbound_roles | (@current_user ? @current_user.uids_to_rolenames.fetch(uid, []) : [])

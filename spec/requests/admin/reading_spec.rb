@@ -190,14 +190,14 @@ describe Admin::LocalpoolRoda do
         # TODO need user which can access localpool > meter > register but nor reading
       end
 
-      it '205' do
+      it '204' do
         count = Reading::Single.count
         reading = create(:reading, register: register, date: Date.today)
         expect(Reading::Single.count).to eq count + 1
 
         DELETE "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
 
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(204)
         expect(Reading::Single.count).to eq count
       end
     end

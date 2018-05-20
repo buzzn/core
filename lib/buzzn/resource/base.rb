@@ -8,10 +8,9 @@ module Buzzn::Resource
 
     attr_reader :object, :current_user, :current_roles, :permissions
 
-    def context
+    def security_context
       Context.new(current_user, current_roles, permissions)
     end
-    alias security_context context
 
     class << self
 

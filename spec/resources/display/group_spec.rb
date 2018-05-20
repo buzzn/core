@@ -82,14 +82,6 @@ describe Display::GroupResource do
         end
       end
     end
-
-    it 'update' do
-      expect{ resource.registers.first.update({}) }.to raise_error Buzzn::PermissionDenied
-    end
-
-    it 'delete' do
-      expect{ resource.registers.first.delete }.to raise_error Buzzn::PermissionDenied
-    end
   end
 
   describe 'mentors' do
@@ -112,14 +104,6 @@ describe Display::GroupResource do
         expect(reg.type).to eq 'person'
         expect(reg.to_h.keys).to eq attributes
       end
-    end
-
-    it 'update' do
-      expect{ resource.mentors.first.update({}) }.to raise_error Buzzn::PermissionDenied
-    end
-
-    it 'delete' do
-      expect{ resource.mentors.first.delete }.to raise_error Buzzn::PermissionDenied
     end
   end
 end
