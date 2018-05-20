@@ -1,5 +1,6 @@
 require_relative '../admin_roda'
 require_relative '../../transactions/admin/reading/create'
+require_relative '../../transactions/admin/reading/delete'
 
 class Admin::ReadingRoda < BaseRoda
 
@@ -31,7 +32,9 @@ class Admin::ReadingRoda < BaseRoda
       end
 
       r.delete! do
-        reading.delete
+        Transactions::Admin::Reading::Delete.(
+          resource: reading
+        )
       end
     end
   end

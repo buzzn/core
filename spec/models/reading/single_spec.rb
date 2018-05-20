@@ -49,11 +49,20 @@ describe 'Reading::Single' do
       end
     end
 
-    context 'when reading is saved record' do
+    context 'when reading is saved record and dirty' do
       let(:reading) { create(:reading) }
+      before { reading.value = 123 }
       it 'is true' do
         expect(reading).to be_readonly
         expect { reading.save! }.to raise_error(ActiveRecord::ReadOnlyRecord)
+      end
+    end
+
+    context 'when reading is saved record and not dirty' do
+      let(:reading) { create(:reading) }
+      it 'is false' do
+        expect(reading).not_to be_readonly
+        expect { reading.destroy }.not_to raise_error
       end
     end
   end

@@ -43,11 +43,12 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
       if user != :anonymous
         it 'update' do
           person = all.retrieve(send(user).person.id)
-          expect { person.update(updated_at: person.object.updated_at) }.not_to raise_error
+          expect(person.updatable?).to be true
         end
 
         it 'delete' do
-          expect { all.retrieve(me.person.id).delete }.to raise_error Buzzn::PermissionDenied
+          person = all.retrieve(send(user).person.id)
+          expect(person.deletable?).to be false
         end
       end
 
@@ -57,12 +58,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
           it 'R-U-D' do
             address = person.address
             expect(address).not_to be_nil
-
-            expect { address.update(updated_at: address.object.updated_at) }.not_to raise_error
-
-            person.object.address = nil
-            person.object.save
-            expect(person.object.reload.address).to be_nil
+            expect(address.updatable?).to be true
           end
         end
 
@@ -72,10 +68,7 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
             expect(bank_accounts.collect{|b| b.object}).to eq [bank_account]
 
             bank_account = bank_accounts.first
-            expect { bank_account .update(updated_at: bank_account .object.updated_at) }.not_to raise_error
-
-            bank_account.delete
-            expect(person.object.reload.bank_accounts.size).to eq 0
+            expect(bank_account.updatable?).to be true
           end
         end
       end

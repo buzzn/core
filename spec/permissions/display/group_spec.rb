@@ -35,11 +35,11 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
           end
 
           it 'update' do
-            expect { group.update({}) }.to raise_error Buzzn::PermissionDenied
+            expect(group.updatable?).to be false
           end
 
           it 'delete' do
-            expect { group.delete }.to raise_error Buzzn::PermissionDenied
+            expect(group.deletable?).to be false
           end
 
           context 'registers' do
@@ -55,11 +55,11 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
             end
 
             it 'update' do
-              expect { register.update({}) }.to raise_error Buzzn::PermissionDenied
+              expect(register.updatable?).to be false
             end
 
             it 'delete' do
-              expect { register.delete }.to raise_error Buzzn::PermissionDenied
+              expect(register.deletable?).to be false
             end
           end
 
@@ -76,11 +76,11 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
             end
 
             it 'update' do
-              expect { actual_mentor.update({}) }.to raise_error Buzzn::PermissionDenied
+              expect(actual_mentor.updatable?).to be false
             end
 
             it 'delete' do
-              expect { actual_mentor.delete }.to raise_error Buzzn::PermissionDenied
+              expect(actual_mentor.deletable?).to be false
             end
           end
         end
