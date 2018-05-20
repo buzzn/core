@@ -34,7 +34,7 @@ describe Admin::LocalpoolResource do
         add_register_with_label(pool, :production_wind)
         add_register_with_label(pool, :production_water)
       end
-      it { is_expected.to eq ['wind', 'water'] }
+      it { is_expected.to match_array ['wind', 'water'] }
     end
   end
 
