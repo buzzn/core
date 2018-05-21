@@ -13,8 +13,8 @@ module Meter
     # on admin UI we use the virtual meter to manage the virtual registers
     # IMO: a bit confusing for development and sooner or later to user
     def register
-      to_resource(object.operand,
-                  permissions.register)
+      Register::BaseResource.to_resource(object.operand,
+                                         security_context.register)
     end
 
     def type

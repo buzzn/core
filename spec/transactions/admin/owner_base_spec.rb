@@ -13,18 +13,16 @@ describe Transactions::Admin::Localpool::OwnerBase do
 
   entity!(:pool) { pools.first }
 
-  entity!(:person) { PersonResource.new(create(:person)) }
+  entity!(:person) { PersonResource.new(create(:person), pool.security_context.owner) }#Buzzn::Resource::Context.new(nil, nil, nil)) }
 
-  entity!(:person2) { PersonResource.new(create(:person)) }
+  entity!(:person2) { PersonResource.new(create(:person), pool.security_context.owner) }#Buzzn::Resource::Context.new(nil, nil, nil)) }
 
   entity!(:organization) do
-    # use BUZZN_OPERATOR role to have access to child objects
-    OrganizationResource.new(create(:organization, :other, contact: create(:person)), current_roles: [Role::BUZZN_OPERATOR], permissions: pool.permissions.owner)
+    OrganizationResource.new(create(:organization, :other, contact: create(:person)), pool.security_context.owner)
   end
 
   entity!(:organization2) do
-    # use BUZZN_OPERATOR role to have access to child objects
-    OrganizationResource.new(create(:organization, :other, contact: create(:person)), current_roles: [Role::BUZZN_OPERATOR], permissions: pool.permissions.owner)
+    OrganizationResource.new(create(:organization, :other, contact: create(:person)), pool.security_context.owner)
   end
 
   let(:subject) { Transactions::Admin::Localpool::OwnerBase.new }
