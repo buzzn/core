@@ -52,7 +52,7 @@ module Admin
     end
 
     def meters
-      all(permissions.meters, object.meters.real_or_virtual)
+      all(security_context.meters, object.meters.real_or_virtual)
     end
 
     # pv, chp, wind, water, etc

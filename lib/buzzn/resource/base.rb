@@ -6,11 +6,7 @@ module Buzzn::Resource
 
     include Schemas::Support::DryValidationForResource
 
-    attr_reader :object, :current_user, :current_roles, :permissions
-
-    def security_context
-      Context.new(current_user, current_roles, permissions)
-    end
+    attr_reader :object, :security_context
 
     class << self
 
@@ -26,28 +22,6 @@ module Buzzn::Resource
           end
       end
 
-      def new(resource, options = {})
-        # FIXME probably not needed
-        @abstract = false if @abstract.nil?
-        # TODO this should be the only contructor
-        if options.is_a? Context
-          options = options.to_h
-        end
-        options ||= {}
-        # ActiveModel::SerializableResource does not check whether it has
-        # already an serializer, so we check it here and just return it
-        # FIXME check if still needed
-        if resource.is_a? self
-          resource
-        elsif abstract?
-          # FIXME find if still needed
-          to_resource(options[:current_user], options[:current_roles],
-                      options[:permissions], resource)
-        else
-          super
-        end
-      end
-
       # DSL methods
 
       def attribute(*attr)
@@ -58,8 +32,8 @@ module Buzzn::Resource
 
       def has_many(method, clazz = nil)
         define_method method do
-          perms = permissions.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
-          all(perms, object.send(method), clazz)
+          context = security_context.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
+          all(context, object.send(method), clazz)
         end
       end
 
@@ -67,11 +41,10 @@ module Buzzn::Resource
         # deliver nested resource if permissions allow otherwise
         # raise PermissionsDenied or RecordNotFound when not found
         define_method "#{method}!" do
-          perms = permissions.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
-          if allowed?(perms.retrieve)
+          context = security_context.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
+          if allowed?(context.permissions.retrieve)
             if result = object.send(method)
-              self.class.to_resource(current_user, current_roles, perms,
-                                     result, clazz)
+              self.class.to_resource(result, context, clazz)
             else
               raise Buzzn::RecordNotFound.new(self.class, method, current_user)
             end
@@ -84,10 +57,9 @@ module Buzzn::Resource
 
         # deliver result if permissions allow otherwise nil
         define_method method do
-          perms = permissions.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
-          if allowed?(perms.retrieve) && (result = object.send(method))
-            self.class.to_resource(current_user, current_roles, perms,
-                                   result, clazz)
+          context = security_context.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
+          if allowed?(context.permissions.retrieve) && (result = object.send(method))
+            self.class.to_resource(result, context, clazz)
           end
         end
       end
@@ -111,23 +83,10 @@ module Buzzn::Resource
         @abstract == true
       end
 
-      ANONYMOUS = [Role::ANONYMOUS].freeze
-      def all_allowed(user, roles, perms, enum)
-        if user.nil?
-          if allowed?(ANONYMOUS, perms)
-            enum
-          else
-            enum.where('1=2') # deliver an empty AR relation
-          end
-        elsif allowed?(ANONYMOUS | roles | user.unbound_rolenames, perms)
-          enum
-        else
-          enum.permitted(user.uids_for(perms)) rescue enum.restricted(user.uids_for(perms))
-        end
-      end
-
       def all(user, clazz = nil)
-        enum = all_allowed(user, [], permissions.retrieve, filter_all(model.all))
+        permissions = (self::Permission rescue NoPermission)
+        context = Context.new(user, [], permissions)
+        enum = filter_all_allowed(context, filter_all(model.all))
         unbound = ANONYMOUS
         unbound += user.unbound_rolenames if user
         to_resource = (clazz || self).method(:to_resource)
@@ -141,16 +100,36 @@ module Buzzn::Resource
         result
       end
 
-      def filter_all(objects); objects; end
-
-      def to_resource(user, roles, permissions, instance, clazz = nil)
+      def to_resource(instance, security_context, clazz = nil)
         clazz ||= find_resource_class(instance.class)
         raise "could not find Resource class for #{instance.class}" if clazz.nil?
         raise "could not instantiate Resource class for #{instance.class} as #{clazz} is abstract" if clazz.abstract?
-        clazz.send(:new, instance, current_user: user, current_roles: roles, permissions: permissions)
+        clazz.new(instance, security_context)
       end
 
+      protected
+
+      def filter_all(objects); objects; end
+
       private
+
+      ANONYMOUS = [Role::ANONYMOUS].freeze
+
+      def filter_all_allowed(security_context, enum)
+        perms = security_context.permissions.retrieve
+        user = security_context.current_user
+        if user.nil?
+          if allowed?(ANONYMOUS, perms)
+            enum
+          else
+            enum.where('1=2') # deliver an empty AR relation
+          end
+        elsif allowed?(ANONYMOUS | security_context.current_roles | user.unbound_rolenames, perms)
+          enum
+        else
+          enum.permitted(user.uids_for(perms)) rescue enum.restricted(user.uids_for(perms))
+        end
+      end
 
       def allowed_roles(user, perms)
         return false unless user
@@ -166,14 +145,7 @@ module Buzzn::Resource
         (roles & perms).size > 0
       end
 
-      def permissions
-        if @permissions.nil?
-          @permissions = (self::Permission rescue NoPermission)
-        end
-        @permissions
-      end
-
-      ALL_PERMISSIONS = { '*' => :* }.freeze
+      All_PERMISSIONS = { '*' => :* }.freeze
       def roles_map(user)
         result = {}
         if user
@@ -200,35 +172,13 @@ module Buzzn::Resource
 
     end
 
-    def initialize(resource, current_user: nil, current_roles: [], permissions: nil)
-      @current_user = current_user
-      @current_roles = current_roles
-      @permissions = permissions
-      @object = resource
-    end
-
-    def to_collection(enum, perms, clazz = nil)
-      Buzzn::Resource::Collection.new(enum,
-                                      (clazz || self.class).method(:to_resource),
-                                      current_user,
-                                      current_roles,
-                                      perms,
-                                      clazz)
-    end
-
-    def to_resource(instance, perms, clazz = nil)
-      self.class.to_resource(current_user, current_roles,
-                                        perms, instance, clazz)
+    def initialize(object, security_context)
+      @security_context = security_context
+      @object = object
     end
 
     def allowed?(perms, roles = current_roles)
       self.class.send(:allowed?, roles, perms)
-    end
-
-    def all(perms, enum, clazz = nil)
-      result = self.class.all_allowed(current_user, current_roles,
-                                      perms.retrieve, enum)
-      to_collection(result, perms, clazz)
     end
 
     def to_h(options = {})
@@ -282,17 +232,40 @@ module Buzzn::Resource
       json << '}'
     end
 
-    def is_a?(clazz)
-      # for dry-validation we say we are a Hash
-      super || clazz == Hash
-    end
-
     def method_missing(method, *args)
       if key?(method) && args.size == 0
         get(method)
       else
         super
       end
+    end
+
+    private
+
+    def to_collection(enum, perms, clazz = nil)
+      Buzzn::Resource::Collection.new(enum,
+                                      (clazz || self.class).method(:to_resource),
+                                      current_user,
+                                      current_roles,
+                                      perms,
+                                      clazz)
+    end
+
+    def all(security_context, enum, clazz = nil)
+      result = self.class.send(:filter_all_allowed, security_context, enum)
+      to_collection(result, security_context.permissions, clazz)
+    end
+
+    def current_user
+      security_context.current_user
+    end
+
+    def current_roles
+      security_context.current_roles
+    end
+
+    def permissions
+      security_context.permissions
     end
 
   end

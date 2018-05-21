@@ -28,8 +28,11 @@ module Buzzn::Resource
 
     def each(&block)
       @objects.each do |model|
-        block.call(@to_resource.call(@current_user, current_roles(uid(model)),
-                                     @permissions, model, @instance_class))
+        block.call(@to_resource.call(model,
+                                     Context.new(@current_user,
+                                                 current_roles(uid(model)),
+                                                 @permissions),
+                                     @instance_class))
       end
     end
 
@@ -57,9 +60,11 @@ module Buzzn::Resource
 
     def do_retrieve_or_nil(id, *args)
       if result = @objects.where(*args).first
-        @to_resource.call(@current_user,
-                          current_roles("#{clazz}:#{id}"),
-                          @permissions, result, @instance_class)
+        @to_resource.call(result,
+                          Context.new(@current_user,
+                                      current_roles("#{clazz}:#{id}"),
+                                      @permissions),
+                          @instance_class)
       end
     end
 
@@ -88,7 +93,7 @@ module Buzzn::Resource
     end
 
     def any_roles
-      (collect { |a| a.current_roles }.flatten | @unbound_roles).uniq
+      (collect { |a| a.security_context.current_roles }.flatten | @unbound_roles).uniq
     end
 
     def allowed?(method)
@@ -129,8 +134,11 @@ module Buzzn::Resource
           m.instance_variable_set(:@object, model)
           m.instance_variable_set(:@current_roles, current_roles(uid(model)))
         else
-          m = @to_resource.call(@current_user, current_roles(uid(model)),
-                                @permissions, model, @instance_class)
+          m = @to_resource.call(model,
+                                Context.new(@current_user,
+                                            current_roles(uid(model)),
+                                            @permissions),
+                                @instance_class)
           cache[model.class] = m
         end
         if first
