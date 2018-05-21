@@ -33,7 +33,7 @@ describe Register::SubstituteResource do
           'meter_id' => register.meter_id,
           'updatable'=> true,
           'deletable'=> true,
-          'createables'=>['readings'],
+          'createables'=>['readings', 'contracts'],
         }
       end
 

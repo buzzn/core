@@ -26,6 +26,7 @@ describe Admin::LocalpoolRoda do
       'show_display_app' => nil,
       'updatable'=>true,
       'deletable'=>true,
+      'createables' => ['managers', 'organizations', 'registers', 'persons', 'tariffs', 'billing_cycles'],
       'incompleteness' => {
         'grid_feeding_register' => ['must be filled'],
         'grid_consumption_register' => ['must be filled'],

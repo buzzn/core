@@ -105,6 +105,7 @@ describe Admin::LocalpoolRoda do
       'show_display_app' => localpool.show_display_app,
       'updatable'=>true,
       'deletable'=>true,
+      'createables' => ['managers', 'organizations', 'registers', 'persons', 'tariffs', 'billing_cycles'],
       'incompleteness' => serialized_incompleteness(localpool),
       'bank_account' => serialized_bank_account(localpool.bank_account),
       'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
@@ -158,8 +159,7 @@ describe Admin::LocalpoolRoda do
     it '200 all' do
       GET '/localpools?include=', $admin
       expect(response).to have_http_status(200)
-      expect(json.keys).to match_array ['array', 'createable']
-      expect(json['createable']).to eq true
+      expect(json.keys).to match_array ['array']
       expect(sort(json['array'])).to eq sort(localpools_json)
     end
   end
@@ -215,6 +215,7 @@ describe Admin::LocalpoolRoda do
         'show_display_app' => true,
         'updatable'=>true,
         'deletable'=>true,
+        'createables' => ['managers', 'organizations', 'registers', 'persons', 'tariffs', 'billing_cycles'],
         'incompleteness' => serialized_incompleteness(nil),
         'bank_account' => nil,
         'power_sources' => [],
@@ -292,6 +293,7 @@ describe Admin::LocalpoolRoda do
         'show_display_app' => false,
         'updatable'=>true,
         'deletable'=>true,
+        'createables' => ['managers', 'organizations', 'registers', 'persons', 'tariffs', 'billing_cycles'],
         'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => nil,
         'power_sources' => ['pv'],
@@ -681,7 +683,7 @@ describe Admin::LocalpoolRoda do
             'meter_id' => register.meter.id,
             'updatable' => true,
             'deletable' => false,
-            'createables' => ['readings'],
+            'createables' => ['readings', 'contracts'],
             'metering_point_id' => register.metering_point_id,
             'obis' => register.obis
           }

@@ -29,6 +29,7 @@ describe Admin::LocalpoolRoda do
       'show_display_app' => nil,
       'updatable'=>true,
       'deletable'=>true,
+      'createables' => ['managers', 'organizations', 'registers', 'persons', 'tariffs', 'billing_cycles'],
       'incompleteness' => {
         'grid_feeding_register' => ['must be filled'],
         'grid_consumption_register' => ['must be filled'],
@@ -75,7 +76,7 @@ describe Admin::LocalpoolRoda do
       'customer_number' => nil,
       'updatable'=>true,
       'deletable'=>false,
-      'address' => address_json,
+      'address' => address_json.dup,
     }
   end
 
@@ -130,6 +131,7 @@ describe Admin::LocalpoolRoda do
         'customer_number' => nil,
         'updatable'=>true,
         'deletable'=>false,
+        'address' => address_json,
         'bank_accounts'=>{
           'array'=> organization.bank_accounts.collect do |bank_account|
             {
@@ -146,7 +148,6 @@ describe Admin::LocalpoolRoda do
             }
           end
         },
-        'address' => address_json,
         'contact' => person_json
       }
     end
@@ -156,7 +157,7 @@ describe Admin::LocalpoolRoda do
       it '200' do
         GET "/localpools/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
         expect(response).to have_http_status(200)
-        expect(json).to eq localpool_json
+        expect(json.to_yaml).to eq localpool_json.to_yaml
       end
     end
   end

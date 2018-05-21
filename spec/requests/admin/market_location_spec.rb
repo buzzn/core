@@ -46,7 +46,7 @@ describe Admin::LocalpoolRoda do
             'meter_id' => register.meter.id,
             'updatable' => false,
             'deletable' => false,
-            'createables' => ['readings'],
+            'createables' => ['readings', 'contracts'],
             'pre_decimal_position' => 6,
             'post_decimal_position' => register.post_decimal_position,
             'low_load_ability' => false,
