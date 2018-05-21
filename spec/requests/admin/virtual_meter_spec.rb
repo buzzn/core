@@ -57,7 +57,7 @@ describe Admin::LocalpoolRoda do
                 'meter_id' => part.operand.meter_id,
                 'updatable'=>false,
                 'deletable'=>false,
-                'createables' => ['readings'],
+                'createables' => ['readings', 'contracts'],
                 'pre_decimal_position'=>part.operand.pre_decimal_position,
                 'post_decimal_position'=>part.operand.post_decimal_position,
                 'low_load_ability'=>part.operand.low_load_ability,

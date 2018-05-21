@@ -107,7 +107,7 @@ describe Admin::Roda do
               'meter_id' => register.meter_id,
               'updatable'=> false,
               'deletable'=> false,
-              'createables'=>['readings'],
+              'createables'=>['readings', 'contracts'],
               'pre_decimal_position'=>register.pre_decimal_position,
               'post_decimal_position'=>register.post_decimal_position,
               'low_load_ability'=>register.low_load_ability,

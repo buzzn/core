@@ -101,10 +101,7 @@ module Buzzn::Resource
         permissions = (self::Permission rescue NoPermission)
         context = Context.new(user, permissions)
         objects = filter_all_allowed(context, filter_all(model.all))
-        to_resource = (clazz || self).method(:to_resource)
-        result = to_collection(objects, context, clazz || self)
-        result['createable'] = allowed?(context.current_roles, permissions.create)
-        result
+        to_collection(objects, context, clazz || self)
       end
 
       def to_resource(instance, security_context, clazz = nil)
@@ -257,8 +254,8 @@ module Buzzn::Resource
 
     private
 
-    def all(security_context, enum, clazz = nil)
-      result = self.class.send(:filter_all_allowed, security_context, enum)
+    def all(security_context, objects, clazz = nil)
+      result = self.class.send(:filter_all_allowed, security_context, objects)
       self.class.send(:to_collection, result, security_context, clazz)
     end
 

@@ -37,7 +37,7 @@ describe Register::RealResource do
           'meter_id' => register.meter_id,
           'updatable'=> true,
           'deletable'=> true,
-          'createables'=>['readings'],
+          'createables'=>['readings', 'contracts'],
           'pre_decimal_position'=>6,
           'post_decimal_position'=>1,
           'low_load_ability'=>false,

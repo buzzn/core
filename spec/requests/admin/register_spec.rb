@@ -38,7 +38,7 @@ describe Admin::LocalpoolRoda do
             'meter_id' => register.meter_id,
             'updatable'=> true,
             'deletable'=> true,
-            'createables'=>['readings'],
+            'createables'=>['readings', 'contracts'],
             'pre_decimal_position'=>6,
             'post_decimal_position'=>1,
             'low_load_ability'=>false,
@@ -150,7 +150,7 @@ describe Admin::LocalpoolRoda do
           'meter_id' => real_register.meter_id,
           'updatable'=> true,
           'deletable'=> true,
-          'createables'=>['readings'],
+          'createables'=>['readings', 'contracts'],
           'pre_decimal_position'=>6,
           'post_decimal_position'=>real_register.post_decimal_position,
           'low_load_ability'=>false,
@@ -175,7 +175,7 @@ describe Admin::LocalpoolRoda do
           'meter_id' => virtual_register.meter_id,
           'updatable'=> true,
           'deletable'=> true,
-          'createables'=>['readings']
+          'createables'=>['readings', 'contracts']
         }
       end
 
@@ -195,7 +195,7 @@ describe Admin::LocalpoolRoda do
             'meter_id' => register.meter_id,
             'updatable'=> true,
             'deletable'=> false,
-            'createables'=>['readings'],
+            'createables'=>['readings', 'contracts'],
           }
           if register.is_a? Register::Real
             json['direction'] = register.attributes['direction']
@@ -238,7 +238,7 @@ describe Admin::LocalpoolRoda do
                 'meter_id' => register.meter_id,
                 'updatable'=> true,
                 'deletable'=> true,
-                'createables'=>['readings'],
+                'createables'=>['readings', 'contracts'],
                 'pre_decimal_position'=>register.pre_decimal_position,
                 'post_decimal_position'=>register.post_decimal_position,
                 'low_load_ability'=>register.low_load_ability,

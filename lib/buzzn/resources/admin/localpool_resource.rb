@@ -17,7 +17,7 @@ module Admin
                :show_energy,
                :show_contact,
                :show_display_app,
-               :updatable, :deletable,
+               :updatable, :deletable, :createables,
                :incompleteness,
                :bank_account,
                :power_sources,

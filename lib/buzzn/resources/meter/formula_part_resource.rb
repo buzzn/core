@@ -1,5 +1,3 @@
-require_relative '../register/base_resource'
-
 module Meter
   class FormulaPartResource < Buzzn::Resource::Entity
 
@@ -9,9 +7,7 @@ module Meter
 
     # on admin UI we use the virtual meter to manage the virtual registers
     # IMO: a bit confusing for development and sooner or later to user
-    has_one :register do |object|
-      object.operand
-    end
+    has_one :register, &:operand
 
     def type
       'meter_formula_part'

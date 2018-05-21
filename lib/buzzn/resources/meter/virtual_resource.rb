@@ -1,4 +1,5 @@
 require_relative 'base_resource'
+require_relative 'formula_part_resource'
 
 module Meter
   class VirtualResource < BaseResource

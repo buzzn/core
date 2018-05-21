@@ -14,7 +14,6 @@ module Buzzn::Resource
       @to_resource = to_resource_method
       @instance_class = clazz
       @meta = {}
-      #@meta['createable'] = (security_context.current_roles & security_context.permissions.create).size > 0 if security_context.permissions.respond_to?(:create)
     end
 
     def security_context(uid = nil)

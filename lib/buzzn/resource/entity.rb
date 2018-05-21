@@ -7,16 +7,9 @@ module Buzzn::Resource
 
       # Create-Update-Delete API
 
-      def has_many!(method, clazz = nil)
-        has_many(method, clazz)
+      def has_many(method, clazz = nil)
+        super
         createables << method
-        define_method "create_#{method.to_s.singularize}" do |params = {}|
-          create(permissions.send(method).create) do
-            to_resource(object.send(method).create!(params),
-                        permissions.send(method),
-                        clazz)
-          end
-        end
       end
 
       def createables
@@ -37,7 +30,7 @@ module Buzzn::Resource
 
     def createables
       result = self.class.createables.select do |name|
-        allowed?(permissions.send(name).create)
+        permissions.respond_to?(name) && allowed?(permissions.send(name).create)
       end
       if self.class.superclass.respond_to? :createables
         result += self.class.superclass.createables
