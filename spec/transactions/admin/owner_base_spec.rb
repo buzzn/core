@@ -13,9 +13,9 @@ describe Transactions::Admin::Localpool::OwnerBase do
 
   entity!(:pool) { pools.first }
 
-  entity!(:person) { PersonResource.new(create(:person), pool.security_context.owner) }#Buzzn::Resource::Context.new(nil, nil, nil)) }
+  entity!(:person) { PersonResource.new(create(:person), pool.security_context.owner) }
 
-  entity!(:person2) { PersonResource.new(create(:person), pool.security_context.owner) }#Buzzn::Resource::Context.new(nil, nil, nil)) }
+  entity!(:person2) { PersonResource.new(create(:person), pool.security_context.owner) }
 
   entity!(:organization) do
     OrganizationResource.new(create(:organization, :other, contact: create(:person)), pool.security_context.owner)

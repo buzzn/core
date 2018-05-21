@@ -7,6 +7,8 @@ require_relative '../../schemas/completeness/admin/localpool'
 module Admin
   class LocalpoolResource < GroupResource
 
+    include Import.args[:resource, :context, 'config.display_url']
+
     model Group::Localpool
 
     attributes :start_date,
@@ -24,7 +26,9 @@ module Admin
 
     has_one :localpool_processing_contract
     has_one :metering_point_operator_contract
-    has_many :meters
+    has_many :meters do |object|
+      object.meters.real_or_virtual
+    end
     has_many :managers, PersonResource
     has_many :localpool_power_taker_contracts
     has_many :users
@@ -42,18 +46,6 @@ module Admin
     has_one :transmission_system_operator
     has_one :electricity_supplier
     has_one :bank_account
-
-    # TODO remove this and use contructor injection once the resource code
-    #      is cleaned up
-    attr_reader :display_url
-    def initialize(*)
-      super
-      @display_url = Import.global('config.display_url')
-    end
-
-    def meters
-      all(security_context.meters, object.meters.real_or_virtual)
-    end
 
     # pv, chp, wind, water, etc
     def all_power_sources

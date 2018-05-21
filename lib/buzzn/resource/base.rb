@@ -33,7 +33,13 @@ module Buzzn::Resource
       def has_many(method, clazz = nil)
         define_method method do
           context = security_context.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
-          all(context, object.send(method), clazz)
+          objects =
+            if block_given?
+              yield(object)
+            else
+              object.send(method)
+            end
+          all(context, objects, clazz)
         end
       end
 
@@ -42,24 +48,32 @@ module Buzzn::Resource
         # raise PermissionsDenied or RecordNotFound when not found
         define_method "#{method}!" do
           context = security_context.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
+          result =
+            if block_given?
+              yield(object)
+            else
+              object.send(method)
+            end
           if allowed?(context.permissions.retrieve)
-            if result = object.send(method)
+            if result
               self.class.to_resource(result, context, clazz)
             else
               raise Buzzn::RecordNotFound.new(self.class, method, current_user)
             end
           else
-            clazz = self.class.send(:find_resource_class,
-                                    object.send(method).class)
-            raise Buzzn::PermissionDenied.new(clazz, :retrieve, current_user)
+            new_clazz = clazz || self.class.send(:find_resource_class,
+                                                 result.class)
+            raise Buzzn::PermissionDenied.new(new_clazz, :retrieve, current_user)
           end
         end
 
         # deliver result if permissions allow otherwise nil
         define_method method do
           context = security_context.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
-          if allowed?(context.permissions.retrieve) && (result = object.send(method))
-            self.class.to_resource(result, context, clazz)
+          if allowed?(context.permissions.retrieve) && (result = block_given? ? yield(object) : object.send(method))
+            new_clazz = clazz || self.class.send(:find_resource_class,
+                                                 result.class)
+            self.class.to_resource(result, context, new_clazz)
           end
         end
       end
@@ -85,18 +99,11 @@ module Buzzn::Resource
 
       def all(user, clazz = nil)
         permissions = (self::Permission rescue NoPermission)
-        context = Context.new(user, [], permissions)
-        enum = filter_all_allowed(context, filter_all(model.all))
-        unbound = ANONYMOUS
-        unbound += user.unbound_rolenames if user
+        context = Context.new(user, permissions)
+        objects = filter_all_allowed(context, filter_all(model.all))
         to_resource = (clazz || self).method(:to_resource)
-        result = Buzzn::Resource::Collection.new(enum,
-                                                 to_resource,
-                                                 user,
-                                                 unbound,
-                                                 permissions,
-                                                 clazz || self)
-        result['createable'] = allowed?(unbound, permissions.create)
+        result = to_collection(objects, context, clazz || self)
+        result['createable'] = allowed?(context.current_roles, permissions.create)
         result
       end
 
@@ -145,7 +152,7 @@ module Buzzn::Resource
         (roles & perms).size > 0
       end
 
-      All_PERMISSIONS = { '*' => :* }.freeze
+      ALL_PERMISSIONS = { '*' => :* }.freeze
       def roles_map(user)
         result = {}
         if user
@@ -168,6 +175,14 @@ module Buzzn::Resource
         else
           const
         end
+      end
+
+      def to_collection(enum, security_context, clazz = nil)
+        to_resource = (clazz || self).method(:to_resource)
+        Buzzn::Resource::Collection.new(enum,
+                                        to_resource,
+                                        security_context,
+                                        clazz)
       end
 
     end
@@ -242,18 +257,9 @@ module Buzzn::Resource
 
     private
 
-    def to_collection(enum, perms, clazz = nil)
-      Buzzn::Resource::Collection.new(enum,
-                                      (clazz || self.class).method(:to_resource),
-                                      current_user,
-                                      current_roles,
-                                      perms,
-                                      clazz)
-    end
-
     def all(security_context, enum, clazz = nil)
       result = self.class.send(:filter_all_allowed, security_context, enum)
-      to_collection(result, security_context.permissions, clazz)
+      self.class.send(:to_collection, result, security_context, clazz)
     end
 
     def current_user
