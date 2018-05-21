@@ -7,14 +7,10 @@ module Meter
 
     attributes :operator
 
-    #TODO: do something like
-    # has_one :register, Register::BaseResource { object.operand }
-
     # on admin UI we use the virtual meter to manage the virtual registers
     # IMO: a bit confusing for development and sooner or later to user
-    def register
-      Register::BaseResource.to_resource(object.operand,
-                                         security_context.register)
+    has_one :register do |object|
+      object.operand
     end
 
     def type

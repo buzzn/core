@@ -6,32 +6,32 @@ module Buzzn::Resource
 
     include Enumerable
 
-    attr_reader :current_user, :permisions, :objects, :instance_class
+    attr_reader :objects, :instance_class
 
-    def initialize(objects, to_resource_method, current_user, unbound_roles, permissions, clazz = nil)
-      @current_user = current_user
-      @unbound_roles = unbound_roles
-      @permissions = permissions
+    def initialize(objects, to_resource_method, security_context, clazz = nil)
+      @security_context = security_context
       @objects = objects
       @to_resource = to_resource_method
       @instance_class = clazz
       @meta = {}
+      #@meta['createable'] = (security_context.current_roles & security_context.permissions.create).size > 0 if security_context.permissions.respond_to?(:create)
     end
 
-    def security_context
-      Context.new(@current_user, @unbound_roles, @permissions)
-    end
-
-    def current_roles(uid)
-      @unbound_roles | (@current_user ? @current_user.uids_to_rolenames.fetch(uid, []) : [])
+    def security_context(uid = nil)
+      if uid
+        roles = current_roles | (current_user ? current_user.uids_to_rolenames.fetch(uid, []) : [])
+        Context.new(current_user,
+                    permissions,
+                    roles)
+      else
+        @security_context
+      end
     end
 
     def each(&block)
       @objects.each do |model|
         block.call(@to_resource.call(model,
-                                     Context.new(@current_user,
-                                                 current_roles(uid(model)),
-                                                 @permissions),
+                                     security_context(uid(model)),
                                      @instance_class))
       end
     end
@@ -58,27 +58,6 @@ module Buzzn::Resource
       do_retrieve_or_nil(id, id: id)
     end
 
-    def do_retrieve_or_nil(id, *args)
-      if result = @objects.where(*args).first
-        @to_resource.call(result,
-                          Context.new(@current_user,
-                                      current_roles("#{clazz}:#{id}"),
-                                      @permissions),
-                          @instance_class)
-      end
-    end
-
-    def do_retrieve(id, *args)
-      if result = do_retrieve_or_nil(id, *args)
-        result
-      elsif clazz && clazz.where(*args).size > 0
-        raise Buzzn::PermissionDenied.new(clazz.where(*args).first, :retrieve, @current_user)
-      else
-        raise Buzzn::RecordNotFound.new(clazz, id, @current_user)
-      end
-    end
-    private :do_retrieve
-
     def to_a
       collect { |i| i }
     end
@@ -93,11 +72,11 @@ module Buzzn::Resource
     end
 
     def any_roles
-      (collect { |a| a.security_context.current_roles }.flatten | @unbound_roles).uniq
+      (collect { |a| a.security_context.current_roles }.flatten | current_roles).uniq
     end
 
     def allowed?(method)
-      (@permissions.send(method) & any_roles).size > 0
+      (permissions.send(method) & any_roles).size > 0
     end
 
     def []=(k, v)
@@ -132,12 +111,10 @@ module Buzzn::Resource
       @objects.each do |model|
         if m = cache[model.class]
           m.instance_variable_set(:@object, model)
-          m.instance_variable_set(:@current_roles, current_roles(uid(model)))
+          m.instance_variable_set(:@security_context, security_context(uid(model)))
         else
           m = @to_resource.call(model,
-                                Context.new(@current_user,
-                                            current_roles(uid(model)),
-                                            @permissions),
+                                security_context(uid(model)),
                                 @instance_class)
           cache[model.class] = m
         end
@@ -154,6 +131,24 @@ module Buzzn::Resource
 
     private
 
+    def do_retrieve_or_nil(id, *args)
+      if result = @objects.where(*args).first
+        @to_resource.call(result,
+                          security_context("#{clazz}:#{id}"),
+                          @instance_class)
+      end
+    end
+
+    def do_retrieve(id, *args)
+      if result = do_retrieve_or_nil(id, *args)
+        result
+      elsif clazz && clazz.where(*args).size > 0
+        raise Buzzn::PermissionDenied.new(clazz.where(*args).first, :retrieve, current_user)
+      else
+        raise Buzzn::RecordNotFound.new(clazz, id, current_user)
+      end
+    end
+
     def clazz
       @clazz ||= @objects.class.to_s.sub(/::ActiveRecord_.*/, '').safe_constantize
       @clazz ||= @instance_class && @instance_class.model
@@ -161,6 +156,18 @@ module Buzzn::Resource
 
     def uid(model)
       "#{model.class}:#{model.id}"
+    end
+
+    def current_user
+      security_context.current_user
+    end
+
+    def current_roles
+      security_context.current_roles
+    end
+
+    def permissions
+      security_context.permissions
     end
 
   end

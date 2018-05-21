@@ -9,8 +9,8 @@ class AdminResource < Buzzn::Resource::Base
   def initialize(user)
     super(Admin::LocalpoolResource.all(user).objects,
           Buzzn::Resource::Context.new(user,
-                                       Permission.retrieve,
-                                       Permission))
+                                       Permission,
+                                       Permission.retrieve))
   end
 
 end
