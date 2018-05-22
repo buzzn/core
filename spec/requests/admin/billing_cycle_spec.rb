@@ -15,6 +15,9 @@ describe Admin::BillingCycleResource do
 
       entity(:localpool) { create(:localpool) }
       entity(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
+      entity(:meta_json) do
+        { 'next_billing_cycle_begin_date' => billing_cycle.end_date.as_json }
+      end
 
       let(:expected_json) do
         {
@@ -28,7 +31,7 @@ describe Admin::BillingCycleResource do
       end
 
       it_behaves_like 'single', :billing_cycle
-      it_behaves_like 'all'
+      it_behaves_like 'all', :meta_json
     end
 
     context 'POST' do

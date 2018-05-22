@@ -30,7 +30,7 @@ module Buzzn::Resource
       end
       alias :attributes :attribute
 
-      def has_many(method, clazz = nil)
+      def has_many(method, *clazz_and_meta)
         define_method method do
           context = security_context.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
           objects =
@@ -39,7 +39,7 @@ module Buzzn::Resource
             else
               object.send(method)
             end
-          all(context, objects, clazz)
+          all(context, objects, *clazz_and_meta)
         end
       end
 
@@ -254,9 +254,15 @@ module Buzzn::Resource
 
     private
 
-    def all(security_context, objects, clazz = nil)
-      result = self.class.send(:filter_all_allowed, security_context, objects)
-      self.class.send(:to_collection, result, security_context, clazz)
+    def all(security_context, objects, *clazz_and_meta)
+      clazz = clazz_and_meta.shift
+      meta = clazz_and_meta
+      allowed_objects = self.class.send(:filter_all_allowed, security_context, objects)
+      result = self.class.send(:to_collection, allowed_objects, security_context, clazz)
+      meta.each do |key|
+        result[key] = send(key)
+      end
+      result
     end
 
     def current_user

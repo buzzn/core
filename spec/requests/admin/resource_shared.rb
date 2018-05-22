@@ -39,7 +39,7 @@ shared_examples 'single' do |object_name|
   end
 end
 
-shared_examples 'all' do
+shared_examples 'all' do |meta|
 
   let(:all_path) { path.sub(%r(/[0-9]+$), '') }
 
@@ -69,8 +69,10 @@ shared_examples 'all' do
   it '200' do
     GET all_path, $admin
     expect(response).to have_http_status(200)
-    array = json['array']
+    rjson = json
+    array = rjson.delete('array')
     expect(array.to_yaml).to eq [expected_json].to_yaml
+    expect(rjson.to_yaml).to eq send(meta).to_yaml if meta
   end
 end
 
