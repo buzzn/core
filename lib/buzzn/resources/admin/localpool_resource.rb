@@ -22,6 +22,7 @@ module Admin
                :bank_account,
                :power_sources,
                :display_app_url,
+               # TODO remove me once the UI uses the meta data section
                :next_billing_cycle_begin_date
 
     has_one :localpool_processing_contract
@@ -38,7 +39,7 @@ module Admin
     has_many :market_locations
     has_many :persons
     has_many :tariffs, Contract::TariffResource
-    has_many :billing_cycles, BillingCycleResource
+    has_many :billing_cycles, BillingCycleResource, :next_billing_cycle_begin_date
     has_one :owner
     has_one :gap_contract_customer
     has_one :address

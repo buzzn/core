@@ -118,7 +118,12 @@ describe Admin::LocalpoolRoda do
     Group::Localpool.all.collect { |localpool| serialize(localpool) }
   end
 
-  let(:localpool_json) { serialize(localpool_no_contracts) }
+  let(:localpool_json) do
+    serialize(localpool_no_contracts)
+      .merge('billing_cycles' => {
+               'next_billing_cycle_begin_date' => localpool_no_contracts.start_date.as_json, 'array' => []
+             })
+  end
 
   context 'GET' do
 
@@ -144,7 +149,7 @@ describe Admin::LocalpoolRoda do
     end
 
     it '200' do
-      GET "/localpools/#{localpool_no_contracts.id}", $admin, include: 'meters, address'
+      GET "/localpools/#{localpool_no_contracts.id}", $admin, include: 'meters, address, billing_cycles'
       expect(response).to have_http_status(200)
 
       result = json

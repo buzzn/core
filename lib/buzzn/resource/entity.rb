@@ -7,7 +7,7 @@ module Buzzn::Resource
 
       # Create-Update-Delete API
 
-      def has_many(method, clazz = nil)
+      def has_many(method, *)
         super
         createables << method
       end
