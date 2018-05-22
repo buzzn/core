@@ -5,6 +5,7 @@ require_relative 'concerns/with_date_range'
 
 class BillingItem < ActiveRecord::Base
 
+  include LastDate
   include WithDateRange
 
   belongs_to :billing

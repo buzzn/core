@@ -4,7 +4,7 @@ module Admin
     model BillingItem
 
     attributes  :begin_date,
-                :end_date,
+                :last_date,
                 :begin_reading_kwh,
                 :end_reading_kwh,
                 :consumed_energy_kwh,
@@ -21,14 +21,6 @@ module Admin
 
     def end_reading_kwh
       end_reading.value / 1000 if end_reading
-    end
-
-    def begin_date
-      object.date_range.first
-    end
-
-    def end_date
-      object.date_range.last
     end
 
   end

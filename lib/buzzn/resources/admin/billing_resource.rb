@@ -6,19 +6,11 @@ module Admin
     model Billing
 
     attributes :begin_date,
-               :end_date,
+               :last_date,
                :status
 
     has_one :contract
     has_many :items, BillingItemResource
-
-    def begin_date
-      object.date_range.first
-    end
-
-    def end_date
-      object.date_range.last
-    end
 
   end
 end
