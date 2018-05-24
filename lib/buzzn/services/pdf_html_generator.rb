@@ -5,45 +5,8 @@ require_relative '../services'
 
 class Services::PdfHtmlGenerator
 
-  include Import.args[path: 'config.templates_path']
-
-  class Missing
-
-    def initialize(name)
-      @name = name
-    end
-
-    def method_missing(method, *args)
-      "__#{@name}.#{method}__"
-    end
-
-    def to_s
-      "__#{@name}__"
-    end
-
-  end
-
-  class Html
-
-    def render(file)
-      Slim::Template.new(file).render(self)
-    end
-
-    def method_missing(method, *args)
-      Missing.new(method)
-    end
-
-  end
-
-  def initialize(templates = nil)
-    @path = File.expand_path(templates || 'app/pdfs')
-
-    unless File.exists?(@path)
-      raise ArgumentError.new("#{@path} does not exist")
-    end
-    unless File.directory?(@path)
-      raise ArgumentError.new("#{@path} is not a directory")
-    end
+  def initialize(path = 'app/pdfs')
+    @path = path
   end
 
   def resolve_template(name)
@@ -51,16 +14,26 @@ class Services::PdfHtmlGenerator
     unless File.exists?(file)
       raise ArgumentError.new("#{name} not found in #{@path}")
     end
-    file
+    source = File.read(file)
+    basename = name.sub('.slim', '')
+    template = Template.where(name: basename).order(version: :desc).limit(1).first
+    if template.nil? || (File.mtime(file) > template.created_at && File.read(file) != template.source)
+      template = Template.create(name: basename, source: source)
+    end
+    template
   end
 
-  def generate_pdf(name, struct)
-    WickedPdf.new.pdf_from_string(render_html(name, struct), javascript_delay: 0, dpi: '380', extra: '--enable-forms')
+  def generate_pdf(name_or_template, struct)
+    WickedPdf.new.pdf_from_string(render_html(name_or_template, struct), javascript_delay: 0, dpi: '380', extra: '--enable-forms')
   end
 
-  def render_html(name, struct)
-    file = resolve_template(name)
-    Slim::Template.new(file).render(struct)
+  def render_html(name_or_template, struct)
+    if name_or_template.is_a?(String)
+      template = resolve_template(name_or_template)
+    else
+      template = name_or_template
+    end
+    Slim::Template.new { template.source }.render(struct)
   end
 
 end

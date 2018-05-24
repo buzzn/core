@@ -15,8 +15,9 @@ describe 'Schemas::Invariants::Contract::Localpool' do
   entity(:processing)              { create(:contract, :localpool_processing,    localpool: localpool) }
   entity(:metering_point_operator) { create(:contract, :metering_point_operator, localpool: localpool) }
 
-  shared_examples 'invariants of localpool' do |contract|
+  shared_examples 'invariants of localpool' do |contract_name|
 
+    let(:contract) { send(contract_name) }
     let(:tested_invariants) { contract.invariant.errors[:localpool] }
 
     subject { tested_invariants }
@@ -40,60 +41,10 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     end
   end
 
-  shared_examples 'invariants of market_location group' do |contract|
 
-    entity(:other) { create(:localpool) }
+  shared_examples 'invariants of contracting party' do |label, contract_name, expected|
 
-    let(:tested_invariants) { contract.invariant.errors[:market_location] }
-
-    subject { tested_invariants }
-
-    context 'when market_location belongs to different group' do
-      before do
-        contract.market_location.register.meter.group = other
-      end
-      it { is_expected.to eq(['meter.group must match contract.localpool']) }
-    end
-
-    context 'when market_location belongs to same group' do
-      before do
-        contract.market_location.register.meter.group = contract.localpool
-      end
-      it { is_expected.to be_nil }
-    end
-
-    after do
-      contract.market_location.register.meter.group = contract.localpool
-    end
-  end
-
-  shared_examples 'invariants of market_location' do |contract|
-
-    let(:tested_invariants) { contract.invariant.errors[:market_location] }
-
-    subject { tested_invariants }
-
-    context 'when there is no market_location' do
-      before do
-        contract.market_location = nil
-      end
-      it { is_expected.to eq(['must be filled']) }
-    end
-
-    context 'when there is a market_location' do
-      before do
-        contract.market_location = market_location
-      end
-      it { is_expected.to be_nil }
-    end
-
-    after do
-      contract.market_location = market_location
-    end
-  end
-
-  shared_examples 'invariants of contracting party' do |label, contract, expected|
-
+    let(:contract) { send(contract_name) }
     let(:tested_invariants) { contract.invariant.errors[:"#{label}"] }
 
     subject { tested_invariants }
@@ -138,63 +89,52 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     before { powertaker.contractor = localpool.owner }
 
     describe 'localpool' do
-      it_behaves_like 'invariants of localpool', powertaker
-    end
-
-    describe 'market_location' do
-      it_behaves_like 'invariants of market_location', powertaker
-      it_behaves_like 'invariants of market_location group', powertaker
+      it_behaves_like 'invariants of localpool', :powertaker
     end
 
     describe 'customer' do
-      it_behaves_like 'invariants of contracting party', :customer, powertaker, nil
+      it_behaves_like 'invariants of contracting party', :customer, :powertaker, nil
     end
 
     describe 'contractor' do
-      it_behaves_like 'invariants of contracting party', :contractor, powertaker, 'must be the localpool owner'
+      it_behaves_like 'invariants of contracting party', :contractor, :powertaker, 'must be the localpool owner'
     end
   end
 
   context 'processing contract' do
     describe 'localpool' do
-      it_behaves_like 'invariants of localpool', processing
+      it_behaves_like 'invariants of localpool', :processing
     end
 
     describe 'customer' do
-      it_behaves_like 'invariants of contracting party', :customer, processing, 'must be the localpool owner'
+      it_behaves_like 'invariants of contracting party', :customer, :processing, 'must be the localpool owner'
     end
 
     describe 'contractor' do
       # TODO should actuall check that contractor is Buzzn Organization
-      it_behaves_like 'invariants of contracting party', :contractor, processing, nil
+      it_behaves_like 'invariants of contracting party', :contractor, :processing, nil
     end
   end
 
   context 'metering point operator contract' do
     describe 'localpool' do
-      it_behaves_like 'invariants of localpool', metering_point_operator
+      it_behaves_like 'invariants of localpool', :metering_point_operator
     end
 
-    # TODO needs check on register (like power-taker)
-
     describe 'customer' do
-      it_behaves_like 'invariants of contracting party', :customer, processing, 'must be the localpool owner'
+      it_behaves_like 'invariants of contracting party', :customer, :metering_point_operator, 'must be the localpool owner'
     end
 
     describe 'contractor' do
       # TODO should actuall check that contractor is Buzzn Organization
-      it_behaves_like 'invariants of contracting party', :contractor, processing, nil
+      it_behaves_like 'invariants of contracting party', :contractor, :metering_point_operator, nil
     end
+
   end
 
   context 'third party contract' do
     describe 'localpool' do
-      it_behaves_like 'invariants of localpool', third_party
-    end
-
-    describe 'market_location' do
-      it_behaves_like 'invariants of market_location', third_party
-      it_behaves_like 'invariants of market_location group', third_party
+      it_behaves_like 'invariants of localpool', :third_party
     end
   end
 end

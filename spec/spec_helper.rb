@@ -3,22 +3,25 @@ ENV['RACK_ENV'] = 'test'
 ENV['LOG_LEVEL'] ||= 'warn' # can not set it in rails env as it is always 'error'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
-require 'vcr'
 require 'webmock/rspec'
 require 'rspec/retry'
 require 'awesome_print'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir['./spec/support/**/*.rb'].each { |f| require f }
 
 I18n.default_locale = :en
 
-VCR.configure do |c|
-  c.cassette_library_dir = 'spec/vcr_cassettes'
-  c.hook_into :faraday, :webmock
-  c.default_cassette_options = { :serialize_with => :syck }
+# we want randomness and reproduciblity, so set it here and any
+# test can reset an initial state with Kernel.srand 0
+class Array
+  alias sample_old sample
+  def sample(*)
+    sample_old(random: Kernel)
+  end
 end
+Kernel.srand 0
 
 RSpec.configure do |config|
 

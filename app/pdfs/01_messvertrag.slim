@@ -1,13 +1,13 @@
 doctype html
 html
   head
-    title = '#{title_text}'
-    meta charset='utf-8'
-    link href='#{Dir.pwd}/public/css/pdf-creation.css' rel='stylesheet'
-    script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
-    script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
-  css:
-    html{line-height:1.4}
+    title Messvertrag #{number}
+meta charset='utf-8'
+link href='#{Dir.pwd}/public/css/pdf-creation.css' rel='stylesheet'
+script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
+script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
+css:
+html{line-height:1.4}
   body
     div.wrapper
       h1.is-text-center Messvertrag
@@ -20,18 +20,20 @@ html
         E-Mail: team@buzzn.net <br>
         nachfolgend <b>„BUZZN“</b>
       p.is-text-center und
-      p.is-text-center «LSG_V.-Partner» <br>
-        «LSG_Straße» «LSG_HausNr», «LSG_PLZ» «LSG_Ort» <br>
-        vertreten durch «LSG_Kontakt» <br>
-        Telefon: «LSG_Tel» <br>
-        Fax: «LSG_Fax» <br>
-        E‑Mail: «LSG_Email» <br>
+      div.is-text-center #{customer.name} <br>
+        #{address.street}, #{address.zip} #{address.city}
+      - if customer.name != customer.partner_name
+        <br>vertreten durch #{customer.partner_name}
+      div.is-text-center Telefon: #{customer.partner.phone}
+      - if customer.partner.fax
+        <br>Fax: #{customer.partner.fax}
+      div.is-text-center E‑Mail: #{customer.partner.email} <br>
         nachfolgend <b>„Kunde“</b>
       p.is-text-center
-        <b>(Vertragsnummer «Mess_Vertr_Nr»)</b>
+        <b>(Vertragsnummer #{number})</b>
 
       h2 1 Vertragsgegenstand und Definition „Messstelle“
-      p Dieser Vertrag regelt als Rahmenvertrag den Messstellenbetrieb und die Messung (nachfolgend zusammenfassend „Messstellenbetrieb“) für die Strom-Messstelle(n) des Kunden im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort» (nachfolgend „Objekt“).
+      p Dieser Vertrag regelt als Rahmenvertrag den Messstellenbetrieb und die Messung (nachfolgend zusammenfassend „Messstellenbetrieb“) für die Strom-Messstelle(n) des Kunden im Objekt #{address.street}, #{address.zip} #{address.city} (nachfolgend „Objekt“).
       p Der Begriff „Messstelle“ bezeichnet den Zähler (direkt ab-/auslesbar oder berechnet), mit dem die Messung erfolgt, einschließlich der Gesamtheit der rund um den Zähler im Objekt des Kunden eingebauten weiteren technischen Einrichtungen, die der Messung dienen. Dazu zählen insbesondere
       ul.is-styled-list
         li Mess-, Steuer-, Tarif- und Zusatzeinrichtungen,
@@ -175,15 +177,16 @@ html
           span.page-total-number 11
     div.alwaysbreak
     div.wrapper
-      h2 Auftrag und Vollmacht (Anlage 1 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      h2 Auftrag und Vollmacht (Anlage 1 zum Messvertrag Nr. #{number})
       p An den Messstellen im Objekt
       p.is-indented
-        strong «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort»
+        strong #{address.street}, #{address.zip} #{address.city}
       p beauftrage ich,
       p.is-indented
-        strong «LSG_V.-Partner»<br>
-          vertreten durch «LSG_Kontakt»<br>
-          «LSG_Straße» «LSG_HausNr», «LSG_PLZ» «LSG_Ort»
+        strong #{customer.name}
+      - if customer.name != customer.partner_name
+        <br>vertreten durch #{customer.partner_name}
+      div #{address.street}, #{address.zip} #{address.city}
       p hiermit
       p.is-indented
         storng BUZZN GmbH<br>
@@ -215,7 +218,7 @@ html
           span.page-total-number 11
     div.alwaysbreak
     div.wrapper
-      h2 Zählerkonfiguration (Anlage 2 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      h2 Zählerkonfiguration (Anlage 2 zum Messvertrag Nr. #{number})
       img.is-responsive src="#{Dir.pwd}/public/assets/images/buzzn_messvertrag_img_1.png"
       footer.is-small
         .footer-logo
@@ -229,7 +232,7 @@ html
           span.page-total-number 11
     div.alwaysbreak
     div.wrapper
-      h2 Anmeldung Messstelle (Anlage 3 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      h2 Anmeldung Messstelle (Anlage 3 zum Messvertrag Nr. #{number})
       p Hinweis für Lokale Stromgeber: Als Anmeldung im Sinne dieser Anlage 1 gilt auch jede Übermittlung eines Stromvertrags zwischen einem Lokalen Stromgeber und einem Lokalen Stromnehmer. In diesem Fall muss die jeweilige Messstelle <u>nicht</u> erneut mit dem nachfolgenden Formular angemeldet werden.
       table.is-full-width.is-verticalalign-top.has-td-fix-height
         tr
@@ -279,7 +282,7 @@ html
           span.page-total-number 11
     div.alwaysbreak
     div.wrapper
-      h2 Abmeldung Messstelle (Anlage 4 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      h2 Abmeldung Messstelle (Anlage 4 zum Messvertrag Nr. #{number})
       table.is-full-width.is-verticalalign-top.has-td-fix-height
         tr
           td.is-huge.is-bold 1
@@ -319,10 +322,10 @@ html
           span.page-total-number 11
     div.alwaysbreak
     div.wrapper
-      h2 SEPA Lastschrift-Mandat (Anlage 5 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      h2 SEPA Lastschrift-Mandat (Anlage 5 zum Messvertrag Nr. #{number})
       p Fällige Zahlungen aufgrund dieses Messvertrags werden per SEPA-Basis-Lastschriftverfahren eingezogen.
       p Die Gläubiger-Identifikationsnummer von BUZZN ist DE64ZZZ00000588286.
-      p Die Mandatsreferenz lautet «Mess_Vertr_Nr».
+      p Die Mandatsreferenz lautet #{number}.
       p Hiermit ermächtige ich BUZZN GmbH, Adams-Lehmann-Straße 56, 80797 München, widerruflich, fällige Zahlungen aufgrund dieses Messvertrages von nachstehendem Bankkonto mittels SEPA Basislastschrift einzuziehen. Zugleich weise ich meine Bank an, die durch BUZZN GmbH von meinem Konto gezogenen Lastschriften einzulösen. Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrags verlangen. Es gelten dabei die mit meiner Bank vereinbarten Bedingungen.
       p.has-dotted-underline.has-space-above.col-half.float-none
       p
@@ -354,7 +357,7 @@ html
           span.page-total-number 11
     div.alwaysbreak
     div.wrapper
-      h2 Preisliste (Anlage 6 zum Messvertrag Nr. «Mess_Vertr_Nr»)
+      h2 Preisliste (Anlage 6 zum Messvertrag Nr. #{number})
       p Alle Preisangaben verstehen sich netto (zzgl. Umsatzsteuer) je Messstelle. Preisliste gültig ab 01.01.2018.
       table.is-full-width.is-verticalalign-top.has-td-fix-height
         tr

@@ -664,6 +664,18 @@ CREATE TYPE roles_name AS ENUM (
 
 
 --
+-- Name: templates_name; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE templates_name AS ENUM (
+    '01_messvertrag',
+    'invoice',
+    'minimal',
+    'pdf_generator'
+);
+
+
+--
 -- Name: rodauth_get_previous_salt(bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1695,6 +1707,43 @@ ALTER SEQUENCE payments_id_seq OWNED BY payments.id;
 
 
 --
+-- Name: pdf_documents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE pdf_documents (
+    id integer NOT NULL,
+    json character varying(16384) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    template_id integer NOT NULL,
+    document_id integer NOT NULL,
+    localpool_id integer,
+    contract_id integer,
+    billing_id integer,
+    CONSTRAINT check_pdf_document_relations CHECK ((((localpool_id IS NOT NULL) AND (contract_id IS NULL) AND (billing_id IS NULL)) OR ((localpool_id IS NULL) AND (contract_id IS NOT NULL) AND (billing_id IS NULL)) OR ((localpool_id IS NULL) AND (contract_id IS NULL) AND (billing_id IS NOT NULL))))
+);
+
+
+--
+-- Name: pdf_documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE pdf_documents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pdf_documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE pdf_documents_id_seq OWNED BY pdf_documents.id;
+
+
+--
 -- Name: persons; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1915,6 +1964,39 @@ ALTER SEQUENCE tariffs_id_seq OWNED BY tariffs.id;
 
 
 --
+-- Name: templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE templates (
+    id integer NOT NULL,
+    version integer NOT NULL,
+    source character varying(65536) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    name templates_name
+);
+
+
+--
+-- Name: templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE templates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE templates_id_seq OWNED BY templates.id;
+
+
+--
 -- Name: zip_to_prices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2119,6 +2201,13 @@ ALTER TABLE ONLY payments ALTER COLUMN id SET DEFAULT nextval('payments_id_seq':
 
 
 --
+-- Name: pdf_documents id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pdf_documents ALTER COLUMN id SET DEFAULT nextval('pdf_documents_id_seq'::regclass);
+
+
+--
 -- Name: persons id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2151,6 +2240,13 @@ ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regcl
 --
 
 ALTER TABLE ONLY tariffs ALTER COLUMN id SET DEFAULT nextval('tariffs_id_seq'::regclass);
+
+
+--
+-- Name: templates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY templates ALTER COLUMN id SET DEFAULT nextval('templates_id_seq'::regclass);
 
 
 --
@@ -2409,6 +2505,14 @@ ALTER TABLE ONLY payments
 
 
 --
+-- Name: pdf_documents pdf_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pdf_documents
+    ADD CONSTRAINT pdf_documents_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: persons persons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2446,6 +2550,14 @@ ALTER TABLE ONLY roles
 
 ALTER TABLE ONLY tariffs
     ADD CONSTRAINT tariffs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: templates templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY templates
+    ADD CONSTRAINT templates_pkey PRIMARY KEY (id);
 
 
 --
@@ -2846,6 +2958,41 @@ CREATE UNIQUE INDEX index_organizations_on_slug ON organizations USING btree (sl
 --
 
 CREATE INDEX index_payments_on_contract_id ON payments USING btree (contract_id);
+
+
+--
+-- Name: index_pdf_documents_on_billing_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pdf_documents_on_billing_id ON pdf_documents USING btree (billing_id);
+
+
+--
+-- Name: index_pdf_documents_on_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pdf_documents_on_contract_id ON pdf_documents USING btree (contract_id);
+
+
+--
+-- Name: index_pdf_documents_on_document_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pdf_documents_on_document_id ON pdf_documents USING btree (document_id);
+
+
+--
+-- Name: index_pdf_documents_on_localpool_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pdf_documents_on_localpool_id ON pdf_documents USING btree (localpool_id);
+
+
+--
+-- Name: index_pdf_documents_on_template_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pdf_documents_on_template_id ON pdf_documents USING btree (template_id);
 
 
 --
@@ -3317,6 +3464,46 @@ ALTER TABLE ONLY payments
 
 
 --
+-- Name: pdf_documents fk_pdf_documents_billing; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pdf_documents
+    ADD CONSTRAINT fk_pdf_documents_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
+
+
+--
+-- Name: pdf_documents fk_pdf_documents_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pdf_documents
+    ADD CONSTRAINT fk_pdf_documents_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
+
+
+--
+-- Name: pdf_documents fk_pdf_documents_document; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pdf_documents
+    ADD CONSTRAINT fk_pdf_documents_document FOREIGN KEY (document_id) REFERENCES documents(id);
+
+
+--
+-- Name: pdf_documents fk_pdf_documents_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pdf_documents
+    ADD CONSTRAINT fk_pdf_documents_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
+
+
+--
+-- Name: pdf_documents fk_pdf_documents_template; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY pdf_documents
+    ADD CONSTRAINT fk_pdf_documents_template FOREIGN KEY (template_id) REFERENCES templates(id);
+
+
+--
 -- Name: persons fk_persons_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3423,6 +3610,10 @@ INSERT INTO schema_migrations (version) VALUES ('31');
 INSERT INTO schema_migrations (version) VALUES ('32');
 
 INSERT INTO schema_migrations (version) VALUES ('33');
+
+INSERT INTO schema_migrations (version) VALUES ('34');
+
+INSERT INTO schema_migrations (version) VALUES ('35');
 
 INSERT INTO schema_migrations (version) VALUES ('4');
 

@@ -18,6 +18,10 @@ FactoryGirl.define do
       address
     end
 
+    trait :with_legal_representation do
+      legal_representation { FactoryGirl.create(:person, :organization_contact) }
+    end
+
     trait :other do
     end
 
