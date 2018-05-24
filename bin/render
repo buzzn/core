@@ -42,6 +42,9 @@ require './config/buzzn'
 
 generator =
   case file
+  when /01_messvertrag.slim$/
+    contract = Contract::MeteringPointOperator.first
+    Buzzn::Pdfs::MeteringPointOperator.new(contract)
   when /invoice.slim$/
     billing = Billing.all.detect { |b| !b.items.first.end_reading.nil? && !b.items.first.begin_reading.nil? }
     raise 'could not find valid billing' unless billing

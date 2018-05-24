@@ -17,6 +17,7 @@ class Builders::StructBuilder
   private
 
   def process_hash(hash)
+    hash = hash.dup
     hash.each do |key, value|
       case value
       when Hash then hash[key] = process_hash(value)

@@ -1,8 +1,9 @@
 describe Services::PdfHtmlGenerator do
 
-  class With < Services::PdfHtmlGenerator::Html
+  class Empty < Pdf::Generator::PdfStruct
+  end
 
-    include Import.kwargs['services.pdf_html_generator']
+  class With < Pdf::Generator::PdfStruct
 
     def initialize(data = {})
       @data = data
@@ -22,37 +23,26 @@ describe Services::PdfHtmlGenerator do
 
   end
 
-  let(:this) { File.expand_path('..', __FILE__) }
+  let(:this) { File.expand_path('../pdfs', __FILE__) }
   subject { Services::PdfHtmlGenerator.new(this) }
 
-  it 'fails on wrong templates path' do
-    expect { Services::PdfHtmlGenerator.new('something') }.to raise_error ArgumentError
-    expect { Services::PdfHtmlGenerator.new(__FILE__) }.to raise_error ArgumentError
-    expect do
-      Dir.chdir(this) do
-        # passing in nil means the auto_inject does its job
-        Services::PdfHtmlGenerator.new('app/templates')
-      end
-    end.to raise_error ArgumentError
-  end
-
-  it 'generates plain html' do
-    html = subject.render_html('simple.slim', Services::PdfHtmlGenerator::Html.new)
+  it 'renders html simple' do
+    html = subject.render_html('minimal.slim', Empty.new)
     expect(html).to eq "<!DOCTYPE html>\n<html>\n  <head>\n    <title>be happy</title>\n  </head>\n</html>"
   end
 
-  it 'renders html - simple' do
-    html = subject.render_html('with_parameters.slim', Services::PdfHtmlGenerator::Html.new)
+  it 'renders html with empty parameters' do
+    html = subject.render_html('01_messvertrag.slim', Empty.new)
     expect(html).to eq "<!DOCTYPE html>\n<html>\n  <head>\n    <title>be happy __when__</title>\n  </head>\n  <body>\n    <h1>\n      __time.today__\n    </h1>\n  </body>\n</html>"
   end
 
   it 'renders html' do
-    html = subject.render_html('with_parameters.slim', With.new)
+    html = subject.render_html('01_messvertrag.slim', With.new)
     expect(html).to eq "<!DOCTYPE html>\n<html>\n  <head>\n    <title>be happy all the time</title>\n  </head>\n  <body>\n    <h1>\n      1111-11-11\n    </h1>\n  </body>\n</html>"
   end
 
-  it 'generates pdf' do
-    pdf = subject.generate_pdf('with_parameters.slim', With.new(when: 'forever', time: Date))
+  it 'generates pdf', slow: true do
+    pdf = subject.generate_pdf('01_messvertrag.slim', With.new(when: 'forever', time: Date))
     expect(pdf).to start_with '%PDF-1.4'
   end
 end

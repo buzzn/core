@@ -1,7 +1,7 @@
-require 'buzzn/pdf_generator'
+require_relative 'pdf_generator'
 
-module Buzzn::Pdfs
-  class Invoice < Buzzn::PdfGenerator
+module Pdf
+  class Invoice < Generator
 
     def initialize(billing)
       super

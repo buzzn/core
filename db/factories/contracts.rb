@@ -11,7 +11,6 @@ FactoryGirl.define do
     termination_date              { end_date.present? ? end_date - 3.months : nil }
     contract_number_addition      1
     power_of_attorney             true
-    metering_point_operator_name  'Generic metering point operator'
 
     after(:build) do |account, transients|
       unless account.is_a?(Contract::LocalpoolThirdParty)
@@ -35,6 +34,7 @@ FactoryGirl.define do
   trait :metering_point_operator do
     contract_number { generate(:metering_point_operator_contract_nr) }
     initialize_with { Contract::MeteringPointOperator.new }
+    metering_point_operator_name  'Generic metering point operator'
     before(:create) do |contract, evaluator|
       contract.customer = evaluator.customer ? evaluator.customer : contract.localpool.owner
     end

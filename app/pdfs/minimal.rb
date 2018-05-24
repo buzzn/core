@@ -1,7 +1,7 @@
-require 'buzzn/pdf_generator'
+require_relative 'pdf_generator'
 
-module Buzzn::Pdfs
-  class Minimal < Buzzn::PdfGenerator
+module Pdf
+  class Minimal < Generator
 
     def initialize(template = nil, **kwargs)
       super(kwargs)
@@ -15,7 +15,9 @@ module Buzzn::Pdfs
     end
 
     def build_struct
-      {}
+      {
+        name: 'me and the corner'
+      }
     end
 
   end

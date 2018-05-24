@@ -12,9 +12,11 @@ html
     p #{page_one.paragraph}
     p #{address}
 
+  - if name != 'something'
+    p #{name}
+
     div.alwaysbreak
 
     h1 #{page_two.header}
     p #{page_two.paragraph}
     p #{address}
-    
