@@ -4,7 +4,7 @@ describe 'Schemas::Invariants::Contract::LocalpoolThirdParty' do
 
   entity(:person)       { create(:person) }
   entity(:organization) { create(:organization) }
-  entity(:localpool)    { create(:localpool) }
+  entity(:localpool)    { create(:group, :localpool) }
 
   entity(:third_party) { create(:contract, :localpool_third_party, localpool: localpool) }
   entity(:register) { third_party.register }

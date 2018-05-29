@@ -3,7 +3,7 @@ require_relative 'name_size_shared'
 
 describe 'Schemas::Invariants::Group::Localpool' do
 
-  entity(:localpool) { create(:localpool) }
+  entity(:localpool) { create(:group, :localpool) }
 
   context 'name' do
     it_behaves_like 'invariants of name-size', :localpool

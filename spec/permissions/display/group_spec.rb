@@ -6,14 +6,14 @@ describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
   let(:anonymous) { nil }
 
   entity!(:tribe) do
-    group = create(:localpool, :tribe, show_display_app: true)
+    group = create(:group, :tribe, show_display_app: true)
     create(:meter, :real, group: group)
     mentor.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group
   end
 
   entity!(:localpool) do
-    group = create(:localpool, show_display_app: true)
+    group = create(:group, :localpool, show_display_app: true)
     create(:meter, :virtual, group: group)
     mentor.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group

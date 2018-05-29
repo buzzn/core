@@ -20,14 +20,14 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   let(:anonymous)            { nil }
 
   entity!(:localpool1) do
-    pool = create(:localpool)
+    pool = create(:group, :localpool)
     localpool_member.person.add_role(Role::GROUP_MEMBER, pool)
     localpool_member2.person.add_role(Role::GROUP_MEMBER, pool)
     pool
   end
 
   entity!(:localpool2) do
-    pool = create(:localpool)
+    pool = create(:group, :localpool)
     localpool_owner.person.add_role(Role::GROUP_OWNER, pool)
     localpool_manager.person.add_role(Role::GROUP_ADMIN, pool)
     localpool_member3.person.add_role(Role::GROUP_MEMBER, pool)
@@ -43,7 +43,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     pool
   end
 
-  entity!(:localpool3) { create(:localpool) }
+  entity!(:localpool3) { create(:group, :localpool) }
 
   let(:contract) { localpool2.localpool_power_taker_contracts.first }
   let(:register) { localpool2.registers.real.input.first }

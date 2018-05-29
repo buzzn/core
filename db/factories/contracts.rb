@@ -4,7 +4,7 @@ FactoryGirl.define do
       customer nil
       contractor nil
     end
-    localpool                     { FactoryGirl.build(:localpool) }
+    localpool                     { FactoryGirl.build(:group, :localpool) }
     contract_number               { generate(:metering_point_operator_contract_nr) }
     signing_date                  { (begin_date || Date.today) - 3.weeks }
     begin_date                    { Date.new(2016, 1, 1) }

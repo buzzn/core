@@ -1,16 +1,16 @@
 describe Display::GroupResource do
 
-  entity(:admin) { Fabricate(:admin) }
+  entity(:admin) { create(:account, :buzzn_operator) }
 
   entity!(:tribe) do
-    group = Fabricate(:tribe, show_display_app: true)
+    group = create(:group, :tribe, show_display_app: true)
     create(:meter, :real, group: group)
     admin.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group
   end
 
   entity!(:localpool) do
-    group = create(:localpool, show_display_app: true)
+    group = create(:group, :localpool, show_display_app: true)
     create(:meter, :virtual, group: group)
     admin.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group

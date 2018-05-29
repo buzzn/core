@@ -108,7 +108,7 @@ describe 'Factories produce valid records' do
   end
 
   context 'Localpool' do
-    subject { create(:localpool) }
+    subject { create(:group, :localpool) }
     it { is_expected.to have_valid_invariants }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:address, Address) }
@@ -226,7 +226,7 @@ describe 'Factories produce valid records' do
     subject { create(:tariff) }
     it { is_expected.to be_valid }
     it 'can override group' do
-      group    = create(:localpool)
+      group    = create(:group, :localpool)
       tariff   = create(:tariff, group: group)
       expect(tariff.group).to eq(group)
       expect(tariff).to be_valid

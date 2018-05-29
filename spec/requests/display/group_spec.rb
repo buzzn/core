@@ -14,12 +14,12 @@ describe Display::GroupRoda do
     }
   end
 
-  entity!(:tribe) { Fabricate(:tribe, show_display_app: true) }
+  entity!(:tribe) { create(:group, :tribe, show_display_app: true) }
 
-  entity!(:localpool) { Fabricate(:localpool, show_display_app: false) }
+  entity!(:localpool) { create(:group, :localpool, show_display_app: false) }
 
   entity!(:group) do
-    group = Fabricate(:localpool, show_display_app: true)
+    group = create(:group, :localpool, show_display_app: true)
     $user.person.reload.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group
   end
@@ -129,7 +129,7 @@ describe Display::GroupRoda do
         expect(json).to eq not_found_json
       end
 
-      entity(:mentor) { Fabricate(:user).person }
+      entity(:mentor) { create(:account).person }
 
       let(:group) do
         group = tribe

@@ -7,7 +7,7 @@ describe Admin::LocalpoolRoda do
 
   context 'organizations' do
 
-    entity!(:localpool) { create(:localpool, owner: organization) }
+    entity!(:localpool) { create(:group, :localpool, owner: organization) }
     entity!(:address) { create(:address) }
     entity!(:person) { create(:person) }
     entity!(:organization) do

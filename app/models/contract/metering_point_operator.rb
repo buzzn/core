@@ -8,7 +8,7 @@ module Contract
     end
 
     def customer
-      localpool.owner
+      localpool&.owner
     end
 
     def customer=(*)

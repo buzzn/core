@@ -12,7 +12,7 @@ describe Admin::LocalpoolRoda do
                                    address: address,
                                    contact: person,
                                    legal_representation: person) end
-  entity!(:localpool) { create(:localpool) }
+  entity!(:localpool) { create(:group, :localpool) }
 
   let(:localpool_json) do
     {

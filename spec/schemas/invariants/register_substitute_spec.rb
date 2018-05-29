@@ -2,7 +2,7 @@ require 'buzzn/schemas/invariants/register/substitute'
 
 describe 'Schemas::Invariants::Register::Substitute' do
 
-  entity(:group) { create(:localpool) }
+  entity(:group) { create(:group, :localpool) }
   entity(:first) { create(:register, :substitute) }
 
   subject { register.invariant.errors[:group] }

@@ -2,7 +2,7 @@ require 'buzzn/transactions/admin/localpool/assign_owner'
 
 describe Transactions::Admin::Localpool::OwnerBase do
 
-  let!(:localpool)         { create(:localpool) }
+  let!(:localpool)         { create(:group, :localpool) }
   let(:person)             { create(:person) }
   let(:person_resource)    { PersonResource.new(person, Buzzn::Resource::Context.new(nil, nil, nil)) }
 

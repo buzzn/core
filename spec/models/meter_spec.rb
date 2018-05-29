@@ -1,7 +1,7 @@
 describe Meter::Real do
 
   entity!(:meter) { create(:meter, :real, group: nil) }
-  entity!(:group) { create(:localpool) }
+  entity!(:group) { create(:group, :localpool) }
 
   it 'gets a sequence_number if added to a group' do
     expect(meter.group).to eq nil
@@ -10,7 +10,7 @@ describe Meter::Real do
     expect(meter.reload.sequence_number).to eq 1
     expect(meter.group).to eq group
 
-    expect { meter.update(group: create(:localpool)) }.to raise_error ArgumentError
+    expect { meter.update(group: create(:group, :localpool)) }.to raise_error ArgumentError
 
     second_meter = create(:meter, :real, group: group)
     expect(second_meter.reload.sequence_number).to eq 2

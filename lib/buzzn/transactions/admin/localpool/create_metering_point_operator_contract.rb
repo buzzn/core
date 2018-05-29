@@ -1,17 +1,18 @@
 module Transactions::Admin::Localpool
-  class CreatePersonOwner
+  class CreateMeteringPointOperatorContract
 
     validate :params_schema
     authorize :allowed_roles
     precondition :localpool_schema
-    add :new_metering_point_operator_contract, with :'operations.action.new'
-    add :generate_pdf
+    add :object, with: :'operations.action.new'
+    add :generator
+    add :pdf
     around :db_transaction
     tee :store_pdf
     map :save_metering_point_operator_contract
 
     def params_schema
-      Schemas::Transactions::Admin::Person::Create
+      Schemas::Transactions::Admin::Contract::MeteringPointOperator::Create
     end
 
     def allowed_roles(permission_context:)
@@ -24,16 +25,16 @@ module Transactions::Admin::Localpool
 
     def new_metering_point_operator_contract(params:, resource:)
       attrs = params.merge(localpool: resource.object)
-      { object: super(Contract::MeteringPointOperator, attrs) }
+      super(Contract::MeteringPointOperator, attrs)
+    end
+    alias object new_metering_point_operator_contract
+
+    def generator(object:)
+      Pdf::MeteringPointOperator.new(object)
     end
 
-    def generate_pdf(object:)
-      generator = Pdf::MeteringPointOperator.new(object)
-      kw = { generator: generator }
-      unless generator.pdf_document_stale?
-        kw[:pdf] = generator.to_pdf
-      end
-      kw
+    def pdf(generator:)
+      generator.to_pdf if generator.pdf_document_stale?
     end
 
     def store_pdf(generator:, pdf:, object:)

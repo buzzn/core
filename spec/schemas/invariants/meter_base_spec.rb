@@ -72,7 +72,7 @@ describe 'Schemas::Invariants::Meter::Base' do
 
   subject { meter.invariant.errors[:group] }
 
-  entity(:localpool) { create(:localpool) }
+  entity(:localpool) { create(:group, :localpool) }
 
   context 'no meter group' do
     entity(:meter) { create(:meter, :real, group: nil) }

@@ -66,7 +66,7 @@ describe Admin::LocalpoolRoda do
 
   entity(:manager) { create(:person) }
   entity!(:localpool) do
-    localpool = create(:localpool)
+    localpool = create(:group, :localpool)
     manager.add_role(Role::GROUP_ADMIN, localpool)
     c = create(:contract, :localpool_powertaker, localpool: localpool)
     c.market_location.register.update(label: :production_pv)
@@ -84,7 +84,7 @@ describe Admin::LocalpoolRoda do
   end
 
   entity(:localpool_no_contracts) do
-    create(:localpool,
+    create(:group, :localpool,
            address: create(:address),
            bank_account: create(:bank_account)
           )

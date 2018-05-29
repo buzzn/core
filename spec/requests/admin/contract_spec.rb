@@ -9,7 +9,7 @@ describe Admin::LocalpoolRoda do
 
     entity(:person) { create(:person, :with_bank_account) }
 
-    entity(:localpool) { create(:localpool, owner: person) }
+    entity(:localpool) { create(:group, :localpool, owner: person) }
 
     entity(:organization) do
       buzzn = Organization.buzzn

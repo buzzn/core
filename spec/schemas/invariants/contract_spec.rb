@@ -5,9 +5,9 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
   entity(:person)       { create(:person) }
   entity(:organization) { create(:organization) }
-  entity(:tariff)       { create(:tariff, group: create(:localpool)) }
+  entity(:tariff)       { create(:tariff, group: create(:group, :localpool)) }
   entity(:localpool)    { tariff.group }
-  entity(:other_localpool) { create(:localpool) }
+  entity(:other_localpool) { create(:group, :localpool) }
 
   entity(:third_party) { create(:contract, :localpool_third_party, localpool: localpool) }
   entity(:market_location)         { third_party.market_location }
@@ -120,16 +120,6 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     describe 'localpool' do
       it_behaves_like 'invariants of localpool', :metering_point_operator
     end
-
-    describe 'customer' do
-      it_behaves_like 'invariants of contracting party', :customer, :metering_point_operator, 'must be the localpool owner'
-    end
-
-    describe 'contractor' do
-      # TODO should actuall check that contractor is Buzzn Organization
-      it_behaves_like 'invariants of contracting party', :contractor, :metering_point_operator, nil
-    end
-
   end
 
   context 'third party contract' do

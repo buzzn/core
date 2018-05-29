@@ -12,7 +12,7 @@ describe 'Schemas::Invariants::MarketLocation' do
     it { is_expected.to be_nil }
   end
   context 'failure' do
-    before { market_location.update(group: create(:localpool)) }
+    before { market_location.update(group: create(:group, :localpool)) }
     it { is_expected.to eq(['BUG: group and deep nested group must match']) }
   end
 

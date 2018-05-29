@@ -5,7 +5,7 @@ describe Buzzn::Localpool::TotalAccountedEnergy do
 
   entity(:reference) { {} }
   entity(:total) do
-    total = Buzzn::Localpool::TotalAccountedEnergy.new(create(:localpool))
+    total = Buzzn::Localpool::TotalAccountedEnergy.new(create(:group, :localpool))
     i = 0
     Buzzn::AccountedEnergy::SINGLE_LABELS.each do |label|
       i += 1

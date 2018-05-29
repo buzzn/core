@@ -5,7 +5,7 @@ describe Admin::LocalpoolRoda do
     TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
-  entity(:group) { create(:localpool) }
+  entity(:group) { create(:group, :localpool) }
 
   entity(:meter) { create(:meter, :real, group: group) }
 
@@ -213,7 +213,7 @@ describe Admin::LocalpoolRoda do
 
       let(:regixster) do
         register = [real_register, virtual_register].sample
-        Fabricate(:single_reading, register: register)
+        create(:reading, :regualr, register: register)
         register
       end
 

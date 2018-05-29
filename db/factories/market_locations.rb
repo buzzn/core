@@ -7,7 +7,7 @@ FactoryGirl.define do
     end
 
     name '1.OG links vorne'
-    group { FactoryGirl.create(:localpool) }
+    group { FactoryGirl.create(:group, :localpool) }
 
     trait :with_market_location_id do
       market_location_id { generate(:market_location_id) }

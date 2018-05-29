@@ -1,12 +1,14 @@
 describe Contract::TariffResource do
 
-  entity(:admin) { Fabricate(:admin) }
-  entity(:localpool) { Fabricate(:localpool) }
-  entity(:tariff) { Fabricate(:tariff, group: localpool) }
+  entity(:admin) { create(:account, :buzzn_operator) }
+  entity(:localpool) { create(:group, :localpool) }
+  entity(:tariff) { create(:tariff, group: localpool) }
 
-  entity(:localpool_processing) do Fabricate(:localpool_processing_contract,
-                                             localpool: localpool,
-                                             tariffs: [tariff]) end
+  entity(:localpool_processing) do
+    create(:contract, :localpool_processing,
+              localpool: localpool,
+              tariffs: [tariff])
+  end
 
   let(:tariff_resource) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).tariffs.first }
 

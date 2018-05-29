@@ -53,7 +53,7 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
     Services::Datasource::Discovergy::OptimizedGroup.new(api: api)
   end
 
-  entity(:localpool) { create(:localpool) }
+  entity(:localpool) { create(:group, :localpool) }
 
   entity!(:meters) do
     create(:meter, :real, :connected_to_discovergy, group: localpool,

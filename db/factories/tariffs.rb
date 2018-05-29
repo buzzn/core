@@ -6,7 +6,7 @@ FactoryGirl.define do
     baseprice_cents_per_month 300
 
     after(:build) do |tariff|
-      tariff.group = FactoryGirl.build(:localpool) unless tariff.group
+      tariff.group = FactoryGirl.build(:group, :localpool) unless tariff.group
       #tariff.contracts << FactoryGirl.build(:contract, localpool: tariff.group) if tariff.contracts.empty?
     end
   end

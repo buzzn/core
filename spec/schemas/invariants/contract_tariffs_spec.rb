@@ -5,8 +5,8 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
   entity(:tariff)       { create(:tariff, group: localpool) }
   entity(:tariff2)      { create(:tariff, group: localpool, begin_date: tariff.begin_date - 2.year, end_date: tariff.begin_date - 1.year) }
-  entity(:localpool)    { create(:localpool) }
-  entity(:other_localpool) { create(:localpool) }
+  entity(:localpool)    { create(:group, :localpool) }
+  entity(:other_localpool) { create(:group, :localpool) }
 
   entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, tariffs: [tariff]) }
   entity(:processing)              { create(:contract, :localpool_processing,    localpool: localpool, tariffs: [tariff]) }

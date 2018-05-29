@@ -13,7 +13,7 @@ describe Admin::BillingResource do
 
     context 'GET' do
 
-      entity(:localpool) { create(:localpool) }
+      entity(:localpool) { create(:group, :localpool) }
       entity(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
       entity(:billing) do
         billing = create(:billing, contract: create(:contract, :localpool_powertaker, :with_tariff, localpool: localpool))

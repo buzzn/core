@@ -7,7 +7,7 @@ describe Register::SubstituteResource do
     TestAdminLocalpoolRoda
   end
 
-  entity(:group) { create(:localpool) }
+  entity(:group) { create(:group, :localpool) }
 
   entity(:meter) { create(:meter, :virtual, group: group, registers: [build(:register, :substitute)]) }
 
