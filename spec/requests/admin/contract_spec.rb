@@ -12,8 +12,12 @@ describe Admin::LocalpoolRoda do
     entity(:localpool) { create(:localpool, owner: person) }
 
     entity(:organization) do
-      create(:organization, :with_bank_account, :with_address, contact: person)
+      buzzn = Organization.buzzn
+      buzzn.contact = person
+      buzzn.save!
+      buzzn
     end
+    entity(:bank_account) { create(:bank_account, owner: organization) }
 
     before do
       $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
@@ -21,8 +25,7 @@ describe Admin::LocalpoolRoda do
 
     entity(:metering_point_operator_contract) do
       create(:contract, :metering_point_operator,
-             localpool: localpool,
-             contractor: organization)
+             localpool: localpool, contractor_bank_account: bank_account)
     end
 
     entity(:localpool_power_taker_contract) do

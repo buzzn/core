@@ -10,7 +10,8 @@ describe Admin::LocalpoolRoda do
                              address: address) end
   entity!(:organization) do create(:organization, :with_bank_account,
                                    address: address,
-                                   contact: person) end
+                                   contact: person,
+                                   legal_representation: person) end
   entity!(:localpool) { create(:localpool) }
 
   let(:localpool_json) do
@@ -41,6 +42,9 @@ describe Admin::LocalpoolRoda do
       'bank_account' => nil,
       'power_sources' => [],
       'display_app_url' => nil,
+      'allowed_actions' => {
+        'create_metering_point_operator_contract'=>true
+      },
       'next_billing_cycle_begin_date' => '2016-02-01'
     }
   end

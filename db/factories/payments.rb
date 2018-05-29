@@ -5,7 +5,7 @@ FactoryGirl.define do
     cycle        Contract::Payment.cycles[:monthly]
 
     before(:create) do |payment, _evaluator|
-      payment.contract ||= FactoryGirl.build(:contract, :metering_point_operator)
+      payment.contract ||= FactoryGirl.build(:contract)
     end
   end
 end

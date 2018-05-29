@@ -6,15 +6,16 @@ describe Pdf::MeteringPointOperator do
 
   entity!(:person) { organization.contact }
 
-  entity(:contract) { create(:contract, :metering_point_operator, customer: organization, contract_number: 90001) }
+  entity(:contract) { create(:contract, :metering_point_operator, localpool: localpool, contract_number: 90001) }
 
+  entity(:localpool) { create(:localpool, owner: organization) }
   entity(:organization) { create(:organization, :other, :with_address, :with_legal_representation, name: 'some-orga-name') }
 
   let(:name) { subject.send(:template_name) }
     subject { Pdf::MeteringPointOperator.new(contract) }
 
   context 'person customer' do
-    before { contract.customer = person }
+    before { localpool.owner = person }
 
     it 'renders html' do
       html = subject.to_html
@@ -24,7 +25,7 @@ describe Pdf::MeteringPointOperator do
   end
 
   context 'organization customer' do
-    before { contract.customer = organization }
+    before { localpool.owner = organization }
 
     it 'renders html' do
       html = subject.to_html

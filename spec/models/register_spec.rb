@@ -1,27 +1,5 @@
 describe Register do
 
-  entity!(:urbanstr) do
-    Fabricate(:register_urbanstr88, meter: Fabricate(:output_meter))
-  end
-
-  entity! :register do
-    easymeter_60051560 = Fabricate(:easymeter_60051560)
-    easymeter_60051560.broker = Fabricate(:discovergy_broker, meter: easymeter_60051560)
-    easymeter_60051560.output_register
-  end
-
-  it 'returns registers by label' do
-    consumption = Register::Base.all.consumption.size
-    production = Register::Base.all.production_pv.size
-    3.times { Fabricate(:input_meter) }
-    3.times { Fabricate(:output_meter) }
-    expect(Register::Base.all.consumption.size).to eq consumption + 3
-    expect(Register::Base.all.production_pv.size).to eq production + 3
-    expect(Register::Base.all.by_labels(Register::Base.labels[:consumption], Register::Base.labels[:production_pv]).size).to eq consumption + production + 6
-    expect(Register::Base.all.by_labels(Register::Base.labels[:grid_feeding], Register::Base.labels[:demarcation_pv]).size).to eq 0
-    expect{ Register::Base.all.by_labels('something') }.to raise_error ArgumentError
-  end
-
   describe 'obis' do
     context 'when register is base' do
       it { expect(Register::Base.new.obis).to be_nil }

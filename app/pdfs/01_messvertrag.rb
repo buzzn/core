@@ -13,7 +13,7 @@ module Pdf
     def build_struct
       {
         version: template.version,
-        customer: build_customer(contract.customer),
+        customer: build_customer(contract.localpool.owner),
         address: build_address(contract.localpool.address),
         number: contract.full_contract_number,
       }

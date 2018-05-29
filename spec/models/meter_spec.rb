@@ -10,7 +10,7 @@ describe Meter::Real do
     expect(meter.reload.sequence_number).to eq 1
     expect(meter.group).to eq group
 
-    expect { meter.update(group: Fabricate(:localpool)) }.to raise_error ArgumentError
+    expect { meter.update(group: create(:localpool)) }.to raise_error ArgumentError
 
     second_meter = create(:meter, :real, group: group)
     expect(second_meter.reload.sequence_number).to eq 2

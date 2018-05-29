@@ -69,6 +69,7 @@ describe Admin::LocalpoolResource do
         expect(pool.incompleteness[:owner]).to eq(['must be filled'])
         pool.object.owner = organization
         expect(pool.incompleteness[:owner]).to eq(contact: ['must be filled'],
+                                                  legal_representation: ['must be filled'],
                                                   address: ['must be filled'])
         organization.contact = person
         organization.contact.remove_role(Role::GROUP_OWNER, pool.object)

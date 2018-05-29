@@ -44,6 +44,9 @@ describe Admin::LocalpoolRoda do
       case localpool.owner
       when Organization
         json['owner'] = {}
+        unless localpool.owner.legal_representation
+          json['owner']['legal_representation'] = ['must be filled']
+        end
         unless localpool.owner.contact
           json['owner']['contact'] = ['must be filled']
         end
@@ -90,6 +93,15 @@ describe Admin::LocalpoolRoda do
   let(:empty_json) { [] }
 
   def serialize(localpool)
+    allowed =
+      if localpool.address
+        true
+      else
+        {
+          'address' => ['must be filled'],
+          'owner' => ['must be filled']
+        }
+      end
     {
       'id'=>localpool.id,
       'type'=>'group_localpool',
@@ -110,6 +122,9 @@ describe Admin::LocalpoolRoda do
       'bank_account' => serialized_bank_account(localpool.bank_account),
       'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
       'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil),
+      'allowed_actions' => {
+        'create_metering_point_operator_contract'=> allowed
+      },
       'next_billing_cycle_begin_date' => localpool.start_date.as_json
     }
   end
@@ -225,6 +240,12 @@ describe Admin::LocalpoolRoda do
         'bank_account' => nil,
         'power_sources' => [],
         'display_app_url' => 'https://display.buzzn.io/super-duper',
+        'allowed_actions' => {
+          'create_metering_point_operator_contract'=> {
+            'address' => ['must be filled'],
+            'owner' => ['must be filled']
+          }
+        },
         'next_billing_cycle_begin_date' => Date.today.as_json,
       }
     end
@@ -303,6 +324,9 @@ describe Admin::LocalpoolRoda do
         'bank_account' => nil,
         'power_sources' => ['pv'],
         'display_app_url' => nil,
+        'allowed_actions' => {
+          'create_metering_point_operator_contract'=>true
+        },
         'next_billing_cycle_begin_date' => Date.yesterday.as_json
       }
     end
@@ -545,7 +569,17 @@ describe Admin::LocalpoolRoda do
           'customer_number' => nil,
           'updatable'=>true,
           'deletable'=>false,
-          'address' => nil
+          'address' => {
+            'id'=>contract.contractor.address.id,
+            'type'=>'address',
+            'updated_at'=>contract.contractor.address.updated_at.as_json,
+            'street'=>contract.contractor.address.street,
+            'city'=>contract.contractor.address.city,
+            'zip'=>contract.contractor.address.zip,
+            'country'=>contract.contractor.address.attributes['country'],
+            'updatable'=>true,
+            'deletable'=>false
+          }
         },
         'customer'=>{
           'id'=>contract.customer.id,
@@ -575,8 +609,8 @@ describe Admin::LocalpoolRoda do
             'deletable'=>false
           }
         },
-        'customer_bank_account'=> serialized_bank_account(contract.customer_bank_account).merge('updatable' => true),
-        'contractor_bank_account'=> serialized_bank_account(contract.contractor_bank_account).merge('updatable' => true)
+        'customer_bank_account'=> nil,
+        'contractor_bank_account'=> nil
       }
     end
 

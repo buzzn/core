@@ -48,13 +48,15 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
   let(:contract) { localpool2.localpool_power_taker_contracts.first }
   let(:register) { localpool2.registers.real.input.first }
 
-  entity!(:mpoc) do Fabricate(:metering_point_operator_contract,
-                              localpool: localpool2) end
-  entity!(:lpc) do Fabricate(:localpool_processing_contract,
-                             localpool: localpool2) end
+  entity!(:mpoc) do
+    create(:contract, :metering_point_operator, localpool: localpool2)
+  end
+  entity!(:lpc) do
+    create(:contract, :localpool_processing, localpool: localpool2)
+  end
 
-  entity(:tariff) { Fabricate(:tariff, group: localpool2)}
-  entity!(:billing_cycle) { Fabricate(:billing_cycle, localpool: localpool2) }
+  entity(:tariff) { create(:tariff, group: localpool2)}
+  entity!(:billing_cycle) { create(:billing_cycle, localpool: localpool2) }
 
   xit 'create' do
     expect do
@@ -149,8 +151,8 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
       # FIXME the permissions need to be handed over to the collection
       #       and ask the createable? on the collection itself
 
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).create_tariff(Fabricate.build(:tariff).attributes) }.not_to raise_error
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).create_tariff(Fabricate.build(:tariff).attributes) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).create_tariff(build(:tariff).attributes) }.not_to raise_error
+      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).create_tariff(build(:tariff).attributes) }.not_to raise_error
 
       expect{ Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).create_tariff }.to raise_error Buzzn::PermissionDenied
       expect{ Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).create_tariff }.to raise_error Buzzn::PermissionDenied

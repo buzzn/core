@@ -7,19 +7,18 @@ describe Admin::LocalpoolRoda do
 
   context 'organizations' do
 
-    entity(:group) { create(:localpool) }
+    entity!(:localpool) { create(:localpool, owner: organization) }
     entity!(:address) { create(:address) }
+    entity!(:person) { create(:person) }
     entity!(:organization) do
-      organization = Fabricate(:metering_service_provider,
-                               contact: Fabricate(:person),
-                               legal_representation: Fabricate(:person))
+      organization = create(:organization, :metering_service_provider,
+                            contact: person,
+                            legal_representation: person)
       organization.update(address: address)
-      create(:bank_account, owner: organization)
-      create(:contract, :metering_point_operator,
-                localpool: group,
-                customer: organization,
-                contractor: organization)
       organization
+    end
+    entity!(:contract) do
+      create(:contract, :metering_point_operator, localpool: localpool)
     end
 
     context 'GET' do
@@ -92,12 +91,12 @@ describe Admin::LocalpoolRoda do
       end
 
       it '401' do
-        GET "/localpools/#{group.id}/organizations/#{organization.id}", $admin
+        GET "/localpools/#{localpool.id}/organizations/#{organization.id}", $admin
         expire_admin_session do
-          GET "/localpools/#{group.id}/organizations", $admin
+          GET "/localpools/#{localpool.id}/organizations", $admin
           expect(response).to be_session_expired_json(401)
 
-          GET "/localpools/#{group.id}/organizations/#{organization.id}", $admin
+          GET "/localpools/#{localpool.id}/organizations/#{organization.id}", $admin
           expect(response).to be_session_expired_json(401)
         end
       end
@@ -107,12 +106,12 @@ describe Admin::LocalpoolRoda do
       end
 
       it '404' do
-        GET "/localpools/#{group.id}/organizations/bla-blub", $admin
+        GET "/localpools/#{localpool.id}/organizations/bla-blub", $admin
         expect(response).to be_not_found_json(404, Organization)
       end
 
       it '200' do
-        GET "/localpools/#{group.id}/organizations/#{organization.id}", $admin, include: 'bank_accounts, contact, legal_representation'
+        GET "/localpools/#{localpool.id}/organizations/#{organization.id}", $admin, include: 'bank_accounts, contact, legal_representation'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq organization_json.to_yaml
       end
@@ -156,9 +155,9 @@ describe Admin::LocalpoolRoda do
       context 'GET' do
 
         it '401' do
-          GET "/localpools/#{group.id}/organizations/#{organization.id}/address", $admin
+          GET "/localpools/#{localpool.id}/organizations/#{organization.id}/address", $admin
           expire_admin_session do
-            GET "/localpools/#{group.id}/organizations/#{organization.id}/address", $admin
+            GET "/localpools/#{localpool.id}/organizations/#{organization.id}/address", $admin
             expect(response).to be_session_expired_json(401)
           end
         end
@@ -170,7 +169,7 @@ describe Admin::LocalpoolRoda do
         it '404' do
           organization.update(address: nil)
           begin
-            GET "/localpools/#{group.id}/organizations/#{organization.id}/address", $admin
+            GET "/localpools/#{localpool.id}/organizations/#{organization.id}/address", $admin
             expect(response).to be_not_found_json(404, OrganizationResource, :address)
           ensure
             organization.update(address: address)
@@ -178,11 +177,11 @@ describe Admin::LocalpoolRoda do
         end
 
         it '200' do
-          GET "/localpools/#{group.id}/organizations/#{organization.id}/address", $admin
+          GET "/localpools/#{localpool.id}/organizations/#{organization.id}/address", $admin
           expect(response).to have_http_status(200)
           expect(json.to_yaml).to eq address_json.to_yaml
 
-          GET "/localpools/#{group.id}/organizations/#{organization.id}", $admin, include: 'address'
+          GET "/localpools/#{localpool.id}/organizations/#{organization.id}", $admin, include: 'address'
           expect(response).to have_http_status(200)
           expect(json).to eq organization_json
 

@@ -42,6 +42,10 @@ FactoryGirl.define do
       contracting_party
     end
 
+    trait :metering_service_provider do
+      contracting_party
+    end
+
     trait :metering_point_operator do
       contracting_party
     end

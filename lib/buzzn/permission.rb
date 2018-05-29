@@ -28,6 +28,7 @@ module Buzzn
     def dup(name)
       permission = super()
       permission.instance_variable_set(:@name, name)
+      permission.instance_variable_set(:@perms, @perms.dup)
       permission
     end
 
@@ -77,7 +78,9 @@ module Buzzn
         when String
           node = root[*(ref.split('/').select { |p| !p.empty? })]
           raise "missing absolute reference #{ref} in #{self}" unless node
-          node.dup(name)
+          n = node.dup(name)
+          n.instance_eval(&block) if block
+          n
         when Symbol
           node = @perms[ref]
           raise "missing relative reference #{ref} in #{self}" unless node
