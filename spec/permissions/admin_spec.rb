@@ -1,22 +1,19 @@
 describe "#{Buzzn::Permission} - #{AdminResource}" do
 
   entity!(:localpool) do
-    localpool = Fabricate(:localpool)
-    Fabricate(:metering_point_operator_contract, localpool: localpool)
-    localpool
+    create(:contract, :metering_point_operator).localpool
   end
 
-  entity(:admin) { Fabricate(:admin) }
-  entity(:operator) { Fabricate(:buzzn_operator) }
+  entity(:operator) { create(:account, :buzzn_operator) }
   entity!(:manager) do
-    manager = Fabricate(:user)
+    manager = create(:account)
     manager.person.add_role(Role::GROUP_ADMIN, localpool)
     manager
   end
 
   let(:anonymous) { nil }
 
-  [:admin, :operator, :manager, :anonymous].each do |user|
+  [:operator, :manager, :anonymous].each do |user|
 
     context "user<#{user}>" do
 

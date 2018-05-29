@@ -70,17 +70,34 @@ module Group
                        .where('contracts.customer_person_id = persons.id or contracts.contractor_person_id = persons.id')
                        .select(1)
                        .exists
-      Person.where(localpool_users.or(contract_users))
+      localpool = Localpool.arel_table
+      localpool_owner =
+        if base.respond_to?(:to_a)
+          base.where('groups.owner_person_id=persons.id').project(1).exists
+        else
+          localpool.where(localpool[:id].eq(base).and(localpool[:owner_person_id].eq(persons[:id]))).project(1).exists
+        end
+      Person.where(localpool_owner.or(localpool_users).or(contract_users))
     end
 
     def organizations
-      self.class.organizations(contracts)
+      self.class.organizations(self)
     end
 
-    def self.organizations(base = contracts)
-      Organization.where(base.where('contracts.customer_organization_id = organizations.id or contracts.contractor_organization_id = organizations.id')
+    def self.organizations(base = where('1=1'))
+      organizations = Organization.arel_table
+      localpool = Localpool.arel_table
+      localpool_owner =
+        if base.respond_to?(:to_a)
+          base.where('groups.owner_organization_id=organizations.id').project(1).exists
+        else
+          localpool.where(localpool[:id].eq(base).and(localpool[:owner_organization_id].eq(organizations[:id]))).project(1).exists
+        end
+
+      contract_organizations = contracts(base).where('contracts.customer_organization_id = organizations.id or contracts.contractor_organization_id = organizations.id')
                   .select(1)
-                  .exists)
+                  .exists
+      Organization.where(localpool_owner.or(contract_organizations))
     end
 
     def one_way_meters

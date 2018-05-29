@@ -1,13 +1,13 @@
 describe "#{Buzzn::Permission} - #{Display::GroupResource}" do
 
-  entity(:admin) { Fabricate(:admin) }
-  entity(:mentor) { Fabricate(:user) }
-  entity(:other) { Fabricate(:user) }
+  entity(:admin) { create(:account, :buzzn_operator) }
+  entity(:mentor) { create(:account) }
+  entity(:other) { create(:account) }
   let(:anonymous) { nil }
 
   entity!(:tribe) do
-    group = Fabricate(:tribe, show_display_app: true)
-    Fabricate(:real_meter, group: group)
+    group = create(:localpool, :tribe, show_display_app: true)
+    create(:meter, :real, group: group)
     mentor.person.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group
   end

@@ -3,7 +3,7 @@ describe 'Contract::Base' do
   context 'status' do
 
     context 'when contract has no dates at all' do
-      let(:contract) { Fabricate.build(:metering_point_operator_contract, begin_date: nil) }
+      let(:contract) { create(:contract, :metering_point_operator, begin_date: nil) }
       it 'is onboarding' do
         expect(contract.status).to be_onboarding
         expect(contract.status).to eq('onboarding') # string still works
@@ -13,7 +13,7 @@ describe 'Contract::Base' do
     end
 
     context 'when contract has begin date' do
-      let(:contract) { Fabricate.build(:metering_point_operator_contract, begin_date: Date.yesterday) }
+      let(:contract) { create(:contract, :metering_point_operator, begin_date: Date.yesterday) }
       it 'is active' do
         expect(contract.status).to be_active
         expect(contract).to be_active
@@ -39,7 +39,7 @@ describe 'Contract::Base' do
   end
 
   context 'tariffs' do
-    let(:contract) { Fabricate.build(:metering_point_operator_contract) }
+    let(:contract) { create(:contract, :metering_point_operator) }
     it 'has none by default' do
       expect(contract.tariffs).to eq([])
     end

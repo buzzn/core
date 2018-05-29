@@ -1,7 +1,15 @@
 describe Contract::BaseResource do
 
   entity(:admin) { create(:account, :buzzn_operator) }
-  entity(:localpool) { create(:localpool) }
+  entity!(:buzzn) do
+    buzzn = Organization.where(slug: 'buzzn').first
+    buzzn.bank_accounts << create(:bank_account, owner: buzzn)
+  end
+  entity(:localpool) do
+    localpool = create(:localpool)
+    localpool.owner.bank_accounts << create(:bank_account, owner: localpool.owner)
+    localpool
+  end
 
   entity!(:metering_point_operator) do
     create(:contract, :metering_point_operator, localpool: localpool)

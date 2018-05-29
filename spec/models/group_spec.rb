@@ -28,11 +28,9 @@ describe Group::Base do
 
   describe Group::Localpool do
 
-    entity(:buzzn) { Organization.buzzn }
-
     entity!(:localpool_with_contracts) do
-      create(:contract, :metering_point_operator, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn)
-      create(:contract, :localpool_processing, :with_tariff, :with_payment, localpool: localpool, contractor: buzzn)
+      create(:contract, :metering_point_operator, :with_tariff, :with_payment, localpool: localpool)
+      create(:contract, :localpool_processing, :with_tariff, :with_payment, localpool: localpool)
       localpool
     end
 
@@ -42,7 +40,7 @@ describe Group::Base do
       persons = localpool.contracts.collect { |c| c.customer }.uniq
       expect(persons.size).to be > 0
       organizations = localpool.contracts.collect { |c| c.contractor }.uniq
-      expect(both_localpools.persons).to match_array persons
+      expect(both_localpools.persons).to match_array persons + [localpool_without_contracts.owner]
       expect(both_localpools.organizations).to match_array organizations
       expect(localpool.persons).to match_array persons
       expect(localpool.organizations).to match_array organizations
@@ -57,9 +55,9 @@ describe Group::Base do
     end
 
     describe 'assigning owner' do
-      let(:localpool) { Fabricate.build(:localpool, owner: nil) }
+      let(:localpool) { create(:localpool, owner: nil) }
       context 'when new owner is an organization' do
-        let(:new_owner) { Fabricate(:other_organization) }
+        let(:new_owner) { create(:organization) }
         before { expect(localpool.owner).to be_nil } # assert precondition ...
         it 'is a assigned correctly' do
           localpool.owner = new_owner
@@ -69,7 +67,7 @@ describe Group::Base do
         end
       end
       context 'when new owner is a person' do
-        let(:new_owner) { Fabricate(:person) }
+        let(:new_owner) { create(:person) }
         it 'is a assigned correctly' do
           localpool.owner = new_owner
           expect(localpool.owner).to eq(new_owner)
@@ -118,9 +116,9 @@ end
 # run it without nested transactions
 describe Group::Localpool, :skip_nested do
 
-  let(:person) { Fabricate(:person) }
-  let(:organization) { Fabricate(:other_organization) }
-  let(:localpool) { Fabricate(:localpool, owner_person: person) }
+  let(:person) { create(:person) }
+  let(:organization) { create(:organization) }
+  let(:localpool) { create(:localpool, owner_person: person) }
 
   after do
     localpool.delete

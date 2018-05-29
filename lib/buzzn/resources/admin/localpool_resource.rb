@@ -22,6 +22,7 @@ module Admin
                :bank_account,
                :power_sources,
                :display_app_url,
+               :allowed_actions,
                # TODO remove me once the UI uses the meta data section
                :next_billing_cycle_begin_date
 
@@ -71,5 +72,17 @@ module Admin
       end
     end
 
+    def allowed_actions
+      allowed = {}
+      if allowed?(permissions.metering_point_operator_contract.create)
+        allowed[:create_metering_point_operator_contract] = create_metering_point_operator_contract.success? || create_metering_point_operator_contract.errors
+      end
+      allowed
+    end
+
+    def create_metering_point_operator_contract
+      @create_mpo ||= Schemas::PreConditions::Contract::MeteringPointOperatorCreate
+      @create_mpo.call(self)
+    end
   end
 end

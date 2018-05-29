@@ -8,7 +8,6 @@ describe Admin::BankAccountRoda do
         rodauth.check_session_expiration
 
         localpool = Admin::LocalpoolResource.all(current_user).first
-        localpool.object.persons
         parent = localpool.organizations.retrieve_or_nil(id) || localpool.persons.retrieve_or_nil(id)
         shared[Admin::BankAccountRoda::PARENT] = parent
         r.run Admin::BankAccountRoda
@@ -29,16 +28,16 @@ describe Admin::BankAccountRoda do
     localpool
   end
 
-  entity!(:contract) do Fabricate(:metering_point_operator_contract,
-                                  localpool: localpool,
-                                  contractor: Fabricate(:other_organization)) end
+  entity!(:contract) do
+    create(:contract, :localpool_powertaker, localpool: localpool)
+  end
 
   entity!(:person_account) do
-    Fabricate(:bank_account, owner: contract.customer)
+    create(:bank_account, owner: contract.customer)
   end
 
   entity!(:organization_account) do
-    Fabricate(:bank_account, owner: contract.contractor)
+    create(:bank_account, owner: contract.contractor)
   end
 
   [:person_account, :organization_account].each do |name|
@@ -87,15 +86,6 @@ describe Admin::BankAccountRoda do
           }
         end
 
-        # can not construct users to see parent but not bank_account
-        if name == :organization_account
-          it '403' do
-            POST "/test/#{parent.id}", $user, holder: 'someone', iban: 'DE23100000001234567890', bank_name: 'Limitless Limited', bic: '123123123XXX'
-            expect(response).to have_http_status(403)
-            expect(json).to eq create_denied_json
-          end
-        end
-
         it '422' do
           POST "/test/#{parent.id}", $admin,
                bank_name: 'blablub' * 20,
@@ -135,14 +125,6 @@ describe Admin::BankAccountRoda do
           expire_admin_session do
             PATCH "/test/#{parent.id}/#{bank_account.id}", $admin
             expect(response).to be_session_expired_json(401)
-          end
-        end
-
-        # can not construct users to see parent but not bank_account
-        if name == :organization_account
-          it '403' do
-            PATCH "/test/#{parent.id}/#{bank_account.id}", $user
-            expect(response).to be_denied_json(403, bank_account)
           end
         end
 
@@ -192,15 +174,7 @@ describe Admin::BankAccountRoda do
       context 'GET' do
 
         let(:bank_accounts_json) do
-          parent.bank_accounts.collect {|bank_account| serialized_bank_account(bank_account) }
-        end
-
-        # can not construct users to see parent but not bank_account
-        if name == :organization_account
-          it '403' do
-            GET "/test/#{parent.id}/#{bank_account.id}", $user
-            expect(response).to be_denied_json(403, bank_account)
-          end
+          parent.bank_accounts.reload.collect {|bank_account| serialized_bank_account(bank_account) }
         end
 
         it '404' do
@@ -230,14 +204,6 @@ describe Admin::BankAccountRoda do
       end
 
       context 'DELETE' do
-
-        # can not construct users to see parent but not bank_account
-        if name == :organization_account
-          it '403' do
-            DELETE "/test/#{parent.id}/#{bank_account.id}", $user
-            expect(response).to be_denied_json(403, bank_account)
-          end
-        end
 
         it '401' do
           GET "/test/#{parent.id}/#{bank_account.id}", $admin

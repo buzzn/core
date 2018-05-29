@@ -35,6 +35,9 @@ describe Admin::LocalpoolRoda do
       'bank_account' => nil,
       'power_sources' => [],
       'display_app_url' => nil,
+      'allowed_actions' => {
+        'create_metering_point_operator_contract'=>true
+      },
       'next_billing_cycle_begin_date' => '2016-02-01',
       'distribution_system_operator' => nil,
       'transmission_system_operator' => nil,
