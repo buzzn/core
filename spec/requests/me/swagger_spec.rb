@@ -17,8 +17,8 @@ describe Me, :swagger, :skip_nested do
 
   login_path '/api/me/login'
 
-  entity!(:account) { Proc.new { @a ||= Fabricate(:user) } }
-  entity!(:account_change_login) { Proc.new { @b ||= Fabricate(:user) } }
+  entity!(:account) { Proc.new { @a ||= create(:account, :self, password: 'Example123') } }
+  entity!(:account_change_login) { Proc.new { @b ||= create(:account, :self, password: 'Example123') } }
 
   after :all do
     [account.call, account_change_login.call].each do |a|

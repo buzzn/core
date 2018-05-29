@@ -1,7 +1,7 @@
 describe Contract::TariffResource do
 
-  entity(:admin) { Fabricate(:admin) }
-  entity(:localpool) { create(:localpool) }
+  entity(:admin) { create(:account, :buzzn_operator) }
+  entity(:localpool) { create(:group, :localpool) }
   entity(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
   entity(:billing) do
     billing = create(:billing, contract: create(:contract, :localpool_powertaker, :with_tariff, localpool: localpool))

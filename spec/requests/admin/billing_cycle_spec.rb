@@ -13,7 +13,7 @@ describe Admin::BillingCycleResource do
 
     context 'GET' do
 
-      entity(:localpool) { create(:localpool) }
+      entity(:localpool) { create(:group, :localpool) }
       entity(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
       entity(:meta_json) do
         { 'next_billing_cycle_begin_date' => billing_cycle.end_date.as_json }
@@ -38,7 +38,7 @@ describe Admin::BillingCycleResource do
 
       let(:path) { "/localpools/#{localpool.id}/billing-cycles" }
 
-      entity(:localpool) { create(:localpool) }
+      entity(:localpool) { create(:group, :localpool) }
 
       let(:expected_errors) do
         [
@@ -65,7 +65,7 @@ describe Admin::BillingCycleResource do
 
   context 'PATCH' do
 
-    entity(:localpool) { create(:localpool) }
+    entity(:localpool) { create(:group, :localpool) }
     entity(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
 
     let(:wrong_json) do
@@ -137,7 +137,7 @@ describe Admin::BillingCycleResource do
 
   context 'DELETE' do
 
-    entity(:localpool) { create(:localpool) }
+    entity(:localpool) { create(:group, :localpool) }
     entity(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
 
     entity!(:other_billing_cycle) { create(:billing_cycle, localpool: localpool) }

@@ -2,7 +2,7 @@ require 'buzzn/transactions/admin/billing_cycle/create'
 
 describe Transactions::Admin::BillingCycle::Create do
 
-  entity!(:localpool) { create(:localpool) }
+  entity!(:localpool) { create(:group, :localpool) }
 
   let(:account)            { Account::Base.where(person_id: user).first }
   let(:localpool_resource) { Admin::LocalpoolResource.all(account).first }
@@ -12,14 +12,12 @@ describe Transactions::Admin::BillingCycle::Create do
 
   let(:input) { {name: 'route-66', last_date: Date.today - 5.day} }
 
-  subject(:transaction) { Transactions::Admin::BillingCycle::Create.for(localpool_resource) }
-
   describe 'authorization' do
 
     let(:user) { member }
 
     it 'fails' do
-      expect { transaction.call(params: input, resource: localpool_resource) }.to raise_error Buzzn::PermissionDenied
+      expect { subject.call(params: input, resource: localpool_resource) }.to raise_error Buzzn::PermissionDenied
     end
   end
 
@@ -29,7 +27,7 @@ describe Transactions::Admin::BillingCycle::Create do
       let(:user) { operator }
 
       it 'succeeds' do
-        result = transaction.call(params: input, resource: localpool_resource)
+        result = subject.call(params: input, resource: localpool_resource)
         expect(result).to be_success
         expect(result.value).to be_a Admin::BillingCycleResource
         expect(result.value.object).to eq(localpool.billing_cycles.first)
@@ -39,14 +37,14 @@ describe Transactions::Admin::BillingCycle::Create do
       context 'second call' do
 
         it 'fails' do
-          expect { transaction.call(params: input, resource: localpool_resource) }.to raise_error Buzzn::ValidationError
+          expect { subject.call(params: input, resource: localpool_resource) }.to raise_error Buzzn::ValidationError
         end
 
         context 'when last date is different' do
           let(:new_input) { input.merge(last_date: Date.today - 1.day) }
 
           it 'succeeds' do
-            result = transaction.call(params: new_input, resource: localpool_resource)
+            result = subject.call(params: new_input, resource: localpool_resource)
             expect(result).to be_success
             expect(result.value).to be_a Admin::BillingCycleResource
             billing_cycle_model = result.value.object
@@ -66,7 +64,7 @@ describe Transactions::Admin::BillingCycle::Create do
     after      { BillingCycle.destroy_all }
 
     it 'works', :skip do
-      result = transaction.call(params: input, resource: resource)
+      result = subject.call(params: input, resource: resource)
       expect(result).to be_success
       billing_cycle = result.value.object
       billings      = result.value.object.billings

@@ -5,19 +5,19 @@ describe 'Schemas::Invariants::Contract::Localpool' do
 
   entity(:person)       { create(:person) }
   entity(:organization) { create(:organization) }
-  entity(:tariff)       { create(:tariff, group: create(:localpool)) }
+  entity(:tariff)       { create(:tariff, group: create(:group, :localpool)) }
   entity(:localpool)    { tariff.group }
-  entity(:other_localpool) { create(:localpool) }
+  entity(:other_localpool) { create(:group, :localpool) }
 
   entity(:third_party) { create(:contract, :localpool_third_party, localpool: localpool) }
-  entity(:market_location)         { third_party.market_location }
+  entity!(:market_location)         { third_party.market_location }
   entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, market_location: market_location, tariffs: [tariff]) }
   entity(:processing)              { create(:contract, :localpool_processing,    localpool: localpool) }
   entity(:metering_point_operator) { create(:contract, :metering_point_operator, localpool: localpool) }
 
   shared_examples 'invariants of market_location group' do |contract_name|
 
-    entity(:other) { create(:localpool) }
+    entity(:other) { create(:group, :localpool) }
 
     let(:contract) { send(contract_name) }
     let(:tested_invariants) { contract.invariant.errors[:market_location] }

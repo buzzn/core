@@ -23,7 +23,7 @@ describe Admin, :swagger do
   entity!(:bank_account_4) { create(:bank_account, owner: organization) }
 
   entity!(:localpool) do
-    localpool = create(:localpool)
+    localpool = create(:group, :localpool)
     person.add_role(Role::GROUP_OWNER, localpool)
     create(:contract, :localpool_processing, localpool: localpool, customer: organization)
     create(:contract, :metering_point_operator, localpool: localpool)

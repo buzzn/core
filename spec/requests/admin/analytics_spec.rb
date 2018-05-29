@@ -35,7 +35,7 @@ describe Admin::LocalpoolRoda do
     container
   end
 
-  entity!(:localpool) { Fabricate(:localpool) }
+  entity!(:localpool) { create(:group, :localpool) }
 
   before do
     container.stub('discovergy', MockDatasource4Aggregates.new)

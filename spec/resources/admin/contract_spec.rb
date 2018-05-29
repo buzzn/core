@@ -6,7 +6,7 @@ describe Contract::BaseResource do
     buzzn.bank_accounts << create(:bank_account, owner: buzzn)
   end
   entity(:localpool) do
-    localpool = create(:localpool)
+    localpool = create(:group, :localpool)
     localpool.owner.bank_accounts << create(:bank_account, owner: localpool.owner)
     localpool
   end

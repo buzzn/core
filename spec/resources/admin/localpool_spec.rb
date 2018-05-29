@@ -1,7 +1,7 @@
 describe Admin::LocalpoolResource do
 
-  entity(:admin) { Fabricate(:admin) }
-  entity!(:localpool) { Fabricate(:localpool, bank_account: create(:bank_account)) }
+  entity(:admin) { create(:account, :buzzn_operator) }
+  entity!(:localpool) { create(:group, :localpool, bank_account: create(:bank_account)) }
 
   entity!(:pools) { Admin::LocalpoolResource.all(admin) }
 
@@ -42,11 +42,9 @@ describe Admin::LocalpoolResource do
 
     entity!(:pool) { pools.first }
 
-    entity!(:person) { Fabricate(:person) }
+    entity!(:person) { create(:person) }
 
-    entity!(:organization) do
-      Fabricate(:other_organization)
-    end
+    entity!(:organization) { create(:organization, contact: nil) }
 
     before do
       pool.object.update(owner: nil)

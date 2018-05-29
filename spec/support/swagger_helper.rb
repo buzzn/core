@@ -16,10 +16,6 @@ module SwaggerHelper
     end
   end
 
-  def admin
-    self.class.admin
-  end
-
   def swagger(&block)
     self.class.swagger(&block)
   end
@@ -100,11 +96,6 @@ module SwaggerHelper
   end
 
   module ClassMethods
-
-    def admin
-      #binding.pry
-      @admin ||= Proc.new { @a ||= Fabricate(:admin_token) }
-    end
 
     def swagger(&block)
       @swagger ||=

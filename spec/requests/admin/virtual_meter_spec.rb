@@ -8,7 +8,7 @@ describe Admin::LocalpoolRoda do
   context 'meters as virtual' do
 
     entity(:group) do
-      group = create(:localpool)
+      group = create(:group, :localpool)
       $user.person.reload.add_role(Role::GROUP_MEMBER, group)
       group
     end
@@ -22,7 +22,7 @@ describe Admin::LocalpoolRoda do
 
     entity!(:register) { meter.register }
 
-    entity!(:register2) { Fabricate(:output_meter, group: group).registers.first }
+    entity!(:register2) { create(:meter, :real, register_direction: :output, group: group).registers.first }
 
     entity!(:formula_part) { register.formula_parts.first }
 

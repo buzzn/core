@@ -34,7 +34,7 @@ describe Display::GroupRoda do
     container
   end
 
-  entity!(:localpool) { Fabricate(:localpool, show_display_app: true) }
+  entity!(:localpool) { create(:group, :localpool, show_display_app: true) }
 
   before do
     container.stub('discovergy', MockDatasource4Aggregates.new)

@@ -7,7 +7,7 @@ describe Admin::LocalpoolRoda do
 
   context 'tariffs' do
 
-    entity!(:localpool) { create(:localpool) }
+    entity!(:localpool) { create(:group, :localpool) }
     entity!(:tariff) { create(:tariff, group: localpool, contracts: [create(:contract, localpool: localpool)]) }
 
     entity!(:tariffs) do

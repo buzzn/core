@@ -7,7 +7,7 @@ describe Admin::LocalpoolRoda do
 
   context 'readings' do
 
-    entity(:localpool) { create(:localpool) }
+    entity(:localpool) { create(:group, :localpool) }
     entity(:meter)     { create(:meter, :real, group: localpool) }
     entity(:register)  { meter.input_register }
     entity!(:reading)  { create(:reading, register: register)}

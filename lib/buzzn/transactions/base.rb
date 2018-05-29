@@ -3,21 +3,12 @@ require_relative 'step_adapters'
 
 class Transactions::Base
 
-  include Dry::Transaction(container: Buzzn::Boot::MainContainer, step_adapters: Transactions::StepAdapters)
+  include Dry::Transaction(container: Buzzn::Boot::MainContainer, step_adapters: Transactions::StepAdapters::Registry)
 
   class << self
 
     def call(*args)
       new.call(*args)
-    end
-
-    def for(subject = nil, *steps)
-      args = {}
-      if subject
-        arg = [subject]
-        steps.each { |s| args[s] = arg }
-      end
-      new.with_step_args(args)
     end
 
   end

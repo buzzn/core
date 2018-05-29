@@ -1,15 +1,13 @@
 describe "#{Buzzn::Permission} - #{PersonResource}" do
 
-  entity(:admin) { Fabricate(:admin) }
+  entity(:admin) { create(:account, :buzzn_operator, :self) }
   entity!(:me) do
-    me = Fabricate(:user)
-    me.person.address = Fabricate(:address)
-    me.person.save
+    me = create(:account, :self)
+    me.person.update!(address: create(:address))
     me
   end
 
-  entity!(:bank_account) do Fabricate(:bank_account,
-                                      owner: me.person) end
+  entity!(:bank_account) { create(:bank_account, owner: me.person) }
 
   let(:anonymous) { nil }
 

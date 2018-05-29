@@ -18,5 +18,8 @@ FactoryGirl.define do
         account.person.add_role(Role::BUZZN_OPERATOR)
       end
     end
+    trait :self do
+      person { FactoryGirl.create(:person, :with_self_role) }
+    end
   end
 end

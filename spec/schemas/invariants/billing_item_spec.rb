@@ -2,7 +2,7 @@ require 'buzzn/schemas/invariants/billing'
 
 describe 'Schemas::Invariants::BillingItem' do
 
-  entity(:localpool) { create(:localpool) }
+  entity(:localpool) { create(:group, :localpool) }
   entity(:contract) { create(:contract, :localpool_powertaker, localpool: localpool) }
   entity(:billing) { create(:billing, contract: contract) }
   entity(:register) { create(:register, :consumption) }

@@ -10,7 +10,7 @@ describe Builders::Discovergy::SubstituteTickerBuilder do
     load_json('last_readings.json')
   end
 
-  entity(:group) { create(:localpool) }
+  entity(:group) { create(:group, :localpool) }
 
   entity!(:registers) do
     labels_map = load_json('labels.json')

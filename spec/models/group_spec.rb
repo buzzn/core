@@ -2,8 +2,8 @@ require 'buzzn/schemas/invariants/group/localpool'
 
 describe Group::Base do
 
-  entity!(:localpool) { create(:localpool) }
-  entity!(:tribe)     { create(:localpool) }
+  entity!(:localpool) { create(:group, :localpool) }
+  entity!(:tribe)     { create(:group, :localpool) }
 
   it 'filters group' do
     group = [tribe, localpool].sample
@@ -35,7 +35,7 @@ describe Group::Base do
     end
 
     it 'has organizations and persons' do
-      localpool_without_contracts = create(:localpool)
+      localpool_without_contracts = create(:group, :localpool)
       both_localpools = Group::Localpool.where(id: [localpool, localpool_without_contracts])
       persons = localpool.contracts.collect { |c| c.customer }.uniq
       expect(persons.size).to be > 0
@@ -55,7 +55,7 @@ describe Group::Base do
     end
 
     describe 'assigning owner' do
-      let(:localpool) { create(:localpool, owner: nil) }
+      let(:localpool) { create(:group, :localpool, owner: nil) }
       context 'when new owner is an organization' do
         let(:new_owner) { create(:organization) }
         before { expect(localpool.owner).to be_nil } # assert precondition ...
@@ -84,7 +84,7 @@ describe Group::Base do
   end
 
   context 'mentors' do
-    let(:group) { create(:localpool) }
+    let(:group) { create(:group, :localpool) }
 
     context 'Group has no energy mentor' do
       it 'returns an empty array' do
@@ -118,7 +118,7 @@ describe Group::Localpool, :skip_nested do
 
   let(:person) { create(:person) }
   let(:organization) { create(:organization) }
-  let(:localpool) { create(:localpool, owner_person: person) }
+  let(:localpool) { create(:group, :localpool, owner_person: person) }
 
   after do
     localpool.delete

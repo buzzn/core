@@ -6,7 +6,7 @@ FactoryGirl.define do
     end
 
     datasource :standard_profile
-    group { FactoryGirl.create(:localpool) }
+    group { FactoryGirl.create(:group, :localpool) }
 
     before(:create) do |meter, evaluator|
       case meter

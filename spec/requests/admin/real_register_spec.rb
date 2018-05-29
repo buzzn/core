@@ -7,7 +7,7 @@ describe Register::RealResource do
     TestAdminLocalpoolRoda
   end
 
-  entity(:group) { create(:localpool) }
+  entity(:group) { create(:group, :localpool) }
 
   entity(:meter) { create(:meter, :real, group: group) }
 

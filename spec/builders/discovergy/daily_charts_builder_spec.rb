@@ -6,7 +6,7 @@ describe Builders::Discovergy::DailyChartsBuilder do
     JSON.parse(File.read(File.join(File.dirname(__FILE__), 'daily_charts_three.json')))
   end
 
-  entity(:group) { create(:localpool) }
+  entity(:group) { create(:group, :localpool) }
 
   entity(:registers) do
     response.collect do |id, _|

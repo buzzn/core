@@ -9,7 +9,7 @@ describe Me::Roda, :skip_nested do
   login_path '/api/me/login'
 
   entity!(:user) do
-    user = Fabricate(:user)
+    user = create(:account, :self, password: 'Example123')
     def user.password; 'Example123'; end
     user
   end

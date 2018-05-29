@@ -8,7 +8,7 @@ describe Admin::LocalpoolRoda do
   context 'meters as real' do
 
     entity(:group) do
-      group = create(:localpool)
+      group = create(:group, :localpool)
       $user.person.reload.add_role(Role::GROUP_MEMBER, group)
       group
     end

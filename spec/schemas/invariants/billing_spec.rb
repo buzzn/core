@@ -2,7 +2,7 @@ require 'buzzn/schemas/invariants/billing'
 
 describe 'Schemas::Invariants::Billing' do
 
-  entity(:localpool) { create(:localpool) }
+  entity(:localpool) { create(:group, :localpool) }
   entity(:contract) { create(:contract, :localpool_powertaker, localpool: localpool) }
   entity(:billing) { create(:billing, contract: contract) }
 
@@ -25,7 +25,7 @@ describe 'Schemas::Invariants::Billing' do
       end
       context 'group mismatch' do
         before do
-          contract.update(localpool: create(:localpool))
+          contract.update(localpool: create(:group, :localpool))
           billing.contract.reload
         end
         it { is_expected.to eq(['BUG: group and deep nested group must match']) }
