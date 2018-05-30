@@ -1,4 +1,4 @@
-require_relative 'pdf_generator'
+require_relative 'generator'
 
 module Pdf
   class MeteringPointOperator < Generator
