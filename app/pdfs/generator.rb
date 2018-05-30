@@ -43,7 +43,7 @@ module Pdf
 
     include Import.reader['services.pdf_html_generator']
 
-    def initialize(root_object)
+    def initialize(root_object, **)
       @root = root_object
       @builder = Builders::StructBuilder.new(PdfStruct)
     end
@@ -65,14 +65,14 @@ module Pdf
 
     def create_pdf_document(pdf = nil)
       pdf_document = PdfDocument.where(template: template, json: data.to_json.to_s).first
-      binding.pry
       return pdf_document if pdf_document
-      pdf ||= to_pdf #generate pdf outside of transaction unless given
+      pdf ||= to_pdf #generate pdf outside of transaction
       key = @root.class.name.underscore.gsub(%r(.*/), '')
-      document = Document.new(path: "pdfs/#{key}/#{@root.id}/template/#{template.name}_#{Buzzn::Utils::Chronos.now.strftime("%Y%m%d_%H%M%S")}.pdf")
+      path = "pdfs/#{key}/#{@root.id}/template/#{template.name}_#{Buzzn::Utils::Chronos.now.strftime("%Y%m%d_%H%M%S")}.pdf"
+      document = Document.new(path: path)
       PdfDocument.transaction do
         document.store(pdf)
-        attrs = { template: source,
+        attrs = { template: template,
                   json: data.to_json,
                   document: document }
         attrs[key] = @root
