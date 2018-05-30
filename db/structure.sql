@@ -2,14 +2,15 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.6
--- Dumped by pg_dump version 9.6.6
+-- Dumped from database version 9.6.9
+-- Dumped by pg_dump version 9.6.9
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -42,13 +43,11 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
-SET search_path = public, pg_catalog;
-
 --
 -- Name: addresses_country; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE addresses_country AS ENUM (
+CREATE TYPE public.addresses_country AS ENUM (
     'AD',
     'AE',
     'AF',
@@ -305,7 +304,7 @@ CREATE TYPE addresses_country AS ENUM (
 -- Name: billing_items_contract_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE billing_items_contract_type AS ENUM (
+CREATE TYPE public.billing_items_contract_type AS ENUM (
     'power_taker',
     'third_party',
     'gap'
@@ -316,7 +315,7 @@ CREATE TYPE billing_items_contract_type AS ENUM (
 -- Name: billings_status; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE billings_status AS ENUM (
+CREATE TYPE public.billings_status AS ENUM (
     'open',
     'calculated',
     'delivered',
@@ -329,7 +328,7 @@ CREATE TYPE billings_status AS ENUM (
 -- Name: contracts_renewable_energy_law_taxation; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE contracts_renewable_energy_law_taxation AS ENUM (
+CREATE TYPE public.contracts_renewable_energy_law_taxation AS ENUM (
     'F',
     'R',
     'N'
@@ -340,7 +339,7 @@ CREATE TYPE contracts_renewable_energy_law_taxation AS ENUM (
 -- Name: formula_parts_operator; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE formula_parts_operator AS ENUM (
+CREATE TYPE public.formula_parts_operator AS ENUM (
     '+',
     '-'
 );
@@ -350,7 +349,7 @@ CREATE TYPE formula_parts_operator AS ENUM (
 -- Name: meters_datasource; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_datasource AS ENUM (
+CREATE TYPE public.meters_datasource AS ENUM (
     'standard_profile',
     'discovergy',
     'virtual'
@@ -361,7 +360,7 @@ CREATE TYPE meters_datasource AS ENUM (
 -- Name: meters_direction_number; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_direction_number AS ENUM (
+CREATE TYPE public.meters_direction_number AS ENUM (
     'ERZ',
     'ZRZ'
 );
@@ -371,7 +370,7 @@ CREATE TYPE meters_direction_number AS ENUM (
 -- Name: meters_edifact_cycle_interval; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_edifact_cycle_interval AS ENUM (
+CREATE TYPE public.meters_edifact_cycle_interval AS ENUM (
     'MONTHLY',
     'QUARTERLY',
     'HALF_YEARLY',
@@ -383,7 +382,7 @@ CREATE TYPE meters_edifact_cycle_interval AS ENUM (
 -- Name: meters_edifact_data_logging; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_edifact_data_logging AS ENUM (
+CREATE TYPE public.meters_edifact_data_logging AS ENUM (
     'Z04',
     'Z05'
 );
@@ -393,7 +392,7 @@ CREATE TYPE meters_edifact_data_logging AS ENUM (
 -- Name: meters_edifact_measurement_method; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_edifact_measurement_method AS ENUM (
+CREATE TYPE public.meters_edifact_measurement_method AS ENUM (
     'AMR',
     'MMR'
 );
@@ -403,7 +402,7 @@ CREATE TYPE meters_edifact_measurement_method AS ENUM (
 -- Name: meters_edifact_meter_size; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_edifact_meter_size AS ENUM (
+CREATE TYPE public.meters_edifact_meter_size AS ENUM (
     'Z01',
     'Z02',
     'Z03'
@@ -414,7 +413,7 @@ CREATE TYPE meters_edifact_meter_size AS ENUM (
 -- Name: meters_edifact_metering_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_edifact_metering_type AS ENUM (
+CREATE TYPE public.meters_edifact_metering_type AS ENUM (
     'AHZ',
     'WSZ',
     'LAZ',
@@ -428,7 +427,7 @@ CREATE TYPE meters_edifact_metering_type AS ENUM (
 -- Name: meters_edifact_mounting_method; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_edifact_mounting_method AS ENUM (
+CREATE TYPE public.meters_edifact_mounting_method AS ENUM (
     'BKE',
     'DPA',
     'HS'
@@ -439,7 +438,7 @@ CREATE TYPE meters_edifact_mounting_method AS ENUM (
 -- Name: meters_edifact_tariff; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_edifact_tariff AS ENUM (
+CREATE TYPE public.meters_edifact_tariff AS ENUM (
     'ETZ',
     'ZTZ',
     'NTZ'
@@ -450,7 +449,7 @@ CREATE TYPE meters_edifact_tariff AS ENUM (
 -- Name: meters_edifact_voltage_level; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_edifact_voltage_level AS ENUM (
+CREATE TYPE public.meters_edifact_voltage_level AS ENUM (
     'E06',
     'E05',
     'E04',
@@ -462,7 +461,7 @@ CREATE TYPE meters_edifact_voltage_level AS ENUM (
 -- Name: meters_manufacturer_name; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_manufacturer_name AS ENUM (
+CREATE TYPE public.meters_manufacturer_name AS ENUM (
     'easy_meter',
     'other'
 );
@@ -472,7 +471,7 @@ CREATE TYPE meters_manufacturer_name AS ENUM (
 -- Name: meters_ownership; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE meters_ownership AS ENUM (
+CREATE TYPE public.meters_ownership AS ENUM (
     'BUZZN',
     'FOREIGN_OWNERSHIP',
     'CUSTOMER',
@@ -485,7 +484,7 @@ CREATE TYPE meters_ownership AS ENUM (
 -- Name: organization_market_functions_function; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE organization_market_functions_function AS ENUM (
+CREATE TYPE public.organization_market_functions_function AS ENUM (
     'distribution_system_operator',
     'electricity_supplier',
     'metering_point_operator',
@@ -501,7 +500,7 @@ CREATE TYPE organization_market_functions_function AS ENUM (
 -- Name: payments_cycle; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE payments_cycle AS ENUM (
+CREATE TYPE public.payments_cycle AS ENUM (
     'monthly',
     'yearly',
     'once'
@@ -512,7 +511,7 @@ CREATE TYPE payments_cycle AS ENUM (
 -- Name: persons_preferred_language; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE persons_preferred_language AS ENUM (
+CREATE TYPE public.persons_preferred_language AS ENUM (
     'de',
     'en'
 );
@@ -522,7 +521,7 @@ CREATE TYPE persons_preferred_language AS ENUM (
 -- Name: persons_prefix; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE persons_prefix AS ENUM (
+CREATE TYPE public.persons_prefix AS ENUM (
     'F',
     'M'
 );
@@ -532,7 +531,7 @@ CREATE TYPE persons_prefix AS ENUM (
 -- Name: persons_title; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE persons_title AS ENUM (
+CREATE TYPE public.persons_title AS ENUM (
     'Prof.',
     'Dr.',
     'Prof. Dr.'
@@ -543,7 +542,7 @@ CREATE TYPE persons_title AS ENUM (
 -- Name: readings_quality; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE readings_quality AS ENUM (
+CREATE TYPE public.readings_quality AS ENUM (
     '20',
     '67',
     '79',
@@ -557,7 +556,7 @@ CREATE TYPE readings_quality AS ENUM (
 -- Name: readings_read_by; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE readings_read_by AS ENUM (
+CREATE TYPE public.readings_read_by AS ENUM (
     'BN',
     'SN',
     'SG',
@@ -569,7 +568,7 @@ CREATE TYPE readings_read_by AS ENUM (
 -- Name: readings_reason; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE readings_reason AS ENUM (
+CREATE TYPE public.readings_reason AS ENUM (
     'IOM',
     'COM1',
     'COM2',
@@ -586,7 +585,7 @@ CREATE TYPE readings_reason AS ENUM (
 -- Name: readings_source; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE readings_source AS ENUM (
+CREATE TYPE public.readings_source AS ENUM (
     'SM',
     'MAN'
 );
@@ -596,7 +595,7 @@ CREATE TYPE readings_source AS ENUM (
 -- Name: readings_status; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE readings_status AS ENUM (
+CREATE TYPE public.readings_status AS ENUM (
     'Z83',
     'Z84',
     'Z86'
@@ -607,7 +606,7 @@ CREATE TYPE readings_status AS ENUM (
 -- Name: readings_unit; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE readings_unit AS ENUM (
+CREATE TYPE public.readings_unit AS ENUM (
     'Wh',
     'W',
     'm³'
@@ -618,7 +617,7 @@ CREATE TYPE readings_unit AS ENUM (
 -- Name: registers_direction; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE registers_direction AS ENUM (
+CREATE TYPE public.registers_direction AS ENUM (
     'in',
     'out'
 );
@@ -628,7 +627,7 @@ CREATE TYPE registers_direction AS ENUM (
 -- Name: registers_label; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE registers_label AS ENUM (
+CREATE TYPE public.registers_label AS ENUM (
     'CONSUMPTION',
     'CONSUMPTION_COMMON',
     'DEMARCATION_PV',
@@ -651,7 +650,7 @@ CREATE TYPE registers_label AS ENUM (
 -- Name: roles_name; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE roles_name AS ENUM (
+CREATE TYPE public.roles_name AS ENUM (
     'BUZZN_OPERATOR',
     'GROUP_OWNER',
     'GROUP_ADMIN',
@@ -667,11 +666,10 @@ CREATE TYPE roles_name AS ENUM (
 -- Name: templates_name; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE templates_name AS ENUM (
+CREATE TYPE public.templates_name AS ENUM (
     '01_messvertrag',
     'invoice',
-    'minimal',
-    'pdf_generator'
+    'minimal'
 );
 
 
@@ -679,7 +677,7 @@ CREATE TYPE templates_name AS ENUM (
 -- Name: rodauth_get_previous_salt(bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION rodauth_get_previous_salt(acct_id bigint) RETURNS text
+CREATE FUNCTION public.rodauth_get_previous_salt(acct_id bigint) RETURNS text
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO public, pg_temp
     AS $$
@@ -697,7 +695,7 @@ $$;
 -- Name: rodauth_get_salt(bigint); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION rodauth_get_salt(acct_id bigint) RETURNS text
+CREATE FUNCTION public.rodauth_get_salt(acct_id bigint) RETURNS text
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO public, pg_temp
     AS $$
@@ -715,7 +713,7 @@ $$;
 -- Name: rodauth_previous_password_hash_match(bigint, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION rodauth_previous_password_hash_match(acct_id bigint, hash text) RETURNS boolean
+CREATE FUNCTION public.rodauth_previous_password_hash_match(acct_id bigint, hash text) RETURNS boolean
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO public, pg_temp
     AS $$
@@ -733,7 +731,7 @@ $$;
 -- Name: rodauth_valid_password_hash(bigint, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS boolean
+CREATE FUNCTION public.rodauth_valid_password_hash(acct_id bigint, hash text) RETURNS boolean
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO public, pg_temp
     AS $$
@@ -755,7 +753,7 @@ SET default_with_oids = false;
 -- Name: account_login_change_keys; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_login_change_keys (
+CREATE TABLE public.account_login_change_keys (
     id bigint NOT NULL,
     key text NOT NULL,
     login text NOT NULL,
@@ -767,7 +765,7 @@ CREATE TABLE account_login_change_keys (
 -- Name: account_password_change_times; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_password_change_times (
+CREATE TABLE public.account_password_change_times (
     id bigint NOT NULL,
     changed_at timestamp without time zone DEFAULT now() NOT NULL
 );
@@ -777,7 +775,7 @@ CREATE TABLE account_password_change_times (
 -- Name: account_password_hashes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_password_hashes (
+CREATE TABLE public.account_password_hashes (
     id bigint NOT NULL,
     password_hash text NOT NULL
 );
@@ -787,7 +785,7 @@ CREATE TABLE account_password_hashes (
 -- Name: account_password_reset_keys; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_password_reset_keys (
+CREATE TABLE public.account_password_reset_keys (
     id bigint NOT NULL,
     key text NOT NULL,
     deadline timestamp without time zone DEFAULT ((now())::timestamp without time zone + '1 day'::interval) NOT NULL
@@ -798,7 +796,7 @@ CREATE TABLE account_password_reset_keys (
 -- Name: account_previous_password_hashes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_previous_password_hashes (
+CREATE TABLE public.account_previous_password_hashes (
     id bigint NOT NULL,
     account_id bigint,
     password_hash text NOT NULL
@@ -809,7 +807,7 @@ CREATE TABLE account_previous_password_hashes (
 -- Name: account_previous_password_hashes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE account_previous_password_hashes_id_seq
+CREATE SEQUENCE public.account_previous_password_hashes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -821,14 +819,14 @@ CREATE SEQUENCE account_previous_password_hashes_id_seq
 -- Name: account_previous_password_hashes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE account_previous_password_hashes_id_seq OWNED BY account_previous_password_hashes.id;
+ALTER SEQUENCE public.account_previous_password_hashes_id_seq OWNED BY public.account_previous_password_hashes.id;
 
 
 --
 -- Name: account_remember_keys; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_remember_keys (
+CREATE TABLE public.account_remember_keys (
     id bigint NOT NULL,
     key text NOT NULL,
     deadline timestamp without time zone DEFAULT ((now())::timestamp without time zone + '14 days'::interval) NOT NULL
@@ -839,7 +837,7 @@ CREATE TABLE account_remember_keys (
 -- Name: account_statuses; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_statuses (
+CREATE TABLE public.account_statuses (
     id integer NOT NULL,
     name text NOT NULL
 );
@@ -849,7 +847,7 @@ CREATE TABLE account_statuses (
 -- Name: account_verification_keys; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE account_verification_keys (
+CREATE TABLE public.account_verification_keys (
     id bigint NOT NULL,
     key text NOT NULL,
     requested_at timestamp without time zone DEFAULT now() NOT NULL
@@ -860,12 +858,12 @@ CREATE TABLE account_verification_keys (
 -- Name: accounts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE accounts (
+CREATE TABLE public.accounts (
     id bigint NOT NULL,
     status_id integer DEFAULT 1 NOT NULL,
-    email citext NOT NULL,
+    email public.citext NOT NULL,
     person_id integer NOT NULL,
-    CONSTRAINT valid_email CHECK ((email ~ '^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$'::citext))
+    CONSTRAINT valid_email CHECK ((email OPERATOR(public.~) '^[^,;@ \r\n]+@[^,@; \r\n]+\.[^,@; \r\n]+$'::public.citext))
 );
 
 
@@ -873,7 +871,7 @@ CREATE TABLE accounts (
 -- Name: accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE accounts_id_seq
+CREATE SEQUENCE public.accounts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -885,14 +883,14 @@ CREATE SEQUENCE accounts_id_seq
 -- Name: accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
+ALTER SEQUENCE public.accounts_id_seq OWNED BY public.accounts.id;
 
 
 --
 -- Name: addresses; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE addresses (
+CREATE TABLE public.addresses (
     id integer NOT NULL,
     street character varying(64) NOT NULL,
     zip character varying(16) NOT NULL,
@@ -900,7 +898,7 @@ CREATE TABLE addresses (
     addition character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    country addresses_country
+    country public.addresses_country
 );
 
 
@@ -908,7 +906,7 @@ CREATE TABLE addresses (
 -- Name: addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE addresses_id_seq
+CREATE SEQUENCE public.addresses_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -920,14 +918,14 @@ CREATE SEQUENCE addresses_id_seq
 -- Name: addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE addresses_id_seq OWNED BY addresses.id;
+ALTER SEQUENCE public.addresses_id_seq OWNED BY public.addresses.id;
 
 
 --
 -- Name: bank_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE bank_accounts (
+CREATE TABLE public.bank_accounts (
     id integer NOT NULL,
     holder character varying(64) NOT NULL,
     iban character varying(32) NOT NULL,
@@ -946,7 +944,7 @@ CREATE TABLE bank_accounts (
 -- Name: bank_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE bank_accounts_id_seq
+CREATE SEQUENCE public.bank_accounts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -958,14 +956,14 @@ CREATE SEQUENCE bank_accounts_id_seq
 -- Name: bank_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE bank_accounts_id_seq OWNED BY bank_accounts.id;
+ALTER SEQUENCE public.bank_accounts_id_seq OWNED BY public.bank_accounts.id;
 
 
 --
 -- Name: banks; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE banks (
+CREATE TABLE public.banks (
     id integer NOT NULL,
     blz character varying(32) NOT NULL,
     description character varying(128) NOT NULL,
@@ -980,7 +978,7 @@ CREATE TABLE banks (
 -- Name: banks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE banks_id_seq
+CREATE SEQUENCE public.banks_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -992,14 +990,14 @@ CREATE SEQUENCE banks_id_seq
 -- Name: banks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE banks_id_seq OWNED BY banks.id;
+ALTER SEQUENCE public.banks_id_seq OWNED BY public.banks.id;
 
 
 --
 -- Name: billing_cycles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE billing_cycles (
+CREATE TABLE public.billing_cycles (
     id integer NOT NULL,
     name character varying(64) NOT NULL,
     begin_date date NOT NULL,
@@ -1014,7 +1012,7 @@ CREATE TABLE billing_cycles (
 -- Name: billing_cycles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE billing_cycles_id_seq
+CREATE SEQUENCE public.billing_cycles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1026,20 +1024,20 @@ CREATE SEQUENCE billing_cycles_id_seq
 -- Name: billing_cycles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE billing_cycles_id_seq OWNED BY billing_cycles.id;
+ALTER SEQUENCE public.billing_cycles_id_seq OWNED BY public.billing_cycles.id;
 
 
 --
 -- Name: billing_items; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE billing_items (
+CREATE TABLE public.billing_items (
     id integer NOT NULL,
     begin_date date NOT NULL,
     end_date date NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    contract_type billing_items_contract_type,
+    contract_type public.billing_items_contract_type,
     billing_id integer NOT NULL,
     begin_reading_id integer,
     end_reading_id integer,
@@ -1052,7 +1050,7 @@ CREATE TABLE billing_items (
 -- Name: billing_items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE billing_items_id_seq
+CREATE SEQUENCE public.billing_items_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1064,21 +1062,21 @@ CREATE SEQUENCE billing_items_id_seq
 -- Name: billing_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE billing_items_id_seq OWNED BY billing_items.id;
+ALTER SEQUENCE public.billing_items_id_seq OWNED BY public.billing_items.id;
 
 
 --
 -- Name: billings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE billings (
+CREATE TABLE public.billings (
     id integer NOT NULL,
     begin_date date NOT NULL,
     end_date date NOT NULL,
     invoice_number character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    status billings_status,
+    status public.billings_status,
     billing_cycle_id integer,
     contract_id integer NOT NULL
 );
@@ -1088,7 +1086,7 @@ CREATE TABLE billings (
 -- Name: billings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE billings_id_seq
+CREATE SEQUENCE public.billings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1100,14 +1098,14 @@ CREATE SEQUENCE billings_id_seq
 -- Name: billings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE billings_id_seq OWNED BY billings.id;
+ALTER SEQUENCE public.billings_id_seq OWNED BY public.billings.id;
 
 
 --
 -- Name: brokers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE brokers (
+CREATE TABLE public.brokers (
     id integer NOT NULL,
     type character varying NOT NULL,
     external_id character varying
@@ -1118,7 +1116,7 @@ CREATE TABLE brokers (
 -- Name: brokers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE brokers_id_seq
+CREATE SEQUENCE public.brokers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1130,14 +1128,14 @@ CREATE SEQUENCE brokers_id_seq
 -- Name: brokers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE brokers_id_seq OWNED BY brokers.id;
+ALTER SEQUENCE public.brokers_id_seq OWNED BY public.brokers.id;
 
 
 --
 -- Name: contract_tax_data; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE contract_tax_data (
+CREATE TABLE public.contract_tax_data (
     id integer NOT NULL,
     retailer boolean,
     provider_permission boolean,
@@ -1156,7 +1154,7 @@ CREATE TABLE contract_tax_data (
 -- Name: contract_tax_data_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE contract_tax_data_id_seq
+CREATE SEQUENCE public.contract_tax_data_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1168,14 +1166,14 @@ CREATE SEQUENCE contract_tax_data_id_seq
 -- Name: contract_tax_data_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE contract_tax_data_id_seq OWNED BY contract_tax_data.id;
+ALTER SEQUENCE public.contract_tax_data_id_seq OWNED BY public.contract_tax_data.id;
 
 
 --
 -- Name: contracts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE contracts (
+CREATE TABLE public.contracts (
     id integer NOT NULL,
     signing_date date NOT NULL,
     begin_date date,
@@ -1201,7 +1199,7 @@ CREATE TABLE contracts (
     down_payment_before_cents_per_month character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    renewable_energy_law_taxation contracts_renewable_energy_law_taxation,
+    renewable_energy_law_taxation public.contracts_renewable_energy_law_taxation,
     type character varying(64) NOT NULL,
     localpool_id integer,
     customer_bank_account_id integer,
@@ -1220,7 +1218,7 @@ CREATE TABLE contracts (
 -- Name: contracts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE contracts_id_seq
+CREATE SEQUENCE public.contracts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1232,14 +1230,14 @@ CREATE SEQUENCE contracts_id_seq
 -- Name: contracts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE contracts_id_seq OWNED BY contracts.id;
+ALTER SEQUENCE public.contracts_id_seq OWNED BY public.contracts.id;
 
 
 --
 -- Name: contracts_tariffs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE contracts_tariffs (
+CREATE TABLE public.contracts_tariffs (
     tariff_id integer NOT NULL,
     contract_id integer NOT NULL
 );
@@ -1249,7 +1247,7 @@ CREATE TABLE contracts_tariffs (
 -- Name: core_configs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE core_configs (
+CREATE TABLE public.core_configs (
     id integer NOT NULL,
     namespace character varying NOT NULL,
     key character varying NOT NULL,
@@ -1261,7 +1259,7 @@ CREATE TABLE core_configs (
 -- Name: core_configs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE core_configs_id_seq
+CREATE SEQUENCE public.core_configs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1273,14 +1271,14 @@ CREATE SEQUENCE core_configs_id_seq
 -- Name: core_configs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE core_configs_id_seq OWNED BY core_configs.id;
+ALTER SEQUENCE public.core_configs_id_seq OWNED BY public.core_configs.id;
 
 
 --
 -- Name: customer_numbers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE customer_numbers (
+CREATE TABLE public.customer_numbers (
     id integer NOT NULL
 );
 
@@ -1289,7 +1287,7 @@ CREATE TABLE customer_numbers (
 -- Name: customer_numbers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE customer_numbers_id_seq
+CREATE SEQUENCE public.customer_numbers_id_seq
     START WITH 100000
     INCREMENT BY 1
     NO MINVALUE
@@ -1301,14 +1299,14 @@ CREATE SEQUENCE customer_numbers_id_seq
 -- Name: customer_numbers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE customer_numbers_id_seq OWNED BY customer_numbers.id;
+ALTER SEQUENCE public.customer_numbers_id_seq OWNED BY public.customer_numbers.id;
 
 
 --
 -- Name: devices; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE devices (
+CREATE TABLE public.devices (
     id integer NOT NULL,
     manufacturer_name character varying,
     manufacturer_product_name character varying,
@@ -1334,7 +1332,7 @@ CREATE TABLE devices (
 -- Name: devices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE devices_id_seq
+CREATE SEQUENCE public.devices_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1346,14 +1344,14 @@ CREATE SEQUENCE devices_id_seq
 -- Name: devices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE devices_id_seq OWNED BY devices.id;
+ALTER SEQUENCE public.devices_id_seq OWNED BY public.devices.id;
 
 
 --
 -- Name: documents; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE documents (
+CREATE TABLE public.documents (
     id integer NOT NULL,
     path character varying(128) NOT NULL,
     encryption_details character varying(512) NOT NULL,
@@ -1366,7 +1364,7 @@ CREATE TABLE documents (
 -- Name: documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE documents_id_seq
+CREATE SEQUENCE public.documents_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1378,14 +1376,14 @@ CREATE SEQUENCE documents_id_seq
 -- Name: documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE documents_id_seq OWNED BY documents.id;
+ALTER SEQUENCE public.documents_id_seq OWNED BY public.documents.id;
 
 
 --
 -- Name: energy_classifications; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE energy_classifications (
+CREATE TABLE public.energy_classifications (
     id integer NOT NULL,
     tariff_name character varying,
     nuclear_ratio double precision NOT NULL,
@@ -1407,7 +1405,7 @@ CREATE TABLE energy_classifications (
 -- Name: energy_classifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE energy_classifications_id_seq
+CREATE SEQUENCE public.energy_classifications_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1419,18 +1417,18 @@ CREATE SEQUENCE energy_classifications_id_seq
 -- Name: energy_classifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE energy_classifications_id_seq OWNED BY energy_classifications.id;
+ALTER SEQUENCE public.energy_classifications_id_seq OWNED BY public.energy_classifications.id;
 
 
 --
 -- Name: formula_parts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE formula_parts (
+CREATE TABLE public.formula_parts (
     id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    operator formula_parts_operator,
+    operator public.formula_parts_operator,
     register_id integer NOT NULL,
     operand_id integer NOT NULL
 );
@@ -1440,7 +1438,7 @@ CREATE TABLE formula_parts (
 -- Name: formula_parts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE formula_parts_id_seq
+CREATE SEQUENCE public.formula_parts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1452,14 +1450,14 @@ CREATE SEQUENCE formula_parts_id_seq
 -- Name: formula_parts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE formula_parts_id_seq OWNED BY formula_parts.id;
+ALTER SEQUENCE public.formula_parts_id_seq OWNED BY public.formula_parts.id;
 
 
 --
 -- Name: groups; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE groups (
+CREATE TABLE public.groups (
     id integer NOT NULL,
     name character varying(64) NOT NULL,
     description character varying(256),
@@ -1491,7 +1489,7 @@ CREATE TABLE groups (
 -- Name: groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE groups_id_seq
+CREATE SEQUENCE public.groups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1503,14 +1501,14 @@ CREATE SEQUENCE groups_id_seq
 -- Name: groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
+ALTER SEQUENCE public.groups_id_seq OWNED BY public.groups.id;
 
 
 --
 -- Name: market_locations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE market_locations (
+CREATE TABLE public.market_locations (
     id integer NOT NULL,
     name character varying(64) NOT NULL,
     market_location_id character varying(11),
@@ -1524,7 +1522,7 @@ CREATE TABLE market_locations (
 -- Name: market_locations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE market_locations_id_seq
+CREATE SEQUENCE public.market_locations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1536,14 +1534,14 @@ CREATE SEQUENCE market_locations_id_seq
 -- Name: market_locations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE market_locations_id_seq OWNED BY market_locations.id;
+ALTER SEQUENCE public.market_locations_id_seq OWNED BY public.market_locations.id;
 
 
 --
 -- Name: meters; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE meters (
+CREATE TABLE public.meters (
     id integer NOT NULL,
     product_serialnumber character varying(128),
     product_name character varying(64),
@@ -1555,18 +1553,18 @@ CREATE TABLE meters (
     calibrated_until date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    datasource meters_datasource,
-    manufacturer_name meters_manufacturer_name,
-    ownership meters_ownership,
-    direction_number meters_direction_number,
-    edifact_metering_type meters_edifact_metering_type,
-    edifact_meter_size meters_edifact_meter_size,
-    edifact_measurement_method meters_edifact_measurement_method,
-    edifact_tariff meters_edifact_tariff,
-    edifact_mounting_method meters_edifact_mounting_method,
-    edifact_voltage_level meters_edifact_voltage_level,
-    edifact_cycle_interval meters_edifact_cycle_interval,
-    edifact_data_logging meters_edifact_data_logging,
+    datasource public.meters_datasource,
+    manufacturer_name public.meters_manufacturer_name,
+    ownership public.meters_ownership,
+    direction_number public.meters_direction_number,
+    edifact_metering_type public.meters_edifact_metering_type,
+    edifact_meter_size public.meters_edifact_meter_size,
+    edifact_measurement_method public.meters_edifact_measurement_method,
+    edifact_tariff public.meters_edifact_tariff,
+    edifact_mounting_method public.meters_edifact_mounting_method,
+    edifact_voltage_level public.meters_edifact_voltage_level,
+    edifact_cycle_interval public.meters_edifact_cycle_interval,
+    edifact_data_logging public.meters_edifact_data_logging,
     type character varying NOT NULL,
     sequence_number integer,
     group_id integer,
@@ -1579,7 +1577,7 @@ CREATE TABLE meters (
 -- Name: meters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE meters_id_seq
+CREATE SEQUENCE public.meters_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1591,20 +1589,20 @@ CREATE SEQUENCE meters_id_seq
 -- Name: meters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE meters_id_seq OWNED BY meters.id;
+ALTER SEQUENCE public.meters_id_seq OWNED BY public.meters.id;
 
 
 --
 -- Name: organization_market_functions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE organization_market_functions (
+CREATE TABLE public.organization_market_functions (
     id integer NOT NULL,
     market_partner_id character varying(64) NOT NULL,
     edifact_email character varying(64) NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    function organization_market_functions_function,
+    function public.organization_market_functions_function,
     address_id integer,
     organization_id integer,
     contact_person_id integer
@@ -1615,7 +1613,7 @@ CREATE TABLE organization_market_functions (
 -- Name: organization_market_functions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE organization_market_functions_id_seq
+CREATE SEQUENCE public.organization_market_functions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1627,14 +1625,14 @@ CREATE SEQUENCE organization_market_functions_id_seq
 -- Name: organization_market_functions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE organization_market_functions_id_seq OWNED BY organization_market_functions.id;
+ALTER SEQUENCE public.organization_market_functions_id_seq OWNED BY public.organization_market_functions.id;
 
 
 --
 -- Name: organizations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE organizations (
+CREATE TABLE public.organizations (
     id integer NOT NULL,
     name character varying(64) NOT NULL,
     description character varying(256),
@@ -1656,7 +1654,7 @@ CREATE TABLE organizations (
 -- Name: organizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE organizations_id_seq
+CREATE SEQUENCE public.organizations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1668,21 +1666,21 @@ CREATE SEQUENCE organizations_id_seq
 -- Name: organizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE organizations_id_seq OWNED BY organizations.id;
+ALTER SEQUENCE public.organizations_id_seq OWNED BY public.organizations.id;
 
 
 --
 -- Name: payments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE payments (
+CREATE TABLE public.payments (
     id integer NOT NULL,
     begin_date date NOT NULL,
     price_cents integer NOT NULL,
     end_date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    cycle payments_cycle,
+    cycle public.payments_cycle,
     contract_id integer NOT NULL
 );
 
@@ -1691,7 +1689,7 @@ CREATE TABLE payments (
 -- Name: payments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE payments_id_seq
+CREATE SEQUENCE public.payments_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1703,14 +1701,14 @@ CREATE SEQUENCE payments_id_seq
 -- Name: payments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE payments_id_seq OWNED BY payments.id;
+ALTER SEQUENCE public.payments_id_seq OWNED BY public.payments.id;
 
 
 --
 -- Name: pdf_documents; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE pdf_documents (
+CREATE TABLE public.pdf_documents (
     id integer NOT NULL,
     json character varying(16384) NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -1728,7 +1726,7 @@ CREATE TABLE pdf_documents (
 -- Name: pdf_documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE pdf_documents_id_seq
+CREATE SEQUENCE public.pdf_documents_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1740,14 +1738,14 @@ CREATE SEQUENCE pdf_documents_id_seq
 -- Name: pdf_documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE pdf_documents_id_seq OWNED BY pdf_documents.id;
+ALTER SEQUENCE public.pdf_documents_id_seq OWNED BY public.pdf_documents.id;
 
 
 --
 -- Name: persons; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE persons (
+CREATE TABLE public.persons (
     id integer NOT NULL,
     first_name character varying(64) NOT NULL,
     last_name character varying(64) NOT NULL,
@@ -1756,9 +1754,9 @@ CREATE TABLE persons (
     fax character varying(64),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    prefix persons_prefix,
-    preferred_language persons_preferred_language,
-    title persons_title,
+    prefix public.persons_prefix,
+    preferred_language public.persons_preferred_language,
+    title public.persons_title,
     image character varying(64),
     customer_number integer,
     address_id integer
@@ -1769,7 +1767,7 @@ CREATE TABLE persons (
 -- Name: persons_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE persons_id_seq
+CREATE SEQUENCE public.persons_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1781,14 +1779,14 @@ CREATE SEQUENCE persons_id_seq
 -- Name: persons_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE persons_id_seq OWNED BY persons.id;
+ALTER SEQUENCE public.persons_id_seq OWNED BY public.persons.id;
 
 
 --
 -- Name: persons_roles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE persons_roles (
+CREATE TABLE public.persons_roles (
     person_id integer NOT NULL,
     role_id integer NOT NULL
 );
@@ -1798,7 +1796,7 @@ CREATE TABLE persons_roles (
 -- Name: readings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE readings (
+CREATE TABLE public.readings (
     id integer NOT NULL,
     raw_value integer NOT NULL,
     value integer NOT NULL,
@@ -1806,12 +1804,12 @@ CREATE TABLE readings (
     date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    unit readings_unit,
-    reason readings_reason,
-    read_by readings_read_by,
-    quality readings_quality,
-    source readings_source,
-    status readings_status,
+    unit public.readings_unit,
+    reason public.readings_reason,
+    read_by public.readings_read_by,
+    quality public.readings_quality,
+    source public.readings_source,
+    status public.readings_status,
     register_id integer NOT NULL
 );
 
@@ -1820,7 +1818,7 @@ CREATE TABLE readings (
 -- Name: readings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE readings_id_seq
+CREATE SEQUENCE public.readings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1832,14 +1830,14 @@ CREATE SEQUENCE readings_id_seq
 -- Name: readings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE readings_id_seq OWNED BY readings.id;
+ALTER SEQUENCE public.readings_id_seq OWNED BY public.readings.id;
 
 
 --
 -- Name: registers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE registers (
+CREATE TABLE public.registers (
     id integer NOT NULL,
     metering_point_id character varying(64),
     observer_enabled boolean,
@@ -1850,8 +1848,8 @@ CREATE TABLE registers (
     share_publicly boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    label registers_label,
-    direction registers_direction,
+    label public.registers_label,
+    direction public.registers_direction,
     type character varying NOT NULL,
     last_observed timestamp without time zone,
     meter_id integer NOT NULL,
@@ -1863,7 +1861,7 @@ CREATE TABLE registers (
 -- Name: registers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE registers_id_seq
+CREATE SEQUENCE public.registers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1875,18 +1873,18 @@ CREATE SEQUENCE registers_id_seq
 -- Name: registers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE registers_id_seq OWNED BY registers.id;
+ALTER SEQUENCE public.registers_id_seq OWNED BY public.registers.id;
 
 
 --
 -- Name: roles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE roles (
+CREATE TABLE public.roles (
     id integer NOT NULL,
     resource_id integer,
     resource_type character varying(32),
-    name roles_name
+    name public.roles_name
 );
 
 
@@ -1894,7 +1892,7 @@ CREATE TABLE roles (
 -- Name: roles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE roles_id_seq
+CREATE SEQUENCE public.roles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1906,14 +1904,14 @@ CREATE SEQUENCE roles_id_seq
 -- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
+ALTER SEQUENCE public.roles_id_seq OWNED BY public.roles.id;
 
 
 --
 -- Name: schema_info; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE schema_info (
+CREATE TABLE public.schema_info (
     version integer DEFAULT 0 NOT NULL
 );
 
@@ -1922,7 +1920,7 @@ CREATE TABLE schema_info (
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE schema_migrations (
+CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
 );
 
@@ -1931,7 +1929,7 @@ CREATE TABLE schema_migrations (
 -- Name: tariffs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE tariffs (
+CREATE TABLE public.tariffs (
     id integer NOT NULL,
     name character varying(64) NOT NULL,
     begin_date date NOT NULL,
@@ -1948,7 +1946,7 @@ CREATE TABLE tariffs (
 -- Name: tariffs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE tariffs_id_seq
+CREATE SEQUENCE public.tariffs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1960,20 +1958,20 @@ CREATE SEQUENCE tariffs_id_seq
 -- Name: tariffs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE tariffs_id_seq OWNED BY tariffs.id;
+ALTER SEQUENCE public.tariffs_id_seq OWNED BY public.tariffs.id;
 
 
 --
 -- Name: templates; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE templates (
+CREATE TABLE public.templates (
     id integer NOT NULL,
     version integer NOT NULL,
     source character varying(65536) NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    name templates_name
+    name public.templates_name
 );
 
 
@@ -1981,7 +1979,7 @@ CREATE TABLE templates (
 -- Name: templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE templates_id_seq
+CREATE SEQUENCE public.templates_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1993,14 +1991,14 @@ CREATE SEQUENCE templates_id_seq
 -- Name: templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE templates_id_seq OWNED BY templates.id;
+ALTER SEQUENCE public.templates_id_seq OWNED BY public.templates.id;
 
 
 --
 -- Name: zip_to_prices; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE zip_to_prices (
+CREATE TABLE public.zip_to_prices (
     id integer NOT NULL,
     zip integer NOT NULL,
     price_euro_year_dt double precision NOT NULL,
@@ -2024,7 +2022,7 @@ CREATE TABLE zip_to_prices (
 -- Name: zip_to_prices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE zip_to_prices_id_seq
+CREATE SEQUENCE public.zip_to_prices_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2036,231 +2034,231 @@ CREATE SEQUENCE zip_to_prices_id_seq
 -- Name: zip_to_prices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE zip_to_prices_id_seq OWNED BY zip_to_prices.id;
+ALTER SEQUENCE public.zip_to_prices_id_seq OWNED BY public.zip_to_prices.id;
 
 
 --
 -- Name: account_previous_password_hashes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_previous_password_hashes ALTER COLUMN id SET DEFAULT nextval('account_previous_password_hashes_id_seq'::regclass);
+ALTER TABLE ONLY public.account_previous_password_hashes ALTER COLUMN id SET DEFAULT nextval('public.account_previous_password_hashes_id_seq'::regclass);
 
 
 --
 -- Name: accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq'::regclass);
+ALTER TABLE ONLY public.accounts ALTER COLUMN id SET DEFAULT nextval('public.accounts_id_seq'::regclass);
 
 
 --
 -- Name: addresses id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY addresses ALTER COLUMN id SET DEFAULT nextval('addresses_id_seq'::regclass);
+ALTER TABLE ONLY public.addresses ALTER COLUMN id SET DEFAULT nextval('public.addresses_id_seq'::regclass);
 
 
 --
 -- Name: bank_accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY bank_accounts ALTER COLUMN id SET DEFAULT nextval('bank_accounts_id_seq'::regclass);
+ALTER TABLE ONLY public.bank_accounts ALTER COLUMN id SET DEFAULT nextval('public.bank_accounts_id_seq'::regclass);
 
 
 --
 -- Name: banks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY banks ALTER COLUMN id SET DEFAULT nextval('banks_id_seq'::regclass);
+ALTER TABLE ONLY public.banks ALTER COLUMN id SET DEFAULT nextval('public.banks_id_seq'::regclass);
 
 
 --
 -- Name: billing_cycles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billing_cycles ALTER COLUMN id SET DEFAULT nextval('billing_cycles_id_seq'::regclass);
+ALTER TABLE ONLY public.billing_cycles ALTER COLUMN id SET DEFAULT nextval('public.billing_cycles_id_seq'::regclass);
 
 
 --
 -- Name: billing_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billing_items ALTER COLUMN id SET DEFAULT nextval('billing_items_id_seq'::regclass);
+ALTER TABLE ONLY public.billing_items ALTER COLUMN id SET DEFAULT nextval('public.billing_items_id_seq'::regclass);
 
 
 --
 -- Name: billings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billings ALTER COLUMN id SET DEFAULT nextval('billings_id_seq'::regclass);
+ALTER TABLE ONLY public.billings ALTER COLUMN id SET DEFAULT nextval('public.billings_id_seq'::regclass);
 
 
 --
 -- Name: brokers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY brokers ALTER COLUMN id SET DEFAULT nextval('brokers_id_seq'::regclass);
+ALTER TABLE ONLY public.brokers ALTER COLUMN id SET DEFAULT nextval('public.brokers_id_seq'::regclass);
 
 
 --
 -- Name: contract_tax_data id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contract_tax_data ALTER COLUMN id SET DEFAULT nextval('contract_tax_data_id_seq'::regclass);
+ALTER TABLE ONLY public.contract_tax_data ALTER COLUMN id SET DEFAULT nextval('public.contract_tax_data_id_seq'::regclass);
 
 
 --
 -- Name: contracts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts ALTER COLUMN id SET DEFAULT nextval('contracts_id_seq'::regclass);
+ALTER TABLE ONLY public.contracts ALTER COLUMN id SET DEFAULT nextval('public.contracts_id_seq'::regclass);
 
 
 --
 -- Name: core_configs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY core_configs ALTER COLUMN id SET DEFAULT nextval('core_configs_id_seq'::regclass);
+ALTER TABLE ONLY public.core_configs ALTER COLUMN id SET DEFAULT nextval('public.core_configs_id_seq'::regclass);
 
 
 --
 -- Name: customer_numbers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY customer_numbers ALTER COLUMN id SET DEFAULT nextval('customer_numbers_id_seq'::regclass);
+ALTER TABLE ONLY public.customer_numbers ALTER COLUMN id SET DEFAULT nextval('public.customer_numbers_id_seq'::regclass);
 
 
 --
 -- Name: devices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY devices ALTER COLUMN id SET DEFAULT nextval('devices_id_seq'::regclass);
+ALTER TABLE ONLY public.devices ALTER COLUMN id SET DEFAULT nextval('public.devices_id_seq'::regclass);
 
 
 --
 -- Name: documents id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY documents ALTER COLUMN id SET DEFAULT nextval('documents_id_seq'::regclass);
+ALTER TABLE ONLY public.documents ALTER COLUMN id SET DEFAULT nextval('public.documents_id_seq'::regclass);
 
 
 --
 -- Name: energy_classifications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY energy_classifications ALTER COLUMN id SET DEFAULT nextval('energy_classifications_id_seq'::regclass);
+ALTER TABLE ONLY public.energy_classifications ALTER COLUMN id SET DEFAULT nextval('public.energy_classifications_id_seq'::regclass);
 
 
 --
 -- Name: formula_parts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY formula_parts ALTER COLUMN id SET DEFAULT nextval('formula_parts_id_seq'::regclass);
+ALTER TABLE ONLY public.formula_parts ALTER COLUMN id SET DEFAULT nextval('public.formula_parts_id_seq'::regclass);
 
 
 --
 -- Name: groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
+ALTER TABLE ONLY public.groups ALTER COLUMN id SET DEFAULT nextval('public.groups_id_seq'::regclass);
 
 
 --
 -- Name: market_locations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY market_locations ALTER COLUMN id SET DEFAULT nextval('market_locations_id_seq'::regclass);
+ALTER TABLE ONLY public.market_locations ALTER COLUMN id SET DEFAULT nextval('public.market_locations_id_seq'::regclass);
 
 
 --
 -- Name: meters id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY meters ALTER COLUMN id SET DEFAULT nextval('meters_id_seq'::regclass);
+ALTER TABLE ONLY public.meters ALTER COLUMN id SET DEFAULT nextval('public.meters_id_seq'::regclass);
 
 
 --
 -- Name: organization_market_functions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organization_market_functions ALTER COLUMN id SET DEFAULT nextval('organization_market_functions_id_seq'::regclass);
+ALTER TABLE ONLY public.organization_market_functions ALTER COLUMN id SET DEFAULT nextval('public.organization_market_functions_id_seq'::regclass);
 
 
 --
 -- Name: organizations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organizations ALTER COLUMN id SET DEFAULT nextval('organizations_id_seq'::regclass);
+ALTER TABLE ONLY public.organizations ALTER COLUMN id SET DEFAULT nextval('public.organizations_id_seq'::regclass);
 
 
 --
 -- Name: payments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY payments ALTER COLUMN id SET DEFAULT nextval('payments_id_seq'::regclass);
+ALTER TABLE ONLY public.payments ALTER COLUMN id SET DEFAULT nextval('public.payments_id_seq'::regclass);
 
 
 --
 -- Name: pdf_documents id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pdf_documents ALTER COLUMN id SET DEFAULT nextval('pdf_documents_id_seq'::regclass);
+ALTER TABLE ONLY public.pdf_documents ALTER COLUMN id SET DEFAULT nextval('public.pdf_documents_id_seq'::regclass);
 
 
 --
 -- Name: persons id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY persons ALTER COLUMN id SET DEFAULT nextval('persons_id_seq'::regclass);
+ALTER TABLE ONLY public.persons ALTER COLUMN id SET DEFAULT nextval('public.persons_id_seq'::regclass);
 
 
 --
 -- Name: readings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY readings ALTER COLUMN id SET DEFAULT nextval('readings_id_seq'::regclass);
+ALTER TABLE ONLY public.readings ALTER COLUMN id SET DEFAULT nextval('public.readings_id_seq'::regclass);
 
 
 --
 -- Name: registers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY registers ALTER COLUMN id SET DEFAULT nextval('registers_id_seq'::regclass);
+ALTER TABLE ONLY public.registers ALTER COLUMN id SET DEFAULT nextval('public.registers_id_seq'::regclass);
 
 
 --
 -- Name: roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY roles ALTER COLUMN id SET DEFAULT nextval('roles_id_seq'::regclass);
+ALTER TABLE ONLY public.roles ALTER COLUMN id SET DEFAULT nextval('public.roles_id_seq'::regclass);
 
 
 --
 -- Name: tariffs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tariffs ALTER COLUMN id SET DEFAULT nextval('tariffs_id_seq'::regclass);
+ALTER TABLE ONLY public.tariffs ALTER COLUMN id SET DEFAULT nextval('public.tariffs_id_seq'::regclass);
 
 
 --
 -- Name: templates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY templates ALTER COLUMN id SET DEFAULT nextval('templates_id_seq'::regclass);
+ALTER TABLE ONLY public.templates ALTER COLUMN id SET DEFAULT nextval('public.templates_id_seq'::regclass);
 
 
 --
 -- Name: zip_to_prices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY zip_to_prices ALTER COLUMN id SET DEFAULT nextval('zip_to_prices_id_seq'::regclass);
+ALTER TABLE ONLY public.zip_to_prices ALTER COLUMN id SET DEFAULT nextval('public.zip_to_prices_id_seq'::regclass);
 
 
 --
 -- Name: account_login_change_keys account_login_change_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_login_change_keys
+ALTER TABLE ONLY public.account_login_change_keys
     ADD CONSTRAINT account_login_change_keys_pkey PRIMARY KEY (id);
 
 
@@ -2268,7 +2266,7 @@ ALTER TABLE ONLY account_login_change_keys
 -- Name: account_password_change_times account_password_change_times_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_password_change_times
+ALTER TABLE ONLY public.account_password_change_times
     ADD CONSTRAINT account_password_change_times_pkey PRIMARY KEY (id);
 
 
@@ -2276,7 +2274,7 @@ ALTER TABLE ONLY account_password_change_times
 -- Name: account_password_hashes account_password_hashes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_password_hashes
+ALTER TABLE ONLY public.account_password_hashes
     ADD CONSTRAINT account_password_hashes_pkey PRIMARY KEY (id);
 
 
@@ -2284,7 +2282,7 @@ ALTER TABLE ONLY account_password_hashes
 -- Name: account_password_reset_keys account_password_reset_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_password_reset_keys
+ALTER TABLE ONLY public.account_password_reset_keys
     ADD CONSTRAINT account_password_reset_keys_pkey PRIMARY KEY (id);
 
 
@@ -2292,7 +2290,7 @@ ALTER TABLE ONLY account_password_reset_keys
 -- Name: account_previous_password_hashes account_previous_password_hashes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_previous_password_hashes
+ALTER TABLE ONLY public.account_previous_password_hashes
     ADD CONSTRAINT account_previous_password_hashes_pkey PRIMARY KEY (id);
 
 
@@ -2300,7 +2298,7 @@ ALTER TABLE ONLY account_previous_password_hashes
 -- Name: account_remember_keys account_remember_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_remember_keys
+ALTER TABLE ONLY public.account_remember_keys
     ADD CONSTRAINT account_remember_keys_pkey PRIMARY KEY (id);
 
 
@@ -2308,7 +2306,7 @@ ALTER TABLE ONLY account_remember_keys
 -- Name: account_statuses account_statuses_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_statuses
+ALTER TABLE ONLY public.account_statuses
     ADD CONSTRAINT account_statuses_name_key UNIQUE (name);
 
 
@@ -2316,7 +2314,7 @@ ALTER TABLE ONLY account_statuses
 -- Name: account_statuses account_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_statuses
+ALTER TABLE ONLY public.account_statuses
     ADD CONSTRAINT account_statuses_pkey PRIMARY KEY (id);
 
 
@@ -2324,7 +2322,7 @@ ALTER TABLE ONLY account_statuses
 -- Name: account_verification_keys account_verification_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_verification_keys
+ALTER TABLE ONLY public.account_verification_keys
     ADD CONSTRAINT account_verification_keys_pkey PRIMARY KEY (id);
 
 
@@ -2332,7 +2330,7 @@ ALTER TABLE ONLY account_verification_keys
 -- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts
+ALTER TABLE ONLY public.accounts
     ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
 
 
@@ -2340,7 +2338,7 @@ ALTER TABLE ONLY accounts
 -- Name: addresses addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY addresses
+ALTER TABLE ONLY public.addresses
     ADD CONSTRAINT addresses_pkey PRIMARY KEY (id);
 
 
@@ -2348,7 +2346,7 @@ ALTER TABLE ONLY addresses
 -- Name: bank_accounts bank_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY bank_accounts
+ALTER TABLE ONLY public.bank_accounts
     ADD CONSTRAINT bank_accounts_pkey PRIMARY KEY (id);
 
 
@@ -2356,7 +2354,7 @@ ALTER TABLE ONLY bank_accounts
 -- Name: banks banks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY banks
+ALTER TABLE ONLY public.banks
     ADD CONSTRAINT banks_pkey PRIMARY KEY (id);
 
 
@@ -2364,7 +2362,7 @@ ALTER TABLE ONLY banks
 -- Name: billing_cycles billing_cycles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billing_cycles
+ALTER TABLE ONLY public.billing_cycles
     ADD CONSTRAINT billing_cycles_pkey PRIMARY KEY (id);
 
 
@@ -2372,7 +2370,7 @@ ALTER TABLE ONLY billing_cycles
 -- Name: billing_items billing_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billing_items
+ALTER TABLE ONLY public.billing_items
     ADD CONSTRAINT billing_items_pkey PRIMARY KEY (id);
 
 
@@ -2380,7 +2378,7 @@ ALTER TABLE ONLY billing_items
 -- Name: billings billings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billings
+ALTER TABLE ONLY public.billings
     ADD CONSTRAINT billings_pkey PRIMARY KEY (id);
 
 
@@ -2388,7 +2386,7 @@ ALTER TABLE ONLY billings
 -- Name: brokers brokers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY brokers
+ALTER TABLE ONLY public.brokers
     ADD CONSTRAINT brokers_pkey PRIMARY KEY (id);
 
 
@@ -2396,7 +2394,7 @@ ALTER TABLE ONLY brokers
 -- Name: contract_tax_data contract_tax_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contract_tax_data
+ALTER TABLE ONLY public.contract_tax_data
     ADD CONSTRAINT contract_tax_data_pkey PRIMARY KEY (id);
 
 
@@ -2404,7 +2402,7 @@ ALTER TABLE ONLY contract_tax_data
 -- Name: contracts contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts
+ALTER TABLE ONLY public.contracts
     ADD CONSTRAINT contracts_pkey PRIMARY KEY (id);
 
 
@@ -2412,7 +2410,7 @@ ALTER TABLE ONLY contracts
 -- Name: core_configs core_configs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY core_configs
+ALTER TABLE ONLY public.core_configs
     ADD CONSTRAINT core_configs_pkey PRIMARY KEY (id);
 
 
@@ -2420,7 +2418,7 @@ ALTER TABLE ONLY core_configs
 -- Name: customer_numbers customer_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY customer_numbers
+ALTER TABLE ONLY public.customer_numbers
     ADD CONSTRAINT customer_numbers_pkey PRIMARY KEY (id);
 
 
@@ -2428,7 +2426,7 @@ ALTER TABLE ONLY customer_numbers
 -- Name: devices devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY devices
+ALTER TABLE ONLY public.devices
     ADD CONSTRAINT devices_pkey PRIMARY KEY (id);
 
 
@@ -2436,7 +2434,7 @@ ALTER TABLE ONLY devices
 -- Name: documents documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY documents
+ALTER TABLE ONLY public.documents
     ADD CONSTRAINT documents_pkey PRIMARY KEY (id);
 
 
@@ -2444,7 +2442,7 @@ ALTER TABLE ONLY documents
 -- Name: energy_classifications energy_classifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY energy_classifications
+ALTER TABLE ONLY public.energy_classifications
     ADD CONSTRAINT energy_classifications_pkey PRIMARY KEY (id);
 
 
@@ -2452,7 +2450,7 @@ ALTER TABLE ONLY energy_classifications
 -- Name: formula_parts formula_parts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY formula_parts
+ALTER TABLE ONLY public.formula_parts
     ADD CONSTRAINT formula_parts_pkey PRIMARY KEY (id);
 
 
@@ -2460,7 +2458,7 @@ ALTER TABLE ONLY formula_parts
 -- Name: groups groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
+ALTER TABLE ONLY public.groups
     ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
 
 
@@ -2468,7 +2466,7 @@ ALTER TABLE ONLY groups
 -- Name: market_locations market_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY market_locations
+ALTER TABLE ONLY public.market_locations
     ADD CONSTRAINT market_locations_pkey PRIMARY KEY (id);
 
 
@@ -2476,7 +2474,7 @@ ALTER TABLE ONLY market_locations
 -- Name: meters meters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY meters
+ALTER TABLE ONLY public.meters
     ADD CONSTRAINT meters_pkey PRIMARY KEY (id);
 
 
@@ -2484,7 +2482,7 @@ ALTER TABLE ONLY meters
 -- Name: organization_market_functions organization_market_functions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organization_market_functions
+ALTER TABLE ONLY public.organization_market_functions
     ADD CONSTRAINT organization_market_functions_pkey PRIMARY KEY (id);
 
 
@@ -2492,7 +2490,7 @@ ALTER TABLE ONLY organization_market_functions
 -- Name: organizations organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organizations
+ALTER TABLE ONLY public.organizations
     ADD CONSTRAINT organizations_pkey PRIMARY KEY (id);
 
 
@@ -2500,7 +2498,7 @@ ALTER TABLE ONLY organizations
 -- Name: payments payments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY payments
+ALTER TABLE ONLY public.payments
     ADD CONSTRAINT payments_pkey PRIMARY KEY (id);
 
 
@@ -2508,7 +2506,7 @@ ALTER TABLE ONLY payments
 -- Name: pdf_documents pdf_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pdf_documents
+ALTER TABLE ONLY public.pdf_documents
     ADD CONSTRAINT pdf_documents_pkey PRIMARY KEY (id);
 
 
@@ -2516,7 +2514,7 @@ ALTER TABLE ONLY pdf_documents
 -- Name: persons persons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY persons
+ALTER TABLE ONLY public.persons
     ADD CONSTRAINT persons_pkey PRIMARY KEY (id);
 
 
@@ -2524,7 +2522,7 @@ ALTER TABLE ONLY persons
 -- Name: readings readings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY readings
+ALTER TABLE ONLY public.readings
     ADD CONSTRAINT readings_pkey PRIMARY KEY (id);
 
 
@@ -2532,7 +2530,7 @@ ALTER TABLE ONLY readings
 -- Name: registers registers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY registers
+ALTER TABLE ONLY public.registers
     ADD CONSTRAINT registers_pkey PRIMARY KEY (id);
 
 
@@ -2540,7 +2538,7 @@ ALTER TABLE ONLY registers
 -- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY roles
+ALTER TABLE ONLY public.roles
     ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
 
 
@@ -2548,7 +2546,7 @@ ALTER TABLE ONLY roles
 -- Name: tariffs tariffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tariffs
+ALTER TABLE ONLY public.tariffs
     ADD CONSTRAINT tariffs_pkey PRIMARY KEY (id);
 
 
@@ -2556,7 +2554,7 @@ ALTER TABLE ONLY tariffs
 -- Name: templates templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY templates
+ALTER TABLE ONLY public.templates
     ADD CONSTRAINT templates_pkey PRIMARY KEY (id);
 
 
@@ -2564,7 +2562,7 @@ ALTER TABLE ONLY templates
 -- Name: zip_to_prices zip_to_prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY zip_to_prices
+ALTER TABLE ONLY public.zip_to_prices
     ADD CONSTRAINT zip_to_prices_pkey PRIMARY KEY (id);
 
 
@@ -2572,983 +2570,983 @@ ALTER TABLE ONLY zip_to_prices
 -- Name: accounts_email_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX accounts_email_index ON accounts USING btree (email) WHERE (status_id = ANY (ARRAY[1, 2]));
+CREATE UNIQUE INDEX accounts_email_index ON public.accounts USING btree (email) WHERE (status_id = ANY (ARRAY[1, 2]));
 
 
 --
 -- Name: index_bank_accounts_on_owner_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_bank_accounts_on_owner_organization_id ON bank_accounts USING btree (owner_organization_id);
+CREATE INDEX index_bank_accounts_on_owner_organization_id ON public.bank_accounts USING btree (owner_organization_id);
 
 
 --
 -- Name: index_bank_accounts_on_owner_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_bank_accounts_on_owner_person_id ON bank_accounts USING btree (owner_person_id);
+CREATE INDEX index_bank_accounts_on_owner_person_id ON public.bank_accounts USING btree (owner_person_id);
 
 
 --
 -- Name: index_banks_on_bic; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_banks_on_bic ON banks USING btree (bic);
+CREATE INDEX index_banks_on_bic ON public.banks USING btree (bic);
 
 
 --
 -- Name: index_banks_on_blz; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_banks_on_blz ON banks USING btree (blz);
+CREATE UNIQUE INDEX index_banks_on_blz ON public.banks USING btree (blz);
 
 
 --
 -- Name: index_billing_cycles_on_localpool_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_cycles_on_localpool_id ON billing_cycles USING btree (localpool_id);
+CREATE INDEX index_billing_cycles_on_localpool_id ON public.billing_cycles USING btree (localpool_id);
 
 
 --
 -- Name: index_billing_items_on_begin_reading_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_items_on_begin_reading_id ON billing_items USING btree (begin_reading_id);
+CREATE INDEX index_billing_items_on_begin_reading_id ON public.billing_items USING btree (begin_reading_id);
 
 
 --
 -- Name: index_billing_items_on_billing_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_items_on_billing_id ON billing_items USING btree (billing_id);
+CREATE INDEX index_billing_items_on_billing_id ON public.billing_items USING btree (billing_id);
 
 
 --
 -- Name: index_billing_items_on_end_reading_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_items_on_end_reading_id ON billing_items USING btree (end_reading_id);
+CREATE INDEX index_billing_items_on_end_reading_id ON public.billing_items USING btree (end_reading_id);
 
 
 --
 -- Name: index_billing_items_on_register_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_items_on_register_id ON billing_items USING btree (register_id);
+CREATE INDEX index_billing_items_on_register_id ON public.billing_items USING btree (register_id);
 
 
 --
 -- Name: index_billing_items_on_tariff_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billing_items_on_tariff_id ON billing_items USING btree (tariff_id);
+CREATE INDEX index_billing_items_on_tariff_id ON public.billing_items USING btree (tariff_id);
 
 
 --
 -- Name: index_billings_on_billing_cycle_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billings_on_billing_cycle_id ON billings USING btree (billing_cycle_id);
+CREATE INDEX index_billings_on_billing_cycle_id ON public.billings USING btree (billing_cycle_id);
 
 
 --
 -- Name: index_billings_on_billing_cycle_id_and_status; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billings_on_billing_cycle_id_and_status ON billings USING btree (billing_cycle_id, status);
+CREATE INDEX index_billings_on_billing_cycle_id_and_status ON public.billings USING btree (billing_cycle_id, status);
 
 
 --
 -- Name: index_billings_on_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_billings_on_contract_id ON billings USING btree (contract_id);
+CREATE INDEX index_billings_on_contract_id ON public.billings USING btree (contract_id);
 
 
 --
 -- Name: index_billings_on_invoice_number; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_billings_on_invoice_number ON billings USING btree (invoice_number);
+CREATE UNIQUE INDEX index_billings_on_invoice_number ON public.billings USING btree (invoice_number);
 
 
 --
 -- Name: index_contract_tax_data_on_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contract_tax_data_on_contract_id ON contract_tax_data USING btree (contract_id);
+CREATE INDEX index_contract_tax_data_on_contract_id ON public.contract_tax_data USING btree (contract_id);
 
 
 --
 -- Name: index_contracts_on_contractor_bank_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_contractor_bank_account_id ON contracts USING btree (contractor_bank_account_id);
+CREATE INDEX index_contracts_on_contractor_bank_account_id ON public.contracts USING btree (contractor_bank_account_id);
 
 
 --
 -- Name: index_contracts_on_contractor_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_contractor_organization_id ON contracts USING btree (contractor_organization_id);
+CREATE INDEX index_contracts_on_contractor_organization_id ON public.contracts USING btree (contractor_organization_id);
 
 
 --
 -- Name: index_contracts_on_contractor_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_contractor_person_id ON contracts USING btree (contractor_person_id);
+CREATE INDEX index_contracts_on_contractor_person_id ON public.contracts USING btree (contractor_person_id);
 
 
 --
 -- Name: index_contracts_on_customer_bank_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_customer_bank_account_id ON contracts USING btree (customer_bank_account_id);
+CREATE INDEX index_contracts_on_customer_bank_account_id ON public.contracts USING btree (customer_bank_account_id);
 
 
 --
 -- Name: index_contracts_on_customer_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_customer_organization_id ON contracts USING btree (customer_organization_id);
+CREATE INDEX index_contracts_on_customer_organization_id ON public.contracts USING btree (customer_organization_id);
 
 
 --
 -- Name: index_contracts_on_customer_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_customer_person_id ON contracts USING btree (customer_person_id);
+CREATE INDEX index_contracts_on_customer_person_id ON public.contracts USING btree (customer_person_id);
 
 
 --
 -- Name: index_contracts_on_localpool_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_localpool_id ON contracts USING btree (localpool_id);
+CREATE INDEX index_contracts_on_localpool_id ON public.contracts USING btree (localpool_id);
 
 
 --
 -- Name: index_contracts_on_market_location_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contracts_on_market_location_id ON contracts USING btree (market_location_id);
+CREATE INDEX index_contracts_on_market_location_id ON public.contracts USING btree (market_location_id);
 
 
 --
 -- Name: index_contracts_tariffs_on_contract_id_and_tariff_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_contracts_tariffs_on_contract_id_and_tariff_id ON contracts_tariffs USING btree (contract_id, tariff_id);
+CREATE UNIQUE INDEX index_contracts_tariffs_on_contract_id_and_tariff_id ON public.contracts_tariffs USING btree (contract_id, tariff_id);
 
 
 --
 -- Name: index_contracts_tariffs_on_tariff_id_and_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_contracts_tariffs_on_tariff_id_and_contract_id ON contracts_tariffs USING btree (tariff_id, contract_id);
+CREATE UNIQUE INDEX index_contracts_tariffs_on_tariff_id_and_contract_id ON public.contracts_tariffs USING btree (tariff_id, contract_id);
 
 
 --
 -- Name: index_devices_on_metering_point_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_devices_on_metering_point_id ON devices USING btree (metering_point_id);
+CREATE INDEX index_devices_on_metering_point_id ON public.devices USING btree (metering_point_id);
 
 
 --
 -- Name: index_documents_on_path; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_documents_on_path ON documents USING btree (path);
+CREATE UNIQUE INDEX index_documents_on_path ON public.documents USING btree (path);
 
 
 --
 -- Name: index_energy_classifications_on_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_energy_classifications_on_organization_id ON energy_classifications USING btree (organization_id);
+CREATE INDEX index_energy_classifications_on_organization_id ON public.energy_classifications USING btree (organization_id);
 
 
 --
 -- Name: index_formula_parts_on_operand_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_formula_parts_on_operand_id ON formula_parts USING btree (operand_id);
+CREATE INDEX index_formula_parts_on_operand_id ON public.formula_parts USING btree (operand_id);
 
 
 --
 -- Name: index_formula_parts_on_register_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_formula_parts_on_register_id ON formula_parts USING btree (register_id);
+CREATE INDEX index_formula_parts_on_register_id ON public.formula_parts USING btree (register_id);
 
 
 --
 -- Name: index_groups_on_address_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_address_id ON groups USING btree (address_id);
+CREATE INDEX index_groups_on_address_id ON public.groups USING btree (address_id);
 
 
 --
 -- Name: index_groups_on_bank_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_bank_account_id ON groups USING btree (bank_account_id);
+CREATE INDEX index_groups_on_bank_account_id ON public.groups USING btree (bank_account_id);
 
 
 --
 -- Name: index_groups_on_distribution_system_operator_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_distribution_system_operator_id ON groups USING btree (distribution_system_operator_id);
+CREATE INDEX index_groups_on_distribution_system_operator_id ON public.groups USING btree (distribution_system_operator_id);
 
 
 --
 -- Name: index_groups_on_electricity_supplier_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_electricity_supplier_id ON groups USING btree (electricity_supplier_id);
+CREATE INDEX index_groups_on_electricity_supplier_id ON public.groups USING btree (electricity_supplier_id);
 
 
 --
 -- Name: index_groups_on_gap_contract_customer_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_gap_contract_customer_organization_id ON groups USING btree (gap_contract_customer_organization_id);
+CREATE INDEX index_groups_on_gap_contract_customer_organization_id ON public.groups USING btree (gap_contract_customer_organization_id);
 
 
 --
 -- Name: index_groups_on_gap_contract_customer_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_gap_contract_customer_person_id ON groups USING btree (gap_contract_customer_person_id);
+CREATE INDEX index_groups_on_gap_contract_customer_person_id ON public.groups USING btree (gap_contract_customer_person_id);
 
 
 --
 -- Name: index_groups_on_owner_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_owner_organization_id ON groups USING btree (owner_organization_id);
+CREATE INDEX index_groups_on_owner_organization_id ON public.groups USING btree (owner_organization_id);
 
 
 --
 -- Name: index_groups_on_owner_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_owner_person_id ON groups USING btree (owner_person_id);
+CREATE INDEX index_groups_on_owner_person_id ON public.groups USING btree (owner_person_id);
 
 
 --
 -- Name: index_groups_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_groups_on_slug ON groups USING btree (slug);
+CREATE UNIQUE INDEX index_groups_on_slug ON public.groups USING btree (slug);
 
 
 --
 -- Name: index_groups_on_transmission_system_operator_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_groups_on_transmission_system_operator_id ON groups USING btree (transmission_system_operator_id);
+CREATE INDEX index_groups_on_transmission_system_operator_id ON public.groups USING btree (transmission_system_operator_id);
 
 
 --
 -- Name: index_market_functions_on_organization_id_function; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_market_functions_on_organization_id_function ON organization_market_functions USING btree (organization_id, function);
+CREATE UNIQUE INDEX index_market_functions_on_organization_id_function ON public.organization_market_functions USING btree (organization_id, function);
 
 
 --
 -- Name: index_market_locations_on_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_market_locations_on_group_id ON market_locations USING btree (group_id);
+CREATE INDEX index_market_locations_on_group_id ON public.market_locations USING btree (group_id);
 
 
 --
 -- Name: index_market_locations_on_market_location_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_market_locations_on_market_location_id ON market_locations USING btree (market_location_id);
+CREATE UNIQUE INDEX index_market_locations_on_market_location_id ON public.market_locations USING btree (market_location_id);
 
 
 --
 -- Name: index_meters_on_broker_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_meters_on_broker_id ON meters USING btree (broker_id);
+CREATE INDEX index_meters_on_broker_id ON public.meters USING btree (broker_id);
 
 
 --
 -- Name: index_meters_on_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_meters_on_group_id ON meters USING btree (group_id);
+CREATE INDEX index_meters_on_group_id ON public.meters USING btree (group_id);
 
 
 --
 -- Name: index_meters_on_group_id_and_sequence_number; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_meters_on_group_id_and_sequence_number ON meters USING btree (group_id, sequence_number);
+CREATE UNIQUE INDEX index_meters_on_group_id_and_sequence_number ON public.meters USING btree (group_id, sequence_number);
 
 
 --
 -- Name: index_organization_market_functions_on_address_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_organization_market_functions_on_address_id ON organization_market_functions USING btree (address_id);
+CREATE INDEX index_organization_market_functions_on_address_id ON public.organization_market_functions USING btree (address_id);
 
 
 --
 -- Name: index_organization_market_functions_on_contact_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_organization_market_functions_on_contact_person_id ON organization_market_functions USING btree (contact_person_id);
+CREATE INDEX index_organization_market_functions_on_contact_person_id ON public.organization_market_functions USING btree (contact_person_id);
 
 
 --
 -- Name: index_organization_market_functions_on_market_partner_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_organization_market_functions_on_market_partner_id ON organization_market_functions USING btree (market_partner_id);
+CREATE UNIQUE INDEX index_organization_market_functions_on_market_partner_id ON public.organization_market_functions USING btree (market_partner_id);
 
 
 --
 -- Name: index_organization_market_functions_on_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_organization_market_functions_on_organization_id ON organization_market_functions USING btree (organization_id);
+CREATE INDEX index_organization_market_functions_on_organization_id ON public.organization_market_functions USING btree (organization_id);
 
 
 --
 -- Name: index_organizations_on_address_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_organizations_on_address_id ON organizations USING btree (address_id);
+CREATE INDEX index_organizations_on_address_id ON public.organizations USING btree (address_id);
 
 
 --
 -- Name: index_organizations_on_contact_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_organizations_on_contact_id ON organizations USING btree (contact_id);
+CREATE INDEX index_organizations_on_contact_id ON public.organizations USING btree (contact_id);
 
 
 --
 -- Name: index_organizations_on_legal_representation_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_organizations_on_legal_representation_id ON organizations USING btree (legal_representation_id);
+CREATE INDEX index_organizations_on_legal_representation_id ON public.organizations USING btree (legal_representation_id);
 
 
 --
 -- Name: index_organizations_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_organizations_on_slug ON organizations USING btree (slug);
+CREATE UNIQUE INDEX index_organizations_on_slug ON public.organizations USING btree (slug);
 
 
 --
 -- Name: index_payments_on_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_payments_on_contract_id ON payments USING btree (contract_id);
+CREATE INDEX index_payments_on_contract_id ON public.payments USING btree (contract_id);
 
 
 --
 -- Name: index_pdf_documents_on_billing_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_pdf_documents_on_billing_id ON pdf_documents USING btree (billing_id);
+CREATE INDEX index_pdf_documents_on_billing_id ON public.pdf_documents USING btree (billing_id);
 
 
 --
 -- Name: index_pdf_documents_on_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_pdf_documents_on_contract_id ON pdf_documents USING btree (contract_id);
+CREATE INDEX index_pdf_documents_on_contract_id ON public.pdf_documents USING btree (contract_id);
 
 
 --
 -- Name: index_pdf_documents_on_document_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_pdf_documents_on_document_id ON pdf_documents USING btree (document_id);
+CREATE INDEX index_pdf_documents_on_document_id ON public.pdf_documents USING btree (document_id);
 
 
 --
 -- Name: index_pdf_documents_on_localpool_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_pdf_documents_on_localpool_id ON pdf_documents USING btree (localpool_id);
+CREATE INDEX index_pdf_documents_on_localpool_id ON public.pdf_documents USING btree (localpool_id);
 
 
 --
 -- Name: index_pdf_documents_on_template_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_pdf_documents_on_template_id ON pdf_documents USING btree (template_id);
+CREATE INDEX index_pdf_documents_on_template_id ON public.pdf_documents USING btree (template_id);
 
 
 --
 -- Name: index_persons_on_address_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_persons_on_address_id ON persons USING btree (address_id);
+CREATE INDEX index_persons_on_address_id ON public.persons USING btree (address_id);
 
 
 --
 -- Name: index_persons_on_first_name_and_last_name_and_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_persons_on_first_name_and_last_name_and_email ON persons USING btree (first_name, last_name, email);
+CREATE INDEX index_persons_on_first_name_and_last_name_and_email ON public.persons USING btree (first_name, last_name, email);
 
 
 --
 -- Name: index_persons_roles_on_person_id_and_role_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_persons_roles_on_person_id_and_role_id ON persons_roles USING btree (person_id, role_id);
+CREATE INDEX index_persons_roles_on_person_id_and_role_id ON public.persons_roles USING btree (person_id, role_id);
 
 
 --
 -- Name: index_persons_roles_on_role_id_and_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_persons_roles_on_role_id_and_person_id ON persons_roles USING btree (role_id, person_id);
+CREATE INDEX index_persons_roles_on_role_id_and_person_id ON public.persons_roles USING btree (role_id, person_id);
 
 
 --
 -- Name: index_readings_on_register_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_readings_on_register_id ON readings USING btree (register_id);
+CREATE INDEX index_readings_on_register_id ON public.readings USING btree (register_id);
 
 
 --
 -- Name: index_readings_on_register_id_and_date_and_reason; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_readings_on_register_id_and_date_and_reason ON readings USING btree (register_id, date, reason);
+CREATE UNIQUE INDEX index_readings_on_register_id_and_date_and_reason ON public.readings USING btree (register_id, date, reason);
 
 
 --
 -- Name: index_registers_on_market_location_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_registers_on_market_location_id ON registers USING btree (market_location_id);
+CREATE INDEX index_registers_on_market_location_id ON public.registers USING btree (market_location_id);
 
 
 --
 -- Name: index_registers_on_meter_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_registers_on_meter_id ON registers USING btree (meter_id);
+CREATE INDEX index_registers_on_meter_id ON public.registers USING btree (meter_id);
 
 
 --
 -- Name: index_registers_on_meter_id_and_direction; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_registers_on_meter_id_and_direction ON registers USING btree (meter_id, direction);
+CREATE UNIQUE INDEX index_registers_on_meter_id_and_direction ON public.registers USING btree (meter_id, direction);
 
 
 --
 -- Name: index_tariffs_on_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_tariffs_on_group_id ON tariffs USING btree (group_id);
+CREATE INDEX index_tariffs_on_group_id ON public.tariffs USING btree (group_id);
 
 
 --
 -- Name: index_zip_to_prices_on_zip; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_zip_to_prices_on_zip ON zip_to_prices USING btree (zip);
+CREATE INDEX index_zip_to_prices_on_zip ON public.zip_to_prices USING btree (zip);
 
 
 --
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
 
 
 --
 -- Name: account_login_change_keys account_login_change_keys_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_login_change_keys
-    ADD CONSTRAINT account_login_change_keys_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_login_change_keys
+    ADD CONSTRAINT account_login_change_keys_id_fkey FOREIGN KEY (id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: account_password_change_times account_password_change_times_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_password_change_times
-    ADD CONSTRAINT account_password_change_times_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_password_change_times
+    ADD CONSTRAINT account_password_change_times_id_fkey FOREIGN KEY (id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: account_password_hashes account_password_hashes_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_password_hashes
-    ADD CONSTRAINT account_password_hashes_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_password_hashes
+    ADD CONSTRAINT account_password_hashes_id_fkey FOREIGN KEY (id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: account_password_reset_keys account_password_reset_keys_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_password_reset_keys
-    ADD CONSTRAINT account_password_reset_keys_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_password_reset_keys
+    ADD CONSTRAINT account_password_reset_keys_id_fkey FOREIGN KEY (id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: account_previous_password_hashes account_previous_password_hashes_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_previous_password_hashes
-    ADD CONSTRAINT account_previous_password_hashes_account_id_fkey FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_previous_password_hashes
+    ADD CONSTRAINT account_previous_password_hashes_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: account_remember_keys account_remember_keys_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_remember_keys
-    ADD CONSTRAINT account_remember_keys_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_remember_keys
+    ADD CONSTRAINT account_remember_keys_id_fkey FOREIGN KEY (id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: account_verification_keys account_verification_keys_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY account_verification_keys
-    ADD CONSTRAINT account_verification_keys_id_fkey FOREIGN KEY (id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.account_verification_keys
+    ADD CONSTRAINT account_verification_keys_id_fkey FOREIGN KEY (id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: accounts accounts_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts
-    ADD CONSTRAINT accounts_person_id_fkey FOREIGN KEY (person_id) REFERENCES persons(id);
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.persons(id);
 
 
 --
 -- Name: accounts accounts_status_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts
-    ADD CONSTRAINT accounts_status_id_fkey FOREIGN KEY (status_id) REFERENCES account_statuses(id);
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_status_id_fkey FOREIGN KEY (status_id) REFERENCES public.account_statuses(id);
 
 
 --
 -- Name: bank_accounts fk_bank_accounts_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY bank_accounts
-    ADD CONSTRAINT fk_bank_accounts_organization FOREIGN KEY (owner_organization_id) REFERENCES organizations(id);
+ALTER TABLE ONLY public.bank_accounts
+    ADD CONSTRAINT fk_bank_accounts_organization FOREIGN KEY (owner_organization_id) REFERENCES public.organizations(id);
 
 
 --
 -- Name: bank_accounts fk_bank_accounts_person; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY bank_accounts
-    ADD CONSTRAINT fk_bank_accounts_person FOREIGN KEY (owner_person_id) REFERENCES persons(id);
+ALTER TABLE ONLY public.bank_accounts
+    ADD CONSTRAINT fk_bank_accounts_person FOREIGN KEY (owner_person_id) REFERENCES public.persons(id);
 
 
 --
 -- Name: billing_cycles fk_billing_cycles_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billing_cycles
-    ADD CONSTRAINT fk_billing_cycles_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
+ALTER TABLE ONLY public.billing_cycles
+    ADD CONSTRAINT fk_billing_cycles_localpool FOREIGN KEY (localpool_id) REFERENCES public.groups(id);
 
 
 --
 -- Name: billing_items fk_billing_items_billing; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billing_items
-    ADD CONSTRAINT fk_billing_items_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
+ALTER TABLE ONLY public.billing_items
+    ADD CONSTRAINT fk_billing_items_billing FOREIGN KEY (billing_id) REFERENCES public.billings(id);
 
 
 --
 -- Name: billing_items fk_billing_items_register; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billing_items
-    ADD CONSTRAINT fk_billing_items_register FOREIGN KEY (register_id) REFERENCES registers(id);
+ALTER TABLE ONLY public.billing_items
+    ADD CONSTRAINT fk_billing_items_register FOREIGN KEY (register_id) REFERENCES public.registers(id);
 
 
 --
 -- Name: billings fk_billings_billing_cycles; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billings
-    ADD CONSTRAINT fk_billings_billing_cycles FOREIGN KEY (billing_cycle_id) REFERENCES billing_cycles(id);
+ALTER TABLE ONLY public.billings
+    ADD CONSTRAINT fk_billings_billing_cycles FOREIGN KEY (billing_cycle_id) REFERENCES public.billing_cycles(id);
 
 
 --
 -- Name: billings fk_billings_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY billings
-    ADD CONSTRAINT fk_billings_contracts FOREIGN KEY (contract_id) REFERENCES contracts(id);
+ALTER TABLE ONLY public.billings
+    ADD CONSTRAINT fk_billings_contracts FOREIGN KEY (contract_id) REFERENCES public.contracts(id);
 
 
 --
 -- Name: contracts fk_contracts_contractor_bank_account; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts
-    ADD CONSTRAINT fk_contracts_contractor_bank_account FOREIGN KEY (contractor_bank_account_id) REFERENCES bank_accounts(id);
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_contracts_contractor_bank_account FOREIGN KEY (contractor_bank_account_id) REFERENCES public.bank_accounts(id);
 
 
 --
 -- Name: contracts fk_contracts_contractor_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts
-    ADD CONSTRAINT fk_contracts_contractor_organization FOREIGN KEY (contractor_organization_id) REFERENCES organizations(id);
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_contracts_contractor_organization FOREIGN KEY (contractor_organization_id) REFERENCES public.organizations(id);
 
 
 --
 -- Name: contracts fk_contracts_contractor_person; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts
-    ADD CONSTRAINT fk_contracts_contractor_person FOREIGN KEY (contractor_person_id) REFERENCES persons(id);
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_contracts_contractor_person FOREIGN KEY (contractor_person_id) REFERENCES public.persons(id);
 
 
 --
 -- Name: contracts fk_contracts_customer_bank_account; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts
-    ADD CONSTRAINT fk_contracts_customer_bank_account FOREIGN KEY (customer_bank_account_id) REFERENCES bank_accounts(id);
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_contracts_customer_bank_account FOREIGN KEY (customer_bank_account_id) REFERENCES public.bank_accounts(id);
 
 
 --
 -- Name: contracts fk_contracts_customer_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts
-    ADD CONSTRAINT fk_contracts_customer_organization FOREIGN KEY (customer_organization_id) REFERENCES organizations(id);
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_contracts_customer_organization FOREIGN KEY (customer_organization_id) REFERENCES public.organizations(id);
 
 
 --
 -- Name: contracts fk_contracts_customer_person; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts
-    ADD CONSTRAINT fk_contracts_customer_person FOREIGN KEY (customer_person_id) REFERENCES persons(id);
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_contracts_customer_person FOREIGN KEY (customer_person_id) REFERENCES public.persons(id);
 
 
 --
 -- Name: contracts fk_contracts_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts
-    ADD CONSTRAINT fk_contracts_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_contracts_localpool FOREIGN KEY (localpool_id) REFERENCES public.groups(id);
 
 
 --
 -- Name: contracts fk_contracts_market_location; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts
-    ADD CONSTRAINT fk_contracts_market_location FOREIGN KEY (market_location_id) REFERENCES market_locations(id);
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_contracts_market_location FOREIGN KEY (market_location_id) REFERENCES public.market_locations(id);
 
 
 --
 -- Name: contracts_tariffs fk_contracts_tariffs_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts_tariffs
-    ADD CONSTRAINT fk_contracts_tariffs_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
+ALTER TABLE ONLY public.contracts_tariffs
+    ADD CONSTRAINT fk_contracts_tariffs_contract FOREIGN KEY (contract_id) REFERENCES public.contracts(id);
 
 
 --
 -- Name: contracts_tariffs fk_contracts_tariffs_tariff; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contracts_tariffs
-    ADD CONSTRAINT fk_contracts_tariffs_tariff FOREIGN KEY (tariff_id) REFERENCES tariffs(id);
+ALTER TABLE ONLY public.contracts_tariffs
+    ADD CONSTRAINT fk_contracts_tariffs_tariff FOREIGN KEY (tariff_id) REFERENCES public.tariffs(id);
 
 
 --
 -- Name: formula_parts fk_formula_parts_operand; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY formula_parts
-    ADD CONSTRAINT fk_formula_parts_operand FOREIGN KEY (operand_id) REFERENCES registers(id);
+ALTER TABLE ONLY public.formula_parts
+    ADD CONSTRAINT fk_formula_parts_operand FOREIGN KEY (operand_id) REFERENCES public.registers(id);
 
 
 --
 -- Name: formula_parts fk_formula_parts_register; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY formula_parts
-    ADD CONSTRAINT fk_formula_parts_register FOREIGN KEY (register_id) REFERENCES registers(id);
+ALTER TABLE ONLY public.formula_parts
+    ADD CONSTRAINT fk_formula_parts_register FOREIGN KEY (register_id) REFERENCES public.registers(id);
 
 
 --
 -- Name: groups fk_groups_address; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_groups_address FOREIGN KEY (address_id) REFERENCES public.addresses(id);
 
 
 --
 -- Name: groups fk_groups_distribution_system_operator; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_distribution_system_operator FOREIGN KEY (distribution_system_operator_id) REFERENCES organizations(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_groups_distribution_system_operator FOREIGN KEY (distribution_system_operator_id) REFERENCES public.organizations(id);
 
 
 --
 -- Name: groups fk_groups_electricity_supplier; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_electricity_supplier FOREIGN KEY (electricity_supplier_id) REFERENCES organizations(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_groups_electricity_supplier FOREIGN KEY (electricity_supplier_id) REFERENCES public.organizations(id);
 
 
 --
 -- Name: groups fk_groups_gap_contract_customer_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_gap_contract_customer_organization FOREIGN KEY (gap_contract_customer_organization_id) REFERENCES organizations(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_groups_gap_contract_customer_organization FOREIGN KEY (gap_contract_customer_organization_id) REFERENCES public.organizations(id);
 
 
 --
 -- Name: groups fk_groups_gap_contract_customer_person; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_gap_contract_customer_person FOREIGN KEY (gap_contract_customer_person_id) REFERENCES persons(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_groups_gap_contract_customer_person FOREIGN KEY (gap_contract_customer_person_id) REFERENCES public.persons(id);
 
 
 --
 -- Name: groups fk_groups_owner_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_owner_organization FOREIGN KEY (owner_organization_id) REFERENCES organizations(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_groups_owner_organization FOREIGN KEY (owner_organization_id) REFERENCES public.organizations(id);
 
 
 --
 -- Name: groups fk_groups_owner_person; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_owner_person FOREIGN KEY (owner_person_id) REFERENCES persons(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_groups_owner_person FOREIGN KEY (owner_person_id) REFERENCES public.persons(id);
 
 
 --
 -- Name: groups fk_groups_transmission_system_operator; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY groups
-    ADD CONSTRAINT fk_groups_transmission_system_operator FOREIGN KEY (transmission_system_operator_id) REFERENCES organizations(id);
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT fk_groups_transmission_system_operator FOREIGN KEY (transmission_system_operator_id) REFERENCES public.organizations(id);
 
 
 --
 -- Name: market_locations fk_market_locations_group; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY market_locations
-    ADD CONSTRAINT fk_market_locations_group FOREIGN KEY (group_id) REFERENCES groups(id);
+ALTER TABLE ONLY public.market_locations
+    ADD CONSTRAINT fk_market_locations_group FOREIGN KEY (group_id) REFERENCES public.groups(id);
 
 
 --
 -- Name: meters fk_meters_broker; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY meters
-    ADD CONSTRAINT fk_meters_broker FOREIGN KEY (broker_id) REFERENCES brokers(id);
+ALTER TABLE ONLY public.meters
+    ADD CONSTRAINT fk_meters_broker FOREIGN KEY (broker_id) REFERENCES public.brokers(id);
 
 
 --
 -- Name: meters fk_meters_group; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY meters
-    ADD CONSTRAINT fk_meters_group FOREIGN KEY (group_id) REFERENCES groups(id);
+ALTER TABLE ONLY public.meters
+    ADD CONSTRAINT fk_meters_group FOREIGN KEY (group_id) REFERENCES public.groups(id);
 
 
 --
 -- Name: organization_market_functions fk_organization_market_functions_address; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organization_market_functions
-    ADD CONSTRAINT fk_organization_market_functions_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+ALTER TABLE ONLY public.organization_market_functions
+    ADD CONSTRAINT fk_organization_market_functions_address FOREIGN KEY (address_id) REFERENCES public.addresses(id);
 
 
 --
 -- Name: organization_market_functions fk_organization_market_functions_contact_person; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organization_market_functions
-    ADD CONSTRAINT fk_organization_market_functions_contact_person FOREIGN KEY (contact_person_id) REFERENCES persons(id);
+ALTER TABLE ONLY public.organization_market_functions
+    ADD CONSTRAINT fk_organization_market_functions_contact_person FOREIGN KEY (contact_person_id) REFERENCES public.persons(id);
 
 
 --
 -- Name: organization_market_functions fk_organization_market_functions_organization; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organization_market_functions
-    ADD CONSTRAINT fk_organization_market_functions_organization FOREIGN KEY (organization_id) REFERENCES organizations(id);
+ALTER TABLE ONLY public.organization_market_functions
+    ADD CONSTRAINT fk_organization_market_functions_organization FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
 
 
 --
 -- Name: persons fk_organizations_address; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY persons
-    ADD CONSTRAINT fk_organizations_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+ALTER TABLE ONLY public.persons
+    ADD CONSTRAINT fk_organizations_address FOREIGN KEY (address_id) REFERENCES public.addresses(id);
 
 
 --
 -- Name: organizations fk_organizations_address; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organizations
-    ADD CONSTRAINT fk_organizations_address FOREIGN KEY (address_id) REFERENCES addresses(id);
+ALTER TABLE ONLY public.organizations
+    ADD CONSTRAINT fk_organizations_address FOREIGN KEY (address_id) REFERENCES public.addresses(id);
 
 
 --
 -- Name: organizations fk_organizations_contact; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organizations
-    ADD CONSTRAINT fk_organizations_contact FOREIGN KEY (contact_id) REFERENCES persons(id);
+ALTER TABLE ONLY public.organizations
+    ADD CONSTRAINT fk_organizations_contact FOREIGN KEY (contact_id) REFERENCES public.persons(id);
 
 
 --
 -- Name: organizations fk_organizations_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organizations
-    ADD CONSTRAINT fk_organizations_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
+ALTER TABLE ONLY public.organizations
+    ADD CONSTRAINT fk_organizations_customer_number FOREIGN KEY (customer_number) REFERENCES public.customer_numbers(id);
 
 
 --
 -- Name: organizations fk_organizations_legal_representation; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY organizations
-    ADD CONSTRAINT fk_organizations_legal_representation FOREIGN KEY (legal_representation_id) REFERENCES persons(id);
+ALTER TABLE ONLY public.organizations
+    ADD CONSTRAINT fk_organizations_legal_representation FOREIGN KEY (legal_representation_id) REFERENCES public.persons(id);
 
 
 --
 -- Name: payments fk_payments_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY payments
-    ADD CONSTRAINT fk_payments_contract FOREIGN KEY (contract_id) REFERENCES contracts(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.payments
+    ADD CONSTRAINT fk_payments_contract FOREIGN KEY (contract_id) REFERENCES public.contracts(id) ON DELETE CASCADE;
 
 
 --
 -- Name: pdf_documents fk_pdf_documents_billing; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pdf_documents
-    ADD CONSTRAINT fk_pdf_documents_billing FOREIGN KEY (billing_id) REFERENCES billings(id);
+ALTER TABLE ONLY public.pdf_documents
+    ADD CONSTRAINT fk_pdf_documents_billing FOREIGN KEY (billing_id) REFERENCES public.billings(id);
 
 
 --
 -- Name: pdf_documents fk_pdf_documents_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pdf_documents
-    ADD CONSTRAINT fk_pdf_documents_contract FOREIGN KEY (contract_id) REFERENCES contracts(id);
+ALTER TABLE ONLY public.pdf_documents
+    ADD CONSTRAINT fk_pdf_documents_contract FOREIGN KEY (contract_id) REFERENCES public.contracts(id);
 
 
 --
 -- Name: pdf_documents fk_pdf_documents_document; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pdf_documents
-    ADD CONSTRAINT fk_pdf_documents_document FOREIGN KEY (document_id) REFERENCES documents(id);
+ALTER TABLE ONLY public.pdf_documents
+    ADD CONSTRAINT fk_pdf_documents_document FOREIGN KEY (document_id) REFERENCES public.documents(id);
 
 
 --
 -- Name: pdf_documents fk_pdf_documents_localpool; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pdf_documents
-    ADD CONSTRAINT fk_pdf_documents_localpool FOREIGN KEY (localpool_id) REFERENCES groups(id);
+ALTER TABLE ONLY public.pdf_documents
+    ADD CONSTRAINT fk_pdf_documents_localpool FOREIGN KEY (localpool_id) REFERENCES public.groups(id);
 
 
 --
 -- Name: pdf_documents fk_pdf_documents_template; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pdf_documents
-    ADD CONSTRAINT fk_pdf_documents_template FOREIGN KEY (template_id) REFERENCES templates(id);
+ALTER TABLE ONLY public.pdf_documents
+    ADD CONSTRAINT fk_pdf_documents_template FOREIGN KEY (template_id) REFERENCES public.templates(id);
 
 
 --
 -- Name: persons fk_persons_customer_number; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY persons
-    ADD CONSTRAINT fk_persons_customer_number FOREIGN KEY (customer_number) REFERENCES customer_numbers(id);
+ALTER TABLE ONLY public.persons
+    ADD CONSTRAINT fk_persons_customer_number FOREIGN KEY (customer_number) REFERENCES public.customer_numbers(id);
 
 
 --
 -- Name: readings fk_readings_register; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY readings
-    ADD CONSTRAINT fk_readings_register FOREIGN KEY (register_id) REFERENCES registers(id);
+ALTER TABLE ONLY public.readings
+    ADD CONSTRAINT fk_readings_register FOREIGN KEY (register_id) REFERENCES public.registers(id);
 
 
 --
 -- Name: registers fk_registers_market_location; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY registers
-    ADD CONSTRAINT fk_registers_market_location FOREIGN KEY (market_location_id) REFERENCES market_locations(id);
+ALTER TABLE ONLY public.registers
+    ADD CONSTRAINT fk_registers_market_location FOREIGN KEY (market_location_id) REFERENCES public.market_locations(id);
 
 
 --
 -- Name: registers fk_registers_meter; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY registers
-    ADD CONSTRAINT fk_registers_meter FOREIGN KEY (meter_id) REFERENCES meters(id);
+ALTER TABLE ONLY public.registers
+    ADD CONSTRAINT fk_registers_meter FOREIGN KEY (meter_id) REFERENCES public.meters(id);
 
 
 --
 -- Name: tariffs fk_tariffs_group; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tariffs
-    ADD CONSTRAINT fk_tariffs_group FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tariffs
+    ADD CONSTRAINT fk_tariffs_group FOREIGN KEY (group_id) REFERENCES public.groups(id) ON DELETE CASCADE;
 
 
 --
 -- Name: contract_tax_data fk_tax_data_contract; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contract_tax_data
-    ADD CONSTRAINT fk_tax_data_contract FOREIGN KEY (contract_id) REFERENCES contracts(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.contract_tax_data
+    ADD CONSTRAINT fk_tax_data_contract FOREIGN KEY (contract_id) REFERENCES public.contracts(id) ON DELETE CASCADE;
 
 
 --
