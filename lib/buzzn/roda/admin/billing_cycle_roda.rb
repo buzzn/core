@@ -1,10 +1,13 @@
 require_relative '../admin_roda'
-require_relative '../../transactions/admin/billing_cycle/create'
-require_relative '../../transactions/admin/billing_cycle/update'
-require_relative '../../transactions/admin/billing_cycle/delete'
 
 module Admin
   class BillingCycleRoda < BaseRoda
+
+  include Import.args[:env,
+                      'transactions.admin.billing_cycle.create',
+                      'transactions.admin.billing_cycle.update',
+                      'transactions.admin.billing_cycle.delete',
+                     ]
 
     plugin :shared_vars
 
@@ -13,10 +16,7 @@ module Admin
       localpool = shared[LocalpoolRoda::PARENT]
 
       r.post! do
-        Transactions::Admin::BillingCycle::Create.(
-          resource: localpool,
-          params: r.params
-        )
+        create.(resource: localpool, params: r.params)
       end
 
       billing_cycles = localpool.billing_cycles
@@ -32,15 +32,11 @@ module Admin
         end
 
         r.patch! do
-          Transactions::Admin::BillingCycle::Update.(
-            resource: billing_cycle, params: r.params
-          )
+          update.(resource: billing_cycle, params: r.params)
         end
 
         r.delete! do
-          Transactions::Admin::BillingCycle::Delete.(
-            resource: billing_cycle
-          )
+          delete.(resource: billing_cycle)
         end
 
         r.on 'billings' do

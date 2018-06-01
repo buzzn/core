@@ -1,3 +1,4 @@
+require './app/models/reading/single.rb'
 require_relative '../reading'
 
 Schemas::Constraints::Reading::Single = Schemas::Support.Form do

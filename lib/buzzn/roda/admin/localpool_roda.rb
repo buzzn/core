@@ -1,12 +1,17 @@
 require_relative '../admin_roda'
 require_relative '../plugins/aggregation'
-require_relative '../../transactions/bubbles'
-require_relative '../../transactions/group_chart'
-require_relative '../../transactions/admin/localpool/create'
-require_relative '../../transactions/admin/localpool/update'
 
 module Admin
   class LocalpoolRoda < BaseRoda
+
+  include Import.args[:env,
+                      'transactions.admin.localpool.create',
+                      'transactions.admin.localpool.update',
+                      'transactions.admin.localpool.assign_owner',
+                      'transactions.admin.localpool.create_person_owner',
+                      'transactions.admin.localpool.create_organization_owner',
+                      'transactions.bubbles'
+                     ]
 
     PARENT = :localpool
 
@@ -22,15 +27,11 @@ module Admin
         shared[PARENT] = localpool = localpools.retrieve(id)
 
         r.get! 'bubbles' do
-          aggregated(
-            Transactions::Bubbles.(localpool).value
-          )
+          aggregated(bubbles.(localpool).value)
         end
 
         r.patch! do
-          Transactions::Admin::Localpool::Update.(
-            resource: localpool, params: r.params
-          )
+          update.(resource: localpool, params: r.params)
         end
 
         r.on 'contracts' do
@@ -79,33 +80,23 @@ module Admin
 
         r.on 'person-owner' do
           r.post! do
-            Transactions::Admin::Localpool::CreatePersonOwner.(
-              resource: localpool,
-              params: r.params
-            )
+            create_person_owner.(resource: localpool, params: r.params)
           end
 
           r.post! :id do |id|
-            Transactions::Admin::Localpool::AssignOwner.(
-              resource: localpool,
-              new_owner: localpool.persons.retrieve(id)
-            )
+            assign_owner.(resource: localpool,
+                          new_owner: localpool.persons.retrieve(id))
           end
         end
 
         r.on 'organization-owner' do
           r.post! do
-            Transactions::Admin::Localpool::CreateOrganizationOwner.(
-              resource: localpool,
-              params: r.params
-            )
+            create_organization_owner.(resource: localpool, params: r.params)
           end
 
           r.post! :id do |id|
-            Transactions::Admin::Localpool::AssignOwner.(
-              resource: localpool,
-              new_owner: localpool.organizations.retrieve(id)
-            )
+            assign_owner.(resource: localpool,
+                          new_owner: localpool.organizations.retrieve(id))
           end
         end
 
@@ -121,10 +112,7 @@ module Admin
       end
 
       r.post! do
-        Transactions::Admin::Localpool::Create.(
-          resource: localpools,
-          params: r.params
-        )
+        create.(resource: localpools, params: r.params)
       end
     end
 

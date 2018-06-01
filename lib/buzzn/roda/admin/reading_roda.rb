@@ -1,8 +1,11 @@
 require_relative '../admin_roda'
-require_relative '../../transactions/admin/reading/create'
-require_relative '../../transactions/admin/reading/delete'
 
 class Admin::ReadingRoda < BaseRoda
+
+  include Import.args[:env,
+                      'transactions.admin.reading.create',
+                      'transactions.admin.reading.delete',
+                     ]
 
   plugin :shared_vars
 
@@ -13,10 +16,7 @@ class Admin::ReadingRoda < BaseRoda
     register = shared[REGISTER]
 
     r.post! do
-      Transactions::Admin::Reading::Create.(
-        resource: register,
-        params: r.params
-      )
+      create.(resource: register, params: r.params)
     end
 
     readings = register.readings
@@ -32,9 +32,7 @@ class Admin::ReadingRoda < BaseRoda
       end
 
       r.delete! do
-        Transactions::Admin::Reading::Delete.(
-          resource: reading
-        )
+        delete.(resource: reading)
       end
     end
   end

@@ -1,8 +1,11 @@
 require_relative '../admin_roda'
-require_relative '../../transactions/admin/billing/update'
-require_relative '../../transactions/admin/billing/delete'
 
 class Admin::BillingRoda < BaseRoda
+
+  include Import.args[:env,
+                      'transactions.admin.billing.update',
+                      'transactions.admin.billing.delete',
+                     ]
 
   plugin :shared_vars
 

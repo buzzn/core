@@ -21,6 +21,7 @@ describe "#{Buzzn::Permission} - #{AdminResource}" do
 
       [:persons, :organizations].each do |type|
         it type do
+          all = AdminResource.new(send(user))
           if user != :anonymous
             expect(all.send(type).collect { |l| l.object }).to match_array Group::Localpool.all.send(type).to_a
           else

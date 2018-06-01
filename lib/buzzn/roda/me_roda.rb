@@ -1,8 +1,9 @@
 require_relative 'base_roda'
-require_relative '../transactions/person/update'
 
 module Me
   class Roda < BaseRoda
+
+    include Import.args[:env, 'transactions.person.update']
 
     plugin :rodauth, csrf: false, json: :only do
 
@@ -83,7 +84,7 @@ module Me
       end
 
       r.patch! do
-        Transactions::Person::Update.(resource: person, params: r.params)
+        update.(resource: person, params: r.params)
       end
     end
 

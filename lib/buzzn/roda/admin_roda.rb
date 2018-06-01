@@ -1,4 +1,5 @@
 require_relative 'base_roda'
+
 module Admin
   class Roda < ::BaseRoda
 

@@ -47,22 +47,32 @@ module Group
       self.class.contracts(self)
     end
 
-    def self.contracts(base = where('1=1')) # take the complete set as default
-      Contract::Localpool.joins(:localpool).where(localpool: base)
+    def self.contracts(base = where('1=1')) # means take all localpools
+      if base.is_a?(Group::Localpool)
+        Contract::Localpool.where(localpool: base)
+      else
+        Contract::Localpool.joins(:localpool).where(localpool: base)
+      end
     end
 
     def persons
       self.class.persons(self)
     end
 
-    def self.persons(base = where('1=1')) # take the complete set as default
+    def self.persons(base = self.all) #where('1=1')) # means take all localpools
       roles = Role.arel_table
       persons_roles     = Arel::Table.new(:persons_roles)
       persons         = Person.arel_table
+      localpool_ids =
+        if base.is_a?(Group::Localpool)
+          base.id
+        else
+          base.select(:id).pluck(:id)
+        end
       localpool_users = persons_roles
                         .join(roles)
                         .on(roles[:id].eq(persons_roles[:role_id])
-                             .and(roles[:resource_id].eq(base)))
+                             .and(roles[:resource_id].in(localpool_ids)))
                         .where(persons_roles[:person_id].eq(persons[:id]))
                         .project(1)
                         .exists
@@ -72,10 +82,10 @@ module Group
                        .exists
       localpool = Localpool.arel_table
       localpool_owner =
-        if base.respond_to?(:to_a)
-          base.where('groups.owner_person_id=persons.id').project(1).exists
-        else
+        if base.is_a?(Group::Localpool)
           localpool.where(localpool[:id].eq(base).and(localpool[:owner_person_id].eq(persons[:id]))).project(1).exists
+        else
+          base.where('groups.owner_person_id=persons.id').project(1).exists
         end
       Person.where(localpool_owner.or(localpool_users).or(contract_users))
     end

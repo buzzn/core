@@ -1,6 +1,8 @@
 require_relative '../contract'
 require_relative '../person'
 require_relative '../organization'
+require './app/models/organization.rb'
+require './app/models/person.rb'
 
 module Schemas::PreConditions::Contract
 

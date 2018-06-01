@@ -1,3 +1,5 @@
+require 'dry/core/inflector'
+
 module Buzzn
   class Permission
 

@@ -1,7 +1,7 @@
 require_relative 'owner_base'
 
 module Transactions::Admin::Localpool
-  class CreatePersonOwner < OwnerBase
+  class CreateOrganizationOwner < OwnerBase
 
     validate :schema
     authorize :allowed_roles

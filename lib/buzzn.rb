@@ -8,6 +8,8 @@ module Buzzn
         case resource
         when Class
           super(create_class(resource, action, user))
+        when Buzzn::Resource::Base
+          super(create_class(resource.class, action, user))
         else
           super(create_instance(resource, action, user))
         end
