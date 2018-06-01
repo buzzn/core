@@ -1,8 +1,9 @@
 require_relative 'base_roda'
-require_relative '../transactions/ticker'
-require_relative '../transactions/register_chart'
 
 class RegisterRoda < BaseRoda
+
+  include Import.args[:env,
+                      'transactions.ticker']
 
   plugin :aggregation
   plugin :shared_vars
@@ -25,19 +26,8 @@ class RegisterRoda < BaseRoda
         register
       end
 
-      r.get! 'charts' do
-        aggregated(
-          Transactions::RegisterChart
-            .for(register)
-            .call(r.params).value
-        )
-      end
-
       r.get! 'ticker' do
-        aggregated(
-          Transactions::Ticker
-            .call(register).value
-        )
+        aggregated(ticker.(register).value)
       end
 
       r.get! 'readings' do

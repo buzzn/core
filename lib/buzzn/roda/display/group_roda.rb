@@ -1,8 +1,10 @@
 require_relative '../display_roda'
-require_relative '../../transactions/bubbles'
-require_relative '../../transactions/display/daily_charts'
 
 class Display::GroupRoda < BaseRoda
+
+  include Import.args[:env,
+                      'transactions.display.daily_charts',
+                      'transactions.bubbles']
 
   plugin :aggregation
 
@@ -25,15 +27,11 @@ class Display::GroupRoda < BaseRoda
       end
 
       r.get! 'charts' do
-        aggregated(
-          Transactions::Display::DailyCharts.call(group).value
-        )
+        aggregated(daily_charts.(group).value)
       end
 
       r.get! 'bubbles' do
-        aggregated(
-          Transactions::Bubbles.call(group).value
-        )
+        aggregated(bubbles.(group).value)
       end
 
       r.get! 'mentors' do

@@ -1,21 +1,22 @@
 require 'dry-initializer'
+require_relative '../permissions/no_permission'
 
 module Buzzn::Resource
-  class Context
+  class SecurityContext
 
     extend Dry::Initializer
 
-    param :current_user
-    param :permissions
+    param :current_user, default: proc { nil }
+    param :permissions, default: proc { NoPermission }
     param :current_roles, default: proc {
-      roles = [Role::ANONYMOUS]
+      roles = ['ANONYMOUS'] #[Role::ANONYMOUS]
       roles += current_user.unbound_rolenames if current_user
       roles
     }
 
     def method_missing(method, *args)
       if permissions.respond_to?(method)
-        Context.new(current_user, permissions.send(method), current_roles)
+        self.class.new(current_user, permissions.send(method), current_roles)
       else
         super
       end

@@ -1,7 +1,8 @@
 require_relative '../permission'
 
 AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
-  define_group(:managers, :admin, :buzzn_operator, :localpool_manager)
+  define_group(:managers, :admin, :buzzn_operator, :group_admin)
+  define_group(:operators, :admin, :buzzn_operator)
 
   retrieve :managers
 
@@ -30,5 +31,10 @@ AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
 
   organizations do
     retrieve :managers
+  end
+
+  localpools do
+    retrieve :managers
+    create :operators
   end
 end

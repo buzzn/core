@@ -1,9 +1,12 @@
 require_relative '../admin_roda'
-require_relative '../../transactions/admin/bank_account/create'
-require_relative '../../transactions/admin/bank_account/update'
-require_relative '../../transactions/admin/bank_account/delete'
 
 class Admin::BankAccountRoda < BaseRoda
+
+  include Import.args[:env,
+                      'transactions.admin.bank_account.create',
+                      'transactions.admin.bank_account.update',
+                      'transactions.admin.bank_account.delete',
+                     ]
 
   PARENT = :bank_account_parent
 
@@ -14,9 +17,7 @@ class Admin::BankAccountRoda < BaseRoda
     parent = shared[PARENT]
 
     r.post! do
-      Transactions::Admin::BankAccount::Create.(
-        resource: parent, params: r.params
-      )
+      create.(resource: parent, params: r.params)
     end
 
     bank_accounts = parent.bank_accounts
@@ -34,15 +35,11 @@ class Admin::BankAccountRoda < BaseRoda
       end
 
       r.patch! do
-        Transactions::Admin::BankAccount::Update.(
-          resource: bank_account, params: r.params
-        )
+        update.(resource: bank_account, params: r.params)
       end
 
       r.delete! do
-        Transactions::Admin::BankAccount::Delete.(
-          resource: bank_account
-        )
+        delete.(resource: bank_account)
       end
     end
   end

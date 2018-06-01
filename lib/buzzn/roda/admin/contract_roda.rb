@@ -1,4 +1,5 @@
 require_relative '../admin_roda'
+
 module Admin
   class ContractRoda < BaseRoda
 

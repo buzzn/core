@@ -1,3 +1,4 @@
+require './app/models/register/base.rb'
 require_relative '../register'
 
 Schemas::Constraints::Register::Common = Schemas::Support.Form do

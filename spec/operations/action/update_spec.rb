@@ -3,7 +3,7 @@ require 'buzzn/schemas/invariants/contract/base'
 
 describe Operations::Action::Update do
 
-  entity(:session) { Buzzn::Resource::Context.new(nil, [], nil) }
+  entity(:session) { Buzzn::Resource::SecurityContext.new }
   entity(:resource_with_invariant) { Contract::LocalpoolPowerTakerResource.new(create(:contract, :localpool_powertaker), session) }
   entity(:resource_without_invariant) { PersonResource.new(create(:person), session) }
   let(:input) { {} }

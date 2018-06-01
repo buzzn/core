@@ -1,5 +1,9 @@
+require_relative '../localpool'
+#require_relative '../../../schemas/transactions/admin/contract/metering_point_operator/create'
+require_relative '../../../schemas/pre_conditions/contract/metering_point_operator_create'
+
 module Transactions::Admin::Localpool
-  class CreateMeteringPointOperatorContract
+  class CreateMeteringPointOperatorContract < Transactions::Base
 
     validate :params_schema
     authorize :allowed_roles
@@ -12,7 +16,7 @@ module Transactions::Admin::Localpool
     map :save_metering_point_operator_contract
 
     def params_schema
-      Schemas::Transactions::Admin::Contract::MeteringPointOperator::Create
+      nil#Schemas::Transactions::Admin::Contract::MeteringPointOperator::Create
     end
 
     def allowed_roles(permission_context:)

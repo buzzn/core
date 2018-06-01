@@ -9,7 +9,7 @@ class Transactions::StepAdapters::Abstract
   end
 
   def call(operation, options, args)
-    do_call(operation, options, **args[0])
+    do_call(operation, options, **(args[0] || {}))
   end
 
 end

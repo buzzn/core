@@ -4,7 +4,7 @@ describe Transactions::Admin::Localpool::OwnerBase do
 
   let!(:localpool)         { create(:group, :localpool) }
   let(:person)             { create(:person) }
-  let(:person_resource)    { PersonResource.new(person, Buzzn::Resource::Context.new(nil, nil, nil)) }
+  let(:person_resource)    { PersonResource.new(person) }
 
   let(:account)            { Account::Base.where(person_id: user).first }
   let(:localpool_resource) { Admin::LocalpoolResource.all(account).first }

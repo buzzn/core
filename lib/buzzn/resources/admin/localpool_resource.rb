@@ -7,7 +7,7 @@ require_relative '../../schemas/completeness/admin/localpool'
 module Admin
   class LocalpoolResource < GroupResource
 
-    include Import.args[:resource, :context, 'config.display_url']
+    include Import.args[:resource, :security_context, 'config.display_url']
 
     model Group::Localpool
 

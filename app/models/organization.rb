@@ -1,3 +1,4 @@
+require_relative 'filterable'
 require_relative 'organization_market_function'
 
 class Organization < ActiveRecord::Base

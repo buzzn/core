@@ -1,3 +1,6 @@
+require_relative 'filterable'
+require_relative '../uploaders/person_image_uploader'
+
 class Person < ActiveRecord::Base
 
   self.table_name = :persons

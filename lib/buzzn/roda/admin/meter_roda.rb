@@ -1,8 +1,9 @@
 require_relative '../admin_roda'
-require_relative '../../transactions/admin/meter/update_real'
 
 module Admin
   class MeterRoda < BaseRoda
+
+    include Import.args[:env, 'transactions.admin.meter.update_real']
 
     plugin :shared_vars
 
@@ -24,9 +25,7 @@ module Admin
         case meter.object
         when Meter::Real
           r.patch! do
-            Transactions::Admin::Meter::UpdateReal.(
-              resource: meter, params: r.params
-            )
+            update_real.(resource: meter, params: r.params)
           end
         when Meter::Virtual
           nil # nothing to patch

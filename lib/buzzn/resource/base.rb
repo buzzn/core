@@ -1,5 +1,5 @@
 require_relative '../schemas/support/enable_dry_validation'
-require_relative 'context'
+require_relative 'security_context'
 
 module Buzzn::Resource
   class Base
@@ -99,7 +99,7 @@ module Buzzn::Resource
 
       def all(user, clazz = nil)
         permissions = (self::Permission rescue NoPermission)
-        context = Context.new(user, permissions)
+        context = SecurityContext.new(user, permissions)
         objects = filter_all_allowed(context, filter_all(model.all))
         to_collection(objects, context, clazz || self)
       end
@@ -119,19 +119,19 @@ module Buzzn::Resource
 
       ANONYMOUS = [Role::ANONYMOUS].freeze
 
-      def filter_all_allowed(security_context, enum)
+      def filter_all_allowed(security_context, objects)
         perms = security_context.permissions.retrieve
         user = security_context.current_user
         if user.nil?
           if allowed?(ANONYMOUS, perms)
-            enum
+            objects
           else
-            enum.where('1=2') # deliver an empty AR relation
+            objects.where('1=2') # deliver an empty AR relation
           end
         elsif allowed?(ANONYMOUS | security_context.current_roles | user.unbound_rolenames, perms)
-          enum
+          objects
         else
-          enum.permitted(user.uids_for(perms)) rescue enum.restricted(user.uids_for(perms))
+          objects.permitted(user.uids_for(perms)) rescue objects.restricted(user.uids_for(perms))
         end
       end
 
@@ -174,9 +174,9 @@ module Buzzn::Resource
         end
       end
 
-      def to_collection(enum, security_context, clazz = nil)
+      def to_collection(objects, security_context, clazz = nil)
         to_resource = (clazz || self).method(:to_resource)
-        Buzzn::Resource::Collection.new(enum,
+        Buzzn::Resource::Collection.new(objects,
                                         to_resource,
                                         security_context,
                                         clazz)
@@ -184,8 +184,8 @@ module Buzzn::Resource
 
     end
 
-    def initialize(object, security_context)
-      @security_context = security_context
+    def initialize(object, security_context = nil)
+      @security_context = security_context || SecurityContext.new
       @object = object
     end
 

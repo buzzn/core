@@ -4,8 +4,8 @@ require_relative '../../../schemas/transactions/admin/billing/update'
 class Transactions::Admin::Billing::Update < Transactions::Base
 
   validate :schema
-  check :authorize, with: :'operations.authorization.update_ng'
-  step :persist, with: :'operations.action.update_ng'
+  check :authorize, with: :'operations.authorization.update'
+  step :persist, with: :'operations.action.update'
 
   def schema
     Schemas::Transactions::Admin::Billing::Update

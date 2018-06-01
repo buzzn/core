@@ -24,5 +24,4 @@ begin
       }
     end
   Buzzn::Boot::MainContainer.register_config(:fog, fog)
-  Buzzn::Boot::MainContainer.register_config(:templates_path, 'app/pdfs')
 end

@@ -1,4 +1,5 @@
 require_relative '../billing'
+require './app/models/billing.rb'
 
 Schemas::Transactions::Admin::Billing::Update = Schemas::Support.Form(Schemas::Transactions::Update) do
   optional(:receivables_cents).filled(:int?)

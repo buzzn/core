@@ -1,4 +1,5 @@
 require_relative '../../buzzn'
+require_relative '../../buzzn/resource/security_context'
 require_relative 'reader'
 require_relative 'active_record'
 require_relative 'main_container'
@@ -77,8 +78,15 @@ module Buzzn
           importer = Dry::DependencyInjection::Importer.new(singletons)
           importer.import('lib/buzzn', 'services')
           importer.import('lib/buzzn', 'operations')
+          importer.import('lib/buzzn', 'transactions') do |file|
+            !file.include?('steps_adapter')
+          end
 
           MainContainer.merge(singletons)
+
+          # to create resources with injection
+          MainContainer.register(:security_context,
+                                 Buzzn::Resource::SecurityContext.new)
 
           # finalize after we have the complete MainContainer setup
           singletons.finalize

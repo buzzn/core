@@ -1,5 +1,4 @@
-require_relative 'context'
-require 'ruby_regex'
+require_relative 'security_context'
 
 module Buzzn::Resource
   class Collection
@@ -19,9 +18,7 @@ module Buzzn::Resource
     def security_context(uid = nil)
       if uid
         roles = current_roles | (current_user ? current_user.uids_to_rolenames.fetch(uid, []) : [])
-        Context.new(current_user,
-                    permissions,
-                    roles)
+        SecurityContext.new(current_user, permissions, roles)
       else
         @security_context
       end
