@@ -9,6 +9,7 @@ describe Transactions::StepAdapters::Authorize do
     def create_localpool(permission_context:)
       permission_context.localpools.create
     end
+
   end
 
   subject { AuthorizeTransaction.new }
@@ -32,7 +33,7 @@ describe Transactions::StepAdapters::Authorize do
   it 'error message' do
     begin
       subject.call(resource: AdminResource.new(nil))
-      fail
+      raise 'failed'
     rescue Buzzn::PermissionDenied => e
       expect(e.message).to eq('create_localpool AdminResource: permission denied for User: --anonymous--')
     end

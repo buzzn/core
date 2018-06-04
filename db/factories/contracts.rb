@@ -39,7 +39,7 @@ FactoryGirl.define do
   trait :metering_point_operator do
     contract_number { generate(:metering_point_operator_contract_nr) }
     initialize_with { Contract::MeteringPointOperator.new }
-    metering_point_operator_name  'Generic metering point operator'
+    metering_point_operator_name 'Generic metering point operator'
   end
 
   trait :power_taker do

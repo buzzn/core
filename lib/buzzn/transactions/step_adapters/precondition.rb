@@ -18,7 +18,6 @@ module Transactions::StepAdapters
         # TODO better use this and handle on roda - see transactions/base
         #Failure(result.errors)
       end
-
     end
 
     register :precondition, Precondition.new

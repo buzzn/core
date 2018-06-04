@@ -16,10 +16,12 @@ I18n.default_locale = :en
 # we want randomness and reproduciblity, so set it here and any
 # test can reset an initial state with Kernel.srand 0
 class Array
+
   alias sample_old sample
   def sample(*)
     sample_old(random: Kernel)
   end
+
 end
 Kernel.srand 0
 

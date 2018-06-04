@@ -16,4 +16,5 @@ class AdminResource < Buzzn::Resource::Base
     super(Admin::LocalpoolResource.all(user).objects,
           Buzzn::Resource::SecurityContext.new(user, Permission, all_roles))
   end
+
 end

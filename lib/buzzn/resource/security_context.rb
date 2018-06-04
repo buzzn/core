@@ -22,7 +22,7 @@ module Buzzn::Resource
       end
     end
 
-    def respond_to?(method)
+    def respond_to_missing?(method, *args)
       super || permissions.respond_to?(method)
     end
 

@@ -10,6 +10,7 @@ describe Transactions::StepAdapters::Add do
     def be
       :happy
     end
+
   end
 
   subject { AddTransaction.new }

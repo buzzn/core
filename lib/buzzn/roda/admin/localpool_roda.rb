@@ -4,14 +4,14 @@ require_relative '../plugins/aggregation'
 module Admin
   class LocalpoolRoda < BaseRoda
 
-  include Import.args[:env,
-                      'transactions.admin.localpool.create',
-                      'transactions.admin.localpool.update',
-                      'transactions.admin.localpool.assign_owner',
-                      'transactions.admin.localpool.create_person_owner',
-                      'transactions.admin.localpool.create_organization_owner',
-                      'transactions.bubbles'
-                     ]
+    include Import.args[:env,
+                        'transactions.admin.localpool.create',
+                        'transactions.admin.localpool.update',
+                        'transactions.admin.localpool.assign_owner',
+                        'transactions.admin.localpool.create_person_owner',
+                        'transactions.admin.localpool.create_organization_owner',
+                        'transactions.bubbles'
+                       ]
 
     PARENT = :localpool
 

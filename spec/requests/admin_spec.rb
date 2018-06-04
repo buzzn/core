@@ -127,9 +127,10 @@ describe Admin::Roda do
       end
 
       let(:expected_person_json) do
-        expected_persons_with_nested_json.select do |item|
+        persons = expected_persons_with_nested_json.select do |item|
           item['id'] == person.id
-        end.collect do |item|
+        end
+        persons.collect do |item|
           json = item.dup
           contracts = json.delete('contracts')
           json['address'] = {

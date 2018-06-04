@@ -16,7 +16,7 @@ module Transactions::Admin::Localpool
     map :save_metering_point_operator_contract
 
     def params_schema
-      nil#Schemas::Transactions::Admin::Contract::MeteringPointOperator::Create
+      #Schemas::Transactions::Admin::Contract::MeteringPointOperator::Create
     end
 
     def allowed_roles(permission_context:)
@@ -50,5 +50,6 @@ module Transactions::Admin::Localpool
       object.save!
       Contract::MeteringPointOperatorResource.new(object, resource.security_context.metering_point_operator_contract)
     end
+
   end
 end

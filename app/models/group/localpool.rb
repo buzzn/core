@@ -61,8 +61,8 @@ module Group
 
     def self.persons(base = self.all) #where('1=1')) # means take all localpools
       roles = Role.arel_table
-      persons_roles     = Arel::Table.new(:persons_roles)
-      persons         = Person.arel_table
+      persons_roles = Arel::Table.new(:persons_roles)
+      persons = Person.arel_table
       localpool_ids =
         if base.is_a?(Group::Localpool)
           base.id
@@ -105,8 +105,8 @@ module Group
         end
 
       contract_organizations = contracts(base).where('contracts.customer_organization_id = organizations.id or contracts.contractor_organization_id = organizations.id')
-                  .select(1)
-                  .exists
+                                              .select(1)
+                                              .exists
       Organization.where(localpool_owner.or(contract_organizations))
     end
 

@@ -10,9 +10,7 @@ module Schemas::PreConditions::Contract
 
     required(:address).filled
     required(:owner) do
-      filled?.and(
-       type?(Organization).then schema(Schemas::PreConditions::Organization)).and(
-        type?(Person).then schema(Schemas::PreConditions::Person))
+      filled?.and(type?(Organization).then(schema(Schemas::PreConditions::Organization)).and(type?(Person).then(schema(Schemas::PreConditions::Person))))
     end
   end
 

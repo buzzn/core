@@ -3,11 +3,11 @@ require_relative '../admin_roda'
 module Admin
   class BillingCycleRoda < BaseRoda
 
-  include Import.args[:env,
-                      'transactions.admin.billing_cycle.create',
-                      'transactions.admin.billing_cycle.update',
-                      'transactions.admin.billing_cycle.delete',
-                     ]
+    include Import.args[:env,
+                        'transactions.admin.billing_cycle.create',
+                        'transactions.admin.billing_cycle.update',
+                        'transactions.admin.billing_cycle.delete',
+                       ]
 
     plugin :shared_vars
 

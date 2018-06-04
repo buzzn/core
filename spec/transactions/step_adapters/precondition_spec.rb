@@ -9,6 +9,7 @@ describe Transactions::StepAdapters::Precondition do
     def create_precondition_schema
       Schemas::Constraints::Group
     end
+
   end
 
   entity(:localpool) { create(:group, :localpool) }
