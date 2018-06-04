@@ -1,3 +1,4 @@
+require './app/models/person.rb'
 require_relative '../person'
 
 Schemas::Transactions::Person::Update = Schemas::Support.Form(Schemas::Transactions::Update) do
