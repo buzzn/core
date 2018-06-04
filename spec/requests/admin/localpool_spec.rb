@@ -8,8 +8,7 @@ describe Admin::LocalpoolRoda do
 
   def serialized_bank_account(account)
     if account.present?
-      {
-        'id'                    => account.id,
+      { 'id'                    => account.id,
         'type'                  => 'bank_account',
         'updated_at'            => account.updated_at.as_json,
         'holder'                => account.holder,
@@ -18,22 +17,19 @@ describe Admin::LocalpoolRoda do
         'iban'                  => account.iban,
         'direct_debit'          => account.direct_debit,
         'updatable'             => false,
-        'deletable'             => false
-      }
+        'deletable'             => false }
     else
       nil
     end
   end
 
   def serialized_incompleteness(localpool)
-    json = {
-      'owner' => ['must be filled'],
-      'grid_feeding_register' => ['must be filled'],
-      'grid_consumption_register' => ['must be filled'],
-      'distribution_system_operator' => ['must be filled'],
-      'transmission_system_operator' => ['must be filled'],
-      'electricity_supplier' => ['must be filled']
-    }
+    json = { 'owner' => ['must be filled'],
+             'grid_feeding_register' => ['must be filled'],
+             'grid_consumption_register' => ['must be filled'],
+             'distribution_system_operator' => ['must be filled'],
+             'transmission_system_operator' => ['must be filled'],
+             'electricity_supplier' => ['must be filled'] }
     if localpool
       unless localpool.bank_account
         json['bank_account'] = ['must be filled']
@@ -97,13 +93,10 @@ describe Admin::LocalpoolRoda do
       if localpool.address
         true
       else
-        {
-          'address' => ['must be filled'],
-          'owner' => ['must be filled']
-        }
+        { 'address' => ['must be filled'],
+          'owner' => ['must be filled'] }
       end
-    {
-      'id'=>localpool.id,
+    { 'id'=>localpool.id,
       'type'=>'group_localpool',
       'updated_at'=>localpool.updated_at.as_json,
       'name'=>localpool.name,
@@ -125,8 +118,7 @@ describe Admin::LocalpoolRoda do
       'allowed_actions' => {
         'create_metering_point_operator_contract'=> allowed
       },
-      'next_billing_cycle_begin_date' => localpool.start_date.as_json
-    }
+      'next_billing_cycle_begin_date' => localpool.start_date.as_json }
   end
 
   let(:localpools_json) do
@@ -187,16 +179,12 @@ describe Admin::LocalpoolRoda do
   context 'POST' do
 
     let(:wrong_json) do
-      {
-        'errors'=>[
-          {'parameter'=>'name',
-           'detail'=>'size cannot be greater than 64'},
-          {'parameter'=>'description',
-           'detail'=>'size cannot be greater than 256'},
-          {'parameter' => 'start_date',
-           'detail' => 'must be a date'}
-        ]
-      }
+      { 'errors'=>[{'parameter'=>'name',
+                    'detail'=>'size cannot be greater than 64'},
+                   {'parameter'=>'description',
+                    'detail'=>'size cannot be greater than 256'},
+                   {'parameter' => 'start_date',
+                    'detail' => 'must be a date'}] }
     end
 
     it '401' do
@@ -222,8 +210,7 @@ describe Admin::LocalpoolRoda do
     end
 
     let(:created_json) do
-      {
-        'type' => 'group_localpool',
+      { 'type' => 'group_localpool',
         'name' => 'suPer Duper',
         'slug' => 'super-duper',
         'description' => 'superduper localpool location on the dark side of the moon',
@@ -246,8 +233,7 @@ describe Admin::LocalpoolRoda do
             'owner' => ['must be filled']
           }
         },
-        'next_billing_cycle_begin_date' => Date.today.as_json,
-      }
+        'next_billing_cycle_begin_date' => Date.today.as_json }
     end
 
     let(:new_localpool) do
@@ -273,40 +259,34 @@ describe Admin::LocalpoolRoda do
   context 'PATCH' do
 
       let(:wrong_json) do
-        {
-          'errors'=>[
-            {'parameter'=>'updated_at',
-             'detail'=>'is missing'},
-            {'parameter'=>'name',
-             'detail'=>'size cannot be greater than 64'},
-            {'parameter'=>'description',
-             'detail'=>'size cannot be greater than 256'},
-            {'parameter' => 'start_date',
-             'detail' => 'must be a date'},
-            {'parameter' => 'show_object',
-             'detail' => 'must be boolean'},
-            {'parameter' => 'show_production',
-             'detail' => 'must be boolean'},
-            {'parameter' => 'show_energy',
-             'detail' => 'must be boolean'},
-            {'parameter' => 'show_contact',
-             'detail' => 'must be boolean'},
-            {'parameter' => 'show_display_app',
-             'detail' => 'must be boolean'}
-          ]
-        }
+        { 'errors'=>[{'parameter'=>'updated_at',
+                      'detail'=>'is missing'},
+                     {'parameter'=>'name',
+                      'detail'=>'size cannot be greater than 64'},
+                     {'parameter'=>'description',
+                      'detail'=>'size cannot be greater than 256'},
+                     {'parameter' => 'start_date',
+                      'detail' => 'must be a date'},
+                     {'parameter' => 'show_object',
+                      'detail' => 'must be boolean'},
+                     {'parameter' => 'show_production',
+                      'detail' => 'must be boolean'},
+                     {'parameter' => 'show_energy',
+                      'detail' => 'must be boolean'},
+                     {'parameter' => 'show_contact',
+                      'detail' => 'must be boolean'},
+                     {'parameter' => 'show_display_app',
+                      'detail' => 'must be boolean'}] }
       end
 
     let(:stale_json) do
-      {
-        'errors' => [
-          {'detail'=>"Group::Localpool: #{localpool.id} was updated at: #{localpool.updated_at}"}]
-      }
+      { 'errors' => [
+        {'detail'=>"Group::Localpool: #{localpool.id} was updated at: #{localpool.updated_at}"}
+      ] }
     end
 
     let(:updated_json) do
-      {
-        'id'=>localpool.id,
+      { 'id'=>localpool.id,
         'type'=>'group_localpool',
         'name'=>'a b c d',
         'slug' => 'a-b-c',
@@ -327,8 +307,7 @@ describe Admin::LocalpoolRoda do
         'allowed_actions' => {
           'create_metering_point_operator_contract'=>true
         },
-        'next_billing_cycle_begin_date' => Date.yesterday.as_json
-      }
+        'next_billing_cycle_begin_date' => Date.yesterday.as_json }
     end
 
     it '401' do
@@ -417,8 +396,7 @@ describe Admin::LocalpoolRoda do
         'deletable'=>false,
         'tariffs'=>{
           'array'=> contract.tariffs.collect do |t|
-            {
-              'id'=>t.id,
+            { 'id'=>t.id,
               'type'=>'contract_tariff',
               'updated_at'=>t.updated_at.as_json,
               'name'=>t.name,
@@ -427,21 +405,18 @@ describe Admin::LocalpoolRoda do
               'energyprice_cents_per_kwh'=>t.energyprice_cents_per_kwh,
               'baseprice_cents_per_month'=>t.baseprice_cents_per_month,
               'updatable' => false,
-              'deletable' => false,
-            }
+              'deletable' => false }
           end
         },
         'payments'=>{
           'array'=> contract.payments.collect do |p|
-            {
-              'id'=>p.id,
+            { 'id'=>p.id,
               'type'=>'contract_payment',
               'updated_at'=>nil,
               'begin_date'=>p.begin_date.to_s,
               'last_date'=>nil,
               'price_cents'=>p.price_cents,
-              'cycle'=>p.cycle,
-            }
+              'cycle'=>p.cycle }
           end
         },
         'contractor'=>{
@@ -529,8 +504,7 @@ describe Admin::LocalpoolRoda do
         'metering_point_operator_name'=>contract.metering_point_operator_name,
         'tariffs'=> {
           'array'=>contract.tariffs.collect do |tariff|
-            {
-              'id'=>tariff.id,
+            { 'id'=>tariff.id,
               'type'=>'contract_tariff',
               'updated_at'=>contract.tariff.updated_at.as_json,
               'name'=>contract.tariff.name,
@@ -539,21 +513,18 @@ describe Admin::LocalpoolRoda do
               'energyprice_cents_per_kwh'=>contract.tariff.energyprice_cents_per_kwh,
               'baseprice_cents_per_month'=>contract.tariff.baseprice_cents_per_month,
               'updatable' => false,
-              'deletable' => false,
-            }
+              'deletable' => false }
           end
         },
         'payments'=>{
           'array'=> contract.payments.collect do |p|
-            {
-              'id'=>p.id,
+            { 'id'=>p.id,
               'type'=>'contract_payment',
               'updated_at'=>nil,
               'begin_date'=>p.begin_date.to_s,
               'last_date'=>p.last_date ? p.last_date.to_s : nil,
               'price_cents'=>p.price_cents,
-              'cycle'=>p.cycle,
-            }
+              'cycle'=>p.cycle }
           end
         },
         'contractor'=>{
@@ -678,8 +649,7 @@ describe Admin::LocalpoolRoda do
         register = market_location.register
         json['customer'] =
           if contract.customer
-            {
-              'id'=>contract.customer.id,
+            { 'id'=>contract.customer.id,
               'type'=>'person',
               'updated_at'=>contract.customer.updated_at.as_json,
               'prefix'=>contract.customer.attributes['prefix'],
@@ -693,8 +663,7 @@ describe Admin::LocalpoolRoda do
               'image'=>contract.customer.image.medium.url,
               'customer_number' => contract.customer.customer_number.id,
               'updatable'=>true,
-              'deletable'=>false,
-            }
+              'deletable'=>false }
           end
         json['market_location'] = {
           'id' => market_location.id,
@@ -757,26 +726,22 @@ describe Admin::LocalpoolRoda do
     context 'GET' do
 
       let(:managers_json) do
-        [
-          {
-            'id'=>manager.id,
-            'type'=>'person',
-            'updated_at'=>manager.updated_at.as_json,
-            'prefix'=>manager.attributes['prefix'],
-            'title'=>manager.title,
-            'first_name'=>manager.first_name,
-            'last_name'=>manager.last_name,
-            'phone'=>manager.phone,
-            'fax'=>manager.fax,
-            'email'=>manager.email,
-            'preferred_language'=>manager.attributes['preferred_language'],
-            'image'=>manager.image.medium.url,
-            'customer_number' => nil,
-            'updatable'=>true,
-            'deletable'=>true,
-            'bank_accounts'=> { 'array'=>[] },
-          }
-        ]
+        [{ 'id'=>manager.id,
+           'type'=>'person',
+           'updated_at'=>manager.updated_at.as_json,
+           'prefix'=>manager.attributes['prefix'],
+           'title'=>manager.title,
+           'first_name'=>manager.first_name,
+           'last_name'=>manager.last_name,
+           'phone'=>manager.phone,
+           'fax'=>manager.fax,
+           'email'=>manager.email,
+           'preferred_language'=>manager.attributes['preferred_language'],
+           'image'=>manager.image.medium.url,
+           'customer_number' => nil,
+           'updatable'=>true,
+           'deletable'=>true,
+           'bank_accounts'=> { 'array'=>[] } }]
       end
 
       it '401' do

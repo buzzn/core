@@ -28,10 +28,13 @@ class Services::PdfHtmlGenerator
   end
 
   def render_html(name_or_template, struct)
-    if name_or_template.is_a?(String)
+    case name_or_template
+    when String
       template = resolve_template(name_or_template)
-    else
+    when Template
       template = name_or_template
+    else
+      raise "can not handle #{name_or_template.class}"
     end
     Slim::Template.new { template.source }.render(struct)
   end

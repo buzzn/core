@@ -18,5 +18,6 @@ module Contract
     def contractor=(*)
       raise 'can not assign contractor as it is always Organization.buzzn'
     end
+
   end
 end

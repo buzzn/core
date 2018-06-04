@@ -5,9 +5,7 @@ module Contract
 
     model MeteringPointOperator
 
-    attributes :metering_point_operator_name#,
-               #:allowed_actionss#,
-              # :incompleteness
+    attributes :metering_point_operator_name
 
     def allowed_actionsaxs
       allowed = []

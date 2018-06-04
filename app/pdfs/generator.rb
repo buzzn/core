@@ -44,6 +44,7 @@ module Pdf
     include Import.reader['services.pdf_html_generator']
 
     def initialize(root_object, **)
+      @logger = Buzzn::Logger.new(self)
       @root = root_object
       @builder = Builders::StructBuilder.new(PdfStruct)
     end
@@ -55,12 +56,12 @@ module Pdf
     def to_pdf
       time = Buzzn::Utils::Chronos.now.to_f
       pdf = pdf_html_generator.generate_pdf(template, struct)
-      p (Buzzn::Utils::Chronos.now.to_f - time)
+      @logger.info{ "#{Buzzn::Utils::Chronos.now.to_f - time} seconds" }
       pdf
     end
 
     def pdf_document_stale?
-      PdfDocument.where(template: template, json: data.to_json).count == 0
+      PdfDocument.where(template: template, json: data.to_json).count.zero?
     end
 
     def create_pdf_document(pdf = nil)
@@ -68,7 +69,7 @@ module Pdf
       return pdf_document if pdf_document
       pdf ||= to_pdf #generate pdf outside of transaction
       key = @root.class.name.underscore.gsub(%r(.*/), '')
-      path = "pdfs/#{key}/#{@root.id}/template/#{template.name}_#{Buzzn::Utils::Chronos.now.strftime("%Y%m%d_%H%M%S")}.pdf"
+      path = "pdfs/#{key}/#{@root.id}/template/#{template.name}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}.pdf"
       document = Document.new(path: path)
       PdfDocument.transaction do
         document.store(pdf)

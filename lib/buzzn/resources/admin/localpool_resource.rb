@@ -84,5 +84,6 @@ module Admin
       @create_mpo ||= Schemas::PreConditions::Contract::MeteringPointOperatorCreate
       @create_mpo.call(self)
     end
+
   end
 end

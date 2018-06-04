@@ -6,8 +6,8 @@ describe Contract::TariffResource do
 
   entity(:localpool_processing) do
     create(:contract, :localpool_processing,
-              localpool: localpool,
-              tariffs: [tariff])
+           localpool: localpool,
+           tariffs: [tariff])
   end
 
   let(:tariff_resource) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).tariffs.first }

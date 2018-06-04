@@ -3,6 +3,8 @@ require_relative 'generator'
 module Pdf
   class MeteringPointOperator < Generator
 
+    attr_reader :contract
+
     def initialize(contract)
       super
       @contract = contract
@@ -30,10 +32,6 @@ module Pdf
       else
         raise "can not handle #{person_or_organization.class}"
       end
-    end
-
-    def contract
-      @contract
     end
 
     def build_customer(customer)

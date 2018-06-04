@@ -51,7 +51,7 @@ describe Services::PdfHtmlGenerator do
     entity(:minimal) { File.join(this, 'minimal.slim') }
     entity!(:old) { generator.resolve_template('minimal.slim') }
     entity!(:before) do
-      sleep 1;
+      sleep 1
       FileUtils.touch(minimal)
     end
 

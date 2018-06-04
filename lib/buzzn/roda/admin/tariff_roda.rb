@@ -3,10 +3,10 @@ require_relative '../admin_roda'
 module Admin
   class TariffRoda < BaseRoda
 
-  include Import.args[:env,
-                      'transactions.admin.tariff.create',
-                      'transactions.admin.tariff.delete',
-                     ]
+    include Import.args[:env,
+                        'transactions.admin.tariff.create',
+                        'transactions.admin.tariff.delete',
+                       ]
 
     plugin :shared_vars
 

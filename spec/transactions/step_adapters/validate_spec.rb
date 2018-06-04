@@ -9,6 +9,7 @@ describe Transactions::StepAdapters::Validate do
     def params_schema
       Schemas::Constraints::Group
     end
+
   end
 
   subject { ValidateTransaction.new }
@@ -20,7 +21,7 @@ describe Transactions::StepAdapters::Validate do
   end
 
   it do
-    expect { subject.call(params:{}) }.to raise_error(Buzzn::ValidationError)
+    expect { subject.call(params: {}) }.to raise_error(Buzzn::ValidationError)
   end
 
 end

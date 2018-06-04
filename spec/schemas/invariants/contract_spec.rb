@@ -41,7 +41,6 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     end
   end
 
-
   shared_examples 'invariants of contracting party' do |label, contract_name, expected|
 
     let(:contract) { send(contract_name) }
