@@ -59,8 +59,10 @@ describe Services::PdfHtmlGenerator do
 
     context 'new template' do
       entity!(:before2) do
-        generator.instance_variable_set(:@path, 'tmp/pdfs')
-        FileUtils.cp(File.join(this, 'minimal2.slim'), 'tmp/pdfs/minimal.slim')
+        temp_dir = 'tmp/pdfs'
+        generator.instance_variable_set(:@path, temp_dir)
+        FileUtils.mkdir_p temp_dir
+        FileUtils.cp(File.join(this, 'minimal2.slim'), "#{temp_dir}/minimal.slim")
       end
       entity(:new) { generator.resolve_template('minimal.slim') }
 
