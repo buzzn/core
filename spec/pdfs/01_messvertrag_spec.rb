@@ -19,7 +19,7 @@ describe Pdf::MeteringPointOperator do
 
     it 'renders html' do
       html = subject.to_html
-      print_html(name, html)
+      html = print_html(name, html)
       expect(html).to eq File.read(__FILE__.sub(/.rb$/, '_person.html'))
     end
   end

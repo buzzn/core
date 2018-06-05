@@ -85,5 +85,9 @@ module Admin
       @create_mpo.call(self)
     end
 
+    def deletable
+      super && object.owner.nil?
+    end
+
   end
 end
