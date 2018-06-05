@@ -29,7 +29,7 @@ describe Admin::LocalpoolRoda do
       'show_contact' => nil,
       'show_display_app' => nil,
       'updatable'=>true,
-      'deletable'=>true,
+      'deletable'=>false,
       'createables' => ['managers', 'organizations', 'registers', 'persons', 'tariffs', 'billing_cycles'],
       'incompleteness' => {
         'grid_feeding_register' => ['must be filled'],
