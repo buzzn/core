@@ -1,3 +1,5 @@
+require_relative '../operations'
+
 class Operations::Noop
 
   def call(**)
