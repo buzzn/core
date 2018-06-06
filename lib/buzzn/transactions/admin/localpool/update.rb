@@ -5,7 +5,9 @@ class Transactions::Admin::Localpool::Update < Transactions::Base
 
   validate :schema
   check :authorize, with: :'operations.authorization.update'
-  map :persist, with: :'operations.action.update'
+  around :db_transaction
+  tee :create_or_update_address, with: :'operations.action.create_or_update_address'
+  map :update_localpool, with: :'operations.action.update'
 
   def schema
     Schemas::Transactions::Admin::Localpool::Update

@@ -1,4 +1,5 @@
 require_relative '../constraints'
+require './app/models/address.rb'
 
 Schemas::Constraints::Address = Schemas::Support.Form do
   required(:street).filled(:str?, max_size?: 64)
