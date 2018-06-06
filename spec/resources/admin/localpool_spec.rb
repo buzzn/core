@@ -66,7 +66,7 @@ describe Admin::LocalpoolResource do
       it 'invalid' do
         expect(pool.incompleteness[:owner]).to eq(['must be filled'])
         pool.object.owner = organization
-        expect(pool.incompleteness[:owner]).to eq({})
+        expect(pool.incompleteness[:owner]).to eq(nil)
         organization.contact = person
         organization.contact.remove_role(Role::GROUP_OWNER, pool.object)
         organization.contact.add_role(Role::GROUP_OWNER, pool.object)
