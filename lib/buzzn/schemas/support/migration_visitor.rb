@@ -3,7 +3,7 @@ require_relative 'visitor'
 class Schemas::Support::MigrationVisitor < Schemas::Support::Visitor
 
   def initialize(schema, includes: nil, excludes: [])
-    super(schema)
+    @schema = schema
     @includes = includes
     @excludes = excludes
   end
@@ -33,7 +33,7 @@ class Schemas::Support::MigrationVisitor < Schemas::Support::Visitor
         migration.send(type, name, db_options)
       end
     end
-    visit(&processor)
+    visit(@schema, &processor)
   end
 
   def up(table, clazz)
@@ -49,7 +49,7 @@ class Schemas::Support::MigrationVisitor < Schemas::Support::Visitor
         # omit
       end
     end
-    visit(&processor)
+    visit(@schema, &processor)
   end
 
   def down(table, clazz)
@@ -64,7 +64,7 @@ class Schemas::Support::MigrationVisitor < Schemas::Support::Visitor
         # omit
       end
     end
-    visit(&processor)
+    visit(@schema, &processor)
     clazz.drop_table(table)
   end
 

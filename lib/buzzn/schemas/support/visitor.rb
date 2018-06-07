@@ -3,16 +3,10 @@ require_relative '../support'
 class Schemas::Support::Visitor
 
   def self.visit(schema, &block)
-    new(schema).visit(&block)
+    new.visit(schema, &block)
   end
 
-  attr_reader :schema
-
-  def initialize(schema)
-    @schema = schema
-  end
-
-  def visit(&block)
+  def visit(schema, prefix = '', &block)
     schema.rules.each do |name, rule|
       required =
         case rule
@@ -23,20 +17,20 @@ class Schemas::Support::Visitor
         else
           raise "do not know what to do with #{rule.class}"
         end
-      result = visit_rule(rule.rules[1..-1], {})
-      block.call(name: name, required: required, type: result.delete(:type), options: result)
+      result = visit_rule(rule.rules[1..-1], {}, name, &block)
+      block.call(name: "#{prefix}#{name}", required: required, type: result.delete(:type), options: result) if result
     end
   end
 
-  def visit_rule(rules, result)
+  def visit_rule(rules, result, name = nil, &block)
     rules.collect do |rule|
       case rule
       when Dry::Logic::Operations::And
-        visit_rule(rule.rules, result)
+        visit_rule(rule.rules, result, name, &block)
       when Dry::Logic::Operations::Key
-        visit_rule(rule.rules, result)
+        visit_rule(rule.rules, result, name, &block)
       when Dry::Logic::Operations::Implication
-        visit_rule(rule.rules[1..-1], result)
+        visit_rule(rule.rules[1..-1], result, name, &block)
       when Dry::Logic::Rule::Predicate
         type = rule.predicate.to_s.gsub(/.*#|\?>$/, '')
         case type
@@ -76,6 +70,9 @@ class Schemas::Support::Visitor
         else
           result[:type] = rule.to_s.sub('?', '').to_sym unless result[:type]
         end
+      when Dry::Validation::Schema
+        visit(rule, "#{name}.", &block)
+        result = nil
       else
         raise "do not know what to do with #{rule.class}"
       end

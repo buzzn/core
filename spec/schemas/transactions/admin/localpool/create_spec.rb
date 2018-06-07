@@ -17,7 +17,7 @@ describe 'Schemas::Transactions::Admin::Localpool::Create' do
 
     let(:params) { {name: 'be there', address: {street: 'wallstreet', zip: '666', city: 'atlantis', country: 'IT'}} }
 
-    it { expect(subject.({name: 'be here', address: {}})).to be_failure }
+    it { expect(subject.(name: 'be here', address: {})).to be_failure }
     it { expect(subject.(params)).to be_success }
     it { expect(subject.(params).output).to eq params }
   end

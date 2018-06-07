@@ -41,7 +41,7 @@ module SwaggerHelper
     expect(@schema).not_to be_nil
     expected = @expected || []
     process_rule = ->(name: nil, required: nil, type: nil, options: {}) do
-      if required && @expected.nil?
+      if required && @expected.nil? && !name&.include?('.')
         expected << { 'parameter' => "#{name}", 'detail' => 'is missing' }
       end
 
@@ -83,6 +83,8 @@ module SwaggerHelper
         sparam.exclusiveMinimum = options[:exclusive_min] if options[:exclusive_min]
       when :boolean
         sparam.type = 'boolean'
+      when :hash
+        sparam.type = 'hash'
       else
         sparam.type = 'string'
         sparam.format = type.to_s
