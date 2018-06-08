@@ -17,36 +17,39 @@ describe Transactions::Admin::Localpool::Update do
       resource.object.reload
     end
 
-    entity(:result) do
-      transaction.(params: {name: 'takari',
-                            updated_at: localpool.reload.updated_at.as_json},
-                   resource: resource).value
-    end
+    #it_behaves_like 'update without address', Transactions::Admin::Localpool::Update.new, resource, name: 'takari'
 
-    it { expect(result).to be_a Admin::LocalpoolResource }
-    it { expect(result.name).to eq 'takari' }
-    it { expect(result.address).to be nil }
 
-    context 'create address' do
+    # entity(:result) do
+    #   transaction.(params: {name: 'takari',
+    #                         updated_at: localpool.reload.updated_at.as_json},
+    #                resource: resource).value
+    # end
 
-      entity(:result2) do
-        transaction.(params: {
-                       name: 'takakari',
-                       updated_at: localpool.reload.updated_at.as_json,
-                       address: {
-                         street: 'wallstreet', zip: '666',
-                         city: 'atlantis', country: 'IT',
-                         updated_at: Date.new(0).as_json
-                       }
-                     },
-                     resource: resource).value
-      end
+    # it { expect(result).to be_a Admin::LocalpoolResource }
+    # it { expect(result.name).to eq 'takari' }
+    # it { expect(result.address).to be nil }
 
-      it { expect(result2).to be_a Admin::LocalpoolResource }
-      it { expect(result2.name).to eq 'takakari' }
-      it { expect(result2.address).to be_a AddressResource }
+    # context 'create address' do
 
-    end
+    #   entity(:result2) do
+    #     transaction.(params: {
+    #                    name: 'takakari',
+    #                    updated_at: localpool.reload.updated_at.as_json,
+    #                    address: {
+    #                      street: 'wallstreet', zip: '666',
+    #                      city: 'atlantis', country: 'IT',
+    #                      updated_at: Date.new(0).as_json
+    #                    }
+    #                  },
+    #                  resource: resource).value
+    #   end
+
+    #   it { expect(result2).to be_a Admin::LocalpoolResource }
+    #   it { expect(result2.name).to eq 'takakari' }
+    #   it { expect(result2.address).to be_a AddressResource }
+
+    # end
   end
 
   context 'with address' do

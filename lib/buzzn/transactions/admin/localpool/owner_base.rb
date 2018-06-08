@@ -2,7 +2,7 @@ require_relative '../localpool'
 
 class Transactions::Admin::Localpool::OwnerBase < Transactions::Base
 
-  def assign_owner(new_owner:, resource:)
+  def assign_owner(new_owner:, resource:, **)
     old_owner = resource.owner
     resource.object.owner = new_owner.nil? ? nil : new_owner.object
     setup_roles(resource, old_owner, new_owner)
