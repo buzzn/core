@@ -7,7 +7,7 @@ module Transactions::Admin::Localpool
     authorize :allowed_roles
     around :db_transaction
     tee :create_address, with: :'operations.action.create_address'
-    map :create_person, with: :'operations.action.create_item'
+    add :new_owner, with: :'operations.action.create_item'
     map :assign_owner
 
     def schema
@@ -18,7 +18,7 @@ module Transactions::Admin::Localpool
       permission_context.owner.create
     end
 
-    def create_person(params:, resource:)
+    def new_owner(params:, resource:)
       PersonResource.new(
         *super(resource.persons, params)
       )
