@@ -40,6 +40,15 @@ describe Admin::LocalpoolRoda do
       case localpool.owner
       when Organization
         json['owner'] = {}
+        unless localpool.owner.legal_representation
+          json['owner']['legal_representation'] = ['must be filled']
+        end
+        unless localpool.owner.contact
+          json['owner']['contact'] = ['must be filled']
+        end
+        unless localpool.owner.address
+          json['owner']['address'] = ['must be filled']
+        end
         json.delete('owner') if json['owner'].empty?
       when Person
         json.delete('owner')
