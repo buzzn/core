@@ -9,6 +9,7 @@ module Admin
                         'transactions.admin.localpool.update',
                         'transactions.admin.localpool.assign_owner',
                         'transactions.admin.localpool.create_person_owner',
+                        'transactions.admin.localpool.update_person_owner',
                         'transactions.admin.localpool.create_organization_owner',
                         'transactions.bubbles'
                        ]
@@ -81,6 +82,10 @@ module Admin
         r.on 'person-owner' do
           r.post! do
             create_person_owner.(resource: localpool, params: r.params)
+          end
+
+          r.patch! do
+            update_person_owner.(resource: localpool.owner, params: r.params)
           end
 
           r.post! :id do |id|

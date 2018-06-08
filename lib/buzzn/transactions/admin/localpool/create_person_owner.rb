@@ -6,11 +6,12 @@ module Transactions::Admin::Localpool
     validate :schema
     authorize :allowed_roles
     around :db_transaction
+    tee :create_address, with: :'operations.action.create_address'
     map :create_person, with: :'operations.action.create_item'
     map :assign_owner
 
     def schema
-      Schemas::Transactions::Admin::Person::Create
+      Schemas::Transactions::Person::Create
     end
 
     def allowed_roles(permission_context:)
