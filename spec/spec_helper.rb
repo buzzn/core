@@ -1,7 +1,9 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RACK_ENV'] = 'test'
 ENV['LOG_LEVEL'] ||= 'warn' # can not set it in rails env as it is always 'error'
-require File.expand_path('../../config/environment', __FILE__)
+
+require 'rails/all' # needed for ruby-swagger
+require File.expand_path('../../config/application', __FILE__)
 require 'rack/test'
 require 'awesome_print'
 

@@ -22,9 +22,6 @@ gem 'wkhtmltopdf-binary-edge'
 # storage
 gem 'fog-aws'
 
-# swagger
-gem 'ruby-swagger'
-
 # authentication
 gem 'rodauth'
 gem 'bcrypt'
@@ -100,6 +97,7 @@ group :development do
 end
 
 group :test do
+  gem 'ruby-swagger'
   gem 'rspec_nested_transactions'
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
