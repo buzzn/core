@@ -1,4 +1,4 @@
-describe Me::Roda do
+describe Me::Roda, :request_helper do
 
   def app
     Me::Roda # this defines the active application for this test

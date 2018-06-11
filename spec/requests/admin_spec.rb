@@ -1,4 +1,4 @@
-describe Admin::Roda do
+describe Admin::Roda, :request_helper do
 
   class TestAdminRoda < BaseRoda
 

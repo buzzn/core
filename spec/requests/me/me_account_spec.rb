@@ -1,6 +1,6 @@
 # we can not have nested transactions on AR connection and use Sequel at the
 # same time as it does not see the entities from AR connection
-describe Me::Roda, :skip_nested do
+describe Me::Roda, :skip_nested, :request_helper do
 
   def app
     CoreRoda # use full stack as we need to test CORS config as well
@@ -47,7 +47,7 @@ describe Me::Roda, :skip_nested do
     end
 
     it '200' do
-      expect(authorize(user)).not_to be_nil
+      expect(do_authorize(user)).not_to be_nil
 
       GET '/api/me', user, {}, {'Origin' => 'http://localhost:2999'}
       expect(response.headers['Access-Control-Expose-Headers']).to eq 'Authorization'

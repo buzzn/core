@@ -1,7 +1,7 @@
 require 'dry/container/stub'
 require_relative 'test_admin_localpool_roda'
 
-describe Admin::LocalpoolRoda do
+describe Admin::LocalpoolRoda, :request_helper do
 
   class MockDatasource4Aggregates
 

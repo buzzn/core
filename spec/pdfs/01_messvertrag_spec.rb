@@ -1,4 +1,4 @@
-describe Pdf::MeteringPointOperator do
+describe Pdf::MeteringPointOperator, :pdfs_helper do
 
   before(:all) do
     Kernel.srand 0
