@@ -30,10 +30,10 @@ shared_examples 'update with nested address' do |params|
 
     let(:nested_params) do
       base_params.merge(address: {street: 'wallstreet',
-                                       zip: '666',
-                                       city: 'atlantis',
-                                       country: 'IT',
-                                       updated_at: Date.today.as_json})
+                                  zip: '666',
+                                  city: 'atlantis',
+                                  country: 'IT',
+                                  updated_at: Date.today.as_json})
     end
 
     it { expect(subject.(base_params.merge(address: {}))).to be_failure }

@@ -33,26 +33,6 @@ module RequestsHelper
     token
   end
 
-  def do_it(action, path, params, account, headers = {})
-    default_headers = {
-      'Accept' => 'application/json',
-      'Content-Type' => 'application/json',
-    }
-    account = account.call if account.is_a? Proc
-    case account
-    when Account::Base
-      default_headers['Authorization'] = do_authorize(account, headers)
-    when NilClass
-    else
-      raise "can not handle #{account.class}"
-    end
-    send action, path, params, process_headers(default_headers.merge(headers))
-    if response.status == 500
-      puts json.to_yaml rescue response.body
-    end
-  end
-  private :do_it
-
   def GET(path, token = nil, params = {}, headers = {})
     do_it(:get, path, params, token, headers)
   end
@@ -83,10 +63,9 @@ module RequestsHelper
     end
   end
 
-  def sort_array_of_hash(array, id = 'id')
+  def sort(array, id = 'id')
     array.sort{|n, m| m[id] <=> n[id]}
   end
-  alias sort sort_array_of_hash
 
   def sort_hash(h)
     case h
@@ -100,15 +79,32 @@ module RequestsHelper
 
   private
 
-  def process_headers(headers)
-    converted_headers = {}
+  def do_it(action, path, params, account, headers = {})
+    default_headers = {
+      'Accept' => 'application/json',
+      'Content-Type' => 'application/json',
+    }
+    account = account.call if account.is_a? Proc
+    case account
+    when Account::Base
+      default_headers['Authorization'] = do_authorize(account, headers)
+    when NilClass
+    else
+      raise "can not handle #{account.class}"
+    end
+    send action, path, params, process_headers(default_headers.merge(headers))
+    if response.status == 500
+      puts json.to_yaml rescue response.body
+    end
+  end
 
-    headers.each do |name, value|
-      env_key = name.upcase.gsub("-", "_")
-      env_key = "HTTP_" + env_key unless "CONTENT_TYPE" == env_key
+  def process_headers(headers)
+    headers.each_with_object({}) do |item, converted_headers|
+      name, value = *item
+      env_key = name.upcase.tr('-', '_')
+      env_key = 'HTTP_' + env_key unless env_key == 'CONTENT_TYPE'
       converted_headers[env_key] = value
     end
-    converted_headers
   end
 
   def sort_element(v)

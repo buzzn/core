@@ -2,7 +2,7 @@
 ENV['RACK_ENV'] = 'test'
 ENV['LOG_LEVEL'] ||= 'warn' # can not set it in rails env as it is always 'error'
 require File.expand_path('../../config/environment', __FILE__)
-require "rack/test"
+require 'rack/test'
 require 'awesome_print'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -51,10 +51,6 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = 'random'
-
-  #binding.pry
-  # In Rspec 3.x the spec type is not automatically inferred from a file location, and you must manually set it
- # config.infer_spec_type_from_file_location!
 
   # Include helpers
   config.include RequestsHelper, :request_helper

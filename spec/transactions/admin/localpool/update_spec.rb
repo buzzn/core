@@ -19,7 +19,6 @@ describe Transactions::Admin::Localpool::Update do
 
     #it_behaves_like 'update without address', Transactions::Admin::Localpool::Update.new, resource, name: 'takari'
 
-
     # entity(:result) do
     #   transaction.(params: {name: 'takari',
     #                         updated_at: localpool.reload.updated_at.as_json},

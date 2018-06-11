@@ -2,7 +2,6 @@ require './app/models/person.rb'
 require_relative '../person'
 require_relative '../address/update'
 
-
 Schemas::Transactions::Person::Update = Schemas::Support.Form(Schemas::Transactions::Update) do
   optional(:title).value(included_in?: ::Person.titles.values)
   optional(:prefix).value(included_in?: ::Person.prefixes.values)
