@@ -3,8 +3,6 @@ ENV['RACK_ENV'] = 'test'
 ENV['LOG_LEVEL'] ||= 'warn' # can not set it in rails env as it is always 'error'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
-require 'webmock/rspec'
-require 'rspec/retry'
 require 'awesome_print'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -48,14 +46,6 @@ RSpec.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
 
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  # config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
-  config.use_transactional_fixtures = false
-
   # Run specs in random order to surface order dependencies. If you find an
   # order dependency and want to debug it, you can fix the order by providing
   # the seed, which is printed after each run.
@@ -68,10 +58,6 @@ RSpec.configure do |config|
   # Include helpers
   config.include RequestsHelper, type: :request
   config.include PdfsHelper#, type: :pdfs
-
-  def last_email
-    ActionMailer::Base.deliveries.last
-  end
 
   module ClassMethods
 
@@ -151,11 +137,6 @@ RSpec.configure do |config|
       super
     end
   end
-
-  # show retry status in spec process
-  config.verbose_retry = true
-  # show exception that triggers a retry if verbose_retry is set to true
-  config.display_try_failure_messages = true
 
   # Enable the :focus tag, but run all specs when no focus is set, or when running in CI (in case a :focus is forgotten in-code).
   # https://relishapp.com/rspec/rspec-core/v/2-6/docs/filtering/run-all-when-everything-filtered
