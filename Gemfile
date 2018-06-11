@@ -25,9 +25,6 @@ gem 'fog-aws'
 # swagger
 gem 'ruby-swagger'
 
-# roda
-gem 'roda'
-
 # authentication
 gem 'rodauth'
 gem 'bcrypt'
@@ -57,21 +54,19 @@ gem 'concurrent-ruby-ext'
 
 # Backend
 gem 'puma'
-gem 'rails', '< 5'
+gem 'roda'
 gem 'redis'
 gem 'rack-cors', require: 'rack/cors'
 gem 'clockwork'
 gem 'money-rails'
-gem 'redis-namespace' # ???
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
 gem 'mini_magick'
 gem 'carrierwave'
 gem 'faraday'
 gem 'jbuilder'
 gem 'remote_lock'
-gem 'fabrication'
 gem 'factory_girl'
-gem 'dotenv-rails'
+gem 'dotenv'
 gem 'smarter_csv'
 gem 'sentry-raven' # the Sentry exception notification service
 
@@ -100,18 +95,14 @@ group :development, :test do
 end
 
 group :development do
-  gem 'pry-rails'
   gem 'rake'
 end
 
 group :test do
   gem 'rspec_nested_transactions'
-  gem 'vcr'
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
+  gem 'rails', '< 5'
   gem 'rspec-rails'
-  gem 'email_spec'
   gem 'timecop'
-  gem 'rspec-retry'
-  gem 'webmock'
 end
