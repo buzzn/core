@@ -10,7 +10,7 @@ module ActiveRecordSequelMigrationsAdapter
   def run_sequel_migration(number)
     Sequel.extension :migration
     Sequel.postgres(config[:database], config.except(:database)) do |db|
-      migrations_path = Rails.root.join('db', 'sequel')
+      migrations_path = 'db/sequel'
       puts "Running sequel migration #{number} from #{migrations_path}"
       Sequel::Migrator.run(db, migrations_path, target: number)
     end

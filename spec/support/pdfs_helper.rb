@@ -6,7 +6,7 @@ module PdfsHelper
   def print_html(name, content)
     FileUtils.mkdir_p('tmp/pdfs')
     file = "tmp/pdfs/#{name.sub('slim', 'html')}"
-    root = Rails.root.to_s + '/'
+    root = File.expand_path('.') + '/'
     content.gsub!(root, '')
     File.open(file, 'wb') do |f|
       f.print(content)

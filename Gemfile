@@ -59,7 +59,7 @@ gem 'activerecord', '< 5'
 gem 'redis'
 gem 'rack-cors', require: 'rack/cors'
 gem 'clockwork'
-#gem 'money-rails'
+gem 'mail'
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
 gem 'mini_magick'
 gem 'carrierwave'
