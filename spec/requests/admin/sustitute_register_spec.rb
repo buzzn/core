@@ -1,7 +1,7 @@
 require_relative 'test_admin_localpool_roda'
 require_relative 'resource_shared'
 
-describe Register::SubstituteResource do
+describe Register::SubstituteResource, :request_helper do
 
   def app
     TestAdminLocalpoolRoda

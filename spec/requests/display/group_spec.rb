@@ -1,4 +1,4 @@
-describe Display::GroupRoda do
+describe Display::GroupRoda, :request_helper do
 
   def app
     Display::GroupRoda # this defines the active application for this test

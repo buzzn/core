@@ -1,6 +1,6 @@
 require 'buzzn/types/zip_price_config'
 
-describe Utils::ZipToPriceRoda do
+describe Utils::ZipToPriceRoda, :request_helper do
 
   def app
     Utils::ZipToPriceRoda # this defines the active application for this test

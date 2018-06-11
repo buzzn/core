@@ -1,5 +1,5 @@
 require 'buzzn/schemas/support/visitor'
-describe Admin, :swagger do
+describe Admin, :swagger, :request_helper do
   include SwaggerHelper
 
   def app

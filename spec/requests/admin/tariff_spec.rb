@@ -1,5 +1,5 @@
 require_relative 'test_admin_localpool_roda'
-describe Admin::LocalpoolRoda do
+describe Admin::LocalpoolRoda, :request_helper do
 
   def app
     TestAdminLocalpoolRoda # this defines the active application for this test

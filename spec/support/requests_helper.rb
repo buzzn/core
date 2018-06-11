@@ -17,12 +17,16 @@ module RequestsHelper
     self.class.login_path || '/login'
   end
 
-  def authorize(account, headers = {})
+  def response
+    last_response
+  end
+
+  def do_authorize(account, headers = {})
     $authorizations ||= {}
     pwd = account.respond_to?(:password) ? account.password : 'Example123'
     token = account ? $authorizations[account.id] : nil
     if account && token.nil?
-      post login_path, {login: account.email, password: pwd}.to_json, {'Content-Type' => 'application/json'}.merge(headers)
+      post login_path, {login: account.email, password: pwd}.to_json, process_headers(headers.merge('CONTENT_TYPE' => 'application/json'))
       token = response.headers['Authorization']
       $authorizations[account.id] = token
     end
@@ -31,19 +35,18 @@ module RequestsHelper
 
   def do_it(action, path, params, account, headers = {})
     default_headers = {
-      'Accept'              => 'application/json',
-      'Content-Type'        => 'application/json',
+      'Accept' => 'application/json',
+      'Content-Type' => 'application/json',
     }
     account = account.call if account.is_a? Proc
     case account
     when Account::Base
-      default_headers['Authorization'] = authorize(account, headers)
+      default_headers['Authorization'] = do_authorize(account, headers)
     when NilClass
     else
       raise "can not handle #{account.class}"
     end
-    send action, path, params, default_headers.merge(headers)
-
+    send action, path, params, process_headers(default_headers.merge(headers))
     if response.status == 500
       puts json.to_yaml rescue response.body
     end
@@ -96,6 +99,17 @@ module RequestsHelper
   end
 
   private
+
+  def process_headers(headers)
+    converted_headers = {}
+
+    headers.each do |name, value|
+      env_key = name.upcase.gsub("-", "_")
+      env_key = "HTTP_" + env_key unless "CONTENT_TYPE" == env_key
+      converted_headers[env_key] = value
+    end
+    converted_headers
+  end
 
   def sort_element(v)
     case v

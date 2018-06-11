@@ -1,7 +1,7 @@
 require_relative 'test_admin_localpool_roda'
 require_relative 'resource_shared'
 
-describe Admin::BillingResource do
+describe Admin::BillingResource, :request_helper do
 
   def app
     TestAdminLocalpoolRoda # this defines the active application for this test

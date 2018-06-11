@@ -1,6 +1,6 @@
 require 'dry/container/stub'
 
-describe Display::GroupRoda do
+describe Display::GroupRoda, :request_helper do
 
   class MockDatasource4Aggregates
 

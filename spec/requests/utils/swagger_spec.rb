@@ -1,7 +1,7 @@
 require 'buzzn/schemas/support/visitor'
 require 'buzzn/schemas/transactions/utils/zip_to_price'
 
-describe 'Utils' do
+describe 'Utils', :request_helper do
   include SwaggerHelper
 
   def app

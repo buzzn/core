@@ -1,4 +1,4 @@
-describe Admin::BankAccountRoda do
+describe Admin::BankAccountRoda, :request_helper do
 
   class BankAccountParentRoda < BaseRoda
 

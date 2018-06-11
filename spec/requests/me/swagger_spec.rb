@@ -8,7 +8,7 @@ require 'buzzn/schemas/transactions/me/reset_password_request'
 
 # we can not have nested transactions on AR connection and use Sequel at the
 # same time as it does not see the entities from AR connection
-describe Me, :swagger, :skip_nested do
+describe Me, :swagger, :skip_nested, :request_helper do
   include SwaggerHelper
 
   def app

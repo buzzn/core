@@ -55,10 +55,11 @@ gem 'concurrent-ruby-ext'
 # Backend
 gem 'puma'
 gem 'roda'
+gem 'activerecord', '< 5'
 gem 'redis'
 gem 'rack-cors', require: 'rack/cors'
 gem 'clockwork'
-gem 'money-rails'
+#gem 'money-rails'
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
 gem 'mini_magick'
 gem 'carrierwave'
@@ -103,6 +104,5 @@ group :test do
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
   gem 'rails', '< 5'
-  gem 'rspec-rails'
   gem 'timecop'
 end

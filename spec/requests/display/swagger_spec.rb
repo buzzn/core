@@ -2,7 +2,7 @@ require 'buzzn/schemas/support/visitor'
 require 'buzzn/schemas/transactions/chart'
 require 'buzzn/schemas/transactions/display/score'
 
-describe Display do
+describe Display, :request_helper do
   include SwaggerHelper
 
   def app
