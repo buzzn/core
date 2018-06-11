@@ -53,7 +53,7 @@ namespace :beekeeper do
           self.table_name = '#{schema}.#{table}'
         end
       CODE
-      path = Rails.root.join("lib/beekeeper/models/#{namespace.downcase}/#{table}.rb")
+      path = "lib/beekeeper/models/#{namespace.downcase}/#{table}.rb"
       File.open(path, 'w+') { |f| f.write(class_definition) }
     end
   end
@@ -66,7 +66,7 @@ namespace :beekeeper do
       Person.all.each do |person|
         next unless person.email
         file_name = person.email.downcase
-        local_file_path = Rails.root.join('lib/beekeeper/person_images', "#{file_name}.jpg")
+        local_file_path = File.join('lib/beekeeper/person_images', "#{file_name}.jpg")
         putc '.'
         if File.exist?(local_file_path)
           puts "\nAssigning image #{local_file_path} to #{person.name}"

@@ -394,6 +394,7 @@ DEPENDENCIES
   leafy
   listen
   loofah (~> 2.2.1)
+  mail
   mini_magick
   multi_json
   newrelic_rpm
