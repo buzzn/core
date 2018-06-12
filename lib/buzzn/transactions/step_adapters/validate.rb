@@ -4,7 +4,7 @@ module Transactions::StepAdapters
   class Validate < Abstract
 
     def do_call(operation, options, params:, **kwargs)
-      schema = operation.()
+      schema = operation.(**kwargs)
       unless schema.is_a? Dry::Validation::Schema
         raise ArgumentError.new("step +#{options[:step_name]}+ needs operation which returns a Dry::Validation::Schema instance")
       end
