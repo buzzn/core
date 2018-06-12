@@ -1,5 +1,4 @@
 require_relative '../localpool'
-require_relative '../../address/update'
 
 Schemas::Transactions::Admin::Localpool::Update = Schemas::Support.Form(Schemas::Transactions::Update) do
   optional(:name).filled(:str?, max_size?: 64)
@@ -10,5 +9,4 @@ Schemas::Transactions::Admin::Localpool::Update = Schemas::Support.Form(Schemas:
   optional(:show_energy).filled(:bool?)
   optional(:show_contact).filled(:bool?)
   optional(:show_display_app).filled(:bool?)
-  optional(:address).schema(Schemas::Transactions::Address::Update)
 end
