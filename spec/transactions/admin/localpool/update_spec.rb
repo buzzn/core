@@ -5,7 +5,6 @@ describe Transactions::Admin::Localpool::Update do
 
   entity(:operator) { create(:account, :buzzn_operator) }
   entity!(:localpool) { create(:group, :localpool) }
-  entity!(:address) { localpool.address }
 
   entity(:resource) { Admin::LocalpoolResource.all(operator).first }
 

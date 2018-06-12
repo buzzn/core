@@ -89,13 +89,14 @@ describe Admin::LocalpoolRoda, :request_helper do
   let(:empty_json) { [] }
 
   def serialize(localpool)
-    allowed =
-      if localpool.address
-        true
-      else
-        { 'address' => ['must be filled'],
-          'owner' => ['must be filled'] }
-      end
+    allowed = {}
+    unless localpool.address
+      allowed['address'] = ['must be filled']
+    end
+    unless localpool.owner
+      allowed['owner'] = ['must be filled']
+    end
+    allowed = true if allowed.empty?
     { 'id'=>localpool.id,
       'type'=>'group_localpool',
       'updated_at'=>localpool.updated_at.as_json,
@@ -304,9 +305,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'bank_account' => nil,
         'power_sources' => ['pv'],
         'display_app_url' => nil,
-        'allowed_actions' => {
-          'create_metering_point_operator_contract'=>true
-        },
+        'allowed_actions' => { 'create_metering_point_operator_contract'=> { 'address' => ['must be filled'] } },
         'next_billing_cycle_begin_date' => Date.yesterday.as_json }
     end
 
