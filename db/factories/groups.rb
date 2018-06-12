@@ -11,7 +11,6 @@ FactoryGirl.define do
 
     name        { generate(:localpool_name) }
     description { |attrs| "#{attrs[:name]} description" }
-    address
     start_date { Date.new(2016, 2, 1) }
 
     trait :with_address do

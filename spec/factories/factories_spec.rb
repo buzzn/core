@@ -111,7 +111,11 @@ describe 'Factories produce valid records' do
     subject { create(:group, :localpool) }
     it { is_expected.to have_valid_invariants }
     it { is_expected.to be_valid }
-    it { is_expected.to have_association(:address, Address) }
+    it { is_expected.not_to have_association(:address, Address) }
+    context 'with address' do
+      subject { create(:group, :localpool, :with_address) }
+      it { is_expected.to have_association(:address, Address) }
+    end
   end
 
   context 'Broker' do

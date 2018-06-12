@@ -92,7 +92,6 @@ shared_examples 'update without address' do |transaction, resource_name, params|
                      address: {
                        street: 'wallstreet', zip: '666',
                        city: 'atlantis', country: 'IT',
-                       updated_at: Date.new(0).as_json
                      }
                    },
                    resource: resource).value

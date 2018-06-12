@@ -37,13 +37,16 @@ describe Admin::LocalpoolRoda, :request_helper do
         'distribution_system_operator' => ['must be filled'],
         'transmission_system_operator' => ['must be filled'],
         'electricity_supplier' => ['must be filled'],
-        'bank_account' => ['must be filled']
+        'bank_account' => ['must be filled'],
+        'address' => ['must be filled']
       },
       'bank_account' => nil,
       'power_sources' => [],
       'display_app_url' => nil,
       'allowed_actions' => {
-        'create_metering_point_operator_contract'=>true
+        'create_metering_point_operator_contract'=> {
+          'address' => ['must be filled']
+        }
       },
       'next_billing_cycle_begin_date' => '2016-02-01'
     }
