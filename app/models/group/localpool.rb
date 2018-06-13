@@ -13,7 +13,6 @@ module Group
     belongs_to :transmission_system_operator, class_name: 'Organization'
     belongs_to :electricity_supplier, class_name: 'Organization'
 
-    has_many :addresses, as: :addressable, dependent: :destroy
     has_many :tariffs, dependent: :destroy, class_name: 'Contract::Tariff', foreign_key: :group_id
     has_many :billing_cycles, dependent: :destroy
 
