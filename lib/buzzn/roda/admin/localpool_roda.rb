@@ -11,7 +11,8 @@ module Admin
                         'transactions.admin.localpool.create_person_owner',
                         'transactions.admin.localpool.update_person_owner',
                         'transactions.admin.localpool.create_organization_owner',
-                        'transactions.bubbles'
+                        'transactions.bubbles',
+                        'transactions.delete'
                        ]
 
     PARENT = :localpool
@@ -33,6 +34,10 @@ module Admin
 
         r.patch! do
           update.(resource: localpool, params: r.params)
+        end
+
+        r.delete! do
+          delete.(resource: localpool)
         end
 
         r.on 'contracts' do

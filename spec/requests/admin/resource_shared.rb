@@ -1,3 +1,51 @@
+shared_examples 'delete' do |object_name|
+
+  let(:object) { send(object_name) }
+
+  def errors_detail
+    json['errors'].first['detail'].sub(/.*[0-9]+ /, '')
+  end
+
+  it '401' do
+    GET path, $admin
+    expire_admin_session do
+      DELETE path, $admin
+      expect(response).to be_session_expired_json(401)
+    end
+  end
+
+  it '403' do
+    DELETE path
+    expect(response.status).to eq(403)
+    # this comes from the me_roda mounted in TestAdminLocalpoolRoda
+    expect(errors_detail).to eq('retrieve Person: permission denied for User: --anonymous--')
+
+    DELETE path, $user
+    expect(response.status).to eq(403)
+    expect(errors_detail).to eq("permission denied for User: #{$user.id}")
+  end
+
+  it '404' do
+    wrong_path = path.sub(/[0-9]*$/, '1234567890')
+    DELETE wrong_path, $admin
+    expect(response.status).to eq(404)
+    expect(errors_detail).to eq("not found by User: #{$admin.id}")
+  end
+
+  context '204' do
+    it do
+      DELETE path, $admin
+      expect(response).to have_http_status(204)
+      expect(response.body).to be_empty
+
+      GET path, $admin
+      expect(response).to have_http_status(404)
+
+      expect { object.reload }.to raise_error ActiveRecord::RecordNotFound
+    end
+  end
+end
+
 shared_examples 'single' do |object_name|
 
   let(:object) { send(object_name) }
