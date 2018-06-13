@@ -4,16 +4,6 @@ describe Display::GroupRoda, :request_helper do
     Display::GroupRoda # this defines the active application for this test
   end
 
-  let(:not_found_json) do
-    {
-      'errors' => [
-        {
-          'detail'=>'Group::Base: bla-blub not found'
-        }
-      ]
-    }
-  end
-
   entity!(:tribe) { create(:group, :tribe, show_display_app: true) }
 
   entity!(:localpool) { create(:group, :localpool, show_display_app: false) }
@@ -23,8 +13,6 @@ describe Display::GroupRoda, :request_helper do
     $user.person.reload.add_role(Role::GROUP_ENERGY_MENTOR, group)
     group
   end
-
-  let(:empty_json) { [] }
 
   context 'GET' do
 
@@ -86,7 +74,6 @@ describe Display::GroupRoda, :request_helper do
     it '404' do
       GET '/bla-blub', nil
       expect(response).to have_http_status(404)
-      expect(json).to eq not_found_json
 
       GET "/#{group.slug}123", nil
       expect(response).to have_http_status(404)
@@ -126,7 +113,6 @@ describe Display::GroupRoda, :request_helper do
       it '404' do
         GET '/bla-blub/mentors', nil
         expect(response).to have_http_status(404)
-        expect(json).to eq not_found_json
       end
 
       entity(:mentor) { create(:account).person }

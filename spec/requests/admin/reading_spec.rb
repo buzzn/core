@@ -14,17 +14,15 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     let(:wrong_json) do
       {
-        'errors'=>[
-          {'parameter'=>'raw_value', 'detail'=>'must be an integer'},
-          {'parameter'=>'value', 'detail'=>'must be an integer'},
-          {'parameter'=>'unit', 'detail'=>'must be one of: Wh, W, m³'},
-          {'parameter'=>'reason', 'detail'=>'must be one of: IOM, COM1, COM2, ROM, PMR, COT, COS, CMP, COB'},
-          {'parameter'=>'read_by', 'detail'=>'must be one of: BN, SN, SG, VNB'},
-          {'parameter'=>'quality', 'detail'=>'must be one of: 20, 67, 79, 187, 220, 201'},
-          {'parameter'=>'source', 'detail'=>'must be one of: SM, MAN'},
-          {'parameter'=>'status', 'detail'=>'must be one of: Z83, Z84, Z86'},
-          {'parameter'=>'date', 'detail'=>'must be a date'}
-        ]
+        "raw_value"=>["must be an integer"],
+        "value"=>["must be an integer"],
+        "unit"=>["must be one of: Wh, W, m³"],
+        "reason"=>["must be one of: IOM, COM1, COM2, ROM, PMR, COT, COS, CMP, COB"],
+        "read_by"=>["must be one of: BN, SN, SG, VNB"],
+        "quality"=>["must be one of: 20, 67, 79, 187, 220, 201"],
+        "source"=>["must be one of: SM, MAN"],
+        "status"=>["must be one of: Z83, Z84, Z86"],
+        "date"=>["must be a date"]
       }
     end
 
@@ -165,7 +163,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       it '404' do
         GET "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/bla-blub", $admin
-        expect(response).to be_not_found_json(404, Reading::Single)
+        expect(response).to have_http_status(404)
       end
 
       it '200' do

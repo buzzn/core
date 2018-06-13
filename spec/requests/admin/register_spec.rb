@@ -49,22 +49,13 @@ describe Admin::LocalpoolRoda, :request_helper do
 
         let(:wrong_json) do
           {
-            'errors'=>[
-              {'parameter'=>'label',
-               'detail'=>'must be one of: CONSUMPTION, CONSUMPTION_COMMON, DEMARCATION_PV, DEMARCATION_CHP, DEMARCATION_WIND, DEMARCATION_WATER, PRODUCTION_PV, PRODUCTION_CHP, PRODUCTION_WIND, PRODUCTION_WATER, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER'},
-              {'parameter'=>'metering_point_id',
-               'detail'=>'size cannot be greater than 64'},
-              {'parameter'=>'observer_enabled',
-               'detail'=>'must be boolean'},
-              {'parameter'=>'observer_min_threshold',
-               'detail'=>'must be an integer'},
-              {'parameter'=>'observer_max_threshold',
-               'detail'=>'must be an integer'},
-              {'parameter'=>'observer_offline_monitoring',
-               'detail'=>'must be boolean'},
-              {'parameter'=>'updated_at',
-               'detail'=>'is missing'},
-            ]
+            "label"=>["must be one of: CONSUMPTION, CONSUMPTION_COMMON, DEMARCATION_PV, DEMARCATION_CHP, DEMARCATION_WIND, DEMARCATION_WATER, PRODUCTION_PV, PRODUCTION_CHP, PRODUCTION_WIND, PRODUCTION_WATER, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER"],
+            "metering_point_id"=>["size cannot be greater than 64"],
+            "observer_enabled"=>["must be boolean"],
+            "observer_min_threshold"=>["must be an integer"],
+            "observer_max_threshold"=>["must be an integer"],
+            "observer_offline_monitoring"=>["must be boolean"],
+            "updated_at"=>["is missing"]
           }
         end
 
@@ -78,13 +69,13 @@ describe Admin::LocalpoolRoda, :request_helper do
 
         it '404' do
           PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/bla-blub", $admin
-          expect(response).to be_not_found_json(404, Register::Real)
+          expect(response).to have_http_status(404)
         end
 
         it '409' do
           PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                 updated_at: DateTime.now
-          expect(response).to be_stale_json(409, register)
+          expect(response).to have_http_status(409)
         end
 
         it '422' do

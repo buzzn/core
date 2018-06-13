@@ -353,12 +353,12 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       it '403' do
         GET "/localpools/#{localpool.id}/contracts/#{metering_point_operator_contract.id}", $user
-        expect(response).to be_denied_json(403, metering_point_operator_contract)
+        expect(response).to have_http_status(403)
       end
 
       it '404' do
         GET "/localpools/#{localpool.id}/contracts/bla-blub", $admin
-        expect(response).to be_not_found_json(404, Contract::Localpool)
+        expect(response).to have_http_status(404)
       end
 
       [:metering_point_operator, :localpool_power_taker].each do |type|

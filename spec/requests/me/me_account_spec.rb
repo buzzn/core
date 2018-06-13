@@ -24,27 +24,17 @@ describe Me::Roda, :skip_nested, :request_helper do
 
   let(:invalid_password_json) do
     {
-      'errors'=>[
-        {'parameter'=>'password', 'detail'=>'invalid password'}
-      ]
+      'password'=>['invalid password']
     }
   end
 
   let(:no_matching_passwords_json) do
     {
-      'errors'=>[
-        {'parameter'=>'password', 'detail'=>'passwords do not match'}
-      ]
+      'password'=>['passwords do not match']
     }
   end
 
   context 'login' do
-
-    let(:access_denied_json) do
-      {
-        'error' => 'Access Denied'
-      }
-    end
 
     it '200' do
       expect(do_authorize(user)).not_to be_nil
@@ -58,11 +48,9 @@ describe Me::Roda, :skip_nested, :request_helper do
     it '401' do
       POST '/api/me/login', nil
       expect(response).to have_http_status(401)
-      expect(json).to eq access_denied_json
 
       POST '/api/me/login', nil, login: user.email
       expect(response).to have_http_status(401)
-      expect(json).to eq access_denied_json
     end
   end
 
@@ -70,17 +58,13 @@ describe Me::Roda, :skip_nested, :request_helper do
 
     let(:no_matching_new_passwords_json) do
       {
-        'errors'=>[
-          {'parameter'=>'new-password', 'detail'=>'passwords do not match'}
-        ]
+        'new-password'=>['passwords do not match']
       }
     end
 
     let(:invalid_new_password_json) do
       {
-        'errors'=>[
-          {'parameter'=>'new-password', 'detail'=>'invalid password, does not meet requirements (minimum 6 characters)'}
-        ]
+        'new-password'=>['invalid password, does not meet requirements (minimum 6 characters)']
       }
     end
 
@@ -134,19 +118,13 @@ describe Me::Roda, :skip_nested, :request_helper do
 
     let(:invalid_login_json) do
       {
-        'errors'=>[
-          {'parameter'=>'login',
-           'detail'=>'invalid login, minimum 3 characters'}
-        ]
+        'login'=>['invalid login, minimum 3 characters']
       }
     end
 
     let(:no_matching_logins_json) do
       {
-        'errors'=>[
-          {'parameter'=>'login',
-           'detail'=>'logins do not match'}
-        ]
+        'login'=>['logins do not match']
       }
     end
 
@@ -282,18 +260,13 @@ describe Me::Roda, :skip_nested, :request_helper do
 
     let(:invalid_password_same_as_current_json) do
       {
-        'errors'=>[
-          {'parameter'=>'password',
-           'detail'=>'invalid password, same as current password'}
-        ]
+        'password'=>['invalid password, same as current password']
       }
     end
 
     let(:invalid_password_json) do
       {
-        'errors'=>[
-          {'parameter'=>'password', 'detail'=>'invalid password, does not meet requirements (minimum 6 characters)'}
-        ]
+       'password'=>['invalid password, does not meet requirements (minimum 6 characters)']
       }
     end
 

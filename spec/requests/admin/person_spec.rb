@@ -205,12 +205,12 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       it '403' do
         GET "/localpools/#{group.id}/persons/#{person.id}", $other
-        expect(response).to be_denied_json(403, person, user: $other)
+        expect(response).to have_http_status(403)
       end
 
       it '404' do
         GET "/localpools/#{group.id}/persons/bla-blub", $admin
-        expect(response).to be_not_found_json(404, Person)
+        expect(response).to have_http_status(404)
       end
 
       it '200' do
