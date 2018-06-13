@@ -1,6 +1,5 @@
 require './app/models/person.rb'
 require_relative '../person'
-require_relative '../address/update'
 
 Schemas::Transactions::Person::Update = Schemas::Support.Form(Schemas::Transactions::Update) do
   optional(:title).value(included_in?: ::Person.titles.values)
@@ -10,5 +9,4 @@ Schemas::Transactions::Person::Update = Schemas::Support.Form(Schemas::Transacti
   optional(:phone).filled(:str?, :phone_number?, max_size?: 64)
   optional(:fax).filled(:str?, :phone_number?, max_size?: 64)
   optional(:preferred_language).value(included_in?: ::Person.preferred_languages.values)
-  optional(:address).schema(Schemas::Transactions::Address::Update)
 end
