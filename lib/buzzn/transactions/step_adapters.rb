@@ -1,3 +1,5 @@
+require_relative '../transactions'
+
 module Transactions::StepAdapters
   class Registry < Dry::Transaction::StepAdapters
   end
