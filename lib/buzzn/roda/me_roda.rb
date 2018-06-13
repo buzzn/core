@@ -21,11 +21,11 @@ module Me
       set_error_flash do |message|
         if request.path =~ /\/login\Z/
           response.status = 401
-          payload = { error: 'Access Denied' }.to_json
+          payload = ''
         else
           response.status = 422
           k, v = json_response[json_response_field_error_key]
-          payload = {errors: [{parameter: k, detail: v}]}.to_json
+          payload = {"#{k}" => [v]}.to_json
         end
         request.halt [response.status, {'Content-Type' => 'application/json'},
                       [payload]]

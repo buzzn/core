@@ -148,12 +148,12 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     it '403' do
       GET "/localpools/#{localpool.id}", $other
-      expect(response).to be_denied_json(403, localpool, user: $other)
+      expect(response).to have_http_status(403)
     end
 
     it '404' do
       GET '/localpools/bla-blub', $admin
-      expect(response).to be_not_found_json(404, Group::Localpool)
+      expect(response).to have_http_status(404)
     end
 
     it '200' do
@@ -180,12 +180,11 @@ describe Admin::LocalpoolRoda, :request_helper do
   context 'POST' do
 
     let(:wrong_json) do
-      { 'errors'=>[{'parameter'=>'name',
-                    'detail'=>'size cannot be greater than 64'},
-                   {'parameter'=>'description',
-                    'detail'=>'size cannot be greater than 256'},
-                   {'parameter' => 'start_date',
-                    'detail' => 'must be a date'}] }
+      {
+        "name"=>["size cannot be greater than 64"],
+        "description"=>["size cannot be greater than 256"],
+        "start_date"=>["must be a date"]
+      }
     end
 
     it '401' do
@@ -198,7 +197,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     it '403' do
       POST '/localpools', $user, new_localpool
-      expect(response).to be_denied_json(403, Admin::LocalpoolResource, user: $user, prefix: :create)
+      expect(response).to have_http_status(403)
     end
 
     it '422' do
@@ -259,31 +258,18 @@ describe Admin::LocalpoolRoda, :request_helper do
 
   context 'PATCH' do
 
-      let(:wrong_json) do
-        { 'errors'=>[{'parameter'=>'updated_at',
-                      'detail'=>'is missing'},
-                     {'parameter'=>'name',
-                      'detail'=>'size cannot be greater than 64'},
-                     {'parameter'=>'description',
-                      'detail'=>'size cannot be greater than 256'},
-                     {'parameter' => 'start_date',
-                      'detail' => 'must be a date'},
-                     {'parameter' => 'show_object',
-                      'detail' => 'must be boolean'},
-                     {'parameter' => 'show_production',
-                      'detail' => 'must be boolean'},
-                     {'parameter' => 'show_energy',
-                      'detail' => 'must be boolean'},
-                     {'parameter' => 'show_contact',
-                      'detail' => 'must be boolean'},
-                     {'parameter' => 'show_display_app',
-                      'detail' => 'must be boolean'}] }
-      end
-
-    let(:stale_json) do
-      { 'errors' => [
-        {'detail'=>"Group::Localpool: #{localpool.id} was updated at: #{localpool.updated_at}"}
-      ] }
+    let(:wrong_json) do
+      {
+        "updated_at"=>["is missing"],
+        "name"=>["size cannot be greater than 64"],
+        "description"=>["size cannot be greater than 256"],
+        "start_date"=>["must be a date"],
+        "show_object"=>["must be boolean"],
+        "show_production"=>["must be boolean"],
+        "show_energy"=>["must be boolean"],
+        "show_contact"=>["must be boolean"],
+        "show_display_app"=>["must be boolean"]
+      }
     end
 
     let(:updated_json) do
@@ -319,15 +305,13 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     it '404' do
       PATCH '/localpools/bla-blub', $admin
-      expect(response).to be_not_found_json(404, Group::Localpool)
+      expect(response).to have_http_status(404)
     end
 
     it '409' do
       PATCH "/localpools/#{localpool.id}", $admin,
             updated_at: DateTime.now
-
       expect(response).to have_http_status(409)
-      expect(json.to_yaml).to eq stale_json.to_yaml
     end
 
       it '422' do
@@ -466,13 +450,12 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       it '403' do
         GET "/localpools/#{localpool.id}/localpool-processing-contract", $user
-        expect(response).to be_denied_json(403, Contract::LocalpoolProcessingResource)
+        expect(response).to have_http_status(403)
       end
 
       it '404' do
         GET "/localpools/#{localpool_no_contracts.id}/localpool-processing-contract", $admin
-        expect(response).to be_not_found_json(404, Admin::LocalpoolResource,
-                                              :localpool_processing_contract)
+        expect(response).to have_http_status(404)
       end
 
       it '200' do
@@ -596,13 +579,12 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       it '403' do
         GET "/localpools/#{localpool.id}/metering-point-operator-contract", $user
-        expect(response).to be_denied_json(403, Contract::MeteringPointOperatorResource)
+        expect(response).to have_http_status(403)
       end
 
       it '404' do
         GET "/localpools/#{localpool_no_contracts.id}/metering-point-operator-contract", $admin
-        expect(response).to be_not_found_json(404, Admin::LocalpoolResource,
-                                              :metering_point_operator_contract)
+        expect(response).to have_http_status(404)
       end
 
       it '200' do

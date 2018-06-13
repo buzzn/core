@@ -39,10 +39,10 @@ module SwaggerHelper
 
   def expect_missing(ops)
     expect(@schema).not_to be_nil
-    expected = @expected || []
+    expected = @expected || {}
     process_rule = ->(name: nil, required: nil, type: nil, options: {}) do
       if required && @expected.nil? && !name&.include?('.')
-        expected << { 'parameter' => "#{name}", 'detail' => 'is missing' }
+        expected[name] = ['is missing']
       end
 
       sparam = Swagger::Data::Parameter.new
@@ -94,7 +94,7 @@ module SwaggerHelper
     end
 
     Schemas::Support::Visitor.visit(@schema, &process_rule)
-    expect(expected).to match_array json['errors']
+    expect(expected).to eq json unless expected.blank?
   end
 
   module ClassMethods

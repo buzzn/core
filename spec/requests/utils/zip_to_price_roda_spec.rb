@@ -28,18 +28,15 @@ describe Utils::ZipToPriceRoda, :request_helper do
 
     let(:wrong_json) do
       {
-        'errors'=>[
-          {'parameter'=>'type',
-           'detail'=>'must be one of: single, double, smart'},
-          {'parameter'=>'zip', 'detail'=>'must be an integer'},
-          {'parameter'=>'annual_kwh', 'detail'=>'must be an integer'}
-        ]
+        "type"=>["must be one of: single, double, smart"],
+        "zip"=>["must be an integer"],
+        "annual_kwh"=>["must be an integer"]
       }
     end
 
     let(:not_found_json) do
       {
-        'errors'=>[{'parameter'=>'zip', 'detail'=>'no price for zip found'}]
+        'zip'=>['no price for zip found']
       }
     end
 
@@ -59,15 +56,13 @@ describe Utils::ZipToPriceRoda, :request_helper do
 
       expect(response).to have_http_status(422)
       expect(json.to_yaml).to eq wrong_json.to_yaml
-    end
 
-    it '404' do
       POST '', nil,
            zip: 1,
            annual_kwh: 1234,
            type: 'single'
 
-      expect(response).to have_http_status(404)
+      expect(response).to have_http_status(422)
       expect(json.to_yaml).to eq not_found_json.to_yaml
     end
 

@@ -15,26 +15,18 @@ module Buzzn
       def self.new(logger: Logger.new(self))
         super() do |e|
           response.status = ERRORS[e.class] || raise(e)
-          response['Content-Type'] = 'application/json'
 
           case e
           when Buzzn::ValidationError
-            errs = []
-            e.errors.each do |name, messages|
-              messages.each do |message|
-                errs << "{\"parameter\":\"#{name}\",\"detail\":\"#{message}\"}"
-              end
-            end
-            errors = "{\"errors\":[#{errs.join(',')}]}"
-            logger.debug{ errors.to_s }
+            logger.debug{ e.errors.inspect }
+            errors = e.errors.to_json
+            response['Content-Type'] = 'application/json'
+            response.write(errors)
           when Buzzn::PermissionDenied, Buzzn::RecordNotFound, Buzzn::StaleEntity
-            errors = "{\"errors\":[{\"detail\":\"#{e.message}\"}]}"
-            logger.info{ errors.to_s }
+            logger.info{ e.message }
           else
             logger.error{ "#{e.message}\n\t" + e.backtrace.join("\n\t")}
-            errors = '{"errors":[{"detail":"internal server error"}]}'
           end
-          response.write(errors)
         end
       end
 

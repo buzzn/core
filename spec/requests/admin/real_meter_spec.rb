@@ -64,12 +64,12 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       it '403' do
         GET "/localpools/#{group.id}/meters/#{meter.id}", $user
-        expect(response).to be_denied_json(403, meter)
+        expect(response).to have_http_status(403)
       end
 
       it '404' do
         GET "/localpools/#{group.id}/meters/bla-blub", $admin
-        expect(response).to be_not_found_json(404, Meter::Base)
+        expect(response).to have_http_status(404)
       end
 
       it '200' do
@@ -90,44 +90,24 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       let(:wrong_json) do
         {
-          'errors'=>[
-            {'parameter'=>'product_serialnumber',
-             'detail'=>'size cannot be greater than 128'},
-            {'parameter'=>'datasource',
-             'detail'=>'must be one of: standard_profile, discovergy, virtual'},
-            {'parameter'=>'product_name',
-             'detail'=>'size cannot be greater than 64'},
-            {'parameter'=>'manufacturer_name',
-             'detail'=>'must be one of: easy_meter, other'},
-            {'parameter'=>'build_year',
-             'detail'=>'must be an integer'},
-            {'parameter'=>'sent_data_dso',
-             'detail'=>'must be a date'},
-            {'parameter'=>'converter_constant',
-             'detail'=>'must be an integer'},
-            {'parameter'=>'calibrated_until',
-             'detail'=>'must be a date'},
-            {'parameter'=>'direction_number',
-             'detail'=>'must be one of: ERZ, ZRZ'},
-            {'parameter'=>'edifact_metering_type',
-             'detail'=>'must be one of: AHZ, WSZ, LAZ, MAZ, EHZ, IVA'},
-            {'parameter'=>'edifact_meter_size',
-             'detail'=>'must be one of: Z01, Z02, Z03'},
-            {'parameter'=>'edifact_measurement_method',
-             'detail'=>'must be one of: AMR, MMR'},
-            {'parameter'=>'edifact_tariff',
-             'detail'=>'must be one of: ETZ, ZTZ, NTZ'},
-            {'parameter'=>'edifact_mounting_method',
-             'detail'=>'must be one of: BKE, DPA, HS'},
-            {'parameter'=>'edifact_voltage_level',
-             'detail'=>'must be one of: E06, E05, E04, E03'},
-            {'parameter'=>'edifact_cycle_interval',
-             'detail'=>'must be one of: MONTHLY, QUARTERLY, HALF_YEARLY, YEARLY'},
-            {'parameter'=>'edifact_data_logging',
-             'detail'=>'must be one of: Z04, Z05'},
-            {'parameter'=>'updated_at',
-             'detail'=>'is missing'}
-          ]
+          "product_serialnumber"=>["size cannot be greater than 128"],
+          "datasource"=>["must be one of: standard_profile, discovergy, virtual"],
+          "product_name"=>["size cannot be greater than 64"],
+          "manufacturer_name"=>["must be one of: easy_meter, other"],
+          "build_year"=>["must be an integer"],
+          "sent_data_dso"=>["must be a date"],
+          "converter_constant"=>["must be an integer"],
+          "calibrated_until"=>["must be a date"],
+          "direction_number"=>["must be one of: ERZ, ZRZ"],
+          "edifact_metering_type"=>["must be one of: AHZ, WSZ, LAZ, MAZ, EHZ, IVA"],
+          "edifact_meter_size"=>["must be one of: Z01, Z02, Z03"],
+          "edifact_measurement_method"=>["must be one of: AMR, MMR"],
+          "edifact_tariff"=>["must be one of: ETZ, ZTZ, NTZ"],
+          "edifact_mounting_method"=>["must be one of: BKE, DPA, HS"],
+          "edifact_voltage_level"=>["must be one of: E06, E05, E04, E03"],
+          "edifact_cycle_interval"=>["must be one of: MONTHLY, QUARTERLY, HALF_YEARLY, YEARLY"],
+          "edifact_data_logging"=>["must be one of: Z04, Z05"],
+          "updated_at"=>["is missing"]
         }
       end
 
@@ -172,19 +152,19 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       it '403' do
         PATCH "/localpools/#{group.id}/meters/#{real_meter.id}", $user
-        expect(response).to be_denied_json(403, real_meter)
+        expect(response).to have_http_status(403)
       end
 
       it '404' do
         PATCH "/localpools/#{group.id}/meters/bla-blub", $admin
-        expect(response).to be_not_found_json(404, Meter::Base)
+        expect(response).to have_http_status(404)
       end
 
       it '409' do
         meter = real_meter
         PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               updated_at: DateTime.now
-        expect(response).to be_stale_json(409, meter)
+        expect(response).to have_http_status(409)
       end
 
       it '422' do

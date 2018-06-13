@@ -107,7 +107,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       it '404' do
         GET "/localpools/#{localpool.id}/organizations/bla-blub", $admin
-        expect(response).to be_not_found_json(404, Organization)
+        expect(response).to have_http_status(404)
       end
 
       it '200' do
@@ -170,7 +170,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           organization.update(address: nil)
           begin
             GET "/localpools/#{localpool.id}/organizations/#{organization.id}/address", $admin
-            expect(response).to be_not_found_json(404, OrganizationResource, :address)
+            expect(response).to have_http_status(404)
           ensure
             organization.update(address: address)
           end

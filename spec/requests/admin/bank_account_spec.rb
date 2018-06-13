@@ -64,27 +64,13 @@ describe Admin::BankAccountRoda, :request_helper do
 
       let(:wrong_json) do
         {
-          'errors'=>[
-            {'parameter'=>'holder',
-             'detail'=>'size cannot be greater than 64'},
-            {'parameter'=>'iban',
-             'detail'=>'must be a string'},
-            {'parameter'=>'bank_name',
-             'detail'=>'size cannot be greater than 64'},
-          ]
+          "holder"=>["size cannot be greater than 64"],
+          "iban"=>["must be a string"],
+          "bank_name"=>["size cannot be greater than 64"]
         }
       end
 
       context 'POST' do
-
-        let(:create_denied_json) do
-          {
-            'errors' => [
-              {
-                'detail'=>" OrganizationResource: #{parent.id} permission denied for User: #{$user.id}" }
-            ]
-          }
-        end
 
         it '422' do
           POST "/test/#{parent.id}", $admin,
@@ -107,16 +93,10 @@ describe Admin::BankAccountRoda, :request_helper do
 
         let(:wrong_json) do
           {
-            'errors'=>[
-              {'parameter'=>'updated_at',
-               'detail'=>'is missing'},
-              {'parameter'=>'holder',
-               'detail'=>'size cannot be greater than 64'},
-              {'parameter'=>'iban',
-               'detail'=>'must be a valid iban'},
-              {'parameter'=>'bank_name',
-               'detail'=>'size cannot be greater than 64'},
-            ]
+            "updated_at"=>["is missing"],
+            "holder"=>["size cannot be greater than 64"],
+            "iban"=>["must be a valid iban"],
+            "bank_name"=>["size cannot be greater than 64"]
           }
         end
 
@@ -130,13 +110,13 @@ describe Admin::BankAccountRoda, :request_helper do
 
         it '404' do
           PATCH "/test/#{parent.id}/bla-blub", $admin
-          expect(response).to be_not_found_json(404, BankAccount)
+          expect(response).to have_http_status(404)
         end
 
         it '409' do
           PATCH "/test/#{parent.id}/#{bank_account.id}", $admin,
                 updated_at: DateTime.now
-          expect(response).to be_stale_json(409, bank_account)
+          expect(response).to have_http_status(409)
         end
 
         it '422' do
@@ -179,7 +159,7 @@ describe Admin::BankAccountRoda, :request_helper do
 
         it '404' do
           GET "/test/#{parent.id}/bla-blub", $admin
-          expect(response).to be_not_found_json(404, BankAccount)
+          expect(response).to have_http_status(404)
         end
 
         it '401' do
@@ -215,7 +195,7 @@ describe Admin::BankAccountRoda, :request_helper do
 
         it '404' do
           DELETE "/test/#{parent.id}/bla-blub", $admin
-          expect(response).to be_not_found_json(404, BankAccount)
+          expect(response).to have_http_status(404)
         end
 
         it '204' do

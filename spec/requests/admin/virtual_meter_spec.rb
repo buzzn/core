@@ -85,12 +85,12 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       it '403' do
         GET "/localpools/#{group.id}/meters/#{meter.id}", $user
-        expect(response).to be_denied_json(403, meter)
+        expect(response).to have_http_status(403)
       end
 
       it '404' do
         GET "/localpools/#{group.id}/meters/bla-blub", $admin
-        expect(response).to be_not_found_json(404, Meter::Base)
+        expect(response).to have_http_status(404)
       end
 
       it '200' do
@@ -132,7 +132,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
         it '404' do
           GET "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
-          expect(response).to be_not_found_json(404, Register::FormulaPart)
+          expect(response).to have_http_status(404)
         end
 
         it '200 all' do
@@ -152,12 +152,8 @@ describe Admin::LocalpoolRoda, :request_helper do
 
         let(:wrong_json) do
           {
-            'errors'=>[
-              {'parameter'=>'updated_at',
-               'detail'=>'is missing'},
-              {'parameter'=>'operator',
-               'detail'=>'must be one of: +, -'},
-            ]
+            "updated_at"=>["is missing"],
+            "operator"=>["must be one of: +, -"]
           }
         end
 
@@ -179,24 +175,24 @@ describe Admin::LocalpoolRoda, :request_helper do
 
         it '404' do
           PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/bla-blub", $admin
-          expect(response).to be_not_found_json(404, Register::FormulaPart)
+          expect(response).to have_http_status(404)
 
           PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
                 $admin,
                 updated_at: DateTime.now,
                 register_id: 123
-          expect(response).to be_not_found_json(404, Register::Base, 123)
+          expect(response).to have_http_status(404)
         end
 
         it '403' do
           PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $user
-          expect(response).to be_denied_json(403, meter)
+          expect(response).to have_http_status(403)
         end
 
         it '409' do
           PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
                 updated_at: DateTime.now
-          expect(response).to be_stale_json(409, formula_part)
+          expect(response).to have_http_status(409)
         end
 
         it '422' do

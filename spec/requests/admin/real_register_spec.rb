@@ -1,5 +1,5 @@
 require_relative 'test_admin_localpool_roda'
-require_relative 'resource_shared'
+require_relative 'shared_crud'
 
 describe Register::RealResource, :request_helper do
 
@@ -46,8 +46,8 @@ describe Register::RealResource, :request_helper do
         }
       end
 
-      it_behaves_like 'single', :register
-      it_behaves_like 'all'
+      it_behaves_like 'single', :register, path: :path, expected: :expected_json
+      it_behaves_like 'all', path: :path, expected: :expected_json
     end
   end
 end

@@ -1,5 +1,5 @@
 require_relative 'test_admin_localpool_roda'
-require_relative 'resource_shared'
+require_relative 'shared_crud'
 
 describe Admin::BillingResource, :request_helper do
 
@@ -38,8 +38,8 @@ describe Admin::BillingResource, :request_helper do
         }
       end
 
-      it_behaves_like 'single', :billing
-      it_behaves_like 'all'
+      it_behaves_like 'single', :billing, path: :path, expected: :expected_json
+      it_behaves_like 'all', path: :path, expected: :expected_json
 
       it 'nested objects' do
         GET path, $admin, include: 'contract:[customer],items:[meter, tariff]'

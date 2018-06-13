@@ -16,7 +16,7 @@ class Transactions::Utils::ZipToPrice < Transactions::Base
     if result = prices.max_price
       Success(result)
     else
-      Failure(Buzzn::GeneralError.new(zip: ['no price for zip found']))
+      Failure(Buzzn::ValidationError.new(zip: ['no price for zip found']))
     end
   end
 
