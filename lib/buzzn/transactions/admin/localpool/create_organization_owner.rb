@@ -6,8 +6,9 @@ module Transactions::Admin::Localpool
     validate :schema
     authorize :allowed_roles
     around :db_transaction
-    map :create_organization, with: :'operations.action.create_item'
-    map :assign_owner
+    tee :create_address, with: :'operations.action.create_address'
+    add :new_owner, with: :'operations.action.create_item'
+    map :assign_owner # from super-class
 
     def schema
       Schemas::Transactions::Admin::Organization::Create
@@ -17,8 +18,9 @@ module Transactions::Admin::Localpool
       permission_context.owner.create
     end
 
-    def create_organization(params:, resource:)
-      attrs = params.merge(mode: :other)
+    def new_owner(params:, resource:)
+      attrs = params.merge(mode: :other) # FIXME remove this other mode
+                                         # and mkae proper subclasses
       OrganizationResource.new(
         *super(resource.organizations, attrs)
       )

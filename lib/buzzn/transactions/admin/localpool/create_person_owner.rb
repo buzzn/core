@@ -8,10 +8,10 @@ module Transactions::Admin::Localpool
     around :db_transaction
     tee :create_address, with: :'operations.action.create_address'
     add :new_owner, with: :'operations.action.create_item'
-    map :assign_owner
+    map :assign_owner # from super-class
 
     def schema
-      Schemas::Transactions::Person::Create
+      Schemas::Transactions::Person::CreateWithAddress
     end
 
     def allowed_roles(permission_context:)
