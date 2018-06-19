@@ -1,6 +1,5 @@
 require_relative '../localpool'
-require_relative '../../../schemas/transactions/admin/localpool/update_with_address'
-require_relative '../../../schemas/transactions/admin/localpool/update_without_address'
+require_relative '../../../schemas/transactions/admin/localpool/update'
 
 class Transactions::Admin::Localpool::Update < Transactions::Base
 
@@ -11,11 +10,7 @@ class Transactions::Admin::Localpool::Update < Transactions::Base
   map :update_localpool, with: :'operations.action.update'
 
   def schema(resource:, **)
-    if resource.address
-      Schemas::Transactions::Admin::Localpool::UpdateWithAddress
-    else
-      Schemas::Transactions::Admin::Localpool::UpdateWithoutAddress
-    end
+    Schemas::Transactions::Admin::Localpool.update_for(resource)
   end
 
 end

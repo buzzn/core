@@ -1,9 +1,9 @@
-require 'buzzn/schemas/transactions/admin/localpool/update_with_address'
+require 'buzzn/schemas/transactions/admin/localpool/update'
 require_relative '../../shared_nested_address'
 
-describe 'Schemas::Transactions::Admin::Localpool::UpdateWithAddress' do
+describe 'Schemas::Transactions::Admin::Localpool.update_with_address' do
 
-  subject { Schemas::Transactions::Admin::Localpool::UpdateWithAddress }
+  subject { Schemas::Transactions::Admin::Localpool.update_with_address }
 
   it_behaves_like 'update with nested address', name: 'be there'
 
