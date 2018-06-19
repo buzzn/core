@@ -1,6 +1,5 @@
 require_relative 'owner_base'
-require_relative '../../../schemas/transactions/person/update_with_address'
-require_relative '../../../schemas/transactions/person/update_without_address'
+require_relative '../../../schemas/transactions/person/update'
 
 module Transactions::Admin::Localpool
   class UpdatePersonOwner < OwnerBase
@@ -12,11 +11,7 @@ module Transactions::Admin::Localpool
     map :update_person, with: :'operations.action.update'
 
     def schema(resource:, **)
-      if resource.address
-        Schemas::Transactions::Person::UpdateWithAddress
-      else
-        Schemas::Transactions::Person::UpdateWithoutAddress
-      end
+      Schemas::Transactions::Person.update_for(resource)
     end
 
     def allowed_roles(permission_context:)
