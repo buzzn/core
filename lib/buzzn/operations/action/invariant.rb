@@ -18,7 +18,6 @@ class Operations::Action::Invariant
 
   def invariant(object)
     if invariant = object.invariant
-      binding.pry
       invariant
     else
       ALWAYS_SUCCESS
