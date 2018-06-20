@@ -152,8 +152,8 @@ describe Admin::LocalpoolRoda, :request_helper do
 
         let(:wrong_json) do
           {
-            "updated_at"=>["is missing"],
-            "operator"=>["must be one of: +, -"]
+            'updated_at'=>['is missing'],
+            'operator'=>['must be one of: +, -']
           }
         end
 

@@ -90,24 +90,24 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       let(:wrong_json) do
         {
-          "product_serialnumber"=>["size cannot be greater than 128"],
-          "datasource"=>["must be one of: standard_profile, discovergy, virtual"],
-          "product_name"=>["size cannot be greater than 64"],
-          "manufacturer_name"=>["must be one of: easy_meter, other"],
-          "build_year"=>["must be an integer"],
-          "sent_data_dso"=>["must be a date"],
-          "converter_constant"=>["must be an integer"],
-          "calibrated_until"=>["must be a date"],
-          "direction_number"=>["must be one of: ERZ, ZRZ"],
-          "edifact_metering_type"=>["must be one of: AHZ, WSZ, LAZ, MAZ, EHZ, IVA"],
-          "edifact_meter_size"=>["must be one of: Z01, Z02, Z03"],
-          "edifact_measurement_method"=>["must be one of: AMR, MMR"],
-          "edifact_tariff"=>["must be one of: ETZ, ZTZ, NTZ"],
-          "edifact_mounting_method"=>["must be one of: BKE, DPA, HS"],
-          "edifact_voltage_level"=>["must be one of: E06, E05, E04, E03"],
-          "edifact_cycle_interval"=>["must be one of: MONTHLY, QUARTERLY, HALF_YEARLY, YEARLY"],
-          "edifact_data_logging"=>["must be one of: Z04, Z05"],
-          "updated_at"=>["is missing"]
+          'product_serialnumber'=>['size cannot be greater than 128'],
+          'datasource'=>['must be one of: standard_profile, discovergy, virtual'],
+          'product_name'=>['size cannot be greater than 64'],
+          'manufacturer_name'=>['must be one of: easy_meter, other'],
+          'build_year'=>['must be an integer'],
+          'sent_data_dso'=>['must be a date'],
+          'converter_constant'=>['must be an integer'],
+          'calibrated_until'=>['must be a date'],
+          'direction_number'=>['must be one of: ERZ, ZRZ'],
+          'edifact_metering_type'=>['must be one of: AHZ, WSZ, LAZ, MAZ, EHZ, IVA'],
+          'edifact_meter_size'=>['must be one of: Z01, Z02, Z03'],
+          'edifact_measurement_method'=>['must be one of: AMR, MMR'],
+          'edifact_tariff'=>['must be one of: ETZ, ZTZ, NTZ'],
+          'edifact_mounting_method'=>['must be one of: BKE, DPA, HS'],
+          'edifact_voltage_level'=>['must be one of: E06, E05, E04, E03'],
+          'edifact_cycle_interval'=>['must be one of: MONTHLY, QUARTERLY, HALF_YEARLY, YEARLY'],
+          'edifact_data_logging'=>['must be one of: Z04, Z05'],
+          'updated_at'=>['is missing']
         }
       end
 

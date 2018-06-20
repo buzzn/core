@@ -30,9 +30,11 @@ describe Admin::BillingCycleResource, :request_helper do
       }
     end
 
-    it_behaves_like 'single', :billing_cycle, path: :path,
+    it_behaves_like 'single', :billing_cycle,
+                    path: :path,
                     expected: :expected_json
-    it_behaves_like 'all', path: :path,
+    it_behaves_like 'all',
+                    path: :path,
                     expected: :expected_json,
                     meta: :meta_json
   end
@@ -45,8 +47,8 @@ describe Admin::BillingCycleResource, :request_helper do
 
     let(:expected_errors) do
       {
-        "name"=>["size cannot be greater than 64"],
-        "last_date"=>["must be a date"]
+        'name'=>['size cannot be greater than 64'],
+        'last_date'=>['must be a date']
       }
     end
 
@@ -78,9 +80,9 @@ describe Admin::BillingCycleResource, :request_helper do
     let(:path) { "/localpools/#{localpool.id}/billing-cycles/#{billing_cycle.id}" }
     let(:expected_error_json) do
       {
-        "updated_at"=>["is missing"],
-        "name"=>["size cannot be greater than 64"],
-        "last_date"=>["must be a date"]
+        'updated_at'=>['is missing'],
+        'name'=>['size cannot be greater than 64'],
+        'last_date'=>['must be a date']
       }
     end
 

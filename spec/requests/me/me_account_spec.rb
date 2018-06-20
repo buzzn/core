@@ -266,7 +266,7 @@ describe Me::Roda, :skip_nested, :request_helper do
 
     let(:invalid_password_json) do
       {
-       'password'=>['invalid password, does not meet requirements (minimum 6 characters)']
+        'password'=>['invalid password, does not meet requirements (minimum 6 characters)']
       }
     end
 

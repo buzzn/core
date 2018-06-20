@@ -181,9 +181,9 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     let(:wrong_json) do
       {
-        "name"=>["size cannot be greater than 64"],
-        "description"=>["size cannot be greater than 256"],
-        "start_date"=>["must be a date"]
+        'name'=>['size cannot be greater than 64'],
+        'description'=>['size cannot be greater than 256'],
+        'start_date'=>['must be a date']
       }
     end
 
@@ -258,17 +258,18 @@ describe Admin::LocalpoolRoda, :request_helper do
 
   context 'PATCH' do
 
-    let(:wrong_json) do
+      # make rubocop happy
+      let(:wrong_json) do
       {
-        "updated_at"=>["is missing"],
-        "name"=>["size cannot be greater than 64"],
-        "description"=>["size cannot be greater than 256"],
-        "start_date"=>["must be a date"],
-        "show_object"=>["must be boolean"],
-        "show_production"=>["must be boolean"],
-        "show_energy"=>["must be boolean"],
-        "show_contact"=>["must be boolean"],
-        "show_display_app"=>["must be boolean"]
+        'updated_at'=>['is missing'],
+        'name'=>['size cannot be greater than 64'],
+        'description'=>['size cannot be greater than 256'],
+        'start_date'=>['must be a date'],
+        'show_object'=>['must be boolean'],
+        'show_production'=>['must be boolean'],
+        'show_energy'=>['must be boolean'],
+        'show_contact'=>['must be boolean'],
+        'show_display_app'=>['must be boolean']
       }
     end
 

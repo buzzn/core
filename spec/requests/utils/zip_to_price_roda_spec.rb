@@ -28,9 +28,9 @@ describe Utils::ZipToPriceRoda, :request_helper do
 
     let(:wrong_json) do
       {
-        "type"=>["must be one of: single, double, smart"],
-        "zip"=>["must be an integer"],
-        "annual_kwh"=>["must be an integer"]
+        'type'=>['must be one of: single, double, smart'],
+        'zip'=>['must be an integer'],
+        'annual_kwh'=>['must be an integer']
       }
     end
 

@@ -64,9 +64,9 @@ describe Admin::BankAccountRoda, :request_helper do
 
       let(:wrong_json) do
         {
-          "holder"=>["size cannot be greater than 64"],
-          "iban"=>["must be a string"],
-          "bank_name"=>["size cannot be greater than 64"]
+          'holder'=>['size cannot be greater than 64'],
+          'iban'=>['must be a string'],
+          'bank_name'=>['size cannot be greater than 64']
         }
       end
 
@@ -93,10 +93,10 @@ describe Admin::BankAccountRoda, :request_helper do
 
         let(:wrong_json) do
           {
-            "updated_at"=>["is missing"],
-            "holder"=>["size cannot be greater than 64"],
-            "iban"=>["must be a valid iban"],
-            "bank_name"=>["size cannot be greater than 64"]
+            'updated_at'=>['is missing'],
+            'holder'=>['size cannot be greater than 64'],
+            'iban'=>['must be a valid iban'],
+            'bank_name'=>['size cannot be greater than 64']
           }
         end
 

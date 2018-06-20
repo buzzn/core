@@ -55,10 +55,10 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       let(:wrong_json) do
         {
-          "name"=>["size cannot be greater than 64"],
-          "begin_date"=>["must be a date"],
-          "energyprice_cents_per_kwh"=>["must be a float"],
-          "baseprice_cents_per_month"=>["must be a float"]
+          'name'=>['size cannot be greater than 64'],
+          'begin_date'=>['must be a date'],
+          'energyprice_cents_per_kwh'=>['must be a float'],
+          'baseprice_cents_per_month'=>['must be a float']
         }
       end
 
@@ -80,7 +80,8 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       let(:path) {"/localpools/#{localpool.id}/tariffs" }
 
-      it_behaves_like 'create', Contract::Tariff, path: :path,
+      it_behaves_like 'create', Contract::Tariff,
+                      path: :path,
                       wrong: {
                         name: 'Max Mueller' * 10,
                         begin_date: 'heute-hier-morgen-dort',

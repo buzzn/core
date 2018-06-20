@@ -79,14 +79,14 @@ describe Me::Roda, :request_helper do
 
     let(:wrong_json) do
       {
-        "updated_at"=>["is missing"],
-        "title"=>["must be one of: Prof., Dr., Prof. Dr."],
-        "prefix"=>["must be one of: F, M"],
-        "first_name"=>["size cannot be greater than 64"],
-        "last_name"=>["size cannot be greater than 64"],
-        "phone"=>["must be a valid phone-number"],
-        "fax"=>["size cannot be greater than 64"],
-        "preferred_language"=>["must be one of: de, en"]
+        'updated_at'=>['is missing'],
+        'title'=>['must be one of: Prof., Dr., Prof. Dr.'],
+        'prefix'=>['must be one of: F, M'],
+        'first_name'=>['size cannot be greater than 64'],
+        'last_name'=>['size cannot be greater than 64'],
+        'phone'=>['must be a valid phone-number'],
+        'fax'=>['size cannot be greater than 64'],
+        'preferred_language'=>['must be one of: de, en']
       }
     end
 
