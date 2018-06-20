@@ -16,12 +16,12 @@ describe Admin::LocalpoolRoda, :request_helper do
   it 'create' do
     POST '/localpools', $admin, address: {}
 
-    expect(json).to eq("name"=>["is missing"],
-                       "address"=> {
-                         "street"=>["is missing"],
-                         "zip"=>["is missing"],
-                         "city"=>["is missing"],
-                         "country"=>["is missing"]
+    expect(json).to eq('name'=>['is missing'],
+                       'address'=> {
+                         'street'=>['is missing'],
+                         'zip'=>['is missing'],
+                         'city'=>['is missing'],
+                         'country'=>['is missing']
                        })
   end
 end

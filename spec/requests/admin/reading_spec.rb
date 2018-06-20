@@ -14,15 +14,15 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     let(:wrong_json) do
       {
-        "raw_value"=>["must be an integer"],
-        "value"=>["must be an integer"],
-        "unit"=>["must be one of: Wh, W, m³"],
-        "reason"=>["must be one of: IOM, COM1, COM2, ROM, PMR, COT, COS, CMP, COB"],
-        "read_by"=>["must be one of: BN, SN, SG, VNB"],
-        "quality"=>["must be one of: 20, 67, 79, 187, 220, 201"],
-        "source"=>["must be one of: SM, MAN"],
-        "status"=>["must be one of: Z83, Z84, Z86"],
-        "date"=>["must be a date"]
+        'raw_value'=>['must be an integer'],
+        'value'=>['must be an integer'],
+        'unit'=>['must be one of: Wh, W, m³'],
+        'reason'=>['must be one of: IOM, COM1, COM2, ROM, PMR, COT, COS, CMP, COB'],
+        'read_by'=>['must be one of: BN, SN, SG, VNB'],
+        'quality'=>['must be one of: 20, 67, 79, 187, 220, 201'],
+        'source'=>['must be one of: SM, MAN'],
+        'status'=>['must be one of: Z83, Z84, Z86'],
+        'date'=>['must be a date']
       }
     end
 

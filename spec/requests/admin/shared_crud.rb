@@ -70,7 +70,7 @@ shared_examples 'update' do |object_name, path:, wrong:, params:, errors:, expec
 
   it '409' do
     PATCH _path, $admin,
-          updated_at: DateTime.now
+          updated_at: Time.now.as_json
     expect(response).to have_http_status(409)
   end
 

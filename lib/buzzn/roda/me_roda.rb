@@ -25,7 +25,7 @@ module Me
         else
           response.status = 422
           k, v = json_response[json_response_field_error_key]
-          payload = {"#{k}" => [v]}.to_json
+          payload = {k.to_s => [v]}.to_json
         end
         request.halt [response.status, {'Content-Type' => 'application/json'},
                       [payload]]
