@@ -1,7 +1,7 @@
 require 'buzzn/schemas/transactions/admin/localpool/update'
 require_relative '../../shared_nested_address'
 
-describe 'Schemas::Transactions::Admin::Localpool::update' do
+describe 'Schemas::Transactions::Admin::Localpool::Update' do
 
   context 'with address' do
 

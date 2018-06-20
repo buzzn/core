@@ -1,4 +1,5 @@
 require_relative 'owner_base'
+require_relative '../../../schemas/transactions/person/create_with_address'
 
 module Transactions::Admin::Localpool
   class CreatePersonOwner < OwnerBase

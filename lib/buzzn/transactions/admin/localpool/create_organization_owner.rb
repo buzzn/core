@@ -1,4 +1,5 @@
 require_relative 'owner_base'
+require_relative '../../../schemas/transactions/organization/create_with_nested'
 
 module Transactions::Admin::Localpool
   class CreateOrganizationOwner < OwnerBase
@@ -11,7 +12,7 @@ module Transactions::Admin::Localpool
     map :assign_owner # from super-class
 
     def schema
-      Schemas::Transactions::Admin::Organization::Create
+      Schemas::Transactions::Organization::CreateWithNested
     end
 
     def allowed_roles(permission_context:)
@@ -19,10 +20,8 @@ module Transactions::Admin::Localpool
     end
 
     def new_owner(params:, resource:)
-      attrs = params.merge(mode: :other) # FIXME remove this other mode
-                                         # and mkae proper subclasses
       OrganizationResource.new(
-        *super(resource.organizations, attrs)
+        *super(resource.organizations, params)
       )
     end
 
