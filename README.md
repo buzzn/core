@@ -45,6 +45,8 @@ See [docs/application_architecture.md](docs/application_architecture.md).
 * bin/server  - starts puma server
 * bin/rake    - runs rake with application bundler context
 * bin/rspec   - runs rspec with the current bundler context
+* bin/reset_test_db   - runs some rake tasks to reset test DB
+* bin/example_data    - runs some rake tasks to setup and seed DB for running local server
 
 you can add `./bin` to your `PATH` to simplely use `console`, `server`, `rake` or `rspec`.
 
@@ -73,12 +75,12 @@ DISCOVERGY_PASSWORD=<password from lastpass>
 ## Common testing workflow - after checking out a remote branch
 
 - checkout the branch
-- run `RACK_ENV=test rake db:reset` once to ensure DB is prepared
+- run `reset_test_db` once to ensure DB is prepared
 - run `rspec`
 
 ## Common testing workflow - to run one test file
 
-- run `RACK_ENV=test rake db:reset` once to ensure DB is prepared
+- run `reset_test_db` once to ensure DB is prepared
 - run `rspec path/to/spec_file`
 
 ## Loading setup and example data ("seeds")
