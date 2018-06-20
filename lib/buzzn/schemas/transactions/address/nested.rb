@@ -2,7 +2,6 @@ require_relative 'create'
 require_relative 'update'
 
 module Schemas::Transactions::Address
-
   module Nested
 
     def base
@@ -30,5 +29,4 @@ module Schemas::Transactions::Address
     end
 
   end
-
 end
