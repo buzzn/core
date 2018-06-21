@@ -166,6 +166,24 @@ shared_examples 'create' do |model_clazz, path:, wrong:, params:, errors:, expec
 
   let(:all_path) { send(path).sub(%r(/[0-9]+$), '') }
 
+  let(:create_expected_json) do
+    case expected
+    when Hash
+      expected
+    else
+      send(expected)
+    end
+  end
+
+  let(:errors_json) do
+    case errors
+    when Hash
+      errors
+    else
+      send(errors)
+    end
+  end
+
   it '401' do
     GET all_path, $admin
     expire_admin_session do
@@ -178,7 +196,7 @@ shared_examples 'create' do |model_clazz, path:, wrong:, params:, errors:, expec
     POST all_path, $admin, wrong
     send(:p, json) if response.status != 422
     expect(response).to have_http_status(422)
-    expect(json.to_yaml).to eq send(errors).to_yaml
+    expect(json.to_yaml).to eq errors_json.to_yaml
   end
 
   it '201' do
@@ -190,9 +208,10 @@ shared_examples 'create' do |model_clazz, path:, wrong:, params:, errors:, expec
     object = model_clazz.find(id)
     expect(result.delete('updated_at')).not_to eq nil
     expect(object).not_to be_nil
+    obj_attrs = object.attributes
     params.each do |key, val|
-      expect(object.send(key).as_json).to eq val
+      expect((obj_attrs[key.to_s] || object.send(key)).as_json).to eq val
     end
-    expect(result.to_yaml).to eq send(expected).to_yaml
+    expect(result.to_yaml).to eq create_expected_json.to_yaml
   end
 end
