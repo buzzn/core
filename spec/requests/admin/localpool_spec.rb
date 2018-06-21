@@ -277,7 +277,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       { 'id'=>localpool.id,
         'type'=>'group_localpool',
         'name'=>'a b c d',
-        'slug' => 'a-b-c',
+        'slug' => localpool.slug,
         'description'=>'none',
         'start_date' => Date.yesterday.as_json,
         'show_object' => true,
@@ -331,6 +331,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       end
 
       it '200' do
+         # to satisfy rubocop :(
          old = localpool.updated_at
         PATCH "/localpools/#{localpool.id}", $admin,
               updated_at: localpool.updated_at,
