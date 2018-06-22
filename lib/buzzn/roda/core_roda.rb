@@ -47,6 +47,10 @@ class CoreRoda < CommonRoda
         r.on 'utils' do
           r.run Utils::Roda
         end
+
+        r.on 'website-forms' do
+          r.run WebsiteFormRoda::Roda
+        end
       end
 
       r.get! 'health' do
