@@ -668,7 +668,20 @@ CREATE TYPE public.roles_name AS ENUM (
 
 CREATE TYPE public.templates_name AS ENUM (
     '01_messvertrag',
+    '02_abwicklungsvertrag',
+    '03_auftragsformular_neubau_umzug',
+    '04_auftragsformular_bestand',
+    '05_agb_haushalt',
+    '06_agb_gewerbe',
+    '07_LSN_a02_neubau_umzug',
+    '08_LSN_a02_bestand',
+    '09_LSN_t01_ohne_zahlerwechsel',
+    '10_LSN_t01_mit_zahlerwechsel',
+    '11_LSN_t02_ohne_zahlerwechsel',
+    '12_LSN_t02_mit_zahlerwechsel',
     'invoice',
+    'lcp_report',
+    'lsn_a01',
     'minimal'
 );
 
