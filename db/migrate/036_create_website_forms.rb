@@ -4,6 +4,7 @@ class CreateWebsiteForms < ActiveRecord::Migration
     create_table :website_forms do |t|
       t.string :form_name, null: false, limit: 64
       t.json :form_content
+      t.timestamps
     end
     add_index :website_forms, :form_name
   end
