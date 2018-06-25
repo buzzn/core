@@ -97,7 +97,7 @@ describe 'Factories produce valid records' do
   context 'Device' do
     subject { create(:device) }
     it { is_expected.to be_valid }
-    it { is_expected.to have_association(:register, Register::Input) }
+    it { is_expected.to have_association(:localpool, Group::Localpool) }
   end
 
   context 'FormulaPart' do

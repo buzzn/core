@@ -23,6 +23,8 @@ class CreateGroups < ActiveRecord::Migration
 
     add_belongs_to :groups, :bank_account, reference: :bank_accounts, index: true, null: true
 
+    add_belongs_to :devices, :localpool, reference: :groups, index: true, null: true
+
     add_foreign_key :groups, :addresses, name: :fk_groups_address
 
     add_foreign_key :groups, :persons, name: :fk_groups_owner_person, column: :owner_person_id
@@ -34,6 +36,8 @@ class CreateGroups < ActiveRecord::Migration
     add_foreign_key :groups, :organizations, name: :fk_groups_distribution_system_operator, column: :distribution_system_operator_id
     add_foreign_key :groups, :organizations, name: :fk_groups_transmission_system_operator, column: :transmission_system_operator_id
     add_foreign_key :groups, :organizations, name: :fk_groups_electricity_supplier, column: :electricity_supplier_id
+
+    add_foreign_key :devices, :groups, name: :fk_devices_localpool, column: :localpool_id
 
     add_index :groups, [:slug], unique: true
 
