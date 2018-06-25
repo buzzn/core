@@ -1,79 +1,15 @@
 class Device < ActiveRecord::Base
 
-  include Filterable
-
-  BIO_MASS    = 'bio_mass'
-  BIO_GAS     = 'bio_gas'
-  NATURAL_GAS = 'natural_gas' # erdgas
-  FLUID_GAS   = 'fluid_gas'
-  FUEL_OIL    = 'fuel_oil' # Heizöl
-  WOOD        = 'wood'
-  VEG_OIL     = 'veg_oil' # Pflanzenöl
-  SUN         = 'sun'
-  WIND        = 'wind'
-  WATER       = 'water'
-  OTHER       = 'other'
-
-  class << self
-
-    def all_primary_energies
-      @primary_energy ||= [BIO_MASS, BIO_GAS, NATURAL_GAS, FLUID_GAS, FUEL_OIL,
-                            WOOD, VEG_OIL, SUN, WIND, WATER, OTHER]
-    end
-
-  end
-
   belongs_to :register, class_name: 'Register::Base', foreign_key: :register_id
 
-  def self.search_attributes
-    [:manufacturer_name, :manufacturer_product_name, :mode, :category,
-     :shop_link]
-  end
+  belongs_to :localpool, class_name: 'Group::Localpool', foreign_key: :localpool_id
 
-  def self.filter(search)
-    do_filter(search, *search_attributes)
-  end
+  enum law: { eeg: :eeg, kwkg: :kwkg, free: :free }
 
-  def name
-    "#{self.manufacturer_name} #{self.manufacturer_product_name}"
-  end
+  enum two_way_meter: { yes: :yes, planned: :planned }
 
-  def self.readables
-    %w{
-      me
-      friends
-      world
-    }
-  end
+  enum two_way_meter_used: { used_yes: :yes, used_planned: :planned }
 
-  def self.laws
-    %w{
-      eeg
-      kwkg
-    }.collect(&:to_sym)
-  end
-
-  def self.modes
-    %w{
-      in
-      out
-    }
-  end
-
-  def output?
-    self.mode == 'out'
-  end
-
-  def input?
-    self.mode == 'in'
-  end
-
-  def in_and_output?
-    self.mode == 'in_out'
-  end
-
-  def editable_users
-    User.with_role(:manager, self).to_a
-  end
+  enum primary_energy: %i(bio_mass bio_gas natural_gas fluid_gas fuel_oil wood veg_oil sun wind water other).each_with_object({}) { |i, map| map[i] = i }
 
 end

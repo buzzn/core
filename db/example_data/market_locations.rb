@@ -27,8 +27,8 @@ end
 SampleData.market_locations.common_consumption = create_market_location('Allgemeinstrom')
 
 SampleData.market_locations.ladestation_eauto.register = create(:register, :consumption_common,
-                                                                meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
-                                                                devices: [build(:device, :ecar, commissioning: SampleData.localpools.people_power.start_date, register: nil)])
+                                                                meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power))
+#devices: [build(:device, :ecar, commissioning: SampleData.localpools.people_power.start_date)])
 
 SampleData.market_locations.common_consumption.register = create(:register, :consumption_common,
                                                                  meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power))
