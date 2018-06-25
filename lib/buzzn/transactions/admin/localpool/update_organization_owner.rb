@@ -8,6 +8,9 @@ module Transactions::Admin::Localpool
     authorize :allowed_roles
     around :db_transaction
     tee :create_or_update_address, with: :'operations.action.create_or_update_address'
+    tee :create_or_update_contact_address, with: :'operations.action.create_or_update_address'
+    tee :create_or_update_contact, with: :'operations.action.create_or_update_person'
+    tee :create_or_update_legal_representation, with: :'operations.action.create_or_update_person'
     map :update_organization, with: :'operations.action.update'
 
     def schema(resource:, **)
@@ -16,6 +19,18 @@ module Transactions::Admin::Localpool
 
     def allowed_roles(permission_context:)
       permission_context.update
+    end
+
+    def create_or_update_contact_address(params:, resource:)
+      super(params: params[:contact] || {})
+    end
+
+    def create_or_update_contact(params:, resource:)
+      super(params: params, method: :contact)
+    end
+
+    def create_or_update_legal_representation(params:, resource:)
+      super(params: params, method: :legal_representation)
     end
 
   end
