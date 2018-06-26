@@ -1,4 +1,4 @@
 require_relative '../transactions'
 
-module Schemas::Transactions::Utils
+module Schemas::Transactions::Website
 end

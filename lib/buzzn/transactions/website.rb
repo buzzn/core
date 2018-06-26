@@ -1,5 +1,5 @@
 require_relative '../transactions'
 require_relative 'base'
 
-module Transactions::WebsiteForm
+module Transactions::Website
 end
