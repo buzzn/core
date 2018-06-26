@@ -12,4 +12,9 @@ class Device < ActiveRecord::Base
 
   enum primary_energy: %i(bio_mass bio_gas natural_gas fluid_gas fuel_oil wood veg_oil sun wind water other).each_with_object({}) { |i, map| map[i] = i }
 
+  private
+
+  # permissions helpers
+  scope :permitted, ->(uids) { where(id: uids) }
+
 end
