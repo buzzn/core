@@ -1,7 +1,7 @@
-require_relative 'base_roda'
+require_relative '../base_roda'
 
-module WebsiteFormRoda
-  class Roda < BaseRoda
+module Website
+  class WebsiteFormRoda < BaseRoda
 
     include Import.args[:env, 'transactions.website_form.create']
 

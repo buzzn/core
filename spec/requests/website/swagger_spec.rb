@@ -1,7 +1,7 @@
 require 'buzzn/schemas/support/visitor'
 require 'buzzn/schemas/transactions/utils/zip_to_price'
 
-describe 'Utils', :request_helper do
+describe 'Website', :request_helper do
   include SwaggerHelper
 
   def app
@@ -9,7 +9,7 @@ describe 'Utils', :request_helper do
   end
 
   swagger do |s|
-    s.basePath = '/api/utils'
+    s.basePath = '/api/website'
   end
 
   post '/zip-to-price' do

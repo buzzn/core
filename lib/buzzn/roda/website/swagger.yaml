@@ -1,10 +1,10 @@
 ---
 swagger: '2.0'
 info:
-  title: Utils API
-  description: Swagger for Utils Internal API
+  title: Website API
+  description: Swagger for Website Internal API
   version: '1'
-basePath: "/api/utils"
+basePath: "/api/website"
 paths:
   "/zip-to-price":
     post:
