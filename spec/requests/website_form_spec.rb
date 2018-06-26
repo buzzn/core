@@ -33,17 +33,17 @@ describe WebsiteFormRoda, :request_helper do
   context 'GET' do
 
     it '403' do
-      GET '/api/website-forms', nil
+      GET '/website-forms', nil
       expect(response).to have_http_status(403)
     end
 
     it '401' do
-      GET '/api/website-forms', $user
+      GET '/website-forms', $other
       expect(response).to have_http_status(401)
     end
 
     it '200' do
-      GET '/api/website-forms', $admin
+      GET '/website-forms', $admin
       expect(response).to have_http_status(200)
     end
 
