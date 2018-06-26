@@ -1,4 +1,6 @@
 require_relative '../constraints'
+require './app/models/device.rb'
+
 Schemas::Constraints::Device = Schemas::Support.Form do
   required(:two_way_meter).value(included_in?: Device.two_way_meters.values)
   required(:two_way_meter_used).value(included_in?: Device.two_way_meter_useds.values)

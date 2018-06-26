@@ -22,6 +22,13 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
   delete :operators
 
   # nested method and its CRUD permissions
+  devices do
+    create :managers
+    retrieve :managers
+    update :managers
+    delete :managers
+  end
+
   distribution_system_operator do
     retrieve :operators
   end
