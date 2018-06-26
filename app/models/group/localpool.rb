@@ -17,12 +17,6 @@ module Group
     has_many :tariffs, dependent: :destroy, class_name: 'Contract::Tariff', foreign_key: :group_id
     has_many :billing_cycles, dependent: :destroy
 
-    # permissions helpers
-    scope(:permitted, lambda do |uids|
-      ids = uids.collect { |u| u.start_with?('Group::Localpool') ? u.sub('Group::Localpool:', '') : nil }
-      where(id: ids)
-    end)
-
     def metering_point_operator_contract
       Contract::MeteringPointOperator.where(localpool_id: self).first
     end

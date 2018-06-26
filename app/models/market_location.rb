@@ -35,6 +35,7 @@ class MarketLocation < ActiveRecord::Base
     self.registers = new_register ? [new_register] : []
   end
 
+  # FIXME broken
   scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
 
   def consumption?

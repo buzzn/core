@@ -64,6 +64,7 @@ module Register
 
     # permissions helpers
 
+    # FIXME broken
     scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
 
     def reading_at(date)

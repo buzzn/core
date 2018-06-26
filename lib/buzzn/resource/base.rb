@@ -100,15 +100,12 @@ module Buzzn::Resource
       def all(user, clazz = nil)
         permissions = (self::Permission rescue NoPermission)
         context = SecurityContext.new(user, permissions)
-        objects = filter_all_allowed(context, filter_all(model.all))
+        objects = filter_all_allowed(context, filter_all(model.all), clazz)
         to_collection(objects, context, clazz || self)
       end
 
       def to_resource(instance, security_context, clazz = nil)
-        clazz ||= find_resource_class(instance.class)
-        raise "could not find Resource class for #{instance.class}" if clazz.nil?
-        raise "could not instantiate Resource class for #{instance.class} as #{clazz} is abstract" if clazz.abstract?
-        clazz.new(instance, security_context)
+        to_class(instance, clazz).new(instance, security_context)
       end
 
       protected
@@ -117,9 +114,16 @@ module Buzzn::Resource
 
       private
 
+      def to_class(instance, clazz)
+        clazz ||= find_resource_class(instance.class)
+        raise "could not find Resource class for #{instance.class}" if clazz.nil?
+        raise "could not instantiate Resource class for #{instance.class} as #{clazz} is abstract" if clazz.abstract?
+        clazz
+      end
+
       ANONYMOUS = [Role::ANONYMOUS].freeze
 
-      def filter_all_allowed(security_context, objects)
+      def filter_all_allowed(security_context, objects, clazz)
         perms = security_context.permissions.retrieve
         user = security_context.current_user
         if user.nil?
@@ -131,7 +135,19 @@ module Buzzn::Resource
         elsif allowed?(ANONYMOUS | security_context.current_roles | user.unbound_rolenames, perms)
           objects
         else
-          objects.permitted(user.uids_for(perms)) rescue objects.restricted(user.uids_for(perms))
+          filter_permitted(objects, user.uids_for(perms), clazz)
+        end
+      end
+
+      def filter_permitted(objects, uids, clazz)
+        return objects if objects.empty?
+        return objects.where('1=0') if uids.empty?
+        if objects.respond_to?(:permitted)
+          objects.permitted(uids)
+        else
+          prefix = (clazz&.model || objects.first.class).to_s + ':'
+          ids = uids.collect { |u| u.start_with?(prefix) ? u.sub(prefix, '') : nil }
+          objects.where(id: ids)
         end
       end
 
@@ -257,7 +273,7 @@ module Buzzn::Resource
     def all(security_context, objects, *clazz_and_meta)
       clazz = clazz_and_meta.shift
       meta = clazz_and_meta
-      allowed_objects = self.class.send(:filter_all_allowed, security_context, objects)
+      allowed_objects = self.class.send(:filter_all_allowed, security_context, objects, clazz)
       result = self.class.send(:to_collection, allowed_objects, security_context, clazz)
       meta.each do |key|
         result[key] = send(key)

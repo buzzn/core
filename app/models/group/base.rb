@@ -40,8 +40,6 @@ module Group
       Person.with_roles(self, Role::GROUP_ENERGY_MENTOR)
     end
 
-    scope :permitted, ->(uids) { where(id: uids) }
-
     def self.search_attributes
       [:name, :description]
     end
