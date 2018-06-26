@@ -1,6 +1,6 @@
 require_relative '../base_roda'
 
-module Utils
+module Website
   class ZipToPriceRoda < BaseRoda
 
     include Import.args[:env, 'transactions.utils.zip_to_price']

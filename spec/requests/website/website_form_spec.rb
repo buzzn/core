@@ -1,6 +1,6 @@
 require_relative 'test_websiteform_roda'
 
-describe WebsiteFormRoda, :request_helper do
+describe Website::WebsiteFormRoda, :request_helper do
 
   def app
     CoreRoda
@@ -9,13 +9,13 @@ describe WebsiteFormRoda, :request_helper do
   context 'POST' do
 
     it '422' do
-      POST '/api/website-forms', nil,
+      POST '/api/website/website-forms', nil,
            form_name: 'blablub'
       expect(response).to have_http_status(422)
     end
 
     it '422' do
-      POST '/api/website-forms', nil,
+      POST '/api/website/website-forms', nil,
            form_name: 'powertaker_v1',
            form_content: '{ "key": "value" }'
       expect(response).to have_http_status(201)
@@ -24,26 +24,21 @@ describe WebsiteFormRoda, :request_helper do
 
 end
 
-describe WebsiteFormRoda, :request_helper do
+describe Website::WebsiteFormRoda, :request_helper do
 
   def app
-    TestWebsiteFormRoda
+    Website::TestWebsiteFormRoda
   end
 
   context 'GET' do
 
     it '403' do
-      GET '/website-forms', nil
+      GET 'website/website-forms', nil
       expect(response).to have_http_status(403)
     end
 
-    it '401' do
-      GET '/website-forms', $other
-      expect(response).to have_http_status(401)
-    end
-
     it '200' do
-      GET '/website-forms', $admin
+      GET 'website/website-forms', $admin
       expect(response).to have_http_status(200)
     end
 
