@@ -1,5 +1,5 @@
 require 'buzzn/schemas/support/visitor'
-require 'buzzn/schemas/transactions/utils/zip_to_price'
+require 'buzzn/schemas/transactions/website/zip_to_price'
 
 describe 'Website', :request_helper do
   include SwaggerHelper
@@ -14,7 +14,7 @@ describe 'Website', :request_helper do
 
   post '/zip-to-price' do
     description 'calculates the price for the given zipcode'
-    schema Schemas::Transactions::Utils::ZipToPrice
+    schema Schemas::Transactions::Website::ZipToPrice
   end
 
   it 'GET /swagger.json' do

@@ -1,6 +1,6 @@
-require 'buzzn/transactions/website_form/create'
+require 'buzzn/transactions/website/website_form/create'
 
-describe Transactions::WebsiteForm::Create do
+describe Transactions::Website::WebsiteForm::Create do
 
   describe 'create' do
 
