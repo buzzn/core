@@ -1,4 +1,4 @@
-require_relative '../person'
+require_relative '../website_form'
 
 class Transactions::WebsiteForm::Create < Transactions::Base
 
