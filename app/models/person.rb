@@ -91,11 +91,4 @@ class Person < ActiveRecord::Base
     rel
   }
 
-  # permissions helpers
-
-  scope :permitted, ->(uids) {
-    ids = uids.collect { |u| u.start_with?('Person') ? u.sub('Person:', '') : nil }
-    where(id: ids)
-  }
-
 end

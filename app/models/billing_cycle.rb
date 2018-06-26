@@ -13,6 +13,7 @@ class BillingCycle < ActiveRecord::Base
     :open
   end
 
+  # TODO broken as uids are '{class_name}:{id}' now
   scope :permitted, ->(uids) { where(localpool_id: uids) }
 
 end
