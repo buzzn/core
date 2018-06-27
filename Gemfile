@@ -4,6 +4,7 @@ ruby '2.3.1'
 # transient dependency of rails with security issue, pick secure one
 gem 'loofah', '~> 2.2.1'
 gem 'rails-html-sanitizer', '~> 1.0.4'
+gem 'sprockets', '~> 3.7.2'
 
 # infrastructure
 gem 'dry-auto_inject'
