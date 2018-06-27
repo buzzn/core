@@ -5,8 +5,8 @@ Schemas::Transactions::Device::Update = Schemas::Support.Form(Schemas::Transacti
   optional(:two_way_meter_used).value(included_in?: Device.two_way_meter_useds.values)
   optional(:primary_energy).value(included_in?: Device.primary_energies.values)
   optional(:commissioning).filled(:date?)
-  optional(:watt_peak).filled(:int?)
-  optional(:watt_hour_pa).filled(:int?)
   optional(:law).value(included_in?: Device.laws.values)
   optional(:manufacturer).filled(:str?, max_size?: 64)
+  optional(:kw_peak).filled(:float?)
+  optional(:kwh_per_annum).filled(:float?)
 end

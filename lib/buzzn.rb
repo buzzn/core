@@ -58,7 +58,7 @@ module Buzzn
     end
 
     def message
-      @errors.values.inspect
+      @errors.inspect
     end
 
   end
