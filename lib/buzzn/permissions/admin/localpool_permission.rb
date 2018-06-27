@@ -27,6 +27,9 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     retrieve :managers
     update :managers
     delete :managers
+    electricity_supplier do
+      retrieve :managers
+    end
   end
 
   distribution_system_operator do

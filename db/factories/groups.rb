@@ -21,7 +21,7 @@ FactoryGirl.define do
       initialize_with { Group::Localpool.new }
       owner { FactoryGirl.create(:person) }
       after(:create) do |group, evaluator|
-        person_for_role = group.owner.is_a?(Organization) ? group.owner&.contact : group&.owner
+        person_for_role = group.owner.is_a?(Organization::Base) ? group.owner&.contact : group&.owner
         person_for_role&.add_role(Role::GROUP_OWNER, group)
         evaluator.admins.each { |admin| admin.add_role(Role::GROUP_ADMIN, group) }
         evaluator.tariffs_attrs.each { |tariff_attrs| create(:tariff, tariff_attrs.merge(group: group)) }

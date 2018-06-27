@@ -1,10 +1,7 @@
 describe Contract::BaseResource do
 
   entity(:admin) { create(:account, :buzzn_operator) }
-  entity!(:buzzn) do
-    buzzn = Organization.where(slug: 'buzzn').first
-    buzzn.bank_accounts << create(:bank_account, owner: buzzn)
-  end
+  entity!(:buzzn) { Organization::Market.buzzn }
   entity(:localpool) do
     localpool = create(:group, :localpool)
     localpool.owner.bank_accounts << create(:bank_account, owner: localpool.owner)
@@ -48,8 +45,7 @@ describe Contract::BaseResource do
     expect(result).to match_array expected
   end
 
-  [:customer, :customer_bank_account, :contractor,
-   :contractor_bank_account].each do |name|
+  [:customer, :customer_bank_account, :contractor].each do |name|
     it "nested #{name}" do
       all.each do |contract|
         obj = resources.retrieve(contract.id)

@@ -1,4 +1,4 @@
-require 'buzzn/schemas/transactions/organization/create_with_nested'
+require 'buzzn/schemas/transactions/organization/create'
 require_relative '../shared_nested_address'
 
 describe 'Schemas::Transactions::Organization::CreateWithNested' do

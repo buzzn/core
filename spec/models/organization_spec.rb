@@ -1,14 +1,14 @@
 describe 'Organization Model' do
 
   describe 'predefined organizations' do
-    let(:buzzn) { Organization.find_by(slug: 'buzzn') }
+    let(:buzzn) { Organization::Base.find_by(slug: 'buzzn') }
 
     it 'is available' do
-      expect(Organization.buzzn).not_to be_nil
+      expect(Organization::Market.buzzn).not_to be_nil
     end
 
     it 'it is still in the database' do
-      expect(Organization.buzzn).to eq(buzzn)
+      expect(Organization::Market.buzzn).to eq(buzzn)
     end
 
     describe 'the predicate method' do
@@ -16,7 +16,7 @@ describe 'Organization Model' do
         expect(buzzn).to be_buzzn
       end
       it 'returns false when org is not the called method' do
-        expect(create(:organization)).not_to be_buzzn
+        expect(create(:organization, :electricity_supplier)).not_to be_buzzn
       end
     end
   end
@@ -41,20 +41,20 @@ describe 'Organization Model' do
           value[-(length+1)..-1]
         ]
         searchable_values.each do |search_string|
-          found_organizations = Organization.filter(search_string)
+          found_organizations = Organization::General.filter(search_string)
           expect(found_organizations).to include org_to_find
         end
       end
     end
 
-    it 'can not find anything', :retry => 3 do
-      organizations = Organization.filter('Der Clown ist müde und geht nach Hause.')
+    it 'can not find anything' do
+      organizations = Organization::General.filter('Der Clown ist müde und geht nach Hause.')
       expect(organizations).to be_empty
     end
 
-    it 'filters organization with no params', :retry => 3 do
-      other_organizations = Organization.filter(nil)
-      expect(other_organizations.size).to eq Organization.count
+    it 'filters organization with no params' do
+      other_organizations = Organization::General.filter(nil)
+      expect(other_organizations.size).to eq Organization::General.count
     end
   end
 

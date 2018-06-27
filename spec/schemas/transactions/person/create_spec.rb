@@ -1,4 +1,4 @@
-require 'buzzn/schemas/transactions/person/create_with_address'
+require 'buzzn/schemas/transactions/person/create'
 require_relative '../shared_nested_address'
 
 describe 'Schemas::Transactions::Person::CreateWithAddress' do

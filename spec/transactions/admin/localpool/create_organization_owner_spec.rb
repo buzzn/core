@@ -10,18 +10,18 @@ describe Transactions::Admin::Localpool::CreateOrganizationOwner do
 
   entity(:resource) { Admin::LocalpoolResource.all(operator).first }
 
-  it_behaves_like 'create without address', Transactions::Admin::Localpool::CreateOrganizationOwner.new, OrganizationResource, name: 'Zappa-For-President'
-  it_behaves_like 'create with address', Transactions::Admin::Localpool::CreateOrganizationOwner.new, OrganizationResource, name: 'Elvis-Lives'
+  it_behaves_like 'create without address', Transactions::Admin::Localpool::CreateOrganizationOwner.new, Organization::GeneralResource, name: 'Zappa-For-President'
+  it_behaves_like 'create with address', Transactions::Admin::Localpool::CreateOrganizationOwner.new, Organization::GeneralResource, name: 'Elvis-Lives'
 
   context 'contact' do
-    it_behaves_like 'create without person', Transactions::Admin::Localpool::CreateOrganizationOwner.new, OrganizationResource, :contact, name: 'Zappa-For-President-Forever'
-    it_behaves_like 'create with person without address', Transactions::Admin::Localpool::CreateOrganizationOwner.new, OrganizationResource, :contact, name: 'Elvis-Lives-Forever'
-    it_behaves_like 'create with person with address', Transactions::Admin::Localpool::CreateOrganizationOwner.new, OrganizationResource, :contact, name: 'Mamas-and-Papas'
+    it_behaves_like 'create without person', Transactions::Admin::Localpool::CreateOrganizationOwner.new, Organization::GeneralResource, :contact, name: 'Zappa-For-President-Forever'
+    it_behaves_like 'create with person without address', Transactions::Admin::Localpool::CreateOrganizationOwner.new, Organization::GeneralResource, :contact, name: 'Elvis-Lives-Forever'
+    it_behaves_like 'create with person with address', Transactions::Admin::Localpool::CreateOrganizationOwner.new, Organization::GeneralResource, :contact, name: 'Mamas-and-Papas'
   end
 
   context 'legal_representation' do
-    it_behaves_like 'create without person', Transactions::Admin::Localpool::CreateOrganizationOwner.new, OrganizationResource, :legal_representation, name: 'Zappa-For-President-Again-And-Again'
+    it_behaves_like 'create without person', Transactions::Admin::Localpool::CreateOrganizationOwner.new, Organization::GeneralResource, :legal_representation, name: 'Zappa-For-President-Again-And-Again'
 
-    it_behaves_like 'create with person without address', Transactions::Admin::Localpool::CreateOrganizationOwner.new, OrganizationResource, :legal_representation, name: 'Elvis-Lives-Again-And-Again'
+    it_behaves_like 'create with person without address', Transactions::Admin::Localpool::CreateOrganizationOwner.new, Organization::GeneralResource, :legal_representation, name: 'Elvis-Lives-Again-And-Again'
   end
 end

@@ -12,6 +12,8 @@ module Admin
                :law,
                :manufacturer
 
+    has_one :electricity_supplier
+
     def kw_peak
       watt_peak / 1000
     end

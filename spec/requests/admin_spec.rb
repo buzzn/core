@@ -13,7 +13,7 @@ describe Admin::Roda, :request_helper do
     TestAdminRoda # this defines the active application for this test
   end
 
-  entity!(:localpool) { create(:group, :localpool, owner: create(:organization)) }
+  entity!(:localpool) { create(:group, :localpool, owner: create(:organization, :with_contact)) }
 
   entity!(:contract) do
     create(:contract, :localpool_powertaker, localpool: localpool)
@@ -204,9 +204,9 @@ describe Admin::Roda, :request_helper do
             'website'=>organization.website,
             'email'=>organization.email,
             'description'=>organization.description,
-            'customer_number' => nil,
             'updatable'=>false,
             'deletable'=>false,
+            'customer_number' => nil,
           }
         ]
       end

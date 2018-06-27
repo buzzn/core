@@ -1,10 +1,10 @@
-require_relative 'organization_resource'
+require_relative 'organization/general_resource'
 require_relative 'person_resource'
 
 class AdminResource < Buzzn::Resource::Base
 
   has_many :persons, PersonResource
-  has_many :organizations, OrganizationResource
+  has_many :organizations, Organization::GeneralResource
 
   def initialize(user)
     current_roles = []

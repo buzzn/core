@@ -12,7 +12,7 @@ describe Admin::LocalpoolRoda, :request_helper do
     entity(:localpool) { create(:group, :localpool, owner: person) }
 
     entity(:organization) do
-      buzzn = Organization.buzzn
+      buzzn = create(:organization, :with_address)
       buzzn.contact = person
       buzzn.save!
       buzzn
@@ -32,6 +32,34 @@ describe Admin::LocalpoolRoda, :request_helper do
       create(:contract, :localpool_powertaker,
              customer: organization,
              localpool: localpool)
+    end
+
+    let('buzzn_json') do
+      buzzn = Organization::Market.buzzn
+      {
+        'id'=>buzzn.id,
+        'type'=>'organization_market',
+        'updated_at'=>buzzn.updated_at.as_json,
+        'name'=>buzzn.name,
+        'phone'=>buzzn.phone,
+        'fax'=>buzzn.fax,
+        'website'=>buzzn.website,
+        'email'=>buzzn.email,
+        'description'=>buzzn.description,
+        'updatable'=>true,
+        'deletable'=>false,
+        'address'=>{
+          'id'=>buzzn.address.id,
+          'type'=>'address',
+          'updated_at'=>buzzn.address.updated_at.as_json,
+          'street'=>buzzn.address.street,
+          'city'=>buzzn.address.city,
+          'zip'=>buzzn.address.zip,
+          'country'=>buzzn.address.attributes['country'],
+          'updatable'=>true,
+          'deletable'=>false
+        }
+      }
     end
 
     let(:person_json) do
@@ -82,9 +110,9 @@ describe Admin::LocalpoolRoda, :request_helper do
         'website'=>organization.website,
         'email'=>organization.email,
         'description'=>organization.description,
-        'customer_number' => nil,
         'updatable'=>true,
         'deletable'=>false,
+        'customer_number' => nil,
         'address'=>{
           'id'=>organization.address.id,
           'type'=>'address',
@@ -309,7 +337,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               }
             end
           },
-          'contractor'=>organization_json.dup,
+          'contractor'=>buzzn_json,
           'customer'=>person_json.dup,
           'customer_bank_account'=>{
             'id'=>contract.customer_bank_account.id,
@@ -412,11 +440,10 @@ describe Admin::LocalpoolRoda, :request_helper do
 
         let('contract') { metering_point_operator_contract }
 
-        let('contractor_json') do
-          json = organization_json.dup
-          json.delete('address')
-          json.delete('contact')
-          json
+        let(:contractor_json) do
+          contractor_json = buzzn_json.dup
+          contractor_json.delete('address')
+          contractor_json
         end
 
         it '401' do

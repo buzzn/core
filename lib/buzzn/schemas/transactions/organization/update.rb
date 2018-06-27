@@ -1,4 +1,4 @@
-require './app/models/organization.rb'
+require './app/models/organization/general.rb'
 require_relative '../organization'
 require_relative '../address/nested'
 

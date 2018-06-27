@@ -4,7 +4,7 @@ module Contract
   class MeteringPointOperator < Localpool
 
     after_initialize do
-      self.contractor_organization = Organization.buzzn
+      self.contractor_organization = Organization::Market.buzzn
     end
 
     def customer

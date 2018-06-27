@@ -9,7 +9,7 @@ describe Pdf::MeteringPointOperator, :pdfs_helper do
   entity(:contract) { create(:contract, :metering_point_operator, localpool: localpool, contract_number: 90001) }
 
   entity(:localpool) { create(:group, :localpool, :with_address, owner: organization) }
-  entity(:organization) { create(:organization, :other, :with_address, :with_legal_representation, name: 'some-orga-name') }
+  entity(:organization) { create(:organization, :with_contact, :with_address, :with_legal_representation, name: 'some-orga-name') }
 
   let(:name) { subject.send(:template_name) }
   subject { Pdf::MeteringPointOperator.new(contract) }

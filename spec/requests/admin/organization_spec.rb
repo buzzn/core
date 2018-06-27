@@ -11,7 +11,7 @@ describe Admin::LocalpoolRoda, :request_helper do
     entity!(:address) { create(:address) }
     entity!(:person) { create(:person) }
     entity!(:organization) do
-      organization = create(:organization, :metering_service_provider,
+      organization = create(:organization,
                             contact: person,
                             legal_representation: person)
       organization.update(address: address)
@@ -34,9 +34,9 @@ describe Admin::LocalpoolRoda, :request_helper do
           'website'=>organization.website,
           'email'=>organization.email,
           'description'=>organization.description,
-          'customer_number' => nil,
           'updatable'=>true,
           'deletable'=>true,
+          'customer_number' => nil,
           'bank_accounts'=>{
             'array'=> organization.bank_accounts.collect do |bank_account|
               {
