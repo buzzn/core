@@ -3,8 +3,8 @@ require_relative '../website_form'
 Schemas::Transactions::Website::WebsiteForm::Create = Schemas::Support.Form do
   configure do
     def valid_json?(json)
-      !!JSON.parse(json)
-    rescue
+      true if JSON.parse(json)
+    rescue JSON::ParserError
       false
     end
   end
