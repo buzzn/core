@@ -1,4 +1,6 @@
 require_relative 'test_admin_localpool_roda'
+require_relative 'shared_crud'
+
 describe Admin::LocalpoolRoda, :request_helper do
 
   def app
@@ -116,7 +118,9 @@ describe Admin::LocalpoolRoda, :request_helper do
       it '200' do
         GET "/localpools/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq localpool_json.to_yaml
+        result = json
+        result['incompleteness'].delete('owner') # is flaky
+        expect(result.to_yaml).to eq localpool_json.to_yaml
       end
     end
   end
@@ -164,14 +168,79 @@ describe Admin::LocalpoolRoda, :request_helper do
       it '200' do
         GET "/localpools/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
         expect(response).to have_http_status(200)
-        expect(json.to_yaml).to eq localpool_json.to_yaml
+        result = json
+        result['incompleteness'].delete('owner') # is flaky
+        expect(result.to_yaml).to eq localpool_json.to_yaml
       end
     end
   end
 
-  context 'owner' do
+  context 'person owner' do
     it_behaves_like 'nested person', 'owner'
+    let(:path) { "/localpools/#{localpool.id}/person-owner" }
+    it_behaves_like 'create', Person,
+                    path: :path,
+                    wrong: {
+                      prefix: 'M_W',
+                      first_name: 'Ford' * 100,
+                      last_name: 'Perfect' * 100,
+                      preferred_language: 'german'
+                    },
+                    params: {
+                      prefix: 'M',
+                      first_name: 'Ford',
+                      last_name: 'Perfect',
+                      preferred_language: 'de'
+                    },
+                    errors: {
+                      'prefix'=>['must be one of: F, M'],
+                      'first_name'=>['size cannot be greater than 64'],
+                      'last_name'=>['size cannot be greater than 64'],
+                      'preferred_language'=>['must be one of: de, en']
+                    },
+                    expected: {
+                      'type' => 'person',
+                      'prefix' => 'M',
+                      'title' => nil,
+                      'first_name' => 'Ford',
+                      'last_name' => 'Perfect',
+                      'phone' => nil,
+                      'fax' => nil,
+                      'email' => nil,
+                      'preferred_language' => 'de',
+                      'image' => nil,
+                      'customer_number' => nil,
+                      'updatable' => true,
+                      'deletable' => false
+                    }
+  end
+
+  context 'organization owner' do
     it_behaves_like 'nested organization', 'owner'
+    let(:path) { "/localpools/#{localpool.id}/organization-owner" }
+    it_behaves_like 'create', Organization,
+                    path: :path,
+                    wrong: {
+                      name: 'Perfect Propaganda' * 100,
+                    },
+                    params: {
+                      name: 'Perfect Propaganda'
+                    },
+                    errors: {
+                      'name'=>['size cannot be greater than 64'],
+                    },
+                    expected: {
+                      'type' => 'organization',
+                      'name' => 'Perfect Propaganda',
+                      'phone' => nil,
+                      'fax' => nil,
+                      'website' => nil,
+                      'email' => nil,
+                      'description' => nil,
+                      'customer_number' => nil,
+                      'updatable' => true,
+                      'deletable' => false
+                    }
   end
 
   context 'gap_contract_customer' do

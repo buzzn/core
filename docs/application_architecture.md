@@ -14,8 +14,8 @@ Example: updating a register.
     - producing the HTTP response (headers, status, ...)
 - Buzzn::Transaction (lib/buzzn/transactions) encapsulates the business logic. It is used for mutating resources. Reads go directly to a Buzzn::Resource.
 - Buzzn::Resource (lib/buzzn/resources)
-    - handles authorization / permissions
-    - can implement business logic
+    - handles authorization / permissions for nested resources and on retrieves
+    - can implement simple business logic
     - serializes response to JSON
 
 ### How & where do we validate stuff?
@@ -65,7 +65,7 @@ At the time of writing Rails is a legacy dependency and almost removed. Details:
 - instead of Rails controllers, we use Roda tree procs.
 - instead of ActiveRecord validations, we use dry-schema; see "How & where do we validate stuff?" for details.
 - instead of the views and the asset pipeline, we use the homemade `Buzzn::Resource::*` objects to render the JSON (the application is API-only).
-- instead of the Rails logger, we use `Buzzn::Logger`. 
+- instead of the Rails logger, we use `Buzzn::Logger`.
 - Rails environments are deprecated. The application should only be configured through environment variables. See http://12factor.net/config for the reasoning.
 - tests: the tests inherit from Rack::Test.
 - the `rails server` and `rails console` tasks have been replaced by `bin/server` and `bin/console`.
