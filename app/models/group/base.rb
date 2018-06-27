@@ -11,7 +11,12 @@ module Group
     PV = 'pv'
 
     before_save do
-      self.slug = Buzzn::Slug.new(self.name)
+      if self.slug.nil?
+        self.slug = Buzzn::Slug.new(self.name)
+        if (count = self.class.where(slug: self.slug).count).positive?
+          self.slug = Buzzn::Slug.new(self.name, count)
+        end
+      end
     end
 
     before_destroy :destroy_content

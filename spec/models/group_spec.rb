@@ -26,6 +26,14 @@ describe Group::Base do
     expect(groups.size).to eq Group::Base.count
   end
 
+  describe 'reuse slug' do
+
+    before { Group::Localpool.create(name: 'Dagobert Duck') }
+
+    it { expect(Group::Localpool.create(name: 'Dagobert Duck').slug).to eq 'dagobert-duck_1' }
+
+  end
+
   describe Group::Localpool do
 
     entity!(:localpool_with_contracts) do
