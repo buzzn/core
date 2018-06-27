@@ -18,11 +18,11 @@ describe Transactions::Admin::Localpool::OwnerBase do
   entity!(:person2) { PersonResource.new(create(:person), pool.security_context.owner) }
 
   entity!(:organization) do
-    OrganizationResource.new(create(:organization, :other, contact: create(:person)), pool.security_context.owner)
+    Organization::GeneralResource.new(create(:organization, contact: create(:person)), pool.security_context.owner)
   end
 
   entity!(:organization2) do
-    OrganizationResource.new(create(:organization, :other, contact: create(:person)), pool.security_context.owner)
+    Organization::GeneralResource.new(create(:organization, contact: create(:person)), pool.security_context.owner)
   end
 
   let(:subject) { Transactions::Admin::Localpool::OwnerBase.new }

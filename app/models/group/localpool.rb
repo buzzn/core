@@ -9,9 +9,9 @@ module Group
 
     belongs_to :grid_consumption_register, class_name: 'Register::Input'
     belongs_to :grid_feeding_register, class_name: 'Register::Output'
-    belongs_to :distribution_system_operator, class_name: 'Organization'
-    belongs_to :transmission_system_operator, class_name: 'Organization'
-    belongs_to :electricity_supplier, class_name: 'Organization'
+    belongs_to :distribution_system_operator, class_name: 'Organization::Market'
+    belongs_to :transmission_system_operator, class_name: 'Organization::Market'
+    belongs_to :electricity_supplier, class_name: 'Organization::Market'
 
     has_many :devices, foreign_key: :localpool_id
     has_many :tariffs, dependent: :destroy, class_name: 'Contract::Tariff', foreign_key: :group_id
@@ -89,7 +89,7 @@ module Group
     end
 
     def self.organizations(base = where('1=1'))
-      organizations = Organization.arel_table
+      organizations = Organization::General.arel_table
       localpool = Localpool.arel_table
       localpool_owner =
         if base.respond_to?(:to_a)
@@ -101,7 +101,7 @@ module Group
       contract_organizations = contracts(base).where('contracts.customer_organization_id = organizations.id or contracts.contractor_organization_id = organizations.id')
                                               .select(1)
                                               .exists
-      Organization.where(localpool_owner.or(contract_organizations))
+      Organization::General.where(localpool_owner.or(contract_organizations))
     end
 
     def one_way_meters

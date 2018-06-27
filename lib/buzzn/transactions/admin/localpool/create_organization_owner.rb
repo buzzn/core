@@ -1,5 +1,5 @@
 require_relative 'owner_base'
-require_relative '../../../schemas/transactions/organization/create_with_nested'
+require_relative '../../../schemas/transactions/organization/create'
 
 module Transactions::Admin::Localpool
   class CreateOrganizationOwner < OwnerBase
@@ -35,7 +35,7 @@ module Transactions::Admin::Localpool
     end
 
     def new_owner(params:, resource:)
-      OrganizationResource.new(
+      Organization::GeneralResource.new(
         *super(resource.organizations, params)
       )
     end

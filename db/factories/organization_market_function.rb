@@ -1,6 +1,6 @@
 FactoryGirl.define do
-  factory :organization_market_function do
-    function { OrganizationMarketFunction.functions.keys.sample }
+  factory :organization_market_function, class: 'Organization::MarketFunction' do
+    function { Organization::MarketFunction.functions.keys.sample }
     # sequences
     market_partner_id { generate(:market_partner_id) }
     edifact_email { generate(:edifact_email) }
@@ -9,7 +9,7 @@ FactoryGirl.define do
     address
 
     before(:create) do |function, _transients|
-      function.organization ||= FactoryGirl.create(:organization)
+      function.organization ||= FactoryGirl.create(:organization, :market)
     end
   end
 end

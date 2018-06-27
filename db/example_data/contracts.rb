@@ -31,7 +31,7 @@ module SampleData::PTContractFactory
       person =
         if contract.customer.is_a?(Person)
           contract.customer
-        elsif contract.customer.is_a?(Organization)
+        elsif contract.customer.is_a?(Organization::Base)
           contract.customer.contact
         end
       if person
@@ -69,14 +69,14 @@ SampleData.contracts = OpenStruct.new
 SampleData.contracts.mpo = create(:contract, :metering_point_operator,
   localpool: SampleData.localpools.people_power,
   customer: SampleData.localpools.people_power.owner,
-  contractor: Organization.buzzn,
+  contractor: Organization::Market.buzzn,
   payments: [build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')]
                                  )
 
 SampleData.contracts.lpp = create(:contract, :localpool_processing,
   localpool: SampleData.localpools.people_power,
   customer: SampleData.localpools.people_power.owner,
-  contractor: Organization.buzzn,
+  contractor: Organization::Market.buzzn,
   payments: [build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')],
   tariffs: [
     build(:tariff, name: 'Standard', energyprice_cents_per_kwh: 28.9, group: SampleData.localpools.people_power),

@@ -36,7 +36,7 @@ describe 'Factories produce valid records' do
   context 'Energy classification' do
     subject { create(:energy_classification) }
     it { is_expected.to be_valid }
-    it { is_expected.to have_association(:organization, Organization) }
+    it { is_expected.to have_association(:organization, Organization::Market) }
   end
 
   context 'Bank account' do
@@ -52,7 +52,7 @@ describe 'Factories produce valid records' do
     subject { create(:contract) }
     it { is_expected.to be_valid }
     it { is_expected.to have_association(:localpool, Group::Localpool) }
-    it { is_expected.to have_association(:contractor, Organization) }
+    it { is_expected.to have_association(:contractor, Organization::General) }
     it 'has bank account' do
       is_expected.to have_association(:contractor_bank_account, BankAccount)
     end
@@ -142,7 +142,10 @@ describe 'Factories produce valid records' do
   context 'Organization' do
     subject { create(:organization) }
     it { is_expected.to be_valid }
-    it { is_expected.to have_association(:contact, Person) }
+    context 'Trait with contact' do
+      subject { create(:organization, :with_contact) }
+      it { is_expected.to have_association(:contact, Person) }
+    end
     context 'Trait with address' do
       subject { create(:organization, :with_address) }
       it { is_expected.to have_association(:address, Address) }

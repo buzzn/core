@@ -8,7 +8,7 @@ module Contract
 
     def initialize(*args)
       super
-      self.contractor = Organization.buzzn
+      self.contractor = Organization::General.buzzn
     end
 
   end

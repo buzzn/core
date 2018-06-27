@@ -26,10 +26,10 @@ module Schemas
                 localpool = role.resource
                 owner = localpool.owner
                 (owner.is_a?(Person) && input.id == owner.id) ||
-                  (owner.is_a?(::Organization) && owner.contact && input.id == owner.contact.id)
+                  (owner.is_a?(::Organization::General) && owner.contact && input.id == owner.contact.id)
               end
               the_role != nil
-            when 'Organization'
+            when 'Organization::General'
               has_owner_role?(input.contact)
             when 'NilClass'
               true

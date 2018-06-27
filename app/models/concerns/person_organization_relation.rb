@@ -2,7 +2,7 @@ module PersonOrganizationRelation
 
   def self.generate(model, name)
     model.belongs_to :"#{name}_person", class_name: 'Person', foreign_key: :"#{name}_person_id"
-    model.belongs_to :"#{name}_organization", class_name: 'Organization', foreign_key: :"#{name}_organization_id"
+    model.belongs_to :"#{name}_organization", class_name: 'Organization::Base', foreign_key: :"#{name}_organization_id"
     model.class_eval do
 
       define_method(name) do
@@ -14,7 +14,7 @@ module PersonOrganizationRelation
         when Person
           self.send(:"#{name}_person=", new_value)
           self.send(:"#{name}_organization=", nil)
-        when Organization
+        when Organization::Base
           self.send(:"#{name}_organization=", new_value)
           self.send(:"#{name}_person=", nil)
         when NilClass

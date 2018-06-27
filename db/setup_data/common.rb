@@ -11,7 +11,7 @@ end
 # Energy classifications
 #
 energy_classifications = {
-  buzzn: EnergyClassification.create!(
+  buzzn: Organization::EnergyClassification.create!(
     tariff_name:                      'Buzzn GmbH',
     nuclear_ratio:                    2.1,
     coal_ratio:                       5.9,
@@ -22,7 +22,7 @@ energy_classifications = {
     co2_emission_gramm_per_kwh:       131,
     nuclear_waste_miligramm_per_kwh:  0.03
   ),
-  germany: EnergyClassification.create!(
+  germany: Organization::EnergyClassification.create!(
     tariff_name:                       'Energy Mix Germany',
     nuclear_ratio:                     15.4,
     coal_ratio:                        43.8,
@@ -92,7 +92,7 @@ get_csv(:organizations, converters: { state: Converters::State }).each do |row|
   Buzzn::Logger.root.debug "Loading organization #{row[:name]}"
   address_attrs = row.slice(*ADDRESS_ATTRIBUTES)
   org_attrs     = row.except(*(ADDRESS_ATTRIBUTES + [:state]))
-  record        = Organization.new(org_attrs)
+  record        = Organization::Market.new(org_attrs)
   if ADDRESS_ATTRIBUTES.all? { |attr| address_attrs[attr].present? }
     record.build_address(address_attrs)
   else
@@ -105,14 +105,14 @@ get_csv(:organizations, converters: { state: Converters::State }).each do |row|
 end
 
 # Assigning buzzn and germany here is essential for the application to work!
-Organization.buzzn = Organization.find_by(slug: 'buzzn')
-Organization.buzzn.energy_classifications = [energy_classifications[:buzzn]]
-Organization.germany = Organization.find_by(slug: 'germany')
-Organization.germany.energy_classifications = [energy_classifications[:germany]]
+Organization::Market.buzzn = Organization::Market.find_by(slug: 'buzzn')
+Organization::Market.buzzn.energy_classifications = [energy_classifications[:buzzn]]
+Organization::Market.germany = Organization::Market.find_by(slug: 'germany')
+Organization::Market.germany.energy_classifications = [energy_classifications[:germany]]
 
 get_csv(:organization_market_functions).each do |row|
   begin
-    organization = Organization.find_by(name: row[:organization_id])
+    organization = Organization::Market.find_by(name: row[:organization_id])
     unless organization
       Buzzn::Logger.root.debug "Unable to find organization #{row[:organization_id]} for assigning market function."
       next

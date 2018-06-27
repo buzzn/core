@@ -6,9 +6,9 @@ describe Admin::LocalpoolRoda, :request_helper do
   end
 
   entity!(:localpool) do create(:group, :localpool,
-                                distribution_system_operator: Organization.distribution_system_operator.first,
-                                transmission_system_operator: Organization.transmission_system_operator.first,
-                                electricity_supplier: Organization.electricity_supplier.first) end
+                                distribution_system_operator: Organization::Market.distribution_system_operators.first,
+                                transmission_system_operator: Organization::Market.transmission_system_operators.first,
+                                electricity_supplier: Organization::Market.electricity_suppliers.first) end
 
   let(:localpool_json) do
     json = {
@@ -50,7 +50,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       organization = localpool.send key
       json[key] = {
         'id'=>organization.id,
-        'type'=>'organization',
+        'type'=>'organization_market',
         'updated_at'=>organization.updated_at.as_json,
         'name'=>organization.name,
         'phone'=>organization.phone,
@@ -58,7 +58,6 @@ describe Admin::LocalpoolRoda, :request_helper do
         'website'=>organization.website,
         'email'=>organization.email,
         'description'=>organization.description,
-        'customer_number' => nil,
         'updatable'=>false,
         'deletable'=>false,
       }

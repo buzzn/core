@@ -28,6 +28,7 @@ describe 'Schemas::Invariants::Group::Localpool' do
       before { localpool.update(owner: person) }
       it_behaves_like 'an owner'
     end
+
     context 'organization' do
       entity!(:organization) { create(:organization, contact: person) }
 
@@ -42,13 +43,13 @@ describe 'Schemas::Invariants::Group::Localpool' do
                                       electricity_supplier: nil) end
 
     it 'invalid' do
-      localpool.update(distribution_system_operator: Organization.transmission_system_operator.first)
+      localpool.update(distribution_system_operator: Organization::Market.transmission_system_operators.first)
       expect(localpool.invariant.errors[:distribution_system_operator]).not_to be_nil
       expect(localpool.distribution_system_operator).not_to be_nil
     end
 
     it 'valid' do
-      localpool.update(distribution_system_operator: Organization.distribution_system_operator.first)
+      localpool.update(distribution_system_operator: Organization::Market.distribution_system_operators.first)
       expect(localpool.invariant.errors[:distribution_system_operator]).to be_nil
       expect(localpool.distribution_system_operator).not_to be_nil
     end
@@ -59,13 +60,13 @@ describe 'Schemas::Invariants::Group::Localpool' do
                                       electricity_supplier: nil) end
 
     it 'invalid' do
-      localpool.update(transmission_system_operator: Organization.distribution_system_operator.first)
+      localpool.update(transmission_system_operator: Organization::Market.distribution_system_operators.first)
       expect(localpool.invariant.errors[:transmission_system_operator]).not_to be_nil
       expect(localpool.transmission_system_operator).not_to be_nil
     end
 
     it 'valid' do
-      localpool.update(transmission_system_operator: Organization.transmission_system_operator.first)
+      localpool.update(transmission_system_operator: Organization::Market.transmission_system_operators.first)
       expect(localpool.invariant.errors[:transmission_system_operator]).to be_nil
       expect(localpool.transmission_system_operator).not_to be_nil
     end
@@ -76,13 +77,13 @@ describe 'Schemas::Invariants::Group::Localpool' do
                                       distribution_system_operator: nil) end
 
     it 'invalid' do
-      localpool.update(electricity_supplier: Organization.transmission_system_operator.first)
+      localpool.update(electricity_supplier: Organization::Market.transmission_system_operators.first)
       expect(localpool.invariant.errors[:electricity_supplier]).not_to be_nil
       expect(localpool.electricity_supplier).not_to be_nil
     end
 
     it 'valid' do
-      localpool.update(electricity_supplier: Organization.electricity_supplier.first)
+      localpool.update(electricity_supplier: Organization::Market.electricity_suppliers.first)
       expect(localpool.invariant.errors[:electricity_supplier]).to be_nil
       expect(localpool.electricity_supplier).not_to be_nil
     end

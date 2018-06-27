@@ -17,7 +17,7 @@ class Transactions::Admin::Localpool::OwnerBase < Transactions::Base
     case old_owner
     when PersonResource
       old_owner.object.remove_role(Role::GROUP_OWNER, localpool.object)
-    when OrganizationResource
+    when Organization::GeneralResource
       setup_roles(localpool, old_owner.contact, nil)
     when NilClass
     # skip
@@ -29,7 +29,7 @@ class Transactions::Admin::Localpool::OwnerBase < Transactions::Base
     case new_owner
     when PersonResource
       new_owner.object.add_role(Role::GROUP_OWNER, localpool.object)
-    when OrganizationResource
+    when Organization::GeneralResource
       setup_roles(localpool, nil, new_owner.contact)
     when NilClass
     # skip

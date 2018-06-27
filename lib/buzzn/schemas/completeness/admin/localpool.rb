@@ -1,4 +1,4 @@
-require_relative '../../../resources/organization_resource'
+require_relative '../../../resources/organization/general_resource'
 require_relative '../../../resources/person_resource'
 require_relative '../admin'
 require_relative '../organization'
@@ -15,7 +15,7 @@ module Schemas::Completeness::Admin
 
     required(:owner) do
       filled?.and(
-        type?(OrganizationResource).then schema(Schemas::Completeness::Organization)).and(
+        type?(Organization::GeneralResource).then schema(Schemas::Completeness::Organization)).and(
         type?(PersonResource).then schema(Schemas::Completeness::Person))
     end
 

@@ -16,7 +16,7 @@ describe Admin, :swagger, :request_helper do
 
   entity!(:bank_account_2) { create(:bank_account, owner: person) }
 
-  entity!(:organization) { create(:organization, :other) }
+  entity!(:organization) { create(:organization) }
 
   entity!(:bank_account_3) { create(:bank_account, owner: organization) }
 

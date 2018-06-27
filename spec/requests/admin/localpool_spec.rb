@@ -414,9 +414,9 @@ describe Admin::LocalpoolRoda, :request_helper do
           'website'=>contract.contractor.website,
           'email'=>contract.contractor.email,
           'description'=>contract.contractor.description,
-          'customer_number' => nil,
           'updatable'=>true,
-          'deletable'=>false
+          'deletable'=>false,
+          'customer_number' => nil,
         },
         'customer'=>{
           'id'=>contract.customer.id,
@@ -513,7 +513,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         },
         'contractor'=>{
           'id'=>contract.contractor.id,
-          'type'=>'organization',
+          'type'=>'organization_market',
           'updated_at'=>contract.contractor.updated_at.as_json,
           'name'=>contract.contractor.name,
           'phone'=>contract.contractor.phone,
@@ -521,7 +521,6 @@ describe Admin::LocalpoolRoda, :request_helper do
           'website'=>contract.contractor.website,
           'email'=>contract.contractor.email,
           'description'=>contract.contractor.description,
-          'customer_number' => nil,
           'updatable'=>true,
           'deletable'=>false,
           'address' => {

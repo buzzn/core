@@ -139,9 +139,9 @@ describe Admin::LocalpoolRoda, :request_helper do
         'website'=>organization.website,
         'email'=>organization.email,
         'description'=>organization.description,
-        'customer_number' => nil,
         'updatable'=>true,
         'deletable'=>false,
+        'customer_number' => nil,
         'address' => address_json,
         'bank_accounts'=>{
           'array'=> organization.bank_accounts.collect do |bank_account|
@@ -218,7 +218,7 @@ describe Admin::LocalpoolRoda, :request_helper do
   context 'organization owner' do
     it_behaves_like 'nested organization', 'owner'
     let(:path) { "/localpools/#{localpool.id}/organization-owner" }
-    it_behaves_like 'create', Organization,
+    it_behaves_like 'create', Organization::General,
                     path: :path,
                     wrong: {
                       name: 'Perfect Propaganda' * 100,
@@ -237,9 +237,9 @@ describe Admin::LocalpoolRoda, :request_helper do
                       'website' => nil,
                       'email' => nil,
                       'description' => nil,
-                      'customer_number' => nil,
                       'updatable' => true,
-                      'deletable' => false
+                      'deletable' => false,
+                      'customer_number' => nil,
                     }
   end
 

@@ -47,7 +47,9 @@ describe Group::Base do
       both_localpools = Group::Localpool.where(id: [localpool, localpool_without_contracts])
       persons = localpool.contracts.collect { |c| c.customer }.uniq
       expect(persons.size).to be > 0
-      organizations = localpool.contracts.collect { |c| c.contractor }.uniq
+      organizations = localpool.contracts.collect { |c| c.contractor }
+                               .uniq
+                               .reject { |o| o.is_a?(Organization::Market) }
       expect(both_localpools.persons).to match_array persons + [localpool_without_contracts.owner]
       expect(both_localpools.organizations).to match_array organizations
       expect(localpool.persons).to match_array persons

@@ -1,7 +1,7 @@
 FactoryGirl.define do
-  factory :energy_classification do
+  factory :energy_classification, class: 'Organization::EnergyClassification' do
     tariff_name                      'Generic Mix'
-    organization                     { FactoryGirl.create(:organization) }
+    organization                     { FactoryGirl.create(:organization, :electricity_supplier) }
     nuclear_ratio                    2.1
     coal_ratio                       5.9
     gas_ratio                        40.9
@@ -13,12 +13,12 @@ FactoryGirl.define do
 
     trait :buzzn do
       tariff_name                       'Buzzn GmbH'
-      organization                      { Organization.find_by(slug: 'buzzn') }
+      organization                      { Organization::Market.find_by(slug: 'buzzn') }
     end
 
     trait :germany do
       tariff_name                       'Energy Mix Germany'
-      organization                      { Organization.find_by(slug: 'germany') }
+      organization                      { Organization::Market.find_by(slug: 'germany') }
       nuclear_ratio                     15.4
       coal_ratio                        43.8
       gas_ratio                         6.5
