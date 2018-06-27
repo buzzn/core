@@ -1,5 +1,7 @@
 en:
   errors:
+    valid_json?: "must be a valid JSON"
+
     phone_number?: "must be a valid phone-number"
 
     iban?: "must be a valid iban"

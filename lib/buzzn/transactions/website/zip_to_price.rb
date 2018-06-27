@@ -1,14 +1,14 @@
-require_relative '../utils'
-require_relative '../../schemas/transactions/utils/zip_to_price'
+require_relative '../website'
+require_relative '../../schemas/transactions/website/zip_to_price'
 require_relative '../../types/zip_prices'
 
-class Transactions::Utils::ZipToPrice < Transactions::Base
+class Transactions::Website::ZipToPrice < Transactions::Base
 
   validate :schema
   step :zip_to_price
 
   def schema
-    Schemas::Transactions::Utils::ZipToPrice
+    Schemas::Transactions::Website::ZipToPrice
   end
 
   def zip_to_price(params:)
