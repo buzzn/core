@@ -41,6 +41,7 @@ module Admin
     has_many :persons
     has_many :tariffs, Contract::TariffResource
     has_many :billing_cycles, BillingCycleResource, :next_billing_cycle_begin_date
+    has_many :devices
     has_one :owner
     has_one :gap_contract_customer
     has_one :address

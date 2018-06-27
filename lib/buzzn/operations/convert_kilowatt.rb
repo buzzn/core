@@ -4,7 +4,7 @@ class Operations::ConvertKilowatt
 
   def call(params:, map:, **)
     map.each do |from, to|
-      params[to] = convert(params[from])
+      params[to] = convert(params.delete(from))
     end
   end
 

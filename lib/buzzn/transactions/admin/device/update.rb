@@ -12,7 +12,7 @@ class Transactions::Admin::Device::Update < Transactions::Base
     Schemas::Transactions::Device::Update
   end
 
-  def convert_kilowatt(params: params)
+  def convert_kilowatt(params:, resource:)
     super(params: params, map: { kw_peak: :watt_peak,
                                  kwh_per_annum: :watt_hour_pa})
   end

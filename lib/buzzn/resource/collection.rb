@@ -64,15 +64,15 @@ module Buzzn::Resource
     end
 
     def createable?
-      allowed?(:create)
+      allowed?(permissions.send(:create))
     end
 
     def any_roles
       (collect { |a| a.security_context.current_roles }.flatten | current_roles).uniq
     end
 
-    def allowed?(method)
-      (permissions.send(method) & any_roles).size > 0
+    def allowed?(roles, perms = any_roles)
+      (roles & perms).size > 0
     end
 
     def []=(k, v)
