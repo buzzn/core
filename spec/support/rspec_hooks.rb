@@ -16,6 +16,9 @@ RSpec.configure do |config|
   #
 
   config.append_after(:each) do |spec|
-    Redis.current.flushall
+    require_relative '../../lib/buzzn/services/redis_cache'
+    require_relative '../../lib/buzzn/services/redis_sidekiq'
+    Services::RedisCache.current.flushall
+    Services::RedisSidekiq.current.flushall
   end
 end
