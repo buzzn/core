@@ -2,7 +2,8 @@ require_relative '../services'
 require_relative '../types/maintenance_mode'
 class Services::Health
 
-  include Import['services.redis',
+  include Import['services.redis_cache',
+                 'services.redis_sidekiq',
                  'config.heroku_slug_commit',
                  'config.heroku_release_created_at']
 
@@ -17,7 +18,7 @@ class Services::Health
   end
 
   def redis?
-    redis.ping == 'PONG' ? 'alive' : 'dead'
+    redis_cache.ping == 'PONG' ? 'alive' : 'dead'
   rescue
     'dead'
   end
