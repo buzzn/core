@@ -3,7 +3,7 @@ require_relative '../services'
 
 class Services::Cache
 
-  include Import['services.redis', 'services.metrics']
+  include Import[redis: 'services.redis_cache', metrics: 'services.metrics']
 
   def initialize(**)
     super
