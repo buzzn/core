@@ -3,7 +3,7 @@ describe Services::Datasource::Registry do
   subject { Services::Datasource::Registry.new }
 
   module  Buzzn::Test
-    class DataSource < Buzzn::DataSource
+    class DataSource
 
       NAME = 'test'
 

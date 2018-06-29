@@ -1,6 +1,6 @@
 require_relative '../standard_profile'
 
-class Services::Datasource::StandardProfile::Implementation < Buzzn::DataSource
+class Services::Datasource::StandardProfile::Implementation
 
   extend Dry::DependencyInjection::Eager
 

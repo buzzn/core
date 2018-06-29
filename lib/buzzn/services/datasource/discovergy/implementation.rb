@@ -1,6 +1,6 @@
 require_relative '../discovergy'
 
-class Services::Datasource::Discovergy::Implementation < Buzzn::DataSource
+class Services::Datasource::Discovergy::Implementation
 
   extend Dry::DependencyInjection::Eager
 
