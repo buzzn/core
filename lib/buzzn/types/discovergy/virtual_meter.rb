@@ -19,8 +19,8 @@ class Types::Discovergy::VirtualMeter < Types::Discovergy::Meter
 
     def to_path; :virtual_meter; end
 
-    option :meter_ids_plus, Types::Strict::Array.member(Types::Strict::String)
-    option :meter_ids_minus, Types::Strict::Array.member(Types::Strict::String), optional: true
+    option :meter_ids_plus, Types::Strict::Array.of(Types::Strict::String)
+    option :meter_ids_minus, Types::Strict::Array.of(Types::Strict::String), optional: true
 
     def to_query
       { meterIdsPlus: meter_ids_plus, meterIdsMinus: meter_ids_minus }.compact
