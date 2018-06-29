@@ -6,7 +6,7 @@ describe Services::CurrentPower do
 
   end
 
-  class MockDataSource < Buzzn::DataSource
+  class MockDataSource
 
     include Import['services.datasource.registry']
 

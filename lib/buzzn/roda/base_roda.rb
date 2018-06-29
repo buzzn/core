@@ -6,10 +6,6 @@ require_relative 'plugins/terminal_verbs'
 require_relative 'plugins/created_deleted'
 require_relative 'plugins/aggregation'
 
-require 'buzzn/data_result_set'
-require 'buzzn/data_result_array'
-require 'buzzn/data_point'
-require 'buzzn/data_result'
 require 'buzzn/db'
 
 class BaseRoda < CommonRoda
@@ -18,7 +14,7 @@ class BaseRoda < CommonRoda
 
   plugin :json,
          :include_request=>true,
-         :classes=>[Dry::Monads::Result::Success, Dry::Monads::Result::Failure, NilClass, Array, Hash, Buzzn::DataResultSet, Buzzn::DataResultArray, Buzzn::DataResult, Buzzn::Resource::Base, Buzzn::Resource::Collection, Types::Datasource::Current, Types::CacheItem],
+         :classes=>[Dry::Monads::Result::Success, Dry::Monads::Result::Failure, NilClass, Array, Hash, Buzzn::Resource::Base, Buzzn::Resource::Collection, Types::Datasource::Current, Types::CacheItem],
          :serializer=> Buzzn::Roda::Serializer.new
 
   plugin :terminal_verbs
