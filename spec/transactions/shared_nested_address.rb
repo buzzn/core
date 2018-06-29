@@ -1,7 +1,7 @@
 shared_examples 'create without address' do |transaction, expected_class, params|
 
   entity(:result) do
-    transaction.(params: params, resource: resource).value
+    transaction.(params: params, resource: resource).value!
   end
 
   it { expect(result.address).to be nil }
@@ -15,7 +15,7 @@ shared_examples 'create with address' do |transaction, expected_class, params|
 
   entity(:result) do
     transaction.(params: params.merge(address: address),
-                 resource: resource).value
+                 resource: resource).value!
   end
 
   it { expect(result).to be_a expected_class }
@@ -34,7 +34,7 @@ shared_examples 'update with address' do |transaction, resource_name, params|
 
   entity!(:result) do
     transaction.(params: params.merge(updated_at: object.updated_at.as_json),
-                 resource: resource).value
+                 resource: resource).value!
   end
 
   it { expect(result).to be_a resource.class }
@@ -53,7 +53,7 @@ shared_examples 'update with address' do |transaction, resource_name, params|
                        updated_at: object.address.updated_at.as_json
                      }
                    },
-                   resource: resource).value
+                   resource: resource).value!
     end
 
     it { expect(result2).to be_a resource.class }
@@ -75,7 +75,7 @@ shared_examples 'update without address' do |transaction, resource_name, params|
 
   entity(:result) do
     transaction.(params: params.merge(updated_at: object.updated_at.as_json),
-                 resource: resource).value
+                 resource: resource).value!
   end
 
   it { expect(result).to be_a resource.class }
@@ -94,7 +94,7 @@ shared_examples 'update without address' do |transaction, resource_name, params|
                        city: 'atlantis', country: 'IT',
                      }
                    },
-                   resource: resource).value
+                   resource: resource).value!
     end
 
     it { expect(result2).to be_a resource.class }

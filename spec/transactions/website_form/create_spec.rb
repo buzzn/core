@@ -13,7 +13,7 @@ describe Transactions::Website::WebsiteForm::Create do
     it 'succeeds' do
       result = subject.call(params: input, resource: resource)
       expect(result).to be_success
-      expect(result.value).to be_a WebsiteFormResource
+      expect(result.value!).to be_a WebsiteFormResource
     end
 
     it 'fails' do

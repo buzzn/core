@@ -32,7 +32,7 @@ module Buzzn
         options = {include: Buzzn::IncludeParser.parse(request.params['include'])}
         case object
         when Dry::Monads::Result::Success
-          handle_success(object.value, request).to_json(options)
+          handle_success(object.value!, request).to_json(options)
         when Dry::Monads::Result::Failure
           handle_failure(object.value, request)
         when NilClass

@@ -15,7 +15,7 @@ class Roda
           when Dry::Monads::Result::Failure
             error_response(object)
           when Dry::Monads::Result::Success
-            result = object.value
+            result = object.value!
           else
             result = object
           end
@@ -31,7 +31,7 @@ class Roda
         end
 
         def error_response(monad)
-          raise monad.value
+          raise monad.value!
         end
 
       end

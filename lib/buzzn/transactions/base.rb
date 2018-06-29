@@ -18,14 +18,14 @@ class Transactions::Base
     ActiveRecord::Base.transaction(requires_new: true) do
       result = yield(Success(input))
       return result if result.is_a?(Dry::Monads::Result::Failure)
-      if result.value.invariant&.failure?
+      if result.value!.invariant&.failure?
         raise ActiveRecord::Rollback
       end
     end
-    if result.value.persisted?
+    if result.value!.persisted?
       result
     else
-      raise Buzzn::ValidationError.new(result.value.invariant.errors)
+      raise Buzzn::ValidationError.new(result.value!.invariant.errors)
       # TODO better use this and handle on roda - see operations/validation
       #Failure(entity.invariant.errors)
     end

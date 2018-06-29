@@ -1,7 +1,7 @@
 shared_examples 'create without person' do |transaction, expected_class, method, params|
 
   entity(:result) do
-    transaction.(params: params, resource: resource).value
+    transaction.(params: params, resource: resource).value!
   end
 
   it { expect(result.send(method)).to be nil }
@@ -15,7 +15,7 @@ shared_examples 'create with person without address' do |transaction, expected_c
 
   entity(:result) do
     transaction.(params: params.merge(method => person),
-                 resource: resource).value
+                 resource: resource).value!
   end
 
   it { expect(result.send(method)).to be_a PersonResource }
@@ -32,7 +32,7 @@ shared_examples 'create with person with address' do |transaction, expected_clas
 
   entity(:result) do
     transaction.(params: params.merge(method => person),
-                 resource: resource).value
+                 resource: resource).value!
   end
 
   it { expect(result.send(method)).to be_a PersonResource }

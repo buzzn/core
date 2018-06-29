@@ -17,8 +17,8 @@ describe Transactions::StepAdapters::Add do
 
   it { expect(subject.call(hello: :world)).to be_success }
 
-  it { expect(subject.call(hello: :world).value).to eq(hello: :world, be: :happy, with: nil) }
+  it { expect(subject.call(hello: :world).value!).to eq(hello: :world, be: :happy, with: nil) }
 
-  it { expect(subject.call.value).to eq(be: :happy, with: nil) }
+  it { expect(subject.call.value!).to eq(be: :happy, with: nil) }
 
 end

@@ -29,9 +29,9 @@ describe Transactions::Admin::BillingCycle::Create do
       it 'succeeds' do
         result = subject.call(params: input, resource: localpool_resource)
         expect(result).to be_success
-        expect(result.value).to be_a Admin::BillingCycleResource
-        expect(result.value.object).to eq(localpool.billing_cycles.first)
-        expect(result.value.begin_date).to eq(localpool.start_date)
+        expect(result.value!).to be_a Admin::BillingCycleResource
+        expect(result.value!.object).to eq(localpool.billing_cycles.first)
+        expect(result.value!.begin_date).to eq(localpool.start_date)
       end
 
       context 'second call' do
@@ -46,8 +46,8 @@ describe Transactions::Admin::BillingCycle::Create do
           it 'succeeds' do
             result = subject.call(params: new_input, resource: localpool_resource)
             expect(result).to be_success
-            expect(result.value).to be_a Admin::BillingCycleResource
-            billing_cycle_model = result.value.object
+            expect(result.value!).to be_a Admin::BillingCycleResource
+            billing_cycle_model = result.value!.object
             expect(billing_cycle_model).to eq(localpool.billing_cycles.last)
             expect(billing_cycle_model.date_range).to eq(localpool.billing_cycles.last.date_range)
           end
@@ -66,8 +66,8 @@ describe Transactions::Admin::BillingCycle::Create do
     it 'works', :skip do
       result = subject.call(params: input, resource: resource)
       expect(result).to be_success
-      billing_cycle = result.value.object
-      billings      = result.value.object.billings
+      billing_cycle = result.value!.object
+      billings      = result.value!.object.billings
 
       expect(billings.count).to eq(1)
       expect(billings.first).to have_attributes(
