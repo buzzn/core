@@ -17,5 +17,5 @@ class Services::RedisCache
   def self.current
     self.new
   end
-end
 
+end
