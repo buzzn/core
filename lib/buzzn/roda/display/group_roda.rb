@@ -27,11 +27,11 @@ class Display::GroupRoda < BaseRoda
       end
 
       r.get! 'charts' do
-        aggregated(daily_charts.(group).value)
+        aggregated(daily_charts.(group).value!)
       end
 
       r.get! 'bubbles' do
-        aggregated(bubbles.(group).value)
+        aggregated(bubbles.(group).value!)
       end
 
       r.get! 'mentors' do

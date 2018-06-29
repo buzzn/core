@@ -23,7 +23,7 @@ describe Transactions::StepAdapters::Authorize do
   it { expect(subject.call(resource: resource)).to be_success }
 
   it 'pass input through' do
-    expect(subject.call(resource: resource).value).to eq(resource: resource)
+    expect(subject.call(resource: resource).value!).to eq(resource: resource)
   end
 
   it do

@@ -29,7 +29,7 @@ module Admin
         shared[PARENT] = localpool = localpools.retrieve(id)
 
         r.get! 'bubbles' do
-          aggregated(bubbles.(localpool).value)
+          aggregated(bubbles.(localpool).value!)
         end
 
         r.patch! do

@@ -27,7 +27,7 @@ class RegisterRoda < BaseRoda
       end
 
       r.get! 'ticker' do
-        aggregated(ticker.(register).value)
+        aggregated(ticker.(register).value!)
       end
 
       r.get! 'readings' do

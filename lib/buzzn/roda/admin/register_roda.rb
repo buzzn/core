@@ -41,9 +41,7 @@ class Admin::RegisterRoda < BaseRoda
       end
 
       r.get! 'ticker' do
-        aggregated(
-          Transactions::Ticker.(register).value
-        )
+        aggregated(Transactions::Ticker.(register).value!)
       end
 
       r.on 'readings' do
