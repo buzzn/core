@@ -100,7 +100,7 @@ module Buzzn
               require path
             end
           end
-          %w(resource resources roda permissions schemas).each do |dir|
+          %w(resource resources roda permissions schemas workers).each do |dir|
             Dir["./lib/buzzn/#{dir}/**/*.rb"].each do |path|
               require path
             end
