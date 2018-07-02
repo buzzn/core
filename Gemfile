@@ -37,6 +37,9 @@ gem 'pgreset' # Automatically kill postgres connections during db:reset
 gem 'multi_json'
 gem 'oj'
 
+# background / message queue
+gem 'sidekiq'
+
 # iso-3166, etc
 gem 'validates_zipcode'
 gem 'countries'
