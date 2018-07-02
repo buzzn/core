@@ -17,8 +17,14 @@ class Services::Health
     'errored'
   end
 
-  def redis?
+  def redis_cache?
     redis_cache.ping == 'PONG' ? 'alive' : 'dead'
+  rescue
+    'dead'
+  end
+
+  def redis_sidekiq?
+    redis_sidekiq.ping == 'PONG' ? 'alive' : 'dead'
   rescue
     'dead'
   end
@@ -43,9 +49,10 @@ class Services::Health
       maintenance: maintenace?,
       build: build_info,
       database: database?,
-      redis: redis?,
+      redis_cache: redis_cache?,
+      redis_sidekiq: redis_sidekiq?,
     }
-    result[:healthy] = result.slice(:database, :redis).values.all? { |v| v == 'alive' }
+    result[:healthy] = result.slice(:database, :redis_cache).values.all? { |v| v == 'alive' }
     result
   end
 

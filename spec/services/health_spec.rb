@@ -6,7 +6,8 @@ describe Services::Health do
                        build: {version: 'not-available',
                                timestamp: 'not-available'},
                        database: 'alive',
-                       redis: 'alive',
+                       redis_cache: 'alive',
+                       redis_sidekiq: 'alive',
                        healthy: true)
   end
 end
