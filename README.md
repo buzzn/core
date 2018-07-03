@@ -154,6 +154,10 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
 
 ## Install required software
     imagemagick, postgresql, redis
+    for postgresql important on linux: 
+      Edit the pg_hba.conf file /etc/postgresql/9.5/main/pg_hba.conf
+      Change all authentication methods to "trust" and restart Server. 
+
     use homebrew on a Mac
 
 ## Set up the project
