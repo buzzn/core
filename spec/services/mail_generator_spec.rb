@@ -54,10 +54,8 @@ html
   it 'renders text' do
     html = generator.render_text('simple', Content.new(simple_content))
     expect(html).to eq %{
-#{simple_content[:header]}
-
--------------
-
+#{simple_content[:header]}\n
+-------------\n
 #{simple_content[:text]}
 }
 
