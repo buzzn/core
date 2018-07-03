@@ -50,8 +50,6 @@ module Buzzn
           preload_singletons
 
           eager_load_some
-
-          setup_configurations
         end
 
         private
@@ -105,10 +103,6 @@ module Buzzn
               require path
             end
           end
-        end
-
-        def setup_configurations
-          Dir['config/configurations/*.rb'].each { |f| require "./#{f}" }
         end
 
       end
