@@ -23,6 +23,35 @@ describe Admin::Roda, :request_helper do
     {'error' => 'This session has expired, please login again.'}
   end
 
+  context 'organization_markets' do
+
+    it '401' do
+      GET '/test/organization_markets', $admin
+      expect(response).to have_http_status(200)
+
+      GET '/test/organization_markets', nil
+      expect(response).to have_http_status(401)
+
+      Timecop.travel(Time.now + 30 * 60) do
+        GET '/test/organization_markets', $admin
+
+        expect(response).to have_http_status(401)
+        expect(json).to eq(expired_json)
+      end
+    end
+
+    it '200' do
+      GET "/test/organization_markets", $admin
+
+      expect(response).to have_http_status(200)
+      expect(json['array'].size).to eq(Organization::Market.count)
+      json['array'].each do |item|
+        expect(item['type']).to eq('organization_market')
+      end
+    end
+
+  end
+
   context 'persons' do
 
     context 'GET' do
@@ -170,8 +199,9 @@ describe Admin::Roda, :request_helper do
 
       it '401' do
         GET '/test/persons', $admin
+        expect(response).to have_http_status(200)
 
-        GET '/test/organizations', nil
+        GET '/test/person', nil
         expect(response).to have_http_status(401)
 
         Timecop.travel(Time.now + 30 * 60) do
@@ -220,6 +250,7 @@ describe Admin::Roda, :request_helper do
 
       it '401' do
         GET '/test/organizations', $admin
+        expect(response).to have_http_status(200)
 
         GET '/test/organizations', nil
         expect(response).to have_http_status(401)
@@ -239,6 +270,7 @@ describe Admin::Roda, :request_helper do
     context 'GET' do
       it '401' do
         GET '/test/localpools', $admin
+        expect(response).to have_http_status(200)
 
         GET '/test/localpools', nil
         expect(response).to have_http_status(401)
