@@ -3,7 +3,14 @@ require 'sidekiq'
 
 class Services::SidekiqServer
 
+  extend Dry::DependencyInjection::Eager
+
   include Import[redis: 'services.redis_sidekiq']
+
+  def initialize(**)
+    super
+    self.create
+  end
 
   def create
     redis_conn = proc {
