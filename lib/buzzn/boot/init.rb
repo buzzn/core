@@ -93,7 +93,7 @@ module Buzzn
         end
 
         def eager_load_some
-          %w( uploaders models pdfs ).each do |sub|
+          %w( uploaders models pdfs mails ).each do |sub|
             Dir["./app/#{sub}/**/*.rb"].sort.each do |path|
               require path
             end

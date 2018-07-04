@@ -1,0 +1,79 @@
+Hallo <%= customer.name %>,
+
+Dein Auftrag zum Strom nehmen ist hier eingegangen. Vielen Dank!
+
+Wir freuen uns, dass Du Dich entschieden hast, in Zukunft Strom aus dem
+buzzn Pool zu beziehen und damit ein neues Energiesystem zu unterstützen
+en.
+
+Jetzt kontaktieren wir Deinen derzeitigen Lieferanten und regeln mit ihm
+Deinen nahtlosen Wechsel zu buzzn. Es kann durchaus einige Wochen dauern,
+bis wir wissen, ab welchem Datum Dein Strom von buzzn kommt. Vorerst musst
+Du erst einmal nichts tun außer warten.
+
+Sobald alle notwendigen Schritte erledigt sind, bekommst Du die
+Auftragsbestätigung mit dem genauen Bezugsbeginn zugesendet. Mit Zusendung
+der Auftragsbestätigung kommt der Vertrag dann zustande.
+
+Hast Du noch Fragen? Unter der Rufnummer 0791 401-626 steht Dir unser
+Service Team (Stromnehmer) gerne telefonisch zur Verfügung:
+
+Mo. - Mi.  | 8:00 - 16:00 Uhr
+Do.        | 7:30 - 20:00 Uhr
+Fr.        | 8:00 - 12:00 Uhr
+
+Ansonsten freuen wir uns auch über eine E-Mail von Dir an team@buzzn.net.
+
+Nochmals danke und auf gute Energiefreundschaft!
+
+Das buzzn Team
+
+Hier eine Zusammenfassung Deiner Angaben (die Kontodaten haben wir
+erhalten, sie werden aber aus Sicherheitsgründen nicht mit dieser E-Mail
+versendet):
+
+Persönliche Angaben
+-------------------
+
+Vorname: <%= customer.name %>
+Nachname: <%= customer.last_name %>
+Geschlecht: <%= customer.gender %>
+Telefon: <%= customer.phone %>
+E-Mail: <%= customer.email %>
+
+Vertragspartner
+---------------
+
+Person (natürlich oder juristisch): <%= partner.name %>
+Straße: <%= partner.address.street %>
+Adresszusatz: <%= partner.address.addition %>
+Ort: <%= partner.address.zip %> <%= partner.address.city %>
+
+Vertretung: <%= partner.represented_by %>
+
+Bezugsstelle
+------------
+
+Neueinzug?: <% moving_in ? 'ja' : 'nein' %>
+<% if moving_in %>
+Datum (bei Neueinzug): <%= moving_in_date %>
+<% end %>
+Zählernummer: <%= counter_id %>
+Zählpunkt-ID: <%= count_id %>
+Prognose: <%= estimated_kwh %>
+Vorlieferant: <%= previous_supplier.name %>
+Kundennummer Vorlieferant: <%= previous_supplier.customer_no %>
+Vertragsnummer Vorlieferant: <%= previous_supplier.contract_no %>
+Bisheriger Abschlag: <%= previous_a_conto %>
+
+
+Feedback
+----------
+
+Meine Nachricht an das buzzn Team:
+
+<%= message %>
+
+Wie bin ich auf buzzn aufmerksam geworden:
+
+<%= reference %>
