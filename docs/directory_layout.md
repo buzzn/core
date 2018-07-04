@@ -110,6 +110,7 @@ app
 │   ├── reading
 │   └── register
 ├── pdfs        # slim templates and binding class for pdf generation
+├── mails       # slim templates and binding class for mail generation
 └── uploaders   # image uploaders
 ```
 
