@@ -64,7 +64,6 @@ DISCOVERGY_PASSWORD=<password from lastpass>
 
 | task name            | description   | source
 |----------------------|---------------|----------------
-| `rake db:reset`      | Drop and recreate the DB, load schema and setup data | Rails default
 | `rake db:empty` | Resets the database without dropping the DB.<br />Useful to reset DB when it has open connections. | Buzzn custom
 | `rake db:seed:example_data` | Load an example localpool into the DB.<br />It does not prepare/empty the DB, run `rake db:empty` beforehands if required. | Buzzn custom
 | `rake deploy:staging` | Deploy the application to staging. | Buzzn custom
