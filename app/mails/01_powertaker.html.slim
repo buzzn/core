@@ -1,0 +1,116 @@
+doctype html
+html
+meta charset='utf-8'
+
+body
+  p Hallo <%= customer.name %>,<br>
+  p Dein Auftrag zum Strom nehmen ist hier eingegangen. Vielen Dank!<br>
+  p Wir freuen uns, dass Du Dich entschieden hast, in Zukunft Strom aus dem
+    buzzn Pool zu beziehen und damit ein neues Energiesystem zu unterstützen.
+
+  p Jetzt kontaktieren wir Deinen derzeitigen Lieferanten und regeln mit ihm
+    Deinen nahtlosen Wechsel zu buzzn. Es kann durchaus einige Wochen dauern,
+    bis wir wissen, ab welchem Datum Dein Strom von buzzn kommt. Vorerst musst
+    Du erst einmal nichts tun außer warten.
+
+  p Sobald alle notwendigen Schritte erledigt sind, bekommst Du die
+    Auftragsbestätigung mit dem genauen Bezugsbeginn zugesendet. Mit Zusendung
+    der Auftragsbestätigung kommt der Vertrag dann zustande.
+
+  p Hast Du noch Fragen? Unter der Rufnummer 0791 401-626 steht Dir unser
+    Service Team (Stromnehmer) gerne telefonisch zur Verfügung:
+
+  ul
+    li Mo. - Mi.  | 8:00 - 16:00 Uhr
+    li Do.        | 7:30 - 20:00 Uhr
+    li Fr.        | 8:00 - 12:00 Uhr
+
+  p Ansonsten freuen wir uns auch über eine E-Mail von Dir an team@buzzn.net.
+
+  p Nochmals danke und auf gute Energiefreundschaft!
+
+  p Das buzzn Team
+
+  p Hier eine Zusammenfassung Deiner Angaben (die Kontodaten haben wir
+    erhalten, sie werden aber aus Sicherheitsgründen nicht mit dieser E-Mail
+    versendet):
+  h1 Persönliche Angaben
+
+  table
+    tr
+      td Vorname
+      td #{customer.name}
+    tr
+      td Nachname
+      td #{customer.last_name}
+    tr
+      td Geschlecht
+      td #{customer.gender}
+    tr
+      td Telefon
+      td #{customer.phone}
+    tr
+      td E-Mail
+      td #{customer.email}
+
+  h1 Vertragspartner
+
+  table
+    tr
+      td Person (natürlich oder juristisch)
+      td #{partner.name}
+    tr
+      td Straße
+      td #{partner.address.street}
+    tr
+      td Adresszusatz
+      td #{partner.address.addition}
+    tr
+      td Ort
+      td #{partner.address.zip} #{partner.address.city}
+    tr
+      td Vertretung
+      td #{partner.represented_by}
+
+  h1 Bezugsstelle
+
+  table
+    tr
+      td Neueinzug?
+      td #{ moving_in ? 'ja' : 'nein' }
+    - if moving_in
+      tr
+        td Datum (bei Neueinzug)
+        td #{moving_in_date}
+    tr
+      td Zählernummer
+      td #{ counter_id }
+    tr
+      td Zählpunkt-ID
+      td #{ count_id }
+    tr
+      td Prognose
+      td #{ estimated_kwh }
+    tr
+      td Vorlieferant
+      td #{ previous_supplier.name }
+    tr
+      td Kundennummer
+      td #{ previous_supplier.customer_no }
+    tr
+      td Vertragsnummer Vorlieferant
+      td #{ previous_supplier.contract_no }
+    tr
+      td Bisheriger Abschlag
+      td #{ previous_a_conto }
+
+
+    h1 Feedback
+
+    b Meine Nachricht an das buzzn Team:
+
+    p #{ message }
+
+    b Wie bin ich auf buzzn aufmerksam geworden:
+
+    p #{ reference }
