@@ -2,6 +2,7 @@ require_relative '../group_resource'
 require_relative '../person_resource'
 require_relative '../contract/tariff_resource'
 require_relative 'billing_cycle_resource'
+require_relative 'device_resource'
 require_relative '../../schemas/completeness/admin/localpool'
 
 module Admin
@@ -41,7 +42,7 @@ module Admin
     has_many :persons
     has_many :tariffs, Contract::TariffResource
     has_many :billing_cycles, BillingCycleResource, :next_billing_cycle_begin_date
-    has_many :devices
+    has_many :devices, DeviceResource
     has_one :owner
     has_one :gap_contract_customer
     has_one :address

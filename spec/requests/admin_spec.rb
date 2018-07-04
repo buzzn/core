@@ -41,7 +41,7 @@ describe Admin::Roda, :request_helper do
     end
 
     it '200' do
-      GET "/test/organization_markets", $admin
+      GET '/test/organization_markets', $admin
 
       expect(response).to have_http_status(200)
       expect(json['array'].size).to eq(Organization::Market.count)

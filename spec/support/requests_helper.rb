@@ -72,8 +72,10 @@ module RequestsHelper
     when Array
       sort_array(h)
     when Hash
-      h.each { |k, v| h[k] = sort_element(v) }
+      h.each { |k, v| h[k] = sort_hash(v) }
       Hash[h.sort]
+    else
+      h
     end
   end
 

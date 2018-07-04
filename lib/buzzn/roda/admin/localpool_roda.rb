@@ -64,6 +64,10 @@ module Admin
           r.run BillingCycleRoda
         end
 
+        r.on 'devices' do
+          r.run Admin::DeviceRoda
+        end
+
         r.get! do
           localpool
         end
