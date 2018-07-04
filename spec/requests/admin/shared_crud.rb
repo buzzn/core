@@ -46,6 +46,42 @@ shared_examples 'update' do |object_name, path:, wrong:, params:, errors:, expec
 
   let(:_path) { send(path) }
 
+  let(:wrong_input) do
+    case wrong
+    when Hash
+      wrong
+    else
+      send(wrong)
+    end
+  end
+
+  let(:right_input) do
+    case params
+    when Hash
+      params
+    else
+      send(params)
+    end
+  end
+
+  let(:errors_json) do
+    case errors
+    when Hash
+      errors
+    else
+      send(errors)
+    end
+  end
+
+  let(:update_expected_json) do
+    case expected
+    when Hash
+      expected
+    else
+      send(expected)
+    end
+  end
+
   it '401' do
     GET _path, $admin
     expire_admin_session do
@@ -75,25 +111,26 @@ shared_examples 'update' do |object_name, path:, wrong:, params:, errors:, expec
   end
 
   it '422' do
-    PATCH _path, $admin, wrong
+    PATCH _path, $admin, wrong_input
     expect(response).to have_http_status(422)
-    expect(json.to_yaml).to eq send(errors).to_yaml
+    expect(sort_hash(json).to_yaml).to eq sort_hash(errors_json).to_yaml
   end
 
   it '200' do
     old = object.updated_at
     PATCH _path, $admin,
-          params.merge(updated_at: object.updated_at)
+          right_input.merge(updated_at: object.updated_at)
 
     expect(response).to have_http_status(200)
     object.reload
-    params.each do |key, val|
+    right_input.each do |key, val|
       expect(object.send(key).as_json).to eq val
     end
 
     result = json
     expect(result.delete('updated_at')).to be > old.as_json
-    expect(result.to_yaml).to eq send(expected).to_yaml
+    expect(result.delete('id')).to eq(object.id)
+    expect(sort_hash(result).to_yaml).to eq sort_hash(update_expected_json).to_yaml
   end
 end
 
@@ -128,7 +165,7 @@ shared_examples 'single' do |object_name, path:, expected:|
   it '200' do
     GET _path, $admin
     expect(response).to have_http_status(200)
-    expect(json.to_yaml).to eq send(expected).to_yaml
+    expect(sort_hash(json).to_yaml).to eq sort_hash(send(expected)).to_yaml
   end
 end
 
@@ -157,7 +194,7 @@ shared_examples 'all' do |path:, expected:, meta: nil|
     expect(response).to have_http_status(200)
     rjson = json
     array = rjson.delete('array')
-    expect(array.to_yaml).to eq [send(expected)].to_yaml
+    expect(sort_hash(array).to_yaml).to eq [sort_hash(send(expected))].to_yaml
     expect(rjson.to_yaml).to eq send(meta).to_yaml if meta
   end
 end
@@ -165,6 +202,24 @@ end
 shared_examples 'create' do |model_clazz, path:, wrong:, params:, errors:, expected:|
 
   let(:all_path) { send(path).sub(%r(/[0-9]+$), '') }
+
+  let(:wrong_input) do
+    case wrong
+    when Hash
+      wrong
+    else
+      send(wrong)
+    end
+  end
+
+  let(:right_input) do
+    case params
+    when Hash
+      params
+    else
+      send(params)
+    end
+  end
 
   let(:create_expected_json) do
     case expected
@@ -193,14 +248,14 @@ shared_examples 'create' do |model_clazz, path:, wrong:, params:, errors:, expec
   end
 
   it '422' do
-    POST all_path, $admin, wrong
+    POST all_path, $admin, wrong_input
     send(:p, json) if response.status != 422
     expect(response).to have_http_status(422)
     expect(json.to_yaml).to eq errors_json.to_yaml
   end
 
   it '201' do
-    POST all_path, $admin, params
+    POST all_path, $admin, right_input
     send(:p, json) if response.status != 201
     expect(response).to have_http_status(201)
     result = json
@@ -209,7 +264,8 @@ shared_examples 'create' do |model_clazz, path:, wrong:, params:, errors:, expec
     expect(result.delete('updated_at')).not_to eq nil
     expect(object).not_to be_nil
     obj_attrs = object.attributes
-    params.each do |key, val|
+    right_input.each do |key, val|
+      next unless object.respond_to?(key)
       expect((obj_attrs[key.to_s] || object.send(key)).as_json).to eq val
     end
     expect(result.to_yaml).to eq create_expected_json.to_yaml

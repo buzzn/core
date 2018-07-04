@@ -88,7 +88,6 @@ describe Admin::BillingCycleResource, :request_helper do
 
     entity :expected_json do
       {
-        'id'=>billing_cycle.id,
         'type'=>'billing_cycle',
         'name'=>'abcd',
         'begin_date'=>billing_cycle.begin_date.to_s,

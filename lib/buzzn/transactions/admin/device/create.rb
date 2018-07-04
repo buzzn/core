@@ -15,7 +15,7 @@ module Transactions::Admin::Device
     end
 
     def allowed_roles(permission_context:)
-      permission_context.devices.create
+      permission_context.create
     end
 
     def convert_kilowatt(params:, resource:)
@@ -25,7 +25,7 @@ module Transactions::Admin::Device
 
     def create_device(params:, resource:)
       Admin::DeviceResource.new(
-        *super(resource.devices, params)
+        *super(resource, params)
       )
     end
 

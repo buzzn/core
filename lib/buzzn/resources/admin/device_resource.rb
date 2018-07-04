@@ -10,16 +10,17 @@ module Admin
                :kw_peak,
                :kwh_per_annum,
                :law,
-               :manufacturer
+               :manufacturer,
+               :updatable, :deletable
 
     has_one :electricity_supplier
 
     def kw_peak
-      watt_peak / 1000
+      watt_peak / 1000.0
     end
 
     def kwh_per_annum
-      watt_hour_pa / 1000
+      watt_hour_pa / 1000.0
     end
 
   end

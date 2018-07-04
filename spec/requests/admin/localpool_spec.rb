@@ -660,7 +660,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'id' => register.id,
             'type' => 'register_real',
             'updated_at'=> register.updated_at.as_json,
-            'direction' => register.attributes['direction'],
+            'direction' => register.label.production? ? 'out' : 'in',
             'pre_decimal_position' => 6,
             'post_decimal_position' => register.post_decimal_position,
             'low_load_ability' => false,

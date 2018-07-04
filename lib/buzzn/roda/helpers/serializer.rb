@@ -34,7 +34,7 @@ module Buzzn
         when Dry::Monads::Result::Success
           handle_success(object.value!, request).to_json(options)
         when Dry::Monads::Result::Failure
-          handle_failure(object.value, request)
+          handle_failure(object.failure, request)
         when NilClass
           # response with 404 unless otherwise set
         else
