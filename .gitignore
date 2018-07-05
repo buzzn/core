@@ -17,9 +17,10 @@
 # ignore resilio data
 .sync
 
-# redis
+# generated
 dump.rdb
 /config/database.yml
+/db/structure.sql
 
 .byebug_history
 .rspec-local
