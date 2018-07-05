@@ -5,9 +5,11 @@ require_relative '../address/update'
 require_relative '../person/create'
 require_relative '../person/update'
 
-module Schemas::Transactions
+module Schemas::Transactions::Organization
 
-  Organization::Update = Schemas::Support.Form(Update) do
+  extend Schemas::Transactions::Address::Nested
+
+  Update = Schemas::Support.Form(Schemas::Transactions::Update) do
     optional(:name).filled(:str?, max_size?: 64, min_size?: 4)
     optional(:description).filled(:str?, max_size?: 256)
     optional(:email).filled(:str?, :email?, max_size?: 64)

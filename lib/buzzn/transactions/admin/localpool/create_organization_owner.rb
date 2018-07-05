@@ -19,7 +19,6 @@ module Transactions::Admin::Localpool
     end
 
     def allowed_roles(permission_context:)
-      binding.pry
       permission_context.owner.create
     end
 
