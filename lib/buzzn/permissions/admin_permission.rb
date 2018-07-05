@@ -31,6 +31,10 @@ AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
 
   organizations do
     retrieve :managers
+
+    contact do
+      retrieve :managers
+    end
   end
 
   localpools do
