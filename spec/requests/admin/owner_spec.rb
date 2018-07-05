@@ -12,7 +12,7 @@ describe Admin::LocalpoolRoda, :request_helper do
   entity!(:person) { first_localpool.owner }
   entity(:organization) { create(:organization, :with_contact) }
 
-  shared_examples 'assign owner' do |object: |
+  shared_examples 'assign owner' do |object:|
 
     let(:owner) { send(object) }
 
