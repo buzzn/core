@@ -98,8 +98,9 @@ module Admin
           end
 
           r.post! :id do |id|
+            new_owner = AdminResource.new(current_user).persons.retrieve(id)
             assign_owner.(resource: localpool,
-                          new_owner: localpool.persons.retrieve(id))
+                          new_owner: new_owner)
           end
         end
 
@@ -109,8 +110,9 @@ module Admin
           end
 
           r.post! :id do |id|
+            new_owner = AdminResource.new(current_user).organizations.retrieve(id)
             assign_owner.(resource: localpool,
-                          new_owner: localpool.organizations.retrieve(id))
+                          new_owner: new_owner)
           end
         end
 
