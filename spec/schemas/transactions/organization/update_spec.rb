@@ -3,9 +3,15 @@ require_relative '../shared_nested_address'
 
 describe 'Schemas::Transactions::Organization::Update' do
 
+  entity(:organization) { create(:organization, :with_address) }
+
+  entity!(:address) { organization.address }
+
+  subject { Schemas::Transactions::Organization.update_for(organization) }
+
   context 'with address' do
 
-    subject { Schemas::Transactions::Organization.update_with_address }
+    before { organization.update!(address: address) }
 
     it_behaves_like 'update with nested address', name: 'Stairways To Heaven'
 
@@ -13,7 +19,7 @@ describe 'Schemas::Transactions::Organization::Update' do
 
   context 'without address' do
 
-    subject { Schemas::Transactions::Organization.update_without_address }
+    before { organization.update!(address: nil) }
 
     it_behaves_like 'update without nested address', name: 'Zombie-Powder-Poo'
 

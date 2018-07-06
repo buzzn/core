@@ -17,7 +17,7 @@ class Schemas::Support::Visitor
         else
           raise "do not know what to do with #{rule.class}"
         end
-      result = visit_rule(rule.rules[1..-1], {}, name, &block)
+      result = visit_rule(rule.rules[1..-1], {}, "#{prefix}#{name}", &block)
       block.call(name: "#{prefix}#{name}", required: required, type: result.delete(:type), options: result) if result
     end
   end
