@@ -23,11 +23,20 @@ describe Admin, :swagger, :request_helper do
   entity!(:bank_account_4) { create(:bank_account, owner: organization) }
 
   entity!(:localpool) do
-    localpool = create(:group, :localpool)
-    person.add_role(Role::GROUP_OWNER, localpool)
+    localpool = create(:group, :localpool, owner: person)
     create(:contract, :localpool_processing, localpool: localpool, customer: organization)
     create(:contract, :metering_point_operator, localpool: localpool)
     localpool
+  end
+
+  entity!(:localpool2) { create(:group, :localpool, owner: nil) }
+
+  entity!(:localpool3) do
+    create(:group, :localpool,
+           owner: create(:organization,
+                         :with_address,
+                         :with_contact,
+                         :with_legal_representation))
   end
 
   entity!(:billing_cycle_1) { create(:billing_cycle, localpool: localpool) }
@@ -319,10 +328,36 @@ describe Admin, :swagger, :request_helper do
     description 'returns all the power-taker-contracts of the localpool'
   end
 
-  # managers
+  # owner
 
-  get '/localpools/{localpool.id}/managers' do
-    description 'returns all the managers of the localpool'
+  post '/localpools/{localpool2.id}/person-owner' do
+    description 'creates person owner of the localpool'
+    schema Schemas::Transactions::Person::CreateWithAddress
+  end
+
+  patch '/localpools/{localpool.id}/person-owner' do
+    description 'updates the person owner of the localpool'
+    schema Schemas::Transactions::Person.update_for(localpool)
+  end
+
+  post '/localpools/{localpool.id}/person-owner/{person.id}' do
+    description 'assign different person as owner of the localpool'
+    schema Schemas::Support.Form
+  end
+
+  post '/localpools/{localpool2.id}/organization-owner' do
+    description 'creates organization owner of the localpool'
+    schema Schemas::Transactions::Organization::CreateWithNested
+  end
+
+  patch '/localpools/{localpool3.id}/organization-owner' do
+    description 'updates the organization owner of the localpool'
+    schema Schemas::Transactions::Organization.update_for(localpool3.owner)
+  end
+
+  post '/localpools/{localpool.id}/organization-owner/{organization.id}' do
+    description 'assign different organization as owner of the localpool'
+    schema Schemas::Support.Form
   end
 
   # swagger

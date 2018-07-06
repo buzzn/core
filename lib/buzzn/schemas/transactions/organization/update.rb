@@ -5,40 +5,46 @@ require_relative '../address/update'
 require_relative '../person/create'
 require_relative '../person/update'
 
-module Schemas::Transactions::Organization
+module Schemas::Transactions
 
-  extend Schemas::Transactions::Address::Nested
+  module Organization
 
-  Update = Schemas::Support.Form(Schemas::Transactions::Update) do
-    optional(:name).filled(:str?, max_size?: 64, min_size?: 4)
-    optional(:description).filled(:str?, max_size?: 256)
-    optional(:email).filled(:str?, :email?, max_size?: 64)
-    optional(:phone).filled(:str?, :phone_number?, max_size?: 64)
-    optional(:fax).filled(:str?, :phone_number?, max_size?: 64)
-    optional(:website).filled(:str?, :url?, max_size?: 64)
-  end
-
-  def update_for(resource)
-    key = accept(KeyVisitor.new, resource)
-    if schema = cache[key]
-      schema
-    else
-      cache[key] = accept(SchemaVisitor.new(Update), resource)
+    Update = Schemas::Support.Form(Schemas::Transactions::Update) do
+      optional(:name).filled(:str?, max_size?: 64, min_size?: 4)
+      optional(:description).filled(:str?, max_size?: 256)
+      optional(:email).filled(:str?, :email?, max_size?: 64)
+      optional(:phone).filled(:str?, :phone_number?, max_size?: 64)
+      optional(:fax).filled(:str?, :phone_number?, max_size?: 64)
+      optional(:website).filled(:str?, :url?, max_size?: 64)
     end
-  end
 
-  private
+    class << self
 
-  def cache
-    @cache ||= Array.new(16) # only 12 are used but easier to have holes
-  end
+      def update_for(resource)
+        key = accept(KeyVisitor.new, resource)
+        if schema = cache[key]
+          schema
+        else
+          cache[key] = accept(SchemaVisitor.new(Update), resource)
+        end
+      end
 
-  def accept(visitor, resource)
-    visitor.address(!resource.address.nil?)
-    visitor.legal(!resource.legal_representation.nil?)
-    visitor.contact_address(!resource&.contact&.address.nil?)
-    visitor.contact(!contact.nil?)
-    visitor.result
+      private
+
+      def cache
+        @cache ||= Array.new(16) # only 12 are used but easier to have holes
+      end
+
+      def accept(visitor, resource)
+        visitor.address(!resource.address.nil?)
+        visitor.legal(!resource.legal_representation.nil?)
+        visitor.contact_address(!resource&.contact&.address.nil?)
+        visitor.contact(!resource&.contact.nil?)
+        visitor.result
+      end
+
+    end
+
   end
 
   class SchemaVisitor
@@ -59,7 +65,7 @@ module Schemas::Transactions::Organization
 
     def legal(yes)
       @schema = Schemas::Support.Form(@schema) do
-        optional(:address).schema(yes ? Person::Update : Person::Create)
+        optional(:legal_representation).schema(yes ? Person::Update : Person::Create)
       end
     end
 
