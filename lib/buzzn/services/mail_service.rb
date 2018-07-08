@@ -10,7 +10,15 @@ class Services::MailService
   OPTIONAL_MESSAGE_KEYS=[:bcc, :html]
 
   include Import['config.mail_backend',
-                 'services.mailgun_service']
+                 'config.mailgun_api_key',
+                 'config.mailgun_domain',
+                 'services.mailgun_service',
+                 'services.mail_stdout_service']
+
+  def initialize(**)
+    super
+    @logger = Buzzn::Logger.new(self)
+  end
 
   def deliver(message = {})
     message = check_message_params(message)
@@ -20,9 +28,14 @@ class Services::MailService
       # not implemented yet
       nil
     when 'mailgun'
-      api_key = Import.global('config.mailgun_api_key')
-      domain = Import.global('config.mailgun_domain')
-      mailgun_service.deliver(domain, api_key, message)
+      if mailgun_api_key == '11111111111111111111111111111111-11111111-11111111'
+        @logger.info('development mailgun api_key: using stdout backend')
+        mail_stdout_service.deliver(message)
+      else
+        mailgun_service.deliver(mailgun_domain, mailgun_api_key, message)
+      end
+    when 'stdout'
+      mail_stdout_service.deliver(message)
     end
   end
 
