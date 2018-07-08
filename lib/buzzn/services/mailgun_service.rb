@@ -31,7 +31,7 @@ class Services::MailgunService
     case res
     when Net::HTTPSuccess, Net::HTTPRedirection
       # done
-      nil
+      true
     else
       raise Buzzn::MailSendError.new res.body
     end
