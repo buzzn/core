@@ -52,7 +52,7 @@ class Services::Health
       redis_cache: redis_cache?,
       redis_sidekiq: redis_sidekiq?,
     }
-    result[:healthy] = result.slice(:database, :redis_cache).values.all? { |v| v == 'alive' }
+    result[:healthy] = result.slice(:database, :redis_cache, :redis_sidekiq).values.all? { |v| v == 'alive' }
     result
   end
 
