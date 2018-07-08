@@ -20,18 +20,20 @@ html
         E-Mail: team@buzzn.net <br>
         nachfolgend <b>„BUZZN“</b>
       p.is-text-center und
-      p.is-text-center «LSG_V.-Partner» <br>
-        «LSG_Straße» «LSG_HausNr», «LSG_PLZ» «LSG_Ort» <br>
-        «LSG_Kontakt» <br>
-        Telefon: «LSG_Tel» <br>
-        Fax: «LSG_Fax» <br>
-        E‑Mail: «LSG_Email» <br>
+      div.is-text-center #{powergiver.name} <br>
+        #{powergiver.address.street}, #{powergiver.address.zip} #{powergiver.address.city} <br>
+      - if powergiver.name != powergiver.partner_name
+        <br>vertreten durch #{powergiver.partner_name}
+      div.is-text-center Telefon: #{powergiver.phone}
+      - if powergiver.fax
+        Fax: #{powergiver.fax} <br>
+        E‑Mail: #{powergiver.email}<br>
         nachfolgend <b>„Lokaler Stromgeber - LSG“</b>
       p.is-text-center
-        <b>(Vertragsnummer «Ab_Vertr_Nr»)</b>
+        <b>Vertragsnummer #{number}</b>
 
       h2 1 Vertragsgegenstand und Definition „Lokale Energiegruppe“
-      p Dieser Vertrag regelt als Rahmenvertrag das einmalige Einrichten sowie die anschließende laufende Verwaltung einer Lokale Energiegruppe des LSG im Objekt «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort» (nachfolgend „Objekt“) durch BUZZN.
+      p Dieser Vertrag regelt als Rahmenvertrag das einmalige Einrichten sowie die anschließende laufende Verwaltung einer Lokale Energiegruppe des LSG im Objekt #{powertaker.address.street}, #{powertaker.address.zip} #{powertaker.address.city} (nachfolgend „Objekt“) durch BUZZN.
       p Eine „Lokale Energiegruppe“ im Sinne dieses Vertrages ist ein Mess- und Abrechnungskonzept für elektrische Energie, die im Objekt von dem LSG (als Betreiber einer Stromerzeugungsanlage) selbst erzeugt und dort direkt an Dritte (nachfolgend „Lokaler Stromnehmer“) verkauft wird.
 
       h2 2	Akquise von Lokalen Stromnehmern
@@ -144,7 +146,7 @@ html
       p Der LSG informiert BUZZN unaufgefordert und unverzüglich über jegliche Änderung von vertragsrelevanten Daten (insbesondere Stammdaten gemäß Anlage 1, Daten zu Lokalen Stromnehmern). Sofern BUZZN durch eine unterbliebene oder verzögerte Meldung Kosten entstehen, ist BUZZN berechtigt, diese Kosten an den LSG weiterzugeben.
       p BUZZN ist berechtigt, Dritte mit der Erfüllung ihrer Pflichten aus diesem Vertrag zu beauftragen.
       p Sollten einzelne Bestimmungen dieses Vertrages unwirksam oder undurchführbar sein oder werden, so bleibt der Vertrag im Übrigen davon unberührt. BUZZN und der LSG werden die unwirksame oder undurchführbare Bestimmung durch eine wirksame bzw. durchführbare, in ihrem wirtschaftlichen Ergebnis möglichst gleichkommende Bestimmung ersetzen. Entsprechendes gilt für eine Lücke im Vertrag.
-      Änderungen oder Ergänzungen des Vertrages bedürfen zu ihrer Wirksamkeit der Schriftform. Gleiches gilt für die Änderung der Schriftformklausel. 
+        Änderungen oder Ergänzungen des Vertrages bedürfen zu ihrer Wirksamkeit der Schriftform. Gleiches gilt für die Änderung der Schriftformklausel. 
       div.row
         div.col-half
           p.has-dotted-underline.has-space-above
@@ -172,30 +174,33 @@ html
           span.page-total-number 11
     div.alwaysbreak
     div.wrapper
-      h2 Stammdaten LSG (Anlage 1 zum Abwicklungsvertrag Nr. «Ab_Vertr_Nr»)
+      h2 Stammdaten LSG (Anlage 1 zum Abwicklungsvertrag Nr. #{number})
       h3 Kontaktperson
-      p «LSG_Kontakt»
-        <br/>«LSG_Straße» «LSG_HausNr», «LSG_PLZ» «LSG_Ort»
-        <br/>Telefon: «LSG_Tel»
-        <br/>Fax: «LSG_Fax»
-        <br/>E‑Mail: «LSG_Email»
+      p #{powergiver.name}
+        <br/>#{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}
+        <br/>Telefon: #{powergiver.phone}
+        - if powergiver.fax
+          <br/>Fax: #{powergiver.fax}
+        <br/>E‑Mail: #{powergiver.email}
       h3 Vertragspartner
-      p «LSG_V.-Partner»
-        <br/>vertreten durch «LSG_Kontakt»
-        <br/>«LSG_Straße» «LSG_HausNr», «LSG_PLZ» «LSG_Ort»
-        <br/>Telefon: «LSG_Tel»
-        <br/>Fax: «LSG_Fax»
-        <br/>E‑Mail: «LSG_Email»
+      p #{powergiver.partner_name}
+      - if powergiver.partner_name != powergiver.name
+        <br/>vertreten durch #{powergiver.partner_name}
+        <br/>#{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}
+        <br/>Telefon: #{powergiver.phone}
+        - if powergiver.fax
+          <br/>Fax: #{powergiver.fax}
+        <br/>E‑Mail: #{powergiver.mail}
       h3 Lokale Energiegruppe
-      p Anschrift: «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort» 
+      p Anschrift: #{powertaker.address.street} #{powertaker.address.zip} #{powertaker.address.city}
         <br/>Objekttyp: […] 
-        <br/>Örtlicher Netzbetreiber: «LSG_VNB»
+        <br/>Örtlicher Netzbetreiber: #{localgroup.local_supplier}
       h3 Stromverbrauch
       p Anzahl der Parteien im Objekt: […]  
         <br/>Geschätzter Stromverbrauch aller Parteien (kWh pro Jahr): […]
       h3 Stromerzeugungsanlage 1
       p Status der Anlage: […] 
-        <br/>Welches Gesetz regelt die Stromerzeugung? […] 
+        <br/>Welches Gesetz regelt die Stromerzeugung? […]
         <br/>Datum der Inbetriebnahme: […]  
         <br/>Elektrische Leistung (kW): […] 
         <br/>Geschätzte Stromerzeugung (kWh pro Jahr): […] 
@@ -254,16 +259,16 @@ html
           span.page-total-number 11
     div.alwaysbreak
     div.wrapper
-      h2 Vollmacht (Anlage 2 zum Abwicklungsvertrag Nr. «Ab_Vertr_Nr»)
+      h2 Vollmacht (Anlage 2 zum Abwicklungsvertrag Nr. #{number})
       p An der Übergabestelle
       p.is-indented
-        b «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort»
+        b #{powertaker.address.street} #{powertaker.address.zip} #{powertaker.address.city}
 
       p bevollmächtige ich,
       p.is-indented
-        b «LSG_V.-Partner»
-          <br/>«LSG_Straße» «LSG_HausNr», «LSG_PLZ» «LSG_Ort»
-          <br/>«LSG_Kontakt»
+        b #{powergiver.name}
+          <br/>#{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}
+          <br/>#{powergiver.partner_name}
       p hiermit
       p.is-indented
         b BUZZN GmbH
@@ -280,7 +285,7 @@ html
       p in meinem Namen alle Handlungen vorzunehmen, Erklärungen abzugeben und entgegenzunehmen, die notwendig sind
       p zur Umsetzung eines direkten Stromverkaufs (einschließlich erforderlicher Lieferantenwechselprozesse) im Objekt
       p.is-indented
-        b «LSN_Straße_b» «LSN_HausNr_b», «MP_PLZ» «MP_Ort»
+        b #{powertaker.address.street} #{powertaker.address.zip} #{powertaker.address.city}
       p und zur Übernahme des Messstellenbetriebs und der Messdienstleistung durch die BUZZN GmbH an der Übergabestelle sowie den Messstellen der Anschlussnutzer, die im Rahmen des direkten Stromverkaufs im Objekt beliefert werden sollen.
       p Diese Vollmacht erstreckt sich auch auf Dritte, die der Bevollmächtigte mit der Erledigung des vorgenannten Auftrags beauftragt hat.
       p.has-dotted-underline.has-space-above.col-half.float-none
