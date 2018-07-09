@@ -14,8 +14,4 @@ class Services::RedisSidekiq
     @instance ||= super().create
   end
 
-  def self.current
-    self.new
-  end
-
 end

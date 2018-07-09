@@ -25,8 +25,4 @@ class Services::SidekiqServer
     @instance ||= super().create
   end
 
-  def self.current
-    self.new
-  end
-
 end
