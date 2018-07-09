@@ -16,4 +16,8 @@ module Schemas::Transactions::Person
     optional(:preferred_language).value(included_in?: ::Person.preferred_languages.values)
   end
 
+  AssignOrUpdate = Schemas::Support.Form(Update) do
+    optional(:id).filled(:int?)
+  end
+
 end
