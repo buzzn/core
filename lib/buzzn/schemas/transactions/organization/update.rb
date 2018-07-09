@@ -65,7 +65,9 @@ module Schemas::Transactions
 
     def legal(yes)
       @schema = Schemas::Support.Form(@schema) do
-        optional(:legal_representation).schema(yes ? Person::Update : Person::Create)
+        optional(:legal_representation) do
+          id?.not.then(schema(yes ? Person::AssignOrUpdate : Person::AssignOrCreate))
+        end
       end
     end
 
@@ -85,12 +87,18 @@ module Schemas::Transactions
       @schema = Schemas::Support.Form(@schema) do
         if @has_contact
           if @has_contact_address
-            optional(:contact).schema(Person::Update.update_with_address)
+            optional(:contact) do
+              id?.not.then(schema(Person::Update.assign_or_update_with_address))
+            end
           else
-            optional(:contact).schema(Person::Update.update_without_address)
+            optional(:contact) do
+              id?.not.then(schema(Person::Update.assign_or_update_without_address))
+            end
           end
         else
-          optional(:contact).schema(Person::CreateWithAddress)
+          optional(:contact) do
+            id?.not.then(schema(Person::AssignOrCreateWithAddress))
+          end
         end
       end
     end

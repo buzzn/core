@@ -10,6 +10,8 @@ en:
 
     url?: "must be a valid URL"
 
+    id?: "missing nested ID"
+
     has_owner_role?: "missing GROUP_OWNER role"
 
     metering_point_id?: 'missing metering_point_id'

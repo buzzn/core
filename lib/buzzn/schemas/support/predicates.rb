@@ -4,6 +4,12 @@ module Schemas::Support::Predicates
 
   include Dry::Logic::Predicates
 
+  predicate(:id?) do |value|
+    p value
+    p value.is_a?(Hash) && value.key?(:id)
+    value.is_a?(Hash) && value.key?(:id)
+  end
+
   predicate(:iban?) do |value|
     IBANTools::IBAN.valid?(value)
   end

@@ -8,9 +8,14 @@ module Schemas::Transactions::Organization
   Create = Schemas::Constraints::Organization::Base
 
   CreateWithNested = Schemas::Support.Form(Create) do
+
     optional(:address).schema(Schemas::Transactions::Address::Create)
-    optional(:contact).schema(Schemas::Transactions::Person::CreateWithAddress)
-    optional(:legal_representation).schema(Schemas::Transactions::Person::Create)
+    optional(:contact) do
+      id?.not.then(schema(Schemas::Transactions::Person::AssignOrCreateWithAddress))
+    end
+    optional(:legal_representation) do
+      id?.not.then(schema(Schemas::Transactions::Person::AssignOrCreate))
+    end
   end
 
 end

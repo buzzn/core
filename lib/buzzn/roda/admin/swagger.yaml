@@ -1009,6 +1009,11 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: contact.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: contact
         in: formData
         required: false
@@ -1065,6 +1070,11 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: legal_representation.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: legal_representation
         in: formData
         required: false
@@ -1813,6 +1823,11 @@ paths:
         enum:
         - de
         - en
+      - name: legal_representation.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: legal_representation
         in: formData
         required: false
@@ -2151,6 +2166,11 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: contact.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: contact
         in: formData
         required: false
