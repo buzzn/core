@@ -2,7 +2,8 @@ require_relative '../services'
 require_relative '../types/maintenance_mode'
 class Services::Health
 
-  include Import['services.redis',
+  include Import['services.redis_cache',
+                 'services.redis_sidekiq',
                  'config.heroku_slug_commit',
                  'config.heroku_release_created_at']
 
@@ -16,8 +17,14 @@ class Services::Health
     'errored'
   end
 
-  def redis?
-    redis.ping == 'PONG' ? 'alive' : 'dead'
+  def redis_cache?
+    redis_cache.ping == 'PONG' ? 'alive' : 'dead'
+  rescue
+    'dead'
+  end
+
+  def redis_sidekiq?
+    redis_sidekiq.ping == 'PONG' ? 'alive' : 'dead'
   rescue
     'dead'
   end
@@ -42,9 +49,10 @@ class Services::Health
       maintenance: maintenace?,
       build: build_info,
       database: database?,
-      redis: redis?,
+      redis_cache: redis_cache?,
+      redis_sidekiq: redis_sidekiq?,
     }
-    result[:healthy] = result.slice(:database, :redis).values.all? { |v| v == 'alive' }
+    result[:healthy] = result.slice(:database, :redis_cache, :redis_sidekiq).values.all? { |v| v == 'alive' }
     result
   end
 
