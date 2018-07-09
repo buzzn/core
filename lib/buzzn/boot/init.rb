@@ -93,12 +93,12 @@ module Buzzn
         end
 
         def eager_load_some
-          %w( uploaders models pdfs ).each do |sub|
+          %w( uploaders models pdfs mails ).each do |sub|
             Dir["./app/#{sub}/**/*.rb"].sort.each do |path|
               require path
             end
           end
-          %w(resource resources roda permissions schemas).each do |dir|
+          %w(resource resources roda permissions schemas workers).each do |dir|
             Dir["./lib/buzzn/#{dir}/**/*.rb"].each do |path|
               require path
             end

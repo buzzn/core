@@ -1,12 +1,12 @@
 require_relative '../services'
 require 'redis'
 
-class Services::Redis
+class Services::RedisCache
 
-  include Import['config.redis_url']
+  include Import['config.redis_cache_url']
 
   def create
-    ::Redis.new(url: redis_url)
+    ::Redis.new(url: redis_cache_url)
   end
 
   # just factory method for Redis
