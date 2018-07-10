@@ -92,13 +92,11 @@ class Beekeeper::Importer::GenerateBillings
     item
   end
 
-  # rubocop:disable Style/ClassVars
   def next_invoice_number
-    @@global_invoice_number ||= 0
-    @@global_invoice_number += 1
-    "BEE-#{format('%05d', @@global_invoice_number)}"
+    $global_invoice_number ||= Billing.count
+    $global_invoice_number += 1
+    "BEE-#{format('%05d', $global_invoice_number)}"
   end
-  # rubocop:enable Style/ClassVars
 
   def create_billings_for_current_year(localpool)
     contracts_ended_this_year = localpool.contracts.where('end_date BETWEEN ? AND ?', Date.today.at_beginning_of_year, Date.today)

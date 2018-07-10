@@ -25,7 +25,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       attributes = account_new.converted_attributes(bank_accounts)
       slug = Buzzn::Slug.new(attributes[:name])
       # FIXME: should not be necessary since the saving code also deduplicates the organizations
-      Organization.find_by(slug: slug) || Organization.new(attributes.merge(contact: orga_contact))
+      Organization::Base.find_by(slug: slug) || Organization::General.new(attributes.merge(contact: orga_contact))
     end
 
     def orga_contact
