@@ -1832,38 +1832,11 @@ paths:
         in: formData
         required: false
         type: hash
-      - name: contact.prefix
+      - name: contact.updated_at
         in: formData
         required: true
         type: string
-        enum:
-        - F
-        - M
-      - name: contact.first_name
-        in: formData
-        required: true
-        type: string
-        format: ''
-        maxLength: 64
-      - name: contact.last_name
-        in: formData
-        required: true
-        type: string
-        format: ''
-        maxLength: 64
-      - name: contact.email
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
-      - name: contact.preferred_language
-        in: formData
-        required: true
-        type: string
-        enum:
-        - de
-        - en
+        format: date-time
       - name: contact.title
         in: formData
         required: false
@@ -1872,6 +1845,25 @@ paths:
         - Prof.
         - Dr.
         - Prof. Dr.
+      - name: contact.prefix
+        in: formData
+        required: false
+        type: string
+        enum:
+        - F
+        - M
+      - name: contact.first_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact.last_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: contact.phone
         in: formData
         required: false
@@ -1884,27 +1876,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: contact.address.street
+      - name: contact.preferred_language
+        in: formData
+        required: false
+        type: string
+        enum:
+        - de
+        - en
+      - name: contact.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contact.address.updated_at
         in: formData
         required: true
+        type: string
+        format: date-time
+      - name: contact.address.street
+        in: formData
+        required: false
         type: string
         format: ''
         maxLength: 64
       - name: contact.address.zip
         in: formData
-        required: true
+        required: false
         type: string
         format: ''
         maxLength: 16
       - name: contact.address.city
         in: formData
-        required: true
+        required: false
         type: string
         format: ''
         maxLength: 64
       - name: contact.address.country
         in: formData
-        required: true
+        required: false
         type: string
         enum:
         - AD
@@ -2166,11 +2175,6 @@ paths:
         in: formData
         required: false
         type: hash
-      - name: contact.id
-        in: formData
-        required: false
-        type: integer
-        format: int64
       - name: contact
         in: formData
         required: false

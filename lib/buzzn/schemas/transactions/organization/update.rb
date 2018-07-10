@@ -84,23 +84,28 @@ module Schemas::Transactions
     private
 
     def do_contact
-      @schema = Schemas::Support.Form(@schema) do
+      @schema =
         if @has_contact
           if @has_contact_address
-            optional(:contact) do
-              id?.not.then(schema(Person::Update.assign_or_update_with_address))
+            Schemas::Support.Form(@schema) do
+              optional(:contact) do
+                id?.not.then(schema(Person.assign_or_update_with_address))
+              end
             end
           else
-            optional(:contact) do
-              id?.not.then(schema(Person::Update.assign_or_update_without_address))
+            Schemas::Support.Form(@schema) do
+              optional(:contact) do
+                id?.not.then(schema(Person.assign_or_update_without_address))
+              end
             end
           end
         else
-          optional(:contact) do
-            id?.not.then(schema(Person::AssignOrCreateWithAddress))
+          Schemas::Support.Form(@schema) do
+            optional(:contact) do
+              id?.not.then(schema(Person::AssignOrCreateWithAddress))
+            end
           end
         end
-      end
     end
 
   end

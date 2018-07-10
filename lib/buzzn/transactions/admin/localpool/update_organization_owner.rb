@@ -22,15 +22,15 @@ module Transactions::Admin::Localpool
     end
 
     def create_or_update_contact_address(params:, resource:)
-      super(params: params[:contact] || {})
+      super(params: params[:contact] || {}, resource: resource.contact)
     end
 
     def create_or_update_contact(params:, resource:)
-      super(params: params, method: :contact)
+      super(params: params, method: :contact, resource: resource)
     end
 
     def create_or_update_legal_representation(params:, resource:)
-      super(params: params, method: :legal_representation)
+      super(params: params, method: :legal_representation, resource: resource)
     end
 
   end
