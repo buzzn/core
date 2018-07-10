@@ -4,10 +4,6 @@ require_relative 'update'
 module Schemas::Transactions::Address
   module Nested
 
-    def base
-      self.const_get(:Update)
-    end
-
     def update_for(resource)
       if resource.address
         update_with_address
@@ -25,29 +21,39 @@ module Schemas::Transactions::Address
     end
 
     def update_with_address
-      @with_address ||= Schemas::Support.Form(base) do
+      @with_address ||= Schemas::Support.Form(update_base) do
         optional(:address).schema(Update)
       end
     end
 
     def assign_or_update_with_address
-      @assign_with_address ||= Schemas::Support.Form(base) do
+      @assign_with_address ||= Schemas::Support.Form(assign_or_update_base) do
         optional(:id).filled(:int?)
         optional(:address).schema(Update)
       end
     end
 
     def update_without_address
-      @without_address ||= Schemas::Support.Form(base) do
+      @without_address ||= Schemas::Support.Form(update_base) do
         optional(:address).schema(Create)
       end
     end
 
     def assign_or_update_without_address
-      @assign_without_address ||= Schemas::Support.Form(base) do
+      @assign_without_address ||= Schemas::Support.Form(assign_or_update_base) do
         optional(:id).filled(:int?)
         optional(:address).schema(Create)
       end
+    end
+
+    private
+
+    def update_base
+      self.const_get(:Update)
+    end
+
+    def assign_or_update_base
+      self.const_get(:AssignOrUpdate)
     end
 
   end

@@ -28,7 +28,7 @@ shared_examples 'update with address' do |transaction, resource_name, params|
   entity(:resource) { send(resource_name) }
   entity(:object) do
     o = resource.object
-    o.update(address: create(:address))
+    o.update!(address: create(:address))
     o.reload
   end
 
@@ -69,7 +69,7 @@ shared_examples 'update without address' do |transaction, resource_name, params|
   entity(:resource) { send(resource_name) }
   entity(:object) do
     o = resource.object
-    o.update(address: nil)
+    o.update!(address: nil)
     o.reload
   end
 
