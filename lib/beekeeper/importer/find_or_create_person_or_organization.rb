@@ -12,7 +12,7 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
   def run(unsaved_record)
     if unsaved_record.is_a?(Person)
       get_unique_person(unsaved_record)
-    elsif unsaved_record.is_a?(Organization)
+    elsif unsaved_record.is_a?(Organization::Base)
       get_unique_organization(unsaved_record)
     else
       raise "Can't handle records of type #{unsaved_record.class}"
@@ -80,11 +80,11 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
 
   def find_or_create_organization(attributes)
     org = find_organization(attributes[:name])
-    org ? org : Organization.create!(attributes)
+    org ? org : Organization::General.create!(attributes)
   end
 
   def find_organization(name)
-    Organization.find_by(slug: Buzzn::Slug.new(name))
+    Organization::Base.find_by(slug: Buzzn::Slug.new(name))
   end
 
   # Only placed at the end because the regexp patterns as hash keys mess up my syntax highlighting ...

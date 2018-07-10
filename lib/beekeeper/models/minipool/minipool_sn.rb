@@ -67,7 +67,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
                       Person.new(kontaktdaten.converted_attributes.merge(address: address))
     else
       # TODO add contact person
-      Organization.new(kontaktdaten.converted_attributes)
+      Organization::General.new(kontaktdaten.converted_attributes)
     end
   end
 

@@ -58,7 +58,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     end
 
     def org_for_slug(slug, beekeeper_value, lookup_purpose)
-      org = Organization.find_by(slug: slug)
+      org = Organization::Base.find_by(slug: slug)
       if !org && !starts_in_future?
         add_warning("#{lookup_purpose} name", "unable to map beekeeper value '#{beekeeper_value}'")
       end
