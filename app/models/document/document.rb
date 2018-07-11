@@ -1,6 +1,7 @@
 require 'buzzn/security/secure_hash_serializer'
 require 'buzzn/crypto/decryptor'
 require 'buzzn/crypto/encryptor'
+require 'magic'
 
 class Document < ActiveRecord::Base
 
