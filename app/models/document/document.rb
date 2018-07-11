@@ -19,6 +19,11 @@ class Document < ActiveRecord::Base
   end
 
   def store(data)
+    sha256 = Digest::SHA256.new
+    self.sha256 = sha256.hexdigest(data)
+    self.mime = Magic.guess_string_mime_type(data)
+    self.size = data.length
+
     encrypted = Crypto::Encryptor.new.process(data)
     self.encryption_details = encrypted.details
     if valid?
