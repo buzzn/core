@@ -13,7 +13,7 @@ describe Admin::Roda, :request_helper do
     TestAdminRoda # this defines the active application for this test
   end
 
-  entity!(:localpool) { create(:group, :localpool, owner: create(:organization, :with_contact)) }
+  entity!(:localpool) { create(:group, :localpool, owner: create(:organization, :with_contact, :with_address, :with_legal_representation)) }
 
   entity!(:contract) do
     create(:contract, :localpool_powertaker, localpool: localpool)
@@ -246,6 +246,15 @@ describe Admin::Roda, :request_helper do
 
         expect(response).to have_http_status(200)
         expect(json['array'].to_yaml).to eq(organizations_json.to_yaml)
+
+        GET '/test/organizations', $admin, include: 'contact:[address], legal_representation, address'
+
+        expect(response).to have_http_status(200)
+        result = json['array'].first
+        expect(result).to has_nested_json(:address, :id)
+        expect(result).to has_nested_json(:contact, :id)
+        expect(result).to has_nested_json(:contact, :address, :id)
+        expect(result).to has_nested_json(:legal_representation, :id)
       end
 
       it '401' do

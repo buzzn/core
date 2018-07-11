@@ -34,6 +34,17 @@ AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
 
     contact do
       retrieve :managers
+      address do
+        retrieve :managers
+      end
+    end
+
+    legal_representation do
+      retrieve :managers
+    end
+
+    address do
+      retrieve :managers
     end
   end
 
