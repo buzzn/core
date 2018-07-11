@@ -21,12 +21,16 @@ class Document < ActiveRecord::Base
   before_destroy :check_relations
 
   def check_relations
-    if contract_documents.any? ||
-       billing_documents.any? ||
-       group_documents.any? ||
-       pdf_documents.any?
+    if is_referenced?
       throw(:abort)
     end
+  end
+
+  def is_referenced?
+    contract_documents.any? ||
+    billing_documents.any? ||
+    group_documents.any? ||
+    pdf_documents.any?
   end
 
   def read
