@@ -8,11 +8,11 @@ module Pdf
       @template = template.sub('app/pdfs/', '') if template
     end
 
-    protected
-
     def template
       @template || super
     end
+
+    protected
 
     def build_struct
       {

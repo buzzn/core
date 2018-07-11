@@ -9,14 +9,29 @@ class Document < ActiveRecord::Base
 
   serialize :encryption_details, Security::SecureHashSerializer.new
 
-  attr_readonly :path#, :encryption_details
+  attr_readonly :path
 
   validates :path, presence: true, uniqueness: true
 
+  has_many :contract_documents
+  has_many :billing_documents
+  has_many :group_documents
+  has_many :pdf_documents
+
+  before_destroy :check_relations
+
+  def check_relations
+    if contract_documents.any? ||
+       billing_documents.any? ||
+       group_documents.any? ||
+       pdf_documents.any?
+      throw(:abort)
+    end
+  end
+
   def read
     encrypted = storage.files.get(self.path).body
-    Crypto::Decryptor.new(self.encryption_details)
-      .process(encrypted)
+    Crypto::Decryptor.new(self.encryption_details).process(encrypted)
   end
 
   def store(data)
