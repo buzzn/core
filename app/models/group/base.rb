@@ -19,8 +19,6 @@ module Group
       end
     end
 
-    before_destroy :destroy_content
-
     belongs_to :address
     belongs_to :bank_account
 
@@ -59,15 +57,6 @@ module Group
         return PV
       end
     end
-
-    private
-
-      def destroy_content
-        self.registers.each do |register|
-          register.group = nil
-          register.save
-        end
-      end
 
   end
 end
