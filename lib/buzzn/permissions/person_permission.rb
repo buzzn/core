@@ -20,7 +20,7 @@ PersonResource::Permission = Buzzn::Permission.new(PersonResource) do
     delete :self
   end
 
-  bank_accounts  do
+  bank_accounts do
     crud(:self)
   end
 end

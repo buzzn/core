@@ -1,6 +1,7 @@
 require_relative '../../permission'
 
 module Organization
+
   GeneralResource::Permission = Buzzn::Permission.new(GeneralResource) do
     # define groups of roles
     define_group(:ops, Role::BUZZN_OPERATOR)
@@ -24,4 +25,5 @@ module Organization
       retrieve :ops
     end
   end
+
 end
