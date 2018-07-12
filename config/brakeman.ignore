@@ -1,0 +1,26 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "64173cbe4ea21f7fe737b4bfd2e65e34011ca83d995649d642dcc1095f6f368a",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "lib/buzzn/resources/admin_resource.rb",
+      "line": 16,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Organization::General.where(\"(#{Organization::GeneralResource.all(current_user).objects.to_sql.sub(\"SELECT \\\"organizations\\\".* FROM \\\"organizations\\\" WHERE \", \"\")}) OR (#{object.organizations.to_sql.sub(\"SELECT \\\"organizations\\\".* FROM \\\"organizations\\\" WHERE \", \"\")})\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "AdminResource",
+        "method": "organizations"
+      },
+      "user_input": "object.organizations.to_sql.sub(\"SELECT \\\"organizations\\\".* FROM \\\"organizations\\\" WHERE \", \"\")",
+      "confidence": "Weak",
+      "note": ""
+    }
+  ],
+  "updated": "2018-07-12 12:00:41 +0200",
+  "brakeman_version": "4.0.1"
+}
