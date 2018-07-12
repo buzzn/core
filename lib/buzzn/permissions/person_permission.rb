@@ -4,18 +4,23 @@ PersonResource::Permission = Buzzn::Permission.new(PersonResource) do
   # define groups of roles
   define_group(:none)
   define_group(:self, Role::SELF)
+  define_group(:ops, Role::SELF, Role::BUZZN_OPERATOR)
 
   # top level CRUD permissions
   create :none
-  retrieve :self
+  retrieve :ops
   update :self
   delete :none
 
   # nested method and its CRUD permissions, missing ones means no permissions
   address do
-    crud(:self)
+    create :self
+    retrieve :ops
+    update :self
+    delete :self
   end
 
-  # reuse permissions from 'address'
-  bank_accounts '/address'
+  bank_accounts  do
+    crud(:self)
+  end
 end

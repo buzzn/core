@@ -41,9 +41,11 @@ module Group
       self.class.contracts(self)
     end
 
-    def self.contracts(base = where('1=1')) # means take all localpools
+    def self.contracts(base = nil) # means take all localpools
       if base.is_a?(Group::Localpool)
         Contract::Localpool.where(localpool: base)
+      elsif base.nil?
+        Contract::Localpool.all
       else
         Contract::Localpool.joins(:localpool).where(localpool: base)
       end
@@ -88,11 +90,14 @@ module Group
       self.class.organizations(self)
     end
 
-    def self.organizations(base = where('1=1'))
+    def self.organizations(base = nil)
       organizations = Organization::General.arel_table
       localpool = Localpool.arel_table
       localpool_owner =
-        if base.respond_to?(:to_a)
+        if base.nil?
+          # NOTE: self.all did add some `AND 1=0` condition :P
+          localpool.where(localpool[:type].eq(self.to_s).and(localpool[:owner_organization_id].eq(organizations[:id]))).project(1).exists
+        elsif base.respond_to?(:to_a)
           base.where('groups.owner_organization_id=organizations.id').project(1).exists
         else
           localpool.where(localpool[:id].eq(base).and(localpool[:owner_organization_id].eq(organizations[:id]))).project(1).exists
