@@ -7,7 +7,7 @@ module Operations::Action
     def call(params:, resource:, method:, **)
       if (person_resource = resource&.send(method)) && params.key?(method)
         if params.size == 1 && params.key?(:id)
-          params[method] = Person.find(params[:id])
+          sparams[method] = Person.find(params[:id])
         else
           super(params: params.delete(method), resource: person_resource)
         end
