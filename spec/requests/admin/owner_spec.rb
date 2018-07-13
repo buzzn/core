@@ -35,6 +35,16 @@ describe Admin::LocalpoolRoda, :request_helper do
     let(:path) { "/localpools/#{localpool.id}/organization-owner" }
 
     it_behaves_like 'assign owner', object: :organization
+
+    context 'create with existing contact' do
+      it '200' do
+        POST "#{path}", $admin, name: 'is there anybody out there',
+             contact: { id: person.id }
+
+        expect(response).to have_http_status(201)
+        expect(localpool.reload.owner.contact).to eq(person)
+      end
+    end
   end
 
   context 'person' do
