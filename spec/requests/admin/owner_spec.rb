@@ -8,20 +8,53 @@ describe Admin::LocalpoolRoda, :request_helper do
   end
 
   entity!(:localpool) { create(:group, :localpool) }
-  entity!(:first_localpool) { create(:group, :localpool) }
-  entity!(:person) { first_localpool.owner }
-  entity(:organization) { create(:organization, :with_contact) }
+  entity!(:person) { create(:person) }
+  entity(:organization) { create(:organization) }
 
-  shared_examples 'assign owner' do |object:|
+  # FIXME permissions hack on /organizations and /persons
+  entity!(:permissions_hack) do
+    create(:group, :localpool, owner: organization)
+    create(:group, :localpool, owner: person)
+  end
 
-    let(:owner) { send(object) }
+  let(:organization_path) { "/localpools/#{localpool.id}/organization-owner" }
+  let(:person_path) { "/localpools/#{localpool.id}/person-owner" }
 
-    it '200' do
-      POST "#{path}/#{owner.id}", $admin
+  shared_examples 'assign owner' do |first:, second:|
+
+    let(:first_owner) { send(first) }
+    let(:second_owner) { send(second) }
+    let(:first_path) { send("#{first}_path") }
+    let(:second_path) { send("#{second}_path") }
+
+    context '201', :order => :defined do
+      it first do
+        POST "#{first_path}/#{first_owner.id}", $admin
+
+        expect(response).to have_http_status(201)
+        expect(json['id']).to eq(first_owner.id)
+        expect(localpool.reload.owner).to eq(first_owner)
+      end
+
+      it second do
+        POST "#{second_path}/#{second_owner.id}", $admin
+
+        expect(response).to have_http_status(201)
+        expect(json['id']).to eq(second_owner.id)
+        expect(localpool.reload.owner).to eq(second_owner)
+      end
+    end
+  end
+
+  shared_examples 'create organization and assign person' do |method|
+
+    it "200 - #{method}" do
+      POST organization_path, $admin,
+           name: "is there anybody out there: #{method}",
+           method => { id: person.id }
 
       expect(response).to have_http_status(201)
-      expect(json['id']).to eq(owner.id)
-      expect(localpool.reload.owner).to eq(owner)
+      expect(localpool.reload.owner.send(method)).to eq(person)
     end
 
   end
@@ -29,33 +62,24 @@ describe Admin::LocalpoolRoda, :request_helper do
   context 'organization' do
 
     entity!(:before) do
-      first_localpool.update!(owner: organization)
+      localpool.update!(owner: organization)
     end
 
-    let(:path) { "/localpools/#{localpool.id}/organization-owner" }
+    it_behaves_like 'assign owner', first: :person, second: :organization
+    it_behaves_like 'create organization and assign person', :contact
+    it_behaves_like 'create organization and assign person', :legal_representation
 
-    it_behaves_like 'assign owner', object: :organization
-
-    context 'create with existing contact' do
-      it '200' do
-        POST path, $admin, name: 'is there anybody out there',
-                           contact: { id: person.id }
-
-        expect(response).to have_http_status(201)
-        expect(localpool.reload.owner.contact).to eq(person)
-      end
-    end
   end
 
   context 'person' do
 
     entity!(:before) do
-      first_localpool.update!(owner: person)
+      localpool.update!(owner: person)
     end
 
     let(:path) { "/localpools/#{localpool.id}/person-owner" }
 
-    it_behaves_like 'assign owner', object: :person
+    it_behaves_like 'assign owner', first: :organization, second: :person
   end
 
 end
