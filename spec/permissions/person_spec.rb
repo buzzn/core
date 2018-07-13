@@ -23,8 +23,8 @@ describe "#{Buzzn::Permission} - #{PersonResource}" do
           expect(all.collect { |l| l.object }).to match_array [send(user).person]
         when :admin
           expect(all.collect { |l| l.object }).to match_array Person.all
-        else
-          expect(all.collect { |l| l.object }).to eq([])
+        else :anonymous
+          expect(all.collect { |l| l.object }).to eq []
         end
       end
 
