@@ -8,15 +8,6 @@ class AdminResource < Buzzn::Resource::Base
   has_many :organizations, Organization::GeneralResource
   has_many :organization_markets, Organization::MarketResource
 
-  def organizations
-    # FIXM to much happy sql hacking AR
-    general = Organization::GeneralResource.all(current_user)
-    sql1 = general.objects.to_sql.sub('SELECT "organizations".* FROM "organizations" WHERE ', '')
-    sql2 = object.organizations.to_sql.sub('SELECT "organizations".* FROM "organizations" WHERE ', '')
-    all = Organization::General.where("(#{sql1}) OR (#{sql2})")
-    Organization::GeneralResource.send(:to_collection, all, general.security_context)
-  end
-
   def organization_markets
     Organization::MarketResource.all(current_user)
   end
