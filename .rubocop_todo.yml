@@ -700,6 +700,7 @@ Style/CommentedKeyword:
 Style/ConditionalAssignment:
   Exclude:
     - 'db/factories/meters.rb'
+    - 'lib/buzzn/operations/action/create_or_update_person.rb'
     - 'spec/requests/display/group_spec.rb'
 
 # Offense count: 20

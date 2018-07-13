@@ -38,8 +38,8 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     context 'create with existing contact' do
       it '200' do
-        POST "#{path}", $admin, name: 'is there anybody out there',
-             contact: { id: person.id }
+        POST path, $admin, name: 'is there anybody out there',
+                           contact: { id: person.id }
 
         expect(response).to have_http_status(201)
         expect(localpool.reload.owner.contact).to eq(person)
