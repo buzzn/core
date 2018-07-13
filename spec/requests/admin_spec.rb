@@ -61,7 +61,7 @@ describe Admin::Roda, :request_helper do
       end
 
       let(:expected_persons_json) do
-        [person, localpool.owner.reload.contact].collect do |p|
+        [person, localpool.owner.contact].collect do |p|
           {
             'id'=>p.id,
             'type'=>'person',
@@ -218,15 +218,12 @@ describe Admin::Roda, :request_helper do
 
     context 'GET' do
 
-      let!(:organization) do
-        contract.localpool.owner.contact.roles.delete_all
-        contract.localpool.owner.update!(contact: $user.person)
-        contract.localpool.owner.contact.add_role(Role::GROUP_OWNER, contract.localpool)
+      let(:organization) do
         contract.contractor
       end
 
-      def serialize(*orgs)
-        orgs.collect do |organization|
+      let(:organizations_json) do
+        [
           {
             'id'=>organization.id,
             'type'=>'organization',
@@ -241,34 +238,23 @@ describe Admin::Roda, :request_helper do
             'deletable'=>false,
             'customer_number' => nil,
           }
-        end
+        ]
       end
 
-      context '200' do
-        it 'as buzzn-operator' do
-          GET '/test/organizations', $admin
+      it '200' do
+        GET '/test/organizations', $admin
 
-          expect(response).to have_http_status(200)
-          expect(sort(json['array']).to_yaml).to eq(sort(serialize(*Organization::General.all)).to_yaml)
-        end
+        expect(response).to have_http_status(200)
+        expect(json['array'].to_yaml).to eq(organizations_json.to_yaml)
 
-        it 'as localpool owner' do
-          GET '/test/organizations', $user
+        GET '/test/organizations', $admin, include: 'contact:[address], legal_representation, address'
 
-          expect(response).to have_http_status(200)
-          expect(json['array'].to_yaml).to eq(serialize(organization).to_yaml)
-        end
-
-        it 'nested' do
-          GET '/test/organizations', $admin, include: 'contact:[address], legal_representation, address'
-
-          expect(response).to have_http_status(200)
-          result = json['array'].find { |o| o['address'] }
-          expect(result).to has_nested_json(:address, :id)
-          expect(result).to has_nested_json(:contact, :id)
-          expect(result).to has_nested_json(:contact, :address, :id)
-          expect(result).to has_nested_json(:legal_representation, :id)
-        end
+        expect(response).to have_http_status(200)
+        result = json['array'].first
+        expect(result).to has_nested_json(:address, :id)
+        expect(result).to has_nested_json(:contact, :id)
+        expect(result).to has_nested_json(:contact, :address, :id)
+        expect(result).to has_nested_json(:legal_representation, :id)
       end
 
       it '401' do
