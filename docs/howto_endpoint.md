@@ -5,7 +5,6 @@
 * add model into ./app/models
 * add migration in ./db/migrate
 * nice to have a factory in ./db/factories with tests in ./specs/factories/factories_spec.rb
-* remember to run migration once to update ./db/structure.sql
 
 ## business transaction
 
@@ -26,3 +25,5 @@ lib/buzzn/transactions/admin
 │   ├── delete.rb
 │   └── update.rb
 ```
+
+## roda enpoint

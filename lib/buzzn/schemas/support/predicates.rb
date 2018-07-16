@@ -1,4 +1,5 @@
 require_relative '../support'
+require 'ruby_regex'
 
 module Schemas::Support::Predicates
 
