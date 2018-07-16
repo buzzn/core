@@ -27,6 +27,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'status'=>contract.status.to_s,
           'updatable'=>true,
           'deletable'=>false,
+          'documentable'=>true,
           'forecast_kwh_pa'=>contract.forecast_kwh_pa,
           'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
           'third_party_billing_number'=>contract.third_party_billing_number,
@@ -174,6 +175,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'status'=>contract.status.to_s,
           'updatable'=>true,
           'deletable'=>false,
+          'documentable'=>true,
           'metering_point_operator_name'=>contract.metering_point_operator_name,
           'localpool' => {
             'id'=>contract.localpool.id,
@@ -336,5 +338,48 @@ describe Admin::LocalpoolRoda, :request_helper do
         end
       end
     end
+
+    context 'document' do
+
+      context 'generate' do
+        let ('contract') { localpool_processing_contract }
+        let ('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}/document" }
+
+        context 'unauthenticated' do
+          it '403' do
+            POST path
+            expect(response).to have_http_status(403)
+          end
+        end
+
+        context 'authenticated' do
+
+          # we only want POSTs, change that to 405?
+          it '404' do
+            GET path, $admin
+            expect(response).to have_http_status(404)
+
+            PATCH path, $admin
+            expect(response).to have_http_status(404)
+
+            PUT path, $admin
+            expect(response).to have_http_status(404)
+
+            DELETE path, $admin
+            expect(response).to have_http_status(404)
+          end
+
+
+          it '201' do
+            POST path, $admin
+            expect(response).to have_http_status(201)
+          end
+
+        end
+
+      end
+
+    end
+
   end
 end
