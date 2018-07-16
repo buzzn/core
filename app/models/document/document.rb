@@ -28,9 +28,9 @@ class Document < ActiveRecord::Base
 
   def is_referenced?
     contract_documents.any? ||
-    billing_documents.any? ||
-    group_documents.any? ||
-    pdf_documents.any?
+      billing_documents.any? ||
+      group_documents.any? ||
+      pdf_documents.any?
   end
 
   def read
