@@ -14,4 +14,5 @@ class CreateGroupDocuments < ActiveRecord::Migration
     add_foreign_key :group_documents, :groups, name: :fk_group_documents_group, column: :group_id
     add_index :group_documents, [:document_id, :group_id], unique: true
   end
+
 end

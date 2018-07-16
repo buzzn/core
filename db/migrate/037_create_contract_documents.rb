@@ -14,4 +14,5 @@ class CreateContractDocuments < ActiveRecord::Migration
     add_foreign_key :contract_documents, :contracts, name: :fk_contract_documents_contract, column: :contract_id
     add_index :contract_documents, [:contract_id, :document_id], unique: true
   end
+
 end

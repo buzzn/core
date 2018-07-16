@@ -14,4 +14,5 @@ class CreateBillingDocuments < ActiveRecord::Migration
     add_foreign_key :billing_documents, :billings, name: :fk_billing_documents_billing, column: :billing_id
     add_index :billing_documents, [:document_id, :billing_id], unique: true
   end
+
 end
