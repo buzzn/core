@@ -12,14 +12,20 @@ module Contract
                 :last_date,
                 :status
 
-    attributes :updatable, :deletable
+    attributes :updatable, :deletable, :documentable
 
     has_many :tariffs
     has_many :payments
+    has_many :documents
     has_one :contractor
     has_one :customer
     has_one :customer_bank_account
     has_one :contractor_bank_account
+
+    def documentable
+      !permissions.nil? && allowed?(permissions.document)
+    end
+    alias documentable? documentable
 
   end
 end
