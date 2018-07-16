@@ -218,12 +218,8 @@ describe Admin::Roda, :request_helper do
 
     context 'GET' do
 
-      let(:organization) do
-        contract.contractor
-      end
-
       let(:organizations_json) do
-        [
+        Organization::General.all.collect do |organization|
           {
             'id'=>organization.id,
             'type'=>'organization',
@@ -238,7 +234,7 @@ describe Admin::Roda, :request_helper do
             'deletable'=>false,
             'customer_number' => nil,
           }
-        ]
+        end
       end
 
       it '200' do
