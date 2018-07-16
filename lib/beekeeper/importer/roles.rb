@@ -9,7 +9,7 @@ class Beekeeper::Importer::Roles
   def run(localpool)
     owner =
       case localpool.owner
-      when Organization
+      when Organization::General
         localpool.owner.contact
       when Person
         localpool.owner
