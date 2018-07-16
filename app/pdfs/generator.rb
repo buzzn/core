@@ -76,7 +76,6 @@ module Pdf
         attrs = { template: template,
                   json: data.to_json,
                   document: document }
-        attrs[key] = @root
         PdfDocument.create!(attrs)
       end
     end
