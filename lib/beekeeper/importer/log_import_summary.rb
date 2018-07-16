@@ -13,7 +13,7 @@ class Beekeeper::Importer::LogImportSummary
     logger.info('-' * 80)
 
     logger.info("localpools                                               : #{Group::Localpool.count}")
-    logger.info("organizations                                            : #{Organization.count}")
+    logger.info("organizations                                            : #{Organization::General.count}")
     logger.info("persons                                                  : #{Person.count}")
     logger.info("contracts                                                : #{Contract::Base.count}")
     logger.info("registers (real)                                         : #{Register::Real.count}")
@@ -47,11 +47,11 @@ class Beekeeper::Importer::LogImportSummary
     logger.info("group orga owner addresses                               : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| g.owner.address }.count}")
     logger.info("group orga owner with bank-accounts                      : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| !g.owner.bank_accounts.empty? }.count}")
     logger.info("group orga contacts                                      : #{Group::Localpool.where('owner_organization_id IS NOT NULL').select {|g| g.owner.contact_id }.count}")
-    logger.info("group orga contact addresses                             : #{Organization.where(id: Group::Localpool.where('owner_organization_id IS NOT NULL').select(:owner_organization_id)).joins(:contact).where('persons.address_id IS NOT NULL').count}")
+    logger.info("group orga contact addresses                             : #{Organization::General.where(id: Group::Localpool.where('owner_organization_id IS NOT NULL').select(:owner_organization_id)).joins(:contact).where('persons.address_id IS NOT NULL').count}")
     powertakers = Person.where(id: Contract::LocalpoolPowerTaker.all.select(:customer_person_id))
     logger.info("localpool powertaker person                              : #{powertakers.count}")
     logger.info("localpool powertaker person with address                 : #{powertakers.where("address_id is not null").count}")
-    powertakers = Organization.where(id: Contract::LocalpoolPowerTaker.all.select(:customer_organization_id))
+    powertakers = Organization::General.where(id: Contract::LocalpoolPowerTaker.all.select(:customer_organization_id))
     logger.info("localpool powertaker organization                        : #{powertakers.count}")
     logger.info("localpool powertaker organization with address           : #{powertakers.where("address_id is not null").count}")
   end

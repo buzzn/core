@@ -17,7 +17,7 @@ class Services::Datasource::Discovergy::Api
     monitored_request(query)
   end
 
-  def request(query, builder = Builder::StructBuilder.new)
+  def request(query, builder = Builders::StructBuilder.new)
     payload = monitored_request(query)
     return if payload.empty?
     result = MultiJson.load(payload)
