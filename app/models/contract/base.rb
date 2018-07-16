@@ -39,6 +39,8 @@ module Contract
     has_and_belongs_to_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
     has_many :billings, foreign_key: :contract_id
+    has_many :contract_documents, foreign_key: :contract_id
+    has_many :documents, through: :contract_documents
 
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
     belongs_to :customer_bank_account, class_name: 'BankAccount'
@@ -100,6 +102,10 @@ module Contract
       end
       # wrap the string in ActiveSupport::StringInquirer, which allows status.ended? etc, hiding the string.
       ActiveSupport::StringInquirer.new(status)
+    end
+
+    def pdf_generator
+      nil
     end
 
     private
