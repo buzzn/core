@@ -99,6 +99,7 @@ describe Admin::Roda, :request_helper do
               'status'=>contract.status.to_s,
               'updatable'=>false,
               'deletable'=>false,
+              'documentable'=>false,
               'forecast_kwh_pa'=>contract.forecast_kwh_pa,
               'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
               'third_party_billing_number'=>contract.third_party_billing_number,
