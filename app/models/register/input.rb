@@ -16,7 +16,7 @@ module Register
     # end
 
     def obis
-      '1-0:1.8.0'
+      '1-1:1.8.0'
     end
 
   end

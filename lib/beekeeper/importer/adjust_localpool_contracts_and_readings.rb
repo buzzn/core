@@ -49,7 +49,11 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     ordered_contracts = register.market_location.contracts.order(begin_date: :asc).to_a
     ordered_contracts[0...-1].map.with_index do |contract, index|
       next_contract = ordered_contracts[index + 1]
-      gap_in_days   = (next_contract.begin_date - contract.end_date).to_i
+      begin
+        gap_in_days   = (next_contract.begin_date - contract.end_date).to_i
+      rescue
+        binding.pry
+      end
       [contract, next_contract, gap_in_days]
     end
   end

@@ -45,12 +45,17 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     end
 
     def real_registers
-      msb_zählwerk_daten.reject(&:skip_import?).collect do |zählwerk|
-        attrs = zählwerk.converted_attributes
-        add_warnings(attrs, zählwerk)
+      msb_zählwerk_daten.reject(&:skip_import?).collect do |zaehlwerk|
+        attrs = zaehlwerk.converted_attributes
+        add_warnings(attrs, zaehlwerk)
         attrs[:meter] = find_or_build_meter(attrs[:meter_attributes])
 
-        build_register(attrs, zählwerk)
+        begin
+          build_register(attrs, zaehlwerk)
+
+        rescue
+          binding.pry
+        end
       end
     end
 
