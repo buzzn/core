@@ -45,6 +45,20 @@ module RequestsHelper
     do_it(:post, path, params.to_json, token, headers)
   end
 
+  def POST_FILE(path, filename, data, mime, token = nil)
+    # write the data to a tmpfile
+    Dir.mktmpdir do |dir|
+      tmpfile = File.join(dir, filename)
+      File.open(tmpfile, 'w') do |f|
+        f.write(data)
+      end
+      params = {
+        :file => Rack::Test::UploadedFile.new(tmpfile, mime)
+      }
+      do_it(:post, path, params, token, {})
+    end
+  end
+
   def PUT(path, token = nil, params = {}, headers = {})
     do_it(:put, path, params, token, headers)
   end
