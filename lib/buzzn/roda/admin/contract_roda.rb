@@ -50,6 +50,10 @@ module Admin
           end
         end
 
+        r.on 'documents' do
+          r.run DocumentRoda
+        end
+
       end
     end
 

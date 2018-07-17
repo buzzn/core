@@ -9,6 +9,11 @@ FactoryGirl.define do
       data { File.read('spec/data/' + build(:file, :pdf)[:file]) }
       filename { build(:file, :pdf)[:file] }
     end
+
+    trait :png do
+      data { File.read('spec/data/' + build(:file, :png)[:file]) }
+      filename { build(:file, :png)[:file] }
+    end
   end
 
   factory :contract_document, class: 'ContractDocument' do
