@@ -8,7 +8,7 @@ describe Admin::LocalpoolRoda, :request_helper do
   end
 
   context 'contracts' do
-    include_context "contract entities"
+    include_context 'contract entities'
 
     context 'GET' do
       let(:localpool_power_taker_contract_json) do
@@ -342,8 +342,8 @@ describe Admin::LocalpoolRoda, :request_helper do
     context 'document' do
 
       context 'generate' do
-        let ('contract') { localpool_processing_contract }
-        let ('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}/document" }
+        let('contract') { localpool_processing_contract }
+        let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}/document" }
 
         context 'unauthenticated' do
           it '403' do
@@ -368,7 +368,6 @@ describe Admin::LocalpoolRoda, :request_helper do
             DELETE path, $admin
             expect(response).to have_http_status(404)
           end
-
 
           it '201' do
             POST path, $admin
