@@ -2,8 +2,12 @@ describe 'Services::UnbilledBillingItemsFactory' do
 
   let(:date_range)       { Date.new(2017, 1, 1)...Date.new(2018, 1, 1) }
   let(:args)             { { date_range: date_range, market_locations: market_locations } }
-  let(:market_locations) { [create(:market_location, :with_contract, register: :consumption)] }
-  subject                { Services::UnbilledBillingItemsFactory.new.call(args) }
+  let(:market_locations) do
+    meta = create(:market_location, :consumption)
+    create(:contract, :localpool_powertaker, market_location: meta)
+    [meta]
+  end
+  subject { Services::UnbilledBillingItemsFactory.new.call(args) }
 
   context 'when group has no market locations' do
     let(:market_locations) { [] }
@@ -51,7 +55,7 @@ describe 'Services::UnbilledBillingItemsFactory' do
         [create(:contract, :localpool_gap, begin_date: date_range.first - 1.month, end_date: date_range.first + 1.month),
          create(:contract, :localpool_powertaker, begin_date: date_range.first + 1.month, end_date: nil)]
       end
-      let!(:market_locations) { [create(:market_location, contracts: contracts, register: :consumption)] }
+      let!(:market_locations) { [create(:market_location, :consumption, contracts: contracts)] }
 
       it 'returns two billing items' do
         expect(subject.size).to eq(1)

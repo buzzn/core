@@ -1,5 +1,5 @@
 def create_market_location(name)
-  FactoryGirl.create(:market_location, :with_market_location_id, name: name, group: SampleData.localpools.people_power)
+  FactoryGirl.create(:market_location, name: name)
 end
 
 #

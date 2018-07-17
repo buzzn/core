@@ -6,13 +6,6 @@ module Schemas
 
       Base = Schemas::Support.Form(Schemas::Constraints::Meter::Base) do
 
-        configure do
-          def match_group?(group, registers)
-            registers.all? { |register| register.group.nil? || register.group == group }
-          end
-        end
-
-        required(:group).maybe
         required(:registers).filled
         required(:manufacturer_name).filled
         required(:edifact_measurement_method).filled
@@ -34,9 +27,6 @@ module Schemas
             .and(value(:edifact_measurement_method).eql?('MMR').then(value(:datasource).eql?('standard_profile')))
         end
 
-        rule(group: [:group, :registers]) do |group, registers|
-          group.filled?.then(registers.match_group?(group))
-        end
       end
 
     end
