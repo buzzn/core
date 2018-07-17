@@ -27,8 +27,9 @@ describe MarketLocation do
   end
 
   describe 'consumption?' do
-    let(:market_location) { build(:market_location, register: register_trait) }
-    subject               { market_location.consumption? }
+    let(:market_location) { create(:market_location, register_trait) }
+    before { market_location.registers.reload }
+    subject { market_location.consumption? }
     context 'when register has label consumption' do
       let(:register_trait) { :consumption }
       it { is_expected.to eq(true) }

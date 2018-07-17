@@ -33,7 +33,7 @@ module Register
     belongs_to :market_location
     belongs_to :meter, class_name: 'Meter::Base', foreign_key: :meter_id
 
-    has_one :group, through: :market_location
+    has_one :group, through: :meter
     has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'
 
     scope :real,    -> { where(type: [Register::Input, Register::Output]) }

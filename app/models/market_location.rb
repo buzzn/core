@@ -9,7 +9,6 @@
 #
 class MarketLocation < ActiveRecord::Base
 
-  belongs_to :group, class_name: 'Group::Base'
   has_many :contracts, -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty)) }, class_name: 'Contract::Base'
   has_many :billings, through: :contracts
 
@@ -17,7 +16,10 @@ class MarketLocation < ActiveRecord::Base
   # I'm already setting things up 1:n on the DB and association level, hopefully that'll make implementation
   # easier later on.
   has_many :registers, class_name: 'Register::Base'
-  private :registers
+
+  def group
+    register.meter&.group
+  end
 
   def contracts_in_date_range(date_range)
     contracts.in_date_range(date_range)

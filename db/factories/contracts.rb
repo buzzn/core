@@ -71,8 +71,7 @@ FactoryGirl.define do
   trait :is_localpool_powertaker_contract do
     before(:create) do |contract, _evaluator|
       unless contract.market_location
-        contract.market_location = create(:market_location,
-                                          group: contract.localpool)
+        contract.market_location = create(:market_location)
       end
       unless contract.market_location.register
         meter = FactoryGirl.create(:meter, :real, :one_way,
