@@ -41,6 +41,9 @@ class Beekeeper::Importer::LocalpoolContracts
       customer:        customer,
       contractor:      localpool.owner
     )
+    if localpool.slug == 'wagnisart-australien-asien'
+      p contract_attributes.slice(:contract_number, :contract_number_addition, :begin_date, :end_date)
+    end
     contract = Contract::LocalpoolPowerTaker.create!(contract_attributes)
     contract.tariffs =
       if contract.end_date.nil?
