@@ -1,43 +1,22 @@
 describe Document do
 
-  entity!(:document) { Document.create('test/me', 'happy4ever') }
-
   it 'creates and destroys' do
-    doc = Document.new(path: 'test/something')
-    doc.store('now')
+    doc = Document.new(filename: 'test/something')
+    doc.store('somethingrandom')
 
-    expect(Document.find_by_path('test/something').read).to eq 'now'
-    expect(File.read('tmp/files/test/something')).not_to eq 'now'
+    expect(Document.find_by_filename('something').read).to eq 'somethingrandom'
+    expect(File.read('tmp/files/sha256/0b/f6e2e388c96348fe46bd071d01e264dcb8e939456e8f4ab860351334875ad50b')).not_to eq 'somethingrandom'
 
     doc.destroy
     expect { doc.reload }.to raise_error ActiveRecord::RecordNotFound
     expect(File.exist?('tmp/files/test/something')).to be false
   end
 
-  TEST_DATA = [
-    {
-      :file => 'test.png',
-      :mime => 'image/png',
-      :size => 17787,
-      :sha256 => '49de6c289ace1f224ded6d813423a07a346debb0d5e662b4be8095b60af49a94'
-    },
-    {
-      :file => 'test.txt',
-      :mime => 'text/plain',
-      :size => 9,
-      :sha256 => 'efd2c46f61d312c1fb880ffc0589759eff34403864f93d376c7c3b7d816528b5'
-    },
-    {
-      :file => 'test.pdf',
-      :mime => 'application/pdf',
-      :size => 9602,
-      :sha256 => '0a1a44171994d640c3d4f75f919a05de519a13c26998e72ba2b242f0ef1e8b67'
-    }
-  ]
+  entity(:files) { [build(:file, :png), build(:file, :txt), build(:file, :pdf)]}
 
-  TEST_DATA.each do |data|
+  files.each do |data|
     it "creates valid metadata for #{data[:file]}" do
-      doc = Document.new(path: 'test/meta/' + data[:file])
+      doc = Document.new(filename: data[:file])
       doc.store(File.read('spec/data/' + data[:file]))
 
       expect(doc.size).to eq data[:size]
@@ -47,26 +26,27 @@ describe Document do
   end
 
   it 'retrieves' do
-    doc = Document.find_by_path('test/me')
+    document = Document.create('test/me', 'now')
+    doc = Document.find_by_filename('me')
     expect(doc).to eq document
-    expect(doc.read).to eq 'happy4ever'
-    expect(File.read('tmp/files/test/me')).not_to eq 'happy4ever'
+    expect(doc.read).to eq 'now'
   end
 
   it 'updates' do
-    begin
-      document.store('something else')
-      expect(document.read).to eq 'something else'
-      expect(File.read('tmp/files/test/me')).not_to eq 'something else'
-
-      doc = Document.find_by_path('test/me')
-      expect(doc.read).to eq 'something else'
-    ensure
-      document.store('happy4ever')
-    end
+    document = Document.create('test/me2', 'now')
+    document.store('something else')
+    expect(document.read).to eq 'something else'
   end
 
-  it 'path is unique' do
-    expect {Document.create('test/me', 'try it') }.to raise_error ActiveRecord::RecordInvalid
+  it 'does not delete with multiple references' do
+    doc1 = Document.create('one', 'samestring')
+    doc2 = Document.create('two', 'samestring')
+    expect(doc1.sha256).to eq doc2.sha256
+    expect(doc1.sha256).to eq '2573e9d755fa961f32ceb11d954aced58964f717ffc889e1d5f0762fd5547537'
+    expect(File.exist?('tmp/files/sha256/37/2573e9d755fa961f32ceb11d954aced58964f717ffc889e1d5f0762fd5547537')).to be true
+    doc1.destroy
+    expect(File.exist?('tmp/files/sha256/37/2573e9d755fa961f32ceb11d954aced58964f717ffc889e1d5f0762fd5547537')).to be true
+    doc2.destroy
+    expect(File.exist?('tmp/files/sha256/37/2573e9d755fa961f32ceb11d954aced58964f717ffc889e1d5f0762fd5547537')).to be false
   end
 end

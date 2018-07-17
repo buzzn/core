@@ -9,9 +9,10 @@ class Document < ActiveRecord::Base
 
   serialize :encryption_details, Security::SecureHashSerializer.new
 
-  attr_readonly :path
+  attr_readonly :filename
 
-  validates :path, presence: true, uniqueness: true
+  validates :filename, presence: true
+  validates :sha256, presence: true
 
   has_many :contract_documents
   has_many :billing_documents
@@ -21,12 +22,12 @@ class Document < ActiveRecord::Base
   before_destroy :check_relations
 
   def check_relations
-    if is_referenced?
+    if referenced?
       throw(:abort)
     end
   end
 
-  def is_referenced?
+  def referenced?
     contract_documents.any? ||
       billing_documents.any? ||
       group_documents.any? ||
@@ -36,6 +37,11 @@ class Document < ActiveRecord::Base
   def read
     encrypted = storage.files.get(self.path).body
     Crypto::Decryptor.new(self.encryption_details).process(encrypted)
+  end
+
+  def path
+    dir = self.sha256[-2..-1]
+    'sha256/' + dir + '/' + self.sha256
   end
 
   def store(data)
@@ -57,12 +63,19 @@ class Document < ActiveRecord::Base
   end
 
   def destroy
-    storage.files.get(self.path).destroy
+    # deduplication, only delete if last reference
+    unless Document.where(:sha256 => self.sha256).count > 1
+      storage.files.get(self.path).destroy
+    end
     super
   end
 
-  def self.create(path, data)
-    document = new(:path => path)
+  def filename=(value)
+    super(File.basename(value))
+  end
+
+  def self.create(filename, data)
+    document = new(:filename => filename)
     document.store(data)
     document
   end
