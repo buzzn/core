@@ -11,8 +11,11 @@ class Document < ActiveRecord::Base
 
   attr_readonly :filename
 
+  attr_accessor :data
+
   validates :filename, presence: true
   validates :sha256, presence: true
+  validates :sha256_encrypted, presence: true
 
   has_many :contract_documents
   has_many :billing_documents
@@ -20,10 +23,17 @@ class Document < ActiveRecord::Base
   has_many :pdf_documents
 
   before_destroy :check_relations
+  before_validation :check_and_store_data
 
   def check_relations
     if referenced?
       throw(:abort)
+    end
+  end
+
+  def check_and_store_data
+    if sha256_of_data(self.data) != self.sha256
+      self.store
     end
   end
 
@@ -40,17 +50,17 @@ class Document < ActiveRecord::Base
   end
 
   def path
-    dir = self.sha256[-2..-1]
-    'sha256/' + dir + '/' + self.sha256
+    dir = self.sha256_encrypted[-2..-1]
+    'sha256/' + dir + '/' + self.sha256_encrypted
   end
 
-  def store(data)
-    sha256 = Digest::SHA256.new
-    self.sha256 = sha256.hexdigest(data)
-    self.mime = Magic.guess_string_mime_type(data)
+  def store
+    self.sha256 = sha256_of_data(self.data)
+    self.mime = Magic.guess_string_mime_type(self.data)
     self.size = data.length
 
-    encrypted = Crypto::Encryptor.new.process(data)
+    encrypted = Crypto::Encryptor.new.process(self.data)
+    self.sha256_encrypted = sha256_of_data(encrypted.data)
     self.encryption_details = encrypted.details
     if valid?
       storage.files.create(
@@ -64,7 +74,7 @@ class Document < ActiveRecord::Base
 
   def destroy
     # deduplication, only delete if last reference
-    unless Document.where(:sha256 => self.sha256).count > 1
+    unless Document.where(:sha256_encrypted => self.sha256_encrypted).count > 1
       storage.files.get(self.path).destroy
     end
     super
@@ -74,10 +84,11 @@ class Document < ActiveRecord::Base
     super(File.basename(value))
   end
 
-  def self.create(filename, data)
-    document = new(:filename => filename)
-    document.store(data)
-    document
+  private
+
+  def sha256_of_data(data)
+    sha256 = Digest::SHA256.new
+    sha256.hexdigest(data)
   end
 
 end

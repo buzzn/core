@@ -71,7 +71,8 @@ module Pdf
       filename = "#{template.name}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}.pdf"
       document = Document.new(filename: filename)
       PdfDocument.transaction do
-        document.store(pdf)
+        document.data = pdf
+        document.save
         attrs = { template: template,
                   json: data.to_json,
                   document: document }

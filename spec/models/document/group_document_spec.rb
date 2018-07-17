@@ -1,6 +1,6 @@
 describe GroupDocument do
 
-  entity!(:document) { Document.create('test/contract/file.jpg', File.read('spec/data/test.pdf'))}
+  entity!(:document) { Document.create(filename: 'test/contract/file.jpg', data: File.read('spec/data/test.pdf'))}
   entity!(:group) { create(:group) }
 
   it 'does not allow double entries' do

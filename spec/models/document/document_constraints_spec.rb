@@ -4,7 +4,7 @@ describe Document do
   context 'no relations' do
 
     it 'should be deletable' do
-      doc = Document.create('test/relation/file.jpg', File.read('spec/data/test.pdf'))
+      doc = Document.create(filename: 'test/relation/file.jpg', data: File.read('spec/data/test.pdf'))
       doc.destroy
     end
 
@@ -19,7 +19,7 @@ describe Document do
     context 'contract' do
 
       it 'should not be deletable' do
-        doc = Document.create('test/relation/contract/file.jpg', File.read('spec/data/test.pdf'))
+        doc = Document.create(filename: 'test/relation/contract/file.jpg', data: File.read('spec/data/test.pdf'))
         ContractDocument.create(document_id: doc.id, contract_id: contract.id)
         expect do
           doc.destroy
@@ -31,7 +31,7 @@ describe Document do
     context 'billing' do
 
       it 'should not be deletable' do
-        doc = Document.create('test/relation/billing/file.jpg', File.read('spec/data/test.pdf'))
+        doc = Document.create(filename: 'test/relation/billing/file.jpg', data: File.read('spec/data/test.pdf'))
         BillingDocument.create(document_id: doc.id, billing_id: billing.id)
         expect do
           doc.destroy
@@ -43,7 +43,7 @@ describe Document do
     context 'group' do
 
       it 'should not be deletable' do
-        doc = Document.create('test/relation/group/file.jpg', File.read('spec/data/test.pdf'))
+        doc = Document.create(filename: 'test/relation/group/file.jpg', data: File.read('spec/data/test.pdf'))
         GroupDocument.create(document_id: doc.id, group_id: group.id)
         expect do
           doc.destroy
@@ -57,7 +57,7 @@ describe Document do
     context 'pdf' do
 
       it 'should not be deletable' do
-        doc = Document.create('test/relation/pdf/file.jpg', File.read('spec/data/test.pdf'))
+        doc = Document.create(filename: 'test/relation/pdf/file.jpg', data: File.read('spec/data/test.pdf'))
         PdfDocument.create(document_id: doc.id, json: { :foo => :bar }, template_id: generator.template.id)
         expect do
           doc.destroy

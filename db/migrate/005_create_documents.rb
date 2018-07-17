@@ -7,10 +7,12 @@ class CreateDocuments < ActiveRecord::Migration
 
       t.string :mime, null: false
       t.string :sha256, null: false
+      t.string :sha256_encrypted, null: false
       t.integer :size, null: false
 
       t.timestamps null: false
     end
+    add_index :documents, [:sha256_encrypted], unique: true
   end
 
 end

@@ -2,14 +2,16 @@ describe Document do
 
   it 'creates and destroys' do
     doc = Document.new(filename: 'test/something')
-    doc.store('somethingrandom')
+    doc.data = 'somethingrandom'
+    doc.store
 
+    filepath = File.join('tmp/files/', doc.path)
     expect(Document.find_by_filename('something').read).to eq 'somethingrandom'
-    expect(File.read('tmp/files/sha256/0b/f6e2e388c96348fe46bd071d01e264dcb8e939456e8f4ab860351334875ad50b')).not_to eq 'somethingrandom'
+    expect(filepath).not_to eq 'somethingrandom'
 
     doc.destroy
     expect { doc.reload }.to raise_error ActiveRecord::RecordNotFound
-    expect(File.exist?('tmp/files/test/something')).to be false
+    expect(File.exist?(filepath)).to be false
   end
 
   entity(:files) { [build(:file, :png), build(:file, :txt), build(:file, :pdf)]}
@@ -17,7 +19,8 @@ describe Document do
   files.each do |data|
     it "creates valid metadata for #{data[:file]}" do
       doc = Document.new(filename: data[:file])
-      doc.store(File.read('spec/data/' + data[:file]))
+      doc.data = File.read('spec/data/' + data[:file])
+      doc.store
 
       expect(doc.size).to eq data[:size]
       expect(doc.mime).to eq data[:mime]
@@ -26,27 +29,23 @@ describe Document do
   end
 
   it 'retrieves' do
-    document = Document.create('test/me', 'now')
+    document = Document.create(filename: 'test/me', data: 'now')
     doc = Document.find_by_filename('me')
     expect(doc).to eq document
     expect(doc.read).to eq 'now'
   end
 
   it 'updates' do
-    document = Document.create('test/me2', 'now')
-    document.store('something else')
+    document = Document.create(filename: 'test/me2', data: 'now')
+    document.data = 'something else'
+    document.store
     expect(document.read).to eq 'something else'
   end
 
-  it 'does not delete with multiple references' do
-    doc1 = Document.create('one', 'samestring')
-    doc2 = Document.create('two', 'samestring')
+  it 'produces same sha256 but different sha256_encrypted' do
+    doc1 = Document.create(filename: 'one', data: 'samestring')
+    doc2 = Document.create(filename: 'two', data: 'samestring')
     expect(doc1.sha256).to eq doc2.sha256
-    expect(doc1.sha256).to eq '2573e9d755fa961f32ceb11d954aced58964f717ffc889e1d5f0762fd5547537'
-    expect(File.exist?('tmp/files/sha256/37/2573e9d755fa961f32ceb11d954aced58964f717ffc889e1d5f0762fd5547537')).to be true
-    doc1.destroy
-    expect(File.exist?('tmp/files/sha256/37/2573e9d755fa961f32ceb11d954aced58964f717ffc889e1d5f0762fd5547537')).to be true
-    doc2.destroy
-    expect(File.exist?('tmp/files/sha256/37/2573e9d755fa961f32ceb11d954aced58964f717ffc889e1d5f0762fd5547537')).to be false
+    expect(doc1.sha256_encrypted).not_to eq doc2.sha256_encrypted
   end
 end
