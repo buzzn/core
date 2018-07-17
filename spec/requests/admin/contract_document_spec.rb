@@ -36,7 +36,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       end
 
-      context 'retrieves a document' do
+      context 'retrieves metadata of a document' do
 
         context 'unauthenticated' do
           it '403' do
@@ -49,6 +49,27 @@ describe Admin::LocalpoolRoda, :request_helper do
           it '200' do
             GET "#{path}/#{document.id}", $admin
             expect(response).to have_http_status(200)
+          end
+        end
+
+      end
+
+      context 'fetches a document' do
+
+        context 'unauthenticated' do
+          it '403' do
+            GET "#{path}/#{document.id}/fetch"
+            expect(response).to have_http_status(403)
+          end
+        end
+
+        context 'authenticated' do
+          it '200' do
+            GET "#{path}/#{document.id}/fetch", $admin
+            expect(response).to have_http_status(200)
+            expect(response.headers['Content-Type']).to eq 'application/pdf'
+            expect(response.headers['ETag']).not_to eq nil
+            expect(response.body[0..7]).to eq '%PDF-1.4'
           end
         end
 
