@@ -29,8 +29,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     def build_register(attrs, zählwerk)
       add_warnings(attrs, zählwerk)
       register_class = attrs[:type].constantize
-      # note: during the import we move the name from the register (zählwerk) to the newly introduced entity market
-      # location; this models reality more correctly and lets us handle register changes of a market location cleanly.
+      # note: during the import we move the name from the register (zählwerk) to the newly introduced entity
       register       = register_class.new(attrs.except(:type, :meter_attributes, :name))
       register.build_market_location(name: attrs[:name])
       # debug = "#{zählwerk.buzznid}: #{register.label} (#{register.name})"
