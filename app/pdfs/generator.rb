@@ -68,9 +68,8 @@ module Pdf
       pdf_document = PdfDocument.where(template: template, json: data.to_json.to_s).first
       return pdf_document if pdf_document
       pdf ||= to_pdf #generate pdf outside of transaction
-      key = @root.class.name.underscore.gsub(%r(.*/), '')
-      path = "pdfs/#{key}/#{@root.id}/template/#{template.name}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}.pdf"
-      document = Document.new(path: path)
+      filename = "#{template.name}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}.pdf"
+      document = Document.new(filename: filename)
       PdfDocument.transaction do
         document.store(pdf)
         attrs = { template: template,
