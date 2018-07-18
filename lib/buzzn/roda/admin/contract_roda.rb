@@ -35,7 +35,7 @@ module Admin
           contract.customer!
         end
 
-        r.post! 'document' do
+        r.post! 'documents/generate' do
           document.(resource: contract, params: r.params)
         end
 

@@ -343,7 +343,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       context 'generate' do
         let('contract') { localpool_processing_contract }
-        let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}/document" }
+        let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}/documents/generate" }
 
         context 'unauthenticated' do
           it '403' do
