@@ -13,10 +13,6 @@ class Document < ActiveRecord::Base
 
   attr_accessor :data
 
-  validates :filename, presence: true
-  validates :sha256, presence: true
-  validates :sha256_encrypted, presence: true
-
   has_many :contract_documents, dependent: :destroy
   has_many :billing_documents, dependent: :destroy
   has_many :group_documents, dependent: :destroy
