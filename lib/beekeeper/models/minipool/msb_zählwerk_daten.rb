@@ -57,7 +57,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
   def obis
     return '1-1:1.8.0' if ['1-1:1.8.0', '1-1:.8.0'].include?(read_attribute(:obis))
-    return '1-1:2.8.0' if ['1-1:2.8.0', '1-1:2:8.0'].include?(read_attribute(:obis))
+    return '1-1:2.8.0' if ['1-1:2.8.0', '1-1:2:8.0', '1-2:1.8.0'].include?(read_attribute(:obis))
     add_warning(:obis, "Unknown obis: #{read_attribute(:obis)} for #{buzznid}")
   end
 

@@ -8,10 +8,10 @@ describe Register do
       it { expect { Register::Real.new.obis }.to raise_error(RuntimeError, 'not implemented') }
     end
     context 'when register is input' do
-      it { expect(Register::Input.new.obis).to eq('1-0:1.8.0') }
+      it { expect(Register::Input.new.obis).to eq('1-1:1.8.0') }
     end
     context 'when register is output' do
-      it { expect(Register::Output.new.obis).to eq('1-0:2.8.0') }
+      it { expect(Register::Output.new.obis).to eq('1-1:2.8.0') }
     end
   end
 

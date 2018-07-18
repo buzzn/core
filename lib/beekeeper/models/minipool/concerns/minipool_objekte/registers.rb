@@ -49,13 +49,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
         attrs = zaehlwerk.converted_attributes
         add_warnings(attrs, zaehlwerk)
         attrs[:meter] = find_or_build_meter(attrs[:meter_attributes])
-
-        begin
-          build_register(attrs, zaehlwerk)
-
-        rescue
-          binding.pry
-        end
+        build_register(attrs, zaehlwerk)
       end
     end
 

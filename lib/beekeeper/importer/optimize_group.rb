@@ -74,9 +74,15 @@ class Beekeeper::Importer::OptimizeGroup
   def create_optimized_group(localpool, warnings)
     if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings) && complete?(localpool) # && no_others?(localpool)
       localpool.registers.reload
-      puts "create optimized group for #{localpool.slug} and execute:\n\n"
+      puts
+      puts
+      puts '=' * 20
+      puts
+      puts "either continue by leaving the shell or create the optimized group for #{localpool.slug} by executing:\n\n"
       puts 'meter = @optimized.create(localpool)'
       puts 'optimized_groups[localpool.slug] = meter.product_serialnumber'
+      puts
+      puts '=' * 20
       binding.send(:pry)
     else
       optimized_groups[localpool.slug] = nil
@@ -90,7 +96,7 @@ class Beekeeper::Importer::OptimizeGroup
                                      .collect { |m| m.registers }
                                      .flatten
                                      .all? { |r| r.label.consumption? }
-
+    # missing consumption meters can be calculated
     p "all meters but consumption are connected to discovergy: #{all_discovergy_but_consumption}"
     all_discovergy_but_consumption
   end
