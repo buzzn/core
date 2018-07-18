@@ -41,9 +41,6 @@ class Beekeeper::Importer::LocalpoolContracts
       customer:        customer,
       contractor:      localpool.owner
     )
-    if localpool.slug == 'wagnisart-australien-asien'
-      p contract_attributes.slice(:contract_number, :contract_number_addition, :begin_date, :end_date)
-    end
     contract = Contract::LocalpoolPowerTaker.create!(contract_attributes)
     contract.tariffs =
       if contract.end_date.nil?
@@ -69,7 +66,7 @@ class Beekeeper::Importer::LocalpoolContracts
   def find_or_create_register(contract, registers, localpool)
     meter = registers.collect(&:meter).find { |m| m.legacy_buzznid == contract[:buzznid] }
     if meter
-      meter.registers.input.first
+      meter.registers.first
     else
       create_fake_register(contract[:buzznid], localpool) if contract[:buzznid].present?
     end
@@ -93,7 +90,7 @@ class Beekeeper::Importer::LocalpoolContracts
     logger.warn("No meter/register for #{buzznid}, creating a fake temporary one.")
     meter = Meter::Real.create!(product_serialnumber: "FAKE-FOR-IMPORT-#{counter}", legacy_buzznid: buzznid, group: localpool)
     register = Register::Input.create!(share_with_group: false, meter: meter, label: :other)
-    MarketLocation.create!(group: localpool, name: 'FAKE-FOR-IMPORT', register: register)
+    MarketLocation.create!(name: 'FAKE-FOR-IMPORT', register: register)
     register
   end
 
