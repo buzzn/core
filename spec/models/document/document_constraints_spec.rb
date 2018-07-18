@@ -20,10 +20,11 @@ describe Document do
 
       it 'should not be deletable' do
         doc = Document.create(filename: 'test/relation/contract/file.jpg', data: File.read('spec/data/test.pdf'))
-        ContractDocument.create(document_id: doc.id, contract_id: contract.id)
+        cdoc = ContractDocument.create(document_id: doc.id, contract_id: contract.id)
+        doc.destroy
         expect do
-          doc.destroy
-        end.to raise_error(UncaughtThrowError)
+          cdoc.reload
+        end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
     end
@@ -32,10 +33,11 @@ describe Document do
 
       it 'should not be deletable' do
         doc = Document.create(filename: 'test/relation/billing/file.jpg', data: File.read('spec/data/test.pdf'))
-        BillingDocument.create(document_id: doc.id, billing_id: billing.id)
+        bdoc = BillingDocument.create(document_id: doc.id, billing_id: billing.id)
+        doc.destroy
         expect do
-          doc.destroy
-        end.to raise_error(UncaughtThrowError)
+          bdoc.reload
+        end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
     end
@@ -44,10 +46,11 @@ describe Document do
 
       it 'should not be deletable' do
         doc = Document.create(filename: 'test/relation/group/file.jpg', data: File.read('spec/data/test.pdf'))
-        GroupDocument.create(document_id: doc.id, group_id: group.id)
+        gdoc = GroupDocument.create(document_id: doc.id, group_id: group.id)
+        doc.destroy
         expect do
-          doc.destroy
-        end.to raise_error(UncaughtThrowError)
+          gdoc.reload
+        end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
     end
@@ -58,10 +61,11 @@ describe Document do
 
       it 'should not be deletable' do
         doc = Document.create(filename: 'test/relation/pdf/file.jpg', data: File.read('spec/data/test.pdf'))
-        PdfDocument.create(document_id: doc.id, json: { :foo => :bar }, template_id: generator.template.id)
+        pdf = PdfDocument.create(document_id: doc.id, json: { :foo => :bar }, template_id: generator.template.id)
+        doc.destroy
         expect do
-          doc.destroy
-        end.to raise_error(UncaughtThrowError)
+          pdf.reload
+        end.to raise_error(ActiveRecord::RecordNotFound)
       end
 
     end

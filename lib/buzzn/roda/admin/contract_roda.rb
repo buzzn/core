@@ -40,6 +40,7 @@ module Admin
         end
 
         r.on 'documents' do
+          shared[:documents] = contract.documents
           r.run DocumentRoda
         end
 

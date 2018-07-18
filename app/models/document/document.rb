@@ -17,31 +17,17 @@ class Document < ActiveRecord::Base
   validates :sha256, presence: true
   validates :sha256_encrypted, presence: true
 
-  has_many :contract_documents
-  has_many :billing_documents
-  has_many :group_documents
-  has_many :pdf_documents
+  has_many :contract_documents, dependent: :destroy
+  has_many :billing_documents, dependent: :destroy
+  has_many :group_documents, dependent: :destroy
+  has_many :pdf_documents, dependent: :destroy
 
-  before_destroy :check_relations
   before_validation :check_and_store_data
-
-  def check_relations
-    if referenced?
-      throw(:abort)
-    end
-  end
 
   def check_and_store_data
     if sha256_of_data(self.data) != self.sha256
       self.store
     end
-  end
-
-  def referenced?
-    contract_documents.any? ||
-      billing_documents.any? ||
-      group_documents.any? ||
-      pdf_documents.any?
   end
 
   def read
