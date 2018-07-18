@@ -36,18 +36,7 @@ module Admin
         end
 
         r.post! 'document' do
-          rdoc = document.(
-            resource: contract, params: r.params
-          )
-          if rdoc.success?
-            res = rdoc.value!
-            # res.document is a ContractDocument
-            r.response.status = 201 # created
-            r.response.headers['Location'] = "/localpools/#{contract.localpool_id}/contract/#{contract.id}/documents/#{res[:document].document_id}"
-            ''
-          else
-            r.response.status = 500
-          end
+          document.(resource: contract, params: r.params)
         end
 
         r.on 'documents' do

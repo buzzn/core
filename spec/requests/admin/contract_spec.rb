@@ -369,9 +369,9 @@ describe Admin::LocalpoolRoda, :request_helper do
             expect(response).to have_http_status(404)
           end
 
-          it '201' do
+          it '200' do
             POST path, $admin
-            expect(response).to have_http_status(201)
+            expect(response).to have_http_status(200)
           end
 
         end
