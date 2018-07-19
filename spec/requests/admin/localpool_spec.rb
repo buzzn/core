@@ -211,8 +211,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     let(:created_json) do
       { 'type' => 'group_localpool',
-        'name' => 'suPer Duper',
-        'slug' => 'super-duper',
+        'name' => '12313213',
         'description' => 'superduper localpool location on the dark side of the moon',
         'start_date' => Date.today.as_json,
         'show_object' => false,
@@ -226,7 +225,6 @@ describe Admin::LocalpoolRoda, :request_helper do
         'incompleteness' => serialized_incompleteness(nil),
         'bank_account' => nil,
         'power_sources' => [],
-        'display_app_url' => 'https://display.buzzn.io/super-duper',
         'allowed_actions' => {
           'create_metering_point_operator_contract'=> {
             'address' => ['must be filled'],
@@ -252,6 +250,8 @@ describe Admin::LocalpoolRoda, :request_helper do
       id = result.delete('id')
       expect(result.delete('updated_at')).not_to be_nil
       expect(Group::Localpool.find(id)).not_to be_nil
+      result.delete('slug')
+      result.delete('display_app_url')
       expect(result.to_yaml).to eq created_json.to_yaml
     end
   end
