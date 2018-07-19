@@ -111,6 +111,7 @@ module Admin
           end
 
           r.patch! do
+            r.response.status = 200
             update_organization_owner.(resource: localpool.owner, params: r.params)
           end
 

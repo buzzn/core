@@ -5,9 +5,11 @@ module Operations::Action
   class CreateOrUpdatePerson < Update
 
     def call(params:, resource:, method:, **)
-      if (person_resource = resource&.send(method)) && params.key?(method)
+      person_resource = resource&.send(method)
+      person_params = params[method]
+      if person_resource && person_params && !person_params.key?(:id)
         super(params: params.delete(method), resource: person_resource)
-      elsif person_params = params[method]
+      elsif person_params
         params[method] = find_or_create(person_params)
       end
     end

@@ -46,14 +46,23 @@ describe Admin::LocalpoolRoda, :request_helper do
     end
   end
 
-  shared_examples 'create organization and assign person' do |method|
+  shared_examples 'create/update organization and assign person' do |method|
 
-    it "200 - #{method}" do
+    it "201 - #{method}" do
       POST organization_path, $admin,
            name: "is there anybody out there: #{method}",
            method => { id: person.id }
 
       expect(response).to have_http_status(201)
+      expect(localpool.reload.owner.send(method)).to eq(person)
+    end
+
+    it "200 - #{method}" do
+      PATCH organization_path, $admin,
+            updated_at: localpool.owner.updated_at.as_json,
+            method => { id: person.id }
+
+      expect(response).to have_http_status(200)
       expect(localpool.reload.owner.send(method)).to eq(person)
     end
 
@@ -66,8 +75,8 @@ describe Admin::LocalpoolRoda, :request_helper do
     end
 
     it_behaves_like 'assign owner', first: :person, second: :organization
-    it_behaves_like 'create organization and assign person', :contact
-    it_behaves_like 'create organization and assign person', :legal_representation
+    it_behaves_like 'create/update organization and assign person', :contact
+    it_behaves_like 'create/update organization and assign person', :legal_representation
 
   end
 
