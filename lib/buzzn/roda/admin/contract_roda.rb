@@ -3,7 +3,13 @@ require_relative '../admin_roda'
 module Admin
   class ContractRoda < BaseRoda
 
+    include Import.args[:env,
+                        'transactions.admin.contract.document'
+                       ]
+
     plugin :shared_vars
+
+    PARENT = :contract
 
     route do |r|
 
@@ -14,7 +20,8 @@ module Admin
       end
 
       r.on :id do |id|
-        contract = contracts.retrieve(id)
+
+        shared[PARENT] = contract = contracts.retrieve(id)
 
         r.get! do
           contract
@@ -27,6 +34,16 @@ module Admin
         r.get! 'customer' do
           contract.customer!
         end
+
+        r.post! 'documents/generate' do
+          document.(resource: contract, params: r.params)
+        end
+
+        r.on 'documents' do
+          shared[:documents] = contract.documents
+          r.run DocumentRoda
+        end
+
       end
     end
 

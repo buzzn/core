@@ -1,4 +1,6 @@
 require_relative 'test_admin_localpool_roda'
+require_relative 'contract_shared'
+
 describe Admin::LocalpoolRoda, :request_helper do
 
   def app
@@ -6,134 +8,7 @@ describe Admin::LocalpoolRoda, :request_helper do
   end
 
   context 'contracts' do
-
-    entity(:person) { create(:person, :with_bank_account) }
-
-    entity(:localpool) { create(:group, :localpool, owner: person) }
-
-    entity(:organization) do
-      buzzn = create(:organization, :with_address)
-      buzzn.contact = person
-      buzzn.save!
-      buzzn
-    end
-    entity(:bank_account) { create(:bank_account, owner: organization) }
-
-    before do
-      $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
-    end
-
-    entity(:metering_point_operator_contract) do
-      create(:contract, :metering_point_operator,
-             localpool: localpool, contractor_bank_account: bank_account)
-    end
-
-    entity(:localpool_power_taker_contract) do
-      create(:contract, :localpool_powertaker,
-             customer: organization,
-             localpool: localpool)
-    end
-
-    let('buzzn_json') do
-      buzzn = Organization::Market.buzzn
-      {
-        'id'=>buzzn.id,
-        'type'=>'organization_market',
-        'updated_at'=>buzzn.updated_at.as_json,
-        'name'=>buzzn.name,
-        'phone'=>buzzn.phone,
-        'fax'=>buzzn.fax,
-        'website'=>buzzn.website,
-        'email'=>buzzn.email,
-        'description'=>buzzn.description,
-        'updatable'=>true,
-        'deletable'=>false,
-        'address'=>{
-          'id'=>buzzn.address.id,
-          'type'=>'address',
-          'updated_at'=>buzzn.address.updated_at.as_json,
-          'street'=>buzzn.address.street,
-          'city'=>buzzn.address.city,
-          'zip'=>buzzn.address.zip,
-          'country'=>buzzn.address.attributes['country'],
-          'updatable'=>true,
-          'deletable'=>false
-        }
-      }
-    end
-
-    let(:person_json) do
-      person_json = {
-        'id'=>person.id,
-        'type'=>'person',
-        'updated_at'=>person.updated_at.as_json,
-        'prefix'=>person.attributes['prefix'],
-        'title'=>person.attributes['title'],
-        'first_name'=>person.first_name,
-        'last_name'=>person.last_name,
-        'phone'=>person.phone,
-        'fax'=>person.fax,
-        'email'=>person.email,
-        'preferred_language'=>person.attributes['preferred_language'],
-        'image'=>person.image.medium.url,
-        'customer_number' => nil,
-        'updatable'=>true,
-        'deletable'=>false,
-        'address'=>{
-          'id'=>person.address.id,
-          'type'=>'address',
-          'updated_at'=>person.address.updated_at.as_json,
-          'street'=>person.address.street,
-          'city'=>person.address.city,
-          'zip'=>person.address.zip,
-          'country'=>person.address.attributes['country'],
-          'updatable'=>true,
-          'deletable'=>false
-        }
-      }
-      def person_json.dup
-        json = super
-        json['address'] = json['address'].dup
-        json
-      end
-      person_json
-    end
-
-    let(:organization_json) do
-      orga_json = {
-        'id'=>organization.id,
-        'type'=>'organization',
-        'updated_at'=>organization.updated_at.as_json,
-        'name'=>organization.name,
-        'phone'=>organization.phone,
-        'fax'=>organization.fax,
-        'website'=>organization.website,
-        'email'=>organization.email,
-        'description'=>organization.description,
-        'updatable'=>true,
-        'deletable'=>false,
-        'customer_number' => nil,
-        'address'=>{
-          'id'=>organization.address.id,
-          'type'=>'address',
-          'updated_at'=>organization.address.updated_at.as_json,
-          'street'=>organization.address.street,
-          'city'=>organization.address.city,
-          'zip'=>organization.address.zip,
-          'country'=>organization.address.attributes['country'],
-          'updatable'=>true,
-          'deletable'=>false
-        },
-        'contact'=>person_json
-      }
-      def orga_json.dup
-        json = super
-        json['address'] = json['address'].dup
-        json['contact'] = json['contact'].dup
-        json
-      end
-      orga_json
-    end
+    include_context 'contract entities'
 
     context 'GET' do
       let(:localpool_power_taker_contract_json) do
@@ -152,6 +27,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'status'=>contract.status.to_s,
           'updatable'=>true,
           'deletable'=>false,
+          'documentable'=>true,
           'forecast_kwh_pa'=>contract.forecast_kwh_pa,
           'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
           'third_party_billing_number'=>contract.third_party_billing_number,
@@ -299,6 +175,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'status'=>contract.status.to_s,
           'updatable'=>true,
           'deletable'=>false,
+          'documentable'=>true,
           'metering_point_operator_name'=>contract.metering_point_operator_name,
           'localpool' => {
             'id'=>contract.localpool.id,
@@ -461,5 +338,47 @@ describe Admin::LocalpoolRoda, :request_helper do
         end
       end
     end
+
+    context 'document' do
+
+      context 'generate' do
+        let('contract') { localpool_processing_contract }
+        let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}/documents/generate" }
+
+        context 'unauthenticated' do
+          it '403' do
+            POST path
+            expect(response).to have_http_status(403)
+          end
+        end
+
+        context 'authenticated' do
+
+          # we only want POSTs, change that to 405?
+          it '404' do
+            GET path, $admin
+            expect(response).to have_http_status(404)
+
+            PATCH path, $admin
+            expect(response).to have_http_status(404)
+
+            PUT path, $admin
+            expect(response).to have_http_status(404)
+
+            DELETE path, $admin
+            expect(response).to have_http_status(404)
+          end
+
+          it '200' do
+            POST path, $admin
+            expect(response).to have_http_status(200)
+          end
+
+        end
+
+      end
+
+    end
+
   end
 end

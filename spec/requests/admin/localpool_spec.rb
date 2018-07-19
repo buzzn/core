@@ -379,6 +379,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'status' => contract.status.to_s,
         'updatable'=>true,
         'deletable'=>false,
+        'documentable'=>true,
         'tariffs'=>{
           'array'=> contract.tariffs.collect do |t|
             { 'id'=>t.id,
@@ -485,6 +486,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'status'=>contract.status.to_s,
         'updatable'=>true,
         'deletable'=>false,
+        'documentable'=>true,
         'metering_point_operator_name'=>contract.metering_point_operator_name,
         'tariffs'=> {
           'array'=>contract.tariffs.collect do |tariff|
@@ -611,6 +613,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'last_date'=>nil,
           'status' => contract.status.to_s,
           'updatable'=>true,
+          'documentable'=>true,
           'deletable'=>false
         }
         if contract.is_a?(Contract::LocalpoolPowerTaker)
