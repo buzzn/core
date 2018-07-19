@@ -16,19 +16,6 @@ describe Document do
 
   context 'with relations' do
 
-    context 'contract' do
-
-      it 'should not be deletable' do
-        doc = Document.create(filename: 'test/relation/contract/file.jpg', data: File.read('spec/data/test.pdf'))
-        cdoc = ContractDocument.create(document_id: doc.id, contract_id: contract.id)
-        doc.destroy
-        expect do
-          cdoc.reload
-        end.to raise_error(ActiveRecord::RecordNotFound)
-      end
-
-    end
-
     context 'billing' do
 
       it 'should not be deletable' do

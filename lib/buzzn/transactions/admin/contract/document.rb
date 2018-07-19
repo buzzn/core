@@ -17,18 +17,13 @@ class Transactions::Admin::Contract::Document < Transactions::Base
   end
 
   def contract_document(resource:, params:, generator:, generate_document:)
-    if ContractDocument.where(:contract_id => resource.id,
-                              :document_id => generate_document.document.id).any?
-      ContractDocument.where(:contract_id => resource.id,
-                             :document_id => generate_document.document.id).first
-    else
-      ContractDocument.create!(contract_id: resource.id,
-                               document_id: generate_document.document.id)
-    end
+    doc = generate_document.document
+    resource.object.documents << doc
+    doc
   end
 
-  def result(resource:, params:, generator:, generate_document:, contract_document:)
-    DocumentResource.new(contract_document.document)
+  def result(contract_document:, **)
+    DocumentResource.new(contract_document)
   end
 
 end

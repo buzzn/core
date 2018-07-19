@@ -16,7 +16,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}/documents" }
 
       entity!('document') { create(:document, :pdf) }
-      entity!('contract_document') { create(:contract_document, contract_id: contract.id, document: document)}
+      entity!('contract_document') { contract.documents << document }
 
       context 'list documents' do
 
@@ -78,10 +78,9 @@ describe Admin::LocalpoolRoda, :request_helper do
       context 'deletes a document' do
 
         entity!('deletable_document') { create(:document, :png) }
-        entity!('deletable_contract_document') { create(:contract_document, contract_id: contract.id, document: deletable_document)}
+        entity!('deletable_contract_document') { contract.documents << deletable_document}
 
         let('document_id') { deletable_document.id }
-        let('contract_document_id') { deletable_contract_document.id }
 
         context 'unauthenticated' do
           it '403' do
@@ -95,7 +94,6 @@ describe Admin::LocalpoolRoda, :request_helper do
             DELETE "#{path}/#{document_id}", $admin
             expect(response).to have_http_status(204)
             expect { Document.find(document_id) }.to raise_error ActiveRecord::RecordNotFound
-            expect { ContractDocument.find(contract_document_id) }.to raise_error ActiveRecord::RecordNotFound
           end
         end
 

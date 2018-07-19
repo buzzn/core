@@ -39,15 +39,7 @@ module Contract
     has_and_belongs_to_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
     has_many :billings, foreign_key: :contract_id
-    has_many :contract_documents, foreign_key: :contract_id
-    has_many :documents, through: :contract_documents do
-      def create!(params)
-        contract = @association.owner
-        doc = Document.create(filename: params[:filename], data: params[:data])
-        ContractDocument.create(contract_id: contract.id, document: doc)
-        doc
-      end
-    end
+    has_and_belongs_to_many :documents, foreign_key: :contract_id
 
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
     belongs_to :customer_bank_account, class_name: 'BankAccount'
