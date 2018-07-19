@@ -2,7 +2,7 @@ require_relative '../authorization'
 
 class Operations::Authorization::Delete
 
-  def call(resource:)
+  def call(resource:, **)
     unless resource.deletable?
       raise Buzzn::PermissionDenied.new(resource, :delete,
                                         resource.security_context.current_user)
