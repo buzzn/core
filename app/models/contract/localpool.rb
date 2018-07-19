@@ -8,5 +8,9 @@ module Contract
 
     belongs_to :localpool, class_name: 'Group::Localpool'
 
+    def pdf_generator
+      Pdf::LocalPoolProcessingContract
+    end
+
   end
 end

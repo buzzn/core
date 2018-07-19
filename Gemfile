@@ -22,6 +22,7 @@ gem 'wkhtmltopdf-binary-edge'
 
 # storage
 gem 'fog-aws'
+gem 'magic'
 
 # authentication
 gem 'rodauth'
