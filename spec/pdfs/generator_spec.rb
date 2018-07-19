@@ -14,8 +14,6 @@ describe Pdf::Generator do
 
       it { expect(pdf_document).to be_persisted }
 
-      it { expect(pdf_document.localpool).to eq(localpool) }
-
       it { expect(pdf_document.document.read).to eq('some pdf data') }
 
       it { expect(generator.pdf_document_stale?).to be false }
@@ -37,8 +35,6 @@ describe Pdf::Generator do
           it { expect(pdf_document2.document.id).not_to eq(pdf_document.document.id) }
 
           it { expect(pdf_document2).to be_persisted }
-
-          it { expect(pdf_document2.localpool).to eq(localpool) }
 
           it { expect(pdf_document2.document.read).to eq('some pdf data') }
 
