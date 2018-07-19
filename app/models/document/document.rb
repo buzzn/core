@@ -13,7 +13,7 @@ class Document < ActiveRecord::Base
 
   attr_accessor :data
 
-  has_and_belongs_to_many :contracts, class_name: 'Contract::Base',  dependent: :destroy
+  has_and_belongs_to_many :contracts, class_name: 'Contract::Base', dependent: :destroy
   has_many :billing_documents, dependent: :destroy
   has_many :group_documents, dependent: :destroy
   has_many :pdf_documents, dependent: :destroy

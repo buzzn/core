@@ -531,6 +531,9 @@ Naming/PredicateName:
 # SupportedStyles: snake_case, camelCase
 Naming/VariableName:
   EnforcedStyle: snake_case
+  Exclude:
+    - 'lib/beekeeper/**/*'
+    - 'script/beekeeper_import/check_seas.rb'
 
 # Offense count: 11
 # Configuration parameters: EnforcedStyle.
