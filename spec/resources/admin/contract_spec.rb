@@ -25,6 +25,7 @@ describe Contract::BaseResource do
                             'termination_date',
                             'last_date',
                             'updatable',
+                            'documentable',
                             'deletable'] end
   let!(:all) { [metering_point_operator, localpool_processing, localpool_power_taker] }
 

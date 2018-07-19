@@ -46,7 +46,7 @@ module Buzzn
       @groups[name] || (@parent ? @parent.get(name) : raise("group not found: #{name}"))
     end
 
-    [:create, :retrieve, :update, :delete].each do |method|
+    [:create, :retrieve, :update, :document, :delete].each do |method|
       define_method method do |group_name = nil|
         if group_name
           @perms[method] = get(group_name)
@@ -60,6 +60,7 @@ module Buzzn
       create(group_name)
       retrieve(group_name)
       update(group_name)
+      document(group_name)
       delete(group_name)
     end
 
