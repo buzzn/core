@@ -13,7 +13,7 @@ module Group
     before_save do
       if self.slug.nil?
         self.slug = Buzzn::Slug.new(self.name)
-        if (count = self.class.where(slug: self.slug).count).positive?
+        if (count = self.class.where("slug like ?", self.slug + '%').count).positive?
           self.slug = Buzzn::Slug.new(self.name, count)
         end
       end

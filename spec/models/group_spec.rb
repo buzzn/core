@@ -30,7 +30,10 @@ describe Group::Base do
 
     before { Group::Localpool.create(name: 'Dagobert Duck') }
 
-    it { expect(Group::Localpool.create(name: 'Dagobert Duck').slug).to eq 'dagobert-duck_1' }
+    it do
+      expect(Group::Localpool.create(name: 'Dagobert Duck').slug).to eq 'dagobert-duck_1'
+      expect(Group::Localpool.create(name: 'Dagobert Duck').slug).to eq 'dagobert-duck_2'
+    end
 
   end
 
