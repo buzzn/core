@@ -116,6 +116,7 @@ module Admin
           end
 
           r.post! :id do |id|
+            r.response.status = 201
             new_owner = AdminResource.new(current_user).organizations.retrieve(id)
             assign_owner.(resource: localpool,
                           new_owner: new_owner)
