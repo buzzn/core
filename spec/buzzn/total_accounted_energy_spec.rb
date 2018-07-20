@@ -117,6 +117,9 @@ describe Buzzn::Localpool::TotalAccountedEnergy do
     end
 
     it 'grid feeding chp' do
+
+      skip('maybe obsolete. maybe_not. but not used')
+
       expect(total.grid_feeding_chp).to eq watt_hour(0)
       def localpool.energy_generator_type
         Group::Base::CHP
@@ -125,6 +128,9 @@ describe Buzzn::Localpool::TotalAccountedEnergy do
     end
 
     it 'grid feeding pv' do
+
+      skip('maybe obsolete. maybe_not. but not used')
+
       expect(total.grid_feeding_pv).to eq watt_hour(0)
       def localpool.energy_generator_type
         Group::Base::PV

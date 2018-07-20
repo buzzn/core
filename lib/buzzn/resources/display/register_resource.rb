@@ -3,8 +3,7 @@ module Display
 
     model Register::Base
 
-    attributes  :direction,
-                :name,
+    attributes  :name,
                 :label
 
     def type
@@ -14,7 +13,7 @@ module Display
       when Register::Virtual
         'register_virtual'
       else
-        raise "unknown group type: #{object.class}"
+        raise "unknown register type: #{object.class}"
       end
     end
 

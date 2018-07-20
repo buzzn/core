@@ -13,9 +13,5 @@ module Register
       Services::Datasource::Discovergy::Implementation::NAME
     end
 
-    def obis
-      raise 'not implemented'
-    end
-
   end
 end

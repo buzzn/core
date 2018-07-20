@@ -59,7 +59,6 @@ describe Display::GroupResource do
     let(:attributes) do ['id',
                          'type',
                          'updated_at',
-                         'direction',
                          'name',
                          'label'] end
     it 'retrieve' do
