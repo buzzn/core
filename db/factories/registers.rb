@@ -4,7 +4,6 @@ FactoryGirl.define do
       readings nil
     end
 
-    direction             Register::Base.directions[:input]
     label                 Register::Base.labels[:consumption]
     share_with_group      true
     share_publicly        false
@@ -38,25 +37,21 @@ FactoryGirl.define do
 
     trait :virtual_input do
       virtual
-      direction Register::Base.directions[:input]
     end
 
     trait :virtual_output do
       virtual
-      direction Register::Base.directions[:output]
     end
 
     trait :input do
       real
       initialize_with { Register::Input.new }
-      direction       Register::Base.directions[:input]
     end
 
     trait :output do
       real
       initialize_with { Register::Output.new }
       label           Register::Base.labels[:production_pv]
-      direction       Register::Base.directions[:output]
     end
 
     trait :with_market_location do

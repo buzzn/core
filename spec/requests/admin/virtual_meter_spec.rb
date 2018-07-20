@@ -48,7 +48,7 @@ describe Admin::LocalpoolRoda, :request_helper do
                 'type'=>'register_real',
                 'updated_at'=> part.operand.updated_at.as_json,
                 'label'=>part.operand.attributes['label'],
-                'direction'=>part.operand.attributes['direction'],
+                'direction'=>part.operand.label.consumption? ? 'in' : 'out',
                 'last_reading'=>0,
                 'observer_min_threshold'=> part.operand.observer_min_threshold,
                 'observer_max_threshold'=> part.operand.observer_max_threshold,

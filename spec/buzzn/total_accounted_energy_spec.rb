@@ -3,6 +3,8 @@ require 'buzzn/localpool/total_accounted_energy'
 
 describe Buzzn::Localpool::TotalAccountedEnergy do
 
+  skip('maybe obsolete. maybe_not. but not used')
+
   entity(:reference) { {} }
   entity(:total) do
     total = Buzzn::Localpool::TotalAccountedEnergy.new(create(:group, :localpool))
