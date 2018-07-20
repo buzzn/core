@@ -130,7 +130,7 @@ describe Admin::Roda, :request_helper do
                   'type'=>'register_real',
                   'updated_at'=>register.updated_at.as_json,
                   'label'=>register.attributes['label'],
-                  'direction'=>register.attributes['direction'],
+                  'direction'=>'in',
                   'last_reading'=> 0,
                   'observer_min_threshold'=>register.observer_min_threshold,
                   'observer_max_threshold'=>register.observer_max_threshold,
