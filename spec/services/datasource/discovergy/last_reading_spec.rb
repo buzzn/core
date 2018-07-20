@@ -29,7 +29,7 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
   entity(:api) { ApiMock.new }
 
   entity(:meter) { create(:meter, :real, :connected_to_discovergy) }
-  entity(:register) { meter.input_register }
+  entity(:register) { meter.registers.first }
 
   entity(:last_readings) do
     Services::Datasource::Discovergy::LastReading.new(api: api)
@@ -59,18 +59,18 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
 
     before { api.result = two_way_meter_result }
 
-    [:input_register, :output_register].each do |type|
+    [:consumption, :production].each do |type|
 
       context type do
         it 'power' do
-          register = meter.send type
+          register = meter.registers.select { |r| r.label.send("#{type}?") }.first
           result = last_readings.power(register)
           expect(result.values[:power]).to eq -58500
           expect(api.query).to eq "/last_reading?meterId=EASYMETER_#{meter.product_serialnumber}&fields=power&each=false"
         end
 
         it 'energy' do
-          register = meter.send type
+          register = meter.registers.select { |r| r.label.send("#{type}?") }.first
           result = last_readings.energy(register)
           expect(result.values[:energy]).to eq 183082318054500
           expect(result.values[:energyOut]).to eq 105450808714000

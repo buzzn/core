@@ -15,7 +15,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     entity(:meter) do
       meter = create(:meter, :virtual, group: group)
-      create(:formula_part, operand: create(:meter, :real, group: group).input_register,
+      create(:formula_part, operand: create(:meter, :real, group: group).registers.first,
              register: meter.register)
       meter
     end

@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :register, class: 'Register::Input' do
+  factory :register, class: 'Register::Real' do
     transient do
       readings nil
     end
@@ -45,12 +45,12 @@ FactoryGirl.define do
 
     trait :input do
       real
-      initialize_with { Register::Input.new }
+      initialize_with { Register::Real.new }
     end
 
     trait :output do
       real
-      initialize_with { Register::Output.new }
+      initialize_with { Register::Real.new }
       label           Register::Base.labels[:production_pv]
     end
 
