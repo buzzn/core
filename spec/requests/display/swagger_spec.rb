@@ -13,8 +13,6 @@ describe Display, :request_helper do
 
   entity!(:group) { create(:group, :localpool, show_display_app: true) }
 
-  entity!(:register) { create(:meter, :real, group: group).input_register }
-
   swagger do |s|
     s.basePath = '/api/display'
   end

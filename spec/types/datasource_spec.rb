@@ -2,7 +2,7 @@ require 'buzzn/types/datasource'
 
 describe Types::Datasource do
 
-  entity(:register) { create(:meter, :real).input_register }
+  entity(:register) { create(:meter, :real).registers.first }
 
   it Types::Datasource::Bubble do
     subject = Types::Datasource::Bubble.new(value: 123, register: register)

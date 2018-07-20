@@ -60,7 +60,7 @@ describe Admin, :swagger, :request_helper, :side_effects => true do
 
   entity!(:real_meter) { meter }
 
-  entity!(:real_register) { real_meter.input_register }
+  entity!(:real_register) { real_meter.registers.first }
 
   entity!(:virtual_meter) { create(:meter, :virtual, group: localpool) }
 
@@ -78,7 +78,7 @@ describe Admin, :swagger, :request_helper, :side_effects => true do
   entity!(:reading_2) { create(:reading, register: register, date: Date.today) }
 
   entity!(:localpool_power_taker_contract) do
-    register = create(:meter, :real, group: localpool).input_register
+    register = create(:meter, :real, group: localpool).registers.first
     create(:contract, :localpool_powertaker,
            localpool: localpool,
            market_location: create(:market_location, register: register))

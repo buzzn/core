@@ -1,6 +1,6 @@
 describe Services::CurrentPower do
 
-  class MockRegister < Register::Input
+  class MockRegister < Register::Real
 
     def datasource; 'mock'; end
 

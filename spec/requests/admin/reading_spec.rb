@@ -9,7 +9,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     entity(:localpool) { create(:group, :localpool) }
     entity(:meter)     { create(:meter, :real, group: localpool) }
-    entity(:register)  { meter.input_register }
+    entity(:register)  { meter.registers.first }
     entity!(:reading)  { create(:reading, register: register)}
 
     let(:wrong_json) do

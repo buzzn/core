@@ -65,19 +65,5 @@ module Meter
       Register::Real.where(meter_id: self.id).delete_all
     end
 
-    ['output', 'input'].each do |direction|
-      define_method :"#{direction}_register" do
-        Register.const_get(direction.capitalize).where(meter_id: self.id).first
-      end
-    end
-
-    def input_register=(attr)
-      registers << Register::Input.new(attr.merge(meter: self))
-    end
-
-    def output_register=(attr)
-      registers << Register::Output.new(attr.merge(meter: self))
-    end
-
   end
 end
