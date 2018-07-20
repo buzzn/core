@@ -101,8 +101,8 @@ describe 'Schemas::Invariants::Group::Localpool' do
 
     def make_register(localpool, label:, register_direction: :input)
       meter = create(:meter, :real, group: localpool, register_direction: register_direction)
-      meter.input_register.update(label: label)
-      meter.input_register
+      meter.registers.first.update(label: label)
+      meter.registers.first
     end
 
     context 'when there is no such register' do

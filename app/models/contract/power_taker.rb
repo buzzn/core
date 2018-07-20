@@ -7,7 +7,7 @@ module Contract
       super
     end
 
-    belongs_to :register, class_name: 'Register::Input'
+    belongs_to :register, class_name: 'Register::Real'
 
     validates :register, presence: true
     validates :old_supplier_name, presence: false
