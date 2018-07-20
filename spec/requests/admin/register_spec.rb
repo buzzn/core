@@ -29,7 +29,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'id'=>register.id,
             'type'=>'register_real',
             'label'=>'DEMARCATION_PV',
-            'direction'=>register.attributes['direction'],
+            'direction'=>register.label.consumption? ? 'in' : 'out',
             'last_reading'=>last ? last.value : 0,
             'observer_min_threshold'=>10,
             'observer_max_threshold'=>100,
@@ -132,7 +132,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'type'=>'register_real',
           'updated_at'=>real_register.updated_at.as_json,
           'label'=>real_register.attributes['label'],
-          'direction'=>real_register.attributes['direction'],
+          'direction'=>real_register.label.consumption? ? 'in' : 'out',
           'last_reading'=>last ? last.value : 0,
           'observer_min_threshold'=>nil,
           'observer_max_threshold'=>nil,
@@ -157,7 +157,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'type'=>'register_virtual',
           'updated_at'=>virtual_register.updated_at.as_json,
           'label'=>virtual_register.attributes['label'],
-          'direction'=>virtual_register.attributes['direction'],
+          'direction'=>virtual_register.label.consumption? ? 'in' : 'out',
           'last_reading'=>last ? last.value : 0,
           'observer_min_threshold'=>100,
           'observer_max_threshold'=>5000,
@@ -189,7 +189,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'createables'=>['readings', 'contracts'],
           }
           if register.is_a? Register::Real
-            json['direction'] = register.attributes['direction']
+            json['direction'] = register.label.consumption? ? 'in' : 'out',
             json['pre_decimal_position'] = register.pre_decimal_position
             json['post_decimal_position'] = register.post_decimal_position
             json['low_load_ability'] = register.low_load_ability
@@ -220,7 +220,7 @@ describe Admin::LocalpoolRoda, :request_helper do
                 'type'=>'register_real',
                 'updated_at'=>register.updated_at.as_json,
                 'label'=>register.attributes['label'],
-                'direction'=>register.attributes['direction'],
+                'direction'=>register.label.consumption? ? 'in' : 'out',
                 'last_reading'=> last ? last.value : 0,
                 'observer_min_threshold'=>register.observer_min_threshold,
                 'observer_max_threshold'=>register.observer_max_threshold,
