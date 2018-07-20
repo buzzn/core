@@ -28,8 +28,6 @@ module Register
       other
     ).each_with_object({}) { |item, map| map[Label.new(item.to_s)] = item.to_s.upcase }
 
-    enum direction: { input: 'in', output: 'out' }
-
     belongs_to :market_location
     belongs_to :meter, class_name: 'Meter::Base', foreign_key: :meter_id
 
@@ -81,10 +79,14 @@ module Register
       end
     end
 
-    # FIXME: it would be best to raise an exception here (and even define this class as abstract as well)
-    # but raising here causes lots of test & code to fail.
     def obis
-      nil
+      if label&.consumption? || label == :grid_consumption
+        '1-1:1.8.0'
+      elsif label&.production? || label == :grid_feeding
+        '1-1:2.8.0'
+      else
+        nil
+      end
     end
 
     def low_load_ability

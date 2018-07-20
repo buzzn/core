@@ -7,9 +7,5 @@ module Register
     #   self.direction = Base.directions[:input]
     # end
 
-    def obis
-      '1-1:1.8.0'
-    end
-
   end
 end
