@@ -23,10 +23,22 @@ module Organization
     PREDEFINED_ORGANIZATIONS = %i(buzzn germany)
     mattr_accessor(*PREDEFINED_ORGANIZATIONS)
     PREDEFINED_ORGANIZATIONS.each do |accessor|
+
       # Defines a predicate method, example: @organization.buzzn?
       define_method "#{accessor}?" do
-        self == self.class.send(accessor)
+        self.slug == accessor.to_s
       end
+
+    end
+
+    class << self
+
+      PREDEFINED_ORGANIZATIONS.each do |accessor|
+        define_method accessor.to_s do
+          self.where(:slug => 'buzzn').first
+        end
+      end
+
     end
 
   end
