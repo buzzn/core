@@ -37,6 +37,7 @@ module Admin
     has_many :users
     has_many :organizations
     has_many :contracts
+    has_many :localpool_processing_contracts
     has_many :registers
     has_many :market_locations
     has_many :persons
