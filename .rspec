@@ -3,3 +3,4 @@
 --format documentation
 --tag ~slow
 --tag ~broken
+--tag ~side_effects
