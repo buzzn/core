@@ -32,7 +32,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       'show_display_app' => nil,
       'updatable'=>true,
       'deletable'=>false,
-      'createables' => ['managers', 'organizations', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
+      'createables' => ['managers', 'organizations', 'localpool_processing_contracts', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
       'incompleteness' => {
         'grid_feeding_register' => ['must be filled'],
         'grid_consumption_register' => ['must be filled'],
