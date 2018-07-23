@@ -37,7 +37,7 @@ module SwaggerHelper
     @expected = expected
   end
 
-  def expect_missing(ops)
+  def expect_missing(ops, consumes = ['application/x-www-form-urlencoded'])
     expect(@schema).not_to be_nil
     expected = @expected || {}
     process_rule = ->(name: nil, required: nil, type: nil, options: {}) do
@@ -90,7 +90,7 @@ module SwaggerHelper
         sparam.format = type.to_s
       end
       ops.add_parameter(sparam)
-      ops.consumes = ['application/x-www-form-urlencoded']
+      ops.consumes = consumes
     end
 
     Schemas::Support::Visitor.visit(@schema, &process_rule)
@@ -127,7 +127,7 @@ module SwaggerHelper
           paths.add_path(normalized, spath)
         end
         ops = spath.send("#{method}=", Swagger::Data::Operation.new)
-        ops.produces = ['application/json']
+        ops.produces = options[:produces].nil? ? ['application/json'] : options[:produces]
         path.scan(/\{[^{}]*\}/).each do |param|
           sparam = Swagger::Data::Parameter.new
           sparam.name = param[1..-2].sub(/_[1-9]/, '').gsub('.', '_')
@@ -158,10 +158,14 @@ module SwaggerHelper
         self.current = ops
         real_path = eval "\"#{swagger.basePath}#{path.gsub(/\{/, '#{').sub(/\/$/, '')}\""
         send(method.to_s.upcase, real_path, user)
-        expect([200, 201, 204, 422, 401]).to include response.status
+        expect([200, 201, 204, 422, 401, 403]).to include response.status
         instance_eval &block
         if [:post, :patch, :put].include?(method) || response.status == 422
-          expect_missing(ops)
+          if options[:consumes]
+            expect_missing(ops, options[:consumes])
+          else
+            expect_missing(ops)
+          end
         end
       end
     end
