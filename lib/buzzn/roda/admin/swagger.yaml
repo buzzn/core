@@ -2465,14 +2465,23 @@ paths:
         in: path
         required: true
         type: string
+      - name: file.filename
+        in: formData
+        required: true
+        type: string
+        format: ''
+      - name: file.tempfile
+        in: formData
+        required: true
+        type: string
+        format: ''
       - name: file
         in: formData
-        description: file to upload
         required: true
-        type: file
+        type: hash
       responses:
-        200:
-          description: success
+        201:
+          description: created
   "/localpools/{localpool_id}/contracts/{contract_id}/documents/{document_id}":
     get:
       description: returns the metadata of a document
@@ -2512,14 +2521,14 @@ paths:
         required: true
         type: string
       responses:
-        200:
-          description: success
+        204:
+          description: deleted
   "/localpools/{localpool_id}/contracts/{contract_id}/documents/{document_id}/fetch":
     get:
       description: serves the actual document
       produces:
-      - application/pdf
       - application/octet-stream
+      - application/pdf
       parameters:
       - name: localpool_id
         in: path
@@ -2530,23 +2539,6 @@ paths:
         required: true
         type: string
       - name: document_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/localpools/{localpool_id}/contracts/{contract_id}/documents/generate":
-    get:
-      description: documents the contract by producing a PDF
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: contract_id
         in: path
         required: true
         type: string
@@ -3766,19 +3758,6 @@ paths:
       responses:
         200:
           description: patched
-  "/localpools/{localpool_id}/power-taker-contracts":
-    get:
-      description: returns all the power-taker-contracts of the localpool
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
   "/localpools/{localpool_id}/tariffs":
     get:
       description: returns all the tariffs of the localpool

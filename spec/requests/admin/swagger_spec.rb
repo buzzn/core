@@ -29,6 +29,13 @@ describe Admin, :swagger, :request_helper do
     localpool
   end
 
+  entity!(:document) do
+    document = create(:document, :pdf)
+    contract = localpool.contracts.sample
+    contract.documents << document
+    document
+  end
+
   entity!(:localpool2) { create(:group, :localpool, owner: nil) }
 
   entity!(:localpool3) do
@@ -137,6 +144,27 @@ describe Admin, :swagger, :request_helper do
 
   get '/localpools/{localpool.id}/contracts/{contract.id}/customer' do
     description 'returns the customer of the contract'
+  end
+
+  get '/localpools/{localpool.id}/contracts/{contract.id}/documents' do
+    description 'returns the documents of the contract'
+  end
+
+  post '/localpools/{localpool.id}/contracts/{contract.id}/documents', $admin, :consumes => ['multipart/form-data'] do
+    description 'attaches a document to a contract'
+    schema Schemas::Transactions::Admin::Document::Create
+  end
+
+  get '/localpools/{localpool.id}/contracts/{contract.id}/documents/{document.id}' do
+    description 'returns the metadata of a document'
+  end
+
+  get '/localpools/{localpool.id}/contracts/{contract.id}/documents/{document.id}/fetch', $admin, :produces => ['application/octet-stream', 'application/pdf'] do
+    description 'serves the actual document'
+  end
+
+  delete '/localpools/{localpool.id}/contracts/{contract.id}/documents/{document.id}' do
+    description 'deletes a document'
   end
 
   # meters
@@ -308,24 +336,6 @@ describe Admin, :swagger, :request_helper do
 
   delete '/localpools/{localpool.id}/billing-cycles/{billing_cycle_2.id}' do
     description 'deletes the billing-cycles of the localpool'
-  end
-
-  # localpool-processing-contract
-
-  get '/localpools/{localpool.id}/localpool-processing-contract' do
-    description 'returns the localpool-processing-contract of the localpool'
-  end
-
-  # metering-point-operator-contract
-
-  get '/localpools/{localpool.id}/metering-point-operator-contract' do
-    description 'returns the metering-point-operator-contract of the localpool'
-  end
-
-  # power-taker-contracts
-
-  get '/localpools/{localpool.id}/power-taker-contracts' do
-    description 'returns all the power-taker-contracts of the localpool'
   end
 
   # owner
