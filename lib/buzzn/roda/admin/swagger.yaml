@@ -2482,6 +2482,23 @@ paths:
       responses:
         201:
           description: created
+  "/localpools/{localpool_id}/contracts/{contract_id}/documents/generate":
+    post:
+      description: documents the contract by producing a PDF
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_id}/contracts/{contract_id}/documents/{document_id}":
     get:
       description: returns the metadata of a document
@@ -3323,27 +3340,32 @@ paths:
         enum:
         - de
         - en
-      - name: address.street
+      - name: address.updated_at
         in: formData
         required: true
+        type: string
+        format: date-time
+      - name: address.street
+        in: formData
+        required: false
         type: string
         format: ''
         maxLength: 64
       - name: address.zip
         in: formData
-        required: true
+        required: false
         type: string
         format: ''
         maxLength: 16
       - name: address.city
         in: formData
-        required: true
+        required: false
         type: string
         format: ''
         maxLength: 64
       - name: address.country
         in: formData
-        required: true
+        required: false
         type: string
         enum:
         - AD

@@ -23,7 +23,7 @@ describe Admin, :swagger, :request_helper, :side_effects => true do
   entity!(:bank_account_4) { create(:bank_account, owner: organization) }
 
   entity!(:localpool) do
-    localpool = create(:group, :localpool, owner: person)
+    localpool = create(:group, :localpool, :with_address, owner: person)
     create(:contract, :localpool_processing, localpool: localpool, customer: organization)
     create(:contract, :metering_point_operator, localpool: localpool)
     localpool
@@ -161,6 +161,11 @@ describe Admin, :swagger, :request_helper, :side_effects => true do
 
   get '/localpools/{localpool.id}/contracts/{contract.id}/documents/{document.id}/fetch', $admin, :produces => ['application/octet-stream', 'application/pdf'] do
     description 'serves the actual document'
+  end
+
+  post '/localpools/{localpool.id}/contracts/{contract.id}/documents/generate', $admin do
+    description 'documents the contract by producing a PDF'
+    schema Schemas::Support.Form
   end
 
   delete '/localpools/{localpool.id}/contracts/{contract.id}/documents/{document.id}' do
