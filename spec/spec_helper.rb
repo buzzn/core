@@ -141,5 +141,6 @@ RSpec.configure do |config|
   # Enable the :focus tag, but run all specs when no focus is set, or when running in CI (in case a :focus is forgotten in-code).
   # https://relishapp.com/rspec/rspec-core/v/2-6/docs/filtering/run-all-when-everything-filtered
   config.filter_run(focus: true) unless ENV['CI'].present?
+  config.filter_run_when_matching :side_effects
   config.run_all_when_everything_filtered = true
 end
