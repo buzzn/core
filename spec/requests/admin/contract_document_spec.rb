@@ -12,11 +12,11 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     context 'documents' do
 
-      entity!('contract') { localpool_processing_contract }
+      let!('contract') { localpool_processing_contract }
       let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}/documents" }
 
-      entity!('document') { create(:document, :pdf) }
-      entity!('contract_document') { contract.documents << document }
+      let!('document') { create(:document, :pdf) }
+      let!('contract_document') { contract.documents << document }
 
       context 'list documents' do
 
@@ -77,8 +77,8 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       context 'deletes a document' do
 
-        entity!('deletable_document') { create(:document, :png) }
-        entity!('deletable_contract_document') { contract.documents << deletable_document}
+        let!('deletable_document') { create(:document, :png) }
+        let!('deletable_contract_document') { contract.documents << deletable_document}
 
         let('document_id') { deletable_document.id }
 

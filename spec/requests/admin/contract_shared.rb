@@ -1,33 +1,33 @@
 shared_context 'contract entities', :shared_context => :metadata do
 
-  entity(:person) { create(:person, :with_bank_account) }
+  let(:person) { create(:person, :with_bank_account) }
 
-  entity(:localpool) { create(:group, :localpool, :with_address, owner: person) }
+  let(:localpool) { create(:group, :localpool, :with_address, owner: person) }
 
-  entity(:organization) do
+  let(:organization) do
     buzzn = create(:organization, :with_address)
     buzzn.contact = person
     buzzn.save!
     buzzn
   end
-  entity(:bank_account) { create(:bank_account, owner: organization) }
+  let!(:bank_account) { create(:bank_account, owner: organization) }
 
   before do
     $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
   end
 
-  entity(:metering_point_operator_contract) do
+  let(:metering_point_operator_contract) do
     create(:contract, :metering_point_operator,
            localpool: localpool, contractor_bank_account: bank_account)
   end
 
-  entity(:localpool_power_taker_contract) do
+  let(:localpool_power_taker_contract) do
     create(:contract, :localpool_powertaker,
            customer: organization,
            localpool: localpool)
   end
 
-  entity(:localpool_processing_contract) do
+  let(:localpool_processing_contract) do
     create(:contract, :localpool_processing,
            customer: organization,
            localpool: localpool)
