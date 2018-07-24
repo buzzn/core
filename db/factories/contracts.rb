@@ -61,7 +61,7 @@ FactoryGirl.define do
   trait :localpool_processing do
     contract_number { generate(:localpool_processing_contract_nr) }
     initialize_with { Contract::LocalpoolProcessing.new }
-    contractor Organization::Market.buzzn
+    contractor { Organization::Market.buzzn }
     before(:create) do |contract, evaluator|
       contract.customer = evaluator.customer ? evaluator.customer : contract.localpool.owner
       contract.tax_data = FactoryGirl.build(:tax_data)
