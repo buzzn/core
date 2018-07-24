@@ -89,14 +89,28 @@ describe Admin::LocalpoolRoda, :request_helper do
   let(:empty_json) { [] }
 
   def serialize(localpool)
-    allowed = {}
+    allowed = {
+      'create_metering_point_operator_contract' => {},
+      'create_localpool_processing_contract' => {}
+    }
     unless localpool.address
-      allowed['address'] = ['must be filled']
+      allowed['create_metering_point_operator_contract']['address'] = ['must be filled']
     end
     unless localpool.owner
-      allowed['owner'] = ['must be filled']
+      allowed['create_metering_point_operator_contract']['owner'] = ['must be filled']
+      allowed['create_localpool_processing_contract']['owner'] = ['must be filled']
     end
-    allowed = true if allowed.empty?
+    if localpool.localpool_processing_contracts.any?
+      allowed['create_localpool_processing_contract']['localpool_processing_contract'] = ['cannot be defined']
+    end
+
+    allowed = allowed.map do |k,v|
+      if v.empty?
+        [k, true]
+      else
+        [k, v]
+      end
+    end.to_h
     { 'id'=>localpool.id,
       'type'=>'group_localpool',
       'updated_at'=>localpool.updated_at.as_json,
@@ -117,7 +131,8 @@ describe Admin::LocalpoolRoda, :request_helper do
       'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
       'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil),
       'allowed_actions' => {
-        'create_metering_point_operator_contract'=> allowed
+        'create_metering_point_operator_contract'=> allowed['create_metering_point_operator_contract'],
+        'create_localpool_processing_contract'=> allowed['create_localpool_processing_contract']
       },
       'next_billing_cycle_begin_date' => localpool.start_date.as_json }
   end
@@ -229,6 +244,9 @@ describe Admin::LocalpoolRoda, :request_helper do
           'create_metering_point_operator_contract'=> {
             'address' => ['must be filled'],
             'owner' => ['must be filled']
+          },
+          'create_localpool_processing_contract' => {
+            'owner' => ['must be filled']
           }
         },
         'next_billing_cycle_begin_date' => Date.today.as_json }
@@ -292,7 +310,10 @@ describe Admin::LocalpoolRoda, :request_helper do
         'bank_account' => nil,
         'power_sources' => ['pv'],
         'display_app_url' => nil,
-        'allowed_actions' => { 'create_metering_point_operator_contract'=> { 'address' => ['must be filled'] } },
+        'allowed_actions' => {
+          'create_metering_point_operator_contract'=> {'address' => ['must be filled']},
+          'create_localpool_processing_contract'=> {'localpool_processing_contract' => ['cannot be defined']}
+        },
         'next_billing_cycle_begin_date' => Date.yesterday.as_json }
     end
 

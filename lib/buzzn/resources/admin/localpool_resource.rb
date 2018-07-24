@@ -80,12 +80,20 @@ module Admin
       if allowed?(permissions.metering_point_operator_contract.create)
         allowed[:create_metering_point_operator_contract] = create_metering_point_operator_contract.success? || create_metering_point_operator_contract.errors
       end
+      if allowed?(permissions.localpool_processing_contracts.create)
+        allowed[:create_localpool_processing_contract] = create_localpool_processing_contract.success? || create_localpool_processing_contract.errors
+      end
       allowed
     end
 
     def create_metering_point_operator_contract
       @create_mpo ||= Schemas::PreConditions::Contract::MeteringPointOperatorCreate
       @create_mpo.call(self)
+    end
+
+    def create_localpool_processing_contract
+      @create_lpc ||= Schemas::PreConditions::Contract::LocalpoolProcessingContractCreate
+      @create_lpc.call(self)
     end
 
     def deletable
