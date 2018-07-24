@@ -70,8 +70,8 @@ describe Admin::LocalpoolRoda, :request_helper do
     c.market_location.register.update(label: :production_pv)
     create(:contract, :localpool_processing, localpool: localpool)
     create(:contract, :metering_point_operator, localpool: localpool)
-    localpool.contracts.each do |c|
-      c.customer.update(customer_number: CustomerNumber.create)
+    localpool.contracts.each do |co|
+      co.customer.update(customer_number: CustomerNumber.create)
     end
     create(:contract, :localpool_third_party, localpool: localpool)
     localpool.meters.each { |meter| meter.update(group: localpool) }
@@ -363,7 +363,7 @@ describe Admin::LocalpoolRoda, :request_helper do
        end
     end
 
-  xcontext 'localpool-processing-contract' do
+  context 'localpool-processing-contract' do
 
     let(:expected_json) do
       contract = localpool.localpool_processing_contract
@@ -380,7 +380,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'updatable'=>true,
         'deletable'=>false,
         'documentable'=>true,
-        'tax_number' => "FIXME",
+        'tax_number' => nil, #FIXME: add tax_data to factory etc.
         'tariffs'=>{
           'array'=> contract.tariffs.collect do |t|
             { 'id'=>t.id,
@@ -408,7 +408,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         },
         'contractor'=>{
           'id'=>contract.contractor.id,
-          'type'=>'organization',
+          'type'=>'organization_market',
           'updated_at'=>contract.contractor.updated_at.as_json,
           'name'=>contract.contractor.name,
           'phone'=>contract.contractor.phone,
@@ -418,7 +418,6 @@ describe Admin::LocalpoolRoda, :request_helper do
           'description'=>contract.contractor.description,
           'updatable'=>true,
           'deletable'=>false,
-          'customer_number' => nil,
         },
         'customer'=>{
           'id'=>contract.customer.id,
@@ -438,7 +437,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'deletable'=>false
         },
         'customer_bank_account'=> serialized_bank_account(contract.customer_bank_account).merge('updatable' => true),
-        'contractor_bank_account'=> serialized_bank_account(contract.contractor_bank_account).merge('updatable' => true)
+        'contractor_bank_account'=> nil
       }
     end
 
