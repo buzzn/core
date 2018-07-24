@@ -52,9 +52,13 @@ module Admin
       r.post!(:param=>'type') do |type|
         case type.to_s
         when 'contract_localpool_processing'
-          create_localpool_processing.(resource: localpool_processing_contracts, params: r.params)
+          begin
+            create_localpool_processing.(resource: localpool_processing_contracts, params: r.params)
+          rescue ActiveRecord::StatementInvalid
+            r.response.status = 422
+          end
         else
-          r.response.status 400
+          r.response.status = 400
         end
       end
 
