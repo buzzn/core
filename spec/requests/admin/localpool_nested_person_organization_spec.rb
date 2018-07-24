@@ -48,7 +48,8 @@ describe Admin::LocalpoolRoda, :request_helper do
       'allowed_actions' => {
         'create_metering_point_operator_contract'=> {
           'address' => ['must be filled']
-        }
+        },
+        'create_localpool_processing_contract' => true,
       },
       'next_billing_cycle_begin_date' => '2016-02-01'
     }

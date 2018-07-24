@@ -15,8 +15,9 @@ module Admin
 
     route do |r|
 
-      contracts = shared[LocalpoolRoda::PARENT].contracts
-      localpool_processing_contracts = shared[LocalpoolRoda::PARENT].localpool_processing_contracts
+      localpool = shared[LocalpoolRoda::PARENT]
+      contracts = localpool.contracts
+      localpool_processing_contracts = localpool.localpool_processing_contracts
 
       r.on :id do |id|
 
@@ -52,11 +53,7 @@ module Admin
       r.post!(:param=>'type') do |type|
         case type.to_s
         when 'contract_localpool_processing'
-          begin
-            create_localpool_processing.(resource: localpool_processing_contracts, params: r.params)
-          rescue ActiveRecord::StatementInvalid
-            r.response.status = 422
-          end
+          create_localpool_processing.(resource: localpool_processing_contracts, params: r.params, localpool: localpool)
         else
           r.response.status = 400
         end
