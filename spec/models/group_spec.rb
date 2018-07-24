@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'buzzn/schemas/invariants/group/localpool'
 
 describe Group::Base do
@@ -132,8 +133,13 @@ describe Group::Localpool, :skip_nested do
   let(:person) { create(:person) }
   let(:organization) { create(:organization) }
   let(:localpool) { create(:group, :localpool, owner_person: person) }
+  let!(:contract) { create(:contract, :localpool_processing, :with_tariff, :with_payment, localpool: localpool) }
 
   after do
+    contract.tariffs.each do |t|
+      t.destroy
+    end
+    contract.delete
     localpool.delete
     person.delete
     organization.delete
@@ -146,6 +152,12 @@ describe Group::Localpool, :skip_nested do
     expect { localpool.save }.to raise_error ActiveRecord::StatementInvalid
     localpool.owner_person = nil
     expect { localpool.save }.not_to raise_error
+  end
+
+  it 'fails when two localpool processing contracts are created' do
+    expect do
+      create(:contract, :localpool_processing, :with_tariff, :with_payment, localpool: localpool)
+    end.to raise_error ActiveRecord::StatementInvalid
   end
 
 end
