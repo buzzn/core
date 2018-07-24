@@ -119,4 +119,14 @@ FactoryGirl.define do
       contract.payments = [build(:payment)]
     end
   end
+
+  trait :with_pdf do
+    after(:create) do |contract, _evaluator|
+      # using Transactions::Admin::Contract::Document.call(resource: res, params: {})
+      # is not trivial due to security_context
+      generator = contract.pdf_generator.new(contract)
+      doc = generator.create_pdf_document.document
+      contract.documents << doc
+    end
+  end
 end
