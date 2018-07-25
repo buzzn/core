@@ -15,21 +15,20 @@ module Pdf
     def build_struct
       {
         version: template.version,
-        powergiver: build_powergiver(contract.localpool),
+        powergiver: build_powergiver(contract.customer),
         powertaker: build_powertaker(contract.localpool),
         number: contract.full_contract_number
       }
     end
 
-    def build_powergiver(localpool)
-      partner = legal_partner(localpool.owner)
+    def build_powergiver(customer)
       {
-        name: name(localpool.owner),
-        partner_name: name(partner),
-        address: build_address(localpool.owner.address),
-        fax: localpool.owner.fax,
-        phone: localpool.owner.phone,
-        email: localpool.owner.email
+        name: name(customer),
+        partner_name: name(legal_partner(customer)),
+        address: build_address(customer.address),
+        fax: customer.fax,
+        phone: customer.phone,
+        email: customer.email
       }
     end
 
@@ -41,8 +40,12 @@ module Pdf
 
     def name(person_or_organization)
       case person_or_organization
+      when PersonResource
+        person_or_organization.first_name + ' ' + person_or_organization.last_name
       when Person
         person_or_organization.first_name + ' ' + person_or_organization.last_name
+      when Organization::GeneralResource
+        person_or_organization.name
       when Organization::Base
         person_or_organization.name
       else
@@ -52,8 +55,12 @@ module Pdf
 
     def legal_partner(person_or_organization)
       case person_or_organization
+      when PersonResource
+        person_or_organization
       when Person
         person_or_organization
+      when Organization::GeneralResource
+        person_or_organization.legal_representation
       when Organization::Base
         person_or_organization.legal_representation
       else
