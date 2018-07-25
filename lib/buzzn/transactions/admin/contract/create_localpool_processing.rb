@@ -1,5 +1,5 @@
 require_relative '../contract'
-require_relative '../../../schemas/pre_conditions/contract/localpool_processing_contract.rb'
+require_relative '../../../schemas/pre_conditions/localpool/create_localpool_processing_contract'
 
 class Transactions::Admin::Contract::CreateLocalpoolProcessing < Transactions::Base
 
@@ -17,7 +17,8 @@ class Transactions::Admin::Contract::CreateLocalpoolProcessing < Transactions::B
   end
 
   def localpool_schema(localpool:, **)
-    result = Schemas::PreConditions::Contract::LocalpoolProcessingContractCreate.call(localpool)
+    subject = Schemas::Support::ActiveRecordValidator.new(localpool.object)
+    result = Schemas::PreConditions::Localpool::CreateLocalpoolProcessingContract.call(subject)
     unless result.success?
       raise Buzzn::ValidationError.new(result.errors)
     end
