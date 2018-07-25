@@ -46,6 +46,12 @@ describe Admin, :swagger, :request_helper, order: :defined do
                          :with_legal_representation))
   end
 
+  entity!(:localpool_processing_contract) do
+    {
+      'type' => 'contract_localpool_processing',
+    }
+  end
+
   entity!(:billing_cycle_1) { create(:billing_cycle, localpool: localpool) }
 
   entity!(:billing_cycle_2) { create(:billing_cycle, localpool: localpool) }
@@ -132,6 +138,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   get '/localpools/{localpool.id}/contracts' do
     description 'returns all the contracts of the localpool'
+  end
+
+  post '/localpools/{localpool3.id}/contracts', $admin, {}, localpool_processing_contract do
+    description 'adds new contract to the localpool'
+    schema Schemas::Transactions::Admin::Contract::LocalpoolProcessing::Create
   end
 
   get '/localpools/{localpool.id}/contracts/{contract.id}' do
