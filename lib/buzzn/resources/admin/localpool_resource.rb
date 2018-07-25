@@ -87,13 +87,13 @@ module Admin
     end
 
     def create_metering_point_operator_contract
-      @create_mpo ||= Schemas::PreConditions::Contract::MeteringPointOperatorCreate
-      @create_mpo.call(self)
+      subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+      Schemas::PreConditions::Contract::MeteringPointOperatorCreate.call(subject)
     end
 
     def create_localpool_processing_contract
-      @create_lpc ||= Schemas::PreConditions::Contract::LocalpoolProcessingContractCreate
-      @create_lpc.call(self)
+      subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+      Schemas::PreConditions::Localpool::CreateLocalpoolProcessingContract.call(subject)
     end
 
     def deletable
