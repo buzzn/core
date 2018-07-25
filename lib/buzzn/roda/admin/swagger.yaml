@@ -1431,6 +1431,47 @@ paths:
       responses:
         201:
           description: created
+  "/localpools/{localpool3_id}/contracts":
+    post:
+      description: adds new contract to the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool3_id
+        in: path
+        required: true
+        type: string
+      - name: signing_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: termination_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: end_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: tax_number
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        201:
+          description: created
   "/localpools/{localpool3_id}/organization-owner":
     patch:
       description: updates the organization owner of the localpool
