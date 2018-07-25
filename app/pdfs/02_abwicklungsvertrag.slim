@@ -268,7 +268,8 @@ html
       p.is-indented
         b #{powergiver.name}
           <br/>#{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}
-          <br/>#{powergiver.partner_name}
+        - if powergiver.partner_name != powergiver.name
+          <br/>vertreten durch #{powergiver.partner_name}
       p hiermit
       p.is-indented
         b BUZZN GmbH
