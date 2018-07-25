@@ -29,7 +29,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'id'=>register.id,
             'type'=>'register_real',
             'label'=>'DEMARCATION_PV',
-            'direction'=>register.label.consumption? ? 'in' : 'out',
+            'direction'=>register.consumption? ? 'in' : 'out',
             'last_reading'=>last ? last.value : 0,
             'observer_min_threshold'=>10,
             'observer_max_threshold'=>100,
@@ -50,11 +50,13 @@ describe Admin::LocalpoolRoda, :request_helper do
         let(:wrong_json) do
           {
             'label'=>['must be one of: CONSUMPTION, CONSUMPTION_COMMON, DEMARCATION_PV, DEMARCATION_CHP, DEMARCATION_WIND, DEMARCATION_WATER, PRODUCTION_PV, PRODUCTION_CHP, PRODUCTION_WIND, PRODUCTION_WATER, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER'],
-            'metering_point_id'=>['size cannot be greater than 64'],
+            'share_with_group'=>['must be boolean'],
+            'share_publicly'=>['must be boolean'],
             'observer_enabled'=>['must be boolean'],
             'observer_min_threshold'=>['must be an integer'],
             'observer_max_threshold'=>['must be an integer'],
             'observer_offline_monitoring'=>['must be boolean'],
+            'metering_point_id'=>['size cannot be greater than 64'],
             'updated_at'=>['is missing']
           }
         end
@@ -84,6 +86,8 @@ describe Admin::LocalpoolRoda, :request_helper do
                 label: 'grid',
                 pre_decimal_position: 'pre',
                 post_decimal_position: 'post',
+                share_with_group: 'why not',
+                share_publicly: 'never',
                 low_load_ability: 'dunno',
                 observer_enabled: 'dunno',
                 observer_min_threshold: 'nothing',
@@ -98,7 +102,9 @@ describe Admin::LocalpoolRoda, :request_helper do
           PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                 updated_at: register.updated_at,
                 metering_point_id: '123456',
-                label: Register::Base.labels[:demarcation_pv],
+                label: Register::Meta.labels[:demarcation_pv],
+                share_with_group: true,
+                share_publicly: false,
                 observer_enabled: true,
                 observer_min_threshold: 10,
                 observer_max_threshold: 100,
@@ -106,15 +112,16 @@ describe Admin::LocalpoolRoda, :request_helper do
           expect(response).to have_http_status(200)
           register.reload
           expect(register.metering_point_id).to eq '123456'
-          expect(register.label).to eq 'demarcation_pv'
-          expect(register.observer_enabled).to eq true
-          expect(register.observer_min_threshold).to eq 10
-          expect(register.observer_max_threshold).to eq 100
-          expect(register.observer_offline_monitoring).to eq true
+          expect(register.meta.label).to eq 'demarcation_pv'
+          expect(register.meta.share_with_group).to eq true
+          expect(register.meta.share_publicly).to eq false
+          expect(register.meta.observer_enabled).to eq true
+          expect(register.meta.observer_min_threshold).to eq 10
+          expect(register.meta.observer_max_threshold).to eq 100
+          expect(register.meta.observer_offline_monitoring).to eq true
 
           result = json
-          # TODO fix it: our time setup does not allow
-          #expect(result.delete('updated_at')).to be > old.as_json
+          expect(result.delete('updated_at')).to be > old.as_json
           expect(result.delete('updated_at')).not_to eq old.as_json
           expect(result.to_yaml).to eq updated_json.to_yaml
         end
@@ -131,8 +138,8 @@ describe Admin::LocalpoolRoda, :request_helper do
           'id'=>real_register.id,
           'type'=>'register_real',
           'updated_at'=>real_register.updated_at.as_json,
-          'label'=>real_register.attributes['label'],
-          'direction'=>real_register.label.consumption? ? 'in' : 'out',
+          'label'=>real_register.meta.attributes['label'],
+          'direction'=>real_register.consumption? ? 'in' : 'out',
           'last_reading'=>last ? last.value : 0,
           'observer_min_threshold'=>nil,
           'observer_max_threshold'=>nil,
@@ -179,17 +186,17 @@ describe Admin::LocalpoolRoda, :request_helper do
             'updated_at'=>register.updated_at.as_json,
             'label'=>register.attributes['label'],
             'last_reading'=>last ? last.value : 0,
-            'observer_min_threshold'=>register.observer_min_threshold,
-            'observer_max_threshold'=>register.observer_max_threshold,
-            'observer_enabled'=>register.observer_enabled,
-            'observer_offline_monitoring'=>register.observer_offline_monitoring,
+            'observer_min_threshold'=>register.meta.observer_min_threshold,
+            'observer_max_threshold'=>register.meta.observer_max_threshold,
+            'observer_enabled'=>register.meta.observer_enabled,
+            'observer_offline_monitoring'=>register.meta.observer_offline_monitoring,
             'meter_id' => register.meter_id,
             'updatable'=> true,
             'deletable'=> false,
             'createables'=>['readings', 'contracts'],
           }
           if register.is_a? Register::Real
-            json['direction'] = register.label.consumption? ? 'in' : 'out',
+            json['direction'] = register.consumption? ? 'in' : 'out',
             json['pre_decimal_position'] = register.pre_decimal_position
             json['post_decimal_position'] = register.post_decimal_position
             json['low_load_ability'] = register.low_load_ability
@@ -213,19 +220,19 @@ describe Admin::LocalpoolRoda, :request_helper do
         context "as #{type}" do
           let(:virtual_registers_json) { [virtual_register_json] }
           let(:real_registers_json) do
-            real_register.meter.registers.collect do |register|
+            real_register.meter.registers.reload.collect do |register|
               last = register.readings.order('date').last
               {
                 'id'=>register.id,
                 'type'=>'register_real',
                 'updated_at'=>register.updated_at.as_json,
-                'label'=>register.attributes['label'],
-                'direction'=>register.label.consumption? ? 'in' : 'out',
+                'label'=>register.meta.attributes['label'],
+                'direction'=>register.consumption? ? 'in' : 'out',
                 'last_reading'=> last ? last.value : 0,
-                'observer_min_threshold'=>register.observer_min_threshold,
-                'observer_max_threshold'=>register.observer_max_threshold,
-                'observer_enabled'=>register.observer_enabled,
-                'observer_offline_monitoring'=>register.observer_offline_monitoring,
+                'observer_min_threshold'=>register.meta.observer_min_threshold,
+                'observer_max_threshold'=>register.meta.observer_max_threshold,
+                'observer_enabled'=>register.meta.observer_enabled,
+                'observer_offline_monitoring'=>register.meta.observer_offline_monitoring,
                 'meter_id' => register.meter_id,
                 'updatable'=> true,
                 'deletable'=> true,

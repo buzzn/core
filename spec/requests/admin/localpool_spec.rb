@@ -65,9 +65,9 @@ describe Admin::LocalpoolRoda, :request_helper do
     localpool = create(:group, :localpool)
     manager.add_role(Role::GROUP_ADMIN, localpool)
     c = create(:contract, :localpool_powertaker, localpool: localpool)
-    c.market_location.register.update(label: :production_pv)
+    c.market_location.register.meta.production_pv!
     c = create(:contract, :localpool_powertaker, localpool: localpool)
-    c.market_location.register.update(label: :production_pv)
+    c.market_location.register.meta.update(label: :production_pv)
     create(:contract, :localpool_processing, localpool: localpool)
     create(:contract, :metering_point_operator, localpool: localpool)
     localpool.contracts.each do |co|
@@ -676,7 +676,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'type' => 'market_location',
           'updated_at' => market_location.updated_at.as_json,
           'name' => market_location.name,
-          'kind' => register.label.production? ? 'production' : 'consumption',
+          'kind' => register.kind.to_s,
           'market_location_id' => nil,
           'updatable' => false,
           'deletable' => false,
@@ -684,11 +684,11 @@ describe Admin::LocalpoolRoda, :request_helper do
             'id' => register.id,
             'type' => 'register_real',
             'updated_at'=> register.updated_at.as_json,
-            'direction' => register.label.production? ? 'out' : 'in',
+            'direction' => register.meta.label.production? ? 'out' : 'in',
             'pre_decimal_position' => 6,
             'post_decimal_position' => register.post_decimal_position,
             'low_load_ability' => false,
-            'label' => register.attributes['label'],
+            'label' => register.meta.attributes['label'],
             'last_reading' => 0,
             'observer_min_threshold' => nil,
             'observer_max_threshold' => nil,

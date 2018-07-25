@@ -2990,6 +2990,12 @@ paths:
         in: path
         required: true
         type: string
+      - name: name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: label
         in: formData
         required: false
@@ -3010,12 +3016,14 @@ paths:
         - GRID_CONSUMPTION_CORRECTED
         - GRID_FEEDING_CORRECTED
         - OTHER
-      - name: metering_point_id
+      - name: share_with_group
         in: formData
         required: false
-        type: string
-        format: ''
-        maxLength: 64
+        type: boolean
+      - name: share_publicly
+        in: formData
+        required: false
+        type: boolean
       - name: observer_enabled
         in: formData
         required: false
@@ -3036,7 +3044,7 @@ paths:
         in: formData
         required: false
         type: boolean
-      - name: name
+      - name: metering_point_id
         in: formData
         required: false
         type: string

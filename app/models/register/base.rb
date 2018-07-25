@@ -10,54 +10,38 @@ module Register
 
     include Filterable
 
-    class Label < String
-
-      ['production', 'consumption', 'demarcation', 'grid'].each do |method|
-        define_method "#{method}?" do
-          self.to_s.start_with?(method)
-        end
-      end
-
-    end
-
-    enum label: %i(consumption consumption_common
-      demarcation_pv demarcation_chp demarcation_wind demarcation_water
-      production_pv production_chp production_wind production_water
-      grid_consumption grid_feeding
-      grid_consumption_corrected grid_feeding_corrected
-      other
-    ).each_with_object({}) { |item, map| map[Label.new(item.to_s)] = item.to_s.upcase }
-
     belongs_to :market_location
     belongs_to :meter, class_name: 'Meter::Base', foreign_key: :meter_id
 
     has_one :group, through: :meter
     has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'
 
-    scope :real,    -> { where(type: [Register::Input, Register::Output]) }
+    has_one :meta, class_name: 'Meta', foreign_key: :register_id
+
+    scope :real,    -> { where(type: Register::Reak) }
     scope :virtual, -> { where(type: Register::Virtual) }
 
     scope :consumption_production, -> do
-      by_labels(*Register::Base.labels.select { |label, _| label.production? || label.consumption? }.values)
+      by_labels(*Register::Meta.labels.select { |label, _| label.production? || label.consumption? }.values)
     end
     scope :production_consumption, -> { consumption_production }
 
     scope :production, -> do
-      by_labels(*Register::Base.labels.select { |label, _| label.production? }.values)
+      by_labels(*Register::Meta.labels.select { |label, _| label.production? }.values)
     end
 
     scope :grid_consumption_production, -> do
-      by_labels(*Register::Base.labels.select { |label, _| label.production? || label.consumption? | label.grid? }.values)
+      by_labels(*Register::Meta.labels.select { |label, _| label.production? || label.consumption? | label.grid? }.values)
     end
     scope :grid_production_consumption, -> { grid_consumption_production }
 
     scope :by_group, ->(group) { group ? self.where(group: group.id) : self.where(group: nil) }
 
     scope :by_labels, ->(*labels) do
-      if (Register::Base.labels.values & labels).sort != labels.sort
+      if (Register::Meta.labels.values & labels).sort != labels.sort
         raise ArgumentError.new("#{labels.inspect} needs to be subset of #{Register::Base.labels.values}")
       end
-      self.where('label in (?)', labels)
+      self.joins(:meta).where('register_meta.label in (?)', labels)
     end
 
     # permissions helpers
@@ -80,12 +64,28 @@ module Register
     end
 
     def obis
-      if label&.consumption? || label == :grid_consumption
+      if meta&.label&.consumption? || meta&.label == :grid_consumption
         '1-1:1.8.0'
-      elsif label&.production? || label == :grid_feeding
+      elsif meta&.label&.production? || meta&.label == :grid_feeding
         '1-1:2.8.0'
       else
         nil
+      end
+    end
+
+    def kind
+      if meta.label.production?
+        :production
+      elsif meta.label.consumption?
+        :consumption
+      else
+        :system
+      end
+    end
+
+    [:consumption, :production, :system].each do |method|
+      define_method("#{method}?") do
+        kind == method
       end
     end
 
@@ -99,6 +99,12 @@ module Register
 
     def post_decimal_position
       1
+    end
+
+    # HACK for nested invariant
+
+    def meta_for_invariant
+      Schemas::Support::ActiveRecordValidator.new(meta)
     end
 
   end

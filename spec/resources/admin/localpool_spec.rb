@@ -8,8 +8,7 @@ describe Admin::LocalpoolResource do
   context 'power_sources' do
 
     def add_register_with_label(pool, label)
-      meter = create(:meter, :real, register_direction: :output, group: pool.object)
-      meter.registers.first.send("#{label}!")
+      create(:meter, :real, register_label: label, group: pool.object)
       pool.object.reload
     end
 
@@ -91,9 +90,7 @@ describe Admin::LocalpoolResource do
 
       context 'with register' do
         entity(:input_register) do
-          r = create(:meter, :real, group: localpool).registers.first
-          r.update(label: :grid_consumption)
-          r
+          create(:meter, :real, register_label: :grid_consumption, group: localpool).registers.first
         end
 
         context 'without metering_point_id' do
@@ -129,9 +126,7 @@ describe Admin::LocalpoolResource do
 
       context 'with register' do
         entity(:output_register) do
-          r = create(:meter, :real, register_direction: :output, group: localpool).registers.first
-          r.update(label: :grid_feeding)
-          r
+          create(:meter, :real, register_label: :grid_feeding, group: localpool).registers.first
         end
 
         context 'without metering_point_id' do

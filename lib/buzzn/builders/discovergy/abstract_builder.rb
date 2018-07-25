@@ -50,11 +50,11 @@ class Builders::Discovergy::AbstractBuilder
   end
 
   def production?(register)
-    register.label.production? || register.grid_consumption?
+    register.production? || register.meta.grid_consumption?
   end
 
   def consumption?(register)
-    register.label.consumption? || register.grid_feeding?
+    register.consumption? || register.meta.grid_feeding?
   end
 
   def adjust(val, register)

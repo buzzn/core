@@ -10,19 +10,19 @@ FactoryGirl.define do
 
     trait :consumption_common do
       after(:build) do |market_location, evaluator|
-        create(:register, :consumption_common, market_location: market_location)
+        create(:register, :real, :consumption_common, market_location: market_location)
       end
     end
 
     trait :consumption do
       after(:build) do |market_location, evaluator|
-        create(:register, :consumption, market_location: market_location)
+        create(:register, :real, :consumption, market_location: market_location)
       end
     end
 
     trait :production_water do
       after(:build) do |market_location, evaluator|
-        create(:register, :production_water, market_location: market_location)
+        create(:register, :real, :production_water, market_location: market_location)
       end
     end
 

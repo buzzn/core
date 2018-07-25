@@ -11,4 +11,10 @@ class Transactions::Admin::Register::UpdateReal < Transactions::Base
     Schemas::Transactions::Admin::Register::UpdateReal
   end
 
+  def persist(resource:, params:, **)
+    resource.object.meta.update!(params.except(:metering_point_id, :updated_at))
+    super(resource: resource,
+          params: params.slice(:metering_point_id, :updated_at))
+  end
+
 end
