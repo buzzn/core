@@ -57,7 +57,13 @@ module Schemas::Support
     end
 
     def get(attr)
-      attributes[attr.to_s] || @model.send(attr)
+      if !attributes[attr.to_s].nil?
+        attributes[attr.to_s]
+      elsif @model.send(attr).is_a? ActiveRecord::Base
+        ActiveRecordValidator.new(@model.send(attr))
+      else
+        @model.send(attr)
+      end
     end
     alias :[] :get
 
@@ -67,6 +73,10 @@ module Schemas::Support
 
     def validate(schema)
       schema.call(self)
+    end
+
+    def model_is_a?(clazz)
+      @model.is_a?(clazz)
     end
 
   end

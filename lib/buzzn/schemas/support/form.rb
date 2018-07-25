@@ -10,12 +10,15 @@ module Schemas::Support
       config.messages_file = ERRORS
 
       predicates(Predicates)
+
     end
   end
 
   Schema = Dry::Validation.Schema(build: false) do
     configure do
       config.messages_file = ERRORS
+
+      predicates(Predicates)
     end
   end
 
