@@ -5,7 +5,7 @@ shared_context 'contract entities', :shared_context => :metadata do
   let(:localpool) { create(:group, :localpool, :with_address, owner: person) }
 
   let(:organization) do
-    buzzn = create(:organization, :with_address)
+    buzzn = create(:organization, :with_address, :with_legal_representation)
     buzzn.contact = person
     buzzn.save!
     buzzn
