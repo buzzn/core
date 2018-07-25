@@ -70,8 +70,8 @@ describe Admin::LocalpoolRoda, :request_helper do
     c.market_location.register.update(label: :production_pv)
     create(:contract, :localpool_processing, localpool: localpool)
     create(:contract, :metering_point_operator, localpool: localpool)
-    localpool.contracts.each do |c|
-      c.customer.update(customer_number: CustomerNumber.create)
+    localpool.contracts.each do |co|
+      co.customer.update(customer_number: CustomerNumber.create)
     end
     create(:contract, :localpool_third_party, localpool: localpool)
     localpool.meters.each { |meter| meter.update(group: localpool) }
@@ -89,14 +89,28 @@ describe Admin::LocalpoolRoda, :request_helper do
   let(:empty_json) { [] }
 
   def serialize(localpool)
-    allowed = {}
+    allowed = {
+      'create_metering_point_operator_contract' => {},
+      'create_localpool_processing_contract' => {}
+    }
     unless localpool.address
-      allowed['address'] = ['must be filled']
+      allowed['create_metering_point_operator_contract']['address'] = ['must be filled']
     end
     unless localpool.owner
-      allowed['owner'] = ['must be filled']
+      allowed['create_metering_point_operator_contract']['owner'] = ['must be filled']
+      allowed['create_localpool_processing_contract']['owner'] = ['must be filled']
     end
-    allowed = true if allowed.empty?
+    if localpool.localpool_processing_contracts.any?
+      allowed['create_localpool_processing_contract']['localpool_processing_contract'] = ['cannot be defined']
+    end
+
+    allowed = allowed.map do |k,v|
+      if v.empty?
+        [k, true]
+      else
+        [k, v]
+      end
+    end.to_h
     { 'id'=>localpool.id,
       'type'=>'group_localpool',
       'updated_at'=>localpool.updated_at.as_json,
@@ -111,13 +125,14 @@ describe Admin::LocalpoolRoda, :request_helper do
       'show_display_app' => localpool.show_display_app,
       'updatable'=>true,
       'deletable'=>localpool.owner.nil?,
-      'createables' => ['managers', 'organizations', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
+      'createables' => ['managers', 'organizations', 'localpool_processing_contracts', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
       'incompleteness' => serialized_incompleteness(localpool),
       'bank_account' => serialized_bank_account(localpool.bank_account),
       'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
       'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil),
       'allowed_actions' => {
-        'create_metering_point_operator_contract'=> allowed
+        'create_metering_point_operator_contract'=> allowed['create_metering_point_operator_contract'],
+        'create_localpool_processing_contract'=> allowed['create_localpool_processing_contract']
       },
       'next_billing_cycle_begin_date' => localpool.start_date.as_json }
   end
@@ -221,13 +236,16 @@ describe Admin::LocalpoolRoda, :request_helper do
         'show_display_app' => true,
         'updatable'=>true,
         'deletable'=>true,
-        'createables' => ['managers', 'organizations', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
+        'createables' => ['managers', 'organizations', 'localpool_processing_contracts', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
         'incompleteness' => serialized_incompleteness(nil),
         'bank_account' => nil,
         'power_sources' => [],
         'allowed_actions' => {
           'create_metering_point_operator_contract'=> {
             'address' => ['must be filled'],
+            'owner' => ['must be filled']
+          },
+          'create_localpool_processing_contract' => {
             'owner' => ['must be filled']
           }
         },
@@ -287,12 +305,15 @@ describe Admin::LocalpoolRoda, :request_helper do
         'show_display_app' => false,
         'updatable'=>true,
         'deletable'=>false,
-        'createables' => ['managers', 'organizations', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
+        'createables' => ['managers', 'organizations', 'localpool_processing_contracts', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
         'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => nil,
         'power_sources' => ['pv'],
         'display_app_url' => nil,
-        'allowed_actions' => { 'create_metering_point_operator_contract'=> { 'address' => ['must be filled'] } },
+        'allowed_actions' => {
+          'create_metering_point_operator_contract'=> {'address' => ['must be filled']},
+          'create_localpool_processing_contract'=> {'localpool_processing_contract' => ['cannot be defined']}
+        },
         'next_billing_cycle_begin_date' => Date.yesterday.as_json }
     end
 
@@ -380,6 +401,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'updatable'=>true,
         'deletable'=>false,
         'documentable'=>true,
+        'tax_number' => nil, #FIXME: add tax_data to factory etc.
         'tariffs'=>{
           'array'=> contract.tariffs.collect do |t|
             { 'id'=>t.id,
@@ -407,7 +429,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         },
         'contractor'=>{
           'id'=>contract.contractor.id,
-          'type'=>'organization',
+          'type'=>'organization_market',
           'updated_at'=>contract.contractor.updated_at.as_json,
           'name'=>contract.contractor.name,
           'phone'=>contract.contractor.phone,
@@ -417,7 +439,6 @@ describe Admin::LocalpoolRoda, :request_helper do
           'description'=>contract.contractor.description,
           'updatable'=>true,
           'deletable'=>false,
-          'customer_number' => nil,
         },
         'customer'=>{
           'id'=>contract.customer.id,
@@ -437,7 +458,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'deletable'=>false
         },
         'customer_bank_account'=> serialized_bank_account(contract.customer_bank_account).merge('updatable' => true),
-        'contractor_bank_account'=> serialized_bank_account(contract.contractor_bank_account).merge('updatable' => true)
+        'contractor_bank_account'=> nil
       }
     end
 

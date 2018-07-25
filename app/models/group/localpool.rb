@@ -17,12 +17,15 @@ module Group
     has_many :tariffs, dependent: :destroy, class_name: 'Contract::Tariff', foreign_key: :group_id
     has_many :billing_cycles, dependent: :destroy
 
+    has_many :metering_point_operator_contracts, class_name: 'Contract::MeteringPointOperator', foreign_key: :localpool_id
+    has_many :localpool_processing_contracts, class_name: 'Contract::LocalpoolProcessing', foreign_key: :localpool_id
+
     def metering_point_operator_contract
-      Contract::MeteringPointOperator.where(localpool_id: self).first
+      self.metering_point_operator_contracts.first
     end
 
     def localpool_processing_contract
-      Contract::LocalpoolProcessing.where(localpool_id: self).first
+      self.localpool_processing_contracts.first
     end
 
     def localpool_power_taker_contracts
