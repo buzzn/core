@@ -42,3 +42,4 @@ en:
     belongs_to_contract?: 'must belong to contract'
     match_register?: 'must match register'
     grow_in_time?: 'must grow in time'
+    mtype?: 'wrong type, must be %{type}'
