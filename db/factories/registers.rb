@@ -4,9 +4,7 @@ FactoryGirl.define do
       readings nil
     end
 
-    label                 Register::Base.labels[:consumption]
-    share_with_group      true
-    share_publicly        false
+    meta { FactoryGirl.build(:meta) }
 
     after(:create) do |register, transients|
       register.readings = transients.readings if transients.readings
@@ -51,7 +49,6 @@ FactoryGirl.define do
     trait :output do
       real
       initialize_with { Register::Real.new }
-      label           Register::Base.labels[:production_pv]
     end
 
     trait :with_market_location do
@@ -60,46 +57,13 @@ FactoryGirl.define do
       end
     end
 
-    # This register is publicly connected. Only those have a metering point id
-    trait :grid_connected do
-      metering_point_id # uses sequence
-    end
-
-    trait :grid_input do
-      input
-      grid_connected
-      label Register::Base.labels[:grid_consumption]
-    end
-
-    trait :grid_output do
-      output
-      grid_connected
-      label Register::Base.labels[:grid_feeding]
-    end
-
-    trait :production_bhkw do
-      output
-      label Register::Base.labels[:production_chp]
-    end
-
-    trait :production_pv do
-      output
-      label Register::Base.labels[:production_pv]
-    end
-
-    trait :production_water do
-      output
-      label Register::Base.labels[:production_water]
-    end
-
-    trait :consumption do
-      input
-      label Register::Base.labels[:consumption]
-    end
-
-    trait :consumption_common do
-      input
-      label Register::Base.labels[:consumption_common]
+    [:grid_consumption, :grid_feeding,
+     :production_bhkw, :production_pv, :production_water, :production_wind,
+     :consumption, :consumption_common
+    ].each do |name|
+      trait name do
+        meta { FactoryGirl.build(:meta, name) }
+      end
     end
   end
 end

@@ -3,13 +3,13 @@ SampleData.meters = OpenStruct.new(
   grid: create(:meter, :real, :two_way,
     group: SampleData.localpools.people_power,
     registers: [
-      create(:register, :grid_output,
+      create(:register, :real, :grid_feeding,
         readings: [
           build(:reading, :setup, date: '2016-01-01', raw_value: 1_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40', register: nil),
           build(:reading, :regular, date: '2016-12-31', raw_value: 12_000_000, register: nil)
         ]
             ),
-      create(:register, :grid_input,
+      create(:register, :real, :grid_consumption,
         readings: [
           build(:reading, :setup, date: '2016-01-01', raw_value: 2_000, comment: 'Ablesung bei Einbau; Wandlerfaktor 40', register: nil),
           build(:reading, :regular, date: '2016-12-31', raw_value: 66_000_000, register: nil)

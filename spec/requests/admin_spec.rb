@@ -129,13 +129,13 @@ describe Admin::Roda, :request_helper do
                   'id'=>register.id,
                   'type'=>'register_real',
                   'updated_at'=>register.updated_at.as_json,
-                  'label'=>register.attributes['label'],
+                  'label'=>register.meta.attributes['label'],
                   'direction'=>'in',
                   'last_reading'=> 0,
-                  'observer_min_threshold'=>register.observer_min_threshold,
-                  'observer_max_threshold'=>register.observer_max_threshold,
-                  'observer_enabled'=>register.observer_enabled,
-                  'observer_offline_monitoring'=>register.observer_offline_monitoring,
+                  'observer_min_threshold'=>register.meta.observer_min_threshold,
+                  'observer_max_threshold'=>register.meta.observer_max_threshold,
+                  'observer_enabled'=>register.meta.observer_enabled,
+                  'observer_offline_monitoring'=>register.meta.observer_offline_monitoring,
                   'meter_id' => register.meter_id,
                   'updatable'=> false,
                   'deletable'=> false,
@@ -247,7 +247,7 @@ describe Admin::Roda, :request_helper do
         GET '/test/organizations', $admin, include: 'contact:[address], legal_representation, address'
 
         expect(response).to have_http_status(200)
-        result = json['array'].first
+        result = json['array'].find { |s| s['address'] }
         expect(result).to has_nested_json(:address, :id)
         expect(result).to has_nested_json(:contact, :id)
         expect(result).to has_nested_json(:contact, :address, :id)

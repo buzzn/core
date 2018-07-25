@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :meter do
     transient do
       registers nil
-      register_direction :input
+      register_label :consumption
     end
 
     datasource :standard_profile
@@ -23,7 +23,7 @@ FactoryGirl.define do
           meter.registers = evaluator.registers
           meter.direction_number = meter.registers.size == 1 ? :one_way_meter : :two_way_meter
         else
-          meter.registers = [FactoryGirl.build(:register, evaluator.register_direction, meter: meter)]
+          meter.registers = [FactoryGirl.build(:register, :real, evaluator.register_label, meter: meter)]
         end
       end
     end

@@ -22,7 +22,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     entity!(:register) { meter.register }
 
-    entity!(:register2) { create(:meter, :real, register_direction: :output, group: group).registers.first }
+    entity!(:register2) { create(:meter, :real, register_label: :production_pv, group: group).registers.first }
 
     entity!(:formula_part) { register.formula_parts.first }
 
@@ -47,13 +47,13 @@ describe Admin::LocalpoolRoda, :request_helper do
                 'id'=>part.operand.id,
                 'type'=>'register_real',
                 'updated_at'=> part.operand.updated_at.as_json,
-                'label'=>part.operand.attributes['label'],
-                'direction'=>part.operand.label.consumption? ? 'in' : 'out',
+                'label'=>part.operand.meta.attributes['label'],
+                'direction'=>part.operand.meta.label.consumption? ? 'in' : 'out',
                 'last_reading'=>0,
-                'observer_min_threshold'=> part.operand.observer_min_threshold,
-                'observer_max_threshold'=> part.operand.observer_max_threshold,
-                'observer_enabled'=> part.operand.observer_enabled,
-                'observer_offline_monitoring'=> part.operand.observer_offline_monitoring,
+                'observer_min_threshold'=> part.operand.meta.observer_min_threshold,
+                'observer_max_threshold'=> part.operand.meta.observer_max_threshold,
+                'observer_enabled'=> part.operand.meta.observer_enabled,
+                'observer_offline_monitoring'=> part.operand.meta.observer_offline_monitoring,
                 'meter_id' => part.operand.meter_id,
                 'updatable'=>false,
                 'deletable'=>false,

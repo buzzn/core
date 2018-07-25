@@ -1,4 +1,4 @@
 require_relative '../register'
-require_relative '../../../constraints/register/base'
+require_relative '../../../constraints/register/meta'
 
-Schemas::Transactions::Admin::Register::CreateReal = Schemas::Constraints::Register::Base
+Schemas::Transactions::Admin::Register::CreateReal = Schemas::Constraints::Register::Meta

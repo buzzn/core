@@ -34,9 +34,9 @@ class Services::Datasource::Discovergy::OptimizedGroup
     group.registers.each do |r|
       next unless r.meter.discovergy?
       next if r.is_a?(Register::Substitute)
-      if r.label.production? || r.grid_consumption?
+      if r.production? || r.meta.grid_consumption?
         plus << discovergy_id(r.meter)
-      elsif r.label.consumption? || r.grid_feeding?
+      elsif r.consumption? || r.meta.grid_feeding?
         minus << discovergy_id(r.meter)
       end
     end

@@ -29,7 +29,7 @@ describe MarketLocation do
   describe 'consumption?' do
     let(:market_location) { create(:market_location, register_trait) }
     before { market_location.registers.reload }
-    subject { market_location.consumption? }
+    subject { market_location.register.consumption? }
     context 'when register has label consumption' do
       let(:register_trait) { :consumption }
       it { is_expected.to eq(true) }

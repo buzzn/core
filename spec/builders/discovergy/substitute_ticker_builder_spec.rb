@@ -17,10 +17,10 @@ describe Builders::Discovergy::SubstituteTickerBuilder do
     labels_map.each do |serial, labels|
       registers =
         if labels.size == 1
-          [build(:register, :real, label: labels.first)]
+          [build(:register, :real, labels.first.to_sym)]
         else
-          [build(:register, :real, :input, label: :grid_consumption),
-           build(:register, :real, :output, label: :grid_feeding)]
+          [build(:register, :real, :grid_consumption),
+           build(:register, :real, :grid_feeding)]
         end
       create(:meter, :real,
              group: group,

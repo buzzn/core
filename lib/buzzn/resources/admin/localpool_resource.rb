@@ -54,8 +54,8 @@ module Admin
 
     # pv, chp, wind, water, etc
     def all_power_sources
-      prodcution_registers = object.registers.select(:label).production
-      labels = prodcution_registers.collect { |register| register.label.sub('production_', '') }
+      prodcution_registers = object.registers.production.includes(:meta)
+      labels = prodcution_registers.collect { |register| register.meta.label.sub('production_', '') }
       labels.uniq
     end
     alias power_sources all_power_sources
