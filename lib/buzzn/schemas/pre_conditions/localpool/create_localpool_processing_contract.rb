@@ -1,12 +1,12 @@
-require_relative '../contract'
+require_relative '../localpool'
 require_relative '../person'
 require_relative '../organization'
 require './app/models/organization/general.rb'
 require './app/models/person.rb'
 
-module Schemas::PreConditions::Contract
+module Schemas::PreConditions::Localpool
 
-  LocalpoolProcessingContractCreate = Schemas::Support.Schema do
+  CreateLocalpoolProcessingContract = Schemas::Support.Schema do
 
     # only one localpool_processing_contract is allowed
     required(:localpool_processing_contract).value(:none?)
