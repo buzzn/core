@@ -283,6 +283,101 @@ describe Admin::LocalpoolRoda, :request_helper do
       end
     end
 
+    context 'POST Localpool Processing' do
+
+      # we need a clean pool without any contracts
+      let(:person) { create(:person, :with_bank_account) }
+      let(:localpool) { create(:group, :localpool, :with_address, owner: person) }
+
+      let('path') { "/localpools/#{localpool.id}/contracts" }
+
+      let('invalid_type_json') do
+        {
+          'type' => 'contract_with_the_devil'
+        }
+      end
+
+      let('missing_everything_json') do
+        {
+          'type' => 'contract_localpool_processing',
+        }
+      end
+
+      let('signing_date_json') {{'signing_date' => Date.today.to_s}}
+      let('tax_number_json') {{'tax_number' => '777888999'}}
+
+      let('missing_tax_number_json') do
+        missing_everything_json.merge(signing_date_json)
+      end
+
+      let('missing_signing_date_json') do
+        missing_everything_json.merge(tax_number_json)
+      end
+
+      let('valid_localpool_processing') do
+        missing_everything_json.merge(tax_number_json).merge(signing_date_json)
+      end
+
+      context 'unauthenticated' do
+
+        it '403' do
+          POST path
+          expect(response).to have_http_status(403)
+        end
+
+      end
+
+      context 'authenticated' do
+
+        context 'invalid data' do
+
+          it 'fails with 400 for a wrong type' do
+            POST path, $admin, invalid_type_json
+            expect(response).to have_http_status(400)
+          end
+
+          it 'fails with 422 for incomplete data: everything' do
+            POST path, $admin, missing_everything_json
+            expect(response).to have_http_status(422)
+            expect(json['signing_date']).to eq ['is missing']
+            expect(json['tax_number']).to eq ['is missing']
+          end
+
+          it 'fails with 422 for incomplete data: tax_number' do
+            POST path, $admin, missing_tax_number_json
+            expect(response).to have_http_status(422)
+            expect(json['tax_number']).to eq ['is missing']
+          end
+
+          it 'fails with 422 for incomplete data: signing_date' do
+            POST path, $admin, missing_signing_date_json
+            expect(response).to have_http_status(422)
+            expect(json['signing_date']).to eq ['is missing']
+          end
+
+        end
+
+        context 'valid date' do
+
+          it 'creates a new localpool processing contract' do
+            POST path, $admin, valid_localpool_processing
+            expect(response).to have_http_status(201)
+            expect(json['tax_number']).to eq valid_localpool_processing['tax_number']
+          end
+
+          it 'fails for two localpool processing contracts' do
+            POST path, $admin, valid_localpool_processing
+            expect(response).to have_http_status(201)
+            POST path, $admin, valid_localpool_processing
+            expect(response).to have_http_status(422)
+          end
+
+        end
+
+      end
+
+    end
+
     context 'customer' do
 
       context 'GET' do

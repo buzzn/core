@@ -6,6 +6,10 @@ module Contract
     model LocalpoolProcessing
 
     attributes :begin_date
+    attributes :tax_number
+
+    has_one :contractor
+    has_one :customer
 
   end
 end
