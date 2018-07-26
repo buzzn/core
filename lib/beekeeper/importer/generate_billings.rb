@@ -52,7 +52,9 @@ class Beekeeper::Importer::GenerateBillings
 
   def create_billings(localpool, billing_cycle)
     billings = []
-    localpool.market_locations.select(&:consumption?).each do |market_location|
+    localpool.market_locations
+      .select{ |ml| ml.register.consumption? }
+      .each do |market_location|
       contracts_to_bill(market_location, billing_cycle.date_range).each do |contract|
         date_range = billing_date_range(contract, billing_cycle)
         billings << create_billing(localpool, contract, date_range, billing_cycle)
