@@ -13,8 +13,8 @@ class Transactions::Admin::Register::UpdateReal < Transactions::Base
 
   def persist(resource:, params:, **)
     resource.object.meta.update!(params.except(:metering_point_id, :updated_at))
-    super(resource: resource,
-          params: params.slice(:metering_point_id, :updated_at))
+    # note: there is actually no data on register which can be updated
+    super(resource: resource, params: params.slice(:updated_at))
   end
 
 end

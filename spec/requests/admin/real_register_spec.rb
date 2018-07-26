@@ -13,7 +13,7 @@ describe Register::RealResource, :request_helper do
 
   entity(:register) { meter.registers.first }
 
-  before(:all) { register.update(metering_point_id: '123456') }
+  before(:all) { register.meter.update(metering_location: Meter::MeteringLocation.new(metering_location_id: '123456')) }
 
   context 'localpools/<id>/meters/<id>/registers' do
 

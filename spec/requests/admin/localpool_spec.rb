@@ -699,7 +699,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'updatable' => true,
             'deletable' => false,
             'createables' => ['readings', 'contracts'],
-            'metering_point_id' => register.metering_point_id,
+            'metering_point_id' => register.meter.metering_location&.metering_location_id,
             'obis' => register.obis
           }
         }

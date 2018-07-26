@@ -21,6 +21,13 @@ describe Admin::LocalpoolRoda, :request_helper do
 
   context 'meters' do
     context 'registers' do
+
+      it 'PUT - 405' do
+        PUT "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
+        expect(response).to have_http_status(405)
+        expect(response.headers['X-Allowed-Methods']).to eq('get, patch')
+      end
+
       context 'PATCH' do
 
         let(:updated_json) do
@@ -111,7 +118,7 @@ describe Admin::LocalpoolRoda, :request_helper do
                 observer_offline_monitoring: true
           expect(response).to have_http_status(200)
           register.reload
-          expect(register.metering_point_id).to eq '123456'
+          expect(register.meter.metering_location&.metering_location_id).to eq '123456'
           expect(register.meta.label).to eq 'demarcation_pv'
           expect(register.meta.share_with_group).to eq true
           expect(register.meta.share_publicly).to eq false
@@ -152,7 +159,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'pre_decimal_position'=>6,
           'post_decimal_position'=>real_register.post_decimal_position,
           'low_load_ability'=>false,
-          'metering_point_id'=>real_register.metering_point_id,
+          'metering_point_id'=>real_register.meter.metering_location&.metering_location_id,
           'obis'=>real_register.obis,
         }
       end
@@ -200,7 +207,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             json['pre_decimal_position'] = register.pre_decimal_position
             json['post_decimal_position'] = register.post_decimal_position
             json['low_load_ability'] = register.low_load_ability
-            json['metering_point_id'] = register.metering_point_id
+            json['metering_point_id'] = register.meter.metering_location&.metering_location_id
             json['obis'] = register.obis
           end
           json
@@ -240,7 +247,7 @@ describe Admin::LocalpoolRoda, :request_helper do
                 'pre_decimal_position'=>register.pre_decimal_position,
                 'post_decimal_position'=>register.post_decimal_position,
                 'low_load_ability'=>register.low_load_ability,
-                'metering_point_id'=>register.metering_point_id,
+                'metering_point_id'=>register.meter.metering_location&.metering_location_id,
                 'obis'=>register.obis
               }
             end
