@@ -21,6 +21,8 @@ module Schemas
 
           def has_owner_role?(input)
             case input.class.to_s
+            when 'Schemas::Support::ActiveRecordValidator'
+              has_owner_role?(input.model)
             when 'Person'
               the_role = input.roles.where(name: Role::GROUP_OWNER).find do |role|
                 localpool = role.resource
@@ -39,7 +41,7 @@ module Schemas
           end
 
           def at_most_one_register_with_same_label?(register)
-            register.meter.group.registers.where(label: register.attributes['label']).count <= 1
+            register.meter.group.registers.joins(:meta).where('register_meta.label': register.meta.attributes['label']).count <= 1
           end
         end
 

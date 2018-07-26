@@ -17,7 +17,7 @@ class Builders::Discovergy::SubstituteCalculator
       value = @to_value.call(values, register)
       @substitute = add(@substitute, value, register)
       @time = [values['time'], @time].max
-    elsif register.label.consumption?
+    elsif register.consumption?
       @missing_registers << register
     end
   end
@@ -29,9 +29,9 @@ class Builders::Discovergy::SubstituteCalculator
   end
 
   def value(register)
-    value = if register.label.production?
+    value = if register.production?
               -@substitute.to_i
-            elsif register.label.consumption?
+            elsif register.consumption?
               @substitute.to_i
             else
               raise 'BUG: can handle only production and consuption subsitute registers'
@@ -42,12 +42,12 @@ class Builders::Discovergy::SubstituteCalculator
   private
 
   def add(substitute, value, register)
-    if register.label.consumption? || register.grid_feeding?
+    if register.consumption? || register.meta.grid_feeding?
       substitute - value
-    elsif register.label.production? || register.grid_consumption?
+    elsif register.production? || register.meta.grid_consumption?
       substitute + value
     else
-      raise "can not handle #{register.class}"
+      raise "can not handle #{register.inspect}"
     end
   end
 

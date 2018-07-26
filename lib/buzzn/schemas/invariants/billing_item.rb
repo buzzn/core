@@ -5,15 +5,15 @@ module Schemas
     BillingItem = Schemas::Support.Form(Schemas::Constraints::BillingItem) do
       configure do
         def in_contract_tariffs?(contract, tariff)
-          contract.tariffs.include?(tariff)
+          contract.tariffs.include?(tariff.model)
         end
 
         def belongs_to_contract?(contract, register)
-          contract.market_location.register == register
+          contract.market_location.register == register.model
         end
 
         def match_register?(register, reading)
-          reading.register == register
+          reading.register == register.model
         end
 
         def inside_period?(date_range, thing)

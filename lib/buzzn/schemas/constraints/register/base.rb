@@ -1,7 +1,5 @@
 require_relative 'common'
 
-Schemas::Constraints::Register::Base = Schemas::Support.Form(Schemas::Constraints::Register::Common) do
-  required(:label).value(included_in?: Register::Base.labels.values)
-  required(:share_with_group).filled(:bool?)
-  optional(:share_publicly).filled(:bool?)
+Schemas::Constraints::Register::Base = Schemas::Support.Form do
+  optional(:metering_point_id).filled(:str?, max_size?: 64)
 end

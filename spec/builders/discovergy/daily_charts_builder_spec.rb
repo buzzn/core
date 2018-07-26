@@ -10,18 +10,17 @@ describe Builders::Discovergy::DailyChartsBuilder do
 
   entity(:registers) do
     response.collect do |id, _|
-      direction, label =
+      label =
         if id == 'EASYMETER_60327687'
-          [:output, Register::Base.labels['production_pv']]
+          :production_pv
         else
-          [:input, Register::Base.labels['consumption']]
+          :consumption
         end
       meter = create(:meter, :real, :connected_to_discovergy,
                      group: group,
-                     register_direction: direction,
+                     register_label: label,
                      product_serialnumber: id.sub('EASYMETER_', ''))
       register = meter.registers.first
-      register.update(label: label)
       register
     end
   end

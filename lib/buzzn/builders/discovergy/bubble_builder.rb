@@ -31,7 +31,7 @@ module Builders::Discovergy
     def process_entry(registers, values, calculator)
       registers.collect do |register|
         calculator.process(values, register)
-        if register.label.production? || register.label.consumption?
+        if register.production? || register.consumption?
           build_bubble(register, values)
         end
       end

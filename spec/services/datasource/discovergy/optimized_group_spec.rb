@@ -58,9 +58,8 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
   entity!(:meters) do
     create(:meter, :real, :connected_to_discovergy, group: localpool,
            product_serialnumber: '1234567890')
-    meter = create(:meter, :real, :connected_to_discovergy, register_direction: :output, group: localpool,
+    meter = create(:meter, :real, :connected_to_discovergy, register_label: :production_pv, group: localpool,
                    product_serialnumber: '9876543210')
-    meter.registers.first.production_pv!
     localpool.meters
   end
 

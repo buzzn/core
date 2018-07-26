@@ -13,7 +13,7 @@ class Types::Datasource::Bubble
   end
 
   def as_json(*)
-    { id: register.id, label: register.label, name: register.name, value: value }
+    { id: register.id, label: register.meta.label, name: register.name, value: value }
   end
 
 end

@@ -12,13 +12,11 @@ class MarketLocationResource < Buzzn::Resource::Entity
   has_many :contracts
 
   def kind
-    if object.register.label.production?
-      :production
-    elsif object.register.label.consumption?
-      :consumption
-    else
-      :system
-    end
+    register.kind
+  end
+
+  def name
+    object.register.meta.name
   end
 
 end
