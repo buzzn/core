@@ -48,6 +48,8 @@ module Schemas::Support
 
     include DryValidation
 
+    attr_reader :model
+
     def initialize(model)
       @model = model
     end
@@ -77,6 +79,18 @@ module Schemas::Support
 
     def model_is_a?(clazz)
       @model.is_a?(clazz)
+    end
+
+    def method_missing(method, *args)
+      if @model.respond_to?(method)
+        @model.send(method, *args)
+      else
+        super
+      end
+    end
+
+    def respond_to?(method)
+      super || @model.respond_to?(method)
     end
 
   end
