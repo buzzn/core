@@ -402,6 +402,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'deletable'=>false,
         'documentable'=>true,
         'tax_number' => nil, #FIXME: add tax_data to factory etc.
+        'allowed_actions' => { 'document_localpool_processing_contract' => true },
         'tariffs'=>{
           'array'=> contract.tariffs.collect do |t|
             { 'id'=>t.id,
