@@ -1,7 +1,5 @@
 class MarketLocationResource < Buzzn::Resource::Entity
 
-  model MarketLocation
-
   attributes :name, :kind, :market_location_id
 
   attributes :updatable, :deletable
@@ -11,8 +9,20 @@ class MarketLocationResource < Buzzn::Resource::Entity
 
   has_many :contracts
 
+  def type
+    'market_location'
+  end
+
+  def group
+    register.group
+  end
+
+  def market_location_id
+    object.register.meta.market_location&.market_location_id
+  end
+
   def kind
-    register.kind
+    object.register.kind
   end
 
   def name

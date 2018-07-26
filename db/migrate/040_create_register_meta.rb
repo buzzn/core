@@ -9,8 +9,8 @@ class CreateRegisterMeta < ActiveRecord::Migration
 
     add_column :register_meta, :last_observed, :timestamp, null: true
 
-    add_belongs_to :register_meta, :register, index: true
-    add_foreign_key :register_meta, :registers, name: :fk_meta_register, on_delete: :cascade
+    add_belongs_to :registers, :register_meta, index: true
+    add_foreign_key :registers, :register_meta, name: :fk_registers_register_meta, column: :register_meta_id
   end
 
 end

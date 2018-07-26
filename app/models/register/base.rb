@@ -16,7 +16,7 @@ module Register
     has_one :group, through: :meter
     has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'
 
-    has_one :meta, class_name: 'Meta', foreign_key: :register_id
+    belongs_to :meta, class_name: 'Meta', foreign_key: :register_meta_id
 
     scope :real,    -> { where(type: Register::Reak) }
     scope :virtual, -> { where(type: Register::Virtual) }

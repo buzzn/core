@@ -21,7 +21,13 @@ module Register
       other
     ).each_with_object({}) { |item, map| map[Label.new(item.to_s)] = item.to_s.upcase }
 
-    belongs_to :register, class_name: 'Real', foreign_key: :register_id
+    has_many :registers, class_name: 'Base', foreign_key: :register_meta_id
+
+    def register
+      registers.last
+    end
+
+    belongs_to :market_location, class_name: 'MarketLocation2', foreign_key: :market_location_id
 
   end
 end
