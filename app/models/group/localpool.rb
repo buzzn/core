@@ -33,11 +33,11 @@ module Group
     end
 
     def grid_feeding_register
-      registers.grid_feeding.first
+      registers.joins(:meta).where('register_meta.label': 'GRID_FEEDING').first
     end
 
     def grid_consumption_register
-      registers.grid_consumption.first
+      registers.joins(:meta).where('register_meta.label': 'GRID_CONSUMPTION').first
     end
 
     def contracts

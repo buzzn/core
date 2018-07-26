@@ -41,7 +41,7 @@ class MarketLocation < ActiveRecord::Base
   scope :permitted, ->(uids) { joins(:contracts).where('contracts.id': uids) }
 
   def consumption?
-    register.label.consumption?
+    register.consumption?
   end
 
 end

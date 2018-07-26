@@ -55,7 +55,7 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
 
   context 'two-way-meter' do
 
-    entity!(:register2) { create(:register, :output, meter: meter) }
+    entity!(:register2) { create(:register, :real, :production_pv, meter: meter) }
 
     before { api.result = two_way_meter_result }
 
@@ -63,14 +63,14 @@ describe Services::Datasource::Discovergy::OptimizedGroup do
 
       context type do
         it 'power' do
-          register = meter.registers.select { |r| r.label.send("#{type}?") }.first
+          register = meter.registers.select { |r| r.send("#{type}?") }.first
           result = last_readings.power(register)
           expect(result.values[:power]).to eq -58500
           expect(api.query).to eq "/last_reading?meterId=EASYMETER_#{meter.product_serialnumber}&fields=power&each=false"
         end
 
         it 'energy' do
-          register = meter.registers.select { |r| r.label.send("#{type}?") }.first
+          register = meter.registers.select { |r| r.send("#{type}?") }.first
           result = last_readings.energy(register)
           expect(result.values[:energy]).to eq 183082318054500
           expect(result.values[:energyOut]).to eq 105450808714000

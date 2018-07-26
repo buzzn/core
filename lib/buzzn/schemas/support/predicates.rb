@@ -29,4 +29,8 @@ module Schemas::Support::Predicates
     ! /^[0-9+\(\)#\.\s\/ext-]+$/.match(value).nil?
   end
 
+  predicate(:mtype?) do |type, validator|
+    validator.model_is_a?(type)
+  end
+
 end

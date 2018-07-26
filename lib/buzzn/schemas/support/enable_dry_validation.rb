@@ -48,6 +48,8 @@ module Schemas::Support
 
     include DryValidation
 
+    attr_reader :model
+
     def initialize(model)
       @model = model
     end
@@ -57,7 +59,13 @@ module Schemas::Support
     end
 
     def get(attr)
-      attributes[attr.to_s] || @model.send(attr)
+      if !attributes[attr.to_s].nil?
+        attributes[attr.to_s]
+      elsif @model.send(attr).is_a? ActiveRecord::Base
+        ActiveRecordValidator.new(@model.send(attr))
+      else
+        @model.send(attr)
+      end
     end
     alias :[] :get
 
@@ -67,6 +75,22 @@ module Schemas::Support
 
     def validate(schema)
       schema.call(self)
+    end
+
+    def model_is_a?(clazz)
+      @model.is_a?(clazz)
+    end
+
+    def method_missing(method, *args)
+      if @model.respond_to?(method)
+        @model.send(method, *args)
+      else
+        super
+      end
+    end
+
+    def respond_to?(method)
+      super || @model.respond_to?(method)
     end
 
   end

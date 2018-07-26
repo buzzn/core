@@ -99,9 +99,8 @@ describe 'Schemas::Invariants::Group::Localpool' do
 
     subject { tested_invariants }
 
-    def make_register(localpool, label:, register_direction: :input)
-      meter = create(:meter, :real, group: localpool, register_direction: register_direction)
-      meter.registers.first.update(label: label)
+    def make_register(localpool, label:)
+      meter = create(:meter, :real, group: localpool, register_label: label)
       meter.registers.first
     end
 

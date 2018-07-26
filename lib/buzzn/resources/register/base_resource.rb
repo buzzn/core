@@ -9,6 +9,8 @@ module Register
 
     attributes :label, :direction,
                :last_reading,
+               # TODO :share_with_group,
+               # TODO :share_publicly,
                :observer_min_threshold,
                :observer_max_threshold,
                :observer_enabled,
@@ -27,9 +29,19 @@ module Register
       reading ? reading.corrected_value.value : 0
     end
 
-    # hardcode the direction for the time being
+    # derive the direction for the label
     def direction
-      object.label.consumption? ? 'in' : 'out'
+      object.consumption? ? 'in' : 'out'
+    end
+
+    def label
+      object.meta.attributes['label']
+    end
+
+    [:observer_enabled, :observer_min_threshold, :observer_max_threshold, :observer_offline_monitoring].each do |method|
+      define_method(method) do
+        object.meta.send(method)
+      end
     end
 
   end

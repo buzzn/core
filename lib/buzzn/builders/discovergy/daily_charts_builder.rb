@@ -30,9 +30,9 @@ module Builders::Discovergy
 
     def build_method(response)
       substitute = substitute_register(response)
-      if substitute&.label&.production?
+      if substitute&.production?
         method(:build_sum_with_production_substitute)
-      elsif substitute&.label&.consumption? || virtual?
+      elsif substitute&.consumption? || virtual?
         method(:build_sum_with_consumption_substitute)
       else
         method(:build_sum)
@@ -67,9 +67,9 @@ module Builders::Discovergy
     end
 
     def build_sum(register, consumption, production, data)
-      if register.label.production?
+      if register.production?
         do_sum(register, production, data)
-      elsif register.label.consumption?
+      elsif register.consumption?
         do_sum(register, consumption, data)
       end
     end
@@ -79,7 +79,7 @@ module Builders::Discovergy
         do_sum(register, consumption, data)
       elsif register.grid_feeding?
         do_sum(register, consumption, data, method(:substract))
-      elsif register.label.production?
+      elsif register.production?
         do_sum(register, consumption, data)
         do_sum(register, production, data)
       end
@@ -90,7 +90,7 @@ module Builders::Discovergy
         do_sum(register, production, data)
       elsif register.grid_feeding?
         do_sum(register, production, data, method(:substract))
-      elsif register.label.consumption?
+      elsif register.consumption?
         do_sum(register, consumption, data)
         do_sum(register, production, data)
       end

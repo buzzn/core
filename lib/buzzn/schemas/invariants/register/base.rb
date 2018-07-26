@@ -4,12 +4,21 @@ module Schemas
   module Invariants
     module Register
 
+      Meta = Schemas::Support.Form(Schemas::Constraints::Register::Meta) do
+
+        required(:observer_enabled).maybe
+        required(:observer_min_threshold).maybe
+        required(:observer_max_threshold).maybe
+
+        rule(observer_enabled: [:observer_enabled, :observer_min_threshold, :observer_max_threshold]) do |observer_enabled, observer_min_threshold, observer_max_threshold|
+          observer_enabled.true?.then(observer_max_threshold.filled?.and(observer_min_threshold.filled?).and(observer_max_threshold.gteq?(value(:observer_min_threshold))))
+        end
+
+      end
+
       Base = Schemas::Support.Form(Schemas::Constraints::Register::Base) do
 
         configure do
-          def match_group?(group, meter)
-            meter.group && meter.group == group
-          end
 
           # WARNING: as of now, our readings don't always grow over time. Reason:
           # beekeeper had no notion of metering locations, and thus couldn't model it's register changes.
@@ -22,20 +31,9 @@ module Schemas
           end
         end
 
-        required(:observer_enabled).maybe
-        required(:observer_min_threshold).maybe
-        required(:observer_max_threshold).maybe
-        required(:group).maybe
         required(:readings).filled { grow_in_time? }
-        required(:meter).filled
+        required(:meta_for_invariant).schema(Meta)
 
-        rule(observer_enabled: [:observer_enabled, :observer_min_threshold, :observer_max_threshold]) do |observer_enabled, observer_min_threshold, observer_max_threshold|
-          observer_enabled.true?.then(observer_max_threshold.filled?.and(observer_min_threshold.filled?).and(observer_max_threshold.gteq?(value(:observer_min_threshold))))
-        end
-
-        rule(group: [:group, :meter]) do |group, meter|
-          group.filled?.then(meter.match_group?(group))
-        end
       end
 
     end

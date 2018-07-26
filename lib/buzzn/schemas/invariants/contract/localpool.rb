@@ -40,7 +40,7 @@ module Schemas
           end
 
           def localpool_owner?(localpool, contracting_party)
-            localpool.nil? || localpool.owner == contracting_party
+            localpool.nil? || localpool.owner == contracting_party.model
           end
         end
 
