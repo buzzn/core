@@ -25,7 +25,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     @converted_attributes ||= {
       meter_attributes:      meter_attributes,
       name:                  name,
-      type:                  map_type,
+      type:                  'Register::Real',
       label:                 map_label,
       metering_point_id:     metering_point_id,
       readings:              readings,
@@ -83,11 +83,6 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
 
   def output?
     obis == '1-1:2.8.0'
-  end
-
-  def map_type
-    return 'Register::Input' if input?
-    return 'Register::Output' if output?
   end
 
   LABEL_MAP = {

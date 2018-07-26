@@ -30,7 +30,7 @@ class Beekeeper::Importer::Brokers
     unless logged
       has_other = false
       each_register(meters) do |register|
-        has_other ||= register.other?
+        has_other ||= register.meta.other?
       end
       if has_other
         log_meters(meters, warnings)
@@ -69,7 +69,7 @@ class Beekeeper::Importer::Brokers
 
   def log_meters(meters, warnings)
     each_register(meters) do |register|
-      warnings["Register '#{register.meter.legacy_buzznid}' (#{register.meter.manufacturer_name} : #{register.meter.product_serialnumber} : #{register.label})"] = register.meter.datasource
+      warnings["Register '#{register.meter.legacy_buzznid}' (#{register.meter.manufacturer_name} : #{register.meter.product_serialnumber} : #{register.meta.label})"] = register.meter.datasource
     end
   end
 
