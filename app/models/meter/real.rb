@@ -5,6 +5,8 @@ module Meter
 
     has_many :registers, class_name: 'Register::Real', foreign_key: :meter_id
 
+    belongs_to :metering_location, class_name: 'MeteringLocation', foreign_key: :metering_location_id
+
     enum manufacturer_name: [:easy_meter, :other].each_with_object({}).each {|k, map| map[k] = k.to_s }
 
     enum direction_number: {
