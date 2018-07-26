@@ -30,7 +30,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       add_warnings(attrs, zählwerk)
       register_class = attrs[:type].constantize
       # note: during the import we move the name from the register (zählwerk) to the newly introduced entity
-      register       = register_class.new(attrs.except(:type, :meter_attributes, :name))
+      register       = register_class.new(attrs.slice(:metering_point_id, :readings, :meter))
+      register.build_meta(attrs.except(:type, :meter_attributes, :metering_point_id, :meter, :readings))
       register.build_market_location(name: attrs[:name])
       # debug = "#{zählwerk.buzznid}: #{register.label} (#{register.name})"
       # debug << " MPID #{register.metering_point_id}" if register.metering_point_id
