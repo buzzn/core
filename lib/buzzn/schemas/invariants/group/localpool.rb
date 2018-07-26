@@ -21,6 +21,8 @@ module Schemas
 
           def has_owner_role?(input)
             case input.class.to_s
+            when 'Schemas::Support::ActiveRecordValidator'
+              has_owner_role?(input.model)
             when 'Person'
               the_role = input.roles.where(name: Role::GROUP_OWNER).find do |role|
                 localpool = role.resource

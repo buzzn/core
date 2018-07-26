@@ -5,7 +5,7 @@ module Schemas
     Billing = Schemas::Support.Form(Schemas::Constraints::Billing) do
       configure do
         def match_group?(localpool, billing_cycle)
-          billing_cycle.localpool == localpool
+          billing_cycle.localpool == localpool.model
         end
 
         def lineup?(items)
