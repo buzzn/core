@@ -25,6 +25,9 @@ dump.rdb
 .byebug_history
 .rspec-local
 *.local
+*.staging
+*.production
+
 public/uploads
 uploads
 
