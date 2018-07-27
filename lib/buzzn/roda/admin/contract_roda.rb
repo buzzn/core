@@ -23,32 +23,26 @@ module Admin
 
         shared[PARENT] = contract = contracts.retrieve(id)
 
-        r.get! do
-          contract
-        end
+        r.get! { contract }
 
-        r.get! 'contractor' do
-          contract.contractor!
-        end
+        r.get!('contractor') { contract.contractor! }
 
-        r.get! 'customer' do
-          contract.customer!
-        end
-
-        r.post! 'documents/generate' do
-          document.(resource: contract, params: r.params)
-        end
+        r.get!('customer') { contract.customer! }
 
         r.on 'documents' do
+
+          r.on 'generate' do
+            r.post! { document.(resource: contract, params: r.params) }
+            r.others!
+          end
+
           shared[:documents] = contract.documents
           r.run DocumentRoda
         end
 
       end
 
-      r.get! do
-        contracts
-      end
+      r.get! { contracts }
 
       r.post!(:param=>'type') do |type|
         case type.to_s
