@@ -11,8 +11,7 @@ CarrierWave.configure do |config|
   config.ignore_download_errors   = false
 
   # AWS
-  aws_access_key = Import.global('config.aws_access_key') rescue false
-  if aws_access_key
+  if Import.global?('config.aws_access_key')
     config.fog_provider     = 'fog/aws'
     config.fog_credentials  = {
       provider:               'AWS',
