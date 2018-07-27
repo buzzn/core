@@ -32,6 +32,8 @@ AWS\_REGION=eu-west-1
 
 AWS\_BUCKET=buzzn-core-staging
 ASSET\_HOST=https://staging-files.buzzn.io
+
+SECRET\_KEY\_BASE=....
 ```
 
 then run the actual update
