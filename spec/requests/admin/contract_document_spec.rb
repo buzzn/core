@@ -112,7 +112,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           context 'with valid data' do
             it '201' do
               POST_FILE path, document.filename, document.read, document.mime, $admin
-              expect(response).to have_http_status(200)
+              expect(response).to have_http_status(201)
             end
           end
 

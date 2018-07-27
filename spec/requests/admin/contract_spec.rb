@@ -449,23 +449,23 @@ describe Admin::LocalpoolRoda, :request_helper do
         context 'authenticated' do
 
           # we only want POSTs, change that to 405?
-          it '404' do
+          it '405' do
             GET path, $admin
-            expect(response).to have_http_status(404)
+            expect(response).to have_http_status(405)
 
             PATCH path, $admin
-            expect(response).to have_http_status(404)
+            expect(response).to have_http_status(405)
 
             PUT path, $admin
-            expect(response).to have_http_status(404)
+            expect(response).to have_http_status(405)
 
             DELETE path, $admin
-            expect(response).to have_http_status(404)
+            expect(response).to have_http_status(405)
           end
 
-          it '200' do
+          it '201' do
             POST path, $admin
-            expect(response).to have_http_status(200)
+            expect(response).to have_http_status(201)
           end
 
         end
