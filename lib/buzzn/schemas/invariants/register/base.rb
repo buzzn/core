@@ -1,4 +1,5 @@
 require_relative '../../constraints/register/base'
+require_relative '../../constraints/register/meta'
 
 module Schemas
   module Invariants
