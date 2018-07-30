@@ -6,8 +6,6 @@ FactoryGirl.define do
       register nil
     end
 
-    name '1.OG links vorne'
-
     trait :consumption_common do
       after(:build) do |market_location, evaluator|
         create(:register, :real, :consumption_common, market_location: market_location)

@@ -1,23 +1,17 @@
-def create_market_location(name)
-  FactoryGirl.create(:market_location, name: name)
+def update_register(register, name)
+  ml = FactoryGirl.create(:market_location, register: register)
+  register.meta.update(name: name)
+  register
 end
 
 #
 # More registers (without powertakers & contracts)
 #
 SampleData.registers = OpenStruct.new(
-  bhkw: create(:register, :production_bhkw,
-    meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
-    #devices: [build(:device, :bhkw, commissioning: '1995-01-01', register: nil)],
-    market_location: create_market_location('Produktion BHKW')
-              ),
-  pv: create(:register, :production_pv,
-    meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
-    #devices: [build(:device, :pv, commissioning: '2017-04-10', register: nil)],
-    market_location: create_market_location('Produktion PV')
-            ),
-  water: create(:register, :production_water,
-    meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power),
-    market_location: create_market_location('Produktion Wasserkraft')
-               )
+  bhkw: update_register(create(:register, :production_bhkw,
+                               meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)), 'Produktion BHKW'),
+  pv: update_register(create(:register, :production_pv,
+                             meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)), 'Produktion PV'),
+  water: update_register(create(:register, :production_water,
+                                meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)), 'Produktion Wasserkraft')
 )

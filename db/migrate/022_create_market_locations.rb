@@ -10,8 +10,6 @@ class CreateMarketLocations < ActiveRecord::Migration
     add_belongs_to :registers, :market_location, index: true, null: true
 
     add_foreign_key :registers, :market_locations, name: :fk_registers_market_location
-
-    add_index :market_locations, :market_location_id, unique: true
   end
 
   def down
