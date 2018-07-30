@@ -259,65 +259,32 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     end
   end
 
-  context 'metering_point_operator_contract' do
+  context 'metering_point_operator_contracts' do
 
     it 'retrieve' do
-      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).metering_point_operator_contract).to be_nil
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).metering_point_operator_contract! }.to raise_error Buzzn::RecordNotFound
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).metering_point_operator_contracts.first).to be_nil
 
-      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).metering_point_operator_contract.object).to eq mpoc
-      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).metering_point_operator_contract.object).to eq mpoc
-      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).metering_point_operator_contract.object).to eq mpoc
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).metering_point_operator_contracts.first.object).to eq mpoc
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).metering_point_operator_contracts.first.object).to eq mpoc
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).metering_point_operator_contracts.first.object).to eq mpoc
 
-      expect{ Admin::LocalpoolResource.all(localpool_member3).retrieve(localpool2.id).metering_point_operator_contract! }.to raise_error Buzzn::PermissionDenied
-      expect(Admin::LocalpoolResource.all(localpool_member3).retrieve(localpool2.id).metering_point_operator_contract).to be_nil
+      expect(Admin::LocalpoolResource.all(localpool_member3).retrieve(localpool2.id).metering_point_operator_contracts.count).to eq 0
     end
 
-    it 'update' do
-      [buzzn_operator, localpool_owner, localpool_manager].each do |role|
-        contract = Admin::LocalpoolResource.all(role).retrieve(localpool2.id).localpool_processing_contract
-        expect(contract.updatable?).to be true
-      end
-    end
-
-    it 'delete' do
-      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).metering_point_operator_contract.deletable?).to be false
-
-      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).metering_point_operator_contract.deletable?).to be false
-
-      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).metering_point_operator_contract.deletable?).to be false
-    end
   end
 
-  context 'localpool_processing_contract' do
+  context 'localpool_processing_contracts' do
 
     it 'retrieve' do
-      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).localpool_processing_contract).to be_nil
-      expect{ Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).localpool_processing_contract! }.to raise_error Buzzn::RecordNotFound
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool1.id).localpool_processing_contracts.first).to be_nil
 
-      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_processing_contract.object).to eq lpc
-      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contract.object).to eq lpc
-      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contract.object).to eq lpc
+      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_processing_contracts.first.object).to eq lpc
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contracts.first.object).to eq lpc
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contracts.first.object).to eq lpc
 
-      expect{ Admin::LocalpoolResource.all(localpool_member3).retrieve(localpool2.id).localpool_processing_contract! }.to raise_error Buzzn::PermissionDenied
-      expect(Admin::LocalpoolResource.all(localpool_member3).retrieve(localpool2.id).localpool_processing_contract).to be_nil
+      expect(Admin::LocalpoolResource.all(localpool_member3).retrieve(localpool2.id).localpool_processing_contracts.count).to eq 0
     end
 
-    it 'update' do
-      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_processing_contract.updatable?).to be true
-
-      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contract.updatable?).to be true
-
-      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contract.updatable?).to be true
-    end
-
-    it 'delete' do
-      expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).localpool_processing_contract.deletable?).to be false
-
-      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).localpool_processing_contract.deletable?).to be false
-
-      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).localpool_processing_contract.deletable?).to be false
-    end
   end
 
   context 'localpool_power_taker_contracts' do
