@@ -24,12 +24,12 @@ namespace :heroku do
     end
 
     task :is_staging do
-      Dotenv.load('.env.staging')
+      Dotenv.overload('.env.staging')
       raise "\nwrong or missing aws bucket, see docs/beekeeper.md\n" unless ENV['AWS_BUCKET'].include?('staging')
     end
 
     task :is_production do
-      Dotenv.load('.env.production')
+      Dotenv.overload('.env.production')
       raise "\nwrong or missing aws bucket, see docs/beekeeper.md\n" unless ENV['AWS_BUCKET'].include?('production')
     end
   end
