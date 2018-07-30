@@ -6,6 +6,8 @@ namespace :db do
     DatabaseEmptier.call
   end
 
+  task reset: [:drop, :create, :migrate]
+
   Rake::Task['seed'].clear
   task seed: 'seed:setup_data'
 
