@@ -266,6 +266,33 @@ describe Admin::LocalpoolRoda, :request_helper do
         expect(response).to have_http_status(404)
       end
 
+      context 'without a type' do
+        let!(:contract1) { metering_point_operator_contract }
+        let!(:contract2) { localpool_processing_contract }
+        let!(:contract3) { localpool_power_taker_contract }
+
+        it '200' do
+          GET "/localpools/#{localpool.id}/contracts", $admin
+          expect(response).to have_http_status(200)
+          expect(json['array'].count).to eq(3)
+        end
+      end
+
+      context 'with a type' do
+        let!(:contract1) { metering_point_operator_contract }
+        let!(:contract2) { localpool_processing_contract }
+        let!(:contract3) { localpool_power_taker_contract }
+
+        [:contract_localpool_processing, :contract_metering_point_operator, :contract_power_taker].each do |type|
+          it "200 for #{type}" do
+            GET "/localpools/#{localpool.id}/contracts", $admin, 'type' => type.to_s
+            expect(response).to have_http_status(200)
+            expect(json['array'].count).to eq(1)
+            expect(json['array'].first['type']).to eq(type.to_s)
+          end
+        end
+      end
+
       [:metering_point_operator, :localpool_power_taker].each do |type|
 
         context "as #{type}" do
@@ -279,6 +306,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end
+
         end
       end
     end
