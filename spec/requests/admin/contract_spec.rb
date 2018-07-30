@@ -103,7 +103,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'id' => contract.market_location.id,
             'type' => 'market_location',
             'updated_at'=> contract.market_location.updated_at.as_json,
-            'name' => contract.market_location.name,
+            'name' => contract.market_location.register.meta.name,
             'kind' => 'consumption',
             'market_location_id' => nil,
             'updatable' => false,

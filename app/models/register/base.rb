@@ -55,7 +55,7 @@ module Register
 
     def name
       if market_location
-        market_location.name
+        meta.name
       elsif persisted?
         "Register #{id}"
       else

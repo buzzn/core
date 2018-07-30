@@ -676,7 +676,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'id' => market_location.id,
           'type' => 'market_location',
           'updated_at' => market_location.updated_at.as_json,
-          'name' => market_location.name,
+          'name' => market_location.register.meta.name,
           'kind' => register.kind.to_s,
           'market_location_id' => nil,
           'updatable' => false,
