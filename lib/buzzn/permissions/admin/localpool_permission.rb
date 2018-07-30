@@ -233,15 +233,18 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
   end
 
   # reuse permissions from 'contracts'
-  localpool_power_taker_contracts '/contracts'
-
-  # reuse permissions from 'contracts'
-  localpool_processing_contract '/contracts'
-
-  # reuse permissions from 'contracts'
-  metering_point_operator_contract '/contracts' do
+  localpool_power_taker_contracts '/contracts' do
     create :managers
   end
+
+  localpool_processing_contracts '/contracts' do
+    create :managers
+  end
+
+  metering_point_operator_contracts '/contracts' do
+    create :managers
+  end
+
 
   meters do
     retrieve :managers
