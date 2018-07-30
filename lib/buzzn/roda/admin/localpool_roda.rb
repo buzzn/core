@@ -73,18 +73,6 @@ module Admin
           localpool
         end
 
-        r.get! 'localpool-processing-contract' do
-          localpool.localpool_processing_contract!
-        end
-
-        r.get! 'metering-point-operator-contract' do
-          localpool.metering_point_operator_contract!
-        end
-
-        r.get! 'power-taker-contracts' do
-          localpool.localpool_power_taker_contracts
-        end
-
         r.get! 'managers' do
           localpool.managers
         end

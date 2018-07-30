@@ -42,7 +42,18 @@ module Admin
 
       end
 
-      r.get! { contracts }
+      r.get! do
+        case r.params['type'].to_s
+        when 'contract_localpool_processing'
+          localpool.localpool_processing_contracts
+        when 'contract_power_taker'
+          localpool.localpool_power_taker_contracts
+        when 'contract_metering_point_operator'
+          localpool.metering_point_operator_contracts
+        else
+          contracts
+        end
+      end
 
       r.post!(:param=>'type') do |type|
         case type.to_s
