@@ -31,6 +31,7 @@ paths:
         required: false
         type: string
         enum:
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -70,6 +71,7 @@ paths:
         required: false
         type: string
         enum:
+        - 
         - de
         - en
       responses:

@@ -80,13 +80,13 @@ describe Me::Roda, :request_helper do
     let(:wrong_json) do
       {
         'updated_at'=>['is missing'],
-        'title'=>['must be one of: Prof., Dr., Prof. Dr.'],
+        'title'=>['must be one of: , Prof., Dr., Prof. Dr.'],
         'prefix'=>['must be one of: F, M'],
         'first_name'=>['size cannot be greater than 64'],
         'last_name'=>['size cannot be greater than 64'],
         'phone'=>['must be a valid phone-number'],
         'fax'=>['size cannot be greater than 64'],
-        'preferred_language'=>['must be one of: de, en']
+        'preferred_language'=>['must be one of: , de, en']
       }
     end
 
@@ -168,6 +168,36 @@ describe Me::Roda, :request_helper do
       #expect(result.delete('updated_at')).to be > old.as_json
       expect(result.delete('updated_at')).not_to eq old.as_json
       expect(result.to_yaml).to eq updated_json.to_yaml
+    end
+
+    it '200 - with delete' do
+      old = person.updated_at
+      PATCH '', $user,
+            updated_at: person.updated_at,
+            title: nil,
+            prefix: 'M',
+            first_name: 'Maxima',
+            last_name: 'Toll',
+            phone: nil,
+            fax: nil,
+            preferred_language: nil
+
+      expect(response).to have_http_status(200)
+      person.reload
+      expect(person.title).to be_nil
+      expect(person.prefix).to eq 'male'
+      expect(person.first_name).to eq 'Maxima'
+      expect(person.last_name).to eq 'Toll'
+      expect(person.phone).to be_nil
+      expect(person.fax).to be_nil
+      expect(person.preferred_language).to be_nil
+
+      result = json
+      # TODO fix it: our time setup does not allow
+      #expect(result.delete('updated_at')).to be > old.as_json
+      expect(result.delete('updated_at')).not_to eq old.as_json
+      expected = updated_json.merge('title' => nil, 'phone' => nil, 'fax' => nil, 'preferred_language' => nil)
+      expect(result.to_yaml).to eq expected.to_yaml
     end
   end
 end

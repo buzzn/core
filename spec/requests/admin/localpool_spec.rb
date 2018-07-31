@@ -381,7 +381,20 @@ describe Admin::LocalpoolRoda, :request_helper do
         #expect(result.delete('updated_at')).to be > old.as_json
         expect(Time.parse(result.delete('updated_at'))).to be > old
         expect(result.to_yaml).to eq updated_json.to_yaml
-       end
+      end
+
+      it '200 - delete' do
+        old = localpool.updated_at
+        PATCH "/localpools/#{localpool.id}", $admin,
+              updated_at: localpool.updated_at,
+              description: nil,
+              start_date: nil
+
+        expect(response).to have_http_status(200)
+        localpool.reload
+        expect(localpool.description).to be_nil
+        expect(localpool.start_date).to be_nil
+      end
     end
 
   context 'localpool-processing-contract' do
