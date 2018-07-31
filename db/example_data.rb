@@ -9,13 +9,13 @@ include FactoryGirl::Syntax::Methods
 SAMPLES_TO_LOAD = %i(
   persons
   localpools
-  market_locations
+  register_metas
   contracts
   meters
   registers
   readings
   billings
-  brokers
+  update_meters
 )
 
 #

@@ -14,7 +14,7 @@ FactoryGirl.define do
         end
       end
       if evaluator.billing&.contract
-        evaluator.register = evaluator.billing.contract.market_location.register
+        evaluator.register = evaluator.billing.contract.register_meta.register
       end
     end
 

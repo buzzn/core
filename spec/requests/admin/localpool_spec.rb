@@ -65,9 +65,9 @@ describe Admin::LocalpoolRoda, :request_helper do
     localpool = create(:group, :localpool)
     manager.add_role(Role::GROUP_ADMIN, localpool)
     c = create(:contract, :localpool_powertaker, localpool: localpool)
-    c.market_location.register.meta.production_pv!
+    c.register_meta.register.meta.production_pv!
     c = create(:contract, :localpool_powertaker, localpool: localpool)
-    c.market_location.register.meta.update(label: :production_pv)
+    c.register_meta.register.meta.update(label: :production_pv)
     create(:contract, :localpool_processing, localpool: localpool)
     create(:contract, :metering_point_operator, localpool: localpool)
     localpool.contracts.each do |co|
@@ -652,8 +652,8 @@ describe Admin::LocalpoolRoda, :request_helper do
         else
           json['type'] = 'contract_localpool_third_party'
         end
-        market_location = contract.market_location
-        register = market_location.register
+        register_meta = contract.register_meta
+        register = register_meta.register
         json['customer'] =
           if contract.customer
             { 'id'=>contract.customer.id,
@@ -673,10 +673,10 @@ describe Admin::LocalpoolRoda, :request_helper do
               'deletable'=>false }
           end
         json['market_location'] = {
-          'id' => market_location.id,
+          'id' => register_meta.id,
           'type' => 'market_location',
-          'updated_at' => market_location.updated_at.as_json,
-          'name' => market_location.register.meta.name,
+          'updated_at' => register_meta.updated_at.as_json,
+          'name' => register_meta.register.meta.name,
           'kind' => register.kind.to_s,
           'market_location_id' => nil,
           'updatable' => false,

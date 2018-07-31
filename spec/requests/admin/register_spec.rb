@@ -11,7 +11,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
   entity!(:real_register) do
     register = meter.registers.first
-    create(:contract, :localpool_powertaker, market_location: register.meta, localpool: group)
+    create(:contract, :localpool_powertaker, register_meta: register.meta, localpool: group)
     register
   end
 

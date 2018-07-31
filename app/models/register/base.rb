@@ -10,7 +10,6 @@ module Register
 
     include Filterable
 
-    belongs_to :market_location
     belongs_to :meter, class_name: 'Meter::Base', foreign_key: :meter_id
 
     has_one :group, through: :meter
@@ -51,16 +50,6 @@ module Register
 
     def reading_at(date)
       readings.find_by(date: date)
-    end
-
-    def name
-      if market_location
-        meta.name
-      elsif persisted?
-        "Register #{id}"
-      else
-        'Register (not persisted)'
-      end
     end
 
     def obis

@@ -36,26 +36,4 @@ describe Register do
     end
   end
 
-  describe 'name' do
-    context 'when register has a market location' do
-      let(:register) { create(:register, :real, :with_market_location) }
-      it 'returns the name of the market location' do
-        expect(register.name).to eq(register.market_location.register.meta.name)
-        expect(register.name).not_to be_nil
-      end
-    end
-    context 'when register has no market location' do
-      let(:register) { create(:register, :real) }
-      context 'when register is persisted' do
-        it 'returns the id' do
-          expect(register.name).to eq("Register #{register.id}")
-        end
-      end
-      context 'when register is not persisted' do
-        it 'returns some info' do
-          expect(build(:register, :real).name).to eq('Register (not persisted)')
-        end
-      end
-    end
-  end
 end

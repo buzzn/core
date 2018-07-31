@@ -88,7 +88,7 @@ describe 'Schemas::Invariants::BillingItem' do
       it { is_expected.to eq(['must belong to contract']) }
 
       context 'from contract' do
-        before { item.update(register: billing.contract.market_location.register) }
+        before { item.update(register: billing.contract.register_meta.register) }
 
         it { is_expected.to be_nil }
       end

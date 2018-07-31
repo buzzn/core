@@ -4,7 +4,7 @@ describe 'Services::UnbilledBillingItemsFactory' do
   let(:args)             { { date_range: date_range, market_locations: register_metas } }
   let(:register_metas) do
     meta = create(:register, :real, :consumption).meta
-    create(:contract, :localpool_powertaker, market_location: meta)
+    create(:contract, :localpool_powertaker, register_meta: meta)
     [meta]
   end
   subject { Services::UnbilledBillingItemsFactory.new.call(args) }
@@ -54,8 +54,8 @@ describe 'Services::UnbilledBillingItemsFactory' do
       let(:register_meta) { create(:register, :real, :consumption).meta }
       let(:register_metas) { [register_meta] }
       let!(:contracts) do
-        [create(:contract, :localpool_gap, begin_date: date_range.first - 1.month, end_date: date_range.first + 1.month, market_location: register_meta),
-         create(:contract, :localpool_powertaker, begin_date: date_range.first + 1.month, end_date: nil, market_location: register_meta)]
+        [create(:contract, :localpool_gap, begin_date: date_range.first - 1.month, end_date: date_range.first + 1.month, register_meta: register_meta),
+         create(:contract, :localpool_powertaker, begin_date: date_range.first + 1.month, end_date: nil, register_meta: register_meta)]
       end
 
       it 'returns two billing items' do

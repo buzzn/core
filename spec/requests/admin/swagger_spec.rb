@@ -81,7 +81,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
     register = create(:meter, :real, group: localpool).registers.first
     create(:contract, :localpool_powertaker,
            localpool: localpool,
-           market_location: register.meta)
+           register_meta: register.meta)
   end
 
   entity!(:billing_1) do
