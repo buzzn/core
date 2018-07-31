@@ -45,8 +45,7 @@ FactoryGirl.define do
     metering_point_operator_name 'Generic metering point operator'
 
     after(:build) do |account, transients|
-      #binding.pry
-      #FactoryGirl.create(:bank_account, owner: account.customer)
+      FactoryGirl.create(:bank_account, owner: account.customer)
     end
   end
 
@@ -71,18 +70,15 @@ FactoryGirl.define do
   trait :is_localpool_powertaker_contract do
     before(:create) do |contract, _evaluator|
       unless contract.market_location
-        contract.market_location = create(:market_location)
-      end
-      unless contract.market_location.register
         meter = FactoryGirl.create(:meter, :real, :one_way,
                                    group: contract.localpool)
-        contract.market_location.register = meter.registers.first
+        contract.market_location = meter.registers.first.meta
       end
     end
     # makes sure all contracts of a localpool get the same contract nr but a sequential addition
     after(:create) do |contract, _evaluator|
-      malo_contracts = Contract::Base.for_market_locations.where(localpool_id: contract.localpool.id)
-      max_contract_number_addition = malo_contracts.maximum(:contract_number_addition)
+      contracts = Contract::Base.for_localpool.where(localpool_id: contract.localpool.id)
+      max_contract_number_addition = contracts.maximum(:contract_number_addition)
       contract.update(contract_number: contract.localpool.id + 66_000,
                       contract_number_addition: max_contract_number_addition + 1)
     end

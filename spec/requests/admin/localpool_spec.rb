@@ -587,7 +587,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'deletable'=>false
           }
         },
-        'customer_bank_account'=> nil,
+        'customer_bank_account'=> serialized_bank_account(contract.customer_bank_account).merge('updatable' => true),
         'contractor_bank_account'=> nil
       }
     end

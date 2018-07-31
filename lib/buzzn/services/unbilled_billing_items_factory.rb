@@ -24,8 +24,8 @@ class Services::UnbilledBillingItemsFactory
   # ]
   def call(market_locations:, date_range:)
     # TODO
-    market_locations.each.with_object([]) do |market_location, array|
-      array << {
+    market_locations.collect do |market_location|
+      {
         market_location: market_location,
         contracts: contracts_with_items(market_location, date_range)
       }
@@ -34,10 +34,10 @@ class Services::UnbilledBillingItemsFactory
 
   private
 
-  def contracts_with_items(market_location, date_range)
-    contracts, unbilled_date_range = unbilled_contracts(market_location, date_range)
-    contracts.map.with_object([]) do |contract, array|
-      array << {
+  def contracts_with_items(register_meta, date_range)
+    contracts, unbilled_date_range = unbilled_contracts(register_meta, date_range)
+    contracts.collect do |contract|
+      {
         contract: contract,
         # We don't handle register and tariff changes yet, so we always return an array with one item, rather than 2+
         # later (register and tariff changes will cause new items).
@@ -46,10 +46,10 @@ class Services::UnbilledBillingItemsFactory
     end
   end
 
-  def unbilled_contracts(market_location, date_range)
+  def unbilled_contracts(register_meta, date_range)
     return [] if date_range_zero?(date_range)
-    unbilled_date_range = unbilled_date_range(market_location, date_range)
-    contracts = market_location.contracts_in_date_range(unbilled_date_range)
+    unbilled_date_range = unbilled_date_range(register_meta, date_range)
+    contracts = register_meta.contracts_in_date_range(unbilled_date_range)
     [contracts, unbilled_date_range]
   end
 
@@ -63,13 +63,13 @@ class Services::UnbilledBillingItemsFactory
     date_range.last == date_range.first
   end
 
-  def unbilled_date_range(market_location, date_range)
-    last_billing = last_billing_for(market_location, date_range)
+  def unbilled_date_range(register_meta, date_range)
+    last_billing = last_billing_for(register_meta, date_range)
     last_billing ? last_billing.end_date...date_range.last : date_range
   end
 
-  def last_billing_for(market_location, date_range)
-    market_location.billings_in_date_range(date_range).order(:end_date).last
+  def last_billing_for(register_meta, date_range)
+    register_meta.billings_in_date_range(date_range).order(:end_date).last
   end
 
 end

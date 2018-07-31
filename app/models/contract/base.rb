@@ -43,7 +43,7 @@ module Contract
 
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
     belongs_to :customer_bank_account, class_name: 'BankAccount'
-    belongs_to :market_location
+    belongs_to :market_location, class_name: 'Register::Meta', foreign_key: :register_meta_id
 
     # status consts
     ONBOARDING = 'onboarding'
@@ -60,7 +60,7 @@ module Contract
     scope :localpool_processing,     -> { where(type: 'LocalpoolProcessing') }
     scope :metering_point_operators, -> { where(type: 'MeteringPointOperator') }
     scope :other_suppliers,          -> { where(type: 'OtherSupplier') }
-    scope :for_market_locations,     -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty))}
+    scope :for_localpool,            -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty))}
     scope :localpool_power_takers_and_other_suppliers, -> {where('type in (?)', %w(LocalpoolPowerTaker OtherSupplier))}
     scope :running_in_year, ->(year) do
       where('begin_date <= ?', Date.new(year, 12, 31)).where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1))

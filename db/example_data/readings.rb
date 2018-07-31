@@ -1,15 +1,15 @@
 def all_reading_dates(localpool)
   dates = []
-  localpool.market_locations.each do |market_location|
+  localpool.register_meta.each do |register_meta|
     # add first date to the beginning
-    dates << [market_location.register, localpool.start_date, :device_setup]
+    dates << [register_meta.register, localpool.start_date, :device_setup]
     # yearly dates
     ((localpool.start_date.year + 1)..Date.today.year).each do |year|
-      dates << [market_location.register, Date.new(year, 1, 1), :regular_reading]
+      dates << [register_meta.register, Date.new(year, 1, 1), :regular_reading]
     end
     # now add contract end dates
-    market_location.contracts.select(&:ended?).each do |contract|
-      dates << [market_location.register, contract.end_date, :contract_change]
+    register_meta.contracts.select(&:ended?).each do |contract|
+      dates << [register_meta.register, contract.end_date, :contract_change]
     end
   end
   dates
