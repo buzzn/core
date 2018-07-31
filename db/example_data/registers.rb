@@ -1,5 +1,4 @@
 def update_register(register, name)
-  ml = FactoryGirl.create(:market_location, register: register)
   register.meta.update(name: name)
   register
 end

@@ -69,10 +69,10 @@ FactoryGirl.define do
 
   trait :is_localpool_powertaker_contract do
     before(:create) do |contract, _evaluator|
-      unless contract.market_location
+      unless contract.register_meta
         meter = FactoryGirl.create(:meter, :real, :one_way,
                                    group: contract.localpool)
-        contract.market_location = meter.registers.first.meta
+        contract.register_meta = meter.registers.first.meta
       end
     end
     # makes sure all contracts of a localpool get the same contract nr but a sequential addition

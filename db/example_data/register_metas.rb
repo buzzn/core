@@ -1,9 +1,8 @@
-SampleData.market_locations = OpenStruct.new
+SampleData.register_metas = OpenStruct.new
 
-def create_market_location(name, register)
-  ml = FactoryGirl.create(:market_location, register: register)
-  ml.register.meta.update(name: name)
-  ml.register.meta
+def create_register_meta(name, register)
+  register.meta.update(name: name)
+  register.meta
 end
 
 # names = [
@@ -23,15 +22,15 @@ end
 #   # Apartment 10      => apartment_10
 #   # Ladestation eAuto => ladestation_eauto
 #   var_name = name.split(' (').first.downcase.tr(' ', '_')
-#   SampleData.market_locations.send("#{var_name}=", create_market_location(name))
+#   SampleData.register_metas.send("#{var_name}=", create_register_meta(name))
 # end
 
-SampleData.market_locations.ladestation_eauto = create_market_location('Ladestation eAuto', create(:register, :consumption_common,
+SampleData.register_metas.ladestation_eauto = create_register_meta('Ladestation eAuto', create(:register, :consumption_common,
                                                                                   meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)))
 
 
-SampleData.market_locations.common_consumption = create_market_location('Allgemeinstrom', create(:register, :consumption_common,
+SampleData.register_metas.common_consumption = create_register_meta('Allgemeinstrom', create(:register, :consumption_common,
                                                                                                   meter: build(:meter, :real, :one_way, group: SampleData.localpools.people_power)))
 
-SampleData.market_locations.apartment_10 = create_market_location('Apartment 10', create(:register, :substitute,
+SampleData.register_metas.apartment_10 = create_register_meta('Apartment 10', create(:register, :substitute,
                                                                             meter: build(:meter, :virtual, group: SampleData.localpools.people_power)))

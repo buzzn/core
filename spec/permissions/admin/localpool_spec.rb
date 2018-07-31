@@ -36,7 +36,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     create(:contract, :localpool_powertaker,
            localpool: pool,
            customer: localpool_member3.person,
-           market_location: meter.registers.first.meta)
+           register_meta: meter.registers.first.meta)
     pool.registers.each do |r|
       r.update(address: create(:address)) unless r.valid?
     end

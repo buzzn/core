@@ -3,10 +3,9 @@
 # https://de.wikipedia.org/wiki/Marktlokations-Identifikationsnummer
 #
 module Register
-  class MarketLocation2 < ActiveRecord::Base
+  class MarketLocation < ActiveRecord::Base
 
-    # TODO self.table_name = 'market_locations'
-    self.table_name = 'market_locations2'
+    self.table_name = 'market_locations'
 
     has_many :meta, class_name: 'Meta'
 

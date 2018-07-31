@@ -2,7 +2,7 @@ require 'buzzn/schemas/invariants/register/substitute'
 
 describe 'Schemas::Invariants::Register::Base' do
 
-  entity(:register) { create(:register, :real, :with_market_location) }
+  entity(:register) { create(:register, :real) }
 
   context 'readings' do
 

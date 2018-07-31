@@ -30,7 +30,7 @@ module Register
       registers.last
     end
 
-    belongs_to :market_location, class_name: 'MarketLocation2', foreign_key: :market_location_id
+    belongs_to :market_location, class_name: 'MarketLocation', foreign_key: :market_location_id
 
     def contracts_in_date_range(date_range)
       contracts.in_date_range(date_range)

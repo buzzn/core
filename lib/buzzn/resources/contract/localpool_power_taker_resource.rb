@@ -14,7 +14,9 @@ module Contract
                 :old_account_number,
                 :mandate_reference
 
-    has_one :market_location
+    has_one :market_location, Register::MetaResource do |object|
+      object.register_meta
+    end
 
   end
 end

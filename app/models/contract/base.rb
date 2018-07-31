@@ -43,7 +43,7 @@ module Contract
 
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
     belongs_to :customer_bank_account, class_name: 'BankAccount'
-    belongs_to :market_location, class_name: 'Register::Meta', foreign_key: :register_meta_id
+    belongs_to :register_meta, class_name: 'Register::Meta', foreign_key: :register_meta_id
 
     # status consts
     ONBOARDING = 'onboarding'

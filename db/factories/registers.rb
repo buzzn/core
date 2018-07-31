@@ -51,12 +51,6 @@ FactoryGirl.define do
       initialize_with { Register::Real.new }
     end
 
-    trait :with_market_location do
-      before(:create) do |register, evaluator|
-        create(:market_location, register: register)
-      end
-    end
-
     [:grid_consumption, :grid_feeding,
      :production_bhkw, :production_pv, :production_water, :production_wind,
      :consumption, :consumption_common
