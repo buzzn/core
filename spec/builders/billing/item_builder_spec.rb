@@ -72,8 +72,7 @@ describe 'Builders::Billing::ItemBuilder' do
     describe 'begin_reading' do
 
       let(:register)        { create(:register, :real, readings: readings) }
-      let(:market_location) { create(:market_location, register: register) }
-      let(:contract)        { create(:contract, :localpool_powertaker, market_location: market_location) }
+      let(:contract)        { create(:contract, :localpool_powertaker, market_location: register.meta) }
 
       context 'register has no reading for item begin date' do
         let(:readings) { [] }
@@ -93,8 +92,7 @@ describe 'Builders::Billing::ItemBuilder' do
     describe 'end_reading' do
 
       let(:register)        { create(:register, :real, readings: readings) }
-      let(:market_location) { create(:market_location, register: register) }
-      let(:contract)        { create(:contract, :localpool_powertaker, market_location: market_location) }
+      let(:contract)        { create(:contract, :localpool_powertaker, market_location: register.meta) }
 
       context 'register has no reading for item end date' do
         let(:readings) { [] }

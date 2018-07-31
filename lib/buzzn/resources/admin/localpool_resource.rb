@@ -1,6 +1,7 @@
 require_relative '../group_resource'
 require_relative '../person_resource'
 require_relative '../contract/tariff_resource'
+require_relative '../register/meta_resource'
 require_relative 'billing_cycle_resource'
 require_relative 'device_resource'
 require_relative '../../schemas/completeness/admin/localpool'
@@ -39,7 +40,10 @@ module Admin
     has_many :contracts
     has_many :localpool_processing_contracts
     has_many :registers
-    has_many :market_locations
+    has_many :market_locations, Register::MetaResource do |object|
+      object.register_meta
+    end
+    has_many :register_meta
     has_many :persons
     has_many :tariffs, Contract::TariffResource
     has_many :billing_cycles, BillingCycleResource, :next_billing_cycle_begin_date

@@ -3,7 +3,7 @@ SampleData.market_locations = OpenStruct.new
 def create_market_location(name, register)
   ml = FactoryGirl.create(:market_location, register: register)
   ml.register.meta.update(name: name)
-  ml
+  ml.register.meta
 end
 
 # names = [

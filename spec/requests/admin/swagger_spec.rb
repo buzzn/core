@@ -1,5 +1,5 @@
 require 'buzzn/schemas/support/visitor'
-describe Admin, :swagger, :request_helper, :side_effects => true do
+describe Admin, :swagger, :request_helper, order: :defined do
   include SwaggerHelper
 
   def app
@@ -81,7 +81,7 @@ describe Admin, :swagger, :request_helper, :side_effects => true do
     register = create(:meter, :real, group: localpool).registers.first
     create(:contract, :localpool_powertaker,
            localpool: localpool,
-           market_location: create(:market_location, register: register))
+           market_location: register.meta)
   end
 
   entity!(:billing_1) do

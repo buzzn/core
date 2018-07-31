@@ -8,12 +8,11 @@ describe Admin::LocalpoolRoda, :request_helper do
   context 'market location' do
 
     entity(:market_location) do
-      create(:market_location,
-             register: create(:register, :real))
+      create(:register, :real).meta
     end
 
     entity(:group) do
-      group = market_location.group
+      group = market_location.register.meter.group
       $user.person.reload.add_role(Role::GROUP_MEMBER, group)
       group
     end

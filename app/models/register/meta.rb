@@ -23,11 +23,22 @@ module Register
 
     has_many :registers, class_name: 'Base', foreign_key: :register_meta_id
 
+    has_many :contracts, -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty)) }, class_name: 'Contract::Base', foreign_key: :register_meta_id
+    has_many :billings, through: :contracts
+
     def register
       registers.last
     end
 
     belongs_to :market_location, class_name: 'MarketLocation2', foreign_key: :market_location_id
+
+    def contracts_in_date_range(date_range)
+      contracts.in_date_range(date_range)
+    end
+
+    def billings_in_date_range(date_range)
+      billings.in_date_range(date_range)
+    end
 
   end
 end

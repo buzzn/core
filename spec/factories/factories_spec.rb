@@ -73,7 +73,7 @@ describe 'Factories produce valid records' do
         end
       end
       describe 'market_location' do
-        it { is_expected.to have_association(:market_location, MarketLocation) }
+        it { is_expected.to have_association(:market_location, Register::Meta) }
       end
       include_examples 'has valid invariants'
      end
@@ -88,7 +88,7 @@ describe 'Factories produce valid records' do
         end
       end
       describe 'market_location' do
-        it { is_expected.to have_association(:market_location, MarketLocation) }
+        it { is_expected.to have_association(:market_location, Register::Meta) }
       end
       include_examples 'has valid invariants'
     end
