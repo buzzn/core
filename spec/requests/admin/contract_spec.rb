@@ -73,8 +73,8 @@ describe Admin::LocalpoolRoda, :request_helper do
               }
             end
           },
-          'contractor'=>person_json.dup,
-          'customer'=>organization_json.dup,
+          'contractor'=>organization_json.dup,
+          'customer'=>person2_json.dup,
           'customer_bank_account'=>{
             'id'=>contract.customer_bank_account.id,
             'type'=>'bank_account',
@@ -214,7 +214,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             end
           },
           'contractor'=>buzzn_json,
-          'customer'=>person_json.dup,
+          'customer'=>organization_json.dup,
           'customer_bank_account'=>{
             'id'=>contract.customer_bank_account.id,
             'type'=>'bank_account',
@@ -300,7 +300,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
           let(:contract_json) { send "#{type}_contract_json" }
 
-          it '200' do
+          it "200 for #{type}" do
             GET "/localpools/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,market_location:[register:meter]'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
@@ -412,8 +412,9 @@ describe Admin::LocalpoolRoda, :request_helper do
         let('contract') { metering_point_operator_contract }
 
         let('customer_json') do
-          json = person_json.dup
+          json = organization_json.dup
           json.delete('address')
+          json.delete('contact')
           json
         end
 
