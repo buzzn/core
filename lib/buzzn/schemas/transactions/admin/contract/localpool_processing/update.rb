@@ -8,7 +8,7 @@ module Schemas::Transactions::Admin::Contract::LocalpoolProcessing
     optional(:begin_date).maybe(:date?)
     optional(:termination_date).maybe(:date?)
     optional(:end_date).maybe(:date?)
-    # FIXME add rest of tax details
+    # TODO add rest of tax details
   end
 
 end
