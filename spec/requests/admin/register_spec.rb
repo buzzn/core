@@ -11,7 +11,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
   entity!(:real_register) do
     register = meter.registers.first
-    create(:contract, :localpool_powertaker, market_location: create(:market_location, register: register), localpool: group)
+    create(:contract, :localpool_powertaker, register_meta: register.meta, localpool: group)
     register
   end
 
@@ -21,6 +21,13 @@ describe Admin::LocalpoolRoda, :request_helper do
 
   context 'meters' do
     context 'registers' do
+
+      it 'PUT - 405' do
+        PUT "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
+        expect(response).to have_http_status(405)
+        expect(response.headers['X-Allowed-Methods']).to eq('get, patch')
+      end
+
       context 'PATCH' do
 
         let(:updated_json) do
@@ -42,7 +49,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'pre_decimal_position'=>6,
             'post_decimal_position'=>1,
             'low_load_ability'=>false,
-            'metering_point_id'=>'123456',
+            'metering_point_id'=>'12345667890',
             'obis'=>register.obis,
           }
         end
@@ -56,7 +63,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'observer_min_threshold'=>['must be an integer'],
             'observer_max_threshold'=>['must be an integer'],
             'observer_offline_monitoring'=>['must be boolean'],
-            'metering_point_id'=>['size cannot be greater than 64'],
+            'metering_point_id'=>['length must be 11'],
             'updated_at'=>['is missing']
           }
         end
@@ -101,7 +108,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           old = register.updated_at
           PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
                 updated_at: register.updated_at,
-                metering_point_id: '123456',
+                metering_point_id: '12345667890',
                 label: Register::Meta.labels[:demarcation_pv],
                 share_with_group: true,
                 share_publicly: false,
@@ -111,7 +118,7 @@ describe Admin::LocalpoolRoda, :request_helper do
                 observer_offline_monitoring: true
           expect(response).to have_http_status(200)
           register.reload
-          expect(register.metering_point_id).to eq '123456'
+          expect(register.meter.metering_location&.metering_location_id).to eq '12345667890'
           expect(register.meta.label).to eq 'demarcation_pv'
           expect(register.meta.share_with_group).to eq true
           expect(register.meta.share_publicly).to eq false
@@ -121,7 +128,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           expect(register.meta.observer_offline_monitoring).to eq true
 
           result = json
-          expect(result.delete('updated_at')).to be > old.as_json
+          expect(result.delete('updated_at')).to be >= old.as_json
           expect(result.delete('updated_at')).not_to eq old.as_json
           expect(result.to_yaml).to eq updated_json.to_yaml
         end
@@ -152,7 +159,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'pre_decimal_position'=>6,
           'post_decimal_position'=>real_register.post_decimal_position,
           'low_load_ability'=>false,
-          'metering_point_id'=>real_register.metering_point_id,
+          'metering_point_id'=>real_register.meter.reload.metering_location&.metering_location_id,
           'obis'=>real_register.obis,
         }
       end
@@ -200,7 +207,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             json['pre_decimal_position'] = register.pre_decimal_position
             json['post_decimal_position'] = register.post_decimal_position
             json['low_load_ability'] = register.low_load_ability
-            json['metering_point_id'] = register.metering_point_id
+            json['metering_point_id'] = register.meter.metering_location&.metering_location_id
             json['obis'] = register.obis
           end
           json
@@ -240,7 +247,7 @@ describe Admin::LocalpoolRoda, :request_helper do
                 'pre_decimal_position'=>register.pre_decimal_position,
                 'post_decimal_position'=>register.post_decimal_position,
                 'low_load_ability'=>register.low_load_ability,
-                'metering_point_id'=>register.metering_point_id,
+                'metering_point_id'=>register.meter.metering_location&.metering_location_id,
                 'obis'=>register.obis
               }
             end

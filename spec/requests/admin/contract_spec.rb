@@ -13,7 +13,7 @@ describe Admin::LocalpoolRoda, :request_helper do
     context 'GET' do
       let(:localpool_power_taker_contract_json) do
         contract = localpool_power_taker_contract
-        register = contract.market_location.register
+        register = contract.register_meta.register
         meter = register.meter
         {
           'id'=>contract.id,
@@ -100,10 +100,10 @@ describe Admin::LocalpoolRoda, :request_helper do
             'deletable'=> false,
           },
           'market_location' => {
-            'id' => contract.market_location.id,
+            'id' => contract.register_meta.id,
             'type' => 'market_location',
-            'updated_at'=> contract.market_location.updated_at.as_json,
-            'name' => contract.market_location.name,
+            'updated_at'=> contract.register_meta.updated_at.as_json,
+            'name' => contract.register_meta.register.meta.name,
             'kind' => 'consumption',
             'market_location_id' => nil,
             'updatable' => false,
@@ -126,8 +126,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               'pre_decimal_position'=>6,
               'post_decimal_position'=>1,
               'low_load_ability'=>false,
-              'metering_point_id'=>register.metering_point_id,
-              'obis'=>register.obis,
+              'metering_point_id'=>register.meter.metering_location&.metering_location_id,    'obis'=>register.obis,
               'meter' => {
                 'id'=>meter.id,
                 'type'=>'meter_real',
@@ -450,23 +449,23 @@ describe Admin::LocalpoolRoda, :request_helper do
         context 'authenticated' do
 
           # we only want POSTs, change that to 405?
-          it '404' do
+          it '405' do
             GET path, $admin
-            expect(response).to have_http_status(404)
+            expect(response).to have_http_status(405)
 
             PATCH path, $admin
-            expect(response).to have_http_status(404)
+            expect(response).to have_http_status(405)
 
             PUT path, $admin
-            expect(response).to have_http_status(404)
+            expect(response).to have_http_status(405)
 
             DELETE path, $admin
-            expect(response).to have_http_status(404)
+            expect(response).to have_http_status(405)
           end
 
-          it '200' do
+          it '201' do
             POST path, $admin
-            expect(response).to have_http_status(200)
+            expect(response).to have_http_status(201)
           end
 
         end

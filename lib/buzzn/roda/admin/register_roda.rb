@@ -40,6 +40,8 @@ class Admin::RegisterRoda < BaseRoda
         end
       end
 
+      r.others!
+
       r.get! 'ticker' do
         aggregated(Transactions::Ticker.(register).value!)
       end

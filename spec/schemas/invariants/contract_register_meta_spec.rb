@@ -10,48 +10,48 @@ describe 'Schemas::Invariants::Contract::Localpool' do
   entity(:other_localpool) { create(:group, :localpool) }
 
   entity(:third_party) { create(:contract, :localpool_third_party, localpool: localpool) }
-  entity!(:market_location) { third_party.market_location }
-  entity(:powertaker) { create(:contract, :localpool_powertaker,    localpool: localpool, market_location: market_location, tariffs: [tariff]) }
+  entity!(:register_meta) { third_party.register_meta }
+  entity(:powertaker) { create(:contract, :localpool_powertaker,    localpool: localpool, register_meta: register_meta, tariffs: [tariff]) }
   entity(:processing) { create(:contract, :localpool_processing,    localpool: localpool) }
   entity(:metering_point_operator) { create(:contract, :metering_point_operator, localpool: localpool) }
 
-  shared_examples 'invariants of market_location' do |contract_name|
+  shared_examples 'invariants of register_meta' do |contract_name|
 
     let(:contract) { send(contract_name) }
-    let(:tested_invariants) { contract.invariant.errors[:market_location] }
+    let(:tested_invariants) { contract.invariant.errors[:register_meta] }
 
     subject { tested_invariants }
 
-    context 'when there is no market_location' do
+    context 'when there is no register_meta' do
       before do
-        contract.market_location = nil
+        contract.register_meta = nil
       end
       it { is_expected.to eq(['must be filled']) }
     end
 
-    context 'when there is a market_location' do
+    context 'when there is a register_meta' do
       before do
-        contract.market_location = market_location
+        contract.register_meta = register_meta
       end
       it { is_expected.to be_nil }
     end
 
     after do
-      contract.market_location = market_location
+      contract.register_meta = register_meta
     end
   end
 
   context 'powertaker contract' do
     before { powertaker.contractor = localpool.owner }
 
-    describe 'market_location' do
-      it_behaves_like 'invariants of market_location', :powertaker
+    describe 'register_meta' do
+      it_behaves_like 'invariants of register_meta', :powertaker
     end
   end
 
   context 'third party contract' do
-    describe 'market_location' do
-      it_behaves_like 'invariants of market_location', :third_party
+    describe 'register_meta' do
+      it_behaves_like 'invariants of register_meta', :third_party
     end
   end
 end

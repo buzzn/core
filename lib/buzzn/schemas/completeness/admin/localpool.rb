@@ -9,7 +9,7 @@ module Schemas::Completeness::Admin
 
     configure do
       def metering_point_id?(input)
-        ! input.metering_point_id.nil?
+        ! input.meter.metering_location&.metering_location_id.nil?
       end
     end
 

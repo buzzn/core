@@ -6,7 +6,7 @@ module Schemas
 
       LocalpoolRegister = Schemas::Support.Form(Localpool) do
 
-        required(:market_location).filled
+        required(:register_meta).filled
 
       end
 

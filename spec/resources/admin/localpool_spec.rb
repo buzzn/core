@@ -95,7 +95,7 @@ describe Admin::LocalpoolResource do
 
         context 'without metering_point_id' do
           before do
-            input_register.update(metering_point_id: nil)
+            input_register.meter.update(metering_location: nil)
             pool.object.meters << input_register.meter
           end
           it 'is incomplete' do
@@ -105,7 +105,7 @@ describe Admin::LocalpoolResource do
 
         context 'with metering_point_id' do
           before do
-            input_register.update(metering_point_id: 'DE123423123')
+            input_register.meter.update(metering_location: Meter::MeteringLocation.new(metering_location_id: 'DE123423123'))
             pool.object.meters << input_register.meter
           end
           it 'is complete' do
@@ -131,7 +131,7 @@ describe Admin::LocalpoolResource do
 
         context 'without metering_point_id' do
           before do
-            output_register.update(metering_point_id: nil)
+            output_register.meter.update(metering_location: nil)
             pool.object.meters << output_register.meter
           end
           it 'is incomplete' do
@@ -141,7 +141,7 @@ describe Admin::LocalpoolResource do
 
         context 'with metering_point_id' do
           before do
-            output_register.update(metering_point_id: 'DE123423123')
+            output_register.meter.update(metering_location: Meter::MeteringLocation.new(metering_location_id: 'DE123423124'))
             pool.object.meters << output_register.meter
           end
           it 'is complete' do
