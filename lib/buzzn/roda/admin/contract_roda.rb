@@ -6,6 +6,7 @@ module Admin
     include Import.args[:env,
                         'transactions.admin.contract.document',
                         'transactions.admin.contract.create_localpool_processing',
+                        'transactions.admin.contract.update_localpool_processing',
                        ]
 
     plugin :shared_vars
@@ -23,7 +24,22 @@ module Admin
 
         shared[PARENT] = contract = contracts.retrieve(id)
 
-        r.get! { contract }
+        r.get! do
+          contract
+        end
+
+        r.patch! do
+          case contract
+          when Contract::LocalpoolProcessingResource
+            update_localpool_processing.(resource: contract, params: r.params)
+          else
+            r.response.status = 400
+          end
+        end
+
+        r.get! 'contractor' do
+          contract.contractor!
+        end
 
         r.get!('contractor') { contract.contractor! }
 
