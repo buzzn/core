@@ -1,4 +1,6 @@
 require_relative '../../beekeeper'
+require_relative './minipool/concerns/import_warnings'
+
 class Beekeeper::Minipool::BaseRecord < ActiveRecord::Base
 
   self.abstract_class = true
