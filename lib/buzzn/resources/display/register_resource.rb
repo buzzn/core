@@ -17,6 +17,10 @@ module Display
       end
     end
 
+    def name
+      object.meta.name
+    end
+
     def label
       object.meta.attributes['label']
     end

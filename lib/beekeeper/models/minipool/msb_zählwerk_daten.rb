@@ -27,7 +27,6 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
       name:                  name,
       type:                  'Register::Real',
       label:                 map_label,
-      metering_point_id:     metering_point_id,
       readings:              readings,
       # set these defaults (not imported from beekeeper)
       share_with_group:      false,
@@ -64,7 +63,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   private
 
   def meter_attributes
-    msb_gerät.converted_attributes
+    msb_gerät.converted_attributes.merge(metering_point_id: metering_point_id)
   end
 
   def name

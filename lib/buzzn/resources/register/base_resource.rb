@@ -1,4 +1,5 @@
 require_relative '../reading_resource'
+require_relative 'meta_resource'
 
 module Register
   class BaseResource < Buzzn::Resource::Entity
@@ -20,7 +21,9 @@ module Register
 
     has_one :meter
     has_one :group
-    has_one :market_location
+    has_one :market_location, MetaResource do |object|
+      object.meta
+    end
     has_many :readings, ReadingResource
     has_many :contracts
 

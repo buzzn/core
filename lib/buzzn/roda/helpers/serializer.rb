@@ -8,18 +8,7 @@ module Buzzn
         @logger ||= Buzzn::Logger.new(self)
       end
 
-      def infer_status(object)
-        if object.destroyed?
-          204
-        elsif object.created_at == object.updated_at
-          201
-        end
-      end
-
       def handle_success(value, request)
-        if request.response.status.nil? && value.is_a?(Buzzn::Resource::Base)
-          request.response.status = infer_status(value.object)
-        end
         value
       end
 

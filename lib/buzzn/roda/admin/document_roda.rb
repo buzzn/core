@@ -21,6 +21,8 @@ module Admin
         create.(resource: documents, params: r.params)
       end
 
+      r.others!
+
       r.on :id do |id|
 
         r.get! do
@@ -31,6 +33,8 @@ module Admin
           document = documents.retrieve(id)
           delete.(resource: document)
         end
+
+        r.others!
 
         r.get! 'fetch' do
           doc = documents.retrieve(id)

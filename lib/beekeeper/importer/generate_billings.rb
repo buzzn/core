@@ -52,8 +52,10 @@ class Beekeeper::Importer::GenerateBillings
 
   def create_billings(localpool, billing_cycle)
     billings = []
-    localpool.market_locations.select(&:consumption?).each do |market_location|
-      contracts_to_bill(market_location, billing_cycle.date_range).each do |contract|
+    localpool.register_meta
+      .select{ |ml| ml.register.consumption? }
+      .each do |register_meta|
+      contracts_to_bill(register_meta, billing_cycle.date_range).each do |contract|
         date_range = billing_date_range(contract, billing_cycle)
         billings << create_billing(localpool, contract, date_range, billing_cycle)
       end
@@ -61,10 +63,10 @@ class Beekeeper::Importer::GenerateBillings
     billings.flatten
   end
 
-  def contracts_to_bill(market_location, date_range)
-    #market_location.contracts_in_date_range(date_range).without_third_party
+  def contracts_to_bill(register_meta, date_range)
+    #register_meta.contracts_in_date_range(date_range).without_third_party
     # FIXME: create fake billings for third party contracts; right now that's the only way to show them on the the billing cycle page
-    market_location.contracts_in_date_range(date_range)
+    register_meta.contracts_in_date_range(date_range)
   end
 
   def create_billing(localpool, contract, date_range, billing_cycle = nil)
@@ -88,7 +90,7 @@ class Beekeeper::Importer::GenerateBillings
   def item_for_contract(contract, date_range)
     item = Builders::Billing::ItemBuilder.from_contract(contract, date_range)
     # TODO make contract.register
-    item.register = contract.market_location.register
+    item.register = contract.register_meta.register
     item
   end
 

@@ -86,7 +86,7 @@ describe Admin::Roda, :request_helper do
         expected_persons_json.collect do |item|
           json = item.dup
           if item['id'] == person.id
-            register = contract.market_location.register
+            register = contract.register_meta.register
             contract_json = {
               'id'=>contract.id,
               'type'=>'contract_localpool_power_taker',
@@ -117,10 +117,10 @@ describe Admin::Roda, :request_helper do
                 'description'=>localpool.description,
               },
               'market_location' => {
-                'id' => contract.market_location.id,
+                'id' => contract.register_meta.id,
                 'type' => 'market_location',
-                'updated_at'=> contract.market_location.updated_at.as_json,
-                'name' => contract.market_location.name,
+                'updated_at'=> contract.register_meta.updated_at.as_json,
+                'name' => contract.register_meta.register.meta.name,
                 'kind' => 'consumption',
                 'market_location_id' => nil,
                 'updatable' => false,
@@ -143,7 +143,7 @@ describe Admin::Roda, :request_helper do
                   'pre_decimal_position'=>register.pre_decimal_position,
                   'post_decimal_position'=>register.post_decimal_position,
                   'low_load_ability'=>register.low_load_ability,
-                  'metering_point_id'=>register.metering_point_id,
+                  'metering_point_id'=>register.meter.metering_location&.metering_location_id,
                   'obis'=>register.obis
                 }
               }

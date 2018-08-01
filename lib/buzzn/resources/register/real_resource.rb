@@ -13,5 +13,9 @@ module Register
 
     has_many :devices
 
+    def metering_point_id
+      object.meter.metering_location&.metering_location_id
+    end
+
   end
 end

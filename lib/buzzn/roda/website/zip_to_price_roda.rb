@@ -8,6 +8,7 @@ module Website
     route do |r|
 
       r.post! do
+        response.status = 200
         zip_to_price.(params: r.params)
       end
     end

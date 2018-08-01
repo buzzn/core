@@ -8,12 +8,11 @@ describe Admin::LocalpoolRoda, :request_helper do
   context 'market location' do
 
     entity(:market_location) do
-      create(:market_location,
-             register: create(:register, :real))
+      create(:register, :real).meta
     end
 
     entity(:group) do
-      group = market_location.group
+      group = market_location.register.meter.group
       $user.person.reload.add_role(Role::GROUP_MEMBER, group)
       group
     end
@@ -27,7 +26,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'id' => market_location.id,
           'type' => 'market_location',
           'updated_at' => market_location.updated_at.as_json,
-          'name' => market_location.name,
+          'name' => market_location.register.meta.name,
           'kind' => 'consumption',
           'market_location_id' => nil,
           'updatable' => true,
@@ -50,7 +49,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'pre_decimal_position' => 6,
             'post_decimal_position' => register.post_decimal_position,
             'low_load_ability' => false,
-            'metering_point_id' => register.metering_point_id,
+            'metering_point_id'=>register.meter.metering_location&.metering_location_id,
             'obis' => register.obis,
             'meter' => {
               'id'=>meter.id,

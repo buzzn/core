@@ -30,9 +30,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       add_warnings(attrs, zählwerk)
       register_class = attrs[:type].constantize
       # note: during the import we move the name from the register (zählwerk) to the newly introduced entity
-      register       = register_class.new(attrs.slice(:metering_point_id, :readings, :meter))
+      register       = register_class.new(attrs.slice(:readings, :meter))
       register.build_meta(attrs.except(:type, :meter_attributes, :metering_point_id, :meter, :readings))
-      register.build_market_location(name: attrs[:name])
       # debug = "#{zählwerk.buzznid}: #{register.label} (#{register.name})"
       # debug << " MPID #{register.metering_point_id}" if register.metering_point_id
       # puts debug
@@ -49,7 +48,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       msb_zählwerk_daten.reject(&:skip_import?).collect do |zaehlwerk|
         attrs = zaehlwerk.converted_attributes
         add_warnings(attrs, zaehlwerk)
-        attrs[:meter] = find_or_build_meter(attrs[:meter_attributes])
+        attrs[:meter] = find_or_build_meter(attrs[:meter_attributes], zaehlwerk)
         build_register(attrs, zaehlwerk)
       end
     end
@@ -59,12 +58,22 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       add_warning("meter '#{attrs[:name]}'", zählwerk.msb_gerät.warnings) if zählwerk.msb_gerät.warnings.present?
     end
 
-    def find_or_build_meter(attributes)
+    def find_or_build_meter(attributes, zaehlwerk)
       meter = Beekeeper::MeterRegistry.get(attributes[:buzznid])
       if meter
         meter
       else
+        metering_point_id = attributes.delete(:metering_point_id)
         meter = Meter::Real.new(attributes.except(:buzznid).merge(legacy_buzznid: attributes[:buzznid]))
+        if metering_point_id
+          if metering_point_id.size != 33
+            # FIXME all these warnings seems not to work
+            warn "metering_point_id has wrong size #{metering_point_id}"
+            add_warning("metering_point_id has wrong size #{metering_point_id}",zaehlwerk.warnings)
+          else
+            meter.metering_location = Meter::MeteringLocation.create!(metering_location_id: metering_point_id)
+          end
+        end
         Beekeeper::MeterRegistry.set(attributes[:buzznid], meter)
         meter
       end
