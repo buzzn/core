@@ -2,15 +2,16 @@ shared_context 'contract entities', :shared_context => :metadata do
 
   let(:person) { create(:person, :with_bank_account) }
 
-  let(:localpool) { create(:group, :localpool, :with_address, owner: person) }
+  let(:person2) { create(:person, :with_bank_account) }
 
   let(:organization) do
-    buzzn = create(:organization, :with_address, :with_legal_representation)
-    buzzn.contact = person
-    buzzn.save!
-    buzzn
+    org = create(:organization, :with_address, :with_legal_representation)
+    org.contact = person
+    org.save!
+    org
   end
   let!(:bank_account) { create(:bank_account, owner: organization) }
+  let(:localpool) { create(:group, :localpool, :with_address, owner: organization) }
 
   before do
     $user.person.reload.add_role(Role::GROUP_MEMBER, localpool)
@@ -18,18 +19,21 @@ shared_context 'contract entities', :shared_context => :metadata do
 
   let(:metering_point_operator_contract) do
     create(:contract, :metering_point_operator,
-           localpool: localpool, contractor_bank_account: bank_account)
+           localpool: localpool,
+           contractor_bank_account: bank_account)
   end
 
   let(:localpool_power_taker_contract) do
     create(:contract, :localpool_powertaker,
-           customer: organization,
+           contractor: localpool.owner,
+           customer: person2,
            localpool: localpool)
   end
 
   let(:localpool_processing_contract) do
     create(:contract, :localpool_processing,
-           customer: organization,
+           customer: localpool.owner,
+           contractor: Organization::Market.buzzn,
            localpool: localpool)
   end
 
@@ -96,6 +100,43 @@ shared_context 'contract entities', :shared_context => :metadata do
       json
     end
     person_json
+  end
+
+  let(:person2_json) do
+    person2_json = {
+      'id'=>person2.id,
+      'type'=>'person',
+      'updated_at'=>person2.updated_at.as_json,
+      'prefix'=>person2.attributes['prefix'],
+      'title'=>person2.attributes['title'],
+      'first_name'=>person2.first_name,
+      'last_name'=>person2.last_name,
+      'phone'=>person2.phone,
+      'fax'=>person2.fax,
+      'email'=>person2.email,
+      'preferred_language'=>person2.attributes['preferred_language'],
+      'image'=>person2.image.medium.url,
+      'customer_number' => nil,
+      'updatable'=>true,
+      'deletable'=>false,
+      'address'=>{
+        'id'=>person2.address.id,
+        'type'=>'address',
+        'updated_at'=>person2.address.updated_at.as_json,
+        'street'=>person2.address.street,
+        'city'=>person2.address.city,
+        'zip'=>person2.address.zip,
+        'country'=>person2.address.attributes['country'],
+        'updatable'=>true,
+        'deletable'=>false
+      }
+    }
+    def person2_json.dup
+      json = super
+      json['address'] = json['address'].dup
+      json
+    end
+    person2_json
   end
 
   let(:organization_json) do
