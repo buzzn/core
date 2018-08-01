@@ -310,6 +310,39 @@ describe Admin::LocalpoolRoda, :request_helper do
       end
     end
 
+    context 'PATCH Localpool Processing' do
+      let(:contract) { localpool_processing_contract }
+      let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}" }
+
+      let('update_tax_number_json') do
+        {
+          'tax_number' => '777388834',
+          'updated_at' => contract.updated_at
+        }
+      end
+
+      context 'unauthenticated' do
+
+        it '403' do
+          PATCH path, nil, update_tax_number_json
+          expect(response).to have_http_status(403)
+        end
+
+      end
+
+      context 'authenticated' do
+        it 'updates the tax data' do
+          expect(contract.tax_data.tax_number).to be nil
+          PATCH path, $admin, update_tax_number_json
+          expect(response).to have_http_status(200)
+          expect(json['tax_number']).to eq '777388834'
+          contract.tax_data.reload
+          expect(contract.tax_data.tax_number).to eq '777388834'
+        end
+      end
+
+    end
+
     context 'POST Localpool Processing' do
 
       # we need a clean pool without any contracts
