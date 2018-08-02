@@ -3,9 +3,16 @@ require 'buzzn/transactions/admin/billing_cycle/create'
 describe Transactions::Admin::BillingCycle::Create do
 
   entity!(:localpool) { create(:group, :localpool) }
+  entity!(:localpool_without_start_date) do
+    localpool = create(:group, :localpool)
+    localpool.start_date = nil
+    localpool.save
+    localpool
+  end
 
   let(:account)            { Account::Base.where(person_id: user).first }
-  let(:localpool_resource) { Admin::LocalpoolResource.all(account).first }
+  let(:localpool_resource) { Admin::LocalpoolResource.all(account).retrieve(localpool.id) }
+  let(:localpool_without_start_date_resource) { Admin::LocalpoolResource.all(account).retrieve(localpool_without_start_date.id) }
 
   entity(:member)   { create(:person, :with_account, :with_self_role, roles: { Role::GROUP_MEMBER => localpool }) }
   entity(:operator) { create(:person, :with_account, :with_self_role, roles: { Role::BUZZN_OPERATOR => nil }) }
@@ -26,11 +33,17 @@ describe Transactions::Admin::BillingCycle::Create do
 
     let(:user) { operator }
 
-    it 'fails' do
+    it 'does not leave orphaned objects when failing' do
       before_count = localpool.billing_cycles.count
       expect { subject.call(params: future_input, resource: localpool_resource) }.to raise_error Buzzn::ValidationError
       expect(localpool.billing_cycles.count).to eq before_count
     end
+
+    it 'does not allow creation with empty next_billing_cycle_begin_date' do
+      expect(localpool_without_start_date_resource.next_billing_cycle_begin_date).to be_nil
+      expect { subject.call(params: input, resource: localpool_without_start_date_resource) }.to raise_error Buzzn::ValidationError
+    end
+
   end
 
   describe 'repeated calls' do
