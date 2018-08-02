@@ -87,6 +87,9 @@ module Admin
       if allowed?(permissions.localpool_processing_contracts.create)
         allowed[:create_localpool_processing_contract] = create_localpool_processing_contract.success? || create_localpool_processing_contract.errors
       end
+      if allowed?(permissions.billing_cycles.create)
+        allowed[:create_billing_cycle] = create_billing_cycle.success? || create_billing_cycle.errors
+      end
       allowed
     end
 
@@ -98,6 +101,11 @@ module Admin
     def create_localpool_processing_contract
       subject = Schemas::Support::ActiveRecordValidator.new(self.object)
       Schemas::PreConditions::Localpool::CreateLocalpoolProcessingContract.call(subject)
+    end
+
+    def create_billing_cycle
+      subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+      Schemas::PreConditions::Localpool::CreateBillingCycle.call(subject)
     end
 
     def deletable
