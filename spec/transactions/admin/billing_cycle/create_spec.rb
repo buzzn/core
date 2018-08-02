@@ -11,6 +11,7 @@ describe Transactions::Admin::BillingCycle::Create do
   entity(:operator) { create(:person, :with_account, :with_self_role, roles: { Role::BUZZN_OPERATOR => nil }) }
 
   let(:input) { {name: 'route-66', last_date: Date.today - 5.day} }
+  let(:future_input) { {name: 'fail0r', last_date: Date.today + 24.day} }
 
   describe 'authorization' do
 
@@ -18,6 +19,17 @@ describe Transactions::Admin::BillingCycle::Create do
 
     it 'fails' do
       expect { subject.call(params: input, resource: localpool_resource) }.to raise_error Buzzn::PermissionDenied
+    end
+  end
+
+  describe 'invalid inputs' do
+
+    let(:user) { operator }
+
+    it 'fails' do
+      before_count = localpool.billing_cycles.count
+      expect { subject.call(params: future_input, resource: localpool_resource) }.to raise_error Buzzn::ValidationError
+      expect(localpool.billing_cycles.count).to eq before_count
     end
   end
 
