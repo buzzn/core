@@ -7,6 +7,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   authorize :allowed_roles
   tee :end_date, with: :'operations.end_date'
   tee :set_date_range
+  around :db_transaction
   map :create_billing_cycle, with: :'operations.action.create_item'
 
   def schema
