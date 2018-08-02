@@ -2607,6 +2607,56 @@ paths:
       responses:
         200:
           description: success
+  "/localpools/{localpool_id}/contracts/{localpool_processing_contract_id}":
+    patch:
+      description: updates an existing LocalpoolProcessingContract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_processing_contract_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: tax_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: signing_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: termination_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: end_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/meters":
     get:
       description: returns all the meters of the localpool

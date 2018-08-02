@@ -24,7 +24,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   entity!(:localpool) do
     localpool = create(:group, :localpool, :with_address, owner: person)
-    create(:contract, :localpool_processing, localpool: localpool, customer: organization)
+    create(:contract, :localpool_processing, localpool: localpool)
     create(:contract, :metering_point_operator, localpool: localpool)
     localpool
   end
@@ -46,7 +46,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
                          :with_legal_representation))
   end
 
-  entity!(:localpool_processing_contract) do
+  entity!(:localpool_processing_contract_json) do
     {
       'type' => 'contract_localpool_processing',
     }
@@ -61,6 +61,10 @@ describe Admin, :swagger, :request_helper, order: :defined do
   entity!(:tariff_2) { create(:tariff, group: localpool, begin_date: Date.today) }
 
   entity!(:contract) { localpool.contracts.sample }
+
+  let!(:localpool_processing_contract) do
+    localpool.localpool_processing_contracts.first
+  end
 
   entity!(:meter) { create(:meter, :real, group: localpool) }
 
@@ -140,13 +144,18 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'returns all the contracts of the localpool'
   end
 
-  post '/localpools/{localpool3.id}/contracts', $admin, {}, localpool_processing_contract do
+  post '/localpools/{localpool3.id}/contracts', $admin, {}, localpool_processing_contract_json do
     description 'adds new contract to the localpool'
     schema Schemas::Transactions::Admin::Contract::LocalpoolProcessing::Create
   end
 
   get '/localpools/{localpool.id}/contracts/{contract.id}' do
     description 'returns the contract for the given ID'
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{localpool_processing_contract.id}' do
+    description 'updates an existing LocalpoolProcessingContract'
+    schema Schemas::Transactions::Admin::Contract::LocalpoolProcessing::Update
   end
 
   get '/localpools/{localpool.id}/contracts/{contract.id}/contractor' do
@@ -393,4 +402,5 @@ describe Admin, :swagger, :request_helper, order: :defined do
     expect(response).to have_http_status(200)
     expect(json).not_to be_nil
   end
+
 end
