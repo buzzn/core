@@ -188,5 +188,24 @@ describe Admin::LocalpoolRoda, :request_helper do
         end
       end
     end
+
+    context 'bank-account' do
+
+      entity!(:bank_account) { create(:bank_account, owner: organization) }
+      entity!(:idempotent_update) { { 'updated_at': bank_account.updated_at } }
+
+      context 'PATCH' do
+        it '200' do
+          PATCH "/localpools/#{localpool.id}/organizations/#{organization.id}/bank-accounts/#{bank_account.id}", $admin, idempotent_update
+          expect(response.status).to be 200
+        end
+
+        it '422' do
+          PATCH "/localpools/#{localpool.id}/organizations/#{organization.id}/bank-accounts/#{bank_account.id}", $admin, {}
+          expect(response.status).to be 422
+        end
+      end
+    end
+
   end
 end
