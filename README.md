@@ -123,8 +123,8 @@ We're running on Heroku, so you can deploy from Heroku's web interface if you wa
 
 to switch maintenance mode off/on execute the rake tasks on heroku for staging
 
-    `heroku run rake maintenance:on --remote staging`
-    `heroku run rake maintenance:on --remote staging`
+    `heroku run rake maintenance:on -a buzzn-core-staging`
+    `heroku run rake maintenance:on -a buzzn-core-staging`
 
 or for production
 
