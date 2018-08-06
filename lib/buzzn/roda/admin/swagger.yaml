@@ -1782,6 +1782,7 @@ paths:
         required: false
         type: string
         enum:
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -1821,6 +1822,7 @@ paths:
         required: false
         type: string
         enum:
+        - 
         - de
         - en
       - name: legal_representation.id
@@ -1842,6 +1844,7 @@ paths:
         required: false
         type: string
         enum:
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -1881,6 +1884,7 @@ paths:
         required: false
         type: string
         enum:
+        - 
         - de
         - en
       - name: contact.id
@@ -3308,6 +3312,7 @@ paths:
         required: false
         type: string
         enum:
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -3347,6 +3352,7 @@ paths:
         required: false
         type: string
         enum:
+        - 
         - de
         - en
       - name: address.updated_at

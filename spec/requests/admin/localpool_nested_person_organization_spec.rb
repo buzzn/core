@@ -50,6 +50,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'address' => ['must be filled']
         },
         'create_localpool_processing_contract' => true,
+        'create_billing_cycle' => true
       },
       'next_billing_cycle_begin_date' => '2016-02-01'
     }
