@@ -103,12 +103,12 @@ class Beekeeper::Importer::OptimizeGroup
 
   def complete?(localpool)
     registers = @optimized.local(localpool).collect { |m| m.registers }.flatten
-    p "has grid_consumpion on discovergy: #{registers.one? { |r| r.grid_consumption? }}"
-    p "has grid_feeding on discovergy: #{registers.one? { |r| r.grid_feeding? }}"
-    p "has all production on discovergy: #{registers.any? { |r| r.label.production? }}"
-    registers.one? { |r| r.grid_consumption? } &&
-      registers.one? { |r| r.grid_feeding? } &&
-      registers.any? { |r| r.label.production? }
+    p "has grid_consumpion on discovergy: #{registers.one? { |r| r.meta.grid_consumption? }}"
+    p "has grid_feeding on discovergy: #{registers.one? { |r| r.meta.grid_feeding? }}"
+    p "has all production on discovergy: #{registers.any? { |r| r.production? }}"
+    registers.one? { |r| r.meta.grid_consumption? } &&
+      registers.one? { |r| r.meta.grid_feeding? } &&
+      registers.any? { |r| r.production? }
   end
 
   def no_others?(localpool)

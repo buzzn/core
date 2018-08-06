@@ -5,7 +5,7 @@ module Register
 
     class Label < String
 
-      ['production', 'consumption', 'demarcation', 'grid'].each do |method|
+      ['production', 'consumption', 'demarcation', 'grid', 'grid_consumption', 'grid_feeding'].each do |method|
         define_method "#{method}?" do
           self.to_s.start_with?(method)
         end
