@@ -91,7 +91,8 @@ describe Admin::LocalpoolRoda, :request_helper do
   def serialize(localpool)
     allowed = {
       'create_metering_point_operator_contract' => {},
-      'create_localpool_processing_contract' => {}
+      'create_localpool_processing_contract' => {},
+      'create_billing_cycle' => {}
     }
     unless localpool.address
       allowed['create_metering_point_operator_contract']['address'] = ['must be filled']
@@ -99,6 +100,9 @@ describe Admin::LocalpoolRoda, :request_helper do
     unless localpool.owner
       allowed['create_metering_point_operator_contract']['owner'] = ['must be filled']
       allowed['create_localpool_processing_contract']['owner'] = ['must be filled']
+    end
+    unless localpool.start_date
+      allowed['create_billing_cycle']['start_date'] = ['must be filled']
     end
     if localpool.localpool_processing_contracts.any?
       allowed['create_localpool_processing_contract']['localpool_processing_contract'] = ['cannot be defined']
@@ -132,7 +136,8 @@ describe Admin::LocalpoolRoda, :request_helper do
       'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil),
       'allowed_actions' => {
         'create_metering_point_operator_contract'=> allowed['create_metering_point_operator_contract'],
-        'create_localpool_processing_contract'=> allowed['create_localpool_processing_contract']
+        'create_localpool_processing_contract'=> allowed['create_localpool_processing_contract'],
+        'create_billing_cycle'=> allowed['create_billing_cycle']
       },
       'next_billing_cycle_begin_date' => localpool.start_date.as_json }
   end
@@ -247,7 +252,8 @@ describe Admin::LocalpoolRoda, :request_helper do
           },
           'create_localpool_processing_contract' => {
             'owner' => ['must be filled']
-          }
+          },
+          'create_billing_cycle' => true
         },
         'next_billing_cycle_begin_date' => Date.today.as_json }
     end
@@ -260,18 +266,43 @@ describe Admin::LocalpoolRoda, :request_helper do
       json
     end
 
-    it '201' do
-      POST '/localpools', $admin, new_localpool
-
-      expect(response).to have_http_status(201)
-      result = json
-      id = result.delete('id')
-      expect(result.delete('updated_at')).not_to be_nil
-      expect(Group::Localpool.find(id)).not_to be_nil
-      result.delete('slug')
-      result.delete('display_app_url')
-      expect(result.to_yaml).to eq created_json.to_yaml
+    let(:created_json_missing_start) do
+      json = created_json.dup
+      json['start_date'] = nil
+      json['next_billing_cycle_begin_date'] = nil
+      json['allowed_actions']['create_billing_cycle'] = {
+        'start_date' => ['must be filled']
+      }
+      json
     end
+
+    let(:new_localpool_missing_start) do
+      json = created_json_missing_start.dup
+      json.delete('type')
+      json.delete('updatable')
+      json.delete('deletable')
+      json
+    end
+
+    context 'create'
+    [[:new_localpool, :created_json], [:new_localpool_missing_start, :created_json_missing_start]].each do |tuple|
+
+      let(:parameter) { send tuple[0]}
+      let(:expected) { send tuple[1]}
+      it "201 for #{tuple[0]}" do
+        POST '/localpools', $admin, parameter
+
+        expect(response).to have_http_status(201)
+        result = json
+        id = result.delete('id')
+        expect(result.delete('updated_at')).not_to be_nil
+        expect(Group::Localpool.find(id)).not_to be_nil
+        result.delete('slug')
+        result.delete('display_app_url')
+        expect(result.to_yaml).to eq expected.to_yaml
+      end
+    end
+
   end
 
   context 'PATCH' do
@@ -312,7 +343,8 @@ describe Admin::LocalpoolRoda, :request_helper do
         'display_app_url' => nil,
         'allowed_actions' => {
           'create_metering_point_operator_contract'=> {'address' => ['must be filled']},
-          'create_localpool_processing_contract'=> {'localpool_processing_contract' => ['cannot be defined']}
+          'create_localpool_processing_contract'=> {'localpool_processing_contract' => ['cannot be defined']},
+          'create_billing_cycle' => true
         },
         'next_billing_cycle_begin_date' => Date.yesterday.as_json }
     end
@@ -381,7 +413,20 @@ describe Admin::LocalpoolRoda, :request_helper do
         #expect(result.delete('updated_at')).to be > old.as_json
         expect(Time.parse(result.delete('updated_at'))).to be > old
         expect(result.to_yaml).to eq updated_json.to_yaml
-       end
+      end
+
+      it '200 - delete' do
+        old = localpool.updated_at
+        PATCH "/localpools/#{localpool.id}", $admin,
+              updated_at: localpool.updated_at,
+              description: nil,
+              start_date: nil
+
+        expect(response).to have_http_status(200)
+        localpool.reload
+        expect(localpool.description).to be_nil
+        expect(localpool.start_date).to be_nil
+      end
     end
 
   context 'localpool-processing-contract' do

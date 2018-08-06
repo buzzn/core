@@ -69,6 +69,16 @@ describe Admin::BillingCycleResource, :request_helper do
                     expected: :expected_json,
                     errors: :expected_errors
 
+    it 'fails without a start date' do
+      start_date = localpool.start_date
+      localpool.start_date = nil
+      localpool.save
+      POST path, $admin, { last_date: '2018-08-02', name: 'shouldntwork'}
+      expect(response).to have_http_status(422)
+      localpool.start_date = start_date
+      localpool.save
+    end
+
   end
 
   context 'PATCH' do

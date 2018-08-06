@@ -5,12 +5,19 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
 
   validate :schema
   authorize :allowed_roles
+  precondition :localpool_schema
+  tee :localpool_schema
   tee :end_date, with: :'operations.end_date'
   tee :set_date_range
+  around :db_transaction
   map :create_billing_cycle, with: :'operations.action.create_item'
 
   def schema
     Schemas::Transactions::Admin::BillingCycle::Create
+  end
+
+  def localpool_schema
+    Schemas::PreConditions::Localpool::CreateBillingCycle
   end
 
   def allowed_roles(permission_context:)
