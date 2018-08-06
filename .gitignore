@@ -27,6 +27,7 @@ dump.rdb
 *.local
 *.staging
 *.production
+.env.development
 
 public/uploads
 uploads
