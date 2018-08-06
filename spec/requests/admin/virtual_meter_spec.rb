@@ -179,7 +179,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
           PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}",
                 $admin,
-                updated_at: DateTime.now,
+                updated_at: formula_part.updated_at,
                 register_id: 123
           expect(response).to have_http_status(404)
         end
