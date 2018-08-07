@@ -343,11 +343,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     end
 
-    context 'POST Localpool Processing' do
-
-      # we need a clean pool without any contracts
-      let(:person) { create(:person, :with_bank_account) }
-      let(:localpool) { create(:group, :localpool, :with_address, owner: person) }
+    context 'POST contract' do
 
       let('path') { "/localpools/#{localpool.id}/contracts" }
 
@@ -356,6 +352,45 @@ describe Admin::LocalpoolRoda, :request_helper do
           'type' => 'contract_with_the_devil'
         }
       end
+
+      let('missing_type_json') do
+        {
+          'foo' => 'somedata'
+        }
+      end
+
+      context 'unauthenticated' do
+
+        it '403' do
+          POST path
+          expect(response).to have_http_status(403)
+        end
+
+      end
+
+      context 'authenticated' do
+
+        it '400 for an invalid type' do
+          POST path, $admin, invalid_type_json
+          expect(response).to have_http_status(400)
+        end
+
+        it '400 for an missing type' do
+          POST path, $admin, missing_type_json
+          expect(response).to have_http_status(400)
+        end
+
+      end
+
+    end
+
+    context 'POST Localpool Processing' do
+
+      # we need a clean pool without any contracts
+      let(:person) { create(:person, :with_bank_account) }
+      let(:localpool) { create(:group, :localpool, :with_address, owner: person) }
+
+      let('path') { "/localpools/#{localpool.id}/contracts" }
 
       let('missing_everything_json') do
         {
@@ -378,23 +413,9 @@ describe Admin::LocalpoolRoda, :request_helper do
         missing_everything_json.merge(tax_number_json).merge(signing_date_json)
       end
 
-      context 'unauthenticated' do
-
-        it '403' do
-          POST path
-          expect(response).to have_http_status(403)
-        end
-
-      end
-
       context 'authenticated' do
 
         context 'invalid data' do
-
-          it 'fails with 400 for a wrong type' do
-            POST path, $admin, invalid_type_json
-            expect(response).to have_http_status(400)
-          end
 
           it 'fails with 422 for incomplete data: everything' do
             POST path, $admin, missing_everything_json
