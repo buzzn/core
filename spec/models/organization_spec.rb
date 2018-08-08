@@ -1,3 +1,4 @@
+# coding: utf-8
 describe 'Organization Model' do
 
   describe 'predefined organizations' do
@@ -56,6 +57,24 @@ describe 'Organization Model' do
       other_organizations = Organization::General.filter(nil)
       expect(other_organizations.size).to eq Organization::General.count
     end
+  end
+
+  describe 'slug generation' do
+    entity!(:organization) { create(:organization) }
+
+    it 'has a slug' do
+      expect(organization.slug).not_to be_nil
+    end
+
+    it 'creates a distinct slug' do
+      cloned = Organization::General.new
+      cloned.name = organization.name
+      cloned.description = organization.description
+      cloned.save
+      expect(cloned.slug).not_to be_nil
+      expect(cloned.slug).not_to eq organization.slug
+    end
+
   end
 
   describe 'market functions' do
