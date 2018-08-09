@@ -2,6 +2,9 @@ require_relative '../group_resource'
 require_relative '../person_resource'
 require_relative '../contract/tariff_resource'
 require_relative '../register/meta_resource'
+require_relative '../contract/localpool_processing_resource'
+require_relative '../contract/localpool_power_taker_resource'
+require_relative '../contract/metering_point_operator_resource'
 require_relative 'billing_cycle_resource'
 require_relative 'device_resource'
 require_relative '../../schemas/completeness/admin/localpool'
@@ -28,17 +31,18 @@ module Admin
                # TODO remove me once the UI uses the meta data section
                :next_billing_cycle_begin_date
 
-    has_one :localpool_processing_contract
-    has_one :metering_point_operator_contract
     has_many :meters do |object|
       object.meters.real_or_virtual
     end
     has_many :managers, PersonResource
-    has_many :localpool_power_taker_contracts
     has_many :users
     has_many :organizations
+
     has_many :contracts
-    has_many :localpool_processing_contracts
+    has_many :localpool_processing_contracts, Contract::LocalpoolProcessingResource
+    has_many :metering_point_operator_contracts, Contract::MeteringPointOperatorResource
+    has_many :localpool_power_taker_contracts, Contract::PowerTakerResource
+
     has_many :registers
     has_many :market_locations, Register::MetaResource do |object|
       object.register_meta
@@ -81,7 +85,7 @@ module Admin
 
     def allowed_actions
       allowed = {}
-      if allowed?(permissions.metering_point_operator_contract.create)
+      if allowed?(permissions.metering_point_operator_contracts.create)
         allowed[:create_metering_point_operator_contract] = create_metering_point_operator_contract.success? || create_metering_point_operator_contract.errors
       end
       if allowed?(permissions.localpool_processing_contracts.create)

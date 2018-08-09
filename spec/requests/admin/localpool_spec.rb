@@ -129,7 +129,18 @@ describe Admin::LocalpoolRoda, :request_helper do
       'show_display_app' => localpool.show_display_app,
       'updatable'=>true,
       'deletable'=>localpool.owner.nil?,
-      'createables' => ['managers', 'organizations', 'localpool_processing_contracts', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
+      'createables' => [
+        'managers',
+        'organizations',
+        'localpool_processing_contracts',
+        'metering_point_operator_contracts',
+        'localpool_power_taker_contracts',
+        'registers',
+        'persons',
+        'tariffs',
+        'billing_cycles',
+        'devices'
+      ],
       'incompleteness' => serialized_incompleteness(localpool),
       'bank_account' => serialized_bank_account(localpool.bank_account),
       'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
@@ -241,7 +252,18 @@ describe Admin::LocalpoolRoda, :request_helper do
         'show_display_app' => true,
         'updatable'=>true,
         'deletable'=>true,
-        'createables' => ['managers', 'organizations', 'localpool_processing_contracts', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
+        'createables' => [
+          'managers',
+          'organizations',
+          'localpool_processing_contracts',
+          'metering_point_operator_contracts',
+          'localpool_power_taker_contracts',
+          'registers',
+          'persons',
+          'tariffs',
+          'billing_cycles',
+          'devices'
+        ],
         'incompleteness' => serialized_incompleteness(nil),
         'bank_account' => nil,
         'power_sources' => [],
@@ -307,8 +329,8 @@ describe Admin::LocalpoolRoda, :request_helper do
 
   context 'PATCH' do
 
-      # make rubocop happy
-      let(:wrong_json) do
+    # make rubocop happy
+    let(:wrong_json) do
       {
         'updated_at'=>['is missing'],
         'name'=>['size cannot be greater than 64'],
@@ -336,7 +358,18 @@ describe Admin::LocalpoolRoda, :request_helper do
         'show_display_app' => false,
         'updatable'=>true,
         'deletable'=>false,
-        'createables' => ['managers', 'organizations', 'localpool_processing_contracts', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
+        'createables' => [
+          'managers',
+          'organizations',
+          'localpool_processing_contracts',
+          'metering_point_operator_contracts',
+          'localpool_power_taker_contracts',
+          'registers',
+          'persons',
+          'tariffs',
+          'billing_cycles',
+          'devices'
+        ],
         'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => nil,
         'power_sources' => ['pv'],
@@ -368,408 +401,50 @@ describe Admin::LocalpoolRoda, :request_helper do
       expect(response).to have_http_status(409)
     end
 
-      it '422' do
-        PATCH "/localpools/#{localpool.id}", $admin,
-              name: 'NoName' * 20,
-              description: 'something' * 100,
-              start_date: 'today is it not',
-              show_object: 'maybe',
-              show_production: 'nope',
-              show_energy: 'yep',
-              show_contact: 'not',
-              show_display_app: 'later'
+    it '422' do
+      PATCH "/localpools/#{localpool.id}", $admin,
+            name: 'NoName' * 20,
+            description: 'something' * 100,
+            start_date: 'today is it not',
+            show_object: 'maybe',
+            show_production: 'nope',
+            show_energy: 'yep',
+            show_contact: 'not',
+            show_display_app: 'later'
 
-        expect(response).to have_http_status(422)
-        expect(json.to_yaml).to eq wrong_json.to_yaml
-      end
-
-      it '200' do
-         # to satisfy rubocop :(
-         old = localpool.updated_at
-        PATCH "/localpools/#{localpool.id}", $admin,
-              updated_at: localpool.updated_at,
-              name: 'a b c d',
-              description: 'none',
-              start_date: Date.yesterday.as_json,
-              show_object: true,
-              show_production: false,
-              show_energy: true,
-              show_contact: false,
-              show_display_app: false
-
-        expect(response).to have_http_status(200)
-        localpool.reload
-        expect(localpool.name).to eq 'a b c d'
-        expect(localpool.description).to eq 'none'
-        expect(localpool.start_date).to eq Date.yesterday
-        expect(localpool.show_object).to eq true
-        expect(localpool.show_production).to eq false
-        expect(localpool.show_energy).to eq true
-        expect(localpool.show_contact).to eq false
-        expect(localpool.show_display_app).to eq false
-
-        result = json
-        # TODO fix it: our time setup does not allow
-        #expect(result.delete('updated_at')).to be > old.as_json
-        expect(Time.parse(result.delete('updated_at'))).to be > old
-        expect(result.to_yaml).to eq updated_json.to_yaml
-      end
-
-      it '200 - delete' do
-        old = localpool.updated_at
-        PATCH "/localpools/#{localpool.id}", $admin,
-              updated_at: localpool.updated_at,
-              description: nil,
-              start_date: nil
-
-        expect(response).to have_http_status(200)
-        localpool.reload
-        expect(localpool.description).to be_nil
-        expect(localpool.start_date).to be_nil
-      end
+      expect(response).to have_http_status(422)
+      expect(json.to_yaml).to eq wrong_json.to_yaml
     end
 
-  context 'localpool-processing-contract' do
+    it '200' do
+      old = localpool.updated_at
+      PATCH "/localpools/#{localpool.id}", $admin,
+            updated_at: localpool.updated_at,
+            name: 'a b c d',
+            description: 'none',
+            start_date: Date.yesterday.as_json,
+            show_object: true,
+            show_production: false,
+            show_energy: true,
+            show_contact: false,
+            show_display_app: false
 
-    let(:expected_json) do
-      contract = localpool.localpool_processing_contract
-      {
-        'id'=>contract.id,
-        'type'=>'contract_localpool_processing',
-        'updated_at'=>contract.updated_at.as_json,
-        'full_contract_number'=>"#{contract.contract_number}/#{contract.contract_number_addition}",
-        'signing_date'=>contract.signing_date.to_s,
-        'begin_date'=>contract.begin_date.to_s,
-        'termination_date'=>nil,
-        'last_date'=>nil,
-        'status' => contract.status.to_s,
-        'updatable'=>true,
-        'deletable'=>false,
-        'documentable'=>true,
-        'tax_number' => nil, #FIXME: add tax_data to factory etc.
-        'allowed_actions' => { 'document_localpool_processing_contract' => true },
-        'tariffs'=>{
-          'array'=> contract.tariffs.collect do |t|
-            { 'id'=>t.id,
-              'type'=>'contract_tariff',
-              'updated_at'=>t.updated_at.as_json,
-              'name'=>t.name,
-              'begin_date'=>t.begin_date.to_s,
-              'last_date'=>nil,
-              'energyprice_cents_per_kwh'=>t.energyprice_cents_per_kwh,
-              'baseprice_cents_per_month'=>t.baseprice_cents_per_month,
-              'updatable' => false,
-              'deletable' => false }
-          end
-        },
-        'payments'=>{
-          'array'=> contract.payments.collect do |p|
-            { 'id'=>p.id,
-              'type'=>'contract_payment',
-              'updated_at'=>nil,
-              'begin_date'=>p.begin_date.to_s,
-              'last_date'=>nil,
-              'price_cents'=>p.price_cents,
-              'cycle'=>p.cycle }
-          end
-        },
-        'contractor'=>{
-          'id'=>contract.contractor.id,
-          'type'=>'organization_market',
-          'updated_at'=>contract.contractor.updated_at.as_json,
-          'name'=>contract.contractor.name,
-          'phone'=>contract.contractor.phone,
-          'fax'=>contract.contractor.fax,
-          'website'=>contract.contractor.website,
-          'email'=>contract.contractor.email,
-          'description'=>contract.contractor.description,
-          'updatable'=>true,
-          'deletable'=>false,
-        },
-        'customer'=>{
-          'id'=>contract.customer.id,
-          'type'=>'person',
-          'updated_at'=>contract.customer.updated_at.as_json,
-          'prefix'=>contract.customer.attributes['prefix'],
-          'title'=>contract.customer.title,
-          'first_name'=>contract.customer.first_name,
-          'last_name'=>contract.customer.last_name,
-          'phone'=>contract.customer.phone,
-          'fax'=>contract.customer.fax,
-          'email'=>contract.customer.email,
-          'preferred_language'=>contract.customer.attributes['preferred_language'],
-          'image'=>contract.customer.image.medium.url,
-          'customer_number' => contract.customer.customer_number.id,
-          'updatable'=>true,
-          'deletable'=>false
-        },
-        'customer_bank_account'=> serialized_bank_account(contract.customer_bank_account).merge('updatable' => true),
-        'contractor_bank_account'=> nil
-      }
-    end
+      expect(response).to have_http_status(200)
+      localpool.reload
+      expect(localpool.name).to eq 'a b c d'
+      expect(localpool.description).to eq 'none'
+      expect(localpool.start_date).to eq Date.yesterday
+      expect(localpool.show_object).to eq true
+      expect(localpool.show_production).to eq false
+      expect(localpool.show_energy).to eq true
+      expect(localpool.show_contact).to eq false
+      expect(localpool.show_display_app).to eq false
 
-    context 'GET' do
-
-      it '401' do
-        GET "/localpools/#{localpool.id}/localpool-processing-contract", $admin
-        expire_admin_session do
-          GET "/localpools/#{localpool.id}/localpool-processing-contract", $admin
-          expect(response).to be_session_expired_json(401)
-        end
-      end
-
-      it '403' do
-        GET "/localpools/#{localpool.id}/localpool-processing-contract", $user
-        expect(response).to have_http_status(403)
-      end
-
-      it '404' do
-        GET "/localpools/#{localpool_no_contracts.id}/localpool-processing-contract", $admin
-        expect(response).to have_http_status(404)
-      end
-
-      it '200' do
-        GET "/localpools/#{localpool.id}/localpool-processing-contract", $admin, include: 'tariffs,payments,contractor,customer,customer_bank_account,contractor_bank_account'
-        expect(json.to_yaml).to eq expected_json.to_yaml
-        expect(response).to have_http_status(200)
-
-      end
-    end
-  end
-
-  context 'metering-point-operator-contract' do
-
-    let(:expected_json) do
-      contract = localpool.metering_point_operator_contract
-      {
-        'id'=>contract.id,
-        'type'=>'contract_metering_point_operator',
-        'updated_at'=>contract.updated_at.as_json,
-        'full_contract_number'=>"#{contract.contract_number}/#{contract.contract_number_addition}",
-        'signing_date'=>contract.signing_date.to_s,
-        'begin_date'=>contract.begin_date.to_s,
-        'termination_date'=>nil,
-        'last_date'=>nil,
-        'status'=>contract.status.to_s,
-        'updatable'=>true,
-        'deletable'=>false,
-        'documentable'=>true,
-        'metering_point_operator_name'=>contract.metering_point_operator_name,
-        'tariffs'=> {
-          'array'=>contract.tariffs.collect do |tariff|
-            { 'id'=>tariff.id,
-              'type'=>'contract_tariff',
-              'updated_at'=>contract.tariff.updated_at.as_json,
-              'name'=>contract.tariff.name,
-              'begin_date'=>contract.tariff.begin_date.to_s,
-              'last_date'=>nil,
-              'energyprice_cents_per_kwh'=>contract.tariff.energyprice_cents_per_kwh,
-              'baseprice_cents_per_month'=>contract.tariff.baseprice_cents_per_month,
-              'updatable' => false,
-              'deletable' => false }
-          end
-        },
-        'payments'=>{
-          'array'=> contract.payments.collect do |p|
-            { 'id'=>p.id,
-              'type'=>'contract_payment',
-              'updated_at'=>nil,
-              'begin_date'=>p.begin_date.to_s,
-              'last_date'=>p.last_date ? p.last_date.to_s : nil,
-              'price_cents'=>p.price_cents,
-              'cycle'=>p.cycle }
-          end
-        },
-        'contractor'=>{
-          'id'=>contract.contractor.id,
-          'type'=>'organization_market',
-          'updated_at'=>contract.contractor.updated_at.as_json,
-          'name'=>contract.contractor.name,
-          'phone'=>contract.contractor.phone,
-          'fax'=>contract.contractor.fax,
-          'website'=>contract.contractor.website,
-          'email'=>contract.contractor.email,
-          'description'=>contract.contractor.description,
-          'updatable'=>true,
-          'deletable'=>false,
-          'address' => {
-            'id'=>contract.contractor.address.id,
-            'type'=>'address',
-            'updated_at'=>contract.contractor.address.updated_at.as_json,
-            'street'=>contract.contractor.address.street,
-            'city'=>contract.contractor.address.city,
-            'zip'=>contract.contractor.address.zip,
-            'country'=>contract.contractor.address.attributes['country'],
-            'updatable'=>true,
-            'deletable'=>false
-          }
-        },
-        'customer'=>{
-          'id'=>contract.customer.id,
-          'type'=>'person',
-          'updated_at'=>contract.customer.updated_at.as_json,
-          'prefix'=>contract.customer.attributes['prefix'],
-          'title'=>contract.customer.title,
-          'first_name'=>contract.customer.first_name,
-          'last_name'=>contract.customer.last_name,
-          'phone'=>contract.customer.phone,
-          'fax'=>contract.customer.fax,
-          'email'=>contract.customer.email,
-          'preferred_language'=>contract.customer.attributes['preferred_language'],
-          'image'=>contract.customer.image.medium.url,
-          'customer_number' => contract.customer.customer_number.id,
-          'updatable'=>true,
-          'deletable'=>false,
-          'address'=>{
-            'id'=>contract.customer.address.id,
-            'type'=>'address',
-            'updated_at'=>contract.customer.address.updated_at.as_json,
-            'street'=>contract.customer.address.street,
-            'city'=>contract.customer.address.city,
-            'zip'=>contract.customer.address.zip,
-            'country'=>contract.customer.address.attributes['country'],
-            'updatable'=>true,
-            'deletable'=>false
-          }
-        },
-        'customer_bank_account'=> serialized_bank_account(contract.customer_bank_account).merge('updatable' => true),
-        'contractor_bank_account'=> nil
-      }
-    end
-
-    context 'GET' do
-
-      it '401' do
-        GET "/localpools/#{localpool.id}/metering-point-operator-contract", $admin
-        expire_admin_session do
-          GET "/localpools/#{localpool.id}/metering-point-operator-contract", $admin
-          expect(response).to be_session_expired_json(401)
-        end
-      end
-
-      it '403' do
-        GET "/localpools/#{localpool.id}/metering-point-operator-contract", $user
-        expect(response).to have_http_status(403)
-      end
-
-      it '404' do
-        GET "/localpools/#{localpool_no_contracts.id}/metering-point-operator-contract", $admin
-        expect(response).to have_http_status(404)
-      end
-
-      it '200' do
-        GET "/localpools/#{localpool.id}/metering-point-operator-contract", $admin, include: 'tariffs,payments,contractor:address,customer:address,customer_bank_account,contractor_bank_account'
-        expect(json.to_yaml).to eq expected_json.to_yaml
-        expect(response).to have_http_status(200)
-      end
-    end
-  end
-
-  context 'power-taker-contracts' do
-
-    let(:expected_json) do
-      localpool.localpool_power_taker_contracts.collect do |contract|
-        json = {
-          'id'=>contract.id,
-          'type' => 'contract_localpool_power_taker',
-          'updated_at'=>contract.updated_at.as_json,
-          'full_contract_number'=>"#{contract.contract_number}/#{contract.contract_number_addition}",
-          'signing_date'=>contract.signing_date.to_s,
-          'begin_date'=>contract.begin_date.to_s,
-          'termination_date'=>nil,
-          'last_date'=>nil,
-          'status' => contract.status.to_s,
-          'updatable'=>true,
-          'documentable'=>true,
-          'deletable'=>false
-        }
-        if contract.is_a?(Contract::LocalpoolPowerTaker)
-          json.merge!(
-            'forecast_kwh_pa'=>contract.forecast_kwh_pa,
-            'renewable_energy_law_taxation'=>contract.attributes['renewable_energy_law_taxation'],
-            'third_party_billing_number'=>contract.third_party_billing_number,
-            'third_party_renter_number'=>contract.third_party_renter_number,
-            'old_supplier_name'=>contract.old_supplier_name,
-            'old_customer_number'=>contract.old_customer_number,
-            'old_account_number'=>contract.old_account_number,
-            'mandate_reference' => nil
-          )
-        else
-          json['type'] = 'contract_localpool_third_party'
-        end
-        register_meta = contract.register_meta
-        register = register_meta.register
-        json['customer'] =
-          if contract.customer
-            { 'id'=>contract.customer.id,
-              'type'=>'person',
-              'updated_at'=>contract.customer.updated_at.as_json,
-              'prefix'=>contract.customer.attributes['prefix'],
-              'title'=>contract.customer.title,
-              'first_name'=>contract.customer.first_name,
-              'last_name'=>contract.customer.last_name,
-              'phone'=>contract.customer.phone,
-              'fax'=>contract.customer.fax,
-              'email'=>contract.customer.email,
-              'preferred_language'=>contract.customer.attributes['preferred_language'],
-              'image'=>contract.customer.image.medium.url,
-              'customer_number' => contract.customer.customer_number.id,
-              'updatable'=>true,
-              'deletable'=>false }
-          end
-        json['market_location'] = {
-          'id' => register_meta.id,
-          'type' => 'market_location',
-          'updated_at' => register_meta.updated_at.as_json,
-          'name' => register_meta.register.meta.name,
-          'kind' => register.kind.to_s,
-          'market_location_id' => nil,
-          'updatable' => false,
-          'deletable' => false,
-          'register' => {
-            'id' => register.id,
-            'type' => 'register_real',
-            'updated_at'=> register.updated_at.as_json,
-            'direction' => register.meta.label.production? ? 'out' : 'in',
-            'pre_decimal_position' => 6,
-            'post_decimal_position' => register.post_decimal_position,
-            'low_load_ability' => false,
-            'label' => register.meta.attributes['label'],
-            'last_reading' => 0,
-            'observer_min_threshold' => nil,
-            'observer_max_threshold' => nil,
-            'observer_enabled'=> nil,
-            'observer_offline_monitoring' => nil,
-            'meter_id' => register.meter.id,
-            'updatable' => true,
-            'deletable' => false,
-            'createables' => ['readings', 'contracts'],
-            'metering_point_id' => register.meter.metering_location&.metering_location_id,
-            'obis' => register.obis
-          }
-        }
-        json
-      end
-    end
-
-    context 'GET' do
-      it '401' do
-        GET "/localpools/#{localpool.id}/power-taker-contracts", $admin
-        expire_admin_session do
-          GET "/localpools/#{localpool.id}/power-taker-contracts", $admin
-          expect(response).to be_session_expired_json(401)
-        end
-      end
-
-      it '200' do
-        GET "/localpools/#{localpool.id}/power-taker-contracts", $user
-        expect(json['array'].to_yaml).to eq empty_json.to_yaml
-        expect(response).to have_http_status(200)
-
-        GET "/localpools/#{localpool.id}/power-taker-contracts", $admin, include: 'customer,market_location:register'
-        expect(sort_hash(json['array']).to_yaml).to eq sort_hash(expected_json).to_yaml
-        expect(response).to have_http_status(200)
-      end
+      result = json
+      # TODO fix it: our time setup does not allow
+      #expect(result.delete('updated_at')).to be > old.as_json
+      expect(Time.parse(result.delete('updated_at'))).to be > old
+      expect(result.to_yaml).to eq updated_json.to_yaml
     end
   end
 
