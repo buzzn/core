@@ -282,7 +282,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         let!(:contract2) { localpool_processing_contract }
         let!(:contract3) { localpool_power_taker_contract }
 
-        [:contract_localpool_processing, :contract_metering_point_operator, :contract_power_taker].each do |type|
+        [:contract_localpool_processing, :contract_metering_point_operator, :contract_localpool_power_taker].each do |type|
           it "200 for #{type}" do
             GET "/localpools/#{localpool.id}/contracts", $admin, 'type' => type.to_s
             expect(response).to have_http_status(200)
