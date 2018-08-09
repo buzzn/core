@@ -73,8 +73,8 @@ describe Admin::LocalpoolRoda, :request_helper do
               }
             end
           },
-          'contractor'=>person_json.dup,
-          'customer'=>organization_json.dup,
+          'contractor'=>organization_json.dup,
+          'customer'=>person2_json.dup,
           'customer_bank_account'=>{
             'id'=>contract.customer_bank_account.id,
             'type'=>'bank_account',
@@ -214,7 +214,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             end
           },
           'contractor'=>buzzn_json,
-          'customer'=>person_json.dup,
+          'customer'=>organization_json.dup,
           'customer_bank_account'=>{
             'id'=>contract.customer_bank_account.id,
             'type'=>'bank_account',
@@ -265,6 +265,33 @@ describe Admin::LocalpoolRoda, :request_helper do
         expect(response).to have_http_status(404)
       end
 
+      context 'without a type' do
+        let!(:contract1) { metering_point_operator_contract }
+        let!(:contract2) { localpool_processing_contract }
+        let!(:contract3) { localpool_power_taker_contract }
+
+        it '200' do
+          GET "/localpools/#{localpool.id}/contracts", $admin
+          expect(response).to have_http_status(200)
+          expect(json['array'].count).to eq(3)
+        end
+      end
+
+      context 'with a type' do
+        let!(:contract1) { metering_point_operator_contract }
+        let!(:contract2) { localpool_processing_contract }
+        let!(:contract3) { localpool_power_taker_contract }
+
+        [:contract_localpool_processing, :contract_metering_point_operator, :contract_power_taker].each do |type|
+          it "200 for #{type}" do
+            GET "/localpools/#{localpool.id}/contracts", $admin, 'type' => type.to_s
+            expect(response).to have_http_status(200)
+            expect(json['array'].count).to eq(1)
+            expect(json['array'].first['type']).to eq(type.to_s)
+          end
+        end
+      end
+
       [:metering_point_operator, :localpool_power_taker].each do |type|
 
         context "as #{type}" do
@@ -273,13 +300,88 @@ describe Admin::LocalpoolRoda, :request_helper do
 
           let(:contract_json) { send "#{type}_contract_json" }
 
-          it '200' do
+          it "200 for #{type}" do
             GET "/localpools/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,market_location:[register:meter]'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end
+
         end
       end
+    end
+
+    context 'PATCH Localpool Processing' do
+      let(:contract) { localpool_processing_contract }
+      let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}" }
+
+      let('update_tax_number_json') do
+        {
+          'tax_number' => '777388834',
+          'updated_at' => contract.updated_at
+        }
+      end
+
+      context 'unauthenticated' do
+
+        it '403' do
+          PATCH path, nil, update_tax_number_json
+          expect(response).to have_http_status(403)
+        end
+
+      end
+
+      context 'authenticated' do
+        it 'updates the tax data' do
+          expect(contract.tax_data.tax_number).to be nil
+          PATCH path, $admin, update_tax_number_json
+          expect(response).to have_http_status(200)
+          expect(json['tax_number']).to eq '777388834'
+          contract.tax_data.reload
+          expect(contract.tax_data.tax_number).to eq '777388834'
+        end
+      end
+
+    end
+
+    context 'POST contract' do
+
+      let('path') { "/localpools/#{localpool.id}/contracts" }
+
+      let('invalid_type_json') do
+        {
+          'type' => 'contract_with_the_devil'
+        }
+      end
+
+      let('missing_type_json') do
+        {
+          'foo' => 'somedata'
+        }
+      end
+
+      context 'unauthenticated' do
+
+        it '403' do
+          POST path
+          expect(response).to have_http_status(403)
+        end
+
+      end
+
+      context 'authenticated' do
+
+        it '400 for an invalid type' do
+          POST path, $admin, invalid_type_json
+          expect(response).to have_http_status(400)
+        end
+
+        it '400 for an missing type' do
+          POST path, $admin, missing_type_json
+          expect(response).to have_http_status(400)
+        end
+
+      end
+
     end
 
     context 'POST Localpool Processing' do
@@ -289,12 +391,6 @@ describe Admin::LocalpoolRoda, :request_helper do
       let(:localpool) { create(:group, :localpool, :with_address, owner: person) }
 
       let('path') { "/localpools/#{localpool.id}/contracts" }
-
-      let('invalid_type_json') do
-        {
-          'type' => 'contract_with_the_devil'
-        }
-      end
 
       let('missing_everything_json') do
         {
@@ -317,23 +413,9 @@ describe Admin::LocalpoolRoda, :request_helper do
         missing_everything_json.merge(tax_number_json).merge(signing_date_json)
       end
 
-      context 'unauthenticated' do
-
-        it '403' do
-          POST path
-          expect(response).to have_http_status(403)
-        end
-
-      end
-
       context 'authenticated' do
 
         context 'invalid data' do
-
-          it 'fails with 400 for a wrong type' do
-            POST path, $admin, invalid_type_json
-            expect(response).to have_http_status(400)
-          end
 
           it 'fails with 422 for incomplete data: everything' do
             POST path, $admin, missing_everything_json
@@ -384,8 +466,9 @@ describe Admin::LocalpoolRoda, :request_helper do
         let('contract') { metering_point_operator_contract }
 
         let('customer_json') do
-          json = person_json.dup
+          json = organization_json.dup
           json.delete('address')
+          json.delete('contact')
           json
         end
 

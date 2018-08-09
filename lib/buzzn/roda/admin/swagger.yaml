@@ -1431,6 +1431,47 @@ paths:
       responses:
         201:
           description: created
+  "/localpools/{localpool3_id}/contracts":
+    post:
+      description: adds new contract to the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool3_id
+        in: path
+        required: true
+        type: string
+      - name: signing_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: termination_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: end_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: tax_number
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        201:
+          description: created
   "/localpools/{localpool3_id}/organization-owner":
     patch:
       description: updates the organization owner of the localpool
@@ -2186,6 +2227,139 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool3_id}/organizations":
+    get:
+      description: returns all the organizations of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool3_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool3_id}/organizations/{organization_id}":
+    get:
+      description: returns the organization of the localpool for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool3_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool3_id}/organizations/{organization_id}/bank-accounts":
+    get:
+      description: returns all bank-accounts of the organization for the given ID
+      produces:
+      - application/json
+      parameters:
+      - name: localpool3_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool3_id}/organizations/{organization_id}/bank-accounts/{bank_account_id}":
+    get:
+      description: returns the bank-accounts of the organization for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool3_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: delete the bank-accounts of the organization for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool3_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: updates the bank-accounts of the organization for the given IDs
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool3_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: holder
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: iban
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 32
+      - name: bank_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}":
     get:
       description: returns the localpool
@@ -2566,6 +2740,56 @@ paths:
       responses:
         200:
           description: success
+  "/localpools/{localpool_id}/contracts/{localpool_processing_contract_id}":
+    patch:
+      description: updates an existing LocalpoolProcessingContract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_processing_contract_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: tax_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: signing_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: termination_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: end_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/meters":
     get:
       description: returns all the meters of the localpool
@@ -3157,139 +3381,6 @@ paths:
       responses:
         201:
           description: created
-  "/localpools/{localpool_id}/organizations":
-    get:
-      description: returns all the organizations of the localpool
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/localpools/{localpool_id}/organizations/{organization_id}":
-    get:
-      description: returns the organization of the localpool for the given IDs
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: organization_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/localpools/{localpool_id}/organizations/{organization_id}/bank-accounts":
-    get:
-      description: returns all bank-accounts of the organization for the given ID
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: organization_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-  "/localpools/{localpool_id}/organizations/{organization_id}/bank-accounts/{bank_account_id}":
-    get:
-      description: returns the bank-accounts of the organization for the given IDs
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: organization_id
-        in: path
-        required: true
-        type: string
-      - name: bank_account_id
-        in: path
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-    delete:
-      description: delete the bank-accounts of the organization for the given IDs
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: organization_id
-        in: path
-        required: true
-        type: string
-      - name: bank_account_id
-        in: path
-        required: true
-        type: string
-      responses:
-        204:
-          description: deleted
-    patch:
-      description: updates the bank-accounts of the organization for the given IDs
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: organization_id
-        in: path
-        required: true
-        type: string
-      - name: bank_account_id
-        in: path
-        required: true
-        type: string
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
-      - name: holder
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
-      - name: iban
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 32
-      - name: bank_name
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
-      responses:
-        200:
-          description: patched
   "/localpools/{localpool_id}/person-owner":
     patch:
       description: updates the person owner of the localpool

@@ -118,7 +118,7 @@ module SwaggerHelper
       @paths ||= Swagger::Data::Paths.new
     end
 
-    def generic(path, method, user, options, &block)
+    def generic(path, method, user, options, params, &block)
       it "#{method.to_s.upcase} #{path}" do
         user ||= $admin
         normalized = path.gsub(/_[1-9]/, '').gsub('.', '_')
@@ -157,7 +157,7 @@ module SwaggerHelper
         ops.responses = responses
         self.current = ops
         real_path = eval "\"#{swagger.basePath}#{path.gsub(/\{/, '#{').sub(/\/$/, '')}\""
-        send(method.to_s.upcase, real_path, user)
+        send(method.to_s.upcase, real_path, user, params)
         expect([200, 201, 204, 422, 401, 403]).to include response.status
         instance_eval &block
         if [:post, :patch, :put].include?(method) || response.status == 422
@@ -171,8 +171,8 @@ module SwaggerHelper
     end
 
     [:post, :get, :patch, :delete].each do |method|
-      define_method(method) do |path, user = nil, options = {}, &block|
-        generic(path, method, user, options, &block) if path
+      define_method(method) do |path, user = nil, options = {}, params = {}, &block|
+        generic(path, method, user, options, params, &block) if path
       end
     end
 

@@ -16,7 +16,10 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   entity!(:bank_account_2) { create(:bank_account, owner: person) }
 
-  entity!(:organization) { create(:organization, :with_legal_representation) }
+  entity!(:organization) { create(:organization,
+                                  :with_address,
+                                  :with_contact,
+                                  :with_legal_representation) }
 
   entity!(:bank_account_3) { create(:bank_account, owner: organization) }
 
@@ -24,7 +27,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   entity!(:localpool) do
     localpool = create(:group, :localpool, :with_address, owner: person)
-    create(:contract, :localpool_processing, localpool: localpool, customer: organization)
+    create(:contract, :localpool_processing, localpool: localpool)
     create(:contract, :metering_point_operator, localpool: localpool)
     localpool
   end
@@ -39,11 +42,13 @@ describe Admin, :swagger, :request_helper, order: :defined do
   entity!(:localpool2) { create(:group, :localpool, owner: nil) }
 
   entity!(:localpool3) do
-    create(:group, :localpool,
-           owner: create(:organization,
-                         :with_address,
-                         :with_contact,
-                         :with_legal_representation))
+    create(:group, :localpool, owner: organization)
+  end
+
+  entity!(:localpool_processing_contract_json) do
+    {
+      'type' => 'contract_localpool_processing',
+    }
   end
 
   entity!(:billing_cycle_1) { create(:billing_cycle, localpool: localpool) }
@@ -55,6 +60,10 @@ describe Admin, :swagger, :request_helper, order: :defined do
   entity!(:tariff_2) { create(:tariff, group: localpool, begin_date: Date.today) }
 
   entity!(:contract) { localpool.contracts.sample }
+
+  let!(:localpool_processing_contract) do
+    localpool.localpool_processing_contracts.first
+  end
 
   entity!(:meter) { create(:meter, :real, group: localpool) }
 
@@ -134,8 +143,18 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'returns all the contracts of the localpool'
   end
 
+  post '/localpools/{localpool3.id}/contracts', $admin, {}, localpool_processing_contract_json do
+    description 'adds new contract to the localpool'
+    schema Schemas::Transactions::Admin::Contract::LocalpoolProcessing::Create
+  end
+
   get '/localpools/{localpool.id}/contracts/{contract.id}' do
     description 'returns the contract for the given ID'
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{localpool_processing_contract.id}' do
+    description 'updates an existing LocalpoolProcessingContract'
+    schema Schemas::Transactions::Admin::Contract::LocalpoolProcessing::Update
   end
 
   get '/localpools/{localpool.id}/contracts/{contract.id}/contractor' do
@@ -273,30 +292,30 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   # organizations
 
-  get '/localpools/{localpool.id}/organizations' do
+  get '/localpools/{localpool3.id}/organizations' do
     description 'returns all the organizations of the localpool'
   end
 
-  get '/localpools/{localpool.id}/organizations/{organization.id}' do
+  get '/localpools/{localpool3.id}/organizations/{organization.id}' do
     description 'returns the organization of the localpool for the given IDs'
   end
 
   # organizations > bank-accounts
 
-  get '/localpools/{localpool.id}/organizations/{organization.id}/bank-accounts' do
+  get '/localpools/{localpool3.id}/organizations/{organization.id}/bank-accounts' do
     description 'returns all bank-accounts of the organization for the given ID'
   end
 
-  get '/localpools/{localpool.id}/organizations/{organization.id}/bank-accounts/{bank_account_3.id}' do
+  get '/localpools/{localpool3.id}/organizations/{organization.id}/bank-accounts/{bank_account_3.id}' do
     description 'returns the bank-accounts of the organization for the given IDs'
   end
 
-  patch '/localpools/{localpool.id}/organizations/{organization.id}/bank-accounts/{bank_account_3.id}' do
+  patch '/localpools/{localpool3.id}/organizations/{organization.id}/bank-accounts/{bank_account_3.id}' do
     description 'updates the bank-accounts of the organization for the given IDs'
     schema Schemas::Transactions::BankAccount::Update
   end
 
-  delete '/localpools/{localpool.id}/organizations/{organization.id}/bank-accounts/{bank_account_4.id}' do
+  delete '/localpools/{localpool3.id}/organizations/{organization.id}/bank-accounts/{bank_account_4.id}' do
     description 'delete the bank-accounts of the organization for the given IDs'
   end
 
@@ -382,4 +401,5 @@ describe Admin, :swagger, :request_helper, order: :defined do
     expect(response).to have_http_status(200)
     expect(json).not_to be_nil
   end
+
 end

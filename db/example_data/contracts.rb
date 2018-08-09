@@ -79,8 +79,7 @@ SampleData.contracts.lpp = create(:contract, :localpool_processing, :with_pdf,
   contractor: Organization::Market.buzzn,
   payments: [build(:payment, price_cents: 120_00, begin_date: '2016-01-01', cycle: 'monthly')],
   tariffs: [
-    build(:tariff, name: 'Standard', energyprice_cents_per_kwh: 28.9, group: SampleData.localpools.people_power),
-    build(:tariff, name: 'Reduziert', energyprice_cents_per_kwh: 25.9, group: SampleData.localpools.people_power)
+    build(:tariff, name: 'Standard', energyprice_cents_per_kwh: 28.9, group: SampleData.localpools.people_power)
   ],
                                  )
 

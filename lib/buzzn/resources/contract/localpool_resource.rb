@@ -1,5 +1,5 @@
 require_relative 'base_resource'
-require_relative '../admin/localpool_resource'
+require_relative '../group_resource'
 
 module Contract
   class LocalpoolResource < BaseResource
