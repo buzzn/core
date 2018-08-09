@@ -41,7 +41,7 @@ module Admin
     has_many :contracts
     has_many :localpool_processing_contracts, Contract::LocalpoolProcessingResource
     has_many :metering_point_operator_contracts, Contract::MeteringPointOperatorResource
-    has_many :localpool_power_taker_contracts, Contract::PowerTakerResource
+    has_many :localpool_power_taker_contracts, Contract::LocalpoolPowerTakerResource
 
     has_many :registers
     has_many :market_locations, Register::MetaResource do |object|
