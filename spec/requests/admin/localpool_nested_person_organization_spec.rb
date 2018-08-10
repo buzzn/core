@@ -1,7 +1,7 @@
 require_relative 'test_admin_localpool_roda'
 require_relative 'shared_crud'
 
-describe Admin::LocalpoolRoda, :request_helper do
+describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
 
   def app
     TestAdminLocalpoolRoda # this defines the active application for this test
@@ -243,6 +243,29 @@ describe Admin::LocalpoolRoda, :request_helper do
                       'deletable' => false,
                       'customer_number' => nil,
                     }
+  end
+
+  context 'organization owner assign' do
+    entity!(:another_organization) do
+      create(:organization, :with_bank_account,
+             address: address, contact: person,
+             legal_representation: person)
+    end
+
+    let(:base_path) { "/localpools/#{localpool.id}/organization-owner" }
+
+    it 'assigs a new owner' do
+      localpool.reload
+      expect(localpool.owner_organization_id).not_to be_nil
+      old_org_owner_id = localpool.owner_organization_id
+      request_path = "#{base_path}/#{another_organization.id}"
+      POST request_path, $admin
+      expect(response).to have_http_status(201)
+      localpool.reload
+      expect(localpool.owner.id).not_to eq old_org_owner_id
+      expect(localpool.owner.id).to eq another_organization.id
+    end
+
   end
 
   context 'gap_contract_customer' do
