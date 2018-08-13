@@ -47,10 +47,11 @@ module Contract
 
     # status consts
     ONBOARDING = 'onboarding'
+    SIGNED     = 'signed'
     ACTIVE     = 'active'
     TERMINATED = 'terminated'
     ENDED      = 'ended'
-    STATUS     = [ONBOARDING, ACTIVE, TERMINATED, ENDED]
+    STATUS     = [ONBOARDING, SIGNED, ACTIVE, TERMINATED, ENDED]
 
     STATUS.each { |s| delegate "#{s}?", to: :status } # adds status query methods like contract.active?
 
@@ -96,6 +97,8 @@ module Contract
         TERMINATED
       elsif begin_date && begin_date <= today
         ACTIVE
+      elsif signing_date
+        SIGNED
       else
         ONBOARDING
       end

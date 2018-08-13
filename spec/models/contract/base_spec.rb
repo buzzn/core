@@ -3,7 +3,7 @@ describe 'Contract::Base' do
   context 'status' do
 
     context 'when contract has no dates at all' do
-      let(:contract) { create(:contract, :metering_point_operator, begin_date: nil) }
+      let(:contract) { create(:contract, :metering_point_operator, begin_date: nil, signing_date: nil) }
       it 'is onboarding' do
         expect(contract.status).to be_onboarding
         expect(contract.status).to eq('onboarding') # string still works
@@ -12,8 +12,17 @@ describe 'Contract::Base' do
       end
     end
 
+    context 'when contract has a signing date' do
+      let(:contract) { create(:contract, :metering_point_operator, begin_date: nil) }
+      it 'is onboarding' do
+        expect(contract.status).to be_signed
+        expect(contract).to be_signed
+      end
+    end
+
     context 'when contract has begin date' do
       let(:contract) { create(:contract, :metering_point_operator, begin_date: Date.yesterday) }
+
       it 'is active' do
         expect(contract.status).to be_active
         expect(contract).to be_active

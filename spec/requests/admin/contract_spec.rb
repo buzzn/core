@@ -420,7 +420,6 @@ describe Admin::LocalpoolRoda, :request_helper do
           it 'fails with 422 for incomplete data: everything' do
             POST path, $admin, missing_everything_json
             expect(response).to have_http_status(422)
-            expect(json['signing_date']).to eq ['is missing']
             expect(json['tax_number']).to eq ['is missing']
           end
 
@@ -430,15 +429,15 @@ describe Admin::LocalpoolRoda, :request_helper do
             expect(json['tax_number']).to eq ['is missing']
           end
 
-          it 'fails with 422 for incomplete data: signing_date' do
-            POST path, $admin, missing_signing_date_json
-            expect(response).to have_http_status(422)
-            expect(json['signing_date']).to eq ['is missing']
-          end
-
         end
 
         context 'valid date' do
+
+          it 'creates a localpool with missing signing_date' do
+            POST path, $admin, missing_signing_date_json
+            expect(response).to have_http_status(201)
+            expect(json['signing_date']).to eq nil
+          end
 
           it 'creates a new localpool processing contract' do
             POST path, $admin, valid_localpool_processing

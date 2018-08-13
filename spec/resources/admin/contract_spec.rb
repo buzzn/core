@@ -112,7 +112,12 @@ describe Contract::BaseResource do
       contract.object.update begin_date: nil
       contract.object.update termination_date: nil
       contract.object.update end_date: nil
+      contract.object.update signing_date: nil
+
       expect(contract.status).to eq Contract::Base::ONBOARDING
+
+      contract.object.update signing_date: Date.today
+      expect(contract.status).to eq Contract::Base::SIGNED
 
       contract.object.update begin_date: Date.today
       expect(contract.status).to eq Contract::Base::ACTIVE
