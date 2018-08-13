@@ -22,6 +22,7 @@ describe Register::SubstituteResource, :request_helper do
         {
           'id'=>register.id,
           'type'=>'register_substitute',
+          'created_at'=>register.created_at.as_json,
           'updated_at'=>register.updated_at.as_json,
           'label'=>register.meta.attributes['label'],
           'direction'=>register.consumption? ? 'in' : 'out',

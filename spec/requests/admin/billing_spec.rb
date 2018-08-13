@@ -31,6 +31,7 @@ describe Admin::BillingResource, :request_helper do
         {
           'id'=>billing.id,
           'type'=>'billing',
+          'created_at'=>billing.created_at.as_json,
           'updated_at'=>billing.updated_at.as_json,
           'begin_date'=>billing.begin_date.as_json,
           'last_date'=>billing.last_date.as_json,

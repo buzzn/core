@@ -25,6 +25,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       {
         'id'=>meter.id,
         'type'=>'meter_real',
+        'created_at'=> meter.created_at.as_json,
         'updated_at'=> meter.updated_at.as_json,
         'product_serialnumber'=>meter.product_serialnumber,
         'sequence_number' => meter.sequence_number,
@@ -245,6 +246,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         # TODO fix it: our time setup does not allow
         #expect(result.delete('updated_at')).to be > old.as_json
         expect(result.delete('updated_at')).not_to eq old.as_json
+        expect(result.delete('created_at')).not_to be_nil
         expect(result.to_yaml).to eq updated_json.to_yaml
       end
     end

@@ -53,7 +53,7 @@ module Buzzn::Resource
       Dry::Core::Inflector.underscore(self.class.model.to_s.gsub(/::/, '')).underscore
     end
 
-    attribute :id, :type, :updated_at
+    attribute :id, :type, :created_at, :updated_at
 
   end
 end

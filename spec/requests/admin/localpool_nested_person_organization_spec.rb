@@ -20,6 +20,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
     {
       'id'=>localpool.id,
       'type'=>'group_localpool',
+      'created_at'=>localpool.created_at.as_json,
       'updated_at'=>localpool.updated_at.as_json,
       'name'=>localpool.name,
       'slug'=>localpool.slug,
@@ -60,6 +61,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
     {
       'id'=>address.id,
       'type'=>'address',
+      'created_at'=>address.created_at.as_json,
       'updated_at'=>address.updated_at.as_json,
       'street'=>address.street,
       'city'=>address.city,
@@ -74,6 +76,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
     {
       'id'=>person.id,
       'type'=>'person',
+      'created_at'=>person.created_at.as_json,
       'updated_at'=>person.updated_at.as_json,
       'prefix'=>person.attributes['prefix'],
       'title'=>person.title,
@@ -101,6 +104,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
           {
             'id'=>bank_account.id,
             'type'=>'bank_account',
+            'created_at'=>bank_account.created_at.as_json,
             'updated_at'=>bank_account.updated_at.as_json,
             'holder'=>bank_account.holder,
             'bank_name'=>bank_account.bank_name,
@@ -134,6 +138,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       localpool_json[key] = {
         'id'=>organization.id,
         'type'=>'organization',
+        'created_at'=>organization.created_at.as_json,
         'updated_at'=>organization.updated_at.as_json,
         'name'=>organization.name,
         'phone'=>organization.phone,
@@ -150,6 +155,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
             {
               'id'=>bank_account.id,
               'type'=>'bank_account',
+              'created_at'=>bank_account.created_at.as_json,
               'updated_at'=>bank_account.updated_at.as_json,
               'holder'=>bank_account.holder,
               'bank_name'=>bank_account.bank_name,

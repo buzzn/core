@@ -27,6 +27,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>organization.id,
           'type'=>'organization',
+          'created_at'=>organization.created_at.as_json,
           'updated_at'=>organization.updated_at.as_json,
           'name'=>organization.name,
           'phone'=>organization.phone,
@@ -42,6 +43,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               {
                 'id'=>bank_account.id,
                 'type'=>'bank_account',
+                'created_at'=>bank_account.created_at.as_json,
                 'updated_at'=>bank_account.updated_at.as_json,
                 'holder'=>bank_account.holder,
                 'bank_name'=>bank_account.bank_name,
@@ -56,6 +58,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'contact'=>{
             'id'=>organization.contact.id,
             'type'=>'person',
+            'created_at'=>organization.contact.created_at.as_json,
             'updated_at'=>organization.contact.updated_at.as_json,
             'prefix'=>organization.contact.attributes['prefix'],
             'title'=>organization.contact.title,
@@ -73,6 +76,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'legal_representation'=>{
             'id'=>organization.legal_representation.id,
             'type'=>'person',
+            'created_at'=>organization.legal_representation.created_at.as_json,
             'updated_at'=>organization.legal_representation.updated_at.as_json,
             'prefix'=>organization.legal_representation.attributes['prefix'],
             'title'=>organization.legal_representation.title,
@@ -123,6 +127,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>address.id,
           'type'=>'address',
+          'created_at'=>address.created_at.as_json,
           'updated_at'=>address.updated_at.as_json,
           'street'=>address.street,
           'city'=>address.city,
@@ -137,6 +142,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>organization.id,
           'type'=>'organization',
+          'created_at'=>organization.created_at.as_json,
           'updated_at'=>organization.updated_at.as_json,
           'name'=>organization.name,
           'phone'=>organization.phone,

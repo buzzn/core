@@ -30,6 +30,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       {
         'id'=>meter.id,
         'type'=>'meter_virtual',
+        'created_at'=> meter.created_at.as_json,
         'updated_at'=> meter.updated_at.as_json,
         'product_serialnumber'=>meter.product_serialnumber,
         'sequence_number' => meter.sequence_number,
@@ -41,11 +42,13 @@ describe Admin::LocalpoolRoda, :request_helper do
             {
               'id'=>part.id,
               'type'=>'meter_formula_part',
+              'created_at'=> part.created_at.as_json,
               'updated_at'=> part.updated_at.as_json,
               'operator'=>part.attributes['operator'],
               'register'=>{
                 'id'=>part.operand.id,
                 'type'=>'register_real',
+                'created_at'=> part.operand.created_at.as_json,
                 'updated_at'=> part.operand.updated_at.as_json,
                 'label'=>part.operand.meta.attributes['label'],
                 'direction'=>part.operand.meta.label.consumption? ? 'in' : 'out',
@@ -108,6 +111,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           {
             'id'=>formula_part.id,
             'type'=>'meter_formula_part',
+            'created_at'=> formula_part.created_at.as_json,
             'updated_at'=> formula_part.updated_at.as_json,
             'operator'=>formula_part.attributes['operator'],
           }
@@ -219,6 +223,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           # TODO fix it: our time setup does not allow
           #expect(result.delete('updated_at')).to be > old.as_json
           expect(result.delete('updated_at')).not_to eq old.as_json
+          expect(result.delete('created_at')).not_to be_nil
           expect(result.to_yaml).to eq updated_json.to_yaml
         end
       end

@@ -130,6 +130,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           result = json
           expect(result.delete('updated_at')).to be >= old.as_json
           expect(result.delete('updated_at')).not_to eq old.as_json
+          expect(result.delete('created_at')).not_to be_nil
           expect(result.to_yaml).to eq updated_json.to_yaml
         end
       end
@@ -144,6 +145,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>real_register.id,
           'type'=>'register_real',
+          'created_at'=>real_register.created_at.as_json,
           'updated_at'=>real_register.updated_at.as_json,
           'label'=>real_register.meta.attributes['label'],
           'direction'=>real_register.consumption? ? 'in' : 'out',
@@ -190,6 +192,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           json = {
             'id'=>register.id,
             'type'=>"register_#{register.is_a?(Register::Real) ? 'real': 'virtual'}",
+            'created_at'=>register.created_at.as_json,
             'updated_at'=>register.updated_at.as_json,
             'label'=>register.attributes['label'],
             'last_reading'=>last ? last.value : 0,
@@ -232,6 +235,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               {
                 'id'=>register.id,
                 'type'=>'register_real',
+                'created_at'=>register.created_at.as_json,
                 'updated_at'=>register.updated_at.as_json,
                 'label'=>register.meta.attributes['label'],
                 'direction'=>register.consumption? ? 'in' : 'out',

@@ -18,6 +18,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>contract.id,
           'type'=>'contract_localpool_power_taker',
+          'created_at'=>contract.created_at.as_json,
           'updated_at'=>contract.updated_at.as_json,
           'full_contract_number'=>contract.full_contract_number,
           'signing_date'=>contract.signing_date.to_s,
@@ -39,6 +40,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'localpool' => {
             'id'=>contract.localpool.id,
             'type'=>'group_localpool',
+            'created_at'=>contract.localpool.created_at.as_json,
             'updated_at'=>contract.localpool.updated_at.as_json,
             'name'=>contract.localpool.name,
             'slug'=>contract.localpool.slug,
@@ -49,6 +51,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               {
                 'id'=>contract.tariff.id,
                 'type'=>'contract_tariff',
+                'created_at'=>contract.tariff.created_at,
                 'updated_at'=>nil,
                 'name'=>contract.tariff.name,
                 'begin_date'=>contract.tariff.begin_date.to_s,
@@ -65,6 +68,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               {
                 'id'=>p.id,
                 'type'=>'contract_payment',
+                'created_at'=>p.created_at,
                 'updated_at'=>nil,
                 'begin_date'=>p.begin_date.to_s,
                 'end_date'=>p.end_date ? p.end_date.to_s : nil,
@@ -78,6 +82,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'customer_bank_account'=>{
             'id'=>contract.customer_bank_account.id,
             'type'=>'bank_account',
+            'created_at'=>contract.customer_bank_account.created_at.as_json,
             'updated_at'=>contract.customer_bank_account.updated_at.as_json,
             'holder'=>contract.customer_bank_account.holder,
             'bank_name'=>contract.customer_bank_account.bank_name,
@@ -90,6 +95,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'contractor_bank_account'=>{
             'id'=>contract.contractor_bank_account.id,
             'type'=>'bank_account',
+            'created_at'=>contract.contractor_bank_account.created_at.as_json,
             'updated_at'=>contract.contractor_bank_account.updated_at.as_json,
             'holder'=>contract.contractor_bank_account.holder,
             'bank_name'=>contract.contractor_bank_account.bank_name,
@@ -102,6 +108,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'market_location' => {
             'id' => contract.register_meta.id,
             'type' => 'market_location',
+            'created_at'=> contract.register_meta.created_at.as_json,
             'updated_at'=> contract.register_meta.updated_at.as_json,
             'name' => contract.register_meta.register.meta.name,
             'kind' => 'consumption',
@@ -111,6 +118,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'register' => {
               'id'=>register.id,
               'type'=>'register_real',
+              'created_at'=>register.created_at.as_json,
               'updated_at'=>register.updated_at.as_json,
               'label'=>'CONSUMPTION',
               'direction'=>'in',
@@ -130,6 +138,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               'meter' => {
                 'id'=>meter.id,
                 'type'=>'meter_real',
+                'created_at'=> meter.created_at.as_json,
                 'updated_at'=> meter.updated_at.as_json,
                 'product_serialnumber'=>meter.product_serialnumber,
                 'sequence_number' => meter.sequence_number,
@@ -165,6 +174,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>contract.id,
           'type'=>'contract_metering_point_operator',
+          'created_at'=>contract.created_at.as_json,
           'updated_at'=>contract.updated_at.as_json,
           'full_contract_number'=>contract.full_contract_number,
           'signing_date'=>contract.signing_date.as_json,
@@ -179,6 +189,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'localpool' => {
             'id'=>contract.localpool.id,
             'type'=>'group_localpool',
+            'created_at'=>contract.localpool.created_at.as_json,
             'updated_at'=>contract.localpool.updated_at.as_json,
             'name'=>contract.localpool.name,
             'slug'=>contract.localpool.slug,
@@ -189,6 +200,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               {
                 'id'=>contract.tariff.id,
                 'type'=>'contract_tariff',
+                'created_at'=>contract.tariff.created_at,
                 'updated_at'=>nil,
                 'name'=>contract.tariff.name,
                 'begin_date'=>contract.tariff.begin_date.to_s,
@@ -205,6 +217,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               {
                 'id'=>p.id,
                 'type'=>'contract_payment',
+                'created_at'=>p.created_at,
                 'updated_at'=>nil,
                 'begin_date'=>p.begin_date.to_s,
                 'end_date'=>p.end_date ? p.end_date.to_s : nil,
@@ -218,6 +231,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'customer_bank_account'=>{
             'id'=>contract.customer_bank_account.id,
             'type'=>'bank_account',
+            'created_at'=>contract.customer_bank_account.created_at.as_json,
             'updated_at'=>contract.customer_bank_account.updated_at.as_json,
             'holder'=>contract.customer_bank_account.holder,
             'bank_name'=>contract.customer_bank_account.bank_name,
@@ -230,6 +244,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'contractor_bank_account'=>{
             'id'=>contract.contractor_bank_account.id,
             'type'=>'bank_account',
+            'created_at'=>contract.contractor_bank_account.created_at.as_json,
             'updated_at'=>contract.contractor_bank_account.updated_at.as_json,
             'holder'=>contract.contractor_bank_account.holder,
             'bank_name'=>contract.contractor_bank_account.bank_name,

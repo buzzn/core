@@ -20,6 +20,7 @@ describe Display::GroupRoda, :request_helper do
       {
         'id'=>group.id,
         'type'=>'group_localpool',
+        'created_at'=>group.created_at.as_json,
         'updated_at'=>group.updated_at.as_json,
         'name'=>group.name,
         'slug'=>group.slug,
@@ -29,6 +30,7 @@ describe Display::GroupRoda, :request_helper do
             {
               'id'=>manager.id,
               'type'=>'person',
+              'created_at'=>manager.created_at.as_json,
               'updated_at'=>manager.updated_at.as_json,
               'title'=>manager.attributes['title'],
               'first_name'=>manager.first_name,
@@ -50,6 +52,7 @@ describe Display::GroupRoda, :request_helper do
         {
           'id'=>group.id,
           'type'=>"group_#{type}",
+          'created_at'=>group.created_at.as_json,
           'updated_at'=>group.updated_at.as_json,
           'name'=>group.name,
           'slug'=>group.slug,
@@ -59,6 +62,7 @@ describe Display::GroupRoda, :request_helper do
               {
                 'id'=>manager.id,
                 'type'=>'person',
+                'created_at'=>manager.created_at.as_json,
                 'updated_at'=>manager.updated_at.as_json,
                 'title'=>manager.attributes['title'],
                 'first_name'=>manager.first_name,
@@ -128,6 +132,7 @@ describe Display::GroupRoda, :request_helper do
           {
             'id'=>mentor.id,
             'type'=>'person',
+            'created_at'=>mentor.created_at.as_json,
             'updated_at'=>mentor.updated_at.as_json,
             'title'=>mentor.attributes['title'],
             'first_name'=>mentor.first_name,

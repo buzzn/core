@@ -128,6 +128,7 @@ shared_examples 'update' do |object_name, path:, wrong:, params:, errors:, expec
     end
 
     result = json
+    expect(result.delete('created_at')).not_to be_nil
     expect(result.delete('updated_at')).to be > old.as_json
     expect(result.delete('id')).to eq(object.id)
     expect(sort_hash(result).to_yaml).to eq sort_hash(update_expected_json).to_yaml
@@ -261,6 +262,7 @@ shared_examples 'create' do |model_clazz, path:, wrong:, params:, errors:, expec
     result = json
     id = result.delete('id')
     object = model_clazz.find(id)
+    expect(result.delete('created_at')).not_to eq nil
     expect(result.delete('updated_at')).not_to eq nil
     expect(object).not_to be_nil
     obj_attrs = object.attributes

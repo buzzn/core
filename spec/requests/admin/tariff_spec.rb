@@ -19,6 +19,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>tariff.id,
           'type'=>'contract_tariff',
+          'created_at' => tariff.created_at.as_json,
           'updated_at' => tariff.updated_at.as_json,
           'name'=>tariff.name,
           'begin_date'=>tariff.begin_date.to_s,

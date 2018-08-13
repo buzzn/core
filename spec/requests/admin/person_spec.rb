@@ -26,6 +26,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       {
         'id'=>person.id,
         'type'=>'person',
+        'created_at'=>person.created_at.as_json,
         'updated_at'=>person.updated_at.as_json,
         'prefix'=>person.attributes['prefix'],
         'title'=>person.title,
@@ -44,6 +45,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             {
               'id'=>bank_account.id,
               'type'=>'bank_account',
+              'created_at'=>bank_account.created_at.as_json,
               'updated_at'=>bank_account.updated_at.as_json,
               'holder'=>bank_account.holder,
               'bank_name'=>bank_account.bank_name,
@@ -58,6 +60,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'address'=>{
           'id'=>person.address.id,
           'type'=>'address',
+          'created_at'=>person.address.created_at.as_json,
           'updated_at'=>person.address.updated_at.as_json,
           'street'=>person.address.street,
           'city'=>person.address.city,
@@ -74,6 +77,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>person.id,
           'type'=>'person',
+          'created_at'=>person.created_at.as_json,
           'updated_at'=>person.updated_at.as_json,
           'prefix'=>person.attributes['prefix'],
           'title'=>person.title,
@@ -92,6 +96,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               {
                 'id'=>bank_account.id,
                 'type'=>'bank_account',
+                'created_at'=>bank_account.created_at.as_json,
                 'updated_at'=>bank_account.updated_at.as_json,
                 'holder'=>bank_account.holder,
                 'bank_name'=>bank_account.bank_name,
@@ -112,6 +117,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>person.id,
           'type'=>'person',
+          'created_at'=>person.created_at.as_json,
           'updated_at'=>person.updated_at.as_json,
           'prefix'=>person.attributes['prefix'],
           'title'=>person.title,
@@ -130,6 +136,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               {
                 'id'=>bank_account.id,
                 'type'=>'bank_account',
+                'created_at'=>bank_account.created_at.as_json,
                 'updated_at'=>bank_account.updated_at.as_json,
                 'holder'=>bank_account.holder,
                 'bank_name'=>bank_account.bank_name,
@@ -150,6 +157,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>person.id,
           'type'=>'person',
+          'created_at'=>person.created_at.as_json,
           'updated_at'=>person.updated_at.as_json,
           'prefix'=>person.attributes['prefix'],
           'title'=>person.title,
@@ -168,6 +176,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               {
                 'id'=>bank_account.id,
                 'type'=>'bank_account',
+                'created_at'=>bank_account.created_at.as_json,
                 'updated_at'=>bank_account.updated_at.as_json,
                 'holder'=>bank_account.holder,
                 'bank_name'=>bank_account.bank_name,
