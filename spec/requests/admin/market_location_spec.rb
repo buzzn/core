@@ -25,6 +25,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id' => market_location.id,
           'type' => 'market_location',
+          'created_at' => market_location.created_at.as_json,
           'updated_at' => market_location.updated_at.as_json,
           'name' => market_location.register.meta.name,
           'kind' => 'consumption',
@@ -34,6 +35,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'register' => {
             'id' => register.id,
             'type' => 'register_real',
+            'created_at'=> register.created_at.as_json,
             'updated_at'=> register.updated_at.as_json,
             'label' => register.meta.attributes['label'],
             'direction' => register.meta.label.consumption? ? 'in' : 'out',
@@ -54,6 +56,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'meter' => {
               'id'=>meter.id,
               'type'=>'meter_real',
+              'created_at'=> meter.created_at.as_json,
               'updated_at'=> meter.updated_at.as_json,
               'product_serialnumber'=>meter.product_serialnumber,
               'sequence_number' => meter.sequence_number,

@@ -35,6 +35,7 @@ describe Display::GroupResource do
   let(:attributes) do ['id',
                        'type',
                        'updated_at',
+                       'created_at',
                        'name',
                        'slug',
                        'description'] end
@@ -58,6 +59,7 @@ describe Display::GroupResource do
   describe 'registers' do
     let(:attributes) do ['id',
                          'type',
+                         'created_at',
                          'updated_at',
                          'name',
                          'label'] end
@@ -86,6 +88,7 @@ describe Display::GroupResource do
   describe 'mentors' do
     let(:attributes) do ['id',
                          'type',
+                         'created_at',
                          'updated_at',
                          'title',
                          'first_name',

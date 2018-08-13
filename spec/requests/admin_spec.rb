@@ -65,6 +65,7 @@ describe Admin::Roda, :request_helper do
           {
             'id'=>p.id,
             'type'=>'person',
+            'created_at'=>p.created_at.as_json,
             'updated_at'=>p.updated_at.as_json,
             'prefix'=>p.attributes['prefix'],
             'title'=>p.attributes['title'],
@@ -90,6 +91,7 @@ describe Admin::Roda, :request_helper do
             contract_json = {
               'id'=>contract.id,
               'type'=>'contract_localpool_power_taker',
+              'created_at'=>contract.created_at.as_json,
               'updated_at'=>contract.updated_at.as_json,
               'full_contract_number'=>contract.full_contract_number,
               'signing_date'=>contract.signing_date.to_s,
@@ -111,6 +113,7 @@ describe Admin::Roda, :request_helper do
               'localpool' => {
                 'id'=>localpool.id,
                 'type'=>'group_localpool',
+                'created_at'=>localpool.created_at.as_json,
                 'updated_at'=>localpool.updated_at.as_json,
                 'name'=>localpool.name,
                 'slug'=>localpool.slug,
@@ -119,6 +122,7 @@ describe Admin::Roda, :request_helper do
               'market_location' => {
                 'id' => contract.register_meta.id,
                 'type' => 'market_location',
+                'created_at'=> contract.register_meta.created_at.as_json,
                 'updated_at'=> contract.register_meta.updated_at.as_json,
                 'name' => contract.register_meta.register.meta.name,
                 'kind' => 'consumption',
@@ -128,6 +132,7 @@ describe Admin::Roda, :request_helper do
                 'register' => {
                   'id'=>register.id,
                   'type'=>'register_real',
+                  'created_at'=>register.created_at.as_json,
                   'updated_at'=>register.updated_at.as_json,
                   'label'=>register.meta.attributes['label'],
                   'direction'=>'in',
@@ -166,6 +171,7 @@ describe Admin::Roda, :request_helper do
           json['address'] = {
             'id'=>person.address.id,
             'type'=>'address',
+            'created_at'=>person.address.created_at.as_json,
             'updated_at'=>person.address.updated_at.as_json,
             'street'=>person.address.street,
             'city'=>person.address.city,
@@ -224,6 +230,7 @@ describe Admin::Roda, :request_helper do
           {
             'id'=>organization.id,
             'type'=>'organization',
+            'created_at'=>organization.created_at.as_json,
             'updated_at'=>organization.updated_at.as_json,
             'name'=>organization.name,
             'phone'=>organization.phone,

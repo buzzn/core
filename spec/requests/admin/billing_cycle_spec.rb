@@ -23,6 +23,7 @@ describe Admin::BillingCycleResource, :request_helper do
       {
         'id'=>billing_cycle.id,
         'type'=>'billing_cycle',
+        'created_at'=>billing_cycle.created_at.as_json,
         'updated_at'=>billing_cycle.updated_at.as_json,
         'name'=>billing_cycle.name,
         'begin_date'=>billing_cycle.begin_date.as_json,

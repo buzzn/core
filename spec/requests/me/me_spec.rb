@@ -14,6 +14,7 @@ describe Me::Roda, :request_helper do
     {
       'id'=>person.id,
       'type'=>'person',
+      'created_at'=>person.created_at.as_json,
       'updated_at'=>person.updated_at.as_json,
       'prefix'=>person.attributes['prefix'],
       'title'=>person.attributes['title'],
@@ -167,6 +168,7 @@ describe Me::Roda, :request_helper do
       # TODO fix it: our time setup does not allow
       #expect(result.delete('updated_at')).to be > old.as_json
       expect(result.delete('updated_at')).not_to eq old.as_json
+      expect(result.delete('created_at')).not_to be_nil
       expect(result.to_yaml).to eq updated_json.to_yaml
     end
 
@@ -196,6 +198,7 @@ describe Me::Roda, :request_helper do
       # TODO fix it: our time setup does not allow
       #expect(result.delete('updated_at')).to be > old.as_json
       expect(result.delete('updated_at')).not_to eq old.as_json
+      expect(result.delete('created_at')).not_to be_nil
       expected = updated_json.merge('title' => nil, 'phone' => nil, 'fax' => nil, 'preferred_language' => nil)
       expect(result.to_yaml).to eq expected.to_yaml
     end

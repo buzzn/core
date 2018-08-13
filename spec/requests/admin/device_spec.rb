@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative 'test_admin_localpool_roda'
 require_relative 'shared_crud'
 
@@ -87,6 +88,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       let(:device_json) do
         created_json.merge(
           'id'=>id.to_i,
+          'created_at' => device.created_at.as_json,
           'updated_at' => device.updated_at.as_json,
           'updatable' => true,
           'deletable' => true

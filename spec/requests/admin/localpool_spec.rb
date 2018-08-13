@@ -10,6 +10,7 @@ describe Admin::LocalpoolRoda, :request_helper do
     if account.present?
       { 'id'                    => account.id,
         'type'                  => 'bank_account',
+        'created_at'            => account.created_at.as_json,
         'updated_at'            => account.updated_at.as_json,
         'holder'                => account.holder,
         'bank_name'             => account.bank_name,
@@ -117,6 +118,7 @@ describe Admin::LocalpoolRoda, :request_helper do
     end.to_h
     { 'id'=>localpool.id,
       'type'=>'group_localpool',
+      'created_at'=>localpool.created_at.as_json,
       'updated_at'=>localpool.updated_at.as_json,
       'name'=>localpool.name,
       'slug'=>localpool.slug,
@@ -318,6 +320,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         result = json
         id = result.delete('id')
         expect(result.delete('updated_at')).not_to be_nil
+        expect(result.delete('created_at')).not_to be_nil
         expect(Group::Localpool.find(id)).not_to be_nil
         result.delete('slug')
         result.delete('display_app_url')
@@ -444,6 +447,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       # TODO fix it: our time setup does not allow
       #expect(result.delete('updated_at')).to be > old.as_json
       expect(Time.parse(result.delete('updated_at'))).to be > old
+      expect(result.delete('created_at')).not_to be_nil
       expect(result.to_yaml).to eq updated_json.to_yaml
     end
   end
@@ -455,6 +459,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       let(:managers_json) do
         [{ 'id'=>manager.id,
            'type'=>'person',
+           'created_at'=>manager.created_at.as_json,
            'updated_at'=>manager.updated_at.as_json,
            'prefix'=>manager.attributes['prefix'],
            'title'=>manager.title,

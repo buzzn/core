@@ -18,7 +18,7 @@ describe Contract::BaseResource do
     create(:contract, :localpool_powertaker, localpool: localpool)
   end
 
-  let(:base_attributes) do ['id', 'type', 'updated_at',
+  let(:base_attributes) do ['id', 'type', 'created_at', 'updated_at',
                             'status',
                             'full_contract_number',
                             'signing_date',

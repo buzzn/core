@@ -47,6 +47,7 @@ describe Admin::BankAccountRoda, :request_helper do
         {
           'id'=>bank_account.id,
           'type'=>'bank_account',
+          'created_at'=>bank_account.created_at.as_json,
           'updated_at'=>bank_account.updated_at.as_json,
           'holder'=>bank_account.holder,
           'bank_name'=>bank_account.bank_name,

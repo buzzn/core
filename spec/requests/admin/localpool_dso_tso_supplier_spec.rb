@@ -14,6 +14,7 @@ describe Admin::LocalpoolRoda, :request_helper do
     json = {
       'id'=>localpool.id,
       'type'=>'group_localpool',
+      'created_at'=>localpool.created_at.as_json,
       'updated_at'=>localpool.updated_at.as_json,
       'name'=>localpool.name,
       'slug'=>localpool.slug,
@@ -64,6 +65,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       json[key] = {
         'id'=>organization.id,
         'type'=>'organization_market',
+        'created_at'=>organization.created_at.as_json,
         'updated_at'=>organization.updated_at.as_json,
         'name'=>organization.name,
         'phone'=>organization.phone,

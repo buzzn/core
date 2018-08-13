@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative 'test_admin_localpool_roda'
 describe Admin::LocalpoolRoda, :request_helper do
 
@@ -86,6 +87,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         result = json
         id = result.delete('id')
         expect(result.delete('updated_at')).not_to be_nil
+        expect(result.delete('created_at')).not_to be_nil
         expect(Reading::Single.find(id)).not_to be_nil
         expect(result.to_yaml).to eq created_json.to_yaml
       end
@@ -98,6 +100,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           {
             'id'=>reading.id,
             'type'=>'reading',
+            'created_at'=>reading.created_at.as_json,
             'updated_at'=>reading.updated_at.as_json,
             'date'=>reading.date.to_s,
             'raw_value'=>reading.raw_value,
@@ -119,6 +122,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'id'=>reading.id,
           'type'=>'reading',
+          'created_at'=>reading.created_at.as_json,
           'updated_at'=>reading.updated_at.as_json,
           'date'=>reading.date.to_s,
           'raw_value'=>reading.raw_value,
