@@ -19,7 +19,6 @@ module Schemas::PreConditions::Contract
     end
 
     required(:tax_number).filled?
-    required(:signing_date).filled?
 
   end
 
