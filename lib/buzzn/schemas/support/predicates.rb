@@ -9,6 +9,18 @@ module Schemas::Support::Predicates
     value.is_a?(Hash) && value.key?(:id)
   end
 
+  predicate(:id_and_not_updated_at?) do |value|
+    value.is_a?(Hash) && value.key?(:id) && !value.key?(:updated_at)
+  end
+
+  predicate(:not_id_and_updated_at?) do |value|
+    value.is_a?(Hash) && !value.key?(:id) && value.key?(:updated_at)
+  end
+
+  predicate(:not_id_and_not_updated_at?) do |value|
+    value.is_a?(Hash) && !value.key?(:id) && !value.key?(:updated_at)
+  end
+
   predicate(:iban?) do |value|
     IBANTools::IBAN.valid?(value)
   end

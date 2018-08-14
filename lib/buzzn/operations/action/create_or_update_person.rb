@@ -4,10 +4,10 @@ require_relative 'update'
 module Operations::Action
   class CreateOrUpdatePerson < Update
 
-    def call(params:, resource:, method:, **)
+    def call(params:, resource:, method:, force_new: false, **)
       person_resource = resource&.send(method)
       person_params = params[method]
-      if person_resource && person_params && !person_params.key?(:id)
+      if !force_new && person_resource && person_params && !person_params.key?(:id)
         super(params: params.delete(method), resource: person_resource)
       elsif person_params
         params[method] = find_or_create(person_params)

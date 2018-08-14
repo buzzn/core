@@ -20,4 +20,8 @@ module Schemas::Transactions::Person
     optional(:id).filled(:int?)
   end
 
+  Assign = Schemas::Support.Form do
+    required(:id).filled(:int?)
+  end
+
 end

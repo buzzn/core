@@ -1070,6 +1070,11 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: legal_representation.updated_at
+        in: formData
+        required: false
+        type: string
+        format: date-time
       - name: legal_representation.id
         in: formData
         required: false
@@ -2217,10 +2222,6 @@ paths:
         format: ''
         maxLength: 64
       - name: contact.address
-        in: formData
-        required: false
-        type: hash
-      - name: contact
         in: formData
         required: false
         type: hash

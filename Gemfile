@@ -14,6 +14,7 @@ gem 'dry-transaction'
 gem 'dry-struct'
 gem 'dry-initializer'
 gem 'dry-dependency-injection'
+gem 'dry-types', '~> 0.12.3'
 
 # pdf
 gem 'slim'
