@@ -9,7 +9,7 @@ class Beekeeper::Importer::CreateLocalpool
 
   def run(attributes)
     attrs = attributes
-      .except(:registers, :powertaker_contracts, :third_party_contracts, :owner, :tariffs)
+      .except(:processing_contract_number, :processing_contract_number_addition, :metering_contract_number, :registers, :powertaker_contracts, :third_party_contracts, :owner, :tariffs)
       .merge(owner: find_or_create_owner(attributes[:owner]))
     Group::Localpool.create(attrs)
   end
