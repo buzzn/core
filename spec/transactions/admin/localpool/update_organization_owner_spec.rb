@@ -19,7 +19,9 @@ describe Transactions::Admin::Localpool::UpdateOrganizationOwner do
     it_behaves_like 'update without person', Transactions::Admin::Localpool::UpdateOrganizationOwner.new, :resource, :contact, name: 'Zappa-For-President-Forever'
     it_behaves_like 'update with person without address', Transactions::Admin::Localpool::UpdateOrganizationOwner.new, :resource, :contact, name: 'Elvis-Lives-Forever'
     it_behaves_like 'update with person with address', Transactions::Admin::Localpool::UpdateOrganizationOwner.new, :resource, :contact, name: 'Mamas-and-Papas'
+
   end
+
 
   context 'legal_representation' do
     it_behaves_like 'update without person', Transactions::Admin::Localpool::UpdateOrganizationOwner.new, :resource, :legal_representation, name: 'Zappa-For-President-Again-And-Again'

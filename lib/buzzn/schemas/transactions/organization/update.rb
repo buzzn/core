@@ -89,13 +89,13 @@ module Schemas::Transactions
           if @has_contact_address
             Schemas::Support.Form(@schema) do
               optional(:contact) do
-                id?.not.then(schema(Person.assign_or_update_with_address))
+                Person.assign_or_update_with_address
               end
             end
           else
             Schemas::Support.Form(@schema) do
               optional(:contact) do
-                id?.not.then(schema(Person.assign_or_update_without_address))
+                Person.assign_or_update_without_address
               end
             end
           end

@@ -251,6 +251,96 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
                     }
   end
 
+  context 'gap_contract_customer' do
+    it_behaves_like 'nested person', 'gap_contract_customer'
+    it_behaves_like 'nested organization', 'gap_contract_customer'
+  end
+
+  context 'organization update with new person' do
+
+    let(:a_brand_new_address) { create(:address) }
+    let(:a_brand_new_address_json) do
+      json = a_brand_new_address.as_json
+      #json.delete('id')
+      #json.delete('updated_at')
+      json.delete('created_at')
+      #json.delete_if { |k, v| k.end_with?('_id') }
+      json.delete_if { |k, v| v.nil? }
+      json[:country] = 'DE'
+      json
+    end
+
+    let(:legacy_person) { create(:person, :with_address) }
+    let(:a_brand_new_person) { build(:person) }
+    let(:a_brand_new_person_json) do
+      json = a_brand_new_person.as_json
+      json.delete('id')
+      json.delete('image')
+      json.delete('updated_at')
+      json.delete('created_at')
+      json.delete_if { |k, v| k.end_with?('_id') }
+      json.delete_if { |k, v| v.nil? }
+      json['preferred_language'] = 'de'
+      json['updatable'] = true
+      json[:address] = a_brand_new_address_json
+      json[:prefix] = 'M'
+      json
+    end
+
+    let(:a_brand_new_address_without_a_name_json) do
+      json = a_brand_new_person_json.dup
+      json.delete('first_name')
+      json.delete('last_name')
+      json
+    end
+
+    let(:owner_path) do
+      localpool.reload
+      "/localpools/#{localpool.id}?include=owner:[bank_accounts,address,legal_representation,contact:[bank_accounts,address]]"
+    end
+
+    let(:patch_path) do
+      localpool.reload
+      "/localpools/#{localpool.id}/organization-owner"
+    end
+
+    it 'fails with incomplete data' do
+      # assign an contact first
+      localpool.reload
+      localpool.owner.contact_id = legacy_person.id
+      localpool.owner.save
+      # fetch organization
+      GET owner_path, $admin
+      expect(response).to have_http_status(200)
+      owner_json = json['owner']
+      owner_json.delete('address')
+      owner_json.delete('legal_representation')
+      owner_json['contact'] = a_brand_new_address_without_a_name_json
+      PATCH patch_path, $admin, owner_json
+      expect(response).to have_http_status(422)
+    end
+
+    it 'assigns a new person and updates the organization' do
+      # fetch organization
+      GET owner_path, $admin
+      expect(response).to have_http_status(200)
+      owner_json = json['owner']
+      owner_json.delete('address')
+      owner_json.delete('legal_representation')
+      owner_json['contact'] = a_brand_new_person_json
+      PATCH patch_path, $admin, owner_json
+      expect(response).to have_http_status(200)
+      localpool.reload
+      expect(localpool.owner.contact.address.street).to eq a_brand_new_person_json[:address]['street']
+    end
+
+    after :all do
+      localpool.owner.contact = nil
+      localpool.owner.save
+    end
+
+  end
+
   context 'organization owner assign' do
     entity!(:another_organization) do
       create(:organization, :with_bank_account,
@@ -274,9 +364,5 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
 
   end
 
-  context 'gap_contract_customer' do
-    it_behaves_like 'nested person', 'gap_contract_customer'
-    it_behaves_like 'nested organization', 'gap_contract_customer'
-  end
 
 end

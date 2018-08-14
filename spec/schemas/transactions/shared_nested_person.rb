@@ -29,7 +29,7 @@ end
 
 shared_examples 'update without nested person' do |method, params|
 
-  let(:base_params) { params.merge(updated_at: Date.today.as_json) }
+  let(:base_params) { params.merge(updated_at: DateTime.now) }
 
   context 'without person' do
     it { expect(subject.({})).to be_failure }
@@ -63,7 +63,7 @@ end
 
 shared_examples 'update without nested person and address' do |method, params|
 
-  let(:base_params) { params.merge(updated_at: Date.today.as_json) }
+  let(:base_params) { params.merge(updated_at: DateTime.now) }
 
   let(:nested_params) do
     base_params.merge(method => {prefix: 'M',
@@ -84,7 +84,7 @@ end
 
 shared_examples 'update with nested person' do |method, params|
 
-  let(:base_params) { params.merge(updated_at: Date.today.as_json) }
+  let(:base_params) { params.merge(updated_at: DateTime.now) }
 
   context 'without person' do
     it { expect(subject.(base_params.merge(method => {}))).to be_failure }
@@ -105,20 +105,26 @@ shared_examples 'update with nested person' do |method, params|
 
     let(:nested_params) do
       base_params.merge(method =>
-                        person_params.merge(updated_at: Date.today.as_json))
+                        person_params.merge(updated_at: DateTime.now))
     end
 
-    it { expect(subject.(base_params.merge(method => {}))).to be_failure }
+    it {
+      expect(subject.(base_params.merge(method => {}))).to be_failure
+    }
     it { expect(subject.(almost_nested_params)).to be_failure }
     it { expect(subject.(nested_params)).to be_success }
-    it { expect(subject.(nested_params).output).to eq nested_params }
+    it {
+      expect(subject.(nested_params).output).to eq nested_params
+    }
   end
 
   context 'assign person' do
 
     let(:nested_params) { base_params.merge(method => {id: send(method).id}) }
 
-    it { expect(subject.(params.merge(method => {}))).to be_failure }
+    it {
+      expect(subject.(params.merge(method => {}))).to be_failure
+    }
     it { expect(subject.(nested_params)).to be_success }
     it { expect(subject.(nested_params).output).to eq nested_params }
   end
@@ -140,11 +146,11 @@ shared_examples 'update with nested person and address' do |method, params|
      country: 'IT'}
   end
 
-  let(:base_params) { params.merge(updated_at: Date.today.as_json) }
+  let(:base_params) { params.merge(updated_at: DateTime.now) }
 
   let(:nested_params) do
     base_params.merge(method =>
-                      person_params.merge(updated_at: Date.today.as_json,
+                      person_params.merge(updated_at: DateTime.now,
                                           address: address_params))
   end
 
@@ -157,19 +163,23 @@ shared_examples 'update with nested person and address' do |method, params|
     end
     let(:almost_nested_nested_params) do
       base_params.merge(method =>
-                        person_params.merge(updated_at: Date.today.as_json,
+                        person_params.merge(updated_at: DateTime.now,
                                             address: address_params))
     end
     let(:nested_params) do
       base_params.merge(method =>
-                        person_params.merge(updated_at: Date.today.as_json,
-                                            address: address_params.merge(updated_at: Date.today.as_json)))
+                        person_params.merge(updated_at: DateTime.now,
+                                            address: address_params.merge(updated_at: DateTime.now)))
     end
     before { send(method).update!(address: address) }
     it { expect(subject.(base_params.merge(method => {}))).to be_failure }
-    it { expect(subject.(almost_nested_params)).to be_failure }
+    it do
+      expect(subject.(almost_nested_params)).to be_failure
+    end
     it { expect(subject.(almost_nested_nested_params)).to be_failure }
-    it { expect(subject.(nested_params)).to be_success }
+    it {
+      expect(subject.(nested_params)).to be_success
+    }
     it { expect(subject.(nested_params).output).to eq nested_params }
   end
 
@@ -180,13 +190,15 @@ shared_examples 'update with nested person and address' do |method, params|
     end
     let(:nested_params) do
       base_params.merge(method =>
-                        person_params.merge(updated_at: Date.today.as_json,
+                        person_params.merge(updated_at: DateTime.now,
                                             address: address_params))
     end
     before { send(method).update!(address: nil) }
     it { expect(subject.(base_params.merge(method => {}))).to be_failure }
     it { expect(subject.(almost_nested_params)).to be_failure }
     it { expect(subject.(nested_params)).to be_success }
-    it { expect(subject.(nested_params).output).to eq nested_params }
+    it do
+      expect(subject.(nested_params).output).to eq nested_params
+    end
   end
 end

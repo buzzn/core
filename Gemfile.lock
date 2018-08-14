@@ -104,7 +104,7 @@ GEM
       dry-events (>= 0.1.0)
       dry-matcher (>= 0.7.0)
       dry-monads (>= 0.4.0)
-    dry-types (0.12.2)
+    dry-types (0.12.3)
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 0.1)
       dry-container (~> 0.3)
@@ -387,6 +387,7 @@ DEPENDENCIES
   dry-monads
   dry-struct
   dry-transaction
+  dry-types (~> 0.12.3)
   dry-validation
   factory_girl
   faraday
