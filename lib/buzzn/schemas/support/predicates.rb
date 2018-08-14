@@ -22,7 +22,10 @@ module Schemas::Support::Predicates
   end
 
   predicate(:url?) do |value|
-    ! RubyRegex::URL.match(value).nil?
+    # loosen for now
+    # ! RubyRegex::URL.match(value).nil?
+    URL_PROTOCOL_OPTIONAL = /(\A\z)|(\A((http|https):\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?\z)/ix
+    ! URL_PROTOCOL_OPTIONAL.match(value).nil?
   end
 
   predicate(:phone_number?) do |value|
