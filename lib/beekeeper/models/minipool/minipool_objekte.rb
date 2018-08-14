@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative 'concerns/import_warnings'
 require_relative 'concerns/minipool_objekte/organizations'
 require_relative 'concerns/minipool_objekte/owner'
@@ -8,6 +9,7 @@ require_relative 'concerns/minipool_objekte/powertaker_contracts'
 #
 # Table name: minipooldb.minipool_objekte
 #
+# Abwicklungsvertrag Nummer
 #  vertragsnummer                   :integer          not null
 #  nummernzusatz                    :integer          not null
 #  objekttyp                        :string(20)       not null
@@ -30,6 +32,7 @@ require_relative 'concerns/minipool_objekte/powertaker_contracts'
 #  adress_id_kontakt                :integer          not null
 #  sg_vertragsnummer                :integer          not null
 #  sn_vertragsnummer                :integer          not null
+# Messvertrags Nummer
 #  messvertragsnummer               :integer          not null
 #  vertragskontonummer              :integer          not null
 #  kontaktdaten_id                  :integer          not null
@@ -81,6 +84,9 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     @converted_attributes ||= {
       name: name,
       start_date: start_date,
+      processing_contract_number: vertragsnummer,
+      processing_contract_number_addition: nummernzusatz,
+      metering_contract_number: messvertragsnummer,
       show_display_app:             show_display_app,
       distribution_system_operator: distribution_system_operator,
       transmission_system_operator: transmission_system_operator,

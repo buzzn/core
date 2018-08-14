@@ -33,6 +33,7 @@ class Beekeeper::Import
       Beekeeper::Importer::Roles.new(logger).run(localpool)
       registers = Beekeeper::Importer::RegistersAndMeters.new(logger).run(localpool, record.converted_attributes[:registers])
       tariffs = Beekeeper::Importer::Tariffs.new(logger).run(localpool, record.converted_attributes[:tariffs])
+      Beekeeper::Importer::GroupContracts.new(logger).run(localpool, record.converted_attributes)
       Beekeeper::Importer::LocalpoolContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], record.converted_attributes[:third_party_contracts], registers, tariffs, warnings)
       Beekeeper::Importer::SetLocalpoolGapContractCustomer.new(logger).run(localpool)
       Beekeeper::Importer::AdjustLocalpoolContractsAndReadings.new(logger).run(localpool)
