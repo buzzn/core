@@ -11,7 +11,6 @@ module Schemas::Transactions::Person
   end
 
   AssignOrCreate = Schemas::Support.Form(Create) do
-    optional(:updated_at).filled(:date_time?)
     optional(:id).filled(:int?)
   end
 
