@@ -32,12 +32,13 @@ module Schemas::Transactions
       private
 
       def cache
-        @cache ||= Array.new(16) # only 12 are used but easier to have holes
+        @cache ||= Array.new(16)
       end
 
       def accept(visitor, resource)
         visitor.address(!resource.address.nil?)
         visitor.legal(!resource.legal_representation.nil?)
+        visitor.legal_address(!resource&.legal_representation&.address.nil?)
         visitor.contact_address(!resource&.contact&.address.nil?)
         visitor.contact(!resource&.contact.nil?)
         visitor.result
@@ -64,44 +65,46 @@ module Schemas::Transactions
     end
 
     def legal(yes)
-      @schema = Schemas::Support.Form(@schema) do
-        optional(:legal_representation) do
-          id?.not.then(schema(yes ? Person::AssignOrUpdate : Person::AssignOrCreate))
-        end
-      end
+      @has_legal = yes
+      do_person('legal', :legal_representation) unless @has_legal_address.nil?
+    end
+
+    def legal_address(yes)
+      @has_legal_address = yes
+      do_person('legal', :legal_representation) unless @has_legal.nil?
     end
 
     def contact(yes)
       @has_contact = yes
-      do_contact unless @has_contact_address.nil?
+      do_person('contact', :contact) unless @has_contact_address.nil?
     end
 
     def contact_address(yes)
       @has_contact_address = yes
-      do_contact unless @has_contact.nil?
+      do_person('contact', :contact) unless @has_contact.nil?
     end
 
     private
 
-    def do_contact
+    def do_person(method, param)
       @schema =
-        if @has_contact
-          if @has_contact_address
+        if instance_variable_get("@has_#{method}")
+          if instance_variable_get("@has_#{method}_address")
             Schemas::Support.Form(@schema) do
-              optional(:contact) do
+              optional(param) do
                 Person.assign_or_update_with_address
               end
             end
           else
             Schemas::Support.Form(@schema) do
-              optional(:contact) do
+              optional(param) do
                 Person.assign_or_update_without_address
               end
             end
           end
         else
           Schemas::Support.Form(@schema) do
-            optional(:contact) do
+            optional(param) do
               id?.not.then(schema(Person::AssignOrCreateWithAddress))
             end
           end
@@ -115,8 +118,9 @@ module Schemas::Transactions
     NONE = 0
     ADDRESS = 1
     LEGAL = 2
-    CONTACT = 4
-    CONTACT_ADDRESS = 8
+    LEGAL_ADDRESS = 4
+    CONTACT = 8
+    CONTACT_ADDRESS = 16
 
     def initialize
       @key = NONE
@@ -135,6 +139,12 @@ module Schemas::Transactions
     def legal(yes)
       if yes
         @key |= LEGAL
+      end
+    end
+
+    def legal_address(yes)
+      if yes
+        @key |= LEGAL_ADDRESS
       end
     end
 
