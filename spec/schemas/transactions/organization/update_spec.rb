@@ -57,14 +57,16 @@ describe 'Schemas::Transactions::Organization::Update' do
     before { organization.update!(legal_representation: nil) }
 
     it_behaves_like 'update without nested person', :legal_representation, name: 'Zombie-Powder-Poo'
+    it_behaves_like 'update without nested person and address', :legal_representation, name: 'Zombie-Powder-Poo'
 
   end
 
-  context 'with legal_representation' do
+  context 'with legal_representation', skip: true do
 
     before { organization.update!(legal_representation: legal_representation) }
 
     it_behaves_like 'update with nested person', :legal_representation, name: 'Stairways To Heaven'
+    it_behaves_like 'update with nested person and address', :legal_representation, name: 'Zombie-Powder-Poo'
 
   end
 
