@@ -52,7 +52,7 @@ class CoreRoda < CommonRoda
 
       r.get! 'health' do
         info = health.info
-        r.response.headers['content_type'] = 'application/json'
+        r.response.headers['Content-Type'] = 'application/json'
         unless info[:healthy]
           logger.error(info.to_yaml.strip)
           r.response.status = 503
