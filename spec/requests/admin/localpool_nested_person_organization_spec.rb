@@ -256,15 +256,13 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
     it_behaves_like 'nested organization', 'gap_contract_customer'
   end
 
-  context 'organization update with new person' do
+  context 'organization update' do
 
-    let(:a_brand_new_address) { create(:address) }
+    let(:a_brand_new_address) { build(:address) }
     let(:a_brand_new_address_json) do
       json = a_brand_new_address.as_json
-      #json.delete('id')
-      #json.delete('updated_at')
       json.delete('created_at')
-      #json.delete_if { |k, v| k.end_with?('_id') }
+      json.delete('updated_at')
       json.delete_if { |k, v| v.nil? }
       json[:country] = 'DE'
       json
@@ -281,9 +279,23 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       json.delete_if { |k, v| k.end_with?('_id') }
       json.delete_if { |k, v| v.nil? }
       json['preferred_language'] = 'de'
-      json['updatable'] = true
-      json[:address] = a_brand_new_address_json
-      json[:prefix] = 'M'
+      json['address'] = a_brand_new_address_json
+      json['prefix'] = 'M'
+      json
+    end
+
+    let(:a_brand_new_legal_person) { build(:person) }
+    let(:a_brand_new_legal_person_json) do
+      json = a_brand_new_legal_person.as_json
+      json.delete('id')
+      json.delete('image')
+      json.delete('updated_at')
+      json.delete('created_at')
+      json.delete('address')
+      json.delete_if { |k, v| k.end_with?('_id') }
+      json.delete_if { |k, v| v.nil? }
+      json['preferred_language'] = 'de'
+      json['prefix'] = 'M'
       json
     end
 
@@ -320,7 +332,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       expect(response).to have_http_status(422)
     end
 
-    it 'assigns a new person and updates the organization' do
+    it 'assigns a new person to contact and updates the organization' do
       # fetch organization
       GET owner_path, $admin
       expect(response).to have_http_status(200)
@@ -331,7 +343,22 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       PATCH patch_path, $admin, owner_json
       expect(response).to have_http_status(200)
       localpool.reload
-      expect(localpool.owner.contact.address.street).to eq a_brand_new_person_json[:address]['street']
+      expect(localpool.owner.contact.address.street).to eq a_brand_new_person_json['address']['street']
+    end
+
+    it 'assigns a new person as legal representation and updates the organization' do
+      # fetch organization
+      GET owner_path, $admin
+      expect(response).to have_http_status(200)
+      owner_json = json['owner']
+      owner_json.delete('address')
+      owner_json.delete('contact')
+      owner_json['legal_representation'] = a_brand_new_legal_person_json
+      PATCH patch_path, $admin, owner_json
+      expect(response).to have_http_status(200)
+      localpool.owner.reload
+      expect(localpool.owner.legal_representation.last_name).to eq a_brand_new_legal_person_json['last_name']
+      expect(localpool.owner.legal_representation.first_name).to eq a_brand_new_legal_person_json['first_name']
     end
 
     after :all do
