@@ -10,14 +10,8 @@ module Group
     CHP = 'chp'
     PV = 'pv'
 
-    before_save do
-      if self.slug.nil?
-        self.slug = Buzzn::Slug.new(self.name)
-        if (count = self.class.where("slug like ?", self.slug + '%').count).positive?
-          self.slug = Buzzn::Slug.new(self.name, count)
-        end
-      end
-    end
+    before_save :check_slug
+    before_create :check_slug
 
     before_destroy :destroy_content
 
@@ -62,6 +56,20 @@ module Group
         self.registers.each do |register|
           register.group = nil
           register.save
+        end
+      end
+
+      def check_slug
+        if self.slug.nil?
+          baseslug = Buzzn::Slug.new(self.name)
+
+          self.slug = baseslug
+
+          count = Slug.get_next('organization', baseslug)
+          if count.positive? || self.class.where(:slug => self.slug)
+            self.slug = Buzzn::Slug.new(self.name, count)
+          end
+          Slug.commit('organization', baseslug, self.slug)
         end
       end
 

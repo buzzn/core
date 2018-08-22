@@ -70,9 +70,39 @@ describe 'Organization Model' do
       cloned = Organization::General.new
       cloned.name = organization.name
       cloned.description = organization.description
+      cloned.slug = nil
       cloned.save
       expect(cloned.slug).not_to be_nil
       expect(cloned.slug).not_to eq organization.slug
+    end
+
+    it 'creates multiple distinct slugs' do
+      slugs = []
+      3.times do
+        org = Organization::General.new
+        org.name = 'Gute Energie'
+        org.save
+        expect(org.slug).not_to be_nil
+        slugs.append(org.slug)
+      end
+
+      expect(slugs.uniq).to eq slugs
+    end
+
+    it 'creates multiple distinct slugs with deletion' do
+      saved_org = nil
+
+      5.times do |count|
+        org = Organization::General.new
+        org.name = 'Gute Energie'
+        org.save
+        expect(org.slug).not_to be_nil
+        if count == 1
+          saved_org = org
+        elsif count == 2
+          saved_org.destroy
+        end
+      end
     end
 
   end

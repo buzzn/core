@@ -249,6 +249,20 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
                       'deletable' => false,
                       'customer_number' => nil,
                     }
+
+    let(:new_organization_owner_json) do
+      {
+        name: 'Gute Energie'
+      }
+    end
+
+    # regression test
+    it 'does does not fail with repeated POSTs' do
+      4.times do
+        POST path, $admin, new_organization_owner_json
+        expect(response).to have_http_status(201)
+      end
+    end
   end
 
   context 'gap_contract_customer' do
@@ -390,6 +404,5 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
     end
 
   end
-
 
 end
