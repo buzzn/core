@@ -4,7 +4,6 @@ require_relative '../../../schemas/transactions/person/create'
 require_relative '../../../schemas/transactions/address'
 require_relative '../../step_adapters/validate'
 
-
 module Transactions::Admin::Localpool
   class UpdateOrganizationOwner < OwnerBase
 
@@ -63,7 +62,6 @@ module Transactions::Admin::Localpool
       permission_context.update
     end
 
-
     # clear methods:
     #
     # the owner already has a contact and the
@@ -71,11 +69,17 @@ module Transactions::Admin::Localpool
     # created as it has no updated_at
 
     def clear_contact(params:, resource:)
-      !resource.object.contact.nil? && !params[:contact].nil? && params[:contact][:updated_at].nil?
+      !resource.object.contact.nil? &&
+        !params[:contact].nil? &&
+        params[:contact][:updated_at].nil? &&
+        params[:contact][:id].nil?
     end
 
     def clear_legal_representation(params:, resource:, **)
-      !resource.object.legal_representation.nil? && !params[:legal_representation].nil? && params[:legal_representation][:updated_at].nil?
+      !resource.object.legal_representation.nil? &&
+        !params[:legal_representation].nil? &&
+        params[:legal_representation][:updated_at].nil? &&
+        params[:legal_representation][:id].nil?
     end
 
     def create_or_update_contact_address_stage1(params:, resource:, clear_contact:, **)
