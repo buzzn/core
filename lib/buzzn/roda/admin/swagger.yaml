@@ -1818,15 +1818,6 @@ paths:
         required: true
         type: string
         format: date-time
-      - name: legal_representation.title
-        in: formData
-        required: false
-        type: string
-        enum:
-        - 
-        - Prof.
-        - Dr.
-        - Prof. Dr.
       - name: legal_representation.prefix
         in: formData
         required: false
@@ -1846,13 +1837,7 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: legal_representation.phone
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
-      - name: legal_representation.fax
+      - name: legal_representation.email
         in: formData
         required: false
         type: string
@@ -1866,6 +1851,27 @@ paths:
         - 
         - de
         - en
+      - name: legal_representation.title
+        in: formData
+        required: false
+        type: string
+        enum:
+        - 
+        - Prof.
+        - Dr.
+        - Prof. Dr.
+      - name: legal_representation.phone
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legal_representation.fax
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: legal_representation.id
         in: formData
         required: false
@@ -2163,15 +2169,6 @@ paths:
         required: true
         type: string
         format: date-time
-      - name: contact.title
-        in: formData
-        required: false
-        type: string
-        enum:
-        - 
-        - Prof.
-        - Dr.
-        - Prof. Dr.
       - name: contact.prefix
         in: formData
         required: false
@@ -2191,13 +2188,7 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: contact.phone
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
-      - name: contact.fax
+      - name: contact.email
         in: formData
         required: false
         type: string
@@ -2211,6 +2202,27 @@ paths:
         - 
         - de
         - en
+      - name: contact.title
+        in: formData
+        required: false
+        type: string
+        enum:
+        - 
+        - Prof.
+        - Dr.
+        - Prof. Dr.
+      - name: contact.phone
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact.fax
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: contact.id
         in: formData
         required: false
@@ -3677,15 +3689,6 @@ paths:
         required: true
         type: string
         format: date-time
-      - name: title
-        in: formData
-        required: false
-        type: string
-        enum:
-        - 
-        - Prof.
-        - Dr.
-        - Prof. Dr.
       - name: prefix
         in: formData
         required: false
@@ -3705,13 +3708,7 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: phone
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
-      - name: fax
+      - name: email
         in: formData
         required: false
         type: string
@@ -3725,6 +3722,27 @@ paths:
         - 
         - de
         - en
+      - name: title
+        in: formData
+        required: false
+        type: string
+        enum:
+        - 
+        - Prof.
+        - Dr.
+        - Prof. Dr.
+      - name: phone
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: fax
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: address.updated_at
         in: formData
         required: true

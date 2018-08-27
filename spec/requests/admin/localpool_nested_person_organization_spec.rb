@@ -351,6 +351,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       GET owner_path, $admin
       expect(response).to have_http_status(200)
       owner_json = json['owner']
+      owner_json.delete('email')
       owner_json.delete('address')
       owner_json.delete('legal_representation')
       owner_json['contact'] = a_brand_new_person_json
