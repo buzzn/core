@@ -19,11 +19,12 @@ module Contract
     private
 
     CONTRACT_NUMBER_BASE = 60000
+    CONTRACT_NUMBER_RANGE = 10000
 
     def check_contract_number
       if self.contract_number.nil?
         maximum = self.class.maximum(:contract_number)
-        if maximum.nil? || maximum < CONTRACT_NUMBER_BASE
+        if maximum.nil? || (maximum < CONTRACT_NUMBER_BASE || maximum > CONTRACT_NUMBER_BASE+CONTRACT_NUMBER_RANGE-1)
           self.contract_number = CONTRACT_NUMBER_BASE
         else
           self.contract_number = maximum + 1
