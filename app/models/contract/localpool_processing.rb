@@ -13,5 +13,26 @@ module Contract
              :provider_permission,
              to: :tax_data, allow_nil: true
 
+    before_save :check_contract_number
+    before_create :check_contract_number
+
+    private
+
+    CONTRACT_NUMBER_BASE = 60000
+
+    def check_contract_number
+      if self.contract_number.nil?
+        maximum = self.class.maximum(:contract_number)
+        if maximum.nil? || maximum < CONTRACT_NUMBER_BASE
+          self.contract_number = CONTRACT_NUMBER_BASE
+        else
+          self.contract_number = maximum + 1
+        end
+      end
+      if self.contract_number_addition.nil?
+        self.contract_number_addition = (self.class.where(:contract_number => self.contract_number).maximum(:contract_number_addition) || -1) + 1
+      end
+    end
+
   end
 end
