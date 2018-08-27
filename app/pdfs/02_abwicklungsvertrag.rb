@@ -12,6 +12,10 @@ module Pdf
 
     protected
 
+    def pdf_filename
+      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Abwicklungsvertrag-#{contract.localpool.slug}.pdf"
+    end
+
     def build_struct
       {
         version: template.version,
