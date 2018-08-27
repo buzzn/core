@@ -76,6 +76,13 @@ describe 'Organization Model' do
       expect(cloned.slug).not_to eq organization.slug
     end
 
+    it 'doesn\'t append a number for initial slugs' do
+      org = Organization::General.new
+      org.name = "A Unique Organization"
+      org.save
+      expect(org.slug).to eq "a-unique-organization"
+    end
+
     it 'creates multiple distinct slugs' do
       slugs = []
       3.times do
