@@ -95,7 +95,7 @@ class Beekeeper::Importer::OptimizeGroup
     all_discovergy_but_consumption = (localpool_meters - discovergy_meters)
                                      .collect { |m| m.registers }
                                      .flatten
-                                     .all? { |r| r.label.consumption? }
+                                     .all? { |r| r.consumption? }
     # missing consumption meters can be calculated
     p "all meters but consumption are connected to discovergy: #{all_discovergy_but_consumption}"
     all_discovergy_but_consumption
