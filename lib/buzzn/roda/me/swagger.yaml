@@ -26,15 +26,6 @@ paths:
         required: true
         type: string
         format: date-time
-      - name: title
-        in: formData
-        required: false
-        type: string
-        enum:
-        - 
-        - Prof.
-        - Dr.
-        - Prof. Dr.
       - name: prefix
         in: formData
         required: false
@@ -54,13 +45,7 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: phone
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
-      - name: fax
+      - name: email
         in: formData
         required: false
         type: string
@@ -74,6 +59,27 @@ paths:
         - 
         - de
         - en
+      - name: title
+        in: formData
+        required: false
+        type: string
+        enum:
+        - 
+        - Prof.
+        - Dr.
+        - Prof. Dr.
+      - name: phone
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: fax
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       responses:
         200:
           description: patched
