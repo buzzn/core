@@ -61,6 +61,8 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   entity!(:contract) { localpool.contracts.sample }
 
+  entity!(:device) { create(:device, localpool: localpool) }
+
   let!(:localpool_processing_contract) do
     localpool.localpool_processing_contracts.first
   end
@@ -392,6 +394,30 @@ describe Admin, :swagger, :request_helper, order: :defined do
   post '/localpools/{localpool.id}/organization-owner/{organization.id}' do
     description 'assign different organization as owner of the localpool'
     schema Schemas::Support.Form
+  end
+
+  # devices
+
+  get '/localpools/{localpool.id}/devices' do
+    description 'returns all devices of the localpool'
+  end
+
+  post '/localpools/{localpool.id}/devices' do
+    description 'creates a new for the localpool'
+    schema Schemas::Transactions::Device::Create
+  end
+
+  get '/localpools/{localpool.id}/devices/{device.id}' do
+    description 'returns a device of the localpool'
+  end
+
+  patch '/localpools/{localpool.id}/devices/{device.id}' do
+    description 'updates a device of the localpool'
+    schema Schemas::Transactions::Device::Update
+  end
+
+  delete '/localpools/{localpool.id}/devices/{device.id}' do
+    description 'deletes a device of the localpool'
   end
 
   # swagger
