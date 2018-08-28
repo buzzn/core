@@ -3081,6 +3081,225 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/devices":
+    get:
+      description: returns all devices of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: creates a new for the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: two_way_meter
+        in: formData
+        required: true
+        type: string
+        enum:
+        - 'yes'
+        - planned
+      - name: two_way_meter_used
+        in: formData
+        required: true
+        type: string
+        enum:
+        - 'yes'
+        - planned
+      - name: primary_energy
+        in: formData
+        required: true
+        type: string
+        enum:
+        - bio_mass
+        - bio_gas
+        - natural_gas
+        - fluid_gas
+        - fuel_oil
+        - wood
+        - veg_oil
+        - sun
+        - wind
+        - water
+        - other
+      - name: commissioning
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: law
+        in: formData
+        required: false
+        type: string
+        enum:
+        - eeg
+        - kwkg
+        - free
+      - name: manufacturer
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: kw_peak
+        in: formData
+        required: true
+        type: number
+        format: float
+      - name: kwh_per_annum
+        in: formData
+        required: true
+        type: number
+        format: float
+      - name: electricity_supplier.id
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      - name: electricity_supplier
+        in: formData
+        required: false
+        type: hash
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/devices/{device_id}":
+    get:
+      description: returns a device of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: device_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: deletes a device of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: device_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: updates a device of the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: device_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: two_way_meter
+        in: formData
+        required: false
+        type: string
+        enum:
+        - 'yes'
+        - planned
+      - name: two_way_meter_used
+        in: formData
+        required: false
+        type: string
+        enum:
+        - 'yes'
+        - planned
+      - name: primary_energy
+        in: formData
+        required: false
+        type: string
+        enum:
+        - bio_mass
+        - bio_gas
+        - natural_gas
+        - fluid_gas
+        - fuel_oil
+        - wood
+        - veg_oil
+        - sun
+        - wind
+        - water
+        - other
+      - name: commissioning
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: law
+        in: formData
+        required: false
+        type: string
+        enum:
+        - eeg
+        - kwkg
+        - free
+      - name: manufacturer
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: kw_peak
+        in: formData
+        required: false
+        type: number
+        format: float
+      - name: kwh_per_annum
+        in: formData
+        required: false
+        type: number
+        format: float
+      - name: electricity_supplier.id
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      - name: electricity_supplier
+        in: formData
+        required: false
+        type: hash
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/meters":
     get:
       description: returns all the meters of the localpool
