@@ -4,6 +4,7 @@ require_relative '../contract/tariff_resource'
 require_relative '../register/meta_resource'
 require_relative '../contract/localpool_processing_resource'
 require_relative '../contract/localpool_power_taker_resource'
+require_relative '../contract/localpool_third_party_resource'
 require_relative '../contract/metering_point_operator_resource'
 require_relative 'billing_cycle_resource'
 require_relative 'device_resource'
@@ -42,6 +43,7 @@ module Admin
     has_many :localpool_processing_contracts, Contract::LocalpoolProcessingResource
     has_many :metering_point_operator_contracts, Contract::MeteringPointOperatorResource
     has_many :localpool_power_taker_contracts, Contract::LocalpoolPowerTakerResource
+    has_many :localpool_third_party_contracts, Contract::LocalpoolThirdPartyResource
 
     has_many :registers
     has_many :market_locations, Register::MetaResource do |object|
