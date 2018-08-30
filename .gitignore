@@ -17,6 +17,8 @@
 # ignore resilio data
 .sync
 
+.ruby-gemset
+
 # generated
 dump.rdb
 /config/database.yml
