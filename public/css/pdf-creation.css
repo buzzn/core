@@ -24,10 +24,15 @@ input[type=checkbox]{visibility:hidden;width:1rem}
 /*page break*/
 div.alwaysbreak {page-break-before: always;}
 /*format classes*/
-.wrapper {width: 100%; height: auto; min-height: 1000px; position: relative; padding-bottom: 2rem;}
+.wrapper {width: 100%; height: auto; min-height: 1300px; position: relative; padding-bottom: 2rem;}
 .row {margin: 0 -0.375rem;}
 .col-3rd {width: 30%; margin: 0.375rem 0.375rem; float: left;}
 .col-half {width: 47%; margin: 0.375rem 0.375rem; float: left;}
+
+/* hard positions */
+.offset-one-third {position: absolute; left: 33%;}
+.offset-two-thirds {position: absolute; left: 66%;}
+.offset-half {position: absolute; left: 50%;}
 /*modifiers is*/
 .is-huge {font-size: 1.75rem;}
 .is-larger {font-size: 1.125rem;}
@@ -66,7 +71,7 @@ div.alwaysbreak {page-break-before: always;}
 .card p:last-child {position: absolute; bottom: 0.375rem;}
 .logo {width: 10rem; height: 4rem; background: #eeeeee;}
 .footer-logo {width: auto; float: right;}
-.footer-logo img {width: 2.5rem; height: auto;}
+.footer-logo img {margin-left: 2.5px; width: 2.5rem; height: auto;}
 /*colors*/
 .ash {background: #eeeeee;}
 .sand {background: #DBD7C1;}
