@@ -203,21 +203,25 @@ html
         <br/>Geschätzter Stromverbrauch aller Parteien (kWh pro Jahr): <input class="offset-half" name="all_parties_estimated_kwh" type="text">
       h3 Stromerzeugungsanlage 1
       p Status der Anlage: <input class="offset-half" name="device_0_state_of_device" type="text">
-        <br/>Welches Gesetz regelt die Stromerzeugung? <input class="offset-half" name="device_0_production_law" type="text">
-        <br/>Datum der Inbetriebnahme: <input class="offset-half" name="device_0_date_of_commission" type="text"> 
-        <br/>Elektrische Leistung (kW): <input class="offset-half" name="device_0_production_power" type="number">
-        <br/>Geschätzte Stromerzeugung (kWh pro Jahr):  <input class="offset-half" name="device_0_estimated_production_per_a" type="number">
-        <br/>2-Richtungszähler? <input class="offset-half" name="device_0_two_way_meter" type="checkbox">
-        <br/>Fließt der Strom der Parteien über diesen 2-Richtungszähler?  <input class="offset-half" name="device_0_two_way_meter" type="checkbox">
-        <br/>Stromanbieter Zusatzstrom? <input class="offset-half" name="device_0_supplier_additional_power" type="text">
+        <ul class="input_list">
+          <li>Welches Gesetz regelt die Stromerzeugung? <input class="offset-half" name="device_0_production_law" type="text"></li>
+          <li>Datum der Inbetriebnahme: <input class="offset-half" name="device_0_date_of_commission" type="text"> </li>
+          <li>Elektrische Leistung (kW): <input class="offset-half" name="device_0_production_power" type="number"></li>
+          <li>Geschätzte Stromerzeugung (kWh pro Jahr):  <input class="offset-half" name="device_0_estimated_production_per_a" type="number"></li>
+          <li>2-Richtungszähler? <input class="offset-half" name="device_0_two_way_meter" type="checkbox"></li>
+          <li>Fließt der Strom der Parteien über diesen 2-Richtungszähler?  <input class="offset-half" name="device_0_two_way_meter" type="checkbox"></li>
+          <li>Stromanbieter Zusatzstrom? <input class="offset-half" name="device_0_supplier_additional_power" type="text"></li>
+        </ul>
       h3 Stromerzeugungsanlage 2 (sofern vorhanden oder geplant)
-        <br/>Welches Gesetz regelt die Stromerzeugung? <input class="offset-half" name="device_1_production_law" type="text">
-        <br/>Datum der Inbetriebnahme: <input class="offset-half" name="device_1_date_of_commission" type="text"> 
-        <br/>Elektrische Leistung (kW): <input class="offset-half" name="device_1_production_power" type="number">
-        <br/>Geschätzte Stromerzeugung (kWh pro Jahr):  <input class="offset-half" name="device_1_estimated_production_per_a" type="number">
-        <br/>2-Richtungszähler? <input class="offset-half" name="device_1_two_way_meter" type="checkbox">
-        <br/>Fließt der Strom der Parteien über diesen 2-Richtungszähler?  <input class="offset-half" name="device_1_two_way_meter" type="checkbox">
-        <br/>Stromanbieter Zusatzstrom? <input class="offset-half" name="device_1_supplier_additional_power" type="text">
+        <ul class="input_list">
+          <li>Welches Gesetz regelt die Stromerzeugung? <input class="offset-half" name="device_1_production_law" type="text"></li>
+          <li>Datum der Inbetriebnahme: <input class="offset-half" name="device_1_date_of_commission" type="text"> </li>
+          <li>Elektrische Leistung (kW): <input class="offset-half" name="device_1_production_power" type="number"></li>
+          <li>Geschätzte Stromerzeugung (kWh pro Jahr):  <input class="offset-half" name="device_1_estimated_production_per_a" type="number"></li>
+          <li>2-Richtungszähler? <input class="offset-half" name="device_1_two_way_meter" type="checkbox"></li>
+          <li>Fließt der Strom der Parteien über diesen 2-Richtungszähler?  <input class="offset-half" name="device_1_two_way_meter" type="checkbox"></li>
+          <li>Stromanbieter Zusatzstrom? <input class="offset-half" name="device_1_supplier_additional_power" type="text"></li>
+        </ul>
       h3 Steuernummer
       p Die Steuernummer wird zur Erstellung der Stromnehmer-Jahresabrechnungen benötigt.
       p Steuernummer: <input class="offset-half" name="steuernummer" type="text">
