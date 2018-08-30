@@ -1,4 +1,5 @@
 require_relative 'localpool_resource'
+require_relative '../register/meta_resource'
 
 module Contract
   class LocalpoolPowerTakerResource < LocalpoolResource
