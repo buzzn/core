@@ -28,6 +28,8 @@ dump.rdb
 *.staging
 *.production
 .env.development
+.env.test
+.env.*.save
 
 public/uploads
 uploads
