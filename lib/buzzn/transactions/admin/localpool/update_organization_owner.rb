@@ -47,7 +47,7 @@ module Transactions::Admin::Localpool
 
           result = schema.call(params[nested[0]])
           if result.success?
-            Success(params[nested[0]].merge(params: result.output))
+            Success(params[nested[0]].replace(result.output))
           else
             schema_second_pass_validations[nested[0]] = result.errors
           end
