@@ -12,8 +12,12 @@ module Pdf
 
     protected
 
+    def title
+      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Abwicklungsvertrag-#{contract.localpool.slug}"
+    end
+
     def pdf_filename
-      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Abwicklungsvertrag-#{contract.localpool.slug}.pdf"
+      "#{title}.pdf"
     end
 
     def build_struct
@@ -22,7 +26,8 @@ module Pdf
         powergiver: build_powergiver(contract.customer),
         powertaker: build_powertaker(contract.localpool),
         number: contract.full_contract_number,
-        localgroup_local_supplier: contract.localpool.electricity_supplier
+        localgroup_local_supplier: contract.localpool.electricity_supplier,
+        title_text: title
       }
     end
 
