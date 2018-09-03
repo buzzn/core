@@ -8,4 +8,8 @@ Organization::MarketResource::Permission = Buzzn::Permission.new(Organization::M
   # top level CRUD permissions
   crud :ops
 
+  market_functions do
+    retrieve :ops
+  end
+
 end
