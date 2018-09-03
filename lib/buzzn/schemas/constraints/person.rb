@@ -1,4 +1,4 @@
-require './app/models/person.rb'
+require './app/models/person'
 require_relative '../constraints'
 
 Schemas::Constraints::Person = Schemas::Support.Form do
