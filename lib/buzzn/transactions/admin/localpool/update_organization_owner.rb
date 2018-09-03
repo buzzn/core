@@ -30,6 +30,7 @@ module Transactions::Admin::Localpool
     end
 
     def schema_second_pass(resource:, params:)
+      schema_second_pass_validations = {}
       [[:contact, resource.object.contact], [:legal_representation, resource.object.legal_representation]].each do |nested|
         if !params[nested[0]].nil?
           if !params[nested[0]][:id].nil?
@@ -46,15 +47,18 @@ module Transactions::Admin::Localpool
             schema = Schemas::Transactions::Person::CreateWithAddress
           end
 
-          # non-DRY :/
           result = schema.call(params[nested[0]])
           if result.success?
             Success(params[nested[0]].merge(params: result.output))
           else
-            raise Buzzn::ValidationError.new(result.errors)
+            schema_second_pass_validations[nested[0]] = result.errors
           end
 
         end
+      end
+
+      if schema_second_pass_validations.size.positive?
+        raise Buzzn::ValidationError.new(schema_second_pass_validations)
       end
     end
 
