@@ -525,6 +525,10 @@ describe Admin::LocalpoolRoda, :request_helper do
             }
           end
 
+          let!(:localpool_processing_contract) do
+            create(:contract, :localpool_processing, localpool: localpool)
+          end
+
           context 'invalid data' do
 
             it 'fails with 422 for incomplete data: everything' do
