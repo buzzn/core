@@ -27,7 +27,11 @@ module Group
     end
 
     def localpool_processing_contract
-      self.localpool_processing_contracts.first
+      self.localpool_processing_contracts.each do |lpc|
+        next if [Contract::Base::TERMINATED, Contract::Base::ENDED].include? lpc.status
+        return lpc
+      end
+      nil
     end
 
     def localpool_power_taker_and_third_party_contracts

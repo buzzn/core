@@ -45,6 +45,9 @@ module Contract
     belongs_to :customer_bank_account, class_name: 'BankAccount'
     belongs_to :register_meta, class_name: 'Register::Meta', foreign_key: :register_meta_id
 
+    before_save :check_contract_number
+    before_create :check_contract_number
+
     # status consts
     ONBOARDING = 'onboarding'
     SIGNED     = 'signed'
@@ -108,6 +111,12 @@ module Contract
 
     def pdf_generator
       nil
+    end
+
+    protected
+
+    def check_contract_number
+      return
     end
 
     private
