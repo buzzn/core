@@ -14,13 +14,11 @@ module Transactions::Admin::Localpool
     tee :create_or_update_address, with: :'operations.action.create_or_update_address'
 
     add :clear_contact
-    tee :create_or_update_contact_address_stage1, with: :'operations.action.create_or_update_address'
-    add :create_or_update_contact_address_stage2, with: :'operations.action.create_or_update_address'
+    tee :create_or_update_contact_address, with: :'operations.action.create_or_update_address'
     tee :create_or_update_contact, with: :'operations.action.create_or_update_person'
 
     add :clear_legal_representation
-    tee :create_or_update_legal_representation_address_stage1, with: :'operations.action.create_or_update_address'
-    add :create_or_update_legal_representation_address_stage2, with: :'operations.action.create_or_update_address'
+    tee :create_or_update_legal_representation_address, with: :'operations.action.create_or_update_address'
     tee :create_or_update_legal_representation, with: :'operations.action.create_or_update_person'
 
     map :update_organization, with: :'operations.action.update'
@@ -86,44 +84,28 @@ module Transactions::Admin::Localpool
         params[:legal_representation][:id].nil?
     end
 
-    def create_or_update_contact_address_stage1(params:, resource:, clear_contact:, **)
-      unless clear_contact
+    def create_or_update_contact_address(params:, resource:, clear_contact:, **)
+      if clear_contact
+        super(params: params[:contact] || {}, resource: nil)
+      else
         super(params: params[:contact] || {}, resource: resource.contact)
       end
     end
 
-    def create_or_update_contact_address_stage2(params:, resource:, clear_contact:, **)
-      if clear_contact
-        super(params: params[:contact] || {}, resource: nil)
-      end
-    end
-
-    def create_or_update_contact(params:, resource:, clear_contact:, create_or_update_contact_address_stage2:, **)
+    def create_or_update_contact(params:, resource:, clear_contact:, **)
       super(params: params, method: :contact, force_new: clear_contact, resource: resource)
-      if clear_contact
-        params[:contact].address = create_or_update_contact_address_stage2
-        params[:contact].save
-      end
     end
 
-    def create_or_update_legal_representation_address_stage1(params:, resource:, clear_legal_representation:, **)
-      unless clear_legal_representation
+    def create_or_update_legal_representation_address(params:, resource:, clear_legal_representation:, **)
+      if clear_legal_representation
+        super(params: params[:legal_representation] || {}, resource: nil)
+      else
         super(params: params[:legal_representation] || {}, resource: resource.legal_representation)
       end
     end
 
-    def create_or_update_legal_representation_address_stage2(params:, resource:, clear_legal_representation:, **)
-      if clear_legal_representation
-        super(params: params[:legal_representation] || {}, resource: nil)
-      end
-    end
-
-    def create_or_update_legal_representation(params:, resource:, clear_legal_representation:, create_or_update_legal_representation_address_stage2:, **)
+    def create_or_update_legal_representation(params:, resource:, clear_legal_representation:, **)
       super(params: params, method: :legal_representation, force_new: clear_legal_representation, resource: resource)
-      if clear_legal_representation
-        params[:legal_representation].address = create_or_update_legal_representation_address_stage2
-        params[:legal_representation].save
-      end
     end
 
   end
