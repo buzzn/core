@@ -45,9 +45,42 @@ describe Admin, :swagger, :request_helper, order: :defined do
     create(:group, :localpool, owner: organization)
   end
 
+  entity!(:localpool_pta) do
+    localpool
+  end
+
+  entity!(:localpool_pto) do
+    localpool
+  end
+
+  entity!(:localpool_ptp) do
+    localpool
+  end
+
   entity!(:localpool_processing_contract_json) do
     {
       'type' => 'contract_localpool_processing',
+    }
+  end
+
+  entity!(:localpool_power_taker_contract_assign_json) do
+    {
+      'type' => 'contract_localpool_power_taker',
+      'customer' => { id: ''},
+    }
+  end
+
+  entity!(:localpool_power_taker_contract_org_json) do
+    {
+      'type' => 'contract_localpool_power_taker',
+      'customer' => { type: 'organization'},
+    }
+  end
+
+  entity!(:localpool_power_taker_contract_person_json) do
+    {
+      'type' => 'contract_localpool_power_taker',
+      'customer' => { type: 'person'},
     }
   end
 
@@ -146,8 +179,23 @@ describe Admin, :swagger, :request_helper, order: :defined do
   end
 
   post '/localpools/{localpool3.id}/contracts', $admin, {}, localpool_processing_contract_json do
-    description 'adds new contract to the localpool'
+    description 'adds a processing contract to the localpool'
     schema Schemas::Transactions::Admin::Contract::LocalpoolProcessing::Create
+  end
+
+  post '/localpools/{localpool_pto.id}/contracts', $admin, {}, localpool_power_taker_contract_org_json do
+    description 'adds a power taker contract (organization) to the localpool'
+    schema Schemas::Transactions::Admin::Contract::PowerTaker::CreateWithOrganization
+  end
+
+  post '/localpools/{localpool_ptp.id}/contracts', $admin, {}, localpool_power_taker_contract_person_json do
+    description 'adds a power taker contract (person) to the localpool'
+    schema Schemas::Transactions::Admin::Contract::PowerTaker::CreateWithPerson
+  end
+
+  post '/localpools/{localpool_pta.id}/contracts', $admin, {}, localpool_power_taker_contract_assign_json do
+    description 'adds a power taker contract (assign) to the localpool'
+    schema Schemas::Transactions::Admin::Contract::PowerTaker::CreateWithAssign
   end
 
   get '/localpools/{localpool.id}/contracts/{contract.id}' do

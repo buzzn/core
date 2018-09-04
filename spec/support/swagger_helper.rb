@@ -37,7 +37,10 @@ module SwaggerHelper
     @expected = expected
   end
 
-  def expect_missing(ops, consumes = ['application/x-www-form-urlencoded'])
+  def expect_missing(ops, consumes, params)
+    consumes ||= ['application/x-www-form-urlencoded']
+    params ||= {}
+
     expect(@schema).not_to be_nil
     expected = @expected || {}
     process_rule = ->(name: nil, required: nil, type: nil, options: {}) do
@@ -94,7 +97,7 @@ module SwaggerHelper
     end
 
     Schemas::Support::Visitor.visit(@schema, &process_rule)
-    expect(expected).to eq json unless expected.blank?
+    expect(expected).to eq json unless expected.blank? || !params.blank?
   end
 
   module ClassMethods
@@ -161,11 +164,7 @@ module SwaggerHelper
         expect([200, 201, 204, 422, 401, 403]).to include response.status
         instance_eval &block
         if [:post, :patch, :put].include?(method) || response.status == 422
-          if options[:consumes]
-            expect_missing(ops, options[:consumes])
-          else
-            expect_missing(ops)
-          end
+          expect_missing(ops, options[:consumes], params)
         end
       end
     end
