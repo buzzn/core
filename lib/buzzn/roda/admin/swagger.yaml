@@ -1725,6 +1725,12 @@ paths:
         in: path
         required: true
         type: string
+      - name: type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - contract_localpool_processing
       - name: signing_date
         in: formData
         required: false
@@ -4781,6 +4787,17 @@ paths:
         in: path
         required: true
         type: string
+      - name: type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - contract_localpool_power_taker
+      - name: customer.id
+        in: formData
+        required: true
+        type: string
+        format: ''
       - name: signing_date
         in: formData
         required: false
@@ -4842,6 +4859,18 @@ paths:
         in: path
         required: true
         type: string
+      - name: type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - contract_localpool_power_taker
+      - name: customer.type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - organization
       - name: signing_date
         in: formData
         required: false
@@ -5896,6 +5925,18 @@ paths:
         in: path
         required: true
         type: string
+      - name: type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - contract_localpool_power_taker
+      - name: customer.type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - person
       - name: signing_date
         in: formData
         required: false
