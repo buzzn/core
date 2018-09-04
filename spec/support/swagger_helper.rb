@@ -96,6 +96,26 @@ module SwaggerHelper
       ops.consumes = consumes
     end
 
+    params_process = ->(prefix: '', p: {}) do
+      p.each do |k, v|
+        name = k.to_s
+        unless prefix.blank?
+          name = prefix + '.' + name
+        end
+        if v.is_a? Hash
+          params_process.call(prefix: name, p: v)
+        elsif v.blank?
+          process_rule.call(name: name, required: true, type: nil, options: { })
+        else
+          process_rule.call(name: name, required: true, type: :enum, options: { values: [v] })
+        end
+      end
+    end
+
+    unless params.blank?
+      params_process.call(p: params)
+    end
+
     Schemas::Support::Visitor.visit(@schema, &process_rule)
     expect(expected).to eq json unless expected.blank? || !params.blank?
   end
@@ -139,6 +159,7 @@ module SwaggerHelper
           sparam.type = 'string'
           ops.add_parameter(sparam)
         end
+
         responses = Swagger::Data::Responses.new
         resp = Swagger::Data::Response.new
         case method
