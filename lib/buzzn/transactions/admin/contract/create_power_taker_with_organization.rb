@@ -6,6 +6,7 @@ module Transactions::Admin::Contract
     validate :schema
     tee :schema_paranoid
     check :authorize, with: :'operations.authorization.create'
+    tee :localpool_schema
     around :db_transaction
 
     tee :create_contact_address, with: :'operations.action.create_address'
