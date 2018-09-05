@@ -5,6 +5,7 @@ module Transactions::Admin::Contract
 
     validate :schema
     check :authorize, with: :'operations.authorization.create'
+    tee :localpool_schema
     around :db_transaction
 
     add :create_address, with: :'operations.action.create_address'
