@@ -10,6 +10,14 @@ class Transactions::Admin::Contract::CreatePowerTakerBase < Transactions::Base
     end
   end
 
+  def localpool_schema(localpool:, **)
+    subject = Schemas::Support::ActiveRecordValidator.new(localpool.object)
+    result = Schemas::PreConditions::Localpool::CreateLocalpoolPowerTakerContract.call(subject)
+    unless result.success?
+      raise Buzzn::ValidationError.new(result.errors)
+    end
+  end
+
   def assign_contractor(params:, localpool:, **)
     params[:contractor] = localpool.owner.object
   end
