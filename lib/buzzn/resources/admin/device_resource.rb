@@ -3,17 +3,13 @@ module Admin
 
     model Device
 
-    attributes :two_way_meter,
-               :two_way_meter_used,
-               :primary_energy,
+    attributes :primary_energy,
                :commissioning,
                :kw_peak,
                :kwh_per_annum,
                :law,
                :manufacturer,
                :updatable, :deletable
-
-    has_one :electricity_supplier
 
     def kw_peak
       watt_peak / 1000.0

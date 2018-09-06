@@ -18,8 +18,6 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     let(:wrong) do
       {
-        'two_way_meter'=> :something,
-        'two_way_meter_used'=> :something_else,
         'primary_energy'=> :free_will,
         'commissioning'=> :tomorrow,
         'manufacturer' => 'GummiBar' * 40,
@@ -30,8 +28,6 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     let(:wrong_json) do
       {
-        'two_way_meter'=>['must be one of: yes, planned'],
-        'two_way_meter_used'=>['must be one of: yes, planned'],
         'primary_energy'=>['must be one of: bio_mass, bio_gas, natural_gas, fluid_gas, fuel_oil, wood, veg_oil, sun, wind, water, other'],
         'commissioning'=>['must be a date'],
         'manufacturer' => ['size cannot be greater than 64'],
@@ -43,8 +39,6 @@ describe Admin::LocalpoolRoda, :request_helper do
     let(:created_json) do
       {
         'type'=>'device',
-        'two_way_meter'=> 'yes',
-        'two_way_meter_used'=> 'planned',
         'primary_energy'=> 'sun',
         'commissioning'=> Date.today.as_json,
         'kw_peak'=> 32.42,
@@ -62,8 +56,6 @@ describe Admin::LocalpoolRoda, :request_helper do
                       path: :path,
                       wrong: :wrong,
                       params: {
-                        'two_way_meter'=> 'yes',
-                        'two_way_meter_used'=> 'planned',
                         'primary_energy'=> 'sun',
                         'manufacturer' => 'GummiBär',
                         'commissioning'=> Date.today.as_json,
@@ -98,12 +90,6 @@ describe Admin::LocalpoolRoda, :request_helper do
       it_behaves_like 'single', :device, expected: :device_json, path: :path
       it_behaves_like 'all', expected: :device_json, path: :path
 
-      it 'nested electricity_supplier' do
-        device.update!(electricity_supplier: Organization::Market.electricity_suppliers.first)
-        GET path, $admin, include: :electricity_supplier
-
-        expect(json).to has_nested_json(:electricity_supplier)
-      end
     end
 
     context 'PATCH' do
@@ -114,7 +100,6 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       let(:input) do
         {
-          'two_way_meter'=> 'planned',
           'primary_energy'=> 'wind',
           'manufacturer' => 'RubberBear',
           'commissioning'=> (Date.today + 1).as_json,
