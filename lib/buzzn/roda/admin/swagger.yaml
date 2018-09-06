@@ -3500,20 +3500,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: two_way_meter
-        in: formData
-        required: true
-        type: string
-        enum:
-        - 'yes'
-        - planned
-      - name: two_way_meter_used
-        in: formData
-        required: true
-        type: string
-        enum:
-        - 'yes'
-        - planned
       - name: primary_energy
         in: formData
         required: true
