@@ -1,14 +1,6 @@
-require_relative '../contract'
+require_relative '../localpool'
 
-class Transactions::Admin::Contract::CreatePowerTakerBase < Transactions::Base
-
-  def localpool_schema(localpool:, **)
-    subject = Schemas::Support::ActiveRecordValidator.new(localpool.object)
-    result = Schemas::PreConditions::Localpool::CreateLocalpoolPowerTakerContract.call(subject)
-    unless result.success?
-      raise Buzzn::ValidationError.new(result.errors)
-    end
-  end
+class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transactions::Base
 
   def localpool_schema(localpool:, **)
     subject = Schemas::Support::ActiveRecordValidator.new(localpool.object)

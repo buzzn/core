@@ -5,11 +5,11 @@ module Admin
 
     include Import.args[:env,
                         'transactions.admin.contract.document',
-                        'transactions.admin.contract.create_localpool_processing',
-                        'transactions.admin.contract.update_localpool_processing',
-                        'transactions.admin.contract.create_power_taker_assign',
-                        'transactions.admin.contract.create_power_taker_with_person',
-                        'transactions.admin.contract.create_power_taker_with_organization',
+                        'transactions.admin.contract.localpool.create_processing',
+                        'transactions.admin.contract.localpool.update_processing',
+                        'transactions.admin.contract.localpool.create_power_taker_assign',
+                        'transactions.admin.contract.localpool.create_power_taker_with_person',
+                        'transactions.admin.contract.localpool.create_power_taker_with_organization',
                        ]
 
     plugin :shared_vars
@@ -35,7 +35,7 @@ module Admin
         r.patch! do
           case contract
           when Contract::LocalpoolProcessingResource
-            update_localpool_processing.(resource: contract, params: r.params)
+            update_processing.(resource: contract, params: r.params)
           else
             r.response.status = 400
           end
@@ -78,7 +78,7 @@ module Admin
       r.post!(:param=>'type') do |type|
         case type.to_s
         when 'contract_localpool_processing'
-          create_localpool_processing.(resource: localpool_processing_contracts, params: r.params, localpool: localpool)
+          create_processing.(resource: localpool_processing_contracts, params: r.params, localpool: localpool)
         when 'contract_localpool_power_taker'
           # we have 3 cases here:
           # assign with an id

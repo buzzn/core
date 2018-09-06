@@ -1,6 +1,6 @@
 require_relative '../localpool_processing'
 
-module Schemas::Transactions::Admin::Contract::LocalpoolProcessing
+module Schemas::Transactions::Admin::Contract::Localpool::Processing
 
   Update = Schemas::Support.Form(Schemas::Transactions::Update) do
     optional(:tax_number).filled(:str?, max_size?: 64)

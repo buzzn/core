@@ -180,22 +180,22 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   post '/localpools/{localpool3.id}/contracts', $admin, {}, localpool_processing_contract_json do
     description 'adds a processing contract to the localpool'
-    schema Schemas::Transactions::Admin::Contract::LocalpoolProcessing::Create
+    schema Schemas::Transactions::Admin::Contract::Localpool::Processing::Create
   end
 
   post '/localpools/{localpool_pto.id}/contracts', $admin, {}, localpool_power_taker_contract_org_json do
     description 'adds a power taker contract (organization) to the localpool'
-    schema Schemas::Transactions::Admin::Contract::PowerTaker::CreateWithOrganization
+    schema Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::CreateWithOrganization
   end
 
   post '/localpools/{localpool_ptp.id}/contracts', $admin, {}, localpool_power_taker_contract_person_json do
     description 'adds a power taker contract (person) to the localpool'
-    schema Schemas::Transactions::Admin::Contract::PowerTaker::CreateWithPerson
+    schema Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::CreateWithPerson
   end
 
   post '/localpools/{localpool_pta.id}/contracts', $admin, {}, localpool_power_taker_contract_assign_json do
     description 'adds a power taker contract (assign) to the localpool'
-    schema Schemas::Transactions::Admin::Contract::PowerTaker::CreateWithAssign
+    schema Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::CreateWithAssign
   end
 
   get '/localpools/{localpool.id}/contracts/{contract.id}' do
@@ -204,7 +204,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   patch '/localpools/{localpool.id}/contracts/{localpool_processing_contract.id}' do
     description 'updates an existing LocalpoolProcessingContract'
-    schema Schemas::Transactions::Admin::Contract::LocalpoolProcessing::Update
+    schema Schemas::Transactions::Admin::Contract::Localpool::Processing::Update
   end
 
   get '/localpools/{localpool.id}/contracts/{contract.id}/contractor' do

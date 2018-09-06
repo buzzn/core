@@ -1,4 +1,4 @@
-require_relative '../contract'
+require_relative 'localpool'
 
-module Schemas::Transactions::Admin::Contract::LocalpoolProcessing
+module Schemas::Transactions::Admin::Contract::Localpool::Processing
 end

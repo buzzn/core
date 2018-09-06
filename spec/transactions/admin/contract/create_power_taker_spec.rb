@@ -1,6 +1,6 @@
-require 'buzzn/transactions/admin/contract/create_power_taker_with_organization'
-require 'buzzn/transactions/admin/contract/create_power_taker_with_person'
-require 'buzzn/transactions/admin/contract/create_power_taker_assign'
+require 'buzzn/transactions/admin/contract/localpool/create_power_taker_with_organization'
+require 'buzzn/transactions/admin/contract/localpool/create_power_taker_with_person'
+require 'buzzn/transactions/admin/contract/localpool/create_power_taker_assign'
 
 require 'buzzn/resources/contract/localpool_power_taker_resource'
 
@@ -19,7 +19,7 @@ shared_examples 'without processing contract' do |transaction|
 
 end
 
-describe Transactions::Admin::Contract::CreatePowerTakerAssign, order: :defined do
+describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order: :defined do
 
   let!(:localpool) { create(:group, :localpool) }
   let(:operator) { create(:account, :buzzn_operator) }
@@ -49,7 +49,7 @@ describe Transactions::Admin::Contract::CreatePowerTakerAssign, order: :defined 
   end
 
   context 'invalid state' do
-    it_behaves_like 'without processing contract', Transactions::Admin::Contract::CreatePowerTakerAssign.new do
+    it_behaves_like 'without processing contract', Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign.new do
       let(:params) { assign_request_person }
       let(:lp) { localpoolr }
       let(:r) { resource }
@@ -66,21 +66,21 @@ describe Transactions::Admin::Contract::CreatePowerTakerAssign, order: :defined 
     end
 
     let(:result_invalid) do
-      Transactions::Admin::Contract::CreatePowerTakerAssign.new.(resource: resource,
-                                                                 params: invalid_assign_request_person,
-                                                                 localpool: localpoolr)
+      Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign.new.(resource: resource,
+                                                                            params: invalid_assign_request_person,
+                                                                            localpool: localpoolr)
     end
 
     let(:result_valid_person) do
-      Transactions::Admin::Contract::CreatePowerTakerAssign.new.(resource: resource,
-                                                                 params: assign_request_person,
-                                                                 localpool: localpoolr)
+      Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign.new.(resource: resource,
+                                                                            params: assign_request_person,
+                                                                            localpool: localpoolr)
     end
 
     let(:result_valid_org) do
-      Transactions::Admin::Contract::CreatePowerTakerAssign.new.(resource: resource,
-                                                                 params: assign_request_org,
-                                                                 localpool: localpoolr)
+      Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign.new.(resource: resource,
+                                                                            params: assign_request_org,
+                                                                            localpool: localpoolr)
     end
 
     it 'does not assign an invalid id' do
@@ -108,7 +108,7 @@ describe Transactions::Admin::Contract::CreatePowerTakerAssign, order: :defined 
 
 end
 
-describe Transactions::Admin::Contract::CreatePowerTakerWithPerson, order: :defined do
+describe Transactions::Admin::Contract::Localpool::CreatePowerTakerWithPerson, order: :defined do
 
   let!(:localpool) { create(:group, :localpool) }
   let(:operator) { create(:account, :buzzn_operator) }
@@ -137,7 +137,7 @@ describe Transactions::Admin::Contract::CreatePowerTakerWithPerson, order: :defi
   end
 
   context 'invalid state' do
-    it_behaves_like 'without processing contract', Transactions::Admin::Contract::CreatePowerTakerWithPerson.new do
+    it_behaves_like 'without processing contract', Transactions::Admin::Contract::Localpool::CreatePowerTakerWithPerson.new do
       let(:params) { create_person_request }
       let(:lp) { localpoolr }
       let(:r) { resource }
@@ -154,7 +154,9 @@ describe Transactions::Admin::Contract::CreatePowerTakerWithPerson, order: :defi
     end
 
     let(:result) do
-      Transactions::Admin::Contract::CreatePowerTakerWithPerson.new.(resource: resource, params: create_person_request, localpool: localpoolr)
+      Transactions::Admin::Contract::Localpool::CreatePowerTakerWithPerson.new.(resource: resource,
+                                                                                params: create_person_request,
+                                                                                localpool: localpoolr)
     end
 
     it 'creates the contract and creates the powertaker' do
@@ -167,7 +169,7 @@ describe Transactions::Admin::Contract::CreatePowerTakerWithPerson, order: :defi
 
 end
 
-describe Transactions::Admin::Contract::CreatePowerTakerWithOrganization, order: :defined do
+describe Transactions::Admin::Contract::Localpool::CreatePowerTakerWithOrganization, order: :defined do
 
   let!(:localpool) { create(:group, :localpool) }
   let(:operator) { create(:account, :buzzn_operator) }
@@ -220,7 +222,7 @@ describe Transactions::Admin::Contract::CreatePowerTakerWithOrganization, order:
   end
 
   context 'invalid state' do
-    it_behaves_like 'without processing contract', Transactions::Admin::Contract::CreatePowerTakerWithOrganization.new do
+    it_behaves_like 'without processing contract', Transactions::Admin::Contract::Localpool::CreatePowerTakerWithOrganization.new do
       let(:params) { create_org_request }
       let(:lp) { localpoolr }
       let(:r) { resource }
@@ -237,7 +239,9 @@ describe Transactions::Admin::Contract::CreatePowerTakerWithOrganization, order:
     end
 
     let(:result) do
-      Transactions::Admin::Contract::CreatePowerTakerWithOrganization.new.(resource: resource, params: create_org_request, localpool: localpoolr)
+      Transactions::Admin::Contract::Localpool::CreatePowerTakerWithOrganization.new.(resource: resource,
+                                                                                      params: create_org_request,
+                                                                                      localpool: localpoolr)
     end
 
     it 'creates the contract and creates the powertaker' do
