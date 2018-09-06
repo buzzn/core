@@ -1,7 +1,7 @@
-require_relative '../contract'
-require_relative '../../../schemas/transactions/admin/contract/localpool_processing/update'
+require_relative '../localpool'
+require_relative '../../../../schemas/transactions/admin/contract/localpool_processing/update'
 
-class Transactions::Admin::Contract::UpdateLocalpoolProcessing < Transactions::Base
+class Transactions::Admin::Contract::Localpool::UpdateProcessing < Transactions::Base
 
   validate :schema
   check :authorize, with: :'operations.authorization.update'
@@ -10,7 +10,7 @@ class Transactions::Admin::Contract::UpdateLocalpoolProcessing < Transactions::B
   map :update_localpool_processing_contract, with: :'operations.action.update'
 
   def schema
-    Schemas::Transactions::Admin::Contract::LocalpoolProcessing::Update
+    Schemas::Transactions::Admin::Contract::Localpool::Processing::Update
   end
 
   # TODO move this to operation when done

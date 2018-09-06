@@ -1,6 +1,6 @@
 require_relative './create_power_taker_base'
 
-module Transactions::Admin::Contract
+module Transactions::Admin::Contract::Localpool
   class CreatePowerTakerAssign < CreatePowerTakerBase
 
     validate :schema
@@ -13,7 +13,7 @@ module Transactions::Admin::Contract
     map :create_contract, with: :'operations.action.create_item'
 
     def schema
-      Schemas::Transactions::Admin::Contract::PowerTaker::CreateWithAssign
+      Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::CreateWithAssign
     end
 
     def assign_customer(params:, **)

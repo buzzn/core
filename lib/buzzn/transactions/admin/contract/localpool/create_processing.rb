@@ -1,7 +1,7 @@
-require_relative '../contract'
-require_relative '../../../schemas/pre_conditions/localpool/create_localpool_processing_contract'
+require_relative '../localpool'
+require_relative '../../../../schemas/pre_conditions/localpool/create_localpool_processing_contract'
 
-class Transactions::Admin::Contract::CreateLocalpoolProcessing < Transactions::Base
+class Transactions::Admin::Contract::Localpool::CreateProcessing < Transactions::Base
 
   validate :schema
   check :authorize, with: :'operations.authorization.create'
@@ -13,7 +13,7 @@ class Transactions::Admin::Contract::CreateLocalpoolProcessing < Transactions::B
   map :create_contract, with: :'operations.action.create_item'
 
   def schema
-    Schemas::Transactions::Admin::Contract::LocalpoolProcessing::Create
+    Schemas::Transactions::Admin::Contract::Localpool::Processing::Create
   end
 
   def localpool_schema(localpool:, **)
