@@ -10,7 +10,8 @@ module Organization
                :fax,
                :website,
                :email,
-               :description
+               :description,
+               :additional_legal_representation
 
     attributes :updatable, :deletable
 

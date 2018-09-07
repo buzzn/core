@@ -76,6 +76,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'website'=>organization.website,
         'email'=>organization.email,
         'description'=>organization.description,
+        'additional_legal_representation'=>organization.additional_legal_representation,
         'updatable'=>false,
         'deletable'=>false,
       }

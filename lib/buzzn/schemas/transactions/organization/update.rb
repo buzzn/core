@@ -16,6 +16,7 @@ module Schemas::Transactions
       optional(:phone).maybe(:filled?, :str?, :phone_number?, max_size?: 64)
       optional(:fax).maybe(:filled?, :str?, :phone_number?, max_size?: 64)
       optional(:website).maybe(:filled?, :str?, :url?, max_size?: 64)
+      optional(:additional_legal_representation).maybe(:str?, max_size?: 256)
     end
 
     class << self
