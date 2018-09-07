@@ -393,6 +393,12 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: additional_legal_representation
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
       - name: address.street
         in: formData
         required: true
@@ -1814,6 +1820,12 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: additional_legal_representation
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
       - name: address.updated_at
         in: formData
         required: true
@@ -3535,6 +3547,12 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: model
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: name
         in: formData
         required: false
@@ -3616,20 +3634,6 @@ paths:
         required: true
         type: string
         format: date-time
-      - name: two_way_meter
-        in: formData
-        required: false
-        type: string
-        enum:
-        - 'yes'
-        - planned
-      - name: two_way_meter_used
-        in: formData
-        required: false
-        type: string
-        enum:
-        - 'yes'
-        - planned
       - name: primary_energy
         in: formData
         required: false
@@ -3665,6 +3669,12 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: kw_peak
         in: formData
         required: false
@@ -3675,15 +3685,6 @@ paths:
         required: false
         type: number
         format: float
-      - name: electricity_supplier.id
-        in: formData
-        required: true
-        type: integer
-        format: int64
-      - name: electricity_supplier
-        in: formData
-        required: false
-        type: hash
       responses:
         200:
           description: patched
@@ -5037,6 +5038,12 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: customer.additional_legal_representation
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
       - name: customer.address.street
         in: formData
         required: true
