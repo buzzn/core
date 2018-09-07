@@ -10,6 +10,7 @@ module Admin
                         'transactions.admin.contract.localpool.create_power_taker_assign',
                         'transactions.admin.contract.localpool.create_power_taker_with_person',
                         'transactions.admin.contract.localpool.create_power_taker_with_organization',
+                        'transactions.admin.contract.localpool.update_power_taker',
                        ]
 
     plugin :shared_vars
@@ -36,6 +37,8 @@ module Admin
           case contract
           when Contract::LocalpoolProcessingResource
             update_processing.(resource: contract, params: r.params)
+          when Contract::LocalpoolPowerTakerResource
+            update_power_taker.(resource: contract, params: r.params)
           else
             r.response.status = 400
           end
