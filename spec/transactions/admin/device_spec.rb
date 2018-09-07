@@ -8,7 +8,9 @@ describe Transactions::Admin::Device do
       primary_energy: 'bio_mass',
       commissioning: Date.today.as_json,
       kw_peak: 1.250,
-      kwh_per_annum: 23.400
+      kwh_per_annum: 23.400,
+      name: 'Thing in the basement',
+      model: 'T-800'
     }
   end
 

@@ -9,6 +9,8 @@ module Admin
                :kwh_per_annum,
                :law,
                :manufacturer,
+               :name,
+               :model,
                :updatable, :deletable
 
     def kw_peak
