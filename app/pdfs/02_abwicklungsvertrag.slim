@@ -197,7 +197,11 @@ html
       - if localgroup_local_supplier && localgroup_local_supplier.name
         p Örtlicher Netzbetreiber: #{localgroup_local_supplier.name}
       - else
-        p Örtlicher Netzbetreiber: <input name="localgroup_local_supplier_name" type="text">
+        p Örtlicher Netzbetreiber: <input class="offset-half" name="localgroup_local_supplier_name" type="text">
+      - if localgroup_additional_power_supplier && localgroup_additional_power_supplier.name
+        p Stromanbieter Zusatzstrom: #{localgroup_additional_power_supplier.name}
+      - else
+        p Stromanbieter Zusatzstrom: <input class="offset-half" name="supplier_additional_power_supplier" type="text">
       h3 Stromverbrauch
       p Anzahl der Parteien im Objekt: [
         <br/>Geschätzter Stromverbrauch aller Parteien (kWh pro Jahr): <input class="offset-half" name="all_parties_estimated_kwh" type="text">
