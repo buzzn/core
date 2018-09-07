@@ -10,7 +10,7 @@ schema=$2
 
 which pgloader 2&> /dev/null
 [[ $? -eq 2 ]] && echo "Please install pgloader. https://pgloader.io/" && exit 1
-[[ ! -z $(pgloader --version | grep "3.5.2") ]] && echo "pgloader version 3.5.2 has a bug, use 3.5.1 instead. https://github.com/dimitri/pgloader/issues/810" && exit 1
+[[ ! -z $(pgloader --version | grep "3.5.2") ]] && echo "pgloader version 3.5.2 has a bug, use 3.5.1 instead if it fails on your system. https://github.com/dimitri/pgloader/issues/810"
 
 echo "Will load into this schema: ${schema}"
 
