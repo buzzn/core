@@ -7,4 +7,5 @@ Schemas::Constraints::Organization::Base = Schemas::Support.Form do
   optional(:phone).filled(:str?, :phone_number?, max_size?: 64)
   optional(:fax).filled(:str?, :phone_number?, max_size?: 64)
   optional(:website).filled(:str?, :url?, max_size?: 64)
+  optional(:additional_legal_representation).filled(:str?, max_size?: 256)
 end

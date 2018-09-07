@@ -9,7 +9,6 @@ describe Transactions::Admin::Localpool::Update do
   entity(:resource) { Admin::LocalpoolResource.all(operator).first }
 
   it_behaves_like 'update with address', Transactions::Admin::Localpool::Update.new, :resource, name: 'takakari'
-
   it_behaves_like 'update without address', Transactions::Admin::Localpool::Update.new, :resource, name: 'takari'
 
 end
