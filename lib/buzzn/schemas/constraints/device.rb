@@ -8,6 +8,7 @@ module Schemas::Constraints
     required(:commissioning).filled(:date?)
     optional(:law).value(included_in?: Device.laws.values)
     optional(:manufacturer).filled(:str?, max_size?: 64)
+    optional(:name).filled(:str?, max_size?: 64)
   end
 
   Device = Schemas::Support.Form(DeviceCommon) do
