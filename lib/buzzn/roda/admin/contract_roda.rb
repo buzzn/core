@@ -5,8 +5,12 @@ module Admin
 
     include Import.args[:env,
                         'transactions.admin.contract.document',
-                        'transactions.admin.contract.create_localpool_processing',
-                        'transactions.admin.contract.update_localpool_processing',
+                        'transactions.admin.contract.localpool.create_processing',
+                        'transactions.admin.contract.localpool.update_processing',
+                        'transactions.admin.contract.localpool.create_power_taker_assign',
+                        'transactions.admin.contract.localpool.create_power_taker_with_person',
+                        'transactions.admin.contract.localpool.create_power_taker_with_organization',
+                        'transactions.admin.contract.localpool.update_power_taker',
                        ]
 
     plugin :shared_vars
@@ -19,6 +23,7 @@ module Admin
       localpool = shared[LocalpoolRoda::PARENT]
       contracts = localpool.contracts
       localpool_processing_contracts = localpool.localpool_processing_contracts
+      localpool_power_taker_contracts = localpool.localpool_power_taker_contracts
 
       r.on :id do |id|
 
@@ -31,7 +36,9 @@ module Admin
         r.patch! do
           case contract
           when Contract::LocalpoolProcessingResource
-            update_localpool_processing.(resource: contract, params: r.params)
+            update_processing.(resource: contract, params: r.params)
+          when Contract::LocalpoolPowerTakerResource
+            update_power_taker.(resource: contract, params: r.params)
           else
             r.response.status = 400
           end
@@ -74,7 +81,25 @@ module Admin
       r.post!(:param=>'type') do |type|
         case type.to_s
         when 'contract_localpool_processing'
-          create_localpool_processing.(resource: localpool_processing_contracts, params: r.params, localpool: localpool)
+          create_processing.(resource: localpool_processing_contracts, params: r.params, localpool: localpool)
+        when 'contract_localpool_power_taker'
+          # we have 3 cases here:
+          # assign with an id
+          # create with an organization as customer
+          # create with a  person as customer
+          if r.params['customer'].nil?
+            # TODO error
+            r.response.status = 422
+            raise Buzzn::ValidationError.new(customer: 'must be filled')
+          else
+            if !r.params['customer']['id'].nil?
+              create_power_taker_assign.(resource: localpool_power_taker_contracts, params: r.params, localpool: localpool)
+            elsif r.params['customer']['type'] == 'organization'
+              create_power_taker_with_organization.(resource: localpool_power_taker_contracts, params: r.params, localpool: localpool)
+            else # default to person
+              create_power_taker_with_person.(resource: localpool_power_taker_contracts, params: r.params, localpool: localpool)
+            end
+          end
         else
           r.response.status = 400
         end

@@ -1,5 +1,6 @@
 require_relative 'test_admin_localpool_roda'
 require_relative 'contract_shared'
+require_relative '../../support/params_helper.rb'
 
 describe Admin::LocalpoolRoda, :request_helper do
 
@@ -358,6 +359,41 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     end
 
+    context 'PATCH Localpool PowerTaker' do
+
+      let(:contract) { localpool_power_taker_contract }
+      let(:path) { "/localpools/#{localpool.id}/contracts/#{contract.id}" }
+
+      let(:today) { Date.today }
+      let(:update_signing_date_json) do
+        {
+          'signing_date' => today.to_s,
+          'updated_at' => contract.updated_at
+        }
+      end
+
+      context 'unauthenticated' do
+
+        it '403' do
+          PATCH path, nil, update_signing_date_json
+          expect(response).to have_http_status(403)
+        end
+
+      end
+
+      context 'authenticated' do
+        it 'updates the signing date' do
+          old_date = contract.signing_date
+          PATCH path, $admin, update_signing_date_json
+          expect(response).to have_http_status(200)
+          expect(json['signing_date']).to eq update_signing_date_json['signing_date']
+          contract.reload
+          expect(contract.signing_date.as_json).not_to eq old_date
+        end
+      end
+
+    end
+
     context 'POST contract' do
 
       let('path') { "/localpools/#{localpool.id}/contracts" }
@@ -399,7 +435,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     end
 
-    context 'POST Localpool Processing' do
+    context 'POST contract' do
 
       # we need a clean pool without any contracts
       let(:person) { create(:person, :with_bank_account) }
@@ -407,64 +443,224 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       let('path') { "/localpools/#{localpool.id}/contracts" }
 
-      let('missing_everything_json') do
-        {
-          'type' => 'contract_localpool_processing',
-        }
-      end
-
-      let('signing_date_json') {{'signing_date' => Date.today.to_s}}
-      let('tax_number_json') {{'tax_number' => '777888999'}}
-
-      let('missing_tax_number_json') do
-        missing_everything_json.merge(signing_date_json)
-      end
-
-      let('missing_signing_date_json') do
-        missing_everything_json.merge(tax_number_json)
-      end
-
-      let('valid_localpool_processing') do
-        missing_everything_json.merge(tax_number_json).merge(signing_date_json)
-      end
-
       context 'authenticated' do
 
-        context 'invalid data' do
+        context 'localpool processing' do
 
-          it 'fails with 422 for incomplete data: everything' do
-            POST path, $admin, missing_everything_json
-            expect(response).to have_http_status(422)
-            expect(json['tax_number']).to eq ['is missing']
+          let('missing_everything_json') do
+            {
+              'type' => 'contract_localpool_processing',
+            }
           end
 
-          it 'fails with 422 for incomplete data: tax_number' do
-            POST path, $admin, missing_tax_number_json
-            expect(response).to have_http_status(422)
-            expect(json['tax_number']).to eq ['is missing']
+          let('signing_date_json') {{'signing_date' => Date.today.to_s}}
+          let('tax_number_json') {{'tax_number' => '777888999'}}
+
+          let('missing_tax_number_json') do
+            missing_everything_json.merge(signing_date_json)
+          end
+
+          let('missing_signing_date_json') do
+            missing_everything_json.merge(tax_number_json)
+          end
+
+          let('valid_localpool_processing') do
+            missing_everything_json.merge(tax_number_json).merge(signing_date_json)
+          end
+
+          context 'invalid data' do
+
+            it 'fails with 422 for incomplete data: everything' do
+              POST path, $admin, missing_everything_json
+              expect(response).to have_http_status(422)
+              expect(json['tax_number']).to eq ['is missing']
+            end
+
+            it 'fails with 422 for incomplete data: tax_number' do
+              POST path, $admin, missing_tax_number_json
+              expect(response).to have_http_status(422)
+              expect(json['tax_number']).to eq ['is missing']
+            end
+
+          end
+
+          context 'valid date' do
+
+            it 'creates a localpool with missing signing_date' do
+              POST path, $admin, missing_signing_date_json
+              expect(response).to have_http_status(201)
+              expect(json['signing_date']).to eq nil
+            end
+
+            it 'creates a new localpool processing contract' do
+              POST path, $admin, valid_localpool_processing
+              expect(response).to have_http_status(201)
+              expect(json['tax_number']).to eq valid_localpool_processing['tax_number']
+            end
+
+            it 'fails for two localpool processing contracts' do
+              POST path, $admin, valid_localpool_processing
+              expect(response).to have_http_status(201)
+              POST path, $admin, valid_localpool_processing
+              expect(response).to have_http_status(422)
+            end
+
           end
 
         end
 
-        context 'valid date' do
+        context 'powertaker' do
 
-          it 'creates a localpool with missing signing_date' do
-            POST path, $admin, missing_signing_date_json
-            expect(response).to have_http_status(201)
-            expect(json['signing_date']).to eq nil
+          let('base_request_json') do
+            {
+              'type' => 'contract_localpool_power_taker',
+            }
           end
 
-          it 'creates a new localpool processing contract' do
-            POST path, $admin, valid_localpool_processing
-            expect(response).to have_http_status(201)
-            expect(json['tax_number']).to eq valid_localpool_processing['tax_number']
+          let!(:localpool_processing_contract) do
+            create(:contract, :localpool_processing, localpool: localpool)
           end
 
-          it 'fails for two localpool processing contracts' do
-            POST path, $admin, valid_localpool_processing
-            expect(response).to have_http_status(201)
-            POST path, $admin, valid_localpool_processing
-            expect(response).to have_http_status(422)
+          context 'invalid data' do
+
+            it 'fails with 422 for incomplete data: everything' do
+              POST path, $admin, base_request_json
+              expect(response).to have_http_status(422)
+            end
+
+          end
+
+          context 'with create organization' do
+            let(:address) { build(:address) }
+
+            let(:person) do
+              build(:person, :with_bank_account, address: address)
+            end
+
+            let(:organization) do
+              build(:organization, :with_bank_account,
+                    address: address,
+                    contact: person,
+                    legal_representation: person)
+            end
+
+            let(:address_json) do
+              build_address_json(address)
+            end
+
+            let(:person_json) do
+              build_person_json(person, address_json)
+            end
+
+            let(:legal_representation_json) do
+              build_person_json(person, address_json)
+            end
+
+            let(:organization_json) do
+              build_organization_json(organization: organization,
+                                      address_json: address_json,
+                                      contact_json: person_json,
+                                      legal_representation_json: legal_representation_json)
+            end
+
+            let(:create_org_request_json) do
+              base_request_json.merge(customer: organization_json.merge('type' => 'organization'),
+                                      register_meta: { name: 'Secret Room'})
+            end
+
+            context 'valid data' do
+
+              it 'creates the contract and creates the powertaker' do
+                POST path, $admin, create_org_request_json
+                expect(response).to have_http_status(201)
+              end
+
+            end
+
+          end
+
+          context 'with create person' do
+            let(:power_taker_person) { build(:person) }
+
+            let(:power_taker_person_address_json) do
+              build_address_json(power_taker_person.address)
+            end
+
+            let(:power_taker_person_json) do
+              build_person_json(power_taker_person, power_taker_person_address_json)
+            end
+
+            let(:create_person_request_json) do
+              base_request_json.merge(customer: power_taker_person_json.merge('type' => 'person'),
+                                      register_meta: { name: 'Secret Room'})
+            end
+
+            context 'valid data' do
+
+              it 'creates the contract and creates the powertaker' do
+                POST path, $admin, create_person_request_json
+                expect(response).to have_http_status(201)
+              end
+
+            end
+
+          end
+
+          context 'with assignment' do
+            let(:power_taker_person) { create(:person) }
+            let(:power_taker_org) { create(:organization) }
+
+            let(:assign_request_person_json) do
+              base_request_json.merge(customer: { id: power_taker_person.id, type: 'person' },
+                                      register_meta: { name: 'Secret Room'})
+            end
+
+            let(:invalid_assign_request_person_json) do
+              base_request_json.merge(customer: { id: 13371337, type: 'person' },
+                                      register_meta: { name: 'Secret Room'})
+            end
+
+            let(:assign_request_org_json) do
+              base_request_json.merge(customer: { id: power_taker_org.id, type: 'organization' },
+                                      register_meta: { name: 'Secret Room'})
+            end
+
+            context 'valid data' do
+
+              it 'creates the contract and assigns the person as the powertaker' do
+                POST path, $admin, assign_request_person_json
+                expect(response).to have_http_status(201)
+                created_contract = Contract::LocalpoolPowerTaker.find(json['id'])
+                expect(created_contract).not_to be_nil
+                expect(created_contract.customer.id).to eq power_taker_person.id
+                expect(created_contract.contractor.id).to eq localpool.owner.id
+              end
+
+              it 'creates the contract and assigns the organization as the powertaker' do
+                POST path, $admin, assign_request_org_json
+                expect(response).to have_http_status(201)
+                created_contract = Contract::LocalpoolPowerTaker.find(json['id'])
+                expect(created_contract).not_to be_nil
+                expect(created_contract.customer.id).to eq power_taker_org.id
+                expect(created_contract.contractor.id).to eq localpool.owner.id
+              end
+
+            end
+
+            context 'invalid data' do
+
+              it 'fails with 422 for invalid data: strange customer type' do
+                POST path, $admin, base_request_json.merge(customer: { id: 1337, type: 'hokuspokus'})
+                expect(response).to have_http_status(422)
+              end
+
+              it 'fails with 422 for invalid data: invalid id' do
+                POST path, $admin, invalid_assign_request_person_json
+                expect(response).to have_http_status(422)
+              end
+
+            end
+
           end
 
         end

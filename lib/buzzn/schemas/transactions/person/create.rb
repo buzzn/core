@@ -11,11 +11,11 @@ module Schemas::Transactions::Person
   end
 
   AssignOrCreate = Schemas::Support.Form(Create) do
-    optional(:id).filled(:int?)
+    optional(:id).value(:int?)
   end
 
   AssignOrCreateWithAddress = Schemas::Support.Form(CreateWithAddress) do
-    optional(:id).filled(:int?)
+    optional(:id).value(:int?)
   end
 
 end

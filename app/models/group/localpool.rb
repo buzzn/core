@@ -19,16 +19,22 @@ module Group
 
     has_many :metering_point_operator_contracts, class_name: 'Contract::MeteringPointOperator', foreign_key: :localpool_id
     has_many :localpool_processing_contracts, class_name: 'Contract::LocalpoolProcessing', foreign_key: :localpool_id
+    has_many :localpool_power_taker_contracts, class_name: 'Contract::LocalpoolPowerTaker', foreign_key: :localpool_id
+    has_many :localpool_third_party_contracts, class_name: 'Contract::LocalpoolThirdParty', foreign_key: :localpool_id
 
     def metering_point_operator_contract
       self.metering_point_operator_contracts.first
     end
 
     def localpool_processing_contract
-      self.localpool_processing_contracts.first
+      self.localpool_processing_contracts.each do |lpc|
+        next if [Contract::Base::TERMINATED, Contract::Base::ENDED].include? lpc.status
+        return lpc
+      end
+      nil
     end
 
-    def localpool_power_taker_contracts
+    def localpool_power_taker_and_third_party_contracts
       Contract::Base.where(localpool_id: self, type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolThirdParty))
     end
 

@@ -36,8 +36,8 @@ module Schemas::Support::Predicates
   predicate(:url?) do |value|
     # loosen for now
     # ! RubyRegex::URL.match(value).nil?
-    URL_PROTOCOL_OPTIONAL = /(\A\z)|(\A((http|https):\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?\z)/ix
-    ! URL_PROTOCOL_OPTIONAL.match(value).nil?
+    url_protocol_optional = /(\A\z)|(\A((http|https):\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?\z)/ix
+    ! url_protocol_optional.match(value).nil?
   end
 
   predicate(:phone_number?) do |value|

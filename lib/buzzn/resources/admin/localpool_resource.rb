@@ -4,6 +4,7 @@ require_relative '../contract/tariff_resource'
 require_relative '../register/meta_resource'
 require_relative '../contract/localpool_processing_resource'
 require_relative '../contract/localpool_power_taker_resource'
+require_relative '../contract/localpool_third_party_resource'
 require_relative '../contract/metering_point_operator_resource'
 require_relative 'billing_cycle_resource'
 require_relative 'device_resource'
@@ -42,6 +43,7 @@ module Admin
     has_many :localpool_processing_contracts, Contract::LocalpoolProcessingResource
     has_many :metering_point_operator_contracts, Contract::MeteringPointOperatorResource
     has_many :localpool_power_taker_contracts, Contract::LocalpoolPowerTakerResource
+    has_many :localpool_third_party_contracts, Contract::LocalpoolThirdPartyResource
 
     has_many :registers
     has_many :market_locations, Register::MetaResource do |object|
@@ -91,6 +93,9 @@ module Admin
       if allowed?(permissions.localpool_processing_contracts.create)
         allowed[:create_localpool_processing_contract] = create_localpool_processing_contract.success? || create_localpool_processing_contract.errors
       end
+      if allowed?(permissions.localpool_power_taker_contracts.create)
+        allowed[:create_localpool_power_taker_contract] = create_localpool_power_taker_contract.success? || create_localpool_power_taker_contract.errors
+      end
       if allowed?(permissions.billing_cycles.create)
         allowed[:create_billing_cycle] = create_billing_cycle.success? || create_billing_cycle.errors
       end
@@ -105,6 +110,11 @@ module Admin
     def create_localpool_processing_contract
       subject = Schemas::Support::ActiveRecordValidator.new(self.object)
       Schemas::PreConditions::Localpool::CreateLocalpoolProcessingContract.call(subject)
+    end
+
+    def create_localpool_power_taker_contract
+      subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+      Schemas::PreConditions::Localpool::CreateLocalpoolPowerTakerContract.call(subject)
     end
 
     def create_billing_cycle

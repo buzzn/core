@@ -14,8 +14,12 @@ module Schemas::Transactions::Organization
       id?.not.then(schema(Schemas::Transactions::Person::AssignOrCreateWithAddress))
     end
     optional(:legal_representation) do
-      id?.not.then(schema(Schemas::Transactions::Person::AssignOrCreate))
+      id?.not.then(schema(Schemas::Transactions::Person::AssignOrCreateWithAddress))
     end
+  end
+
+  AssignOrCreateWithNested = Schemas::Support.Form(CreateWithNested) do
+    optional(:id).value(:int?)
   end
 
 end
