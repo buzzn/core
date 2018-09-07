@@ -207,6 +207,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Admin::Contract::Localpool::Processing::Update
   end
 
+  patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}' do
+    description 'updates an existing LocalpoolPowerTakerContract'
+    schema Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::Update
+  end
+
   get '/localpools/{localpool.id}/contracts/{contract.id}/contractor' do
     description 'returns the contractor of the contract'
   end

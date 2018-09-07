@@ -359,6 +359,41 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     end
 
+    context 'PATCH Localpool PowerTaker' do
+
+      let(:contract) { localpool_power_taker_contract }
+      let(:path) { "/localpools/#{localpool.id}/contracts/#{contract.id}" }
+
+      let(:today) { Date.today }
+      let(:update_signing_date_json) do
+        {
+          'signing_date' => today.to_s,
+          'updated_at' => contract.updated_at
+        }
+      end
+
+      context 'unauthenticated' do
+
+        it '403' do
+          PATCH path, nil, update_signing_date_json
+          expect(response).to have_http_status(403)
+        end
+
+      end
+
+      context 'authenticated' do
+        it 'updates the signing date' do
+          old_date = contract.signing_date
+          PATCH path, $admin, update_signing_date_json
+          expect(response).to have_http_status(200)
+          expect(json['signing_date']).to eq update_signing_date_json['signing_date']
+          contract.reload
+          expect(contract.signing_date.as_json).not_to eq old_date
+        end
+      end
+
+    end
+
     context 'POST contract' do
 
       let('path') { "/localpools/#{localpool.id}/contracts" }
@@ -400,7 +435,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
     end
 
-    context 'POST Localpool Processing' do
+    context 'POST contract' do
 
       # we need a clean pool without any contracts
       let(:person) { create(:person, :with_bank_account) }

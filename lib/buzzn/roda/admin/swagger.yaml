@@ -3319,6 +3319,113 @@ paths:
       responses:
         200:
           description: success
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}":
+    patch:
+      description: updates an existing LocalpoolPowerTakerContract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: signing_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: termination_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: end_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: register_meta.updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: register_meta.name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: register_meta.label
+        in: formData
+        required: false
+        type: string
+        enum:
+        - CONSUMPTION
+        - CONSUMPTION_COMMON
+        - DEMARCATION_PV
+        - DEMARCATION_CHP
+        - DEMARCATION_WIND
+        - DEMARCATION_WATER
+        - PRODUCTION_PV
+        - PRODUCTION_CHP
+        - PRODUCTION_WIND
+        - PRODUCTION_WATER
+        - GRID_CONSUMPTION
+        - GRID_FEEDING
+        - GRID_CONSUMPTION_CORRECTED
+        - GRID_FEEDING_CORRECTED
+        - OTHER
+      - name: register_meta.share_with_group
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.share_publicly
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.observer_enabled
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.observer_min_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: register_meta.observer_max_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: register_meta.observer_offline_monitoring
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta
+        in: formData
+        required: false
+        type: hash
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/contracts/{localpool_processing_contract_id}":
     patch:
       description: updates an existing LocalpoolProcessingContract
