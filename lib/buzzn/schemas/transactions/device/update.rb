@@ -7,6 +7,7 @@ Schemas::Transactions::Device::Update = Schemas::Support.Form(Schemas::Transacti
   optional(:commissioning).filled(:date?)
   optional(:law).value(included_in?: Device.laws.values)
   optional(:manufacturer).filled(:str?, max_size?: 64)
+  optional(:model).filled(:str?, max_size?: 64)
   optional(:name).filled(:str?, max_size?: 64)
   optional(:kw_peak).filled(:float?)
   optional(:kwh_per_annum).filled(:float?)

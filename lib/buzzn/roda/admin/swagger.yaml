@@ -3669,6 +3669,12 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: model
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: name
         in: formData
         required: false
