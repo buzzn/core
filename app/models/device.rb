@@ -4,8 +4,6 @@ class Device < ActiveRecord::Base
 
   belongs_to :localpool, class_name: 'Group::Localpool', foreign_key: :localpool_id
 
-  belongs_to :electricity_supplier, class_name: 'Organization::Market', foreign_key: :electricity_supplier_id
-
   enum law: { eeg: 'eeg', kwkg: 'kwkg', free: 'free' }
 
   enum two_way_meter: { yes: 'yes', planned: 'planned' }

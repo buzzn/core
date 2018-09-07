@@ -7,7 +7,6 @@ module Transactions::Admin::Device
     validate :schema
     authorize :allowed_roles
     tee :convert_kilowatt, with: :'operations.convert_kilowatt'
-    tee :assign_electricity_supplier
     map :create_device, with: :'operations.action.create_item'
 
     def schema
