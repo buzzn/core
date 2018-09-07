@@ -20,15 +20,16 @@ html
         E-Mail: team@buzzn.net <br>
         nachfolgend <b>„BUZZN“</b>
       p.is-text-center und
-      div.is-text-center #{powergiver.name} <br>
-        #{powergiver.address.street}, #{powergiver.address.zip} #{powergiver.address.city} <br>
-      - if powergiver.name != powergiver.partner_name
-        <br>vertreten durch #{powergiver.partner_name}
-      div.is-text-center Telefon: #{powergiver.phone}
-      - if powergiver.fax
-        Fax: #{powergiver.fax} <br>
-        E‑Mail: #{powergiver.email}<br>
-        nachfolgend <b>„Lokaler Stromgeber - LSG“</b>
+      div.is-text-center
+        | #{powergiver.name} <br>
+        | #{powergiver.address.street}, #{powergiver.address.zip} #{powergiver.address.city}<br>
+        - if powergiver.name != powergiver.partner_name
+          | vertreten durch #{powergiver.partner_name}<br>
+        | Telefon: #{powergiver.phone}<br>
+        - if powergiver.fax
+          | Fax: #{powergiver.fax}<br>
+        | E‑Mail: #{powergiver.email}<br>
+        | nachfolgend <b>„Lokaler Stromgeber - LSG“</b>
       p.is-text-center
         <b>Vertragsnummer #{number}</b>
 
@@ -176,35 +177,41 @@ html
     div.wrapper
       h2 Stammdaten LSG (Anlage 1 zum Abwicklungsvertrag Nr. #{number})
       h3 Kontaktperson
-      p #{powergiver.name}
-        <br/>#{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}
-        <br/>Telefon: #{powergiver.phone}
-      - if powergiver.fax
-        <br/>Fax: #{powergiver.fax}
-        <br/>E‑Mail: #{powergiver.email}
+      p
+        | #{powergiver.name}<br>
+        | #{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}<br>
+        | Telefon: #{powergiver.phone}<br>
+        - if powergiver.fax
+          | Fax: #{powergiver.fax}<br>
+        | E‑Mail: #{powergiver.email}
       h3 Vertragspartner
-      p #{powergiver.partner_name}
-      - if powergiver.partner_name != powergiver.name
-        <br/>vertreten durch #{powergiver.partner_name}
-        <br/>#{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}
-        <br/>Telefon: #{powergiver.phone}
-      - if powergiver.fax
-        <br/>Fax: #{powergiver.fax}
-        <br/>E‑Mail: #{powergiver.mail}
+      p
+        | #{powergiver.partner_name}<br>
+        - if powergiver.partner_name != powergiver.name
+          | vertreten durch #{powergiver.partner_name}<br>
+        | #{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}<br>
+        | Telefon: #{powergiver.phone}<br>
+        - if powergiver.fax
+          | Fax: #{powergiver.fax}<br/>
+        | E‑Mail: #{powergiver.email}
       h3 Lokale Energiegruppe
-      p Anschrift: #{powertaker.address.street} #{powertaker.address.zip} #{powertaker.address.city}
-        <br/>Objekttyp: <input name="localgroup_object_type" type="text">
-      - if localgroup_local_supplier && localgroup_local_supplier.name
-        p Örtlicher Netzbetreiber: #{localgroup_local_supplier.name}
-      - else
-        p Örtlicher Netzbetreiber: <input class="offset-half" name="localgroup_local_supplier_name" type="text">
-      - if localgroup_additional_power_supplier && localgroup_additional_power_supplier.name
-        p Stromanbieter Zusatzstrom: #{localgroup_additional_power_supplier.name}
-      - else
-        p Stromanbieter Zusatzstrom: <input class="offset-half" name="supplier_additional_power_supplier" type="text">
+      p
+        | Anschrift: #{powertaker.address.street} #{powertaker.address.zip} #{powertaker.address.city}<br>
+        | Objekttyp: <input name="localgroup_object_type" type="text"><br>
+        - if localgroup_local_supplier && localgroup_local_supplier.name
+          | Örtlicher Netzbetreiber: #{localgroup_local_supplier.name}<br>
+        - else
+          | Örtlicher Netzbetreiber: <input class="offset-half" name="localgroup_local_supplier_name" type="text"><br>
+        - if localgroup_additional_power_supplier && localgroup_additional_power_supplier.name
+          | Stromanbieter Zusatzstrom: #{localgroup_additional_power_supplier.name}
+        - else
+          | Stromanbieter Zusatzstrom: <input class="offset-half" name="supplier_additional_power_supplier" type="text">
       h3 Stromverbrauch
-      p Anzahl der Parteien im Objekt: [
-        <br/>Geschätzter Stromverbrauch aller Parteien (kWh pro Jahr): <input class="offset-half" name="all_parties_estimated_kwh" type="text">
+      p
+        <ul class="input_list">
+         <li>Anzahl der Parteien im Objekt: <input class="offset-half" name="parties_in_object" type="text"></li>
+         <li>Geschätzter Stromverbrauch aller Parteien (kWh pro Jahr): <input class="offset-half" name="all_parties_estimated_kwh" type="text"></li>
+        </ul>
       h3 Stromerzeugungsanlage 1
       p Status der Anlage: <input class="offset-half" name="device_0_state_of_device" type="text">
         <ul class="input_list">
