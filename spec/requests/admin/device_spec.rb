@@ -45,6 +45,8 @@ describe Admin::LocalpoolRoda, :request_helper do
         'kwh_per_annum'=> 3.122,
         'law' => 'free',
         'manufacturer' => 'GummiBär',
+        'name' => 'The big one',
+        'model' => '3000',
         'updatable'=>true,
         'deletable'=>true
       }
@@ -58,10 +60,12 @@ describe Admin::LocalpoolRoda, :request_helper do
                       params: {
                         'primary_energy'=> 'sun',
                         'manufacturer' => 'GummiBär',
+                        'model' => '3000',
                         'commissioning'=> Date.today.as_json,
                         'kw_peak'=> 32.42,
                         'kwh_per_annum'=> 3.122,
-                        'law' => 'free'
+                        'law' => 'free',
+                        'name' => 'The big one',
                       },
                       errors: :wrong_json,
                       expected: :created_json
