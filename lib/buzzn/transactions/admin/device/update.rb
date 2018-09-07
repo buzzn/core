@@ -7,7 +7,6 @@ module Transactions::Admin::Device
     validate :schema
     check :authorize, with: :'operations.authorization.update'
     tee :convert_kilowatt, with: :'operations.convert_kilowatt'
-    tee :assign_electricity_supplier
     map :persist, with: :'operations.action.update'
 
     def schema

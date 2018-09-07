@@ -26,7 +26,8 @@ module Pdf
         powergiver: build_powergiver(contract.customer),
         powertaker: build_powertaker(contract.localpool),
         number: contract.full_contract_number,
-        localgroup_local_supplier: contract.localpool.electricity_supplier,
+        localgroup_local_supplier: contract.localpool.distribution_system_operator,
+        localgroup_additional_power_supplier: contract.localpool.electricity_supplier,
         title_text: title
       }
     end
