@@ -90,7 +90,7 @@ module Admin
           if r.params['customer'].nil?
             # TODO error
             r.response.status = 422
-            raise Buzzn::ValidationError.new(customer: 'must be filled')
+            raise Buzzn::ValidationError.new(customer: ['must be filled'])
           else
             if !r.params['customer']['id'].nil?
               create_power_taker_assign.(resource: localpool_power_taker_contracts, params: r.params, localpool: localpool)
