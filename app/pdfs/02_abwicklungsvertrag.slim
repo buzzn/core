@@ -11,26 +11,29 @@ html
   body
     div.wrapper
       h1.is-text-center Abwicklungsvertrag
-      p.is-text-center zwischen
-      p.is-text-center  BUZZN GmbH <br>
-        Adams-Lehmann-Straße 56, 80797 München <br>
-        vertreten durch den Geschäftsführer Justus Schütze <br>
-        Telefon: 089-4161714-10 <br>
-        Fax: 089-4161714-99 <br>
-        E-Mail: team@buzzn.net <br>
-        nachfolgend <b>„BUZZN“</b>
-      p.is-text-center und
-      div.is-text-center
-        | #{powergiver.name} <br>
-        | #{powergiver.address.street}, #{powergiver.address.zip} #{powergiver.address.city}<br>
-        - if powergiver.name != powergiver.partner_name
-          | vertreten durch #{powergiver.partner_name}<br>
-        | Telefon: #{powergiver.phone}<br>
-        - if powergiver.fax
-          | Fax: #{powergiver.fax}<br>
-        | E‑Mail: #{powergiver.email}<br>
-        | nachfolgend <b>„Lokaler Stromgeber - LSG“</b>
-      p.is-text-center
+      div.col-half
+        h2.is-text-center zwischen
+        p.is-text-center  BUZZN GmbH <br>
+          Adams-Lehmann-Straße 56, 80797 München <br>
+          vertreten durch den Geschäftsführer Justus Schütze <br>
+          Telefon: 089-4161714-10 <br>
+          Fax: 089-4161714-99 <br>
+          E-Mail: team@buzzn.net <br>
+          nachfolgend <b>„BUZZN“</b>
+      div.col-half
+        h2.is-text-center und
+        div.is-text-center
+          | #{powergiver.name} <br>
+          | #{powergiver.address.street}, #{powergiver.address.zip} #{powergiver.address.city}<br>
+          - if powergiver.name != powergiver.partner_name
+            | vertreten durch #{powergiver.partner_name}<br>
+          | Telefon: #{powergiver.phone}<br>
+          - if powergiver.fax
+            | Fax: #{powergiver.fax}<br>
+          | E‑Mail: #{powergiver.email}<br>
+          | nachfolgend <b>„Lokaler Stromgeber - LSG“</b>
+
+      p.is-text-center.clear
         <b>Vertragsnummer #{number}</b>
 
       h2 1 Vertragsgegenstand und Definition „Lokale Energiegruppe“
@@ -42,18 +45,6 @@ html
       p Er schließt Stromlieferverträge (nachfolgend „Stromverträge“) mit den Lokalen Stromnehmern. BUZZN stellt dem LSG hierfür unentgeltlich und unter Ausschluss der gesetzlichen Gewährleistung ein Auftragsformular samt Allgemeinen Geschäftsbedingungen (AGB) als Muster zur Verfügung. Der LSG verwendet grundsätzlich dieses Auftragsformular samt AGB, beides in der jeweils geltenden Fassung. Sofern der LSG in begründeten Ausnahmefällen hiervon abweichen will, informiert er BUZZN darüber unverzüglich.
       p Zwischen BUZZN und dem LSG gelten in jedem Fall ausschließlich die Regelungen dieses Abwicklungsvertrags und der weiteren im Hinblick auf die Lokale Energiegruppe zwischen BUZZN und dem LSG abgeschlossenen Verträge. Die vom LSG abgeschlossenen Stromverträge berühren das Rechtsverhältnis zwischen BUZZN und dem LSG nicht.
       p Der LSG übermittelt BUZZN binnen drei Monaten nach Abschluss dieses Abwicklungsvertrags die von den Lokalen Stromnehmern unterschriebenen Auftragsformulare samt AGB gesammelt in Kopie. BUZZN beginnt in diesem Fall mit der Einrichtung der Lokale Energiegruppe im Sinne der nachfolgenden Bestimmungen. Bei fehlender Übermittlung bis zum vorgenannten Zeitpunkt endet dieser Abwicklungsvertrag. Das gilt auch für alle weiteren im Hinblick auf mit der Lokalen Energiegruppe abgeschlossenen Verträge zwischen BUZZN und dem LSG, insbesondere den Messvertrag (siehe Abschnitt 3).
-      footer.is-small
-        .footer-logo
-          | powered by
-          img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span Version: #{version}
-        p.pagination.is-small
-          | Seite&nbsp;
-          span.page-number 1&nbsp;
-          | von&nbsp;
-          span.page-total-number 8
-    div.alwaysbreak
-    div.wrapper
       h2 3	Übernahme von Messstellenbetrieb und Messung
       p BUZZN übernimmt im Rahmen der Einrichtung der Lokalen Energiegruppe an allen Lokalen Energiegruppen-Messstellen auf Grundlage eines gesonderten Messvertrags den Messstellenbetrieb und die Messung im Sinne der gesetzlichen Vorgaben. BUZZN wickelt die hierfür erforderlichen Geschäftsprozesse mit dem Verteilernetzbetreiber ab und stimmt mit diesem das Messkonzept ab. BUZZN teilt dem LSG unverzüglich das Datum mit, zu dem BUZZN den Messstellenbetrieb und die Messung übernimmt.
       h2 4	Abwicklung von Geschäftsprozessen betreffend Stromlieferung
@@ -64,7 +55,6 @@ html
       p BUZZN versendet im Namen des LSG bei Bezugsbeginn und Bezugsende ein Begrüßungs- bzw. Beendigungsschreiben an den jeweiligen Lokalen Stromnehmer.
       p Der Stichtag für einen Bezugsbeginn kann nicht vor dem Datum liegen, zu dem BUZZN den Messstellenbetrieb und die Messung übernimmt. Der Stichtag hängt zudem davon ab, bis wann die im Verhältnis zum Verteilernetzbetreiber und zu anderen Stromlieferanten anfallenden Geschäftsprozesse abgewickelt werden können.
       p Ein Bezugsende mit anschließender Belieferung durch einen externen Lieferanten führt immer zu einem Messende im Sinne des Messvertrags für die den austretenden Lokalen Stromnehmer betreffende(n) Messstelle(n), da BUZZN keinen Messstellenbetrieb und keine Messung für externe Lieferanten durchführt.
-      p Ein etwaiger Lieferanten- oder Abnehmerwechsel des LSG an der Übergabestelle zum öffentlichen Netz wegen Reststrombezugs bzw. Überschusseinspeisung für die Lokale Energiegruppe ist nicht Gegenstand dieses Vertrags.
       footer.is-small
         .footer-logo
           | powered by
@@ -72,11 +62,12 @@ html
         span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 2&nbsp;
+          span.page-number 1&nbsp;
           | von&nbsp;
-          span.page-total-number 8
+          span.page-total-number 5
     div.alwaysbreak
     div.wrapper
+      p Ein etwaiger Lieferanten- oder Abnehmerwechsel des LSG an der Übergabestelle zum öffentlichen Netz wegen Reststrombezugs bzw. Überschusseinspeisung für die Lokale Energiegruppe ist nicht Gegenstand dieses Vertrags.
       h2 5	Lokale Energiegruppen-Preise
       p Die Lokale Energiegruppen-Preise (Bezugspreis und Grundpreis gemäß den jeweiligen Stromverträgen) werden vom LSG festgelegt und bei Bedarf angepasst. Sie sind Bestandteil des Stromvertrags zwischen LSG und Lokalen Stromnehmer.
       p Der LSG verpflichtet sich, die Lokale Energiegruppen-Preise (Bezugspreis und Grundpreis) für alle Lokalen Stromnehmer im Objekt mit dem gleichen Zähler und einem Jahresbezug kleiner 100.000 Kilowattstunden zu jedem Zeitpunkt identisch zu halten.
@@ -92,6 +83,13 @@ html
       p BUZZN übernimmt im Namen des LSG die Prognose, die Ermittlung sowie die Meldung im Sinne des vorgehenden Absatzes.
       p Der LSG erhält eine Abschrift der Meldung und bezahlt die EEG-Umlage direkt an den ÜNB.
       p BUZZN übernimmt im Namen des LSG zudem die gesetzliche Meldepflicht im Zusammenhang mit der EEG-Umlage gegenüber der Bundesnetzagentur.
+      h2 8	Stromsteuer
+      p Der LSG leistet Strom an die Lokalen Stromnehmer als Letztverbraucher im Sinne des Stromsteuergesetzes (StromStG) und der Stromsteuerverordnung (StromStV). Auch dann, wenn die durch den LSG im Objekt selbst erzeugte und an die Lokalen Stromnehmer verkaufte Strommenge von der Stromsteuer befreit ist, ist der LSG dennoch „Versorger“ im Sinne des Gesetzes, was gewisse Pflichten mit sich bringt, insbesondere das Führen eines Belegheftes sowie die Abgabe einer jährlichen Stromsteuererklärung (in der Regel als Nullmeldung).
+      p BUZZN unterstützt den LSG bei der Erfüllung dieser Pflichten, indem BUZZN für den LSG bei der zuständigen Steuerbehörde im Namen des LSG den Antrag auf Erlaubnis als Versorger gemäß § 4 StromStG sowie den Antrag auf Behandlung des LSG als Letztverbraucher gemäß § 1a Abs. 2 StromStV für die durch ihn an die Lokalen Stromnehmer gelieferte Reststrommenge stellt.
+      p BUZZN ermittelt zudem turnusmäßig die stromsteuerrelevanten Mengen und teilt sie dem LSG zwecks Verwendung in der Stromsteuererklärung mit.
+      p Im Übrigen ist der LSG für alle steuerrechtlichen Belange selbst verantwortlich.
+      p Der LSG stellt BUZZN alle für die Erfüllung der vorgenannten Aufgaben relevanten Informationen und Erklärungen zur Verfügung und informiert BUZZN unaufgefordert und unverzüglich über jegliche Änderung seines stromsteuerlichen Status. Lässt der LSG  BUZZN die Informationen oder Erklärungen nicht rechtzeitig zukommen, ist BUZZN von der Pflicht zur Durchführung der vorgenannten Aufgaben befreit.
+      p BUZZN übermittelt dem LSG die mit der zuständigen Steuerbehörde geführte Korrespondenz sowie von der Behörde erteilte Bescheide.
 
       footer.is-small
         .footer-logo
@@ -100,18 +98,11 @@ html
         span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 3&nbsp;
+          span.page-number 2&nbsp;
           | von&nbsp;
-          span.page-total-number 8
+          span.page-total-number 5
     div.alwaysbreak
     div.wrapper
-      h2 8	Stromsteuer
-      p Der LSG leistet Strom an die Lokalen Stromnehmer als Letztverbraucher im Sinne des Stromsteuergesetzes (StromStG) und der Stromsteuerverordnung (StromStV). Auch dann, wenn die durch den LSG im Objekt selbst erzeugte und an die Lokalen Stromnehmer verkaufte Strommenge von der Stromsteuer befreit ist, ist der LSG dennoch „Versorger“ im Sinne des Gesetzes, was gewisse Pflichten mit sich bringt, insbesondere das Führen eines Belegheftes sowie die Abgabe einer jährlichen Stromsteuererklärung (in der Regel als Nullmeldung).
-      p BUZZN unterstützt den LSG bei der Erfüllung dieser Pflichten, indem BUZZN für den LSG bei der zuständigen Steuerbehörde im Namen des LSG den Antrag auf Erlaubnis als Versorger gemäß § 4 StromStG sowie den Antrag auf Behandlung des LSG als Letztverbraucher gemäß § 1a Abs. 2 StromStV für die durch ihn an die Lokalen Stromnehmer gelieferte Reststrommenge stellt.
-      p BUZZN ermittelt zudem turnusmäßig die stromsteuerrelevanten Mengen und teilt sie dem LSG zwecks Verwendung in der Stromsteuererklärung mit.
-      p Im Übrigen ist der LSG für alle steuerrechtlichen Belange selbst verantwortlich.
-      p Der LSG stellt BUZZN alle für die Erfüllung der vorgenannten Aufgaben relevanten Informationen und Erklärungen zur Verfügung und informiert BUZZN unaufgefordert und unverzüglich über jegliche Änderung seines stromsteuerlichen Status. Lässt der LSG  BUZZN die Informationen oder Erklärungen nicht rechtzeitig zukommen, ist BUZZN von der Pflicht zur Durchführung der vorgenannten Aufgaben befreit.
-      p BUZZN übermittelt dem LSG die mit der zuständigen Steuerbehörde geführte Korrespondenz sowie von der Behörde erteilte Bescheide.
       h2 9	Vollmacht
       p Der LSG bevollmächtigt BUZZN, in seinem Namen gegenüber Dritten alle Handlungen vorzunehmen, Erklärungen abzugeben und entgegenzunehmen, die zur Erfüllung der vertraglichen Pflichten von BUZZN notwendig sind (siehe Anlage 2).
       p Diese Vollmacht erstreckt sich auch auf Dritte, die BUZZN zur Erfüllung ihrer Pflichten aus diesem Vertrag beauftragt.
@@ -123,18 +114,6 @@ html
       p Der Vertragsbeginn steht unter der aufschiebenden Bedingung, dass BUZZN und der LSG einen gesonderten Messvertrag unterzeichnen.
       p Im Falle der Kündigung des Messvertrages endet auch dieser Vertrag zum selben Datum und umgekehrt.
       p Beiden Vertragsparteien steht ein Sonderkündigungsrecht aus wichtigem Grund zu. Wichtige Gründe sind die Verletzung oder Zuwiderhandlung gegen wesentliche Vertragspflichten. Im Fall einer Sonderkündigung aus wichtigem Grund beträgt die Kündigungsfrist einen Monat zum Monatsende, wenn nicht ein Festhalten am Vertrag bis zu diesem Zeitpunkt für wenigstens einen der Vertragspartner unzumutbar ist.
-      footer.is-small
-        .footer-logo
-          | powered by
-          img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span Version: #{version}
-        p.pagination.is-small
-          | Seite&nbsp;
-          span.page-number 4&nbsp;
-          | von&nbsp;
-          span.page-total-number 8
-    div.alwaysbreak
-    div.wrapper
       h2 12	Haftung
       p Für Schäden des LSG haftet BUZZN, sofern diese auf vorsätzlichem oder grob fahrlässigem Verhalten von BUZZN oder auf zumindest fahrlässiger Verletzung von Vertragspflichten, deren Erfüllung die ordnungsgemäße Durchführung des Vertrages überhaupt erst ermöglicht und auf deren Einhaltung der Vertragspartner regelmäßig vertrauen darf (sog. Kardinalpflichten), durch BUZZN beruhen sowie bei zumindest fahrlässiger Verletzung von Gesundheit, Körper oder Leben des LSG. Im Übrigen ist die Haftung von BUZZN ausgeschlossen; Schadensersatzansprüche des LSG, die kein Verschulden von BUZZN voraussetzen, bleiben von diesem Haftungsausschluss unberührt.
       p Soweit die Haftung ausgeschlossen oder beschränkt ist, gilt dies auch für die Haftung der Vertreter und Erfüllungsgehilfen von BUZZN.
@@ -170,34 +149,37 @@ html
         span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 5&nbsp;
+          span.page-number 3&nbsp;
           | von&nbsp;
-          span.page-total-number 8
+          span.page-total-number 5
     div.alwaysbreak
     div.wrapper
-      h2 Stammdaten LSG (Anlage 1 zum Abwicklungsvertrag Nr. #{number})
-      h3 Kontaktperson
-      p
-        | #{powergiver.name}<br>
-        | #{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}<br>
-        | Telefon: #{powergiver.phone}<br>
-        - if powergiver.fax
-          | Fax: #{powergiver.fax}<br>
-        | E‑Mail: #{powergiver.email}
-      h3 Vertragspartner
-      p
-        | #{powergiver.partner_name}<br>
-        - if powergiver.partner_name != powergiver.name
-          | vertreten durch #{powergiver.partner_name}<br>
-        | #{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}<br>
-        | Telefon: #{powergiver.phone}<br>
-        - if powergiver.fax
-          | Fax: #{powergiver.fax}<br/>
-        | E‑Mail: #{powergiver.email}
+      h1 Stammdaten LSG
+      h2 Anlage 1 zum Abwicklungsvertrag Nr. #{number}
+      div.col-half
+        h3 Kontaktperson
+        p
+          | #{powergiver.name}<br>
+          | #{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}<br>
+          | Telefon: #{powergiver.phone}<br>
+          - if powergiver.fax
+            | Fax: #{powergiver.fax}<br>
+          | E‑Mail: #{powergiver.email}
+      div.col-half
+        h3 Vertragspartner
+        p
+          | #{powergiver.partner_name}<br>
+          - if powergiver.partner_name != powergiver.name
+            | vertreten durch #{powergiver.partner_name}<br>
+          | #{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}<br>
+          | Telefon: #{powergiver.phone}<br>
+          - if powergiver.fax
+            | Fax: #{powergiver.fax}<br/>
+          | E‑Mail: #{powergiver.email}
       h3 Lokale Energiegruppe
       p
         | Anschrift: #{powertaker.address.street} #{powertaker.address.zip} #{powertaker.address.city}<br>
-        | Objekttyp: <input name="localgroup_object_type" type="text"><br>
+        | Objekttyp: <input class="offset-half" name="localgroup_object_type" type="text"><br>
         - if localgroup_local_supplier && localgroup_local_supplier.name
           | Örtlicher Netzbetreiber: #{localgroup_local_supplier.name}<br>
         - else
@@ -233,18 +215,6 @@ html
       p Die Steuernummer wird zur Erstellung der Stromnehmer-Jahresabrechnungen benötigt.
       p Steuernummer: <input class="offset-half" name="steuernummer" type="text">
 
-      footer.is-small
-        .footer-logo
-          | powered by
-          img src="#{Dir.pwd}/public/assets/images/logo.png"
-        span Version: #{version}
-        p.pagination.is-small
-          | Seite&nbsp;
-          span.page-number 6&nbsp;
-          | von&nbsp;
-          span.page-total-number 8
-    div.alwaysbreak
-    div.wrapper
       h3 Datenfreigabe
       p Insbesondere zum Anwerben von neuen Lokalen Stromnehmern bin ich damit einverstanden, dass BUZZN folgende Merkmale meiner Lokalen Energiegruppe im Internet veröffentlicht:
       ul.input_list
@@ -273,9 +243,9 @@ html
         span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 7&nbsp;
+          span.page-number 4&nbsp;
           | von&nbsp;
-          span.page-total-number 8
+          span.page-total-number 5
     div.alwaysbreak
     div.wrapper
       h2 Vollmacht (Anlage 2 zum Abwicklungsvertrag Nr. #{number})
@@ -322,6 +292,6 @@ html
         span Version: #{version}
         p.pagination.is-small
           | Seite&nbsp;
-          span.page-number 8&nbsp;
+          span.page-number 5&nbsp;
           | von&nbsp;
-          span.page-total-number 8
+          span.page-total-number 5
