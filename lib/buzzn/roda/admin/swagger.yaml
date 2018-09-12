@@ -3751,6 +3751,36 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/market-locations":
+    get:
+      description: get all market locations of a localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/market-locations/{market_location_id}":
+    get:
+      description: get all market locations of a localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: market_location_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
   "/localpools/{localpool_id}/meters":
     get:
       description: returns all the meters of the localpool
