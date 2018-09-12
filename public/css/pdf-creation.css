@@ -19,7 +19,7 @@ td {border-bottom: .0625rem solid #999;}
 footer {width: 100%; height: 1.5rem; position: absolute; bottom: 0;}
 strong {display: inline-block;}
 textarea{background:white;color:black;font-size:1rem;padding:0.125rem;border:black solid .0375rem;}
-input{vertical-align: middle;background:white;color:black;font-size:0.8rem;padding:0.125rem;height:1rem;border:black solid .0375rem;}
+input{vertical-align: middle;background:white;color:black;font-size:0.6rem;padding:0.125rem;height:1rem;border:black solid .0175rem; width: 400px;}
 input[type=checkbox]{width:1rem; border: black solid .0375rem;}
 input[type=radio]{width:1rem}
 /*page break*/
