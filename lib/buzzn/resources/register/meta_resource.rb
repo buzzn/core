@@ -1,6 +1,8 @@
 module Register
   class MetaResource < Buzzn::Resource::Entity
 
+    model Meta
+
     attributes :name, :kind, :market_location_id
 
     attributes :updatable, :deletable
