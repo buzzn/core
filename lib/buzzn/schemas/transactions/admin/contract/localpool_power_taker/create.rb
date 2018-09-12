@@ -1,5 +1,5 @@
 require_relative '../localpool_power_taker'
-require_relative '../../../../constraints/contract/base'
+require_relative '../../../../constraints/contract/common'
 require_relative '../../../person/create'
 require_relative '../../../organization/create'
 require_relative '../../register/create_meta'
