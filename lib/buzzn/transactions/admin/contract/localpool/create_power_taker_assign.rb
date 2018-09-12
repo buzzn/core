@@ -6,6 +6,7 @@ module Transactions::Admin::Contract::Localpool
     validate :schema
     check :authorize, with: :'operations.authorization.create'
     tee :localpool_schema
+    tee :register_meta_schema
     around :db_transaction
     tee :assign_customer
     tee :assign_contractor

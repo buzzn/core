@@ -565,7 +565,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
             let(:create_org_request_json) do
               base_request_json.merge(customer: organization_json.merge('type' => 'organization'),
-                                      register_meta: { name: 'Secret Room'})
+                                      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'})
             end
 
             context 'valid data' do
@@ -592,7 +592,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
             let(:create_person_request_json) do
               base_request_json.merge(customer: power_taker_person_json.merge('type' => 'person'),
-                                      register_meta: { name: 'Secret Room'})
+                                      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'})
             end
 
             context 'valid data' do
@@ -612,17 +612,17 @@ describe Admin::LocalpoolRoda, :request_helper do
 
             let(:assign_request_person_json) do
               base_request_json.merge(customer: { id: power_taker_person.id, type: 'person' },
-                                      register_meta: { name: 'Secret Room'})
+                                      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'})
             end
 
             let(:invalid_assign_request_person_json) do
               base_request_json.merge(customer: { id: 13371337, type: 'person' },
-                                      register_meta: { name: 'Secret Room'})
+                                      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'})
             end
 
             let(:assign_request_org_json) do
               base_request_json.merge(customer: { id: power_taker_org.id, type: 'organization' },
-                                      register_meta: { name: 'Secret Room'})
+                                      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'})
             end
 
             context 'valid data' do

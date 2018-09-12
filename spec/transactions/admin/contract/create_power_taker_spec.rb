@@ -35,17 +35,21 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order
 
   let(:assign_request_person) do
     { customer: { id: power_taker_person.id, type: 'person' },
-      register_meta: { name: 'Secret Room'} }
+      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
   end
 
   let(:invalid_assign_request_person) do
     { customer: { id: 13371337, type: 'person' },
-      register_meta: { name: 'Secret Room'} }
+      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
+  end
+
+  let(:register_meta) do
+    create(:meta)
   end
 
   let(:assign_request_org) do
     { customer: { id: power_taker_org.id, type: 'organization' },
-      register_meta: { name: 'Secret Room'} }
+      register_meta: { id: register_meta.id } }
   end
 
   context 'invalid state' do
@@ -133,7 +137,7 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerWithPerson, o
 
   let(:create_person_request) do
     { customer: power_taker_person_param,
-      register_meta: { name: 'Secret Room'} }
+      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
   end
 
   context 'invalid state' do
@@ -218,7 +222,7 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerWithOrganizat
 
   let(:create_org_request) do
     { customer: organization_params,
-      register_meta: { name: 'Secret Room'} }
+      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
   end
 
   context 'invalid state' do
