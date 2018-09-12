@@ -128,6 +128,8 @@ describe Admin, :swagger, :request_helper, order: :defined do
            register_meta: register.meta)
   end
 
+  entity!(:market_location) { localpool_power_taker_contract.register_meta }
+
   entity!(:billing_1) do
     create(:billing, billing_cycle: billing_cycle_1,
               contract: localpool_power_taker_contract)
@@ -289,6 +291,16 @@ describe Admin, :swagger, :request_helper, order: :defined do
   patch '/localpools/{localpool.id}/meters/{real_meter.id}/registers/{real_register.id}' do
     description 'update the real register of a meter for the given IDs'
     schema Schemas::Transactions::Admin::Register::UpdateReal
+  end
+
+  # meta_register / market_locations
+
+  get '/localpools/{localpool.id}/market-locations' do
+    description 'get all market locations of a localpool'
+  end
+
+  get '/localpools/{localpool.id}/market-locations/{market_location.id}' do
+    description 'get all market locations of a localpool'
   end
 
   # meters > registers > ticker
