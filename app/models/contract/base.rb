@@ -44,6 +44,7 @@ module Contract
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
     belongs_to :customer_bank_account, class_name: 'BankAccount'
     belongs_to :register_meta, class_name: 'Register::Meta', foreign_key: :register_meta_id
+    belongs_to :register_meta_option, class_name: 'Register::MetaOption', foreign_key: :register_meta_option_id
 
     before_save :check_contract_number
     before_create :check_contract_number
