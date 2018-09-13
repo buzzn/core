@@ -59,6 +59,18 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: legacy_power_taker_contract_buzznid
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legacy_power_giver_contract_buzznid
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: address.street
         in: formData
         required: true
@@ -3017,6 +3029,18 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: legacy_power_taker_contract_buzznid
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legacy_power_giver_contract_buzznid
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       responses:
         200:
           description: patched

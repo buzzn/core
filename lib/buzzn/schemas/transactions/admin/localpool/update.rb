@@ -14,6 +14,9 @@ module Schemas::Transactions::Admin::Localpool
     optional(:show_energy).filled(:bool?)
     optional(:show_contact).filled(:bool?)
     optional(:show_display_app).filled(:bool?)
+    # legacy
+    optional(:legacy_power_taker_contract_buzznid).maybe(:str?, max_size?: 64)
+    optional(:legacy_power_giver_contract_buzznid).maybe(:str?, max_size?: 64)
   end
 
 end
