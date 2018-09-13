@@ -287,11 +287,21 @@ describe Admin::LocalpoolRoda, :request_helper do
         let!(:contract1) { metering_point_operator_contract }
         let!(:contract2) { localpool_processing_contract }
         let!(:contract3) { localpool_power_taker_contract }
-
+        let(:register_meta) { create(:meta) }
         it '200' do
           GET "/localpools/#{localpool.id}/contracts", $admin
           expect(response).to have_http_status(200)
           expect(json['array'].count).to eq(3)
+        end
+
+        it '200 with includes and an empty register_meta' do
+          old = contract3.register_meta
+          contract3.register_meta
+          contract3.save
+          GET "/localpools/#{localpool.id}/contracts?include=market_location:[register],customer:[address,contact:address]", $admin
+          expect(response).to have_http_status(200)
+          contract3.register_meta = old
+          contract3.save
         end
       end
 
