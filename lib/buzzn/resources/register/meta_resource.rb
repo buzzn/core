@@ -1,6 +1,8 @@
 module Register
   class MetaResource < Buzzn::Resource::Entity
 
+    model Meta
+
     attributes :name, :kind, :market_location_id
 
     attributes :updatable, :deletable
@@ -19,15 +21,11 @@ module Register
     end
 
     def market_location_id
-      object.register.meta.market_location&.market_location_id
+      object.market_location&.market_location_id
     end
 
     def kind
-      object.register.kind
-    end
-
-    def name
-      object.register.meta.name
+      object.register.nil? ? nil : object.register.kind
     end
 
   end

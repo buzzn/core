@@ -44,6 +44,7 @@ module Contract
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
     belongs_to :customer_bank_account, class_name: 'BankAccount'
     belongs_to :register_meta, class_name: 'Register::Meta', foreign_key: :register_meta_id
+    belongs_to :register_meta_option, class_name: 'Register::MetaOption', foreign_key: :register_meta_option_id
 
     before_save :check_contract_number
     before_create :check_contract_number
@@ -92,13 +93,13 @@ module Contract
       "#{contract_number}/#{contract_number_addition}"
     end
 
-    def status
-      today = Date.today
-      status = if end_date && end_date <= today
+    def status(at = nil)
+      at ||= Date.today
+      status = if end_date && end_date <= at
                  ENDED
       elsif termination_date
         TERMINATED
-      elsif begin_date && begin_date <= today
+      elsif begin_date && begin_date <= at
         ACTIVE
       elsif signing_date
         SIGNED

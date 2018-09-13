@@ -120,6 +120,8 @@ describe Admin::Roda, :request_helper do
               'old_customer_number'=>contract.old_customer_number,
               'old_account_number'=>contract.old_account_number,
               'mandate_reference' => nil,
+              'share_register_with_group' => true,
+              'share_register_publicly' => true,
               'localpool' => {
                 'id'=>localpool.id,
                 'type'=>'group_localpool',
