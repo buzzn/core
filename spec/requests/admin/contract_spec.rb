@@ -38,6 +38,8 @@ describe Admin::LocalpoolRoda, :request_helper do
           'old_customer_number'=>contract.old_customer_number,
           'old_account_number'=>contract.old_account_number,
           'mandate_reference' => nil,
+          'share_register_with_group' => true,
+          'share_register_publicly' => true,
           'localpool' => {
             'id'=>contract.localpool.id,
             'type'=>'group_localpool',
@@ -565,6 +567,9 @@ describe Admin::LocalpoolRoda, :request_helper do
 
             let(:create_org_request_json) do
               base_request_json.merge(customer: organization_json.merge('type' => 'organization'),
+                                      begin_date: Date.today.as_json,
+                                      share_register_with_group: true,
+                                      share_register_publicly: true,
                                       register_meta: { name: 'Secret Room', label: 'CONSUMPTION'})
             end
 
@@ -592,6 +597,9 @@ describe Admin::LocalpoolRoda, :request_helper do
 
             let(:create_person_request_json) do
               base_request_json.merge(customer: power_taker_person_json.merge('type' => 'person'),
+                                      begin_date: Date.today.as_json,
+                                      share_register_with_group: true,
+                                      share_register_publicly: true,
                                       register_meta: { name: 'Secret Room', label: 'CONSUMPTION'})
             end
 
@@ -612,16 +620,25 @@ describe Admin::LocalpoolRoda, :request_helper do
 
             let(:assign_request_person_json) do
               base_request_json.merge(customer: { id: power_taker_person.id, type: 'person' },
+                                      begin_date: Date.today.as_json,
+                                      share_register_with_group: true,
+                                      share_register_publicly: true,
                                       register_meta: { name: 'Secret Room', label: 'CONSUMPTION'})
             end
 
             let(:invalid_assign_request_person_json) do
               base_request_json.merge(customer: { id: 13371337, type: 'person' },
+                                      begin_date: Date.today.as_json,
+                                      share_register_with_group: true,
+                                      share_register_publicly: true,
                                       register_meta: { name: 'Secret Room', label: 'CONSUMPTION'})
             end
 
             let(:assign_request_org_json) do
               base_request_json.merge(customer: { id: power_taker_org.id, type: 'organization' },
+                                      begin_date: Date.today.as_json,
+                                      share_register_with_group: true,
+                                      share_register_publicly: true,
                                       register_meta: { name: 'Secret Room', label: 'CONSUMPTION'})
             end
 

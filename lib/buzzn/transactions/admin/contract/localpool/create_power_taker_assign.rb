@@ -11,6 +11,7 @@ module Transactions::Admin::Contract::Localpool
     tee :assign_customer
     tee :assign_contractor
     tee :assign_register_meta
+    tee :create_register_meta_options
     map :create_contract, with: :'operations.action.create_item'
 
     def schema
