@@ -5098,11 +5098,11 @@ paths:
         format: ''
       - name: share_register_with_group
         in: formData
-        required: true
+        required: false
         type: boolean
       - name: share_register_publicly
         in: formData
-        required: true
+        required: false
         type: boolean
       - name: register_meta.id
         in: formData
@@ -5317,11 +5317,11 @@ paths:
         format: ''
       - name: share_register_with_group
         in: formData
-        required: true
+        required: false
         type: boolean
       - name: share_register_publicly
         in: formData
-        required: true
+        required: false
         type: boolean
       - name: register_meta.id
         in: formData
@@ -6535,11 +6535,11 @@ paths:
         format: ''
       - name: share_register_with_group
         in: formData
-        required: true
+        required: false
         type: boolean
       - name: share_register_publicly
         in: formData
-        required: true
+        required: false
         type: boolean
       - name: register_meta.id
         in: formData
