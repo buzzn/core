@@ -35,13 +35,17 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
 
   def assign_register_meta(params:, **)
     begin
-      params[:register_meta] = if params[:register_meta][:id].nil?
-                                 params[:register_meta] = Register::Meta.create(params[:register_meta])
-                               else
-                                 Register::Meta.find(params[:register_meta][:id])
-                               end
+      register_meta = params[:register_meta][:id].nil? ? params[:register_meta] = Register::Meta.create(params[:register_meta])
+                                                       : Register::Meta.find(params[:register_meta][:id])
+      begin_date = params[:begin_date]
+      register_meta.contracts.each do |contract|
+        if contract.status(begin_date) == Contract::Base::ACTIVE
+          raise Buzzn::ValidationError.new(register_meta: [ :error => 'other_contract_active_at_begin', :contract_id => contract.id ])
+        end
+      end
+      params[:register_meta] = register_meta
     rescue ActiveRecord::RecordNotFound
-      raise Buzzn::ValidationError.new(register_meta: { :id => 'object does not exist'})
+      raise Buzzn::ValidationError.new(register_meta: [ :id => 'object does not exist'])
     end
   end
 

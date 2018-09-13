@@ -9,6 +9,7 @@ module Schemas::Transactions
   Admin::Contract::Localpool::PowerTaker::CUSTOMER_TYPES = ['person', 'organization']
 
   Admin::Contract::Localpool::PowerTaker::CreateBase = Schemas::Support.Form(Schemas::Constraints::Contract::Common) do
+    required(:begin_date).maybe(:date?)
     required(:register_meta) do
       schema(Admin::Register::CreateMetaLoose)
     end
