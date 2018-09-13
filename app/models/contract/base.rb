@@ -93,13 +93,13 @@ module Contract
       "#{contract_number}/#{contract_number_addition}"
     end
 
-    def status
-      today = Date.today
-      status = if end_date && end_date <= today
+    def status(at = nil)
+      at ||= Date.today
+      status = if end_date && end_date <= at
                  ENDED
       elsif termination_date
         TERMINATED
-      elsif begin_date && begin_date <= today
+      elsif begin_date && begin_date <= at
         ACTIVE
       elsif signing_date
         SIGNED
