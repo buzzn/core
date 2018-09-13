@@ -5,5 +5,9 @@ module Schemas
       required(:updated_at).filled(:date_time?)
     end
 
+    UpdateOptional = Schemas::Support.Form do
+      optional(:updated_at).filled(:date_time?)
+    end
+
   end
 end

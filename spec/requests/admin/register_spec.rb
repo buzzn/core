@@ -57,8 +57,6 @@ describe Admin::LocalpoolRoda, :request_helper do
         let(:wrong_json) do
           {
             'label'=>['must be one of: CONSUMPTION, CONSUMPTION_COMMON, DEMARCATION_PV, DEMARCATION_CHP, DEMARCATION_WIND, DEMARCATION_WATER, PRODUCTION_PV, PRODUCTION_CHP, PRODUCTION_WIND, PRODUCTION_WATER, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER'],
-            'share_with_group'=>['must be boolean'],
-            'share_publicly'=>['must be boolean'],
             'observer_enabled'=>['must be boolean'],
             'observer_min_threshold'=>['must be an integer'],
             'observer_max_threshold'=>['must be an integer'],
@@ -93,8 +91,6 @@ describe Admin::LocalpoolRoda, :request_helper do
                 label: 'grid',
                 pre_decimal_position: 'pre',
                 post_decimal_position: 'post',
-                share_with_group: 'why not',
-                share_publicly: 'never',
                 low_load_ability: 'dunno',
                 observer_enabled: 'dunno',
                 observer_min_threshold: 'nothing',
@@ -110,8 +106,6 @@ describe Admin::LocalpoolRoda, :request_helper do
                 updated_at: register.updated_at,
                 metering_point_id: '12345667890',
                 label: Register::Meta.labels[:demarcation_pv],
-                share_with_group: true,
-                share_publicly: false,
                 observer_enabled: true,
                 observer_min_threshold: 10,
                 observer_max_threshold: 100,
@@ -120,8 +114,6 @@ describe Admin::LocalpoolRoda, :request_helper do
           register.reload
           expect(register.meter.metering_location&.metering_location_id).to eq '12345667890'
           expect(register.meta.label).to eq 'demarcation_pv'
-          expect(register.meta.share_with_group).to eq true
-          expect(register.meta.share_publicly).to eq false
           expect(register.meta.observer_enabled).to eq true
           expect(register.meta.observer_min_threshold).to eq 10
           expect(register.meta.observer_max_threshold).to eq 100

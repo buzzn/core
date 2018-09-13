@@ -3,8 +3,6 @@ FactoryGirl.define do
 
     name '1.OG links vorne'
     label                 Register::Meta.labels[:consumption]
-    share_with_group      true
-    share_publicly        false
 
     # This register is publicly connected. Only those have a metering point id
     trait :grid_connected do

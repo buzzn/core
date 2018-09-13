@@ -19,6 +19,47 @@ shared_examples 'without processing contract' do |transaction|
 
 end
 
+shared_examples 'with existing contract on same register' do |transaction|
+
+  let!(:begin_date) { Date.today }
+  let!(:end_date) { Date.today + 30 }
+
+  let!(:begin_date_new) { begin_date + 10 }
+
+  let!(:register_meta) { create(:meta) }
+  let!(:other_contract) do
+    create(:contract, :localpool_powertaker,
+           register_meta: register_meta,
+           localpool: lp.object,
+           begin_date: begin_date,
+           termination_date: nil,
+           end_date: end_date)
+  end
+
+  let(:params_modified) do
+    p = params.dup
+    p[:begin_date] = begin_date_new
+    p[:register_meta] = { id: register_meta.id }
+    p
+  end
+
+  let(:result) do
+    unless lp.localpool_processing_contracts.any?
+      create(:contract, :localpool_processing,
+             customer: lp.object.owner,
+             contractor: Organization::Market.buzzn,
+             localpool: lp.object)
+      lp.object.reload
+    end
+    transaction.(resource: r, params: params_modified, localpool: lp)
+  end
+
+  it 'does not create' do
+    expect {result}.to raise_error(Buzzn::ValidationError, "{:register_meta=>[{:error=>\"other_contract_active_at_begin\", :contract_id=>#{other_contract.id}}]}")
+  end
+
+end
+
 describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order: :defined do
 
   let!(:localpool) { create(:group, :localpool) }
@@ -35,17 +76,30 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order
 
   let(:assign_request_person) do
     { customer: { id: power_taker_person.id, type: 'person' },
-      register_meta: { name: 'Secret Room'} }
+      begin_date: Date.today.as_json,
+      share_register_publicly: false,
+      share_register_with_group: true,
+      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
   end
 
   let(:invalid_assign_request_person) do
     { customer: { id: 13371337, type: 'person' },
-      register_meta: { name: 'Secret Room'} }
+      begin_date: Date.today.as_json,
+      share_register_publicly: false,
+      share_register_with_group: true,
+      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
+  end
+
+  let(:register_meta) do
+    create(:meta)
   end
 
   let(:assign_request_org) do
     { customer: { id: power_taker_org.id, type: 'organization' },
-      register_meta: { name: 'Secret Room'} }
+      begin_date: Date.today.as_json,
+      share_register_publicly: false,
+      share_register_with_group: true,
+      register_meta: { id: register_meta.id } }
   end
 
   context 'invalid state' do
@@ -54,6 +108,13 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order
       let(:lp) { localpoolr }
       let(:r) { resource }
     end
+
+    it_behaves_like 'with existing contract on same register', Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign.new do
+      let(:params) { assign_request_person }
+      let(:lp) { localpoolr }
+      let(:r) { resource }
+    end
+
   end
 
   context 'valid state' do
@@ -133,7 +194,8 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerWithPerson, o
 
   let(:create_person_request) do
     { customer: power_taker_person_param,
-      register_meta: { name: 'Secret Room'} }
+      begin_date: Date.today.as_json,
+      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
   end
 
   context 'invalid state' do
@@ -218,7 +280,10 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerWithOrganizat
 
   let(:create_org_request) do
     { customer: organization_params,
-      register_meta: { name: 'Secret Room'} }
+      begin_date: Date.today.as_json,
+      share_register_publicly: false,
+      share_register_with_group: true,
+      register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
   end
 
   context 'invalid state' do

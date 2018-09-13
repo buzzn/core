@@ -13,10 +13,20 @@ module Contract
                 :old_supplier_name,
                 :old_customer_number,
                 :old_account_number,
-                :mandate_reference
+                :mandate_reference,
+                :share_register_with_group,
+                :share_register_publicly
 
     has_one :market_location, Register::MetaResource do |object|
       object.register_meta
+    end
+
+    def share_register_with_group
+      object.register_meta_option.nil? ? false : object.register_meta_option.share_with_group
+    end
+
+    def share_register_publicly
+      object.register_meta_option.nil? ? false : object.register_meta_option.share_publicly
     end
 
   end

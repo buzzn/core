@@ -3372,6 +3372,71 @@ paths:
         required: false
         type: string
         format: date
+      - name: forecast_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: original_signing_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: mandate_reference
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: confirm_pricing_model
+        in: formData
+        required: false
+        type: boolean
+      - name: power_of_attorney
+        in: formData
+        required: false
+        type: boolean
+      - name: other_contract
+        in: formData
+        required: false
+        type: boolean
+      - name: move_in
+        in: formData
+        required: false
+        type: boolean
+      - name: authorization
+        in: formData
+        required: false
+        type: boolean
+      - name: third_party_billing_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: third_party_renter_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: metering_point_operator_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_supplier_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_customer_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_account_number
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: register_meta.updated_at
         in: formData
         required: true
@@ -3403,14 +3468,6 @@ paths:
         - GRID_CONSUMPTION_CORRECTED
         - GRID_FEEDING_CORRECTED
         - OTHER
-      - name: register_meta.share_with_group
-        in: formData
-        required: false
-        type: boolean
-      - name: register_meta.share_publicly
-        in: formData
-        required: false
-        type: boolean
       - name: register_meta.observer_enabled
         in: formData
         required: false
@@ -3694,6 +3751,36 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/market-locations":
+    get:
+      description: get all market locations of a localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/market-locations/{market_location_id}":
+    get:
+      description: get all market locations of a localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: market_location_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
   "/localpools/{localpool_id}/meters":
     get:
       description: returns all the meters of the localpool
@@ -4148,14 +4235,6 @@ paths:
         - GRID_CONSUMPTION_CORRECTED
         - GRID_FEEDING_CORRECTED
         - OTHER
-      - name: share_with_group
-        in: formData
-        required: false
-        type: boolean
-      - name: share_publicly
-        in: formData
-        required: false
-        type: boolean
       - name: observer_enabled
         in: formData
         required: false
@@ -4911,7 +4990,7 @@ paths:
         format: date
       - name: begin_date
         in: formData
-        required: false
+        required: true
         type: string
         format: date
       - name: termination_date
@@ -4924,12 +5003,158 @@ paths:
         required: false
         type: string
         format: date
+      - name: contract_number
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contract_number_addition
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: renewable_energy_law_taxation
+        in: formData
+        required: false
+        type: string
+        enum:
+        - F
+        - R
+        - N
+      - name: forecast_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: original_signing_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: mandate_reference
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: confirm_pricing_model
+        in: formData
+        required: false
+        type: boolean
+      - name: power_of_attorney
+        in: formData
+        required: false
+        type: boolean
+      - name: other_contract
+        in: formData
+        required: false
+        type: boolean
+      - name: move_in
+        in: formData
+        required: false
+        type: boolean
+      - name: authorization
+        in: formData
+        required: false
+        type: boolean
+      - name: third_party_billing_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: third_party_renter_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: metering_point_operator_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_supplier_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_customer_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_account_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: energy_consumption_before_kwh_pa
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: down_payment_before_cents_per_month
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: share_register_with_group
+        in: formData
+        required: false
+        type: boolean
+      - name: share_register_publicly
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: register_meta.name
         in: formData
-        required: true
+        required: false
         type: string
         format: ''
         maxLength: 64
+      - name: register_meta.label
+        in: formData
+        required: false
+        type: string
+        enum:
+        - CONSUMPTION
+        - CONSUMPTION_COMMON
+        - DEMARCATION_PV
+        - DEMARCATION_CHP
+        - DEMARCATION_WIND
+        - DEMARCATION_WATER
+        - PRODUCTION_PV
+        - PRODUCTION_CHP
+        - PRODUCTION_WIND
+        - PRODUCTION_WATER
+        - GRID_CONSUMPTION
+        - GRID_FEEDING
+        - GRID_CONSUMPTION_CORRECTED
+        - GRID_FEEDING_CORRECTED
+        - OTHER
+      - name: register_meta.observer_enabled
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.observer_min_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: register_meta.observer_max_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: register_meta.observer_offline_monitoring
+        in: formData
+        required: false
+        type: boolean
       - name: register_meta
         in: formData
         required: true
@@ -4984,7 +5209,7 @@ paths:
         format: date
       - name: begin_date
         in: formData
-        required: false
+        required: true
         type: string
         format: date
       - name: termination_date
@@ -4997,12 +5222,158 @@ paths:
         required: false
         type: string
         format: date
+      - name: contract_number
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contract_number_addition
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: renewable_energy_law_taxation
+        in: formData
+        required: false
+        type: string
+        enum:
+        - F
+        - R
+        - N
+      - name: forecast_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: original_signing_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: mandate_reference
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: confirm_pricing_model
+        in: formData
+        required: false
+        type: boolean
+      - name: power_of_attorney
+        in: formData
+        required: false
+        type: boolean
+      - name: other_contract
+        in: formData
+        required: false
+        type: boolean
+      - name: move_in
+        in: formData
+        required: false
+        type: boolean
+      - name: authorization
+        in: formData
+        required: false
+        type: boolean
+      - name: third_party_billing_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: third_party_renter_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: metering_point_operator_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_supplier_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_customer_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_account_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: energy_consumption_before_kwh_pa
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: down_payment_before_cents_per_month
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: share_register_with_group
+        in: formData
+        required: false
+        type: boolean
+      - name: share_register_publicly
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: register_meta.name
         in: formData
-        required: true
+        required: false
         type: string
         format: ''
         maxLength: 64
+      - name: register_meta.label
+        in: formData
+        required: false
+        type: string
+        enum:
+        - CONSUMPTION
+        - CONSUMPTION_COMMON
+        - DEMARCATION_PV
+        - DEMARCATION_CHP
+        - DEMARCATION_WIND
+        - DEMARCATION_WATER
+        - PRODUCTION_PV
+        - PRODUCTION_CHP
+        - PRODUCTION_WIND
+        - PRODUCTION_WATER
+        - GRID_CONSUMPTION
+        - GRID_FEEDING
+        - GRID_CONSUMPTION_CORRECTED
+        - GRID_FEEDING_CORRECTED
+        - OTHER
+      - name: register_meta.observer_enabled
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.observer_min_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: register_meta.observer_max_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: register_meta.observer_offline_monitoring
+        in: formData
+        required: false
+        type: boolean
       - name: register_meta
         in: formData
         required: true
@@ -6056,7 +6427,7 @@ paths:
         format: date
       - name: begin_date
         in: formData
-        required: false
+        required: true
         type: string
         format: date
       - name: termination_date
@@ -6069,12 +6440,158 @@ paths:
         required: false
         type: string
         format: date
+      - name: contract_number
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contract_number_addition
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: renewable_energy_law_taxation
+        in: formData
+        required: false
+        type: string
+        enum:
+        - F
+        - R
+        - N
+      - name: forecast_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: original_signing_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: mandate_reference
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: confirm_pricing_model
+        in: formData
+        required: false
+        type: boolean
+      - name: power_of_attorney
+        in: formData
+        required: false
+        type: boolean
+      - name: other_contract
+        in: formData
+        required: false
+        type: boolean
+      - name: move_in
+        in: formData
+        required: false
+        type: boolean
+      - name: authorization
+        in: formData
+        required: false
+        type: boolean
+      - name: third_party_billing_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: third_party_renter_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: metering_point_operator_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_supplier_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_customer_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_account_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: energy_consumption_before_kwh_pa
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: down_payment_before_cents_per_month
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: share_register_with_group
+        in: formData
+        required: false
+        type: boolean
+      - name: share_register_publicly
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: register_meta.name
         in: formData
-        required: true
+        required: false
         type: string
         format: ''
         maxLength: 64
+      - name: register_meta.label
+        in: formData
+        required: false
+        type: string
+        enum:
+        - CONSUMPTION
+        - CONSUMPTION_COMMON
+        - DEMARCATION_PV
+        - DEMARCATION_CHP
+        - DEMARCATION_WIND
+        - DEMARCATION_WATER
+        - PRODUCTION_PV
+        - PRODUCTION_CHP
+        - PRODUCTION_WIND
+        - PRODUCTION_WATER
+        - GRID_CONSUMPTION
+        - GRID_FEEDING
+        - GRID_CONSUMPTION_CORRECTED
+        - GRID_FEEDING_CORRECTED
+        - OTHER
+      - name: register_meta.observer_enabled
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.observer_min_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: register_meta.observer_max_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: register_meta.observer_offline_monitoring
+        in: formData
+        required: false
+        type: boolean
       - name: register_meta
         in: formData
         required: true

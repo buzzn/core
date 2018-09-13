@@ -34,10 +34,12 @@ class Beekeeper::Importer::LocalpoolContracts
   private
 
   def create_contract(localpool, customer, contract, registers, tariffs)
+    register_meta_options = Register::MetaOptions.new(share_with_group: false, share_publicly: false)
     register = find_or_create_register(contract, registers, localpool)
     contract_attributes = contract.except(:powertaker, :buzznid).merge(
       localpool:       localpool,
       register_meta:   register.meta,
+      register_meta_options: register_meta_options,
       customer:        customer,
       contractor:      localpool.owner
     )
@@ -89,7 +91,7 @@ class Beekeeper::Importer::LocalpoolContracts
   def create_fake_register(buzznid, localpool)
     logger.warn("No meter/register for #{buzznid}, creating a fake temporary one.")
     meter = Meter::Real.create!(product_serialnumber: "FAKE-FOR-IMPORT-#{counter}", legacy_buzznid: buzznid, group: localpool)
-    Register::Real.create!(meta: Register::Meta.new(name: 'FAKE-FOR-IMPORt', share_with_group: false, share_publicly: false, label: :other), meter: meter)
+    Register::Real.create!(meta: Register::Meta.new(name: 'FAKE-FOR-IMPORt', label: :other), meter: meter)
   end
 
   def counter
