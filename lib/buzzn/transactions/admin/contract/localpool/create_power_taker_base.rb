@@ -49,6 +49,13 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
     end
   end
 
+  def create_register_meta_options(params:, **)
+    params[:register_meta_option] = Register::MetaOption.create(share_with_group: params[:share_register_with_group],
+                                                                share_publicly: params[:share_register_publicly])
+    params.delete(:share_register_publicly)
+    params.delete(:share_register_with_group)
+  end
+
   def create_contract(params:, resource:, **)
     Contract::LocalpoolPowerTakerResource.new(
       *super(resource, params)

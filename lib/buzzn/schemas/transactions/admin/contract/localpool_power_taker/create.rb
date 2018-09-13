@@ -10,6 +10,8 @@ module Schemas::Transactions
 
   Admin::Contract::Localpool::PowerTaker::CreateBase = Schemas::Support.Form(Schemas::Constraints::Contract::Common) do
     required(:begin_date).maybe(:date?)
+    required(:share_register_with_group).filled(:bool?)
+    required(:share_register_publicly).filled(:bool?)
     required(:register_meta) do
       schema(Admin::Register::CreateMetaLoose)
     end
