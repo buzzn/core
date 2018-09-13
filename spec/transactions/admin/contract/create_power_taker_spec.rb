@@ -195,8 +195,6 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerWithPerson, o
   let(:create_person_request) do
     { customer: power_taker_person_param,
       begin_date: Date.today.as_json,
-      share_register_publicly: false,
-      share_register_with_group: true,
       register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
   end
 
