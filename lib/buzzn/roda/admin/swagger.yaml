@@ -4990,7 +4990,7 @@ paths:
         format: date
       - name: begin_date
         in: formData
-        required: false
+        required: true
         type: string
         format: date
       - name: termination_date
@@ -5096,6 +5096,14 @@ paths:
         required: false
         type: string
         format: ''
+      - name: share_register_with_group
+        in: formData
+        required: true
+        type: boolean
+      - name: share_register_publicly
+        in: formData
+        required: true
+        type: boolean
       - name: register_meta.id
         in: formData
         required: false
@@ -5201,7 +5209,7 @@ paths:
         format: date
       - name: begin_date
         in: formData
-        required: false
+        required: true
         type: string
         format: date
       - name: termination_date
@@ -5307,6 +5315,14 @@ paths:
         required: false
         type: string
         format: ''
+      - name: share_register_with_group
+        in: formData
+        required: true
+        type: boolean
+      - name: share_register_publicly
+        in: formData
+        required: true
+        type: boolean
       - name: register_meta.id
         in: formData
         required: false
@@ -6411,7 +6427,7 @@ paths:
         format: date
       - name: begin_date
         in: formData
-        required: false
+        required: true
         type: string
         format: date
       - name: termination_date
@@ -6517,6 +6533,14 @@ paths:
         required: false
         type: string
         format: ''
+      - name: share_register_with_group
+        in: formData
+        required: true
+        type: boolean
+      - name: share_register_publicly
+        in: formData
+        required: true
+        type: boolean
       - name: register_meta.id
         in: formData
         required: false
