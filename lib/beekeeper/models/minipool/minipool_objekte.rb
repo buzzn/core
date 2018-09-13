@@ -97,7 +97,9 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       registers:                    registers,
       powertaker_contracts:         powertaker_contracts,
       third_party_contracts:        third_party_contracts,
-      tariffs:                      tariffs
+      tariffs:                      tariffs,
+      legacy_power_giver_contract_buzznid: einspeis_buzznid,
+      legacy_power_taker_contract_buzznid: bezug_buzznid,
     }
   end
 

@@ -29,6 +29,8 @@ module Admin
                :power_sources,
                :display_app_url,
                :allowed_actions,
+               :legacy_power_giver_contract_buzznid,
+               :legacy_power_taker_contract_buzznid,
                # TODO remove me once the UI uses the meta data section
                :next_billing_cycle_begin_date
 

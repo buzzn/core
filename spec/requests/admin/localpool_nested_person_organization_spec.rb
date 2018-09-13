@@ -56,7 +56,9 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
         },
         'create_billing_cycle' => true
       },
-      'next_billing_cycle_begin_date' => '2016-02-01'
+      'legacy_power_giver_contract_buzznid' => nil,
+      'legacy_power_taker_contract_buzznid' => nil,
+      'next_billing_cycle_begin_date' => '2016-02-01',
     }
   end
 

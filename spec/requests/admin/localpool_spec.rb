@@ -157,7 +157,10 @@ describe Admin::LocalpoolRoda, :request_helper do
         'create_localpool_power_taker_contract'=> allowed['create_localpool_power_taker_contract'],
         'create_billing_cycle'=> allowed['create_billing_cycle']
       },
-      'next_billing_cycle_begin_date' => localpool.start_date.as_json }
+      'legacy_power_giver_contract_buzznid' => nil,
+      'legacy_power_taker_contract_buzznid' => nil,
+      'next_billing_cycle_begin_date' => localpool.start_date.as_json,
+    }
   end
 
   let(:localpools_json) do
@@ -288,7 +291,9 @@ describe Admin::LocalpoolRoda, :request_helper do
           },
           'create_billing_cycle' => true
         },
-        'next_billing_cycle_begin_date' => Date.today.as_json }
+        'legacy_power_giver_contract_buzznid' => nil,
+        'legacy_power_taker_contract_buzznid' => nil,
+        'next_billing_cycle_begin_date' => Date.today.as_json, }
     end
 
     let(:new_localpool) do
@@ -392,7 +397,10 @@ describe Admin::LocalpoolRoda, :request_helper do
           'create_localpool_power_taker_contract'=> true,
           'create_billing_cycle' => true
         },
-        'next_billing_cycle_begin_date' => Date.yesterday.as_json }
+        'legacy_power_giver_contract_buzznid' => nil,
+        'legacy_power_taker_contract_buzznid' => nil,
+        'next_billing_cycle_begin_date' => Date.yesterday.as_json,
+      }
     end
 
     it '401' do
