@@ -1,3 +1,4 @@
+# coding: utf-8
 # == Schema Information
 #
 # Table name: minipooldb.msb_zählwerk_daten
@@ -28,9 +29,6 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
       type:                  'Register::Real',
       label:                 map_label,
       readings:              readings,
-      # set these defaults (not imported from beekeeper)
-      share_with_group:      false,
-      share_publicly:        false
     }
   end
 

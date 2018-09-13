@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'active_support/concern'
 
 class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
@@ -18,7 +19,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
         SUBSTITUTE_BUZZNID.include?(zählwerk.buzznid)
       end
       zählwerke.collect do |zählwerk|
-        attrs = zählwerk.converted_attributes.slice(:label, :share_with_group, :share_publicly, :name, :meter_attributes)
+        attrs = zählwerk.converted_attributes.slice(:label, :name, :meter_attributes)
         attrs[:type] = 'Register::Substitute'
         attrs[:meter] = build_virtual_meter(attrs[:meter_attributes].slice(:sequence_number, :buzznid))
 

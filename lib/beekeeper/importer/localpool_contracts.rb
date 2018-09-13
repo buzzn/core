@@ -34,12 +34,12 @@ class Beekeeper::Importer::LocalpoolContracts
   private
 
   def create_contract(localpool, customer, contract, registers, tariffs)
-    register_meta_options = Register::MetaOptions.new(share_with_group: false, share_publicly: false)
+    register_meta_option = Register::MetaOption.new(share_with_group: false, share_publicly: false)
     register = find_or_create_register(contract, registers, localpool)
     contract_attributes = contract.except(:powertaker, :buzznid).merge(
       localpool:       localpool,
       register_meta:   register.meta,
-      register_meta_options: register_meta_options,
+      register_meta_option: register_meta_option,
       customer:        customer,
       contractor:      localpool.owner
     )
