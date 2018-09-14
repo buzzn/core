@@ -3572,6 +3572,14 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: share_register_with_group
+        in: formData
+        required: false
+        type: boolean
+      - name: share_register_publicly
+        in: formData
+        required: false
+        type: boolean
       responses:
         200:
           description: patched

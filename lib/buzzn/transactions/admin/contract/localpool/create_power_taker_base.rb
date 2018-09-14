@@ -51,16 +51,14 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
 
   def create_register_meta_options(params:, **)
     params_register_meta = {}
-    if params[:share_register_publicly]
-      params_register_meta[:share_publicly] = params[:share_register_publicly]
+    unless params[:share_register_publicly].nil?
+      params_register_meta[:share_publicly] = params.delete(:share_register_publicly)
     end
-    if params[:share_register_with_group]
-      params_register_meta[:share_with_group] = params[:share_register_with_group]
+    unless params[:share_register_with_group].nil?
+      params_register_meta[:share_with_group] = params.delete(:share_register_with_group)
     end
 
     params[:register_meta_option] = Register::MetaOption.create(params_register_meta)
-    params.delete(:share_register_publicly)
-    params.delete(:share_register_with_group)
   end
 
   def create_contract(params:, resource:, **)
