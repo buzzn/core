@@ -132,6 +132,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     'Bahnhofstr. 21',
     'Fritz-Winter-Straße 3+7 - WA10',
     'Green warriors (Testgruppe)',
+    'Gertrud-Grunow-Straße 45 - WA12',
+    'Gotthardstraße 47',
     'Heigelstraße 27',
     'L.O.F.T.',
     'Mehrgenerationenplatz Forstenried',
