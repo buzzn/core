@@ -1,9 +1,11 @@
 # coding: utf-8
+
 require_relative 'concerns/import_warnings'
 require_relative 'concerns/minipool_objekte/organizations'
 require_relative 'concerns/minipool_objekte/owner'
 require_relative 'concerns/minipool_objekte/registers'
 require_relative 'concerns/minipool_objekte/powertaker_contracts'
+require_relative 'concerns/minipool_objekte/abschlag_information'
 
 # == Schema Information
 #
@@ -75,6 +77,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   include Beekeeper::Minipool::MinipoolObjekte::Owner
   include Beekeeper::Minipool::MinipoolObjekte::Registers
   include Beekeeper::Minipool::MinipoolObjekte::PowertakerContracts
+  include Beekeeper::Minipool::MinipoolObjekte::AbschlagInformation
 
   belongs_to :adresse, foreign_key: 'adress_id'
 
@@ -100,6 +103,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       tariffs:                      tariffs,
       legacy_power_giver_contract_buzznid: einspeis_buzznid,
       legacy_power_taker_contract_buzznid: bezug_buzznid,
+      billing_detail:               billing_detail
     }
   end
 
