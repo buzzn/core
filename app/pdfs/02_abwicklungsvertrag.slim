@@ -157,37 +157,40 @@ html
       h1 Stammdaten LSG
       h2 Anlage 1 zum Abwicklungsvertrag Nr. #{number}
       div.col-half
-        h3 Kontaktperson
+        h3 Vertragspartner
         p
           | #{powergiver.name}<br>
+          - if powergiver.partner_name != powergiver.name
+            | vertreten durch #{powergiver.partner_name}<br>
           | #{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}<br>
           | Telefon: #{powergiver.phone}<br>
           - if powergiver.fax
             | Fax: #{powergiver.fax}<br>
           | E‑Mail: #{powergiver.email}
       div.col-half
-        h3 Vertragspartner
+        h3 Kontaktperson
         p
-          | #{powergiver.partner_name}<br>
-          - if powergiver.partner_name != powergiver.name
-            | vertreten durch #{powergiver.partner_name}<br>
-          | #{powergiver.address.street} #{powergiver.address.zip} #{powergiver.address.city}<br>
-          | Telefon: #{powergiver.phone}<br>
-          - if powergiver.fax
-            | Fax: #{powergiver.fax}<br/>
-          | E‑Mail: #{powergiver.email}
+          | #{powergiver.contact.name}<br>
+          | #{powergiver.contact.address.street} #{powergiver.contact.address.zip} #{powergiver.contact.address.city}<br>
+          | Telefon: #{powergiver.contact.phone}<br>
+          - if powergiver.contact.fax
+            | Fax: #{powergiver.contact.fax}<br/>
+          | E‑Mail: #{powergiver.contact.email}
+      div.clear
       h3 Lokale Energiegruppe
       p
-        | Anschrift: #{powertaker.address.street} #{powertaker.address.zip} #{powertaker.address.city}<br>
-        | Objekttyp: <input class="offset-half" name="localgroup_object_type" type="text"><br>
-        - if localgroup_local_supplier && localgroup_local_supplier.name
-          | Örtlicher Netzbetreiber: #{localgroup_local_supplier.name}<br>
-        - else
-          | Örtlicher Netzbetreiber: <input class="offset-half" name="localgroup_local_supplier_name" type="text"><br>
+        | Anschrift: #{powertaker.address.street} #{powertaker.address.zip} #{powertaker.address.city}
+        <ul class="input_list">
+          <li>Objekttyp: <input class="offset-half" name="localgroup_object_type" type="text"><br></li>
+          - if localgroup_local_supplier && localgroup_local_supplier.name
+            <li>Örtlicher Netzbetreiber: #{localgroup_local_supplier.name}</li>
+          - else
+            <li>Örtlicher Netzbetreiber: <input class="offset-half" name="localgroup_local_supplier_name" type="text"></li>
         - if localgroup_additional_power_supplier && localgroup_additional_power_supplier.name
-          | Stromanbieter Zusatzstrom: #{localgroup_additional_power_supplier.name}
+          <li>Stromanbieter Zusatzstrom: #{localgroup_additional_power_supplier.name}</li>
         - else
-          | Stromanbieter Zusatzstrom: <input class="offset-half" name="supplier_additional_power_supplier" type="text">
+          <li>Stromanbieter Zusatzstrom: <input class="offset-half" name="supplier_additional_power_supplier" type="text"><li>
+        </ul>
       h3 Stromverbrauch
       p
         <ul class="input_list">
@@ -228,8 +231,6 @@ html
           <div class="hcheckbox"></div> Kontaktdaten LSG: Vorname/Nachname, E-Mail, Telefon
         li
           <div class="hcheckbox"></div> Sonstige: <input name="privacy_misc_text" type="text">
-
-
       p.has-dotted-underline.has-space-above.col-half.float-none
       p
       |(Ort), (Datum)
