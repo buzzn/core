@@ -3,6 +3,8 @@ FactoryGirl.define do
 
     name '1.OG links vorne'
     label                 Register::Meta.labels[:consumption]
+    observer_enabled false
+    observer_offline_monitoring false
 
     # This register is publicly connected. Only those have a metering point id
     trait :grid_connected do

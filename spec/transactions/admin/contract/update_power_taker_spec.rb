@@ -51,6 +51,13 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
     json
   end
 
+  let(:with_privacy_options) do
+    {
+      :share_register_publicly => false,
+      :share_register_with_group => true
+    }
+  end
+
   let(:invalid_input_2) do
     contract.reload
     base_input.merge(with_register_meta_input).merge(:updated_at => resource.updated_at.as_json)
@@ -65,6 +72,13 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
   let(:valid_input_2) do
     contract.reload
     base_input.merge(:updated_at => resource.updated_at.as_json)
+  end
+
+  let(:valid_input_3) do
+    contract.reload
+    base_input.merge(with_register_meta_and_updated_input)
+              .merge(with_privacy_options)
+              .merge(:updated_at => resource.updated_at.as_json)
   end
 
   let(:result_invalid) do
@@ -87,6 +101,11 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
                                                                     resource: resource)
   end
 
+  let(:result_valid_3) do
+    Transactions::Admin::Contract::Localpool::UpdatePowerTaker.new.(params: valid_input_3,
+                                                                    resource: resource)
+  end
+
   it 'should not update' do
     expect {result_invalid}.to raise_error(Buzzn::ValidationError, '{:updated_at=>["is missing"]}')
   end
@@ -101,6 +120,13 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
 
   it 'should update' do
     expect(result_valid_2).to be_success
+  end
+
+  it 'should update' do
+    expect(result_valid_3).to be_success
+    contract.reload
+    expect(resource.share_register_publicly).to be false
+    expect(resource.share_register_with_group).to be true
   end
 
 end

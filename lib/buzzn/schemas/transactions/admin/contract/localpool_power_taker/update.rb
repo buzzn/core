@@ -31,6 +31,9 @@ module Schemas::Transactions
     optional(:register_meta) do
       schema(Admin::Register::UpdateMeta)
     end
+
+    optional(:share_register_with_group).value(:bool?)
+    optional(:share_register_publicly).value(:bool?)
   end
 
 end
