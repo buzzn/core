@@ -35,7 +35,8 @@ module Pdf
     def build_powergiver(customer)
       {
         name: name(customer),
-        partner_name: name(legal_partner(customer)),
+        partner_name: partner_name(customer),
+        contact: build_contact(customer),
         address: build_address(customer.address),
         fax: customer.fax,
         phone: customer.phone,
@@ -43,10 +44,34 @@ module Pdf
       }
     end
 
+    def build_contact(customer)
+      {
+        name: name(contact_person(customer)),
+        address: build_address(contact_person(customer).address),
+        fax: contact_person(customer).fax,
+        phone: contact_person(customer).phone,
+        email: contact_person(customer).email
+      }
+    end
+
     def build_powertaker(localpool)
       {
         address: build_address(localpool.address),
       }
+    end
+
+    def partner_name(customer)
+      names = [name(legal_partner(customer))]
+      if customer == Organization::GeneralResource || Organization::Base
+        if !customer.additional_legal_representation.nil? || !customer.additional_legal_representation.empty?
+          names += customer.additional_legal_representation.split(',').map {|x| x.strip }
+        end
+      end
+      if names.size > 1
+        names[0..names.size-2].join(', ') + " und #{names[-1]}"
+      else
+        names[0]
+      end
     end
 
     def name(person_or_organization)
@@ -74,6 +99,21 @@ module Pdf
         person_or_organization.legal_representation
       when Organization::Base
         person_or_organization.legal_representation
+      else
+        raise "can not handle #{person_or_organization.class}"
+      end
+    end
+
+    def contact_person(person_or_organization)
+      case person_or_organization
+      when PersonResource
+        person_or_organization
+      when Person
+        person_or_organization
+      when Organization::GeneralResource
+        person_or_organization.contact
+      when Organization::Base
+        person_or_organization.contact
       else
         raise "can not handle #{person_or_organization.class}"
       end
