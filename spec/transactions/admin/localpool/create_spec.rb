@@ -7,8 +7,18 @@ describe Transactions::Admin::Localpool::Create do
 
   entity(:resource) { Admin::LocalpoolResource.all(operator) }
 
-  it_behaves_like 'create without address', Transactions::Admin::Localpool::Create.new, Admin::LocalpoolResource, name: 'takari'
+  entity(:billing_detail) { build(:billing_detail) }
 
-  it_behaves_like 'create with address', Transactions::Admin::Localpool::Create.new, Admin::LocalpoolResource, name: 'akari'
+  entity(:billing_detail_clean) do
+    json = billing_detail.as_json
+    json.delete(:updated_at)
+    json.delete(:created_at)
+    json.delete(:id)
+    json
+  end
+
+  it_behaves_like 'create without address', Transactions::Admin::Localpool::Create.new, Admin::LocalpoolResource, name: 'takari', billing_detail: billing_detail_clean
+
+  it_behaves_like 'create with address', Transactions::Admin::Localpool::Create.new, Admin::LocalpoolResource, name: 'akari', billing_detail: billing_detail_clean
 
 end

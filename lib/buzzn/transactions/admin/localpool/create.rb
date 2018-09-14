@@ -7,10 +7,17 @@ class Transactions::Admin::Localpool::Create < Transactions::Base
   check :authorize, with: :'operations.authorization.create'
   around :db_transaction
   tee :create_address, with: :'operations.action.create_address'
+  tee :create_billing_detail
   map :create_localpool, with: :'operations.action.create_item'
 
   def schema
     Schemas::Transactions::Admin::Localpool::Create
+  end
+
+  def create_billing_detail(params:, **)
+    if params[:billing_detail]
+      params[:billing_detail] = BillingDetail.create!(params[:billing_detail])
+    end
   end
 
   def create_localpool(params:, resource:)

@@ -353,6 +353,34 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: billing_detail.reduced_power_amount
+        in: formData
+        required: false
+        type: number
+        format: float
+        minimum: 0
+      - name: billing_detail.reduced_power_factor
+        in: formData
+        required: false
+        type: number
+        format: float
+        maximum: 1
+        exclusiveMaximum: true
+        minimum: 0
+      - name: billing_detail.automatic_abschlag_adjust
+        in: formData
+        required: false
+        type: boolean
+      - name: billing_detail.automatic_abschlag_threshold
+        in: formData
+        required: false
+        type: number
+        format: float
+        minimum: 0
+      - name: billing_detail
+        in: formData
+        required: false
+        type: hash
       responses:
         201:
           description: created
@@ -3041,6 +3069,34 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: billing_detail.updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: billing_detail.reduced_power_amount
+        in: formData
+        required: false
+        type: number
+        format: float
+      - name: billing_detail.reduced_power_factor
+        in: formData
+        required: false
+        type: number
+        format: float
+      - name: billing_detail.automatic_abschlag_adjust
+        in: formData
+        required: false
+        type: boolean
+      - name: billing_detail.automatic_abschlag_threshold
+        in: formData
+        required: false
+        type: number
+        format: float
+      - name: billing_detail
+        in: formData
+        required: false
+        type: hash
       responses:
         200:
           description: patched

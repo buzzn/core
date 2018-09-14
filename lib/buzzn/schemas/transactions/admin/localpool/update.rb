@@ -1,5 +1,6 @@
 require_relative '../localpool'
 require_relative '../../address/nested'
+require_relative '../billing_detail/update'
 
 module Schemas::Transactions::Admin::Localpool
 
@@ -17,6 +18,7 @@ module Schemas::Transactions::Admin::Localpool
     # legacy
     optional(:legacy_power_taker_contract_buzznid).maybe(:str?, max_size?: 64)
     optional(:legacy_power_giver_contract_buzznid).maybe(:str?, max_size?: 64)
+    optional(:billing_detail).schema(Schemas::Transactions::Admin::BillingDetail::Update)
   end
 
 end
