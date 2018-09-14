@@ -6,6 +6,7 @@ require_relative '../contract/localpool_processing_resource'
 require_relative '../contract/localpool_power_taker_resource'
 require_relative '../contract/localpool_third_party_resource'
 require_relative '../contract/metering_point_operator_resource'
+require_relative '../billing_detail_resource'
 require_relative 'billing_cycle_resource'
 require_relative 'device_resource'
 require_relative '../../schemas/completeness/admin/localpool'
@@ -63,6 +64,7 @@ module Admin
     has_one :transmission_system_operator
     has_one :electricity_supplier
     has_one :bank_account
+    has_one :billing_detail, BillingDetailResource
 
     # pv, chp, wind, water, etc
     def all_power_sources

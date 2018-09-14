@@ -20,6 +20,7 @@ FactoryGirl.define do
     trait :localpool do
       initialize_with { Group::Localpool.new }
       owner { FactoryGirl.create(:person) }
+      billing_detail { FactoryGirl.create(:billing_detail)}
       after(:create) do |group, evaluator|
         person_for_role = group.owner.is_a?(Organization::Base) ? group.owner&.contact : group&.owner
         person_for_role&.add_role(Role::GROUP_OWNER, group)
