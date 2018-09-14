@@ -62,7 +62,7 @@ module Pdf
 
     def partner_name(customer)
       names = [name(legal_partner(customer))]
-      if customer == Organization::GeneralResource || Organization::Base
+      if customer == Organization::GeneralResource || customer == Organization::Base
         if !customer.additional_legal_representation.nil? || !customer.additional_legal_representation.empty?
           names += customer.additional_legal_representation.split(',').map {|x| x.strip }
         end
