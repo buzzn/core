@@ -24,6 +24,22 @@ module Organization
     legal_representation do
       retrieve :buzzn_operator
     end
+
+    contracts do
+      retrieve :buzzn_operator
+
+      localpool do
+        retrieve :buzzn_operator
+      end
+
+      market_location do
+        retrieve :buzzn_operator
+        register do
+          retrieve :buzzn_operator
+        end
+      end
+    end
+
   end
 
 end
