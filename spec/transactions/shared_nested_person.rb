@@ -1,6 +1,6 @@
 shared_examples 'create without person' do |transaction, expected_class, method, params|
 
-  entity(:result) do
+  let(:result) do
     transaction.(params: params, resource: resource).value!
   end
 
@@ -11,9 +11,9 @@ end
 
 shared_examples 'create with person without address' do |transaction, expected_class, method, params|
 
-  entity(:person) { {prefix: 'M', first_name: 'Frank', last_name: 'Zappa', preferred_language: 'de'} }
+  let(:person) { {prefix: 'M', first_name: 'Frank', last_name: 'Zappa', preferred_language: 'de'} }
 
-  entity(:result) do
+  let(:result) do
     transaction.(params: params.merge(method => person),
                  resource: resource).value!
   end
@@ -26,11 +26,11 @@ end
 
 shared_examples 'create with person with address' do |transaction, expected_class, method, params|
 
-  entity(:address) { {street: 'wallstreet', zip: '666', city: 'atlantis', country: 'IT'} }
+  let(:address) { {street: 'wallstreet', zip: '666', city: 'atlantis', country: 'IT'} }
 
-  entity(:person) { {prefix: 'M', first_name: 'Frank', last_name: 'Zappa', preferred_language: 'de', address: address} }
+  let(:person) { {prefix: 'M', first_name: 'Frank', last_name: 'Zappa', preferred_language: 'de', address: address} }
 
-  entity(:result) do
+  let(:result) do
     transaction.(params: params.merge(method => person),
                  resource: resource).value!
   end
@@ -41,17 +41,15 @@ shared_examples 'create with person with address' do |transaction, expected_clas
 
 end
 
-shared_examples 'update without person' do |transaction, resource_name, method, params|
+shared_examples 'update without person' do |transaction, method, params|
 
-  entity(:resource) { send(resource_name) }
-
-  entity(:object) do
+  let(:object) do
     o = resource.object
     o.update!(method => nil)
     o.reload
   end
 
-  entity(:result) do
+  let(:result) do
     transaction.(params: params.merge(updated_at: object.updated_at.as_json),
                  resource: resource).value!
   end
@@ -64,7 +62,7 @@ shared_examples 'update without person' do |transaction, resource_name, method, 
 
   context 'create person' do
 
-    entity!(:result2) do
+    let(:result2) do
       transaction.(params: {
                      updated_at: object.reload.updated_at.as_json,
                      method => {
@@ -84,16 +82,15 @@ shared_examples 'update without person' do |transaction, resource_name, method, 
   end
 end
 
-shared_examples 'update with person without address' do |transaction, resource_name, method, params|
+shared_examples 'update with person without address' do |transaction, method, params|
 
-  entity(:resource) { send(resource_name) }
-  entity(:object) do
+  let(:object) do
     o = resource.object
     o.update!(method => create(:person))
     o.reload
   end
 
-  entity!(:result) do
+  let!(:result) do
     transaction.(params: params.merge(updated_at: object.updated_at.as_json),
                  resource: resource).value!
   end
@@ -106,7 +103,7 @@ shared_examples 'update with person without address' do |transaction, resource_n
 
   context 'update person' do
 
-    entity(:result2) do
+    let(:result2) do
       transaction.(params: {
                      updated_at: object.reload.updated_at.as_json,
                      method => {
@@ -127,18 +124,17 @@ shared_examples 'update with person without address' do |transaction, resource_n
 
 end
 
-shared_examples 'update with person with address' do |transaction, resource_name, method, params|
+shared_examples 'update with person with address' do |transaction, method, params|
 
-  entity(:resource) { send(resource_name) }
-  entity(:object) do
+  let(:object) do
     o = resource.object
     o.update!(method => create(:person))
     o.reload
   end
 
-  entity!(:address) { object.address }
+  let!(:address) { object.address }
 
-  entity!(:result) do
+  let!(:result) do
     transaction.(params: params.merge(updated_at: object.updated_at.as_json),
                  resource: resource).value!
   end
@@ -151,13 +147,13 @@ shared_examples 'update with person with address' do |transaction, resource_name
 
   context 'update person and update address' do
 
-    entity!(:address2) do
+    let!(:address2) do
       address = create(:address)
       object.send(method).update!(address: address)
       address
     end
 
-    entity(:result2) do
+    let(:result2) do
       transaction.(params: {
                      updated_at: object.reload.updated_at.as_json,
                      method => {
@@ -184,9 +180,9 @@ shared_examples 'update with person with address' do |transaction, resource_name
 
   context 'update person and create address' do
 
-    entity!(:address3) { object.send(method).update!(address: nil) }
+    let!(:address3) { object.send(method).update!(address: nil) }
 
-    entity(:result3) do
+    let(:result3) do
       transaction.(params: {
                      updated_at: object.reload.updated_at.as_json,
                      method => {

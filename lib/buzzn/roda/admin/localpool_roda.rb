@@ -9,9 +9,9 @@ module Admin
                         'transactions.admin.localpool.update',
                         'transactions.admin.localpool.assign_owner',
                         'transactions.admin.localpool.create_person_owner',
-                        'transactions.admin.localpool.update_person_owner',
+                        'transactions.admin.generic.update_nested_person',
                         'transactions.admin.localpool.create_organization_owner',
-                        'transactions.admin.localpool.update_organization_owner',
+                        'transactions.admin.generic.update_nested_organization',
                         'transactions.bubbles',
                         'transactions.delete'
                        ]
@@ -83,7 +83,7 @@ module Admin
           end
 
           r.patch! do
-            update_person_owner.(resource: localpool.owner, params: r.params)
+            update_nested_person.(resource: localpool.owner, params: r.params)
           end
 
           r.post! :id do |id|
@@ -99,8 +99,7 @@ module Admin
           end
 
           r.patch! do
-            r.response.status = 200
-            update_organization_owner.(resource: localpool.owner, params: r.params)
+            update_nested_organization.(resource: localpool.owner, params: r.params)
           end
 
           r.post! :id do |id|
