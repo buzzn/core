@@ -11,6 +11,8 @@ module Admin
                         'transactions.admin.contract.localpool.create_power_taker_with_person',
                         'transactions.admin.contract.localpool.create_power_taker_with_organization',
                         'transactions.admin.contract.localpool.update_power_taker',
+                        'transactions.admin.generic.update_nested_person',
+                        'transactions.admin.generic.update_nested_organization',
                        ]
 
     plugin :shared_vars
@@ -51,6 +53,24 @@ module Admin
         r.get!('contractor') { contract.contractor! }
 
         r.get!('customer') { contract.customer! }
+
+        r.patch!('customer-person') do
+          case contract
+          when Contract::LocalpoolPowerTakerResource
+            update_nested_person.(resource: contract.customer, params: r.params)
+          else
+            r.response.status = 400
+          end
+        end
+
+        r.patch!('customer-organization') do
+          case contract
+          when Contract::LocalpoolPowerTakerResource
+            update_nested_organization.(resource: contract.customer, params: r.params)
+          else
+            r.response.status = 400
+          end
+        end
 
         r.on 'documents' do
 

@@ -128,6 +128,14 @@ describe Admin, :swagger, :request_helper, order: :defined do
            register_meta: register.meta)
   end
 
+  entity!(:localpool_power_taker_contract_2) do
+    register = create(:meter, :real, group: localpool).registers.first
+    create(:contract, :localpool_powertaker,
+           customer: organization,
+           localpool: localpool,
+           register_meta: register.meta)
+  end
+
   entity!(:market_location) { localpool_power_taker_contract.register_meta }
 
   entity!(:billing_1) do
@@ -212,6 +220,16 @@ describe Admin, :swagger, :request_helper, order: :defined do
   patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}' do
     description 'updates an existing LocalpoolPowerTakerContract'
     schema Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::Update
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract_2.id}/customer-organization' do
+    description 'updates the organization owner of the localpool'
+    schema Schemas::Transactions::Organization.update_for(localpool_power_taker_contract_2.customer)
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/customer-person' do
+    description 'updates an existing LocalpoolPowerTakerContract'
+    schema Schemas::Transactions::Person.update_for(localpool_power_taker_contract.customer)
   end
 
   get '/localpools/{localpool.id}/contracts/{contract.id}/contractor' do
