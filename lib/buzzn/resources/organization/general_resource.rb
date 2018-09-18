@@ -10,6 +10,7 @@ module Organization
     has_one :contact
     has_one :legal_representation
     has_many :bank_accounts
+    has_many :contracts
 
     def type
       'organization'

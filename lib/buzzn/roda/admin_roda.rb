@@ -33,9 +33,17 @@ module Admin
         end
       end
 
-      r.get! 'organizations' do
-        admin.organizations
+      r.on 'organizations' do
+
+        r.get! do
+          admin.organizations
+        end
+
+        r.get! :id do |id|
+          admin.organizations.retrieve(id)
+        end
       end
+
       r.get! 'organization_markets' do
         admin.organization_markets
       end
