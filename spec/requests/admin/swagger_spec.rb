@@ -28,8 +28,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
   entity!(:localpool) do
     localpool = create(:group, :localpool, :with_address, owner: person)
     create(:contract, :localpool_processing, localpool: localpool)
-    create(:contract, :metering_point_operator, localpool: localpool)
     localpool
+  end
+
+  entity(:metering_point_operator_contract) do
+    create(:contract, :metering_point_operator, localpool: localpool)
   end
 
   entity!(:document) do
@@ -234,6 +237,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
   patch '/localpools/{localpool.id}/contracts/{localpool_processing_contract.id}' do
     description 'updates an existing LocalpoolProcessingContract'
     schema Schemas::Transactions::Admin::Contract::Localpool::Processing::Update
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{metering_point_operator_contract.id}' do
+    description 'updates an existing MeteringPointOperatorContract'
+    schema Schemas::Transactions::Admin::Contract::Localpool::MeteringPointOperator::Update
   end
 
   patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}' do

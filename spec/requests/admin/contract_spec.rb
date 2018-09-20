@@ -341,6 +341,39 @@ describe Admin::LocalpoolRoda, :request_helper do
       end
     end
 
+    context 'PATCH Metering Point Operator' do
+
+      let(:contract) { metering_point_operator_contract }
+      let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}" }
+
+      let('update_begin_date_json') do
+        {
+          'begin_date' => Date.today + 2,
+          'updated_at' => contract.updated_at
+        }
+      end
+
+      context 'unauthenticated' do
+
+        it '403' do
+          PATCH path, nil, update_begin_date_json
+          expect(response).to have_http_status(403)
+        end
+
+      end
+
+      context 'authenticated' do
+        it 'updates the begin date' do
+          old_date = contract.begin_date
+          PATCH path, $admin, update_begin_date_json
+          expect(response).to have_http_status(200)
+          contract.reload
+          expect(contract.begin_date).not_to eq old_date
+        end
+      end
+
+    end
+
     context 'PATCH Localpool Processing' do
       let(:contract) { localpool_processing_contract }
       let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}" }
