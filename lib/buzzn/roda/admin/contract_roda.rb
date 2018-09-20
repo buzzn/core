@@ -12,6 +12,7 @@ module Admin
                         'transactions.admin.contract.localpool.create_power_taker_with_organization',
                         'transactions.admin.contract.localpool.update_power_taker',
                         'transactions.admin.contract.localpool.create_metering_point_operator',
+                        'transactions.admin.contract.localpool.update_metering_point_operator',
                         'transactions.admin.generic.update_nested_person',
                         'transactions.admin.generic.update_nested_organization',
                        ]
@@ -43,6 +44,8 @@ module Admin
             update_processing.(resource: contract, params: r.params)
           when Contract::LocalpoolPowerTakerResource
             update_power_taker.(resource: contract, params: r.params)
+          when Contract::MeteringPointOperatorResource
+            update_metering_point_operator.(resource: contract, params: r.params)
           else
             r.response.status = 400
           end
