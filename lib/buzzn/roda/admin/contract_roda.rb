@@ -11,6 +11,7 @@ module Admin
                         'transactions.admin.contract.localpool.create_power_taker_with_person',
                         'transactions.admin.contract.localpool.create_power_taker_with_organization',
                         'transactions.admin.contract.localpool.update_power_taker',
+                        'transactions.admin.contract.localpool.create_metering_point_operator',
                         'transactions.admin.generic.update_nested_person',
                         'transactions.admin.generic.update_nested_organization',
                        ]
@@ -26,6 +27,7 @@ module Admin
       contracts = localpool.contracts
       localpool_processing_contracts = localpool.localpool_processing_contracts
       localpool_power_taker_contracts = localpool.localpool_power_taker_contracts
+      metering_point_operator_contracts = localpool.metering_point_operator_contracts
 
       r.on :id do |id|
 
@@ -88,11 +90,11 @@ module Admin
       r.get! do
         case r.params['type'].to_s
         when 'contract_localpool_processing'
-          localpool.localpool_processing_contracts
+          localpool_processing_contracts
         when 'contract_localpool_power_taker'
-          localpool.localpool_power_taker_contracts
+          localpool_power_taker_contracts
         when 'contract_metering_point_operator'
-          localpool.metering_point_operator_contracts
+          metering_point_operator_contracts
         else
           contracts
         end
@@ -102,6 +104,8 @@ module Admin
         case type.to_s
         when 'contract_localpool_processing'
           create_processing.(resource: localpool_processing_contracts, params: r.params, localpool: localpool)
+        when 'contract_metering_point_operator'
+          create_metering_point_operator.(resource: metering_point_operator_contracts, params: r.params, localpool: localpool)
         when 'contract_localpool_power_taker'
           # we have 3 cases here:
           # assign with an id

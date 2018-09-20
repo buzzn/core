@@ -1,12 +1,12 @@
-require_relative '../contract'
+require_relative '../localpool'
 require_relative '../person'
 require_relative '../organization'
 require './app/models/organization/general.rb'
 require './app/models/person.rb'
 
-module Schemas::PreConditions::Contract
+module Schemas::PreConditions::Localpool
 
-  MeteringPointOperatorCreate = Schemas::Support.Schema do
+  CreateMeteringPointOperatorContract = Schemas::Support.Schema do
 
     required(:address).filled
     required(:owner) do

@@ -1759,53 +1759,6 @@ paths:
       responses:
         201:
           description: created
-  "/localpools/{localpool3_id}/contracts":
-    post:
-      description: adds a processing contract to the localpool
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: localpool3_id
-        in: path
-        required: true
-        type: string
-      - name: type
-        in: formData
-        required: true
-        type: string
-        enum:
-        - contract_localpool_processing
-      - name: signing_date
-        in: formData
-        required: false
-        type: string
-        format: date
-      - name: begin_date
-        in: formData
-        required: false
-        type: string
-        format: date
-      - name: termination_date
-        in: formData
-        required: false
-        type: string
-        format: date
-      - name: end_date
-        in: formData
-        required: false
-        type: string
-        format: date
-      - name: tax_number
-        in: formData
-        required: true
-        type: string
-        format: ''
-        maxLength: 64
-      responses:
-        201:
-          description: created
   "/localpools/{localpool3_id}/organization-owner":
     patch:
       description: updates the organization owner of the localpool
@@ -6469,6 +6422,94 @@ paths:
       responses:
         204:
           description: deleted
+  "/localpools/{localpool_lpc_id}/contracts":
+    post:
+      description: adds a processing contract to the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_lpc_id
+        in: path
+        required: true
+        type: string
+      - name: type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - contract_localpool_processing
+      - name: signing_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: termination_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: end_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: tax_number
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_mpo_id}/contracts":
+    post:
+      description: adds a metering point operator contract to the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_mpo_id
+        in: path
+        required: true
+        type: string
+      - name: type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - contract_metering_point_operator
+      - name: signing_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: termination_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: end_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_pta_id}/contracts":
     post:
       description: adds a power taker contract (assign) to the localpool

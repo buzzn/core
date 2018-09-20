@@ -188,6 +188,9 @@ describe Admin::LocalpoolRoda, :request_helper do
           'updatable'=>true,
           'deletable'=>false,
           'documentable'=>true,
+          'allowed_actions'=>{
+            'document_metering_point_operator_contract' => true
+          },
           'metering_point_operator_name'=>contract.metering_point_operator_name,
           'localpool' => {
             'id'=>contract.localpool.id,
@@ -456,6 +459,42 @@ describe Admin::LocalpoolRoda, :request_helper do
       let('path') { "/localpools/#{localpool.id}/contracts" }
 
       context 'authenticated' do
+
+        context 'localpool metering point operator' do
+
+          let('missing_everything_json') do
+            {
+              'type' => 'contract_metering_point_operator',
+            }
+          end
+
+          let('begin_date_json') do
+            {
+              'begin_date' => Date.today.to_s
+            }
+          end
+
+          let('with_begin_date_json') do
+            missing_everything_json.merge(begin_date_json)
+          end
+
+          context 'valid data' do
+
+            it 'creates a metering point operator contract' do
+              POST path, $admin, missing_everything_json
+              expect(response).to have_http_status(201)
+              expect(json['begin_date']).to eq nil
+            end
+
+            it 'creates a metering point operator contract' do
+              POST path, $admin, with_begin_date_json
+              expect(response).to have_http_status(201)
+              expect(json['begin_date']).to eq begin_date_json['begin_date']
+            end
+
+          end
+
+        end
 
         context 'localpool processing' do
 
@@ -756,43 +795,48 @@ describe Admin::LocalpoolRoda, :request_helper do
     context 'document' do
 
       context 'generate' do
-        let('contract') { localpool_processing_contract }
-        let('path') { "/localpools/#{localpool.id}/contracts/#{contract.id}/documents/generate" }
 
-        context 'unauthenticated' do
-          it '403' do
-            POST path
-            expect(response).to have_http_status(403)
+        [:localpool_processing_contract, :metering_point_operator_contract].each do |contract|
+
+          context contract.to_s do
+
+            let(:path) do
+              "/localpools/#{localpool.id}/contracts/#{send(contract).id}/documents/generate"
+            end
+
+            context 'unauthenticated' do
+              it '403' do
+                POST path
+                expect(response).to have_http_status(403)
+              end
+            end
+
+            context 'authenticated' do
+
+              # we only want POSTs, change that to 405?
+              it '405' do
+                GET path, $admin
+                expect(response).to have_http_status(405)
+
+                PATCH path, $admin
+                expect(response).to have_http_status(405)
+
+                PUT path, $admin
+                expect(response).to have_http_status(405)
+
+                DELETE path, $admin
+                expect(response).to have_http_status(405)
+              end
+
+              it '201' do
+                POST path, $admin
+                expect(response).to have_http_status(201)
+              end
+
+            end
           end
         end
-
-        context 'authenticated' do
-
-          # we only want POSTs, change that to 405?
-          it '405' do
-            GET path, $admin
-            expect(response).to have_http_status(405)
-
-            PATCH path, $admin
-            expect(response).to have_http_status(405)
-
-            PUT path, $admin
-            expect(response).to have_http_status(405)
-
-            DELETE path, $admin
-            expect(response).to have_http_status(405)
-          end
-
-          it '201' do
-            POST path, $admin
-            expect(response).to have_http_status(201)
-          end
-
-        end
-
       end
-
     end
-
   end
 end

@@ -141,7 +141,7 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = ['begin_date', 'metering_point_operator_name'] + base_attributes
+      attributes = ['allowed_actions', 'begin_date', 'metering_point_operator_name'] + base_attributes
       attrs = resources.retrieve(metering_point_operator.id).to_h
       expect(attrs['id']).to eq metering_point_operator.id
       expect(attrs['type']).to eq 'contract_metering_point_operator'
