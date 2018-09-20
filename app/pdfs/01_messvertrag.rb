@@ -1,7 +1,10 @@
 require_relative 'generator'
+require_relative 'serializers'
 
 module Pdf
   class MeteringPointOperator < Generator
+
+    include Serializers
 
     attr_reader :contract
 
@@ -12,12 +15,17 @@ module Pdf
 
     protected
 
+    def title
+      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Messvertrag-#{contract.localpool.slug}"
+    end
+
     def build_struct
       {
         version: template.version,
         customer: build_customer(contract.localpool.owner),
         address: build_address(contract.localpool.address),
         number: contract.full_contract_number,
+        title_text: title
       }
     end
 
@@ -38,7 +46,7 @@ module Pdf
       partner = legal_partner(customer)
       {
         name: name(customer),
-        partner_name: name(partner),
+        partner_name: partner_name(customer),
         partner: build_person(partner),
         address: build_address(customer.address)
       }

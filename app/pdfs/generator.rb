@@ -64,15 +64,19 @@ module Pdf
       PdfDocument.where(template: template, json: data.to_json).count.zero?
     end
 
+    def title
+      "#{template.name}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}"
+    end
+
+    def pdf_filename
+      "#{title}.pdf"
+    end
+
     def create_pdf_document(pdf = nil, filename = nil)
       pdf_document = PdfDocument.where(template: template, json: data.to_json.to_s).first
       return pdf_document if pdf_document
       pdf ||= to_pdf #generate pdf outside of transaction
-      if self.class.instance_methods.include?(:pdf_filename)
-        filename ||= self.pdf_filename
-      else
-        filename ||= "#{template.name}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}.pdf"
-      end
+      filename ||= self.pdf_filename
       document = Document.new(filename: filename)
       PdfDocument.transaction do
         document.data = pdf
