@@ -22,14 +22,13 @@ module Schemas::Transactions::Address
 
     def update_with_address
       @with_address ||= Schemas::Support.Form(update_base) do
-        optional(:address).schema(Update)
+        optional(:address).schema(UpdateOptional)
       end
     end
 
     def assign_or_update_with_address
       @assign_with_address ||= Schemas::Support.Form(assign_or_update_base) do
-        optional(:id).filled(:int?)
-        optional(:address).schema(Update)
+        optional(:address).schema(UpdateOptional)
       end
     end
 
@@ -41,7 +40,6 @@ module Schemas::Transactions::Address
 
     def assign_or_update_without_address
       @assign_without_address ||= Schemas::Support.Form(assign_or_update_base) do
-        optional(:id).filled(:int?)
         optional(:address).schema(Create)
       end
     end
