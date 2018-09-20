@@ -56,7 +56,7 @@ shared_examples 'update without nested person' do |method, params|
     let(:nested_params) { base_params.merge(method => {id: send(method).id}) }
 
     it { expect(subject.(params.merge(method => {}))).to be_failure }
-    it { expect(subject.(nested_params)).to be_success }
+    it { expect(subject.(nested_params)).to be_failure }
     it { expect(subject.(nested_params).output).to eq nested_params }
   end
 end

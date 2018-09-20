@@ -4,13 +4,15 @@ require 'buzzn/transactions/admin/generic/update_nested_organization'
 
 describe Transactions::Admin::Generic::UpdateNestedOrganization do
 
-  let(:organization) { create(:organization) }
+  let(:organization) { create(:organization, :with_contact) }
 
-  let(:customer_organization) { create(:organization) }
+  let(:customer_organization) { create(:organization, :with_contact) }
 
   let(:localpool) { create(:group, :localpool, owner: organization) }
 
   let(:operator) { create(:account, :buzzn_operator) }
+
+  let(:another_person) { create(:person) }
 
   let!(:contract) do
     create(:contract, :localpool_powertaker,
@@ -46,6 +48,31 @@ describe Transactions::Admin::Generic::UpdateNestedOrganization do
         it_behaves_like 'update with person with address', Transactions::Admin::Generic::UpdateNestedOrganization.new, :contact, name: 'Mamas-and-Papas' do
           let(:resource) { send(r) }
         end
+
+        it 'assigns the contact with an existing contact' do
+          resource = send(r)
+          transaction = Transactions::Admin::Generic::UpdateNestedOrganization.new
+          json = {
+            'updated_at' => resource.updated_at.as_json,
+            'contact' => { id: another_person.id }
+          }
+          result = transaction.call(resource: resource, params: json)
+          expect(result).to be_success
+        end
+
+        it 'assigns the contact without an existing contact' do
+          resource = send(r)
+          resource.object.contact = nil
+          resource.object.save
+          transaction = Transactions::Admin::Generic::UpdateNestedOrganization.new
+          json = {
+            'updated_at' => resource.updated_at.as_json,
+            'contact' => { id: another_person.id }
+          }
+          result = transaction.call(resource: resource, params: json)
+          expect(result).to be_success
+        end
+
       end
 
       context 'legal_representation' do

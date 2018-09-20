@@ -21,7 +21,6 @@ shared_examples 'update with nested address' do |params|
   let(:base_params) { params.merge(updated_at: Date.today.as_json) }
 
   context 'without address' do
-    it { expect(subject.(base_params.merge(address: {}))).to be_failure }
     it { expect(subject.(base_params)).to be_success }
     it { expect(subject.(base_params).output).to eq base_params }
   end
@@ -43,7 +42,6 @@ shared_examples 'update with nested address' do |params|
                                   updated_at: Date.today.as_json})
     end
 
-    it { expect(subject.(base_params.merge(address: {}))).to be_failure }
     it { expect(subject.(nested_params)).to be_success }
     it { expect(subject.(nested_params).output).to eq nested_params }
   end

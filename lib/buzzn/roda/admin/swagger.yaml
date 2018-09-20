@@ -2108,9 +2108,14 @@ paths:
         type: hash
       - name: legal_representation.updated_at
         in: formData
-        required: true
+        required: false
         type: string
         format: date-time
+      - name: legal_representation.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: legal_representation.prefix
         in: formData
         required: false
@@ -2165,14 +2170,9 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: legal_representation.id
-        in: formData
-        required: false
-        type: integer
-        format: int64
       - name: legal_representation.address.updated_at
         in: formData
-        required: true
+        required: false
         type: string
         format: date-time
       - name: legal_representation.address.street
@@ -2457,11 +2457,20 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: legal_representation
+        in: formData
+        required: false
+        type: hash
       - name: contact.updated_at
         in: formData
-        required: true
+        required: false
         type: string
         format: date-time
+      - name: contact.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: contact.prefix
         in: formData
         required: false
@@ -2516,14 +2525,9 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: contact.id
-        in: formData
-        required: false
-        type: integer
-        format: int64
       - name: contact.address.updated_at
         in: formData
-        required: true
+        required: false
         type: string
         format: date-time
       - name: contact.address.street
@@ -2805,6 +2809,10 @@ paths:
         format: ''
         maxLength: 64
       - name: contact.address
+        in: formData
+        required: false
+        type: hash
+      - name: contact
         in: formData
         required: false
         type: hash
@@ -3889,9 +3897,14 @@ paths:
         type: hash
       - name: legal_representation.updated_at
         in: formData
-        required: true
+        required: false
         type: string
         format: date-time
+      - name: legal_representation.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: legal_representation.prefix
         in: formData
         required: false
@@ -3946,14 +3959,9 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: legal_representation.id
-        in: formData
-        required: false
-        type: integer
-        format: int64
       - name: legal_representation.address.updated_at
         in: formData
-        required: true
+        required: false
         type: string
         format: date-time
       - name: legal_representation.address.street
@@ -4238,11 +4246,20 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: legal_representation
+        in: formData
+        required: false
+        type: hash
       - name: contact.updated_at
         in: formData
-        required: true
+        required: false
         type: string
         format: date-time
+      - name: contact.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
       - name: contact.prefix
         in: formData
         required: false
@@ -4297,14 +4314,9 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: contact.id
-        in: formData
-        required: false
-        type: integer
-        format: int64
       - name: contact.address.updated_at
         in: formData
-        required: true
+        required: false
         type: string
         format: date-time
       - name: contact.address.street
@@ -4589,6 +4601,10 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: contact
+        in: formData
+        required: false
+        type: hash
       responses:
         200:
           description: patched
@@ -4669,7 +4685,7 @@ paths:
         maxLength: 64
       - name: address.updated_at
         in: formData
-        required: true
+        required: false
         type: string
         format: date-time
       - name: address.street
@@ -5943,7 +5959,7 @@ paths:
         maxLength: 64
       - name: address.updated_at
         in: formData
-        required: true
+        required: false
         type: string
         format: date-time
       - name: address.street
