@@ -3,20 +3,11 @@ require_relative 'localpool'
 module Contract
   class MeteringPointOperator < Localpool
 
-    after_initialize do
-      self.contractor_organization = Organization::Market.buzzn
-    end
+    CONTRACT_NUMBER_BASE = 90000
+    CONTRACT_NUMBER_RANGE = 10000
 
-    def customer
-      localpool&.owner
-    end
-
-    def customer=(*)
-      raise 'can not assign customer as it is always localpool.owner'
-    end
-
-    def contractor=(*)
-      raise 'can not assign contractor as it is always Organization.buzzn'
+    def pdf_generator
+      Pdf::MeteringPointOperator
     end
 
   end

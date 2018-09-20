@@ -57,6 +57,20 @@ describe Admin, :swagger, :request_helper, order: :defined do
     localpool
   end
 
+  entity!(:localpool_lpc) do
+    localpool3
+  end
+
+  entity!(:localpool_mpo) do
+    localpool3
+  end
+
+  entity!(:metering_point_contract_json) do
+    {
+      'type' => 'contract_metering_point_operator',
+    }
+  end
+
   entity!(:localpool_processing_contract_json) do
     {
       'type' => 'contract_localpool_processing',
@@ -188,7 +202,12 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'returns all the contracts of the localpool'
   end
 
-  post '/localpools/{localpool3.id}/contracts', $admin, {}, localpool_processing_contract_json do
+  post '/localpools/{localpool_mpo.id}/contracts', $admin, {}, metering_point_contract_json do
+    description 'adds a metering point operator contract to the localpool'
+    schema Schemas::Transactions::Admin::Contract::Localpool::MeteringPointOperator::Create
+  end
+
+  post '/localpools/{localpool_lpc.id}/contracts', $admin, {}, localpool_processing_contract_json do
     description 'adds a processing contract to the localpool'
     schema Schemas::Transactions::Admin::Contract::Localpool::Processing::Create
   end

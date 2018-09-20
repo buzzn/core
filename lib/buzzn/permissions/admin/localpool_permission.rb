@@ -252,7 +252,6 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     create :managers
   end
 
-
   meters do
     retrieve :managers
     update :managers
