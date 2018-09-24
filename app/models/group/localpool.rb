@@ -24,7 +24,11 @@ module Group
     has_many :localpool_third_party_contracts, class_name: 'Contract::LocalpoolThirdParty', foreign_key: :localpool_id
 
     def metering_point_operator_contract
-      self.metering_point_operator_contracts.first
+      self.metering_point_operator_contracts.each do |mpoc|
+        next if [Contract::Base::TERMINATED, Contract::Base::ENDED].include? mpoc.status
+        return mpoc
+      end
+      nil
     end
 
     def localpool_processing_contract

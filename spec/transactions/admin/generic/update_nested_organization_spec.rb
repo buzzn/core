@@ -2,7 +2,7 @@ require_relative '../../shared_nested_address'
 require_relative '../../shared_nested_person'
 require 'buzzn/transactions/admin/generic/update_nested_organization'
 
-describe Transactions::Admin::Generic::UpdateNestedOrganization do
+describe Transactions::Admin::Generic::UpdateNestedOrganization, order:  :defined do
 
   let(:organization) { create(:organization, :with_contact) }
 
