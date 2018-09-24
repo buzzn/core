@@ -43,7 +43,7 @@ describe 'Schemas::Transactions::Organization::Update' do
 
   end
 
-  context 'without contact' do
+  context 'without contact', skip: true do
 
     before { organization.update!(contact: nil) }
 
@@ -52,7 +52,7 @@ describe 'Schemas::Transactions::Organization::Update' do
 
   end
 
-  context 'without legal_representation' do
+  context 'without legal_representation', skip: true do
 
     before { organization.update!(legal_representation: nil) }
 

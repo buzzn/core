@@ -17,7 +17,8 @@ FactoryGirl.define do
       when Contract::LocalpoolThirdParty
         nil
       when Contract::MeteringPointOperator
-        nil
+        account.customer = transients.customer || transients.localpool.owner
+        account.contractor = transients.contractor
       else
         # assign customer if not present yet
         account.customer = transients.customer || FactoryGirl.create(:person, :with_bank_account)
@@ -40,9 +41,13 @@ FactoryGirl.define do
 
   trait :metering_point_operator do
     contract_number { generate(:metering_point_operator_contract_nr) }
-    contractor Organization::Market.buzzn
     initialize_with { Contract::MeteringPointOperator.new }
+    contractor { Organization::Market.buzzn }
     metering_point_operator_name 'Generic metering point operator'
+
+    before(:create) do |contract, evaluator|
+      contract.customer = evaluator.customer ? evaluator.customer : contract.localpool.owner
+    end
 
     after(:build) do |account, transients|
       FactoryGirl.create(:bank_account, owner: account.customer)

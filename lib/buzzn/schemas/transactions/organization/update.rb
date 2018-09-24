@@ -33,15 +33,15 @@ module Schemas::Transactions
       private
 
       def cache
-        @cache ||= Array.new(16)
+        @cache ||= Array.new(32)
       end
 
       def accept(visitor, resource)
         visitor.address(!resource.address.nil?)
         visitor.legal(!resource.legal_representation.nil?)
         visitor.legal_address(!resource&.legal_representation&.address.nil?)
-        visitor.contact_address(!resource&.contact&.address.nil?)
         visitor.contact(!resource&.contact.nil?)
+        visitor.contact_address(!resource&.contact&.address.nil?)
         visitor.result
       end
 
@@ -60,8 +60,14 @@ module Schemas::Transactions
     end
 
     def address(yes)
-      @schema = Schemas::Support.Form(@schema) do
-        optional(:address).schema(yes ? Address::Update : Address::Create)
+      if yes
+        @schema = Schemas::Support.Form(@schema) do
+          optional(:address).schema(Address::Update)
+        end
+      else
+        @schema = Schemas::Support.Form(@schema) do
+          optional(:address).schema(Address::Create)
+        end
       end
     end
 
@@ -92,22 +98,16 @@ module Schemas::Transactions
         if instance_variable_get("@has_#{method}")
           if instance_variable_get("@has_#{method}_address")
             Schemas::Support.Form(@schema) do
-              optional(param) do
-                Person.assign_or_update_with_address
-              end
+              optional(param).schema(Person.assign_or_update_with_address)
             end
           else
             Schemas::Support.Form(@schema) do
-              optional(param) do
-                Person.assign_or_update_without_address
-              end
+              optional(param).schema(Person.assign_or_update_without_address)
             end
           end
         else
           Schemas::Support.Form(@schema) do
-            optional(param) do
-              id?.not.then(schema(Person::AssignOrCreateWithAddress))
-            end
+            optional(param).schema(Person::AssignOrCreateWithAddressOptional)
           end
         end
     end

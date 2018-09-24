@@ -1,7 +1,10 @@
 describe "#{Buzzn::Permission} - #{AdminResource}" do
 
   entity!(:localpool) do
-    create(:contract, :metering_point_operator).localpool
+    create(:group, :localpool)
+  end
+  entity!(:metering_point_operator_contract) do
+    create(:contract, :metering_point_operator, localpool: localpool, customer: localpool.owner)
   end
 
   entity(:operator) { create(:account, :buzzn_operator) }

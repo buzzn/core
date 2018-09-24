@@ -119,6 +119,11 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       retrieve :managers_organization
       update :managers_organization
       delete :none
+      address do
+        retrieve :managers_organization
+        update :managers_organization
+        delete :none
+      end
     end
 
     address do
@@ -153,11 +158,6 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       end
     end
 
-  end
-
-  localpool_processing_contracts do
-    create :managers
-    update :managers
   end
 
   contracts do
@@ -196,8 +196,9 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       update :managers
       delete :none
 
-      # reuse permissions from 'organizations' -> 'contact'
-      contact '/organizations/contact'
+      # reuse permissions from 'organizations'
+      contact              '/organizations/contact'
+      legal_representation '/organizations/legal_representation'
 
       address do
         retrieve :managers_organization_self
@@ -211,9 +212,6 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
         delete :none
       end
 
-      legal_representation do
-        retrieve :managers_organization_self
-      end
     end
 
     contractor_bank_account do
@@ -248,7 +246,6 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
   metering_point_operator_contracts '/contracts' do
     create :managers
   end
-
 
   meters do
     retrieve :managers
