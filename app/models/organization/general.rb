@@ -11,6 +11,7 @@ module Organization
     belongs_to :customer_number, foreign_key: :customer_number
 
     has_many :bank_accounts, foreign_key: :owner_organization_id
+    has_many :contracts, class_name: 'Contract::Base', foreign_key: 'customer_organization_id'
 
     def self.reset_cache
       instance_variables.select { |n| n =~ /@a_/ }.each { |n| instance_variable_set(n, nil) }

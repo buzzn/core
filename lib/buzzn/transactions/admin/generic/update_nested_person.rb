@@ -1,8 +1,7 @@
-require_relative 'owner_base'
 require_relative '../../../schemas/transactions/person/update'
 
-module Transactions::Admin::Localpool
-  class UpdatePersonOwner < OwnerBase
+module Transactions::Admin::Generic
+  class UpdateNestedPerson < Transactions::Base
 
     validate :schema
     authorize :allowed_roles

@@ -1,11 +1,10 @@
-require_relative 'owner_base'
 require_relative '../../../schemas/transactions/organization/update'
 require_relative '../../../schemas/transactions/person/create'
 require_relative '../../../schemas/transactions/address'
 require_relative '../../step_adapters/validate'
 
-module Transactions::Admin::Localpool
-  class UpdateOrganizationOwner < OwnerBase
+module Transactions::Admin::Generic
+  class UpdateNestedOrganization < Transactions::Base
 
     validate :schema
     tee :schema_second_pass

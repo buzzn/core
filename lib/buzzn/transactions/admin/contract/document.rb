@@ -1,5 +1,6 @@
 require_relative '../contract'
 require_relative '../../../schemas/pre_conditions/contract/document_localpool_processing_contract'
+require_relative '../../../schemas/pre_conditions/contract/document_metering_point_operator_contract'
 
 class Transactions::Admin::Contract::Document < Transactions::Base
 
@@ -12,10 +13,14 @@ class Transactions::Admin::Contract::Document < Transactions::Base
   map :result
 
   def contract_schema(resource:, **)
+    subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
     case resource
     when Contract::LocalpoolProcessingResource
-      subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
       result = Schemas::PreConditions::Contract::DocumentLocalpoolProcessingContract.call(subject)
+    when Contract::MeteringPointOperatorResource
+      result = Schemas::PreConditions::Contract::DocumentMeteringPointOperatorContract.call(subject)
+    end
+    unless result.nil?
       unless result.success?
         raise Buzzn::ValidationError.new(result.errors)
       end

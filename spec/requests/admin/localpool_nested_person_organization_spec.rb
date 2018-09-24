@@ -14,7 +14,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
                                    address: address,
                                    contact: person,
                                    legal_representation: person) end
-  entity!(:localpool) { create(:group, :localpool) }
+  entity!(:localpool) { create(:group, :localpool, owner: organization) }
 
   let(:localpool_json) do
     {

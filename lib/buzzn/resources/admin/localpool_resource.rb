@@ -108,7 +108,7 @@ module Admin
 
     def create_metering_point_operator_contract
       subject = Schemas::Support::ActiveRecordValidator.new(self.object)
-      Schemas::PreConditions::Contract::MeteringPointOperatorCreate.call(subject)
+      Schemas::PreConditions::Localpool::CreateMeteringPointOperatorContract.call(subject)
     end
 
     def create_localpool_processing_contract
