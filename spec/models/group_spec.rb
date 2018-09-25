@@ -154,10 +154,4 @@ describe Group::Localpool, :skip_nested do
     expect { localpool.save }.not_to raise_error
   end
 
-  it 'fails when two localpool processing contracts are created' do
-    expect do
-      create(:contract, :localpool_processing, :with_tariff, :with_payment, localpool: localpool)
-    end.to raise_error ActiveRecord::StatementInvalid
-  end
-
 end

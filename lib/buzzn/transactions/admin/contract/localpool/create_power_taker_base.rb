@@ -40,7 +40,7 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
       begin_date = params[:begin_date]
       register_meta.contracts.each do |contract|
         if contract.status(begin_date) == Contract::Base::ACTIVE
-          raise Buzzn::ValidationError.new(register_meta: [ :error => 'other_contract_active_at_begin', :contract_id => contract.id ])
+          raise Buzzn::ValidationError.new(register_meta: [:error => 'other_contract_active_at_begin', :contract_id => contract.id])
         end
       end
       params[:register_meta] = register_meta

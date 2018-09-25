@@ -537,19 +537,19 @@ describe Admin::LocalpoolRoda, :request_helper do
             }
           end
 
-          let('signing_date_json') {{'signing_date' => Date.today.to_s}}
+          let('begin_date_json') {{'begin_date' => Date.today.to_s}}
           let('tax_number_json') {{'tax_number' => '777888999'}}
 
           let('missing_tax_number_json') do
-            missing_everything_json.merge(signing_date_json)
+            missing_everything_json.merge(begin_date_json)
           end
 
-          let('missing_signing_date_json') do
+          let('missing_begin_date_json') do
             missing_everything_json.merge(tax_number_json)
           end
 
           let('valid_localpool_processing') do
-            missing_everything_json.merge(tax_number_json).merge(signing_date_json)
+            missing_everything_json.merge(tax_number_json).merge(begin_date_json)
           end
 
           context 'invalid data' do
@@ -558,6 +558,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               POST path, $admin, missing_everything_json
               expect(response).to have_http_status(422)
               expect(json['tax_number']).to eq ['is missing']
+              expect(json['begin_date']).to eq ['is missing']
             end
 
             it 'fails with 422 for incomplete data: tax_number' do
@@ -568,13 +569,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
           end
 
-          context 'valid date' do
-
-            it 'creates a localpool with missing signing_date' do
-              POST path, $admin, missing_signing_date_json
-              expect(response).to have_http_status(201)
-              expect(json['signing_date']).to eq nil
-            end
+          context 'valid data' do
 
             it 'creates a new localpool processing contract' do
               POST path, $admin, valid_localpool_processing
