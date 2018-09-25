@@ -511,18 +511,31 @@ describe Admin::LocalpoolRoda, :request_helper do
             missing_everything_json.merge(begin_date_json)
           end
 
-          context 'valid data' do
+          context 'invalid data' do
 
             it 'creates a metering point operator contract' do
               POST path, $admin, missing_everything_json
-              expect(response).to have_http_status(201)
-              expect(json['begin_date']).to eq nil
+              expect(response).to have_http_status(422)
+              expect(json['begin_date']).to eq [ "is missing" ]
             end
+
+          end
+
+          context 'valid data' do
 
             it 'creates a metering point operator contract' do
               POST path, $admin, with_begin_date_json
               expect(response).to have_http_status(201)
               expect(json['begin_date']).to eq begin_date_json['begin_date']
+            end
+
+            it 'does not create two metering point operator contract' do
+              POST path, $admin, with_begin_date_json
+              expect(response).to have_http_status(201)
+              POST path, $admin, with_begin_date_json
+              expect(response).to have_http_status(422)
+              expect(json['only_active_contract']).to eql [ "another contract is already active" ]
+
             end
 
           end

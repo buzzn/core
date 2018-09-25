@@ -110,9 +110,6 @@ describe Admin::LocalpoolRoda, :request_helper do
     unless localpool.localpool_processing_contracts.any?
       allowed['create_localpool_power_taker_contract']['localpool_processing_contract'] = ['must be filled']
     end
-    if localpool.metering_point_operator_contracts.any?
-      allowed['create_metering_point_operator_contract']['metering_point_operator_contract'] = ['cannot be defined']
-    end
 
     allowed = allowed.map do |k,v|
       if v.empty?
@@ -393,8 +390,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'power_sources' => ['pv'],
         'display_app_url' => nil,
         'allowed_actions' => {
-          'create_metering_point_operator_contract'=> {'metering_point_operator_contract' => ['cannot be defined'],
-                                                       'address' => ['must be filled']},
+          'create_metering_point_operator_contract'=> {'address' => ['must be filled']},
           'create_localpool_processing_contract'=> true,
           'create_localpool_power_taker_contract'=> true,
           'create_billing_cycle' => true
