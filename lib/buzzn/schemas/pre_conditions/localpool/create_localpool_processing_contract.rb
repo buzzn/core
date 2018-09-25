@@ -8,6 +8,7 @@ module Schemas::PreConditions::Localpool
 
   CreateLocalpoolProcessingContract = Schemas::Support.Schema do
 
+    #required(:address).filled
     # that is the customer
     required(:owner) do
       filled?.and(type?(Organization).then(schema(Schemas::PreConditions::Organization)).and(type?(Person).then(schema(Schemas::PreConditions::Person))))

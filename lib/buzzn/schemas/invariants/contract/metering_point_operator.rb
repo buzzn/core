@@ -9,6 +9,9 @@ module Schemas
         required(:customer).filled
         required(:contractor).filled
 
+        required(:id).maybe
+        required(:begin_date).filled
+
         rule(customer: [:customer, :localpool]) do |customer, localpool|
           customer.localpool_owner?(localpool)
         end
@@ -16,6 +19,21 @@ module Schemas
         rule(tariffs: [:tariffs, :begin_date, :end_date]) do |tariffs, begin_date, end_date|
           tariffs.cover_beginning_of_contract?(begin_date).and(tariffs.cover_ending_of_contract?(end_date))
         end
+
+        validate(only_active_contract: %i[localpool begin_date id]) do |localpool, begin_date, id|
+          any = false
+          localpool.metering_point_operator_contracts.each do |mpoc|
+            if mpoc.status(begin_date) == ::Contract::Base::ACTIVE && mpoc.id != id
+              any = true
+            end
+          end
+          if any
+            false
+          else
+            true
+          end
+        end
+
       end
 
     end
