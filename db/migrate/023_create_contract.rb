@@ -25,11 +25,8 @@ class CreateContract < ActiveRecord::Migration
     add_foreign_key :contracts, :persons, name: :fk_contracts_contractor_person, column: :contractor_person_id
     add_foreign_key :contracts, :organizations, name: :fk_contracts_contractor_organization, column: :contractor_organization_id
 
-    # TODO: move that to a more sane place
-    execute 'CREATE EXTENSION IF NOT EXISTS btree_gist'
     execute 'ALTER TABLE contracts ADD CONSTRAINT check_contract_customer CHECK (NOT (customer_person_id IS NOT NULL AND customer_organization_id IS NOT NULL))'
     execute 'ALTER TABLE contracts ADD CONSTRAINT check_contract_contractor CHECK (NOT (contractor_person_id IS NOT NULL AND contractor_organization_id IS NOT NULL))'
-    execute 'ALTER TABLE contracts ADD CONSTRAINT one_localpool_processing_per_group EXCLUDE USING gist (localpool_id with =) WHERE (type = \'Contract::LocalpoolProcessing\')'
   end
 
   def down

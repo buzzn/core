@@ -6507,7 +6507,7 @@ paths:
         format: date
       - name: begin_date
         in: formData
-        required: false
+        required: true
         type: string
         format: date
       - name: termination_date

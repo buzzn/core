@@ -66,7 +66,7 @@ describe Contract::BaseResource do
 
     it 'valid' do
       resources.each do |contract|
-        contract.object.update begin_date: nil, termination_date: nil, end_date: nil
+        contract.object.update termination_date: nil, end_date: nil
         expect(contract).to have_valid_invariants Schemas::Invariants::Contract::Base
 
         contract.object.update begin_date: Date.today

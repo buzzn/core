@@ -8,9 +8,6 @@ module Schemas::PreConditions::Localpool
 
   CreateLocalpoolProcessingContract = Schemas::Support.Schema do
 
-    # only one localpool_processing_contract is allowed
-    required(:localpool_processing_contract).value(:none?)
-
     # that is the customer
     required(:owner) do
       filled?.and(type?(Organization).then(schema(Schemas::PreConditions::Organization)).and(type?(Person).then(schema(Schemas::PreConditions::Person))))

@@ -107,9 +107,7 @@ describe Admin::LocalpoolRoda, :request_helper do
     unless localpool.start_date
       allowed['create_billing_cycle']['start_date'] = ['must be filled']
     end
-    if localpool.localpool_processing_contracts.any?
-      allowed['create_localpool_processing_contract']['localpool_processing_contract'] = ['cannot be defined']
-    else
+    unless localpool.localpool_processing_contracts.any?
       allowed['create_localpool_power_taker_contract']['localpool_processing_contract'] = ['must be filled']
     end
     if localpool.metering_point_operator_contracts.any?
@@ -397,7 +395,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'allowed_actions' => {
           'create_metering_point_operator_contract'=> {'metering_point_operator_contract' => ['cannot be defined'],
                                                        'address' => ['must be filled']},
-          'create_localpool_processing_contract'=> {'localpool_processing_contract' => ['cannot be defined']},
+          'create_localpool_processing_contract'=> true,
           'create_localpool_power_taker_contract'=> true,
           'create_billing_cycle' => true
         },
