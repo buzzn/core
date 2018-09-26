@@ -68,6 +68,14 @@ describe Admin, :swagger, :request_helper, order: :defined do
     localpool3
   end
 
+  entity!(:localpool_meter_real) do
+    localpool
+  end
+
+  entity!(:localpool_meter_virtual) do
+    localpool
+  end
+
   entity!(:metering_point_contract_json) do
     {
       'type' => 'contract_metering_point_operator',
@@ -301,6 +309,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   get '/localpools/{localpool.id}/meters/{meter.id}' do
     description 'returns the meters for the given ID'
+  end
+
+  post '/localpools/{localpool_meter_real.id}/meters', $admin, {}, {'type' => 'real'} do
+    description 'creates a new real meter'
+    schema Schemas::Transactions::Admin::Meter::CreateReal
   end
 
   patch '/localpools/{localpool.id}/meters/{real_meter.id}' do

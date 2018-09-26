@@ -6529,6 +6529,177 @@ paths:
       responses:
         201:
           description: created
+  "/localpools/{localpool_meter_real_id}/meters":
+    post:
+      description: creates a new real meter
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_meter_real_id
+        in: path
+        required: true
+        type: string
+      - name: type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - real
+      - name: product_serialnumber
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+        minLength: 4
+      - name: datasource
+        in: formData
+        required: false
+        type: string
+        enum:
+        - standard_profile
+        - discovergy
+        - virtual
+      - name: product_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: manufacturer_name
+        in: formData
+        required: false
+        type: string
+        enum:
+        - easy_meter
+        - other
+      - name: manufacturer_description
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: location_description
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: ownership
+        in: formData
+        required: false
+        type: string
+        enum:
+        - BUZZN
+        - FOREIGN_OWNERSHIP
+        - CUSTOMER
+        - LEASED
+        - BOUGHT
+      - name: build_year
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        maximum: 2050
+        exclusiveMaximum: true
+        minimum: 1950
+        exclusiveMinimum: true
+      - name: sent_data_dso
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: converter_constant
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: calibrated_until
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: direction_number
+        in: formData
+        required: false
+        type: string
+        enum:
+        - ERZ
+        - ZRZ
+      - name: edifact_metering_type
+        in: formData
+        required: false
+        type: string
+        enum:
+        - AHZ
+        - WSZ
+        - LAZ
+        - MAZ
+        - EHZ
+        - IVA
+      - name: edifact_meter_size
+        in: formData
+        required: false
+        type: string
+        enum:
+        - Z01
+        - Z02
+        - Z03
+      - name: edifact_measurement_method
+        in: formData
+        required: false
+        type: string
+        enum:
+        - AMR
+        - MMR
+      - name: edifact_tariff
+        in: formData
+        required: false
+        type: string
+        enum:
+        - ETZ
+        - ZTZ
+        - NTZ
+      - name: edifact_mounting_method
+        in: formData
+        required: false
+        type: string
+        enum:
+        - BKE
+        - DPA
+        - HS
+      - name: edifact_voltage_level
+        in: formData
+        required: false
+        type: string
+        enum:
+        - E06
+        - E05
+        - E04
+        - E03
+      - name: edifact_cycle_interval
+        in: formData
+        required: false
+        type: string
+        enum:
+        - MONTHLY
+        - QUARTERLY
+        - HALF_YEARLY
+        - YEARLY
+      - name: edifact_data_logging
+        in: formData
+        required: false
+        type: string
+        enum:
+        - Z04
+        - Z05
+      - name: registers
+        in: formData
+        required: true
+        type: array
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_mpo_id}/contracts":
     post:
       description: adds a metering point operator contract to the localpool
