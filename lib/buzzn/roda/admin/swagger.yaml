@@ -6744,6 +6744,13 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: registers.market_location_id
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 11
+        minLength: 11
       - name: registers
         in: formData
         required: true
@@ -6994,6 +7001,13 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: register_meta.market_location_id
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 11
+        minLength: 11
       - name: register_meta
         in: formData
         required: true
@@ -7213,6 +7227,13 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: register_meta.market_location_id
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 11
+        minLength: 11
       - name: register_meta
         in: formData
         required: true
@@ -8431,6 +8452,13 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: register_meta.market_location_id
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 11
+        minLength: 11
       - name: register_meta
         in: formData
         required: true

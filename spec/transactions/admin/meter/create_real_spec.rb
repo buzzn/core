@@ -16,17 +16,22 @@ describe Transactions::Admin::Meter::CreateReal do
 
   let(:existing_grid_consumption_register) { create(:meta, :grid_consumption) }
 
+  let(:market_location_id) do
+    'DE133713371'
+  end
+
+  let(:metering_location_id) do
+    'DE3214325843274587321943754543543'
+  end
+
   let(:grid_consumption_register_params) do
     params = grid_consumption_register.attributes
     params = params.delete_if {|k, v| k.ends_with?('id')}
     params = params.delete_if {|k, v| v.nil? }
     params.delete('updated_at')
     params.delete('created_at')
+    params['market_location_id'] = market_location_id
     params
-  end
-
-  let(:metering_location_id) do
-    'DE3214325843274587321943754543543'
   end
 
   let(:registers_params) do
@@ -69,6 +74,8 @@ describe Transactions::Admin::Meter::CreateReal do
       res = result_meter.value!
       expect(res.registers.count).to eql 1
       expect(res.metering_location_id).to eql metering_location_id
+      expect(res.registers.first.meta.market_location).not_to be_nil
+      expect(res.registers.first.meta.market_location.market_location_id).to eql market_location_id
     end
 
   end
