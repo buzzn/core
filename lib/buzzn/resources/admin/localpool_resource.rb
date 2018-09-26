@@ -38,6 +38,8 @@ module Admin
     has_many :meters do |object|
       object.meters.real_or_virtual
     end
+    has_many :meters_real, Meter::RealResource
+    has_many :meters_virtual, Meter::VirtualResource
     has_many :managers, PersonResource
     has_many :users
     has_many :organizations
