@@ -6697,6 +6697,13 @@ paths:
         in: formData
         required: true
         type: array
+      - name: metering_point_id
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 33
+        minLength: 33
       responses:
         201:
           description: created

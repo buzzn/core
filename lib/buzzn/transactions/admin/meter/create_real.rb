@@ -6,6 +6,7 @@ class Transactions::Admin::Meter::CreateReal < Transactions::Base
   tee :registers_schema
   check :authorize, with: 'operations.authorization.create'
   around :db_transaction
+  tee :create_or_find_metering_point_id
   add :create_meter, with: 'operations.action.create_item'
   tee :create_registers
   map :result
@@ -32,6 +33,13 @@ class Transactions::Admin::Meter::CreateReal < Transactions::Base
 
     unless validation_errors[:registers].empty?
       raise Buzzn::ValidationError.new(validation_errors)
+    end
+  end
+
+  def create_or_find_metering_point_id(params:, **)
+    metering_location_id = params.delete(:metering_location_id)
+    if metering_location_id
+      params[:metering_location] = Meter::MeteringLocation.find_by_metering_location_id(metering_location_id) || Meter::MeteringLocation.create(metering_location_id: metering_location_id)
     end
   end
 

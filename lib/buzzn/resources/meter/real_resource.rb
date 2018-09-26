@@ -22,7 +22,12 @@ module Meter
                :edifact_voltage_level,
                :edifact_cycle_interval,
                :edifact_data_logging,
-               :sent_data_dso
+               :sent_data_dso,
+               :metering_location_id
+
+    def metering_location_id
+      metering_location&.metering_location_id
+    end
 
   end
 end
