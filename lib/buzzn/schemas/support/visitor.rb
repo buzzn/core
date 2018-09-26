@@ -74,7 +74,7 @@ class Schemas::Support::Visitor
         result[:items] = {}
         result[:type] = :array
         # FIXME properly process the schema in each and put it into items of swagger
-        #visit_rule(rule.rules, result[:items], name, &block)
+        visit_rule(rule.rules, result, name, &block)
       when Dry::Validation::Schema
         visit(rule, "#{name}.", &block)
         result = nil

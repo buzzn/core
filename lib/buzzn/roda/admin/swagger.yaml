@@ -6693,11 +6693,62 @@ paths:
         enum:
         - Z04
         - Z05
+      - name: registers.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: registers.name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: registers.label
+        in: formData
+        required: false
+        type: string
+        enum:
+        - CONSUMPTION
+        - CONSUMPTION_COMMON
+        - DEMARCATION_PV
+        - DEMARCATION_CHP
+        - DEMARCATION_WIND
+        - DEMARCATION_WATER
+        - PRODUCTION_PV
+        - PRODUCTION_CHP
+        - PRODUCTION_WIND
+        - PRODUCTION_WATER
+        - GRID_CONSUMPTION
+        - GRID_FEEDING
+        - GRID_CONSUMPTION_CORRECTED
+        - GRID_FEEDING_CORRECTED
+        - OTHER
+      - name: registers.observer_enabled
+        in: formData
+        required: false
+        type: boolean
+      - name: registers.observer_min_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: registers.observer_max_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: registers.observer_offline_monitoring
+        in: formData
+        required: false
+        type: boolean
       - name: registers
         in: formData
         required: true
         type: array
-      - name: metering_point_id
+      - name: metering_location_id
         in: formData
         required: false
         type: string
