@@ -39,7 +39,8 @@ class Transactions::Admin::Meter::CreateReal < Transactions::Base
   def create_or_find_metering_point_id(params:, **)
     metering_location_id = params.delete(:metering_location_id)
     if metering_location_id
-      params[:metering_location] = Meter::MeteringLocation.find_by_metering_location_id(metering_location_id) || Meter::MeteringLocation.create(metering_location_id: metering_location_id)
+      params[:metering_location] = Meter::MeteringLocation.find_by_metering_location_id(metering_location_id) ||
+                                   Meter::MeteringLocation.create(metering_location_id: metering_location_id)
     end
   end
 
@@ -56,6 +57,11 @@ class Transactions::Admin::Meter::CreateReal < Transactions::Base
   def create_registers(params:, create_meter:, **)
     params[:registers].each_with_index do |r, index|
       if r[:id].nil?
+        market_location_id = r.delete(:market_location_id)
+        unless market_location_id.nil?
+          r[:market_location] = Register::MarketLocation.find_by_market_location_id(market_location_id) ||
+                                Register::MarketLocation.create(market_location_id: market_location_id)
+        end
         meta = Register::Meta.create(r)
       else
         begin

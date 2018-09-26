@@ -1,7 +1,9 @@
 require_relative '../register'
 require_relative '../../../constraints/register/meta'
 
-Schemas::Transactions::Admin::Register::CreateMeta = Schemas::Constraints::Register::Meta
+Schemas::Transactions::Admin::Register::CreateMeta = Schemas::Support.Form(Schemas::Constraints::Register::Meta) do
+  optional(:market_location_id).value(:str?, size?: 11)
+end
 
 Schemas::Transactions::Admin::Register::CreateMetaLoose = Schemas::Support.Form do
 
@@ -12,5 +14,6 @@ Schemas::Transactions::Admin::Register::CreateMetaLoose = Schemas::Support.Form 
   optional(:observer_min_threshold).value(:int?, gteq?: 0)
   optional(:observer_max_threshold).value(:int?, gteq?: 0)
   optional(:observer_offline_monitoring).value(:bool?)
+  optional(:market_location_id).value(:str?, size?: 11)
 
 end
