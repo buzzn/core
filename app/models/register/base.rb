@@ -67,12 +67,16 @@ module Register
         :production
       elsif meta.label.consumption?
         :consumption
+      elsif meta.label.grid_consumption?
+        :grid_consumption
+      elsif meta.label.grid_feeding?
+        :grid_feeding
       else
         :system
       end
     end
 
-    [:consumption, :production, :system].each do |method|
+    [:consumption, :production, :grid_consumption, :grid_feeding, :system].each do |method|
       define_method("#{method}?") do
         kind == method
       end
