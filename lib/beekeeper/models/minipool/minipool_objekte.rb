@@ -138,7 +138,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     'L.O.F.T.',
     'Mehrgenerationenplatz Forstenried',
     'People Power Group (Testgruppe)',
-    'WoGe'
+    'WoGe',
+    'Waldstraße 24',
   ]
 
   def show_display_app
