@@ -2,6 +2,8 @@ require_relative '../group_resource'
 require_relative '../person_resource'
 require_relative '../contract/tariff_resource'
 require_relative '../register/meta_resource'
+require_relative '../meter/real_resource'
+require_relative '../meter/virtual_resource'
 require_relative '../contract/localpool_processing_resource'
 require_relative '../contract/localpool_power_taker_resource'
 require_relative '../contract/localpool_third_party_resource'
@@ -38,6 +40,8 @@ module Admin
     has_many :meters do |object|
       object.meters.real_or_virtual
     end
+    has_many :meters_real, Meter::RealResource
+    has_many :meters_virtual, Meter::VirtualResource
     has_many :managers, PersonResource
     has_many :users
     has_many :organizations

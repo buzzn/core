@@ -8,7 +8,7 @@ class Operations::Discovergy
   def call(resource:, **)
     meter = resource.object
     if meter.discovergy? && !meters.connected?(meter)
-      raise Buzzn::ValidationError.new(datasource: 'meter nust be connected with discovergy')
+      raise Buzzn::ValidationError.new(datasource: 'meter must be connected with discovergy')
     end
     true
   end

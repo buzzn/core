@@ -3,16 +3,34 @@ require_relative '../admin_roda'
 module Admin
   class MeterRoda < BaseRoda
 
-    include Import.args[:env, 'transactions.admin.meter.update_real']
+    include Import.args[:env,
+                        'transactions.admin.meter.create_real',
+                        'transactions.admin.meter.update_real',
+                       ]
 
     plugin :shared_vars
+    plugin :param_matchers
 
     route do |r|
 
       meters = shared[LocalpoolRoda::PARENT].meters
+      meters_real = shared[LocalpoolRoda::PARENT].meters_real
 
       r.get! do
         meters.filter(r.params['filter'])
+      end
+
+      r.post!(:param=>'type') do |type|
+        case type.to_s
+        when 'real'
+          create_real.(resource: meters_real, params: r.params)
+        when 'virtual'
+          r.response.status = 400
+        end
+      end
+
+      r.post! do
+        r.response.status = 400
       end
 
       r.on :id do |id|
