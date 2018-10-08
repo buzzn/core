@@ -1,3 +1,5 @@
+require_relative '../filterable'
+
 module Meter
   class Base < ActiveRecord::Base
 
