@@ -80,7 +80,8 @@ describe Admin::LocalpoolRoda, :request_helper do
               'edifact_voltage_level'=>meter.attributes['edifact_voltage_level'],
               'edifact_cycle_interval'=>meter.attributes['edifact_cycle_interval'],
               'edifact_data_logging'=>meter.attributes['edifact_data_logging'],
-              'sent_data_dso'=>meter.sent_data_dso.to_s
+              'sent_data_dso'=>meter.sent_data_dso.to_s,
+              'metering_location_id'=>meter.metering_location_id
             }
           }
         }

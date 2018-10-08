@@ -5,7 +5,7 @@ class Operations::Action::Create
   include Import['operations.action.invariant']
 
   def call(model_class, params)
-    object = mpdel_class.create!(params)
+    object = model_class.create!(params)
     invariant.(object: object)
     [
       object,

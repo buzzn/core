@@ -248,6 +248,7 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
   end
 
   meters do
+    create :managers
     retrieve :managers
     update :managers
     delete :operators
@@ -285,6 +286,9 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       end
     end
   end
+
+  meters_real    '/meters'
+  meters_virutal '/meters'
 
   managers do
     create :managers

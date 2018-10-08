@@ -88,6 +88,8 @@ module SwaggerHelper
         sparam.type = 'boolean'
       when :hash
         sparam.type = 'hash'
+      when :array
+        sparam.type = 'array'
       else
         sparam.type = 'string'
         sparam.format = type.to_s

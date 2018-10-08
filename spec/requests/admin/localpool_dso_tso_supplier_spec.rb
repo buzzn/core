@@ -28,6 +28,8 @@ describe Admin::LocalpoolRoda, :request_helper do
       'updatable'=>true,
       'deletable'=>false,
       'createables' => [
+        'meters',
+        'meters_real',
         'managers',
         'organizations',
         'localpool_processing_contracts',

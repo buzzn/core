@@ -1,4 +1,5 @@
 require_relative 'common'
+require_relative '../../../../../app/models/meter/real'
 
 Schemas::Constraints::Meter::Base = Schemas::Support.Form(Schemas::Constraints::Meter::Common) do
   optional(:datasource).value(included_in?: Meter::Real.datasources.values)
