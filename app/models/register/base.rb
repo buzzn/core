@@ -17,6 +17,8 @@ module Register
 
     belongs_to :meta, class_name: 'Meta', foreign_key: :register_meta_id
 
+    has_many :contracts, through: :meta
+
     scope :real,    -> { where(type: Register::Reak) }
     scope :virtual, -> { where(type: Register::Virtual) }
 
