@@ -16,7 +16,7 @@ class Services::Datasource::Discovergy::Meters
   def connected?(meter_or_serial)
     meter =
       case meter_or_serial
-      when ::Meter::Base then _
+      when ::Meter::Base then meter_or_serial
       else
         ::Meter::Real.new(product_serialnumber: meter_or_serial)
       end
