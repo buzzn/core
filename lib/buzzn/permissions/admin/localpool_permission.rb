@@ -273,6 +273,8 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
         update :none
         delete :managers
       end
+
+      contracts '/contracts'
     end
 
     formula_parts do
