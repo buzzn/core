@@ -43,4 +43,5 @@ en:
     match_register?: 'must match register'
     grow_in_time?: 'must grow in time'
     mtype?: 'wrong type, must be %{type}'
+    alphanumeric?: 'must be alphanumeric'
     only_active_contract: 'another contract is already active'
