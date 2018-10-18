@@ -5561,9 +5561,7 @@ paths:
         in: formData
         required: false
         type: string
-        format: ''
-        maxLength: 128
-        minLength: 4
+        format: alphanumeric
       - name: datasource
         in: formData
         required: false
@@ -6551,9 +6549,7 @@ paths:
         in: formData
         required: false
         type: string
-        format: ''
-        maxLength: 128
-        minLength: 4
+        format: alphanumeric
       - name: datasource
         in: formData
         required: false

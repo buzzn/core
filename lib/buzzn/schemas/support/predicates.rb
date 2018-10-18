@@ -48,4 +48,8 @@ module Schemas::Support::Predicates
     validator.model_is_a?(type)
   end
 
+  predicate(:alphanumeric?) do |value|
+    ! /^[a-zA-Z0-9]+$/.match(value).nil?
+  end
+
 end
