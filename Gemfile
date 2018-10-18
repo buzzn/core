@@ -73,6 +73,7 @@ gem 'factory_girl'
 gem 'dotenv'
 gem 'smarter_csv'
 gem 'sentry-raven' # the Sentry exception notification service
+gem 'rake'
 
 # bin/console
 gem 'pry'
@@ -96,10 +97,6 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'fog-local'
   gem 'rubocop', require: false
-end
-
-group :development do
-  gem 'rake'
 end
 
 group :test do
