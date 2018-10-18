@@ -74,6 +74,7 @@ gem 'dotenv'
 gem 'smarter_csv'
 gem 'sentry-raven' # the Sentry exception notification service
 gem 'rake'
+gem 'rails', '< 5'
 
 # bin/console
 gem 'pry'
@@ -104,6 +105,5 @@ group :test do
   gem 'rspec_nested_transactions'
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
-  gem 'rails', '< 5'
   gem 'timecop'
 end
