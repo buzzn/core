@@ -22,10 +22,8 @@ module Website
         r.halt
       end
 
-      forms = WebsiteFormResource.all(current_user)
-
       r.get! do
-        forms
+        website_forms
       end
 
     end
