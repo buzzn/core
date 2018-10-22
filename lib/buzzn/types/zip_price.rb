@@ -1,4 +1,5 @@
 require_relative '../types'
+require_relative '../types/zip_price_config'
 
 module Types
 

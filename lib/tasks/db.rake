@@ -1,3 +1,4 @@
+# coding: utf-8
 namespace :db do
 
   desc 'Deletes all data in the database (without dropping, recreating or migrating it)'
