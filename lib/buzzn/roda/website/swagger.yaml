@@ -24,12 +24,12 @@ paths:
         - smart
       - name: zip
         in: formData
-        required: false
+        required: true
         type: integer
         format: int64
       - name: annual_kwh
         in: formData
-        required: false
+        required: true
         type: integer
         format: int64
       responses:
