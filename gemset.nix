@@ -1372,9 +1372,9 @@
   wkhtmltopdf-binary-edge = {
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0izhh2mws644cnclbmdj99vy40lqcmgkh064nj3iva0cdj4l1vas";
+      sha256 = "0y2w09yynnqj5vzbivjpkrxfkilhw4zn7yrc49sac54315bb2nhr";
       type = "gem";
     };
-    version = "0.12.5.0";
+    version = "0.12.4.0";
   };
 }
