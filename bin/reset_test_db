@@ -1,2 +1,2 @@
-#!/bin/bash
+#!/usr/bin/env bash
 bin/rake db:drop db:create db:migrate RACK_ENV=test --trace

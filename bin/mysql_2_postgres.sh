@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 file=$1
 schema=$2
 

@@ -1,2 +1,2 @@
-#!/bin/bash
+#!/usr/bin/env bash
 bin/rake db:drop db:create db:migrate db:seed:example_data db:seed:buzzn_operator zip_to_price:set_config zip_to_price:import
