@@ -19,7 +19,7 @@ gem 'dry-types', '~> 0.12.3'
 # pdf
 gem 'slim'
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary-edge'
+gem 'wkhtmltopdf-binary-edge', '~> 0.12.4.0'
 
 # storage
 gem 'fog-aws'
