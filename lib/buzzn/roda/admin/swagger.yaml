@@ -6547,7 +6547,7 @@ paths:
         - real
       - name: product_serialnumber
         in: formData
-        required: false
+        required: true
         type: string
         format: alphanumeric
       - name: datasource
