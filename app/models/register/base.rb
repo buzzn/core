@@ -65,17 +65,7 @@ module Register
     end
 
     def kind
-      if meta.label.production?
-        :production
-      elsif meta.label.consumption?
-        :consumption
-      elsif meta.label.grid_consumption?
-        :grid_consumption
-      elsif meta.label.grid_feeding?
-        :grid_feeding
-      else
-        :system
-      end
+      meta&.kind
     end
 
     [:consumption, :production, :grid_consumption, :grid_feeding, :system].each do |method|

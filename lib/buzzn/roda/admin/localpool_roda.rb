@@ -110,8 +110,8 @@ module Admin
           end
         end
 
-        r.on 'market-locations' do
-          r.run MarketLocationRoda
+        r.on 'register-metas' do
+          r.run RegisterMetaRoda
         end
       end
 

@@ -3,7 +3,14 @@ module Register
 
     model Meta
 
-    attributes :name, :kind, :market_location_id
+    attributes :name,
+               :kind,
+               :label,
+               :market_location_id,
+               :observer_enabled,
+               :observer_min_threshold,
+               :observer_max_threshold,
+               :observer_offline_monitoring
 
     attributes :updatable, :deletable
 
@@ -13,7 +20,7 @@ module Register
     has_many :contracts
 
     def type
-      'market_location'
+      'register_meta'
     end
 
     def group
@@ -22,10 +29,6 @@ module Register
 
     def market_location_id
       object.market_location&.market_location_id
-    end
-
-    def kind
-      object.register.nil? ? nil : object.register.kind
     end
 
   end

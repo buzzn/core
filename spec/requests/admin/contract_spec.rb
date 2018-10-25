@@ -108,14 +108,19 @@ describe Admin::LocalpoolRoda, :request_helper do
             'updatable'=> true,
             'deletable'=> false,
           },
-          'market_location' => {
+          'register_meta' => {
             'id' => contract.register_meta.id,
-            'type' => 'market_location',
+            'type' => 'register_meta',
             'created_at'=> contract.register_meta.created_at.as_json,
             'updated_at'=> contract.register_meta.updated_at.as_json,
             'name' => contract.register_meta.register.meta.name,
-            'kind' => 'consumption',
+            'kind'=>'consumption',
+            'label'=>'CONSUMPTION',
             'market_location_id' => nil,
+            'observer_enabled'=>false,
+            'observer_min_threshold'=>nil,
+            'observer_max_threshold'=>nil,
+            'observer_offline_monitoring'=>false,
             'updatable' => false,
             'deletable' => false,
             'register' => {
@@ -123,13 +128,8 @@ describe Admin::LocalpoolRoda, :request_helper do
               'type'=>'register_real',
               'created_at'=>register.created_at.as_json,
               'updated_at'=>register.updated_at.as_json,
-              'label'=>'CONSUMPTION',
               'direction'=>'in',
               'last_reading'=>0,
-              'observer_min_threshold'=>nil,
-              'observer_max_threshold'=>nil,
-              'observer_enabled'=>false,
-              'observer_offline_monitoring'=>false,
               'meter_id' => meter.id,
               'updatable'=> true,
               'deletable'=> false,
@@ -302,7 +302,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           old = contract3.register_meta
           contract3.register_meta
           contract3.save
-          GET "/localpools/#{localpool.id}/contracts?include=market_location:[register],customer:[address,contact:address]", $admin
+          GET "/localpools/#{localpool.id}/contracts?include=register_meta:[register],customer:[address,contact:address]", $admin
           expect(response).to have_http_status(200)
           contract3.register_meta = old
           contract3.save
@@ -333,7 +333,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           let(:contract_json) { send "#{type}_contract_json" }
 
           it "200 for #{type}" do
-            GET "/localpools/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,market_location:[register:meter]'
+            GET "/localpools/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register_meta:[register:meter]'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end

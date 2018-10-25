@@ -40,5 +40,25 @@ module Register
       billings.in_date_range(date_range)
     end
 
+    def kind
+      if label.production?
+        :production
+      elsif label.consumption?
+        :consumption
+      elsif label.grid_consumption?
+        :grid_consumption
+      elsif label.grid_feeding?
+        :grid_feeding
+      else
+        :system
+      end
+    end
+
+    [:consumption, :production, :grid_consumption, :grid_feeding, :system].each do |method|
+      define_method("#{method}?") do
+        kind == method
+      end
+    end
+
   end
 end

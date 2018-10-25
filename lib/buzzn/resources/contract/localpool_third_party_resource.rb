@@ -6,9 +6,7 @@ module Contract
 
     model LocalpoolThirdParty
 
-    has_one :market_location, Register::MetaResource do |object|
-      object.register_meta
-    end
+    has_one :register_meta, Register::MetaResource
 
   end
 end

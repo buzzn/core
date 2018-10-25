@@ -22,7 +22,7 @@ module Group
     has_many :meters_real, class_name: 'Meter::Real', foreign_key: :group_id
     has_many :meters_virtual, class_name: 'Meter::Virtual', foreign_key: :group_id
     has_many :registers, class_name: 'Register::Base', through: :meters
-    has_many :register_meta, class_name: 'Register::Meta', through: :registers, foreign_key: :register_meta_id, source: :meta
+    has_many :register_metas, class_name: 'Register::Meta', through: :registers, foreign_key: :register_meta_id, source: :meta
 
     def managers
       Person.with_roles(self, Role::GROUP_ADMIN)
