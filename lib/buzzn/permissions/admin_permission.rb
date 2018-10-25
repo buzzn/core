@@ -20,7 +20,7 @@ AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
         retrieve :managers
       end
 
-      market_location do
+      register_meta do
         retrieve :managers
         register do
           retrieve :managers
@@ -54,7 +54,7 @@ AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
         retrieve :managers
       end
 
-      market_location do
+      register_meta do
         retrieve :managers
         register do
           retrieve :managers

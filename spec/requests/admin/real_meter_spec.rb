@@ -75,9 +75,9 @@ describe Admin::LocalpoolRoda, :request_helper do
       end
 
       it '200' do
-        GET "/localpools/#{group.id}/meters/#{meter.id}", $admin, include: 'registers:[market_location:[contracts:[customer]]]'
+        GET "/localpools/#{group.id}/meters/#{meter.id}", $admin, include: 'registers:[register_meta:[contracts:[customer]]]'
 
-        expect(json).to has_nested_json(:registers, :array, :market_location, :contracts, :array, :customer, :id)
+        expect(json).to has_nested_json(:registers, :array, :register_meta, :contracts, :array, :customer, :id)
 
         result = json
         result.delete('registers')

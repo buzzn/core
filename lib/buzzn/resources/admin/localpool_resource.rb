@@ -53,10 +53,7 @@ module Admin
     has_many :localpool_third_party_contracts, Contract::LocalpoolThirdPartyResource
 
     has_many :registers
-    has_many :market_locations, Register::MetaResource do |object|
-      object.register_meta
-    end
-    has_many :register_meta
+    has_many :register_metas
     has_many :persons
     has_many :tariffs, Contract::TariffResource
     has_many :billing_cycles, BillingCycleResource, :next_billing_cycle_begin_date

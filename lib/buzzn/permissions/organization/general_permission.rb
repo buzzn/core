@@ -32,7 +32,7 @@ module Organization
         retrieve :buzzn_operator
       end
 
-      market_location do
+      register_meta do
         retrieve :buzzn_operator
         register do
           retrieve :buzzn_operator

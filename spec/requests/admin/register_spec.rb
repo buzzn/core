@@ -28,99 +28,6 @@ describe Admin::LocalpoolRoda, :request_helper do
         expect(response.headers['X-Allowed-Methods']).to eq('get, patch')
       end
 
-      context 'PATCH' do
-
-        let(:updated_json) do
-          last = register.readings.order('date').last
-          {
-            'id'=>register.id,
-            'type'=>'register_real',
-            'label'=>'DEMARCATION_PV',
-            'direction'=>register.consumption? ? 'in' : 'out',
-            'last_reading'=>last ? last.value : 0,
-            'observer_min_threshold'=>10,
-            'observer_max_threshold'=>100,
-            'observer_enabled'=>true,
-            'observer_offline_monitoring'=>true,
-            'meter_id' => register.meter_id,
-            'updatable'=> true,
-            'deletable'=> true,
-            'createables'=>['readings', 'contracts'],
-            'pre_decimal_position'=>6,
-            'post_decimal_position'=>1,
-            'low_load_ability'=>false,
-            'obis'=>register.obis,
-          }
-        end
-
-        let(:wrong_json) do
-          {
-            'label'=>['must be one of: CONSUMPTION, CONSUMPTION_COMMON, DEMARCATION_PV, DEMARCATION_CHP, DEMARCATION_WIND, DEMARCATION_WATER, PRODUCTION_PV, PRODUCTION_CHP, PRODUCTION_WIND, PRODUCTION_WATER, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER'],
-            'observer_enabled'=>['must be boolean'],
-            'observer_min_threshold'=>['must be an integer'],
-            'observer_max_threshold'=>['must be an integer'],
-            'observer_offline_monitoring'=>['must be boolean'],
-            'updated_at'=>['is missing']
-          }
-        end
-
-        it '401' do
-          GET "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
-          expire_admin_session do
-            PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin
-            expect(response).to be_session_expired_json(401)
-          end
-        end
-
-        it '404' do
-          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/bla-blub", $admin
-          expect(response).to have_http_status(404)
-        end
-
-        it '409' do
-          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
-                updated_at: DateTime.now
-          expect(response).to have_http_status(409)
-        end
-
-        it '422' do
-          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
-                label: 'grid',
-                pre_decimal_position: 'pre',
-                post_decimal_position: 'post',
-                low_load_ability: 'dunno',
-                observer_enabled: 'dunno',
-                observer_min_threshold: 'nothing',
-                observer_max_threshold: 'nothing',
-                observer_offline_monitoring: 'dunno'
-          expect(response).to have_http_status(422)
-          expect(json.to_yaml).to eq wrong_json.to_yaml
-        end
-
-        it '200' do
-          old = register.updated_at
-          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register.id}", $admin,
-                updated_at: register.updated_at,
-                label: Register::Meta.labels[:demarcation_pv],
-                observer_enabled: true,
-                observer_min_threshold: 10,
-                observer_max_threshold: 100,
-                observer_offline_monitoring: true
-          expect(response).to have_http_status(200)
-          register.reload
-          expect(register.meta.label).to eq 'demarcation_pv'
-          expect(register.meta.observer_enabled).to eq true
-          expect(register.meta.observer_min_threshold).to eq 10
-          expect(register.meta.observer_max_threshold).to eq 100
-          expect(register.meta.observer_offline_monitoring).to eq true
-
-          result = json
-          expect(result.delete('updated_at')).to be >= old.as_json
-          expect(result.delete('updated_at')).not_to eq old.as_json
-          expect(result.delete('created_at')).not_to be_nil
-          expect(result.to_yaml).to eq updated_json.to_yaml
-        end
-      end
     end
   end
 
@@ -134,13 +41,8 @@ describe Admin::LocalpoolRoda, :request_helper do
           'type'=>'register_real',
           'created_at'=>real_register.created_at.as_json,
           'updated_at'=>real_register.updated_at.as_json,
-          'label'=>real_register.meta.attributes['label'],
           'direction'=>real_register.consumption? ? 'in' : 'out',
           'last_reading'=>last ? last.value : 0,
-          'observer_min_threshold'=>nil,
-          'observer_max_threshold'=>nil,
-          'observer_enabled'=>false,
-          'observer_offline_monitoring'=>false,
           'meter_id' => real_register.meter_id,
           'updatable'=> true,
           'deletable'=> true,
@@ -158,13 +60,8 @@ describe Admin::LocalpoolRoda, :request_helper do
           'id'=>virtual_register.id,
           'type'=>'register_virtual',
           'updated_at'=>virtual_register.updated_at.as_json,
-          'label'=>virtual_register.attributes['label'],
           'direction'=>virtual_register.label.consumption? ? 'in' : 'out',
           'last_reading'=>last ? last.value : 0,
-          'observer_min_threshold'=>100,
-          'observer_max_threshold'=>5000,
-          'observer_enabled'=>false,
-          'observer_offline_monitoring'=>false,
           'meter_id' => virtual_register.meter_id,
           'updatable'=> true,
           'deletable'=> true,
@@ -180,12 +77,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'type'=>"register_#{register.is_a?(Register::Real) ? 'real': 'virtual'}",
             'created_at'=>register.created_at.as_json,
             'updated_at'=>register.updated_at.as_json,
-            'label'=>register.attributes['label'],
             'last_reading'=>last ? last.value : 0,
-            'observer_min_threshold'=>register.meta.observer_min_threshold,
-            'observer_max_threshold'=>register.meta.observer_max_threshold,
-            'observer_enabled'=>register.meta.observer_enabled,
-            'observer_offline_monitoring'=>register.meta.observer_offline_monitoring,
             'meter_id' => register.meter_id,
             'updatable'=> true,
             'deletable'=> false,
@@ -222,13 +114,8 @@ describe Admin::LocalpoolRoda, :request_helper do
                 'type'=>'register_real',
                 'created_at'=>register.created_at.as_json,
                 'updated_at'=>register.updated_at.as_json,
-                'label'=>register.meta.attributes['label'],
                 'direction'=>register.consumption? ? 'in' : 'out',
                 'last_reading'=> last ? last.value : 0,
-                'observer_min_threshold'=>register.meta.observer_min_threshold,
-                'observer_max_threshold'=>register.meta.observer_max_threshold,
-                'observer_enabled'=>register.meta.observer_enabled,
-                'observer_offline_monitoring'=>register.meta.observer_offline_monitoring,
                 'meter_id' => register.meter_id,
                 'updatable'=> true,
                 'deletable'=> true,
@@ -262,13 +149,13 @@ describe Admin::LocalpoolRoda, :request_helper do
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq register_json.to_yaml
 
-            GET "/localpools/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin, include: 'market_location:contracts'
+            GET "/localpools/#{group.id}/meters/#{register.meter.id}/registers/#{register.id}", $admin, include: 'register_meta:contracts'
             expect(response).to have_http_status(200)
 
-            expect(json).to has_nested_json(:market_location, :contracts, :array, :id)
+            expect(json).to has_nested_json(:register_meta, :contracts, :array, :id)
 
             result = json
-            result.delete('market_location')
+            result.delete('register_meta')
             expect(result.to_yaml).to eq register_json.to_yaml
           end
         end

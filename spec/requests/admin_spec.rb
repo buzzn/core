@@ -131,14 +131,19 @@ describe Admin::Roda, :request_helper do
                 'slug'=>localpool.slug,
                 'description'=>localpool.description,
               },
-              'market_location' => {
+              'register_meta' => {
                 'id' => contract.register_meta.id,
-                'type' => 'market_location',
+                'type' => 'register_meta',
                 'created_at'=> contract.register_meta.created_at.as_json,
                 'updated_at'=> contract.register_meta.updated_at.as_json,
                 'name' => contract.register_meta.register.meta.name,
                 'kind' => 'consumption',
+                'label'=> register.meta.attributes['label'],
                 'market_location_id' => nil,
+                'observer_enabled'=>register.meta.observer_enabled,
+                'observer_min_threshold'=>register.meta.observer_min_threshold,
+                'observer_max_threshold'=>register.meta.observer_max_threshold,
+                'observer_offline_monitoring'=>register.meta.observer_offline_monitoring,
                 'updatable' => false,
                 'deletable' => false,
                 'register' => {
@@ -146,13 +151,8 @@ describe Admin::Roda, :request_helper do
                   'type'=>'register_real',
                   'created_at'=>register.created_at.as_json,
                   'updated_at'=>register.updated_at.as_json,
-                  'label'=>register.meta.attributes['label'],
                   'direction'=>'in',
                   'last_reading'=> 0,
-                  'observer_min_threshold'=>register.meta.observer_min_threshold,
-                  'observer_max_threshold'=>register.meta.observer_max_threshold,
-                  'observer_enabled'=>register.meta.observer_enabled,
-                  'observer_offline_monitoring'=>register.meta.observer_offline_monitoring,
                   'meter_id' => register.meter_id,
                   'updatable'=> false,
                   'deletable'=> false,
@@ -202,14 +202,14 @@ describe Admin::Roda, :request_helper do
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq(sort(expected_persons_json).to_yaml)
 
-        GET '/test/persons', $admin, include: 'contracts:[localpool,market_location:register]'
+        GET '/test/persons', $admin, include: 'contracts:[localpool,register_meta:register]'
 
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq(sort(expected_persons_with_nested_json).to_yaml)
       end
 
       it '200' do
-        GET "/test/persons/#{person.id}", $admin, include: 'address,contracts:[localpool,market_location:register]'
+        GET "/test/persons/#{person.id}", $admin, include: 'address,contracts:[localpool,register_meta:register]'
 
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(expected_person_json.to_yaml)

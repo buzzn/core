@@ -18,7 +18,7 @@ class Transactions::Admin::Contract::Localpool::UpdatePowerTaker < Transactions:
     if params[:register_meta].nil?
       return
     end
-    super(params: params.delete(:register_meta), resource: resource.market_location)
+    super(params: params.delete(:register_meta), resource: resource.register_meta)
   end
 
   def update_register_meta_options(params:, resource:, **)
