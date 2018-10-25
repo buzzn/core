@@ -29,5 +29,4 @@ module Register
     end
 
   end
-
 end

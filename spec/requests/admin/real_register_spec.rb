@@ -42,7 +42,6 @@ describe Register::RealResource, :request_helper do
           'pre_decimal_position'=>6,
           'post_decimal_position'=>1,
           'low_load_ability'=>false,
-          'metering_point_id'=>'123456',
           'obis'=>register.obis,
         }
       end
