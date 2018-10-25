@@ -1,6 +1,6 @@
 def all_reading_dates(localpool)
   dates = []
-  localpool.register_meta.each do |register_meta|
+  localpool.register_metas.each do |register_meta|
     # add first date to the beginning
     dates << [register_meta.register, localpool.start_date, :device_setup]
     # yearly dates
