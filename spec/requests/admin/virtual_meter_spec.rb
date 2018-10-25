@@ -64,7 +64,6 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
                 'pre_decimal_position'=>part.operand.pre_decimal_position,
                 'post_decimal_position'=>part.operand.post_decimal_position,
                 'low_load_ability'=>part.operand.low_load_ability,
-                'metering_point_id'=>part.operand.meter.metering_location&.metering_location_id,
                 'obis'=>part.operand.obis
               }
             }

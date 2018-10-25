@@ -137,7 +137,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               'pre_decimal_position'=>6,
               'post_decimal_position'=>1,
               'low_load_ability'=>false,
-              'metering_point_id'=>register.meter.metering_location&.metering_location_id,    'obis'=>register.obis,
+              'obis'=>register.obis,
               'meter' => {
                 'id'=>meter.id,
                 'type'=>'meter_real',
