@@ -1,8 +1,6 @@
 require_relative '../transactions'
 
 module Transactions::StepAdapters
-  class Registry < Dry::Transaction::StepAdapters
-  end
 end
 
 require_relative 'step_adapters/add'

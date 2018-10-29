@@ -1,4 +1,4 @@
-require_relative '../step_adapters'
+require_relative 'registry'
 
 class Transactions::StepAdapters::Abstract
 
