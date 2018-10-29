@@ -1,5 +1,6 @@
-require_relative '../meter'
 require_relative '../../../operations/discovergy'
+require_relative '../../../schemas/transactions/admin/meter/update_real'
+require_relative '../meter'
 
 class Transactions::Admin::Meter::UpdateReal < Transactions::Base
 
