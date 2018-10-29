@@ -1,5 +1,5 @@
-require_relative '../workers/mail_worker'
 require_relative './init'
+require_relative '../workers/mail_worker'
 
 require 'redis'
 require 'sidekiq'
