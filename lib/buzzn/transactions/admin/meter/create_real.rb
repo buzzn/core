@@ -1,4 +1,5 @@
 require_relative '../../../schemas/transactions/admin/meter/create_real'
+require_relative '../meter'
 
 class Transactions::Admin::Meter::CreateReal < Transactions::Base
 
