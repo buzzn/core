@@ -10,6 +10,7 @@ require 'dotenv'
 require 'pry'
 require 'dry/auto_inject'
 require 'dry-dependency-injection'
+require 'roda'
 
 # core extensions
 require_relative '../core/number'
