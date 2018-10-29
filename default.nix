@@ -18,12 +18,14 @@ in stdenv.mkDerivation {
   buildInputs = [
     pkgs.wkhtmltopdf
     bundix
+    # bundler # enable for native bundle
     gems
     gems.wrappedRuby
     gems.bundler
     pkgs.which
     pkgs.file
     pkgs.postgresql
+    pkgs.heroku
   ];
   dontStrip = true;
   dontPatchELF = true;
