@@ -14,7 +14,7 @@ describe Website::WebsiteFormRoda, :request_helper do
       expect(response).to have_http_status(422)
     end
 
-    it '422' do
+    it '201' do
       POST '/api/website/website-forms', nil,
            form_name: 'powertaker_v1',
            form_content: '{ "key": "value" }'
