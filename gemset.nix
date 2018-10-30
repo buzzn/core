@@ -292,10 +292,10 @@
   dry-initializer = {
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0kb91gckkndkkrpjaf8k8xyw0vr5y58jfyjxrjha0ds3msfbhmi8";
+      sha256 = "1wpp2b1gbp5brp53svdgxlp0yj581zx6yyxn3f28vg707l8cqadw";
       type = "gem";
     };
-    version = "2.3.0";
+    version = "2.5.0";
   };
   dry-logic = {
     dependencies = ["dry-container" "dry-core" "dry-equalizer"];
