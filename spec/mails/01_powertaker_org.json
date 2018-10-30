@@ -1,0 +1,62 @@
+{
+  "calculator": {
+    "type": "single",
+    "zip": "11111",
+    "annual_kwh": "2222",
+    "customerType": "organization",
+    "group": "best"
+  },
+  "personalInfo": {
+    "organization": {
+      "contractingParty": {
+        "name": "Project Peace",
+        "street": "Peaceroad",
+        "houseNum": "9",
+        "zip": "11111",
+        "city": "PeaceCity"
+      },
+      "representedBy": {
+        "firstAndLastName": "Peace Maker",
+        "email": "test@buzzn.net",
+        "phone": "123123214214"
+      },
+      "contactPerson": {
+        "prefix": "herr",
+        "firstName": "Contact",
+        "lastName": "Person",
+        "email": "test@buzzn.net",
+        "phone": "12314215345",
+        "title": "Prof"
+      }
+    },
+    "authorizedContact": true
+  },
+  "address": {
+    "organization": {
+      "shippingAddress": {
+        "sameAddress": true
+      }
+    }
+  },
+  "oldSupplier": {
+    "type": "change",
+    "previousProvider": "EvilEnergy",
+    "previousCustomerNumber": "777777",
+    "meterNumber": "999999"
+  },
+  "bank": {
+    "accountName": "Foobar",
+    "iban": "2343253255",
+    "bankName": "Foobank",
+    "sepaAuthorize": true
+  },
+  "agreement": {
+    "buzznSupplyAgreement": true,
+    "generalAgreement": true
+  },
+  "price": {
+    "baseprice_cents_per_month": 906,
+    "energyprice_cents_per_kilowatt_hour": 29,
+    "total_cents_per_month": 6276
+  }
+}

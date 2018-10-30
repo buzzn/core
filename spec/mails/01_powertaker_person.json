@@ -1,0 +1,51 @@
+{
+  "calculator": {
+    "type": "single",
+    "zip": "11111",
+    "annual_kwh": "2222",
+    "customerType": "person",
+    "group": "best"
+  },
+  "personalInfo": {
+    "person": {
+      "prefix": "herr",
+      "title": "Prof",
+      "firstName": "Peace",
+      "lastName": "Maker",
+      "email": "test@buzzn.net",
+      "phone": "012314325325"
+    }
+  },
+  "address": {
+    "person": {
+      "shippingAddress": {
+        "zip": "11111",
+        "city": "Peacecity",
+        "street": "Peaceroad",
+        "houseNum": "23"
+      }
+    }
+  },
+  "oldSupplier": {
+    "type": "change",
+    "previousProvider": "Zombienation Inc",
+    "previousCustomerNumber": "999",
+    "meterNumber": "1234"
+  },
+  "bank": {
+    "accountName": "Myself",
+    "iban": "1231243214214214",
+    "bankName": "Evilbank",
+    "sepaAuthorize": true
+  },
+  "agreement": {
+    "buzznSupplyAgreement": true,
+    "generalAgreement": true,
+    "newsletter": true
+  },
+  "price": {
+    "baseprice_cents_per_month": 906,
+    "energyprice_cents_per_kilowatt_hour": 29,
+    "total_cents_per_month": 6276
+  }
+}

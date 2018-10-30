@@ -3,9 +3,25 @@ module Mail
 
     include Import.reader['services.mail_generator']
 
+    class MailStruct < OpenStruct
+
+      def method_missing(method, *args, &block)
+        if respond_to?(method)
+          super
+        else
+          "__#{method}__" || super
+        end
+      end
+
+      def respond_to_missing?(*)
+        true
+      end
+
+    end
+
     def initialize(root_object, **)
       @root = root_object
-      @builder = Builders::StructBuilder.new(OpenStruct)
+      @builder = Builders::StructBuilder.new(MailStruct)
     end
 
     def to_html
