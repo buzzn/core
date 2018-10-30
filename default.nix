@@ -5,6 +5,7 @@ let
   stdenv = pkgs.stdenv;
   bundler = pkgs.bundler.override { inherit ruby; };
   bundix = pkgs.bundix.override { inherit bundler; };
+  pgloader = pkgs.callPackage ./pgloader.nix {};
   gems = pkgs.bundlerEnv {
     name = "hive";
     inherit ruby;
@@ -25,7 +26,9 @@ in stdenv.mkDerivation {
     pkgs.which
     pkgs.file
     pkgs.postgresql
+    pkgs.mysql
     pkgs.heroku
+    pgloader
   ];
   dontStrip = true;
   dontPatchELF = true;
