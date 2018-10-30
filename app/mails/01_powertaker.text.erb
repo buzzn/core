@@ -32,48 +32,53 @@ Hier eine Zusammenfassung Deiner Angaben (die Kontodaten haben wir
 erhalten, sie werden aber aus Sicherheitsgründen nicht mit dieser E-Mail
 versendet):
 
-Persönliche Angaben
--------------------
-
-Vorname: <%= customer.name %>
-Nachname: <%= customer.last_name %>
-Geschlecht: <%= customer.gender %>
-Telefon: <%= customer.phone %>
-E-Mail: <%= customer.email %>
-
 Vertragspartner
 ---------------
+<% if calculator.customer_type == 'person' %>
+Titel: <%= personal_info.person.title %>
+Zusatz: <%= personal_info.person.prefix %>
+Vorname: <%= personal_info.person.first_name %>
+Nachname: <%= personal_info.person.last_name %>
+E-Mail: <%= personal_info.person.email %>
+Telefon: <%= personal_info.person.phone %>
+<% else %>
+Name: <%= personal_info.organization.contracting_party.name %>
+Straße: <%= personal_info.organization.contracting_party.street %> <%= personal_info.organization.contracting_party.house_num %>
+Ort: <%= personal_info.organization.contracting_party.zip %> <%= personal_info.organization.contracting_party.city %>
 
-Person (natürlich oder juristisch): <%= partner.name %>
-Straße: <%= partner.address.street %>
-Adresszusatz: <%= partner.address.addition %>
-Ort: <%= partner.address.zip %> <%= partner.address.city %>
+Vertreten durch <%= personal_info.organization.represented_by.first_and_last_name %>
+E-mail: <%= personal_info.organization.represented_by.email %>
+Telefon: <%= personal_info.organization.represented_by.phone %>
 
-Vertretung: <%= partner.represented_by %>
+Kontaktperson:
 
+Titel: <%= personal_info.organization.contact_person.title %>
+Zusatz: <%= personal_info.organization.contact_person.prefix %>
+Vorname: <%= personal_info.organization.contact_person.first_name %>
+Nachname: <%= personal_info.organization.contact_person.last_name %>
+E-Mail: <%= personal_info.organization.contact_person.email %>
+Telefon: <%= personal_info.organization.contact_person.phone %>
+<% end %>
 Bezugsstelle
 ------------
-
-Neueinzug?: <% moving_in ? 'ja' : 'nein' %>
-<% if moving_in %>
-Datum (bei Neueinzug): <%= moving_in_date %>
+<% if calculator.customer_type == 'person' %>
+Straße: <%= address.person.shipping_address.street %> <%= address.person.shipping_address.house_num %>
+Ort: <%= address.person.shipping_address.zip %> <%= address.person.shipping_address.city %>
+<% else %>
+<% if address.organization.shipping_address.same_address %>
+Straße: <%= personal_info.organization.contracting_party.street %> <%= personal_info.organization.contracting_party.house_num %>
+Ort: <%= personal_info.organization.contracting_party.zip %> <%= personal_info.organization.contracting_party.city %>
+<% else %>
+Straße: <%= address.organization.shipping_address.street %> <%= address.organization.shipping_address.house_num %>
+Ort: <%= address.organization.shipping_address.zip %> <%= address.organization.shipping_address.city %>
 <% end %>
-Zählernummer: <%= counter_id %>
-Zählpunkt-ID: <%= count_id %>
-Prognose: <%= estimated_kwh %>
-Vorlieferant: <%= previous_supplier.name %>
-Kundennummer Vorlieferant: <%= previous_supplier.customer_no %>
-Vertragsnummer Vorlieferant: <%= previous_supplier.contract_no %>
-Bisheriger Abschlag: <%= previous_a_conto %>
-
-
-Feedback
-----------
-
-Meine Nachricht an das buzzn Team:
-
-<%= message %>
-
-Wie bin ich auf buzzn aufmerksam geworden:
-
-<%= reference %>
+<% end %>
+Zählernummer: <%= old_supplier.meter_number %>
+Prognose (kWh): <%= calculator.annual_kwh %>
+<% if old_supplier.type == 'move' %>
+Wechseldatum: <%= old_supplier.delivery_start %>
+Zählerstand: <%= old_supplier.meter_reading %>
+<% elsif old_supplier.type == 'change' %>
+Vorlieferant: <%= old_supplier.previous_provider %>
+Kundennummer Vorlieferant: <%= old_supplier.previous_customer_number %>
+<% end %>
