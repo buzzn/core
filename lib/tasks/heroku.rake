@@ -9,17 +9,46 @@ namespace :heroku do
     sh "heroku ps:restart --app=#{app_name}"
   end
 
+  def pull_heroku_to_local_dump(env, dump_url)
+    app_name = "buzzn-core-#{env}"
+    sh "PGSSLMODE=allow heroku pg:pull DATABASE_URL #{dump_url} --app=#{app_name}"
+  end
+
+  namespace :pull_db do
+
+    task staging: %i(db:dump:reset) do
+      pull_heroku_to_local_dump(:staging, Import.global('config.database_dump_url'))
+    end
+
+    task production: %i(db:dump:reset) do
+      pull_heroku_to_local_dump(:production, Import.global('config.database_dump_url'))
+    end
+
+  end
+
   namespace :update_db do
 
     task import: %i(beekeeper:import beekeeper:person_images:attach)
 
     desc 'Run the beekeeper import and push the result to staging'
-    task staging: %i(is_staging db:drop db:create db:migrate db:seed:example_data db:seed:buzzn_operator import) do
+    task staging:    %i(is_staging
+                        db:reset
+                        heroku:pull_db:staging
+                        db:seed:example_data
+                        db:seed:buzzn_operator
+                        db:dump:transfer
+                        import) do
       push_local_db_to_heroku(:staging)
     end
 
     desc 'Run the beekeeper import and push the result to production'
-    task production: %i(is_production db:drop db:create db:migrate db:seed:setup_data db:seed:pho_user import) do
+    task production: %i(is_production
+                        db:reset
+                        heroku:pull_db:production
+                        db:seed:setup_data
+                        db:seed:pho_user
+                        db:dump:transfer
+                        import) do
       push_local_db_to_heroku(:production)
     end
 
