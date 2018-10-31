@@ -62,14 +62,17 @@ DISCOVERGY_PASSWORD=<password from lastpass>
 
 ## Overview
 
-| task name            | description   | source
-|----------------------|---------------|----------------
-| `rake db:empty` | Resets the database without dropping the DB.<br />Useful to reset DB when it has open connections. | Buzzn custom
-| `rake db:seed:example_data` | Load an example localpool into the DB.<br />It does not prepare/empty the DB, run `rake db:empty` beforehands if required. | Buzzn custom
-| `rake deploy:staging` | Deploy the application to staging. | Buzzn custom
-| `rake deploy:production` | Deploy the application to production and create a new release tag. | Buzzn custom
-| `rake heroku:update_db:staging` | Import the beekeeper dump locally and push it to staging.  | Buzzn custom
-| `rake heroku:update_db:production` | Import the beekeeper dump locally and push it to production.  | Buzzn custom
+| task name                          | description                                                                                                                | source       |
+|------------------------------------|----------------------------------------------------------------------------------------------------------------------------|--------------|
+| `rake db:empty`                    | Resets the database without dropping the DB.<br />Useful to reset DB when it has open connections.                         | Buzzn custom |
+| `rake db:seed:example_data`        | Load an example localpool into the DB.<br />It does not prepare/empty the DB, run `rake db:empty` beforehands if required. | Buzzn custom |
+| `rake db:dump:transfer`            | Transfer relevant data from buzzn_core_development to DATABASE_DUMP_NAME                                                   | Buzzn custom |
+| `rake deploy:staging`              | Deploy the application to staging.                                                                                         | Buzzn custom |
+| `rake deploy:production`           | Deploy the application to production and create a new release tag.                                                         | Buzzn custom |
+| `rake heroku:update_db:staging`    | Import the beekeeper dump locally and push it to staging.                                                                  | Buzzn custom |
+| `rake heroku:pull_db:staging`      | Fetch a postgres dump from staging to DATABASE_DUMP_NAME, for use with `db:dump:transfer`                                  |              |
+| `rake heroku:update_db:production` | Import the beekeeper dump locally and push it to production.                                                               | Buzzn custom |
+| `rake heroku:pull_db:production`   | Fetch a postgres dump from production to DATABASE_DUMP_NAME, for use with `db:dump:transfer`                               |              |
 
 ## Common testing workflow - after checking out a remote branch
 
@@ -160,11 +163,21 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
     use homebrew on a Mac
 
 ## Set up the project
+
+### Legacy way
     git clone https://github.com/buzzn/core.git
     cd core
     gem install bundler
     bundle install
     rake application:init
+
+### Using Nix
+* [Download and install Nix](https://nixos.org/nix/)
+```
+    git clone https://github.com/buzzn/core.git
+    cd core
+    nix-shell
+```
 
 ## Start server in development mode
     bin/server
