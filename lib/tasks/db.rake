@@ -9,6 +9,36 @@ namespace :db do
 
   task reset: [:drop, :create, :migrate]
 
+  namespace :dump do
+
+    desc 'Drops the intermediary database used for pulling from a remote (i.e. heroku)'
+    task :drop do
+      password = Import.global('config.postgres_password')
+      host =     Import.global('config.postgres_host')
+      user =     Import.global('config.postgres_user')
+      db =       Import.global('config.database_dump_name')
+      sh "PGPASSWORD=#{password} dropdb -h #{host} -U #{user} --if-exists #{db}"
+    end
+
+    desc 'creates the intermediary database used for pulling from a remote (i.e. heroku)'
+    task :create do
+      password = Import.global('config.postgres_password')
+      host =     Import.global('config.postgres_host')
+      user =     Import.global('config.postgres_user')
+      db =       Import.global('config.database_dump_name')
+      sh "PGPASSWORD=#{password} createdb -h #{host} -U #{user} #{db}"
+    end
+
+    task reset: [:drop, :create]
+
+    desc 'transfers data from the dump to the current database'
+    task :transfer do
+      require_relative '../../db/support/transfer'
+      transfer_webforms
+    end
+
+  end
+
   Rake::Task['seed'].clear
   task seed: 'seed:setup_data'
 
