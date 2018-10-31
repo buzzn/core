@@ -8,6 +8,7 @@ def transfer_webforms
   # change connection back
   ActiveRecord::Base.establish_connection Import.global('config.database_url')
   forms.each do |form|
+    form.delete(:id)
     WebsiteForm.create!(form)
   end
 end
