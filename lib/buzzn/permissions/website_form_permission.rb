@@ -8,7 +8,7 @@ WebsiteFormResource::Permission = Buzzn::Permission.new(WebsiteFormResource) do
 
   create :all
   retrieve :admins
-  update :none
+  update :admins
   delete :none
 
 end

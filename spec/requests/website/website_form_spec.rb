@@ -44,4 +44,26 @@ describe Website::WebsiteFormRoda, :request_helper do
 
   end
 
+  context 'PATCH' do
+    entity(:some_form) { create(:website_form) }
+
+    entity(:update_params) do
+      some_form.reload
+      {
+        :updated_at => some_form.updated_at,
+        :processed => true
+      }
+    end
+
+    it '403' do
+      PATCH "website/website-forms/#{some_form.id}", nil, update_params
+      expect(response).to have_http_status(403)
+    end
+
+    it '200' do
+      PATCH "website/website-forms/#{some_form.id}", $admin, update_params
+      expect(response).to have_http_status(200)
+    end
+  end
+
 end
