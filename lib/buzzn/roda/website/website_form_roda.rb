@@ -3,7 +3,9 @@ require_relative '../base_roda'
 module Website
   class WebsiteFormRoda < BaseRoda
 
-    include Import.args[:env, 'transactions.website.website_form.create']
+    include Import.args[:env,
+                        'transactions.website.website_form.create',
+                        'transactions.website.website_form.update_processed']
 
     plugin :run_handler
 
@@ -24,6 +26,19 @@ module Website
 
       r.get! do
         website_forms
+      end
+
+      r.on :id do |id|
+        website_form = website_forms.retrieve(id)
+
+        r.get! do
+          website_form
+        end
+
+        r.patch! do
+          update_processed.(resource: website_form, params: r.params)
+        end
+
       end
 
     end
