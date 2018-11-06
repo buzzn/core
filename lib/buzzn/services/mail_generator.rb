@@ -20,7 +20,7 @@ class Services::MailGenerator
 
   def render_text(name, struct)
     source = resolve_template(name, 'text', 'erb')
-    ERB.new(source).result(struct.instance_eval { binding })
+    ERB.new(source, nil, '-').result(struct.instance_eval { binding })
   end
 
   def render_html(name, struct)
