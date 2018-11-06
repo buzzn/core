@@ -28,20 +28,28 @@ Nochmals danke und auf gute Energiefreundschaft!
 
 Das buzzn Team
 
-Hier eine Zusammenfassung Deiner Angaben (die Kontodaten haben wir
-erhalten, sie werden aber aus Sicherheitsgründen nicht mit dieser E-Mail
-versendet):
+Hier eine Zusammenfassung Deiner Angaben:
 
+Kontodaten
+----------
+
+SEPA Mandat: <%= bank.sepa_authorize ? "erteilt" : "nicht erteilt" %>
+<% if bank.without_sepa %>
+<%= 'Du hast Dich entschieden uns deine Bankdaten auf anderem Wege zukommen zu lassen.
+Ein entsprechendes Formular kannst du hier herunterladen: TODO' %>
+<% else %>
+<%= 'Deine Bankdaten haben wir erhalten, werden hier aber aus Sicherheitsgründen nicht wiederholt.' %>
+<% end %>
 Vertragspartner
 ---------------
-<% if calculator.customer_type == 'person' %>
+<% if calculator.customer_type == 'person' -%>
 Titel: <%= personal_info.person.title %>
 Zusatz: <%= personal_info.person.prefix %>
 Vorname: <%= personal_info.person.first_name %>
 Nachname: <%= personal_info.person.last_name %>
 E-Mail: <%= personal_info.person.email %>
 Telefon: <%= personal_info.person.phone %>
-<% else %>
+<% else -%>
 Name: <%= personal_info.organization.contracting_party.name %>
 Straße: <%= personal_info.organization.contracting_party.street %> <%= personal_info.organization.contracting_party.house_num %>
 Ort: <%= personal_info.organization.contracting_party.zip %> <%= personal_info.organization.contracting_party.city %>
@@ -58,27 +66,26 @@ Vorname: <%= personal_info.organization.contact_person.first_name %>
 Nachname: <%= personal_info.organization.contact_person.last_name %>
 E-Mail: <%= personal_info.organization.contact_person.email %>
 Telefon: <%= personal_info.organization.contact_person.phone %>
-<% end %>
+<% end -%>
+
 Bezugsstelle
 ------------
-<% if calculator.customer_type == 'person' %>
-Straße: <%= address.person.shipping_address.street %> <%= address.person.shipping_address.house_num %>
-Ort: <%= address.person.shipping_address.zip %> <%= address.person.shipping_address.city %>
-<% else %>
-<% if address.organization.shipping_address.same_address %>
-Straße: <%= personal_info.organization.contracting_party.street %> <%= personal_info.organization.contracting_party.house_num %>
-Ort: <%= personal_info.organization.contracting_party.zip %> <%= personal_info.organization.contracting_party.city %>
-<% else %>
-Straße: <%= address.organization.shipping_address.street %> <%= address.organization.shipping_address.house_num %>
-Ort: <%= address.organization.shipping_address.zip %> <%= address.organization.shipping_address.city %>
-<% end %>
-<% end %>
+<% if calculator.customer_type == 'person' -%>
+<%= "Straße: #{address.person.shipping_address.street} #{address.person.shipping_address.house_num}" %>
+<%= "Ort:    #{address.person.shipping_address.zip} #{address.person.shipping_address.city}" %>
+<% elsif address.organization.shipping_address.same_address -%>
+<%= "Straße: #{personal_info.organization.contracting_party.street} #{personal_info.organization.contracting_party.house_num}" %>
+<%= "Ort:    #{personal_info.organization.contracting_party.zip} #{personal_info.organization.contracting_party.city}" %>
+<% else -%>
+<%= "Straße: #{address.organization.shipping_address.street} #{address.organization.shipping_address.house_num}" %>
+<%= "Ort:    #{address.organization.shipping_address.zip} #{address.organization.shipping_address.city}" %>
+<% end -%>
 Zählernummer: <%= old_supplier.meter_number %>
 Prognose (kWh): <%= calculator.annual_kwh %>
-<% if old_supplier.type == 'move' %>
-Wechseldatum: <%= old_supplier.delivery_start %>
-Zählerstand: <%= old_supplier.meter_reading %>
+<% if old_supplier.type == 'move' -%>
+<%= "Wechseldatum: #{old_supplier.delivery_start}" %>
+<%= "Zählerstand:  #{old_supplier.meter_reading}" %>
 <% elsif old_supplier.type == 'change' %>
-Vorlieferant: <%= old_supplier.previous_provider %>
-Kundennummer Vorlieferant: <%= old_supplier.previous_customer_number %>
-<% end %>
+<%= "Vorlieferant: #{old_supplier.previous_provider}" %>
+<%= "Kundennummer Vorlieferant: #{old_supplier.previous_customer_number}" %>
+<% end -%>
