@@ -37,6 +37,8 @@ namespace :heroku do
                         db:seed:example_data
                         db:seed:buzzn_operator
                         db:dump:transfer
+                        zip_to_price:import
+                        zip_to_price:set_config
                         import) do
       push_local_db_to_heroku(:staging)
     end
@@ -48,6 +50,8 @@ namespace :heroku do
                         db:seed:setup_data
                         db:seed:pho_user
                         db:dump:transfer
+                        zip_to_price:import
+                        zip_to_price:set_config
                         import) do
       push_local_db_to_heroku(:production)
     end
