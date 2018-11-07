@@ -36,6 +36,8 @@ class Beekeeper::Importer::GroupContracts
       localpool: localpool,
       begin_date: start_date,
       signing_date: start_date,
+      customer: localpool.owner,
+      contractor: Organization::Market.buzzn,
       contract_number: contract_number,
       contract_number_addition: 0
     }
