@@ -1,4 +1,5 @@
-require_relative '../step_adapters'
+module Transactions::StepAdapters
+end
 
 class Transactions::StepAdapters::Registry < Dry::Transaction::StepAdapters
 end
