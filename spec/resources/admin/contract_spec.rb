@@ -187,6 +187,11 @@ describe Contract::BaseResource do
                     'old_supplier_name',
                     'old_customer_number',
                     'old_account_number',
+                    'authorization',
+                    'confirm_pricing_model',
+                    'move_in',
+                    'other_contract',
+                    'power_of_attorney',
                     'share_register_with_group',
                     'share_register_publicly',
                     'mandate_reference'] + base_attributes
