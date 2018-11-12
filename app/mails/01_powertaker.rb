@@ -71,11 +71,21 @@ module Mail
         {
           :organization => {
             :shipping_address => {
-              :same_address => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:sameAddress),
-              :street       => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:street),
-              :house_num    => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:houseNum),
-              :zip          => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:zip),
-              :city         => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:city),
+              :same_address       => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:sameAddress),
+              :street             => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:street),
+              :house_num          => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:houseNum),
+              :zip                => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:zip),
+              :city               => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:city),
+              :additional_address => form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:additionalAddress),
+            },
+            :billing_address => {
+              :another_address    => form_content&.[](:address)&.[](:organization)&.[](:billingAddress)&.[](:anotherAddress),
+              :name               => form_content&.[](:address)&.[](:organization)&.[](:billingAddress)&.[](:firstNameLastNameName),
+              :street             => form_content&.[](:address)&.[](:organization)&.[](:billingAddress)&.[](:street),
+              :house_num          => form_content&.[](:address)&.[](:organization)&.[](:billingAddress)&.[](:houseNum),
+              :zip                => form_content&.[](:address)&.[](:organization)&.[](:billingAddress)&.[](:zip),
+              :city               => form_content&.[](:address)&.[](:organization)&.[](:billingAddress)&.[](:city),
+              :additional_address => form_content&.[](:address)&.[](:organization)&.[](:billingAddress)&.[](:additionalAddress),
             }
           }
         }
@@ -83,9 +93,20 @@ module Mail
         {
           :person => {
             :shipping_address => {
-              :zip_city  => form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:zipCity),
-              :street    => form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:street),
-              :house_num => form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:houseNum),
+              :zip                => form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:zip),
+              :city               => form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:city),
+              :street             => form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:street),
+              :house_num          => form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:houseNum),
+              :additional_address => form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:additionalAddress),
+            },
+            :billing_address => {
+              :another_address    => form_content&.[](:address)&.[](:person)&.[](:billingAddress)&.[](:anotherAddress),
+              :name               => form_content&.[](:address)&.[](:person)&.[](:billingAddress)&.[](:firstNameLastNameName),
+              :street             => form_content&.[](:address)&.[](:person)&.[](:billingAddress)&.[](:street),
+              :house_num          => form_content&.[](:address)&.[](:person)&.[](:billingAddress)&.[](:houseNum),
+              :zip                => form_content&.[](:address)&.[](:person)&.[](:billingAddress)&.[](:zip),
+              :city               => form_content&.[](:address)&.[](:person)&.[](:billingAddress)&.[](:city),
+              :additional_address => form_content&.[](:address)&.[](:person)&.[](:billingAddress)&.[](:additionalAddress),
             }
           }
         }
