@@ -14,6 +14,11 @@ module Contract
                 :old_customer_number,
                 :old_account_number,
                 :mandate_reference,
+                :confirm_pricing_model,
+                :power_of_attorney,
+                :other_contract,
+                :move_in,
+                :authorization,
                 :share_register_with_group,
                 :share_register_publicly
 
