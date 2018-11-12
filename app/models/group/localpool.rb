@@ -23,6 +23,12 @@ module Group
     has_many :localpool_power_taker_contracts, class_name: 'Contract::LocalpoolPowerTaker', foreign_key: :localpool_id
     has_many :localpool_third_party_contracts, class_name: 'Contract::LocalpoolThirdParty', foreign_key: :localpool_id
 
+    has_many :register_metas_by_contracts, class_name: 'Register::Meta', through: :localpool_power_taker_contracts, foreign_key: :register_meta_id, source: :register_meta
+
+    def register_metas
+      Register::Meta.where(:id => self.register_metas_by_contracts.pluck(:id) + self.register_metas_by_registers.pluck(:id))
+    end
+
     def metering_point_operator_contract
       self.metering_point_operator_contracts.each do |mpoc|
         next if [Contract::Base::TERMINATED, Contract::Base::ENDED].include? mpoc.status
