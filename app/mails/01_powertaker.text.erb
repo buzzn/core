@@ -1,45 +1,42 @@
-Hallo <%= customer.name %>,
+Hallo <%= customer.name -%>,
 
-Dein Auftrag zum Strom nehmen ist hier eingegangen. Vielen Dank!
+Dein Stromnehmer-Auftrag ist bei uns eingegangen. Vielen Dank!
 
-Wir freuen uns, dass Du Dich entschieden hast, in Zukunft Strom aus dem
-buzzn Pool zu beziehen und damit ein neues Energiesystem zu unterstützen
-en.
+<% if bank.without_sepa -%>
+Zur Vervollständigung Deines Auftrages sende uns Bitte noch das ausgefüllte und
+unterschriebene SEPA-Lastschriftformular [1] per Mail, Fax oder Post zu.
+Sobald dieses bei uns eingegangen ist, organisieren wir die Belieferung Deiner
+Bezugsstelle mit dem Strom aus Deiner gewählten Energiegruppe.
+Dies kann durchaus einige Zeit in Anspruch nehmen, wir melden uns bei Dir.
+<% else -%>
+Wir organisieren jetzt die Belieferung Deiner Bezugsstelle mit dem Strom
+aus Deiner gewählten Energiegruppe.
+Dies kann durchaus einige Zeit in Anspruch nehmen.
+Wir melden uns bei Dir, du musst aktuell nichts tun.
+<% end -%>
 
-Jetzt kontaktieren wir Deinen derzeitigen Lieferanten und regeln mit ihm
-Deinen nahtlosen Wechsel zu buzzn. Es kann durchaus einige Wochen dauern,
-bis wir wissen, ab welchem Datum Dein Strom von buzzn kommt. Vorerst musst
-Du erst einmal nichts tun außer warten.
-
-Sobald alle notwendigen Schritte erledigt sind, bekommst Du die
-Auftragsbestätigung mit dem genauen Bezugsbeginn zugesendet. Mit Zusendung
-der Auftragsbestätigung kommt der Vertrag dann zustande.
-
-Hast Du noch Fragen? Unter der Rufnummer 0791 401-626 steht Dir unser
-Service Team (Stromnehmer) gerne telefonisch zur Verfügung:
-
-Mo. - Mi.  | 8:00 - 16:00 Uhr
-Do.        | 7:30 - 20:00 Uhr
-Fr.        | 8:00 - 12:00 Uhr
+Hast Du noch Fragen? Unter der Rufnummer 089-41 61 71 410 stehen
+wir Dir von 9-18 Uhr gerne telefonisch zur Verfügung.
 
 Ansonsten freuen wir uns auch über eine E-Mail von Dir an team@buzzn.net.
 
-Nochmals danke und auf gute Energiefreundschaft!
+Auf gute Energiefreundschaft!
 
-Das buzzn Team
+Dein buzzn Team
 
+<% if bank.without_sepa -%>
+[1] https://www.buzzn.net/sepa_formular.pdf
+<% end -%>
+
+<% if bank.without_sepa -%>
 Hier eine Zusammenfassung Deiner Angaben:
+<% else -%>
+Hier eine Zusammenfassung Deiner Angaben, die Bankverbindung haben wir erhalten,
+sie wird aber aus Sicherheitsgründen nicht mit dieser E-Mail versendet:
+<% end -%>
 
-Kontodaten
-----------
+Gewählte Gruppe: <%= calculator.group %>
 
-SEPA Mandat: <%= bank.sepa_authorize ? "erteilt" : "nicht erteilt" %>
-<% if bank.without_sepa %>
-<%= 'Du hast Dich entschieden uns deine Bankdaten auf anderem Wege zukommen zu lassen.
-Ein entsprechendes Formular kannst du hier herunterladen: TODO' %>
-<% else %>
-<%= 'Deine Bankdaten haben wir erhalten, werden hier aber aus Sicherheitsgründen nicht wiederholt.' %>
-<% end %>
 Vertragspartner
 ---------------
 <% if calculator.customer_type == 'person' -%>
@@ -68,8 +65,29 @@ E-Mail: <%= personal_info.organization.contact_person.email %>
 Telefon: <%= personal_info.organization.contact_person.phone %>
 <% end -%>
 
-Bezugsstelle
-------------
+Rechnungsadresse
+----------------
+
+<% if calculator.customer_type == 'person' -%>
+<% if address.person.billing_address.another_address -%>
+<%= "Name:   #{address.person.billing_address.name}" %>
+<%= "Straße: #{address.person.billing_address.street} #{address.person.billing_address.house_num}" %>
+<%= "Ort:    #{address.person.billing_address.zip} #{address.person.billing_address.city}" %>
+<% else -%>
+Wie Lieferadresse.
+<% end -%>
+<% elsif calculator.customer_type == 'organization' -%>
+<% if address.organization.billing_address.another_address -%>
+<%= "Name:   #{address.organization.billing_address.name}" %>
+<%= "Straße: #{address.organization.billing_address.street} #{address.organization.billing_address.house_num}" %>
+<%= "Ort:    #{address.organization.billing_address.zip} #{address.organization.billing_address.city}" %>
+<% else -%>
+Wie Lieferadresse.
+<% end -%>
+<% end -%>
+
+Bezugsstelle / Lieferadresse
+----------------------------
 <% if calculator.customer_type == 'person' -%>
 <%= "Straße: #{address.person.shipping_address.street} #{address.person.shipping_address.house_num}" %>
 <%= "Ort:    #{address.person.shipping_address.zip} #{address.person.shipping_address.city}" %>
