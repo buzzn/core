@@ -32,7 +32,9 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       register_class = attrs[:type].constantize
       # note: during the import we move the name from the register (zählwerk) to the newly introduced entity
       register       = register_class.new(attrs.slice(:readings, :meter))
-      register.build_meta(attrs.except(:type, :meter_attributes, :metering_point_id, :meter, :readings))
+
+      register_meta_default_attrs = { :observer_enabled => false, :observer_offline_monitoring => false }
+      register.build_meta(attrs.except(:type, :meter_attributes, :metering_point_id, :meter, :readings).merge(register_meta_default_attrs))
       # debug = "#{zählwerk.buzznid}: #{register.label} (#{register.name})"
       # debug << " MPID #{register.metering_point_id}" if register.metering_point_id
       # puts debug
