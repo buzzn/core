@@ -192,6 +192,8 @@ describe Contract::BaseResource do
                     'move_in',
                     'other_contract',
                     'power_of_attorney',
+                    'metering_point_operator_name',
+                    'original_signing_user',
                     'share_register_with_group',
                     'share_register_publicly',
                     'mandate_reference'] + base_attributes

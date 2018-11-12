@@ -19,6 +19,8 @@ module Contract
                 :other_contract,
                 :move_in,
                 :authorization,
+                :original_signing_user,
+                :metering_point_operator_name,
                 :share_register_with_group,
                 :share_register_publicly
 

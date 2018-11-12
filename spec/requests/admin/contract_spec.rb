@@ -43,6 +43,8 @@ describe Admin::LocalpoolRoda, :request_helper do
           'other_contract' => nil,
           'move_in' => nil,
           'authorization' => nil,
+          'original_signing_user' => nil,
+          'metering_point_operator_name' => nil,
           'share_register_with_group' => true,
           'share_register_publicly' => true,
           'localpool' => {
