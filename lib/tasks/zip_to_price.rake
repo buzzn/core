@@ -17,7 +17,7 @@ namespace :zip_to_price do
       strom_nev: 0.305,
       stromsteuer: 2.050,
       eeg_umlage:  6.405,
-      offshore_haftung: -0.416,
+      offshore_haftung: 0.416,
       deckungs_beitrag: 1.50,
       energie_preis: 6.00,
       vat: 1.19,
