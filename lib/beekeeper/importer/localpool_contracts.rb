@@ -91,7 +91,7 @@ class Beekeeper::Importer::LocalpoolContracts
   def create_fake_register(buzznid, localpool)
     logger.warn("No meter/register for #{buzznid}, creating a fake temporary one.")
     meter = Meter::Real.create!(product_serialnumber: "FAKE-FOR-IMPORT-#{counter}", legacy_buzznid: buzznid, group: localpool)
-    meta = Register::Meta.new(name: "FAKE-FOR-IMPORT-M-#{counter}", label: other, observer_enabled: false, observer_offline_monitoring: false)
+    meta = Register::Meta.new(name: "FAKE-FOR-IMPORT-M-#{counter}", label: :other, observer_enabled: false, observer_offline_monitoring: false)
     Register::Real.create!(meta: meta, meter: meter)
   end
 
