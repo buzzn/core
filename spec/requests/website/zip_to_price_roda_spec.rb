@@ -7,8 +7,10 @@ describe Website::ZipToPriceRoda, :request_helper do
   end
 
   before :all do
-    file = File.join('db', 'csv', 'TEST_MINIMAL_GET_AG_2017ET_DTdot.csv')
-    ZipToPrice.from_csv(file)
+    file = File.join('db', 'csv', 'GetAG_2018_ET_minimal.csv')
+    ZipToPrice.from_csv(file, true)
+    file = File.join('db', 'csv', 'GetAG_2018_DT_minimal.csv')
+    ZipToPrice.from_csv(file, false)
 
     CoreConfig.store Types::ZipPriceConfig.new(
       kwkg_aufschlag: 0.445,
@@ -42,9 +44,9 @@ describe Website::ZipToPriceRoda, :request_helper do
 
     let(:price_json) do
       {
-        'baseprice_cents_per_month'=>841,
-        'energyprice_cents_per_kilowatt_hour'=>30,
-        'total_cents_per_month'=>3926
+        'baseprice_cents_per_month'=>831,
+        'energyprice_cents_per_kilowatt_hour'=>29,
+        'total_cents_per_month'=>3813
       }
     end
 
@@ -68,7 +70,7 @@ describe Website::ZipToPriceRoda, :request_helper do
 
     it '200' do
       POST '', nil,
-           zip: 1217,
+           zip: 1337,
            annual_kwh: 1234,
            type: 'double'
 

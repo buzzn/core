@@ -39,3 +39,7 @@ uploads
 # ignore files created by bin/render
 /*.html
 /*.pdf
+
+# GET AG
+db/csv/2018-10-26_GetAG_ET.csv
+db/csv/2018-10-26_GetAG_DT.csv

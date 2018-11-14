@@ -2,8 +2,10 @@ namespace :zip_to_price do
 
   desc 'Import zip to price data'
   task :import => :environment do
-    file = File.join('db', 'csv', 'GET_AG_2017ET_DTdot.csv')
-    ZipToPrice.from_csv(file)
+    file = File.join('db', 'csv', '2018-10-26_GetAG_ET.csv')
+    ZipToPrice.from_csv(file, true)
+    file = File.join('db', 'csv', '2018-10-26_GetAG_DT.csv')
+    ZipToPrice.from_csv(file, false)
   end
 
   desc 'set zip price config'
