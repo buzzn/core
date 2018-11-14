@@ -3,8 +3,10 @@ require 'buzzn/types/zip_price_config'
 describe Types::ZipPrice do
 
   before :all do
-    file = File.join('db', 'csv', 'TEST_MINIMAL_GET_AG_2017ET_DTdot.csv')
-    ZipToPrice.from_csv(file)
+    file = File.join('db', 'csv', 'GetAG_2018_ET_minimal.csv')
+    ZipToPrice.from_csv(file, true)
+    file = File.join('db', 'csv', 'GetAG_2018_DT_minimal.csv')
+    ZipToPrice.from_csv(file, false)
 
     CoreConfig.store Types::ZipPriceConfig.new(
         kwkg_aufschlag: 1.0,

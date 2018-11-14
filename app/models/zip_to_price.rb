@@ -3,36 +3,56 @@ require 'buzzn/utils/file'
 
 class ZipToPrice < ActiveRecord::Base
 
-  COLUMNS = { zip: 'Plz',
-              price_euro_year_dt: 'Gesamtpreis Euro/Jahr DT',
-              average_price_cents_kwh_dt: 'Durchschnittspreis ct/kWh DT',
-              baseprice_euro_year_dt: 'Grundpreis Euro/Jahr DT',
-              unitprice_cents_kwh_dt: 'Arbeitspreis ct/kWh DT',
-              measurement_euro_year_dt: 'MSB Euro/Jahr DT',
-              baseprice_euro_year_et: 'Grundpreis Euro/Jahr ET',
-              unitprice_cents_kwh_et: 'Arbeitspreis ct/kWh ET',
-              measurement_euro_year_et: 'MSB Euro/Jahr ET',
-              ka: 'KA',
-              state: 'Bundesland',
-              community: 'Gemeinde',
-              vdewid: 'VDEWID',
-              dso: 'Netzbetreiber'}
+  COLUMNS_ET = {
+    zip: 'PLZ',
+    community: 'Ort',
+    dso: 'Netzbetreiber',
+    baseprice_euro_year_et: 'Grundpreis ET',
+    unitprice_cents_kwh_et: 'Arbeitspreis HT ET',
+    measurement_euro_year_et: 'Messstellenbetrieb ET',
+    ka: 'Konzessionsabgabe (ct/kWh)',
+    vnb: 'Verbandsnummer'
+  }
 
-  def self.from_csv(file)
+  COLUMNS_DT = {
+    zip: 'PLZ',
+    community: 'Ort',
+    baseprice_euro_year_dt: 'Grundpreis DT',
+    unitprice_cents_kwh_dt: 'Arbeitspreis DT',
+    measurement_euro_year_dt: 'Messstellenbetrieb DT',
+    vnb: 'Verbandsnummer',
+  }
+
+  def self.from_csv(file, is_et)
     data = Buzzn::Utils::File.read(file)
     # none destructive update
-    update_all(updated: false)
+    update_all(updated: false) if is_et
     CSV.parse(data.gsub(/\r\n?/, "\n"), col_sep: ';', headers: true) do |row|
       values = Hash[row.to_a].values
-      if values.include?(nil) or values.size != 14
-        logger.info "skip corrupted row: #{row}"
+
+      if is_et
+        if values.include?(nil) or values.size != COLUMNS_ET.keys.size
+          logger.info "skip corrupted row: #{row}"
+        else
+          params = Hash[COLUMNS_ET.keys.zip(values)]
+          params[:updated] = true
+          create!(params)
+        end
       else
-        params = Hash[COLUMNS.keys.zip(values)]
-        params[:updated] = true
-        create!(params)
+        if values.include?(nil) or values.size != COLUMNS_DT.keys.size
+          logger.info "skip corrupted row: #{row}"
+        else
+          params = Hash[COLUMNS_DT.keys.zip(values)]
+          et_obj = where(:zip => params[:zip], :vnb => params[:vnb]).first
+          if et_obj.nil?
+            logger.info "No ET row for #{params}"
+          else
+            et_obj.update(params)
+          end
+        end
       end
     end
-    where(updated: false).delete_all
+    where(updated: false).delete_all if is_et
   end
 
   def self.to_csv(io)
