@@ -23,6 +23,18 @@ class ZipToPrice < ActiveRecord::Base
     vnb: 'Verbandsnummer',
   }
 
+  # some DSOs screw up our price calculation, we remove them manually
+  # first is VNB, second is optional list of zip_codes where to keep them
+  DSO_BY_VNB_REMOVE = [
+    [9900113000007, nil],
+    [9900143000001, [84435]],
+    [9907497000000, nil],
+    [9900638000003, nil],
+    [9900632000009, nil],
+    [9907001000008, nil],
+    [9900251000000, nil]
+  ]
+
   def self.from_csv(file, is_et)
     data = Buzzn::Utils::File.read(file)
     # none destructive update
@@ -53,6 +65,15 @@ class ZipToPrice < ActiveRecord::Base
       end
     end
     where(updated: false).delete_all if is_et
+  end
+
+  def self.clean_dsos
+    where(vnb: DSO_BY_VNB_REMOVE.select { |x| x[1].nil? }
+                                .collect { |x| x[0] })
+                                .delete_all
+    DSO_BY_VNB_REMOVE.reject { |x| x[1].nil? }.each do |vnb_zip|
+      where(vnb: vnb_zip[0], zip: vnb_zip[1])
+    end
   end
 
   def self.to_csv(io)

@@ -6,6 +6,7 @@ namespace :zip_to_price do
     ZipToPrice.from_csv(file, true)
     file = File.join('db', 'csv', '2018-10-26_GetAG_DT.csv')
     ZipToPrice.from_csv(file, false)
+    ZipToPrice.clean_dsos
   end
 
   desc 'set zip price config'
