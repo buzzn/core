@@ -62,12 +62,25 @@ module Types
       end
     end
 
+    # 0.04999 is a magic value to adjust the calculation to the current
+    # and soon old php calculator.
+    # TODO: Remove this before next price round
+    # TODO: Remove ugly Round-Up hack as it leads to cancer
+
     def baseprice_cents_per_month
-      @baseprice ||= (yearly_euro_netto * config.vat / 0.12).round.to_i
+      if @baseprice
+        @baseprice
+      else
+        bp = (yearly_euro_netto * config.vat / 0.12).round.to_i
+        if bp % 10
+          bp = (bp/10)*10+10
+        end
+        @baseprice ||= bp
+      end
     end
 
     def energyprice_cents_per_kilowatt_hour
-      @energyprice ||= (unit_cents_netto * config.vat).round.to_i
+      @energyprice ||= (unit_cents_netto * config.vat + 0.04999).round(1)
     end
 
     def total_cents_per_month

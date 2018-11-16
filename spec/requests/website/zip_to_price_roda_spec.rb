@@ -44,9 +44,9 @@ describe Website::ZipToPriceRoda, :request_helper do
 
     let(:price_json) do
       {
-        'baseprice_cents_per_month'=>831,
-        'energyprice_cents_per_kilowatt_hour'=>29,
-        'total_cents_per_month'=>3813
+        'baseprice_cents_per_month'=>840,
+        'energyprice_cents_per_kilowatt_hour'=>29.2,
+        'total_cents_per_month'=>3843
       }
     end
 
