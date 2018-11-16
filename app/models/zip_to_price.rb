@@ -72,7 +72,7 @@ class ZipToPrice < ActiveRecord::Base
                                 .collect { |x| x[0] })
                                 .delete_all
     DSO_BY_VNB_REMOVE.reject { |x| x[1].nil? }.each do |vnb_zip|
-      where(vnb: vnb_zip[0], zip: vnb_zip[1])
+      where(vnb: vnb_zip[0]).where.not(zip: vnb_zip[1]).delete_all
     end
   end
 
