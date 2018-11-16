@@ -1,3 +1,5 @@
+require_relative '../../transactions'
+
 module Transactions::StepAdapters
 end
 
