@@ -1,4 +1,5 @@
 require_relative '../../../schemas/transactions/person/update'
+require_relative '../generic'
 
 module Transactions::Admin::Generic
   class UpdateNestedPerson < Transactions::Base
