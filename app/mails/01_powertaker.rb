@@ -31,7 +31,7 @@ module Mail
         :customer => build_customer,
         :calculator    => {
           :type          => form_content&.[](:calculator)&.[](:type) || 'single',
-          :zip           => form_content&.[](:calculator)&.[](:zip),
+          :zip           => build_zip,
           :annual_kwh    => form_content&.[](:calculator)&.[](:annual_kwh),
           :customer_type => form_content&.[](:calculator)&.[](:customerType) || 'person',
           :group         => (form_content&.[](:calculator)&.[](:group) || 'none').titleize
@@ -58,12 +58,43 @@ module Mail
           :general_agreement      => form_content&.[](:agreement)&.[](:generalAgreement),
           :newsletter_agreement   => form_content&.[](:agreement)&.[](:newsletter),
         },
-        :price         => {
-          :baseprice_cents_per_month           => form_content&.[](:price)&.[](:baseprice_cents_per_month) || 9999,
-          :energyprice_cents_per_kilowatt_hour => form_content&.[](:price)&.[](:energyprice_cents_per_kilowatt_hour) || 50,
-          :total_cents_per_month               => form_content&.[](:price)&.[](:total_cents_per_month) || 9999,
-        }
-      }
+      }.tap do |struct|
+        params = {
+          type: 'single',
+        }.tap do |p|
+          p[:zip] = struct[:calculator][:zip]
+          p[:annual_kwh] = begin
+                             Integer(struct[:calculator][:annual_kwh])
+                           rescue ArgumentError
+                             0
+                           end
+        end
+        if params[:zip].nil?
+          struct[:price] = {}
+          struct[:valid_price] = false
+        else
+          prices = Types::ZipPrices.new(params)
+          struct[:price] = prices.max_price.to_hash
+          struct[:valid_price] = true
+        end
+      end
+    end
+
+    def build_zip
+      zip = if form_content&.[](:calculator)&.[](:customerType) == 'organization'
+              if form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:sameAddress)
+                form_content&.[](:personalInfo)&.[](:organization)&.[](:contractingParty)&.[](:zip)
+              else
+                form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:zip)
+              end
+            elsif form_content&.[](:calculator)&.[](:customerType) == 'person'
+              form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:zip)
+            end
+      begin
+        Integer(zip)
+      rescue ArgumentError
+        nil
+      end
     end
 
     def build_address

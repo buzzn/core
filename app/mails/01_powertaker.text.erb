@@ -108,3 +108,15 @@ Prognose (kWh): <%= calculator.annual_kwh %>
 <%= "Vorlieferant: #{old_supplier.previous_provider}" %>
 <%= "Kundennummer Vorlieferant: #{old_supplier.previous_customer_number}" %>
 <% end -%>
+
+Preise
+------
+
+<% if valid_price -%>
+<%= "Grundpreis pro Monat (Euro): #{(price.baseprice_cents_per_month/100).round(2)}" %>
+<%= "Preis pro kwh (Eurocent): #{price.energyprice_cents_per_kilowatt_hour}" %>
+<%= "Monatlicher Preis für #{calculator.annual_kwh} kwh (Euro): #{(price.total_cents_per_month/100).round(2)}" %>
+<% else -%>
+Auf grund Ihrer Eingaben konnten wir keinen verbindlichen Preis errechnen.
+Bitte kontaktieren Sie uns.
+<% end -%>
