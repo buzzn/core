@@ -1,28 +1,29 @@
-Hallo <%= customer.name -%>,
+Hallo <%= customer.name -%> <%= customer.last_name %>,
 
-Dein Stromnehmer-Auftrag ist bei uns eingegangen. Vielen Dank!
+Ihr Stromnehmer-Auftrag ist bei uns eingegangen. Vielen Dank!
 
 <% if bank.without_sepa -%>
-Zur Vervollständigung Deines Auftrages sende uns Bitte noch das ausgefüllte und
-unterschriebene SEPA-Lastschriftformular [1] per Mail, Fax oder Post zu.
-Sobald dieses bei uns eingegangen ist, organisieren wir die Belieferung Deiner
-Bezugsstelle mit dem Strom aus Deiner gewählten Energiegruppe.
-Dies kann durchaus einige Zeit in Anspruch nehmen, wir melden uns bei Dir.
+Zur Vervollständigung Ihres Auftrages senden Sie uns bitte noch das ausgefüllte
+und unterschriebene SEPA-Lastschriftformular [1] per Mail, Fax oder Post zu.
+
+Sobald dieses bei uns eingegangen ist, organisieren wir die Belieferung Ihrer
+Bezugsstelle mit Strom aus der Energiegruppe "<%= calculator.group %>".
+Dies kann durchaus etwas Zeit in Anspruch nehmen.
+Wir melden uns unaufgefordert wieder bei Ihnen.
 <% else -%>
-Wir organisieren jetzt die Belieferung Deiner Bezugsstelle mit dem Strom
-aus Deiner gewählten Energiegruppe.
-Dies kann durchaus einige Zeit in Anspruch nehmen.
-Wir melden uns bei Dir, du musst aktuell nichts tun.
+Wir organisieren jetzt die Belieferung Ihrer Bezugsstelle mit Strom aus der
+Energiegruppe "<%= calculator.group %>".
+Dies kann durchaus etwas Zeit in Anspruch nehmen.
+Wir melden uns unaufgefordert wieder bei Ihnen, Sie müssen aktuell nichts tun.
 <% end -%>
 
-Hast Du noch Fragen? Unter der Rufnummer 089-41 61 71 410 stehen
-wir Dir von 9-18 Uhr gerne telefonisch zur Verfügung.
+Haben Sie noch Fragen? Unter der Rufnummer 089-416171410 stehen wir Ihnen
+Werktags von 9-18 Uhr gerne telefonisch zur Verfügung.
+Ansonsten freuen wir uns auch über eine E-Mail an team@buzzn.net.
 
-Ansonsten freuen wir uns auch über eine E-Mail von Dir an team@buzzn.net.
+Energiegeladene Grüße,
 
-Auf gute Energiefreundschaft!
-
-Dein buzzn Team
+Ihr BUZZN Team
 
 <% if bank.without_sepa -%>
 [1] https://www.buzzn.net/sepa_formular.pdf
