@@ -91,6 +91,14 @@ module Types
       @json ||= '{"baseprice_cents_per_month":' << baseprice_cents_per_month.to_s << ',"energyprice_cents_per_kilowatt_hour":' << energyprice_cents_per_kilowatt_hour.to_s << ',"total_cents_per_month":' << total_cents_per_month.to_s << '}'
     end
 
+    def to_hash(*)
+      @hash ||= {
+        :baseprice_cents_per_month => baseprice_cents_per_month,
+        :energyprice_cents_per_kilowatt_hour => energyprice_cents_per_kilowatt_hour,
+        :total_cents_per_month => total_cents_per_month,
+      }
+    end
+
   end
 
 end
