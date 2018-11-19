@@ -34,7 +34,7 @@ module Mail
           :zip           => form_content&.[](:calculator)&.[](:zip),
           :annual_kwh    => form_content&.[](:calculator)&.[](:annual_kwh),
           :customer_type => form_content&.[](:calculator)&.[](:customerType) || 'person',
-          :group         => form_content&.[](:calculator)&.[](:group)
+          :group         => (form_content&.[](:calculator)&.[](:group) || 'none').titleize
         },
         :personal_info => build_personal_info,
         :address       => build_address,
@@ -118,11 +118,13 @@ module Mail
     def build_customer
       if form_content&.[](:calculator)&.[](:customerType) == 'organization'
         {
-          :name => form_content&.[](:personalInfo)&.[](:organization)&.[](:contactPerson)&.[](:firstName),
+          :name      => form_content&.[](:personalInfo)&.[](:organization)&.[](:contactPerson)&.[](:firstName),
+          :last_name => form_content&.[](:personalInfo)&.[](:organization)&.[](:contactPerson)&.[](:lastName),
         }
       elsif form_content&.[](:calculator)&.[](:customerType) == 'person'
         {
-          :name => form_content&.[](:personalInfo)&.[](:person)&.[](:firstName),
+          :name      => form_content&.[](:personalInfo)&.[](:person)&.[](:firstName),
+          :last_name => form_content&.[](:personalInfo)&.[](:person)&.[](:lastName),
         }
       else
         { :name => 'none' }
