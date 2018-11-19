@@ -59,6 +59,7 @@ module Mail
           :newsletter_agreement   => form_content&.[](:agreement)&.[](:newsletter),
         },
       }.tap do |struct|
+        struct[:valid_price] = false
         params = {
           type: 'single',
         }.tap do |p|
@@ -71,11 +72,14 @@ module Mail
         end
         if params[:zip].nil?
           struct[:price] = {}
-          struct[:valid_price] = false
         else
           prices = Types::ZipPrices.new(params)
-          struct[:price] = prices.max_price.to_hash
-          struct[:valid_price] = true
+          if prices.max_price
+            struct[:price] = prices.max_price.to_hash
+            struct[:valid_price] = true
+          else
+            struct[:price] = {}
+          end
         end
       end
     end
