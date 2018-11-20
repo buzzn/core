@@ -660,10 +660,10 @@
     dependencies = ["crass" "nokogiri"];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0yjs6wbcj3n06d3xjqpy3qbpx0bfa12h3x2rbpc2k33ldjlkx6zy";
+      sha256 = "1ccsid33xjajd0im2xv941aywi58z7ihwkvaf1w2bv89vn5bhsjg";
       type = "gem";
     };
-    version = "2.2.2";
+    version = "2.2.3";
   };
   lumberjack = {
     source = {
@@ -802,10 +802,10 @@
     dependencies = ["mini_portile2"];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "05fm3xh462glvs0rwnfmc1spmgl4ljg2giifynbmwwqvl42zaaiq";
+      sha256 = "0byyxrazkfm29ypcx5q4syrv126nvjnf7z6bqi01sqkv4llsi4qz";
       type = "gem";
     };
-    version = "1.8.2";
+    version = "1.8.5";
   };
   notiffany = {
     dependencies = ["nenv" "shellany"];
@@ -920,10 +920,10 @@
   rack = {
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0in0amn0kwvzmi8h5zg6ijrx5wpsf8h96zrfmnk1kwh2ql4sxs2q";
+      sha256 = "1g9926ln2lw12lfxm4ylq1h6nl0rafl10za3xvjzc87qvnqic87f";
       type = "gem";
     };
-    version = "1.6.10";
+    version = "1.6.11";
   };
   rack-cors = {
     source = {
