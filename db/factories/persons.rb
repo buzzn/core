@@ -3,8 +3,8 @@ FactoryGirl.define do
     transient do
       roles {}
     end
-    first_name          { FFaker::NameDE.first_name }
-    last_name           { FFaker::NameDE.last_name }
+    sequence(:first_name)          { |n| FFaker::NameDE.first_name + "#{n}" }
+    sequence(:last_name)           { |n| FFaker::NameDE.last_name + "#{n}"}
     email do
       first = first_name.downcase.gsub(/[^0-9a-z]/, '')
       last  = last_name.downcase.gsub(/[^0-9a-z]/, '')
