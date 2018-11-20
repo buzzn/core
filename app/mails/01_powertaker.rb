@@ -54,6 +54,7 @@ module Mail
           :without_sepa   => form_content&.[](:bank)&.[](:withoutSepa) || true,
         },
         :agreement     => {
+          :comments               => form_content&.[](:agreement)&.[](:comments),
           :buzzn_supply_agreement => form_content&.[](:agreement)&.[](:buzznSupplyAgreement),
           :general_agreement      => form_content&.[](:agreement)&.[](:generalAgreement),
           :newsletter_agreement   => form_content&.[](:agreement)&.[](:newsletter),
