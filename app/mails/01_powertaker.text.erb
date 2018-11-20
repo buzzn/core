@@ -120,3 +120,9 @@ Preise
 Auf grund Ihrer Eingaben konnten wir keinen verbindlichen Preis errechnen.
 Bitte kontaktieren Sie uns.
 <% end -%>
+
+<% if agreement.comments && agreement.comments.size > 0 -%>
+Kommentar / Nachricht an uns
+----------------------------
+<%= agreement.comments %>
+<% end -%>
