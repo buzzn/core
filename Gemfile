@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
-ruby '2.3.7'
+ruby '2.3.8'
 
 # transient dependency of rails with security issue, pick secure one
-gem 'loofah', '~> 2.2.1'
+gem 'loofah', '>= 2.2.3'
 gem 'rails-html-sanitizer', '~> 1.0.4'
 gem 'sprockets', '~> 3.7.2'
+gem 'rack', '>= 1.6.11'
 
 # infrastructure
 gem 'dry-auto_inject'
