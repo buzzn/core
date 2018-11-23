@@ -51,7 +51,7 @@ module Mail
           :iban           => form_content&.[](:bank)&.[](:iban),
           :bank_name      => form_content&.[](:bank)&.[](:bankName),
           :sepa_authorize => form_content&.[](:bank)&.[](:sepaAuthorize),
-          :without_sepa   => form_content&.[](:bank)&.[](:withoutSepa) || true,
+          :without_sepa   => form_content&.[](:bank)&.[](:withoutSepa),
         },
         :agreement     => {
           :comments               => form_content&.[](:agreement)&.[](:comments),
