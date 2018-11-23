@@ -31,7 +31,7 @@ class Transactions::Website::WebsiteForm::Create < Transactions::Base
     when 'powertaker_v1'
       schema = Schemas::Transactions::Website::WebsiteForm::PowertakerV1
       generator = Mail::PowerTaker
-      subject = 'Dein Stromauftrag bei buzzn'
+      subject = 'Ihr Stromauftrag bei BUZZN'
       bcc = powertaker_v1_bcc
       from = powertaker_v1_from
       email = symbolized&.[](:personalInfo)&.[](:organization)&.[](:contactPerson)&.[](:email) ||
