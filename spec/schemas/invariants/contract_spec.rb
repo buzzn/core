@@ -9,10 +9,16 @@ describe 'Schemas::Invariants::Contract::Localpool' do
   entity(:localpool)    { tariff.group }
   entity(:other_localpool) { create(:group, :localpool) }
 
-  entity(:third_party) { create(:contract, :localpool_third_party, localpool: localpool) }
   entity(:register_meta)         { third_party.register_meta }
-  entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, register_meta: register_meta, tariffs: [tariff]) }
   entity(:processing)              { create(:contract, :localpool_processing,    localpool: localpool) }
+  entity(:powertaker) do
+    processing
+    create(:contract, :localpool_powertaker,    localpool: localpool, register_meta: register_meta, tariffs: [tariff])
+  end
+  entity(:third_party) do
+    processing
+    create(:contract, :localpool_third_party, localpool: localpool)
+  end
   entity(:metering_point_operator) { create(:contract, :metering_point_operator, localpool: localpool) }
 
   shared_examples 'invariants of localpool' do |contract_name|

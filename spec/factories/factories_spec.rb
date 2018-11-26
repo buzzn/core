@@ -59,7 +59,7 @@ describe 'Factories produce valid records' do
     it { is_expected.to have_association(:customer, Person) }
     it { is_expected.to have_association(:customer_bank_account, BankAccount) }
     it 'has correctly generated contract numbers' do
-      expect(subject.contract_number).to be >= 90_000
+      expect(subject.contract_number).to be >= 60_000
       expect(subject.contract_number).to be <= 100_000
     end
     context 'localpool powertaker contract' do

@@ -19,6 +19,7 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
   end
 
   let(:contract) do
+    lpc
     create(:contract, :localpool_powertaker,
            customer: person,
            contractor: Organization::Market.buzzn,

@@ -33,6 +33,7 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     localpool_member3.person.add_role(Role::GROUP_MEMBER, pool)
     localpool_member4.person.add_role(Role::GROUP_MEMBER, pool)
     meter = create(:meter, :real, group: pool)
+    create(:contract, :localpool_processing, localpool: pool)
     create(:contract, :localpool_powertaker,
            localpool: pool,
            customer: localpool_member3.person,
@@ -45,14 +46,16 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
 
   entity!(:localpool3) { create(:group, :localpool) }
 
-  let(:contract) { localpool2.localpool_power_taker_contracts.first }
   let(:register) { localpool2.registers.real.input.first }
 
   entity!(:mpoc) do
     create(:contract, :metering_point_operator, localpool: localpool2)
   end
-  entity!(:lpc) do
-    create(:contract, :localpool_processing, localpool: localpool2)
+  entity(:lpc) do
+    localpool2.localpool_processing_contracts.first
+  end
+  entity(:contract) do
+    localpool2.localpool_power_taker_contracts.first
   end
 
   entity(:tariff) { create(:tariff, group: localpool2)}

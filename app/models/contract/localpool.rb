@@ -15,7 +15,7 @@ module Contract
 
     def check_contract_number_addition
       if self.contract_number_addition.nil?
-        self.contract_number_addition = (self.class.where(:contract_number => self.contract_number).maximum(:contract_number_addition) || -1) + 1
+        self.contract_number_addition = (Contract::Localpool.where(:contract_number => self.contract_number).maximum(:contract_number_addition) || -1) + 1
       end
     end
 
