@@ -23,17 +23,19 @@ shared_context 'contract entities', :shared_context => :metadata do
            contractor_bank_account: bank_account)
   end
 
-  let(:localpool_power_taker_contract) do
-    create(:contract, :localpool_powertaker,
-           contractor: localpool.owner,
-           customer: person2,
-           localpool: localpool)
-  end
-
   let(:localpool_processing_contract) do
     create(:contract, :localpool_processing,
            customer: localpool.owner,
            contractor: Organization::Market.buzzn,
+           localpool: localpool)
+  end
+
+  let(:localpool_power_taker_contract) do
+    # make sure that this exists before everything else
+    localpool_processing_contract
+    create(:contract, :localpool_powertaker,
+           contractor: localpool.owner,
+           customer: person2,
            localpool: localpool)
   end
 

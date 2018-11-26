@@ -5,11 +5,9 @@ FactoryGirl.define do
       contractor nil
     end
     localpool                     { FactoryGirl.build(:group, :localpool) }
-    contract_number               { generate(:metering_point_operator_contract_nr) }
     signing_date                  { (begin_date || Date.today) - 3.weeks }
     begin_date                    { Date.new(2016, 1, 1) }
     termination_date              { end_date.present? ? end_date - 3.months : nil }
-    contract_number_addition      1
     power_of_attorney             true
 
     after(:build) do |account, transients|
@@ -40,7 +38,6 @@ FactoryGirl.define do
   end
 
   trait :metering_point_operator do
-    contract_number { generate(:metering_point_operator_contract_nr) }
     initialize_with { Contract::MeteringPointOperator.new }
     contractor { Organization::Market.buzzn }
     metering_point_operator_name 'Generic metering point operator'
@@ -63,7 +60,6 @@ FactoryGirl.define do
   end
 
   trait :localpool_processing do
-    contract_number { generate(:localpool_processing_contract_nr) }
     initialize_with { Contract::LocalpoolProcessing.new }
     contractor { Organization::Market.buzzn }
     before(:create) do |contract, evaluator|
@@ -82,14 +78,9 @@ FactoryGirl.define do
                                    group: contract.localpool)
         contract.register_meta = meter.registers.first.meta
       end
-
-    end
-    # makes sure all contracts of a localpool get the same contract nr but a sequential addition
-    after(:create) do |contract, _evaluator|
-      contracts = Contract::Base.for_localpool.where(localpool_id: contract.localpool.id)
-      max_contract_number_addition = contracts.maximum(:contract_number_addition)
-      contract.update(contract_number: contract.localpool.id + 66_000,
-                      contract_number_addition: max_contract_number_addition + 1)
+      unless contract.localpool.localpool_processing_contracts.any?
+        FactoryGirl.create(:contract, :localpool_processing, localpool: contract.localpool)
+      end
     end
   end
 

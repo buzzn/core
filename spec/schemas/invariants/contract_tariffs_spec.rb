@@ -8,8 +8,12 @@ describe 'Schemas::Invariants::Contract::Localpool' do
   entity(:localpool)    { create(:group, :localpool) }
   entity(:other_localpool) { create(:group, :localpool) }
 
-  entity(:powertaker)              { create(:contract, :localpool_powertaker,    localpool: localpool, tariffs: [tariff]) }
   entity(:processing)              { create(:contract, :localpool_processing,    localpool: localpool, tariffs: [tariff]) }
+  entity(:powertaker) do
+    processing
+    create(:contract, :localpool_powertaker,    localpool: localpool, tariffs: [tariff])
+  end
+
   entity(:metering_point_operator) { create(:contract, :metering_point_operator, localpool: localpool, tariffs: [tariff]) }
 
   [:powertaker, :processing, :metering_point_operator].each do |name|

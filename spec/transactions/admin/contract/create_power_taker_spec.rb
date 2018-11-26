@@ -27,7 +27,19 @@ shared_examples 'with existing contract on same register' do |transaction|
   let!(:begin_date_new) { begin_date + 10 }
 
   let!(:register_meta) { create(:meta) }
+  let!(:lpc) do
+    unless lp.localpool_processing_contracts.any?
+      create(:contract, :localpool_processing,
+             customer: lp.object.owner,
+             contractor: Organization::Market.buzzn,
+             localpool: lp.object)
+    end
+    lp.object.reload
+    lp.localpool_processing_contracts.first
+  end
+
   let!(:other_contract) do
+    lpc
     create(:contract, :localpool_powertaker,
            register_meta: register_meta,
            localpool: lp.object,
@@ -44,14 +56,7 @@ shared_examples 'with existing contract on same register' do |transaction|
   end
 
   let(:result) do
-    unless lp.localpool_processing_contracts.any?
-      create(:contract, :localpool_processing,
-             customer: lp.object.owner,
-             contractor: Organization::Market.buzzn,
-             localpool: lp.object)
-      lp.object.reload
-    end
-    transaction.(resource: r, params: params_modified, localpool: lp)
+        transaction.(resource: r, params: params_modified, localpool: lp)
   end
 
   it 'does not create' do

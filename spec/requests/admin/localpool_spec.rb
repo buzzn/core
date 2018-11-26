@@ -65,11 +65,11 @@ describe Admin::LocalpoolRoda, :request_helper do
   entity!(:localpool) do
     localpool = create(:group, :localpool)
     manager.add_role(Role::GROUP_ADMIN, localpool)
+    create(:contract, :localpool_processing, localpool: localpool)
     c = create(:contract, :localpool_powertaker, localpool: localpool)
     c.register_meta.register.meta.production_pv!
     c = create(:contract, :localpool_powertaker, localpool: localpool)
     c.register_meta.register.meta.update(label: :production_pv)
-    create(:contract, :localpool_processing, localpool: localpool)
     create(:contract, :metering_point_operator, localpool: localpool)
     localpool.contracts.each do |co|
       co.customer.update(customer_number: CustomerNumber.create)
