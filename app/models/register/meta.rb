@@ -60,5 +60,19 @@ module Register
       end
     end
 
+    before_save :check_offline_values
+    before_create :check_offline_values
+
+    private
+
+    def check_offline_values
+      if self.observer_enabled.nil?
+        self.observer_enabled = false
+      end
+      if self.observer_offline_monitoring.nil?
+        self.observer_offline_monitoring = false
+      end
+    end
+
   end
 end
