@@ -13,7 +13,17 @@ class Types::Datasource::Bubble
   end
 
   def as_json(*)
-    { id: register.id, label: register.meta.label, name: register.meta.name, value: value }
+    # privacy: only supply names of consumption_common and production*
+    {
+      id: register.id,
+      label: register.meta.label,
+      value: value
+    }.tap do |h|
+      if h[:label].to_s == 'consumption_common' ||
+         h[:label].to_s.start_with?('production')
+        h[:name] = register.meta.name
+      end
+    end
   end
 
 end
