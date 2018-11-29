@@ -34,9 +34,15 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
     localpoolr.localpool_power_taker_contracts.first
   end
 
+  let(:today) do
+    Date.today
+  end
+
   let(:base_input) do
     {
-      'signing_date': Date.today
+      'signing_date': today,
+      'last_date': today + 30,
+      'termination_date': today + 23
     }
   end
 
@@ -117,6 +123,8 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
 
   it 'should update' do
     expect(result_valid).to be_success
+    expect(result_valid.value!.last_date).to eql today+30
+    expect(result_valid.value!.end_date).to eql today+31
   end
 
   it 'should update' do

@@ -56,7 +56,7 @@ shared_examples 'with existing contract on same register' do |transaction|
   end
 
   let(:result) do
-        transaction.(resource: r, params: params_modified, localpool: lp)
+    transaction.(resource: r, params: params_modified, localpool: lp)
   end
 
   it 'does not create' do
@@ -197,9 +197,15 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerWithPerson, o
     build_person_json(power_taker_person, power_taker_person_address_param)
   end
 
+  let(:today) do
+    Date.today
+  end
+
   let(:create_person_request) do
     { customer: power_taker_person_param,
-      begin_date: Date.today.as_json,
+      begin_date: today.as_json,
+      last_date: (today + 30).as_json,
+      termination_date: (today + 23).as_json,
       register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
   end
 
@@ -230,6 +236,8 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerWithPerson, o
       localpool.reload
       expect(result).to be_success
       expect(result.value!).to be_a Contract::LocalpoolPowerTakerResource
+      expect(result.value!.last_date).to eql today + 30
+      expect(result.value!.end_date).to eql today + 31
     end
 
   end

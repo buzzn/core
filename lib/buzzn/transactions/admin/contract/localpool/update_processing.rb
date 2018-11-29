@@ -5,6 +5,7 @@ class Transactions::Admin::Contract::Localpool::UpdateProcessing < Transactions:
 
   validate :schema
   check :authorize, with: :'operations.authorization.update'
+  tee :set_end_date, with: :'operations.end_date'
   around :db_transaction
   tee :update_nested
   map :update_localpool_processing_contract, with: :'operations.action.update'
