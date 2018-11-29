@@ -1,6 +1,6 @@
 require_relative '../localpool_metering_point_operator'
-require_relative '../../../../constraints/contract/base'
+require_relative '../base'
 
-Schemas::Transactions::Admin::Contract::Localpool::MeteringPointOperator::Create = Schemas::Support.Form(Schemas::Constraints::Contract::Base) do
+Schemas::Transactions::Admin::Contract::Localpool::MeteringPointOperator::Create = Schemas::Support.Form(Schemas::Transactions::Admin::Contract::Base) do
   required(:begin_date).filled(:date?)
 end

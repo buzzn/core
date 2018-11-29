@@ -7,7 +7,7 @@ module Schemas::Transactions::Admin::Contract::Localpool::Processing
     optional(:signing_date).filled(:date?)
     optional(:begin_date).maybe(:date?)
     optional(:termination_date).maybe(:date?)
-    optional(:end_date).maybe(:date?)
+    optional(:last_date).maybe(:date?)
     # TODO add rest of tax details
   end
 

@@ -5,6 +5,7 @@ class Transactions::Admin::Contract::Localpool::UpdateMeteringPointOperator < Tr
 
   validate :schema
   check :authorize, with: :'operations.authorization.update'
+  tee :set_end_date, with: :'operations.end_date'
   around :db_transaction
   map :update_metering_point_operator_contract, with: :'operations.action.update'
 

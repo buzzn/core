@@ -3,12 +3,13 @@ require_relative '../../../../constraints/contract/common'
 require_relative '../../../person/create'
 require_relative '../../../organization/create'
 require_relative '../../register/create_meta'
+require_relative '../common'
 
 module Schemas::Transactions
 
   Admin::Contract::Localpool::PowerTaker::CUSTOMER_TYPES = ['person', 'organization']
 
-  Admin::Contract::Localpool::PowerTaker::CreateBase = Schemas::Support.Form(Schemas::Constraints::Contract::Common) do
+  Admin::Contract::Localpool::PowerTaker::CreateBase = Schemas::Support.Form(Schemas::Transactions::Admin::Contract::Common) do
     required(:begin_date).maybe(:date?)
     optional(:share_register_with_group).filled(:bool?)
     optional(:share_register_publicly).filled(:bool?)

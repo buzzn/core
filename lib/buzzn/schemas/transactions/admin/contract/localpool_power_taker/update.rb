@@ -8,7 +8,7 @@ module Schemas::Transactions
     optional(:signing_date).maybe(:date?)
     optional(:begin_date).maybe(:date?)
     optional(:termination_date).maybe(:date?)
-    optional(:end_date).maybe(:date?)
+    optional(:last_date).maybe(:date?)
 
     optional(:forecast_kwh_pa).filled(:int?)
 

@@ -5,6 +5,7 @@ class Transactions::Admin::Contract::Localpool::UpdatePowerTaker < Transactions:
 
   validate :schema
   check :authorize, with: :'operations.authorization.update'
+  tee :set_end_date, with: :'operations.end_date'
   around :db_transaction
   tee :update_register_meta, with: :'operations.action.update'
   tee :update_register_meta_options

@@ -6,6 +6,7 @@ class Transactions::Admin::Contract::Localpool::CreateProcessing < Transactions:
   validate :schema
   check :authorize, with: :'operations.authorization.create'
   tee :localpool_schema
+  tee :set_end_date, with: :'operations.end_date'
   around :db_transaction
   tee :assign_contractor
   tee :assign_customer

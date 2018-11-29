@@ -141,7 +141,7 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = ['allowed_actions', 'begin_date', 'metering_point_operator_name'] + base_attributes
+      attributes = ['allowed_actions', 'begin_date', 'end_date', 'metering_point_operator_name'] + base_attributes
       attrs = resources.retrieve(metering_point_operator.id).to_h
       expect(attrs['id']).to eq metering_point_operator.id
       expect(attrs['type']).to eq 'contract_metering_point_operator'
@@ -160,7 +160,7 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = ['begin_date', 'tax_number', 'allowed_actions'] + base_attributes
+      attributes = ['begin_date', 'end_date', 'tax_number', 'allowed_actions'] + base_attributes
       attrs = resources.retrieve(localpool_processing.id).to_h
       expect(attrs['id']).to eq localpool_processing.id
       expect(attrs['type']).to eq 'contract_localpool_processing'
@@ -180,6 +180,7 @@ describe Contract::BaseResource do
 
     it 'retrieve' do
       attributes = ['begin_date',
+                    'end_date',
                     'forecast_kwh_pa',
                     'renewable_energy_law_taxation',
                     'third_party_billing_number',

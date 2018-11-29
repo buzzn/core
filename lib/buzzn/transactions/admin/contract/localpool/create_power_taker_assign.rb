@@ -7,6 +7,7 @@ module Transactions::Admin::Contract::Localpool
     check :authorize, with: :'operations.authorization.create'
     tee :localpool_schema
     tee :register_meta_schema
+    tee :set_end_date, with: :'operations.end_date'
     around :db_transaction
     tee :assign_customer
     tee :assign_contractor
