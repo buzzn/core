@@ -10,7 +10,7 @@ class Services::UnbilledBillingItemsFactory
   # Returns this structure:
   # [
   #   {
-  #    market_location: <MaLo id:5>
+  #    register_meta: <Register::Meta id:5>
   #    contracts: [
   #      {
   #        contract: <Contract id:5>
@@ -22,12 +22,11 @@ class Services::UnbilledBillingItemsFactory
   #
   #   }
   # ]
-  def call(market_locations:, date_range:)
-    # TODO
-    market_locations.collect do |market_location|
+  def call(register_metas:, date_range:)
+    register_metas.collect do |register_meta|
       {
-        market_location: market_location,
-        contracts: contracts_with_items(market_location, date_range)
+        register_meta: register_meta,
+        contracts: contracts_with_items(register_meta, date_range)
       }
     end
   end
