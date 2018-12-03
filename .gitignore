@@ -19,6 +19,9 @@
 
 .ruby-gemset
 
+# Ignore private user data + passwords
+/db/users.json
+
 # generated
 dump.rdb
 /config/database.yml

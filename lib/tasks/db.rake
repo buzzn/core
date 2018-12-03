@@ -62,15 +62,17 @@ namespace :db do
       require_relative '../../db/example_data'
     end
 
-    desc 'Create the buzzn operator account for Philipp Oswald'
-    task pho_user: :environment do
+    desc 'Create the buzzn operator accounts'
+    task buzzn_operators: :environment do
       require_relative '../../db/support/create_buzzn_operator'
-      create_buzzn_operator(
-        first_name: 'Phillip',
-        last_name:  'Oßwald',
-        email:      'philipp@buzzn.net',
-        password:   Import.global('config.pho_account_password')
-      )
+      file = File.read 'db/users.json'
+      users = JSON.parse(file)
+      users = Buzzn::Utils::Helpers.symbolize_keys_recursive(users)
+      users[:operators].each do |user|
+        create_buzzn_operator(
+          user
+        )
+      end
     end
 
     desc 'Create a generic buzzn operator account'

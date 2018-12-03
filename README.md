@@ -95,7 +95,7 @@ Our application has two kinds of data that we can pre-load ("seed"), *setup* and
 
 Use the [list of example users](db/example_data/persons.rb#L6-L21) to log in. Login is the email, the password always is `Example123`.
 
-Note that creating a user account with the buzzn operator role (super user) is not part of the example data. Use the separate rake tasks `db:seed:pho_user` or `db:seed:buzzn_operator` to create one.
+Note that creating a user account with the buzzn operator role (super user) is not part of the example data. Use the separate rake tasks `db:seed:buzzn_operators` or `db:seed:buzzn_operator` to create one.
 
 **Important**: both rake tasks do not empty the database before running, so when there already is data in the system, there may be conflicts, causing the task to abort.
 So if you know what you are doing, run `rake db:empty` first, to completely delete all data from the database.
