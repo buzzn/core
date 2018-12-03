@@ -12,7 +12,7 @@ module Buzzn
                if value.class == Hash
                  [key.to_sym, symbolize_keys_recursive(value)]
                elsif value.class == Array
-                 value.map { |e| symbolize_keys_recursive(e) }
+                 [key.to_sym, value.map { |e| symbolize_keys_recursive(e) }]
                else
                  [key.to_sym, value]
                end

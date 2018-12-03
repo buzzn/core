@@ -48,7 +48,7 @@ namespace :heroku do
                         db:reset
                         heroku:pull_db:production
                         db:seed:setup_data
-                        db:seed:pho_user
+                        db:seed:buzzn_operators
                         db:dump:transfer
                         zip_to_price:import
                         zip_to_price:set_config
