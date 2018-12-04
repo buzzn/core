@@ -9,6 +9,10 @@ module Schemas::Support::Predicates
     value.is_a?(Hash) && value.key?(:id)
   end
 
+  predicate(:bigint?) do |value|
+    value.is_a?(Integer)
+  end
+
   predicate(:id_and_not_updated_at?) do |value|
     value.is_a?(Hash) && value.key?(:id) && !value.key?(:updated_at)
   end

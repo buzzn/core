@@ -13,8 +13,8 @@ module Schemas::Constraints
   end
 
   Device = Schemas::Support.Form(DeviceCommon) do
-    required(:watt_peak).filled(:int?)
-    required(:watt_hour_pa).filled(:int?)
+    required(:watt_peak).filled(:bigint?)
+    required(:watt_hour_pa).filled(:bigint?)
   end
 
 end
