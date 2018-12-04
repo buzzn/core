@@ -5150,11 +5150,15 @@ paths:
         required: true
         type: number
         format: float
+        maximum: 10000
+        exclusiveMaximum: true
       - name: kwh_per_annum
         in: formData
         required: true
         type: number
         format: float
+        maximum: 87840000
+        exclusiveMaximum: true
       - name: electricity_supplier.id
         in: formData
         required: true
