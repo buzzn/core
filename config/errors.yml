@@ -6,6 +6,8 @@ en:
 
     iban?: "must be a valid iban"
 
+    bigint?: "must be an integer"
+
     email?: "must be a valid email"
 
     url?: "must be a valid URL"
