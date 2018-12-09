@@ -5,7 +5,7 @@ module Website
 
     include Import.args[:env,
                         'transactions.website.website_form.create',
-                        'transactions.website.website_form.update_processed']
+                        'transactions.website.website_form.update_internal']
 
     plugin :run_handler
 
@@ -36,7 +36,7 @@ module Website
         end
 
         r.patch! do
-          update_processed.(resource: website_form, params: r.params)
+          update_internal.(resource: website_form, params: r.params)
         end
 
       end

@@ -1,6 +1,6 @@
-require 'buzzn/transactions/website/website_form/create'
+require 'buzzn/transactions/website/website_form/update_internal'
 
-describe Transactions::Website::WebsiteForm::UpdateProcessed do
+describe Transactions::Website::WebsiteForm::UpdateInternal do
 
   entity(:form) do
     create(:website_form)
@@ -24,16 +24,17 @@ describe Transactions::Website::WebsiteForm::UpdateProcessed do
     form.reload
     {
       :updated_at => form.updated_at.as_json,
-      :processed => false
+      :processed => false,
+      :comment => 'Foobar2018'
     }
   end
 
   let(:result_true) do
-    Transactions::Website::WebsiteForm::UpdateProcessed.new.(resource: resource, params: processed_true_params)
+    Transactions::Website::WebsiteForm::UpdateInternal.new.(resource: resource, params: processed_true_params)
   end
 
   let(:result_false) do
-    Transactions::Website::WebsiteForm::UpdateProcessed.new.(resource: resource, params: processed_false_params)
+    Transactions::Website::WebsiteForm::UpdateInternal.new.(resource: resource, params: processed_false_params)
   end
 
   it 'updates and changes to processed' do
@@ -46,6 +47,7 @@ describe Transactions::Website::WebsiteForm::UpdateProcessed do
     expect(result_false).to be_success
     form.reload
     expect(form.processed).to eql false
+    expect(form.comment).to eql 'Foobar2018'
   end
 
 end
