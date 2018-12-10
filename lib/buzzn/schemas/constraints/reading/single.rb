@@ -10,6 +10,6 @@ Schemas::Constraints::Reading::Single = Schemas::Support.Form do
   required(:quality).value(included_in?: Reading::Single.qualities.values)
   required(:source).value(included_in?: Reading::Single.sources.values)
   required(:status).value(included_in?: Reading::Single.status.values)
+  required(:date).filled(:date?)
   optional(:comment).filled(:str?, max_size?: 256)
-  optional(:date).filled(:date?)
 end
