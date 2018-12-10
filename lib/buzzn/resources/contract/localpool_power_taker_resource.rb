@@ -25,6 +25,7 @@ module Contract
                 :share_register_publicly
 
     has_one :register_meta, Register::MetaResource
+    has_many :billings, Admin::BillingResource
 
     def share_register_with_group
       object.register_meta_option.nil? ? false : object.register_meta_option.share_with_group
