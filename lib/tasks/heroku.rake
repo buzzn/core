@@ -36,10 +36,10 @@ namespace :heroku do
                         heroku:pull_db:staging
                         db:seed:example_data
                         db:seed:buzzn_operator
+                        import
                         db:dump:transfer
                         zip_to_price:import
-                        zip_to_price:set_config
-                        import) do
+                        zip_to_price:set_config) do
       push_local_db_to_heroku(:staging)
     end
 
@@ -49,10 +49,10 @@ namespace :heroku do
                         heroku:pull_db:production
                         db:seed:setup_data
                         db:seed:buzzn_operators
+                        import
                         db:dump:transfer
                         zip_to_price:import
-                        zip_to_price:set_config
-                        import) do
+                        zip_to_price:set_config) do
       push_local_db_to_heroku(:production)
     end
 

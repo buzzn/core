@@ -127,19 +127,9 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     Date.parse(minipool_start)
   end
 
-  # here's how to sync this manually with production: https://github.com/buzzn/scrum/issues/117#issuecomment-361172196
   GROUPS_WITH_DISPLAY_APP_ENABLED = [
-    'Bahnhofstr. 21',
-    'Fritz-Winter-Straße 3+7 - WA10',
     'Green warriors (Testgruppe)',
-    'Gertrud-Grunow-Straße 45 - WA12',
-    'Gotthardstraße 47',
-    'Heigelstraße 27',
-    'L.O.F.T.',
-    'Mehrgenerationenplatz Forstenried',
     'People Power Group (Testgruppe)',
-    'WoGe',
-    'Waldstraße 24',
   ]
 
   def show_display_app
