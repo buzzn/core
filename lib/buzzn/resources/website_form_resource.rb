@@ -4,6 +4,7 @@ class WebsiteFormResource < Buzzn::Resource::Entity
 
   attributes  :form_name,
               :form_content,
+              :comment,
               :processed
 
 end
