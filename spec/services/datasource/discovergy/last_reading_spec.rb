@@ -1,25 +1,15 @@
 require_relative 'api_mock'
 
-describe Services::Datasource::Discovergy::OptimizedGroup do
+require_relative '../../../support/discovergy_helper'
 
-  def serialized_last_reading(power, energy, energy_out = nil)
-    json = {
-      time: 1513324966440,
-      values: {
-        power: power,
-        energy: energy
-      }
-    }
-    json[:values][:energyOut] = energy_out if energy_out
-    json
-  end
+describe Services::Datasource::Discovergy::LastReading do
 
   let(:two_way_meter_result) do
-    serialized_last_reading(-58500, 183082318054500, 105450808714000)
+    serialized_reading(1513324966440, -58500, 183082318054500, 105450808714000)
   end
 
   let(:one_way_meter_result) do
-    serialized_last_reading(12502630, 38236685426000, 0)
+    serialized_reading(1513324966440, 12502630, 38236685426000, 0)
   end
 
   let(:broken_meter_result) do

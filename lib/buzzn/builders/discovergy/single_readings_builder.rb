@@ -3,11 +3,24 @@ require_relative 'abstract_registers_builder'
 module Builders::Discovergy
   class SingleReadingsBuilder < AbstractRegistersBuilder
 
+    # whether it's a virtual meter/register
+    option :virtual
+
     def build(response)
-      smart_registers = registers.to_a.select { |register| register.meter.datasource == :discovergy }
-      smart_registers.each.with_object({}) do |register, hash|
-        reading = find_reading(response, register)
-        hash[register.id] = reading if reading
+      if virtual
+        smart_registers = registers.to_a.select { |register| register.meter.datasource.to_sym == :discovergy }
+        smart_registers.each.with_object({}) do |register, hash|
+          reading = find_reading(response, register)
+          hash[register.id] = reading if reading
+        end
+      else
+        register = registers.first
+        reading = response.first
+        unless reading
+          Buzzn::Logger.root.error("No reading for #{register}")
+          return
+        end
+        { register.id => to_watt_hour(reading, register) }
       end
     end
 

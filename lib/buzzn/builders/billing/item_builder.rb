@@ -5,6 +5,7 @@ module Builders::Billing
 
     class << self
 
+
       def from_contract(contract, max_date_range)
         date_range = date_range(contract, max_date_range)
         attrs = {
@@ -56,8 +57,8 @@ module Builders::Billing
       end
 
       def reading_close_to(contract, date)
-        query_date_range = (date - 1.day)..(date + 1.day)
-        readings = contract.register_meta.register.readings.where(date: query_date_range)
+        reading_service = Import.global('services.reading_service')
+        readings = reading_service.get(contract.register_meta.register, date, :precision => 2.days)
         readings.to_a.max_by(&:value) # if there's more than one reading, take the highest one.
       end
 
