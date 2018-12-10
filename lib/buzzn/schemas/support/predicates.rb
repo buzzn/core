@@ -10,7 +10,13 @@ module Schemas::Support::Predicates
   end
 
   predicate(:bigint?) do |value|
-    value.is_a?(Integer)
+    # FIXME alias this to :int? of dry::types
+    begin
+      Integer(value)
+      true
+    rescue ArgumentError
+      false
+    end
   end
 
   predicate(:id_and_not_updated_at?) do |value|
