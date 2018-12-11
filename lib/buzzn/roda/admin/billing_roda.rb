@@ -19,17 +19,17 @@ class Admin::BillingRoda < BaseRoda
       billings
     end
 
+    r.post! do
+      Transactions::Admin::Billing::Create.(
+        resource: billings, params: r.params, parent: parent
+      )
+    end
+
     r.on :id do |id|
       billing = billings.retrieve(id)
 
       r.get! do
         billing
-      end
-
-      r.create! do
-        Transactions::Admin::Billing::Create.(
-          resource: billings, params: r.params, parent: parent
-        )
       end
 
       r.patch! do
