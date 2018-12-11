@@ -37,8 +37,9 @@ describe Services::Datasource::Discovergy::SingleReading do
     end
 
     it 'stores' do
-      single_reading.next_api_request_single(mock_result)
-      item = cache.get('next_api_request_single')
+      single_reading.next_api_request_single(register, now, mock_result)
+      key = single_reading.next_key(register, now)
+      item = cache.get(key)
       expect(item).to_not be_nil
       result = MultiJson.load(item.json)
       expect(result).to_not eql ''
@@ -47,13 +48,14 @@ describe Services::Datasource::Discovergy::SingleReading do
 
     it 'retrieves nil' do
       # invalidate
-      cache.put('next_api_request_single', '', 600)
-      expect(single_reading.single(register, Date.today)).to be_nil
+      key = single_reading.next_key(register, now)
+      cache.put(key, '', 600)
+      expect(single_reading.single(register, now)).to be_nil
     end
 
     it 'retrieves something' do
       mock_series = create_series(now, 2000, 15.minutes, 137*1000*1000, 50*1000*1000, 4)
-      single_reading.next_api_request_single(mock_series)
+      single_reading.next_api_request_single(register, now, mock_series)
       reading = single_reading.single(register, now)
       expect(reading.values.count).to eql 1
       expect(reading.values.first).to eql 13.7
