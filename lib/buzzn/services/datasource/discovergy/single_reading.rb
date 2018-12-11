@@ -17,11 +17,16 @@ class Services::Datasource::Discovergy::SingleReading
     )
   end
 
-  def next_api_request_single(val)
+  def next_key(register, date)
+    "next#{register.id}#{date}"
+  end
+
+  def next_api_request_single(register, date, val)
     # this puts the raw value into the cache for that
     # the mock api should return for the next single()
     # request
-    cache.put('next_api_request_single', val.to_json, 600)
+    key = next_key(register, date)
+    cache.put(key, val.to_json, 600)
   end
 
   def single(register, date)
@@ -32,7 +37,8 @@ class Services::Datasource::Discovergy::SingleReading
         builder([register], false)
       )
     when :test
-      item = cache.get('next_api_request_single')
+      key = next_key(register, date)
+      item = cache.get(key)
       if item && !item.json.empty?
         result = MultiJson.load(item.json)
         unless result.nil? || result.empty?
