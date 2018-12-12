@@ -50,7 +50,7 @@ describe Transactions::Admin::Billing::Create do
   # inject some fake readings
   entity(:single_reading) do
     Import.global('services.datasource.discovergy.single_reading')
-  end 
+  end
 
   let(:result) do
     Transactions::Admin::Billing::Create.new.(resource: billingsr,
