@@ -42,7 +42,6 @@ describe Transactions::Admin::Billing::Create do
 
   let(:params) do
     {
-      :contract_id => contract.id,
       :begin_date => begin_date,
       :end_date => end_date,
     }
