@@ -24,12 +24,12 @@ class Billing < ActiveRecord::Base
     contract.localpool
   end
 
-  def is_singular?
+  def singular?
     self.billing_cycle.nil?
   end
 
   def generate_invoice_number
-    if self.is_singular?
+    if self.singular?
       "#{Date.today.year}-#{contract.contract_number}/#{contract.contract_number_addition}-2"
     else
       "#{Date.today.year}-#{contract.contract_number}/#{contract.contract_number_addition}"

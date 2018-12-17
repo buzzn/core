@@ -29,6 +29,14 @@ class BillingItem < ActiveRecord::Base
     end
   end
 
+  def in_date_range(date_range)
+    if date_range.first >= self.begin_date && date_range.last <= self.end_date
+      true
+    else
+      false
+    end
+  end
+
   def consumed_energy_kwh
     return unless end_reading && begin_reading
     ((end_reading.value - begin_reading.value) / 1_000.0).round
