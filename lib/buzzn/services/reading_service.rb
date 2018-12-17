@@ -4,12 +4,12 @@ class Services::ReadingService
 
   include Import['services.datasource.discovergy.single_reading']
 
-  def get(register, date, precision: 600)
+  def get(register, date, precision: 600, fetch: true)
     # first check whether we already have this reading
-    readings = register.readings.between(date - precision/2, date + precision/2)
+    readings = register.readings.between((date.to_time - precision/2).to_date, (date + precision/2).to_date)
     if readings.any?
       readings
-    elsif !register.meter.datasource.nil?
+    elsif !register.meter.datasource.nil? && fetch
       case register.meter.datasource.to_sym
       when :discovergy
         reading = single_reading.single(register, date)

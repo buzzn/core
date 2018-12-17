@@ -78,8 +78,8 @@ describe Transactions::Admin::Billing::Create do
     it 'creates' do
       mock_series_start = create_series(begin_date, 2000, 15.minutes,   10*1000*1000, 50*1000*1000, 4)
       mock_series_end   = create_series(end_date,   2000, 15.minutes, 1000*1000*1000, 50*1000*1000, 4)
-      single_reading.next_api_request_single(contract.register_meta.register, begin_date.to_time, mock_series_start)
-      single_reading.next_api_request_single(contract.register_meta.register, end_date.to_time, mock_series_end)
+      single_reading.next_api_request_single(contract.register_meta.register, begin_date, mock_series_start)
+      single_reading.next_api_request_single(contract.register_meta.register, end_date, mock_series_end)
 
       res = result
       expect(res).to be_success

@@ -16,6 +16,10 @@ module Schemas
           reading.register == register.model
         end
 
+        def billings_in_range?(date_range, register)
+          register.model.billing_items.to_a.keep_if { |item| item.in_date_range(date_range) }.any?
+        end
+
         def inside_period?(date_range, thing)
           thing.begin_date <= date_range.first && (thing.end_date.nil? || thing.end_date >= date_range.last)
         end
@@ -28,6 +32,10 @@ module Schemas
       required(:date_range).filled
       required(:begin_reading).maybe
       required(:end_reading).maybe
+
+      rule(unique_item: [:register, :date_range]) do |register, date_range|
+        register.billings_in_range?(date_range)
+      end
 
       rule(tariff: [:tariff, :contract, :date_range]) do |tariff, contract, date_range|
         tariff.in_contract_tariffs?(contract).and(tariff.inside_period?(date_range))

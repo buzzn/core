@@ -58,7 +58,7 @@ module Builders::Billing
 
       def reading_close_to(contract, date)
         reading_service = Import.global('services.reading_service')
-        readings = reading_service.get(contract.register_meta.register, date.to_time, :precision => 2.days)
+        readings = reading_service.get(contract.register_meta.register, date, :precision => 2.days)
         readings.to_a.max_by(&:value) # if there's more than one reading, take the highest one.
       end
 
