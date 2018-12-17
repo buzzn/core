@@ -28,7 +28,9 @@ describe 'Schemas::Invariants::BillingItem' do
 
         context 'inside billing item' do
           before { item.contract.update(end_date: item.end_date + 1.day, begin_date: item.begin_date - 1.day) }
-          it { is_expected.to be_nil }
+          it do
+            is_expected.to be_nil
+          end
 
           context 'open end' do
             before { item.contract.update(end_date: nil, begin_date: item.begin_date - 1.day) }
@@ -115,6 +117,111 @@ describe 'Schemas::Invariants::BillingItem' do
 
       end
     end
+  end
+
+  context 'already_present' do
+
+    #     |xxxxxxx|
+    # |zzzzzzz|
+
+    context 'overlaps partly I' do
+
+      entity!(:another_item) do
+        build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.begin_date + 10.day))
+      end
+
+      it 'produces an error' do
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist'])
+      end
+
+    end
+
+    #     |xxxxxxx|
+    # |zzzzzzzzzzz|
+
+    context 'overlaps partly II' do
+
+      entity!(:another_item) do
+        build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.end_date - 1.day))
+      end
+
+      it 'produces an error' do
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist'])
+      end
+
+    end
+
+    # |xxxxxxx|
+    # |zzzzzzzzzzz|
+
+    context 'overlaps partly III' do
+
+      entity!(:another_item) do
+        build(:billing_item, billing: billing, date_range: (billing.begin_date + 1.day)...(billing.end_date - 10.day))
+      end
+
+      it 'produces an error' do
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist'])
+      end
+
+    end
+
+    # |xxxxxxx|
+    #     |zzzzzzzzzzz|
+
+    context 'overlaps partly III' do
+
+      entity!(:another_item) do
+        build(:billing_item, billing: billing, date_range: (billing.begin_date + 10.day)...(billing.end_date + 10.day))
+      end
+
+      it 'produces an error' do
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist'])
+      end
+
+    end
+
+    # |xxxxxxx|
+    # |zzzzzzz|
+
+    context 'overlaps completely' do
+
+      entity!(:another_item) do
+        build(:billing_item, billing: billing, date_range: (billing.begin_date + 1.day)...(billing.end_date - 1.day))
+      end
+
+      it 'produces an error' do
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist'])
+      end
+
+    end
+
+    # |xxxxxx|
+    #         |zzzzzzz|
+
+    context 'does not overlap I' do
+      entity!(:another_item) do
+        build(:billing_item, billing: billing, date_range: (billing.end_date)...(billing.end_date + 10.day))
+      end
+
+      it 'does not produce error' do
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to be_nil
+      end
+    end
+
+    #          |xxxxxx|
+    # |zzzzzzz|
+
+    context 'does not overlap I' do
+      entity!(:another_item) do
+        build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.begin_date))
+      end
+
+      it 'does not produce error' do
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to be_nil
+      end
+    end
+
   end
 
   context 'end reading' do
