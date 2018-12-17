@@ -5598,6 +5598,34 @@ paths:
       responses:
         201:
           description: created
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/request":
+    post:
+      description: request a reading for the register from an external provider
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: date
+        in: formData
+        required: true
+        type: string
+        format: date
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/{reading_id}":
     get:
       description: returns the reading of a register for the given IDs

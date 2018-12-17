@@ -4,6 +4,7 @@ class Admin::ReadingRoda < BaseRoda
 
   include Import.args[:env,
                       'transactions.admin.reading.create',
+                      'transactions.admin.reading.request',
                       'transactions.admin.reading.delete',
                      ]
 
@@ -17,6 +18,10 @@ class Admin::ReadingRoda < BaseRoda
 
     r.post! do
       create.(resource: register, params: r.params)
+    end
+
+    r.post! 'request' do
+      request.(resource: register, params: r.params)
     end
 
     readings = register.readings

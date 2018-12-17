@@ -35,6 +35,7 @@ class Transactions::Admin::Reading::Request < Transactions::Base
     if readings.nil?
       raise Buzzn::StateError.new(register: {reason: 'reading could not be fetched'})
     end
+    readings.first
   end
 
   def wrap_up(params:, resource:, fetch_reading:, **)
