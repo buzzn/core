@@ -30,10 +30,12 @@ describe Admin::BillingResource, :request_helper do
       let(:expected_json) do
         {
           'id'=>billing.id,
+          'invoice_number'=>billing.invoice_number,
           'type'=>'billing',
           'created_at'=>billing.created_at.as_json,
           'updated_at'=>billing.updated_at.as_json,
           'begin_date'=>billing.begin_date.as_json,
+          'end_date'=>billing.end_date.as_json,
           'last_date'=>billing.last_date.as_json,
           'status'=>billing.status
         }
@@ -49,6 +51,65 @@ describe Admin::BillingResource, :request_helper do
         expect(json).to has_nested_json(:items, :array, :meter, :id)
         expect(json).to has_nested_json(:items, :array, :tariff, :id)
       end
+    end
+  end
+
+  context 'localpools/<id>/contracts/<id>/billings' do
+
+    context 'POST' do
+      entity(:localpool) { create(:group, :localpool) }
+
+      entity(:lpc) do
+        create(:contract, :localpool_processing,
+               customer: localpool.owner,
+               contractor: Organization::Market.buzzn,
+               localpool: localpool)
+      end
+
+      entity(:person) do
+        create(:person, :with_bank_account)
+      end
+
+      entity(:meter) do
+        create(:meter, :real, :connected_to_discovergy, :one_way, group: localpool)
+      end
+
+      entity(:contract) do
+        create(:contract, :localpool_powertaker, :with_tariff,
+               customer: person,
+               register_meta: meter.registers.first.meta,
+               contractor: Organization::Market.buzzn,
+               localpool: localpool)
+      end
+
+      let(:path) do
+        "/localpools/#{localpool.id}/contracts/#{contract.id}/billings"
+      end
+
+      let(:begin_date) { contract.begin_date }
+      let(:last_date)  { begin_date + 90 }
+
+      let(:params) do
+        {
+          :begin_date => begin_date,
+          :last_date  => last_date
+        }
+      end
+
+      context 'unauthenticated' do
+        it '403' do
+          POST path
+          expect(response).to have_http_status(403)
+        end
+      end
+
+      context 'authenticated' do
+        it '200' do
+          POST path, $admin, params
+          expect(response).to have_http_status(201)
+        end
+      end
+
     end
   end
 end

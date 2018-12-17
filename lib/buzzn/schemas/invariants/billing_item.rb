@@ -21,6 +21,7 @@ module Schemas
         end
       end
 
+      optional(:id).maybe
       required(:billing).filled
       required(:tariff).filled
       required(:contract).filled
@@ -47,6 +48,10 @@ module Schemas
 
       rule(end_reading: [:register, :end_reading]) do |register, end_reading|
         end_reading.filled?.then(end_reading.match_register?(register))
+      end
+
+      validate(no_other_billings_in_range: %i[register date_range id]) do |register, date_range, id|
+        register.model.billing_items.to_a.keep_if { |item| item.id != id && item.in_date_range(date_range) }.empty?
       end
 
     end

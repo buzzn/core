@@ -1,5 +1,6 @@
 require_relative 'localpool_resource'
 require_relative '../register/meta_resource'
+require_relative '../admin/billing_resource'
 
 module Contract
   class LocalpoolPowerTakerResource < LocalpoolResource
@@ -25,6 +26,7 @@ module Contract
                 :share_register_publicly
 
     has_one :register_meta, Register::MetaResource
+    has_many :billings, Admin::BillingResource
 
     def share_register_with_group
       object.register_meta_option.nil? ? false : object.register_meta_option.share_with_group

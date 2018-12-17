@@ -62,6 +62,9 @@ module Buzzn
     end
 
   end
+
+  class StateError < GeneralError; end
+
   class ValidationError < GeneralError; end
 
   class NestedValidationError < ValidationError

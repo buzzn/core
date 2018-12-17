@@ -14,6 +14,8 @@ module Register
 
     has_one :group, through: :meter
     has_many :readings, class_name: 'Reading::Single', foreign_key: 'register_id'
+    has_many :billing_items, class_name: 'BillingItem', foreign_key: 'register_id'
+    has_many :billings, through: :billing_items
 
     belongs_to :meta, class_name: 'Meta', foreign_key: :register_meta_id
 

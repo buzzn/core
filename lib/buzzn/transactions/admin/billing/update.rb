@@ -5,7 +5,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
 
   validate :schema
   check :authorize, with: :'operations.authorization.update'
-  step :persist, with: :'operations.action.update'
+  map :persist, with: :'operations.action.update'
 
   def schema
     Schemas::Transactions::Admin::Billing::Update

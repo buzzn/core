@@ -3551,6 +3551,131 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings":
+    get:
+      description: get billings for an LocalpoolPowerTakerContract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: create a new billing for an LocalpoolPowerTakerContract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: begin_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: last_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: status
+        in: formData
+        required: false
+        type: string
+        enum:
+        - open
+        - calculated
+        - delivered
+        - settled
+        - closed
+      - name: invoice_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings/{billing_id}":
+    get:
+      description: get a specific billing for an LocalpoolPowerTakerContract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: billing_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    patch:
+      description: updates a billing for an LocalpoolPowerTakerContract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: billing_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: invoice_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: status
+        in: formData
+        required: false
+        type: string
+        enum:
+        - open
+        - calculated
+        - delivered
+        - settled
+        - closed
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/customer-organization":
     patch:
       description: updates the organization owner of the localpool
@@ -5459,15 +5584,43 @@ paths:
         - Z83
         - Z84
         - Z86
+      - name: date
+        in: formData
+        required: true
+        type: string
+        format: date
       - name: comment
         in: formData
         required: false
         type: string
         format: ''
         maxLength: 256
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/request":
+    post:
+      description: request a reading for the register from an external provider
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
       - name: date
         in: formData
-        required: false
+        required: true
         type: string
         format: date
       responses:

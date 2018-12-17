@@ -1,7 +1,7 @@
 describe 'Services::UnbilledBillingItemsFactory' do
 
   let(:date_range)       { Date.new(2017, 1, 1)...Date.new(2018, 1, 1) }
-  let(:args)             { { date_range: date_range, market_locations: register_metas } }
+  let(:args)             { { date_range: date_range, register_metas: register_metas } }
   let(:register_metas) do
     meta = create(:register, :real, :consumption).meta
     create(:contract, :localpool_powertaker, register_meta: meta)
@@ -24,7 +24,7 @@ describe 'Services::UnbilledBillingItemsFactory' do
 
         it 'contains one bar for the whole date range' do
           # expect(subject.size).to eq(1)
-          expect(subject.first[:market_location]).to eq(register_metas.first)
+          expect(subject.first[:register_meta]).to eq(register_metas.first)
           item = subject.first[:contracts].first[:items].first
           expect(item).to have_attributes(
             date_range: args[:date_range],

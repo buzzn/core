@@ -88,6 +88,12 @@ module Admin
           r.run DocumentRoda
         end
 
+        r.on 'billings' do
+          shared[:billings] = contract.billings
+          shared[:parent] = contract.object
+          r.run BillingRoda
+        end
+
       end
 
       r.get! do

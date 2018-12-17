@@ -3,6 +3,7 @@ require_relative '../admin_roda'
 class Admin::BillingRoda < BaseRoda
 
   include Import.args[:env,
+                      'transactions.admin.billing.create',
                       'transactions.admin.billing.update',
                       'transactions.admin.billing.delete',
                      ]
@@ -12,9 +13,16 @@ class Admin::BillingRoda < BaseRoda
   route do |r|
 
     billings = shared[:billings]
+    parent = shared[:parent]
 
     r.get! do
       billings
+    end
+
+    r.post! do
+      Transactions::Admin::Billing::Create.(
+        resource: billings, params: r.params, parent: parent
+      )
     end
 
     r.on :id do |id|
