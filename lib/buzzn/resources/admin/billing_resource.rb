@@ -6,6 +6,7 @@ module Admin
     model Billing
 
     attributes :begin_date,
+               :end_date,
                :last_date,
                :invoice_number,
                :status

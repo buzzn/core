@@ -38,12 +38,13 @@ describe Transactions::Admin::Billing::Create do
   end
 
   let(:begin_date) { contract.begin_date }
-  let(:end_date)   { begin_date + 90 }
+  let(:last_date)   { begin_date + 90 }
+  let(:end_date)   { begin_date + 90 + 1 }
 
   let(:params) do
     {
       :begin_date => begin_date,
-      :end_date => end_date,
+      :last_date => last_date,
     }
   end
 
@@ -77,7 +78,7 @@ describe Transactions::Admin::Billing::Create do
 
     it 'creates' do
       mock_series_start = create_series(begin_date, 2000, 15.minutes,   10*1000*1000, 50*1000*1000, 4)
-      mock_series_end   = create_series(end_date,   2000, 15.minutes, 1000*1000*1000, 50*1000*1000, 4)
+      mock_series_end   = create_series(last_date,   2000, 15.minutes, 1000*1000*1000, 50*1000*1000, 4)
       single_reading.next_api_request_single(contract.register_meta.register, begin_date, mock_series_start)
       single_reading.next_api_request_single(contract.register_meta.register, end_date, mock_series_end)
 

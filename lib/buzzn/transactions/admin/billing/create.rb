@@ -6,8 +6,9 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   validate :schema
   check :authorize, with: :'operations.authorization.create'
   tee :validate_parent
-  tee :validate_end_date
+  tee :set_end_date, with: :'operations.end_date'
   add :date_range
+  tee :validate_end_date
   tee :complete_params
   around :db_transaction
   add :billing_item
@@ -31,16 +32,16 @@ class Transactions::Admin::Billing::Create < Transactions::Base
 
   def date_range(params:, parent:, **)
     contract = parent
-    register_meta = contract.register_meta
     date_range = params[:begin_date]...params[:end_date]
 
-    last_billing = register_meta.billings_in_date_range(date_range).order(:end_date).last
-    date_range = last_billing ? last_billing.end_date...date_range.last : date_range
-
-    # now shrink date range to contract
     if contract.end_date && contract.end_date < date_range.last
       date_range = date_range.first...contract.end_date
     end
+    if contract.begin_date > date_range.first
+      date_range = contract.begin_date...date_range.last
+    end
+    params[:begin_date] = date_range.first
+    params[:end_date]   = date_range.last
     date_range
   end
 
@@ -49,7 +50,14 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   end
 
   def billing_item(params:, parent:, resource:, date_range:, **)
-    params[:items] = [Builders::Billing::ItemBuilder.from_contract(parent, date_range)]
+    items = [Builders::Billing::ItemBuilder.from_contract(parent, date_range)]
+    items.each do |item|
+      errors = item.invariant.errors.except(:billing, :contract)
+      unless errors.empty?
+        raise Buzzn::ValidationError.new(:items => errors)
+      end
+    end
+    params[:items] = items
   end
 
   def create_billing(params:, resource:, **)
