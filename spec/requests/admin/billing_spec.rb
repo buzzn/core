@@ -30,6 +30,7 @@ describe Admin::BillingResource, :request_helper do
       let(:expected_json) do
         {
           'id'=>billing.id,
+          'invoice_number'=>billing.invoice_number,
           'type'=>'billing',
           'created_at'=>billing.created_at.as_json,
           'updated_at'=>billing.updated_at.as_json,

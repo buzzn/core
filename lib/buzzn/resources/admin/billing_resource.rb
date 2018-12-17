@@ -7,6 +7,7 @@ module Admin
 
     attributes :begin_date,
                :last_date,
+               :invoice_number,
                :status
 
     has_one :contract
