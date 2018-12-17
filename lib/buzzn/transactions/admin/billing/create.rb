@@ -6,6 +6,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   validate :schema
   check :authorize, with: :'operations.authorization.create'
   tee :validate_parent
+  tee :validate_end_date
   add :date_range
   tee :complete_params
   around :db_transaction
@@ -19,6 +20,12 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   def validate_parent(parent:, **)
     unless parent.is_a? Contract::LocalpoolPowerTaker
       raise Buzzn::ValidationError.new('not a valid parent')
+    end
+  end
+
+  def validate_end_date(params:, **)
+    if params[:end_date] < params[:begin_date]
+      raise Buzzn::ValidationError.new(:end_date => ['must be after begin_date'])
     end
   end
 
