@@ -3657,11 +3657,6 @@ paths:
         required: true
         type: string
         format: date-time
-      - name: receivables_cents
-        in: formData
-        required: false
-        type: integer
-        format: int64
       - name: invoice_number
         in: formData
         required: false
