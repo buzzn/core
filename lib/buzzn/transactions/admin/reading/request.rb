@@ -1,3 +1,4 @@
+require_relative '../reading'
 require_relative '../../../schemas/transactions/admin/reading/request'
 
 class Transactions::Admin::Reading::Request < Transactions::Base
