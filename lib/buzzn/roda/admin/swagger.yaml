@@ -3588,7 +3588,7 @@ paths:
         required: true
         type: string
         format: date
-      - name: end_date
+      - name: last_date
         in: formData
         required: true
         type: string

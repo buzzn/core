@@ -35,6 +35,7 @@ describe Admin::BillingResource, :request_helper do
           'created_at'=>billing.created_at.as_json,
           'updated_at'=>billing.updated_at.as_json,
           'begin_date'=>billing.begin_date.as_json,
+          'end_date'=>billing.end_date.as_json,
           'last_date'=>billing.last_date.as_json,
           'status'=>billing.status
         }
@@ -86,12 +87,12 @@ describe Admin::BillingResource, :request_helper do
       end
 
       let(:begin_date) { contract.begin_date }
-      let(:end_date)   { begin_date + 90 }
+      let(:last_date)  { begin_date + 90 }
 
       let(:params) do
         {
           :begin_date => begin_date,
-          :end_date   => end_date
+          :last_date  => last_date
         }
       end
 
