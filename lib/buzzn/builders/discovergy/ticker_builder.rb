@@ -23,7 +23,7 @@ module Builders::Discovergy
     def build_easymeter(response)
       Current.new(time: response['time'],
                   unit: unit,
-                  value: to_value(response, register),
+                  value: to_value(response, register).round,
                   register: register)
     end
 
