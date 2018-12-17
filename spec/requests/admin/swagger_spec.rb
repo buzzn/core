@@ -301,6 +301,26 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'deletes a document'
   end
 
+  # contract -> billings
+
+  get '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/billings' do
+    description 'get billings for an LocalpoolPowerTakerContract'
+  end
+
+  post '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/billings' do
+    description 'create a new billing for an LocalpoolPowerTakerContract'
+    schema Schemas::Transactions::Admin::Billing::Create
+  end
+
+  get '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/billings/{billing_1.id}' do
+    description 'get a specific billing for an LocalpoolPowerTakerContract'
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/billings/{billing_1.id}' do
+    description 'updates a billing for an LocalpoolPowerTakerContract'
+    schema Schemas::Transactions::Admin::Billing::Update
+  end
+
   # meters
 
   get '/localpools/{localpool.id}/meters' do
@@ -373,6 +393,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
   post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
     description 'create reading for the register'
     schema Schemas::Transactions::Admin::Reading::Create
+  end
+
+  post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings/request' do
+    description 'request a reading for the register from an external provider'
+    schema Schemas::Transactions::Admin::Reading::Request
   end
 
   get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
