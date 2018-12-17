@@ -395,6 +395,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Admin::Reading::Create
   end
 
+  post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings/request' do
+    description 'request a reading for the register from an external provider'
+    schema Schemas::Transactions::Admin::Reading::Request
+  end
+
   get '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings' do
     description 'returns all readings of a register for the given IDs'
   end

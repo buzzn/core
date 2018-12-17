@@ -9,7 +9,7 @@ describe Admin::LocalpoolRoda, :request_helper do
   context 'readings' do
 
     entity(:localpool) { create(:group, :localpool) }
-    entity(:meter)     { create(:meter, :real, group: localpool) }
+    entity(:meter)     { create(:meter, :real, :connected_to_discovergy, :one_way, group: localpool) }
     entity(:register)  { meter.registers.first }
     entity!(:reading)  { create(:reading, register: register)}
 
@@ -25,6 +25,41 @@ describe Admin::LocalpoolRoda, :request_helper do
         'status'=>['must be one of: Z83, Z84, Z86'],
         'date'=>['must be a date']
       }
+    end
+
+    context 'request' do
+      before(:each) do
+        Import.global('services.redis_cache').flushall
+      end
+      let(:now) do
+        Date.today.to_time
+      end
+      let(:params) do
+        {
+          date: now.to_json
+        }
+      end
+      entity(:single_reading) do
+        Import.global('services.datasource.discovergy.single_reading')
+      end
+
+      it '403' do
+        POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request"
+        expect(response).to have_http_status(403)
+      end
+
+      it '422' do
+        POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request", $admin
+        expect(response).to have_http_status(422)
+      end
+
+      it 'works' do
+        mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+        single_reading.next_api_request_single(register, now, mock_series_start)
+        POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request", $admin, params
+        expect(response).to have_http_status(201)
+      end
+
     end
 
     context 'POST' do
