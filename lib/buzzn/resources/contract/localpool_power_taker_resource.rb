@@ -22,6 +22,7 @@ module Contract
                 :authorization,
                 :original_signing_user,
                 :metering_point_operator_name,
+                :allowed_actions,
                 :share_register_with_group,
                 :share_register_publicly
 
@@ -34,6 +35,19 @@ module Contract
 
     def share_register_publicly
       object.register_meta_option.nil? ? false : object.register_meta_option.share_publicly
+    end
+
+    def allowed_actions
+      allowed = {}
+      if allowed?(permissions.billings.create)
+        allowed[:create_billing] = create_billing.success? || create_billing.errors
+      end
+      allowed
+    end
+
+    def create_billing
+      subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+      Schemas::PreConditions::Contract::CreateBilling.call(subject)
     end
 
   end

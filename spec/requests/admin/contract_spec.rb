@@ -46,6 +46,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'authorization' => nil,
           'original_signing_user' => nil,
           'metering_point_operator_name' => nil,
+          'allowed_actions' => { 'create_billing' => true },
           'share_register_with_group' => true,
           'share_register_publicly' => true,
           'localpool' => {

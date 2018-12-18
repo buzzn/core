@@ -147,8 +147,13 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       end
     end
 
+    # FIXME maybe simply alias to '/contract'
     contracts do
       retrieve :managers_contract
+
+      billings do
+        retrieve :managers_contract
+      end
 
       customer do
         retrieve :managers_contract
