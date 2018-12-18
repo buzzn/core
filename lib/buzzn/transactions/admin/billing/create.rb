@@ -6,9 +6,9 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   validate :schema
   check :authorize, with: :'operations.authorization.create'
   tee :validate_parent
+  tee :validate_last_date
   tee :set_end_date, with: :'operations.end_date'
   add :date_range
-  tee :validate_end_date
   tee :complete_params
   around :db_transaction
   add :billing_item
@@ -24,9 +24,9 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     end
   end
 
-  def validate_end_date(params:, **)
-    if params[:end_date] < params[:begin_date]
-      raise Buzzn::ValidationError.new(:end_date => ['must be after begin_date'])
+  def validate_last_date(params:, **)
+    if params[:last_date] < params[:begin_date]
+      raise Buzzn::ValidationError.new(:last_date => ['must be after begin_date'])
     end
   end
 
