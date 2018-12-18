@@ -22,6 +22,12 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     unless parent.is_a? Contract::LocalpoolPowerTaker
       raise Buzzn::ValidationError.new('not a valid parent')
     end
+    # validate
+    subject = Schemas::Support::ActiveRecordValidator.new(parent)
+    result = Schemas::PreConditions::Contract::CreateBilling.call(subject)
+    unless result.success?
+      raise Buzzn::ValidationError.new(result.errors)
+    end
   end
 
   def validate_last_date(params:, **)
