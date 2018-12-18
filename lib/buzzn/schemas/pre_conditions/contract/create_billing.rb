@@ -7,7 +7,9 @@ module Schemas::PreConditions::Contract
     required(:tariffs).value(min_size?: 1)
 
     required(:register_meta).schema do
-      required(:register).filled?
+      required(:register).schema do
+        required(:id).value(:int?)
+      end
     end
   end
 
