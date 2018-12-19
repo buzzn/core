@@ -7,6 +7,7 @@ module Admin
                         'transactions.admin.contract.document',
                         'transactions.admin.contract.localpool.create_processing',
                         'transactions.admin.contract.localpool.update_processing',
+                        'transactions.admin.contract.localpool.assign_tariffs',
                         'transactions.admin.contract.localpool.create_power_taker_assign',
                         'transactions.admin.contract.localpool.create_power_taker_with_person',
                         'transactions.admin.contract.localpool.create_power_taker_with_organization',
@@ -86,6 +87,15 @@ module Admin
 
           shared[:documents] = contract.documents
           r.run DocumentRoda
+        end
+
+        r.on 'tariffs' do
+          case contract
+          when Contract::LocalpoolPowerTakerResource
+            assign_tariffs.(resource: contract, params: r.params)
+          else
+            r.response.status = 400
+          end
         end
 
         r.on 'billings' do

@@ -5105,6 +5105,35 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/tariffs":
+    patch:
+      description: updates the tariffs of an LocalpoolPowerTakerContract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: tariff_ids
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/contracts/{localpool_processing_contract_id}":
     patch:
       description: updates an existing LocalpoolProcessingContract
