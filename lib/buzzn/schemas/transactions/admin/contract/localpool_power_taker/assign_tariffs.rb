@@ -1,4 +1,4 @@
-require_relative '../../contract'
+require_relative '../localpool_power_taker'
 
 module Schemas::Transactions
 
