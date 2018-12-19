@@ -844,6 +844,71 @@ describe Admin::LocalpoolRoda, :request_helper do
       end
     end
 
+    context 'tariffs' do
+
+      let(:today) do
+        Date.today
+      end
+
+      let(:contract) do
+        localpool_processing_contract
+        create(:contract, :localpool_powertaker,
+               begin_date: today,
+               signing_date: today,
+               customer: person,
+               contractor: Organization::Market.buzzn,
+               localpool: localpool)
+      end
+
+      let(:tariff_1) do
+        create(:tariff, group: localpool, begin_date: today, end_date: today+30)
+      end
+
+      let(:tariff_2) do
+        create(:tariff, group: localpool, begin_date: today+30)
+      end
+
+      let(:tariff_3) do
+        create(:tariff, group: localpool, begin_date: today+32)
+      end
+
+      let(:tariff_4) do
+        create(:tariff, group: localpool, begin_date: today, end_date: today+30)
+      end
+
+      let(:path) { "/localpools/#{localpool.id}/contracts/#{contract.id}/tariffs" }
+
+      context 'assign' do
+
+        let(:update_tariffs_json) do
+          {
+            'updated_at' => contract.updated_at,
+            'tariff_ids' => [tariff_1.id, tariff_2.id]
+          }
+        end
+
+        context 'unauthenticated' do
+
+          it '403' do
+            PATCH path, nil, update_tariffs_json
+            expect(response).to have_http_status(403)
+          end
+
+        end
+
+        context 'authenticated' do
+
+          it 'updates the tariffs' do
+            PATCH path, $admin, update_tariffs_json
+            expect(response).to have_http_status(200)
+          end
+
+        end
+
+      end
+
+    end
+
     context 'document' do
 
       context 'generate' do
