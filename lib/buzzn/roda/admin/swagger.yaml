@@ -5627,7 +5627,36 @@ paths:
       responses:
         201:
           description: created
-  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/request":
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/request/create":
+    post:
+      description: request a reading for the register from an external provider and
+        store it
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: date
+        in: formData
+        required: true
+        type: string
+        format: date
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/request/read":
     post:
       description: request a reading for the register from an external provider
       consumes:
