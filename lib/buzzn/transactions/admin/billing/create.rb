@@ -56,7 +56,11 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   end
 
   def billing_item(params:, parent:, resource:, date_range:, **)
-    items = [Builders::Billing::ItemBuilder.from_contract(parent, date_range)]
+    begin 
+      items = [Builders::Billing::ItemBuilder.from_contract(parent, date_range)]
+    rescue Buzzn::DataSourceError => error
+      raise Buzzn::ValidationError.new(error.message)
+    end
     items.each do |item|
       errors = item.invariant.errors.except(:billing, :contract)
       unless errors.empty?
