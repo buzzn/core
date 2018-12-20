@@ -400,8 +400,13 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Admin::Reading::Create
   end
 
-  post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings/request' do
+  post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings/request/read' do
     description 'request a reading for the register from an external provider'
+    schema Schemas::Transactions::Admin::Reading::Request
+  end
+
+  post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings/request/create' do
+    description 'request a reading for the register from an external provider and store it'
     schema Schemas::Transactions::Admin::Reading::Request
   end
 
