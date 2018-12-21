@@ -68,14 +68,38 @@ describe Website::ZipToPriceRoda, :request_helper do
       expect(json.to_yaml).to eq not_found_json.to_yaml
     end
 
-    it '200' do
-      POST '', nil,
-           zip: 1337,
-           annual_kwh: 1234,
-           type: 'double'
+    context 'germany 1' do
+      it '200' do
+        POST '', nil,
+             zip: '1337',
+             annual_kwh: 1234,
+             type: 'double'
 
-      expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq price_json.to_yaml
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq price_json.to_yaml
+      end
+      it '200' do
+        POST '', nil,
+             zip: 1337,
+             annual_kwh: 1234,
+             type: 'double'
+
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq price_json.to_yaml
+      end
     end
+
+    context 'germany 2' do
+      it '200' do
+        POST '', nil,
+             zip: '01337',
+             annual_kwh: 1234,
+             type: 'double'
+
+        expect(response).to have_http_status(200)
+        expect(json.to_yaml).to eq price_json.to_yaml
+      end
+    end
+
   end
 end

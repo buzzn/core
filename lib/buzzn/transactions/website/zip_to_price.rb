@@ -4,8 +4,15 @@ require_relative '../../types/zip_prices'
 
 class Transactions::Website::ZipToPrice < Transactions::Base
 
+  tee :fix_params
   validate :schema
   step :zip_to_price
+
+  def fix_params(params:)
+    if params['zip'] && params['zip'].is_a?(String)
+      zeroes, params['zip'] = params['zip'].match(/^(0*)(.*)/i).captures
+    end
+  end
 
   def schema
     Schemas::Transactions::Website::ZipToPrice
