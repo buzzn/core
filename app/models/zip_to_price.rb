@@ -47,6 +47,7 @@ class ZipToPrice < ActiveRecord::Base
           logger.info "skip corrupted row: #{row}"
         else
           params = Hash[COLUMNS_ET.keys.zip(values)]
+          params[:zip] = params[:zip].rjust(5, '0')
           params[:updated] = true
           create!(params)
         end
@@ -55,6 +56,7 @@ class ZipToPrice < ActiveRecord::Base
           logger.info "skip corrupted row: #{row}"
         else
           params = Hash[COLUMNS_DT.keys.zip(values)]
+          params[:zip] = params[:zip].rjust(5, '0')
           et_obj = where(:zip => params[:zip], :vnb => params[:vnb]).first
           if et_obj.nil?
             logger.info "No ET row for #{params}"
