@@ -24,14 +24,14 @@ describe Types::ZipPrices do
   end
 
   it 'max price when there is more then one DSO' do
-    prices = Types::ZipPrices.new(zip: 1338, type: 'single', annual_kwh: 1)
+    prices = Types::ZipPrices.new(zip: '01338', type: 'single', annual_kwh: 1)
     expect(prices.max_price.price.dso).to eq 'Vampire GmbH'
-    expect(ZipToPrice.by_zip(1338).count).to eq 2
+    expect(ZipToPrice.by_zip('01338').count).to eq 2
   end
 
   it 'max price when there is exactly one DSO' do
-    prices = Types::ZipPrices.new(zip: 1337, type: 'single', annual_kwh: 1)
+    prices = Types::ZipPrices.new(zip: '01337', type: 'single', annual_kwh: 1)
     expect(prices.max_price.price.dso).to eq 'Vampire GmbH'
-    expect(ZipToPrice.by_zip(1337).count).to eq 1
+    expect(ZipToPrice.by_zip('01337').count).to eq 1
   end
 end

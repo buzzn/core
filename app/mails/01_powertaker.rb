@@ -86,19 +86,14 @@ module Mail
     end
 
     def build_zip
-      zip = if form_content&.[](:calculator)&.[](:customerType) == 'organization'
-              if form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:sameAddress)
-                form_content&.[](:personalInfo)&.[](:organization)&.[](:contractingParty)&.[](:zip)
-              else
-                form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:zip)
-              end
-            elsif form_content&.[](:calculator)&.[](:customerType) == 'person'
-              form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:zip)
-            end
-      begin
-        Integer(zip)
-      rescue ArgumentError
-        nil
+      if form_content&.[](:calculator)&.[](:customerType) == 'organization'
+        if form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:sameAddress)
+          form_content&.[](:personalInfo)&.[](:organization)&.[](:contractingParty)&.[](:zip)
+        else
+          form_content&.[](:address)&.[](:organization)&.[](:shippingAddress)&.[](:zip)
+        end
+      elsif form_content&.[](:calculator)&.[](:customerType) == 'person'
+        form_content&.[](:address)&.[](:person)&.[](:shippingAddress)&.[](:zip)
       end
     end
 

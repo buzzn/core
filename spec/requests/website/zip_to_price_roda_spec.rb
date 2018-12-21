@@ -31,7 +31,7 @@ describe Website::ZipToPriceRoda, :request_helper do
     let(:wrong_json) do
       {
         'type'=>['must be one of: single, double, smart'],
-        'zip'=>['must be an integer'],
+        'zip'=>['size cannot be greater than 5'],
         'annual_kwh'=>['must be an integer']
       }
     end
@@ -60,7 +60,7 @@ describe Website::ZipToPriceRoda, :request_helper do
       expect(json.to_yaml).to eq wrong_json.to_yaml
 
       POST '', nil,
-           zip: 1,
+           zip: '1',
            annual_kwh: 1234,
            type: 'single'
 
@@ -70,12 +70,13 @@ describe Website::ZipToPriceRoda, :request_helper do
 
     it '200' do
       POST '', nil,
-           zip: 1337,
+           zip: '01337',
            annual_kwh: 1234,
            type: 'double'
 
       expect(response).to have_http_status(200)
       expect(json.to_yaml).to eq price_json.to_yaml
     end
+
   end
 end

@@ -2,7 +2,7 @@ class CreateZipToPrices < ActiveRecord::Migration
 
   def change
     create_table :zip_to_prices do |t|
-      t.integer :zip, null: false
+      t.string :zip, null: false
       t.float   :baseprice_euro_year_dt
       t.float   :unitprice_cents_kwh_dt
       t.float   :measurement_euro_year_dt

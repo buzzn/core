@@ -5,7 +5,7 @@ module Types
 
     extend Dry::Initializer
 
-    option :zip, Types::Strict::Int
+    option :zip, Types::Strict::String
     option :type, MeterTypes
     option :annual_kwh, Types::Strict::Int
 

@@ -9,9 +9,10 @@ describe ZipToPrice do
 
   it 'imports' do
     ZipToPrice.from_csv(file1, true)
-    expect(ZipToPrice.count).to eq 3
+    expect(ZipToPrice.count).to eq 4
     ZipToPrice.from_csv(file2, false)
     expect(ZipToPrice.first.baseprice_euro_year_dt).not_to be_nil
+    expect(ZipToPrice.by_zip('01337')).not_to be_nil
   end
 
 end
