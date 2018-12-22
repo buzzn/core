@@ -55,11 +55,25 @@ describe Admin::LocalpoolRoda, :request_helper do
           expect(response).to have_http_status(422)
         end
 
-        it 'works' do
+        it 'works and produces 201' do
           mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
           single_reading.next_api_request_single(register, now, mock_series_start)
           POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/read", $admin, params
           expect(response).to have_http_status(201)
+        end
+
+        it 'it produces an 422 when if there are already reading' do
+          mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+          single_reading.next_api_request_single(register, now, mock_series_start)
+          create(:reading, register: register, date: now)
+          POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/read", $admin, params
+          expect(response).to have_http_status(422)
+        end
+
+        it 'it produces an 404 when no readings are found' do
+          single_reading.next_api_request_single(register, now, [])
+          POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/read", $admin, params
+          expect(response).to have_http_status(404)
         end
 
       end

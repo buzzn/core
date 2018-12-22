@@ -63,7 +63,7 @@ module Buzzn
 
   end
 
-  class StateError < GeneralError; end
+  class RemoteNotFound < GeneralError; end
 
   class ValidationError < GeneralError; end
 

@@ -9,6 +9,7 @@ module Buzzn
         Buzzn::ValidationError => 422,
         Buzzn::GeneralError => 404,
         Buzzn::DataSourceError => 503,
+        Buzzn::RemoteNotFound => 404,
         ::Services::Datasource::Discovergy::Api::EmptyResponse => 404
       }
 
@@ -17,7 +18,7 @@ module Buzzn
           response.status = ERRORS[e.class] || raise(e)
 
           case e
-          when Buzzn::ValidationError
+          when Buzzn::ValidationError, Buzzn::RemoteNotFound
             logger.debug{ e.errors.inspect }
             errors = e.errors.to_json
             response['Content-Type'] = 'application/json'
