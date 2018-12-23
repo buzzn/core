@@ -23,12 +23,12 @@ class Transactions::Admin::Reading::Request::Base < Transactions::Base
 
   def fetch_reading(resource:, params:, set_create:, **)
     time = params[:date].to_time
-    readings = reading_service.get(resource.object, time, :precision => 1.minutes, fetch: false, create: set_create)
+    readings = reading_service.get(resource.object, time, :precision => 2.days, fetch: false, create: set_create)
     # there are no readings, so we can actually request one
     unless readings.nil?
       raise Buzzn::ValidationError.new(register: {reason: 'readings are already present', readings: readings.collect { |x| x.id }})
     end
-    readings = reading_service.get(resource.object, time, :precision => 1.minutes, fetch: true, create: set_create)
+    readings = reading_service.get(resource.object, time, :precision => 2.days, fetch: true, create: set_create)
     if readings.nil?
       raise Buzzn::RemoteNotFound.new(register: {reason: 'reading could not be fetched'})
     end
