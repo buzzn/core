@@ -1,11 +1,7 @@
-require_relative '../concerns/last_date'
-
 module Contract
   class Tariff < ActiveRecord::Base
 
     self.table_name = :tariffs
-
-    include LastDate
 
     has_and_belongs_to_many :contracts, class_name: 'Contract::Base', association_foreign_key: :contract_id, foreign_key: :tariff_id
     belongs_to :group, class_name: 'Group::Base', foreign_key: :group_id
