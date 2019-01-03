@@ -5754,6 +5754,13 @@ paths:
         required: false
         type: string
         format: alphanumeric
+      - name: direction_number
+        in: formData
+        required: true
+        type: string
+        enum:
+        - ERZ
+        - ZRZ
       - name: datasource
         in: formData
         required: false
@@ -5819,13 +5826,6 @@ paths:
         required: false
         type: string
         format: date
-      - name: direction_number
-        in: formData
-        required: false
-        type: string
-        enum:
-        - ERZ
-        - ZRZ
       - name: edifact_metering_type
         in: formData
         required: false
@@ -6767,6 +6767,13 @@ paths:
         required: true
         type: string
         format: alphanumeric
+      - name: direction_number
+        in: formData
+        required: true
+        type: string
+        enum:
+        - ERZ
+        - ZRZ
       - name: datasource
         in: formData
         required: false
@@ -6832,13 +6839,6 @@ paths:
         required: false
         type: string
         format: date
-      - name: direction_number
-        in: formData
-        required: false
-        type: string
-        enum:
-        - ERZ
-        - ZRZ
       - name: edifact_metering_type
         in: formData
         required: false
