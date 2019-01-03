@@ -38,12 +38,12 @@ describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defin
 
   # Tariff configuration
   # t1 xxxxx
-  # t2     xxxxxxx----
-  # t3       xxxxx----
+  # t2     xxx
+  # t3       xxxxxxxx
   # t4 xxxxx
 
   let!(:tariff_1) do
-    create(:tariff, group: localpool, begin_date: today, end_date: today+30)
+    create(:tariff, group: localpool, begin_date: today)
   end
 
   let!(:tariff_2) do
@@ -55,7 +55,7 @@ describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defin
   end
 
   let!(:tariff_4) do
-    create(:tariff, group: localpool, begin_date: today, end_date: today+30)
+    create(:tariff, group: localpool, begin_date: today)
   end
 
   context 'with a valid tariff combination' do
@@ -76,26 +76,6 @@ describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defin
       expect(result).to be_success
       contract.reload
       expect(contract.tariffs.pluck(:id)).to eql [tariff_1.id, tariff_2.id]
-    end
-
-  end
-
-  context 'with an invalid tariff combination' do
-
-    let(:params) do
-      {
-        updated_at: resource.updated_at.to_json,
-        tariff_ids: [tariff_1.id, tariff_3.id]
-      }
-    end
-
-    let(:result) do
-      Transactions::Admin::Contract::Localpool::AssignTariffs.new.(params: params,
-                                                                   resource: resource)
-    end
-
-    it 'assigns' do
-      expect {result}.to raise_error(Buzzn::ValidationError, '{:tariffs=>["must line up"]}')
     end
 
   end

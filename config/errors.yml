@@ -31,7 +31,6 @@ en:
     match_localpool?: 'meter.group must match contract.localpool'
     localpool_tariffs?: 'all tariff.group must match contract.localpool'
     cover_beginning_of_contract?: 'tariffs must cover beginning of contract'
-    cover_ending_of_contract?: 'tariffs must cover end of contract'
     after?: 'must be after begin_date'
     not_in_future?: 'must not be in the future'
     single_substitute?: 'there can be only one substitute register per group'

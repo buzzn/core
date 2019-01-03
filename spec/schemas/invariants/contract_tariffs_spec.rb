@@ -4,7 +4,7 @@ require 'buzzn/schemas/invariants/contract/localpool_powertaker'
 describe 'Schemas::Invariants::Contract::Localpool' do
 
   entity(:tariff)       { create(:tariff, group: localpool) }
-  entity(:tariff2)      { create(:tariff, group: localpool, begin_date: tariff.begin_date - 2.year, end_date: tariff.begin_date - 1.year) }
+  entity(:tariff2)      { create(:tariff, group: localpool, begin_date: tariff.begin_date - 2.year) }
   entity(:localpool)    { create(:group, :localpool) }
   entity(:other_localpool) { create(:group, :localpool) }
 
@@ -38,23 +38,6 @@ describe 'Schemas::Invariants::Contract::Localpool' do
           localpool.tariffs.reload
         end
         it { is_expected.to be_nil }
-      end
-
-      context 'when tariffs do not line up' do
-        before do
-          contract.tariffs << tariff2
-          localpool.tariffs.reload
-        end
-        it { is_expected.to eq(['must line up']) }
-      end
-
-      context 'when tariffs do not cover ending' do
-        before do
-          contract.tariffs << tariff2
-          contract.tariffs.delete(tariff)
-          localpool.tariffs.reload
-        end
-        it { is_expected.to eq(['tariffs must cover end of contract']) }
       end
 
       context 'when all tariffs belong to localpool' do
