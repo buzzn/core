@@ -17,7 +17,7 @@ module Schemas
         end
 
         def inside_period?(date_range, thing)
-          thing.begin_date <= date_range.first && (thing.end_date.nil? || thing.end_date >= date_range.last)
+          thing.begin_date <= date_range.first && (!thing.respond_to?(:end_date) || thing.end_date.nil? || thing.end_date >= date_range.last)
         end
       end
 

@@ -59,21 +59,6 @@ describe 'Schemas::Invariants::BillingItem' do
         end
         before { item.update(tariff: tariff) }
         it { is_expected.to be_nil }
-
-        context 'ends before billing item' do
-          before { item.tariff.update_columns(end_date: item.end_date - 1.day) }
-          it { is_expected.to eq(['must inside period']) }
-
-          context 'begins after billing item' do
-            before { item.tariff.update_columns(end_date: item.end_date, begin_date: item.begin_date + 1.day) }
-            it { is_expected.to eq(['must inside period']) }
-
-            context 'inside billing item' do
-              before { item.tariff.update_columns(end_date: item.end_date + 1.day, begin_date: item.begin_date - 1.day) }
-              it { is_expected.to be_nil }
-            end
-          end
-        end
       end
     end
   end

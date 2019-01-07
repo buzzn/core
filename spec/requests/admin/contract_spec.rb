@@ -865,7 +865,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       end
 
       let(:tariff_1) do
-        create(:tariff, group: localpool, begin_date: today, end_date: today+30)
+        create(:tariff, group: localpool, begin_date: today)
       end
 
       let(:tariff_2) do
@@ -877,7 +877,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       end
 
       let(:tariff_4) do
-        create(:tariff, group: localpool, begin_date: today, end_date: today+30)
+        create(:tariff, group: localpool, begin_date: today)
       end
 
       let(:path) { "/localpools/#{localpool.id}/contracts/#{contract.id}/tariffs" }
