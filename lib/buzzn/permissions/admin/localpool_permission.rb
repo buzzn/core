@@ -242,6 +242,13 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     tariffs do
       retrieve :managers_contract
     end
+    contexted_tariffs do
+      retrieve :managers_contract
+
+      tariff do
+        retrieve :managers_contract
+      end
+    end
 
     payments :tariffs
   end

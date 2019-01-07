@@ -5106,6 +5106,22 @@ paths:
         200:
           description: patched
   "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/tariffs":
+    get:
+      description: returns the tariffs of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
     patch:
       description: updates the tariffs of an LocalpoolPowerTakerContract
       consumes:

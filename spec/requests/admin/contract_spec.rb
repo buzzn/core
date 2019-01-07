@@ -321,6 +321,21 @@ describe Admin::LocalpoolRoda, :request_helper do
           contract3.register_meta = old
           contract3.save
         end
+
+        context 'with contexted tariffs includes' do
+          before do
+            contract3.tariffs = [ create(:tariff, group: localpool) ]
+            contract3.save
+          end
+          it '200' do
+            GET "/localpools/#{localpool.id}/contracts?include=contexted_tariffs:[tariff]", $admin
+            expect(response).to have_http_status(200)
+            lpc = json["array"].keep_if{|x| x["type"] == "contract_localpool_power_taker"}.first
+            expect(lpc["contexted_tariffs"]["array"].count).to eql 1
+            contexted_tariff = lpc["contexted_tariffs"]["array"][0]
+            expect(contexted_tariff["tariff"]).not_to be_nil
+          end
+        end
       end
 
       context 'with a type' do
@@ -909,6 +924,28 @@ describe Admin::LocalpoolRoda, :request_helper do
 
         end
 
+      end
+
+      context 'request' do
+        before do
+          contract.tariffs = [ tariff_1, tariff_2, tariff_3, tariff_4 ]
+          contract.save
+        end
+
+        context 'unauthenticated' do
+          it 'is denied' do
+            GET path
+            expect(response).to have_http_status(403)
+          end
+        end
+
+        context 'authenticated' do
+          it 'fetches' do
+            GET path, $admin
+            expect(response).to have_http_status(200)
+            expect(json["array"].count).to eql 4
+          end
+        end
       end
 
     end

@@ -20,7 +20,7 @@ module Service
       sorted = @collection.sort_by(&:begin_date)
       sorted.each_with_index do |tariff, idx|
         if idx+1 < sorted.size
-          following_tariff = sorted[idx]
+          following_tariff = sorted[idx+1]
         else
           following_tariff = nil
         end
@@ -33,7 +33,7 @@ module Service
             hash[:last_date] = following_tariff.begin_date - 1
           end
         end
-        items.push(item)
+        items.push(Contract::ContextedTariff.new(item))
       end
       items
     end

@@ -267,6 +267,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Person.update_for(localpool_power_taker_contract.customer)
   end
 
+
+  get '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/tariffs' do
+    description 'returns the tariffs of the contract'
+  end
+
   patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/tariffs' do
     description 'updates the tariffs of an LocalpoolPowerTakerContract'
     schema Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::AssignTariffs
