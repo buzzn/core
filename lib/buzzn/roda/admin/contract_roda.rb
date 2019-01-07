@@ -90,12 +90,19 @@ module Admin
         end
 
         r.on 'tariffs' do
-          case contract
-          when Contract::LocalpoolPowerTakerResource
-            assign_tariffs.(resource: contract, params: r.params)
-          else
-            r.response.status = 400
+          r.patch! do
+            case contract
+            when Contract::LocalpoolPowerTakerResource
+              assign_tariffs.(resource: contract, params: r.params)
+            else
+              r.response.status = 400
+            end
           end
+          r.get! do
+            # FIXME remove in favor of tree include?
+            contract.contexted_tariffs
+          end
+          r.others!
         end
 
         r.on 'billings' do
