@@ -8,6 +8,7 @@ class BillingItem < ActiveRecord::Base
 
   include LastDate
   include WithDateRange
+  include DateRangeScope
 
   belongs_to :billing
   belongs_to :register, class_name: 'Register::Base'
@@ -29,10 +30,10 @@ class BillingItem < ActiveRecord::Base
     end
   end
 
-  def in_date_range(date_range)
-    if date_range.first >= self.begin_date && date_range.first < self.end_date
+  def in_date_range?(date_range)
+    if date_range.first > self.begin_date && date_range.first < self.end_date
       true
-    elsif date_range.last >= self.begin_date && date_range.last <= self.end_date
+    elsif date_range.last > self.begin_date && date_range.last <= self.end_date
       true
     else
       false
