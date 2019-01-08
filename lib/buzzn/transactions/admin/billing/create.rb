@@ -6,7 +6,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   validate :schema
   check :authorize, with: :'operations.authorization.create'
   tee :validate_parent
-  tee :validate_last_date
+  tee :validate_dates
   tee :set_end_date, with: :'operations.end_date'
   add :date_range
   tee :complete_params
@@ -30,9 +30,12 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     end
   end
 
-  def validate_last_date(params:, **)
+  def validate_dates(params:, parent:, **)
     if params[:last_date] < params[:begin_date]
       raise Buzzn::ValidationError.new(:last_date => ['must be after begin_date'])
+    end
+    if params[:begin_date] < parent.begin_date
+      raise Buzzn::ValidationError.new(:begin_date => ['must be after contract[\'begin_date\']'])
     end
   end
 
@@ -56,7 +59,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   end
 
   def billing_item(params:, parent:, resource:, date_range:, **)
-    begin 
+    begin
       items = [Builders::Billing::ItemBuilder.from_contract(parent, date_range)]
     rescue Buzzn::DataSourceError => error
       raise Buzzn::ValidationError.new(error.message)
