@@ -47,7 +47,7 @@ module Schemas
       end
 
       rule(items: [:items, :begin_date, :end_date]) do |billing_items, begin_date, end_date|
-        billing_items.lineup?.and(billing_items.covers_beginning?(begin_date).and(billing_items.covers_ending?(end_date)))
+        billing_items.covers_beginning?(begin_date).and(billing_items.covers_ending?(end_date))
       end
     end
 

@@ -2,7 +2,7 @@ module Contract
   class ContextedTariff
 
     ATTRIBUTES = :begin_date, :end_date, :last_date, :tariff
-    attr_accessor :begin_date, :end_date, :last_date, :tariff
+    attr_accessor :end_date, :last_date, :tariff
 
 
     def id
@@ -26,6 +26,14 @@ module Contract
         nil
       else
         tariff.created_at
+      end
+    end
+
+    def begin_date
+      if tariff.nil?
+        nil
+      else
+        tariff.begin_date
       end
     end
 

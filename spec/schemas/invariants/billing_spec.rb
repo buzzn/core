@@ -52,29 +52,6 @@ describe 'Schemas::Invariants::Billing' do
         context 'covers end' do
           before { billing.items.first.update(end_date: billing.end_date) }
           it { is_expected.to be_nil }
-
-          context 'with two billing items' do
-            entity!(:second_item) do
-              create(:billing_item, billing: billing, begin_date: billing.begin_date + 1.day, end_date: billing.end_date - 1.day)
-              billing.reload
-            end
-            it { is_expected.to eq(['must line up']) }
-            context 'lineup' do
-              before do
-                billing.items.first.update(end_date: billing.begin_date + 1.month)
-                billing.items.last.update(begin_date: billing.begin_date + 1.month, end_date: billing.end_date)
-              end
-              it { is_expected.to be_nil }
-              context 'with three billing items' do
-                entity!(:second_item) do
-                  billings.item.last.update(end_date: billing.end_date - 1.month)
-                  create(:billing_item, billing: billing, begin_date: billing.end_date - 1.month, end_date: billing.end_date)
-                  billing.reload
-                end
-                it { is_expected.to be_nil }
-              end
-            end
-          end
         end
       end
     end
