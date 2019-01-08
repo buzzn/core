@@ -47,3 +47,4 @@ en:
     alphanumeric?: 'must be alphanumeric'
     only_active_contract: 'another contract is already active'
     no_other_billings_in_range: 'other billing items already exist'
+    unique_begin_date?: 'duplicate begin dates present'

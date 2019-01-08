@@ -16,6 +16,7 @@ module Schemas
         rule(tariffs: [:tariffs, :begin_date]) do |tariffs, begin_date|
           tariffs.cover_beginning_of_contract?(begin_date)
         end
+
       end
 
     end
