@@ -20,7 +20,7 @@ describe Contract::TariffResource do
   subject { JSON.parse(billing_item_resource.to_json) }
 
   it 'json has all keys' do
-    expect(subject.keys).to match_array(%w(base_price_cents begin_date begin_reading_kwh consumed_energy_kwh last_date end_reading_kwh energy_price_cents id length_in_days type updated_at created_at))
+    expect(subject.keys).to match_array(%w(base_price_cents begin_date begin_reading_kwh consumed_energy_kwh last_date end_reading_kwh energy_price_cents id length_in_days type updated_at created_at incompleteness))
   end
 
   context 'without readings' do
@@ -31,6 +31,10 @@ describe Contract::TariffResource do
     it 'no end value' do
       expect(subject['end_reading_kwh']).to be_nil
     end
+    it 'is incomplete' do
+      expect(subject['incompleteness']['begin_reading']).to eql ['must be filled']
+      expect(subject['incompleteness']['end_reading']).to eql ['must be filled']
+    end
   end
 
   context 'with readings' do
@@ -40,6 +44,9 @@ describe Contract::TariffResource do
     end
     it 'end value' do
       expect(subject['end_reading_kwh']).to eq(1)
+    end
+    it 'is complete' do
+      expect(subject['incompleteness'].count).to eql(0)
     end
   end
 end
