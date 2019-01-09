@@ -5,4 +5,5 @@ Schemas::Constraints::Billing = Schemas::Support.Form do
   required(:end_date).filled(:date?)
   required(:status).value(included_in?: Billing.status.values)
   optional(:invoice_number).maybe(:str?, max_size?: 64)
+  optional(:invoice_number_addition).maybe(:int?)
 end
