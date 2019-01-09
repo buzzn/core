@@ -147,8 +147,13 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       end
     end
 
+    # FIXME maybe simply alias to '/contract'
     contracts do
       retrieve :managers_contract
+
+      billings do
+        retrieve :managers_contract
+      end
 
       customer do
         retrieve :managers_contract
@@ -175,6 +180,18 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       retrieve :managers_contract
       update :managers
       delete :managers
+
+      items do
+        retrieve :managers_contract
+
+        meter do
+          retrieve :managers_contract
+        end
+
+        tariff do
+          retrieve :managers_contract
+        end
+      end
     end
 
     documents do
@@ -236,6 +253,13 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
 
     tariffs do
       retrieve :managers_contract
+    end
+    contexted_tariffs do
+      retrieve :managers_contract
+
+      tariff do
+        retrieve :managers_contract
+      end
     end
 
     payments :tariffs

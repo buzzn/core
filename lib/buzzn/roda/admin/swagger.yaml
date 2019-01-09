@@ -5105,6 +5105,51 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/tariffs":
+    get:
+      description: returns the tariffs of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    patch:
+      description: updates the tariffs of an LocalpoolPowerTakerContract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: tariff_ids
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/contracts/{localpool_processing_contract_id}":
     patch:
       description: updates an existing LocalpoolProcessingContract
@@ -5598,7 +5643,36 @@ paths:
       responses:
         201:
           description: created
-  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/request":
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/request/create":
+    post:
+      description: request a reading for the register from an external provider and
+        store it
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: date
+        in: formData
+        required: true
+        type: string
+        format: date
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/request/read":
     post:
       description: request a reading for the register from an external provider
       consumes:
@@ -5696,6 +5770,13 @@ paths:
         required: false
         type: string
         format: alphanumeric
+      - name: direction_number
+        in: formData
+        required: true
+        type: string
+        enum:
+        - ERZ
+        - ZRZ
       - name: datasource
         in: formData
         required: false
@@ -5761,13 +5842,6 @@ paths:
         required: false
         type: string
         format: date
-      - name: direction_number
-        in: formData
-        required: false
-        type: string
-        enum:
-        - ERZ
-        - ZRZ
       - name: edifact_metering_type
         in: formData
         required: false
@@ -6709,6 +6783,13 @@ paths:
         required: true
         type: string
         format: alphanumeric
+      - name: direction_number
+        in: formData
+        required: true
+        type: string
+        enum:
+        - ERZ
+        - ZRZ
       - name: datasource
         in: formData
         required: false
@@ -6774,13 +6855,6 @@ paths:
         required: false
         type: string
         format: date
-      - name: direction_number
-        in: formData
-        required: false
-        type: string
-        enum:
-        - ERZ
-        - ZRZ
       - name: edifact_metering_type
         in: formData
         required: false

@@ -4,7 +4,7 @@ class Services::ReadingService
 
   include Import['services.datasource.discovergy.single_reading']
 
-  def get(register, date, precision: 600, fetch: true)
+  def get(register, date, precision: 600, fetch: true, create: true)
     # first check whether we already have this reading
     readings = register.readings.between((date.to_time - precision/2).to_date, (date + precision/2).to_date)
     if readings.any?
@@ -28,7 +28,11 @@ class Services::ReadingService
           status: :z86,
           date: date,
         }
-        [register.readings.create(attrs)]
+        if create
+          [register.readings.create(attrs)]
+        else
+          [register.readings.build(attrs)]
+        end
       when :standard_profile
         nil
       end

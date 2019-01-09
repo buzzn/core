@@ -29,10 +29,12 @@ class Billing < ActiveRecord::Base
   end
 
   def generate_invoice_number
-    if self.singular?
-      "#{Date.today.year}-#{contract.contract_number}/#{contract.contract_number_addition}-2"
-    else
-      "#{Date.today.year}-#{contract.contract_number}/#{contract.contract_number_addition}"
+    "#{Date.today.year}-#{contract.contract_number}/#{contract.contract_number_addition}"
+  end
+
+  def check_invoice_number_addition
+    if self.invoice_number_addition.nil?
+      self.invoice_number_addition = (Billing.where(:invoice_number => self.invoice_number).maximum(:invoice_number_addition) || -1) + 1
     end
   end
 
@@ -40,6 +42,7 @@ class Billing < ActiveRecord::Base
     if self.invoice_number.nil?
       self.invoice_number = generate_invoice_number
     end
+    self.check_invoice_number_addition
   end
 
 end

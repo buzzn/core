@@ -10,5 +10,9 @@ module Contract
       self.check_contract_number_addition
     end
 
+    def contexted_tariffs
+      Service::Tariffs.data(self.tariffs)
+    end
+
   end
 end

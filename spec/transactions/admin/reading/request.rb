@@ -36,19 +36,44 @@ describe Transactions::Admin::Reading::Request do
     Import.global('services.datasource.discovergy.single_reading')
   end
 
-  let(:result) do
-    Transactions::Admin::Reading::Request.new.(resource: registerr,
-                                               params: params)
-  end
-
-  context 'there is not a reading yet' do
-
-    it 'works' do
-      mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
-      single_reading.next_api_request_single(register, now, mock_series_start)
-      expect(result).to be_success
+  context 'fetch' do
+    let(:result) do
+      Transactions::Admin::Reading::Request::Read.new.(resource: registerr,
+                                                      params: params)
     end
 
+    context 'there is not a reading yet' do
+
+      it 'works' do
+        reading_count_old = register.readings.count
+        mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+        single_reading.next_api_request_single(register, now, mock_series_start)
+        expect(result).to be_success
+        register.reload
+        expect(register.readings.count).to eql reading_count_old
+      end
+
+    end
+  end
+
+  context 'fetch+create' do
+    let(:result) do
+      Transactions::Admin::Reading::Request::Create.new.(resource: registerr,
+                                                         params: params)
+    end
+
+    context 'there is not a reading yet' do
+
+      it 'works' do
+        reading_count_old = register.readings.count
+        mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+        single_reading.next_api_request_single(register, now, mock_series_start)
+        expect(result).to be_success
+        register.reload
+        expect(register.readings.count).to eql reading_count_old + 1
+      end
+
+    end
   end
 
 end

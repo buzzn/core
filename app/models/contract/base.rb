@@ -39,6 +39,7 @@ module Contract
     has_and_belongs_to_many :tariffs, class_name: 'Contract::Tariff', foreign_key: :contract_id
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
     has_many :billings, foreign_key: :contract_id
+    has_many :billing_items, through: :billings, :source => 'items'
     has_and_belongs_to_many :documents, foreign_key: :contract_id
 
     belongs_to :contractor_bank_account, class_name: 'BankAccount'

@@ -17,7 +17,7 @@ module Schemas
         end
 
         rule(tariffs: [:tariffs, :begin_date, :end_date]) do |tariffs, begin_date, end_date|
-          tariffs.cover_beginning_of_contract?(begin_date).and(tariffs.cover_ending_of_contract?(end_date))
+          tariffs.cover_beginning_of_contract?(begin_date)
         end
 
         validate(only_active_contract: %i[localpool begin_date id]) do |localpool, begin_date, id|

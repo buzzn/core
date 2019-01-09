@@ -1,6 +1,7 @@
 # coding: utf-8
 require_relative 'test_admin_localpool_roda'
-describe Admin::LocalpoolRoda, :request_helper do
+
+describe Admin::LocalpoolRoda, :request_helper, order: :defined do
 
   def app
     TestAdminLocalpoolRoda # this defines the active application for this test
@@ -43,21 +44,63 @@ describe Admin::LocalpoolRoda, :request_helper do
         Import.global('services.datasource.discovergy.single_reading')
       end
 
-      it '403' do
-        POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request"
-        expect(response).to have_http_status(403)
+      context 'READ' do
+
+        it '403' do
+          POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/read"
+          expect(response).to have_http_status(403)
+        end
+
+        it '422' do
+          POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/read", $admin
+          expect(response).to have_http_status(422)
+        end
+
+        it 'works and produces 201' do
+          mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+          single_reading.next_api_request_single(register, now, mock_series_start)
+          POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/read", $admin, params
+          expect(response).to have_http_status(201)
+        end
+
+        it 'it produces an 404 when no readings are found' do
+          single_reading.next_api_request_single(register, now, [])
+          POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/read", $admin, params
+          expect(response).to have_http_status(404)
+        end
+
+        context 'already present' do
+          it 'it produces an 422 when if there are already reading' do
+            another_reading = create(:reading, register: register, date: now)
+            mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+            single_reading.next_api_request_single(register, now, mock_series_start)
+            POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/read", $admin, params
+            expect(response).to have_http_status(422)
+            another_reading.destroy
+          end
+        end
+
       end
 
-      it '422' do
-        POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request", $admin
-        expect(response).to have_http_status(422)
-      end
+      context 'CREATE' do
 
-      it 'works' do
-        mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
-        single_reading.next_api_request_single(register, now, mock_series_start)
-        POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request", $admin, params
-        expect(response).to have_http_status(201)
+        it '403' do
+          POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/create"
+          expect(response).to have_http_status(403)
+        end
+
+        it '422' do
+          POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/create", $admin
+          expect(response).to have_http_status(422)
+        end
+
+        it 'works' do
+          mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+          single_reading.next_api_request_single(register, now, mock_series_start)
+          POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/create", $admin, params
+          expect(response).to have_http_status(201)
+        end
+
       end
 
     end

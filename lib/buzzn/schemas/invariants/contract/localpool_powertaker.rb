@@ -13,9 +13,10 @@ module Schemas
           contractor.localpool_owner?(localpool)
         end
 
-        rule(tariffs: [:tariffs, :begin_date, :end_date]) do |tariffs, begin_date, end_date|
-          tariffs.cover_beginning_of_contract?(begin_date).and(tariffs.cover_ending_of_contract?(end_date))
+        rule(tariffs: [:tariffs, :begin_date]) do |tariffs, begin_date|
+          tariffs.cover_beginning_of_contract?(begin_date)
         end
+
       end
 
     end

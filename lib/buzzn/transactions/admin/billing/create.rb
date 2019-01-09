@@ -6,9 +6,9 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   validate :schema
   check :authorize, with: :'operations.authorization.create'
   tee :validate_parent
+  tee :validate_dates
   tee :set_end_date, with: :'operations.end_date'
   add :date_range
-  tee :validate_end_date
   tee :complete_params
   around :db_transaction
   add :billing_item
@@ -22,11 +22,20 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     unless parent.is_a? Contract::LocalpoolPowerTaker
       raise Buzzn::ValidationError.new('not a valid parent')
     end
+    # validate
+    subject = Schemas::Support::ActiveRecordValidator.new(parent)
+    result = Schemas::PreConditions::Contract::CreateBilling.call(subject)
+    unless result.success?
+      raise Buzzn::ValidationError.new(result.errors)
+    end
   end
 
-  def validate_end_date(params:, **)
-    if params[:end_date] < params[:begin_date]
-      raise Buzzn::ValidationError.new(:end_date => ['must be after begin_date'])
+  def validate_dates(params:, parent:, **)
+    if params[:last_date] < params[:begin_date]
+      raise Buzzn::ValidationError.new(:last_date => ['must be after begin_date'])
+    end
+    if params[:begin_date] < parent.begin_date
+      raise Buzzn::ValidationError.new(:begin_date => ['must be after contract[\'begin_date\']'])
     end
   end
 
@@ -50,7 +59,55 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   end
 
   def billing_item(params:, parent:, resource:, date_range:, **)
-    items = [Builders::Billing::ItemBuilder.from_contract(parent, date_range)]
+    begin
+      in_range_tariffs = parent.contexted_tariffs.keep_if do |tariff|
+        if tariff.end_date.nil?
+          tariff.begin_date <= date_range.last
+        else
+          tariff.begin_date <= date_range.last && tariff.end_date >= date_range.first
+        end
+      end
+      ranges = []
+      # calculate new range for each tariff
+      new_max = date_range.first
+      in_range_tariffs.each do |tariff|
+        range = {}
+        range[:begin_date] = [tariff.begin_date, new_max].max
+        range[:end_date]   = [tariff.end_date || date_range.last, date_range.last].min
+        range[:tariff]     = tariff.tariff
+        ranges << range
+      end
+      # split even further, split with already existing BillingItems
+      existing_billing_items = parent.register_meta.register.billing_items.in_date_range(date_range)
+      existing_billing_items.each do |item|
+        # search correct range
+        ranges.each_with_index do |range, idx|
+          if range[:begin_date] <= item.begin_date && range[:end_date] <= item.end_date
+            ranges[idx][:end_date] = item.begin_date
+            params[:end_date]      = [item.begin_date, params[:end_date]].min
+          end
+          if range[:begin_date] <= item.begin_date && range[:end_date] > item.end_date
+            new_range = range.dup
+            new_range[:begin_date] = item.end_date
+            ranges[idx][:end_date] = item.begin_date
+            ranges << new_range
+          end
+          if range[:begin_date] > item.begin_date && range[:begin_date] < item.end_date
+            # update also params[:begin] here to line up
+            params[:begin_date]      = [item.end_date, params[:begin_date]].max
+            ranges[idx][:begin_date] = item.end_date
+          end
+        end
+
+      end
+
+      items = []
+      ranges.each do |range|
+        items << Builders::Billing::ItemBuilder.from_contract(parent, range[:begin_date]..range[:end_date], range[:tariff])
+      end
+    rescue Buzzn::DataSourceError => error
+      raise Buzzn::ValidationError.new(error.message)
+    end
     items.each do |item|
       errors = item.invariant.errors.except(:billing, :contract)
       unless errors.empty?

@@ -94,6 +94,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       let(:wrong_json) do
         {
           'product_serialnumber'=>['size cannot be greater than 128'],
+          'direction_number'=>['must be one of: ERZ, ZRZ'],
           'datasource'=>['must be one of: standard_profile, discovergy, virtual'],
           'product_name'=>['size cannot be greater than 64'],
           'manufacturer_name'=>['must be one of: easy_meter, other'],
@@ -101,7 +102,6 @@ describe Admin::LocalpoolRoda, :request_helper do
           'sent_data_dso'=>['must be a date'],
           'converter_constant'=>['must be an integer'],
           'calibrated_until'=>['must be a date'],
-          'direction_number'=>['must be one of: ERZ, ZRZ'],
           'edifact_metering_type'=>['must be one of: AHZ, WSZ, LAZ, MAZ, EHZ, IVA'],
           'edifact_meter_size'=>['must be one of: Z01, Z02, Z03'],
           'edifact_measurement_method'=>['must be one of: AMR, MMR'],
@@ -167,6 +167,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       it '409' do
         meter = real_meter
         PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
+              direction_number: 'ERZ',
               updated_at: DateTime.now
         expect(response).to have_http_status(409)
       end

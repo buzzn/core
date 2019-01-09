@@ -17,7 +17,7 @@ module Schemas
         end
 
         def inside_period?(date_range, thing)
-          thing.begin_date <= date_range.first && (thing.end_date.nil? || thing.end_date >= date_range.last)
+          thing.begin_date <= date_range.first && (!thing.respond_to?(:end_date) || thing.end_date.nil? || thing.end_date >= date_range.last)
         end
       end
 
@@ -51,7 +51,7 @@ module Schemas
       end
 
       validate(no_other_billings_in_range: %i[register date_range id]) do |register, date_range, id|
-        register.model.billing_items.to_a.keep_if { |item| item.id != id && item.in_date_range(date_range) }.empty?
+        register.model.billing_items.to_a.keep_if { |item| item.id != id && item.in_date_range?(date_range) }.empty?
       end
 
     end

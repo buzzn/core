@@ -194,6 +194,7 @@ describe Contract::BaseResource do
                     'other_contract',
                     'power_of_attorney',
                     'metering_point_operator_name',
+                    'allowed_actions',
                     'original_signing_user',
                     'share_register_with_group',
                     'share_register_publicly',
