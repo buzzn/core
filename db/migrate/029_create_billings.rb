@@ -14,7 +14,7 @@ class CreateBillings < ActiveRecord::Migration
     add_foreign_key :billings, :contracts, name: :fk_billings_contracts, column: :contract_id
 
     add_index :billings, [:billing_cycle_id, :status]
-    add_index :billings, :invoice_number, unique: true
+    add_index :billings, [:invoice_number, :invoice_number_addition], unique: true
   end
 
   def down

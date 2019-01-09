@@ -20,6 +20,10 @@ AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
         retrieve :managers
       end
 
+      billings do
+        retrieve :managers
+      end
+
       register_meta do
         retrieve :managers
         register do

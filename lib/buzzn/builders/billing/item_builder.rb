@@ -6,12 +6,12 @@ module Builders::Billing
     class << self
 
 
-      def from_contract(contract, max_date_range)
+      def from_contract(contract, max_date_range, tariff)
         date_range = date_range(contract, max_date_range)
         attrs = {
           contract_type:   contract_type(contract),
           date_range:      date_range,
-          tariff:          tariff(contract),
+          tariff:          tariff,
           begin_reading:   reading_close_to(contract, date_range.first),
           end_reading:     reading_close_to(contract, date_range.last),
           register:        contract.register_meta.register
@@ -48,12 +48,6 @@ module Builders::Billing
         else
           contract.end_date
         end
-      end
-
-      # TODO: right now we don't handle tariff changes, so we can always take the latest tariff.
-      # Later on we'll need to find the tariff that was active on the contract at the begin and end dates of the item
-      def tariff(contract)
-        contract.tariffs.last
       end
 
       def reading_close_to(contract, date)

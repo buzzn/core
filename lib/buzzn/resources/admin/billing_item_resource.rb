@@ -10,7 +10,8 @@ module Admin
                 :consumed_energy_kwh,
                 :length_in_days,
                 :base_price_cents,
-                :energy_price_cents
+                :energy_price_cents,
+                :incompleteness
 
     has_one :tariff
     has_one :meter

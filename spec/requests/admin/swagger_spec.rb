@@ -267,6 +267,16 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Person.update_for(localpool_power_taker_contract.customer)
   end
 
+
+  get '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/tariffs' do
+    description 'returns the tariffs of the contract'
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/tariffs' do
+    description 'updates the tariffs of an LocalpoolPowerTakerContract'
+    schema Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::AssignTariffs
+  end
+
   get '/localpools/{localpool.id}/contracts/{contract.id}/contractor' do
     description 'returns the contractor of the contract'
   end
@@ -395,8 +405,13 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Admin::Reading::Create
   end
 
-  post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings/request' do
+  post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings/request/read' do
     description 'request a reading for the register from an external provider'
+    schema Schemas::Transactions::Admin::Reading::Request
+  end
+
+  post '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}/readings/request/create' do
+    description 'request a reading for the register from an external provider and store it'
     schema Schemas::Transactions::Admin::Reading::Request
   end
 

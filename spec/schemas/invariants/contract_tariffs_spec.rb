@@ -1,10 +1,11 @@
 require 'buzzn/schemas/invariants/contract/localpool_third_party'
 require 'buzzn/schemas/invariants/contract/localpool_powertaker'
 
-describe 'Schemas::Invariants::Contract::Localpool' do
+describe 'Schemas::Invariants::Contract::Localpool', order: :defined do
 
   entity(:tariff)       { create(:tariff, group: localpool) }
-  entity(:tariff2)      { create(:tariff, group: localpool, begin_date: tariff.begin_date - 2.year, end_date: tariff.begin_date - 1.year) }
+  entity(:tariff2)      { create(:tariff, group: localpool, begin_date: tariff.begin_date - 2.year) }
+  entity(:tariff_clone) { create(:tariff, group: localpool, begin_date: tariff.begin_date) }
   entity(:localpool)    { create(:group, :localpool) }
   entity(:other_localpool) { create(:group, :localpool) }
 
@@ -40,28 +41,24 @@ describe 'Schemas::Invariants::Contract::Localpool' do
         it { is_expected.to be_nil }
       end
 
-      context 'when tariffs do not line up' do
-        before do
-          contract.tariffs << tariff2
-          localpool.tariffs.reload
-        end
-        it { is_expected.to eq(['must line up']) }
-      end
-
-      context 'when tariffs do not cover ending' do
-        before do
-          contract.tariffs << tariff2
-          contract.tariffs.delete(tariff)
-          localpool.tariffs.reload
-        end
-        it { is_expected.to eq(['tariffs must cover end of contract']) }
-      end
-
       context 'when all tariffs belong to localpool' do
         before do
           localpool.tariffs.reload
         end
         it { is_expected.to be_nil }
+      end
+
+      context 'when tariffs have same dates' do
+        before do
+          contract.tariffs << tariff_clone
+          localpool.tariffs.reload
+        end
+        after do
+          contract.tariffs.delete(tariff_clone)
+        end
+        it do
+          is_expected.to eq(['duplicate begin dates present'])
+        end
       end
 
       context 'when tariffs do belong to different localpool' do
@@ -74,4 +71,6 @@ describe 'Schemas::Invariants::Contract::Localpool' do
       end
     end
   end
+
+
 end

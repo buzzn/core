@@ -1,6 +1,7 @@
 require_relative 'localpool_resource'
 require_relative '../register/meta_resource'
 require_relative '../admin/billing_resource'
+require_relative 'contexted_tariff_resource'
 
 module Contract
   class LocalpoolPowerTakerResource < LocalpoolResource
@@ -22,11 +23,13 @@ module Contract
                 :authorization,
                 :original_signing_user,
                 :metering_point_operator_name,
+                :allowed_actions,
                 :share_register_with_group,
                 :share_register_publicly
 
     has_one :register_meta, Register::MetaResource
     has_many :billings, Admin::BillingResource
+    has_many :contexted_tariffs, Contract::ContextedTariffResource
 
     def share_register_with_group
       object.register_meta_option.nil? ? false : object.register_meta_option.share_with_group
@@ -34,6 +37,19 @@ module Contract
 
     def share_register_publicly
       object.register_meta_option.nil? ? false : object.register_meta_option.share_publicly
+    end
+
+    def allowed_actions
+      allowed = {}
+      if allowed?(permissions.billings.create)
+        allowed[:create_billing] = create_billing.success? || create_billing.errors
+      end
+      allowed
+    end
+
+    def create_billing
+      subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+      Schemas::PreConditions::Contract::CreateBilling.call(subject)
     end
 
   end

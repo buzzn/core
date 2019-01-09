@@ -1,4 +1,4 @@
-require_relative '../../../constraints/contract/tariff_common'
+require_relative '../../../constraints/contract/tariff'
 require_relative '../tariff'
 
-Schemas::Transactions::Admin::Tariff::Create = Schemas::Constraints::Contract::TariffCommon
+Schemas::Transactions::Admin::Tariff::Create = Schemas::Constraints::Contract::Tariff

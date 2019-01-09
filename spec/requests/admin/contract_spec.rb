@@ -46,6 +46,11 @@ describe Admin::LocalpoolRoda, :request_helper do
           'authorization' => nil,
           'original_signing_user' => nil,
           'metering_point_operator_name' => nil,
+          'allowed_actions' => { 'create_billing' =>
+                                 {
+                                   'tariffs' => [ 'size cannot be less than 1' ]
+                                 }
+                               },
           'share_register_with_group' => true,
           'share_register_publicly' => true,
           'localpool' => {
@@ -315,6 +320,21 @@ describe Admin::LocalpoolRoda, :request_helper do
           expect(response).to have_http_status(200)
           contract3.register_meta = old
           contract3.save
+        end
+
+        context 'with contexted tariffs includes' do
+          before do
+            contract3.tariffs = [ create(:tariff, group: localpool) ]
+            contract3.save
+          end
+          it '200' do
+            GET "/localpools/#{localpool.id}/contracts?include=contexted_tariffs:[tariff]", $admin
+            expect(response).to have_http_status(200)
+            lpc = json["array"].keep_if{|x| x["type"] == "contract_localpool_power_taker"}.first
+            expect(lpc["contexted_tariffs"]["array"].count).to eql 1
+            contexted_tariff = lpc["contexted_tariffs"]["array"][0]
+            expect(contexted_tariff["tariff"]).not_to be_nil
+          end
         end
       end
 
@@ -841,6 +861,93 @@ describe Admin::LocalpoolRoda, :request_helper do
           expect(json.to_yaml).to eq(contractor_json.to_yaml)
         end
       end
+    end
+
+    context 'tariffs' do
+
+      let(:today) do
+        Date.today
+      end
+
+      let(:contract) do
+        localpool_processing_contract
+        create(:contract, :localpool_powertaker,
+               begin_date: today,
+               signing_date: today,
+               customer: person,
+               contractor: Organization::Market.buzzn,
+               localpool: localpool)
+      end
+
+      let(:tariff_1) do
+        create(:tariff, group: localpool, begin_date: today)
+      end
+
+      let(:tariff_2) do
+        create(:tariff, group: localpool, begin_date: today+30)
+      end
+
+      let(:tariff_3) do
+        create(:tariff, group: localpool, begin_date: today+32)
+      end
+
+      let(:tariff_4) do
+        create(:tariff, group: localpool, begin_date: today)
+      end
+
+      let(:path) { "/localpools/#{localpool.id}/contracts/#{contract.id}/tariffs" }
+
+      context 'assign' do
+
+        let(:update_tariffs_json) do
+          {
+            'updated_at' => contract.updated_at,
+            'tariff_ids' => [tariff_1.id, tariff_2.id]
+          }
+        end
+
+        context 'unauthenticated' do
+
+          it '403' do
+            PATCH path, nil, update_tariffs_json
+            expect(response).to have_http_status(403)
+          end
+
+        end
+
+        context 'authenticated' do
+
+          it 'updates the tariffs' do
+            PATCH path, $admin, update_tariffs_json
+            expect(response).to have_http_status(200)
+          end
+
+        end
+
+      end
+
+      context 'request' do
+        before do
+          contract.tariffs = [ tariff_1, tariff_2, tariff_3, tariff_4 ]
+          contract.save
+        end
+
+        context 'unauthenticated' do
+          it 'is denied' do
+            GET path
+            expect(response).to have_http_status(403)
+          end
+        end
+
+        context 'authenticated' do
+          it 'fetches' do
+            GET path, $admin
+            expect(response).to have_http_status(200)
+            expect(json["array"].count).to eql 4
+          end
+        end
+      end
+
     end
 
     context 'document' do
