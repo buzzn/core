@@ -56,6 +56,8 @@ module Admin
     has_many :register_metas
     has_many :persons
     has_many :tariffs, Contract::TariffResource
+    has_many :contexted_gap_contract_tariffs, Contract::ContextedTariffResource
+
     has_many :billing_cycles, BillingCycleResource, :next_billing_cycle_begin_date
     has_many :devices, DeviceResource
     has_one :owner

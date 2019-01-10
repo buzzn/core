@@ -62,4 +62,9 @@ module Schemas::Support::Predicates
     ! /^[a-zA-Z0-9]+$/.match(value).nil?
   end
 
+  predicate(:unique_begin_date?) do |value|
+    # count all begin_date, if there are duplicate begin_dates
+    value.inject(Hash.new(0)) {|h,i| h[i.begin_date] += 1; h }.keep_if{|k,v| v > 1}.empty?
+  end
+
 end
