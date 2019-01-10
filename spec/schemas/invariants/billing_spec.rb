@@ -41,8 +41,9 @@ describe 'Schemas::Invariants::Billing' do
 
     context 'with one billing item' do
       entity!(:item) do
-        create(:billing_item, billing: billing, begin_date: billing.begin_date + 1.day, end_date: billing.end_date - 1.day)
+        item = create(:billing_item, billing: billing, begin_date: billing.begin_date + 1.day, end_date: billing.end_date - 1.day)
         billing.reload
+        item
       end
       it { is_expected.to eq(['must cover begin date']) }
       context 'covers begin' do
@@ -52,6 +53,14 @@ describe 'Schemas::Invariants::Billing' do
         context 'covers end' do
           before { billing.items.first.update(end_date: billing.end_date) }
           it { is_expected.to be_nil }
+        end
+      end
+      context 'billing_items' do
+        subject { billing.invariant.errors[:completeness] }
+        it 'is incomplete' do
+          expect(billing.status).to eql 'open'
+          expect(item.begin_reading).to be_nil
+          it { is_expected.to eq(['billing_items are not complete and state is not open'])}
         end
       end
     end
