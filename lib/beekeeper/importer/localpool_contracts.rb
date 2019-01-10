@@ -44,12 +44,13 @@ class Beekeeper::Importer::LocalpoolContracts
       contractor:      localpool.owner,
     )
     contract = Contract::LocalpoolPowerTaker.create!(contract_attributes)
-    contract.tariffs =
-      if contract.end_date.nil?
-        tariffs_running_contracts(contract, tariffs)
-      else
-        tariffs_ended_contracts(contract, tariffs)
-      end
+    contract.tariffs = tariffs
+    # TODO select proper tariffs again?
+    #  if contract.end_date.nil?
+    #    tariffs_running_contracts(contract, tariffs)
+    #  else
+    #    tariffs_ended_contracts(contract, tariffs)
+    #  end
     raise ActiveRecord::RecordInvalid.new(contract) unless contract.invariant_valid?
   end
 
