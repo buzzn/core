@@ -49,7 +49,10 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     ordered_contracts = register.meta.contracts.order(begin_date: :asc).to_a
     ordered_contracts[0...-1].map.with_index do |contract, index|
       next_contract = ordered_contracts[index + 1]
-      gap_in_days   = (next_contract.begin_date - contract.end_date).to_i
+      if contract.end_date.nil?
+        raise("contract #{contract.contract_number}/#{contract.contract_number_addition} needs to be terminated")
+      end
+      gap_in_days = (next_contract.begin_date - contract.end_date).to_i
       [contract, next_contract, gap_in_days]
     end
   end
@@ -92,7 +95,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       # these attributes come from different places ...
       contract_number_addition:      next_contract_number_addition(previous_contract.localpool),
       customer:                      find_gap_contract_customer(previous_contract.localpool),
-      tariffs:                       previous_contract.localpool.tariffs.at(previous_contract.end_date)
+      tariffs:                       previous_contract.localpool.gap_contract_tariffs
     }
     Contract::LocalpoolGap.create!(attributes)
   end
