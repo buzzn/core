@@ -14,9 +14,14 @@ class Transactions::Admin::Contract::Localpool::AssignTariffs < Transactions::Ba
     Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::AssignTariffs
   end
 
-  def fetched_tariffs(params:, **)
+  def fetched_tariffs(params:, resource:, **)
     begin
-      Contract::Tariff.find(params[:tariff_ids])
+      tariffs = Contract::Tariff.find(params[:tariff_ids])
+      tariffs.each do |tariff|
+        if tariff.group != resource.object.localpool
+          raise Buzzn::ValidationError.new(tariffs: ['one or more tariffs do not belong to this group'])
+        end
+      end
     rescue ActiveRecord::RecordNotFound
       raise Buzzn::ValidationError.new(tariffs: ['one or more tariffs do not exist'])
     end
