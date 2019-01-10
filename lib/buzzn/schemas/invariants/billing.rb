@@ -36,11 +36,18 @@ module Schemas
           last_date = last ? last.end_date : nil
           last_date.nil? || (end_date && last_date >= end_date)
         end
+
+        def are_complete_and_not_open?(status, items)
+          # check whether items are complete
+          items.all.to_a.keep_if { |item| Schemas::Completeness::Admin::BillingItem.call(Schemas::Support::ActiveRecordValidator.new(item)).errors.empty? }.count == items.count || status == 'open'
+        end
+
       end
 
       required(:localpool).filled
       required(:billing_cycle).maybe
       required(:items).maybe
+      required(:status).filled
 
       rule(localpool: [:localpool, :billing_cycle]) do |localpool, billing_cycle|
         billing_cycle.filled?.then(billing_cycle.match_group?(localpool))
@@ -49,6 +56,11 @@ module Schemas
       rule(items: [:items, :begin_date, :end_date]) do |billing_items, begin_date, end_date|
         billing_items.covers_beginning?(begin_date).and(billing_items.covers_ending?(end_date))
       end
+
+      rule(completeness: [:items, :status]) do |billing_items, status|
+        billing_items.are_complete_and_not_open?(status)
+      end
+
     end
 
   end
