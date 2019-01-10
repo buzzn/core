@@ -5454,6 +5454,44 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/gap-contract-tariffs":
+    get:
+      description: returns all the tariffs of the localpool that are configured for
+        gap contracts
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    patch:
+      description: set the tariffs for the localpool will be used for future gap contracts
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: tariff_ids
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/meters":
     get:
       description: returns all the meters of the localpool

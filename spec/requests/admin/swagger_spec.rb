@@ -267,7 +267,6 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Person.update_for(localpool_power_taker_contract.customer)
   end
 
-
   get '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/tariffs' do
     description 'returns the tariffs of the contract'
   end
@@ -501,6 +500,15 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   delete '/localpools/{localpool.id}/tariffs/{tariff_2.id}' do
     description 'deletes the tariff of the localpool for the given IDs'
+  end
+
+  get '/localpools/{localpool.id}/gap-contract-tariffs' do
+    description 'returns all the tariffs of the localpool that are configured for gap contracts'
+  end
+
+  patch '/localpools/{localpool.id}/gap-contract-tariffs' do
+    description 'set the tariffs for the localpool will be used for future gap contracts'
+    schema Schemas::Transactions::Admin::Localpool::AssignGapContractTariffs
   end
 
   # billing-cycles

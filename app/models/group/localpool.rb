@@ -16,6 +16,11 @@ module Group
 
     has_many :devices, foreign_key: :localpool_id
     has_many :tariffs, dependent: :destroy, class_name: 'Contract::Tariff', foreign_key: :group_id
+
+    # Tariffs that are configured for gap contracts
+    has_many :group_gap_contract_tariffs, dependent: :destroy, class_name: 'Contract::GroupGapContractTariff', foreign_key: :group_id
+    has_many :gap_contract_tariffs, class_name: 'Contract::Tariff', through: :group_gap_contract_tariffs, source: :tariff
+
     has_many :billing_cycles, dependent: :destroy
 
     has_many :metering_point_operator_contracts, class_name: 'Contract::MeteringPointOperator', foreign_key: :localpool_id
@@ -130,6 +135,10 @@ module Group
 
     def two_way_meters
       meter_without_corrected_registers.where(direction_number: Meter::Real.direction_numbers[:two_way_meter])
+    end
+
+    def contexted_gap_contract_tariffs
+      Service::Tariffs.data(self.gap_contract_tariffs)
     end
 
   end

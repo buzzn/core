@@ -11,11 +11,6 @@ module Schemas
             localpool.nil? || (localpool.tariffs & tariffs).sort == tariffs.sort
           end
 
-          def unique_begin_date?(tariffs)
-            # count all begin_date, if there are duplicate begin_dates
-            tariffs.inject(Hash.new(0)) {|h,i| h[i.begin_date] += 1; h }.keep_if{|k,v| v > 1}.empty?
-          end
-
           def cover_beginning_of_contract?(begin_date, tariffs)
             first_tariff = tariffs.min_by(&:begin_date)
             first_tariff.nil? || first_tariff.begin_date <= begin_date

@@ -11,6 +11,7 @@ module Admin
                         'transactions.admin.localpool.create_person_owner',
                         'transactions.admin.generic.update_nested_person',
                         'transactions.admin.localpool.create_organization_owner',
+                        'transactions.admin.localpool.assign_gap_contract_tariffs',
                         'transactions.admin.generic.update_nested_organization',
                         'transactions.bubbles',
                         'transactions.delete'
@@ -59,6 +60,16 @@ module Admin
 
         r.on 'tariffs' do
           r.run TariffRoda
+        end
+
+        r.on 'gap-contract-tariffs' do
+          r.get! do
+            localpool.contexted_gap_contract_tariffs
+          end
+          r.patch! do
+            assign_gap_contract_tariffs.(resource: localpool, params: r.params)
+          end
+          r.others!
         end
 
         r.on 'billing-cycles' do
