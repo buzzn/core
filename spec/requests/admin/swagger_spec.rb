@@ -168,6 +168,13 @@ describe Admin, :swagger, :request_helper, order: :defined do
               contract: localpool_power_taker_contract)
   end
 
+  entity!(:billing_item_1) do
+    create(:billing_item,
+           billing: billing_1,
+           tariff: billing_1.contract.tariffs.first)
+
+  end
+
   entity!(:billing_2) do
     create(:billing, billing_cycle: billing_cycle_1,
               contract: localpool_power_taker_contract)
@@ -328,6 +335,13 @@ describe Admin, :swagger, :request_helper, order: :defined do
   patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/billings/{billing_1.id}' do
     description 'updates a billing for an LocalpoolPowerTakerContract'
     schema Schemas::Transactions::Admin::Billing::Update
+  end
+
+  # contract -> billings -> items
+
+  patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/billings/{billing_1.id}/items/{billing_item_1.id}' do
+    description 'updates a billing item for a Billing'
+    schema Schemas::Transactions::Admin::BillingItem::Update
   end
 
   # meters

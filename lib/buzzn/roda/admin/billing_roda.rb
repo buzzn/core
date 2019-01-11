@@ -42,6 +42,12 @@ class Admin::BillingRoda < BaseRoda
         Transactions::Admin::Billing::Delete
           .call(billing)
       end
+
+      r.on 'items' do
+        shared[:billing_items] = billing.items
+        r.run Admin::BillingItemRoda
+      end
+
     end
   end
 
