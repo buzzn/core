@@ -15,6 +15,7 @@ module Admin
 
     has_one :tariff
     has_one :meter
+    has_one :register
 
     def begin_reading_kwh
       begin_reading.value / 1000 if begin_reading

@@ -192,6 +192,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
         tariff do
           retrieve :managers_contract
         end
+
+        register do
+          retrieve :managers_contract
+        end
       end
     end
 
@@ -375,6 +379,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
 
         tariff do
           retrieve :all
+        end
+
+        register do
+          retrieve :managers_contract
         end
       end
     end
