@@ -28,7 +28,7 @@ class Transactions::Admin::BillingItem::Update < Transactions::Base
     if end_reading.nil?
       raise Buzzn::ValidationError.new(:end_reading => ['invalid id'])
     end
-    if begin_reading.register != end_reading.register
+    if begin_reading.register != end_reading.register && begin_reading.register != resource.register
       raise Buzzn::ValidationError.new(:begin_reading => ['registers differ'])
     end
     params[:begin_reading] = begin_reading
