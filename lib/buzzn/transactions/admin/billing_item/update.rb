@@ -6,7 +6,8 @@ class Transactions::Admin::BillingItem::Update < Transactions::Base
   validate :schema
   check :authorize, with: :'operations.authorization.update'
   tee :check_valid
-  tee :readings
+  tee :assign_begin_reading
+  tee :assign_end_reading
   map :persist, with: :'operations.action.update'
 
   def schema
@@ -19,20 +20,26 @@ class Transactions::Admin::BillingItem::Update < Transactions::Base
     end
   end
 
-  def readings(params:, **)
-    begin_reading = Reading::Single.find(params.delete(:begin_reading_id))
-    end_reading = Reading::Single.find(params.delete(:end_reading_id))
-    if begin_reading.nil?
-      raise Buzzn::ValidationError.new(:begin_reading => ['invalid id'])
+  def assign_begin_reading(params:, **)
+    unless params[:begin_reading_id].nil?
+      begin
+        begin_reading = Reading::Single.find(params.delete(:begin_reading_id))
+      rescue ActiveRecord::RecordNotFound
+        raise Buzzn::ValidationError.new(:begin_reading => ['invalid id'])
+      end
+      params[:begin_reading] = begin_reading
     end
-    if end_reading.nil?
-      raise Buzzn::ValidationError.new(:end_reading => ['invalid id'])
+  end
+
+  def assign_end_reading(params:, **)
+    unless params[:end_reading_id].nil?
+      begin
+        end_reading = Reading::Single.find(params.delete(:end_reading_id))
+      rescue ActiveRecord::RecordNotFound
+        raise Buzzn::ValidationError.new(:end_reading => ['invalid id'])
+      end
+      params[:end_reading] = end_reading
     end
-    if begin_reading.register != end_reading.register && begin_reading.register != resource.register
-      raise Buzzn::ValidationError.new(:begin_reading => ['registers differ'])
-    end
-    params[:begin_reading] = begin_reading
-    params[:end_reading]   = end_reading
   end
 
 end
