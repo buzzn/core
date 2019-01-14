@@ -32,7 +32,11 @@ module Buzzn::Resource
 
       def has_many(method, *clazz_and_meta)
         define_method method do
-          context = security_context.send(method) rescue raise("missing permission #{method} on #{permissions} used in #{self}")
+          begin
+            context = security_context.send(method)
+          rescue
+            raise Buzzn::PermissionDenied.new(self, method, security_context.current_user)
+          end
           objects =
             if block_given?
               yield(object)
