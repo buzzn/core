@@ -9,7 +9,7 @@ module Schemas
         end
 
         def belongs_to_contract?(contract, register)
-          contract.register_meta.register == register.model
+          contract.register_meta.registers.include?(register.model)
         end
 
         def match_register?(register, reading)
