@@ -136,7 +136,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'observer_offline_monitoring'=>false,
             'updatable' => false,
             'deletable' => false,
-            'register' => {
+            'registers' => { 'array' => [{
               'id'=>register.id,
               'type'=>'register_real',
               'created_at'=>register.created_at.as_json,
@@ -181,7 +181,7 @@ describe Admin::LocalpoolRoda, :request_helper do
                 'sent_data_dso'=> meter.sent_data_dso.to_s,
                 'metering_location_id' => meter.metering_location_id
               }
-            }
+            }]}
           }
         }
       end
@@ -316,7 +316,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           old = contract3.register_meta
           contract3.register_meta
           contract3.save
-          GET "/localpools/#{localpool.id}/contracts?include=register_meta:[register],customer:[address,contact:address]", $admin
+          GET "/localpools/#{localpool.id}/contracts?include=register_meta:[registers],customer:[address,contact:address]", $admin
           expect(response).to have_http_status(200)
           contract3.register_meta = old
           contract3.save
@@ -362,7 +362,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           let(:contract_json) { send "#{type}_contract_json" }
 
           it "200 for #{type}" do
-            GET "/localpools/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register_meta:[register:meter]'
+            GET "/localpools/#{localpool.id}/contracts/#{contract.id}", $admin, include: 'localpool,tariffs,payments,contractor:[address, contact:address],customer:[address, contact:address],customer_bank_account,contractor_bank_account,register_meta:[registers:meter]'
             expect(response).to have_http_status(200)
             expect(json.to_yaml).to eq contract_json.to_yaml
           end

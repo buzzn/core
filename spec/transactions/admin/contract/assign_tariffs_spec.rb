@@ -129,7 +129,44 @@ describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defin
       billing = create(:billing, contract: contract)
       billing_item = create(:billing_item, billing: billing, tariff: tariff_1)
       resource.object.reload
-      expect {result_second}.to raise_error Buzzn::ValidationError
+      expect {result_second}.to raise_error(Buzzn::ValidationError, '{:tariffs=>["tariffs are already used in billings"]}')
+    end
+
+  end
+
+  context 'with overlapping tariffs' do
+    let(:params_one) do
+      {
+        updated_at: resource.updated_at.to_json,
+        tariff_ids: [tariff_1.id, tariff_2.id]
+      }
+    end
+
+    # tariff1 and tariff4 overlaps, so tariff4 would also be active
+    # for the already created billing item
+    let(:params_two) do
+      {
+        updated_at: resource.updated_at.to_json,
+        tariff_ids: [tariff_1.id, tariff_2.id, tariff_4.id]
+      }
+    end
+
+    let(:result_first) do
+      Transactions::Admin::Contract::Localpool::AssignTariffs.new.(params: params_one,
+                                                                   resource: resource)
+    end
+
+    let(:result_second) do
+      Transactions::Admin::Contract::Localpool::AssignTariffs.new.(params: params_two,
+                                                                   resource: resource)
+    end
+
+    it 'does not assign tariff_4 to the contract' do
+      expect(result_first).to be_success
+      billing = create(:billing, contract: contract)
+      billing_item = create(:billing_item, billing: billing, tariff: tariff_1)
+      resource.object.reload
+      expect {result_second}.to raise_error(Buzzn::ValidationError, {:tariffs=>["tariff id #{tariff_4.id} is active for an already present billing item"]}.to_s)
     end
 
   end
