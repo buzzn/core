@@ -20,6 +20,18 @@ module DateRangeScope
       end_date_col = "#{base.table_name}.end_date"
       where("#{end_date_col} IS NULL OR #{end_date_col} <= ?", time).order(:begin_date)
     }
+
+    # overlap a date_range and the date_range
+    # of the entity
+    def minmax_date_range(date_range)
+      if self.end_date && self.end_date < date_range.last
+        date_range.first...self.end_date
+      elsif self.begin_date > date_range.first
+        self.begin_date...date_range.last
+      else
+        date_range
+      end
+    end
   end
 
 end

@@ -40,18 +40,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   end
 
   def date_range(params:, parent:, **)
-    contract = parent
-    date_range = params[:begin_date]...params[:end_date]
-
-    if contract.end_date && contract.end_date < date_range.last
-      date_range = date_range.first...contract.end_date
-    end
-    if contract.begin_date > date_range.first
-      date_range = contract.begin_date...date_range.last
-    end
-    params[:begin_date] = date_range.first
-    params[:end_date]   = date_range.last
-    date_range
+    parent.minmax_date_range(params[:begin_date]...params[:end_date])
   end
 
   def complete_params(params:, **)
