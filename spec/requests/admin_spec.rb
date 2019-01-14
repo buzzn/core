@@ -155,21 +155,23 @@ describe Admin::Roda, :request_helper do
                 'observer_offline_monitoring'=>register.meta.observer_offline_monitoring,
                 'updatable' => false,
                 'deletable' => false,
-                'register' => {
-                  'id'=>register.id,
-                  'type'=>'register_real',
-                  'created_at'=>register.created_at.as_json,
-                  'updated_at'=>register.updated_at.as_json,
-                  'direction'=>'in',
-                  'last_reading'=> 0,
-                  'meter_id' => register.meter_id,
-                  'updatable'=> false,
-                  'deletable'=> false,
-                  'createables'=>['readings', 'contracts'],
-                  'pre_decimal_position'=>register.pre_decimal_position,
-                  'post_decimal_position'=>register.post_decimal_position,
-                  'low_load_ability'=>register.low_load_ability,
-                  'obis'=>register.obis
+                'registers' => {
+                  'array' => [{
+                                'id'=>register.id,
+                                'type'=>'register_real',
+                                'created_at'=>register.created_at.as_json,
+                                'updated_at'=>register.updated_at.as_json,
+                                'direction'=>'in',
+                                'last_reading'=> 0,
+                                'meter_id' => register.meter_id,
+                                'updatable'=> false,
+                                'deletable'=> false,
+                                'createables'=>['readings', 'contracts'],
+                                'pre_decimal_position'=>register.pre_decimal_position,
+                                'post_decimal_position'=>register.post_decimal_position,
+                                'low_load_ability'=>register.low_load_ability,
+                                'obis'=>register.obis
+                              }]
                 }
               }
             }
@@ -211,14 +213,14 @@ describe Admin::Roda, :request_helper do
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq(sort(expected_persons_json).to_yaml)
 
-        GET '/test/persons', $admin, include: 'contracts:[localpool,register_meta:register]'
+        GET '/test/persons', $admin, include: 'contracts:[localpool,register_meta:registers]'
 
         expect(response).to have_http_status(200)
         expect(sort(json['array']).to_yaml).to eq(sort(expected_persons_with_nested_json).to_yaml)
       end
 
       it '200' do
-        GET "/test/persons/#{person.id}", $admin, include: 'address,contracts:[localpool,register_meta:register]'
+        GET "/test/persons/#{person.id}", $admin, include: 'address,contracts:[localpool,register_meta:registers]'
 
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq(expected_person_json.to_yaml)
