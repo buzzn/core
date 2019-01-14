@@ -19,6 +19,10 @@ module Schemas
         def inside_period?(date_range, thing)
           thing.begin_date <= date_range.first && (!thing.respond_to?(:end_date) || thing.end_date.nil? || thing.end_date >= date_range.last)
         end
+
+        def value_is_lower_than?(end_reading, begin_reading)
+          end_reading.nil? || begin_reading.value <= end_reading.value
+        end
       end
 
       optional(:id).maybe
@@ -48,6 +52,10 @@ module Schemas
 
       rule(end_reading: [:register, :end_reading]) do |register, end_reading|
         end_reading.filled?.then(end_reading.match_register?(register))
+      end
+
+      rule(begin_reading: [:begin_reading, :end_reading]) do |begin_reading, end_reading|
+        begin_reading.filled?.then(begin_reading.value_is_lower_than?(end_reading))
       end
 
       validate(no_other_billings_in_range: %i[register date_range id]) do |register, date_range, id|
