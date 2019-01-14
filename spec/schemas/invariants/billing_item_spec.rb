@@ -2,13 +2,14 @@ require 'buzzn/schemas/invariants/billing'
 
 describe 'Schemas::Invariants::BillingItem' do
 
-  entity(:localpool) { create(:group, :localpool) }
-  entity(:contract) { create(:contract, :localpool_powertaker, localpool: localpool) }
-  entity(:billing) { create(:billing, contract: contract) }
-  entity(:register) { create(:register, :real, :consumption) }
-  entity(:reading) { create(:reading, register: register) }
+  let(:localpool) { create(:group, :localpool) }
+  let(:contract) { create(:contract, :localpool_powertaker, localpool: localpool) }
+  let(:billing) { create(:billing, contract: contract) }
+  let(:register) { create(:register, :real, :consumption) }
+  let(:reading_1) { create(:reading, register: register, date: item.begin_date) }
+  let(:reading_2) { create(:reading, register: register, date: item.end_date) }
 
-  entity!(:item) do
+  let!(:item) do
     create(:billing_item, billing: billing, date_range: (billing.begin_date + 1.day)...(billing.end_date - 1.day))
   end
 
@@ -52,7 +53,7 @@ describe 'Schemas::Invariants::BillingItem' do
       it { is_expected.to eq(['must be in contract tariffs']) }
 
       context 'filled' do
-        entity!(:tariff) do
+        let!(:tariff) do
           tariff = create(:tariff, group: localpool)
           contract.tariffs = [tariff]
           tariff
@@ -89,14 +90,31 @@ describe 'Schemas::Invariants::BillingItem' do
     it { is_expected.to be_nil }
     it('not set') { expect(item.begin_reading).to be_nil }
 
+    context 'incorrect readings' do
+      before do
+        reading_1.update_columns(register_id: item.register.id)
+        reading_2.update_columns(register_id: item.register.id)
+        item.update(begin_reading: reading_1, end_reading: reading_2)
+      end
+
+      context 'begin_reading is higher than end_reading' do
+
+        let(:reading_1) { create(:reading, register: register, date: item.begin_date, value: 200, raw_value: 200) }
+        let(:reading_2) { create(:reading, register: register, date: item.end_date, value: 100, raw_value: 100) }
+
+        it { is_expected.to eq(['begin_reading needs to be lower than end_reading']) }
+      end
+
+    end
+
     context 'mismatching register' do
-      before { reading.update_columns(register_id: register.id) }
-      before { item.update(begin_reading: reading) }
+      before { reading_1.update_columns(register_id: register.id) }
+      before { item.update(begin_reading: reading_1) }
 
       it { is_expected.to eq(['must match register']) }
 
       context 'matching register' do
-        before { reading.update_columns(register_id: item.register.id) }
+        before { reading_1.update_columns(register_id: item.register.id) }
 
         it { is_expected.to be_nil }
 
@@ -111,7 +129,7 @@ describe 'Schemas::Invariants::BillingItem' do
 
     context 'overlaps partly I' do
 
-      entity!(:another_item) do
+      let!(:another_item) do
         build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.begin_date + 10.day))
       end
 
@@ -126,7 +144,7 @@ describe 'Schemas::Invariants::BillingItem' do
 
     context 'overlaps partly II' do
 
-      entity!(:another_item) do
+      let!(:another_item) do
         build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.end_date - 1.day))
       end
 
@@ -141,7 +159,7 @@ describe 'Schemas::Invariants::BillingItem' do
 
     context 'overlaps partly III' do
 
-      entity!(:another_item) do
+      let!(:another_item) do
         build(:billing_item, billing: billing, date_range: (billing.begin_date + 1.day)...(billing.end_date - 10.day))
       end
 
@@ -156,7 +174,7 @@ describe 'Schemas::Invariants::BillingItem' do
 
     context 'overlaps partly III' do
 
-      entity!(:another_item) do
+      let!(:another_item) do
         build(:billing_item, billing: billing, date_range: (billing.begin_date + 10.day)...(billing.end_date + 10.day))
       end
 
@@ -171,7 +189,7 @@ describe 'Schemas::Invariants::BillingItem' do
 
     context 'overlaps completely' do
 
-      entity!(:another_item) do
+      let!(:another_item) do
         build(:billing_item, billing: billing, date_range: (billing.begin_date + 1.day)...(billing.end_date - 1.day))
       end
 
@@ -185,7 +203,7 @@ describe 'Schemas::Invariants::BillingItem' do
     #         |zzzzzzz|
 
     context 'does not overlap I' do
-      entity!(:another_item) do
+      let!(:another_item) do
         build(:billing_item, billing: billing, date_range: (billing.end_date)...(billing.end_date + 10.day))
       end
 
@@ -198,7 +216,7 @@ describe 'Schemas::Invariants::BillingItem' do
     # |zzzzzzz|
 
     context 'does not overlap I' do
-      entity!(:another_item) do
+      let!(:another_item) do
         build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.begin_date))
       end
 
@@ -217,13 +235,13 @@ describe 'Schemas::Invariants::BillingItem' do
     it('not set') { expect(item.end_reading).to be_nil }
 
     context 'mismatching register' do
-      before { reading.update_columns(register_id: register.id) }
-      before { item.update(end_reading: reading) }
+      before { reading_2.update_columns(register_id: register.id) }
+      before { item.update(end_reading: reading_2) }
 
       it { is_expected.to eq(['must match register']) }
 
       context 'matching register' do
-        before { reading.update_columns(register_id: item.register.id) }
+        before { reading_2.update_columns(register_id: item.register.id) }
 
         it { is_expected.to be_nil }
 
