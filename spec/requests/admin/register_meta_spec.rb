@@ -37,7 +37,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
           'observer_offline_monitoring' => false,
           'updatable' => true,
           'deletable' => false,
-          'register' => {
+          'registers' => { 'array' => [{
             'id' => register.id,
             'type' => 'register_real',
             'created_at'=> register.created_at.as_json,
@@ -82,7 +82,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
               'sent_data_dso'=>meter.sent_data_dso.to_s,
               'metering_location_id'=>meter.metering_location_id
             }
-          }
+          }]}
         }
       end
 
@@ -105,7 +105,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
       end
 
       it '200' do
-        GET "/localpools/#{group.id}/register-metas/#{register_meta.id}", $admin, include: 'register:meter'
+        GET "/localpools/#{group.id}/register-metas/#{register_meta.id}", $admin, include: 'registers:meter'
         expect(response).to have_http_status(200)
         expect(json.to_yaml).to eq expected_json.to_yaml
       end

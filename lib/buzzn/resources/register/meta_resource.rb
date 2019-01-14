@@ -15,8 +15,7 @@ module Register
     attributes :updatable, :deletable
 
     has_one :group
-    has_one :register
-
+    has_many :registers
     has_many :contracts
 
     def type

@@ -12,6 +12,14 @@ module DateRangeScope
         .where("#{begin_date_col} < ?", date_range.last) # don't fetch items starting after the period
         .order(:begin_date) # ensure chronological order to ease testing
     }
+    scope :end_before, ->(time) {
+      end_date_col = "#{base.table_name}.end_date"
+      where("#{end_date_col} IS NULL OR #{end_date_col} < ?", time).order(:begin_date)
+    }
+    scope :end_before_or_same, ->(time) {
+      end_date_col = "#{base.table_name}.end_date"
+      where("#{end_date_col} IS NULL OR #{end_date_col} <= ?", time).order(:begin_date)
+    }
   end
 
 end

@@ -59,62 +59,19 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   end
 
   def billing_item(params:, parent:, resource:, date_range:, **)
-    begin
-      in_range_tariffs = parent.contexted_tariffs.keep_if do |tariff|
-        if tariff.end_date.nil?
-          tariff.begin_date <= date_range.last
-        else
-          tariff.begin_date <= date_range.last && tariff.end_date >= date_range.first
-        end
-      end
-      ranges = []
-      # calculate new range for each tariff
-      new_max = date_range.first
-      in_range_tariffs.each do |tariff|
-        range = {}
-        range[:begin_date] = [tariff.begin_date, new_max].max
-        range[:end_date]   = [tariff.end_date || date_range.last, date_range.last].min
-        range[:tariff]     = tariff.tariff
-        ranges << range
-      end
-      # split even further, split with already existing BillingItems
-      existing_billing_items = parent.register_meta.register.billing_items.in_date_range(date_range)
-      existing_billing_items.each do |item|
-        # search correct range
-        ranges.each_with_index do |range, idx|
-          if range[:begin_date] <= item.begin_date && range[:end_date] <= item.end_date
-            ranges[idx][:end_date] = item.begin_date
-            params[:end_date]      = [item.begin_date, params[:end_date]].min
-          end
-          if range[:begin_date] <= item.begin_date && range[:end_date] > item.end_date
-            new_range = range.dup
-            new_range[:begin_date] = item.end_date
-            ranges[idx][:end_date] = item.begin_date
-            ranges << new_range
-          end
-          if range[:begin_date] > item.begin_date && range[:begin_date] < item.end_date
-            # update also params[:begin] here to line up
-            params[:begin_date]      = [item.end_date, params[:begin_date]].max
-            ranges[idx][:begin_date] = item.end_date
-          end
-        end
 
-      end
+    billing_data = Service::BillingData.data(parent, begin_date: date_range.first, end_date: date_range.last)
 
-      items = []
-      ranges.each do |range|
-        items << Builders::Billing::ItemBuilder.from_contract(parent, range[:begin_date]..range[:end_date], range[:tariff])
-      end
-    rescue Buzzn::DataSourceError => error
-      raise Buzzn::ValidationError.new(error.message)
-    end
-    items.each do |item|
+    billing_data[:items].each do |item|
       errors = item.invariant.errors.except(:billing, :contract)
       unless errors.empty?
         raise Buzzn::ValidationError.new(:items => errors)
       end
     end
-    params[:items] = items
+
+    params[:items] = billing_data[:items]
+    params[:begin_date] = billing_data[:begin_date]
+    params[:end_date] = billing_data[:end_date]
   end
 
   def create_billing(params:, resource:, **)

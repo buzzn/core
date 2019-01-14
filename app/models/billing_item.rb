@@ -3,6 +3,7 @@
 #
 require_relative 'concerns/with_date_range'
 require_relative 'concerns/last_date'
+require_relative 'concerns/date_range_scope'
 
 class BillingItem < ActiveRecord::Base
 

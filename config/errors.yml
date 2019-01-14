@@ -49,3 +49,4 @@ en:
     no_other_billings_in_range: 'other billing items already exist'
     unique_begin_date?: 'duplicate begin dates present'
     are_complete_and_not_open?: 'billing_items are not complete and state is not open'
+    value_is_lower_than?: 'begin_reading needs to be lower than end_reading'
