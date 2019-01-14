@@ -195,6 +195,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
 
         register do
           retrieve :managers_contract
+
+          readings do
+            retrieve :managers_contract
+          end
         end
       end
     end
