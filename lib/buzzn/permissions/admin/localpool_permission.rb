@@ -140,7 +140,7 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     update :managers
     delete :none
 
-    register do
+    registers do
       retrieve :managers_contract
       meter do
         retrieve :managers_contract
@@ -212,7 +212,7 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     register_meta do
       retrieve :managers_contract
 
-      register do
+      registers do
         create :none
         retrieve :managers_contract
         update :managers
