@@ -3,6 +3,10 @@ require 'buzzn/transactions/admin/billing_cycle/create'
 describe Transactions::Admin::BillingCycle::Create do
 
   entity!(:localpool) { create(:group, :localpool) }
+  let!(:tariff) do
+    create(:tariff, begin_date: localpool.start_date - 10, group: localpool)
+  end
+
   entity!(:localpool_without_start_date) do
     localpool = create(:group, :localpool)
     localpool.start_date = nil
@@ -13,6 +17,16 @@ describe Transactions::Admin::BillingCycle::Create do
   let(:account)            { Account::Base.where(person_id: user).first }
   let(:localpool_resource) { Admin::LocalpoolResource.all(account).retrieve(localpool.id) }
   let(:localpool_without_start_date_resource) { Admin::LocalpoolResource.all(account).retrieve(localpool_without_start_date.id) }
+
+  let!(:contract_1) do
+    create(:contract, :localpool_powertaker, localpool: localpool)
+  end
+  let!(:contract_2) do
+    create(:contract, :localpool_powertaker, localpool: localpool)
+  end
+  let!(:contract_3) do
+    create(:contract, :localpool_powertaker, localpool: localpool)
+  end
 
   entity(:member)   { create(:person, :with_account, :with_self_role, roles: { Role::GROUP_MEMBER => localpool }) }
   entity(:operator) { create(:person, :with_account, :with_self_role, roles: { Role::BUZZN_OPERATOR => nil }) }
@@ -47,6 +61,12 @@ describe Transactions::Admin::BillingCycle::Create do
   end
 
   describe 'repeated calls' do
+    before do
+      [contract_1, contract_2, contract_3].each do |contract|
+        contract.tariffs << tariff
+        contract.save
+      end
+    end
     context 'first call' do
 
       let(:user) { operator }
