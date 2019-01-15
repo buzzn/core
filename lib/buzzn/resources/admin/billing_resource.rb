@@ -14,5 +14,9 @@ module Admin
     has_one :contract
     has_many :items, BillingItemResource
 
+    def invoice_number
+      object.full_invoice_number
+    end
+
   end
 end

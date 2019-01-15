@@ -61,11 +61,10 @@ module Service
               ranges[idx][:begin_date] = item.end_date
             end
           end
+          ranges.delete_if { |r| (r[:end_date]-r[:begin_date]).zero? }
+          result[:begin_date] = ranges.collect { |r| r[:begin_date] }.min || result[:begin_date]
+          result[:end_date]   = ranges.collect { |r| r[:end_date]   }.max || result[:end_date]
         end
-
-        ranges.delete_if { |r| (r[:end_date]-r[:begin_date]).zero? }
-        result[:begin_date] = ranges.collect { |r| r[:begin_date] }.min
-        result[:end_date]   = ranges.collect { |r| r[:end_date] }.max
 
         ranges.each do |range|
           result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, range[:begin_date]..range[:end_date], range[:tariff], :fail_silent => true)
