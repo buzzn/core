@@ -67,4 +67,9 @@ module Schemas::Support::Predicates
     value.inject(Hash.new(0)) {|h,i| h[i.begin_date] += 1; h }.keep_if{|k,v| v > 1}.empty?
   end
 
+  predicate(:covers_beginning?) do |begin_date, items|
+    first = items.min_by(&:begin_date)
+    !(first.nil? || first.begin_date > begin_date)
+  end
+
 end

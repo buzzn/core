@@ -19,11 +19,6 @@ module Schemas
           end
         end
 
-        def covers_beginning?(begin_date, items)
-          first = items.min_by(&:begin_date)
-          !(first.nil? || first.begin_date > begin_date)
-        end
-
         def covers_ending?(end_date, items)
           last = items.max do |m, n|
             result = m.end_date <=> n.end_date
