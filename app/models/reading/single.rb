@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen-string-literal: true
 module Reading
   class Single < ActiveRecord::Base
@@ -55,6 +56,11 @@ module Reading
     scope :between, ->(begin_date, end_date) { where('date >= ? AND date < ?', begin_date, end_date) }
     scope :with_reason, ->(*reasons) { where(reason: reasons) }
     scope :without_reason, ->(*reasons) { where('reason NOT IN (?)', reasons) }
+    scope :before, ->(date) { where('date < ?', date)}
+
+    def previous
+      Reading::Single.where(:register => self.register).before(date).order(:date).last
+    end
 
     def corrected_value
       Buzzn::Utils::Number.send(unit, value)
