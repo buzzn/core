@@ -50,7 +50,6 @@ module Service
           ranges.each_with_index do |range, idx|
             if range[:begin_date] <= item.begin_date && range[:end_date] <= item.end_date
               ranges[idx][:end_date] = item.begin_date
-              result[:end_date]      = [item.begin_date, result[:end_date]].min
             end
             if range[:begin_date] <= item.begin_date && range[:end_date] > item.end_date
               new_range = range.dup
@@ -59,17 +58,17 @@ module Service
               ranges << new_range
             end
             if range[:begin_date] > item.begin_date && range[:begin_date] < item.end_date
-              # update also params[:begin] here to line up
-              result[:begin_date]      = [item.end_date, result[:begin_date]].max
               ranges[idx][:begin_date] = item.end_date
             end
           end
         end
 
+        ranges.delete_if { |r| (r[:end_date]-r[:begin_date]).zero? }
+        result[:begin_date] = ranges.collect { |r| r[:begin_date] }.min
+        result[:end_date]   = ranges.collect { |r| r[:end_date] }.max
+
         ranges.each do |range|
-          if (range[:end_date]-range[:begin_date]).positive?
-            result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, range[:begin_date]..range[:end_date], range[:tariff], :fail_silent => true)
-          end
+          result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, range[:begin_date]..range[:end_date], range[:tariff], :fail_silent => true)
         end
       end
       result
