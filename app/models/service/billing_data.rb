@@ -64,15 +64,12 @@ module Service
               ranges[idx][:begin_date] = item.end_date
             end
           end
-
         end
 
-        begin
-          ranges.each do |range|
-            result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, range[:begin_date]..range[:end_date], range[:tariff])
+        ranges.each do |range|
+          if (range[:end_date]-range[:begin_date]).positive?
+            result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, range[:begin_date]..range[:end_date], range[:tariff], :fail_silent => true)
           end
-        rescue Buzzn::DataSourceError => error
-          raise Buzzn::ValidationError.new(error.message)
         end
       end
       result
