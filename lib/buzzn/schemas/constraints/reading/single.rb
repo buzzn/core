@@ -11,5 +11,5 @@ Schemas::Constraints::Reading::Single = Schemas::Support.Form do
   required(:source).value(included_in?: Reading::Single.sources.values)
   required(:status).value(included_in?: Reading::Single.status.values)
   required(:date).filled(:date?)
-  optional(:comment).filled(:str?, max_size?: 256)
+  optional(:comment).maybe(:str?, max_size?: 256)
 end
