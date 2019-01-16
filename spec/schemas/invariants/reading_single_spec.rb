@@ -1,6 +1,6 @@
 require 'buzzn/schemas/invariants/reading/single'
 
-describe 'Schemas::Invariants::Register::Base' do
+describe 'Schemas::Invariants::Reading::Single' do
 
   let(:register) { create(:register, :real, :consumption) }
   let(:today) { Date.today }
