@@ -88,10 +88,7 @@ class Beekeeper::Importer::GenerateBillings
   end
 
   def item_for_contract(contract, date_range)
-    item = Builders::Billing::ItemBuilder.from_contract(contract, date_range, contract.tariffs.first)
-    # TODO make contract.register
-    item.register = contract.register_meta.register
-    item
+    Builders::Billing::ItemBuilder.from_contract(contract, contract.register_meta.register, date_range, contract.tariffs.first)
   end
 
   def next_invoice_number
