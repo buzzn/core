@@ -48,17 +48,27 @@ module Service
         existing_billing_items.each do |item|
           # search correct range
           ranges.each_with_index do |range, idx|
-            if range[:begin_date] <= item.begin_date && range[:end_date] <= item.end_date
+            # [ range ]
+            #    [ item ]
+            if item.begin_date >= range[:begin_date] && item.begin_date < range[:end_date] && item.end_date >= range[:end_date]
               ranges[idx][:end_date] = item.begin_date
+              next
             end
+            #   [ range ]
+            # [ item ]
+            if item.begin_date <= range[:begin_date] && item.end_date > range[:begin_date] && item.end_date <= range[:end_date]
+              ranges[idx][:begin_date] = item.end_date
+              next
+            end
+            # [   range   ]
+            #    [ item ]
             if range[:begin_date] <= item.begin_date && range[:end_date] > item.end_date
               new_range = range.dup
               new_range[:begin_date] = item.end_date
+              #new_range[:end_date]   = new_range[:end_date]
               ranges[idx][:end_date] = item.begin_date
               ranges << new_range
-            end
-            if range[:begin_date] > item.begin_date && range[:begin_date] < item.end_date
-              ranges[idx][:begin_date] = item.end_date
+              next
             end
           end
           ranges.delete_if { |r| (r[:end_date]-r[:begin_date]).zero? }
