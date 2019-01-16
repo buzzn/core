@@ -5,6 +5,7 @@ class Transactions::Admin::Reading::Create < Transactions::Base
 
   validate :schema
   authorize :allowed_roles
+  around :db_transaction
   map :create_reading, with: :'operations.action.create_item'
 
   def schema

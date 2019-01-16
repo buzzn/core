@@ -8,6 +8,7 @@ class Transactions::Admin::BillingItem::Update < Transactions::Base
   tee :check_valid
   tee :assign_begin_reading
   tee :assign_end_reading
+  around :db_transaction
   map :persist, with: :'operations.action.update'
 
   def schema
