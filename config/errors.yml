@@ -51,3 +51,5 @@ en:
     are_complete_and_not_open?: 'billing_items are not complete and state is not open'
     value_is_lower_than?: 'begin_reading needs to be lower than end_reading'
     higher_than_previous?: 'reading must be higher than previous'
+    each_after_begin_date?: 'must be after %{begin_date}'
+    each_before_end_date?:  'must be before %{end_date}'

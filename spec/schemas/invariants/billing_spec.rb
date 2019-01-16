@@ -37,18 +37,18 @@ describe 'Schemas::Invariants::Billing' do
 
     subject { billing.invariant.errors[:items] }
 
-    it { is_expected.to eq(['must cover begin date']) }
+    it { is_expected.to eq(['size cannot be less than 1']) }
 
     context 'with one billing item' do
       entity!(:item) do
-        item = create(:billing_item, billing: billing, begin_date: billing.begin_date + 1.day, end_date: billing.end_date - 1.day)
+        item = create(:billing_item, billing: billing, begin_date: billing.begin_date - 2.day, end_date: billing.end_date + 1.day)
         billing.reload
         item
       end
-      it { is_expected.to eq(['must cover begin date']) }
+      it { is_expected.to eq(["must be after #{billing.begin_date}"]) }
       context 'covers begin' do
         before { billing.items.first.update(begin_date: billing.begin_date) }
-        it { is_expected.to eq(['must cover end date']) }
+        it { is_expected.to eq(["must be before #{billing.end_date}"]) }
 
         context 'covers end' do
           before { billing.items.first.update(end_date: billing.end_date) }
