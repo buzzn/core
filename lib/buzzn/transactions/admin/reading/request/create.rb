@@ -7,6 +7,7 @@ module Transactions::Admin::Reading::Request
     authorize :allowed_roles
     tee :check_resource
     add :set_create
+    around :db_transaction
     add :fetch_reading
     map :wrap_up
 
