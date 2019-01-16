@@ -67,7 +67,7 @@ module Service
         end
 
         ranges.each do |range|
-          result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, range[:begin_date]..range[:end_date], range[:tariff], :fail_silent => true)
+          result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, register, range[:begin_date]..range[:end_date], range[:tariff], :fail_silent => true)
         end
       end
       result

@@ -6,7 +6,7 @@ class Services::ReadingService
 
   def get(register, date, precision: 600, fetch: true, create: true)
     # first check whether we already have this reading
-    readings = register.readings.between((date.to_time - precision/2).to_date, (date + precision/2).to_date)
+    readings = register.readings.between((date.to_time - precision/2).to_date, (date.to_time + precision/2).to_date)
     if readings.any?
       readings
     elsif !register.meter.datasource.nil? && fetch

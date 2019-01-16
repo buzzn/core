@@ -53,7 +53,7 @@ class Services::UnbilledBillingItemsFactory
   end
 
   def build_item(contract, date_range)
-    Builders::Billing::ItemBuilder.from_contract(contract, date_range, contract.tariffs.first)
+    Builders::Billing::ItemBuilder.from_contract(contract, contract.register_meta.registers.first, date_range, contract.tariffs.first)
   end
 
   # Ruby can't calculate the length (in days) of a range object when the range is defined with dates -- it always returns nil.

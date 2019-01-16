@@ -12,7 +12,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
     entity(:localpool) { create(:group, :localpool) }
     entity(:meter)     { create(:meter, :real, :connected_to_discovergy, :one_way, group: localpool) }
     entity(:register)  { meter.registers.first }
-    entity!(:reading)  { create(:reading, register: register)}
+    entity!(:reading)  { create(:reading, register: register, value: 10, raw_value: 10)}
 
     let(:wrong_json) do
       {
@@ -95,7 +95,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
         end
 
         it 'works' do
-          mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+          mock_series_start = create_series(now-5.minutes, 2000, 15.minutes, 20*10*1000*1000, 50*1000*1000, 4)
           single_reading.next_api_request_single(register, now, mock_series_start)
           POST "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/request/create", $admin, params
           expect(response).to have_http_status(201)
