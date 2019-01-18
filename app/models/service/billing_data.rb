@@ -27,10 +27,11 @@ module Service
 
       contract.register_meta.registers.each do |register|
         in_range_tariffs = contract.contexted_tariffs.keep_if do |tariff|
+          # last tariff or single tariff
           if tariff.end_date.nil?
             tariff.begin_date <= end_date
           else
-            tariff.begin_date <= end_date && tariff.end_date >= begin_date
+            tariff.begin_date <= end_date && tariff.end_date > begin_date
           end
         end
         ranges = []
