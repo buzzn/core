@@ -4,6 +4,7 @@ module Admin
     model BillingItem
 
     attributes  :begin_date,
+                :end_date,
                 :last_date,
                 :begin_reading_kwh,
                 :end_reading_kwh,
