@@ -20,7 +20,7 @@ describe Contract::TariffResource do
   subject { JSON.parse(billing_item_resource.to_json) }
 
   it 'json has all keys' do
-    expect(subject.keys).to match_array(%w(base_price_cents begin_date begin_reading_kwh consumed_energy_kwh last_date end_reading_kwh energy_price_cents id length_in_days type updated_at created_at incompleteness))
+    expect(subject.keys).to match_array(%w(base_price_cents begin_date begin_reading_kwh consumed_energy_kwh last_date end_date end_reading_kwh energy_price_cents id length_in_days type updated_at created_at incompleteness))
   end
 
   context 'without readings' do
