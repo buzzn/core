@@ -42,7 +42,9 @@ module Service
           range[:begin_date] = [tariff.begin_date, new_max].max
           range[:end_date]   = [tariff.end_date || end_date, end_date].min
           range[:tariff]     = tariff.tariff
-          ranges << range
+          if range[:begin_date] < range[:end_date]
+            ranges << range
+          end
         end
         # split even further, split with already existing BillingItems
         existing_billing_items = register.billing_items.in_date_range(begin_date..end_date)
