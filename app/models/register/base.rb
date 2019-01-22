@@ -76,6 +76,14 @@ module Register
       end
     end
 
+    def installed_at
+      self.readings.installed.order(:date).last
+    end
+
+    def decomissioned_at
+      self.readings.decomissioned.order(:date).last
+    end
+
     def low_load_ability
       false
     end

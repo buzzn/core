@@ -22,6 +22,11 @@ FactoryGirl.define do
       comment   'Turnusablesung'
     end
 
+    trait :remove do
+      reason    :device_removal
+      comment   'Kaputt'
+    end
+
     trait :contract_change do
       read_by   :power_taker
       reason    :contract_change

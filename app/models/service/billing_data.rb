@@ -26,28 +26,30 @@ module Service
       end
 
       contract.register_meta.registers.each do |register|
+        register_begin_date = [begin_date, register.installed_at&.date || begin_date].max
+        register_end_date   = [end_date,   register.decomissioned_at&.date || end_date].min
         in_range_tariffs = contract.contexted_tariffs.keep_if do |tariff|
           # last tariff or single tariff
           if tariff.end_date.nil?
-            tariff.begin_date <= end_date
+            tariff.begin_date <= register_end_date
           else
-            tariff.begin_date <= end_date && tariff.end_date > begin_date
+            tariff.begin_date <= register_end_date && tariff.end_date > register_begin_date
           end
         end
         ranges = []
         # calculate new range for each tariff
-        new_max = begin_date
+        new_max = register_begin_date
         in_range_tariffs.each do |tariff|
           range = {}
           range[:begin_date] = [tariff.begin_date, new_max].max
-          range[:end_date]   = [tariff.end_date || end_date, end_date].min
+          range[:end_date]   = [tariff.end_date || register_end_date, register_end_date].min
           range[:tariff]     = tariff.tariff
           if range[:begin_date] < range[:end_date]
             ranges << range
           end
         end
         # split even further, split with already existing BillingItems
-        existing_billing_items = register.billing_items.in_date_range(begin_date..end_date)
+        existing_billing_items = register.billing_items.in_date_range(register_begin_date..register_end_date)
         existing_billing_items.each do |item|
           # search correct range
           ranges.each_with_index do |range, idx|
