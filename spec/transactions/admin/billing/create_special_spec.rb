@@ -311,4 +311,141 @@ describe Transactions::Admin::Billing::Create do
 
   end
 
+  context 'case 3', order: :defined do
+    let(:contract_begin) { Date.new(2019, 1, 16) }
+    let(:tariff1_begin)  { Date.new(2019, 1, 1)  }
+    let(:tariff2_begin)  { Date.new(2019, 3, 1)  }
+    let(:billing1_begin) { Date.new(2019, 1, 16) }
+    let(:billing1_end)   { Date.new(2019, 4, 15) }
+
+    let(:meter_install)  { Date.new(2019, 1, 20)}
+
+    let(:tariff1) { create(:tariff, group: localpool, begin_date: tariff1_begin) }
+    let(:tariff2) { create(:tariff, group: localpool, begin_date: tariff2_begin) }
+
+    let(:meter)   { create(:meter, :real, :connected_to_discovergy, :one_way, group: localpool) }
+
+    let!(:install_reading) do
+      create(:reading, :setup, raw_value: 0, register: meter.registers.first, date: meter_install)
+    end
+
+    let(:contract) do
+      create(:contract, :localpool_powertaker,
+             customer: person,
+             begin_date: contract_begin,
+             register_meta: meter.registers.first.meta,
+             contractor: Organization::Market.buzzn,
+             localpool: localpool)
+    end
+
+    let!(:billingsr) do
+      localpoolr.contracts.retrieve(contract.id).billings
+    end
+
+    before do
+      contract.tariffs << tariff1 << tariff2
+      contract.save
+      contract.reload
+    end
+
+    let(:params_billing_1) do
+      {
+        :begin_date => billing1_begin,
+        :last_date  => billing1_end
+      }
+    end
+
+    let(:result_billing_1) do
+      Transactions::Admin::Billing::Create.new.(resource: billingsr,
+                                                params: params_billing_1,
+                                                parent: contract)
+    end
+
+    it 'creates a correct billing' do
+      expect(result_billing_1).to be_success
+      value = result_billing_1.value!
+      expect(value).to be_a Admin::BillingResource
+      object = value.object
+      expect(object.items.count).to eql 2
+      item_a = object.items[0]
+      item_b = object.items[1]
+      expect(item_a.begin_date).to eql meter_install
+      expect(item_a.end_date).to   eql tariff2_begin
+      expect(item_b.begin_date).to eql tariff2_begin
+      expect(item_b.end_date).to   eql billing1_end + 1.day # last_date!
+    end
+
+  end
+
+  context 'case 3', order: :defined do
+    let(:contract_begin) { Date.new(2019, 1, 16) }
+    let(:tariff1_begin)  { Date.new(2019, 1, 1)  }
+    let(:tariff2_begin)  { Date.new(2019, 3, 1)  }
+    let(:billing1_begin) { Date.new(2019, 1, 16) }
+    let(:billing1_end)   { Date.new(2019, 4, 15) }
+
+    let(:meter_install)  { Date.new(2019, 1, 20)}
+    let(:meter_remove)   { Date.new(2019, 1, 23)}
+
+    let(:tariff1) { create(:tariff, group: localpool, begin_date: tariff1_begin) }
+    let(:tariff2) { create(:tariff, group: localpool, begin_date: tariff2_begin) }
+
+    let(:meter)   { create(:meter, :real, :connected_to_discovergy, :one_way, group: localpool) }
+
+    let!(:install_reading) do
+      create(:reading, :setup, raw_value: 0, register: meter.registers.first, date: meter_install)
+    end
+
+    let!(:remove_reading) do
+      create(:reading, :remove, raw_value: 3, register: meter.registers.first, date: meter_remove)
+    end
+
+
+    let(:contract) do
+      create(:contract, :localpool_powertaker,
+             customer: person,
+             begin_date: contract_begin,
+             register_meta: meter.registers.first.meta,
+             contractor: Organization::Market.buzzn,
+             localpool: localpool)
+    end
+
+    let!(:billingsr) do
+      localpoolr.contracts.retrieve(contract.id).billings
+    end
+
+    before do
+      contract.tariffs << tariff1 << tariff2
+      contract.save
+      contract.reload
+    end
+
+    let(:params_billing_1) do
+      {
+        :begin_date => billing1_begin,
+        :last_date  => billing1_end
+      }
+    end
+
+    let(:result_billing_1) do
+      Transactions::Admin::Billing::Create.new.(resource: billingsr,
+                                                params: params_billing_1,
+                                                parent: contract)
+    end
+
+    it 'creates a correct billing' do
+      expect(result_billing_1).to be_success
+      value = result_billing_1.value!
+      expect(value).to be_a Admin::BillingResource
+      object = value.object
+      expect(object.items.count).to eql 1
+      item_a = object.items[0]
+      expect(item_a.begin_date).to eql meter_install
+      expect(item_a.end_date).to   eql meter_remove
+      expect(item_a.begin_reading).not_to be_nil
+      expect(item_a.end_reading).not_to be_nil
+    end
+
+  end
+
 end
