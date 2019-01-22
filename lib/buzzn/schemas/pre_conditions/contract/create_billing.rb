@@ -15,6 +15,19 @@ module Schemas::PreConditions::Contract
       end
 
       required(:registers).value(min_size?: 1).true?.then(value(:registers).all_registers_installed?)
+
+      # TODO make this work:
+      #required(:registers).value(min_size?: 1).each do
+      #  schema do
+      #    configure do
+      #      def installed?(readings)
+      #        readings.installed.any?
+      #      end
+      #    end
+      #    required(:readings).value(min_size?: 1).installed?
+      #  end
+      #end
+
     end
 
   end
