@@ -53,3 +53,4 @@ en:
     higher_than_previous?: 'reading must be higher than previous'
     each_after_begin_date?: 'must be after %{begin_date}'
     each_before_end_date?:  'must be before %{end_date}'
+    all_registers_installed?: 'all registers must have a device_setup or change_meter_1 reading'
