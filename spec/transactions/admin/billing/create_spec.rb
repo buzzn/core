@@ -73,6 +73,10 @@ describe Transactions::Admin::Billing::Create do
                                               parent: contract)
   end
 
+  let!(:install_reading) do
+    create(:reading, :setup, raw_value: 0, register: meter.registers.first, date: begin_date - 2.day)
+  end
+
   context 'with a single tariff' do
 
     before do

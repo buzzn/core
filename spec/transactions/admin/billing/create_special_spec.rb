@@ -43,6 +43,10 @@ describe Transactions::Admin::Billing::Create do
              localpool: localpool)
     end
 
+    let!(:install_reading) do
+      create(:reading, :setup, raw_value: 0, register: meter.registers.first, date: contract_begin - 2.day)
+    end
+
     let!(:billingsr) do
       localpoolr.contracts.retrieve(contract.id).billings
     end
@@ -128,8 +132,13 @@ describe Transactions::Admin::Billing::Create do
 
     let(:tariff1) { create(:tariff, group: localpool, begin_date: tariff1_begin) }
     let(:tariff2) { create(:tariff, group: localpool, begin_date: tariff2_begin) }
+
     let(:meter) do
       create(:meter, :real, :connected_to_discovergy, :one_way, group: localpool)
+    end
+
+    let!(:install_reading) do
+      create(:reading, :setup, raw_value: 0, register: meter.registers.first, date: contract_begin - 2.day)
     end
 
     let(:contract) do
@@ -217,8 +226,13 @@ describe Transactions::Admin::Billing::Create do
 
     let(:tariff1) { create(:tariff, group: localpool, begin_date: tariff1_begin) }
     let(:tariff2) { create(:tariff, group: localpool, begin_date: tariff2_begin) }
+
     let(:meter) do
       create(:meter, :real, :connected_to_discovergy, :one_way, group: localpool)
+    end
+
+    let!(:install_reading) do
+      create(:reading, :setup, raw_value: 0, register: meter.registers.first, date: contract_begin - 2.day)
     end
 
     let(:contract) do

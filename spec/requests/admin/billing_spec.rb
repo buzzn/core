@@ -75,6 +75,10 @@ describe Admin::BillingRoda, :request_helper do
         create(:meter, :real, :connected_to_discovergy, :one_way, group: localpool)
       end
 
+      entity!(:install_reading) do
+        create(:reading, :setup, raw_value: 0, register: meter.registers.first, date: lpc.begin_date - 2.day)
+      end
+
       entity(:contract) do
         create(:contract, :localpool_powertaker, :with_tariff,
                customer: person,
