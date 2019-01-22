@@ -54,9 +54,11 @@ module Reading
 
     scope :in_year, ->(year) { where('date >= ? AND date < ?', Date.new(year), Date.new(year + 1)) }
     scope :between, ->(begin_date, end_date) { where('date >= ? AND date < ?', begin_date, end_date) }
-    scope :with_reason, ->(*reasons) { where(reason: reasons) }
-    scope :without_reason, ->(*reasons) { where('reason NOT IN (?)', reasons) }
+    scope :with_reason, ->(*reasons) { where(reason: reasons.flatten) }
+    scope :without_reason, ->(*reasons) { where('reason NOT IN (?)', reasons.flatten) }
     scope :before, ->(date) { where('date < ?', date)}
+    scope :installed,     -> { with_reason(reasons[:device_setup], reasons[:device_change_1]) }
+    scope :decomissioned, -> { with_reason(reasons[:device_removal], reasons[:device_change_2]) }
 
     def previous
       Reading::Single.where(:register => self.register).before(date).order(:date).last

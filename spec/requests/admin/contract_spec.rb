@@ -48,7 +48,10 @@ describe Admin::LocalpoolRoda, :request_helper do
           'metering_point_operator_name' => nil,
           'allowed_actions' => { 'create_billing' =>
                                  {
-                                   'tariffs' => [ 'size cannot be less than 1' ]
+                                   'tariffs' => [ 'size cannot be less than 1' ],
+                                   'register_meta' => {
+                                     'registers' => ['all registers must have a device_setup or change_meter_1 reading']
+                                   }
                                  }
                                },
           'share_register_with_group' => true,
