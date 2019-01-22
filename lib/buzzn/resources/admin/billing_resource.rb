@@ -9,14 +9,11 @@ module Admin
                :end_date,
                :last_date,
                :invoice_number,
+               :full_invoice_number,
                :status
 
     has_one :contract
     has_many :items, BillingItemResource
-
-    def invoice_number
-      object.full_invoice_number
-    end
 
   end
 end

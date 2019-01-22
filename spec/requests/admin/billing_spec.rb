@@ -37,7 +37,8 @@ describe Admin::BillingRoda, :request_helper do
           'begin_date'=>billing.begin_date.as_json,
           'end_date'=>billing.end_date.as_json,
           'last_date'=>billing.last_date.as_json,
-          'status'=>billing.status
+          'status'=>billing.status,
+          'full_invoice_number'=>billing.full_invoice_number
         }
       end
 
