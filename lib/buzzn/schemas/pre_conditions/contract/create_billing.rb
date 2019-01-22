@@ -14,7 +14,11 @@ module Schemas::PreConditions::Contract
         end
       end
 
-      required(:registers).value(min_size?: 1).true?.then(value(:registers).all_registers_installed?)
+      required(:registers).value(min_size?: 1)
+
+      rule(registers: [:registers]) do |registers|
+        registers.all_registers_installed?
+      end
 
       # TODO make this work:
       #required(:registers).value(min_size?: 1).each do
