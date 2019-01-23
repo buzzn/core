@@ -344,6 +344,17 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Admin::BillingItem::Update
   end
 
+  # contract -> accounting
+
+  get '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/accounting/balance_sheet' do
+    description 'retrieve balance sheet for the contract'
+  end
+
+  post '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/accounting/book' do
+    schema Schemas::Transactions::Accounting::Book
+    description 'book an entry onto the account of the contract'
+  end
+
   # meters
 
   get '/localpools/{localpool.id}/meters' do

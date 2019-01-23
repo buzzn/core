@@ -3551,6 +3551,64 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/accounting/balance_sheet":
+    get:
+      description: retrieve balance sheet for the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/accounting/book":
+    post:
+      description: book an entry onto the account of the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: amount
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      - name: external_reference
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      - name: external_settled_at
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: comment
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings":
     get:
       description: get billings for an LocalpoolPowerTakerContract
