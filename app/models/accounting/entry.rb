@@ -3,8 +3,8 @@ module Accounting
 
     self.table_name = :accounting_entries
 
-    belongs_to :booked_by, class_name: 'Account::Base'
-    belongs_to :contract, class_name: 'Contract::Base'
+    belongs_to :booked_by, class_name: 'Account::Base', foreign_key: :booked_by_id
+    belongs_to :contract, class_name: 'Contract::Base', foreign_key: :contract_id
 
     before_create :check_checksum
 
