@@ -112,6 +112,10 @@ module Contract
       ActiveSupport::StringInquirer.new(status)
     end
 
+    def balance_sheet
+      Accounting::BalanceSheet.new(self)
+    end
+
     def pdf_generator
       nil
     end
