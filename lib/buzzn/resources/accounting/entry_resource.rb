@@ -6,7 +6,8 @@ module Accounting
 
     attributes :amount,
                :comment,
-               :external_reference
+               :external_reference,
+               :external_settled_at
 
     has_one :contract, Contract::BaseResource
 
