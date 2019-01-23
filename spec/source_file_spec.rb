@@ -3,6 +3,7 @@ describe 'Source File' do
   (Dir['config/initilaizers/*rb'] + Dir['lib/**/*rb'] + Dir['app/**/*rb']).each do |file|
     it "source code files do not use Time.now in #{file}" do
       next if file == 'lib/buzzn/utils/chronos.rb'
+      next if file == 'app/models/accounting/entry.rb'
       content = File.read(file)
       content.each_line do |line|
         expect(line).not_to match /Time.now/

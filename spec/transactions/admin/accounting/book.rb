@@ -13,7 +13,7 @@ describe Transactions::Admin::Accounting::Book do
   let(:operator) { create(:account, :buzzn_operator) }
 
   let!(:accounting_entriesr) do
-    localpoolr.contracts.retrieve(contract.id).accounting_entries
+    localpoolr.contracts.retrieve(contract.id).balance_sheet.entries
   end
 
   context 'valid data' do
