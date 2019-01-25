@@ -3,6 +3,7 @@ describe 'Billing' do
   describe 'invoice number' do
 
     let(:contract) { create(:contract, :localpool_powertaker) }
+    let(:accounting_entry) { create(:accounting_entry, contract: contract) }
     let(:today) { Date.today }
 
     context 'without an existing number', order: :defined do
@@ -43,6 +44,20 @@ describe 'Billing' do
         it 'generates one'
       end
 
+    end
+
+    context 'accounting_entry' do
+      it 'assigns' do
+        billing = Billing.new
+        billing.begin_date = today
+        billing.end_date = today + 90
+        billing.contract = contract
+        billing.accounting_entry = accounting_entry
+        billing.save
+
+        accounting_entry.reload
+        expect(accounting_entry.billing).to eql billing
+      end
     end
 
     context 'with an existing number' do

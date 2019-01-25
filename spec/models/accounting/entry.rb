@@ -1,11 +1,15 @@
 describe Accounting::Entry do
 
   let(:localpool) { create(:group, :localpool) }
-  let(:contract) do
+  let!(:lpc) do
     create(:contract, :localpool_processing,
            customer: localpool.owner,
            contractor: Organization::Market.buzzn,
            localpool: localpool)
+  end
+
+  let(:contract) do
+    create(:contract, :localpool_powertaker, localpool: localpool)
   end
 
   context 'hashing' do

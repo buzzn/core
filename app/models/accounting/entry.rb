@@ -6,6 +6,8 @@ module Accounting
     belongs_to :booked_by, class_name: 'Account::Base', foreign_key: :booked_by_id
     belongs_to :contract, class_name: 'Contract::Base', foreign_key: :contract_id
 
+    has_one :billing, class_name: 'Billing', foreign_key: :accounting_entry_id
+
     before_create :check_checksum
 
     scope :for_contract, ->(contract) { where(contract: contract) }
