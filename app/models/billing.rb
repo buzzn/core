@@ -12,6 +12,7 @@ class Billing < ActiveRecord::Base
 
   belongs_to :billing_cycle
   belongs_to :contract, -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty)) }, class_name: 'Contract::Base'
+  belongs_to :accounting_entry, class_name: 'Accounting::Entry'
 
   has_many :items, class_name: 'BillingItem', dependent: :destroy
 
