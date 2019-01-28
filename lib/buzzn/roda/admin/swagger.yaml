@@ -353,15 +353,19 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: billing_detail.issues_vat
+        in: formData
+        required: true
+        type: boolean
       - name: billing_detail.reduced_power_amount
         in: formData
-        required: false
+        required: true
         type: number
         format: float
         minimum: 0
       - name: billing_detail.reduced_power_factor
         in: formData
-        required: false
+        required: true
         type: number
         format: float
         maximum: 1
@@ -369,11 +373,11 @@ paths:
         minimum: 0
       - name: billing_detail.automatic_abschlag_adjust
         in: formData
-        required: false
+        required: true
         type: boolean
-      - name: billing_detail.automatic_abschlag_threshold
+      - name: billing_detail.automatic_abschlag_threshold_cents
         in: formData
-        required: false
+        required: true
         type: number
         format: float
         minimum: 0
@@ -3054,6 +3058,10 @@ paths:
         required: false
         type: number
         format: float
+      - name: billing_detail.issues_vat
+        in: formData
+        required: false
+        type: boolean
       - name: billing_detail
         in: formData
         required: false
@@ -3651,16 +3659,6 @@ paths:
         required: true
         type: string
         format: date
-      - name: status
-        in: formData
-        required: false
-        type: string
-        enum:
-        - open
-        - calculated
-        - delivered
-        - settled
-        - closed
       - name: invoice_number
         in: formData
         required: false
@@ -3728,8 +3726,11 @@ paths:
         enum:
         - open
         - calculated
+        - documented
+        - queued
         - delivered
         - settled
+        - void
         - closed
       responses:
         200:

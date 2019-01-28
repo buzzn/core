@@ -9,7 +9,7 @@ Schemas::Constraints::Group = Schemas::Support.Form do
   optional(:show_energy).maybe(:bool?)
   optional(:show_contact).maybe(:bool?)
   optional(:show_display_app).maybe(:bool?)
-  # legacy
+  # legacy for distributed business
   optional(:legacy_power_taker_contract_buzznid).maybe(:str?, max_size?: 64)
   optional(:legacy_power_giver_contract_buzznid).maybe(:str?, max_size?: 64)
 end

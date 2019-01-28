@@ -52,6 +52,8 @@ module Schemas
         required(:grid_feeding_register).maybe { at_most_one_register_with_same_label? }
         required(:grid_consumption_register).maybe { at_most_one_register_with_same_label? }
         required(:gap_contract_tariffs).maybe { unique_begin_date? }
+        required(:billing_detail).filled
+
       end
 
     end
