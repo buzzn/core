@@ -1,6 +1,9 @@
 require_relative 'concerns/last_date'
 require_relative 'concerns/with_date_range'
 require_relative 'concerns/date_range_scope'
+require_relative '../state_machines/billing'
+
+require 'buzzn/types/billing_config'
 
 class Billing < ActiveRecord::Base
 
@@ -8,7 +11,7 @@ class Billing < ActiveRecord::Base
   include WithDateRange
   include DateRangeScope
 
-  enum status: %i(open calculated delivered settled closed).each_with_object({}) { |i, o| o[i] = i.to_s }
+  enum status: StateMachine::Billing.states.each_with_object({}) { |i, o| o[i] = i.to_s }
 
   belongs_to :billing_cycle
   belongs_to :contract, -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty)) }, class_name: 'Contract::Base'
@@ -27,6 +30,16 @@ class Billing < ActiveRecord::Base
 
   def singular?
     self.billing_cycle.nil?
+  end
+
+  def allowed_transitions
+    StateMachine::Billing.transitions_for(self.status.to_sym)
+  end
+
+  def transition_to(status)
+    action = StateMachine::Billing.transition_action(self.status.to_sym, status.to_sym)
+    self.status = status
+    action
   end
 
   def full_invoice_number
@@ -51,6 +64,30 @@ class Billing < ActiveRecord::Base
     if self.invoice_number.nil?
       self.invoice_number = generate_invoice_number
       self.check_invoice_number_addition
+    end
+  end
+
+  def total_amount_before_taxes
+    amount = 0
+    items.each do |item|
+      amount += item.energy_price_cents + item.base_price_cents
+    end
+    amount
+  end
+
+  def total_amount_after_taxes
+    billing_config = CoreConfig.load(Types::BillingConfig)
+    if billing_config.nil?
+      raise 'please set Types::BillingConfig'
+    end
+    total_amount_before_taxes * billing_config.vat
+  end
+
+  def total_amount
+    if self.contract.localpool.billing_detail.issues_vat
+      total_amount_after_taxes
+    else
+      total_amount_before_taxes
     end
   end
 

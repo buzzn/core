@@ -24,7 +24,6 @@ Schemas::Constraints::Contract::Common = Schemas::Support.Form(Schemas::Constrai
   optional(:old_customer_number).filled(:str?)
   optional(:old_account_number).filled(:str?)
 
-  # TODO what for ? why string ?
-  optional(:energy_consumption_before_kwh_pa).filled(:str?)
-  optional(:down_payment_before_cents_per_month).filled(:str?)
+  optional(:energy_consumption_before_kwh_pa).filled(:int?)
+  optional(:down_payment_before_cents_per_month).filled(:int?)
 end

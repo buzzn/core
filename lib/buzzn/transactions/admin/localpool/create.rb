@@ -17,6 +17,8 @@ class Transactions::Admin::Localpool::Create < Transactions::Base
   def create_billing_detail(params:, **)
     if params[:billing_detail]
       params[:billing_detail] = BillingDetail.create!(params[:billing_detail])
+    else
+      params[:billing_detail] = BillingDetail.create!(BillingDetail.defaults)
     end
   end
 

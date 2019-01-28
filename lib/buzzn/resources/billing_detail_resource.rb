@@ -5,6 +5,7 @@ class BillingDetailResource < Buzzn::Resource::Base
   attributes :reduced_power_amount,
              :reduced_power_factor,
              :automatic_abschlag_adjust,
-             :automatic_abschlag_threshold
+             :automatic_abschlag_threshold_cents,
+             :issues_vat
 
 end
