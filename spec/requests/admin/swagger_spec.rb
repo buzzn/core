@@ -207,7 +207,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   patch '/localpools/{localpool.id}' do
     description 'updates the localpool'
-    schema Schemas::Transactions::Admin::Localpool::Update
+    schema Schemas::Transactions::Admin::Localpool.update_for(localpool)
   end
 
   get '/localpools/{localpool.id}/bubbles' do
