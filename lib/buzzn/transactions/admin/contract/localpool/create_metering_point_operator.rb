@@ -20,7 +20,7 @@ class Transactions::Admin::Contract::Localpool::CreateMeteringPointOperator < Tr
     subject = Schemas::Support::ActiveRecordValidator.new(localpool.object)
     result = Schemas::PreConditions::Localpool::CreateMeteringPointOperatorContract.call(subject)
     unless result.success?
-      raise Buzzn::ValidationError.new(result.errors)
+      raise Buzzn::ValidationError.new('localpool': result.errors)
     end
   end
 
