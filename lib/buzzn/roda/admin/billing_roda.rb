@@ -20,9 +20,7 @@ class Admin::BillingRoda < BaseRoda
     end
 
     r.post! do
-      Transactions::Admin::Billing::Create.(
-        resource: billings, params: r.params, parent: parent
-      )
+      create.(resource: billings, params: r.params, parent: parent)
     end
 
     r.on :id do |id|
@@ -33,14 +31,11 @@ class Admin::BillingRoda < BaseRoda
       end
 
       r.patch! do
-        Transactions::Admin::Billing::Update.(
-          resource: billing, params: r.params
-        )
+        update.(resource: billing, params: r.params)
       end
 
       r.delete! do
-        Transactions::Admin::Billing::Delete
-          .call(billing)
+        delete.(resource: billing)
       end
 
       r.on 'items' do
