@@ -299,7 +299,12 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       end
     end
 
-    payments :tariffs
+    payments do
+      retrieve :managers_contract
+      create :managers_contract
+      update :managers_contract
+      delete :managers_contract
+    end
   end
 
   # reuse permissions from 'contracts'

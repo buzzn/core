@@ -7587,16 +7587,6 @@ paths:
         required: false
         type: string
         format: ''
-      - name: energy_consumption_before_kwh_pa
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: down_payment_before_cents_per_month
-        in: formData
-        required: false
-        type: string
-        format: ''
       - name: share_register_with_group
         in: formData
         required: false
@@ -7809,16 +7799,6 @@ paths:
         type: string
         format: ''
       - name: old_account_number
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: energy_consumption_before_kwh_pa
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: down_payment_before_cents_per_month
         in: formData
         required: false
         type: string
@@ -9034,16 +9014,6 @@ paths:
         type: string
         format: ''
       - name: old_account_number
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: energy_consumption_before_kwh_pa
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: down_payment_before_cents_per_month
         in: formData
         required: false
         type: string

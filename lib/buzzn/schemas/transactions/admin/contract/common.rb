@@ -24,8 +24,4 @@ Schemas::Transactions::Admin::Contract::Common = Schemas::Support.Form(Schemas::
   optional(:old_supplier_name).filled(:str?)
   optional(:old_customer_number).filled(:str?)
   optional(:old_account_number).filled(:str?)
-
-  # TODO what for ? why string ?
-  optional(:energy_consumption_before_kwh_pa).filled(:str?)
-  optional(:down_payment_before_cents_per_month).filled(:str?)
 end
