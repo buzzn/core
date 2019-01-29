@@ -1,4 +1,4 @@
-class BillingDetailResource < Buzzn::Resource::Base
+class BillingDetailResource < Buzzn::Resource::Entity
 
   model BillingDetail
 
