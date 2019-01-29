@@ -1,6 +1,6 @@
 require_relative 'test_admin_localpool_roda'
 
-describe Admin::LocalpoolRoda, :request_helper do
+describe Admin::LocalpoolRoda, :request_helper, order: :defined do
 
   def app
     TestAdminLocalpoolRoda # this defines the active application for this test
@@ -281,10 +281,12 @@ describe Admin::LocalpoolRoda, :request_helper do
         'power_sources' => [],
         'allowed_actions' => {
           'create_metering_point_operator_contract'=> {
+            'start_date' => ['must be filled'],
             'address' => ['must be filled'],
             'owner' => ['must be filled']
           },
           'create_localpool_processing_contract' => {
+            'start_date' => ['must be filled'],
             'owner' => ['must be filled']
           },
           'create_localpool_power_taker_contract' => {
