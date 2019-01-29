@@ -13,7 +13,7 @@ class CreateTaxData < ActiveRecord::Migration
 
   def down
     remove_reference :contract_tax_data, :contract
-    remove_foreign_key :contract_tax_data, :contracts, name: :fk_payments_contract
+    remove_foreign_key :contract_tax_data, :contracts, name: :fk_tax_data_contract
     SCHEMA.down(:contract_tax_data, self)
   end
 
