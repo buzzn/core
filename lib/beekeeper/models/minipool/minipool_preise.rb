@@ -15,8 +15,8 @@ class Beekeeper::Minipool::MinipoolPreise < Beekeeper::Minipool::BaseRecord
 
   def converted_attributes
     {
-      baseprice_cents_per_month: baseprice_cents_per_month,
-      energyprice_cents_per_kwh: bezugspreis,
+      baseprice_cents_per_month: baseprice_cents_per_month * 1/1.19,
+      energyprice_cents_per_kwh: bezugspreis * 1/1.19,
       begin_date: datum
     }
   end
