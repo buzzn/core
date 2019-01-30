@@ -163,6 +163,8 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   entity!(:register_meta) { localpool_power_taker_contract.register_meta }
 
+  entity!(:payment_1) { create(:payment, contract: localpool_power_taker_contract) }
+
   entity!(:billing_1) do
     create(:billing, billing_cycle: billing_cycle_1,
               contract: localpool_power_taker_contract)
@@ -353,6 +355,30 @@ describe Admin, :swagger, :request_helper, order: :defined do
   post '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/accounting/book' do
     schema Schemas::Transactions::Accounting::Book
     description 'book an entry onto the account of the contract'
+  end
+
+  # contract -> payments
+
+  get '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/payments' do
+    description 'retrieve payments of the contract'
+  end
+
+  post '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/payments' do
+    schema Schemas::Transactions::Admin::Contract::Payment::Create
+    description 'add an payment entry to the contract'
+  end
+
+  get '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/payments/{payment_1.id}' do
+    description 'retrieve a payment entry of the contract'
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/payments/{payment_1.id}' do
+    schema Schemas::Transactions::Admin::Contract::Payment::Update
+    description 'update an payment entry to the contract'
+  end
+
+  delete '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/payments/{payment_1.id}' do
+    description 'delete a payment entry'
   end
 
   # meters
