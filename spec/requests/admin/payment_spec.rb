@@ -27,6 +27,7 @@ describe Admin::AccountingRoda, :request_helper, order: :defined do
         {
           begin_date: Date.new(2018, 5, 23),
           price_cents: 1377,
+          cycle: 'monthly',
           energy_consumption_kwh_pa: 777
         }
       end

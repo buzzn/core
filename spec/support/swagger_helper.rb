@@ -126,6 +126,7 @@ module SwaggerHelper
     end
 
     Schemas::Support::Visitor.visit(@schema, &process_rule)
+
     expect(expected).to eq json unless expected.blank? || !params.blank?
   end
 
