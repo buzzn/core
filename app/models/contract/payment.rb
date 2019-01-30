@@ -9,8 +9,6 @@ module Contract
            once: 'once'
        }
 
-    belongs_to :contract, class_name: 'Contract::Base', foreign_key: :contract_id
-
     scope :in_year, ->(year) { where(begin_date: Date.new(year-1, 12, 31)...Date.new(year, 12, 31)) }
 
     scope :at, ->(timestamp) do
@@ -30,6 +28,9 @@ module Contract
     end
 
     scope :current, ->(now = Time.current) { at(now) }
+
+    belongs_to :contract, class_name: 'Contract::Base', foreign_key: :contract_id
+    has_one :billing, foreign_key: :adjusted_payment_id
 
   end
 end
