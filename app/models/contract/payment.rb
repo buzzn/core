@@ -29,6 +29,7 @@ module Contract
 
     scope :current, ->(now = Time.current) { at(now) }
 
+    belongs_to :tariff, class_name: 'Contract::Tariff', foreign_key: :tariff_id
     belongs_to :contract, class_name: 'Contract::Base', foreign_key: :contract_id
     has_one :billing, foreign_key: :adjusted_payment_id
 
