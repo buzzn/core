@@ -51,6 +51,10 @@ class Beekeeper::Importer::LocalpoolContracts
     #  else
     #    tariffs_ended_contracts(contract, tariffs)
     #  end
+    if contract.begin_date < localpool.start_date
+      localpool.start_date = contract.begin_date
+      localpool.save
+    end
     raise ActiveRecord::RecordInvalid.new(contract) unless contract.invariant_valid?
   end
 
