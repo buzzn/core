@@ -5532,18 +5532,17 @@ paths:
         in: path
         required: true
         type: string
+      - name: price_cents
+        in: formData
+        required: true
+        type: string
+        enum:
+        - 137
       - name: begin_date
         in: formData
         required: true
         type: string
         format: date
-      - name: price_cents
-        in: formData
-        required: true
-        type: integer
-        format: int64
-        minimum: 0
-        exclusiveMinimum: true
       - name: energy_consumption_kwh_pa
         in: formData
         required: true
@@ -5553,12 +5552,23 @@ paths:
         exclusiveMinimum: true
       - name: cycle
         in: formData
-        required: false
+        required: true
         type: string
         enum:
         - monthly
         - yearly
-        - once
+      - name: tariff_id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: price_cents
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
       responses:
         201:
           description: created
@@ -5653,7 +5663,6 @@ paths:
         enum:
         - monthly
         - yearly
-        - once
       responses:
         200:
           description: patched

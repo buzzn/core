@@ -6,7 +6,6 @@ module Contract
     enum cycle: {
            monthly: 'monthly',
            yearly: 'yearly',
-           once: 'once'
        }
 
     scope :in_year, ->(year) { where(begin_date: Date.new(year-1, 12, 31)...Date.new(year, 12, 31)) }

@@ -10,5 +10,8 @@ module Contract
 
     attributes :updatable, :deletable
 
+    # tariff used for calculation of that payment
+    has_one :tariff, Contract::TariffResource
+
   end
 end
