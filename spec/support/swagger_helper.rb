@@ -115,6 +115,8 @@ module SwaggerHelper
           params_process.call(prefix: name, p: v)
         elsif v.blank?
           process_rule.call(name: name, required: true, type: nil, options: { })
+        elsif v == 'dontinclude'
+          next
         else
           process_rule.call(name: name, required: true, type: :enum, options: { values: [v] })
         end
@@ -126,7 +128,6 @@ module SwaggerHelper
     end
 
     Schemas::Support::Visitor.visit(@schema, &process_rule)
-
     expect(expected).to eq json unless expected.blank? || !params.blank?
   end
 
