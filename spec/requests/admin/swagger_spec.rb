@@ -363,7 +363,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'retrieve payments of the contract'
   end
 
-  post '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/payments', $admin, {}, {'price_cents' => 137} do
+  post '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/payments', $admin, {}, {'price_cents' => 'dontinclude'} do
     schema Schemas::Transactions::Admin::Contract::Payment::Create
     description 'add an payment entry to the contract'
   end

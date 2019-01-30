@@ -5532,12 +5532,6 @@ paths:
         in: path
         required: true
         type: string
-      - name: price_cents
-        in: formData
-        required: true
-        type: string
-        enum:
-        - 137
       - name: begin_date
         in: formData
         required: true
