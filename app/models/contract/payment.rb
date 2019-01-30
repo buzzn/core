@@ -11,8 +11,8 @@ module Contract
 
     belongs_to :contract, class_name: 'Contract::Base', foreign_key: :contract_id
 
-    scope :in_year, ->(year) { where('begin_date <= ?', Date.new(year, 12, 31))
-                                  .where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1)) }
+    scope :in_year, ->(year) { where(begin_date: Date.new(year-1, 12, 31)...Date.new(year, 12, 31)) }
+
     scope :at, ->(timestamp) do
       timestamp = case timestamp
                   when DateTime
@@ -26,11 +26,10 @@ module Contract
                   else
                     raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")
                   end
-        where('begin_date <= ?', timestamp)
-          .where('end_date >= ? OR end_date IS NULL', timestamp + 1.second)
+        where('begin_date <= ?', timestamp).order(:begin_date).last
     end
 
-    scope :current, ->(now = Time.current) {where('begin_date < ? AND (end_date > ? OR end_date IS NULL)', now, now)}
+    scope :current, ->(now = Time.current) { at(now) }
 
   end
 end

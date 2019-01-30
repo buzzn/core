@@ -4,11 +4,11 @@ module Contract
     model Payment
 
     attributes  :begin_date,
-                :end_date,
                 :price_cents,
+                :energy_consumption_kwh_pa,
                 :cycle
 
-    def updated_at; nil; end
+    attributes :updatable, :deletable
 
   end
 end

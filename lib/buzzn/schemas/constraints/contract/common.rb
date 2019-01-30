@@ -23,7 +23,4 @@ Schemas::Constraints::Contract::Common = Schemas::Support.Form(Schemas::Constrai
   optional(:old_supplier_name).filled(:str?)
   optional(:old_customer_number).filled(:str?)
   optional(:old_account_number).filled(:str?)
-
-  optional(:energy_consumption_before_kwh_pa).filled(:int?)
-  optional(:down_payment_before_cents_per_month).filled(:int?)
 end

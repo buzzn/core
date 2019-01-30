@@ -116,6 +116,11 @@ module Admin
           r.run AccountingRoda
         end
 
+        r.on 'payments' do
+          shared[:payments] = contract.payments
+          r.run PaymentRoda
+        end
+
       end
 
       r.get! do

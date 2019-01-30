@@ -5493,6 +5493,163 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/payments":
+    get:
+      description: retrieve payments of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: add an payment entry to the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: begin_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: price_cents
+        in: formData
+        required: true
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
+      - name: energy_consumption_kwh_pa
+        in: formData
+        required: true
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
+      - name: cycle
+        in: formData
+        required: false
+        type: string
+        enum:
+        - monthly
+        - yearly
+        - once
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/payments/{payment_id}":
+    get:
+      description: retrieve a payment entry of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: payment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: delete a payment entry
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: payment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: update an payment entry to the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: payment_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: price_cents
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
+      - name: energy_consumption_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
+      - name: cycle
+        in: formData
+        required: false
+        type: string
+        enum:
+        - monthly
+        - yearly
+        - once
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/tariffs":
     get:
       description: returns the tariffs of the contract
@@ -7587,16 +7744,6 @@ paths:
         required: false
         type: string
         format: ''
-      - name: energy_consumption_before_kwh_pa
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: down_payment_before_cents_per_month
-        in: formData
-        required: false
-        type: string
-        format: ''
       - name: share_register_with_group
         in: formData
         required: false
@@ -7809,16 +7956,6 @@ paths:
         type: string
         format: ''
       - name: old_account_number
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: energy_consumption_before_kwh_pa
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: down_payment_before_cents_per_month
         in: formData
         required: false
         type: string
@@ -9034,16 +9171,6 @@ paths:
         type: string
         format: ''
       - name: old_account_number
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: energy_consumption_before_kwh_pa
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: down_payment_before_cents_per_month
         in: formData
         required: false
         type: string
