@@ -5,6 +5,6 @@ Schemas::Transactions::Admin::BillingDetail::Update = Schemas::Support.Form(Sche
   optional(:reduced_power_amount).filled(:float?).value(gteq?: 0)
   optional(:reduced_power_factor).filled(:float?).value(gteq?: 0).value(lt?: 1)
   optional(:automatic_abschlag_adjust).filled(:bool?)
-  optional(:automatic_abschlag_threshold).filled(:float?).value(gteq?: 0)
+  optional(:automatic_abschlag_threshold_cents).filled(:float?).value(gteq?: 0)
   optional(:issues_vat).filled(:bool?)
 end

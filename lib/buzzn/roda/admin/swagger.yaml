@@ -3053,7 +3053,7 @@ paths:
         in: formData
         required: false
         type: boolean
-      - name: billing_detail.automatic_abschlag_threshold
+      - name: billing_detail.automatic_abschlag_threshold_cents
         in: formData
         required: false
         type: number
