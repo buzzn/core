@@ -4,7 +4,6 @@ require_relative '../../register/update_meta'
 module Schemas::Transactions
 
   Admin::Contract::Localpool::PowerTaker::Update = Schemas::Support.Form(Schemas::Transactions::Update) do
-
     optional(:signing_date).maybe(:date?)
     optional(:begin_date).maybe(:date?)
     optional(:termination_date).maybe(:date?)
@@ -27,6 +26,8 @@ module Schemas::Transactions
     optional(:old_supplier_name).maybe(:str?)
     optional(:old_customer_number).maybe(:str?)
     optional(:old_account_number).maybe(:str?)
+
+    optional(:energy_consumption_before_kwh_pa).value(:int?, gt?: 0)
 
     optional(:register_meta) do
       schema(Admin::Register::UpdateMeta)

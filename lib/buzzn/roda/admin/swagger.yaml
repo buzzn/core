@@ -3773,6 +3773,13 @@ paths:
         required: false
         type: string
         format: ''
+      - name: energy_consumption_before_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
       - name: register_meta.updated_at
         in: formData
         required: true
@@ -7744,6 +7751,13 @@ paths:
         required: false
         type: string
         format: ''
+      - name: energy_consumption_before_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
       - name: share_register_with_group
         in: formData
         required: false
@@ -7960,6 +7974,13 @@ paths:
         required: false
         type: string
         format: ''
+      - name: energy_consumption_before_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
       - name: share_register_with_group
         in: formData
         required: false
@@ -9175,6 +9196,13 @@ paths:
         required: false
         type: string
         format: ''
+      - name: energy_consumption_before_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
       - name: share_register_with_group
         in: formData
         required: false
