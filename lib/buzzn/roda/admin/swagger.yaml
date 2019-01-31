@@ -5543,7 +5543,6 @@ paths:
         type: integer
         format: int64
         minimum: 0
-        exclusiveMinimum: true
       - name: cycle
         in: formData
         required: true
@@ -5562,7 +5561,6 @@ paths:
         type: integer
         format: int64
         minimum: 0
-        exclusiveMinimum: true
       responses:
         201:
           description: created
@@ -5642,14 +5640,12 @@ paths:
         type: integer
         format: int64
         minimum: 0
-        exclusiveMinimum: true
       - name: energy_consumption_kwh_pa
         in: formData
         required: false
         type: integer
         format: int64
         minimum: 0
-        exclusiveMinimum: true
       - name: cycle
         in: formData
         required: false
