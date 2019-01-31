@@ -69,7 +69,8 @@ class Transactions::Admin::Billing::Update < Transactions::Base
            # if we don't touch the treshold we also skip it
            (last_payment.price_cents-estimated_cents_per_month).abs >= resource.object.localpool.billing_detail.automatic_abschlag_threshold_cents
           # create new abschlag for next month
-          payment = resource.object.contract.payments.create!(begin_date: next_month, price_cents: estimated_cents_per_month, cycle: :monthly, energy_consumption_kwh_pa: 365*resource.object.daily_kwh_estimate, tariff: tariff)
+          rounded=100*(estimated_cents_per_month/100.round)
+          payment = resource.object.contract.payments.create!(begin_date: next_month, price_cents: rounded, cycle: :monthly, energy_consumption_kwh_pa: 365*resource.object.daily_kwh_estimate, tariff: tariff)
           params[:adjusted_payment] = payment
         end
       end

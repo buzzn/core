@@ -48,4 +48,51 @@ describe Document do
     expect(doc1.sha256).to eq doc2.sha256
     expect(doc1.sha256_encrypted).not_to eq doc2.sha256_encrypted
   end
+
+  context 'constraints' do
+    include_context :database_integrity
+
+    let(:group) { create(:group, :localpool) }
+    let(:contract) { create(:contract, :localpool_powertaker)}
+    let(:billing) { create(:billing, contract: contract) }
+
+    context 'group', database_integrity: true do
+      let(:document) { Document.create(filename: 'test/contract/file.jpg', data: File.read('spec/data/test.pdf'))}
+      it 'does not allow double entries' do
+        group.documents << document
+        expect do
+          group.documents << document
+        end.to raise_error(ActiveRecord::RecordNotUnique)
+      end
+
+    end
+
+    context 'billing', database_integrity: true do
+
+      let(:document) { Document.create(filename: 'test/contract/file.jpg', data: File.read('spec/data/test.pdf'))}
+
+      it 'does not allow double entries' do
+        billing.documents << document
+        expect do
+          billing.documents << document
+        end.to raise_error(ActiveRecord::RecordNotUnique)
+      end
+
+    end
+
+    context 'contract', database_integrity: true do
+
+      let(:document) { Document.create(filename: 'test/contract/file.jpg', data: File.read('spec/data/test.pdf'))}
+
+      it 'does not allow double entries' do
+        contract.documents << document
+        expect do
+          contract.documents << document
+        end.to raise_error(ActiveRecord::RecordNotUnique)
+      end
+
+    end
+
+  end
+
 end
