@@ -5542,6 +5542,8 @@ paths:
         required: true
         type: integer
         format: int64
+        maximum: 2147483648
+        exclusiveMaximum: true
         minimum: 0
       - name: cycle
         in: formData
@@ -5560,6 +5562,8 @@ paths:
         required: false
         type: integer
         format: int64
+        maximum: 2147483648
+        exclusiveMaximum: true
         minimum: 0
       responses:
         201:
@@ -5639,12 +5643,16 @@ paths:
         required: false
         type: integer
         format: int64
+        maximum: 2147483648
+        exclusiveMaximum: true
         minimum: 0
       - name: energy_consumption_kwh_pa
         in: formData
         required: false
         type: integer
         format: int64
+        maximum: 2147483648
+        exclusiveMaximum: true
         minimum: 0
       - name: cycle
         in: formData
