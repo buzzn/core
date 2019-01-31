@@ -36,6 +36,7 @@ class Beekeeper::Importer::LocalpoolContracts
   def create_contract(localpool, customer, contract, registers, tariffs)
     register_meta_option = Register::MetaOption.new(share_with_group: false, share_publicly: false)
     register = find_or_create_register(contract, registers, localpool)
+    payments = contract.delete(:payments)
     contract_attributes = contract.except(:powertaker, :buzznid).merge(
       localpool:       localpool,
       register_meta:   register.meta,
@@ -45,6 +46,7 @@ class Beekeeper::Importer::LocalpoolContracts
     )
     contract = Contract::LocalpoolPowerTaker.create!(contract_attributes)
     contract.tariffs = tariffs
+    Beekeeper::Importer::Payments.new(logger).run(contract, payments)
     # TODO select proper tariffs again?
     #  if contract.end_date.nil?
     #    tariffs_running_contracts(contract, tariffs)
