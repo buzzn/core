@@ -18,6 +18,8 @@ class Billing < ActiveRecord::Base
   belongs_to :accounting_entry, class_name: 'Accounting::Entry'
   belongs_to :adjusted_payment, class_name: 'Contract::Payment'
 
+  has_one :localpool, through: :contract
+
   has_many :items, class_name: 'BillingItem', dependent: :destroy
 
   scope :for_group, ->(group) { includes(:contract).where(contracts: { localpool_id: group.id }) }
@@ -84,12 +86,12 @@ class Billing < ActiveRecord::Base
     total_amount_before_taxes * billing_config.vat
   end
 
-  def total_amount
-    if self.contract.localpool.billing_detail.issues_vat
-      total_amount_after_taxes
-    else
-      total_amount_before_taxes
+  def daily_kwh_estimate
+    total = 0
+    items.each do |item|
+      total += item.consumed_energy_kwh / (item.length_in_days * 1.0)
     end
+    total
   end
 
 end

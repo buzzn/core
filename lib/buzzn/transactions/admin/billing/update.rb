@@ -35,9 +35,28 @@ class Transactions::Admin::Billing::Update < Transactions::Base
 
     case action
     when :calculate
+      total_amount = resource.object.total_amount_after_taxes
       # accounting is in decacents; 10dc = 1c
-      total_amount = resource.object.total_amount*10
-      params[:accounting_entry] = accounting_service.book(user, contract, -1 * total_amount.round)
+      total_amount_dc = total_amount * 10
+      params[:accounting_entry] = accounting_service.book(user, contract, -1 * total_amount_dc.round)
+
+      if resource.object.localpool.billing_detail.automatic_abschlag_adjust
+        last_payment = resource.object.contract.payments.order(:begin_date).last
+        next_month = Date.today.at_beginning_of_month.next_month
+        tariff = resource.object.contract.tariffs.at(next_month).order(:begin_date).last
+        estimated_cents_per_month = tariff.cents_per_days(30, resource.object.daily_kwh_estimate)
+        if last_payment.nil? ||
+           # if begin_date is in the future we skip as it was manually adjusted
+           # if price_cents is 0 we will also skip it
+           (last_payment.begin_date < Date.today && last_payment.price_cents.positive?) &&
+           # if we don't touch the treshold we also skip it
+           (last_payment.price_cents-estimated_cents_per_month).abs >= resource.object.localpool.billing_detail.automatic_abschlag_threshold_cents
+          # create new abschlag for next month
+          payment = resource.object.contract.payments.create!(begin_date: next_month, price_cents: estimated_cents_per_month, cycle: :monthly, energy_consumption_kwh_pa: 365*resource.object.daily_kwh_estimate, tariff: tariff)
+          params[:adjusted_payment] = payment
+        end
+      end
+
     end
   end
 

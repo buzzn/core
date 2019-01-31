@@ -7,14 +7,14 @@ module Contract
     belongs_to :group, class_name: 'Group::Base', foreign_key: :group_id
 
     scope :in_year, ->(year) {
-      where('begin_date <= ?', Date.new(year, 12, 31)).where('end_date > ? OR end_date IS NULL', Date.new(year, 1, 1))
+      where('begin_date <= ?', Date.new(year, 12, 31))
     }
 
     scope :at, ->(timestamp) do
-      where('begin_date <= ?', timestamp).where('end_date > ? OR end_date IS NULL', timestamp + 1.second)
+      where('begin_date <= ?', timestamp)
     end
 
-    scope :current, ->(now = Time.current) { where('begin_date < ? AND (end_date > ? OR end_date IS NULL)', now, now) }
+    scope :current, ->(now = Time.current) { at(now) }
 
     # permissions helpers
     scope :permitted, ->(uids) { where(group_id: uids) }
