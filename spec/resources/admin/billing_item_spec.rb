@@ -1,4 +1,4 @@
-describe Contract::TariffResource do
+describe Admin::BillingItemResource do
 
   entity(:admin) { create(:account, :buzzn_operator) }
   entity(:localpool) { create(:group, :localpool) }

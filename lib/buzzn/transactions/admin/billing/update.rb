@@ -6,6 +6,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
   validate :schema
   check :authorize, with: :'operations.authorization.update'
   tee :check_status
+  tee :check_precondition
   around :db_transaction
   tee :execute_transistion
   map :persist, with: :'operations.action.update'
@@ -20,6 +21,22 @@ class Transactions::Admin::Billing::Update < Transactions::Base
     if !params[:status].nil? && !resource.object.allowed_transitions.map(&:to_s).include?(params[:status])
       # not allowed
       raise Buzzn::ValidationError.new(status: "transition from #{resource.object.status} to #{params[:status]} is not possible")
+    end
+  end
+
+  def check_precondition(resource:, params:)
+    case resource.object.status.to_sym
+    when :calculated
+      unless params[:status].nil?
+        case params[:status].to_sym
+        when :documented
+          subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
+          result = Schemas::PreConditions::Billing::Update::CalculatedDocumented.call(subject)
+          unless result.success?
+            raise Buzzn::ValidationError.new(result.errors)
+          end
+        end
+      end
     end
   end
 
