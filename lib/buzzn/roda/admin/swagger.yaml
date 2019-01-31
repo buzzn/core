@@ -4033,6 +4033,78 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings/{billing_id}/documents":
+    get:
+      description: returns the documents of the billing
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: billing_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings/{billing_id}/documents/{document2_id}":
+    get:
+      description: returns the metadata of a document
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: billing_id
+        in: path
+        required: true
+        type: string
+      - name: document2_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings/{billing_id}/documents/{document2_id}/fetch":
+    get:
+      description: serves the actual document
+      produces:
+      - application/octet-stream
+      - application/pdf
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: billing_id
+        in: path
+        required: true
+        type: string
+      - name: document2_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
   "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings/{billing_id}/items/{billing_item_id}":
     patch:
       description: updates a billing item for a Billing

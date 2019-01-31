@@ -113,7 +113,7 @@ module Pdf
       end
       contract.contractor_bank_account.tap do |account|
         %i(iban bic bank_name).each do |field|
-          data[field] = account.send(field)
+          data[field] = account.send(field) if account
         end
       end
       data

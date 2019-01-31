@@ -43,6 +43,12 @@ class Admin::BillingRoda < BaseRoda
         r.run Admin::BillingItemRoda
       end
 
+      r.on 'documents' do
+        shared[:documents] = billing.documents
+        shared[:with_post] = false
+        r.run Admin::DocumentRoda
+      end
+
     end
   end
 

@@ -375,6 +375,26 @@ describe Transactions::Admin::Billing::Update do
 
     end
 
+    context 'with a payment' do
+
+      before do
+        localpool.billing_detail.automatic_abschlag_adjust = true
+        localpool.billing_detail.save
+        localpool.reload
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+        billing.reload
+      end
+
+      it 'fails' do
+        expect(billing.status).to eql 'calculated'
+        expect(contract.payments.count).to eql 1
+        expect(update_result).to be_success
+        billing.reload
+        expect(billing.documents.count).to eql 1
+      end
+
+    end
+
   end
 
 end

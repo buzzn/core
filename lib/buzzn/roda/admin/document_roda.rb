@@ -12,13 +12,16 @@ module Admin
     route do |r|
 
       documents = shared[:documents]
+      with_post = shared[:with_post] || true
 
       r.get! do
         documents
       end
 
-      r.post! do
-        create.(resource: documents, params: r.params)
+      if with_post
+        r.post! do
+          create.(resource: documents, params: r.params)
+        end
       end
 
       r.others!
