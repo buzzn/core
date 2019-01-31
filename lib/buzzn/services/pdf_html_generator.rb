@@ -24,7 +24,7 @@ class Services::PdfHtmlGenerator
   end
 
   def generate_pdf(name_or_template, struct)
-    WickedPdf.new(find_wkhtmltopdf_binary_path).pdf_from_string(render_html(name_or_template, struct), javascript_delay: 0, dpi: '380', extra: '--enable-forms')
+    WickedPdf.new(find_wkhtmltopdf_binary_path).pdf_from_string(render_html(name_or_template, struct), javascript_delay: 0, dpi: 75, extra: '--enable-forms')
   end
 
   def find_wkhtmltopdf_binary_path
