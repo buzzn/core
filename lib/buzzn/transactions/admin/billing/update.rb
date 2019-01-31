@@ -74,7 +74,12 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           params[:adjusted_payment] = payment
         end
       end
-
+    when :document
+      generator = Pdf::Invoice.new(resource.object)
+      document = generator.create_pdf_document.document
+      unless resource.object.documents.where(:id => document.id).any?
+        resource.object.documents << document
+      end
     end
   end
 

@@ -1,7 +1,7 @@
 require_relative '../../shared_nested_address'
 require 'buzzn/transactions/admin/localpool/update'
 
-describe Transactions::Admin::Localpool::Update do
+describe Transactions::Admin::Localpool::Update, order: :defined do
 
   entity(:operator) { create(:account, :buzzn_operator) }
   entity(:billing_detail) { create(:billing_detail) }
