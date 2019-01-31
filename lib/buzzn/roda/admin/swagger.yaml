@@ -3891,6 +3891,10 @@ paths:
         required: true
         type: integer
         format: int64
+        maximum: 9223372036854775808
+        exclusiveMaximum: true
+        minimum: -9223372036854775808
+        exclusiveMinimum: true
       - name: external_reference
         in: formData
         required: false
