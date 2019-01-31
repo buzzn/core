@@ -123,6 +123,101 @@ describe Transactions::Admin::Billing::Update do
                                                     params: update_params)
         end
 
+        context 'payment' do
+
+          context 'no automation set' do
+            before do
+              localpool.billing_detail.automatic_abschlag_adjust = false
+              localpool.billing_detail.save
+              localpool.reload
+            end
+
+            it 'does not generate a new payment' do
+              expect(contract.payments.count).to eql 0
+              expect(localpool.billing_detail.automatic_abschlag_adjust).to eql false
+              expect(update_result).to be_success
+              billing.reload
+              contract.reload
+              expect(contract.payments.count).to eql 0
+              expect(billing.adjusted_payment).to be_nil
+            end
+
+          end
+
+          context 'automation set' do
+            before do
+              localpool.billing_detail.automatic_abschlag_adjust = true
+              localpool.billing_detail.automatic_abschlag_threshold_cents = 100 # 1 Euro
+              localpool.billing_detail.save
+              localpool.reload
+            end
+
+            context 'no previous payment' do
+              it 'does not generate a new payment' do
+                expect(contract.payments.count).to eql 0
+                expect(localpool.billing_detail.automatic_abschlag_adjust).to eql true
+                expect(update_result).to be_success
+                billing.reload
+                contract.reload
+                expect(contract.payments.count).to eql 1
+                expect(billing.adjusted_payment).not_to be_nil
+                expect(billing.adjusted_payment.tariff).not_to be_nil
+              end
+            end
+
+            context 'previous payment' do
+              let!(:previous_payment) { create(:payment, price_cents: 5000, contract: contract) }
+              context 'outside threshold' do
+                before do
+                  previous_payment.price_cents = 5000 # != 303
+                  previous_payment.save
+                end
+                it 'does update' do
+                  expect(contract.payments.count).to eql 1
+                  expect(update_result).to be_success
+                  billing.reload
+                  contract.reload
+                  expect(contract.payments.count).to eql 2
+                  expect(billing.adjusted_payment).not_to be_nil
+                  expect(billing.adjusted_payment.tariff).not_to be_nil
+                end
+              end
+
+              context 'under threshold' do
+                before do
+                  previous_payment.price_cents = 300
+                  previous_payment.save
+                end
+                it 'does update' do
+                  expect(contract.payments.count).to eql 1
+                  expect(update_result).to be_success
+                  billing.reload
+                  contract.reload
+                  expect(contract.payments.count).to eql 1
+                  expect(billing.adjusted_payment).to be_nil
+                end
+              end
+
+              context 'with price_cents == 0' do
+                before do
+                  previous_payment.price_cents = 0
+                  previous_payment.save
+                end
+                it 'does update but not readjust' do
+                  expect(contract.payments.count).to eql 1
+                  expect(update_result).to be_success
+                  billing.reload
+                  contract.reload
+                  expect(contract.payments.count).to eql 1
+                  expect(billing.adjusted_payment).to be_nil
+                end
+              end
+            end
+
+          end
+
+        end
+
         context 'without proper billing items' do
 
           let(:billing) do
@@ -150,7 +245,7 @@ describe Transactions::Admin::Billing::Update do
             expect(billing.status).to eql 'calculated'
             expect(billing.accounting_entry).not_to be_nil
             balance = accounting_service.balance(contract)
-            expect(balance).to eql (- billing.total_amount*10).round
+            expect(balance).to eql (- billing.total_amount_after_taxes*10).round
           end
 
         end
@@ -170,7 +265,7 @@ describe Transactions::Admin::Billing::Update do
               expect(billing.status).to eql 'calculated'
               expect(billing.accounting_entry).not_to be_nil
               balance = accounting_service.balance(contract)
-              expect(balance).to eql (10*100*50 - billing.total_amount*10).round
+              expect(balance).to eql (10*100*50 - billing.total_amount_after_taxes*10).round
             end
 
           end
@@ -188,7 +283,7 @@ describe Transactions::Admin::Billing::Update do
               expect(billing.status).to eql 'calculated'
               expect(billing.accounting_entry).not_to be_nil
               balance = accounting_service.balance(contract)
-              expect(balance).to eql (10*100*3 - billing.total_amount*10).round
+              expect(balance).to eql (10*100*3 - billing.total_amount_after_taxes*10).round
             end
 
           end
