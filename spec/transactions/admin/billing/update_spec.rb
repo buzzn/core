@@ -198,6 +198,22 @@ describe Transactions::Admin::Billing::Update do
                 end
               end
 
+              context 'in future, sign of manual update' do
+                before do
+                  previous_payment.price_cents = 5000
+                  previous_payment.begin_date = Date.today + 23.days
+                  previous_payment.save
+                end
+                it 'does update' do
+                  expect(contract.payments.count).to eql 1
+                  expect(update_result).to be_success
+                  billing.reload
+                  contract.reload
+                  expect(contract.payments.count).to eql 1
+                  expect(billing.adjusted_payment).to be_nil
+                end
+              end
+
               context 'with price_cents == 0' do
                 before do
                   previous_payment.price_cents = 0
