@@ -18,6 +18,8 @@ class Billing < ActiveRecord::Base
   belongs_to :accounting_entry, class_name: 'Accounting::Entry'
   belongs_to :adjusted_payment, class_name: 'Contract::Payment'
 
+  has_and_belongs_to_many :documents, join_table: 'billings_documents', class_name: 'Document'
+
   has_one :localpool, through: :contract
 
   has_many :items, class_name: 'BillingItem', dependent: :destroy

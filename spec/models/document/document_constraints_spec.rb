@@ -16,32 +16,6 @@ describe Document do
 
   context 'with relations' do
 
-    context 'billing' do
-
-      it 'should not be deletable' do
-        doc = Document.create(filename: 'test/relation/billing/file.jpg', data: File.read('spec/data/test.pdf'))
-        bdoc = BillingDocument.create(document_id: doc.id, billing_id: billing.id)
-        doc.destroy
-        expect do
-          bdoc.reload
-        end.to raise_error(ActiveRecord::RecordNotFound)
-      end
-
-    end
-
-    context 'group' do
-
-      it 'should not be deletable' do
-        doc = Document.create(filename: 'test/relation/group/file.jpg', data: File.read('spec/data/test.pdf'))
-        gdoc = GroupDocument.create(document_id: doc.id, group_id: group.id)
-        doc.destroy
-        expect do
-          gdoc.reload
-        end.to raise_error(ActiveRecord::RecordNotFound)
-      end
-
-    end
-
     entity(:generator) { Pdf::Minimal.new(root: group) }
 
     context 'pdf' do
