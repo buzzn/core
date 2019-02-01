@@ -20,7 +20,6 @@ gem 'dry-types', '~> 0.12.3'
 # pdf
 gem 'slim'
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary-edge', '~> 0.12.4.0'
 
 # storage
 gem 'fog-aws'
@@ -85,6 +84,7 @@ gem 'rails_12factor'
 
 group :production, :staging do
   gem 'newrelic_rpm'
+  gem 'wkhtmltopdf-heroku'
 end
 
 group :development, :test do
