@@ -51,12 +51,12 @@ class Billing < ActiveRecord::Base
     if self.invoice_number_addition.nil?
       self.invoice_number
     else
-      "#{self.invoice_number}/#{self.invoice_number_addition}"
+      "#{self.invoice_number}-#{self.invoice_number_addition}"
     end
   end
 
   def generate_invoice_number
-    "#{Date.today.year}-#{contract.contract_number}"
+    "#{Date.today.year}-#{contract.full_contract_number}"
   end
 
   def check_invoice_number_addition

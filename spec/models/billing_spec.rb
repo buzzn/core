@@ -17,7 +17,7 @@ describe 'Billing' do
           expect(billing.invoice_number).to be_nil
           billing.save
           expect(billing.invoice_number).not_to be_nil
-          expect(billing.full_invoice_number).to eql "#{today.year}-#{contract.contract_number}/#{contract.contract_number_addition}"
+          expect(billing.full_invoice_number).to eql "#{today.year}-#{contract.full_contract_number}-#{billing.invoice_number_addition}"
           expect(billing.invoice_number_addition).not_to be_nil
         end
 
@@ -27,7 +27,7 @@ describe 'Billing' do
         let(:another_billing) { create(:billing, contract: contract, invoice_number: nil) }
 
         it 'is unique' do
-          expect(another_billing.full_invoice_number).to eql "#{today.year}-#{contract.contract_number}/#{contract.contract_number_addition}"
+          expect(another_billing.full_invoice_number).to eql "#{today.year}-#{contract.full_contract_number}-#{another_billing.invoice_number_addition}"
           expect(another_billing.invoice_number_addition).to eql 1
           billing = Billing.new
           billing.begin_date = today
@@ -36,7 +36,7 @@ describe 'Billing' do
           expect(billing.invoice_number).to be_nil
           billing.save
           expect(billing.invoice_number_addition).to eql 2
-          expect(billing.full_invoice_number).to eql "#{today.year}-#{contract.contract_number}/#{billing.invoice_number_addition}"
+          expect(billing.full_invoice_number).to eql "#{today.year}-#{contract.full_contract_number}-#{billing.invoice_number_addition}"
         end
       end
 

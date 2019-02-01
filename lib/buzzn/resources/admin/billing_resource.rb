@@ -9,6 +9,7 @@ module Admin
                :end_date,
                :last_date,
                :invoice_number,
+               :invoice_number_addition,
                :full_invoice_number,
                :allowed_actions,
                :status
