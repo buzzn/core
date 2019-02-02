@@ -14,5 +14,16 @@ module Contract
       Service::Tariffs.data(self.tariffs)
     end
 
+    def current_tariff
+      now = Date.today
+      current = nil
+      self.contexted_tariffs.each do |tariff|
+        if tariff.begin_date <= now && tariff.end_date.nil? || (tariff.end_date >= now)
+          current = tariff.tariff
+        end
+      end
+      current
+    end
+
   end
 end

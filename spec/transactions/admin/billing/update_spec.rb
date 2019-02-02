@@ -343,56 +343,59 @@ describe Transactions::Admin::Billing::Update do
 
   context 'calculated' do
 
-    let(:update_params) do
-      billing.reload
-      {
-        status: 'documented',
-        updated_at: billing.updated_at.to_json
-      }
-    end
+    context '-> documented' do
 
-    let(:update_result) do
-      Transactions::Admin::Billing::Update.new.(resource: billingr,
-                                                params: update_params)
-    end
-
-    context 'without a payment' do
-
-      before do
-        localpool.billing_detail.automatic_abschlag_adjust = false
-        localpool.billing_detail.save
-        localpool.reload
-        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+      let(:update_params) do
         billing.reload
+        {
+          status: 'documented',
+          updated_at: billing.updated_at.to_json
+        }
       end
 
-      it 'fails' do
-        expect(billing.status).to eql 'calculated'
-        expect(contract.payments.count).to eql 0
-        expect {update_result}.to raise_error(Buzzn::ValidationError,
-                                              '{:contract=>{:payments=>["size cannot be less than 1"]}}')
+      let(:update_result) do
+        Transactions::Admin::Billing::Update.new.(resource: billingr,
+                                                  params: update_params)
       end
 
-    end
+      context 'without a payment' do
 
-    context 'with a payment' do
+        before do
+          localpool.billing_detail.automatic_abschlag_adjust = false
+          localpool.billing_detail.save
+          localpool.reload
+          Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+          billing.reload
+        end
 
-      before do
-        localpool.billing_detail.automatic_abschlag_adjust = true
-        localpool.billing_detail.save
-        localpool.reload
-        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
-        billing.reload
+        it 'fails' do
+          expect(billing.status).to eql 'calculated'
+          expect(contract.payments.count).to eql 0
+          expect {update_result}.to raise_error(Buzzn::ValidationError,
+                                                '{:contract=>{:payments=>["size cannot be less than 1"]}}')
+        end
+
       end
 
-      it 'fails' do
-        expect(billing.status).to eql 'calculated'
-        expect(contract.payments.count).to eql 1
-        expect(update_result).to be_success
-        billing.reload
-        expect(billing.documents.count).to eql 1
-      end
+      context 'with a payment' do
 
+        before do
+          localpool.billing_detail.automatic_abschlag_adjust = true
+          localpool.billing_detail.save
+          localpool.reload
+          Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+          billing.reload
+        end
+
+        it 'fails' do
+          expect(billing.status).to eql 'calculated'
+          expect(contract.payments.count).to eql 1
+          expect(update_result).to be_success
+          billing.reload
+          expect(billing.documents.count).to eql 1
+        end
+
+      end
     end
 
   end

@@ -39,6 +39,19 @@ describe Services::Accounting do
       expect(service.balance(contract)).to eql 1000
     end
 
+    it 'calculates correctly - with certain entry' do
+      entry1 = service.book(operator, contract, 100)
+      entry2 = service.book(operator, contract, 100)
+      entry3 = service.book(operator, contract, 100)
+      entry4 = service.book(operator, another_contract, 50)
+      entry5 = service.book(operator, contract, 100)
+      entry6 = service.book(operator, contract, 100)
+      expect(Accounting::Entry.for_contract(contract).count).to eql 5
+      expect(service.balance(contract)).to eql 500
+      expect(service.balance_at(entry2)).to eql 200
+      expect(service.balance_at(entry5)).to eql 400
+    end
+
   end
 
 end

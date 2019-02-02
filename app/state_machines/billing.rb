@@ -53,7 +53,7 @@ class StateMachine::Billing
     when :documented
       case to
       when :documented
-        nil
+        :document
       when :queued
         :queue
       when :delivered

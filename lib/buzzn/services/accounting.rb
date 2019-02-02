@@ -18,4 +18,24 @@ class Services::Accounting
     Accounting::Entry.for_contract(contract).collect(&:amount).reduce(:+) || 0
   end
 
+  def balance_at(entry)
+    contract = entry.contract
+    amount = 0
+    # traverse until nil FIXME: speedup
+    loop do
+      if entry.contract == contract
+        amount += entry.amount
+      end
+      # end of chain
+      if entry.previous_checksum.nil?
+        break
+      end
+      entry = Accounting::Entry.where(:checksum => entry.previous_checksum).first
+      if entry.nil?
+        raise Buzzn::GeneralError 'Accounting inconsistency'
+      end
+    end
+    amount
+  end
+
 end
