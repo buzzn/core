@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative 'generator'
 
 module Pdf
@@ -11,15 +12,19 @@ module Pdf
     protected
 
     def build_struct
+      billing_config = CoreConfig.load(Types::BillingConfig)
       {
         contractor: build_contractor,
         powertaker: build_powertaker,
         localpool: build_localpool,
         billing: build_billing,
-        item: build_billing_items.first,
+        items: build_billing_items,
+        vat: ((billing_config.vat - 1.0) * 100).round,
         contract: {
           number: contract.full_contract_number,
-        }
+        },
+        current_tariff: build_current_tariff,
+        abschlag: build_abschlag
       }
     end
 
@@ -39,6 +44,10 @@ module Pdf
 
     def contractor_address
       @caddress ||= contractor.address
+    end
+
+    def localpool
+      @localpool ||= contract.localpool
     end
 
     def name(person_or_organization)
@@ -142,8 +151,20 @@ module Pdf
         number: @billing.invoice_number,
         baseprice: to_euro(last_tariff.baseprice_cents_per_month),
         energyprice: to_euro(last_tariff.energyprice_cents_per_kwh),
-        consumed_energy_kwh: @billing.items.first.consumed_energy_kwh
-      }
+        consumed_energy_kwh: @billing.items.first.consumed_energy_kwh,
+      }.tap do |hash|
+        netto = @billing.total_amount_before_taxes
+        brutto = @billing.total_amount_after_taxes
+        balance_at = @billing.balance_at
+        to_pay_cents = (balance_at - @billing.total_amount_after_taxes * 10)/10
+        hash[:netto] = to_euro(netto)
+        hash[:brutto] = to_euro(brutto)
+        hash[:vat_amount] = to_euro(brutto-netto)
+        hash[:balance_at_invoice] = to_euro(balance_at / 10)
+        hash[:to_pay] = to_euro(to_pay_cents.abs)
+        hash[:forderung] = to_pay_cents.positive? ? 'Erstattung' : 'Forderung'
+        hash[:rueck_nach] = to_pay_cents.positive? ? 'Rück' : 'Nach'
+      end
     end
 
     def build_localpool
@@ -164,9 +185,31 @@ module Pdf
           energy_price_euros: to_euro(item.energy_price_cents),
           length_in_days: item.length_in_days,
           base_price_euros_per_day: to_euro(item.baseprice_cents_per_day),
-          base_price_euros: to_euro(item.base_price_cents)
+          base_price_euros: to_euro(item.base_price_cents),
+          meter_name: item.meter.name
         }
       end
+    end
+
+    def build_current_tariff
+      {
+        energyprice_cents_per_kwh: @contract.current_tariff.energyprice_cents_per_kwh,
+        baseprice_euros_per_month:  to_euro(@contract.current_tariff.baseprice_cents_per_month),
+      }
+    end
+
+    def build_abschlag
+      {
+        was_changed: !@billing.adjusted_payment.nil?,
+      }.merge(build_payment(@billing.adjusted_payment || @billing.contract.payments.current))
+    end
+
+    def build_payment(payment)
+      {
+        energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
+        cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
+        amount_euro: to_euro(payment.price_cents)
+      }
     end
 
   end
