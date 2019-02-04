@@ -2,7 +2,7 @@ require 'buzzn/transactions/admin/billing_cycle/create'
 
 describe Transactions::Admin::BillingCycle::Create do
 
-  entity!(:localpool) { create(:group, :localpool) }
+  entity!(:localpool) { create(:group, :localpool, start_date: Date.parse("2017-11-11")) }
   let!(:tariff) do
     tariff = create(:tariff, begin_date: localpool.start_date - 10, group: localpool)
     localpool.gap_contract_tariffs << tariff
@@ -20,20 +20,21 @@ describe Transactions::Admin::BillingCycle::Create do
   let(:localpool_resource) { Admin::LocalpoolResource.all(account).retrieve(localpool.id) }
   let(:localpool_without_start_date_resource) { Admin::LocalpoolResource.all(account).retrieve(localpool_without_start_date.id) }
 
-  let!(:contract_1) do
-    create(:contract, :localpool_powertaker, localpool: localpool)
-  end
-  let!(:contract_2) do
-    create(:contract, :localpool_powertaker, localpool: localpool)
-  end
-  let!(:contract_3) do
-    create(:contract, :localpool_powertaker, localpool: localpool)
+  3.times do |i|
+    let!("contract_#{i+1}".to_sym) do
+      create(:contract, :localpool_powertaker, localpool: localpool, tariffs: [tariff], begin_date: localpool.start_date + (i*13).days)
+    end
+
+    let!("install_reading_#{i+1}".to_sym) do
+      contract = send("contract_#{i+1}")
+      create(:reading, :setup, raw_value: 0, register: contract.register_meta.registers.first, date: contract.begin_date - 2.day)
+    end
   end
 
   entity(:member)   { create(:person, :with_account, :with_self_role, roles: { Role::GROUP_MEMBER => localpool }) }
   entity(:operator) { create(:person, :with_account, :with_self_role, roles: { Role::BUZZN_OPERATOR => nil }) }
 
-  let(:input) { {name: 'route-66', last_date: Date.today - 5.day} }
+  let(:input) { {name: 'route-66', last_date: '2018-12-31'} }
   let(:future_input) { {name: 'fail0r', last_date: Date.today + 24.day} }
 
   describe 'authorization' do
@@ -63,12 +64,7 @@ describe Transactions::Admin::BillingCycle::Create do
   end
 
   describe 'repeated calls' do
-    before do
-      [contract_1, contract_2, contract_3].each do |contract|
-        contract.tariffs << tariff
-        contract.save
-      end
-    end
+
     context 'first call' do
 
       let(:user) { operator }

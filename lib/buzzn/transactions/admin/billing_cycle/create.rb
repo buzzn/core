@@ -28,7 +28,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
 
   def date_range(params:, resource:)
     begin_date = resource.next_billing_cycle_begin_date
-    date_range = begin_date...params.delete(:end_date)
+    begin_date...params.delete(:end_date)
   end
 
   def create_billing_cycle(params:, resource:, date_range:)
@@ -43,16 +43,18 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
     register_metas.each do |register_meta|
       register_meta.contracts.each do |contract|
         contract_billing_date_range = contract.minmax_date_range(date_range)
-        billing_data = Service::BillingData.data(contract,
-                                                 begin_date: contract_billing_date_range.first,
-                                                 end_date: contract_billing_date_range.last)
-        attrs = {}
-        attrs[:items]         = billing_data[:items]
-        attrs[:begin_date]    = billing_data[:begin_date]
-        attrs[:end_date]      = billing_data[:end_date]
-        attrs[:status]         = :open
-        attrs[:billing_cycle] = create_billing_cycle
-        contract.billings.create!(attrs)
+        attrs = {
+          begin_date: contract_billing_date_range.first,
+          last_date:  contract_billing_date_range.last - 1.day, # last_date!
+        }
+        begin
+          Transactions::Admin::Billing::Create.new.(resource: resource.contracts.retrieve(contract.id).billings,
+                                                    params: attrs,
+                                                    parent: contract)
+        rescue Buzzn::ValidationError => e
+          raise Buzzn::ValidationError.new('create_billings': { contract_id: contract.id, errors: e.errors})
+        end
+        # FIXME: add billing_cycle ^
       end
     end
   end
