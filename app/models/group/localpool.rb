@@ -30,6 +30,8 @@ module Group
 
     has_many :register_metas_by_contracts, class_name: 'Register::Meta', through: :localpool_power_taker_contracts, foreign_key: :register_meta_id, source: :register_meta
 
+    has_and_belongs_to_many :documents, class_name: 'Document', join_table: 'groups_documents', foreign_key: :group_id
+
     def register_metas
       Register::Meta.where(:id => self.register_metas_by_contracts.pluck(:id) + self.register_metas_by_registers.pluck(:id))
     end

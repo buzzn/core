@@ -111,6 +111,16 @@ module Admin
           r.run BillingRoda
         end
 
+        r.on 'accounting' do
+          shared[:contract] = contract
+          r.run AccountingRoda
+        end
+
+        r.on 'payments' do
+          shared[:payments] = contract.payments
+          r.run PaymentRoda
+        end
+
       end
 
       r.get! do

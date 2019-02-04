@@ -175,11 +175,42 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       retrieve :managers_contract
     end
 
+    accounting_entries do
+      create :owners
+      update :none
+      retrieve :owners
+      delete :none
+    end
+
+    balance_sheet do
+      create :none
+      retrieve :owners
+      update :none
+      delete :none
+
+      entries do
+        create :owners
+        update :none
+        retrieve :owners
+        delete :none
+      end
+    end
+
     billings do
       create :managers_contract
       retrieve :managers_contract
       update :managers
       delete :managers
+
+      accounting_entry do
+        retrieve :managers_contract
+      end
+
+      documents do
+        create :managers_contract
+        retrieve :managers_contract
+        delete :managers_contract
+      end
 
       items do
         retrieve :managers_contract
@@ -218,6 +249,9 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
         update :managers
         delete :none
         meter do
+          retrieve :managers_contract
+        end
+        readings do
           retrieve :managers_contract
         end
       end
@@ -271,7 +305,16 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       end
     end
 
-    payments :tariffs
+    payments do
+      retrieve :managers_contract
+      create :managers_contract
+      update :managers_contract
+      delete :managers_contract
+
+      tariff do
+        retrieve :managers_contract
+      end
+    end
   end
 
   # reuse permissions from 'contracts'

@@ -12,7 +12,7 @@ class CreateBillingDetail < ActiveRecord::Migration
 
     execute 'ALTER TABLE billing_details ADD CONSTRAINT valid_power_factor_range CHECK (reduced_power_factor >= 0 AND reduced_power_factor <= 1)'
     execute 'ALTER TABLE billing_details ADD CONSTRAINT valid_power_amount CHECK (reduced_power_amount >= 0)'
-    execute 'ALTER TABLE billing_details ADD CONSTRAINT valid_automatic_abschlag_threshold CHECK (automatic_abschlag_threshold >= 0)'
+    execute 'ALTER TABLE billing_details ADD CONSTRAINT valid_automatic_abschlag_threshold_cents CHECK (automatic_abschlag_threshold_cents >= 0)'
   end
 
   def down

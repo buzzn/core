@@ -21,6 +21,7 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
   let(:contract) do
     lpc
     create(:contract, :localpool_powertaker,
+           begin_date: localpool.start_date + 23,
            customer: person,
            contractor: Organization::Market.buzzn,
            localpool: localpool)

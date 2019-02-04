@@ -40,6 +40,7 @@ module Contract
     has_many :payments, class_name: 'Contract::Payment', foreign_key: :contract_id, dependent: :destroy
     has_many :billings, foreign_key: :contract_id
     has_many :billing_items, through: :billings, :source => 'items'
+    has_many :accounting_entries, class_name: 'Accounting::Entry', foreign_key: :contract_id
     has_and_belongs_to_many :documents, foreign_key: :contract_id
 
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
@@ -109,6 +110,10 @@ module Contract
       end
       # wrap the string in ActiveSupport::StringInquirer, which allows status.ended? etc, hiding the string.
       ActiveSupport::StringInquirer.new(status)
+    end
+
+    def balance_sheet
+      Accounting::BalanceSheet.new(self)
     end
 
     def pdf_generator

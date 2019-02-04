@@ -141,12 +141,8 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   end
 
   def tariffs
-    end_date = nil
     Beekeeper::Minipool::MinipoolPreise.where(vertragsnummer: vertragsnummer).order(datum: :desc).collect do |preise|
-      attributes = preise.converted_attributes
-      attributes[:end_date] = end_date
-      end_date = attributes[:begin_date]
-      attributes
+      preise.converted_attributes
     end.reverse.to_enum.with_index(1) do |attributes, index|
       attributes[:name] = "Tarif #{index}"
     end

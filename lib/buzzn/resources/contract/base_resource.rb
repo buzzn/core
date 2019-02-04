@@ -1,5 +1,7 @@
 module Contract
   class BaseResource < Buzzn::Resource::Entity
+    require_relative '../accounting/balance_sheet_resource'
+    require_relative '../accounting/entry_resource'
 
     abstract
 
@@ -18,6 +20,8 @@ module Contract
     has_many :tariffs
     has_many :payments
     has_many :documents
+    has_many :accounting_entries, Accounting::EntryResource
+    has_one  :balance_sheet, Accounting::BalanceSheetResource
     has_one :contractor
     has_one :customer
     has_one :customer_bank_account

@@ -131,6 +131,7 @@ describe Admin::Roda, :request_helper do
               'allowed_actions' => {},
               'share_register_with_group' => true,
               'share_register_publicly' => true,
+              'energy_consumption_before_kwh_pa' => nil,
               'localpool' => {
                 'id'=>localpool.id,
                 'type'=>'group_localpool',

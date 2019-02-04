@@ -4,11 +4,14 @@ module Contract
     model Payment
 
     attributes  :begin_date,
-                :end_date,
                 :price_cents,
+                :energy_consumption_kwh_pa,
                 :cycle
 
-    def updated_at; nil; end
+    attributes :updatable, :deletable
+
+    # tariff used for calculation of that payment
+    has_one :tariff, Contract::TariffResource
 
   end
 end

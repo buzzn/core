@@ -1,6 +1,6 @@
 require 'buzzn/transactions/admin/register/update_meta'
 
-describe Transactions::Admin::Register::UpdateMeta do
+describe Transactions::Admin::Register::UpdateMeta, order: :defined do
 
   entity(:operator) { create(:account, :buzzn_operator) }
 

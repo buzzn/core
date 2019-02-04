@@ -115,6 +115,8 @@ module SwaggerHelper
           params_process.call(prefix: name, p: v)
         elsif v.blank?
           process_rule.call(name: name, required: true, type: nil, options: { })
+        elsif v == 'dontinclude'
+          next
         else
           process_rule.call(name: name, required: true, type: :enum, options: { values: [v] })
         end

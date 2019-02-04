@@ -14,8 +14,8 @@ class Document < ActiveRecord::Base
   attr_accessor :data
 
   has_and_belongs_to_many :contracts, class_name: 'Contract::Base', dependent: :destroy
-  has_many :billing_documents, dependent: :destroy
-  has_many :group_documents, dependent: :destroy
+  has_and_belongs_to_many :billings, dependent: :destroy, join_table: 'billings_documents'
+  has_and_belongs_to_many :groups, class_name: 'Group::Base', join_table: 'groups_documents'
   has_many :pdf_documents, dependent: :destroy
 
   before_validation :check_and_store_data
