@@ -74,13 +74,13 @@ describe Transactions::Admin::Billing::Create do
     let(:result_billing_1) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
-                                                parent: contract)
+                                                contract: contract)
     end
 
     let(:result_billing_2) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_2,
-                                                parent: contract)
+                                                contract: contract)
     end
 
     it 'creates two correct billings' do
@@ -177,13 +177,13 @@ describe Transactions::Admin::Billing::Create do
     let(:result_billing_1) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
-                                                parent: contract)
+                                                contract: contract)
     end
 
     let(:result_billing_2) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_2,
-                                                parent: contract)
+                                                contract: contract)
     end
 
     it 'creates two correct billings' do
@@ -271,13 +271,13 @@ describe Transactions::Admin::Billing::Create do
     let(:result_billing_1) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
-                                                parent: contract)
+                                                contract: contract)
     end
 
     let(:result_billing_2) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_2,
-                                                parent: contract)
+                                                contract: contract)
     end
 
     it 'creates two correct billings' do
@@ -358,7 +358,7 @@ describe Transactions::Admin::Billing::Create do
     let(:result_billing_1) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
-                                                parent: contract)
+                                                contract: contract)
     end
 
     it 'creates a correct billing' do
@@ -430,7 +430,7 @@ describe Transactions::Admin::Billing::Create do
     let(:result_billing_1) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
-                                                parent: contract)
+                                                contract: contract)
     end
 
     it 'creates a correct billing' do
