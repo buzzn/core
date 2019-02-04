@@ -85,6 +85,12 @@ namespace :db do
         email:      'dev+ops@buzzn.net',
         password:   Import.global('config.default_account_password')
       )
+      create_buzzn_operator(
+        first_name: 'Willi',
+        last_name:  'Beekeeper',
+        email:      'dev+beekeeper@buzzn.net',
+        password:   Import.global('config.default_account_password')
+      )
     end
   end
 end
