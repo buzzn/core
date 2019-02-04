@@ -20,7 +20,10 @@ class Admin::BillingRoda < BaseRoda
     end
 
     r.post! do
-      create.(resource: billings, params: r.params, contract: parent_contract)
+      create.(resource: billings,
+              params: r.params,
+              contract: parent_contract,
+              billing_cycle: nil)
     end
 
     r.on :id do |id|

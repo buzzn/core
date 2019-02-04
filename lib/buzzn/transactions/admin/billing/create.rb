@@ -43,7 +43,8 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     contract.minmax_date_range(params[:begin_date]...params[:end_date])
   end
 
-  def complete_params(params:, **)
+  def complete_params(params:, billing_cycle:, **)
+    params[:billing_cycle] = billing_cycle
     params[:status] = :open
   end
 
