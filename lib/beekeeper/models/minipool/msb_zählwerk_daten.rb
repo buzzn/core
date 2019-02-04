@@ -45,7 +45,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   end
 
   def skip_import?
-    msb_gerät.virtual?
+    msb_gerät.nil? || msb_gerät.virtual?
   end
 
   def kennzeichnung

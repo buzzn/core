@@ -1,3 +1,4 @@
+# coding: utf-8
 # == Schema Information
 #
 # Table name: minipooldb.msb_zählwerk_zst
@@ -26,14 +27,31 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
       raw_value: value,
       value:     value,
       comment:   comment,
-      date:      Date.parse(ablesezeitpunkt),
+      date:      date_parsed,
       unit:      'Wh',
       reason:    map_reason,
       quality:   map_quality,
       source:    map_source,
-      status:    statuszst.strip,
+      status:    map_status,
       read_by:   map_read_by,
     }
+  end
+
+  def map_status
+    if Reading::Single.status.values.include?(statuszst.strip)
+      statuszst.strip
+    else
+      add_warning(:status, %(invalid status "#{statuszst.strip}", defaulting to Z86.))
+      'Z86'
+    end
+  end
+
+  def date_parsed
+    begin
+      Date.parse(ablesezeitpunkt)
+    rescue ArgumentError
+      raise "invalid date. please fix #{self.to_json}"
+    end
   end
 
   REASON_MAP = {
