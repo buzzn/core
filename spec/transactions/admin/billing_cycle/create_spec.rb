@@ -4,7 +4,9 @@ describe Transactions::Admin::BillingCycle::Create do
 
   entity!(:localpool) { create(:group, :localpool) }
   let!(:tariff) do
-    create(:tariff, begin_date: localpool.start_date - 10, group: localpool)
+    tariff = create(:tariff, begin_date: localpool.start_date - 10, group: localpool)
+    localpool.gap_contract_tariffs << tariff
+    tariff
   end
 
   entity!(:localpool_without_start_date) do
