@@ -353,15 +353,19 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: billing_detail.issues_vat
+        in: formData
+        required: true
+        type: boolean
       - name: billing_detail.reduced_power_amount
         in: formData
-        required: false
+        required: true
         type: number
         format: float
         minimum: 0
       - name: billing_detail.reduced_power_factor
         in: formData
-        required: false
+        required: true
         type: number
         format: float
         maximum: 1
@@ -369,11 +373,11 @@ paths:
         minimum: 0
       - name: billing_detail.automatic_abschlag_adjust
         in: formData
-        required: false
+        required: true
         type: boolean
-      - name: billing_detail.automatic_abschlag_threshold
+      - name: billing_detail.automatic_abschlag_threshold_cents
         in: formData
-        required: false
+        required: true
         type: number
         format: float
         minimum: 0
@@ -3049,12 +3053,303 @@ paths:
         in: formData
         required: false
         type: boolean
-      - name: billing_detail.automatic_abschlag_threshold
+      - name: billing_detail.automatic_abschlag_threshold_cents
         in: formData
         required: false
         type: number
         format: float
+      - name: billing_detail.issues_vat
+        in: formData
+        required: false
+        type: boolean
       - name: billing_detail
+        in: formData
+        required: false
+        type: hash
+      - name: address.updated_at
+        in: formData
+        required: false
+        type: string
+        format: date-time
+      - name: address.street
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: address.zip
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: address.city
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: address.country
+        in: formData
+        required: false
+        type: string
+        enum:
+        - AD
+        - AE
+        - AF
+        - AG
+        - AI
+        - AL
+        - AM
+        - AO
+        - AQ
+        - AR
+        - AS
+        - AT
+        - AU
+        - AW
+        - AX
+        - AZ
+        - BA
+        - BB
+        - BD
+        - BE
+        - BF
+        - BG
+        - BH
+        - BI
+        - BJ
+        - BL
+        - BM
+        - BN
+        - BO
+        - BQ
+        - BR
+        - BS
+        - BT
+        - BV
+        - BW
+        - BY
+        - BZ
+        - CA
+        - CC
+        - CD
+        - CF
+        - CG
+        - CH
+        - CI
+        - CK
+        - CL
+        - CM
+        - CN
+        - CO
+        - CR
+        - CU
+        - CV
+        - CW
+        - CX
+        - CY
+        - CZ
+        - DE
+        - DJ
+        - DK
+        - DM
+        - DO
+        - DZ
+        - EC
+        - EE
+        - EG
+        - EH
+        - ER
+        - ES
+        - ET
+        - FI
+        - FJ
+        - FK
+        - FM
+        - FO
+        - FR
+        - GA
+        - GB
+        - GD
+        - GE
+        - GF
+        - GG
+        - GH
+        - GI
+        - GL
+        - GM
+        - GN
+        - GP
+        - GQ
+        - GR
+        - GS
+        - GT
+        - GU
+        - GW
+        - GY
+        - HK
+        - HM
+        - HN
+        - HR
+        - HT
+        - HU
+        - ID
+        - IE
+        - IL
+        - IM
+        - IN
+        - IO
+        - IQ
+        - IR
+        - IS
+        - IT
+        - JE
+        - JM
+        - JO
+        - JP
+        - KE
+        - KG
+        - KH
+        - KI
+        - KM
+        - KN
+        - KP
+        - KR
+        - KW
+        - KY
+        - KZ
+        - LA
+        - LB
+        - LC
+        - LI
+        - LK
+        - LR
+        - LS
+        - LT
+        - LU
+        - LV
+        - LY
+        - MA
+        - MC
+        - MD
+        - ME
+        - MF
+        - MG
+        - MH
+        - MK
+        - ML
+        - MM
+        - MN
+        - MO
+        - MP
+        - MQ
+        - MR
+        - MS
+        - MT
+        - MU
+        - MV
+        - MW
+        - MX
+        - MY
+        - MZ
+        - NA
+        - NC
+        - NE
+        - NF
+        - NG
+        - NI
+        - NL
+        - 'NO'
+        - NP
+        - NR
+        - NU
+        - NZ
+        - OM
+        - PA
+        - PE
+        - PF
+        - PG
+        - PH
+        - PK
+        - PL
+        - PM
+        - PN
+        - PR
+        - PS
+        - PT
+        - PW
+        - PY
+        - QA
+        - RE
+        - RO
+        - RS
+        - RU
+        - RW
+        - SA
+        - SB
+        - SC
+        - SD
+        - SE
+        - SG
+        - SH
+        - SI
+        - SJ
+        - SK
+        - SL
+        - SM
+        - SN
+        - SO
+        - SR
+        - SS
+        - ST
+        - SV
+        - SX
+        - SY
+        - SZ
+        - TC
+        - TD
+        - TF
+        - TG
+        - TH
+        - TJ
+        - TK
+        - TL
+        - TM
+        - TN
+        - TO
+        - TR
+        - TT
+        - TV
+        - TW
+        - TZ
+        - UA
+        - UG
+        - UM
+        - US
+        - UY
+        - UZ
+        - VA
+        - VC
+        - VE
+        - VG
+        - VI
+        - VN
+        - VU
+        - WF
+        - WS
+        - YE
+        - YT
+        - ZA
+        - ZM
+        - ZW
+      - name: address.addition
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: address
         in: formData
         required: false
         type: hash
@@ -3478,6 +3773,13 @@ paths:
         required: false
         type: string
         format: ''
+      - name: energy_consumption_before_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
       - name: register_meta.updated_at
         in: formData
         required: true
@@ -3551,6 +3853,68 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/accounting/balance_sheet":
+    get:
+      description: retrieve balance sheet for the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/accounting/book":
+    post:
+      description: book an entry onto the account of the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: amount
+        in: formData
+        required: true
+        type: integer
+        format: int64
+        maximum: 9223372036854775808
+        exclusiveMaximum: true
+        minimum: -9223372036854775808
+        exclusiveMinimum: true
+      - name: external_reference
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      - name: external_settled_at
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: comment
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings":
     get:
       description: get billings for an LocalpoolPowerTakerContract
@@ -3593,16 +3957,6 @@ paths:
         required: true
         type: string
         format: date
-      - name: status
-        in: formData
-        required: false
-        type: string
-        enum:
-        - open
-        - calculated
-        - delivered
-        - settled
-        - closed
       - name: invoice_number
         in: formData
         required: false
@@ -3670,12 +4024,87 @@ paths:
         enum:
         - open
         - calculated
+        - documented
+        - queued
         - delivered
         - settled
+        - void
         - closed
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings/{billing_id}/documents":
+    get:
+      description: returns the documents of the billing
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: billing_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings/{billing_id}/documents/{document2_id}":
+    get:
+      description: returns the metadata of a document
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: billing_id
+        in: path
+        required: true
+        type: string
+      - name: document2_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings/{billing_id}/documents/{document2_id}/fetch":
+    get:
+      description: serves the actual document
+      produces:
+      - application/octet-stream
+      - application/pdf
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: billing_id
+        in: path
+        required: true
+        type: string
+      - name: document2_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
   "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings/{billing_id}/items/{billing_item_id}":
     patch:
       description: updates a billing item for a Billing
@@ -5144,6 +5573,170 @@ paths:
         in: formData
         required: false
         type: hash
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/payments":
+    get:
+      description: retrieve payments of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: add an payment entry to the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: begin_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: energy_consumption_kwh_pa
+        in: formData
+        required: true
+        type: integer
+        format: int64
+        maximum: 2147483648
+        exclusiveMaximum: true
+        minimum: 0
+      - name: cycle
+        in: formData
+        required: true
+        type: string
+        enum:
+        - monthly
+        - yearly
+      - name: tariff_id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: price_cents
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        maximum: 2147483648
+        exclusiveMaximum: true
+        minimum: 0
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/payments/{payment_id}":
+    get:
+      description: retrieve a payment entry of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: payment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: delete a payment entry
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: payment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: update an payment entry to the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: payment_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: price_cents
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        maximum: 2147483648
+        exclusiveMaximum: true
+        minimum: 0
+      - name: energy_consumption_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        maximum: 2147483648
+        exclusiveMaximum: true
+        minimum: 0
+      - name: cycle
+        in: formData
+        required: false
+        type: string
+        enum:
+        - monthly
+        - yearly
       responses:
         200:
           description: patched
@@ -7244,13 +7837,10 @@ paths:
       - name: energy_consumption_before_kwh_pa
         in: formData
         required: false
-        type: string
-        format: ''
-      - name: down_payment_before_cents_per_month
-        in: formData
-        required: false
-        type: string
-        format: ''
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
       - name: share_register_with_group
         in: formData
         required: false
@@ -7470,13 +8060,10 @@ paths:
       - name: energy_consumption_before_kwh_pa
         in: formData
         required: false
-        type: string
-        format: ''
-      - name: down_payment_before_cents_per_month
-        in: formData
-        required: false
-        type: string
-        format: ''
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
       - name: share_register_with_group
         in: formData
         required: false
@@ -8695,13 +9282,10 @@ paths:
       - name: energy_consumption_before_kwh_pa
         in: formData
         required: false
-        type: string
-        format: ''
-      - name: down_payment_before_cents_per_month
-        in: formData
-        required: false
-        type: string
-        format: ''
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
       - name: share_register_with_group
         in: formData
         required: false

@@ -198,6 +198,7 @@ describe Contract::BaseResource do
                     'original_signing_user',
                     'share_register_with_group',
                     'share_register_publicly',
+                    'energy_consumption_before_kwh_pa',
                     'mandate_reference'] + base_attributes
       attrs = resources.retrieve(localpool_power_taker.id).to_h
       expect(attrs['id']).to eq localpool_power_taker.id

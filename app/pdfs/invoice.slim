@@ -138,27 +138,28 @@ html
       p vielen Dank, dass Sie als Lokaler Stromnehmer aus der Energiegruppe #{localpool.name} Strom beziehen. Nachfolgend erhalten Sie Ihre Turnusabrechnung.
       div
         h2 Bezugsmenge
-        table.is-full-width.is-small
-          tr
-            th
-            th Ablesedatum
-            th
-            th.is-text-right kWh
-          tr
-            td.no-border Beginn Abrechnungszeitraum
-            td.no-border #{item.begin_date}
-            td.no-border Zählerstand
-            td.no-border.is-text-right #{item.begin_kwh}
-          tr
-            td Ende Abrechnungszeitraum
-            td #{item.last_date}
-            td Zählerstand
-            td.is-text-right #{item.last_kwh}
-          tr
-            td colspan=3
-              strong Bezug Abrechnungszeitraum
-            td.is-text-right
-              strong #{billing.consumed_energy_kwh}
+        - items.each do |item|
+          table.is-full-width.is-small
+            tr
+              th Zähler "#{item.meter_name}"
+              th Ablesedatum
+              th
+              th.is-text-right kWh
+            tr
+              td.no-border Beginn Abrechnungszeitraum
+              td.no-border #{item.begin_date}
+              td.no-border Zählerstand
+              td.no-border.is-text-right #{item.begin_kwh}
+            tr
+              td Ende Abrechnungszeitraum
+              td #{item.last_date}
+              td Zählerstand
+              td.is-text-right #{item.last_kwh}
+            tr
+              td colspan=3
+                strong Bezug Abrechnungszeitraum
+              td.is-text-right
+                strong #{item.consumed_energy_kwh}
       div
         h2 Abrechnung
         table.is-full-width.is-small
@@ -168,51 +169,59 @@ html
             th Menge
             th Preis je Einheit
             th.is-text-right Betrag
-          tr
-            td.no-border Arbeitspreis
-            td.no-border #{item.begin_date} - #{item.last_date}
-            td.no-border #{item.consumed_energy_kwh} kWh
-            td.no-border #{item.energy_price_cents_per_kwh} Ct/kWh
-            td.no-border.is-text-right #{item.energy_price_euros} €
-          tr
-            td Grundpreis
-            td #{item.begin_date} - #{item.last_date}
-            td #{item.length_in_days} Tage
-            td #{item.base_price_euros_per_day} €/Tag
-            td.is-text-right #{item.base_price_euros} €
+          - items.each do |item|
+            tr
+              td.no-border Arbeitspreis
+              td.no-border #{item.begin_date} - #{item.last_date}
+              td.no-border #{item.consumed_energy_kwh} kWh
+              td.no-border #{item.energy_price_cents_per_kwh} Ct/kWh
+              td.no-border.is-text-right #{item.energy_price_euros} €
+            tr
+              td Grundpreis
+              td #{item.begin_date} - #{item.last_date}
+              td #{item.length_in_days} Tage
+              td #{item.base_price_euros_per_day} €/Tag
+              td.is-text-right #{item.base_price_euros} €
           tr
             td.no-border Zwischensumme (netto)
             td.no-border colspan=3
-            td.no-border.is-text-right #{zwSumme} €
+            td.no-border.is-text-right #{billing.netto} €
           tr
-            td Umsatzsteuer (#{steuersatz}%)
+            td Umsatzsteuer (#{vat}%)
             td colspan=3
-            td.is-text-right #{uSt} €
+            td.is-text-right #{billing.vat_amount} €
           tr
             td.no-border
               strong Rechnungsbetrag (brutto)
             td.no-border colspan=3
             td.no-border.is-text-right
-              strong #{betrag_brutto} €
+              strong #{billing.brutto} €
           tr
-            td Abzüglich Abschläge (brutto)
+            td Guthaben zur Rechnungsstellung (brutto)
             td colspan=3
-            td.is-text-right #{abschlag_produkt} €
+            td.is-text-right #{billing.balance_at_invoice} €
           tr
             td
-              strong #{forderung}
+              strong #{billing.forderung}
             td colspan=3
             td.is-text-right
-              strong #{rest_Summe} €
-      p Aus der Turnusabrechnung ergibt sich eine <strong>#{rueck_nach}zahlung</strong> von <strong>#{rest_Summe} €.</strong>
+              strong #{billing.to_pay} €
+      p Aus der Turnusabrechnung ergibt sich eine <strong>#{billing.rueck_nach}zahlung</strong> von <strong>#{billing.to_pay} €.</strong>
       p #{satz_forderung}
     div.wrapper
       div.log
       h2 Ihre Vertragskonditionen
-      p Die aktuellen Preise in der Energiegruppe #{localpool.name} betragen:<br>
-        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{grundpreis_brutto_neu} €/Monat,</strong> (#{billing.baseprice} €/Monat)<br>
-        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{bezugspreis_brutto_neu} Cent/kWh,</strong> (#{billing.energyprice} Cent/kWh)
-      p <strong>#{abschlag_neu_Satz}</strong>
+      p Die aktuellen Preise für Ihren Vertrag in der Energiegruppe #{localpool.name} betragen:<br>
+        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{current_tariff.baseprice_euros_per_month} €/Monat,</strong> (#{billing.baseprice} €/Monat)<br>
+        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{current_tariff.energyprice_cents_per_kwh} Cent/kWh,</strong> (#{billing.energyprice} Cent/kWh)
+      - if abschlag.was_changed
+        Abschlag wurde geändert
+      - else
+        Abschlag bleibt gleich
+
+      p Abschlag kwh: #{abschlag.energy_consumption_kwh_pa}
+        Betrag: #{abschlag.amount_euro} €/#{abschlag.cycle}
+
       p Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.
       p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.
       p Mit freundlichen Grüßen,

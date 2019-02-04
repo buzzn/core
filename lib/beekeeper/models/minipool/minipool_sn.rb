@@ -53,6 +53,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
       third_party_renter_number:     mieternummer&.strip,
       third_party_billing_number:    rechnungsnummer&.strip,
       renewable_energy_law_taxation: renewable_energy_law_taxation,
+      payments:                      payments
     }
   end
 
@@ -107,6 +108,10 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   def eeg_umlage_reduced?
     eeg_umlage == '-1'
+  end
+
+  def payments
+    Beekeeper::Minipool::Abschlag.where(vertragsnummer: vertragsnummer, nummernzusatz: nummernzusatz).to_a.collect(&:converted_attributes)
   end
 
 end

@@ -31,14 +31,24 @@ describe Admin::BillingRoda, :request_helper do
         {
           'id'=>billing.id,
           'invoice_number'=>billing.invoice_number,
+          'invoice_number_addition'=>billing.invoice_number_addition,
+          'full_invoice_number'=>billing.full_invoice_number,
           'type'=>'billing',
           'created_at'=>billing.created_at.as_json,
           'updated_at'=>billing.updated_at.as_json,
           'begin_date'=>billing.begin_date.as_json,
+          'allowed_actions' => {
+            'update' => {
+              'status' => {
+                'calculated' => true,
+                'open' => true,
+                'void' => true,
+              },
+            },
+          },
           'end_date'=>billing.end_date.as_json,
           'last_date'=>billing.last_date.as_json,
-          'status'=>billing.status,
-          'full_invoice_number'=>billing.full_invoice_number
+          'status'=>billing.status
         }
       end
 

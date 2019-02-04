@@ -6,7 +6,7 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
     subject = Schemas::Support::ActiveRecordValidator.new(localpool.object)
     result = Schemas::PreConditions::Localpool::CreateLocalpoolPowerTakerContract.call(subject)
     unless result.success?
-      raise Buzzn::ValidationError.new(result.errors)
+      raise Buzzn::ValidationError.new('localpool': result.errors)
     end
   end
 

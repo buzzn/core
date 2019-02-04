@@ -9,6 +9,8 @@ class CreatePayment < ActiveRecord::Migration
     SCHEMA.up(:payments, self)
     add_belongs_to :payments, :contract, null: false, index: true
     add_foreign_key :payments, :contracts, name: :fk_payments_contract, null: false, on_delete: :cascade
+
+    add_index :payments, [:begin_date, :contract_id], unique: true
   end
 
   def down
