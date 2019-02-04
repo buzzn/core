@@ -1,4 +1,5 @@
 require_relative 'billing_item_resource'
+require_relative '../accounting/entry_resource'
 
 module Admin
   class BillingResource < Buzzn::Resource::Entity
