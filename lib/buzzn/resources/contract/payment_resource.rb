@@ -1,5 +1,6 @@
 module Contract
   class PaymentResource < Buzzn::Resource::Entity
+    require_relative 'tariff_resource'
 
     model Payment
 
