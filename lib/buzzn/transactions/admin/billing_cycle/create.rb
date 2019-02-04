@@ -50,11 +50,11 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
         begin
           Transactions::Admin::Billing::Create.new.(resource: resource.contracts.retrieve(contract.id).billings,
                                                     params: attrs,
-                                                    contract: contract)
+                                                    contract: contract,
+                                                    billing_cycle: create_billing_cycle)
         rescue Buzzn::ValidationError => e
           raise Buzzn::ValidationError.new('create_billings': { contract_id: contract.id, errors: e.errors})
         end
-        # FIXME: add billing_cycle ^
       end
     end
   end

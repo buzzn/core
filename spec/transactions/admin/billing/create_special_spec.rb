@@ -74,13 +74,15 @@ describe Transactions::Admin::Billing::Create do
     let(:result_billing_1) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
-                                                contract: contract)
+                                                contract: contract,
+                                                billing_cycle: nil)
     end
 
     let(:result_billing_2) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_2,
-                                                contract: contract)
+                                                contract: contract,
+                                                billing_cycle: nil)
     end
 
     it 'creates two correct billings' do
@@ -177,13 +179,15 @@ describe Transactions::Admin::Billing::Create do
     let(:result_billing_1) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
-                                                contract: contract)
+                                                contract: contract,
+                                                billing_cycle: nil)
     end
 
     let(:result_billing_2) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_2,
-                                                contract: contract)
+                                                contract: contract,
+                                                billing_cycle: nil)
     end
 
     it 'creates two correct billings' do
@@ -271,13 +275,15 @@ describe Transactions::Admin::Billing::Create do
     let(:result_billing_1) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
-                                                contract: contract)
+                                                contract: contract,
+                                                billing_cycle: nil)
     end
 
     let(:result_billing_2) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_2,
-                                                contract: contract)
+                                                contract: contract,
+                                                billing_cycle: nil)
     end
 
     it 'creates two correct billings' do
@@ -358,7 +364,8 @@ describe Transactions::Admin::Billing::Create do
     let(:result_billing_1) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
-                                                contract: contract)
+                                                contract: contract,
+                                                billing_cycle: nil)
     end
 
     it 'creates a correct billing' do
@@ -430,7 +437,8 @@ describe Transactions::Admin::Billing::Create do
     let(:result_billing_1) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
-                                                contract: contract)
+                                                contract: contract,
+                                                billing_cycle: nil)
     end
 
     it 'creates a correct billing' do
