@@ -13,14 +13,14 @@ class Admin::BillingRoda < BaseRoda
   route do |r|
 
     billings = shared[:billings]
-    parent = shared[:parent]
+    parent_contract = shared[:parent_contract]
 
     r.get! do
       billings
     end
 
     r.post! do
-      create.(resource: billings, params: r.params, parent: parent)
+      create.(resource: billings, params: r.params, contract: parent_contract)
     end
 
     r.on :id do |id|

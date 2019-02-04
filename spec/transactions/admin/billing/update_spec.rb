@@ -78,7 +78,7 @@ describe Transactions::Admin::Billing::Update do
     end_reading
     result = Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                        params: params,
-                                                       parent: contract)
+                                                       contract: contract)
     result.value!.object
   end
 
@@ -240,7 +240,7 @@ describe Transactions::Admin::Billing::Update do
             install_reading
             result = Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                                params: params,
-                                                               parent: contract)
+                                                               contract: contract)
             result.value!.object
           end
 

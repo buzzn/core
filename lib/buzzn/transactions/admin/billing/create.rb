@@ -5,7 +5,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
 
   validate :schema
   check :authorize, with: :'operations.authorization.create'
-  tee :validate_parent
+  tee :validate_contract
   tee :validate_dates
   tee :set_end_date, with: :'operations.end_date'
   add :date_range
@@ -18,38 +18,37 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     Schemas::Transactions::Admin::Billing::Create
   end
 
-  def validate_parent(parent:, **)
-    unless parent.is_a? Contract::LocalpoolPowerTaker
-      raise Buzzn::ValidationError.new('not a valid parent')
+  def validate_contract(contract:, **)
+    unless contract.is_a? Contract::LocalpoolPowerTaker
+      raise Buzzn::ValidationError.new('not a valid contract')
     end
     # validate
-    subject = Schemas::Support::ActiveRecordValidator.new(parent)
+    subject = Schemas::Support::ActiveRecordValidator.new(contract)
     result = Schemas::PreConditions::Contract::CreateBilling.call(subject)
     unless result.success?
       raise Buzzn::ValidationError.new(result.errors)
     end
   end
 
-  def validate_dates(params:, parent:, **)
+  def validate_dates(params:, contract:, **)
     if params[:last_date] < params[:begin_date]
       raise Buzzn::ValidationError.new(:last_date => ['must be after begin_date'])
     end
-    if params[:begin_date] < parent.begin_date
+    if params[:begin_date] < contract.begin_date
       raise Buzzn::ValidationError.new(:begin_date => ['must be after contract[\'begin_date\']'])
     end
   end
 
-  def date_range(params:, parent:, **)
-    parent.minmax_date_range(params[:begin_date]...params[:end_date])
+  def date_range(params:, contract:, **)
+    contract.minmax_date_range(params[:begin_date]...params[:end_date])
   end
 
   def complete_params(params:, **)
     params[:status] = :open
   end
 
-  def billing_item(params:, parent:, resource:, date_range:, **)
-
-    billing_data = Service::BillingData.data(parent, begin_date: date_range.first, end_date: date_range.last)
+  def billing_item(params:, contract:, resource:, date_range:, **)
+    billing_data = Service::BillingData.data(contract, begin_date: date_range.first, end_date: date_range.last)
 
     billing_data[:items].each do |item|
       errors = item.invariant.errors.except(:billing, :contract)

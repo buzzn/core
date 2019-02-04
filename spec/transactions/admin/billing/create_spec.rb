@@ -70,7 +70,7 @@ describe Transactions::Admin::Billing::Create do
   let(:result) do
     Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                               params: params,
-                                              parent: contract)
+                                              contract: contract)
   end
 
   let!(:install_reading) do
