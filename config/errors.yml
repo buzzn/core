@@ -51,6 +51,7 @@ en:
     are_complete_and_not_open?: 'billing_items are not complete and state is not open'
     value_is_lower_than?: 'begin_reading needs to be lower than end_reading'
     higher_than_previous?: 'reading must be higher than previous'
+    lower_than_following?: 'reading must be lower than following'
     each_after_begin_date?: 'must be after %{begin_date}'
     each_before_end_date?:  'must be before %{end_date}'
     all_registers_installed?: 'all registers must have a device_setup or change_meter_1 reading'

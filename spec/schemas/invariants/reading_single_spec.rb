@@ -33,6 +33,15 @@ describe 'Schemas::Invariants::Reading::Single' do
         end
       end
 
+      context 'two readings with same value, inserting higher in between' do
+        let!(:previous_item1) { create(:reading, register: register, date: today-1, value: 555) }
+        let!(:previous_item2) { create(:reading, register: register, date: today+1, value: 555) }
+        it do
+          item.reload
+          is_expected.to eql ['reading must be lower than following']
+        end
+      end
+
       context 'which is higher' do
         let!(:previous_item) { create(:reading, register: register, date: today-1, value: 999) }
         it do
