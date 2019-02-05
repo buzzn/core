@@ -18,10 +18,16 @@ module Schemas
 
         required(:previous).maybe
         required(:following).maybe
+
         required(:value).filled?
+        required(:raw_value).filled?
 
         rule(value: [:value, :previous, :following]) do |value, previous, following|
           value.higher_than_previous?(previous).and(value.lower_than_following?(following))
+        end
+
+        rule(value: [:value, :raw_value]) do |value, raw_value|
+          value(:value).eql?(value(:raw_value))
         end
 
       end
