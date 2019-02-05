@@ -57,11 +57,16 @@ module Reading
     scope :with_reason, ->(*reasons) { where(reason: reasons.flatten) }
     scope :without_reason, ->(*reasons) { where('reason NOT IN (?)', reasons.flatten) }
     scope :before, ->(date) { where('date < ?', date)}
+    scope :after, ->(date) { where('date > ?', date)}
     scope :installed,     -> { with_reason(reasons[:device_setup], reasons[:device_change_1]) }
     scope :decomissioned, -> { with_reason(reasons[:device_removal], reasons[:device_change_2]) }
 
     def previous
       Reading::Single.where(:register => self.register).before(date).order(:date).last
+    end
+
+    def following
+      Reading::Single.where(:register => self.register).after(date).order(:date).first
     end
 
     def corrected_value

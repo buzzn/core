@@ -135,9 +135,9 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
       let(:created_json) do
         {
           'type'=>'reading',
-          'date'=>Date.new(2016, 2, 1).to_s,
-          'raw_value'=>23,
-          'value'=>500,
+          'date'=>Date.new(2018, 2, 1).to_s,
+          'raw_value'=>19,
+          'value'=>19,
           'unit'=>'m³',
           'reason'=>'IOM',
           'read_by'=>'BN',
