@@ -152,6 +152,14 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
       end
     end
 
+    uniq_readings = uniq_readings.collect do |r|
+      if r.converted_attributes[:raw_value] == 0 && r.converted_attributes[:reason] == 'COS'
+        add_warning(:readings, "Adjusting reading from COS to IOM for #{r.converted_attributes}")
+        r.converted_attributes[:reason] = 'IOM'
+      end
+      r
+    end
+
     uniq_readings.collect { |r| Reading::Single.new(r.converted_attributes) }
   end
 
