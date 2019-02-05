@@ -155,7 +155,7 @@ module Pdf
       }.tap do |hash|
         netto = @billing.total_amount_before_taxes
         brutto = @billing.total_amount_after_taxes
-        balance_at = @billing.balance_at
+        balance_at = @billing.balance_before
         to_pay_cents = (balance_at - @billing.total_amount_after_taxes * 10)/10
         hash[:netto] = to_euro(netto)
         hash[:brutto] = to_euro(brutto)
