@@ -18,6 +18,10 @@ class Services::Accounting
     Accounting::Entry.for_contract(contract).collect(&:amount).reduce(:+) || 0
   end
 
+  def balance_before(entry)
+    balance_at(entry) - entry.amount
+  end
+
   def balance_at(entry)
     contract = entry.contract
     amount = 0

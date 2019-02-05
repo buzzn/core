@@ -52,6 +52,15 @@ describe Services::Accounting do
       expect(service.balance_at(entry5)).to eql 400
     end
 
+    it 'calculates before and at' do
+      entry1 = service.book(operator, contract, 10)
+      entry2 = service.book(operator, contract, 20)
+      entry3 = service.book(operator, another_contract, 50)
+      entry4 = service.book(operator, contract, 100)
+      expect(service.balance_at(entry4)).to eql 130
+      expect(service.balance_before(entry4)).to eql 30
+    end
+
   end
 
 end
