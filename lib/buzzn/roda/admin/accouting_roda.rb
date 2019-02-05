@@ -1,4 +1,7 @@
-class Admin::AccountingRoda < BaseRoda
+require_relative '../admin_roda'
+
+module Admin
+  class AccountingRoda < BaseRoda
 
   include Import.args[:env,
                       'transactions.admin.accounting.book',
@@ -22,4 +25,5 @@ class Admin::AccountingRoda < BaseRoda
 
   end
 
+  end
 end
