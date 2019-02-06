@@ -24,13 +24,15 @@ module DateRangeScope
     # overlap a date_range and the date_range
     # of the entity
     def minmax_date_range(date_range)
+      first = date_range.first
+      last = date_range.last
       if self.end_date && self.end_date < date_range.last
-        date_range.first...self.end_date
-      elsif self.begin_date > date_range.first
-        self.begin_date...date_range.last
-      else
-        date_range
+        last = self.end_date
       end
+      if self.begin_date > date_range.first
+        first = self.begin_date
+      end
+      first..last
     end
   end
 
