@@ -1,5 +1,5 @@
 SampleData.localpools = OpenStruct.new(
-  people_power: create(:group, :localpool, :with_address,
+  people_power: create(:group, :localpool, :with_address, :with_same_gap,
     name: 'People Power Group (Testgruppe)',
     slug: 'people-power-group-testgruppe', # hard-code the slug because we share the link publicly, it shouldn't change
     description: 'Power to the people!',
@@ -15,7 +15,7 @@ SampleData.localpools = OpenStruct.new(
     ],
     gap_contract_customer_organization: Organization::General.find_by(slug: 'hv-schneider')
                       ),
-  green_warriors: create(:group, :localpool, :with_address,
+  green_warriors: create(:group, :localpool, :with_address, :with_same_gap,
     name: 'Green warriors (Testgruppe)',
     show_display_app: true,
     owner: FactoryGirl.create(:organization, :with_legal_representation),
