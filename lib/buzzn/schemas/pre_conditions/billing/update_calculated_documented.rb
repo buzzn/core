@@ -7,7 +7,8 @@ module Schemas::PreConditions::Billing::Update
     required(:status).eql?('calculated')
 
     required(:contract).schema do
-      required(:payments).value(min_size?: 1)
+      required(:current_tariff).filled
+      required(:current_payment).filled
     end
 
   end

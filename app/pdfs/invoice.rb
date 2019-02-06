@@ -201,7 +201,7 @@ module Pdf
     def build_abschlag
       {
         was_changed: !@billing.adjusted_payment.nil?,
-      }.merge(build_payment(@billing.adjusted_payment || @billing.contract.payments.current))
+      }.merge(build_payment(@billing.adjusted_payment || @billing.contract.current_payment))
     end
 
     def build_payment(payment)
