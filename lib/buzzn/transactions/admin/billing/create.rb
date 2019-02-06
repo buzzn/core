@@ -9,6 +9,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   tee :validate_dates
   tee :set_end_date, with: :'operations.end_date'
   add :date_range
+  tee :validate_registers
   tee :complete_params
   around :db_transaction
   add :billing_item
@@ -37,10 +38,19 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     if params[:begin_date] < contract.begin_date
       raise Buzzn::ValidationError.new(:begin_date => ['must be after contract[\'begin_date\']'])
     end
+    if contract.tariffs.at(params[:begin_date]).empty?
+      raise Buzzn::ValidationError.new(:contract => ['tariffs must cover begin_date'])
+    end
   end
 
   def date_range(params:, contract:, **)
     contract.minmax_date_range(params[:begin_date]...params[:end_date])
+  end
+
+  def validate_registers(params:, contract:, date_range:, **)
+    if contract.register_meta.registers.to_a.keep_if { |register| register.installed_at.date < date_range.last && (register.decomissioned_at.nil? || register.decomissioned_at.date > date_range.first) }.empty?
+      raise Buzzn::ValidationError.new(:register_meta => ['no register installed in date range'])
+    end
   end
 
   def complete_params(params:, billing_cycle:, **)

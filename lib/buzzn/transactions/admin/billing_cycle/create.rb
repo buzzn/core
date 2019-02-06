@@ -39,9 +39,12 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
 
   def create_billings(params:, resource:, date_range:, create_billing_cycle:)
     register_metas = resource.object.register_metas_by_registers
-
+    errors = {}
     register_metas.each do |register_meta|
       register_meta.contracts.each do |contract|
+        if contract.begin_date > date_range.last || contract.is_a?(Contract::LocalpoolThirdParty)
+          next
+        end
         contract_billing_date_range = contract.minmax_date_range(date_range)
         attrs = {
           begin_date: contract_billing_date_range.first,
@@ -53,9 +56,13 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
                                                     contract: contract,
                                                     billing_cycle: create_billing_cycle)
         rescue Buzzn::ValidationError => e
-          raise Buzzn::ValidationError.new('create_billings': { contract_id: contract.id, errors: e.errors})
+          errors['create_billings'] = [] if errors['create_billings'].nil?
+          errors['create_billings'] << {contract_id: contract.id, contract_number: contract.full_contract_number, errors: e.errors}
         end
       end
+    end
+    unless errors.empty?
+      raise Buzzn::ValidationError.new(errors)
     end
   end
 
