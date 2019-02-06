@@ -35,7 +35,7 @@ describe Admin::BillingResource do
       expect(subject['allowed_actions']['update']['status']['void']).to eql true
       expect(subject['allowed_actions']['update']['status']['calculated']).to eql true
       expect(subject['allowed_actions']['update']['status']['documented']).not_to eql true
-      expect(subject['allowed_actions']['update']['status']['documented'].to_s).to eql '{"contract"=>{"payments"=>["size cannot be less than 1"]}}'
+      expect(subject['allowed_actions']['update']['status']['documented'].to_s).to eql '{"contract"=>{"current_payment"=>["must be filled"]}}'
     end
 
   end
