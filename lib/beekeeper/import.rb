@@ -26,6 +26,11 @@ class Beekeeper::Import
     logger.info("Localpool #{record.converted_attributes[:name]} (start: #{record.converted_attributes[:start_date]})")
     logger.info('-' * 80)
 
+    beekeeper_account = Account::Base.where(:email => 'dev+beekeeper@buzzn.net').first
+    if beekeeper_account.nil?
+      raise 'please create a beekeeper account first'
+    end
+
     warnings = record.warnings || {}
     Group::Localpool.transaction do
       # need to create localpool with broken invariants
@@ -37,7 +42,11 @@ class Beekeeper::Import
       Beekeeper::Importer::LocalpoolContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], record.converted_attributes[:third_party_contracts], registers, tariffs, warnings)
       Beekeeper::Importer::SetLocalpoolGapContractCustomer.new(logger).run(localpool)
       Beekeeper::Importer::AdjustLocalpoolContractsAndReadings.new(logger).run(localpool)
-      Beekeeper::Importer::GenerateBillings.new(logger).run(localpool)
+      begin
+        Beekeeper::Importer::GenerateBillings.new(logger, beekeeper_account).run(localpool)
+      rescue Buzzn::ValidationError => e
+        logger.error(e.errors)
+      end
 
       # now we can fail and rollback on broken invariants
       raise ActiveRecord::RecordInvalid.new(localpool) unless localpool.invariant_valid?

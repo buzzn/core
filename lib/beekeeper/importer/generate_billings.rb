@@ -5,23 +5,20 @@
 class Beekeeper::Importer::GenerateBillings
 
   attr_reader :logger
+  attr_reader :operator
 
   LAST_BEEKEEPER_BILLING_CYCLE_YEAR = 2017
 
-  def initialize(logger)
+  def initialize(logger, operator)
     @logger = logger
+    @operator = operator
     logger.level = Import.global('config.log_level')
   end
 
   def run(localpool)
     # First, create the billing cycles with their different ranges (initial, yearly and final).
     # That way the following code can be written (almost) without special cases.
-    billing_cycles = create_billing_cycles(localpool)
-    # then run them
-    billing_cycles.each do |billing_cycle|
-      created_billings = create_billings(localpool, billing_cycle)
-      billing_cycle.destroy! if created_billings.size.zero? # quick and dirty
-    end
+    create_billing_cycles(localpool)
     create_billings_for_current_year(localpool)
   end
 
@@ -29,20 +26,24 @@ class Beekeeper::Importer::GenerateBillings
 
   def create_billing_cycles(localpool)
     return [] if localpool.start_date.year == Date.today.year # nothing to do for those
-    date_ranges = []
-    # range for localpool start year
-    date_ranges << (localpool.start_date...Date.new(localpool.start_date.year + 1, 1, 1))
+    last_dates = []
     # yearly ranges since then
-    ((localpool.start_date.year + 1)..LAST_BEEKEEPER_BILLING_CYCLE_YEAR).each do |year|
-      date_ranges << (Date.new(year, 1, 1)...Date.new(year + 1, 1, 1))
+    (localpool.start_date.year..LAST_BEEKEEPER_BILLING_CYCLE_YEAR).each do |year|
+      last_dates << Date.new(year, 12, 31)
     end
-    date_ranges.map { |date_range| create_billing_cycle(localpool, date_range) }
+    last_dates.map { |last_date| create_billing_cycle(localpool, last_date) }
   end
 
-  def create_billing_cycle(localpool, date_range)
-    name = range_spans_one_year?(date_range) ? date_range.first.year : "#{date_range.first} - #{date_range.last}"
+  def create_billing_cycle(localpool, last_date)
+    localpoolr = Admin::LocalpoolResource.all(operator).retrieve(localpool.id)
+    name = "#{localpoolr.next_billing_cycle_begin_date} - #{last_date}"
+    params = {
+      last_date: last_date,
+      name: name
+    }
     logger.info("Creating billing cycle #{name}")
-    BillingCycle.create!(localpool: localpool, date_range: date_range, name: name)
+    Transactions::Admin::BillingCycle::Create.new.(resource: localpoolr,
+                                                   params: params)
   end
 
   def range_spans_one_year?(date_range)
@@ -57,7 +58,9 @@ class Beekeeper::Importer::GenerateBillings
       .each do |register_meta|
       contracts_to_bill(register_meta, billing_cycle.date_range).each do |contract|
         date_range = billing_date_range(contract, billing_cycle)
-        billings << create_billing(localpool, contract, date_range, billing_cycle)
+        if contract.is_a? Contract::LocalpoolPowerTaker
+          billings << create_billing(localpool, contract, date_range, billing_cycle)
+        end
       end
     end
     billings.flatten
@@ -70,14 +73,15 @@ class Beekeeper::Importer::GenerateBillings
   end
 
   def create_billing(localpool, contract, date_range, billing_cycle = nil)
-    Billing.create!(
-      status: :closed, # closed means paid so we don't have to track payments/settling in our system any more.
-      invoice_number: next_invoice_number,
-      contract: contract,
-      billing_cycle: billing_cycle,
-      items: [item_for_contract(contract, date_range)],
-      date_range: date_range
-    )
+    billingsr = Admin::LocalpoolResource.all(operator).retrieve(localpool.id).contracts.retrieve(contract.id).billings
+    params = {
+      begin_date: date_range.first,
+      last_date:  date_range.last,
+    }
+    Transactions::Admin::Billing::Create.new.(resource: billingsr,
+                                              params: params,
+                                              contract: contract,
+                                              billing_cycle: billing_cycle)
     logger.debug("Created billing for contract #{contract.id} (#{date_range})")
   end
 

@@ -59,7 +59,7 @@ namespace :db do
     end
 
     desc 'Loads an example localpool with users etc. into the application. It requires a seeded/set up database.'
-    task example_data: %w(setup_data) do
+    task :example_data do
       require_relative '../../db/example_data'
     end
 

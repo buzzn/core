@@ -31,6 +31,14 @@ FactoryGirl.define do
 
     end
 
+    trait :with_same_gap do
+      after(:create) do |group, evaluator|
+        group.tariffs.each do |t|
+          group.gap_contract_tariffs << t
+        end
+      end
+    end
+
     trait :tribe do
       initialize_with { Group::Tribe.new }
     end
