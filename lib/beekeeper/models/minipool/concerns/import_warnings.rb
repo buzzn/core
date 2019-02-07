@@ -2,12 +2,14 @@ require 'active_support/concern'
 
 module Beekeeper::ImportWarnings
 
-  mattr_accessor :logger
-
   extend ActiveSupport::Concern
 
+  def warnings
+    @warnings ||= {}
+  end
+
   def add_warning(attribute, data)
-    logger.warn(attribute, extra_data: data)
+    warnings[attribute] = data
   end
 
 end

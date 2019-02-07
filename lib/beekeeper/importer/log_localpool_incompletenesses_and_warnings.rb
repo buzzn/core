@@ -12,8 +12,8 @@ class Beekeeper::Importer::LogIncompletenessesAndWarnings
     resource = Admin::LocalpoolResource.all(buzzn_operator_account).retrieve(localpool_id)
 
     # Debug the incompleteness
-    logger.debug "Owner is a #{resource.owner.class}."
-    logger.debug("Owner email/id: #{resource.owner.email}/#{resource.owner.id}")
+    # logger.debug "Owner is a #{resource.owner.class}."
+    # logger.debug("Owner email/id: #{resource.owner.email}/#{resource.owner.id}")
 
     unless resource.owner.is_a?(PersonResource)
       contact = resource.owner.object.contact
