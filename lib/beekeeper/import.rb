@@ -14,7 +14,6 @@ class Beekeeper::Import
     max = 100
     loggers = Beekeeper::Minipool::MinipoolObjekte.to_import[0, max].map do |record|
       logger = LocalpoolLog.new(record)
-      Beekeeper::Minipool::BaseRecord.logger = Beekeeper::Buzzn::BaseRecord.logger = logger
       import_localpool(record, logger)
       logger
     end
@@ -87,17 +86,44 @@ class Beekeeper::Import
     #   end
     # end
 
-    json = loggers.map do |logger|
+    data = loggers.map do |logger|
       {
         localpool: {
-          name:            logger.localpool.minipool_name,
-          start_date:      logger.localpool.minipool_start ? Time.parse(logger.localpool.minipool_start) : nil,
-          contract_number: logger.localpool.vertragsnummer
+            name:            logger.localpool.minipool_name,
+            start_date:      logger.localpool.minipool_start ? Time.parse(logger.localpool.minipool_start) : nil,
+            contract_number: logger.localpool.vertragsnummer
         },
-        messages:  logger.messages
+        messages:       logger.messages,
+        incompleteness: loggable_incompleteness(logger.incompleteness),
+        warnings:       loggable_warnings(logger.warnings)
       }
-    end.to_json
-    File.open('log/beekeeper_import.log', 'w') { |f| f.write(json) }
+    end
+    File.open('log/beekeeper_import.json', 'w') { |f| f.write(data.to_json) }
+  end
+
+  def loggable_warnings(warnings)
+    warnings.map do |key, value|
+      text = "#{key}: #{value}"
+      ::LocalpoolLog::MessageData.new(:warn, text, "warnings").to_h
+    end
+  end
+
+  def loggable_incompleteness(incompleteness)
+    messages = []
+    incompleteness.each do |field, data|
+      text = if data.is_a?(Hash)
+        data.each do |sub_field, messages|
+          text = "#{field}/#{sub_field}: #{messages.join(', ')}"
+          messages << ::LocalpoolLog::MessageData.new(:warn, text, "incompleteness").to_h
+        end
+      elsif data.is_a?(Array)
+        text = "#{field}: #{data.join(', ')}"
+        messages << ::LocalpoolLog::MessageData.new(:warn, text, "incompleteness").to_h
+      else
+        raise "Unexpected data on incompleteness"
+      end
+    end
+    messages
   end
 
 end

@@ -1,6 +1,8 @@
 class LocalpoolLog
 
-  attr_accessor :messages, :localpool, :section, :incompleteness, :warnings
+  attr_reader :messages, :localpool
+  attr_writer :section
+  attr_accessor :incompleteness, :warnings
 
   def initialize(localpool)
     @localpool = localpool
@@ -9,8 +11,8 @@ class LocalpoolLog
   end
 
   %w(debug info warn error).each do |method_name|
-    define_method(method_name) do |text, extra_data = {}|
-      @messages << message_data(method_name, text, extra_data)
+    define_method(method_name) do |text, extra_attributes = {}|
+      @messages << MessageData.new(method_name, text, @section, extra_attributes)
     end
   end
 
@@ -22,23 +24,26 @@ class LocalpoolLog
     result
   end
 
-  private
+  class MessageData
 
-  def message_data(method_name, text, extra_attributes = {})
-    verify_extra_attributes!(extra_attributes)
-    {
-      timestamp: Time.now.iso8601,
-      section:   @section, # example: meters, registers, ...
-      severity:  method_name.upcase,
-      text:      text
-    }.merge(extra_attributes)
-  end
-
-  ALLOWED_EXTRA_ATTRIBUTES = %i(exception extra_data) #  error_source was replaced by section
-
-  def verify_extra_attributes!(attrs)
-    unless attrs.keys.all? { |attr| ALLOWED_EXTRA_ATTRIBUTES.include?(attr) }
-      raise "Invalid extra attribute in: #{attrs.inspect} (allowed: #{ALLOWED_EXTRA_ATTRIBUTES.inspect})"
+    def initialize(severity, text, section, extra_attributes = {})
+      @severity, @text, @section, @extra_attributes = severity, text, section, extra_attributes
+      @timestamp = Time.now.iso8601
     end
+
+    def to_h
+      hash = {
+        # debug, info, warn, error
+        severity:   @severity.upcase,
+        text:       @text,
+        # meters, registers, ...
+        section:    @section,
+        timestamp:  @timestamp
+      }
+      hash[:extra_data] = @extra_attributes[:extra_data] if @extra_attributes[:extra_data]
+      hash
+    end
+
   end
+
 end

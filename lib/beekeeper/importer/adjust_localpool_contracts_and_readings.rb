@@ -12,7 +12,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
 
   def run(localpool)
     localpool.registers.each do |register|
-      logger.debug("--> Meter: #{register.meter.legacy_buzznid}")
+      logger.debug("Meter: #{register.meter.legacy_buzznid}")
       contract_pairs(register).each do |contract, next_contract, gap_in_days|
         case gap_in_days
         when 0
@@ -133,7 +133,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
         # 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
         readings.first.delete
       else
-        logger.error("Unexpected readings for #{register.meter.legacy_buzznid}, not modifying any readings.")
+        logger.error("Unexpected duplicate readings for #{register.meter.legacy_buzznid}. Please add code to decide on which reading to keep.")
       end
     end
   end
