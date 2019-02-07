@@ -20,6 +20,8 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
 
   self.table_name = 'minipooldb.msb_zählwerk_zst'
 
+  include Beekeeper::ImportWarnings
+
   def converted_attributes
     @converted_attributes ||= {
       raw_value: value,
