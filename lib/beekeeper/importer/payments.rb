@@ -4,6 +4,7 @@ class Beekeeper::Importer::Payments
 
   def initialize(logger)
     @logger = logger
+    @logger.section = 'create-payments'
   end
 
   def run(contract, payments)

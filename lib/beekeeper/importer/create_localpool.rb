@@ -4,7 +4,7 @@ class Beekeeper::Importer::CreateLocalpool
 
   def initialize(logger)
     @logger = logger
-    logger.level = Import.global('config.log_level')
+    @logger.section = 'create-localpool'
   end
 
   def run(attributes)

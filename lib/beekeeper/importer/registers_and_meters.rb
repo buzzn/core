@@ -4,14 +4,14 @@ class Beekeeper::Importer::RegistersAndMeters
 
   def initialize(logger)
     @logger = logger
+    @logger.section = 'create-registers-and-meters'
   end
 
   def run(localpool, registers)
     registers.collect do |register|
       register.meter.group = localpool
       unless register.save
-        logger.error("Failed to save register #{register.inspect}")
-        logger.error("Errors: #{register.errors.inspect}")
+        logger.error("Failed to save register #{register.inspect}", extra_data: register.errors)
       end
       register
     end

@@ -1,0 +1,310 @@
+Searching 20 files for "error_data"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/importer/adjust_localpool_contracts_and_readings.rb:
+   75        unless REGISTERS_WITH_IGNORED_MULTIPLE_READINGS.include?(register.meter.legacy_buzznid)
+   76          logger.error(
+   77:           "Expected two readings on #{register.meter.legacy_buzznid} but got #{readings.size}. See error_data for details.",
+   78:           error_data: readings.map { |r| inspect_reading(r) }
+   79          )
+   80        end
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/importer/registers_and_meters.rb:
+   12        register.meter.group = localpool
+   13        unless register.save
+   14:         logger.error("Failed to save register #{register.inspect}", error_data: register.errors)
+   15        end
+   16        register
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/importer/support/json_log_writer.rb:
+   34    end
+   35
+   36:   ALLOWED_EXTRA_ATTRIBUTES = %i(exception error_data) #  error_source was replaced by section
+   37
+   38    def verify_extra_attributes!(attrs)
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/importer/tariffs.rb:
+   14        tariff.group = localpool
+   15        unless tariff.save
+   16:         logger.error("Failed to save tariff #{tariff.inspect}", error_data: tariff.errors)
+   17        end
+   18        # also add tariff to localpool
+
+5 matches across 4 files
+
+
+Searching 20 files for "error_data"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/importer/adjust_localpool_contracts_and_readings.rb:
+   75        unless REGISTERS_WITH_IGNORED_MULTIPLE_READINGS.include?(register.meter.legacy_buzznid)
+   76          logger.error(
+   77:           "Expected two readings on #{register.meter.legacy_buzznid} but got #{readings.size}. See error_data for details.",
+   78:           error_data: readings.map { |r| inspect_reading(r) }
+   79          )
+   80        end
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/importer/registers_and_meters.rb:
+   12        register.meter.group = localpool
+   13        unless register.save
+   14:         logger.error("Failed to save register #{register.inspect}", error_data: register.errors)
+   15        end
+   16        register
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/importer/support/json_log_writer.rb:
+   34    end
+   35
+   36:   ALLOWED_EXTRA_ATTRIBUTES = %i(exception error_data) #  error_source was replaced by section
+   37
+   38    def verify_extra_attributes!(attrs)
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/importer/tariffs.rb:
+   14        tariff.group = localpool
+   15        unless tariff.save
+   16:         logger.error("Failed to save tariff #{tariff.inspect}", error_data: tariff.errors)
+   17        end
+   18        # also add tariff to localpool
+
+5 matches across 4 files
+
+
+Searching 20 files for "LogLocalpoolTodos"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/importer/log_localpool_todos.rb:
+    1: class Beekeeper::Importer::LogIncompletenessesAndWarningsLogLocalpoolTodos
+    2
+    3    attr_reader :logger
+
+1 match in 1 file
+
+
+Searching 20 files for "create-localpool-contracts"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/importer/localpool_contracts.rb:
+    5    def initialize(logger)
+    6      @logger = logger
+    7:     @logger.section = 'create-localpool-contracts'
+    8    end
+    9
+   ..
+   45      contract = Contract::LocalpoolPowerTaker.create!(contract_attributes)
+   46      contract.tariffs = tariffs
+   47:     logger.with_section('create-localpool-contracts') do
+   48        ::Beekeeper::Importer::Payments.new(logger).run(contract, payments)
+   49      end
+
+2 matches in 1 file
+
+
+Searching 20 files for "metering_point_id has wrong"
+
+0 matches
+
+Searching 636 files for "metering_point_id has wrong"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/concerns/minipool_objekte/registers.rb:
+   72            if metering_point_id.size != 33
+   73              # FIXME all these warnings seems not to work
+   74:             warn "metering_point_id has wrong size #{metering_point_id}"
+   75:             add_warning("metering_point_id has wrong size #{metering_point_id}",zaehlwerk.warnings)
+   76            else
+   77              meter.metering_location = Meter::MeteringLocation.create!(metering_location_id: metering_point_id)
+
+2 matches in 1 file
+
+
+Searching 636 files for "metering_point_id has"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/concerns/minipool_objekte/registers.rb:
+   72            if metering_point_id.size != 33
+   73              # FIXME all these warnings seems not to work
+   74:             warn "metering_point_id has length size #{metering_point_id}"
+   75:             add_warning("metering_point_id has wrong size #{metering_point_id}",zaehlwerk.warnings)
+   76            else
+   77              meter.metering_location = Meter::MeteringLocation.create!(metering_location_id: metering_point_id)
+
+2 matches in 1 file
+
+
+Searching 3400 files for "def add_warning"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/concerns/import_warnings.rb:
+   10    end
+   11
+   12:   def add_warning(attribute, data)
+   13      warnings[attribute] = data
+   14    end
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/concerns/minipool_objekte/registers.rb:
+   57      end
+   58
+   59:     def add_warnings(attrs, zählwerk)
+   60        add_warning("register '#{attrs[:name]}'", zählwerk.warnings) if zählwerk.warnings.present?
+   61        add_warning("meter '#{attrs[:name]}'", zählwerk.msb_gerät.warnings) if zählwerk.msb_gerät.warnings.present?
+
+2 matches across 2 files
+
+
+Searching 3400 files for "ImportWarnings"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/concerns/import_warnings.rb:
+    1  require 'active_support/concern'
+    2
+    3: module Beekeeper::ImportWarnings
+    4
+    5    extend ActiveSupport::Concern
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/minipool_objekte.rb:
+   73    self.primary_key = 'vertragsnummer'
+   74
+   75:   include Beekeeper::ImportWarnings
+   76    include Beekeeper::Minipool::MinipoolObjekte::Organizations
+   77    include Beekeeper::Minipool::MinipoolObjekte::Owner
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/minipool_sn.rb:
+   35
+   36    self.table_name = 'minipooldb.minipool_sn'
+   37:   include Beekeeper::ImportWarnings
+   38
+   39    def converted_attributes
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/msb_gerät.rb:
+   71    self.primary_key = 'vertragsnummer'
+   72
+   73:   include Beekeeper::ImportWarnings
+   74
+   75    def converted_attributes
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/msb_zählwerk_daten.rb:
+   20    self.primary_key = 'vertragsnummer'
+   21
+   22:   include Beekeeper::ImportWarnings
+   23    delegate :metering_point_id, to: :msb_gerät
+   24
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/msb_zählwerk_zst.rb:
+   21    self.table_name = 'minipooldb.msb_zählwerk_zst'
+   22
+   23:   include Beekeeper::ImportWarnings
+   24
+   25    def converted_attributes
+
+6 matches across 6 files
+
+
+Searching 3400 files for "include Beekeeper::ImportWarnings"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/buzzn.rb:
+    4    self.abstract_class = true
+    5    establish_connection Import.global('config.buzzn_database_url')
+    6:   include Beekeeper::ImportWarnings
+    7
+    8  end
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool.rb:
+    6    self.abstract_class = true
+    7    establish_connection Import.global('config.minipool_database_url')
+    8:   include Beekeeper::ImportWarnings
+    9
+   10  end
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/minipool_objekte.rb:
+   73    self.primary_key = 'vertragsnummer'
+   74
+   75:   include Beekeeper::ImportWarnings
+   76    include Beekeeper::Minipool::MinipoolObjekte::Organizations
+   77    include Beekeeper::Minipool::MinipoolObjekte::Owner
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/minipool_sn.rb:
+   35
+   36    self.table_name = 'minipooldb.minipool_sn'
+   37:   include Beekeeper::ImportWarnings
+   38
+   39    def converted_attributes
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/msb_gerät.rb:
+   71    self.primary_key = 'vertragsnummer'
+   72
+   73:   include Beekeeper::ImportWarnings
+   74
+   75    def converted_attributes
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/msb_zählwerk_daten.rb:
+   20    self.primary_key = 'vertragsnummer'
+   21
+   22:   include Beekeeper::ImportWarnings
+   23    delegate :metering_point_id, to: :msb_gerät
+   24
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/msb_zählwerk_zst.rb:
+   21    self.table_name = 'minipooldb.msb_zählwerk_zst'
+   22
+   23:   include Beekeeper::ImportWarnings
+   24
+   25    def converted_attributes
+
+7 matches across 7 files
+
+
+Searching 3400 files for "include Beekeeper::ImportWarnings"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/buzzn.rb:
+    4    self.abstract_class = true
+    5    establish_connection Import.global('config.buzzn_database_url')
+    6:   include Beekeeper::ImportWarnings
+    7
+    8  end
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool.rb:
+    6    self.abstract_class = true
+    7    establish_connection Import.global('config.minipool_database_url')
+    8:   include Beekeeper::ImportWarnings
+    9
+   10  end
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/minipool_sn.rb:
+   35
+   36    self.table_name = 'minipooldb.minipool_sn'
+   37:   include Beekeeper::ImportWarnings
+   38
+   39    def converted_attributes
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/msb_gerät.rb:
+   71    self.primary_key = 'vertragsnummer'
+   72
+   73:   include Beekeeper::ImportWarnings
+   74
+   75    def converted_attributes
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/msb_zählwerk_daten.rb:
+   20    self.primary_key = 'vertragsnummer'
+   21
+   22:   include Beekeeper::ImportWarnings
+   23    delegate :metering_point_id, to: :msb_gerät
+   24
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool/msb_zählwerk_zst.rb:
+   21    self.table_name = 'minipooldb.msb_zählwerk_zst'
+   22
+   23:   include Beekeeper::ImportWarnings
+   24
+   25    def converted_attributes
+
+6 matches across 6 files
+
+
+Searching 3400 files for "include Beekeeper::ImportWarnings"
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/buzzn.rb:
+    4    self.abstract_class = true
+    5    establish_connection Import.global('config.buzzn_database_url')
+    6:   include Beekeeper::ImportWarnings
+    7
+    8  end
+
+/Users/phillip/Code/buzzn/core/lib/beekeeper/models/minipool.rb:
+    6    self.abstract_class = true
+    7    establish_connection Import.global('config.minipool_database_url')
+    8:   include Beekeeper::ImportWarnings
+    9
+   10  end
+
+2 matches across 2 files

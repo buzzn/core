@@ -4,6 +4,7 @@ class Beekeeper::Importer::Roles
 
   def initialize(logger)
     @logger = logger
+    @logger.section = 'create-roles'
   end
 
   def run(localpool)
