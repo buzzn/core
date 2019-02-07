@@ -37,26 +37,26 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
 
   # Deduplication of the beekeeper data
   def get_unique_organization(unsaved_record)
-    logger.debug("--> unsaved record: #{unsaved_record.name}")
+    logger.debug("unsaved record: #{unsaved_record.name}")
 
     if (existing_org = find_organization(unsaved_record.name))
-      logger.debug("--> Using existing org: #{existing_org.name}")
+      logger.debug("Using existing org: #{existing_org.name}")
       existing_org
 
     elsif (fibunr = find_account_new_fibunr(unsaved_record.name))
-      logger.debug('--> Taking organization from account_new')
+      logger.debug('Taking organization from account_new')
       # get the data to use for our record
       source_record = Beekeeper::Buzzn::AccountNew.find_by(fibunr: fibunr)
       find_or_create_organization(source_record.converted_attributes)
 
     elsif (kontaktdaten_id = find_kontaktdaten_id(unsaved_record.name))
-      logger.debug('--> Taking organization from kontaktdaten')
+      logger.debug('Taking organization from kontaktdaten')
       # get the data to use for our record
       source_record = Beekeeper::Minipool::Kontaktdaten.find_by(kontaktdaten_id: kontaktdaten_id)
       find_or_create_organization(source_record.converted_attributes)
 
     else # no lookup is configured, create a new organization record
-      logger.debug('--> Creating new organization')
+      logger.debug('Creating new organization')
       unsaved_record.save!
       unsaved_record
     end
