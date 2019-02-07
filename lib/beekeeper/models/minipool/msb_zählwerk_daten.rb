@@ -19,6 +19,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.msb_zählwerk_daten'
   self.primary_key = 'vertragsnummer'
 
+  include Beekeeper::ImportWarnings
   delegate :metering_point_id, to: :msb_gerät
 
   def converted_attributes
