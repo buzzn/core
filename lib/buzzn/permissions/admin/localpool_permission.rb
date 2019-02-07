@@ -322,6 +322,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     create :managers
   end
 
+  localpool_gap_contracts '/contracts' do
+    create :managers
+  end
+
   localpool_processing_contracts '/contracts' do
     create :managers
   end
