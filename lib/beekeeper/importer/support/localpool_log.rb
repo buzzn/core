@@ -32,16 +32,15 @@ class LocalpoolLog
     end
 
     def to_h
-      hash = {
+      {
         # debug, info, warn, error
         severity:   @severity.upcase,
         text:       @text,
         # meters, registers, ...
         section:    @section,
-        timestamp:  @timestamp
+        timestamp:  @timestamp,
+        extra_data: @extra_attributes[:extra_data]
       }
-      hash[:extra_data] = @extra_attributes[:extra_data] if @extra_attributes[:extra_data]
-      hash
     end
 
   end
