@@ -71,7 +71,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
         if metering_point_id
           if metering_point_id.size != 33
             # FIXME all these warnings seems not to work
-            warn "metering_point_id has wrong size #{metering_point_id}"
+            raise "metering_point_id has unexpected length #{metering_point_id}"
             add_warning("metering_point_id has wrong size #{metering_point_id}",zaehlwerk.warnings)
           else
             meter.metering_location = Meter::MeteringLocation.create!(metering_location_id: metering_point_id)

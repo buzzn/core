@@ -34,7 +34,6 @@
 class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
 
   self.table_name = 'minipooldb.minipool_sn'
-  include Beekeeper::ImportWarnings
 
   def converted_attributes
     {

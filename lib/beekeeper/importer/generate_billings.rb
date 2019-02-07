@@ -11,8 +11,8 @@ class Beekeeper::Importer::GenerateBillings
 
   def initialize(logger, operator)
     @logger = logger
+    @logger.section = 'generate-billings'
     @operator = operator
-    logger.level = Import.global('config.log_level')
   end
 
   def run(localpool)

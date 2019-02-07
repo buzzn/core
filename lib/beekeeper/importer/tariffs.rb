@@ -4,6 +4,7 @@ class Beekeeper::Importer::Tariffs
 
   def initialize(logger)
     @logger = logger
+    @logger.section = 'create-tariffs'
   end
 
   def run(localpool, tariffs)
@@ -12,8 +13,7 @@ class Beekeeper::Importer::Tariffs
       tariff = Contract::Tariff.new(attributes)
       tariff.group = localpool
       unless tariff.save
-        logger.error("Failed to save tariff #{tariff.inspect}")
-        logger.error("Errors: #{tariff.errors.inspect}")
+        logger.error("Failed to save tariff #{tariff.inspect}", extra_data: tariff.errors)
       end
       # also add tariff to localpool
       localpool.gap_contract_tariffs << tariff
