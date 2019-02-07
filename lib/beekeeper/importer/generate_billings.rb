@@ -85,6 +85,8 @@ class Beekeeper::Importer::GenerateBillings
                                               contract: contract,
                                               billing_cycle: billing_cycle)
     logger.debug("Created billing for contract #{contract.id} (#{date_range})")
+  rescue Buzzn::ValidationError => e
+    logger.error(e.errors)
   end
 
   def billing_date_range(contract, billing_cycle)
