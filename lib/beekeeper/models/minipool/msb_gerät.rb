@@ -70,8 +70,6 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.msb_gerät'
   self.primary_key = 'vertragsnummer'
 
-  include Beekeeper::ImportWarnings
-
   def converted_attributes
     @converted_attributes ||= {
       product_serialnumber:   zählernummer.strip,

@@ -72,7 +72,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   self.table_name = 'minipooldb.minipool_objekte'
   self.primary_key = 'vertragsnummer'
 
-  include Beekeeper::ImportWarnings
   include Beekeeper::Minipool::MinipoolObjekte::Organizations
   include Beekeeper::Minipool::MinipoolObjekte::Owner
   include Beekeeper::Minipool::MinipoolObjekte::Registers
