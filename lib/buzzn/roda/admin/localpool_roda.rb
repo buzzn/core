@@ -8,9 +8,12 @@ module Admin
                         'transactions.admin.localpool.create',
                         'transactions.admin.localpool.update',
                         'transactions.admin.localpool.assign_owner',
+                        'transactions.admin.localpool.assign_gap_contract_customer',
                         'transactions.admin.localpool.create_person_owner',
+                        'transactions.admin.localpool.create_person_gap_contract_customer',
                         'transactions.admin.generic.update_nested_person',
                         'transactions.admin.localpool.create_organization_owner',
+                        'transactions.admin.localpool.create_organization_gap_contract_customer',
                         'transactions.admin.localpool.assign_gap_contract_tariffs',
                         'transactions.admin.generic.update_nested_organization',
                         'transactions.bubbles',
@@ -119,6 +122,40 @@ module Admin
             assign_owner.(resource: localpool,
                           new_owner: new_owner)
           end
+        end
+
+        r.on 'person-gap-contract-customer' do
+          r.post! do
+            create_person_gap_contract_customer.(resource: localpool, params: r.params)
+          end
+
+          r.patch! do
+            update_nested_person.(resource: localpool.owner, params: r.params)
+          end
+
+          r.post! :id do |id|
+            new_customer = AdminResource.new(current_user).persons.retrieve(id)
+            assign_gap_contract_customer.(resource: localpool,
+                                          new_customer: new_customer)
+          end
+        end
+
+        r.on 'organization-gap-contract-customer' do
+          r.post! do
+            create_organization_gap_contract_customer.(resource: localpool, params: r.params)
+          end
+
+          r.patch! do
+            update_nested_organization.(resource: localpool.gap_contract_customer, params: r.params)
+          end
+
+          r.post! :id do |id|
+            r.response.status = 201
+            new_customer = AdminResource.new(current_user).organizations.retrieve(id)
+            assign_gap_contract_customer.(resource: localpool,
+                                          new_customer: new_customer)
+          end
+
         end
 
         r.on 'register-metas' do
