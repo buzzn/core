@@ -7,11 +7,11 @@ class Beekeeper::Importer::GenerateBillings
   attr_reader :logger
   attr_reader :operator
 
-  LAST_BEEKEEPER_BILLING_CYCLE_YEAR = 2017
+  LAST_BEEKEEPER_BILLING_CYCLE_YEAR = 2018
 
   def initialize(logger, operator)
     @logger = logger
-    @logger.section = 'generate-billings'
+    @logger.section = 'generate-billings-and-cycles'
     @operator = operator
   end
 
@@ -44,6 +44,8 @@ class Beekeeper::Importer::GenerateBillings
     logger.info("Creating billing cycle #{name}")
     Transactions::Admin::BillingCycle::Create.new.(resource: localpoolr,
                                                    params: params)
+  rescue Buzzn::ValidationError => e
+    logger.error(e.errors)
   end
 
   def range_spans_one_year?(date_range)
