@@ -11,14 +11,14 @@ class Beekeeper::Import
   end
 
   def run
-    max = 100
+    max = 10
     loggers = Beekeeper::Minipool::MinipoolObjekte.to_import[0, max].map do |record|
       logger = LocalpoolLog.new(record)
       import_localpool(record, logger)
       logger
     end
     # Beekeeper::Importer::LogImportSummary.new(logger).run
-    write_json_log(loggers)
+    JsonLogWriter.new(loggers).write!
   end
 
   private
@@ -40,12 +40,7 @@ class Beekeeper::Import
       Beekeeper::Importer::LocalpoolContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], record.converted_attributes[:third_party_contracts], registers, tariffs, warnings)
       Beekeeper::Importer::SetLocalpoolGapContractCustomer.new(logger).run(localpool)
       Beekeeper::Importer::AdjustLocalpoolContractsAndReadings.new(logger).run(localpool)
-      # TODO: exception handling into GenerateBillings. add error source & data
-      begin
-        Beekeeper::Importer::GenerateBillings.new(logger, beekeeper_account).run(localpool)
-      rescue Buzzn::ValidationError => e
-        logger.error(e.errors)
-      end
+      Beekeeper::Importer::GenerateBillings.new(logger, beekeeper_account).run(localpool)
 
       # now we can fail and rollback on broken invariants
       raise ActiveRecord::RecordInvalid.new(localpool) unless localpool.invariant_valid?
@@ -60,70 +55,5 @@ class Beekeeper::Import
   end
 
   private
-
-  # How to use the log levels:
-  # DEBUG          debugging and technical details not relevant/comprehensible by PhO
-  # INFO (default) PhO should see and review this before the final import
-  # WARN           should be fixed in the final import, but we can live with it for now
-  # ERROR          something went wrong (like exceptions), should be investigated immediately
-  def write_json_log(loggers)
-    # TODO: put this somewhere. and structure them like messages.
-    # if incompleteness.present?
-    #   incompleteness.each do |field, messages|
-    #     logger.warn("#{field}: #{messages.inspect} (incompleteness)")
-    #   end
-    # end
-    #     unless warnings.empty?
-    #   warnings.each do |field, message|
-    #     if message.is_a?(Hash)
-    #       message.each do |subfield, submessage|
-    #         logger.warn("#{field}:")
-    #         logger.warn("- #{subfield}: #{submessage}")
-    #       end
-    #     else
-    #       logger.warn("#{field}: #{message}")
-    #     end
-    #   end
-    # end
-
-    data = loggers.map do |logger|
-      {
-        localpool: {
-            name:            logger.localpool.minipool_name,
-            start_date:      logger.localpool.minipool_start ? Time.parse(logger.localpool.minipool_start) : nil,
-            contract_number: logger.localpool.vertragsnummer
-        },
-        messages:       logger.messages,
-        incompleteness: loggable_incompleteness(logger.incompleteness),
-        warnings:       loggable_warnings(logger.warnings)
-      }
-    end
-    File.open('log/beekeeper_import.json', 'w') { |f| f.write(data.to_json) }
-  end
-
-  def loggable_warnings(warnings)
-    warnings.map do |key, value|
-      text = "#{key}: #{value}"
-      ::LocalpoolLog::MessageData.new(:warn, text, "warnings").to_h
-    end
-  end
-
-  def loggable_incompleteness(incompleteness)
-    messages = []
-    incompleteness.each do |field, data|
-      text = if data.is_a?(Hash)
-        data.each do |sub_field, messages|
-          text = "#{field}/#{sub_field}: #{messages.join(', ')}"
-          messages << ::LocalpoolLog::MessageData.new(:warn, text, "incompleteness").to_h
-        end
-      elsif data.is_a?(Array)
-        text = "#{field}: #{data.join(', ')}"
-        messages << ::LocalpoolLog::MessageData.new(:warn, text, "incompleteness").to_h
-      else
-        raise "Unexpected data on incompleteness"
-      end
-    end
-    messages
-  end
 
 end
