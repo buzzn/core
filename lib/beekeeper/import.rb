@@ -11,9 +11,11 @@ class Beekeeper::Import
   end
 
   def run
-    max = 3
-    loggers = Beekeeper::Minipool::MinipoolObjekte.to_import[0, max].map do |record|
+    pools_to_import = Beekeeper::Minipool::MinipoolObjekte.to_import
+    # pools_to_import = [Beekeeper::Minipool::MinipoolObjekte.find_by(minipool_name: 'Mehrgenerationenplatz Forstenried')]
+    loggers = pools_to_import.map do |record|
       logger = LocalpoolLog.new(record)
+      puts "------------ Importing #{record.name} ------------"
       import_localpool(record, logger)
       logger
     end
