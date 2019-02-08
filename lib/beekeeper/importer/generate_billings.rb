@@ -45,7 +45,7 @@ class Beekeeper::Importer::GenerateBillings
     Transactions::Admin::BillingCycle::Create.new.(resource: localpoolr,
                                                    params: params)
   rescue Buzzn::ValidationError => e
-    logger.error(e.message, extra_data: e.errors)
+    logger.error("Buzzn::ValidationError for billing_cycle #{name}", extra_data: e.errors)
   end
 
   def range_spans_one_year?(date_range)
@@ -86,7 +86,7 @@ class Beekeeper::Importer::GenerateBillings
                                               billing_cycle: billing_cycle)
     logger.debug("Created billing for contract #{contract.id} (#{date_range})")
   rescue Buzzn::ValidationError => e
-    logger.error(e.message, extra_data: e.errors)
+    logger.error("Buzzn::ValidationError for billing of contract #{contract.id} in date range #{date_range}", extra_data: e.errors)
   end
 
   def billing_date_range(contract, billing_cycle)
