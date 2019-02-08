@@ -7,12 +7,12 @@ class Beekeeper::Importer::GenerateBillings
   attr_reader :logger
   attr_reader :operator
 
-  LAST_BEEKEEPER_BILLING_CYCLE_YEAR = 2017
+  LAST_BEEKEEPER_BILLING_CYCLE_YEAR = 2018
 
   def initialize(logger, operator)
     @logger = logger
+    @logger.section = 'generate-billings-and-cycles'
     @operator = operator
-    logger.level = Import.global('config.log_level')
   end
 
   def run(localpool)
@@ -44,6 +44,8 @@ class Beekeeper::Importer::GenerateBillings
     logger.info("Creating billing cycle #{name}")
     Transactions::Admin::BillingCycle::Create.new.(resource: localpoolr,
                                                    params: params)
+  rescue Buzzn::ValidationError => e
+    logger.error("Buzzn::ValidationError for billing_cycle #{name}", extra_data: e.errors)
   end
 
   def range_spans_one_year?(date_range)
@@ -83,6 +85,8 @@ class Beekeeper::Importer::GenerateBillings
                                               contract: contract,
                                               billing_cycle: billing_cycle)
     logger.debug("Created billing for contract #{contract.id} (#{date_range})")
+  rescue Buzzn::ValidationError => e
+    logger.error("Buzzn::ValidationError for billing of contract #{contract.id} in date range #{date_range}", extra_data: e.errors)
   end
 
   def billing_date_range(contract, billing_cycle)
