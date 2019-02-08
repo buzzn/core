@@ -61,6 +61,10 @@ module Reading
     scope :installed,     -> { with_reason(reasons[:device_setup], reasons[:device_change_1], reasons[:contract_change], reasons[:balancing_zone_change]) }
     scope :decomissioned, -> { with_reason(reasons[:device_removal], reasons[:device_change_2]) }
 
+    def reason_code
+      read_attribute(:reason)
+    end
+
     def previous
       Reading::Single.where(:register => self.register).before(date).order(:date).last
     end
@@ -82,6 +86,10 @@ module Reading
     # but we allow the deletion unless there is a foreignkey reference on it
     def readonly?
       !(new_record? || !changed?)
+    end
+
+    def inspect
+      attributes.slice('date', 'value', 'reason', 'comment', 'id')
     end
 
   end

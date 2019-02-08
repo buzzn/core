@@ -72,7 +72,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       unless REGISTERS_WITH_IGNORED_MULTIPLE_READINGS.include?(register.meter.legacy_buzznid)
         logger.error(
           "Expected two readings on #{register.meter.legacy_buzznid} but got #{readings.size}. See extra_data for details.",
-          extra_data: readings.map { |r| inspect_reading(r) }
+          extra_data: readings.map { |r| r.inspect }
         )
       end
     end
@@ -95,7 +95,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     else
       logger.info(
         'Readings for old contract end and new contract start have different values, this is resolved in code. See extra_data for reading details.',
-        extra_data: readings.collect { |r| inspect_reading(r) }
+        extra_data: readings.collect { |r| r.inspect }
       )
       case register.meter.legacy_buzznid
       when '90057/7'
@@ -122,10 +122,6 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     else
       # case: the only reading is on the new contract end date -- that's what we want, nothing to do.
     end
-  end
-
-  def inspect_reading(reading)
-    reading.attributes.slice('date', 'value', 'reason', 'comment', 'id')
   end
 
 end
