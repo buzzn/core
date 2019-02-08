@@ -11,7 +11,7 @@ class Beekeeper::Import
   end
 
   def run
-    max = 10
+    max = 3
     loggers = Beekeeper::Minipool::MinipoolObjekte.to_import[0, max].map do |record|
       logger = LocalpoolLog.new(record)
       import_localpool(record, logger)
@@ -53,7 +53,5 @@ class Beekeeper::Import
       Beekeeper::Importer::LogIncompletenessesAndWarnings.new(logger).run(localpool.id, warnings)
     end
   end
-
-  private
 
 end
