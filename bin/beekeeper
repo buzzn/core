@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-bin/rake db:drop db:create db:migrate db:seed:setup_data db:seed:buzzn_operator db:seed:example_data beekeeper:import
+bin/rake db:drop db:create db:migrate db:seed:setup_data db:seed:buzzn_operator beekeeper:import

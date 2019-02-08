@@ -1,3 +1,5 @@
+require 'fileutils'
+
 class JsonLogWriter
 
   def initialize(loggers)
@@ -6,6 +8,7 @@ class JsonLogWriter
 
   def write!
     loggable_array = @loggers.map { |logger| loggable_hash(logger) }
+    FileUtils.mkdir_p 'log'
     File.open('log/beekeeper_import.json', 'w') { |f| f.write(loggable_array.to_json) }
   end
 
