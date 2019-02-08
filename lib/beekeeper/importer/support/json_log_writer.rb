@@ -5,13 +5,13 @@ class JsonLogWriter
   end
 
   def write!
-    all_data = @loggers.map { |logger| data_for_logger(logger) }
-    File.open('log/beekeeper_import.json', 'w') { |f| f.write(all_data.to_json) }
+    loggable_array = @loggers.map { |logger| loggable_hash(logger) }
+    File.open('log/beekeeper_import.json', 'w') { |f| f.write(loggable_array.to_json) }
   end
 
   private
 
-  def data_for_logger(logger)
+  def loggable_hash(logger)
     {
       localpool: {
           name:            logger.localpool.minipool_name,

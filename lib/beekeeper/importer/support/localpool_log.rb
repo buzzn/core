@@ -11,7 +11,7 @@ class LocalpoolLog
 
   %w(debug info warn error).each do |method_name|
     define_method(method_name) do |text, extra_attributes = {}|
-      @messages << MessageData.new(method_name, text, @section, extra_attributes)
+      @messages << MessageData.new(method_name, text, @section, extra_attributes).to_h
     end
   end
 
@@ -62,9 +62,8 @@ class LocalpoolLog
         text:       @text,
         # meters, registers, ...
         section:    @section,
-        timestamp:  @timestamp,
-        extra_data: @extra_attributes[:extra_data]
-      }
+        timestamp:  @timestamp
+      }.merge(@extra_attributes)
     end
 
   end
