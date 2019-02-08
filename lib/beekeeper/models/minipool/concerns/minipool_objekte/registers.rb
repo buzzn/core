@@ -15,7 +15,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     end
 
     def substitute_registers
-      zählwerke = msb_zählwerk_daten.select(&:skip_import?).select do |zählwerk|
+      zählwerke = msb_zählwerk_daten.select(&:virtual?).select do |zählwerk|
         SUBSTITUTE_BUZZNID.include?(zählwerk.buzznid)
       end
       zählwerke.collect do |zählwerk|
@@ -48,7 +48,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     end
 
     def real_registers
-      msb_zählwerk_daten.reject(&:skip_import?).collect do |zaehlwerk|
+      msb_zählwerk_daten.reject(&:virtual?).collect do |zaehlwerk|
         attrs = zaehlwerk.converted_attributes
         add_warnings(attrs, zaehlwerk)
         attrs[:meter] = find_or_build_meter(attrs[:meter_attributes], zaehlwerk)
