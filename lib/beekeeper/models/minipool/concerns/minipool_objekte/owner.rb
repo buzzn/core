@@ -44,7 +44,7 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       konto = Beekeeper::Minipool::Kontodaten.where(vertragsnummer: vertragsnummer, nummernzusatz: 0).first
       [BankAccount.new(konto.converted_attributes)]
     rescue Buzzn::RecordNotFound => e
-      add_warning('bank_accounts', "Unable to find bank data: #{e.message}}")
+      add_warning('bank_accounts', "Unable to find bank data: #{e.message}")
       []
     end
 
