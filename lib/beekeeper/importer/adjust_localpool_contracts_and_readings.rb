@@ -83,6 +83,11 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     current_max + 1
   end
 
+  def find_gap_contract_customer(localpool)
+    customer = Beekeeper::Importer::GapContractCustomer.find_by_localpool(localpool)
+    customer ? customer : logger.error('No customer for gap contract found!')
+  end
+
   def handle_two_readings(readings, register)
     if readings.first.value == readings.last.value
       readings.first.delete
@@ -102,10 +107,10 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
         readings.last.update_column(:value, 13_000)
       when '90067/6'
         # [INFO] Readings: date: 2018-01-14, 2122400.0, contract_change // date: 2018-01-15, 2132100.0, contract_change
-        # 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
+        # 2nd reading has a slightly higher reading than the first one. Just delete the first one.
         readings.first.delete
       else
-        logger.error("Unexpected duplicate readings for #{register.meter.legacy_buzznid}. Please add code to decide on which reading to keep.")
+        logger.warn("Unexpected duplicate readings for #{register.meter.legacy_buzznid}. Please add code to decide on which reading to keep.")
       end
     end
   end
