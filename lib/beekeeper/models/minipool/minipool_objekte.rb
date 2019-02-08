@@ -111,16 +111,16 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     minipool_name.strip
   end
 
+  # these are the registers
+  def msb_zählwerk_daten
+    @_msb_zählwerk_daten ||= Beekeeper::Minipool::MsbZählwerkDaten.where(vertragsnummer: messvertragsnummer).order(:nummernzusatz)
+  end
+
   private
 
   # these are the meters
   def msb_geräte
     @_msb_geräte ||= Beekeeper::Minipool::MsbGerät.where(vertragsnummer: messvertragsnummer)
-  end
-
-  # these are the registers
-  def msb_zählwerk_daten
-    @_msb_zählwerk_daten ||= Beekeeper::Minipool::MsbZählwerkDaten.where(vertragsnummer: messvertragsnummer)
   end
 
   def start_date

@@ -33,7 +33,7 @@ class Beekeeper::Importer::LocalpoolContracts
 
   def create_contract(localpool, customer, contract, registers, tariffs)
     register_meta_option = Register::MetaOption.new(share_with_group: false, share_publicly: false)
-    register = find_or_create_register(contract, registers, localpool)
+    register = find_register(contract, registers, localpool)
     payments = contract.delete(:payments)
     contract_attributes = contract.except(:powertaker, :buzznid).merge(
       localpool:       localpool,
@@ -72,17 +72,17 @@ class Beekeeper::Importer::LocalpoolContracts
     end
   end
 
-  def find_or_create_register(contract, registers, localpool)
+  def find_register(contract, registers, localpool)
     meter = registers.collect(&:meter).find { |m| m.legacy_buzznid == contract[:buzznid] }
     if meter
       meter.registers.first
     else
-      create_fake_register(contract[:buzznid], localpool) if contract[:buzznid].present?
+      raise "Unexpected missing register for #{contract[:buzznid]}"
     end
   end
 
   def create_third_party_contract(localpool, contract, registers, warnings)
-    if register = find_or_create_register(contract, registers, localpool)
+    if register = find_register(contract, registers, localpool)
 
       contract_attributes = contract.except(:powertaker, :buzznid).merge(
         localpool:     localpool,
@@ -92,19 +92,6 @@ class Beekeeper::Importer::LocalpoolContracts
     else
       warnings["contract #{contract[:contract_number]}/#{contract[:contract_number_addition]}"] = { :register => 'not found - no buzznid' }
     end
-  end
-
-  # As a temporary solution to importing the actual virtual registers (separate story), we create a fake, empty one.
-  def create_fake_register(buzznid, localpool)
-    logger.warn("No meter/register for #{buzznid}, creating a fake temporary one.")
-    fake_meter_name = "FAKE-FOR-IMPORT-#{counter}"
-    meter = Meter::Real.create!(product_serialnumber: fake_meter_name, legacy_buzznid: buzznid, group: localpool)
-    meta = Register::Meta.new(name: fake_meter_name.gsub('IMPORT-', 'IMPORT-M-'), label: :other, observer_enabled: false, observer_offline_monitoring: false)
-    Register::Real.create!(meta: meta, meter: meter)
-  end
-
-  def counter
-    $counter = $counter.to_i + 1
   end
 
   # Make sure we don't create the same person or organization twice.
