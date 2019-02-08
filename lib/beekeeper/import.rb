@@ -26,10 +26,7 @@ class Beekeeper::Import
   private
 
   def import_localpool(record, logger)
-    beekeeper_account = Account::Base.where(:email => 'dev+beekeeper@buzzn.net').first
-    if beekeeper_account.nil?
-      raise 'please create a beekeeper account first'
-    end
+    verify_beekeeper_account!
 
     warnings = record.warnings || {}
     Group::Localpool.transaction do
@@ -54,6 +51,11 @@ class Beekeeper::Import
       end
       Beekeeper::Importer::LogIncompletenessesAndWarnings.new(logger).run(localpool.id, warnings)
     end
+  end
+
+  def verify_beekeeper_account!
+    beekeeper_account = Account::Base.where(:email => 'dev+beekeeper@buzzn.net').first
+    raise 'please create a beekeeper account first' if beekeeper_account.nil?
   end
 
 end

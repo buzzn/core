@@ -97,8 +97,9 @@ class Beekeeper::Importer::LocalpoolContracts
   # As a temporary solution to importing the actual virtual registers (separate story), we create a fake, empty one.
   def create_fake_register(buzznid, localpool)
     logger.warn("No meter/register for #{buzznid}, creating a fake temporary one.")
-    meter = Meter::Real.create!(product_serialnumber: "FAKE-FOR-IMPORT-#{counter}", legacy_buzznid: buzznid, group: localpool)
-    meta = Register::Meta.new(name: "FAKE-FOR-IMPORT-M-#{counter}", label: :other, observer_enabled: false, observer_offline_monitoring: false)
+    fake_meter_name = "FAKE-FOR-IMPORT-#{counter}"
+    meter = Meter::Real.create!(product_serialnumber: fake_meter_name, legacy_buzznid: buzznid, group: localpool)
+    meta = Register::Meta.new(name: fake_meter_name.gsub('IMPORT-', 'IMPORT-M-'), label: :other, observer_enabled: false, observer_offline_monitoring: false)
     Register::Real.create!(meta: meta, meter: meter)
   end
 
