@@ -4,7 +4,7 @@ class Beekeeper::Importer::GroupContracts
 
   def initialize(logger)
     @logger = logger
-    logger.level = Import.global('config.log_level')
+    @logger.section = 'create-group-contracts'
   end
 
   def run(localpool, attributes)

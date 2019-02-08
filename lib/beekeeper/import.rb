@@ -11,21 +11,21 @@ class Beekeeper::Import
   end
 
   def run
-    #ActiveRecord::Base.logger = Logger.new(STDOUT)
-    logger.info('-' * 80)
-    logger.info('Starting import')
-    logger.info('-' * 80)
-    Beekeeper::Minipool::MinipoolObjekte.to_import.each { |record| import_localpool(record) }
-    Beekeeper::Importer::LogImportSummary.new(logger).run
+    pools_to_import = Beekeeper::Minipool::MinipoolObjekte.to_import
+    # pools_to_import = [Beekeeper::Minipool::MinipoolObjekte.find_by(minipool_name: 'Mehrgenerationenplatz Forstenried')]
+    loggers = pools_to_import.map do |record|
+      logger = LocalpoolLog.new(record)
+      puts "------------ Importing #{record.name} ------------"
+      import_localpool(record, logger)
+      logger
+    end
+    # Beekeeper::Importer::LogImportSummary.new(logger).run
+    JsonLogWriter.new(loggers).write!
   end
 
   private
 
-  def import_localpool(record)
-    logger.info("\n")
-    logger.info("Localpool #{record.converted_attributes[:name]} (start: #{record.converted_attributes[:start_date]})")
-    logger.info('-' * 80)
-
+  def import_localpool(record, logger)
     beekeeper_account = Account::Base.where(:email => 'dev+beekeeper@buzzn.net').first
     if beekeeper_account.nil?
       raise 'please create a beekeeper account first'
@@ -42,11 +42,7 @@ class Beekeeper::Import
       Beekeeper::Importer::LocalpoolContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], record.converted_attributes[:third_party_contracts], registers, tariffs, warnings)
       Beekeeper::Importer::SetLocalpoolGapContractCustomer.new(logger).run(localpool)
       Beekeeper::Importer::AdjustLocalpoolContractsAndReadings.new(logger).run(localpool)
-      begin
-        Beekeeper::Importer::GenerateBillings.new(logger, beekeeper_account).run(localpool)
-      rescue Buzzn::ValidationError => e
-        logger.error(e.errors)
-      end
+      Beekeeper::Importer::GenerateBillings.new(logger, beekeeper_account).run(localpool)
 
       # now we can fail and rollback on broken invariants
       raise ActiveRecord::RecordInvalid.new(localpool) unless localpool.invariant_valid?
@@ -56,25 +52,7 @@ class Beekeeper::Import
         Beekeeper::Importer::Brokers.new(logger).run(localpool, warnings)
         Beekeeper::Importer::OptimizeGroup.new(logger).run(localpool, warnings)
       end
-      Beekeeper::Importer::LogLocalpoolTodos.new(logger).run(localpool.id, warnings)
-    end
-  end
-
-  private
-
-  # How to use the log levels:
-  # DEBUG          debugging and technical details not relevant/comprehensible by PhO
-  # INFO (default) PhO should see and review this before the final import
-  # WARN           should be fixed in the final import, but we can live with it for now
-  # ERROR          something went wrong (like exceptions), should be investigated immediately
-  def logger
-    @logger ||= begin
-      l = Logger.new(STDOUT)
-      l.formatter = proc do |severity, _datetime, _progname, msg|
-        "[#{severity.upcase}] #{msg}\n"
-      end
-      Buzzn::Logger.root = l
-      l
+      Beekeeper::Importer::LogIncompletenessesAndWarnings.new(logger).run(localpool.id, warnings)
     end
   end
 

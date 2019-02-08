@@ -4,7 +4,7 @@ class Beekeeper::Importer::LocalpoolContracts
 
   def initialize(logger)
     @logger = logger
-    logger.level = Import.global('config.log_level')
+    @logger.section = 'create-localpool-contracts'
   end
 
   def run(localpool, powertaker_contracts, third_parties, registers, tariffs, warnings)
@@ -15,8 +15,7 @@ class Beekeeper::Importer::LocalpoolContracts
           create_contract(localpool, customer, contract, registers, tariffs)
         end
       rescue => e
-        logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
-        e.backtrace.each { |row| logger.error("  #{row}") }
+        logger.error("#{e.message} (meter buzznid: #{contract[:buzznid]})", extra_data: e)
       end
     end
     third_parties.each do |contract|
@@ -25,8 +24,7 @@ class Beekeeper::Importer::LocalpoolContracts
           create_third_party_contract(localpool, contract, registers, warnings)
         end
       rescue => e
-        logger.error("#{e} (meter buzznid: #{contract[:buzznid]})")
-        e.backtrace.each { |row| logger.error("  #{row}") }
+        logger.error("#{e.message} (meter buzznid: #{contract[:buzznid]})", extra_data: e)
       end
     end
   end
@@ -46,7 +44,9 @@ class Beekeeper::Importer::LocalpoolContracts
     )
     contract = Contract::LocalpoolPowerTaker.create!(contract_attributes)
     contract.tariffs = tariffs
-    Beekeeper::Importer::Payments.new(logger).run(contract, payments)
+    logger.with_section('create-localpool-contracts') do
+      ::Beekeeper::Importer::Payments.new(logger).run(contract, payments)
+    end
     # TODO select proper tariffs again?
     #  if contract.end_date.nil?
     #    tariffs_running_contracts(contract, tariffs)
@@ -108,7 +108,9 @@ class Beekeeper::Importer::LocalpoolContracts
 
   # Make sure we don't create the same person or organization twice.
   def find_or_create_customer(unsaved_record)
-    Beekeeper::Importer::FindOrCreatePersonOrOrganization.new(logger).run(unsaved_record)
+    logger.with_section('merge-persons-and-organizations') do
+      Beekeeper::Importer::FindOrCreatePersonOrOrganization.new(logger).run(unsaved_record)
+    end
   end
 
 end
