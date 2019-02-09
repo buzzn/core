@@ -42,7 +42,7 @@ module Contract
 
     def allowed_actions
       allowed = {}
-      if allowed?(permissions.billings.create)
+      if permissions.respond_to?(:billings) && allowed?(permissions.billings.create)
         allowed[:create_billing] = create_billing.success? || create_billing.errors
       end
       allowed
