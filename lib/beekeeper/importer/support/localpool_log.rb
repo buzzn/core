@@ -11,7 +11,10 @@ class LocalpoolLog
 
   %w(debug info warn error).each do |method_name|
     define_method(method_name) do |text, extra_attributes = {}|
-      @messages << MessageData.new(method_name, text, @section, extra_attributes).to_h
+      md = MessageData.new(method_name, text, @section, extra_attributes).to_h
+      puts md.to_s
+      puts "\n"
+      @messages << md
     end
   end
 
