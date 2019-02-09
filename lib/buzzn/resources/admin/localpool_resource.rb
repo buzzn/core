@@ -45,7 +45,7 @@ module Admin
     has_many :meters_virtual, Meter::VirtualResource
     has_many :managers, PersonResource
     has_many :users
-    has_many :organizations
+    has_many :organizations, Organization::GeneralResource
 
     has_many :contracts
     has_many :localpool_processing_contracts, Contract::LocalpoolProcessingResource
