@@ -1,5 +1,5 @@
 
-class Beekeeper::Importer::Readings
+class Beekeeper::Importer::ReadingsRegistersMeters
 
   attr_reader :logger
 
@@ -7,7 +7,7 @@ class Beekeeper::Importer::Readings
 
   def initialize(logger)
     @logger = logger
-    @logger.section = 'create-readings'
+    @logger.section = 'readings-registers-meters'
   end
 
   # TODO: check if readings have already been created
