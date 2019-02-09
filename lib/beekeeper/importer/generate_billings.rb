@@ -19,7 +19,7 @@ class Beekeeper::Importer::GenerateBillings
     # First, create the billing cycles with their different ranges (initial, yearly and final).
     # That way the following code can be written (almost) without special cases.
     create_billing_cycles(localpool)
-    create_billings_for_current_year(localpool)
+    #create_billings_for_current_year(localpool)
   end
 
   private
@@ -31,11 +31,33 @@ class Beekeeper::Importer::GenerateBillings
     (localpool.start_date.year..LAST_BEEKEEPER_BILLING_CYCLE_YEAR).each do |year|
       last_dates << Date.new(year, 12, 31)
     end
-    last_dates.map { |last_date| create_billing_cycle(localpool, last_date) }
+    last_dates.map do |last_date|
+      begin
+        create_gap_contracts(localpool, last_date)
+        create_billing_cycle(localpool, last_date)
+      rescue ArgumentError
+        break
+      end
+    end
+  end
+
+  def create_gap_contracts(localpool, last_date)
+    localpoolr = Admin::LocalpoolResource.all(operator).retrieve(localpool.id)
+    gap_contractsr= localpoolr.localpool_gap_contracts
+    request = {
+      begin_date: localpool.start_date,
+      last_date: last_date,
+    }
+    logger.info("Creating gap contracts #{localpool.name} #{request}")
+    Transactions::Admin::Contract::Localpool::CreateGapContracts.new.(resource: gap_contractsr, params: request, localpool: localpoolr)
+  rescue Buzzn::ValidationError => e
+    logger.error("Buzzn::ValidationError for gap contract", extra_data: e.errors)
+    raise ArgumentError
   end
 
   def create_billing_cycle(localpool, last_date)
     localpoolr = Admin::LocalpoolResource.all(operator).retrieve(localpool.id)
+    localpoolr.object.reload
     name = "#{localpoolr.next_billing_cycle_begin_date} - #{last_date}"
     params = {
       last_date: last_date,
@@ -44,8 +66,10 @@ class Beekeeper::Importer::GenerateBillings
     logger.info("Creating billing cycle #{name}")
     Transactions::Admin::BillingCycle::Create.new.(resource: localpoolr,
                                                    params: params)
+    localpoolr.object.reload
   rescue Buzzn::ValidationError => e
     logger.error("Buzzn::ValidationError for billing_cycle #{name}", extra_data: e.errors)
+    raise ArgumentError
   end
 
   def range_spans_one_year?(date_range)

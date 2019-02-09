@@ -21,9 +21,6 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
         when 1
           adjust_end_date_and_readings(contract, register)
           comment = '1 day gap fixed by moving old end date one day ahead'
-        else
-          create_gap_contract(contract, next_contract)
-          comment = "gap of #{gap_in_days} days filled with a 'Leerstandsvertrag' (gap contract)"
         end
         comment = " (#{comment})" if comment
         logger.info("Contract #{contract.contract_number}/#{contract.contract_number_addition}: #{contract.end_date} - #{next_contract.begin_date}#{comment}")
@@ -81,34 +78,9 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     end
   end
 
-  def create_gap_contract(previous_contract, next_contract)
-    attributes = {
-      # take these from previous contract
-      localpool:                     previous_contract.localpool,
-      register_meta:                 previous_contract.register_meta,
-      signing_date:                  previous_contract.end_date,
-      begin_date:                    previous_contract.end_date,
-      contractor:                    previous_contract.localpool.owner,
-      contract_number:               previous_contract.contract_number,
-      # take these from next contract
-      termination_date:              next_contract.begin_date,
-      end_date:                      next_contract.begin_date,
-      # these attributes come from different places ...
-      contract_number_addition:      next_contract_number_addition(previous_contract.localpool),
-      customer:                      find_gap_contract_customer(previous_contract.localpool),
-      tariffs:                       previous_contract.localpool.gap_contract_tariffs
-    }
-    Contract::LocalpoolGap.create!(attributes)
-  end
-
   def next_contract_number_addition(localpool)
     current_max = localpool.contracts.for_localpool.maximum(:contract_number_addition)
     current_max + 1
-  end
-
-  def find_gap_contract_customer(localpool)
-    customer = Beekeeper::Importer::GapContractCustomer.find_by_localpool(localpool)
-    customer ? customer : raise('No customer for gap contract found!')
   end
 
   def handle_two_readings(readings, register)
