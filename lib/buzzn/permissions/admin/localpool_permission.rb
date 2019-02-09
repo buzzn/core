@@ -90,7 +90,9 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
 
     end
 
-    bank_accounts :address
+    bank_accounts do
+      crud :managers_self
+    end
   end
 
   owner do
@@ -120,7 +122,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
   end
 
   organizations do
-    crud :managers
+    create :managers
+    retrieve :managers_self
+    update :managers_self
+    delete :none
 
     contact do
       retrieve :managers_organization
