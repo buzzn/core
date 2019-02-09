@@ -2,8 +2,15 @@ require 'buzzn/transactions/admin/billing_cycle/create'
 
 describe Transactions::Admin::BillingCycle::Create do
 
-  entity!(:localpool) { create(:group, :localpool) }
-  entity!(:localpool_without_start_date) do
+  let(:localpool) { create(:group, :localpool, start_date: Date.parse('2017-11-11'), gap_contract_customer: create(:person)) }
+
+  let(:tariff) do
+    tariff = create(:tariff, begin_date: localpool.start_date - 10, group: localpool)
+    localpool.gap_contract_tariffs << tariff
+    tariff
+  end
+
+  let!(:localpool_without_start_date) do
     localpool = create(:group, :localpool)
     localpool.start_date = nil
     localpool.save
@@ -14,10 +21,21 @@ describe Transactions::Admin::BillingCycle::Create do
   let(:localpool_resource) { Admin::LocalpoolResource.all(account).retrieve(localpool.id) }
   let(:localpool_without_start_date_resource) { Admin::LocalpoolResource.all(account).retrieve(localpool_without_start_date.id) }
 
-  entity(:member)   { create(:person, :with_account, :with_self_role, roles: { Role::GROUP_MEMBER => localpool }) }
-  entity(:operator) { create(:person, :with_account, :with_self_role, roles: { Role::BUZZN_OPERATOR => nil }) }
+  3.times do |i|
+    let!("contract_#{i+1}".to_sym) do
+      create(:contract, :localpool_powertaker, localpool: localpool, tariffs: [tariff], begin_date: localpool.start_date + (i*13).days)
+    end
 
-  let(:input) { {name: 'route-66', last_date: Date.today - 5.day} }
+    let!("install_reading_#{i+1}".to_sym) do
+      contract = send("contract_#{i+1}")
+      create(:reading, :setup, raw_value: 0, register: contract.register_meta.registers.first, date: contract.begin_date - 2.day)
+    end
+  end
+
+  let(:member)   { create(:person, :with_account, :with_self_role, roles: { Role::GROUP_MEMBER => localpool }) }
+  let(:operator) { create(:person, :with_account, :with_self_role, roles: { Role::BUZZN_OPERATOR => nil }) }
+
+  let(:input) { {name: 'route-66', last_date: '2018-12-31'} }
   let(:future_input) { {name: 'fail0r', last_date: Date.today + 24.day} }
 
   describe 'authorization' do
@@ -47,9 +65,20 @@ describe Transactions::Admin::BillingCycle::Create do
   end
 
   describe 'repeated calls' do
+
     context 'first call' do
 
       let(:user) { operator }
+
+      before do
+        3.times do |i|
+          send("install_reading_#{i+1}".to_sym)
+        end
+      end
+
+      it 'setups correctly' do
+        expect(localpool.localpool_power_taker_contracts.count).to eql 3
+      end
 
       it 'succeeds' do
         result = subject.call(params: input, resource: localpool_resource)
@@ -57,11 +86,14 @@ describe Transactions::Admin::BillingCycle::Create do
         expect(result.value!).to be_a Admin::BillingCycleResource
         expect(result.value!.object).to eq(localpool.billing_cycles.first)
         expect(result.value!.begin_date).to eq(localpool.start_date)
+        expect(result.value!.object.billings.count).to eq 3
       end
 
       context 'second call' do
 
         it 'fails' do
+          result = subject.call(params: input, resource: localpool_resource)
+          expect(result).to be_success
           expect { subject.call(params: input, resource: localpool_resource) }.to raise_error Buzzn::ValidationError
         end
 

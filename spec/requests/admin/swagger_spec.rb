@@ -42,10 +42,10 @@ describe Admin, :swagger, :request_helper, order: :defined do
     document
   end
 
-  entity!(:localpool2) { create(:group, :localpool, owner: nil) }
+  entity!(:localpool2) { create(:group, :localpool, owner: nil, gap_contract_customer: person) }
 
   entity!(:localpool3) do
-    create(:group, :localpool, owner: organization)
+    create(:group, :localpool, owner: organization, gap_contract_customer: organization)
   end
 
   entity!(:localpool_pta) do
@@ -615,7 +615,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   patch '/localpools/{localpool.id}/person-owner' do
     description 'updates the person owner of the localpool'
-    schema Schemas::Transactions::Person.update_for(localpool)
+    schema Schemas::Transactions::Person.update_for(localpool.owner)
   end
 
   post '/localpools/{localpool.id}/person-owner/{person.id}' do
@@ -630,10 +630,42 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   patch '/localpools/{localpool3.id}/organization-owner' do
     description 'updates the organization owner of the localpool'
-    schema Schemas::Transactions::Organization.update_for(localpool3.owner)
+    schema Schemas::Transactions::Organization.update_for(localpool3.gap_contract_customer)
   end
 
   post '/localpools/{localpool.id}/organization-owner/{organization.id}' do
+    description 'assign different organization as owner of the localpool'
+    schema Schemas::Support.Form
+  end
+
+  # gap contract customer
+
+  post '/localpools/{localpool2.id}/person-gap-contract-customer' do
+    description 'creates person gap contract customer of the localpool'
+    schema Schemas::Transactions::Person::CreateWithAddress
+  end
+
+  patch '/localpools/{localpool.id}/person-gap-contract-customer' do
+    description 'updates the gap contract customer of the localpool'
+    schema Schemas::Transactions::Person.update_for(localpool2.gap_contract_customer)
+  end
+
+  post '/localpools/{localpool.id}/person-gap-contract-customer/{person.id}' do
+    description 'assign different person as gap contract customer of the localpool'
+    schema Schemas::Support.Form
+  end
+
+  post '/localpools/{localpool2.id}/organization-gap-contract-customer' do
+    description 'creates organization gap contract customer of the localpool'
+    schema Schemas::Transactions::Organization::CreateWithNested
+  end
+
+  patch '/localpools/{localpool3.id}/organization-gap-contract-customer' do
+    description 'updates the organization owner of the localpool'
+    schema Schemas::Transactions::Organization.update_for(localpool3.gap_contract_customer)
+  end
+
+  post '/localpools/{localpool.id}/organization-gap-contract-customer/{organization.id}' do
     description 'assign different organization as owner of the localpool'
     schema Schemas::Support.Form
   end

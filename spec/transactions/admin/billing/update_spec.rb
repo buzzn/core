@@ -78,7 +78,8 @@ describe Transactions::Admin::Billing::Update do
     end_reading
     result = Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                        params: params,
-                                                       parent: contract)
+                                                       contract: contract,
+                                                       billing_cycle: nil)
     result.value!.object
   end
 
@@ -240,7 +241,8 @@ describe Transactions::Admin::Billing::Update do
             install_reading
             result = Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                                params: params,
-                                                               parent: contract)
+                                                               contract: contract,
+                                                               billing_cycle: nil)
             result.value!.object
           end
 
@@ -372,7 +374,7 @@ describe Transactions::Admin::Billing::Update do
           expect(billing.status).to eql 'calculated'
           expect(contract.payments.count).to eql 0
           expect {update_result}.to raise_error(Buzzn::ValidationError,
-                                                '{:contract=>{:payments=>["size cannot be less than 1"]}}')
+                                                '{:contract=>{:current_payment=>["must be filled"]}}')
         end
 
       end

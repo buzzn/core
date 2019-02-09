@@ -5,10 +5,11 @@ class Transactions::Admin::Billing::Create < Transactions::Base
 
   validate :schema
   check :authorize, with: :'operations.authorization.create'
-  tee :validate_parent
+  tee :validate_contract
   tee :validate_dates
   tee :set_end_date, with: :'operations.end_date'
   add :date_range
+  tee :validate_registers
   tee :complete_params
   around :db_transaction
   add :billing_item
@@ -18,49 +19,47 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     Schemas::Transactions::Admin::Billing::Create
   end
 
-  def validate_parent(parent:, **)
-    unless parent.is_a? Contract::LocalpoolPowerTaker
-      raise Buzzn::ValidationError.new('not a valid parent')
+  def validate_contract(contract:, **)
+    unless contract.is_a? Contract::LocalpoolPowerTaker
+      raise Buzzn::ValidationError.new('not a valid contract')
     end
     # validate
-    subject = Schemas::Support::ActiveRecordValidator.new(parent)
+    subject = Schemas::Support::ActiveRecordValidator.new(contract)
     result = Schemas::PreConditions::Contract::CreateBilling.call(subject)
     unless result.success?
       raise Buzzn::ValidationError.new(result.errors)
     end
   end
 
-  def validate_dates(params:, parent:, **)
+  def validate_dates(params:, contract:, **)
     if params[:last_date] < params[:begin_date]
       raise Buzzn::ValidationError.new(:last_date => ['must be after begin_date'])
     end
-    if params[:begin_date] < parent.begin_date
+    if params[:begin_date] < contract.begin_date
       raise Buzzn::ValidationError.new(:begin_date => ['must be after contract[\'begin_date\']'])
     end
+    if contract.tariffs.at(params[:begin_date]).empty?
+      raise Buzzn::ValidationError.new(:contract => ['tariffs must cover begin_date'])
+    end
   end
 
-  def date_range(params:, parent:, **)
-    contract = parent
-    date_range = params[:begin_date]...params[:end_date]
-
-    if contract.end_date && contract.end_date < date_range.last
-      date_range = date_range.first...contract.end_date
-    end
-    if contract.begin_date > date_range.first
-      date_range = contract.begin_date...date_range.last
-    end
-    params[:begin_date] = date_range.first
-    params[:end_date]   = date_range.last
-    date_range
+  def date_range(params:, contract:, **)
+    contract.minmax_date_range(params[:begin_date]...params[:end_date])
   end
 
-  def complete_params(params:, **)
+  def validate_registers(params:, contract:, date_range:, **)
+    if contract.register_meta.registers.to_a.keep_if { |register| register.installed_at.date < date_range.last && (register.decomissioned_at.nil? || register.decomissioned_at.date > date_range.first) }.empty?
+      raise Buzzn::ValidationError.new(:register_meta => ['no register installed in date range'])
+    end
+  end
+
+  def complete_params(params:, billing_cycle:, **)
+    params[:billing_cycle] = billing_cycle
     params[:status] = :open
   end
 
-  def billing_item(params:, parent:, resource:, date_range:, **)
-
-    billing_data = Service::BillingData.data(parent, begin_date: date_range.first, end_date: date_range.last)
+  def billing_item(params:, contract:, resource:, date_range:, **)
+    billing_data = Service::BillingData.data(contract, begin_date: date_range.first, end_date: date_range.last)
 
     billing_data[:items].each do |item|
       errors = item.invariant.errors.except(:billing, :contract)

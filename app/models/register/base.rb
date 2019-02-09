@@ -77,7 +77,7 @@ module Register
     end
 
     def installed_at
-      self.readings.installed.order(:date).last
+      self.readings.installed.order(:date).first
     end
 
     def decomissioned_at

@@ -9,6 +9,7 @@ class Beekeeper::Importer::OptimizeGroup
     @meters    = ::Import.global('services.datasource.discovergy.meters')
     @optimized = ::Import.global('services.datasource.discovergy.optimized_group')
     @logger    = logger
+    @logger.section = 'optimize-group'
   end
 
   def run(localpool, warnings)
@@ -72,18 +73,10 @@ class Beekeeper::Importer::OptimizeGroup
   end
 
   def create_optimized_group(localpool, warnings)
-    if !@optimized.local(localpool).empty? && !localpool.start_date.future? && discovergy_only?(localpool, warnings) && complete?(localpool) # && no_others?(localpool)
-      localpool.registers.reload
-      puts
-      puts
-      puts '=' * 20
-      puts
-      puts "either continue by leaving the shell or create the optimized group for #{localpool.slug} by executing:\n\n"
-      puts 'meter = @optimized.create(localpool)'
-      puts 'optimized_groups[localpool.slug] = meter.product_serialnumber'
-      puts
-      puts '=' * 20
-      binding.send(:pry)
+    if should_create_fake_optimized_group?(localpool, warnings)
+      # TODO: review
+      create_fake_optimized_group(localpool, optimized_groups)
+      logger.warn("This localpool still has a fake optimized group")
     else
       optimized_groups[localpool.slug] = nil
     end
@@ -129,6 +122,20 @@ class Beekeeper::Importer::OptimizeGroup
 
   def optimized_map
     $meter_to_virtual_map ||= @meters.meter_to_virtual_map
+  end
+
+  def should_create_fake_optimized_group?(localpool, warnings)
+    !@optimized.local(localpool).empty? &&
+      !localpool.start_date.future? &&
+      discovergy_only?(localpool, warnings) &&
+      complete?(localpool)
+    # && no_others?(localpool)
+  end
+
+  def create_fake_optimized_group(localpool, optimized_groups)
+    localpool.registers.reload
+    meter = @optimized.create(localpool)
+    optimized_groups[localpool.slug] = meter.product_serialnumber
   end
 
 end

@@ -7,6 +7,7 @@ require_relative '../meter/virtual_resource'
 require_relative '../contract/localpool_processing_resource'
 require_relative '../contract/localpool_power_taker_resource'
 require_relative '../contract/localpool_third_party_resource'
+require_relative '../contract/localpool_gap_contract_resource'
 require_relative '../contract/metering_point_operator_resource'
 require_relative '../billing_detail_resource'
 require_relative 'billing_cycle_resource'
@@ -51,6 +52,7 @@ module Admin
     has_many :metering_point_operator_contracts, Contract::MeteringPointOperatorResource
     has_many :localpool_power_taker_contracts, Contract::LocalpoolPowerTakerResource
     has_many :localpool_third_party_contracts, Contract::LocalpoolThirdPartyResource
+    has_many :localpool_gap_contracts, Contract::LocalpoolGapContractResource
 
     has_many :registers
     has_many :register_metas

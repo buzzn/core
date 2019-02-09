@@ -27,6 +27,7 @@ module Group
     has_many :localpool_processing_contracts, class_name: 'Contract::LocalpoolProcessing', foreign_key: :localpool_id
     has_many :localpool_power_taker_contracts, class_name: 'Contract::LocalpoolPowerTaker', foreign_key: :localpool_id
     has_many :localpool_third_party_contracts, class_name: 'Contract::LocalpoolThirdParty', foreign_key: :localpool_id
+    has_many :localpool_gap_contracts, class_name: 'Contract::LocalpoolGap', foreign_key: :localpool_id
 
     has_many :register_metas_by_contracts, class_name: 'Register::Meta', through: :localpool_power_taker_contracts, foreign_key: :register_meta_id, source: :register_meta
 

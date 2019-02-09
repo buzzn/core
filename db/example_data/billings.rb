@@ -3,5 +3,11 @@
 module Beekeeper; module Importer; end; end
 require 'beekeeper/importer/generate_billings'
 
-billing_generator = Beekeeper::Importer::GenerateBillings.new(Logger.new(STDOUT))
+beekeeper_account = Account::Base.where(:email => 'dev+beekeeper@buzzn.net').first
+if beekeeper_account.nil?
+  raise 'please create a beekeeper account first'
+end
+
+billing_generator = Beekeeper::Importer::GenerateBillings.new(Logger.new(STDOUT), beekeeper_account)
+# FIXME add account ^
 billing_generator.run(SampleData.localpools.people_power)
