@@ -62,7 +62,7 @@ module Admin
         r.get!('customer') { contract.customer! }
 
         r.patch!('customer-bank-account') do
-          bank_account_assign.(resource: contract, params: r.params, attribute: :customer_bank_account, person_or_org: contract.customer)
+          bank_account_assign.(resource: contract, params: r.params, attribute: :customer_bank_account, person_or_org: :customer)
         end
 
         r.patch!('customer-person') do
