@@ -512,6 +512,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'returns all bank-accounts of the person for the given ID'
   end
 
+  post '/localpools/{localpool.id}/persons/{person.id}/bank-accounts' do
+    description 'create a new bank-account of the person for the given ID'
+    schema Schemas::Transactions::BankAccount::Create
+  end
+
   get '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_1.id}' do
     description 'returns the bank-accounts of the person for the given IDs'
   end
@@ -539,6 +544,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   get '/localpools/{localpool3.id}/organizations/{organization.id}/bank-accounts' do
     description 'returns all bank-accounts of the organization for the given ID'
+  end
+
+  post '/localpools/{localpool3.id}/organizations/{organization.id}/bank-accounts' do
+    description 'create a new bank-account of the organization for the given ID'
+    schema Schemas::Transactions::BankAccount::Create
   end
 
   get '/localpools/{localpool3.id}/organizations/{organization.id}/bank-accounts/{bank_account_3.id}' do
