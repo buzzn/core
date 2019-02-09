@@ -9,6 +9,7 @@ module Schemas::PreConditions::Localpool
     required(:localpool_processing_contract).value(:filled?)
     required(:start_date).value(:filled?)
     required(:gap_contract_customer).value(:filled?)
+    required(:gap_contract_tariffs).value(min_size?: 1)
   end
 
 end

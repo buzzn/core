@@ -11,6 +11,7 @@ module Transactions::Admin::Contract::Localpool
     tee :set_end_date, with: :'operations.end_date'
     around :db_transaction
     tee :assign_customer
+    tee :assign_tariffs
     tee :assign_contractor
     tee :assign_register_meta
     tee :create_register_meta_options
@@ -30,6 +31,10 @@ module Transactions::Admin::Contract::Localpool
 
     def assign_customer(params:, localpool:, **)
       params[:customer] = localpool.gap_contract_customer.object
+    end
+
+    def assign_tariffs(params:, localpool:, **)
+      params[:tariffs] = localpool.gap_contract_tariffs
     end
 
     def create_gap_contract(params:, resource:, **)

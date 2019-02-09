@@ -38,13 +38,20 @@ module Transactions::Admin::Contract::Localpool
 
         date_range = ([params[:begin_date], installed_at || params[:begin_date]].max)..([params[:end_date], decomissioned_at || params[:end_date]]).min
 
-        # FIXME: minmax date_range using registers installed_at stuff?
         ranges = [ date_range ]
         register_meta.contracts.order(:begin_date).each do |contract|
+          new_ranges = []
           ranges.each_with_index do |range, idx|
+            #   [ range ]
+            # [ contract ]
+            if contract.begin_date <= range.first && (contract.end_date.nil? || contract.end_date >= range.last)
+              ranges[idx] = range.first..range.first
+              next
+            end
             # [ range ]
             #     [   c   ]
             # [ r ]
+            begin
             if contract.begin_date >= range.first && contract.begin_date < range.last && (contract.end_date.nil? || contract.end_date >= range.last)
               ranges[idx] = range.first..contract.begin_date
               next
@@ -58,13 +65,17 @@ module Transactions::Admin::Contract::Localpool
             end
             # [    range     ]
             #    [   c   ]
-            if range.first <= contract.begin_date && range.last > contract.end_date
+            if range.first <= contract.begin_date && (!contract.end_date.nil? && (range.last > contract.end_date))
               new_range = contract.end_date..range.last
               ranges[idx] = range.first..contract.begin_date
-              ranges << new_range
+              new_ranges << new_range
               next
             end
+            rescue Exception => e
+              byebug.byebug
+            end
           end
+          ranges = ranges + new_ranges
           ranges.delete_if { |r| (r.last-r.first).zero? }
         end
         {

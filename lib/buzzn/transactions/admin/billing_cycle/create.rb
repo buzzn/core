@@ -42,7 +42,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
     errors = {}
     register_metas.each do |register_meta|
       register_meta.contracts.each do |contract|
-        if contract.begin_date > date_range.last || contract.is_a?(Contract::LocalpoolThirdParty)
+        if contract.begin_date >= date_range.last || (!contract.end_date.nil? && contract.end_date <= date_range.first) || contract.is_a?(Contract::LocalpoolThirdParty)
           next
         end
         contract_billing_date_range = contract.minmax_date_range(date_range)
@@ -50,6 +50,9 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
           begin_date: contract_billing_date_range.first,
           last_date:  contract_billing_date_range.last - 1.day, # last_date!
         }
+        #if contract.full_contract_number == "60057/1"
+        #  byebug.byebug
+        #end
         begin
           Transactions::Admin::Billing::Create.new.(resource: resource.contracts.retrieve(contract.id).billings,
                                                     params: attrs,
