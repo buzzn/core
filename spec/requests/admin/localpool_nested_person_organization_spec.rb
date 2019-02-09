@@ -33,7 +33,19 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       'show_display_app' => nil,
       'updatable'=>true,
       'deletable'=>false,
-      'createables' => ['meters', 'meters_real', 'managers', 'organizations', 'localpool_processing_contracts', 'metering_point_operator_contracts', 'localpool_power_taker_contracts', 'registers', 'persons', 'tariffs', 'billing_cycles', 'devices'],
+      'createables' => ['meters',
+                        'meters_real',
+                        'managers',
+                        'organizations',
+                        'localpool_processing_contracts',
+                        'metering_point_operator_contracts',
+                        'localpool_power_taker_contracts',
+                        'localpool_gap_contracts',
+                        'registers',
+                        'persons',
+                        'tariffs',
+                        'billing_cycles',
+                        'devices'],
       'incompleteness' => {
         'grid_feeding_register' => ['must be filled'],
         'grid_consumption_register' => ['must be filled'],
@@ -46,16 +58,6 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       'bank_account' => nil,
       'power_sources' => [],
       'display_app_url' => nil,
-      'allowed_actions' => {
-        'create_metering_point_operator_contract'=> {
-          'address' => ['must be filled']
-        },
-        'create_localpool_processing_contract' => true,
-        'create_localpool_power_taker_contract'=> {
-          'localpool_processing_contract' => ['must be filled']
-        },
-        'create_billing_cycle' => true
-      },
       'legacy_power_giver_contract_buzznid' => nil,
       'legacy_power_taker_contract_buzznid' => nil,
       'next_billing_cycle_begin_date' => '2016-02-01',
@@ -130,6 +132,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
         GET "/localpools/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
         expect(response).to have_http_status(200)
         result = json
+        result.delete('allowed_actions')
         result['incompleteness'].delete('owner') # is flaky
         expect(result.to_yaml).to eq localpool_json.to_yaml
       end
@@ -183,6 +186,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
         GET "/localpools/#{localpool.id}", $admin, include: "#{key}:[address, bank_accounts, contact:[address]]"
         expect(response).to have_http_status(200)
         result = json
+        result.delete('allowed_actions')
         result['incompleteness'].delete('owner') # is flaky
         expect(result.to_yaml).to eq localpool_json.to_yaml
       end

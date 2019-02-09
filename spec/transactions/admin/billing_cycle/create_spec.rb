@@ -2,7 +2,8 @@ require 'buzzn/transactions/admin/billing_cycle/create'
 
 describe Transactions::Admin::BillingCycle::Create do
 
-  let(:localpool) { create(:group, :localpool, start_date: Date.parse('2017-11-11')) }
+  let(:localpool) { create(:group, :localpool, start_date: Date.parse('2017-11-11'), gap_contract_customer: create(:person)) }
+
   let(:tariff) do
     tariff = create(:tariff, begin_date: localpool.start_date - 10, group: localpool)
     localpool.gap_contract_tariffs << tariff

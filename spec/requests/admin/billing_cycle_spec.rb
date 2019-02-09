@@ -44,7 +44,12 @@ describe Admin::BillingCycleResource, :request_helper do
 
     let(:path) { "/localpools/#{localpool.id}/billing-cycles" }
 
-    entity(:localpool) { create(:group, :localpool) }
+    let(:localpool) { create(:group, :localpool, gap_contract_customer: create(:person)) }
+    let!(:tariff) do
+      t = create(:tariff, group: localpool)
+      localpool.gap_contract_tariffs << t
+      t
+    end
 
     let(:expected_errors) do
       {
