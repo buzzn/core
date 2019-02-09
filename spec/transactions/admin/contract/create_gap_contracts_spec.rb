@@ -9,6 +9,13 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContracts, order: :d
   let(:operator) { create(:account, :buzzn_operator) }
   let!(:localpoolr) { Admin::LocalpoolResource.all(operator).retrieve(localpool.id) }
 
+  let!(:tariff) do
+    t = create(:tariff, group: localpool, begin_date: localpool_start_date)
+    localpoolr.object.gap_contract_tariffs << t
+    localpoolr.object.save
+    t
+  end
+
   let(:resource) do
     localpool.save
     localpoolr.localpool_gap_contracts
@@ -113,6 +120,25 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContracts, order: :d
           expect(element).to be_a Contract::LocalpoolGapContractResource
         end
       end
+    end
+
+    context 'with very long contracts' do
+      let!(:contract_1) do
+        create(:contract, :localpool_powertaker, localpool: localpool, register_meta: register_consumption_1.meta, begin_date: Date.new(2017, 4, 1))
+      end
+
+      it 'creates' do
+        expect(result).to be_success
+        res = result.value!
+        expect(res).to be_a Array
+        expect(res.count).to eql 4
+        res.each do |element|
+          expect(element).to be_a Contract::LocalpoolGapContractResource
+        end
+        register_consumption_1.meta.reload
+        expect(register_consumption_1.meta.contracts.count).to eql 1
+      end
+
     end
 
     context 'with contracts' do

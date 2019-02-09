@@ -20,6 +20,10 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContract, order: :de
     create(:meta)
   end
 
+  let(:tariff) do
+    create(:tariff, group: localpool)
+  end
+
   let(:request) do
     { begin_date: Date.today.as_json,
       share_register_publicly: false,
@@ -33,6 +37,12 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContract, order: :de
   end
 
   context 'invalid state' do
+
+    before do
+      localpoolr.object.gap_contract_tariffs << tariff
+      localpoolr.object.save
+      localpoolr.object.reload
+    end
 
     context 'without a gap contract customer' do
 
@@ -84,7 +94,9 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContract, order: :de
 
     before do
       localpoolr.object.gap_contract_customer = gap_person
+      localpoolr.object.gap_contract_tariffs << tariff
       localpoolr.object.save
+      localpoolr.object.reload
     end
 
     let!(:lpc) do
@@ -106,6 +118,7 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContract, order: :de
       expect(result).to be_success
       res = result.value!
       expect(res).to be_a Contract::LocalpoolGapContractResource
+      expect(res.tariffs.count).not_to eql 0
     end
 
   end

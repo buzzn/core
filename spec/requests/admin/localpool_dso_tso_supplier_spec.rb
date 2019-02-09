@@ -35,6 +35,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'localpool_processing_contracts',
         'metering_point_operator_contracts',
         'localpool_power_taker_contracts',
+        'localpool_gap_contracts',
         'registers',
         'persons',
         'tariffs',
@@ -93,7 +94,10 @@ describe Admin::LocalpoolRoda, :request_helper do
     it '200' do
       GET "/localpools/#{localpool.id}", $admin, include: 'distribution_system_operator, transmission_system_operator, electricity_supplier'
       expect(response).to have_http_status(200)
-      expect(json.to_yaml).to eq localpool_json.to_yaml
+      json_without = json.dup
+      json_without.delete('allowed_actions')
+      localpool_json.delete('allowed_actions')
+      expect(json_without.to_yaml).to eq localpool_json.to_yaml
     end
 
   end
