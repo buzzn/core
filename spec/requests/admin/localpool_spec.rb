@@ -90,34 +90,6 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
   let(:empty_json) { [] }
 
   def serialize(localpool)
-    allowed = {
-      'create_metering_point_operator_contract' => {},
-      'create_localpool_processing_contract' => {},
-      'create_localpool_power_taker_contract' => {},
-      'create_billing_cycle' => {}
-    }
-    unless localpool.address
-      allowed['create_metering_point_operator_contract']['address'] = ['must be filled']
-    end
-    unless localpool.owner
-      allowed['create_metering_point_operator_contract']['owner'] = ['must be filled']
-      allowed['create_localpool_processing_contract']['owner'] = ['must be filled']
-      allowed['create_localpool_power_taker_contract']['owner'] = ['must be filled']
-    end
-    unless localpool.start_date
-      allowed['create_billing_cycle']['start_date'] = ['must be filled']
-    end
-    unless localpool.localpool_processing_contracts.any?
-      allowed['create_localpool_power_taker_contract']['localpool_processing_contract'] = ['must be filled']
-    end
-
-    allowed = allowed.map do |k,v|
-      if v.empty?
-        [k, true]
-      else
-        [k, v]
-      end
-    end.to_h
     { 'id'=>localpool.id,
       'type'=>'group_localpool',
       'created_at'=>localpool.created_at.as_json,
@@ -141,6 +113,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
         'localpool_processing_contracts',
         'metering_point_operator_contracts',
         'localpool_power_taker_contracts',
+        'localpool_gap_contracts',
         'registers',
         'persons',
         'tariffs',
@@ -151,12 +124,6 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
       'bank_account' => serialized_bank_account(localpool.bank_account),
       'power_sources' => (localpool.registers.empty? ? [] : ['pv']),
       'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil),
-      'allowed_actions' => {
-        'create_metering_point_operator_contract'=> allowed['create_metering_point_operator_contract'],
-        'create_localpool_processing_contract'=> allowed['create_localpool_processing_contract'],
-        'create_localpool_power_taker_contract'=> allowed['create_localpool_power_taker_contract'],
-        'create_billing_cycle'=> allowed['create_billing_cycle']
-      },
       'legacy_power_giver_contract_buzznid' => nil,
       'legacy_power_taker_contract_buzznid' => nil,
       'next_billing_cycle_begin_date' => localpool.start_date.as_json,
@@ -207,6 +174,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
       expect(result).to has_nested_json(:address, :id)
       result.delete('address')
 
+      result.delete('allowed_actions')
       expect(result.to_yaml).to eq localpool_json.to_yaml
     end
 
@@ -214,7 +182,8 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
       GET '/localpools?include=', $admin
       expect(response).to have_http_status(200)
       expect(json.keys).to match_array ['array']
-      expect(sort(json['array'])).to eq sort(localpools_json)
+      without_allowed = json['array'].map { |x| x.delete('allowed_actions') && x }
+      expect(sort(without_allowed)).to eq sort(localpools_json)
     end
   end
 
@@ -270,6 +239,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
           'localpool_processing_contracts',
           'metering_point_operator_contracts',
           'localpool_power_taker_contracts',
+          'localpool_gap_contracts',
           'registers',
           'persons',
           'tariffs',
@@ -279,22 +249,6 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
         'incompleteness' => serialized_incompleteness(nil),
         'bank_account' => nil,
         'power_sources' => [],
-        'allowed_actions' => {
-          'create_metering_point_operator_contract'=> {
-            'start_date' => ['must be filled'],
-            'address' => ['must be filled'],
-            'owner' => ['must be filled']
-          },
-          'create_localpool_processing_contract' => {
-            'start_date' => ['must be filled'],
-            'owner' => ['must be filled']
-          },
-          'create_localpool_power_taker_contract' => {
-            'localpool_processing_contract' => ['must be filled'],
-            'owner' => ['must be filled']
-          },
-          'create_billing_cycle' => true
-        },
         'legacy_power_giver_contract_buzznid' => nil,
         'legacy_power_taker_contract_buzznid' => nil,
         'next_billing_cycle_begin_date' => Date.today.as_json, }
@@ -312,9 +266,6 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
       json = created_json.dup
       json['start_date'] = nil
       json['next_billing_cycle_begin_date'] = nil
-      json['allowed_actions']['create_billing_cycle'] = {
-        'start_date' => ['must be filled']
-      }
       json
     end
 
@@ -342,6 +293,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
         expect(Group::Localpool.find(id)).not_to be_nil
         result.delete('slug')
         result.delete('display_app_url')
+        result.delete('allowed_actions')
         expect(result.to_yaml).to eq expected.to_yaml
       end
     end
@@ -387,6 +339,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
           'localpool_processing_contracts',
           'metering_point_operator_contracts',
           'localpool_power_taker_contracts',
+          'localpool_gap_contracts',
           'registers',
           'persons',
           'tariffs',
@@ -397,12 +350,6 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
         'bank_account' => nil,
         'power_sources' => ['pv'],
         'display_app_url' => nil,
-        'allowed_actions' => {
-          'create_metering_point_operator_contract'=> {'address' => ['must be filled']},
-          'create_localpool_processing_contract'=> true,
-          'create_localpool_power_taker_contract'=> true,
-          'create_billing_cycle' => true
-        },
         'legacy_power_giver_contract_buzznid' => nil,
         'legacy_power_taker_contract_buzznid' => nil,
         'next_billing_cycle_begin_date' => Date.yesterday.as_json,
@@ -472,6 +419,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
       #expect(result.delete('updated_at')).to be > old.as_json
       expect(Time.parse(result.delete('updated_at'))).to be > old
       expect(result.delete('created_at')).not_to be_nil
+      expect(result.delete('allowed_actions')).not_to be_nil
       expect(result.to_yaml).to eq updated_json.to_yaml
     end
   end

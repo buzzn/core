@@ -4,6 +4,7 @@ describe 'Source File' do
     it "source code files do not use Time.now in #{file}" do
       next if file == 'lib/buzzn/utils/chronos.rb'
       next if file == 'app/models/accounting/entry.rb'
+      next if file == 'lib/beekeeper/importer/support/localpool_log.rb'
       content = File.read(file)
       content.each_line do |line|
         expect(line).not_to match /Time.now/

@@ -14,6 +14,10 @@ module Contract
       Service::Tariffs.data(self.tariffs)
     end
 
+    def current_payment
+      payments.current.last
+    end
+
     def current_tariff
       now = Date.today
       current = nil

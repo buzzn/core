@@ -107,7 +107,7 @@ module Admin
 
         r.on 'billings' do
           shared[:billings] = contract.billings
-          shared[:parent] = contract.object
+          shared[:parent_contract] = contract.object
           r.run BillingRoda
         end
 

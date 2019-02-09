@@ -5,6 +5,7 @@ class Beekeeper::Importer::Brokers
   def initialize(logger)
     @discovergy = ::Import.global('services.datasource.discovergy.meters')
     @logger = logger
+    @logger.section = 'import-brokers'
   end
 
   def run(localpool, warnings)

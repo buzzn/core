@@ -4,7 +4,7 @@ class Beekeeper::Importer::SetLocalpoolGapContractCustomer
 
   def initialize(logger)
     @logger = logger
-    logger.level = Import.global('config.log_level')
+    @logger.section = 'set-localpool-gap-contract-customer'
   end
 
   def run(localpool)

@@ -4,7 +4,6 @@ module Beekeeper::ImportWarnings
 
   extend ActiveSupport::Concern
 
-  # A hash of all information that we want to show to PhO about imported attributes -- questions, fixes, etc.
   def warnings
     @warnings ||= {}
   end
