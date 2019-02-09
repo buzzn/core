@@ -72,6 +72,24 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       crud :managers_self
     end
 
+    contracts do
+      retrieve :managers_self
+
+      localpool do
+        retrieve :managers_self
+      end
+
+      register_meta do
+        retrieve :managers_self
+
+        registers do
+          retrieve :managers_self
+        end
+
+      end
+
+    end
+
     bank_accounts :address
   end
 
@@ -129,6 +147,8 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     address do
       crud :managers_organization
     end
+
+    contracts '/persons/contracts'
 
     bank_accounts do
       crud :managers_organization
