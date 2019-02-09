@@ -282,6 +282,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Person.update_for(localpool_power_taker_contract.customer)
   end
 
+  patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract_2.id}/customer-bank-account' do
+    description 'assigns a bank account of the customer to the contract'
+    schema Schemas::Transactions::BankAccount::Assign
+  end
+
   get '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/tariffs' do
     description 'returns the tariffs of the contract'
   end

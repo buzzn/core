@@ -4,18 +4,19 @@ module Admin
   class ContractRoda < BaseRoda
 
     include Import.args[:env,
-                        'transactions.admin.contract.document',
-                        'transactions.admin.contract.localpool.create_processing',
-                        'transactions.admin.contract.localpool.update_processing',
-                        'transactions.admin.contract.localpool.assign_tariffs',
-                        'transactions.admin.contract.localpool.create_power_taker_assign',
-                        'transactions.admin.contract.localpool.create_power_taker_with_person',
-                        'transactions.admin.contract.localpool.create_power_taker_with_organization',
-                        'transactions.admin.contract.localpool.update_power_taker',
-                        'transactions.admin.contract.localpool.create_metering_point_operator',
-                        'transactions.admin.contract.localpool.update_metering_point_operator',
-                        'transactions.admin.generic.update_nested_person',
-                        'transactions.admin.generic.update_nested_organization',
+                        document: 'transactions.admin.contract.document',
+                        create_processing: 'transactions.admin.contract.localpool.create_processing',
+                        update_processing: 'transactions.admin.contract.localpool.update_processing',
+                        assign_tariffs: 'transactions.admin.contract.localpool.assign_tariffs',
+                        create_power_taker_assign: 'transactions.admin.contract.localpool.create_power_taker_assign',
+                        create_power_taker_with_person: 'transactions.admin.contract.localpool.create_power_taker_with_person',
+                        create_power_taker_with_organization: 'transactions.admin.contract.localpool.create_power_taker_with_organization',
+                        update_power_taker: 'transactions.admin.contract.localpool.update_power_taker',
+                        create_metering_point_operator: 'transactions.admin.contract.localpool.create_metering_point_operator',
+                        update_metering_point_operator: 'transactions.admin.contract.localpool.update_metering_point_operator',
+                        bank_account_assign: 'transactions.admin.bank_account.assign',
+                        update_nested_person: 'transactions.admin.generic.update_nested_person',
+                        update_nested_organization: 'transactions.admin.generic.update_nested_organization',
                        ]
 
     plugin :shared_vars
@@ -59,6 +60,10 @@ module Admin
         r.get!('contractor') { contract.contractor! }
 
         r.get!('customer') { contract.customer! }
+
+        r.patch!('customer-bank-account') do
+          bank_account_assign.(resource: contract, params: r.params, attribute: :customer_bank_account, person_or_org: contract.customer)
+        end
 
         r.patch!('customer-person') do
           case contract
