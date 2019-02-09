@@ -11,10 +11,9 @@ class LocalpoolLog
 
   %w(debug info warn error).each do |method_name|
     define_method(method_name) do |text, extra_attributes = {}|
-      md = MessageData.new(method_name, text, @section, extra_attributes).to_h
-      puts md.to_s
-      puts "\n"
-      @messages << md
+      md = MessageData.new(method_name, text, @section, extra_attributes)
+      puts md.to_s + "\n"
+      @messages << md.to_h
     end
   end
 
@@ -67,6 +66,14 @@ class LocalpoolLog
         section:    @section,
         timestamp:  @timestamp
       }.merge(@extra_attributes)
+    end
+
+    def to_s
+      s = "#{@timestamp} #{@severity.upcase}: [#{@section}] #{@text}"
+      unless @extra_attributes.empty?
+        s += @extra_attributes.to_s
+      end
+      s
     end
 
   end
