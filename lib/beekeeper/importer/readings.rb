@@ -142,20 +142,16 @@ class Beekeeper::Importer::Readings
       end
     end
 
+    # This little lookup ensures that the TWO *registers* of a TWO-way *meter*
+    # are wired to the same meter record in the new system.
     def with_meter_registry(buzznid)
-      if meter = meter_registry.get(buzznid)
+      @meter_registry ||= {}
+      if meter = @meter_registry[buzznid]
         meter
       else
         meter = yield
-        meter_registry.set(buzznid, meter)
-        meter
+        @meter_registry[buzznid] = meter
       end
-    end
-
-    # TODO: maybe the external class isn't needed any more. It used to be, since
-    # the meters were needed from different import classes
-    def meter_registry
-      Beekeeper::MeterRegistry
     end
 
   end
