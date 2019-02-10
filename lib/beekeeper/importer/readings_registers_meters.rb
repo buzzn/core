@@ -11,6 +11,8 @@ class Beekeeper::Importer::ReadingsRegistersMeters
   end
 
   # TODO: clarify why the "Canary Test Group" doesn't import properly
+  # IMPROVEMENT: Since beekeeper stores the serial number (zählernummer) of a register with every reading,
+  # we could store that with the old register on COM1/COM2.
   def run(localpool, record)
     puts "#{localpool.name} has #{record.msb_zählwerk_daten.size} zaehlwerke"
     for_each_zaehlwerk(record) do |zaehlwerk, sorted_readings|
