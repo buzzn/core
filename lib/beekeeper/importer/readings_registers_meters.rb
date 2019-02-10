@@ -10,28 +10,25 @@ class Beekeeper::Importer::ReadingsRegistersMeters
     @logger.section = 'readings-registers-meters'
   end
 
-  # TODO: check if readings have already been created previously in the import
-  # TODO: ensure creation of localpool contracts still works
-  # TODO: assign localpool
-  # TODO: assign all registers of a to the same meta-register (all registers created for on one zaehlwerk)
-  # TODO: rescue errors fine-grained
   # TODO: clarify why the "Canary Test Group" doesn't import properly
   def run(localpool, record)
     puts "#{localpool.name} has #{record.msb_zählwerk_daten.size} zaehlwerke"
     for_each_zaehlwerk(record) do |zaehlwerk, zaehlwerk_readings|
       register = create_register(zaehlwerk)
-      # puts "* Zählwerk: #{zaehlwerk.buzznid} --> #{register.class}"
+      puts "* Zählwerk: #{zaehlwerk.buzznid}"
+      puts '-' * 50
       zaehlwerk_readings.each do |reading|
-        # puts "#{reading.date.iso8601} #{reading.reason_code} #{reading.value.to_s.rjust(10, ' ')}"
+        if reading.reason == 'device_change_2'
+          register = create_register(zaehlwerk, register.meta)
+        end
+        puts "#{reading.date.iso8601} #{reading.reason_code.rjust(5, ' ')} #{reading.value.to_s.rjust(10, ' ')} register: ##{register.id} meta: ##{register.meta.id}"
         register.readings << reading
-      #     if reading.reason == 'device_change_2'
-      #       register = create_register(register)
-      #     end
       end
-      puts "Created #{zaehlwerk_readings.size} readings"
-      register # important to return this!
+      puts '-' * 50
+      puts "Created #{register.meta.registers.size} register(s). The current one is: ##{register.meta.register.id}"
+      puts
+      register # return registers because they are needed to create the contracts later.
     end
-    # puts "Created #{all_registers.size} registers"
   end
 
   private
@@ -40,19 +37,18 @@ class Beekeeper::Importer::ReadingsRegistersMeters
     record.msb_zählwerk_daten.map do |zaehlwerk|
       yield [
         zaehlwerk,
-        zaehlwerk.converted_attributes[:readings].sort_by(&:date).reverse
+        zaehlwerk.converted_attributes[:readings].sort_by(&:date)
       ]
     end
   end
 
-  def create_register(zaehlwerk)
+  def create_register(zaehlwerk, register_meta = nil)
     @builder ||= RegisterBuilder.new(logger)
-    register = @builder.build_register(zaehlwerk)
+    register = @builder.build_register(zaehlwerk, register_meta)
     register.save!
     register
   end
 
-  # The following is copy-pasted from Beekeeper::Minipool::MinipoolObjekte::Registers
   class RegisterBuilder
 
     attr_reader :logger
@@ -61,38 +57,41 @@ class Beekeeper::Importer::ReadingsRegistersMeters
       @logger = logger
     end
 
-    def build_register(zaehlwerk)
+    def build_register(zaehlwerk, register_meta = nil)
       if zaehlwerk.virtual?
         if KNOWN_SUBSTITUTE_REGISTERS.include?(zaehlwerk.buzznid)
-          build_substitute_register(zaehlwerk)
+          build_substitute_register(zaehlwerk, register_meta)
         else
           logger.warn("No meter/register for #{zaehlwerk.buzznid}, creating a fake temporary one.", extra_data: zaehlwerk)
-          build_fake_register(zaehlwerk)
+          build_fake_register(zaehlwerk, register_meta)
         end
       else
-        build_real_register(zaehlwerk)
+        build_real_register(zaehlwerk, register_meta)
       end
     end
 
-    def build_substitute_register(zaehlwerk)
+    # DOES this need a meta?
+    def build_substitute_register(zaehlwerk, register_meta = nil)
       attrs = zaehlwerk.converted_attributes.slice(:label, :name, :meter_attributes)
       attrs[:type] = 'Register::Substitute'
       attrs[:meter] = build_virtual_meter(attrs[:meter_attributes].slice(:sequence_number, :buzznid))
+      attrs[:meta] = register_meta if register_meta
       build_any_register(attrs, zaehlwerk)
     end
 
     # As a temporary solution to importing the actual virtual registers (separate story), we create a fake, empty one.
     # TODO: check if method can be changed to also use build_any_register
-    def build_fake_register(zaehlwerk)
+    def build_fake_register(zaehlwerk, register_meta = nil)
       fake_meter_name = "FAKE-FOR-IMPORT-#{fake_register_counter}"
       meter = Meter::Real.create!(product_serialnumber: fake_meter_name, legacy_buzznid: zaehlwerk.buzznid)
-      meta = Register::Meta.new(name: fake_meter_name.gsub('IMPORT-', 'IMPORT-M-'), label: :other, observer_enabled: false, observer_offline_monitoring: false)
+      meta = register_meta || Register::Meta.new(name: fake_meter_name.gsub('IMPORT-', 'IMPORT-M-'), label: :other, observer_enabled: false, observer_offline_monitoring: false)
       Register::Real.create!(meta: meta, meter: meter)
     end
 
-    def build_real_register(zaehlwerk)
-      attrs = zaehlwerk.converted_attributes
+    def build_real_register(zaehlwerk, register_meta = nil)
+      attrs = zaehlwerk.converted_attributes.except(:readings) # assign these later!
       attrs[:meter] = build_real_meter(attrs[:meter_attributes], zaehlwerk)
+      attrs[:meta] = register_meta if register_meta
       build_any_register(attrs, zaehlwerk)
     end
 
@@ -108,10 +107,13 @@ class Beekeeper::Importer::ReadingsRegistersMeters
       # note: during the import we move the name from the register (zaehlwerk) to the newly introduced entity
       register       = register_class.new(attrs.slice(:readings, :meter))
 
-      register_meta_default_attrs = { :observer_enabled => false, :observer_offline_monitoring => false }
-      register.build_meta(attrs.except(:type, :meter_attributes, :metering_point_id, :meter, :readings).merge(register_meta_default_attrs))
-      logger.debug("#{zaehlwerk.buzznid}: created #{register.class} with meter #{register.meter}")
-      logger.debug("#{zaehlwerk.buzznid}: created Register::Meta: #{register.meta.label} (#{register.meta.name})")
+      if attrs[:meta]
+        register.meta = attrs[:meta]
+      else
+        register.build_meta(register_meta_attrs(attrs))
+      end
+      logger.debug("#{zaehlwerk.buzznid}: built #{register.class}")
+      logger.debug("#{zaehlwerk.buzznid}: built Register::Meta: #{register.meta.label} (#{register.meta.name})")
       register
     end
 
@@ -154,5 +156,11 @@ class Beekeeper::Importer::ReadingsRegistersMeters
       end
     end
 
+    def register_meta_attrs(attrs)
+      attrs
+        .except(:type, :meter_attributes, :metering_point_id, :meter, :readings)
+        .merge(observer_enabled: false, observer_offline_monitoring: false)
+    end
   end
+
 end

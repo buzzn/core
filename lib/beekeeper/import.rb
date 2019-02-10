@@ -12,7 +12,7 @@ class Beekeeper::Import
 
   def run
     pools_to_import = Beekeeper::Minipool::MinipoolObjekte.to_import
-    # pools_to_import = [Beekeeper::Minipool::MinipoolObjekte.find_by(minipool_name: 'Heigelstraße 27')]
+    # pools_to_import = [Beekeeper::Minipool::MinipoolObjekte.find_by(minipool_name: 'Am Kindergarten 16')]
     loggers = pools_to_import.map do |record|
       logger = LocalpoolLog.new(record)
       puts "------------ Importing #{record.name} ------------"
@@ -34,22 +34,22 @@ class Beekeeper::Import
       localpool = Beekeeper::Importer::CreateLocalpool.new(logger).run(record.converted_attributes)
       Beekeeper::Importer::Roles.new(logger).run(localpool)
       registers = Beekeeper::Importer::ReadingsRegistersMeters.new(logger).run(localpool, record)
-      # tariffs = Beekeeper::Importer::Tariffs.new(logger).run(localpool, record.converted_attributes[:tariffs])
-      # Beekeeper::Importer::GroupContracts.new(logger).run(localpool, record.converted_attributes)
-      # Beekeeper::Importer::LocalpoolContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], record.converted_attributes[:third_party_contracts], registers, tariffs, warnings)
-      # Beekeeper::Importer::SetLocalpoolGapContractCustomer.new(logger).run(localpool)
-      # Beekeeper::Importer::AdjustLocalpoolContractsAndReadings.new(logger).run(localpool)
-      # Beekeeper::Importer::GenerateBillings.new(logger, beekeeper_account).run(localpool)
+      tariffs = Beekeeper::Importer::Tariffs.new(logger).run(localpool, record.converted_attributes[:tariffs])
+      Beekeeper::Importer::GroupContracts.new(logger).run(localpool, record.converted_attributes)
+      Beekeeper::Importer::LocalpoolContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], record.converted_attributes[:third_party_contracts], registers, tariffs, warnings)
+      Beekeeper::Importer::SetLocalpoolGapContractCustomer.new(logger).run(localpool)
+      Beekeeper::Importer::AdjustLocalpoolContractsAndReadings.new(logger).run(localpool)
+      Beekeeper::Importer::GenerateBillings.new(logger, beekeeper_account).run(localpool)
 
-      # # now we can fail and rollback on broken invariants
-      # raise ActiveRecord::RecordInvalid.new(localpool) unless localpool.invariant_valid?
-      # localpool.save!
+      # now we can fail and rollback on broken invariants
+      raise ActiveRecord::RecordInvalid.new(localpool) unless localpool.invariant_valid?
+      localpool.save!
 
-      # unless Import.global?('config.skip_brokers')
-      #   Beekeeper::Importer::Brokers.new(logger).run(localpool, warnings)
-      #   Beekeeper::Importer::OptimizeGroup.new(logger).run(localpool, warnings)
-      # end
-      # Beekeeper::Importer::LogIncompletenessesAndWarnings.new(logger).run(localpool.id, warnings)
+      unless Import.global?('config.skip_brokers')
+        Beekeeper::Importer::Brokers.new(logger).run(localpool, warnings)
+        Beekeeper::Importer::OptimizeGroup.new(logger).run(localpool, warnings)
+      end
+      Beekeeper::Importer::LogIncompletenessesAndWarnings.new(logger).run(localpool.id, warnings)
     end
   end
 
