@@ -62,7 +62,10 @@ class Beekeeper::Importer::ReadingsRegistersMeters
         if KNOWN_SUBSTITUTE_REGISTERS.include?(zaehlwerk.buzznid)
           build_substitute_register(zaehlwerk, register_meta)
         else
-          logger.warn("No meter/register for #{zaehlwerk.buzznid}, creating a fake temporary one.", extra_data: zaehlwerk)
+          logger.warn("We think beekeper's #{zaehlwerk.buzznid} is a virtual meter,
+                       but not a substitute one. We still don't know what to do with these.
+                       For now we create a 'fake' temporary meter, so the contracts attached
+                       to it can already be imported as well.", extra_data: zaehlwerk)
           build_fake_register(zaehlwerk, register_meta)
         end
       else
