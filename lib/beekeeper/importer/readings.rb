@@ -73,7 +73,8 @@ class Beekeeper::Importer::Readings
       end
     end
 
-    # DOES this need a meta?
+    private
+
     def build_substitute_register(zaehlwerk, register_meta = nil)
       attrs = zaehlwerk.converted_attributes.slice(:label, :name, :meter_attributes)
       attrs[:type] = 'Register::Substitute'
@@ -82,8 +83,7 @@ class Beekeeper::Importer::Readings
       build_any_register(attrs, zaehlwerk)
     end
 
-    # As a temporary solution to importing the actual virtual registers (separate story), we create a fake, empty one.
-    # TODO: check if method can be changed to also use build_any_register
+    # IMPROVEMENT: could be changed to also use build_any_register
     def build_fake_register(zaehlwerk, register_meta = nil)
       fake_meter_name = "FAKE-FOR-IMPORT-#{fake_register_counter}"
       meter = Meter::Real.create!(product_serialnumber: fake_meter_name, legacy_buzznid: zaehlwerk.buzznid)
@@ -102,21 +102,17 @@ class Beekeeper::Importer::Readings
       $counter = $counter.to_i + 1
     end
 
-    private
-
     def build_any_register(attrs, zaehlwerk)
       log_warnings(attrs, zaehlwerk)
       register_class = attrs[:type].constantize
-      # note: during the import we move the name from the register (zaehlwerk) to the newly introduced entity
-      register       = register_class.new(attrs.slice(:readings, :meter))
+      register       = register_class.new(meter: attrs[:meter])
 
       if attrs[:meta]
         register.meta = attrs[:meta]
       else
         register.build_meta(register_meta_attrs(attrs))
       end
-      logger.debug("#{zaehlwerk.buzznid}: built #{register.class}")
-      logger.debug("#{zaehlwerk.buzznid}: built Register::Meta: #{register.meta.label} (#{register.meta.name})")
+      logger.debug("#{zaehlwerk.buzznid}: built #{register.class} with Register::Meta #{register.meta.label} (#{register.meta.name})")
       register
     end
 
@@ -147,8 +143,8 @@ class Beekeeper::Importer::Readings
       end
     end
 
-    # This little lookup ensures that the TWO *registers* of a TWO-way *meter*
-    # are wired to the same meter record in the new system.
+    # This little lookup ensures that the registers of a two-way meter
+    # are wired to the same meter record.
     def with_meter_registry(buzznid)
       @meter_registry ||= {}
       if meter = @meter_registry[buzznid]
