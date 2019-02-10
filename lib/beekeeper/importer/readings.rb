@@ -3,7 +3,7 @@ class Beekeeper::Importer::Readings
 
   attr_reader :logger
 
-  SUBSTITUTE_BUZZNID = ['90043/1', '90005/5', '90051/9', '90052/12']
+  KNOWN_SUBSTITUTE_REGISTERS = ['90043/1', '90005/5', '90051/9', '90052/12']
 
   def initialize(logger)
     @logger = logger
@@ -29,6 +29,7 @@ class Beekeeper::Importer::Readings
       #     end
       end
       puts "Created #{zaehlwerk_readings.size} readings"
+      register # important to return this!
     end
     # puts "Created #{all_registers.size} registers"
   end
@@ -36,7 +37,7 @@ class Beekeeper::Importer::Readings
   private
 
   def for_each_zaehlwerk(record)
-    record.msb_zählwerk_daten.each do |zaehlwerk|
+    record.msb_zählwerk_daten.map do |zaehlwerk|
       yield [
         zaehlwerk,
         zaehlwerk.converted_attributes[:readings].sort_by(&:date).reverse
@@ -62,7 +63,7 @@ class Beekeeper::Importer::Readings
 
     def build_register(zaehlwerk)
       if zaehlwerk.virtual?
-        if SUBSTITUTE_BUZZNID.include?(zaehlwerk.buzznid)
+        if KNOWN_SUBSTITUTE_REGISTERS.include?(zaehlwerk.buzznid)
           build_substitute_register(zaehlwerk)
         else
           logger.warn("No meter/register for #{zaehlwerk.buzznid}, creating a fake temporary one.", extra_data: zaehlwerk)
@@ -145,8 +146,8 @@ class Beekeeper::Importer::Readings
       if meter = meter_registry.get(buzznid)
         meter
       else
-        meter = yield(attributes)
-        meter_registry.set(buzznid)
+        meter = yield
+        meter_registry.set(buzznid, meter)
         meter
       end
     end
