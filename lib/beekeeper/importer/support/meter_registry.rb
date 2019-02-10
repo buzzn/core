@@ -9,13 +9,7 @@ module Beekeeper
         @meters ||= {}
         verify!(buzznid)
         raise "Not a meter instance: #{meter_instance}" unless meter_instance.is_a?(Meter::Base)
-        if @meters[buzznid]
-          p '-------------------'
-          ap @meters[buzznid]
-          ap meter_instance
-          # FIXME: at least "90005/5" fails here, investigate
-          # raise "Meter for #{buzznid} already set, not overwriting: #{@meters[buzznid].attributes}"
-        end
+        raise "Meter for #{buzznid} already set, not overwriting: #{@meters[buzznid].attributes}" if @meters[buzznid]
         @meters[buzznid] = meter_instance
       end
 
@@ -23,7 +17,6 @@ module Beekeeper
         verify!(buzznid)
         @meters ||= {}
         meter = @meters[buzznid]
-        # puts "No meter for #{buzznid}" unless meter
         meter
       end
 
