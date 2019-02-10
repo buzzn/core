@@ -13,11 +13,11 @@ class Beekeeper::Importer::ReadingsRegistersMeters
   # TODO: clarify why the "Canary Test Group" doesn't import properly
   def run(localpool, record)
     puts "#{localpool.name} has #{record.msb_zählwerk_daten.size} zaehlwerke"
-    for_each_zaehlwerk(record) do |zaehlwerk, ascending_readings|
+    for_each_zaehlwerk(record) do |zaehlwerk, sorted_readings|
       register = create_register(zaehlwerk)
       puts "* Zählwerk: #{zaehlwerk.buzznid}"
       puts '-' * 50
-      ascending_readings.each do |reading|
+      sorted_readings.each do |reading|
         if reading.reason == 'device_change_2'
           register = create_register(zaehlwerk, register.meta)
         end
