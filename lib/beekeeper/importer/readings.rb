@@ -15,6 +15,7 @@ class Beekeeper::Importer::Readings
   # TODO: assign localpool
   # TODO: assign all registers of a to the same meta-register (all registers created for on one zaehlwerk)
   # TODO: rescue errors fine-grained
+  # TODO: clarify why the "Canary Test Group" doesn't import properly
   def run(localpool, record)
     puts "#{localpool.name} has #{record.msb_zählwerk_daten.size} zaehlwerke"
     for_each_zaehlwerk(record) do |zaehlwerk, zaehlwerk_readings|
