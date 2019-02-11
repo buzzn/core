@@ -23,7 +23,7 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContracts, order: :d
 
   5.times do |i|
     let!("meter_consumption_#{i+1}".to_sym) do
-      create(:meter, :real, register_label: :grid_consumption, group: localpool)
+      create(:meter, :real, register_label: :consumption, group: localpool)
     end
 
     let!("register_consumption_#{i+1}".to_sym) do
