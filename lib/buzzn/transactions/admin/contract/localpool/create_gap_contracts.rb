@@ -32,7 +32,7 @@ module Transactions::Admin::Contract::Localpool
 
     def calculated_ranges(params:, resource:, localpool:)
 
-      localpool.object.register_metas.to_a.keep_if { |x| x.consumption? || x.grid_consumption? }.collect do |register_meta|
+      localpool.object.register_metas.to_a.keep_if { |x| x.consumption? }.collect do |register_meta|
         installed_at     = (register_meta.registers.collect { |r| r.installed_at     }.reject(&:nil?).sort_by { |x| x.date }.first)&.date
         decomissioned_at = (register_meta.registers.collect { |r| r.decomissioned_at }.reject(&:nil?).sort_by { |x| x.date }.last)&.date
 
