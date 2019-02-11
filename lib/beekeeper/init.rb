@@ -10,7 +10,6 @@ end
 # wire up invariant with AR and raise error on invalid in before_save
 require 'buzzn/schemas/support/enable_dry_validation'
 require 'buzzn/types/discovergy'
-require 'beekeeper/importer/support/meter_registry'
 require 'beekeeper/importer/support/localpool_log'
 require 'beekeeper/importer/support/json_log_writer'
 
