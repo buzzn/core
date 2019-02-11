@@ -15,7 +15,7 @@ module Contract
     end
 
     def current_payment
-      payments.current.last
+      payments.current
     end
 
     def current_tariff
