@@ -8640,6 +8640,55 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/gap-contract-customer-bank-account":
+    patch:
+      description: updates the bank-accounts of the customer
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: holder
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: iban
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 32
+      - name: bank_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: bic
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+        minLength: 8
+      - name: direct_debit
+        in: formData
+        required: false
+        type: boolean
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/gap-contract-tariffs":
     get:
       description: returns all the tariffs of the localpool that are configured for

@@ -690,6 +690,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Support.Form
   end
 
+  patch '/localpools/{localpool.id}/gap-contract-customer-bank-account' do
+    description 'updates the bank-accounts of the customer'
+    schema Schemas::Transactions::BankAccount::Update
+  end
+
   # devices
 
   get '/localpools/{localpool.id}/devices' do
