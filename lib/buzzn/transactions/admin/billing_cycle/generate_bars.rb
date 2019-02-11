@@ -39,6 +39,7 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
   def billing_as_json(billing)
     {
       billing_id:                billing.id,
+      contract_type:             billing.contract.type,
       full_invoice_number:       billing.full_invoice_number,
       begin_date:                billing.begin_date,
       last_date:                 billing.last_date,
