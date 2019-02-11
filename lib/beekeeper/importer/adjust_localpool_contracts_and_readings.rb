@@ -72,7 +72,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       unless REGISTERS_WITH_IGNORED_MULTIPLE_READINGS.include?(register.meter.legacy_buzznid)
         logger.error(
           "Expected two readings on #{register.meter.legacy_buzznid} but got #{readings.size}. See extra_data for details.",
-          extra_data: readings.map { |r| inspect_reading(r) }
+          extra_data: readings.map { |r| r.inspect }
         )
       end
     end
@@ -83,6 +83,11 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     current_max + 1
   end
 
+  def find_gap_contract_customer(localpool)
+    customer = Beekeeper::Importer::GapContractCustomer.find_by_localpool(localpool)
+    customer ? customer : logger.error('No customer for gap contract found!')
+  end
+
   def handle_two_readings(readings, register)
     if readings.first.value == readings.last.value
       readings.first.delete
@@ -90,7 +95,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     else
       logger.info(
         'Readings for old contract end and new contract start have different values, this is resolved in code. See extra_data for reading details.',
-        extra_data: readings.collect { |r| inspect_reading(r) }
+        extra_data: readings.collect { |r| r.inspect }
       )
       case register.meter.legacy_buzznid
       when '90057/7'
@@ -102,10 +107,10 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
         readings.last.update_column(:value, 13_000)
       when '90067/6'
         # [INFO] Readings: date: 2018-01-14, 2122400.0, contract_change // date: 2018-01-15, 2132100.0, contract_change
-        # 2nd reading has a slightly higher reading than the first one one. Just delete the first one.
+        # 2nd reading has a slightly higher reading than the first one. Just delete the first one.
         readings.first.delete
       else
-        logger.error("Unexpected duplicate readings for #{register.meter.legacy_buzznid}. Please add code to decide on which reading to keep.")
+        logger.warn("Unexpected duplicate readings for #{register.meter.legacy_buzznid}. Please add code to decide on which reading to keep.")
       end
     end
   end
@@ -117,10 +122,6 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     else
       # case: the only reading is on the new contract end date -- that's what we want, nothing to do.
     end
-  end
-
-  def inspect_reading(reading)
-    reading.attributes.slice('date', 'value', 'reason', 'comment', 'id')
   end
 
 end
