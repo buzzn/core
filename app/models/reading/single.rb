@@ -58,7 +58,7 @@ module Reading
     scope :without_reason, ->(*reasons) { where('reason NOT IN (?)', reasons.flatten) }
     scope :before, ->(date) { where('date < ?', date)}
     scope :after, ->(date) { where('date > ?', date)}
-    scope :installed,     -> { with_reason(reasons[:device_setup], reasons[:device_change_1], reasons[:contract_change]) }
+    scope :installed,     -> { with_reason(reasons[:device_setup], reasons[:device_change_1], reasons[:contract_change], reasons[:balancing_zone_change]) }
     scope :decomissioned, -> { with_reason(reasons[:device_removal], reasons[:device_change_2]) }
 
     def previous
