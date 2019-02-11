@@ -691,8 +691,8 @@ describe Admin, :swagger, :request_helper, order: :defined do
   end
 
   patch '/localpools/{localpool.id}/gap-contract-customer-bank-account' do
-    description 'updates the bank-accounts of the customer'
-    schema Schemas::Transactions::BankAccount::Update
+    description 'assigns a bank account of the gap contract customer'
+    schema Schemas::Transactions::BankAccount::Assign
   end
 
   # devices
