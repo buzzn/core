@@ -6,6 +6,9 @@ class Beekeeper::Importer::GapContractCustomer
     'am-urtlgraben'                     => '60021/5',
     'bahnhofstr'                        => '60043/1',
     'cherubinistr'                      => '60009/8',
+    'dietersheimer-strasse'             => '60070/1',
+    'fichtenweg-und'                    => '60000/1',
+    # 'freisinger-str'                    => '' <- no gap contract yet
     'fritz-winter-strasse'              => '60029/79',
     'gertrud-grunow-strasse'            => '60030/37',
     'gotthardstrasse'                   => '60010/1',
@@ -23,11 +26,15 @@ class Beekeeper::Importer::GapContractCustomer
     'lissi-kaeser-strasse'              => '60041/1',
     'loft'                              => '60049/27',
     'marktplatz'                        => '60054/6',
+    'nappenhorn'                        => '60066/17',
     'martinusstrasse'                   => '60053/6',
     'mehrgenerationenplatz-forstenried' => '60015/73',
+    'memminger-str'                     => '60056/1',
     'michaelisstrasse'                  => '60025/3',
+    'oberlaenderstrasse'                => '60047/12',
     'orleansstrasse'                    => '60007/25',
     'panoramastrasse'                   => '60004/1',
+    'paul-forbach-str'                  => '60065/14',
     'prof-kurt-huber-str'               => '60040/6',
     'reinmarplatz'                      => '60017/52',
     'ruhensdorf'                        => '60020/1',
@@ -43,6 +50,7 @@ class Beekeeper::Importer::GapContractCustomer
     'wagnisart-australien-asien'        => '60035/52',
     'wagnisart-europa-amerika'          => '60036/29',
     'woge'                              => '60023/23',
+    'waldstrasse'                       => '60072/10'
   }
 
   class << self
