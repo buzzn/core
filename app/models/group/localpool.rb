@@ -104,13 +104,17 @@ module Group
                        .select(1)
                        .exists
       localpool = Localpool.arel_table
-      localpool_owner =
-        if base.is_a?(Group::Localpool)
-          localpool.where(localpool[:id].eq(base).and(localpool[:owner_person_id].eq(persons[:id]))).project(1).exists
-        else
-          base.where('groups.owner_person_id=persons.id').project(1).exists
-        end
-      Person.where(localpool_owner.or(localpool_users).or(contract_users))
+      localpool_owner = if base.is_a?(Group::Localpool)
+                          localpool.where(localpool[:id].eq(base).and(localpool[:owner_person_id].eq(persons[:id]))).project(1).exists
+                        else
+                          base.where('groups.owner_person_id=persons.id').project(1).exists
+                        end
+      localpool_gap_contract_customer = if base.respond_to?(:to_a)
+                                          base.where('groups.gap_contract_customer_person_id=persons.id').project(1).exists
+                                        else
+                                          localpool.where(localpool[:id].eq(base).and(localpool[:gap_contract_customer_person_id].eq(persons[:id]))).project(1).exists
+                                        end
+      Person.where(localpool_owner.or(localpool_users).or(contract_users).or(localpool_gap_contract_customer))
     end
 
     def organizations
@@ -130,7 +134,12 @@ module Group
       contract_organizations = contracts(base).where('contracts.customer_organization_id = organizations.id or contracts.contractor_organization_id = organizations.id')
                                               .select(1)
                                               .exists
-      Organization::General.where(localpool_owner.or(contract_organizations))
+      localpool_gap_contract_customer = if base.respond_to?(:to_a)
+                                          base.where('groups.gap_contract_customer_organization_id=organizations.id').project(1).exists
+                                        else
+                                          localpool.where(localpool[:id].eq(base).and(localpool[:gap_contract_customer_organization_id].eq(organizations[:id]))).project(1).exists
+                                        end
+      Organization::General.where(localpool_owner.or(contract_organizations).or(localpool_gap_contract_customer))
     end
 
     def one_way_meters
