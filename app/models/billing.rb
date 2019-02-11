@@ -88,6 +88,14 @@ class Billing < ActiveRecord::Base
     total_amount_before_taxes * billing_config.vat
   end
 
+  def total_consumed_energy_kwh
+    total = 0
+    items.each do |item|
+      total += item.consumed_energy_kwh
+    end
+    total
+  end
+
   def daily_kwh_estimate
     total = 0
     items.each do |item|

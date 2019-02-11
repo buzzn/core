@@ -12,9 +12,9 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
   def build_result(resource:, params:, register_metas:, **)
     billings = resource.object.billings
     register_metas.map do |meta|
-      billings = billings.select { |billing| billing.contract.register_meta == meta }
+      billings_filtered = billings.select { |billing| billing.contract.register_meta == meta }
       third_party_contracts = meta.contracts.where(type: 'Contract::LocalpoolThirdParty').to_a
-      build_register_meta_row(meta, billings, third_party_contracts)
+      build_register_meta_row(meta, billings_filtered, third_party_contracts)
     end
   end
 
@@ -45,6 +45,7 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
       last_date:                 billing.last_date,
       end_date:                  billing.end_date,
       status:                    billing.status,
+      total_consumed_energy_kwh: billing.total_consumed_energy_kwh,
       total_amount_before_taxes: billing.total_amount_before_taxes.round(2),
       errors:                    billing.errors.empty? ? {} : billing.errors
     }.tap do |h|
