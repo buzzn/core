@@ -5,6 +5,7 @@ module Admin
 
     include Import.args[:env,
                         'transactions.admin.billing_cycle.create',
+                        'transactions.admin.billing_cycle.generate_bars',
                         'transactions.admin.billing_cycle.update',
                         'transactions.admin.billing_cycle.delete',
                        ]
@@ -37,6 +38,13 @@ module Admin
 
         r.delete! do
           delete.(resource: billing_cycle)
+        end
+
+        r.on 'bars' do
+          r.get! do
+            generate_bars.(resource: billing_cycle, params: r.params)
+          end
+          r.others!
         end
 
         r.on 'billings' do
