@@ -6,7 +6,7 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
   map :build_result
 
   def register_metas(resource:, params:)
-    resource.object.localpool.register_metas_by_registers.order(:name).to_a.select(&:consumption?)
+    resource.object.localpool.register_metas_by_registers.order(:name).uniq.to_a.select(&:consumption?)
   end
 
   def build_result(resource:, params:, register_metas:, **)
