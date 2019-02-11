@@ -55,11 +55,11 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
   end
 
   CONTRACT_MAP = {
-    'Contract::MeteringPointOperator' => 'metering_point_operator',
-    'Contract::LocalpoolProcessing'   => 'localpool_processing',
-    'Contract::LocalpoolPowerTaker'   => 'localpool_power_taker',
-    'Contract::LocalpoolThirdParty'   => 'localpool_third_party',
-    'Contract::LocalpoolGap'          => 'localpool_gap'
+    'Contract::MeteringPointOperator' => 'contract_metering_point_operator',
+    'Contract::LocalpoolProcessing'   => 'contract_localpool_processing',
+    'Contract::LocalpoolPowerTaker'   => 'contract_localpool_power_taker',
+    'Contract::LocalpoolThirdParty'   => 'contract_localpool_third_party',
+    'Contract::LocalpoolGap'          => 'contract_localpool_gap'
   }
 
   def billing_as_json(billing)
