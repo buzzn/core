@@ -65,6 +65,10 @@ module Admin
           bank_account_assign.(resource: contract, params: r.params, attribute: :customer_bank_account, person_or_org: :customer)
         end
 
+        r.patch!('contractor-bank-account') do
+          bank_account_assign.(resource: contract, params: r.params, attribute: :contractor_bank_account, person_or_org: :contractor)
+        end
+
         r.patch!('customer-person') do
           case contract
           when Contract::LocalpoolPowerTakerResource
