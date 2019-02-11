@@ -8642,7 +8642,7 @@ paths:
           description: patched
   "/localpools/{localpool_id}/gap-contract-customer-bank-account":
     patch:
-      description: updates the bank-accounts of the customer
+      description: assigns a bank account of the gap contract customer
       consumes:
       - application/x-www-form-urlencoded
       produces:
@@ -8657,35 +8657,11 @@ paths:
         required: true
         type: string
         format: date-time
-      - name: holder
+      - name: bank_account_id
         in: formData
         required: false
-        type: string
-        format: ''
-        maxLength: 64
-      - name: iban
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 32
-      - name: bank_name
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 64
-      - name: bic
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 16
-        minLength: 8
-      - name: direct_debit
-        in: formData
-        required: false
-        type: boolean
+        type: integer
+        format: int64
       responses:
         200:
           description: patched
