@@ -37,7 +37,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'description'=>organization.description,
           'additional_legal_representation'=> nil,
           'updatable'=>true,
-          'deletable'=>true,
+          'deletable'=>false,
           'customer_number' => nil,
           'bank_accounts'=>{
             'array'=> organization.bank_accounts.collect do |bank_account|
@@ -155,7 +155,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           # FIXME this is now stored on association OrganizationMarketFunction
           'customer_number' => nil,
           'updatable'=>true,
-          'deletable'=>true,
+          'deletable'=>false,
           'address'=>address_json
         }
       end

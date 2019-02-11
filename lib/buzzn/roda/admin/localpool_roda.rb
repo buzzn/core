@@ -5,19 +5,20 @@ module Admin
   class LocalpoolRoda < BaseRoda
 
     include Import.args[:env,
-                        'transactions.admin.localpool.create',
-                        'transactions.admin.localpool.update',
-                        'transactions.admin.localpool.assign_owner',
-                        'transactions.admin.localpool.assign_gap_contract_customer',
-                        'transactions.admin.localpool.create_person_owner',
-                        'transactions.admin.localpool.create_person_gap_contract_customer',
-                        'transactions.admin.generic.update_nested_person',
-                        'transactions.admin.localpool.create_organization_owner',
-                        'transactions.admin.localpool.create_organization_gap_contract_customer',
-                        'transactions.admin.localpool.assign_gap_contract_tariffs',
-                        'transactions.admin.generic.update_nested_organization',
-                        'transactions.bubbles',
-                        'transactions.delete'
+                        create: 'transactions.admin.localpool.create',
+                        bank_account_assign: 'transactions.admin.bank_account.assign',
+                        update: 'transactions.admin.localpool.update',
+                        assign_owner: 'transactions.admin.localpool.assign_owner',
+                        assign_gap_contract_customer: 'transactions.admin.localpool.assign_gap_contract_customer',
+                        create_person_owner: 'transactions.admin.localpool.create_person_owner',
+                        create_person_gap_contract_customer: 'transactions.admin.localpool.create_person_gap_contract_customer',
+                        update_nested_person: 'transactions.admin.generic.update_nested_person',
+                        create_organization_owner: 'transactions.admin.localpool.create_organization_owner',
+                        create_organization_gap_contract_customer: 'transactions.admin.localpool.create_organization_gap_contract_customer',
+                        assign_gap_contract_tariffs: 'transactions.admin.localpool.assign_gap_contract_tariffs',
+                        update_nested_organization: 'transactions.admin.generic.update_nested_organization',
+                        bubbles: 'transactions.bubbles',
+                        delete: 'transactions.delete'
                        ]
 
     PARENT = :localpool
@@ -73,6 +74,10 @@ module Admin
             assign_gap_contract_tariffs.(resource: localpool, params: r.params)
           end
           r.others!
+        end
+
+        r.patch!('gap-contract-customer-bank-account') do
+          bank_account_assign.(resource: localpool, params: r.params, attribute: :gap_contract_customer_bank_account, person_or_org: :gap_contract_customer)
         end
 
         r.on 'billing-cycles' do

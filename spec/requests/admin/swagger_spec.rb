@@ -282,6 +282,16 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Person.update_for(localpool_power_taker_contract.customer)
   end
 
+  patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract_2.id}/customer-bank-account' do
+    description 'assigns a bank account of the customer to the contract'
+    schema Schemas::Transactions::BankAccount::Assign
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract_2.id}/contractor-bank-account' do
+    description 'assigns a bank account of the contractor to the contract'
+    schema Schemas::Transactions::BankAccount::Assign
+  end
+
   get '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/tariffs' do
     description 'returns the tariffs of the contract'
   end
@@ -512,6 +522,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'returns all bank-accounts of the person for the given ID'
   end
 
+  post '/localpools/{localpool.id}/persons/{person.id}/bank-accounts' do
+    description 'create a new bank-account of the person for the given ID'
+    schema Schemas::Transactions::BankAccount::Create
+  end
+
   get '/localpools/{localpool.id}/persons/{person.id}/bank-accounts/{bank_account_1.id}' do
     description 'returns the bank-accounts of the person for the given IDs'
   end
@@ -539,6 +554,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   get '/localpools/{localpool3.id}/organizations/{organization.id}/bank-accounts' do
     description 'returns all bank-accounts of the organization for the given ID'
+  end
+
+  post '/localpools/{localpool3.id}/organizations/{organization.id}/bank-accounts' do
+    description 'create a new bank-account of the organization for the given ID'
+    schema Schemas::Transactions::BankAccount::Create
   end
 
   get '/localpools/{localpool3.id}/organizations/{organization.id}/bank-accounts/{bank_account_3.id}' do
@@ -668,6 +688,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
   post '/localpools/{localpool.id}/organization-gap-contract-customer/{organization.id}' do
     description 'assign different organization as owner of the localpool'
     schema Schemas::Support.Form
+  end
+
+  patch '/localpools/{localpool.id}/gap-contract-customer-bank-account' do
+    description 'assigns a bank account of the gap contract customer'
+    schema Schemas::Transactions::BankAccount::Assign
   end
 
   # devices

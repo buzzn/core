@@ -5305,6 +5305,53 @@ paths:
       responses:
         200:
           description: success
+    post:
+      description: create a new bank-account of the organization for the given ID
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool3_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      - name: holder
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: iban
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 32
+      - name: bank_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: bic
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+        minLength: 8
+      - name: direct_debit
+        in: formData
+        required: false
+        type: boolean
+      responses:
+        201:
+          description: created
   "/localpools/{localpool3_id}/organizations/{organization_id}/bank-accounts/{bank_account_id}":
     get:
       description: returns the bank-accounts of the organization for the given IDs
@@ -5388,6 +5435,17 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: bic
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+        minLength: 8
+      - name: direct_debit
+        in: formData
+        required: false
+        type: boolean
       responses:
         200:
           description: patched
@@ -6575,6 +6633,64 @@ paths:
         type: integer
         format: int64
       - name: end_reading_id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/contractor-bank-account":
+    patch:
+      description: assigns a bank account of the contractor to the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: bank_account_id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/customer-bank-account":
+    patch:
+      description: assigns a bank account of the customer to the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: localpool_power_taker_contract_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: bank_account_id
         in: formData
         required: false
         type: integer
@@ -8524,6 +8640,31 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/gap-contract-customer-bank-account":
+    patch:
+      description: assigns a bank account of the gap contract customer
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: bank_account_id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/gap-contract-tariffs":
     get:
       description: returns all the tariffs of the localpool that are configured for
@@ -9939,6 +10080,53 @@ paths:
       responses:
         200:
           description: success
+    post:
+      description: create a new bank-account of the person for the given ID
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      - name: holder
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: iban
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 32
+      - name: bank_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: bic
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+        minLength: 8
+      - name: direct_debit
+        in: formData
+        required: false
+        type: boolean
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_id}/persons/{person_id}/bank-accounts/{bank_account_id}":
     get:
       description: returns the bank-accounts of the person for the given IDs
@@ -10022,6 +10210,17 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: bic
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+        minLength: 8
+      - name: direct_debit
+        in: formData
+        required: false
+        type: boolean
       responses:
         200:
           description: patched

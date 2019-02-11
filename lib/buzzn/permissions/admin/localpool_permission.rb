@@ -72,7 +72,27 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       crud :managers_self
     end
 
-    bank_accounts :address
+    contracts do
+      retrieve :managers_self
+
+      localpool do
+        retrieve :managers_self
+      end
+
+      register_meta do
+        retrieve :managers_self
+
+        registers do
+          retrieve :managers_self
+        end
+
+      end
+
+    end
+
+    bank_accounts do
+      crud :managers_self
+    end
   end
 
   owner do
@@ -90,6 +110,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
 
   gap_contract_customer '/owner'
 
+  gap_contract_customer_bank_account do
+    retrieve :managers
+  end
+
   energy_consumers do
     retrieve :managers
   end
@@ -102,7 +126,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
   end
 
   organizations do
-    crud :managers
+    create :managers
+    retrieve :managers_self
+    update :managers_self
+    delete :none
 
     contact do
       retrieve :managers_organization
@@ -112,6 +139,9 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
         retrieve :managers_organization
         update :managers_organization
         delete :none
+      end
+      bank_accounts do
+        crud :managers_organization
       end
     end
 
@@ -124,11 +154,16 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
         update :managers_organization
         delete :none
       end
+      bank_accounts do
+        crud :managers_organization
+      end
     end
 
     address do
       crud :managers_organization
     end
+
+    contracts '/persons/contracts'
 
     bank_accounts do
       crud :managers_organization

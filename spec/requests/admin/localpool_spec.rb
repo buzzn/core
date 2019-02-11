@@ -165,7 +165,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
     end
 
     it '200' do
-      GET "/localpools/#{localpool_no_contracts.id}", $admin, include: 'meters, address, billing_cycles'
+      GET "/localpools/#{localpool_no_contracts.id}", $admin, include: 'meters, address, billing_cycles, gap_contract_customer, gap_contract_customer_bank_account'
       expect(response).to have_http_status(200)
 
       result = json
@@ -173,6 +173,11 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
       result.delete('meters')
       expect(result).to has_nested_json(:address, :id)
       result.delete('address')
+
+      expect(result['gap_contract_customer']).to be_nil
+      result.delete('gap_contract_customer')
+      expect(result['gap_contract_customer_bank_account']).to be_nil
+      result.delete('gap_contract_customer_bank_account')
 
       result.delete('allowed_actions')
       expect(result.to_yaml).to eq localpool_json.to_yaml

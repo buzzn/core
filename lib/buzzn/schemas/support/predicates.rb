@@ -1,5 +1,6 @@
 require_relative '../support'
 require 'ruby_regex'
+require 'iban-tools'
 
 module Schemas::Support::Predicates
 
