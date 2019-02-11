@@ -22,6 +22,7 @@ class CreateGroups < ActiveRecord::Migration
     add_belongs_to :groups, :electricity_supplier, reference: :organizations, index: true, null: true
 
     add_belongs_to :groups, :bank_account, reference: :bank_accounts, index: true, null: true
+    add_belongs_to :groups, :gap_contract_customer_bank_account, reference: :bank_accounts, index: true, null: true
 
     add_belongs_to :devices, :localpool, reference: :groups, index: true, null: true
 
@@ -32,6 +33,8 @@ class CreateGroups < ActiveRecord::Migration
 
     add_foreign_key :groups, :persons, name: :fk_groups_gap_contract_customer_person, column: :gap_contract_customer_person_id
     add_foreign_key :groups, :organizations, name: :fk_groups_gap_contract_customer_organization, column: :gap_contract_customer_organization_id
+
+    add_foreign_key :groups, :bank_accounts, name: :fk_groups_gap_contract_customer_bank_account, column: :gap_contract_customer_bank_account_id
 
     add_foreign_key :groups, :organizations, name: :fk_groups_distribution_system_operator, column: :distribution_system_operator_id
     add_foreign_key :groups, :organizations, name: :fk_groups_transmission_system_operator, column: :transmission_system_operator_id

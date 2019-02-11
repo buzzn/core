@@ -64,6 +64,7 @@ module Admin
     has_many :devices, DeviceResource
     has_one :owner
     has_one :gap_contract_customer
+    has_one :gap_contract_customer_bank_account, BankAccountResource
     has_one :address
     has_one :distribution_system_operator
     has_one :transmission_system_operator

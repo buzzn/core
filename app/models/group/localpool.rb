@@ -13,6 +13,7 @@ module Group
     belongs_to :transmission_system_operator, class_name: 'Organization::Market'
     belongs_to :electricity_supplier, class_name: 'Organization::Market'
     belongs_to :billing_detail, class_name: 'BillingDetail'
+    belongs_to :gap_contract_customer_bank_account, class_name: 'BankAccount'
 
     has_many :devices, foreign_key: :localpool_id
     has_many :tariffs, dependent: :destroy, class_name: 'Contract::Tariff', foreign_key: :group_id
