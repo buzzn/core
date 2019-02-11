@@ -11,11 +11,13 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
 
   def build_result(resource:, params:, register_metas:, **)
     billings = resource.object.billings
-    register_metas.map do |meta|
-      billings_filtered = billings.select { |billing| billing.contract.register_meta == meta }
-      third_party_contracts = meta.contracts.where(type: 'Contract::LocalpoolThirdParty').to_a
-      build_register_meta_row(meta, billings_filtered, third_party_contracts)
-    end
+    {
+      array: register_metas.map do |meta|
+        billings_filtered = billings.select { |billing| billing.contract.register_meta == meta }
+        third_party_contracts = meta.contracts.where(type: 'Contract::LocalpoolThirdParty').to_a
+        build_register_meta_row(meta, billings_filtered, third_party_contracts)
+      end
+    }
   end
 
   private
@@ -36,6 +38,22 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
     billings.sort_by(&:begin_date).collect { |billing| billing_as_json(billing) }
   end
 
+  def third_partys_as_json(third_party_contracts)
+    return [] unless third_party_contracts
+    third_party_contracts.sort_by(&:begin_date).collect do |contract|
+
+    end
+  end
+
+  def third_party_as_json(third_party_contract)
+    {
+      billing_id: 0,
+      contract_type: third_party_contract.type,
+      full_invoice_number: nil,
+      begin_date: third_party_contract
+    }
+  end
+
   def billing_as_json(billing)
     {
       billing_id:                billing.id,
@@ -49,15 +67,17 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
       total_amount_before_taxes: billing.total_amount_before_taxes.round(2),
       errors:                    billing.errors.empty? ? {} : billing.errors
     }.tap do |h|
-      h[:items] = billing.items.map do |item|
-        {
-          begin_date:           item.begin_date,
-          end_date:             item.end_date,
-          energy_price_cents:   item.energy_price_cents.round(2),
-          consumed_energy_kwh:  item.consumed_energy_kwh,
-          errors:               item.errors.empty? ? {} : item.errors
-        }
-      end
+      h[:items] = {
+        array: billing.items.map do |item|
+          {
+            begin_date:           item.begin_date,
+            end_date:             item.end_date,
+            energy_price_cents:   item.energy_price_cents.round(2),
+            consumed_energy_kwh:  item.consumed_energy_kwh,
+            errors:               item.errors.empty? ? {} : item.errors
+          }
+        end
+      }
     end
   end
 
