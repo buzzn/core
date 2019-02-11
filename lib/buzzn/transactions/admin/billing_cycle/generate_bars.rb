@@ -54,10 +54,18 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
     }
   end
 
+  CONTRACT_MAP = {
+    'Contract::MeteringPointOperator' => 'metering_point_operator',
+    'Contract::LocalpoolProcessing'   => 'localpool_processing',
+    'Contract::LocalpoolPowerTaker'   => 'localpool_power_taker',
+    'Contract::LocalpoolThirdParty'   => 'localpool_third_party',
+    'Contract::LocalpoolGap'          => 'localpool_gap'
+  }
+
   def billing_as_json(billing)
     {
       billing_id:                billing.id,
-      contract_type:             billing.contract.type,
+      contract_type:             CONTRACT_MAP.fetch(billing.contract.type, 'unknown'),
       full_invoice_number:       billing.full_invoice_number,
       begin_date:                billing.begin_date,
       last_date:                 billing.last_date,
