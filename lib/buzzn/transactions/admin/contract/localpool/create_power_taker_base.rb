@@ -31,6 +31,7 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
 
   def assign_contractor(params:, localpool:, **)
     params[:contractor] = localpool.owner.object
+    params[:contractor_bank_account] = localpool.owner.object.bank_accounts.count.positive? ? localpool.owner.object.bank_accounts.first : nil
   end
 
   def assign_register_meta(params:, **)
