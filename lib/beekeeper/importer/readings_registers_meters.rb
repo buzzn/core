@@ -1,3 +1,4 @@
+# coding: utf-8
 
 class Beekeeper::Importer::ReadingsRegistersMeters
 
@@ -15,13 +16,14 @@ class Beekeeper::Importer::ReadingsRegistersMeters
   # we could store that with the old register on COM1/COM2.
   def run(localpool, record)
     puts "#{localpool.name} has #{record.msb_zählwerk_daten.size} zaehlwerke"
+    max_sequence_number = record.msb_zählwerk_daten.map(&:converted_attributes).map{|x| x[:meter_attributes][:sequence_number] }.max
     for_each_zaehlwerk(record) do |zaehlwerk, sorted_readings|
-      register = create_register(zaehlwerk)
+      register = create_register(zaehlwerk, localpool, max_sequence_number)
       puts "* Zählwerk: #{zaehlwerk.buzznid}"
       puts '-' * 50
       sorted_readings.each do |reading|
         if reading.reason == 'device_change_2'
-          register = create_register(zaehlwerk, register.meta)
+          register = create_register(zaehlwerk, localpool, max_sequence_number, register.meta)
         end
         puts "#{reading.date.iso8601} #{reading.reason_code.rjust(5, ' ')} #{reading.value.to_s.rjust(10, ' ')} register: ##{register.id} meta: ##{register.meta.id}"
         register.readings << reading
@@ -44,8 +46,8 @@ class Beekeeper::Importer::ReadingsRegistersMeters
     end
   end
 
-  def create_register(zaehlwerk, register_meta = nil)
-    @builder ||= RegisterBuilder.new(logger)
+  def create_register(zaehlwerk, localpool, max_sequence_number, register_meta = nil)
+    @builder ||= RegisterBuilder.new(logger, localpool, max_sequence_number)
     register = @builder.build_register(zaehlwerk, register_meta)
     register.save!
     register
@@ -54,9 +56,12 @@ class Beekeeper::Importer::ReadingsRegistersMeters
   class RegisterBuilder
 
     attr_reader :logger
+    attr_reader :localpool
 
-    def initialize(logger)
+    def initialize(logger, localpool, max_sequence_number)
       @logger = logger
+      @localpool = localpool
+      @max_sequence_number = max_sequence_number
     end
 
     def build_register(zaehlwerk, register_meta = nil)
@@ -88,7 +93,7 @@ class Beekeeper::Importer::ReadingsRegistersMeters
     # IMPROVEMENT: could be changed to also use build_any_register
     def build_fake_register(zaehlwerk, register_meta = nil)
       fake_meter_name = "FAKE-FOR-IMPORT-#{fake_register_counter}"
-      meter = Meter::Real.create!(product_serialnumber: fake_meter_name, legacy_buzznid: zaehlwerk.buzznid)
+      meter = Meter::Real.create!(product_serialnumber: fake_meter_name, legacy_buzznid: zaehlwerk.buzznid, group: @localpool)
       meta = register_meta || Register::Meta.new(name: fake_meter_name.gsub('IMPORT-', 'IMPORT-M-'), label: :other, observer_enabled: false, observer_offline_monitoring: false)
       Register::Real.create!(meta: meta, meter: meter)
     end
@@ -125,7 +130,7 @@ class Beekeeper::Importer::ReadingsRegistersMeters
 
     def build_virtual_meter(attributes)
       with_meter_registry(attributes[:buzznid]) do
-        Meter::Virtual.new(attributes.except(:buzznid).merge(legacy_buzznid: attributes[:buzznid]))
+        Meter::Virtual.new(attributes.except(:buzznid).merge(legacy_buzznid: attributes[:buzznid], group: @localpool))
       end
     end
 
@@ -133,7 +138,18 @@ class Beekeeper::Importer::ReadingsRegistersMeters
     def build_real_meter(attributes, zaehlwerk)
       with_meter_registry(attributes[:buzznid]) do
         metering_point_id = attributes.delete(:metering_point_id)
-        meter = Meter::Real.new(attributes.except(:buzznid).merge(legacy_buzznid: attributes[:buzznid]))
+        sequence_number = if Meter::Base.where(group: @localpool).where(:sequence_number => attributes[:sequence_number]).any?
+                            current_max = Meter::Base.where(group: @localpool).maximum(:sequence_number)
+                            if current_max.nil?
+                              raise 'this does not make any sense'
+                            end
+                            if current_max < @max_sequence_number
+                              @max_sequence_number
+                            end
+                          else
+                            attributes[:sequence_number]
+                          end
+        meter = Meter::Real.new(attributes.except(:buzznid, :sequence_number).merge(sequence_number: sequence_number, legacy_buzznid: attributes[:buzznid], group: @localpool))
         if metering_point_id
           if metering_point_id.size != 33
             logger.warn("metering_point_id has wrong size #{metering_point_id}, expected 33", extra_data: zaehlwerk.warnings)
