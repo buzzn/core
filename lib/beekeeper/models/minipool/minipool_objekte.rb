@@ -3,7 +3,6 @@
 require_relative 'concerns/import_warnings'
 require_relative 'concerns/minipool_objekte/organizations'
 require_relative 'concerns/minipool_objekte/owner'
-require_relative 'concerns/minipool_objekte/registers'
 require_relative 'concerns/minipool_objekte/powertaker_contracts'
 require_relative 'concerns/minipool_objekte/abschlag_information'
 
@@ -75,13 +74,15 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
   include Beekeeper::ImportWarnings
   include Beekeeper::Minipool::MinipoolObjekte::Organizations
   include Beekeeper::Minipool::MinipoolObjekte::Owner
-  include Beekeeper::Minipool::MinipoolObjekte::Registers
   include Beekeeper::Minipool::MinipoolObjekte::PowertakerContracts
   include Beekeeper::Minipool::MinipoolObjekte::AbschlagInformation
 
   belongs_to :adresse, foreign_key: 'adress_id'
 
-  scope :to_import, -> { where("minipool_start != '0000-00-00'").order(:minipool_start, :minipool_name) }
+  scope :to_import, -> {
+    where("minipool_start != '0000-00-00' AND minipool_name != 'Canary Test Group'")
+    .order(:minipool_start, :minipool_name)
+  }
 
   def converted_attributes
     @converted_attributes ||= {
@@ -97,7 +98,6 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
       address:                      address,
       owner:                        owner,
       bank_account:                 bank_accounts.first,
-      registers:                    registers,
       powertaker_contracts:         powertaker_contracts,
       third_party_contracts:        third_party_contracts,
       tariffs:                      tariffs,
@@ -111,16 +111,16 @@ class Beekeeper::Minipool::MinipoolObjekte < Beekeeper::Minipool::BaseRecord
     minipool_name.strip
   end
 
+  # these are the registers
+  def msb_zählwerk_daten
+    @_msb_zählwerk_daten ||= Beekeeper::Minipool::MsbZählwerkDaten.where(vertragsnummer: messvertragsnummer).order(:nummernzusatz)
+  end
+
   private
 
   # these are the meters
   def msb_geräte
     @_msb_geräte ||= Beekeeper::Minipool::MsbGerät.where(vertragsnummer: messvertragsnummer)
-  end
-
-  # these are the registers
-  def msb_zählwerk_daten
-    @_msb_zählwerk_daten ||= Beekeeper::Minipool::MsbZählwerkDaten.where(vertragsnummer: messvertragsnummer)
   end
 
   def start_date

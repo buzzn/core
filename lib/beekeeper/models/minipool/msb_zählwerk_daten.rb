@@ -44,7 +44,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     @minipool_sn ||= Beekeeper::Minipool::MinipoolSn.find_by(buzznid: "#{vertragsnummer}/#{nummernzusatz}")
   end
 
-  def skip_import?
+  def virtual?
     msb_gerät.nil? || msb_gerät.virtual?
   end
 
@@ -56,6 +56,31 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     return '1-1:1.8.0' if ['1-1:1.8.0', '1-1:.8.0'].include?(read_attribute(:obis))
     return '1-1:2.8.0' if ['1-1:2.8.0', '1-1:2:8.0', '1-2:1.8.0'].include?(read_attribute(:obis))
     add_warning(:obis, "Unknown obis: #{read_attribute(:obis)} for #{buzznid}")
+  end
+
+  def readings
+    readings = Beekeeper::Minipool::MsbZählwerkZst.where(vertragsnummer: vertragsnummer, nummernzusatz: nummernzusatz, zählwerkID: zählwerkID).to_a
+    uniq_readings = readings.uniq { |r| [r[:ablesezeitpunkt], r[:ablesegrund]] }
+
+    unless uniq_readings.length == readings.length
+      dups = readings.group_by { |r| [r[:ablesezeitpunkt], r[:ablesegrund]] }.select { |_, r| r.length > 1 }
+      dups.each do |_, dup_arr|
+        dup_arr.each do |dup|
+          add_warning(:readings, "duplicate for: vertragsnummer: #{dup.vertragsnummer}, nummernzusatz: #{dup.nummernzusatz}, zählwerkID: #{dup.zählwerkID}, date: #{dup.ablesezeitpunkt}")
+        end
+      end
+    end
+
+    uniq_readings = uniq_readings.collect do |r|
+      # FIXME: add condition that reading is the first on the register
+      if r.converted_attributes[:raw_value] == 0 && r.converted_attributes[:reason] == 'COS'
+        add_warning(:readings, "Adjusting reading from COS to IOM for #{r.converted_attributes}")
+        r.converted_attributes[:reason] = 'IOM'
+      end
+      r
+    end
+
+    uniq_readings.collect { |r| Reading::Single.new(r.converted_attributes) }
   end
 
   private

@@ -20,7 +20,7 @@ ReadingsCheck = Struct.new(:contract) do
 
   # These contracts have virtual meters which we haven't imported yet, so there are no readings.
   def ignore_contract?
-    contract.register.name == 'FAKE-FOR-IMPORT'
+    contract.register.name =~ /FAKE-FOR-IMPORT/
   end
 
   def missing_readings

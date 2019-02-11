@@ -1,3 +1,4 @@
+# coding: utf-8
 ActiveRecord::Base.send(:include, Schemas::Support::ValidateInvariant)
 
 class Beekeeper::Import
@@ -12,7 +13,7 @@ class Beekeeper::Import
 
   def run
     pools_to_import = Beekeeper::Minipool::MinipoolObjekte.to_import
-    # pools_to_import = [Beekeeper::Minipool::MinipoolObjekte.find_by(minipool_name: 'Mehrgenerationenplatz Forstenried')]
+    # pools_to_import = [Beekeeper::Minipool::MinipoolObjekte.find_by(minipool_name: 'Am Kindergarten 16')]
     loggers = pools_to_import.map do |record|
       logger = LocalpoolLog.new(record)
       puts "------------ Importing #{record.name} ------------"
@@ -26,17 +27,14 @@ class Beekeeper::Import
   private
 
   def import_localpool(record, logger)
-    beekeeper_account = Account::Base.where(:email => 'dev+beekeeper@buzzn.net').first
-    if beekeeper_account.nil?
-      raise 'please create a beekeeper account first'
-    end
+    beekeeper_account = verify_beekeeper_account!
 
     warnings = record.warnings || {}
     Group::Localpool.transaction do
       # need to create localpool with broken invariants
       localpool = Beekeeper::Importer::CreateLocalpool.new(logger).run(record.converted_attributes)
       Beekeeper::Importer::Roles.new(logger).run(localpool)
-      registers = Beekeeper::Importer::RegistersAndMeters.new(logger).run(localpool, record.converted_attributes[:registers])
+      registers = Beekeeper::Importer::ReadingsRegistersMeters.new(logger).run(localpool, record)
       tariffs = Beekeeper::Importer::Tariffs.new(logger).run(localpool, record.converted_attributes[:tariffs])
       Beekeeper::Importer::GroupContracts.new(logger).run(localpool, record.converted_attributes)
       Beekeeper::Importer::LocalpoolContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], record.converted_attributes[:third_party_contracts], registers, tariffs, warnings)
@@ -54,6 +52,12 @@ class Beekeeper::Import
       end
       Beekeeper::Importer::LogIncompletenessesAndWarnings.new(logger).run(localpool.id, warnings)
     end
+  end
+
+  def verify_beekeeper_account!
+    beekeeper_account = Account::Base.where(:email => 'dev+beekeeper@buzzn.net').first
+    raise 'please create a beekeeper account first' if beekeeper_account.nil?
+    beekeeper_account
   end
 
 end
