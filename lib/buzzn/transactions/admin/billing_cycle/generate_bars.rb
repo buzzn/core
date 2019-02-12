@@ -72,7 +72,7 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
       end_date:                  billing.end_date,
       status:                    billing.status,
       total_consumed_energy_kwh: billing.total_consumed_energy_kwh,
-      total_amount_before_taxes: billing.total_amount_before_taxes.round(2),
+      total_amount_before_taxes: billing.total_amount_before_taxes.nil? ? nil : billing.total_amount_before_taxes.round(2),
       errors:                    billing.errors.empty? ? {} : billing.errors
     }.tap do |h|
       h[:items] = {
@@ -80,7 +80,7 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
           {
             begin_date:           item.begin_date,
             end_date:             item.end_date,
-            energy_price_cents:   item.energy_price_cents.round(2),
+            energy_price_cents:   item.energy_price_cents.nil? ? nil : item.energy_price_cents.round(2),
             consumed_energy_kwh:  item.consumed_energy_kwh,
             errors:               item.errors.empty? ? {} : item.errors
           }

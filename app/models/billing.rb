@@ -75,6 +75,9 @@ class Billing < ActiveRecord::Base
   def total_amount_before_taxes
     amount = 0
     items.each do |item|
+      if item.energy_price_cents.nil? || item.base_price_cents.nil?
+        return nil
+      end
       amount += item.energy_price_cents + item.base_price_cents
     end
     amount
