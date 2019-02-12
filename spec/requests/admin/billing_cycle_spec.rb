@@ -1,7 +1,7 @@
 require_relative 'test_admin_localpool_roda'
 require_relative 'shared_crud'
 
-describe Admin::BillingCycleResource, :request_helper do
+describe Admin::BillingCycleRoda, :request_helper do
 
   def app
     TestAdminLocalpoolRoda # this defines the active application for this test
@@ -131,4 +131,20 @@ describe Admin::BillingCycleResource, :request_helper do
     it_behaves_like 'delete', :other_billing_cycle, path: :path
 
   end
+
+  context 'bars' do
+
+    let(:localpool) { create(:group, :localpool) }
+    let(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
+
+    let(:path) { "/localpools/#{localpool.id}/billing-cycles/#{billing_cycle.id}/bars" }
+
+    it 'works' do
+      GET path, $admin
+      expect(response).to have_http_status(200)
+      # FIXME: check for content
+    end
+
+  end
+
 end
