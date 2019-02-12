@@ -86,10 +86,6 @@ group :production, :staging do
   gem 'newrelic_rpm'
 end
 
-group :production, :staging, :test do
-  gem 'wkhtmltopdf-heroku'
-end
-
 group :development, :test do
   gem 'pry-byebug'
   gem 'awesome_print'
@@ -105,6 +101,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'wkhtmltopdf-binary-edge' # this is for codeship
   gem 'ruby-swagger'
   gem 'rspec_nested_transactions'
   gem 'pry-rescue'
