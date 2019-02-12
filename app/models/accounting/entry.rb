@@ -21,7 +21,7 @@ module Accounting
       ActiveRecord::Base.transaction do
         ActiveRecord::Base.connection.execute('LOCK TABLE accounting_entries')
         # get previous
-        self.previous_checksum = Accounting::Entry.select(:checksum).last&.checksum
+        self.previous_checksum = Accounting::Entry.where(:contract => self.contract).select(:checksum).last&.checksum
       end
       sha256 = Digest::SHA256.new
       sha256.update(self.previous_checksum || '')
