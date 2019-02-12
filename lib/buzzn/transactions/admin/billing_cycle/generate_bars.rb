@@ -49,6 +49,7 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
     minmaxed_range = third_party_contract.minmax_date_range(range)
     {
       billing_id: 0,
+      contract_id: third_party_contract.id,
       contract_type: CONTRACT_MAP.fetch(third_party_contract.type, 'unknown'),
       full_invoice_number: nil,
       begin_date: third_party_contract.begin_date,
@@ -74,6 +75,7 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
   def billing_as_json(billing)
     {
       billing_id:                billing.id,
+      contract_id:               billing.contract.id,
       contract_type:             CONTRACT_MAP.fetch(billing.contract.type, 'unknown'),
       full_invoice_number:       billing.full_invoice_number,
       begin_date:                billing.begin_date,
