@@ -35,7 +35,7 @@ module Group
     has_and_belongs_to_many :documents, class_name: 'Document', join_table: 'groups_documents', foreign_key: :group_id
 
     def register_metas
-      Register::Meta.where(:id => self.register_metas_by_contracts.pluck(:id) + self.register_metas_by_registers.pluck(:id))
+      Register::Meta.where(:id => (self.register_metas_by_contracts.pluck(:id) + self.register_metas_by_registers.pluck(:id)).uniq)
     end
 
     def metering_point_operator_contract
