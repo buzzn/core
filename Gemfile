@@ -101,7 +101,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'wkhtmltopdf-binary-edge' # this is for codeship
+  gem 'wkhtmltopdf-binary-edge', '~> 0.12.4.0' # this is for codeship
   gem 'ruby-swagger'
   gem 'rspec_nested_transactions'
   gem 'pry-rescue'
