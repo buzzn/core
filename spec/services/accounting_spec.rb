@@ -47,6 +47,8 @@ describe Services::Accounting do
       entry5 = service.book(operator, contract, 100)
       entry6 = service.book(operator, contract, 100)
       expect(Accounting::Entry.for_contract(contract).count).to eql 5
+      expect(entry1.previous_checksum).to be_nil
+      expect(entry4.previous_checksum).to be_nil
       expect(service.balance(contract)).to eql 500
       expect(service.balance_at(entry2)).to eql 200
       expect(service.balance_at(entry5)).to eql 400
