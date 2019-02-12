@@ -1,3 +1,4 @@
+# coding: utf-8
 #
 # Generate closed billings for contracts that have ended and have been billed in beekeeper.
 # When we do _our_ billing, we need those so we know which energy consumption is already billed.
@@ -15,18 +16,19 @@ class Beekeeper::Importer::GenerateBillings
     @operator = operator
   end
 
-  def run(localpool)
+  def run(localpool, record)
     # First, create the billing cycles with their different ranges (initial, yearly and final).
     # That way the following code can be written (almost) without special cases.
-    create_billing_cycles(localpool)
+    create_billing_cycles(localpool, record)
     #create_billings_for_current_year(localpool)
   end
 
   private
 
-  def create_billing_cycles(localpool)
+  def create_billing_cycles(localpool, record)
     return [] if localpool.start_date.year == Date.today.year # nothing to do for those
     last_dates = []
+    accounting_service = Import.global('services.accounting')
     # yearly ranges since then
     (localpool.start_date.year..LAST_BEEKEEPER_BILLING_CYCLE_YEAR).each do |year|
       last_dates << Date.new(year, 12, 31)
@@ -37,10 +39,11 @@ class Beekeeper::Importer::GenerateBillings
         billing_cycle = create_billing_cycle(localpool, last_date)
         set_billing_cycle_to_calculated(localpool, billing_cycle)
         set_billing_cycle_to_closed(localpool, billing_cycle)
+        book_paid_payments(localpool, record, last_date.year)
+
         if last_date.year == 2017
           # reset balances for the localpool
           localpool.contracts.each do |contract|
-            accounting_service = Import.global('services.accounting')
             balance = accounting_service.balance(contract)
             unless balance.zero?
               accounting_service.book(operator, contract, -1*balance, comment: 'Ausgleich Import 2019')
@@ -50,6 +53,18 @@ class Beekeeper::Importer::GenerateBillings
         billing_cycle
       rescue ArgumentError
         break
+      end
+    end
+  end
+
+  def book_paid_payments(localpool, record, year)
+    accounting_service = Import.global('services.accounting')
+    localpool.contracts.each do |contract|
+      record_contract = record.select {|x| x[:contract_number] == contract.contract_number && x[:contract_number_addition] == contract.contract_number_addition}.first
+      next unless record_contract
+      paid = record_contract[:paid_payments].select {|x| x[:year] == year}&.first&.[](:paid)
+      if paid
+        accounting_service.book(operator, contract, paid*10*100, comment: "Bezahlte Abschläge #{year}")
       end
     end
   end

@@ -13,7 +13,7 @@ class Beekeeper::Import
 
   def run
     pools_to_import = Beekeeper::Minipool::MinipoolObjekte.to_import
-    # pools_to_import = [Beekeeper::Minipool::MinipoolObjekte.find_by(minipool_name: 'Am Kindergarten 16')]
+    #pools_to_import = [Beekeeper::Minipool::MinipoolObjekte.find_by(minipool_name: 'UdE 7')]
     loggers = pools_to_import.map do |record|
       logger = LocalpoolLog.new(record)
       puts "------------ Importing #{record.name} ------------"
@@ -40,7 +40,7 @@ class Beekeeper::Import
       Beekeeper::Importer::LocalpoolContracts.new(logger).run(localpool, record.converted_attributes[:powertaker_contracts], record.converted_attributes[:third_party_contracts], registers, tariffs, warnings)
       Beekeeper::Importer::SetLocalpoolGapContractCustomer.new(logger).run(localpool)
       Beekeeper::Importer::AdjustLocalpoolContractsAndReadings.new(logger).run(localpool)
-      Beekeeper::Importer::GenerateBillings.new(logger, beekeeper_account).run(localpool)
+      Beekeeper::Importer::GenerateBillings.new(logger, beekeeper_account).run(localpool, record.converted_attributes[:powertaker_contracts])
 
       # now we can fail and rollback on broken invariants
       raise ActiveRecord::RecordInvalid.new(localpool) unless localpool.invariant_valid?
