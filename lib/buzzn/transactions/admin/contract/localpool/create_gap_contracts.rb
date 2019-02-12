@@ -36,7 +36,7 @@ module Transactions::Admin::Contract::Localpool
         installed_at     = (register_meta.registers.collect { |r| r.installed_at     }.reject(&:nil?).sort_by { |x| x.date }.first)&.date
         decomissioned_at = (register_meta.registers.collect { |r| r.decomissioned_at }.reject(&:nil?).sort_by { |x| x.date }.last)&.date
 
-        if installed_at > params[:begin_date] || (!decomissioned_at.nil? && decomissioned_at < params[:end_date])
+        if installed_at.nil? || installed_at > params[:end_date] || (!decomissioned_at.nil? && decomissioned_at < params[:begin_date])
           ranges = [ ]
         else
           date_range = ([params[:begin_date], installed_at || params[:begin_date]].max)..([params[:end_date], decomissioned_at || params[:end_date]]).min
