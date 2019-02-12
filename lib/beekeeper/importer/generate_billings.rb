@@ -34,7 +34,20 @@ class Beekeeper::Importer::GenerateBillings
     last_dates.map do |last_date|
       begin
         create_gap_contracts(localpool, last_date)
-        create_billing_cycle(localpool, last_date)
+        billing_cycle = create_billing_cycle(localpool, last_date)
+        set_billing_cycle_to_calculated(localpool, billing_cycle)
+        set_billing_cycle_to_closed(localpool, billing_cycle)
+        if last_date.year == 2017
+          # reset balances for the localpool
+          localpool.contracts.each do |contract|
+            accounting_service = Import.global('services.accounting')
+            balance = accounting_service.balance(contract)
+            unless balance.zero?
+              accounting_service.book(operator, contract, -1*balance, comment: 'Ausgleich Import 2019')
+            end
+          end
+        end
+        billing_cycle
       rescue ArgumentError
         break
       end
@@ -45,7 +58,7 @@ class Beekeeper::Importer::GenerateBillings
     localpoolr = Admin::LocalpoolResource.all(operator).retrieve(localpool.id)
     gap_contractsr= localpoolr.localpool_gap_contracts
     request = {
-      begin_date: localpool.start_date,
+      begin_date: localpoolr.next_billing_cycle_begin_date,
       last_date: last_date,
     }
     logger.info("Creating gap contracts #{localpool.name} #{request}")
@@ -64,12 +77,43 @@ class Beekeeper::Importer::GenerateBillings
       name: name
     }
     logger.info("Creating billing cycle #{name}")
-    Transactions::Admin::BillingCycle::Create.new.(resource: localpoolr,
-                                                   params: params)
-    localpoolr.object.reload
+    result = Transactions::Admin::BillingCycle::Create.new.(resource: localpoolr, params: params)
+    result.value!.object
   rescue Buzzn::ValidationError => e
     logger.error("Buzzn::ValidationError for billing_cycle #{name}", extra_data: e.errors)
     raise ArgumentError
+  end
+
+  def set_billing_cycle_to_calculated(localpool, billing_cycle)
+    localpoolr = Admin::LocalpoolResource.all(operator).retrieve(localpool.id)
+    billing_cycler = localpoolr.billing_cycles.retrieve(billing_cycle.id)
+    billing_cycler.object.billings.each do |billing|
+      billing.reload
+      billingr = billing_cycler.billings.retrieve(billing.id)
+      billingr.object.reload
+      begin
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+      rescue Buzzn::ValidationError => e
+        logger.error("Buzzn::ValidationError for billing update #{billing.status} -> calculated", extra_data: e.errors)
+      rescue Buzzn::StaleEntity => e
+        byebug.byebug
+      end
+    end
+  end
+
+  def set_billing_cycle_to_closed(localpool, billing_cycle)
+    localpoolr = Admin::LocalpoolResource.all(operator).retrieve(localpool.id)
+    billing_cycler = localpoolr.billing_cycles.retrieve(billing_cycle.id)
+    billing_cycler.object.billings.each do |billing|
+      billing.reload
+      billingr = billing_cycler.billings.retrieve(billing.id)
+      billingr.object.reload
+      begin
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'closed', updated_at: billing.updated_at.to_json})
+      rescue Buzzn::ValidationError => e
+        logger.error("Buzzn::ValidationError for billing update #{billing.status} -> closed", extra_data: e.errors)
+      end
+    end
   end
 
   def range_spans_one_year?(date_range)
