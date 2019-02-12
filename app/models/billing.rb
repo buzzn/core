@@ -75,6 +75,9 @@ class Billing < ActiveRecord::Base
   def total_amount_before_taxes
     amount = 0
     items.each do |item|
+      if item.energy_price_cents.nil? || item.base_price_cents.nil?
+        return nil
+      end
       amount += item.energy_price_cents + item.base_price_cents
     end
     amount
@@ -86,6 +89,18 @@ class Billing < ActiveRecord::Base
       raise 'please set Types::BillingConfig'
     end
     total_amount_before_taxes * billing_config.vat
+  end
+
+  def total_consumed_energy_kwh
+    total = 0
+    items.each do |item|
+      # not all items are calculatable, return nil
+      if item.consumed_energy_kwh.nil?
+        return nil
+      end
+      total += item.consumed_energy_kwh
+    end
+    total
   end
 
   def daily_kwh_estimate

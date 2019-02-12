@@ -13,7 +13,7 @@ class StateMachine::Billing
     when :open
       [:open, :calculated, :void]
     when :calculated
-      [:calculated, :documented, :void]
+      [:calculated, :documented, :closed, :void]
     when :documented
       [:documented, :queued, :delivered, :void]
     when :queued
@@ -48,6 +48,8 @@ class StateMachine::Billing
       when :documented
         :document
       when :void
+        nil
+      when :closed
         nil
       end
     when :documented

@@ -84,7 +84,6 @@ gem 'rails_12factor'
 
 group :production, :staging do
   gem 'newrelic_rpm'
-  gem 'wkhtmltopdf-heroku'
 end
 
 group :development, :test do
@@ -102,6 +101,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'wkhtmltopdf-binary-edge', '~> 0.12.4.0' # this is for codeship
   gem 'ruby-swagger'
   gem 'rspec_nested_transactions'
   gem 'pry-rescue'
