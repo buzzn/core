@@ -34,7 +34,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
     ActiveRecord::Base.transaction do
       old_end_date = contract.end_date
       contract.update_attribute(:end_date, contract.end_date + 1.day)
-      adjust_readings(register, old_end_date)
+      adjust_readings(contract.register_meta.registers, old_end_date)
     end
 
   end
@@ -61,20 +61,25 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   # In beekeeper, readings for contract changes aren't consistent. Sometimes there's only one for the old contract's
   # end date, sometimes only one for new contract's start date, sometimes there are both.
   # This method cleans things up so that only one reading for the date of the contract change remains.
-  def adjust_readings(register, old_end_date)
-    readings = register.readings.where(date: [old_end_date, old_end_date + 1.day]).order(:date)
-    case readings.size
-    when 2
-      handle_two_readings(readings, register)
-    when 1
-      handle_one_reading(readings.first, old_end_date)
-    else
-      unless REGISTERS_WITH_IGNORED_MULTIPLE_READINGS.include?(register.meter.legacy_buzznid)
-        logger.error(
-          "Expected two readings on #{register.meter.legacy_buzznid} but got #{readings.size}. See extra_data for details.",
-          extra_data: readings.map { |r| r.inspect }
-        )
+  def adjust_readings(registers, old_end_date)
+    registers.each do |register|
+      readings = register.readings.where(date: [old_end_date, old_end_date + 1.day]).order(:date)
+      case readings.size
+      when 2
+        return handle_two_readings(readings, register)
+      when 1
+        return handle_one_reading(readings.first, old_end_date)
+      else
+        next
       end
+    end
+    unless REGISTERS_WITH_IGNORED_MULTIPLE_READINGS.include?(register.meter.legacy_buzznid)
+      logger.error(
+        "Expected two readings on #{register.meter.legacy_buzznid} but got #{readings.size}. See extra_data for details.",
+        extra_data: {
+          old_end_date: old_end_date
+        }
+      )
     end
   end
 
