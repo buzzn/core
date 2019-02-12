@@ -1,11 +1,11 @@
 doctype html
 html
   head
-    title = '#{title_text}'
+    title = "#{title_text}"
     meta charset='utf-8'
     / link href='https://fonts.googleapis.com/css?family=Asap:400,400i,700,700i' rel='stylesheet'
     script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
-    script src='#{Dir.pwd}/public/scripts/pdf-helper.js'
+    script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
     script src='#{Dir.pwd}/public/scripts/bc-chart.js'
     css:
       * {box-sizing: border-box;padding:0;margin:0}
@@ -84,6 +84,7 @@ html
       .bc-chart.vertical .bc-bar span{display: block; position: absolute; right: 1rem; top: 1rem;}
       .bc-chart.vertical .bc-tick{position: absolute; bottom: 0; left: 10px;}
       .bc-chart.vertical .bc-tick::before{position:absolute;top:-10px;left:-7px;content:'_';}
+      .bc-chart.vertical h4{margin-top:4px}
       .bc-legend{margin-left: 1rem; position: relative;}
       .bc-legend-indicator{position: absolute; left: -0.725rem; content:''; width: 0.5rem; height: 0.5rem; background: red}
       .bc-label{width: 39%; text-align: right; padding-right: 0.5rem;vertical-align: top;padding-top: 1rem;}
@@ -108,7 +109,7 @@ html
           #{contractor.bic}<br>
           #{contractor.bank_name}
         p Steuernummer: #{contract.tax_number}
-      p.is-smaller.clear #{contractor.name} • #{contractor.street} #{contractor.HausNr} • #{contractor.zip} #{contractor.city}
+      p.is-smaller.clear #{contractor.name} • #{contractor.street} • #{contractor.zip} #{contractor.city}
       p #{powertaker.title}<br>
         #{powertaker.first_name} #{powertaker.last_name}<br>
         #{powertaker.street}<br>
@@ -392,7 +393,7 @@ html
           'Erneuerbare Energie gefördert nach EEG'
         ];
         // footer HTML required
-        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{contractor.name} • #{contractor.street} #{contractor.HausNr} • #{contractor.zip} #{contractor.city}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
+        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{contractor.name} • #{contractor.street} • #{contractor.zip} #{contractor.city}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
         bcChart('#chart-one', labels1, data());
         bcChart('#chart-two', labels2, data(),'Deutschland');
         bcChart('#chart-three', labels2, data(),'Lokale Energiegruppe #{localpool.name}');
