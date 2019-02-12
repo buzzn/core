@@ -84,6 +84,9 @@ gem 'rails_12factor'
 
 group :production, :staging do
   gem 'newrelic_rpm'
+end
+
+group :production, :staging, :test do
   gem 'wkhtmltopdf-heroku'
 end
 
