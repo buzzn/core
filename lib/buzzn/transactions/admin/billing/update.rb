@@ -55,7 +55,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       total_amount = resource.object.total_amount_after_taxes
       # accounting is in decacents; 10dc = 1c
       total_amount_dc = total_amount * 10
-      params[:accounting_entry] = accounting_service.book(user, contract, -1 * total_amount_dc.round)
+      params[:accounting_entry] = accounting_service.book(user, contract, -1 * total_amount_dc.round, comment: "Billing #{resource.full_invoice_number}")
 
       if resource.object.localpool.billing_detail.automatic_abschlag_adjust
         last_payment = resource.object.contract.payments.order(:begin_date).last

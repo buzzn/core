@@ -56,7 +56,12 @@ class Billing < ActiveRecord::Base
   end
 
   def generate_invoice_number
-    "#{Date.today.year}-#{contract.full_contract_number}"
+    year = if self.billing_cycle.nil?
+             Date.today.year
+           else
+             billing_cycle.end_date.year
+           end
+    "#{year}-#{contract.full_contract_number}"
   end
 
   def check_invoice_number_addition
