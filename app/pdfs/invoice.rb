@@ -14,6 +14,7 @@ module Pdf
     def build_struct
       billing_config = CoreConfig.load(Types::BillingConfig)
       {
+        title_text: @billing.full_invoice_number,
         contractor: build_contractor,
         powertaker: build_powertaker,
         localpool: build_localpool,
@@ -24,7 +25,8 @@ module Pdf
           number: contract.full_contract_number,
         },
         current_tariff: build_current_tariff,
-        abschlag: build_abschlag
+        abschlag: build_abschlag,
+        meter: build_meter
       }
     end
 
@@ -55,6 +57,7 @@ module Pdf
       when Person
         person_or_organization.first_name + ' ' + person_or_organization.last_name
       when Organization
+      when Organization::General
         person_or_organization.name
       else
         raise "can not handle #{person_or_organization.class}"
@@ -66,6 +69,7 @@ module Pdf
       when Person
         person_or_organization
       when Organization
+      when Organization::General
         person_or_organization.contact
       else
         raise "can not handle #{person_or_organization.class}"
@@ -85,6 +89,7 @@ module Pdf
                  end
         "#{prefix} #{person_or_organization.title} #{person_or_organization.last_name}"
       when Organization
+      when Organization::General
         'Sehr geehrte Damen und Herren'
       else
         raise "can not handle #{person_or_organization.class}"
@@ -142,13 +147,18 @@ module Pdf
           data[field] = address.send(field)
         end
       end
+      contract.customer_bank_account.tap do |account|
+        %i(iban bic bank_name).each do |field|
+          data[field] = account.send(field) if account
+        end
+      end
       data
     end
 
     def build_billing
       {
         date: @billing.last_date,
-        number: @billing.invoice_number,
+        number: @billing.full_invoice_number,
         baseprice: to_euro(last_tariff.baseprice_cents_per_month),
         energyprice: to_euro(last_tariff.energyprice_cents_per_kwh),
         consumed_energy_kwh: @billing.items.first.consumed_energy_kwh,
@@ -209,6 +219,12 @@ module Pdf
         energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
         cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
         amount_euro: to_euro(payment.price_cents)
+      }
+    end
+
+    def build_meter
+      {
+        mpsn_ZählerNr_alt: contract.register_meta.registers.first.meter.legacy_buzznid
       }
     end
 
