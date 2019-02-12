@@ -166,29 +166,4 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     @group ||= Beekeeper::Minipool::MinipoolObjekte.find_by(messvertragsnummer: vertragsnummer)
   end
 
-  def readings
-    readings = Beekeeper::Minipool::MsbZählwerkZst.where(vertragsnummer: vertragsnummer, nummernzusatz: nummernzusatz, zählwerkID: zählwerkID).to_a
-    uniq_readings = readings.uniq { |r| [r[:ablesezeitpunkt], r[:ablesegrund]] }
-
-    unless uniq_readings.length == readings.length
-      dups = readings.group_by { |r| [r[:ablesezeitpunkt], r[:ablesegrund]] }.select { |_, r| r.length > 1 }
-      dups.each do |_, dup_arr|
-        dup_arr.each do |dup|
-          add_warning(:readings, "duplicate for: vertragsnummer: #{dup.vertragsnummer}, nummernzusatz: #{dup.nummernzusatz}, zählwerkID: #{dup.zählwerkID}, date: #{dup.ablesezeitpunkt}")
-        end
-      end
-    end
-
-    uniq_readings = uniq_readings.collect do |r|
-      # FIXME: add condition that reading is the first on the register
-      if r.converted_attributes[:raw_value] == 0 && r.converted_attributes[:reason] == 'COS'
-        add_warning(:readings, "Adjusting reading from COS to IOM for #{r.converted_attributes}")
-        r.converted_attributes[:reason] = 'IOM'
-      end
-      r
-    end
-
-    uniq_readings.collect { |r| Reading::Single.new(r.converted_attributes) }
-  end
-
 end
