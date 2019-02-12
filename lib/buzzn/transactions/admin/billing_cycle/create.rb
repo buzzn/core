@@ -38,7 +38,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   end
 
   def create_billings(params:, resource:, date_range:, create_billing_cycle:)
-    register_metas = resource.object.register_metas_by_registers
+    register_metas = resource.object.register_metas_by_registers.uniq # uniq is critically important here!
     errors = {}
     register_metas.each do |register_meta|
       register_meta.contracts.each do |contract|
@@ -50,7 +50,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
           begin_date: contract_billing_date_range.first,
           last_date:  contract_billing_date_range.last - 1.day, # last_date!
         }
-        #if contract.full_contract_number == "60057/1"
+        #if contract.full_contract_number == "60028/43"
         #  byebug.byebug
         #end
         begin
