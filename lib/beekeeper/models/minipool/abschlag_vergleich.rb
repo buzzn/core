@@ -14,4 +14,13 @@ class Beekeeper::Minipool::AbschlagVergleich < Beekeeper::Minipool::BaseRecord
 
   self.table_name = 'minipooldb.abschlag_vergleich'
 
+  def converted_attributes
+    {
+      contract_number: vertragsnummer,
+      contract_number_addition: nummernzusatz,
+      year: abrechnungsjahr,
+      paid: abschlag_real,
+    }
+  end
+
 end
