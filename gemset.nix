@@ -1369,12 +1369,12 @@
     };
     version = "1.1.0";
   };
-  wkhtmltopdf-heroku = {
+  wkhtmltopdf-binary-edge = {
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1grwyypq2r2w3vcah6sd7b6m6l9wi1qq882svissxq1m31rz9w76";
+      sha256 = "0y2w09yynnqj5vzbivjpkrxfkilhw4zn7yrc49sac54315bb2nhr";
       type = "gem";
     };
-    version = "2.12.4.0";
+    version = "0.12.4.0";
   };
 }
