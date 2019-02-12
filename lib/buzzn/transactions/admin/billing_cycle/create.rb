@@ -59,8 +59,10 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
                                                     contract: contract,
                                                     billing_cycle: create_billing_cycle)
         rescue Buzzn::ValidationError => e
-          errors['create_billings'] = [] if errors['create_billings'].nil?
-          errors['create_billings'] << {contract_id: contract.id, contract_number: contract.full_contract_number, errors: e.errors}
+          unless e.errors == {:register_meta => ['no register installed in date range'] }
+            errors['create_billings'] = [] if errors['create_billings'].nil?
+            errors['create_billings'] << {contract_id: contract.id, contract_number: contract.full_contract_number, errors: e.errors}
+          end
         end
       end
     end
