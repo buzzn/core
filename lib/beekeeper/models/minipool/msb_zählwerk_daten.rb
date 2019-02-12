@@ -71,14 +71,16 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
       end
     end
 
-    uniq_readings = uniq_readings.collect do |r|
-      # FIXME: add condition that reading is the first on the register
-      if r.converted_attributes[:raw_value] == 0 && r.converted_attributes[:reason] == 'COS'
-        add_warning(:readings, "Adjusting reading from COS to IOM for #{r.converted_attributes}")
-        r.converted_attributes[:reason] = 'IOM'
-      end
-      r
-    end
+    # Disabled for now, COS is a valid start / install reason
+    # FIXME: add condition that reading is the first on the register
+    #
+    #uniq_readings = uniq_readings.collect do |r|
+    #  if r.converted_attributes[:raw_value] == 0 && r.converted_attributes[:reason] == 'COS'
+    #    add_warning(:readings, "Adjusting reading from COS to IOM for #{r.converted_attributes}")
+    #    r.converted_attributes[:reason] = 'IOM'
+    #  end
+    #  r
+    #end
 
     uniq_readings.collect { |r| Reading::Single.new(r.converted_attributes) }
   end
