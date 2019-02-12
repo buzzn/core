@@ -1,3 +1,5 @@
+require_relative '../localpool'
+
 class Transactions::Admin::Localpool::GapContractCustomerBase < Transactions::Base
 
   def assign_gap_contract_customer(new_customer:, resource:, **)
