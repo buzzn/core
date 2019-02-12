@@ -29,6 +29,7 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContracts, order: :d
     let!("register_consumption_#{i+1}".to_sym) do
       send("meter_consumption_#{i+1}").registers.first
     end
+
   end
 
   let(:gap_person) do
@@ -103,6 +104,12 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContracts, order: :d
 
     let(:result) do
       Transactions::Admin::Contract::Localpool::CreateGapContracts.new.(resource: resource, params: request, localpool: localpoolr)
+    end
+
+    5.times do |i|
+      let!("install_reading_#{i+1}".to_sym) do
+        create(:reading, :setup, raw_value: 0, register: send("register_consumption_#{i+1}"), date: Date.new(2017, 4, 1))
+      end
     end
 
     before do
@@ -272,25 +279,23 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContracts, order: :d
 
     end
 
-    context 'valid state with readings' do
+    context 'valid state with one reading in the future' do
 
-      let!(:install_reading_1) do
-        create(:reading, :setup, raw_value: 0, register: register_consumption_1, date: Date.new(2018, 4, 1))
+      4.times do |i|
+        let!("install_reading_#{i+1}".to_sym) do
+          create(:reading, :setup, raw_value: 0, register: send("register_consumption_#{i+1}"), date: Date.new(2017, 4, 1))
+        end
       end
 
-      let!(:install_reading_2) do
-        create(:reading, :setup, raw_value: 0, register: register_consumption_2, date: Date.new(2018, 4, 1))
-      end
-
-      let!(:remove_reading_2) do
-        create(:reading, :remove, raw_value: 137, register: register_consumption_2, date: Date.new(2018, 8, 1))
+      let!(:install_reading_5) do
+        create(:reading, :setup, raw_value: 0, register: register_consumption_5, date: Date.new(2019, 4, 1))
       end
 
       it 'creates' do
         expect(result).to be_success
         res = result.value!
         expect(res).to be_a Array
-        expect(res.count).to eql 5
+        expect(res.count).to eql 4
         res.each do |element|
           expect(element).to be_a Contract::LocalpoolGapContractResource
         end
@@ -298,16 +303,40 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContracts, order: :d
         5.times do |i|
           send("register_consumption_#{i+1}").meta.reload
         end
-        # should be a gap contract
-        contract1 = register_consumption_1.meta.contracts.first
-        expect(contract1.begin_date).to eql Date.new(2018, 4, 1)
-        expect(contract1.end_date).to   eql Date.new(2019, 1, 1)
+        expect(register_consumption_5.meta.contracts.count).to eql 0
+      end
 
-        # should be a gap contract
-        contract2 = register_consumption_2.meta.contracts.first
-        expect(contract2.begin_date).to eql Date.new(2018, 4, 1)
-        expect(contract2.end_date).to   eql Date.new(2018, 8, 1)
+    end
 
+    context 'valid state with one register of the past' do
+
+      4.times do |i|
+        let!("install_reading_#{i+1}".to_sym) do
+          create(:reading, :setup, raw_value: 0, register: send("register_consumption_#{i+1}"), date: Date.new(2017, 4, 1))
+        end
+      end
+
+      let!(:install_reading_5) do
+        create(:reading, :setup, raw_value: 0, register: register_consumption_5, date: Date.new(2017, 4, 1))
+      end
+
+      let!(:remove_reading_5) do
+        create(:reading, :remove, raw_value: 0, register: register_consumption_5, date: Date.new(2017, 5, 1))
+      end
+
+      it 'creates' do
+        expect(result).to be_success
+        res = result.value!
+        expect(res).to be_a Array
+        expect(res.count).to eql 4
+        res.each do |element|
+          expect(element).to be_a Contract::LocalpoolGapContractResource
+        end
+
+        5.times do |i|
+          send("register_consumption_#{i+1}").meta.reload
+        end
+        expect(register_consumption_5.meta.contracts.count).to eql 0
       end
 
     end
