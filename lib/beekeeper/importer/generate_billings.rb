@@ -107,7 +107,7 @@ class Beekeeper::Importer::GenerateBillings
       billingr = billing_cycler.billings.retrieve(billing.id)
       billingr.object.reload
       begin
-        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billingr.object.updated_at.to_json})
       rescue Buzzn::ValidationError => e
         logger.error("Buzzn::ValidationError for billing update #{billing.status} -> calculated", extra_data: e.errors)
       rescue Buzzn::StaleEntity => e
@@ -124,7 +124,7 @@ class Beekeeper::Importer::GenerateBillings
       billingr = billing_cycler.billings.retrieve(billing.id)
       billingr.object.reload
       begin
-        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'closed', updated_at: billing.updated_at.to_json})
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'closed', updated_at: billingr.object.updated_at.to_json})
       rescue Buzzn::ValidationError => e
         logger.error("Buzzn::ValidationError for billing update #{billing.status} -> closed", extra_data: e.errors)
       end
