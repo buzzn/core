@@ -91,6 +91,10 @@ class Billing < ActiveRecord::Base
   def total_consumed_energy_kwh
     total = 0
     items.each do |item|
+      # not all items are calculatable, return nil
+      if item.consumed_energy_kwh.nil?
+        return nil
+      end
       total += item.consumed_energy_kwh
     end
     total
