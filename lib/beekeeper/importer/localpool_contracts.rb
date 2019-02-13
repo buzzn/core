@@ -15,7 +15,7 @@ class Beekeeper::Importer::LocalpoolContracts
           create_contract(localpool, customer, contract, registers, tariffs)
         end
       rescue => e
-        logger.error("#{e.message} (meter buzznid: #{contract[:buzznid]})", extra_data: e)
+        logger.error("#{e.message} (meter buzznid: #{contract[:buzznid]}, contract: #{contract[:contract_number]}/#{contract[:contract_number_addition]})", extra_data: e)
       end
     end
     third_parties.each do |contract|
@@ -24,7 +24,7 @@ class Beekeeper::Importer::LocalpoolContracts
           create_third_party_contract(localpool, contract, registers, warnings)
         end
       rescue => e
-        logger.error("#{e.message} (meter buzznid: #{contract[:buzznid]})", extra_data: e)
+        logger.error("#{e.message} (meter buzznid: #{contract[:buzznid]}, contract: #{contract[:contract_number]}/#{contract[:contract_number_addition]})", extra_data: e)
       end
     end
   end

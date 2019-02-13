@@ -73,9 +73,9 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
         next
       end
     end
-    unless REGISTERS_WITH_IGNORED_MULTIPLE_READINGS.include?(register.meter.legacy_buzznid)
+    unless REGISTERS_WITH_IGNORED_MULTIPLE_READINGS.include?(registers.first.meter.legacy_buzznid)
       logger.error(
-        "Expected two readings on #{register.meter.legacy_buzznid} but got #{readings.size}. See extra_data for details.",
+        "Expected two readings on #{registers.first.meter.legacy_buzznid} but got something else. See extra_data for details.",
         extra_data: {
           old_end_date: old_end_date
         }
