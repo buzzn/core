@@ -38,7 +38,9 @@ class Beekeeper::Importer::GenerateBillings
         create_gap_contracts(localpool, last_date)
         billing_cycle = create_billing_cycle(localpool, last_date)
         set_billing_cycle_to_calculated(localpool, billing_cycle)
-        set_billing_cycle_to_closed(localpool, billing_cycle)
+        if last_date.year != 2018
+          set_billing_cycle_to_closed(localpool, billing_cycle)
+        end
         book_paid_payments(localpool, record, last_date.year)
 
         if last_date.year == 2017
@@ -65,6 +67,8 @@ class Beekeeper::Importer::GenerateBillings
       paid = record_contract[:paid_payments].select {|x| x[:year] == year}&.first&.[](:paid)
       if paid
         accounting_service.book(operator, contract, paid*10*100, comment: "Bezahlte Abschläge #{year}")
+      elsif year == 2018
+        logger.warn('No payment for 2018', extra_data: { contract: contract.attributes } )
       end
     end
   end
@@ -95,6 +99,18 @@ class Beekeeper::Importer::GenerateBillings
     result = Transactions::Admin::BillingCycle::Create.new.(resource: localpoolr, params: params)
     result.value!.object
   rescue Buzzn::ValidationError => e
+    if e.errors["create_billings"]
+      e.errors["create_billings"] = e.errors["create_billings"].map do |err|
+        err.map do |k,v|
+          if k == :contract_id
+            contract = Contract::Base.find(v)
+            { :contract => contract.attributes.merge(register_meta: contract.register_meta.attributes.merge(meters: contract.register_meta.registers.map { |x| x.meter.attributes })) }
+          else
+            { k => v }
+          end
+        end
+      end
+    end
     logger.error("Buzzn::ValidationError for billing_cycle #{name}", extra_data: e.errors)
     raise ArgumentError
   end
@@ -109,11 +125,16 @@ class Beekeeper::Importer::GenerateBillings
       begin
         Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billingr.object.updated_at.to_json})
       rescue Buzzn::ValidationError => e
-        logger.error("Buzzn::ValidationError for billing update #{billing.status} -> calculated", extra_data: {errors: e.errors,
-                                                                                                               contract: billing.contract.attributes,
-                                                                                                               register_meta: billing.contract.register_meta.attributes.merge(meters: billing.contract.register_meta.registers.map { |x| x.meter.attributes }),
-                                                                                                               billing: billing.attributes.merge(items: billing.items.map{ |x| x.attributes })
-                                                                                                              })
+        blogger = if billing_cycle.end_date == Date.new(2019, 1, 1)
+                    logger.warn
+                  else
+                    logger.error
+                  end
+        blogger.("Buzzn::ValidationError for billing update #{billing.status} -> calculated", extra_data: {errors: e.errors,
+                                                                                                           contract: billing.contract.attributes,
+                                                                                                           register_meta: billing.contract.register_meta.attributes.merge(meters: billing.contract.register_meta.registers.map { |x| x.meter.attributes }),
+                                                                                                           billing: billing.attributes.merge(items: billing.items.map{ |x| x.attributes })
+                                                                                                          })
       rescue Buzzn::StaleEntity => e
         byebug.byebug
       end
@@ -130,11 +151,16 @@ class Beekeeper::Importer::GenerateBillings
       begin
         Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'closed', updated_at: billingr.object.updated_at.to_json})
       rescue Buzzn::ValidationError => e
-        logger.error("Buzzn::ValidationError for billing update #{billing.status} -> closed", extra_data: {errors: e.errors,
-                                                                                                           contract: billing.contract.attributes,
-                                                                                                           register_meta: billing.contract.register_meta.attributes.merge(meters: billing.contract.register_meta.registers.map { |x| x.meter.attributes }),
-                                                                                                           billing: billing.attributes.merge(items: billing.items.map{ |x| x.attributes })
-                                                                                                          })
+        blogger = if billing_cycle.end_date == Date.new(2019, 1, 1)
+                    logger.warn
+                  else
+                    logger.error
+                  end
+        blogger.("Buzzn::ValidationError for billing update #{billing.status} -> closed", extra_data: {errors: e.errors,
+                                                                                                       contract: billing.contract.attributes,
+                                                                                                       register_meta: billing.contract.register_meta.attributes.merge(meters: billing.contract.register_meta.registers.map { |x| x.meter.attributes }),
+                                                                                                       billing: billing.attributes.merge(items: billing.items.map{ |x| x.attributes })
+                                                                                                      })
       rescue Buzzn::StaleEntity => e
         byebug.byebug
       end
