@@ -10,4 +10,4 @@ if beekeeper_account.nil?
 end
 
 billing_generator = Beekeeper::Importer::GenerateBillings.new(LocalpoolLog.new(SampleData.localpools.people_power), beekeeper_account)
-billing_generator.run(SampleData.localpools.people_power)
+billing_generator.run(SampleData.localpools.people_power, [])
