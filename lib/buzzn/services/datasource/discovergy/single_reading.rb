@@ -32,10 +32,28 @@ class Services::Datasource::Discovergy::SingleReading
   def single(register, date)
     case rack_env.to_sym
     when :production, :development
-      api.request(
-        query(register.meter, date, false),
-        builder([register], false)
-      )
+      # byebug.byebug
+      query = query(register.meter, date, false)
+      key = "#{query.meter.product_serialnumber}-#{query.from}-#{query.to}-#{query.resolution}"
+      item = cache.get(key)
+      if item && !item.json.empty?
+        puts '------'
+        puts 'Cached reading:'
+        puts MultiJson.load(item.json)
+        puts '------'
+        result = MultiJson.load(item.json)
+      else
+        result = api.request(
+          query(register.meter, date, false),
+          builder([register], false)
+        )
+        cache.put(key, result.to_json, 600000000)
+        puts '------'
+        puts 'Disco reading:'
+        puts result.inspect
+        puts '------'
+        result
+      end
     when :test
       key = next_key(register, date)
       item = cache.get(key)
