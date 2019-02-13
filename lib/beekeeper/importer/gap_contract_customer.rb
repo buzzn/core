@@ -40,6 +40,7 @@ class Beekeeper::Importer::GapContractCustomer
     'ruhensdorf'                        => '60020/1',
     'scheffelstrasse'                   => '60044/7',
     'schweigerweg'                      => '60002/14',
+    'soltauer-allee'                    => '60078/1',
     'soehren'                           => '60068/55',
     'sulz'                              => '60051/1',
     'tassiloweg'                        => '60027/1',
