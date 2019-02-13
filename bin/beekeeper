@@ -1,2 +1,8 @@
 #!/usr/bin/env bash
+if [[ -e on_the_road_again.opus ]]
+then
+  mpv --loop-file=inf on_the_road_again.opus > /dev/null 2>&1 &
+  MPV_PID=$!
+fi
 bin/rake db:drop db:create db:migrate db:seed:setup_data db:seed:buzzn_operator config:set beekeeper:import
+[[ -n $MPV_PID ]] && kill $MPV_PID
