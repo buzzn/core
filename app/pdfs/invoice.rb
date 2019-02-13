@@ -7,6 +7,7 @@ module Pdf
     def initialize(billing)
       super
       @billing = billing
+      # byebug.byebug
     end
 
     protected
@@ -15,6 +16,7 @@ module Pdf
       billing_config = CoreConfig.load(Types::BillingConfig)
       {
         title_text: @billing.full_invoice_number,
+        tax_number: contract.localpool.localpool_processing_contract.tax_number,
         contractor: build_contractor,
         powertaker: build_powertaker,
         localpool: build_localpool,
