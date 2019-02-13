@@ -42,7 +42,10 @@ class Beekeeper::Import
       Beekeeper::Importer::AdjustLocalpoolContractsAndReadings.new(logger).run(localpool)
 
       # now we can fail and rollback on broken invariants
-      raise ActiveRecord::RecordInvalid.new(localpool) unless localpool.invariant_valid?
+      unless localpool.invariant_valid?
+        byebug.byebug
+        raise ActiveRecord::RecordInvalid.new(localpool)
+      end
       localpool.save!
 
       unless Import.global?('config.skip_brokers')
