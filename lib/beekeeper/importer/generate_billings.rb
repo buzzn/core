@@ -109,7 +109,11 @@ class Beekeeper::Importer::GenerateBillings
       begin
         Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billingr.object.updated_at.to_json})
       rescue Buzzn::ValidationError => e
-        logger.error("Buzzn::ValidationError for billing update #{billing.status} -> calculated", extra_data: {errors: e.errors, contract: billing.contract.to_json, billing: billing.to_json})
+        logger.error("Buzzn::ValidationError for billing update #{billing.status} -> calculated", extra_data: {errors: e.errors,
+                                                                                                               contract: billing.contract.attributes,
+                                                                                                               register_meta: billing.contract.register_meta.attributes.merge(meters: billing.contract.register_meta.registers.map { |x| x.meter.attributes }),
+                                                                                                               billing: billing.attributes.merge(items: billing.items.map{ |x| x.attributes })
+                                                                                                              })
       rescue Buzzn::StaleEntity => e
         byebug.byebug
       end
@@ -126,7 +130,11 @@ class Beekeeper::Importer::GenerateBillings
       begin
         Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'closed', updated_at: billingr.object.updated_at.to_json})
       rescue Buzzn::ValidationError => e
-        logger.error("Buzzn::ValidationError for billing update #{billing.status} -> closed", extra_data: {errors: e.errors, contract: billing.contract.to_json, billing: billing.to_json})
+        logger.error("Buzzn::ValidationError for billing update #{billing.status} -> closed", extra_data: {errors: e.errors,
+                                                                                                           contract: billing.contract.attributes,
+                                                                                                           register_meta: billing.contract.register_meta.attributes.merge(meters: billing.contract.register_meta.registers.map { |x| x.meter.attributes }),
+                                                                                                           billing: billing.attributes.merge(items: billing.items.map{ |x| x.attributes })
+                                                                                                          })
       rescue Buzzn::StaleEntity => e
         byebug.byebug
       end
