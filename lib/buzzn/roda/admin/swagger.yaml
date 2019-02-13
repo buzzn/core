@@ -8363,6 +8363,12 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: sales_tax_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: signing_date
         in: formData
         required: false
@@ -10455,7 +10461,13 @@ paths:
         format: date
       - name: tax_number
         in: formData
-        required: true
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: sales_tax_number
+        in: formData
+        required: false
         type: string
         format: ''
         maxLength: 64
