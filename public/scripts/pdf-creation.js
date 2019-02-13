@@ -7,7 +7,7 @@ Function.prototype.bind = Function.prototype.bind || function (thisp) {
 
 // test navigator.userAgent for PDF creator's headless browser
 function isQt() {
-  return /Qt/.test(navigator.userAgent);
+  return /(Qt|wkhtmltopdf)/.test(navigator.userAgent)
 }
 
 // function fixPdfDimensions()
