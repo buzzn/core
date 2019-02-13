@@ -7,6 +7,7 @@ module Contract
 
     attributes :begin_date,
                :tax_number,
+               :sales_tax_number,
                :allowed_actions
 
     has_one :contractor

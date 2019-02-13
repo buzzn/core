@@ -610,10 +610,6 @@ describe Admin::LocalpoolRoda, :request_helper do
           let('begin_date_json') {{'begin_date' => Date.today.to_s}}
           let('tax_number_json') {{'tax_number' => '777888999'}}
 
-          let('missing_tax_number_json') do
-            missing_everything_json.merge(begin_date_json)
-          end
-
           let('missing_begin_date_json') do
             missing_everything_json.merge(tax_number_json)
           end
@@ -627,14 +623,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             it 'fails with 422 for incomplete data: everything' do
               POST path, $admin, missing_everything_json
               expect(response).to have_http_status(422)
-              expect(json['tax_number']).to eq ['is missing']
               expect(json['begin_date']).to eq ['is missing']
-            end
-
-            it 'fails with 422 for incomplete data: tax_number' do
-              POST path, $admin, missing_tax_number_json
-              expect(response).to have_http_status(422)
-              expect(json['tax_number']).to eq ['is missing']
             end
 
           end
