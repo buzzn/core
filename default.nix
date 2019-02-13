@@ -6,6 +6,7 @@ let
   bundler = pkgs.bundler.override { inherit ruby; };
   bundix = pkgs.bundix.override { inherit bundler; };
   pgloader = pkgs.callPackage ./pgloader.nix {};
+  wkhtmltopdf = pkgs.callPackage ./wkhtmltopdf/default.nix { overrideDerivation = pkgs.lib.overrideDerivation; };
   gems = pkgs.bundlerEnv {
     name = "hive";
     inherit ruby;
@@ -17,7 +18,7 @@ let
 in stdenv.mkDerivation {
   name = "hive";
   buildInputs = [
-    pkgs.wkhtmltopdf
+    wkhtmltopdf
     bundix
     # bundler # enable for native bundle
     gems
