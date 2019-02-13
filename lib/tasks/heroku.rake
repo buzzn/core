@@ -34,8 +34,10 @@ namespace :heroku do
     task staging:    %i(is_staging
                         db:reset
                         heroku:pull_db:staging
-                        db:seed:example_data
+                        db:seed:setup_data
                         db:seed:buzzn_operator
+                        config:set
+                        db:seed:example_data
                         import
                         db:dump:transfer
                         zip_to_price:import
@@ -49,6 +51,7 @@ namespace :heroku do
                         heroku:pull_db:production
                         db:seed:setup_data
                         db:seed:buzzn_operators
+                        config:set
                         import
                         db:dump:transfer
                         zip_to_price:import
