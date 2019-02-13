@@ -50,7 +50,7 @@ describe Admin::LocalpoolRoda, :request_helper do
                                  {
                                    'tariffs' => [ 'size cannot be less than 1' ],
                                    'register_meta' => {
-                                     'registers' => ['all registers must have a device_setup or change_meter_1 reading']
+                                     'registers' => ['all registers must have a device_setup or change_meter_2 reading or similar']
                                    }
                                  }
                                },
