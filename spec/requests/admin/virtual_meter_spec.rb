@@ -189,7 +189,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
 
         it '409' do
           PATCH "/localpools/#{group.id}/meters/#{meter.id}/formula-parts/#{formula_part.id}", $admin,
-                updated_at: DateTime.now
+                updated_at: DateTime.now + 2.seconds
           expect(response).to have_http_status(409)
         end
 

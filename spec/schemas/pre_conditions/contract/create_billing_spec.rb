@@ -54,7 +54,7 @@ describe 'Schemas::Invariants::Contract::CreateBilling', order: :defined do
       end
 
       it do
-        expect(subject[:registers]).to eq(['all registers must have a device_setup or change_meter_1 reading'])
+        expect(subject[:registers]).to eq(['all registers must have a device_setup or change_meter_2 reading or similar'])
       end
 
     end

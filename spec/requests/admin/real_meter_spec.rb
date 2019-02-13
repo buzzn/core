@@ -168,7 +168,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         meter = real_meter
         PATCH "/localpools/#{group.id}/meters/#{meter.id}", $admin,
               direction_number: 'ERZ',
-              updated_at: DateTime.now
+              updated_at: DateTime.now + 1.seconds
         expect(response).to have_http_status(409)
       end
 
