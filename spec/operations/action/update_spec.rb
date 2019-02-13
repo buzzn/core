@@ -9,7 +9,7 @@ describe Operations::Action::Update do
   let(:input) { {} }
 
   context 'stale' do
-    before { input[:updated_at] = Time.now }
+    before { input[:updated_at] = Time.now - + 2.seconds }
     let(:resource) { [resource_with_invariant, resource_without_invariant].sample }
     it 'leaves with error' do
       expect{ subject.call(params: input, resource: resource) }.to raise_error Buzzn::StaleEntity

@@ -116,7 +116,7 @@ describe Admin::BankAccountRoda, :request_helper do
 
         it '409' do
           PATCH "/test/#{parent.id}/#{bank_account.id}", $admin,
-                updated_at: DateTime.now
+                updated_at: DateTime.now + 2.seconds
           expect(response).to have_http_status(409)
         end
 

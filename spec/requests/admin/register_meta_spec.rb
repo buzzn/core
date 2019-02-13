@@ -154,7 +154,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
 
       it '409' do
         PATCH "/localpools/#{group.id}/register-metas/#{register_meta.id}", $admin,
-              updated_at: DateTime.now
+              updated_at: DateTime.now + 2.seconds
         expect(response).to have_http_status(409)
       end
 

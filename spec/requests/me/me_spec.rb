@@ -125,7 +125,7 @@ describe Me::Roda, :request_helper do
     end
 
     it '409' do
-      PATCH '', $user, updated_at: DateTime.now
+      PATCH '', $user, updated_at: DateTime.now + 2.seconds
       expect(response).to have_http_status(409)
     end
 
