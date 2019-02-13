@@ -17,9 +17,10 @@ class Transactions::Admin::Contract::Localpool::UpdateProcessing < Transactions:
   # TODO move this to operation when done
   def update_nested(params:, resource:, **)
     changed = false
-    if params[:tax_number]
-      resource.tax_data.tax_number = params[:tax_number]
-      params.delete(:tax_number)
+    if params[:tax_number] && resource.tax_data.nil?
+      params[:tax_data] = Contract::TaxData.new(tax_number: params.delete(:tax_number))
+    elsif params[:tax_number]
+      resource.tax_data.tax_number = params.delete(:tax_number)
       changed = true
     end
     if changed

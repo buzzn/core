@@ -429,14 +429,37 @@ describe Admin::LocalpoolRoda, :request_helper do
       end
 
       context 'authenticated' do
-        it 'updates the tax data' do
-          expect(contract.tax_data.tax_number).to be nil
-          PATCH path, $admin, update_tax_number_json
-          expect(response).to have_http_status(200)
-          expect(json['tax_number']).to eq '777388834'
-          contract.tax_data.reload
-          expect(contract.tax_data.tax_number).to eq '777388834'
+
+        context 'without a tax_number' do
+
+          before do
+            contract.tax_data.destroy
+          end
+
+          it 'updates/creates the tax data' do
+            expect(contract.tax_data.tax_number).to be nil
+            PATCH path, $admin, update_tax_number_json
+            expect(response).to have_http_status(200)
+            expect(json['tax_number']).to eq '777388834'
+            contract.reload
+            expect(contract.tax_data.tax_number).to eq '777388834'
+          end
+
         end
+
+        context 'with a tax_number' do
+
+          it 'updates the tax data' do
+            expect(contract.tax_data.tax_number).to be nil
+            PATCH path, $admin, update_tax_number_json
+            expect(response).to have_http_status(200)
+            expect(json['tax_number']).to eq '777388834'
+            contract.tax_data.reload
+            expect(contract.tax_data.tax_number).to eq '777388834'
+          end
+
+        end
+
       end
 
     end
