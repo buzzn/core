@@ -19,6 +19,7 @@ module Pdf
         contractor: build_contractor,
         powertaker: build_powertaker,
         no_contact: contact(powertaker).nil?,
+        org_email: powertaker.email,
         localpool: build_localpool,
         billing: build_billing,
         items: build_billing_items,
