@@ -23,7 +23,8 @@ class Transactions::Admin::Contract::Localpool::UpdateProcessing < Transactions:
                end
     if params[:tax_number]
       tax_data.tax_number = params.delete(:tax_number)
-    elsif params[:sales_tax_number]
+    end
+    if params[:sales_tax_number]
       tax_data.sales_tax_number = params.delete(:sales_tax_number)
     end
     tax_data.save
