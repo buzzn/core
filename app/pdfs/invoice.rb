@@ -18,6 +18,7 @@ module Pdf
         sales_tax_number: contract.localpool.localpool_processing_contract.sales_tax_number,
         contractor: build_contractor,
         powertaker: build_powertaker,
+        no_contact: contact(powertaker).nil?,
         localpool: build_localpool,
         billing: build_billing,
         items: build_billing_items,
