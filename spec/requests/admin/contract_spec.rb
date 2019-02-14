@@ -419,6 +419,15 @@ describe Admin::LocalpoolRoda, :request_helper do
         }
       end
 
+      let('update_both_tax_numbers_json') do
+        {
+          'tax_number' => '777388834',
+          'sales_tax_number' => 'DE21355324',
+          'updated_at' => contract.updated_at
+        }
+      end
+
+
       context 'unauthenticated' do
 
         it '403' do
@@ -456,6 +465,21 @@ describe Admin::LocalpoolRoda, :request_helper do
             expect(json['tax_number']).to eq '777388834'
             contract.tax_data.reload
             expect(contract.tax_data.tax_number).to eq '777388834'
+          end
+
+        end
+
+        context 'with both' do
+
+          it 'updates the tax data' do
+            expect(contract.tax_data.tax_number).to be nil
+            PATCH path, $admin, update_both_tax_numbers_json
+            expect(response).to have_http_status(200)
+            expect(json['tax_number']).to eq update_both_tax_numbers_json['tax_number']
+            expect(json['sales_tax_number']).to eq update_both_tax_numbers_json['sales_tax_number']
+            contract.tax_data.reload
+            expect(contract.tax_data.tax_number).to eq update_both_tax_numbers_json['tax_number']
+            expect(contract.tax_data.sales_tax_number).to eq update_both_tax_numbers_json['sales_tax_number']
           end
 
         end
@@ -609,6 +633,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
           let('begin_date_json') {{'begin_date' => Date.today.to_s}}
           let('tax_number_json') {{'tax_number' => '777888999'}}
+          let('sales_tax_number_json') {{'sales_tax_number' => 'DE777888999'}}
 
           let('missing_begin_date_json') do
             missing_everything_json.merge(tax_number_json)
@@ -630,10 +655,24 @@ describe Admin::LocalpoolRoda, :request_helper do
 
           context 'valid data' do
 
-            it 'creates a new localpool processing contract' do
-              POST path, $admin, valid_localpool_processing
-              expect(response).to have_http_status(201)
-              expect(json['tax_number']).to eq valid_localpool_processing['tax_number']
+            context 'tax number' do
+
+              it 'creates a new localpool processing contract' do
+                POST path, $admin, valid_localpool_processing
+                expect(response).to have_http_status(201)
+                expect(json['tax_number']).to eq valid_localpool_processing['tax_number']
+              end
+
+            end
+
+            context 'sales tax number' do
+
+              it 'creates a new localpool processing contract' do
+                POST path, $admin, valid_localpool_processing
+                expect(response).to have_http_status(201)
+                expect(json['sales_tax_number']).to eq valid_localpool_processing['sales_tax_number']
+              end
+
             end
 
             it 'fails for two localpool processing contracts' do
