@@ -118,7 +118,10 @@ html
           #{powertaker.first_name} #{powertaker.last_name}<br>
           #{powertaker.street}<br>
           #{powertaker.zip} #{powertaker.city}
-      -unless no_contact
+      -if no_contact
+        p
+          i #{org_email}
+      -else
         p
           i #{powertaker.email}
       p.is-pull-right #{contractor.city}, den #{billing.date}
