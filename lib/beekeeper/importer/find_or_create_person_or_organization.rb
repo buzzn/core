@@ -1,3 +1,4 @@
+# coding: utf-8
 # This class is responsible for merging the many duplicated persons and organizations in beekeeper
 # into one person or organization record each in our database.
 class Beekeeper::Importer::FindOrCreatePersonOrOrganization
@@ -53,8 +54,9 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
       logger.debug('Taking organization from kontaktdaten')
       # get the data to use for our record
       source_record = Beekeeper::Minipool::Kontaktdaten.find_by(kontaktdaten_id: kontaktdaten_id)
-      find_or_create_organization(source_record.converted_attributes)
-
+      org = find_or_create_organization(source_record.converted_attributes)
+      create_address(org, unsaved_record.address)
+      org
     else # no lookup is configured, create a new organization record
       logger.debug('Creating new organization')
       unsaved_record.save!
