@@ -94,7 +94,6 @@ html
   body
     div.wrapper.tall
       div.log
-      div.logo.is-pull-left
       div.is-small.col-3rd.is-pull-right.no-margin
         p #{contractor.name}<br>
           - Energiegruppce #{localpool.name} - <br>
@@ -102,14 +101,14 @@ html
           #{contractor.street}<br>
           #{contractor.zip} #{contractor.city}
         p T:  #{contractor.phone}<br>
-          F: #{contractor.fax}<br>
+          #{!contractor.fax.empty? ? "F: #{contractor.fax}" : ""}
           Email: #{contractor.email}
         p #{contractor.name}<br>
           #{contractor.iban}<br>
           #{contractor.bic}<br>
           #{contractor.bank_name}
-        - if tax_number
-          p Steuernummer: #{tax_number}
+        - if sales_tax_number
+          p Steuernummer: #{sales_tax_number}
       p.is-smaller.clear #{contractor.name} • #{contractor.street} • #{contractor.zip} #{contractor.city}
       p #{powertaker.title}<br>
         #{powertaker.first_name} #{powertaker.last_name}<br>
@@ -129,13 +128,13 @@ html
           td.no-border.no-padding #{powertaker.street}, #{powertaker.addition}
         tr
           td.no-border.no-padding Zählernummer:
-          td.no-border.no-padding #{mpsn_ZählerNr_alt}
+          td.no-border.no-padding #{meter.buzzn_ids.join(', ')}
         tr
           td.no-border.no-padding Prognose Jahresbezug:
-          td.no-border.no-padding #{verbrauch_Jahr} kWh (#{abrechnungsjahr})
+          td.no-border.no-padding #{abschlag.energy_consumption_kwh_pa} kWh (#{billing_year})
         tr
           td.no-border.no-padding Abrechnungsjahr
-          td.no-border.no-padding #{abrechnungsjahr}
+          td.no-border.no-padding #{billing_year}
 
       p #{powertaker.addressing},
       p vielen Dank, dass Sie als Lokaler Stromnehmer aus der Energiegruppe #{localpool.name} Strom beziehen. Nachfolgend erhalten Sie Ihre Turnusabrechnung.
@@ -177,7 +176,7 @@ html
               td.no-border Arbeitspreis
               td.no-border #{item.begin_date} - #{item.last_date}
               td.no-border #{item.consumed_energy_kwh} kWh
-              td.no-border #{item.energy_price_cents_per_kwh} Ct/kWh
+              td.no-border #{item.energy_price_cents_per_kwh.round(2)} Ct/kWh
               td.no-border.is-text-right #{item.energy_price_euros} €
             tr
               td Grundpreis
@@ -210,20 +209,15 @@ html
             td.is-text-right
               strong #{billing.to_pay} €
       p Aus der Turnusabrechnung ergibt sich eine <strong>#{billing.rueck_nach}zahlung</strong> von <strong>#{billing.to_pay} €.</strong>
-      p #{satz_forderung}
+      p #{billing.satz_forderung}
     div.wrapper
       div.log
       h2 Ihre Vertragskonditionen
       p Die aktuellen Preise für Ihren Vertrag in der Energiegruppe #{localpool.name} betragen:<br>
-        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{current_tariff.baseprice_euros_per_month} €/Monat,</strong> (#{billing.baseprice} €/Monat)<br>
-        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{current_tariff.energyprice_cents_per_kwh} Cent/kWh,</strong> (#{billing.energyprice} Cent/kWh)
-      - if abschlag.was_changed
-        Abschlag wurde geändert
-      - else
-        Abschlag bleibt gleich
+        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{'%.2f' % current_tariff.baseprice_euros_per_month} €/Monat,</strong> (#{'%.2f' % billing.baseprice} €/Monat)<br>
+        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{'%.2f' % current_tariff.energyprice_cents_per_kwh} Cent/kWh,</strong> (#{'%.2f' % billing.energyprice} Cent/kWh)
 
-      p Abschlag kwh: #{abschlag.energy_consumption_kwh_pa}
-        Betrag: #{abschlag.amount_euro} €/#{abschlag.cycle}
+      p #{abschlag.satz}
 
       p Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.
       p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.
@@ -377,13 +371,7 @@ html
       // initiate charts & page break
       $(function(){
         var data = function(){return[0,0,0,0,0].map(function(){return Math.round(Math.random()*100)+50})};
-        var labels1 = [
-          'Ihr Jahresverbrauch in #{dieses_jahr} (1)',
-          'Ihr Jahresverbrauch in #{letztes_jahr} (2)',
-          'Referenz 1-Personen-Haushalt',
-          'Referenz 2-Personen-Haushalt',
-          'Referenz 3 und mehr Personen-Haushalt'
-        ];
+        var labels1 = #{{labels1}};
         var labels2 = [
           'Atom',
           'Kohle',
@@ -394,7 +382,7 @@ html
         ];
         // footer HTML required
         var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{contractor.name} • #{contractor.street} • #{contractor.zip} #{contractor.city}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
-        bcChart('#chart-one', labels1, data());
+        bcChart('#chart-one', labels1, [#{consumption_year}, #{consumption_last_year ? "#{consumption_last_year} ," : ''} 1598, 2766, 4608]);
         bcChart('#chart-two', labels2, data(),'Deutschland');
         bcChart('#chart-three', labels2, data(),'Lokale Energiegruppe #{localpool.name}');
         // page breaks require the presence of at least one .wrapper container

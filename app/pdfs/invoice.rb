@@ -7,7 +7,6 @@ module Pdf
     def initialize(billing)
       super
       @billing = billing
-      # byebug.byebug
     end
 
     protected
@@ -16,7 +15,7 @@ module Pdf
       billing_config = CoreConfig.load(Types::BillingConfig)
       {
         title_text: @billing.full_invoice_number,
-        tax_number: contract.localpool.localpool_processing_contract.tax_number,
+        sales_tax_number: contract.localpool.localpool_processing_contract.sales_tax_number,
         contractor: build_contractor,
         powertaker: build_powertaker,
         localpool: build_localpool,
@@ -27,9 +26,14 @@ module Pdf
           number: contract.full_contract_number,
         },
         current_tariff: build_current_tariff,
+        billing_year: billing_year,
+        consumption_last_year: consumption(billing_year-1),
+        consumption_year: consumption(billing_year),
         abschlag: build_abschlag,
-        meter: build_meter
-      }
+        meter: build_meter,
+      }.tap do |h|
+        h[:labels1] = build_labels1(h[:consumption_last_year])
+      end
     end
 
     private
@@ -44,6 +48,19 @@ module Pdf
 
     def powertaker
       @powertaker ||= contract.customer
+    end
+
+    def billing_year
+      @billing.billing_cycle&.begin_date&.year
+    end
+
+    def consumption(year)
+      return nil unless year
+      collected = @billing.contract.billings.to_a.keep_if { |x| x.billing_cycle.begin_date.year == year }.map { |x| [x.total_consumed_energy_kwh, x.total_days] }
+      return nil if collected.flatten.include?(nil)
+      summed = collected.inject { |x, n| [x[0] + n[0], x[1] + n[1]] }
+      return nil unless summed
+      summed[0] * 365.00 / summed[1]
     end
 
     def contractor_address
@@ -82,14 +99,18 @@ module Pdf
       case person_or_organization
       when Person
         prefix = case person_or_organization.prefix
-                 when 'F'
+                 when 'female'
                    'Sehr geehrte Frau'
-                 when 'M'
+                 when 'male'
                    'Sehr geehrter Herr'
                  else
                    'Hallo'
                  end
-        "#{prefix} #{person_or_organization.title} #{person_or_organization.last_name}"
+        if prefix == 'Hallo'
+          "#{prefix} #{person_or_organization.first_name}"
+        else
+          "#{prefix} #{person_or_organization.title} #{person_or_organization.last_name}"
+        end
       when Organization
       when Organization::General
         'Sehr geehrte Damen und Herren'
@@ -169,6 +190,7 @@ module Pdf
         brutto = @billing.total_amount_after_taxes
         balance_at = @billing.balance_before
         to_pay_cents = (balance_at - @billing.total_amount_after_taxes * 10)/10
+        has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
         hash[:netto] = to_euro(netto)
         hash[:brutto] = to_euro(brutto)
         hash[:vat_amount] = to_euro(brutto-netto)
@@ -176,6 +198,23 @@ module Pdf
         hash[:to_pay] = to_euro(to_pay_cents.abs)
         hash[:forderung] = to_pay_cents.positive? ? 'Erstattung' : 'Forderung'
         hash[:rueck_nach] = to_pay_cents.positive? ? 'Rück' : 'Nach'
+        hash[:satz_forderung] = if has_bank_and_direct_debit
+                                  if to_pay_cents.positive?
+                                    'Der Betrag wird in den nächsten Wochen auf ihrem Bankkonto gutgeschrieben.'
+                                  elsif to_pay_cents.negative?
+                                    'Der Betrag wird in den nächsten Wochen von ihrem Bankkonto eingezogen.'
+                                  else
+                                    ''
+                                  end
+                                else
+                                  if to_pay_cents.positive?
+                                    'Bitte geben Sie uns Ihre Bankverbindung (IBAN, BIC) für die Erstattung Ihres Guthabens an'
+                                  elsif to_pay_cents.negative?
+                                    'Bitte überweisen Sie den Betrag unter Angabe der Rechnungsnummer auf das oben angegebene Konto'
+                                  else
+                                    ''
+                                  end
+                                end
       end
     end
 
@@ -211,23 +250,55 @@ module Pdf
     end
 
     def build_abschlag
-      {
+      abschlag = {
         was_changed: !@billing.adjusted_payment.nil?,
       }.merge(build_payment(@billing.adjusted_payment || @billing.contract.current_payment))
+      has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
+      payment_amounts_to = "Abschlag beträgt #{'%.2f' % abschlag[:amount_euro]}"
+      abschlag[:satz] = if has_bank_and_direct_debit
+                          every_month = 'jeden Monat von Ihrem Konto eingezogen'
+                          if abschlag[:was_changed]
+                            "Ihr neuer #{payment_amounts_to}. Er wird ab dem #{abschlag[:begin_date]} #{every_month}."
+                          else
+                            "Ihr #{payment_amounts_to}. Er wird wie gewohnt #{every_month}."
+                          end
+                        else
+                          if abschlag[:was_changed]
+                            "Ihr neuer #{payment_amounts_to}. Bitte überweisen Sie zu dem 01. eines Monats, erstmalig zum #{abschlag.begin_date} den neuen Abschlag auf das oben angegebene Konto."
+                          else
+                            "Ihr #{payment_amounts_to}. Bitte überweisen Sie den Abschlag wie gewohnt auf das oben angegebene Konto"
+                          end
+                        end
+      abschlag
     end
 
     def build_payment(payment)
       {
         energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
         cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
-        amount_euro: to_euro(payment.price_cents)
+        amount_euro: to_euro(payment.price_cents),
+        begin_date: payment.begin_date
       }
     end
 
     def build_meter
       {
-        mpsn_ZählerNr_alt: contract.register_meta.registers.first.meter.legacy_buzznid
+        buzzn_ids: contract.register_meta.registers.map { |x| x.meter.legacy_buzznid }
       }
+    end
+
+    def build_labels1(consumption_last_year)
+      labels = [
+                 "Ihr Jahresverbrauch in #{billing_year} (1)",
+                 "Ihr Jahresverbrauch in #{billing_year-1} (2)",
+                 'Referenz 1-Personen-Haushalt',
+                 'Referenz 2-Personen-Haushalt',
+                 'Referenz 3 und mehr Personen-Haushalt'
+               ]
+      if consumption_last_year
+        labels.delete(1)
+      end
+      '[' + labels.map {|x| "'#{x}'"}.join(',') + ']'
     end
 
   end
