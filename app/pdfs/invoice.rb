@@ -27,7 +27,7 @@ module Pdf
         },
         current_tariff: build_current_tariff,
         billing_year: billing_year,
-        consumption_last_year: consumption(billing_year-1),
+        consumption_last_year: consumption((billing_year ? billing_year-1 : nil)),
         consumption_year: consumption(billing_year),
         abschlag: build_abschlag,
         meter: build_meter,
@@ -162,12 +162,12 @@ module Pdf
       }
       contact(powertaker).tap do |contact|
         %i(title first_name last_name email).each do |field|
-          data[field] = contact.send(field)
+          data[field] = contact.send(field) if contact
         end
       end
       powertaker.address.tap do |address|
         %i(street zip city addition).each do |field|
-          data[field] = address.send(field)
+          data[field] = address.send(field) if address
         end
       end
       contract.customer_bank_account.tap do |account|
@@ -289,14 +289,15 @@ module Pdf
 
     def build_labels1(consumption_last_year)
       labels = [
-                 "Ihr Jahresverbrauch in #{billing_year} (1)",
-                 "Ihr Jahresverbrauch in #{billing_year-1} (2)",
                  'Referenz 1-Personen-Haushalt',
                  'Referenz 2-Personen-Haushalt',
                  'Referenz 3 und mehr Personen-Haushalt'
                ]
-      if consumption_last_year
-        labels.delete(1)
+      if billing_year
+        labels.unshift("Ihr Jahresverbrauch in #{billing_year} (1)", "Ihr Jahresverbrauch in #{billing_year-1} (2)")
+        if consumption_last_year
+          labels.delete(1)
+        end
       end
       '[' + labels.map {|x| "'#{x}'"}.join(',') + ']'
     end
