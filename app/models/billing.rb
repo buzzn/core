@@ -108,6 +108,17 @@ class Billing < ActiveRecord::Base
     total
   end
 
+  def total_days
+    total = 0
+    items.each do |item|
+      if item.length_in_days.nil?
+        return nil
+      end
+      total += item.length_in_days
+    end
+    total
+  end
+
   def daily_kwh_estimate
     total = 0
     items.each do |item|
