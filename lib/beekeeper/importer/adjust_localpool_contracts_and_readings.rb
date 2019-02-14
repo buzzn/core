@@ -26,6 +26,26 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
         logger.info("Contract #{contract.contract_number}/#{contract.contract_number_addition}: #{contract.end_date} - #{next_contract.begin_date}#{comment}")
       end
     end
+    # Fix / add a few readings
+    if ['fritz-winter-strasse', 'gertrud-grunow-strasse', 'woge', 'tassiloweg'].include?(localpool.slug)
+      localpool.register_metas.uniq.to_a.keep_if {|x| x.label.consumption?}.each do |register_meta|
+        date = Date.new(2015, 12, 31)
+        register_meta.registers.each do |r|
+          next unless r.readings.before(date).any? && r.readings.after(date).any? && r.readings.where(:date => date).empty?
+          value = r.readings.before(date).order(:date).last.value
+          reading = r.readings.create!(date: date,
+                                       value: value,
+                                       raw_value: value,
+                                       reason: :regular_reading,
+                                       comment: 'Import 2019',
+                                       read_by: :buzzn,
+                                       status: :z86,
+                                       source: :manual,
+                                       quality: :read_out)
+          logger.info("Created fake reading for #{r.meter.attributes}", extra_data: reading.attributes)
+        end
+      end
+    end
   end
 
   private
@@ -115,6 +135,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
         # 2nd reading has a slightly higher reading than the first one. Just delete the first one.
         readings.first.delete
       else
+        byebug.byebug
         logger.warn("Unexpected duplicate readings for #{register.meter.legacy_buzznid}. Please add code to decide on which reading to keep.")
       end
     end
