@@ -1,3 +1,4 @@
+# coding: utf-8
 # == Schema Information
 #
 # Table name: minipooldb.minipool_sn
@@ -68,8 +69,7 @@ class Beekeeper::Minipool::MinipoolSn < Beekeeper::Minipool::BaseRecord
     @powertaker ||= if kontaktdaten.person?
                       Person.new(kontaktdaten.converted_attributes.merge(address: address))
     else
-      # TODO add contact person
-      Organization::General.new(kontaktdaten.converted_attributes)
+      Organization::General.new(kontaktdaten.converted_attributes.merge(address: address))
     end
   end
 
