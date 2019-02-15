@@ -7,6 +7,7 @@ module Pdf
     def initialize(billing)
       super
       @billing = billing
+      @de_stats = Organization::EnergyClassification.where(tariff_name: 'Energy Mix Germany').first
     end
 
     protected
@@ -33,6 +34,10 @@ module Pdf
         consumption_year: consumption(billing_year),
         abschlag: build_abschlag,
         meter: build_meter,
+        waste_de: build_waste_de,
+        ratios_de: build_ratios_de,
+        waste_local: build_waste_local,
+        ratios_local: build_ratios_local
       }.tap do |h|
         h[:labels1] = build_labels1(h[:consumption_last_year])
       end
@@ -287,6 +292,36 @@ module Pdf
       {
         buzzn_ids: contract.register_meta.registers.map { |x| x.meter.legacy_buzznid }
       }
+    end
+
+    def build_waste_de
+      {
+        nuclear_waste_miligramm_per_kwh: @de_stats[:nuclear_waste_miligramm_per_kwh],
+        co2_emission_gramm_per_kwh: @de_stats[:co2_emission_gramm_per_kwh]
+      }
+    end
+
+    def build_ratios_de
+      [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :renewablesEegRatio, :otherRenewablesRatio].map { |type| @de_stats[type.to_s.underscore] }.to_json
+    end
+
+    def build_waste_local
+      if localpool.fake_stats
+        {
+          nuclear_waste_miligramm_per_kwh: localpool.fake_stats["nuclearWasteMiligrammPerKwh"],
+          co2_emission_gramm_per_kwh: localpool.fake_stats["co2EmissionGrammPerKwh"]
+        }
+      else
+        {}
+      end
+    end
+
+    def build_ratios_local
+      if localpool.fake_stats
+        [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :renewablesEegRatio, :otherRenewablesRatio].map { |type| localpool.fake_stats[type.to_s] }.to_json
+      else
+        [0, 0, 0, 0, 0, 0].to_json
+      end
     end
 
     def build_labels1(consumption_last_year)

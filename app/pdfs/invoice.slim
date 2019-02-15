@@ -316,14 +316,14 @@ html
       h2 Umweltauswirkungen je Kilowattstunde
       table.no-border
         tr
-          td.no-border.ash #{gl_radioactiver_abfall}
+          td.no-border.ash #{waste_de.nuclear_waste_miligramm_per_kwh}
           td.no-border Radioaktiver Abfall (g/kWh)
-          td.no-border.ash #{localpool.radioactiver_abfall}
+          td.no-border.ash #{waste_local.nuclear_waste_miligramm_per_kwh}
           td.no-border
         tr
-          td.no-border.ash #{gl_c02_emissionen}
+          td.no-border.ash #{waste_de.co2_emission_gramm_per_kwh}
           td.no-border CO2 Emissionen (g/kWh)
-          td.no-border.ash #{localpool.c02_emissionen}
+          td.no-border.ash #{waste_local.co2_emission_gramm_per_kwh}
           td.no-border
         tr
           td
@@ -378,7 +378,8 @@ html
     javascript:
       // initiate charts & page break
       $(function(){
-        var data = function(){return[0,0,0,0,0].map(function(){return Math.round(Math.random()*100)+50})};
+        var data2d = #{{ratios_de}};
+        var data2l = #{{ratios_local}};
         var labels1 = #{{labels1}};
         var labels2 = [
           'Atom',
@@ -391,8 +392,8 @@ html
         // footer HTML required
         var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{contractor.name} • #{contractor.street} • #{contractor.zip} #{contractor.city}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
         bcChart('#chart-one', labels1, [#{consumption_year}, #{consumption_last_year ? "#{consumption_last_year} ," : ''} 1598, 2766, 4608]);
-        bcChart('#chart-two', labels2, data(),'Deutschland');
-        bcChart('#chart-three', labels2, data(),'Lokale Energiegruppe #{localpool.name}');
+        bcChart('#chart-two', labels2, data2d,'Deutschland');
+        bcChart('#chart-three', labels2, data2l,'Lokale Energiegruppe #{localpool.name}');
         // page breaks require the presence of at least one .wrapper container
         setPageBreaks(footer);
       });
