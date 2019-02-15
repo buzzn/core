@@ -36,6 +36,7 @@ namespace :db do
       require_relative '../../db/support/transfer'
       transfer_webforms
       transfer_displays
+      transfer_stats
     end
 
   end
