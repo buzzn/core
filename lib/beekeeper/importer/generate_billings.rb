@@ -36,12 +36,12 @@ class Beekeeper::Importer::GenerateBillings
     last_dates.map do |last_date|
       begin
         create_gap_contracts(localpool, last_date)
+        book_paid_payments(localpool, record, last_date.year)
         billing_cycle = create_billing_cycle(localpool, last_date)
         set_billing_cycle_to_calculated(localpool, billing_cycle)
         if last_date.year != 2018
           set_billing_cycle_to_closed(localpool, billing_cycle)
         end
-        book_paid_payments(localpool, record, last_date.year)
 
         if last_date.year == 2017
           # reset balances for the localpool
