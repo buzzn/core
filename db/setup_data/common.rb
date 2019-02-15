@@ -24,13 +24,13 @@ energy_classifications = {
   ),
   germany: Organization::EnergyClassification.create!(
     tariff_name:                       'Energy Mix Germany',
-    nuclear_ratio:                     15.4,
-    coal_ratio:                        43.8,
-    gas_ratio:                         6.5,
-    other_fossiles_ratio:              2.5,
-    renewables_eeg_ratio:              28.7,
-    other_renewables_ratio:            3.1,
-    co2_emission_gramm_per_kwh:        476,
+    nuclear_ratio:                     12.7,
+    coal_ratio:                        38.1,
+    gas_ratio:                         10.2,
+    other_fossiles_ratio:              2.4,
+    renewables_eeg_ratio:              33.1,
+    other_renewables_ratio:            3.5,
+    co2_emission_gramm_per_kwh:        434,
     nuclear_waste_miligramm_per_kwh:   0.4
   )
 }
