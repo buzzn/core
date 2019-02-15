@@ -76,6 +76,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       end
     when :document
       generator = Pdf::Invoice.new(resource.object)
+      generator.disable_cache
       document = generator.create_pdf_document.document
       unless resource.object.documents.where(:id => document.id).any?
         resource.object.documents << document
