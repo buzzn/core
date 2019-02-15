@@ -94,7 +94,7 @@ html
   body
     div.wrapper.tall
       div.log
-      div.is-small.col-3rd.is-pull-right.no-margin
+      div.is-medium.col-3rd.is-pull-right.no-margin
         p #{contractor.name}<br>
           - Energiegruppce #{localpool.name} - <br>
           #{contractor.contact}<br>
@@ -111,7 +111,7 @@ html
           p USt-IdNr: #{sales_tax_number}
         - if tax_number
           p Steuernummer: #{tax_number}
-      p.is-smaller.clear #{contractor.name} • #{contractor.street} • #{contractor.zip} #{contractor.city}
+      p.is-small.clear #{contractor.name} • #{contractor.street} • #{contractor.zip} #{contractor.city}
       - if no_contact
         p #{powertaker.street}<br>
           #{powertaker.zip} #{powertaker.city}
