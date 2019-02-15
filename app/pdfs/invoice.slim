@@ -272,12 +272,12 @@ html
         div.col-3rd.card.peach
           p
             | Technologie <span class='is-medium'>(mit welchen Verfahren wurde der Eigenstrom erzeugt?)</span>
-          p.is-medium Kraft-Wärme-Kopplung mit Blockheizkraftwerk (7,5 kW)<br>Photovoltaik (25,95 kWp)
+          p.is-medium #{energy_report.tech}
       div.row
         div.col-3rd.card.cornflower
           p
             | Reststrom <span class='is-medium'>(von welchem Lieferant stammt der Reststrom über das öffentliche Netz?)</span>
-          p.is-medium BUZZN GmbH
+          p.is-medium #{energy_report.electricity_supplier}
         div.col-3rd.card.glass
           / p
           /   | Autarkiegrad <span class='is-small'> (wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
