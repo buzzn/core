@@ -29,7 +29,7 @@ module Pdf
         },
         current_tariff: build_current_tariff,
         billing_year: billing_year,
-        consumption_last_year: consumption(billing_year-1),
+        consumption_last_year: consumption(billing_year.nil? ? nil : billing_year-1),
         consumption_year: consumption(billing_year),
         abschlag: build_abschlag,
         meter: build_meter,
