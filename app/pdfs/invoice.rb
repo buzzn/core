@@ -168,9 +168,11 @@ module Pdf
       data = {
         addressing: addressing(powertaker),
       }
-      contact(powertaker).tap do |contact|
-        %i(title first_name last_name email).each do |field|
-          data[field] = contact.send(field)
+      if !contact(powertaker).nil?
+        contact(powertaker).tap do |contact|
+          %i(title first_name last_name email).each do |field|
+            data[field] = contact.send(field)
+          end
         end
       end
       powertaker.address.tap do |address|
@@ -272,7 +274,7 @@ module Pdf
                           end
                         else
                           if abschlag[:was_changed]
-                            "Ihr neuer #{payment_amounts_to}. Bitte überweisen Sie zu dem 01. eines Monats, erstmalig zum #{abschlag.begin_date} den neuen Abschlag auf das oben angegebene Konto."
+                            "Ihr neuer #{payment_amounts_to}. Bitte überweisen Sie zu dem 01. eines Monats, erstmalig zum #{abschlag[:begin_date]} den neuen Abschlag auf das oben angegebene Konto."
                           else
                             "Ihr #{payment_amounts_to}. Bitte überweisen Sie den Abschlag wie gewohnt auf das oben angegebene Konto"
                           end
