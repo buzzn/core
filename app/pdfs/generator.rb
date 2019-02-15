@@ -47,6 +47,11 @@ module Pdf
       @logger = Buzzn::Logger.new(self)
       @root = root_object
       @builder = Builders::StructBuilder.new(PdfStruct)
+      @disable_cache = false
+    end
+
+    def disable_cache
+      @disable_cache = true
     end
 
     def to_html
@@ -74,7 +79,7 @@ module Pdf
 
     def create_pdf_document(pdf = nil, filename = nil)
       pdf_document = PdfDocument.where(template: template, json: data.to_json.to_s).first
-      return pdf_document if pdf_document
+      return pdf_document if pdf_document && !disable_cache
       pdf ||= to_pdf #generate pdf outside of transaction
       filename ||= self.pdf_filename
       document = Document.new(filename: filename)
