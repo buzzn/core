@@ -24,7 +24,7 @@ class Beekeeper::Minipool::Kontodaten < Beekeeper::Minipool::BaseRecord
   def converted_attributes
     {
       holder:       kontoinhaber,
-      iban:         kontonummer,
+      iban:         kontonummer.gsub(' ', ''),
       bank_name:    bank_name,
       bic:          bic,
       direct_debit: direct_debit,
@@ -45,15 +45,18 @@ class Beekeeper::Minipool::Kontodaten < Beekeeper::Minipool::BaseRecord
   end
 
   def bank
-    @bank ||= Bank.find_by_iban(kontonummer)
+    cleaned = kontonummer.gsub(' ', '')
+    unless cleaned.empty?
+      @bank ||= Bank.find_by_iban(cleaned)
+    end
   end
 
   def bank_name
-    bank.description
+    bank&.description
   end
 
   def bic
-    bank.bic
+    bank&.bic
   end
 
 end

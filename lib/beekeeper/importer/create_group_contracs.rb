@@ -16,7 +16,12 @@ class Beekeeper::Importer::GroupContracts
 
   def create_localpool_processing_contract(localpool, start_date, contract_number, contract_number_addition)
     tax_data_attrs = {}.tap do |h|
-      konto = Beekeeper::Minipool::Kontodaten.where(vertragsnummer: contract_number, nummernzusatz: 0).first
+
+      begin
+        konto = Beekeeper::Minipool::Kontodaten.where(vertragsnummer: contract_number, nummernzusatz: 0).first
+      rescue Buzzn::RecordNotFound => e
+        logger.error("Couldn't create bank account #{konto.attributes} for #{contract_number}/#{contract_number_addition}", extra_data: e.message)
+      end
       if konto
         if konto.steuernummer && konto.steuernummer.size.positive?
           h[:tax_number] = konto.steuernummer

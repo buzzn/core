@@ -1,3 +1,4 @@
+# coding: utf-8
 class Beekeeper::Importer::LocalpoolContracts
 
   attr_reader :logger
@@ -35,6 +36,14 @@ class Beekeeper::Importer::LocalpoolContracts
     register_meta_option = Register::MetaOption.new(share_with_group: false, share_publicly: false)
     register = find_register(contract, registers, localpool)
     payments = contract.delete(:payments)
+    begin
+      konto = Beekeeper::Minipool::Kontodaten.where(vertragsnummer: contract[:contract_number], nummernzusatz: contract[:contract_number_addition]).first
+      if konto && !konto.converted_attributes[:iban].empty?
+        customer.bank_accounts.create(konto.converted_attributes)
+      end
+    rescue Buzzn::RecordNotFound => e
+      logger.error("Couldn't create bank account #{konto.attributes} for #{contract}", extra_data: e.message)
+    end
     contract_attributes = contract.except(:powertaker, :buzznid, :paid_payments).merge(
       localpool:       localpool,
       register_meta:   register.meta,
