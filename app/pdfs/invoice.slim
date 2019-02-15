@@ -271,8 +271,10 @@ html
         div.col-3rd.card.sky
           p
             | Primärenergie <span class='is-medium'>(aus welchen Quellen wurde der Eigenstrom Strom erzeugt?)</span>
-          p.is-larger Erdgas #{energy_report.gas_report} %
-          p.is-larger Sonne #{energy_report.sun_report} %
+          - unless energy_report.gas_report == 0
+            p.is-larger Erdgas #{energy_report.gas_report} %
+          - unless energy_report.sun_report == 0
+            p.is-larger Sonne #{energy_report.sun_report} %
         div.col-3rd.card.pork
           p
             | Netzverluste <span class='is-medium'>(wie hoch waren die Übertragungsverluste für den Strom?)</span>
