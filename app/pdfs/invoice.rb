@@ -318,7 +318,7 @@ module Pdf
     end
 
     def build_report
-      Hash[[:selfSufficiencyReport, :utilizationReport, :gasReport, :sunReport].collect { |k| [k.to_s.underscore, localpool.fake_stats[k.to_s]]}]
+      Hash[[:selfSufficiencyReport, :utilizationReport, :gasReport, :sunReport, :electricitySupplier, :tech].collect { |k| [k.to_s.underscore, localpool.fake_stats[k.to_s]]}]
     end
 
     def build_labels1(consumption_last_year)
