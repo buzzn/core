@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative '../billing'
 require_relative '../../../schemas/transactions/admin/billing/update'
 
@@ -11,7 +12,12 @@ class Transactions::Admin::Billing::Update < Transactions::Base
   tee :execute_transistion
   map :persist, with: :'operations.action.update'
 
-  include Import[accounting_service: 'services.accounting']
+  include Import[
+            accounting_service: 'services.accounting',
+            mail_service: 'services.mail_service',
+            powertaker_v1_from: 'config.powertaker_v1_from',
+            powertaker_v1_bcc: 'config.powertaker_v1_bcc',
+          ]
 
   def schema
     Schemas::Transactions::Admin::Billing::Update
@@ -81,6 +87,40 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       unless resource.object.documents.where(:id => document.id).any?
         resource.object.documents << document
       end
+    when :queue
+      customer = resource.object.contract.customer
+      email = case customer
+              when Person
+                customer.email
+              when Organization::Base
+                (!customer.contact.nil? && !customer.contact.email.empty?) ? customer.contact.email : customer.email
+              end
+      if email.nil? || email.empty?
+        raise Buzzn::ValidationError.new(customer: 'email invalid')
+      end
+      subject = "Ihre Stromrechnung 2018"
+      customer_name = 'CUSTOMER_NAME'
+      contractor_name = 'CONTRACTOR_NAME'
+      text = %Q(Guten Tag,
+
+im Auftrag Ihres Lokalen Stromgebers #{contractor_name} übermitteln wir Ihnen im
+Anhang Ihre Stromrechnung 2018.
+
+Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
+
+Vielen Dank, dass Sie People Power unterstützen, die Energiewende von unten.
+
+Energiegeladene Grüße,
+
+Ihr BUZZN Team
+)
+      document = resource.object.documents.order(:created_at).last
+      mail_service.deliver_billing_later(resource.object.id, :from => powertaker_v1_from,
+                                                             :to => 'dev@buzzn.net',
+                                                             :subject => subject,
+                                                             :text => text,
+                                                             :bcc => powertaker_v1_bcc,
+                                                             :document_id => document.id)
     end
   end
 

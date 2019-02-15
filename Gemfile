@@ -63,6 +63,7 @@ gem 'redis'
 gem 'rack-cors', require: 'rack/cors'
 gem 'clockwork'
 gem 'mail'
+gem 'multipart-post'
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
 gem 'mini_magick'
 gem 'carrierwave'
