@@ -182,6 +182,8 @@ module Pdf
             data[field] = contact.send(field)
           end
         end
+      elsif powertaker.respond_to?(:name)
+        data[:name] = powertaker.name
       end
       powertaker.address.tap do |address|
         %i(street zip city addition).each do |field|
