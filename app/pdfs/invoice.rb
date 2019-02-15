@@ -290,6 +290,7 @@ module Pdf
     end
 
     def build_labels1(consumption_last_year)
+      return nil if consumption_last_year.nil?
       labels = [
                  "Ihr Jahresverbrauch in #{billing_year} (1)",
                  "Ihr Jahresverbrauch in #{billing_year-1} (2)",

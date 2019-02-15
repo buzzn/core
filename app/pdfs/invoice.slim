@@ -101,7 +101,7 @@ html
           #{contractor.street}<br>
           #{contractor.zip} #{contractor.city}
         p T:  #{contractor.phone}<br>
-          #{!contractor.fax.empty? ? "F: #{contractor.fax}" : ""}
+          #{(contractor.fax.nil? || contractor.fax.empty?) ? "" : "F: #{contractor.fax}"}
           Email: #{contractor.email}
         p #{contractor.name}<br>
           #{contractor.iban}<br>
