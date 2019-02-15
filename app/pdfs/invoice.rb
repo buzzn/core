@@ -148,8 +148,14 @@ module Pdf
       data = {
         name: name(contractor),
         contact: name(contact(contractor)),
-        email: !contractor&.contact&.email&.empty? ? contractor.contact.email : contractor.email,
       }
+      data[:email] = case contractor
+                     when Person
+                       contractor.email
+                     when Organization
+                     when Organization::General
+                       !contractor&.contact&.email&.empty? ? contractor.contact.email : contractor.email
+                     end
       %i(phone fax).each do |field|
         data[field] = contractor.send(field)
       end
