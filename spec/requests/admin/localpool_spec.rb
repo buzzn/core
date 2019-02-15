@@ -126,7 +126,8 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
       'display_app_url' => (localpool.show_display_app ? "https://display.buzzn.io/#{localpool.slug}" : nil),
       'legacy_power_giver_contract_buzznid' => nil,
       'legacy_power_taker_contract_buzznid' => nil,
-      'next_billing_cycle_begin_date' => localpool.start_date.as_json,
+      'fake_stats' => nil,
+      'next_billing_cycle_begin_date' => localpool.start_date.as_json
     }
   end
 
@@ -256,6 +257,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
         'power_sources' => [],
         'legacy_power_giver_contract_buzznid' => nil,
         'legacy_power_taker_contract_buzznid' => nil,
+        'fake_stats' => nil,
         'next_billing_cycle_begin_date' => Date.today.as_json, }
     end
 
@@ -357,6 +359,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
         'display_app_url' => nil,
         'legacy_power_giver_contract_buzznid' => nil,
         'legacy_power_taker_contract_buzznid' => nil,
+        'fake_stats' => nil,
         'next_billing_cycle_begin_date' => Date.yesterday.as_json,
       }
     end
