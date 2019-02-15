@@ -17,6 +17,7 @@ module Pdf
       {
         title_text: @billing.full_invoice_number,
         sales_tax_number: contract.localpool.localpool_processing_contract.sales_tax_number,
+        tax_number: contract.localpool.localpool_processing_contract.tax_number,
         contractor: build_contractor,
         powertaker: build_powertaker,
         no_contact: contact(powertaker).nil?,
@@ -139,16 +140,17 @@ module Pdf
       date.to_s
     end
 
-    def to_euro(cents)
-      (cents/100.0).round(2)
+    def german_div(cents)
+      sprintf("%d,%02d", cents/100, cents%100)
     end
 
     def build_contractor
       data = {
         name: name(contractor),
         contact: name(contact(contractor)),
+        email: !contractor&.contact&.email&.empty? ? contractor.contact.email : contractor.email,
       }
-      %i(phone fax email).each do |field|
+      %i(phone fax).each do |field|
         data[field] = contractor.send(field)
       end
       contractor.address.tap do |address|
@@ -190,35 +192,35 @@ module Pdf
       {
         date: @billing.last_date,
         number: @billing.full_invoice_number,
-        baseprice: to_euro(last_tariff.baseprice_cents_per_month),
-        energyprice: to_euro(last_tariff.energyprice_cents_per_kwh),
+        baseprice: german_div(last_tariff.baseprice_cents_per_month),
+        energyprice: german_div(last_tariff.energyprice_cents_per_kwh),
         consumed_energy_kwh: @billing.items.first.consumed_energy_kwh,
       }.tap do |hash|
-        netto = @billing.total_amount_before_taxes
-        brutto = @billing.total_amount_after_taxes
+        netto = (@billing.total_amount_before_taxes * 10).round
+        brutto = (@billing.total_amount_after_taxes * 10).round
         balance_at = @billing.balance_before
-        to_pay_cents = (balance_at - @billing.total_amount_after_taxes * 10)/10
+        to_pay_decacents = (balance_at - brutto)
         has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
-        hash[:netto] = to_euro(netto)
-        hash[:brutto] = to_euro(brutto)
-        hash[:vat_amount] = to_euro(brutto-netto)
-        hash[:balance_at_invoice] = to_euro(balance_at / 10)
-        hash[:to_pay] = to_euro(to_pay_cents.abs)
-        hash[:forderung] = to_pay_cents.positive? ? 'Erstattung' : 'Forderung'
-        hash[:rueck_nach] = to_pay_cents.positive? ? 'Rück' : 'Nach'
+        hash[:netto] = german_div(netto / 10)
+        hash[:brutto] = german_div(brutto / 10)
+        hash[:vat_amount] = german_div(brutto/10-netto/10)
+        hash[:balance_at_invoice] = german_div(balance_at / 10)
+        hash[:to_pay] = german_div(to_pay_decacents.abs / 10)
+        hash[:forderung] = to_pay_decacents.positive? ? 'Erstattung' : 'Forderung'
+        hash[:rueck_nach] = to_pay_decacents.positive? ? 'Rück' : 'Nach'
         hash[:satz_forderung] = if has_bank_and_direct_debit
-                                  if to_pay_cents.positive?
+                                  if to_pay_decacents.positive?
                                     'Der Betrag wird in den nächsten Wochen auf ihrem Bankkonto gutgeschrieben.'
-                                  elsif to_pay_cents.negative?
+                                  elsif to_pay_decacents.negative?
                                     'Der Betrag wird in den nächsten Wochen von ihrem Bankkonto eingezogen.'
                                   else
                                     ''
                                   end
                                 else
-                                  if to_pay_cents.positive?
-                                    'Bitte geben Sie uns Ihre Bankverbindung (IBAN, BIC) für die Erstattung Ihres Guthabens an'
-                                  elsif to_pay_cents.negative?
-                                    'Bitte überweisen Sie den Betrag unter Angabe der Rechnungsnummer auf das oben angegebene Konto'
+                                  if to_pay_decacents.positive?
+                                    'Bitte geben Sie uns Ihre Bankverbindung (IBAN, BIC) für die Erstattung Ihres Guthabens an.'
+                                  elsif to_pay_decacents.negative?
+                                    'Bitte überweisen Sie den Betrag unter Angabe der Rechnungsnummer auf das oben angegebene Konto.'
                                   else
                                     ''
                                   end
@@ -240,20 +242,22 @@ module Pdf
           begin_kwh: to_kwh(item.begin_reading.value),
           last_kwh: to_kwh(item.end_reading.value),
           consumed_energy_kwh: item.consumed_energy_kwh,
-          energy_price_cents_per_kwh: item.tariff.energyprice_cents_per_kwh,
-          energy_price_euros: to_euro(item.energy_price_cents),
+          energy_price_cents_per_kwh: german_div(item.tariff.energyprice_cents_per_kwh*100),
+          energy_price_euros: german_div(item.energy_price_cents),
           length_in_days: item.length_in_days,
-          base_price_euros_per_day: to_euro(item.baseprice_cents_per_day),
-          base_price_euros: to_euro(item.base_price_cents),
-          meter_name: item.meter.name
+          base_price_cents_per_day: item.baseprice_cents_per_day.round(4),
+          base_price_euros: german_div(item.base_price_cents),
+          meter_serial_number: item.meter.product_serialnumber
         }
       end
     end
 
     def build_current_tariff
       {
-        energyprice_cents_per_kwh: @contract.current_tariff.energyprice_cents_per_kwh,
-        baseprice_euros_per_month:  to_euro(@contract.current_tariff.baseprice_cents_per_month),
+        energyprice_cents_per_kwh_netto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes),
+        baseprice_euros_per_month_netto: german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes),
+        energyprice_cents_per_kwh_brutto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_after_taxes),
+        baseprice_euros_per_month_brutto: german_div(@contract.current_tariff.baseprice_cents_per_month_after_taxes),
       }
     end
 
@@ -262,7 +266,7 @@ module Pdf
         was_changed: !@billing.adjusted_payment.nil?,
       }.merge(build_payment(@billing.adjusted_payment || @billing.contract.current_payment))
       has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
-      payment_amounts_to = "Abschlag beträgt #{'%.2f' % abschlag[:amount_euro]}"
+      payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro]} €"
       abschlag[:satz] = if has_bank_and_direct_debit
                           every_month = 'jeden Monat von Ihrem Konto eingezogen'
                           if abschlag[:was_changed]
@@ -284,7 +288,7 @@ module Pdf
       {
         energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
         cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
-        amount_euro: to_euro(payment.price_cents),
+        amount_euro: german_div(payment.price_cents),
         begin_date: payment.begin_date
       }
     end
