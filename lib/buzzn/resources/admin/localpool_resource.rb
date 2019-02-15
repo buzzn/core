@@ -35,6 +35,7 @@ module Admin
                :allowed_actions,
                :legacy_power_giver_contract_buzznid,
                :legacy_power_taker_contract_buzznid,
+               :fake_stats
                # TODO remove me once the UI uses the meta data section
                :next_billing_cycle_begin_date
 
