@@ -209,13 +209,13 @@ module Pdf
         netto = (@billing.total_amount_before_taxes * 10).round
         brutto = (@billing.total_amount_after_taxes * 10).round
         balance_at = @billing.balance_before
-        to_pay_decacents = (balance_at - brutto)
+        to_pay_decacents = (balance_at/10 - brutto/10)
         has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
         hash[:netto] = german_div(netto / 10)
         hash[:brutto] = german_div(brutto / 10)
         hash[:vat_amount] = german_div(brutto/10-netto/10)
         hash[:balance_at_invoice] = german_div(balance_at / 10)
-        hash[:to_pay] = german_div(to_pay_decacents.abs / 10)
+        hash[:to_pay] = german_div(to_pay_decacents.abs)
         hash[:forderung] = to_pay_decacents.positive? ? 'Erstattung' : 'Forderung'
         hash[:rueck_nach] = to_pay_decacents.positive? ? 'Rück' : 'Nach'
         hash[:satz_forderung] = if has_bank_and_direct_debit
