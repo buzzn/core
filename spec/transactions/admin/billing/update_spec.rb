@@ -7,7 +7,7 @@ describe Transactions::Admin::Billing::Update do
     CoreConfig.store Types::BillingConfig.new(vat: 1.19)
   end
 
-  let!(:localpool) { create(:group, :localpool) }
+  let!(:localpool) { create(:group, :localpool, fake_stats: { foo: 'bar' }) }
   let(:operator) { create(:account, :buzzn_operator) }
   let!(:localpoolr) { Admin::LocalpoolResource.all(operator).retrieve(localpool.id) }
 
@@ -377,6 +377,23 @@ describe Transactions::Admin::Billing::Update do
                                                 '{:contract=>{:current_payment=>["must be filled"]}}')
         end
 
+      end
+
+      context 'without fake stats and payment' do
+        before do
+          localpool.fake_stats = nil
+          localpool.save
+          localpool.reload
+          Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+          billing.reload
+        end
+
+        it 'fails' do
+          expect(billing.status).to eql 'calculated'
+          expect(contract.payments.count).to eql 0
+          expect {update_result}.to raise_error(Buzzn::ValidationError,
+                                                '{:contract=>{:current_payment=>["must be filled"], :localpool=>{:fake_stats=>["must be filled"]}}}')
+        end
       end
 
       context 'with a payment' do
