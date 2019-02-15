@@ -5490,6 +5490,11 @@ paths:
         type: string
         format: ''
         maxLength: 256
+      - name: fake_stats
+        in: formData
+        required: false
+        type: string
+        format: valid_json
       - name: start_date
         in: formData
         required: false

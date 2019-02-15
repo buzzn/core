@@ -60,6 +60,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       'display_app_url' => nil,
       'legacy_power_giver_contract_buzznid' => nil,
       'legacy_power_taker_contract_buzznid' => nil,
+      'fake_stats' => nil,
       'next_billing_cycle_begin_date' => '2016-02-01',
     }
   end
