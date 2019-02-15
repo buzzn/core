@@ -248,7 +248,7 @@ html
         div.col-3rd.card.sand
           p
             | Autarkiegrad <span class='is-medium'>(wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
-          p.is-larger 24 %
+          p.is-larger #{energy_report.self_sufficiency_report} %
         div.col-3rd.card.mint
           p
             | Lokalität <span class='is-medium'>(wie groß ist die Entfernung zwischen Stromerzeugungsanlage[n] und  Verbrauchsstellen?)</span>
@@ -256,12 +256,13 @@ html
         div.col-3rd.card.custard
           p
             | Nutzungsgrad <span class='is-medium'>wieviel des lokal produzierten Stroms wurde vor Ort verbraucht?)</span>
-          p.is-larger 59 %
+          p.is-larger #{energy_report.utilization_report} %
       div.row
         div.col-3rd.card.sky
           p
             | Primärenergie <span class='is-medium'>(aus welchen Quellen wurde der Eigenstrom Strom erzeugt?)</span>
-          p.is-larger Sonne 22 %
+          p.is-larger Erdgas #{energy_report.gas_report} %
+          p.is-larger Sonne #{energy_report.sun_report} %
         div.col-3rd.card.pork
           p
             | Netzverluste <span class='is-medium'>(wie hoch waren die Übertragungsverluste für den Strom?)</span>

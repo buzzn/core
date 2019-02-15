@@ -37,7 +37,8 @@ module Pdf
         waste_de: build_waste_de,
         ratios_de: build_ratios_de,
         waste_local: build_waste_local,
-        ratios_local: build_ratios_local
+        ratios_local: build_ratios_local,
+        energy_report: build_report
       }.tap do |h|
         h[:labels1] = build_labels1(h[:consumption_last_year])
       end
@@ -321,6 +322,14 @@ module Pdf
         [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :renewablesEegRatio, :otherRenewablesRatio].map { |type| localpool.fake_stats[type.to_s] }.to_json
       else
         [0, 0, 0, 0, 0, 0].to_json
+      end
+    end
+
+    def build_report
+      if localpool.fake_stats
+        Hash[[:selfSufficiencyReport, :utilizationReport, :gasReport, :sunReport].collect { |k| [k.to_s.underscore, localpool.fake_stats[k.to_s]]}]
+      else
+        {}
       end
     end
 
