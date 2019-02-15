@@ -7,7 +7,7 @@ require 'net/http'
 class Services::MailService
 
   REQUIRED_MESSAGE_KEYS=[:from, :to, :subject, :text]
-  OPTIONAL_MESSAGE_KEYS=[:bcc, :html]
+  OPTIONAL_MESSAGE_KEYS=[:bcc, :html, :document_id, :document_name, :document_mime]
 
   include Import['config.mail_backend',
                  'config.mailgun_api_key',
@@ -39,9 +39,23 @@ class Services::MailService
     end
   end
 
+  def deliver_billing(billing_id, message)
+    billing = Billing.find(billing_id)
+    deliver(message)
+    if billing.status == 'queued'
+      billing.status = 'delivered'
+      billing.save
+    end
+  end
+
   def deliver_later(message = {})
     message = check_message_params(message)
     Buzzn::Workers::MailWorker.perform_async(message)
+  end
+
+  def deliver_billing_later(billing_id, message = {})
+    message = check_message_params(message)
+    Buzzn::Workers::BillingMailWorker.perform_async(billing_id, message)
   end
 
   private

@@ -1,6 +1,8 @@
 require_relative '../services'
 require_relative '../mail_error'
 require 'net/http'
+require 'net/http/post/multipart'
+require 'stringio'
 
 class Services::MailgunService
 
@@ -18,13 +20,21 @@ class Services::MailgunService
       form_data['html'] = message[:html]
     end
 
+    if message.key?(:document_id) && !message[:document_id].nil?
+      document = Document.find(message[:document_id])
+      attachment_name = message[:document_name] || 'attachment.pdf'
+      attachment_mime = message[:document_mime] || document.mime || 'application/pdf'
+      io = StringIO.new(document.read)
+      form_data['attachment'] = ::UploadIO.new(io, attachment_mime, attachment_name)
+    end
+
     uri = URI.parse("https://api.mailgun.net/v3/#{domain}/messages")
-    req = Net::HTTP::Post.new(uri)
-    req.basic_auth 'api', api_key
-    req.set_form_data(form_data)
-    opts = { use_ssl: uri.scheme == 'https'}
+
+    opts = { use_ssl: uri.scheme == 'https' }
+
     res = Net::HTTP.start(uri.hostname, uri.port, opts) do |http|
-      http.use_ssl = true
+      req = Net::HTTP::Post::Multipart.new(uri, form_data)
+      req.basic_auth 'api', api_key
       http.request(req)
     end
 

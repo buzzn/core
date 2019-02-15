@@ -409,6 +409,7 @@ DEPENDENCIES
   mail
   mini_magick
   multi_json
+  multipart-post
   newrelic_rpm
   oauth
   oj
