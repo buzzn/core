@@ -48,17 +48,17 @@ class BillingItem < ActiveRecord::Base
 
   def price_cents
     return unless base_price_cents && energy_price_cents
-    (base_price_cents + energy_price_cents).round(2)
+    (base_price_cents.round(2) + energy_price_cents.round(2))
   end
 
   def energy_price_cents
     return unless consumed_energy_kwh && tariff
-    (consumed_energy_kwh * tariff.energyprice_cents_per_kwh)
+    (consumed_energy_kwh * tariff.energyprice_cents_per_kwh.round(2))
   end
 
   def base_price_cents
     return unless length_in_days && baseprice_cents_per_day
-    (length_in_days * baseprice_cents_per_day)
+    (length_in_days * baseprice_cents_per_day.round(4))
   end
 
   def length_in_days

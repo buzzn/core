@@ -30,5 +30,29 @@ module Contract
       days * cents_per_day(kwh_per_day)
     end
 
+    def energyprice_cents_per_kwh_before_taxes
+      self.energyprice_cents_per_kwh
+    end
+
+    def baseprice_cents_per_month_before_taxes
+      self.baseprice_cents_per_month
+    end
+
+    def energyprice_cents_per_kwh_after_taxes
+      billing_config = CoreConfig.load(Types::BillingConfig)
+      if billing_config.nil?
+        raise 'please set Types::BillingConfig'
+      end
+      self.energyprice_cents_per_kwh * billing_config.vat
+    end
+
+    def baseprice_cents_per_month_after_taxes
+      billing_config = CoreConfig.load(Types::BillingConfig)
+      if billing_config.nil?
+        raise 'please set Types::BillingConfig'
+      end
+      self.baseprice_cents_per_month * billing_config.vat
+    end
+
   end
 end

@@ -102,13 +102,15 @@ html
           #{contractor.zip} #{contractor.city}
         p T:  #{contractor.phone}<br>
           #{(contractor.fax.nil? || contractor.fax.empty?) ? "" : "F: #{contractor.fax}"}
-          Email: #{contractor.email}
+        p Email: #{contractor.email}
         p #{contractor.name}<br>
           #{contractor.iban}<br>
           #{contractor.bic}<br>
           #{contractor.bank_name}
         - if sales_tax_number
-          p Steuernummer: #{sales_tax_number}
+          p USt-IdNr: #{sales_tax_number}
+        - if tax_number
+          p Steuernummer: #{tax_number}
       p.is-smaller.clear #{contractor.name} • #{contractor.street} • #{contractor.zip} #{contractor.city}
       - if no_contact
         p #{powertaker.street}<br>
@@ -124,7 +126,7 @@ html
       -else
         p
           i #{powertaker.email}
-      p.is-pull-right #{contractor.city}, den #{billing.date}
+      p.is-pull-right #{contractor.city}, den #{Date.today.strftime("%d.%m.%y")}
       h2.clear Turnusabrechnung - Lokale Energiegruppe #{localpool.name}<br>
         Rechnungsnummer: #{billing.number}
       table.no-border
@@ -136,7 +138,7 @@ html
           td.no-border.no-padding #{powertaker.street}, #{powertaker.addition}
         tr
           td.no-border.no-padding Zählernummer:
-          td.no-border.no-padding #{meter.buzzn_ids.join(', ')}
+          td.no-border.no-padding #{items.map{|x| x.meter_serial_number }.join(', ')}
         tr
           td.no-border.no-padding Prognose Jahresbezug:
           td.no-border.no-padding #{abschlag.energy_consumption_kwh_pa} kWh (#{billing_year})
@@ -151,7 +153,7 @@ html
         - items.each do |item|
           table.is-full-width.is-small
             tr
-              th Zähler "#{item.meter_name}"
+              th Zähler "#{item.meter_serial_number}"
               th Ablesedatum
               th
               th.is-text-right kWh
@@ -184,13 +186,13 @@ html
               td.no-border Arbeitspreis
               td.no-border #{item.begin_date} - #{item.last_date}
               td.no-border #{item.consumed_energy_kwh} kWh
-              td.no-border #{item.energy_price_cents_per_kwh.round(2)} Ct/kWh
+              td.no-border #{item.energy_price_cents_per_kwh} Ct/kWh
               td.no-border.is-text-right #{item.energy_price_euros} €
             tr
               td Grundpreis
               td #{item.begin_date} - #{item.last_date}
               td #{item.length_in_days} Tage
-              td #{item.base_price_euros_per_day} €/Tag
+              td #{item.base_price_cents_per_day} Ct/Tag
               td.is-text-right #{item.base_price_euros} €
           tr
             td.no-border Zwischensumme (netto)
@@ -222,8 +224,8 @@ html
       div.log
       h2 Ihre Vertragskonditionen
       p Die aktuellen Preise für Ihren Vertrag in der Energiegruppe #{localpool.name} betragen:<br>
-        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{'%.2f' % current_tariff.baseprice_euros_per_month} €/Monat,</strong> (#{'%.2f' % billing.baseprice} €/Monat)<br>
-        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{'%.2f' % current_tariff.energyprice_cents_per_kwh} Cent/kWh,</strong> (#{'%.2f' % billing.energyprice} Cent/kWh)
+        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{current_tariff.baseprice_euros_per_month_brutto} €/Monat,</strong> (#{current_tariff.baseprice_euros_per_month_netto} €/Monat)<br>
+        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{current_tariff.energyprice_cents_per_kwh_brutto} Cent/kWh,</strong> (#{current_tariff.energyprice_cents_per_kwh_netto} Cent/kWh)
 
       p #{abschlag.satz}
 
@@ -243,7 +245,7 @@ html
       div.log
       h2 Energiereport
       p Die echte Energiewende ist demokratisch, dezentral und direkt von Mensch zu Mensch.
-      p Nachfolgend einige Fakten und Kennzahlen zu Ihrer Energiegruppe Heigelstraße 27 für das Jahr #{dieses_jahr}:
+      p Nachfolgend einige Fakten und Kennzahlen zu Ihrer Energiegruppe #{localpool.name} für das Jahr #{billing_year}:
       div.row
         div.col-3rd.card.sand
           p
