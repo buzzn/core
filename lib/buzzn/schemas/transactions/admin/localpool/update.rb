@@ -7,8 +7,17 @@ module Schemas::Transactions::Admin::Localpool
   extend Schemas::Transactions::Address::Nested
 
   Update = Schemas::Support.Form(Schemas::Transactions::Update) do
+    configure do
+      def valid_json?(json)
+        true if JSON.parse(json)
+      rescue JSON::ParserError
+        false
+      end
+    end
+
     optional(:name).filled(:str?, max_size?: 64)
     optional(:description).maybe(:filled?, :str?, max_size?: 256)
+    optional(:fake_stats).maybe(:filled?, :valid_json?)
     optional(:start_date).maybe(:filled?, :date?)
     optional(:show_object).filled(:bool?)
     optional(:show_production).filled(:bool?)
