@@ -9,7 +9,7 @@ function bcChart (id, labels, data, title) {
   var isHorizontal = chart.hasClass('horizontal');
   var legendContainer = !isHorizontal ? $(id + ' .bc-legend-container') : null;
   var colors = ['#999', '#aaa', '#bbb', '#ccc', '#ddd', '#eee'];
-  var data = data.map(function(e){return parseInt(e)})
+  var data = data.map(function(e){return parseFloat(e)})
   // calculate horizontal/vertical bar length
   var sum = data.reduce(function(a,b){return a+b});
   var maxvalue = data.reduce(function(a,b){return Math.max(a,b)});
