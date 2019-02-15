@@ -307,30 +307,18 @@ module Pdf
     end
 
     def build_waste_local
-      if localpool.fake_stats
-        {
-          nuclear_waste_miligramm_per_kwh: localpool.fake_stats["nuclearWasteMiligrammPerKwh"],
-          co2_emission_gramm_per_kwh: localpool.fake_stats["co2EmissionGrammPerKwh"]
-        }
-      else
-        {}
-      end
+      {
+        nuclear_waste_miligramm_per_kwh: localpool.fake_stats["nuclearWasteMiligrammPerKwh"],
+        co2_emission_gramm_per_kwh: localpool.fake_stats["co2EmissionGrammPerKwh"]
+      }
     end
 
     def build_ratios_local
-      if localpool.fake_stats
-        [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :renewablesEegRatio, :otherRenewablesRatio].map { |type| localpool.fake_stats[type.to_s] }.to_json
-      else
-        [0, 0, 0, 0, 0, 0].to_json
-      end
+      [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :renewablesEegRatio, :otherRenewablesRatio].map { |type| localpool.fake_stats[type.to_s] }.to_json
     end
 
     def build_report
-      if localpool.fake_stats
-        Hash[[:selfSufficiencyReport, :utilizationReport, :gasReport, :sunReport].collect { |k| [k.to_s.underscore, localpool.fake_stats[k.to_s]]}]
-      else
-        {}
-      end
+      Hash[[:selfSufficiencyReport, :utilizationReport, :gasReport, :sunReport].collect { |k| [k.to_s.underscore, localpool.fake_stats[k.to_s]]}]
     end
 
     def build_labels1(consumption_last_year)
