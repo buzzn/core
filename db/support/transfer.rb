@@ -33,3 +33,22 @@ def transfer_displays
     end
   end
 end
+
+def transfer_stats
+  connect_to_dump
+  begin
+    Group::Localpool.first.fake_stats
+  rescue ActiveModel::MissingAttributeError
+    connect_to_prod
+    return
+  end
+  settings = Group::Localpool.pluck(:slug, :fake_stats)
+  connect_to_prod
+  settings.each do |setting|
+    group = Group::Localpool.where(:slug => setting[0]).first
+    unless group.nil?
+      group.fake_stats = setting[1]
+      group.save
+    end
+  end
+end
