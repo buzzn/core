@@ -99,7 +99,7 @@ html
       div.log
       div.is-medium.col-3rd.is-pull-right.no-margin
         p #{contractor.name}<br>
-          - Energiegruppce #{localpool.name} - <br>
+          Energiegruppe #{localpool.name}<br>
           #{contractor.contact}<br>
           #{contractor.street}<br>
           #{contractor.zip} #{contractor.city}
@@ -121,7 +121,8 @@ html
           #{powertaker.street}<br>
           #{powertaker.zip} #{powertaker.city}
       - else
-        p #{powertaker.title}<br>
+        p #{powertaker.name}<br>
+          #{powertaker.title}<br>
           #{powertaker.first_name} #{powertaker.last_name}<br>
           #{powertaker.street}<br>
           #{powertaker.zip} #{powertaker.city}
@@ -132,7 +133,7 @@ html
         p
           i #{powertaker.email}
       p.is-pull-right #{contractor.city}, den #{Date.today.strftime("%d.%m.%y")}
-      h2.clear Turnusabrechnung - Lokale Energiegruppe #{localpool.name}<br>
+      h2.clear Lokale Energiegruppe #{localpool.name}: Stromrechnung #{billing_year}<br>
         Rechnungsnummer: #{billing.number}
       table.no-border
         tr
@@ -184,7 +185,10 @@ html
             th Position
             th Zeitraum
             th Menge
-            th Preis je Einheit
+            - if issues_vat
+              th Preis je Einheit (Netto)
+            - else
+              th Preis je Einheit (Brutto)
             th.is-text-right Betrag
           - items.each do |item|
             tr
@@ -199,14 +203,15 @@ html
               td #{item.length_in_days} Tage
               td #{item.base_price_cents_per_day} Ct/Tag
               td.is-text-right #{item.base_price_euros} €
-          tr
-            td.no-border Zwischensumme (netto)
-            td.no-border colspan=3
-            td.no-border.is-text-right #{billing.netto} €
-          tr
-            td Umsatzsteuer (#{vat}%)
-            td colspan=3
-            td.is-text-right #{billing.vat_amount} €
+            - if issues_vat
+              tr
+                td.no-border Zwischensumme (netto)
+                td.no-border colspan=3
+                td.no-border.is-text-right #{billing.netto} €
+              tr
+                td Umsatzsteuer (#{vat}%)
+                td colspan=3
+                td.is-text-right #{billing.vat_amount} €
           tr
             td.no-border
               strong Rechnungsbetrag (brutto)

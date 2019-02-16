@@ -18,6 +18,7 @@ module Pdf
         title_text: @billing.full_invoice_number,
         sales_tax_number: contract.localpool.localpool_processing_contract.sales_tax_number,
         tax_number: contract.localpool.localpool_processing_contract.tax_number,
+        issues_vat: contract.localpool.billing_detail.issues_vat,
         contractor: build_contractor,
         powertaker: build_powertaker,
         no_contact: contact(powertaker).nil?,
@@ -122,7 +123,11 @@ module Pdf
         end
       when Organization
       when Organization::General
-        'Sehr geehrte Damen und Herren'
+        if person_or_organization.contact
+          addressing(person_or_organization.contact)
+        else
+          'Sehr geehrte Damen und Herren'
+        end
       else
         raise "can not handle #{person_or_organization.class}"
       end
@@ -175,6 +180,7 @@ module Pdf
     def build_powertaker
       data = {
         addressing: addressing(powertaker),
+        name: powertaker.name
       }
       if !contact(powertaker).nil?
         contact(powertaker).tap do |contact|
@@ -182,8 +188,6 @@ module Pdf
             data[field] = contact.send(field)
           end
         end
-      elsif powertaker.respond_to?(:name)
-        data[:name] = powertaker.name
       end
       powertaker.address.tap do |address|
         %i(street zip city addition).each do |field|
@@ -251,23 +255,31 @@ module Pdf
           last_date: to_date(item.last_date),
           begin_kwh: to_kwh(item.begin_reading.value),
           last_kwh: to_kwh(item.end_reading.value),
-          consumed_energy_kwh: item.consumed_energy_kwh,
-          energy_price_cents_per_kwh: german_div(item.tariff.energyprice_cents_per_kwh*100),
-          energy_price_euros: german_div(item.energy_price_cents),
+          consumed_energy_kwh: to_kwh(item.consumed_energy),
           length_in_days: item.length_in_days,
-          base_price_cents_per_day: item.baseprice_cents_per_day.round(4),
-          base_price_euros: german_div(item.base_price_cents),
           meter_serial_number: item.meter.product_serialnumber
-        }
+        }.tap do |h|
+          if localpool.billing_detail.issues_vat
+            h[:base_price_cents_per_day] = item.baseprice_cents_per_day.round(4)
+            h[:base_price_euros] = german_div(item.base_price_cents)
+            h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh*100)
+            h[:energy_price_euros] = german_div(item.energy_price_cents)
+          else # brutto
+            h[:base_price_cents_per_day] = item.baseprice_cents_per_day_after_taxes.round(4)
+            h[:base_price_euros] = german_div(item.base_price_cents_after_taxes)
+            h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_after_taxes*100)
+            h[:energy_price_euros] = german_div(item.energy_price_cents_after_taxes)
+          end
+        end
       end
     end
 
     def build_current_tariff
       {
-        energyprice_cents_per_kwh_netto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes),
-        baseprice_euros_per_month_netto: german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes),
-        energyprice_cents_per_kwh_brutto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_after_taxes),
-        baseprice_euros_per_month_brutto: german_div(@contract.current_tariff.baseprice_cents_per_month_after_taxes),
+        energyprice_cents_per_kwh_netto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes*100),
+        baseprice_euros_per_month_netto: german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes*100),
+        energyprice_cents_per_kwh_brutto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_after_taxes*100),
+        baseprice_euros_per_month_brutto: german_div(@contract.current_tariff.baseprice_cents_per_month_after_taxes*100),
       }
     end
 
