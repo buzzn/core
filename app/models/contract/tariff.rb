@@ -1,3 +1,5 @@
+require 'bigdecimal'
+
 module Contract
   class Tariff < ActiveRecord::Base
 
@@ -23,7 +25,7 @@ module Contract
     before_update { false }
 
     def cents_per_day(kwh)
-      kwh * self.energyprice_cents_per_kwh + (self.baseprice_cents_per_month * 12) / 365
+      BigDecimal(kwh, 4) * BigDecimal(self.energyprice_cents_per_kwh, 4) + (BigDecimal(self.baseprice_cents_per_month, 4) * 12) / 365
     end
 
     def cents_per_day_after_taxes(kwh)
@@ -55,7 +57,7 @@ module Contract
       if billing_config.nil?
         raise 'please set Types::BillingConfig'
       end
-      self.energyprice_cents_per_kwh * billing_config.vat
+      BigDecimal(self.energyprice_cents_per_kwh, 4) * billing_config.vat
     end
 
     def baseprice_cents_per_month_after_taxes
@@ -63,7 +65,7 @@ module Contract
       if billing_config.nil?
         raise 'please set Types::BillingConfig'
       end
-      self.baseprice_cents_per_month * billing_config.vat
+      BigDecimal(self.baseprice_cents_per_month, 4) * billing_config.vat
     end
 
   end
