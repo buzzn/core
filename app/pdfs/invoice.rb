@@ -26,7 +26,7 @@ module Pdf
         localpool: build_localpool,
         billing: build_billing,
         items: build_billing_items,
-        vat: ((billing_config.vat - 1.0) * 100).round,
+        vat: ((BigDecimal(billing_config.vat, 4) - 1.0) * 100).round,
         contract: {
           number: contract.full_contract_number,
           market_location_name: contract.register_meta.name,
@@ -71,11 +71,11 @@ module Pdf
       return nil if collected.flatten.include?(nil)
       summed = collected.inject { |x, n| [x[0] + n[0], x[1] + n[1]] }
       return nil unless summed
-      summed[0] * 365.00 / summed[1]
+      summed[0] * 365 / summed[1]
     end
 
     def contractor_address
-      @caddress ||= contractor.address
+      @contractor_address ||= contractor.address
     end
 
     def localpool
@@ -139,7 +139,7 @@ module Pdf
     end
 
     def to_kwh(value)
-      (value / 1000.00).round
+      (value / 1000).round
     end
 
     def to_date(date)
@@ -153,12 +153,16 @@ module Pdf
     def build_contractor
       data = {
         contact: name(contact(contractor)),
+        shortname: contractor.name
       }
-      if contact(contractor).nil?
-        data[:name] = contractor.name
-      else
-        data[:name] = ''
-      end
+
+      data[:name] = case contractor
+                    when Organization
+                    when Organization::General
+                      contractor.name
+                    when Person
+                      ''
+                    end
       data[:email] = case contractor
                      when Person
                        contractor.email
@@ -194,7 +198,7 @@ module Pdf
             data[field] = contact.send(field)
           end
         end
-        data[:name] = ""
+        data[:name] = ''
       end
       powertaker.address.tap do |address|
         %i(street zip city addition).each do |field|
@@ -217,30 +221,30 @@ module Pdf
         energyprice: german_div(last_tariff.energyprice_cents_per_kwh),
         consumed_energy_kwh: @billing.items.first.consumed_energy_kwh,
       }.tap do |hash|
-        netto = (@billing.total_amount_before_taxes * 10).round
-        brutto = (@billing.total_amount_after_taxes * 10).round
-        balance_at = @billing.balance_before
-        to_pay_decacents = (balance_at/10 - brutto/10)
+        netto =   @billing.total_amount_before_taxes
+        brutto =  @billing.total_amount_after_taxes
+        balance_at = BigDecimal(@billing.balance_before) / 10
+        to_pay_cents = balance_at - brutto
         has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
-        hash[:netto] = german_div(netto / 10)
-        hash[:brutto] = german_div(brutto / 10)
-        hash[:vat_amount] = german_div(brutto/10-netto/10)
-        hash[:balance_at_invoice] = german_div(balance_at / 10)
-        hash[:to_pay] = german_div(to_pay_decacents.abs)
-        hash[:forderung] = to_pay_decacents.positive? ? 'Erstattung' : 'Forderung'
-        hash[:rueck_nach] = to_pay_decacents.positive? ? 'Rück' : 'Nach'
+        hash[:netto] = german_div(netto)
+        hash[:brutto] = german_div(brutto)
+        hash[:vat_amount] = german_div(brutto-netto)
+        hash[:balance_at_invoice] = german_div(balance_at)
+        hash[:to_pay] = german_div(to_pay_cents.round.abs)
+        hash[:forderung]  = to_pay_cents.positive? ? 'Erstattung' : 'Forderung'
+        hash[:rueck_nach] = to_pay_cents.positive? ? 'Rück' : 'Nach'
         hash[:satz_forderung] = if has_bank_and_direct_debit
-                                  if to_pay_decacents.positive?
-                                    'Der Betrag wird in den nächsten Wochen auf ihrem Bankkonto gutgeschrieben.'
-                                  elsif to_pay_decacents.negative?
+                                  if to_pay_cents.positive?
+                                    'Der Betrag wird in Kürze auf ihrem Bankkonto gutgeschrieben.'
+                                  elsif to_pay_cents.negative?
                                     'Der Betrag wird in den nächsten Wochen von ihrem Bankkonto eingezogen.'
                                   else
                                     ''
                                   end
                                 else
-                                  if to_pay_decacents.positive?
+                                  if to_pay_cents.positive?
                                     'Bitte geben Sie uns Ihre Bankverbindung (IBAN, BIC) für die Erstattung Ihres Guthabens an.'
-                                  elsif to_pay_decacents.negative?
+                                  elsif to_pay_cents.negative?
                                     'Bitte überweisen Sie den Betrag unter Angabe der Rechnungsnummer auf das oben angegebene Konto.'
                                   else
                                     ''
@@ -286,9 +290,9 @@ module Pdf
     def build_current_tariff
       {
         energyprice_cents_per_kwh_netto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes*100),
-        baseprice_euros_per_month_netto: german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes*100),
+        baseprice_euros_per_month_netto: german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes),
         energyprice_cents_per_kwh_brutto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_after_taxes*100),
-        baseprice_euros_per_month_brutto: german_div(@contract.current_tariff.baseprice_cents_per_month_after_taxes*100),
+        baseprice_euros_per_month_brutto: german_div(@contract.current_tariff.baseprice_cents_per_month_after_taxes),
       }
     end
 
@@ -298,10 +302,10 @@ module Pdf
       }.merge(build_payment(@billing.adjusted_payment || @billing.contract.current_payment))
       has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
       payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro]} €"
-      abschlag_begin_date = abschlag[:begin_date].strftime('%d.%m.%y')
+      abschlag_begin_date = abschlag[:begin_date].strftime('%d.%m.%Y')
       # negative means it's disabled for this powertaker
       if abschlag[:disabled]
-        abschlag[:satz]
+        abschlag[:satz] = ''
       else
         abschlag[:satz] = if has_bank_and_direct_debit
                             every_month = 'jeden Monat von Ihrem Konto eingezogen'
