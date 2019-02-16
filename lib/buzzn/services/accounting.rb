@@ -19,7 +19,12 @@ class Services::Accounting
   end
 
   def balance_before(entry)
-    balance_at(entry) - entry.amount
+    if entry.previous_checksum.nil?
+      0
+    else
+      entry = Accounting::Entry.where(:checksum => entry.previous_checksum).first
+      balance_at(entry)
+    end
   end
 
   def balance_at(entry)
