@@ -34,6 +34,19 @@ def transfer_displays
   end
 end
 
+def transfer_issues_vat
+  connect_to_dump
+  settings = Group::Localpool.all.collect { |x| [x.slug, x.billing_detail.issues_vat] }
+  connect_to_prod
+  settings.each do |setting|
+    group = Group::Localpool.where(:slug => setting[0]).first
+    unless group.nil?
+      group.billing_detail.issues_vat = setting[1]
+      group.billing_detail.save
+    end
+  end
+end
+
 def transfer_stats
   connect_to_dump
   begin
