@@ -265,14 +265,14 @@ module Pdf
           h[:last_kwh] -= rounded_consumed-h[:consumed_energy_kwh]
           if localpool.billing_detail.issues_vat
             h[:base_price_cents_per_day] = item.baseprice_cents_per_day.round(4)
-            h[:base_price_euros] = german_div(item.base_price_cents)
-            h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh*100)
-            h[:energy_price_euros] = german_div(item.energy_price_cents)
+            h[:base_price_euros] = german_div(item.base_price_cents.round(2))
+            h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh.round(2)*100)
+            h[:energy_price_euros] = german_div(item.energy_price_cents.round(2))
           else # brutto
             h[:base_price_cents_per_day] = item.baseprice_cents_per_day_after_taxes.round(4)
-            h[:base_price_euros] = german_div(item.base_price_cents_after_taxes)
+            h[:base_price_euros] = german_div(item.base_price_cents_after_taxes.round(2))
             h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_after_taxes*100)
-            h[:energy_price_euros] = german_div(item.energy_price_cents_after_taxes)
+            h[:energy_price_euros] = german_div(item.energy_price_cents_after_taxes.round(2))
           end
         end
       end
