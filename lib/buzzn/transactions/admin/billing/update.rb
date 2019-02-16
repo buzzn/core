@@ -98,9 +98,8 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new(customer: 'email invalid')
       end
-      subject = "Ihre Stromrechnung 2018"
-      customer_name = 'CUSTOMER_NAME'
-      contractor_name = 'CONTRACTOR_NAME'
+      subject = 'Ihre Stromrechnung 2018'
+      contractor_name = resource.object.contract.contractor.name
       text = %Q(Guten Tag,
 
 im Auftrag Ihres Lokalen Stromgebers #{contractor_name} übermitteln wir Ihnen im
