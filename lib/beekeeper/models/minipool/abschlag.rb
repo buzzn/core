@@ -18,7 +18,8 @@ class Beekeeper::Minipool::Abschlag < Beekeeper::Minipool::BaseRecord
 
   def converted_attributes
     {
-      price_cents: abschlag*100,
+      # -1 now marks that automatic payment adjust has been disabled, 0 is actually valid
+      price_cents: abschlag.zero? ? -1 : abschlag*100,
       energy_consumption_kwh_pa: arbeit,
       begin_date: date_parsed,
       cycle: 'monthly'
