@@ -215,9 +215,9 @@ describe Transactions::Admin::Billing::Update do
                 end
               end
 
-              context 'with price_cents == 0' do
+              context 'with price_cents == -1' do
                 before do
-                  previous_payment.price_cents = 0
+                  previous_payment.price_cents = -1
                   previous_payment.save
                 end
                 it 'does update but not readjust' do
