@@ -26,6 +26,7 @@ module Accounting
       sha256 = Digest::SHA256.new
       sha256.update(self.previous_checksum || '')
       sha256.update(self.amount.to_s)
+      sha256.update(self.contract.id.to_s)
       sha256.update(self.created_at.to_i.to_s)
       sha256.hexdigest
     end
