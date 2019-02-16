@@ -42,7 +42,6 @@ class Beekeeper::Importer::GenerateBillings
         if last_date.year != 2018
           set_billing_cycle_to_closed(localpool, billing_cycle)
         end
-
         if last_date.year == 2017
           # reset balances for the localpool
           localpool.contracts.each do |contract|
@@ -67,7 +66,7 @@ class Beekeeper::Importer::GenerateBillings
       paid = record_contract[:paid_payments].select {|x| x[:year] == year}&.first&.[](:paid)
       if paid
         accounting_service.book(operator, contract, paid*10*100, comment: "Bezahlte Abschläge #{year}")
-      elsif year == 2018
+      elsif year == 2018 && (!contract.end_date.nil? && contract.end_date > Date.new(2017, 12, 31))
         logger.warn('No payment for 2018', extra_data: { contract: contract.attributes } )
       end
     end

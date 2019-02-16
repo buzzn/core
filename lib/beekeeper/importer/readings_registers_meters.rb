@@ -103,7 +103,7 @@ class Beekeeper::Importer::ReadingsRegistersMeters
 
     # IMPROVEMENT: could be changed to also use build_any_register
     def build_fake_register(zaehlwerk, register_meta = nil)
-      fake_meter_name = "FAKE-FOR-IMPORT-#{fake_register_counter}"
+      fake_meter_name = "VIRTUAL-#{fake_register_counter}"
       meter = Meter::Real.create!(product_serialnumber: fake_meter_name, legacy_buzznid: zaehlwerk.buzznid, group: @localpool)
       meta = register_meta || Register::Meta.new(name: fake_meter_name.gsub('IMPORT-', 'IMPORT-M-'), label: :other, observer_enabled: false, observer_offline_monitoring: false)
       Register::Real.create!(meta: meta, meter: meter)

@@ -10,13 +10,22 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
   end
 
   def run(unsaved_record)
-    if unsaved_record.is_a?(Person)
-      get_unique_person(unsaved_record)
-    elsif unsaved_record.is_a?(Organization::Base)
-      get_unique_organization(unsaved_record)
-    else
-      raise "Can't handle records of type #{unsaved_record.class}"
+    found = if unsaved_record.is_a?(Person)
+              get_unique_person(unsaved_record)
+            elsif unsaved_record.is_a?(Organization::Base)
+              get_unique_organization(unsaved_record)
+            else
+              raise "Can't handle records of type #{unsaved_record.class}"
+            end
+    unless found.nil?
+      found_ibans = found.bank_accounts.map(&:iban)
+      unsaved_record.bank_accounts.each do |bank_account|
+        unless found_ibans.include?(bank_account.iban)
+          found.bank_accounts << bank_account
+        end
+      end
     end
+    found
   end
 
   private
@@ -39,11 +48,9 @@ class Beekeeper::Importer::FindOrCreatePersonOrOrganization
   # Deduplication of the beekeeper data
   def get_unique_organization(unsaved_record)
     logger.debug("unsaved record: #{unsaved_record.name}")
-
     if (existing_org = find_organization(unsaved_record.name))
       logger.debug("Using existing org: #{existing_org.name}")
       existing_org
-
     elsif (fibunr = find_account_new_fibunr(unsaved_record.name))
       logger.debug('Taking organization from account_new')
       # get the data to use for our record
