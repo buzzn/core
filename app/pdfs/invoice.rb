@@ -138,7 +138,7 @@ module Pdf
     end
 
     def to_kwh(value)
-      (value / 1000).round
+      (value / 1000.00).round
     end
 
     def to_date(date)
@@ -180,14 +180,16 @@ module Pdf
     def build_powertaker
       data = {
         addressing: addressing(powertaker),
-        name: powertaker.name
       }
-      if !contact(powertaker).nil?
+      if contact(powertaker).nil?
+        data[:name] = powertaker.name
+      else
         contact(powertaker).tap do |contact|
           %i(title first_name last_name email).each do |field|
             data[field] = contact.send(field)
           end
         end
+        data[:name] = ""
       end
       powertaker.address.tap do |address|
         %i(street zip city addition).each do |field|
@@ -259,6 +261,8 @@ module Pdf
           length_in_days: item.length_in_days,
           meter_serial_number: item.meter.product_serialnumber
         }.tap do |h|
+          rounded_consumed = h[:last_kwh] - h[:begin_kwh]
+          h[:last_kwh] -= rounded_consumed-h[:consumed_energy_kwh]
           if localpool.billing_detail.issues_vat
             h[:base_price_cents_per_day] = item.baseprice_cents_per_day.round(4)
             h[:base_price_euros] = german_div(item.base_price_cents)
@@ -289,16 +293,17 @@ module Pdf
       }.merge(build_payment(@billing.adjusted_payment || @billing.contract.current_payment))
       has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
       payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro]} €"
+      abschlag_begin_date = abschlag[:begin_date].strftime('%d.%m.%y')
       abschlag[:satz] = if has_bank_and_direct_debit
                           every_month = 'jeden Monat von Ihrem Konto eingezogen'
                           if abschlag[:was_changed]
-                            "Ihr neuer #{payment_amounts_to}. Er wird ab dem #{abschlag[:begin_date]} #{every_month}."
+                            "Ihr neuer #{payment_amounts_to}. Er wird ab dem #{abschlag_begin_date} #{every_month}."
                           else
                             "Ihr #{payment_amounts_to}. Er wird wie gewohnt #{every_month}."
                           end
                         else
                           if abschlag[:was_changed]
-                            "Ihr neuer #{payment_amounts_to}. Bitte überweisen Sie zu dem 01. eines Monats, erstmalig zum #{abschlag[:begin_date]} den neuen Abschlag auf das oben angegebene Konto."
+                            "Ihr neuer #{payment_amounts_to}. Bitte überweisen Sie zu dem 01. eines Monats, erstmalig zum #{abschlag_begin_date} den neuen Abschlag auf das oben angegebene Konto."
                           else
                             "Ihr #{payment_amounts_to}. Bitte überweisen Sie den Abschlag wie gewohnt auf das oben angegebene Konto"
                           end
@@ -323,7 +328,7 @@ module Pdf
 
     def build_waste_de
       {
-        nuclear_waste_miligramm_per_kwh: @de_stats[:nuclear_waste_miligramm_per_kwh],
+        nuclear_waste_miligramm_per_kwh: @de_stats[:nuclear_waste_miligramm_per_kwh] / 1000.00,
         co2_emission_gramm_per_kwh: @de_stats[:co2_emission_gramm_per_kwh]
       }
     end
