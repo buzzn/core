@@ -29,6 +29,7 @@ module Pdf
         vat: ((billing_config.vat - 1.0) * 100).round,
         contract: {
           number: contract.full_contract_number,
+          market_location_name: contract.register_meta.name,
         },
         current_tariff: build_current_tariff,
         billing_year: billing_year,
@@ -151,9 +152,13 @@ module Pdf
 
     def build_contractor
       data = {
-        name: name(contractor),
         contact: name(contact(contractor)),
       }
+      if contact(contractor).nil?
+        data[:name] = contractor.name
+      else
+        data[:name] = ''
+      end
       data[:email] = case contractor
                      when Person
                        contractor.email
@@ -294,20 +299,25 @@ module Pdf
       has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
       payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro]} €"
       abschlag_begin_date = abschlag[:begin_date].strftime('%d.%m.%y')
-      abschlag[:satz] = if has_bank_and_direct_debit
-                          every_month = 'jeden Monat von Ihrem Konto eingezogen'
-                          if abschlag[:was_changed]
-                            "Ihr neuer #{payment_amounts_to}. Er wird ab dem #{abschlag_begin_date} #{every_month}."
+      # negative means it's disabled for this powertaker
+      if abschlag[:disabled]
+        abschlag[:satz]
+      else
+        abschlag[:satz] = if has_bank_and_direct_debit
+                            every_month = 'jeden Monat von Ihrem Konto eingezogen'
+                            if abschlag[:was_changed]
+                              "Ihr neuer #{payment_amounts_to}. Er wird ab dem #{abschlag_begin_date} #{every_month}."
+                            else
+                              "Ihr #{payment_amounts_to}. Er wird wie gewohnt #{every_month}."
+                            end
                           else
-                            "Ihr #{payment_amounts_to}. Er wird wie gewohnt #{every_month}."
+                            if abschlag[:was_changed]
+                              "Ihr neuer #{payment_amounts_to}. Bitte überweisen Sie zu dem 01. eines Monats, erstmalig zum #{abschlag_begin_date} den neuen Abschlag auf das oben angegebene Konto."
+                            else
+                              "Ihr #{payment_amounts_to}. Bitte überweisen Sie den Abschlag wie gewohnt auf das oben angegebene Konto"
+                            end
                           end
-                        else
-                          if abschlag[:was_changed]
-                            "Ihr neuer #{payment_amounts_to}. Bitte überweisen Sie zu dem 01. eines Monats, erstmalig zum #{abschlag_begin_date} den neuen Abschlag auf das oben angegebene Konto."
-                          else
-                            "Ihr #{payment_amounts_to}. Bitte überweisen Sie den Abschlag wie gewohnt auf das oben angegebene Konto"
-                          end
-                        end
+      end
       abschlag
     end
 
@@ -316,6 +326,7 @@ module Pdf
         energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
         cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
         amount_euro: german_div(payment.price_cents),
+        disabled: payment.price_cents.negative?,
         begin_date: payment.begin_date
       }
     end
@@ -334,7 +345,7 @@ module Pdf
     end
 
     def build_ratios_de
-      [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :renewablesEegRatio, :otherRenewablesRatio].map { |type| @de_stats[type.to_s.underscore] }.to_json
+      [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :otherRenewablesRatio, :renewablesEegRatio].map { |type| @de_stats[type.to_s.underscore] }.to_json
     end
 
     def build_waste_local
@@ -345,7 +356,7 @@ module Pdf
     end
 
     def build_ratios_local
-      [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :renewablesEegRatio, :otherRenewablesRatio].map { |type| localpool.fake_stats[type.to_s] }.to_json
+      [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :otherRenewablesRatio, :renewablesEegRatio].map { |type| localpool.fake_stats[type.to_s] }.to_json
     end
 
     def build_report
@@ -353,14 +364,17 @@ module Pdf
     end
 
     def build_labels1(consumption_last_year)
-      return nil if consumption_last_year.nil?
-      labels = [
-                 "Ihr Jahresverbrauch in #{billing_year} (1)",
-                 "Ihr Jahresverbrauch in #{billing_year-1} (2)",
-                 'Referenz 1-Personen-Haushalt',
-                 'Referenz 2-Personen-Haushalt',
-                 'Referenz 3 und mehr Personen-Haushalt'
-               ]
+      labels = if billing_year
+                 [
+                   "Ihr Jahresverbrauch in #{billing_year} (1)",
+                   "Ihr Jahresverbrauch in #{billing_year-1} (2)",
+                   'Referenz 1-Personen-Haushalt',
+                   'Referenz 2-Personen-Haushalt',
+                   'Referenz 3 und mehr Personen-Haushalt'
+                 ]
+               else
+                 []
+               end
       if consumption_last_year
         labels.delete(1)
       end
