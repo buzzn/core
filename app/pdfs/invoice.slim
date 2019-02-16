@@ -114,7 +114,7 @@ html
           p USt-IdNr: #{sales_tax_number}
         - if tax_number
           p Steuernummer: #{tax_number}
-      p.is-small.clear #{contractor.name} • #{contractor.street} • #{contractor.zip} #{contractor.city}
+      p.is-small.clear #{contractor.shortname} • #{contractor.street} • #{contractor.zip} #{contractor.city}
       - if no_contact
         p #{powertaker.name}<br>
 
@@ -132,7 +132,7 @@ html
       -else
         p
           i #{powertaker.email}
-      p.is-pull-right #{contractor.city}, den #{Date.today.strftime("%d.%m.%y")}
+      p.is-pull-right #{contractor.city}, den #{Date.today.strftime("%d.%m.%Y")}
       h2.clear Lokale Energiegruppe #{localpool.name}: Stromrechnung #{billing_year}<br>
         Rechnungsnummer: #{billing.number}
       table.no-border
@@ -420,8 +420,8 @@ html
           'Erneuerbare Energie gefördert nach EEG'
         ];
         // footer HTML required
-        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{contractor.name.empty? ? '' : "#{contractor.name} •"} #{contractor.contact.empty? ? '' : "#{contractor.contact} •"} #{contractor.street} • #{contractor.zip} #{contractor.city}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
-        bcChart('#chart-one', labels1, [#{consumption_year}, #{consumption_last_year ? "#{consumption_last_year} ," : ''} 1598, 2766, 4608]);
+        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{contractor.shortname} • #{contractor.street} • #{contractor.zip} #{contractor.city}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
+        bcChart('#chart-one', labels1, [#{consumption_year.round}, #{consumption_last_year ? "#{consumption_last_year.round} ," : ''} 1598, 2766, 4608]);
         bcChart('#chart-two', labels2, data2d,'Deutschland');
         bcChart('#chart-three', labels2, data2l,'Lokale Energiegruppe #{localpool.name}');
         // page breaks require the presence of at least one .wrapper container
