@@ -78,7 +78,7 @@ class Billing < ActiveRecord::Base
   end
 
   def total_amount_before_taxes
-    amount = 0
+    amount = BigDecimal(0)
     items.each do |item|
       if item.energy_price_cents.nil? || item.base_price_cents.nil?
         return nil
@@ -97,7 +97,7 @@ class Billing < ActiveRecord::Base
   end
 
   def total_consumed_energy_kwh
-    total = 0
+    total = BigDecimal(0)
     items.each do |item|
       # not all items are calculatable, return nil
       if item.consumed_energy_kwh.nil?
@@ -120,9 +120,9 @@ class Billing < ActiveRecord::Base
   end
 
   def daily_kwh_estimate
-    total = 0
+    total = BigDecimal(0)
     items.each do |item|
-      total += item.consumed_energy_kwh / (item.length_in_days * 1.0)
+      total += item.consumed_energy_kwh / item.length_in_days
     end
     total
   end

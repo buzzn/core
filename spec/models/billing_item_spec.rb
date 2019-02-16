@@ -60,7 +60,7 @@ describe 'BillingItem' do
         item.begin_reading = build(:reading, raw_value: 100_000)
       end
       it 'returns the rounded difference' do
-        expect(item.consumed_energy_kwh).to eq(101)
+        expect(item.consumed_energy_kwh).to eq(100.6)
       end
     end
   end
@@ -75,7 +75,8 @@ describe 'BillingItem' do
     context 'when it has a tariff' do
       before { item.tariff = build(:tariff, energyprice_cents_per_kwh: 25.999) }
       it 'calculates the price correctly' do
-        expect(item.energy_price_cents).to eq(2600)
+        expected_price = (100 * BigDecimal(25.999, 3))
+        expect(item.energy_price_cents.round(6)).to eq(expected_price.round(6))
       end
     end
   end
@@ -90,7 +91,9 @@ describe 'BillingItem' do
     context 'when it has a tariff' do
       before { item.tariff = build(:tariff, baseprice_cents_per_month: 100) }
       it 'calculates the price correctly' do
-        expect(item.base_price_cents).to eq(164.385)
+        baseprice_cents_per_day = (50 * 12) / 365.0
+        expected_price          = (baseprice_cents_per_day * 100)
+        expect(item.base_price_cents.round(6)).to eq(expected_price.round(6))
       end
     end
   end
@@ -105,7 +108,7 @@ describe 'BillingItem' do
     context 'when it has a tariff' do
       before { item.tariff = build(:tariff, energyprice_cents_per_kwh: 25.999, baseprice_cents_per_month: 100) }
       it 'calculates the price correctly' do
-        expect(item.price_cents).to eq(2764.39)
+        expect(item.price_cents.round(2)).to eq(2764.38)
       end
     end
   end

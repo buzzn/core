@@ -43,37 +43,12 @@ class BillingItem < ActiveRecord::Base
 
   def consumed_energy
     return unless end_reading && begin_reading
-    end_reading.value - begin_reading.value
+    BigDecimal(end_reading.value) - BigDecimal(begin_reading.value)
   end
 
   def consumed_energy_kwh
     return unless end_reading && begin_reading
-    ((end_reading.value - begin_reading.value) / 1_000.0).round
-  end
-
-  def price_cents
-    return unless base_price_cents && energy_price_cents
-    (base_price_cents.round(2) + energy_price_cents.round(2))
-  end
-
-  def energy_price_cents
-    return unless consumed_energy_kwh && tariff
-    (consumed_energy_kwh * tariff.energyprice_cents_per_kwh.round(2))
-  end
-
-  def energy_price_cents_after_taxes
-    return unless consumed_energy_kwh && tariff
-    (consumed_energy_kwh * tariff.energyprice_cents_per_kwh_after_taxes.round(2))
-  end
-
-  def base_price_cents
-    return unless length_in_days && baseprice_cents_per_day
-    (length_in_days * baseprice_cents_per_day.round(4))
-  end
-
-  def base_price_cents_after_taxes
-    return unless length_in_days && baseprice_cents_per_day_after_taxes
-    (length_in_days * baseprice_cents_per_day_after_taxes.round(4))
+    consumed_energy / 1000
   end
 
   def length_in_days
@@ -81,14 +56,40 @@ class BillingItem < ActiveRecord::Base
     (end_date - begin_date).to_i
   end
 
+  # FIXME: move to tariff
   def baseprice_cents_per_day
     return unless tariff
-    (tariff.baseprice_cents_per_month * 12) / 365.0
+    (BigDecimal(tariff.baseprice_cents_per_month, 4) * 12) / 365
   end
 
   def baseprice_cents_per_day_after_taxes
     return unless tariff
-    (tariff.baseprice_cents_per_month_after_taxes * 12) / 365.0
+    (tariff.baseprice_cents_per_month_after_taxes * 12) / 365
+  end
+
+  def energy_price_cents
+    return unless consumed_energy_kwh && tariff
+    (consumed_energy_kwh * BigDecimal(tariff.energyprice_cents_per_kwh, 4))
+  end
+
+  def base_price_cents
+    return unless length_in_days && baseprice_cents_per_day
+    length_in_days * baseprice_cents_per_day
+  end
+
+  def base_price_cents_after_taxes
+    return unless length_in_days && baseprice_cents_per_day_after_taxes
+    length_in_days * baseprice_cents_per_day_after_taxes
+  end
+
+  def price_cents
+    return unless base_price_cents && energy_price_cents
+    base_price_cents + energy_price_cents
+  end
+
+  def energy_price_cents_after_taxes
+    return unless consumed_energy_kwh && tariff
+    consumed_energy_kwh * tariff.energyprice_cents_per_kwh_after_taxes
   end
 
 end

@@ -76,7 +76,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
            (last_payment.price_cents-estimated_cents_per_month).abs >= resource.object.localpool.billing_detail.automatic_abschlag_threshold_cents
           # create new abschlag for next month
           rounded=100*(estimated_cents_per_month/100).round
-          payment = resource.object.contract.payments.where(begin_date: next_month).first || resource.object.contract.payments.create!(begin_date: next_month, price_cents: rounded, cycle: :monthly, energy_consumption_kwh_pa: 365*resource.object.daily_kwh_estimate, tariff: tariff)
+          payment = resource.object.contract.payments.where(begin_date: next_month).first || resource.object.contract.payments.create!(begin_date: next_month, price_cents: rounded, cycle: :monthly, energy_consumption_kwh_pa: (365*resource.object.daily_kwh_estimate).round, tariff: tariff)
           params[:adjusted_payment] = payment
         end
       end
