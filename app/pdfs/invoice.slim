@@ -420,7 +420,7 @@ html
           'Erneuerbare Energie gefördert nach EEG'
         ];
         // footer HTML required
-        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{contractor.name} • #{contractor.street} • #{contractor.zip} #{contractor.city}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
+        var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{contractor.name.empty? ? '' : "#{contractor.name} •"} #{contractor.contact.empty? ? '' : "#{contractor.contact} •"} #{contractor.street} • #{contractor.zip} #{contractor.city}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
         bcChart('#chart-one', labels1, [#{consumption_year}, #{consumption_last_year ? "#{consumption_last_year} ," : ''} 1598, 2766, 4608]);
         bcChart('#chart-two', labels2, data2d,'Deutschland');
         bcChart('#chart-three', labels2, data2l,'Lokale Energiegruppe #{localpool.name}');
