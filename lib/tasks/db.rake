@@ -37,6 +37,7 @@ namespace :db do
       transfer_webforms
       transfer_displays
       transfer_stats
+      transfer_issues_vat
     end
 
   end
