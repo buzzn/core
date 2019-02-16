@@ -1,4 +1,4 @@
-
+require_relative '../localpool'
 require_relative '../../../schemas/transactions/organization/create'
 
 module Transactions::Admin::Localpool::CreateOrganizationBase
