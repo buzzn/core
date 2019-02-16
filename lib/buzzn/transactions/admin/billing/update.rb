@@ -102,7 +102,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       contractor_name = resource.object.contract.contractor.name
       text = %Q(Guten Tag,
 
-im Auftrag Ihres Lokalen Stromgebers #{contractor_name} übermitteln wir Ihnen im
+im Auftrag Ihres Lokalen Stromgebers "#{contractor_name}" übermitteln wir Ihnen im
 Anhang Ihre Stromrechnung 2018.
 
 Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
