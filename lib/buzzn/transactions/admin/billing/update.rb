@@ -13,6 +13,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
   map :persist, with: :'operations.action.update'
 
   include Import[
+            fixed_email: 'config.fixed_email',
             accounting_service: 'services.accounting',
             mail_service: 'services.mail_service',
             powertaker_v1_from: 'config.powertaker_v1_from',
@@ -89,11 +90,15 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       end
     when :queue
       customer = resource.object.contract.customer
-      email = case customer
-              when Person
-                customer.email
-              when Organization::Base
-                (!customer.contact.nil? && !customer.contact.email.empty?) ? customer.contact.email : customer.email
+      email = if fixed_email.nil? || fixed_email.empty?
+                case customer
+                when Person
+                  customer.email
+                when Organization::Base
+                  (!customer.contact.nil? && !customer.contact.email.empty?) ? customer.contact.email : customer.email
+                end
+              else
+                fixed_email
               end
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new(customer: 'email invalid')
@@ -115,7 +120,7 @@ Ihr BUZZN Team
 )
       document = resource.object.documents.order(:created_at).last
       mail_service.deliver_billing_later(resource.object.id, :from => powertaker_v1_from,
-                                                             :to => 'dev@buzzn.net',
+                                                             :to => email,
                                                              :subject => subject,
                                                              :text => text,
                                                              :bcc => powertaker_v1_bcc,
