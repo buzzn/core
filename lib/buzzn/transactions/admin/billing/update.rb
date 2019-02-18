@@ -8,9 +8,12 @@ class Transactions::Admin::Billing::Update < Transactions::Base
   check :authorize, with: :'operations.authorization.update'
   tee :check_status
   tee :check_precondition
+  add :action
   around :db_transaction
-  tee :execute_transistion
-  map :persist, with: :'operations.action.update'
+  tee :execute_pre_transistion
+  add :persist, with: :'operations.action.update'
+  tee :execute_post_transistion
+  map :wrap_up
 
   include Import[
             fixed_email: 'config.fixed_email',
@@ -47,11 +50,15 @@ class Transactions::Admin::Billing::Update < Transactions::Base
     end
   end
 
-  def execute_transistion(resource:, params:)
+  def action(resource:, params:)
+    billing = resource.object
+    billing.transition_to(params.delete(:status))
+  end
+
+  def execute_pre_transistion(resource:, params:, action:)
     user = resource.security_context.current_user
     billing = resource.object
     contract = billing.contract
-    action = billing.transition_to(params.delete(:status))
     # transition may only continue if invariant are clean
     unless billing.invariant.errors.empty?
       return
@@ -88,6 +95,11 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       unless resource.object.documents.where(:id => document.id).any?
         resource.object.documents << document
       end
+    end
+  end
+
+  def execute_post_transistion(resource:, params:, action:, **)
+    case action
     when :queue
       customer = resource.object.contract.customer
       email = if fixed_email.nil? || fixed_email.empty?
@@ -126,6 +138,10 @@ Ihr BUZZN Team
                                                              :bcc => powertaker_v1_bcc,
                                                              :document_id => document.id)
     end
+  end
+
+  def wrap_up(persist:, **)
+    persist
   end
 
 end
