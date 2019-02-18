@@ -70,12 +70,12 @@ class BillingItem < ActiveRecord::Base
 
   def baseprice_cents_before_taxes
     return unless length_in_days && baseprice_cents_per_day_before_taxes
-    length_in_days * baseprice_cents_per_day_before_taxes
+    (length_in_days * baseprice_cents_per_day_before_taxes).round(0)
   end
 
   def baseprice_cents_after_taxes
     return unless length_in_days && baseprice_cents_per_day_after_taxes
-    length_in_days * baseprice_cents_per_day_after_taxes
+    (length_in_days * baseprice_cents_per_day_after_taxes).round(0)
   end
 
   def price_cents_before_taxes
@@ -90,12 +90,12 @@ class BillingItem < ActiveRecord::Base
 
   def energyprice_cents_before_taxes
     return unless consumed_energy_kwh && tariff
-    (consumed_energy_kwh * BigDecimal(tariff.energyprice_cents_per_kwh, 4))
+    (consumed_energy_kwh * BigDecimal(tariff.energyprice_cents_per_kwh, 4)).round(0)
   end
 
   def energyprice_cents_after_taxes
     return unless consumed_energy_kwh && tariff
-    consumed_energy_kwh * tariff.energyprice_cents_per_kwh_after_taxes
+    (consumed_energy_kwh * tariff.energyprice_cents_per_kwh_after_taxes).round(0)
   end
 
 end

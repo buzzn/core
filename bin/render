@@ -36,6 +36,7 @@ end
 puts 'starting app ....'
 
 file = ARGV[0]
+id = ARGV[1]
 
 require 'bundler/setup'
 require './config/buzzn'
@@ -49,7 +50,10 @@ generator =
     contract = Contract::LocalpoolProcessing.first
     Pdf::LocalPoolProcessingContract.new(contract)
   when /invoice.slim$/
-    billing = Billing.where(:status => :calculated).first
+    #billing = Billing.where(:status => :calculated).first
+    id ||= (Billing.count*rand).round
+    puts "rendering Billing #{id}"
+    billing = Billing.find(id)
     raise 'could not find valid billing' unless billing
     Pdf::Invoice.new(billing)
   else

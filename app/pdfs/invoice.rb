@@ -149,7 +149,7 @@ module Pdf
     def german_div(cents, prec: 2)
       # round cents to precision after divison
       onesr = (cents/100).round(prec)
-      sprintf("%s,%s", onesr.truncate, (onesr.remainder(1)*10).to_s.delete('.').ljust(prec, '0').first(prec))
+      sprintf("%s,%s", onesr.truncate, (onesr.remainder(1)*10).abs.to_s.delete('.').ljust(prec, '0').first(prec))
     end
 
     def build_contractor
@@ -223,8 +223,8 @@ module Pdf
         energyprice: german_div(BigDecimal(last_tariff.energyprice_cents_per_kwh, 4)),
         consumed_energy_kwh: @billing.items.first.consumed_energy_kwh,
       }.tap do |hash|
-        netto =   @billing.total_amount_before_taxes
-        brutto =  @billing.total_amount_after_taxes
+        netto =   @billing.total_amount_before_taxes.round(0)
+        brutto =  @billing.total_amount_after_taxes.round(0)
         balance_at = BigDecimal(@billing.balance_before) / 10
         to_pay_cents = balance_at - brutto
         has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
@@ -282,12 +282,12 @@ module Pdf
             h[:base_price_cents_per_day]   = german_div(item.baseprice_cents_per_day_before_taxes*100, prec: 4)
             h[:base_price_euros]           = german_div(item.baseprice_cents_before_taxes)
             h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_before_taxes*100, prec: 4)
-            h[:energy_price_euros]         = german_div(item.energyprice_cents_before_taxes)
+            h[:energy_price_euros]         = german_div(item.energyprice_cents_before_taxes.round(0))
           else # brutto
             h[:base_price_cents_per_day]   = german_div(item.baseprice_cents_per_day_after_taxes*100, prec: 4)
             h[:base_price_euros]           = german_div(item.baseprice_cents_after_taxes)
             h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_after_taxes*100, prec: 4)
-            h[:energy_price_euros]         = german_div(item.energyprice_cents_after_taxes)
+            h[:energy_price_euros]         = german_div(item.energyprice_cents_after_taxes.round(0))
           end
         end
       end
