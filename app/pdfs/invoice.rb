@@ -143,11 +143,13 @@ module Pdf
     end
 
     def to_date(date)
-      date.to_s
+      date.strftime('%d.%m.%Y')
     end
 
-    def german_div(cents)
-      sprintf("%d,%02d", cents/100, cents%100)
+    def german_div(cents, prec: 2)
+      # round cents to precision after divison
+      onesr = (cents/100).round(prec)
+      sprintf("%s,%s", onesr.truncate, (onesr.remainder(1)*10).to_s.delete('.').ljust(prec, '0').first(prec))
     end
 
     def build_contractor
@@ -217,8 +219,8 @@ module Pdf
       {
         date: @billing.last_date,
         number: @billing.full_invoice_number,
-        baseprice: german_div(last_tariff.baseprice_cents_per_month),
-        energyprice: german_div(last_tariff.energyprice_cents_per_kwh),
+        baseprice: german_div(BigDecimal(last_tariff.baseprice_cents_per_month, 4)),
+        energyprice: german_div(BigDecimal(last_tariff.energyprice_cents_per_kwh, 4)),
         consumed_energy_kwh: @billing.items.first.consumed_energy_kwh,
       }.tap do |hash|
         netto =   @billing.total_amount_before_taxes
@@ -230,7 +232,7 @@ module Pdf
         hash[:brutto] = german_div(brutto)
         hash[:vat_amount] = german_div(brutto-netto)
         hash[:balance_at_invoice] = german_div(balance_at)
-        hash[:to_pay] = german_div(to_pay_cents.round.abs)
+        hash[:to_pay] = german_div(to_pay_cents.abs)
         hash[:forderung]  = to_pay_cents.positive? ? 'Erstattung' : 'Forderung'
         hash[:rueck_nach] = to_pay_cents.positive? ? 'Rück' : 'Nach'
         hash[:satz_forderung] = if has_bank_and_direct_debit
@@ -256,7 +258,11 @@ module Pdf
     def build_localpool
       {
         name: contract.localpool.name
-      }
+      }.tap do |h|
+        %i(street zip city addition).each do |field|
+          h[field] = contract.localpool.address.send(field) unless contract.localpool.address.nil?
+        end
+      end
     end
 
     def build_billing_items
@@ -273,15 +279,15 @@ module Pdf
           rounded_consumed = h[:last_kwh] - h[:begin_kwh]
           h[:last_kwh] -= rounded_consumed-h[:consumed_energy_kwh]
           if localpool.billing_detail.issues_vat
-            h[:base_price_cents_per_day] = item.baseprice_cents_per_day.round(4)
-            h[:base_price_euros] = german_div(item.base_price_cents.round(2))
-            h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh.round(2)*100)
-            h[:energy_price_euros] = german_div(item.energy_price_cents.round(2))
+            h[:base_price_cents_per_day]   = german_div(item.baseprice_cents_per_day_before_taxes*100, prec: 4)
+            h[:base_price_euros]           = german_div(item.baseprice_cents_before_taxes)
+            h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_before_taxes*100, prec: 4)
+            h[:energy_price_euros]         = german_div(item.energyprice_cents_before_taxes)
           else # brutto
-            h[:base_price_cents_per_day] = item.baseprice_cents_per_day_after_taxes.round(4)
-            h[:base_price_euros] = german_div(item.base_price_cents_after_taxes.round(2))
-            h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_after_taxes*100)
-            h[:energy_price_euros] = german_div(item.energy_price_cents_after_taxes.round(2))
+            h[:base_price_cents_per_day]   = german_div(item.baseprice_cents_per_day_after_taxes*100, prec: 4)
+            h[:base_price_euros]           = german_div(item.baseprice_cents_after_taxes)
+            h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_after_taxes*100, prec: 4)
+            h[:energy_price_euros]         = german_div(item.energyprice_cents_after_taxes)
           end
         end
       end
@@ -289,8 +295,8 @@ module Pdf
 
     def build_current_tariff
       {
-        energyprice_cents_per_kwh_netto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes*100),
-        baseprice_euros_per_month_netto: german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes),
+        energyprice_cents_per_kwh_netto:  german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes*100),
+        baseprice_euros_per_month_netto:  german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes),
         energyprice_cents_per_kwh_brutto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_after_taxes*100),
         baseprice_euros_per_month_brutto: german_div(@contract.current_tariff.baseprice_cents_per_month_after_taxes),
       }
@@ -302,7 +308,7 @@ module Pdf
       }.merge(build_payment(@billing.adjusted_payment || @billing.contract.current_payment))
       has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
       payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro]} €"
-      abschlag_begin_date = abschlag[:begin_date].strftime('%d.%m.%Y')
+      abschlag_begin_date = to_date(abschlag[:begin_date])
       # negative means it's disabled for this powertaker
       if abschlag[:disabled]
         abschlag[:satz] = ''
@@ -329,7 +335,7 @@ module Pdf
       {
         energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
         cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
-        amount_euro: german_div(payment.price_cents),
+        amount_euro: german_div(BigDecimal(payment.price_cents, 4)),
         disabled: payment.price_cents.negative?,
         begin_date: payment.begin_date
       }
