@@ -93,7 +93,7 @@ describe 'BillingItem' do
       it 'calculates the price correctly' do
         baseprice_cents_per_day = (50 * 12) / 365.0
         expected_price          = (baseprice_cents_per_day * 100)
-        expect(item.baseprice_cents_before_taxes.round(6)).to eq(expected_price.round(6))
+        expect(item.baseprice_cents_before_taxes).to eq(expected_price.round(0))
       end
     end
   end
@@ -108,7 +108,7 @@ describe 'BillingItem' do
     context 'when it has a tariff' do
       before { item.tariff = build(:tariff, energyprice_cents_per_kwh: 25.999, baseprice_cents_per_month: 100) }
       it 'calculates the price correctly' do
-        expect(item.price_cents_before_taxes.round(2)).to eq(2764.38)
+        expect(item.price_cents_before_taxes.round(2)).to eq(2764.00)
       end
     end
   end

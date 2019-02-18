@@ -91,7 +91,7 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
           {
             begin_date:           item.begin_date,
             end_date:             item.end_date,
-            energy_price_cents:   item.energy_price_cents.nil? ? nil : item.energyprice_cents_before_taxes.round(2),
+            energy_price_cents:   item.energyprice_cents_before_taxes.nil? ? nil : item.energyprice_cents_before_taxes.round(2),
             consumed_energy_kwh:  item.consumed_energy_kwh,
             errors:               item.errors.empty? ? {} : item.errors
           }
