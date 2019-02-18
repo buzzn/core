@@ -33,7 +33,7 @@ module Pdf
         },
         current_tariff: build_current_tariff,
         billing_year: billing_year,
-        consumption_last_year: consumption(billing_year.nil? ? nil : billing_year-1),
+        consumption_last_year: consumption(billing_year.nil? || @billing.billing_cycle.nil? ? nil : billing_year-1),
         consumption_year: consumption(billing_year) || 0,
         abschlag: build_abschlag,
         meter: build_meter,
@@ -62,12 +62,12 @@ module Pdf
     end
 
     def billing_year
-      @billing.billing_cycle&.begin_date&.year
+      @billing.billing_cycle&.begin_date&.year || @billing.begin_date&.year
     end
 
     def consumption(year)
       return nil unless year
-      collected = @billing.contract.billings.to_a.keep_if { |x| x.billing_cycle.begin_date.year == year }.map { |x| [x.total_consumed_energy_kwh, x.total_days] }
+      collected = @billing.billing_cycle ? @billing.contract.billings.to_a.keep_if { |x| x.billing_cycle }.keep_if { |x| x.billing_cycle.begin_date.year == year }.map { |x| [x.total_consumed_energy_kwh, x.total_days] } : [[@billing.total_consumed_energy_kwh, @billing.total_days]]
       return nil if collected.flatten.include?(nil)
       summed = collected.inject { |x, n| [x[0] + n[0], x[1] + n[1]] }
       return nil unless summed
@@ -332,6 +332,7 @@ module Pdf
     end
 
     def build_payment(payment)
+      payment = payment.respond_to?(:first) ? payment.first : payment
       {
         energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
         cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
@@ -385,8 +386,8 @@ module Pdf
                else
                  []
                end
-      if consumption_last_year
-        labels.delete(1)
+      unless consumption_last_year
+        labels.delete_at(1)
       end
       '[' + labels.map {|x| "'#{x}'"}.join(',') + ']'
     end

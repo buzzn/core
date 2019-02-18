@@ -50,7 +50,7 @@ generator =
     contract = Contract::LocalpoolProcessing.first
     Pdf::LocalPoolProcessingContract.new(contract)
   when /invoice.slim$/
-    #billing = Billing.where(:status => :calculated).first
+    # billing = Billing.where(:status => :calculated).first
     id ||= (Billing.count*rand).round
     puts "rendering Billing #{id}"
     billing = Billing.find(id)
