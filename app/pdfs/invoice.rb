@@ -118,7 +118,7 @@ module Pdf
                    'Hallo'
                  end
         if prefix == 'Hallo'
-          "#{prefix} #{person_or_organization.first_name}"
+          "#{prefix} #{person_or_organization.first_name} #{person_organization.last_name}"
         else
           "#{prefix} #{person_or_organization.title} #{person_or_organization.last_name}"
         end
