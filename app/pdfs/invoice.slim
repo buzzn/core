@@ -206,15 +206,15 @@ html
               td #{item.length_in_days} Tage
               td #{item.base_price_cents_per_day} Ct/Tag
               td.is-text-right #{item.base_price_euros} €
-            - if issues_vat
-              tr
-                td.no-border Zwischensumme (netto)
-                td.no-border colspan=3
-                td.no-border.is-text-right #{billing.netto} €
-              tr
-                td Umsatzsteuer (#{vat}%)
-                td colspan=3
-                td.is-text-right #{billing.vat_amount} €
+          - if issues_vat
+            tr
+              td.no-border Zwischensumme (netto)
+              td.no-border colspan=3
+              td.no-border.is-text-right #{billing.netto} €
+            tr
+              td Umsatzsteuer (#{vat}%)
+              td colspan=3
+              td.is-text-right #{billing.vat_amount} €
           tr
             td.no-border
               strong Rechnungsbetrag (brutto)
