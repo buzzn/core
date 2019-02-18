@@ -57,37 +57,43 @@ class BillingItem < ActiveRecord::Base
   end
 
   # FIXME: move to tariff
-  def baseprice_cents_per_day
+  def baseprice_cents_per_day_before_taxes
     return unless tariff
     (BigDecimal(tariff.baseprice_cents_per_month, 4) * 12) / 365
   end
 
+  # FIXME: move to tariff
   def baseprice_cents_per_day_after_taxes
     return unless tariff
     (tariff.baseprice_cents_per_month_after_taxes * 12) / 365
   end
 
-  def energy_price_cents
-    return unless consumed_energy_kwh && tariff
-    (consumed_energy_kwh * BigDecimal(tariff.energyprice_cents_per_kwh, 4))
+  def baseprice_cents_before_taxes
+    return unless length_in_days && baseprice_cents_per_day_before_taxes
+    length_in_days * baseprice_cents_per_day_before_taxes
   end
 
-  def base_price_cents
-    return unless length_in_days && baseprice_cents_per_day
-    length_in_days * baseprice_cents_per_day
-  end
-
-  def base_price_cents_after_taxes
+  def baseprice_cents_after_taxes
     return unless length_in_days && baseprice_cents_per_day_after_taxes
     length_in_days * baseprice_cents_per_day_after_taxes
   end
 
-  def price_cents
-    return unless base_price_cents && energy_price_cents
-    base_price_cents + energy_price_cents
+  def price_cents_before_taxes
+    return unless baseprice_cents_before_taxes && energyprice_cents_before_taxes
+    baseprice_cents_before_taxes + energyprice_cents_before_taxes
   end
 
-  def energy_price_cents_after_taxes
+  def price_cents_after_taxes
+    return unless baseprice_cents_after_taxes && energyprice_cents_after_taxes
+    baseprice_cents_after_taxes + energyprice_cents_after_taxes
+  end
+
+  def energyprice_cents_before_taxes
+    return unless consumed_energy_kwh && tariff
+    (consumed_energy_kwh * BigDecimal(tariff.energyprice_cents_per_kwh, 4))
+  end
+
+  def energyprice_cents_after_taxes
     return unless consumed_energy_kwh && tariff
     consumed_energy_kwh * tariff.energyprice_cents_per_kwh_after_taxes
   end

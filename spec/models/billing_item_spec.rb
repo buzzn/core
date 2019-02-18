@@ -69,14 +69,14 @@ describe 'BillingItem' do
     let(:item) { build(:billing_item, :with_readings, tariff: nil) }
     context 'when it has no tariff' do
       it 'returns nil' do
-        expect(item.energy_price_cents).to be_nil
+        expect(item.energyprice_cents_before_taxes).to be_nil
       end
     end
     context 'when it has a tariff' do
       before { item.tariff = build(:tariff, energyprice_cents_per_kwh: 25.999) }
       it 'calculates the price correctly' do
         expected_price = (100 * BigDecimal(25.999, 3))
-        expect(item.energy_price_cents.round(6)).to eq(expected_price.round(6))
+        expect(item.energyprice_cents_before_taxes.round(6)).to eq(expected_price.round(6))
       end
     end
   end
@@ -85,7 +85,7 @@ describe 'BillingItem' do
     let(:item) { build(:billing_item, end_date: Date.today, begin_date: Date.today - 50.days) }
     context 'when it has no tariff' do
       it 'returns nil' do
-        expect(item.base_price_cents).to be_nil
+        expect(item.baseprice_cents_before_taxes).to be_nil
       end
     end
     context 'when it has a tariff' do
@@ -93,7 +93,7 @@ describe 'BillingItem' do
       it 'calculates the price correctly' do
         baseprice_cents_per_day = (50 * 12) / 365.0
         expected_price          = (baseprice_cents_per_day * 100)
-        expect(item.base_price_cents.round(6)).to eq(expected_price.round(6))
+        expect(item.baseprice_cents_before_taxes.round(6)).to eq(expected_price.round(6))
       end
     end
   end
@@ -102,13 +102,13 @@ describe 'BillingItem' do
     let(:item) { build(:billing_item, :with_readings, end_date: Date.today, begin_date: Date.today - 50.days) }
     context 'when it has no tariff' do
       it 'returns nil' do
-        expect(item.price_cents).to be_nil
+        expect(item.price_cents_before_taxes).to be_nil
       end
     end
     context 'when it has a tariff' do
       before { item.tariff = build(:tariff, energyprice_cents_per_kwh: 25.999, baseprice_cents_per_month: 100) }
       it 'calculates the price correctly' do
-        expect(item.price_cents.round(2)).to eq(2764.38)
+        expect(item.price_cents_before_taxes.round(2)).to eq(2764.38)
       end
     end
   end
