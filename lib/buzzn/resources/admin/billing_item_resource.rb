@@ -18,6 +18,14 @@ module Admin
     has_one :meter
     has_one :register
 
+    def base_price_cents
+      baseprice_cents_before_taxes
+    end
+
+    def energy_price_cents
+      energyprice_cents_before_taxes
+    end
+
     def begin_reading_kwh
       begin_reading.value / 1000 if begin_reading
     end

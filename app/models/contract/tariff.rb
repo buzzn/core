@@ -45,11 +45,11 @@ module Contract
     end
 
     def energyprice_cents_per_kwh_before_taxes
-      self.energyprice_cents_per_kwh
+      BigDecimal(self.energyprice_cents_per_kwh, 4)
     end
 
     def baseprice_cents_per_month_before_taxes
-      self.baseprice_cents_per_month
+      BigDecimal(self.baseprice_cents_per_month, 4)
     end
 
     def energyprice_cents_per_kwh_after_taxes
