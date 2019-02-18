@@ -53,6 +53,9 @@ html
       .pt {padding-top: 10rem;}
       .clear {clear: both;}
       .no-border {border-color: transparent;}
+      .narrow {padding: 0 1rem;}
+      .full-width {width: 100%;}
+      .padding-left-hack {padding-left: 3rem;}
 
       .card {padding: 0.5rem 1rem; min-height: 6rem; position: relative;}
       .card p:last-child {position: absolute; bottom: 0.375rem;}
@@ -329,7 +332,7 @@ html
       h2 Stromkennzeichnung #{billing_year ? billing_year-1 : ""}
       p
         | (Stromkennzeichnung gemäß § 42 Energiewirtschaftsgesetz vom 7. Juli 2005, geändert 2017)
-      div.row
+      div.row.narrow
         div#chart-two.bc-chart.vertical.col-half.is-small
           div.bc-chart-container.col-half
           div.bc-legend-container.col-half
@@ -339,24 +342,33 @@ html
           div.bc-legend-container.col-half
       div.clear
       h2 Umweltauswirkungen je Kilowattstunde
-      table.no-border
-        tr
-          td.no-border.ash #{waste_de.nuclear_waste_miligramm_per_kwh}
-          td.no-border Radioaktiver Abfall (g/kWh)
-          td.no-border.ash #{waste_local.nuclear_waste_miligramm_per_kwh}
-          td.no-border
-        tr
-          td.no-border.ash #{waste_de.co2_emission_gramm_per_kwh}
-          td.no-border CO2 Emissionen (g/kWh)
-          td.no-border.ash #{waste_local.co2_emission_gramm_per_kwh}
-          td.no-border
-        tr
-          td
-          td
-            h3 Deutschland
-          td
-          td
-            h3 Lokale Energiegruppe #{localpool.name}
+      div.narrow
+        table.no-border.full-width
+          tr
+            td
+              table.no-border.full-width
+                tr
+                  td.no-border.ash #{waste_de.nuclear_waste_miligramm_per_kwh}
+                  td.no-border Radioaktiver Abfall (g/kWh)
+                tr
+                  td.no-border.ash #{waste_de.co2_emission_gramm_per_kwh}
+                  td.no-border CO2 Emissionen (g/kWh)
+                tr
+                  td.no-border
+                  td.no-border
+                    h3 Deutschland
+            td.padding-left-hack
+              table.no-border.full-width
+                tr
+                  td.no-border.ash #{waste_local.nuclear_waste_miligramm_per_kwh}
+                  td.no-border
+                tr
+                  td.no-border.ash #{waste_local.co2_emission_gramm_per_kwh}
+                  td.no-border
+                tr
+                  td.no-border
+                  td.no-border
+                    h3 Lokale Energiegruppe #{localpool.name}
       p.is-small <sup>1.</sup> Enthält nicht zertifizierte Mengen aus erneuerbarer Stromgeberproduktion<br>
         <sup>2.</sup> Zur ökologisch sinnvollen gleichzeitigen Produktion von Strom und Wärme in den Häusern der Stromgeber<br>
         <sup>3.</sup> Enthält Heizöl zur ökologisch sinnvollen gleichzeitigen Produktion von Strom und Wärme in den Häusern der Stromgeber
