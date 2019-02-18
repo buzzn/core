@@ -33,8 +33,9 @@ module Transactions::Admin::Contract::Localpool
     def calculated_ranges(params:, resource:, localpool:)
 
       localpool.object.register_metas.to_a.keep_if { |x| x.consumption? }.collect do |register_meta|
-        installed_at     = (register_meta.registers.collect { |r| r.installed_at     }.reject(&:nil?).sort_by { |x| x.date }.first)&.date
-        decomissioned_at = (register_meta.registers.collect { |r| r.decomissioned_at }.reject(&:nil?).sort_by { |x| x.date }.last)&.date
+        install_decomissioned = (register_meta.registers.collect { |r| [r.installed_at&.date, r.decomissioned_at&.date] }).sort_by {|x| x[0]}
+        installed_at     = install_decomissioned.first[0]
+        decomissioned_at = install_decomissioned.last[1]
 
         if installed_at.nil? || installed_at > params[:end_date] || (!decomissioned_at.nil? && decomissioned_at < params[:begin_date])
           ranges = [ ]
