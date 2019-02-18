@@ -283,7 +283,7 @@ describe Transactions::Admin::Billing::Update do
               expect(billing.status).to eql 'calculated'
               expect(billing.accounting_entry).not_to be_nil
               balance = accounting_service.balance(contract)
-              expect(balance).to eql (10*100*50 - billing.total_amount_after_taxes*10).round
+              expect(balance).to eql (10*100*50 - (billing.total_amount_after_taxes*10).round)
             end
 
           end
@@ -301,7 +301,7 @@ describe Transactions::Admin::Billing::Update do
               expect(billing.status).to eql 'calculated'
               expect(billing.accounting_entry).not_to be_nil
               balance = accounting_service.balance(contract)
-              expect(balance).to eql (10*100*3 - billing.total_amount_after_taxes*10).round
+              expect(balance).to eql (10*100*3 - (billing.total_amount_after_taxes*10).round)
             end
 
           end
