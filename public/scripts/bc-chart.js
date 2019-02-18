@@ -34,7 +34,7 @@ function bcChart (id, labels, data, title) {
       $(this).html('').css(css);
     });
     chartContainer.find('.bc-tick').each(function(i){
-      var css = {'left': 20*i+'%'};
+      var css = {'left': 100/data.length*i+'%'};
       $(this).css(css);
     });
     chartContainer.find('.bc-label').each(function(i){
@@ -51,7 +51,7 @@ function bcChart (id, labels, data, title) {
       $(this).css(css);
     });
     chartContainer.find('.bc-tick').each(function(i){
-      var css = {'left':0, 'top': 20*i+'%'};
+      var css = {'left':0, 'top': 100/data.length*i+'%'};
       $(this).css(css);
     });
     legendContainer.html(legendHtml);
