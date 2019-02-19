@@ -22,7 +22,7 @@ class Services::MailgunService
 
     if message.key?(:document_id) && !message[:document_id].nil?
       document = Document.find(message[:document_id])
-      attachment_name = message[:document_name] || 'attachment.pdf'
+      attachment_name = message[:document_name] || document.filename || 'attachment.pdf'
       attachment_mime = message[:document_mime] || document.mime || 'application/pdf'
       io = StringIO.new(document.read)
       form_data['attachment'] = ::UploadIO.new(io, attachment_mime, attachment_name)
