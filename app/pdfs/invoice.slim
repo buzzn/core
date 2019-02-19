@@ -60,6 +60,7 @@ html
 
       .card {padding: 0.5rem 1rem; min-height: 6rem; position: relative;}
       .card p:last-child {position: absolute; bottom: 0.375rem;}
+      .card-width-hack { width: 89%; }
       .clear {clear: both;}
       .logo {width: 10rem; height: 4rem; background: #eeeeee;}
       .footer-logo {width: auto; float: right;}
@@ -292,7 +293,7 @@ html
         div.col-3rd.card.peach
           p
             | Technologie <span class='is-medium'>(mit welchen Verfahren wurde der Eigenstrom erzeugt?)</span>
-          p.is-medium #{{energy_report.tech}}
+          p.is-medium.card-width-hack #{{energy_report.tech}}
       div.row
         div.col-3rd.card.cornflower
           p
