@@ -272,7 +272,7 @@ module Pdf
           last_date: to_date(item.last_date),
           begin_kwh: to_kwh(item.begin_reading.value),
           last_kwh: to_kwh(item.end_reading.value),
-          consumed_energy_kwh: to_kwh(item.consumed_energy),
+          consumed_energy_kwh: item.consumed_energy_kwh,
           length_in_days: item.length_in_days,
           meter_serial_number: item.meter.product_serialnumber
         }.tap do |h|
@@ -362,7 +362,7 @@ module Pdf
     def build_waste_local
       {
         nuclear_waste_miligramm_per_kwh: localpool.fake_stats["nuclearWasteMiligrammPerKwh"],
-        co2_emission_gramm_per_kwh: localpool.fake_stats["co2EmissionGrammPerKwh"]
+        co2_emission_gramm_per_kwh:      localpool.fake_stats['co2EmissionGrammPerKwh'].to_i
       }
     end
 
