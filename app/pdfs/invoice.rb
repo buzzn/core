@@ -305,9 +305,13 @@ module Pdf
     end
 
     def build_abschlag
+      payment = @billing.adjusted_payment || @billing.contract.current_payment
       abschlag = {
         was_changed: !@billing.adjusted_payment.nil?,
-      }.merge(build_payment(@billing.adjusted_payment || @billing.contract.current_payment))
+        satz: ''
+      }.merge(build_payment(payment))
+      return abschlag if payment.nil?
+
       has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
       payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro]} €"
       abschlag_begin_date = to_date(abschlag[:begin_date])
@@ -335,13 +339,19 @@ module Pdf
 
     def build_payment(payment)
       payment = payment.respond_to?(:first) ? payment.first : payment
-      {
-        energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
-        cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
-        amount_euro: german_div(BigDecimal(payment.price_cents, 4)),
-        disabled: payment.price_cents.negative?,
-        begin_date: payment.begin_date
-      }
+      unless payment.nil?
+        {
+          energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
+          cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
+          amount_euro: german_div(BigDecimal(payment.price_cents, 4)),
+          disabled: payment.price_cents.negative?,
+          begin_date: payment.begin_date
+        }
+      else
+        {
+          disabled: true
+        }
+      end
     end
 
     def build_meter
