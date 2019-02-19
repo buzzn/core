@@ -151,9 +151,6 @@ html
           td.no-border.no-padding Zählernummer:
           td.no-border.no-padding.pl #{items.map{|x| x.meter_serial_number }.join(', ')}
         tr
-          td.no-border.no-padding Prognose Jahresbezug:
-          td.no-border.no-padding.pl #{abschlag.energy_consumption_kwh_pa} kWh (#{billing_year})
-        tr
           td.no-border.no-padding Abrechnungsjahr
           td.no-border.no-padding.pl #{billing_year}
 

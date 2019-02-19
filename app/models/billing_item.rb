@@ -48,7 +48,7 @@ class BillingItem < ActiveRecord::Base
 
   def consumed_energy_kwh
     return unless end_reading && begin_reading
-    ((BigDecimal(end_reading.value).round - BigDecimal(begin_reading.value).round)/1000).round
+    (BigDecimal(end_reading.value)/1000).round - (BigDecimal(begin_reading.value)/1000).round
   end
 
   def length_in_days
