@@ -3,6 +3,11 @@
 # Generate closed billings for contracts that have ended and have been billed in beekeeper.
 # When we do _our_ billing, we need those so we know which energy consumption is already billed.
 #
+
+
+class ImporterError < RuntimeError
+end
+
 class Beekeeper::Importer::GenerateBillings
 
   attr_reader :logger
@@ -52,7 +57,8 @@ class Beekeeper::Importer::GenerateBillings
           end
         end
         billing_cycle
-      rescue ArgumentError
+      rescue ImporterError => e
+        #byebug.byebug
         break
       end
     end
@@ -83,7 +89,7 @@ class Beekeeper::Importer::GenerateBillings
     Transactions::Admin::Contract::Localpool::CreateGapContracts.new.(resource: gap_contractsr, params: request, localpool: localpoolr)
   rescue Buzzn::ValidationError => e
     logger.error("Buzzn::ValidationError for gap contract", extra_data: e.errors)
-    raise ArgumentError
+    raise ImporterError
   end
 
   def create_billing_cycle(localpool, last_date)
@@ -111,7 +117,7 @@ class Beekeeper::Importer::GenerateBillings
       end
     end
     logger.error("Buzzn::ValidationError for billing_cycle #{name}", extra_data: e.errors)
-    raise ArgumentError
+    raise ImporterError
   end
 
   def set_billing_cycle_to_calculated(localpool, billing_cycle)
