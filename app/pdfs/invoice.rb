@@ -277,7 +277,9 @@ module Pdf
           meter_serial_number: item.meter.product_serialnumber
         }.tap do |h|
           rounded_consumed = h[:last_kwh] - h[:begin_kwh]
-          h[:last_kwh] -= rounded_consumed-h[:consumed_energy_kwh]
+          if rounded_consumed-h[:consumed_energy_kwh] != 0
+            raise 'Unexpected'
+          end
           if localpool.billing_detail.issues_vat
             h[:base_price_cents_per_day]   = german_div(item.baseprice_cents_per_day_before_taxes*100, prec: 4)
             h[:base_price_euros]           = german_div(item.baseprice_cents_before_taxes)
@@ -372,7 +374,7 @@ module Pdf
 
     def build_report
       Hash[[:selfSufficiencyReport, :utilizationReport, :gasReport, :sunReport, :electricitySupplier, :tech].collect { |k| [k.to_s.underscore, localpool.fake_stats[k.to_s]]}].tap do |h|
-        h['tech'] = h['tech'].gsub('##', '<br />')
+        h['tech'] = h['tech'].gsub('##', '<br />') if h['tech']
       end
     end
 
