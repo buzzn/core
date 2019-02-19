@@ -31,11 +31,15 @@ module Transactions::Admin::Contract::Localpool
     end
 
     def calculated_ranges(params:, resource:, localpool:)
-
       localpool.object.register_metas.to_a.keep_if { |x| x.consumption? }.collect do |register_meta|
-        install_decomissioned = (register_meta.registers.collect { |r| [r.installed_at&.date, r.decomissioned_at&.date] }).sort_by {|x| x[0]}
-        installed_at     = install_decomissioned.first[0]
-        decomissioned_at = install_decomissioned.last[1]
+        install_decomissioned = (register_meta.registers.collect { |r| [r.installed_at&.date, r.decomissioned_at&.date] })
+        # TODO move to PreCondition
+        if install_decomissioned.select { |r| r[0].nil? }.any?
+          raise Buzzn::ValidationError.new('register_meta': { :name => register_meta.name, :error => 'All registers must have an IOM or similar'})
+        end
+        install_decomissioned_sorted = install_decomissioned.sort_by { |x| x[0] }
+        installed_at     = install_decomissioned_sorted.first[0]
+        decomissioned_at = install_decomissioned_sorted.last[1]
 
         if installed_at.nil? || installed_at > params[:end_date] || (!decomissioned_at.nil? && decomissioned_at < params[:begin_date])
           ranges = [ ]
