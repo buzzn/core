@@ -122,7 +122,7 @@ class Billing < ActiveRecord::Base
   def daily_kwh_estimate
     total = BigDecimal(0)
     items.each do |item|
-      total += item.consumed_energy_kwh / item.length_in_days
+      total += BigDecimal(item.consumed_energy_kwh) / BigDecimal(item.length_in_days)
     end
     total
   end
