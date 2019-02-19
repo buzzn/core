@@ -45,11 +45,11 @@ module Contract
     end
 
     def energyprice_cents_per_kwh_before_taxes
-      BigDecimal(self.energyprice_cents_per_kwh, 4)
+      BigDecimal(self.energyprice_cents_per_kwh, 4).round(4)
     end
 
     def baseprice_cents_per_month_before_taxes
-      BigDecimal(self.baseprice_cents_per_month, 4)
+      BigDecimal(self.baseprice_cents_per_month, 4).round(4)
     end
 
     def energyprice_cents_per_kwh_after_taxes
@@ -57,7 +57,7 @@ module Contract
       if billing_config.nil?
         raise 'please set Types::BillingConfig'
       end
-      BigDecimal(self.energyprice_cents_per_kwh, 4) * billing_config.vat
+      self.energyprice_cents_per_kwh_before_taxes * billing_config.vat
     end
 
     def baseprice_cents_per_month_after_taxes
@@ -65,7 +65,7 @@ module Contract
       if billing_config.nil?
         raise 'please set Types::BillingConfig'
       end
-      BigDecimal(self.baseprice_cents_per_month, 4) * billing_config.vat
+      self.baseprice_cents_per_month_before_taxes * billing_config.vat
     end
 
   end
