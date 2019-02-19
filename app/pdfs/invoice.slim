@@ -56,6 +56,7 @@ html
       .narrow {padding: 0 1rem;}
       .full-width {width: 100%;}
       .padding-left-hack {padding-left: 3rem;}
+      .table-width-hack {width: 47%;}
 
       .card {padding: 0.5rem 1rem; min-height: 6rem; position: relative;}
       .card p:last-child {position: absolute; bottom: 0.375rem;}
@@ -291,7 +292,7 @@ html
         div.col-3rd.card.peach
           p
             | Technologie <span class='is-medium'>(mit welchen Verfahren wurde der Eigenstrom erzeugt?)</span>
-          p.is-medium #{energy_report.tech}
+          p.is-medium #{{energy_report.tech}}
       div.row
         div.col-3rd.card.cornflower
           p
@@ -344,7 +345,7 @@ html
       div.narrow
         table.no-border.full-width
           tr
-            td
+            td.table-width-hack
               table.no-border.full-width
                 tr
                   td.no-border.ash #{waste_de.nuclear_waste_miligramm_per_kwh}
@@ -356,7 +357,7 @@ html
                   td.no-border
                   td.no-border
                     h3 Deutschland
-            td.padding-left-hack
+            td.table-width-hack
               table.no-border.full-width
                 tr
                   td.no-border.ash #{waste_local.nuclear_waste_miligramm_per_kwh}
@@ -380,40 +381,40 @@ html
       div.log.pt
       h2 Service
       p <i>Pflichtangaben zur Bundesnetzagentur und zur Schlichtungsstelle Energie:</i>
-      p Bundesnetzagentur für Elektrizität, Erdgas, Telekommunikation, Post und Eisenbahnen 
+      p Bundesnetzagentur für Elektrizität, Erdgas, Telekommunikation, Post und Eisenbahnen.
       h3 Verbraucherservice
       p Postfach 8001 / 53105 Bonn
       table.no-border
         tr
           td.no-border.no-padding Telefon:
-          td.no-border.no-padding Mo.-Fr. von 09:00 Uhr bis 15:00 Uhr
+          td.no-border.no-padding.pl Mo.-Fr. von 09:00 Uhr bis 15:00 Uhr
         tr
           td.no-border.no-padding
-          td.no-border.no-padding 030 / 22480-500 oder 01805 / 101000 - Bundesweites Infotelefon
+          td.no-border.no-padding.pl 030 / 22480-500 oder 01805 / 101000 - Bundesweites Infotelefon
         tr
           td.no-border.no-padding
-          td.no-border.no-padding
-            | (Festnetzpreis 14 ct/min; Mobilfunkpreise maximal 42 ct/min)
+          td.no-border.no-padding.pl
+            |(Festnetzpreis 14 ct/min; Mobilfunkpreise maximal 42 ct/min)
         tr
           td.no-border.no-padding Telefax:
-          td.no-border.no-padding 030 / 22480-323
+          td.no-border.no-padding.pl 030 / 22480-323
         tr
           td.no-border.no-padding E-Mail:
-          td.no-border.no-padding
+          td.no-border.no-padding.pl
             a href="mailto:verbraucherservice-energie@bnetza.de" verbraucherservice-energie@bnetza.de
       h3 Schlichtungsstelle Energie e. V.
       p Friedrichstraße 133, 10117 Berlin
       table.no-border
         tr
           td.no-border.no-padding Telefon:
-          td.no-border.no-padding 030 / 27 57 240 – 0
+          td.no-border.no-padding.pl 030 / 27 57 240 – 0
         tr
           td.no-border.no-padding Internet:
-          td.no-border.no-padding
+          td.no-border.no-padding.pl
             a href="http://www.schlichtungsstelle-energie.de" www.schlichtungsstelle-energie.de
         tr
           td.no-border.no-padding E-Mail:
-          td.no-border.no-padding
+          td.no-border.no-padding.pl
             a href="mailto:info@schlichtungsstelle-energie.de" info@schlichtungsstelle-energie.de
       p Informationen zu Anbietern von wirksamen Maßnahmen zur Energieeffizienzverbesserung und Energieeinsparung sowie ihren Angeboten finden Sie auf einer bei der Bundesstelle für Energieeffizienz (BfEE) öffentlich geführten Anbieterliste unter <a href="http://www.bfee-online.de"> www.bfee-online.de</a>
     javascript:
