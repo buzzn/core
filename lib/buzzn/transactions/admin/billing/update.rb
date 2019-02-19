@@ -75,7 +75,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
         last_payment = resource.object.contract.payments.order(:begin_date).last
         next_month = resource.object.end_date.at_beginning_of_month + 2.months
         tariff = resource.object.contract.tariffs.at(next_month).order(:begin_date).last
-        estimated_cents_per_month = tariff.cents_per_days_after_taxes(30, resource.object.daily_kwh_estimate)
+        estimated_cents_per_month = tariff.cents_per_days_after_taxes(30.42, resource.object.daily_kwh_estimate)
         if last_payment.nil? ||
            # if begin_date is in the future we skip as it was manually adjusted
            # if price_cents is 0 we will also skip it
