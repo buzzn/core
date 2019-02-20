@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require_relative 'generator'
 
 module Pdf
@@ -139,7 +140,7 @@ module Pdf
     end
 
     def to_kwh(value)
-      (value / 1000).round
+      (BigDecimal(value)/ 1000).round
     end
 
     def to_date(date)
