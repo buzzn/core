@@ -16,11 +16,11 @@ class Transactions::Admin::Billing::Update < Transactions::Base
   map :wrap_up
 
   include Import[
-            fixed_email: 'config.fixed_email',
             accounting_service: 'services.accounting',
             mail_service: 'services.mail_service',
-            powertaker_v1_from: 'config.powertaker_v1_from',
-            powertaker_v1_bcc: 'config.powertaker_v1_bcc',
+            billing_email_testmode: 'config.billing_email_testmode',
+            billing_email_from: 'config.billing_email_from',
+            billing_email_bcc:  'config.billing_email_bcc',
           ]
 
   def schema
@@ -121,10 +121,10 @@ class Transactions::Admin::Billing::Update < Transactions::Base
     case action
     when :queue
       customer = resource.object.contract.customer
-      email = if fixed_email.nil? || fixed_email.empty?
-                customer.contact_email
+      email = if billing_email_testmode == '1'
+                'dev@buzzn.net'
               else
-                fixed_email
+                customer.contact_email
               end
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new(customer: 'email invalid')
@@ -145,11 +145,11 @@ Energiegeladene Grüße,
 Ihr BUZZN Team
 )
       document = resource.object.documents.order(:created_at).last
-      mail_service.deliver_billing_later(resource.object.id, :from => powertaker_v1_from,
+      mail_service.deliver_billing_later(resource.object.id, :from => billing_email_from,
                                                              :to => email,
                                                              :subject => subject,
                                                              :text => text,
-                                                             :bcc => powertaker_v1_bcc,
+                                                             :bcc => billing_email_bcc,
                                                              :document_id => document.id)
     end
   end
