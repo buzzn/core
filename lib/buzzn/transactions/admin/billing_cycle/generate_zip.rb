@@ -10,7 +10,7 @@ class Transactions::Admin::BillingCycle::GenerateZip < Transactions::Base
   def generate_status_file(resource:, params:)
     status = ''
     resource.object.billings.each do |b|
-      status += "#{b.full_invoice_number},#{b.contract.full_contract_number},#{b.contract.register_meta.name},#{b.status}\n"
+      status += "#{b.full_invoice_number};#{b.contract.full_contract_number};#{b.contract.register_meta.name};#{b.status}\r\n"
     end
     status
   end
@@ -18,7 +18,7 @@ class Transactions::Admin::BillingCycle::GenerateZip < Transactions::Base
   def generate_zip(resource:, params:, generate_status_file:)
     zio = StringIO.new('')
     buffer = ::Zip::OutputStream.write_buffer(zio) do |zos|
-      zos.put_next_entry('status.txt', nil, ::Zip::Entry::STORED)
+      zos.put_next_entry('status.csv', nil, ::Zip::Entry::STORED)
       zos << generate_status_file
       resource.object.billings.each do |b|
         document = b.documents.order(:created_at).last
