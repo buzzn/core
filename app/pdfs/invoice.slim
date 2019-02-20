@@ -232,24 +232,31 @@ html
               strong #{billing.to_pay} €
       p Aus der Turnusabrechnung ergibt sich eine <strong>#{billing.rueck_nach}zahlung</strong> von <strong>#{billing.to_pay} €.</strong>
       p #{billing.satz_forderung}
+      - if billing_ends_contract
+        br
+        br
+        p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.
+        p Mit freundlichen Grüßen,
+        p #{contractor.contact}
     div.wrapper
       div.log
-      h2 Ihre Vertragskonditionen
-      p Die aktuellen Preise für Ihren Vertrag in der Energiegruppe #{localpool.name} betragen:<br>
-        <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{current_tariff.baseprice_euros_per_month_brutto} €/Monat,</strong> (#{current_tariff.baseprice_euros_per_month_netto} €/Monat)<br>
-        <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{current_tariff.energyprice_cents_per_kwh_brutto} Cent/kWh,</strong> (#{current_tariff.energyprice_cents_per_kwh_netto} Cent/kWh)
+      - unless billing_ends_contract
+        h2 Ihre Vertragskonditionen
+        p Die aktuellen Preise für Ihren Vertrag in der Energiegruppe #{localpool.name} betragen:<br>
+          <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{current_tariff.baseprice_euros_per_month_brutto} €/Monat,</strong> (#{current_tariff.baseprice_euros_per_month_netto} €/Monat)<br>
+          <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{current_tariff.energyprice_cents_per_kwh_brutto} Cent/kWh,</strong> (#{current_tariff.energyprice_cents_per_kwh_netto} Cent/kWh)
 
-      p #{abschlag.satz}
+        p #{abschlag.satz}
 
-      p Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.
-      p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.
-      p Mit freundlichen Grüßen,
-      p #{contractor.contact}
-      br
-      br
-      br
-      br
-      br
+        p Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.
+        p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.
+        p Mit freundlichen Grüßen,
+        p #{contractor.contact}
+        br
+        br
+        br
+        br
+        br
       h2 Verbrauchsvergleich
       p Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist. Dieser Vergleich, den Sie der Grafik entnehmen können, hinkt natürlich, da er die äußeren Gegebenheiten eines Haushaltes, zum Beispiel elektrische Warmwasserbereitung, nicht berücksichtigt.
       / chart goes here

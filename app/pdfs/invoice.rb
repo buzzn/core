@@ -28,6 +28,7 @@ module Pdf
         billing: build_billing,
         items: build_billing_items,
         vat: ((BigDecimal(billing_config.vat, 4) - 1.0) * 100).round,
+        billing_ends_contract: contract.end_date.nil? ? false : @billing.end_date == contract.end_date,
         contract: {
           number: contract.full_contract_number,
           market_location_name: contract.register_meta.name,
