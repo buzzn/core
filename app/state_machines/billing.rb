@@ -17,7 +17,7 @@ class StateMachine::Billing
     when :documented
       [:documented, :queued, :delivered, :void]
     when :queued
-      [:queued, :documented, :void]
+      [:queued, :documented, :delivered, :void]
     when :delivered
       [:delivered, :settled, :void]
     when :settled
@@ -65,6 +65,8 @@ class StateMachine::Billing
       end
     when :queued
       case to
+      when :delivered
+        nil
       when :queued
         nil
       when :documented
