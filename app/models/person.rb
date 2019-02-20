@@ -44,6 +44,10 @@ class Person < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
 
+  def contact_email
+    self.email
+  end
+
   def contracts
     Contract::Base.where(customer_person: self)
   end

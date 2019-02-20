@@ -406,7 +406,7 @@ describe Transactions::Admin::Billing::Update do
           billing.reload
         end
 
-        it 'fails' do
+        it 'works' do
           expect(billing.status).to eql 'calculated'
           expect(contract.payments.count).to eql 1
           expect(update_result).to be_success
@@ -415,6 +415,59 @@ describe Transactions::Admin::Billing::Update do
         end
 
       end
+    end
+
+  end
+
+  context 'documented' do
+
+    context '-> queued' do
+
+      let(:update_params) do
+        billing.reload
+        {
+          status: 'queued',
+          updated_at: billing.updated_at.to_json
+        }
+      end
+
+      let(:update_result) do
+        Transactions::Admin::Billing::Update.new.(resource: billingr,
+                                                  params: update_params)
+      end
+
+      before do
+        localpool.billing_detail.automatic_abschlag_adjust = true
+        localpool.billing_detail.save
+        localpool.reload
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+        billing.reload
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'documented', updated_at: billing.updated_at.to_json})
+        billing.reload
+      end
+
+      context 'without a valid email address' do
+
+        before do
+          contract.customer.email = 'notavalidone'
+          contract.customer.save
+          contract.reload
+          billingr.object.reload
+        end
+
+        it 'fails' do
+          expect {update_result}.to raise_error(Buzzn::ValidationError,
+                                                '{:contract=>{:customer=>{:contact_email=>["must be a valid email"]}}}')
+        end
+
+      end
+
+      context 'with a valid email address' do
+        it 'works' do
+          expect(update_result).to be_success
+        end
+      end
+
     end
 
   end

@@ -28,6 +28,10 @@ module Admin
         object.allowed_transitions.each do |transition|
           allowed[:update][:status][transition] = if status.to_sym == :calculated && transition == :documented
                                                     change_from_calculated_to_documented.success? || change_from_calculated_to_documented.errors
+                                                  elsif status.to_sym == :documented && transition == :documented
+                                                    change_from_documented_to_documented.success? || change_from_documented_to_documented.errors
+                                                  elsif status.to_sym == :documented && transition == :queued
+                                                    change_from_documented_to_queued.success? || change_from_documented_to_queued.errors
                                                   else
                                                     true
                                                   end
@@ -39,6 +43,16 @@ module Admin
     def change_from_calculated_to_documented
       subject = Schemas::Support::ActiveRecordValidator.new(self.object)
       Schemas::PreConditions::Billing::Update::CalculatedDocumented.call(subject)
+    end
+
+    def change_from_documented_to_documented
+      subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+      Schemas::PreConditions::Billing::Update::DocumentedDocumented.call(subject)
+    end
+
+    def change_from_documented_to_queued
+      subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+      Schemas::PreConditions::Billing::Update::DocumentedQueued.call(subject)
     end
 
   end
