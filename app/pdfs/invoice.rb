@@ -46,6 +46,7 @@ module Pdf
         energy_report: build_report
       }.tap do |h|
         h[:labels1] = build_labels1(h[:consumption_last_year])
+        h[:billing_type] = h[:billing_ends_contract] ? 'Schlussabrechnung' : 'Turnusabrechnung'
       end
     end
 

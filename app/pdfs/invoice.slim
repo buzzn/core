@@ -230,7 +230,7 @@ html
             td colspan=3
             td.is-text-right
               strong #{billing.to_pay} €
-      p Aus der Turnusabrechnung ergibt sich eine <strong>#{billing.rueck_nach}zahlung</strong> von <strong>#{billing.to_pay} €.</strong>
+      p Aus der #{billing_type} ergibt sich eine <strong>#{billing.rueck_nach}zahlung</strong> von <strong>#{billing.to_pay} €.</strong>
       p #{billing.satz_forderung}
       - if billing_ends_contract
         br
