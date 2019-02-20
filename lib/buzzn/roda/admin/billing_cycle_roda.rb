@@ -53,7 +53,6 @@ module Admin
           r.get! do
             zip = generate_zip.(resource: billing_cycle, params: r.params)
             filename = Buzzn::Utils::File.sanitize_filename("#{localpool.name}_#{billing_cycle.name}.zip")
-            byebug.byebug
             r.response.headers['Content-Type'] = 'application/zip'
             r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
             r.response.write(zip.value!.string)
