@@ -1183,6 +1183,14 @@
     };
     version = "0.1.3";
   };
+  rubyzip = {
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1n1lb2sdwh9h27y244hxzg1lrxxg2m53pk1vq7p33bna003qkyrj";
+      type = "gem";
+    };
+    version = "1.2.2";
+  };
   schema_monkey = {
     dependencies = ["activerecord" "modware"];
     source = {

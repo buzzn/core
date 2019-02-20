@@ -322,6 +322,7 @@ GEM
       addressable
     ruby_dep (1.5.0)
     ruby_regex (0.1.3)
+    rubyzip (1.2.2)
     schema_monkey (2.1.5)
       activerecord (>= 4.2)
       modware (~> 0.1)
@@ -434,6 +435,7 @@ DEPENDENCIES
   rubocop
   ruby-swagger
   ruby_regex
+  rubyzip (>= 1.0.0)
   schema_plus_enums
   sentry-raven
   sidekiq
