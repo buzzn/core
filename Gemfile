@@ -76,6 +76,7 @@ gem 'smarter_csv'
 gem 'sentry-raven' # the Sentry exception notification service
 gem 'rake'
 gem 'rails', '< 5'
+gem 'rubyzip', '>= 1.0.0'
 
 # bin/console
 gem 'pry'
