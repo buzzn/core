@@ -1,4 +1,5 @@
 require_relative '../admin_roda'
+require 'buzzn/utils/file'
 
 module Admin
   class BillingCycleRoda < BaseRoda
@@ -6,6 +7,7 @@ module Admin
     include Import.args[:env,
                         'transactions.admin.billing_cycle.create',
                         'transactions.admin.billing_cycle.generate_bars',
+                        'transactions.admin.billing_cycle.generate_zip',
                         'transactions.admin.billing_cycle.update',
                         'transactions.admin.billing_cycle.delete',
                        ]
@@ -43,6 +45,18 @@ module Admin
         r.on 'bars' do
           r.get! do
             generate_bars.(resource: billing_cycle, params: r.params)
+          end
+          r.others!
+        end
+
+        r.on 'zip' do
+          r.get! do
+            zip = generate_zip.(resource: billing_cycle, params: r.params)
+            filename = Buzzn::Utils::File.sanitize_filename("#{localpool.name}_#{billing_cycle.name}.zip")
+            byebug.byebug
+            r.response.headers['Content-Type'] = 'application/zip'
+            r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
+            r.response.write(zip.value!.string)
           end
           r.others!
         end
