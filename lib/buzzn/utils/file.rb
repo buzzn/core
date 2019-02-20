@@ -8,6 +8,10 @@ module Buzzn
         data
       end
 
+      def self.sanitize_filename(filename)
+        filename.strip.gsub(/^.*(\\|\/)/, '').gsub(' ', '_').gsub(/[^0-9A-Za-z.\-]/, '_')
+      end
+
     end
   end
 end
