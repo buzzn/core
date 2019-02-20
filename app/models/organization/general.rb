@@ -25,5 +25,9 @@ module Organization
       do_filter(value, *search_attributes)
     end
 
+    def contact_email
+      !(self.contact.nil? || self.contact.email.nil? || self.contact.email.empty?) ? self.contact.email : self.email
+    end
+
   end
 end

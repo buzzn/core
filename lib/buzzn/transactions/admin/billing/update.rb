@@ -47,6 +47,23 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           end
         end
       end
+    when :documented
+      unless params[:status].nil?
+        case params[:status].to_sym
+        when :documented
+          subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
+          result = Schemas::PreConditions::Billing::Update::DocumentedDocumented.call(subject)
+          unless result.success?
+            raise Buzzn::ValidationError.new(result.errors)
+          end
+        when :queued
+          subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
+          result = Schemas::PreConditions::Billing::Update::DocumentedQueued.call(subject)
+          unless result.success?
+            raise Buzzn::ValidationError.new(result.errors)
+          end
+        end
+      end
     end
   end
 
@@ -105,12 +122,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
     when :queue
       customer = resource.object.contract.customer
       email = if fixed_email.nil? || fixed_email.empty?
-                case customer
-                when Person
-                  customer.email
-                when Organization::Base
-                  (!customer.contact.nil? && !customer.contact.email.empty?) ? customer.contact.email : customer.email
-                end
+                customer.contact_email
               else
                 fixed_email
               end
