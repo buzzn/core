@@ -8,8 +8,8 @@ class Transactions::Admin::BillingCycle::GenerateZip < Transactions::Base
   map :wrap_up
 
   def generate_status_file(resource:, params:)
-    status = ''
-    resource.object.billings.each do |b|
+    status = 'Rechnungsnummer;Vertragsnummer;Marktlokation;Status'
+    resource.object.billings.sort_by { |x| x.contract.contract_number_addition }.each do |b|
       status += "#{b.full_invoice_number};#{b.contract.full_contract_number};#{b.contract.register_meta.name};#{b.status}\r\n"
     end
     status
