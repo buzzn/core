@@ -240,13 +240,13 @@ module Pdf
                                   if to_pay_cents.positive?
                                     'Der Betrag wird in Kürze auf ihrem Bankkonto gutgeschrieben.'
                                   elsif to_pay_cents.negative?
-                                    'Der Betrag wird in den nächsten Wochen von ihrem Bankkonto eingezogen.'
+                                    'Der Betrag wird in Kürze von ihrem Bankkonto eingezogen.'
                                   else
                                     ''
                                   end
                                 else
                                   if to_pay_cents.positive?
-                                    'Bitte geben Sie uns Ihre Bankverbindung (IBAN, BIC) für die Erstattung Ihres Guthabens an.'
+                                    'Bitte geben Sie uns Ihre Bankverbindung (IBAN, BIC) für die Erstattung Ihres Guthabens.'
                                   elsif to_pay_cents.negative?
                                     'Bitte überweisen Sie den Betrag unter Angabe der Rechnungsnummer auf das oben angegebene Konto.'
                                   else
