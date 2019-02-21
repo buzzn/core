@@ -19,7 +19,7 @@ class StateMachine::Billing
     when :queued
       [:queued, :documented, :delivered, :void]
     when :delivered
-      [:delivered, :settled, :void]
+      [:delivered, :documented, :settled, :void]
     when :settled
       # TODO add transition for reimbursement
       [:closed, :void]
@@ -79,6 +79,8 @@ class StateMachine::Billing
       when :delivered
         nil
       when :settled
+        nil
+      when :documented
         nil
       when :void
         nil
