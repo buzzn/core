@@ -88,7 +88,10 @@ module Pdf
     def name(person_or_organization)
       case person_or_organization
       when Person
-        person_or_organization.first_name + ' ' + person_or_organization.last_name
+        person_name = ''
+        person_name += person_or_organization.title + ' ' if person_or_organization.title
+        person_name += person_or_organization.first_name + ' ' + person_or_organization.last_name
+        person_name
       when Organization
       when Organization::General
         person_or_organization.name
