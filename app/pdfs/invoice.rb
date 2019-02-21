@@ -203,7 +203,7 @@ module Pdf
             data[field] = contact.send(field)
           end
         end
-        data[:name] = ''
+        data[:name] = powertaker.respond_to?(:name) ? powertaker.name : ''
       end
       powertaker.address.tap do |address|
         %i(street zip city addition).each do |field|
