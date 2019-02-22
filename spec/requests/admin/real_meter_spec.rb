@@ -93,6 +93,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       let(:wrong_json) do
         {
+          'updated_at'=>['is missing'],
           'product_serialnumber'=>['size cannot be greater than 128'],
           'direction_number'=>['must be one of: ERZ, ZRZ'],
           'datasource'=>['must be one of: standard_profile, discovergy, virtual'],
@@ -100,7 +101,6 @@ describe Admin::LocalpoolRoda, :request_helper do
           'manufacturer_name'=>['must be one of: easy_meter, other'],
           'build_year'=>['must be an integer'],
           'sent_data_dso'=>['must be a date'],
-          'converter_constant'=>['must be an integer'],
           'calibrated_until'=>['must be a date'],
           'edifact_metering_type'=>['must be one of: AHZ, WSZ, LAZ, MAZ, EHZ, IVA'],
           'edifact_meter_size'=>['must be one of: Z01, Z02, Z03'],
@@ -110,7 +110,6 @@ describe Admin::LocalpoolRoda, :request_helper do
           'edifact_voltage_level'=>['must be one of: E06, E05, E04, E03'],
           'edifact_cycle_interval'=>['must be one of: MONTHLY, QUARTERLY, HALF_YEARLY, YEARLY'],
           'edifact_data_logging'=>['must be one of: Z04, Z05'],
-          'updated_at'=>['is missing']
         }
       end
 
@@ -129,7 +128,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'manufacturer_description'=>'Manufacturer description',
           'location_description'=>'Location description',
           'direction_number'=>'ZRZ',
-          'converter_constant'=>20,
+          'converter_constant'=>1,
           'ownership'=>'CUSTOMER',
           'build_year'=>2017,
           'calibrated_until'=>Date.today.to_s,
@@ -212,7 +211,6 @@ describe Admin::LocalpoolRoda, :request_helper do
               ownership: Meter::Real.ownerships[:customer],
               build_year: 2017,
               sent_data_dso: '2010-01-01',
-              converter_constant: 20,
               calibrated_until: Date.today,
               edifact_metering_type: Meter::Real.edifact_metering_types[:digital_household_meter],
               edifact_meter_size: Meter::Real.edifact_meter_sizes[:edl21],
@@ -233,7 +231,6 @@ describe Admin::LocalpoolRoda, :request_helper do
         expect(meter.ownership).to eq 'customer'
         expect(meter.build_year).to eq 2017
         expect(meter.sent_data_dso).to eq Date.new(2010)
-        expect(meter.converter_constant).to eq 20
         expect(meter.calibrated_until).to eq Date.today
         expect(meter.edifact_metering_type).to eq 'digital_household_meter'
         expect(meter.edifact_meter_size).to eq 'edl21'
