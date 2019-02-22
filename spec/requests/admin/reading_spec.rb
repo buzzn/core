@@ -12,12 +12,11 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
     entity(:localpool) { create(:group, :localpool) }
     entity(:meter)     { create(:meter, :real, :connected_to_discovergy, :one_way, group: localpool) }
     entity(:register)  { meter.registers.first }
-    entity!(:reading)  { create(:reading, register: register, value: 10, raw_value: 10)}
+    entity!(:reading)  { create(:reading, register: register, raw_value: 10)}
 
     let(:wrong_json) do
       {
         'raw_value'=>['must be an integer'],
-        'value'=>['must be an integer'],
         'unit'=>['must be one of: Wh, W, m³'],
         'reason'=>['must be one of: IOM, COM1, COM2, ROM, PMR, COT, COS, CMP, COB'],
         'read_by'=>['must be one of: BN, SN, SG, VNB'],

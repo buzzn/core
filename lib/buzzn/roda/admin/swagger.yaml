@@ -8827,11 +8827,6 @@ paths:
         required: true
         type: integer
         format: int64
-      - name: value
-        in: formData
-        required: true
-        type: integer
-        format: int64
       - name: unit
         in: formData
         required: true
@@ -9025,6 +9020,11 @@ paths:
         in: path
         required: true
         type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
       - name: product_serialnumber
         in: formData
         required: false
@@ -9092,11 +9092,6 @@ paths:
         required: false
         type: string
         format: date
-      - name: converter_constant
-        in: formData
-        required: false
-        type: integer
-        format: int64
       - name: calibrated_until
         in: formData
         required: false
@@ -9169,11 +9164,6 @@ paths:
         enum:
         - Z04
         - Z05
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
       responses:
         200:
           description: patched
@@ -10566,9 +10556,10 @@ paths:
         format: date
       - name: converter_constant
         in: formData
-        required: false
+        required: true
         type: integer
         format: int64
+        minimum: 1
       - name: calibrated_until
         in: formData
         required: false

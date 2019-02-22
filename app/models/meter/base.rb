@@ -38,6 +38,10 @@ module Meter
       do_filter(value, *search_attributes)
     end
 
+    def converter_constant
+      self[:converter_constant] || 1
+    end
+
     private
 
     def maybe_create_sequence_number

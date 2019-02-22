@@ -16,10 +16,9 @@ class Services::ReadingService
         if reading.nil?
           return nil
         end
-        value = reading.values.first.round
+        value = (BigDecimal(reading.values.first, 2) / BigDecimal(register.meter.converter_constant)).round
         attrs = {
           raw_value: value,
-          value: value,
           unit: :watt_hour,
           reason: :regular_reading,
           read_by: :buzzn,
