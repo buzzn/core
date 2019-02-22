@@ -12,9 +12,9 @@ describe 'Schemas::Invariants::Register::Base' do
 
     context 'monoton increasing' do
       entity!(:reading) do
-        create(:reading, register: register, date: Date.new(2017, 1, 1), value: 100)
-        create(:reading, register: register, date: Date.new(2017, 2, 1), value: 200)
-        create(:reading, register: register, date: Date.new(2017, 3, 1), value: 300)
+        create(:reading, register: register, date: Date.new(2017, 1, 1), raw_value: 100)
+        create(:reading, register: register, date: Date.new(2017, 2, 1), raw_value: 200)
+        create(:reading, register: register, date: Date.new(2017, 3, 1), raw_value: 300)
       end
 
       it { is_expected.to be_nil }

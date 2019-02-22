@@ -1,3 +1,4 @@
+# coding: utf-8
 describe 'Reading::Single' do
 
   describe 'constants' do
@@ -40,6 +41,36 @@ describe 'Reading::Single' do
     end
   end
 
+  describe 'converted constant' do
+    context 'constant = 1' do
+      let(:meter) { create(:meter, :real, converter_constant: 1) }
+      let(:reading) { create(:reading, register: meter.registers.first, raw_value: 42) }
+
+      it 'returns the same value' do
+        expect(reading.value).to eql 42
+      end
+    end
+
+    context 'constant = 80' do
+      let(:meter) { create(:meter, :real, converter_constant: 80) }
+      let(:reading) { create(:reading, register: meter.registers.first, raw_value: 42) }
+
+      it 'returns value * 80' do
+        expect(reading.value).to eql 42*80
+      end
+    end
+
+    context 'constant = nil' do
+      let(:meter) { create(:meter, :real, converter_constant: nil) }
+      let(:reading) { create(:reading, register: meter.registers.first, raw_value: 42) }
+
+      it 'returns value' do
+        expect(reading.value).to eql 42
+      end
+    end
+
+  end
+
   describe 'readonly?' do
     context 'when reading is new record' do
       let(:reading) { build(:reading) }
@@ -51,7 +82,7 @@ describe 'Reading::Single' do
 
     context 'when reading is saved record and dirty' do
       let(:reading) { create(:reading) }
-      before { reading.value = 123 }
+      before { reading.raw_value = 123 }
       it 'is true' do
         expect(reading).to be_readonly
         expect { reading.save! }.to raise_error(ActiveRecord::ReadOnlyRecord)

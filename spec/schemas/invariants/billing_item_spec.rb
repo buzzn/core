@@ -99,8 +99,8 @@ describe 'Schemas::Invariants::BillingItem' do
 
       context 'begin_reading is higher than end_reading' do
 
-        let(:reading_1) { create(:reading, register: register, date: item.begin_date, value: 200, raw_value: 200) }
-        let(:reading_2) { create(:reading, register: register, date: item.end_date, value: 100, raw_value: 100) }
+        let(:reading_1) { create(:reading, register: register, date: item.begin_date, raw_value: 200) }
+        let(:reading_2) { create(:reading, register: register, date: item.end_date,   raw_value: 100) }
 
         it { is_expected.to eq(['begin_reading needs to be lower than end_reading']) }
       end
