@@ -19,7 +19,6 @@ class Services::ReadingService
         value = reading.values.first.round
         attrs = {
           raw_value: value,
-          value: value,
           unit: :watt_hour,
           reason: :regular_reading,
           read_by: :buzzn,

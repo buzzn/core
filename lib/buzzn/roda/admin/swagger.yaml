@@ -8827,11 +8827,6 @@ paths:
         required: true
         type: integer
         format: int64
-      - name: value
-        in: formData
-        required: true
-        type: integer
-        format: int64
       - name: unit
         in: formData
         required: true
@@ -9097,6 +9092,7 @@ paths:
         required: false
         type: integer
         format: int64
+        minimum: 1
       - name: calibrated_until
         in: formData
         required: false
@@ -10566,9 +10562,10 @@ paths:
         format: date
       - name: converter_constant
         in: formData
-        required: false
+        required: true
         type: integer
         format: int64
+        minimum: 1
       - name: calibrated_until
         in: formData
         required: false
