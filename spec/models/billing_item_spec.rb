@@ -48,21 +48,45 @@ describe 'BillingItem' do
   end
 
   describe 'consumed_energy_kwh' do
-    let(:item) { build(:billing_item) }
-    context 'when it has no readings' do
-      it 'returns nil' do
-        expect(item.consumed_energy_kwh).to be_nil
+
+    context 'with a meter with converter_constant of 1' do
+      let(:meter) { create(:meter, :real, converter_constant: 1) }
+      let(:item) { build(:billing_item) }
+      context 'when it has no readings' do
+        it 'returns nil' do
+          expect(item.consumed_energy_kwh).to be_nil
+        end
+      end
+      context 'when it has readings' do
+        before do
+          item.end_reading   = build(:reading, raw_value: 200_600, register: meter.registers.first)
+          item.begin_reading = build(:reading, raw_value: 100_000, register: meter.registers.first)
+        end
+        it 'returns the rounded difference' do
+          expect(item.consumed_energy_kwh).to eq(101)
+        end
       end
     end
-    context 'when it has readings' do
-      before do
-        item.end_reading   = build(:reading, raw_value: 200_600)
-        item.begin_reading = build(:reading, raw_value: 100_000)
+
+    context 'with a meter with converter_constant of 80' do
+      let(:meter) { create(:meter, :real, converter_constant: 80) }
+      let(:item) { build(:billing_item) }
+      context 'when it has no readings' do
+        it 'returns nil' do
+          expect(item.consumed_energy_kwh).to be_nil
+        end
       end
-      it 'returns the rounded difference' do
-        expect(item.consumed_energy_kwh).to eq(101)
+      context 'when it has readings' do
+        before do
+          item.end_reading   = build(:reading, raw_value: 200_600, register: meter.registers.first)
+          item.begin_reading = build(:reading, raw_value: 100_000, register: meter.registers.first)
+        end
+        it 'returns the rounded difference' do
+          expect(item.consumed_energy).to eq(item.end_reading.raw_value*80-item.begin_reading.raw_value*80)
+        end
       end
     end
+
   end
 
   describe 'energy_price_cents' do
