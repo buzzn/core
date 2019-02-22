@@ -1,8 +1,10 @@
+require './app/models/reading/single.rb'
+
 module Schemas
   module Invariants
     module Reading
 
-      Single = Schemas::Support.Form(Schemas::Constraints::Reading::Single) do
+      Single = Schemas::Support.Form do
 
         configure do
 
@@ -19,7 +21,16 @@ module Schemas
         required(:previous).maybe
         required(:following).maybe
 
-        required(:raw_value).filled?
+        required(:raw_value).filled(:bigint?)
+        required(:value).filled(:bigint?)
+        required(:unit).value(included_in?: ::Reading::Single.units.values)
+        required(:reason).value(included_in?: ::Reading::Single.reasons.values)
+        required(:read_by).value(included_in?: ::Reading::Single.read_by.values)
+        required(:quality).value(included_in?: ::Reading::Single.qualities.values)
+        required(:source).value(included_in?: ::Reading::Single.sources.values)
+        required(:status).value(included_in?: ::Reading::Single.status.values)
+        required(:date).filled(:date?)
+        optional(:comment).maybe(:str?, max_size?: 256)
 
         rule(raw_value: [:raw_value, :previous, :following]) do |raw_value, previous, following|
           raw_value.higher_than_previous?(previous).and(raw_value.lower_than_following?(following))
