@@ -10,6 +10,7 @@ module Schemas
         required(:manufacturer_name).filled
         required(:edifact_measurement_method).filled
         required(:datasource).filled
+        required(:converter_constant).value(:int?, gteq?: 1)
 
         rule(:manufacturer_name) do
           value(:datasource).eql?('discovergy').then(value(:manufacturer_name).eql?('easy_meter'))

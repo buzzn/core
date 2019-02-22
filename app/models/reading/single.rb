@@ -51,6 +51,7 @@ module Reading
     }
 
     belongs_to :register, class_name: 'Register::Base'
+    has_one :meter, class_name: 'Meter::Base', through: :register
 
     scope :in_year, ->(year) { where('date >= ? AND date < ?', Date.new(year), Date.new(year + 1)) }
     scope :between, ->(begin_date, end_date) { where('date >= ? AND date < ?', begin_date, end_date) }
@@ -88,8 +89,12 @@ module Reading
       !(new_record? || !changed?)
     end
 
+    def value
+      meter.converter_constant * self.raw_value
+    end
+
     def inspect
-      attributes.slice('date', 'value', 'reason', 'comment', 'id')
+      attributes.slice('date', 'raw_value', 'reason', 'comment', 'id').merge(value: value)
     end
 
   end
