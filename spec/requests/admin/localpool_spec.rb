@@ -138,7 +138,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
   let(:localpool_json) do
     serialize(localpool_no_contracts)
       .merge('billing_cycles' => {
-               'next_billing_cycle_begin_date' => localpool_no_contracts.start_date.as_json, 'array' => []
+               'array' => []
              })
   end
 

@@ -7,7 +7,8 @@ module Admin
 
     attributes  :name,
                 :begin_date,
-                :last_date
+                :last_date,
+                :status
 
     has_many :billings, BillingResource
 

@@ -10,7 +10,20 @@ class BillingCycle < ActiveRecord::Base
   has_many :billings, dependent: :destroy
 
   def status
-    :open
+    billing_statuses = billings.collect(&:status).uniq
+    if billing_statuses.count == 1
+      billing_statuses.first
+    elsif billing_statuses.count == 2 && billing_statuses.include?(['closed', 'void'])
+      'closed'
+    elsif billing_statuses.include?('open')
+      'open'
+    elsif billing_statuses.include?('calculated')
+      'calculated'
+    elsif billing_statuses.include?('documented')
+      'documented'
+    else
+      'open'
+    end
   end
 
   # TODO broken as uids are '{class_name}:{id}' now

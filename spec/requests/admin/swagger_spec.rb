@@ -695,6 +695,13 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::BankAccount::Assign
   end
 
+  # gap contracts
+
+  post '/localpools/{localpool2.id}/gap-contracts' do
+    description 'creates gap contracts for the localpool'
+    schema Schemas::Transactions::Admin::Contract::Localpool::GapContracts::Create
+  end
+
   # devices
 
   get '/localpools/{localpool.id}/devices' do
