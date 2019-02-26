@@ -2,9 +2,9 @@ require 'buzzn/schemas/invariants/billing'
 
 describe 'Schemas::Invariants::Billing' do
 
-  entity(:localpool) { create(:group, :localpool) }
-  entity(:contract) { create(:contract, :localpool_powertaker, localpool: localpool) }
-  entity(:billing) { create(:billing, contract: contract) }
+  let(:localpool) { create(:group, :localpool) }
+  let(:contract) { create(:contract, :localpool_powertaker, localpool: localpool) }
+  let(:billing) { create(:billing, contract: contract) }
 
   context 'without billing-cycle' do
 
@@ -14,7 +14,7 @@ describe 'Schemas::Invariants::Billing' do
 
     context 'with billing-cycle' do
 
-      entity!(:cycle) { create(:billing_cycle, localpool: localpool) }
+      let!(:cycle) { create(:billing_cycle, localpool: localpool) }
       before { cycle.billings << billing }
       context 'group matches' do
         before do
@@ -35,12 +35,23 @@ describe 'Schemas::Invariants::Billing' do
 
   context 'without billing items' do
 
-    subject { billing.invariant.errors[:items] }
+    subject { billing.invariant.errors[:items_present] }
+    context 'not void' do
+      it { is_expected.to eq(['size cannot be less than 1']) }
+    end
 
-    it { is_expected.to eq(['size cannot be less than 1']) }
+    context 'void' do
+      before do
+        billing.status = :void
+        billing.save
+      end
+
+      it { is_expected.to be_nil }
+    end
 
     context 'with one billing item' do
-      entity!(:item) do
+      subject { billing.invariant.errors[:items] }
+      let!(:item) do
         item = create(:billing_item, billing: billing, begin_date: billing.begin_date - 2.day, end_date: billing.end_date + 1.day)
         billing.reload
         item
