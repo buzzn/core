@@ -15,10 +15,6 @@ describe Admin::BillingCycleRoda, :request_helper do
 
     entity(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
 
-    entity(:meta_json) do
-      { 'next_billing_cycle_begin_date' => billing_cycle.end_date.as_json }
-    end
-
     let(:expected_json) do
       {
         'id'=>billing_cycle.id,
@@ -26,6 +22,7 @@ describe Admin::BillingCycleRoda, :request_helper do
         'created_at'=>billing_cycle.created_at.as_json,
         'updated_at'=>billing_cycle.updated_at.as_json,
         'name'=>billing_cycle.name,
+        'status'=>billing_cycle.status,
         'begin_date'=>billing_cycle.begin_date.as_json,
         'last_date'=>billing_cycle.last_date.as_json
       }
@@ -36,8 +33,7 @@ describe Admin::BillingCycleRoda, :request_helper do
                     expected: :expected_json
     it_behaves_like 'all',
                     path: :path,
-                    expected: :expected_json,
-                    meta: :meta_json
+                    expected: :expected_json
   end
 
   context 'POST' do
@@ -45,6 +41,7 @@ describe Admin::BillingCycleRoda, :request_helper do
     let(:path) { "/localpools/#{localpool.id}/billing-cycles" }
 
     let(:localpool) { create(:group, :localpool, gap_contract_customer: create(:person)) }
+    let!(:lpc) { create(:contract, :localpool_processing, localpool: localpool)}
     let!(:tariff) do
       t = create(:tariff, group: localpool)
       localpool.gap_contract_tariffs << t
@@ -63,7 +60,8 @@ describe Admin::BillingCycleRoda, :request_helper do
         'type'=>'billing_cycle',
         'name'=>'mine',
         'begin_date'=> localpool.start_date.as_json,
-        'last_date'=> '2018-02-01'
+        'last_date'=> '2018-02-01',
+        'status'=>'open'
       }
     end
 
@@ -106,6 +104,7 @@ describe Admin::BillingCycleRoda, :request_helper do
       {
         'type'=>'billing_cycle',
         'name'=>'abcd',
+        'status'=>billing_cycle.status,
         'begin_date'=>billing_cycle.begin_date.to_s,
         'last_date'=>billing_cycle.last_date.to_s
       }

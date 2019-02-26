@@ -36,7 +36,6 @@ module Admin
                :legacy_power_giver_contract_buzznid,
                :legacy_power_taker_contract_buzznid,
                :fake_stats,
-               # TODO remove me once the UI uses the meta data section
                :next_billing_cycle_begin_date
 
     has_many :meters do |object|
@@ -61,7 +60,7 @@ module Admin
     has_many :tariffs, Contract::TariffResource
     has_many :contexted_gap_contract_tariffs, Contract::ContextedTariffResource
 
-    has_many :billing_cycles, BillingCycleResource, :next_billing_cycle_begin_date
+    has_many :billing_cycles, BillingCycleResource
     has_many :devices, DeviceResource
     has_one :owner
     has_one :gap_contract_customer
@@ -85,14 +84,6 @@ module Admin
     def display_app_url
       if object.show_display_app
         "#{display_url}/#{object.slug}"
-      end
-    end
-
-    def next_billing_cycle_begin_date
-      if object.billing_cycles.empty?
-        object.start_date
-      else
-        object.billing_cycles.order(:begin_date).last.end_date
       end
     end
 
