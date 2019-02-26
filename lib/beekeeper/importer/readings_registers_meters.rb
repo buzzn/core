@@ -32,7 +32,7 @@ class Beekeeper::Importer::ReadingsRegistersMeters
           register = create_register(zaehlwerk, localpool, max_sequence_number, register.meta, meter)
           meters_on_date["#{zaehlwerk.buzznid}-#{reading.date.iso8601}"] = register.meter
         end
-        puts "#{reading.date.iso8601} #{reading.reason_code.rjust(5, ' ')} #{reading.value.to_s.rjust(10, ' ')} register: ##{register.id} meta: ##{register.meta.id}"
+        puts "#{reading.date.iso8601} #{reading.reason_code.rjust(5, ' ')} #{reading.raw_value.to_s.rjust(10, ' ')} register: ##{register.id} meta: ##{register.meta.id}"
         register.readings << reading
       end
       puts '-' * 50

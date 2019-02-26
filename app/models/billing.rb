@@ -42,7 +42,7 @@ class Billing < ActiveRecord::Base
   end
 
   def transition_to(status)
-    action = StateMachine::Billing.transition_action(self.status.to_sym, status.to_sym)
+    action = StateMachine::Billing.transition_actions(self.status.to_sym, status.to_sym)
     self.status = status
     action
   end
