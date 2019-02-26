@@ -158,7 +158,12 @@ module Group
       if billing_cycles.empty?
         self.start_date
       else
-        self.billing_cycles.order(:begin_date).reject { |x| x.status == 'void' }.last.end_date
+        unvoided_cycles = self.billing_cycles.order(:begin_date).reject { |x| x.status == 'void' }
+        if unvoided_cycles.any?
+          unvoided_cycles.last.end_date
+        else
+          self.start_date
+        end
       end
     end
 
