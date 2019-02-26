@@ -5,6 +5,7 @@ module Transactions::Admin::Contract::Localpool
 
     validate :schema
     tee :localpool_schema
+    tee :complete_begin_date
     tee :set_end_date, with: :'operations.end_date'
     tee :validate_dates
     add :calculated_ranges
@@ -21,6 +22,12 @@ module Transactions::Admin::Contract::Localpool
       result = Schemas::PreConditions::Localpool::CreateLocalpoolGapContract.call(subject)
       unless result.success?
         raise Buzzn::ValidationError.new('localpool': result.errors)
+      end
+    end
+
+    def complete_begin_date(localpool:, params:, **)
+      if params[:begin_date].nil?
+        params[:begin_date] = localpool.next_billing_cycle_begin_date
       end
     end
 
