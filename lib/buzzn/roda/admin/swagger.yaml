@@ -388,6 +388,139 @@ paths:
       responses:
         201:
           description: created
+  "/localpools/{localpool2_id}/gap-contracts":
+    post:
+      description: creates gap contracts for the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool2_id
+        in: path
+        required: true
+        type: string
+      - name: signing_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: begin_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: termination_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: last_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: contract_number
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contract_number_addition
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: renewable_energy_law_taxation
+        in: formData
+        required: false
+        type: string
+        enum:
+        - F
+        - R
+        - N
+      - name: forecast_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: original_signing_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: mandate_reference
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: confirm_pricing_model
+        in: formData
+        required: false
+        type: boolean
+      - name: power_of_attorney
+        in: formData
+        required: false
+        type: boolean
+      - name: other_contract
+        in: formData
+        required: false
+        type: boolean
+      - name: move_in
+        in: formData
+        required: false
+        type: boolean
+      - name: authorization
+        in: formData
+        required: false
+        type: boolean
+      - name: third_party_billing_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: third_party_renter_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: metering_point_operator_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_supplier_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_customer_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: old_account_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: energy_consumption_before_kwh_pa
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+        exclusiveMinimum: true
+      - name: share_register_with_group
+        in: formData
+        required: false
+        type: boolean
+      - name: share_register_publicly
+        in: formData
+        required: false
+        type: boolean
+      responses:
+        201:
+          description: created
   "/localpools/{localpool2_id}/organization-gap-contract-customer":
     post:
       description: creates organization gap contract customer of the localpool

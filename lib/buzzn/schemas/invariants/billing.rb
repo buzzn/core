@@ -49,8 +49,8 @@ module Schemas
 
       required(:localpool).filled
       required(:billing_cycle).maybe
-      required(:items).value(:min_size? => 1)
       required(:status).filled
+      optional(:items).filled
 
       rule(localpool: [:localpool, :billing_cycle]) do |localpool, billing_cycle|
         billing_cycle.filled?.then(billing_cycle.match_group?(localpool))
@@ -60,8 +60,20 @@ module Schemas
         billing_items.are_complete_and_not_open?(status)
       end
 
+      rule(items: [:items, :status]) do |billing_items, status|
+        status.eql?('void').false?.then(billing_items.value(min_size?: 1))
+      end
+
       rule(items: [:items, :begin_date, :end_date]) do |billing_items, begin_date, end_date|
         billing_items.each_after_begin_date?(begin_date).and(billing_items.each_before_end_date?(end_date))
+      end
+
+      validate(items_present: [:items, :status]) do |items, status|
+        if status != 'void'
+          items.count.positive?
+        else
+          true
+        end
       end
 
     end

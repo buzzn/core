@@ -8,7 +8,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
   check :authorize, with: :'operations.authorization.update'
   tee :check_status
   tee :check_precondition
-  add :action
+  add :actions
   around :db_transaction
   tee :execute_pre_transistion
   add :persist, with: :'operations.action.update'
@@ -67,18 +67,19 @@ class Transactions::Admin::Billing::Update < Transactions::Base
     end
   end
 
-  def action(resource:, params:)
+  def actions(resource:, params:)
     billing = resource.object
     billing.transition_to(params.delete(:status))
   end
 
-  def execute_pre_transistion(resource:, params:, action:)
+  def handle_action(resource:, params:, action:)
     user = resource.security_context.current_user
     billing = resource.object
     contract = billing.contract
+
     # transition may only continue if invariant are clean
     unless billing.invariant.errors.empty?
-      return
+      raise Buzzn::ValidationError.new(billing.invariant.errors)
     end
 
     case action
@@ -106,6 +107,21 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           params[:adjusted_payment] = payment
         end
       end
+    when :reverse
+      unless billing.accounting_entry.nil?
+        comment = "Storno #{billing.full_invoice_number}"
+        params[:accounting_entry] = accounting_service.book(user, contract, -1 * billing.accounting_entry.amount, comment: comment)
+      end
+      unless billing.adjusted_payment.nil?
+        ap = billing.adjusted_payment
+        billing.adjusted_payment = nil
+        billing.save
+        ap.destroy
+      end
+    when :void
+      billing.items.each do |item|
+        item.destroy
+      end
     when :document
       generator = Pdf::Invoice.new(resource.object)
       generator.disable_cache
@@ -114,11 +130,6 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       unless resource.object.documents.where(:id => document.id).any?
         resource.object.documents << document
       end
-    end
-  end
-
-  def execute_post_transistion(resource:, params:, action:, **)
-    case action
     when :queue
       customer = resource.object.contract.customer
       email = if billing_email_testmode == '1'
@@ -151,6 +162,19 @@ Ihr BUZZN Team
                                                              :text => text,
                                                              :bcc => billing_email_bcc,
                                                              :document_id => document.id)
+    end
+
+  end
+
+  def execute_pre_transistion(resource:, params:, actions:)
+    if actions.is_a?(Array)
+      actions.select { |a| a[:at] == :pre }.collect { |a| handle_action(resource: resource, params: params, action: a[:action]) }
+    end
+  end
+
+  def execute_post_transistion(resource:, params:, actions:, **)
+    if actions.is_a?(Array)
+      actions.select { |a| a[:at] == :post }.collect { |a| handle_action(resource: resource, params: params, action: a[:action]) }
     end
   end
 

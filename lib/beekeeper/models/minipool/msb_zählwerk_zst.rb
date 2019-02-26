@@ -25,7 +25,6 @@ class Beekeeper::Minipool::MsbZählwerkZst < Beekeeper::Minipool::BaseRecord
   def converted_attributes
     @converted_attributes ||= {
       raw_value: value,
-      value:     value,
       comment:   comment,
       date:      date_parsed,
       unit:      'Wh',

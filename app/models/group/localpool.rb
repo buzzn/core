@@ -154,5 +154,13 @@ module Group
       Service::Tariffs.data(self.gap_contract_tariffs)
     end
 
+    def next_billing_cycle_begin_date
+      if billing_cycles.empty?
+        self.start_date
+      else
+        self.billing_cycles.order(:begin_date).reject { |x| x.status == 'void' }.last.end_date
+      end
+    end
+
   end
 end

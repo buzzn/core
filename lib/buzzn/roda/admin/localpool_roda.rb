@@ -12,6 +12,7 @@ module Admin
                         assign_gap_contract_customer: 'transactions.admin.localpool.assign_gap_contract_customer',
                         create_person_owner: 'transactions.admin.localpool.create_person_owner',
                         create_person_gap_contract_customer: 'transactions.admin.localpool.create_person_gap_contract_customer',
+                        create_gap_contracts: 'transactions.admin.contract.localpool.create_gap_contracts',
                         update_nested_person: 'transactions.admin.generic.update_nested_person',
                         create_organization_owner: 'transactions.admin.localpool.create_organization_owner',
                         create_organization_gap_contract_customer: 'transactions.admin.localpool.create_organization_gap_contract_customer',
@@ -64,6 +65,13 @@ module Admin
 
         r.on 'tariffs' do
           r.run TariffRoda
+        end
+
+        r.on 'gap-contracts' do
+          r.post! do
+            create_gap_contracts.(resource: localpool.localpool_gap_contracts, params: r.params, localpool: localpool)
+          end
+          r.others!
         end
 
         r.on 'gap-contract-tariffs' do
