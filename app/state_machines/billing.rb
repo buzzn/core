@@ -22,7 +22,7 @@ class StateMachine::Billing
       [:delivered, :documented, :settled, :void]
     when :settled
       # TODO add transition for reimbursement
-      [:closed, :void]
+      [:closed] #, :void]
     when :void
       [:void]
     when :closed
@@ -30,38 +30,81 @@ class StateMachine::Billing
     end
   end
 
-  def self.transition_action(from, to)
+  def self.transition_actions(from, to)
     case from
     when :open
       case to
       when :open
         nil
       when :calculated
-        :calculate
+        [
+          {
+            action: :calculate,
+            at: :pre
+          }
+        ]
       when :void
-        nil
+        [
+          {
+            action: :void,
+            at: :post
+          }
+        ]
       end
     when :calculated
       case to
       when :calculated
         nil
       when :documented
-        :document
+        [
+          {
+            action: :document,
+            at: :pre
+          }
+        ]
       when :void
-        nil
+        [
+          {
+            action: :reverse,
+            at: :post
+          },
+          {
+            action: :void,
+            at: :post
+          }
+        ]
       when :closed
         nil
       end
     when :documented
       case to
       when :documented
-        :document
+        [
+          {
+            action: :document,
+            at: :pre
+          }
+        ]
       when :queued
-        :queue
+        [
+          {
+            action: :queue,
+            at: :post
+          }
+        ]
       when :delivered
         nil
       when :void
-        nil
+        [
+          {
+            action: :reverse,
+            at: :post
+          },
+          {
+            action: :void,
+            at: :post
+          }
+        ]
       end
     when :queued
       case to
@@ -72,7 +115,16 @@ class StateMachine::Billing
       when :documented
         nil
       when :void
-        nil
+        [
+          {
+            action: :reverse,
+            at: :post
+          },
+          {
+            action: :void,
+            at: :post
+          }
+        ]
       end
     when :delivered
       case to
@@ -83,14 +135,20 @@ class StateMachine::Billing
       when :documented
         nil
       when :void
-        nil
+        [
+          {
+            action: :reverse,
+            at: :post
+          },
+          {
+            action: :void,
+            at: :post
+          }
+        ]
       end
     when :settled
       case to
       when :closed
-        nil
-      when :void
-        # TODO add action for reimbursement
         nil
       end
     when :void
