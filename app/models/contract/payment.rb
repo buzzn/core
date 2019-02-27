@@ -30,7 +30,7 @@ module Contract
 
     belongs_to :tariff, class_name: 'Contract::Tariff', foreign_key: :tariff_id
     belongs_to :contract, class_name: 'Contract::Base', foreign_key: :contract_id
-    has_one :billing, foreign_key: :adjusted_payment_id
+    has_many :billings, foreign_key: :adjusted_payment_id
 
   end
 end
