@@ -41,7 +41,7 @@ class Transactions::Admin::BillingCycle::GenerateBars < Transactions::Base
   end
 
   def third_partys_as_json(range, third_party_contracts)
-    return [] unless third_party_contracts
+    return [] unless third_party_contracts || third_party_contracts.empty?
     third_party_contracts.sort_by(&:begin_date).keep_if { |c| c.begin_date < range.last && (c.end_date.nil? || (c.end_date > range.first)) }.map{ |x| third_party_as_json(range, x) }
   end
 
