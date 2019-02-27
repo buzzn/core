@@ -320,6 +320,9 @@ GEM
     ruby-progressbar (1.9.0)
     ruby-swagger (0.1.1)
       addressable
+    rubyXL (3.4.0)
+      nokogiri (>= 1.4.4)
+      rubyzip (>= 1.1.6)
     ruby_dep (1.5.0)
     ruby_regex (0.1.3)
     rubyzip (1.2.2)
@@ -434,6 +437,7 @@ DEPENDENCIES
   rspec_nested_transactions
   rubocop
   ruby-swagger
+  rubyXL
   ruby_regex
   rubyzip (>= 1.0.0)
   schema_plus_enums

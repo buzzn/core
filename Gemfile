@@ -78,6 +78,9 @@ gem 'rake'
 gem 'rails', '< 5'
 gem 'rubyzip', '>= 1.0.0'
 
+# excel
+gem 'rubyXL'
+
 # bin/console
 gem 'pry'
 
