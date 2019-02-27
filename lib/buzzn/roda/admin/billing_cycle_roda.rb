@@ -8,6 +8,7 @@ module Admin
                         'transactions.admin.billing_cycle.create',
                         'transactions.admin.billing_cycle.generate_bars',
                         'transactions.admin.billing_cycle.generate_zip',
+                        'transactions.admin.billing_cycle.generate_report',
                         'transactions.admin.billing_cycle.update',
                         'transactions.admin.billing_cycle.delete',
                        ]
@@ -58,6 +59,16 @@ module Admin
             r.response.write(zip.value!.string)
           end
           r.others!
+        end
+
+        r.on 'report' do
+          r.get! do
+            report = generate_report.(resource: billing_cycle, params: r.params)
+            filename = Buzzn::Utils::File.sanitize_filename("#{localpool.name}_#{billing_cycle.name}_report.xlsx")
+            r.response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
+            r.response.write(report.value!.string)
+          end
         end
 
         r.on 'billings' do
