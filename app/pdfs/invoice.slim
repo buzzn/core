@@ -283,7 +283,7 @@ html
       div.row
         div.col-3rd.card.sky
           p
-            | Primärenergie <span class='is-medium'>(aus welchen Quellen wurde der Eigenstrom Strom erzeugt?)</span>
+            | Primärenergie <span class='is-medium'>(aus welchen Quellen wurde der Eigenstrom erzeugt?)</span>
           - unless energy_report.gas_report.to_i.zero?
             p.is-larger Erdgas #{energy_report.gas_report} %
           - unless energy_report.sun_report.to_i.zero?
