@@ -39,7 +39,7 @@ class Transactions::Admin::Contract::Localpool::AssignTariffs < Transactions::Ba
     # check whether a tariff would be valid for an already billed item
     new_tariffs = fetched_tariffs - resource.object.tariffs
     new_tariffs.each do |tariff|
-      if resource.object.billing_items.end_before_or_same(tariff.begin_date).any?
+      if resource.object.billing_items.end_after_or_same(tariff.begin_date).any?
         raise Buzzn::ValidationError.new(tariffs: ["tariff id #{tariff.id} is active for an already present billing item"])
       end
     end
