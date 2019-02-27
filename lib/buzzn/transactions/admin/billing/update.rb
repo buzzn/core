@@ -116,7 +116,9 @@ class Transactions::Admin::Billing::Update < Transactions::Base
         ap = billing.adjusted_payment
         billing.adjusted_payment = nil
         billing.save
-        ap.destroy
+        if ap.billings.count.zero?
+          ap.destroy
+        end
       end
     when :void
       billing.items.each do |item|
