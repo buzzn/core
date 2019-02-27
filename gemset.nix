@@ -1183,6 +1183,15 @@
     };
     version = "0.1.3";
   };
+  rubyXL = {
+    dependencies = ["nokogiri" "rubyzip"];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0rg82hy3pqci0jqbsj596mmcvjq797vs73kgmpm3gcdzfzww4lav";
+      type = "gem";
+    };
+    version = "3.4.0";
+  };
   rubyzip = {
     source = {
       remotes = ["https://rubygems.org"];
