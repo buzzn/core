@@ -14,10 +14,12 @@ module Admin
                         create_person_gap_contract_customer: 'transactions.admin.localpool.create_person_gap_contract_customer',
                         create_gap_contracts: 'transactions.admin.contract.localpool.create_gap_contracts',
                         update_nested_person: 'transactions.admin.generic.update_nested_person',
+                        update_person_owner: 'transactions.admin.localpool.update_person_owner',
                         create_organization_owner: 'transactions.admin.localpool.create_organization_owner',
                         create_organization_gap_contract_customer: 'transactions.admin.localpool.create_organization_gap_contract_customer',
                         assign_gap_contract_tariffs: 'transactions.admin.localpool.assign_gap_contract_tariffs',
                         update_nested_organization: 'transactions.admin.generic.update_nested_organization',
+                        update_organization_owner: 'transactions.admin.localpool.update_organization_owner',
                         bubbles: 'transactions.bubbles',
                         delete: 'transactions.delete'
                        ]
@@ -110,7 +112,7 @@ module Admin
           end
 
           r.patch! do
-            update_nested_person.(resource: localpool.owner, params: r.params)
+            update_person_owner.(resource: localpool, params: r.params)
           end
 
           r.post! :id do |id|
@@ -126,7 +128,7 @@ module Admin
           end
 
           r.patch! do
-            update_nested_organization.(resource: localpool.owner, params: r.params)
+            update_organization_owner.(resource: localpool, params: r.params)
           end
 
           r.post! :id do |id|
