@@ -128,6 +128,16 @@ class Billing < ActiveRecord::Base
   end
 
   # in decacents
+  def balance_at
+    accounting_service = Import.global('services.accounting')
+    if self.accounting_entry.nil?
+      0
+    else
+      accounting_service.balance_at(self.accounting_entry)
+    end
+  end
+
+  # in decacents
   def balance_before
     accounting_service = Import.global('services.accounting')
     if self.accounting_entry.nil?
