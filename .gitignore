@@ -9,6 +9,7 @@
 
 # Ignore all logfiles and tempfiles
 /log/*.log
+/log/*.json
 /tmp
 
 # Ignore OSX Metadata
