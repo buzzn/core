@@ -20,6 +20,10 @@ module DateRangeScope
       end_date_col = "#{base.table_name}.end_date"
       where("#{end_date_col} IS NULL OR #{end_date_col} <= ?", time).order(:begin_date)
     }
+    scope :end_after_or_same,  ->(time) {
+      end_date_col = "#{base.table_name}.end_date"
+      where("#{end_date_col} IS NULL OR #{end_date_col} >= ?", time).order(:begin_date)
+    }
 
     # overlap a date_range and the date_range
     # of the entity

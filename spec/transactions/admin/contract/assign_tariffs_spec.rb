@@ -40,7 +40,7 @@ describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defin
   # t1 xxxxx
   # t2     xxx
   # t3       xxxxxxxx
-  # t4 xxxxx
+  # t4  xxxx
 
   let!(:tariff_1) do
     create(:tariff, group: localpool, begin_date: today)
@@ -55,7 +55,7 @@ describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defin
   end
 
   let!(:tariff_4) do
-    create(:tariff, group: localpool, begin_date: today)
+    create(:tariff, group: localpool, begin_date: today+1)
   end
 
   context 'with a valid tariff combination' do
@@ -164,7 +164,7 @@ describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defin
     it 'does not assign tariff_4 to the contract' do
       expect(result_first).to be_success
       billing = create(:billing, contract: contract)
-      billing_item = create(:billing_item, billing: billing, tariff: tariff_1)
+      billing_item = create(:billing_item, billing: billing, tariff: tariff_1, begin_date: tariff_1.begin_date, end_date: today+28)
       resource.object.reload
       expect {result_second}.to raise_error(Buzzn::ValidationError, {:tariffs=>["tariff id #{tariff_4.id} is active for an already present billing item"]}.to_s)
     end
