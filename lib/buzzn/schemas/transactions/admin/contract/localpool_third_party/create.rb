@@ -1,5 +1,6 @@
 require_relative '../base'
 require_relative '../../register/create_meta'
+require_relative '../localpool_third_party'
 
 module Schemas::Transactions::Admin::Contract::Localpool::ThirdParty
 

@@ -1,8 +1,8 @@
 require_relative 'update_base'
-require_relative '../../../../schemas/transactions/admin/contract/localpool_power_taker/update'
+require_relative '../../../../schemas/transactions/admin/contract/localpool_third_party/update'
 
 module Transactions::Admin::Contract::Localpool
-  class UpdatePowerTaker < UpdateBase
+  class UpdateThirdParty < UpdateBase
 
     validate :schema
     check :authorize, with: :'operations.authorization.update'
@@ -10,10 +10,10 @@ module Transactions::Admin::Contract::Localpool
     around :db_transaction
     tee :update_register_meta, with: :'operations.action.update'
     tee :update_register_meta_options
-    map :update_localpool_power_taker_contract, with: :'operations.action.update'
+    map :update_localpool_third_party_contract, with: :'operations.action.update'
 
     def schema
-      Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::Update
+      Schemas::Transactions::Admin::Contract::Localpool::ThirdParty::Update
     end
 
   end

@@ -13,6 +13,7 @@ module Admin
                         create_power_taker_with_person: 'transactions.admin.contract.localpool.create_power_taker_with_person',
                         create_power_taker_with_organization: 'transactions.admin.contract.localpool.create_power_taker_with_organization',
                         update_power_taker: 'transactions.admin.contract.localpool.update_power_taker',
+                        update_third_party: 'transactions.admin.contract.localpool.update_third_party',
                         create_metering_point_operator: 'transactions.admin.contract.localpool.create_metering_point_operator',
                         update_metering_point_operator: 'transactions.admin.contract.localpool.update_metering_point_operator',
                         bank_account_assign: 'transactions.admin.bank_account.assign',
@@ -48,6 +49,8 @@ module Admin
             update_processing.(resource: contract, params: r.params)
           when Contract::LocalpoolPowerTakerResource
             update_power_taker.(resource: contract, params: r.params)
+          when Contract::LocalpoolThirdPartyResource
+            update_third_party.(resource: contract, params: r.params)
           when Contract::MeteringPointOperatorResource
             update_metering_point_operator.(resource: contract, params: r.params)
           else
