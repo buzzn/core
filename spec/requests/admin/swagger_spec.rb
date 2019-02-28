@@ -60,6 +60,10 @@ describe Admin, :swagger, :request_helper, order: :defined do
     localpool
   end
 
+  entity!(:localpool_3pc) do
+    localpool
+  end
+
   entity!(:localpool_lpc) do
     localpool3
   end
@@ -85,6 +89,12 @@ describe Admin, :swagger, :request_helper, order: :defined do
   entity!(:localpool_processing_contract_json) do
     {
       'type' => 'contract_localpool_processing',
+    }
+  end
+
+  entity!(:localpool_third_party_contract_json) do
+    {
+      'type' => 'contract_localpool_third_party',
     }
   end
 
@@ -149,6 +159,13 @@ describe Admin, :swagger, :request_helper, order: :defined do
   entity!(:localpool_power_taker_contract) do
     register = create(:meter, :real, group: localpool).registers.first
     create(:contract, :localpool_powertaker,
+           localpool: localpool,
+           register_meta: register.meta)
+  end
+
+  entity!(:localpool_third_party_contract) do
+    register = create(:meter, :real, group: localpool).registers.first
+    create(:contract, :localpool_third_party,
            localpool: localpool,
            register_meta: register.meta)
   end
@@ -253,6 +270,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::CreateWithAssign
   end
 
+  post '/localpools/{localpool_3pc.id}/contracts', $admin, {}, localpool_third_party_contract_json do
+    description 'adds a third party contract to the localpool'
+    schema Schemas::Transactions::Admin::Contract::Localpool::ThirdParty::Create
+  end
+
   get '/localpools/{localpool.id}/contracts/{contract.id}' do
     description 'returns the contract for the given ID'
   end
@@ -270,6 +292,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
   patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}' do
     description 'updates an existing LocalpoolPowerTakerContract'
     schema Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::Update
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{localpool_third_party_contract.id}' do
+    description 'updates an existing LocalpoolThirdPartyContract'
+    schema Schemas::Transactions::Admin::Contract::Localpool::ThirdParty::Update
   end
 
   patch '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract_2.id}/customer-organization' do
