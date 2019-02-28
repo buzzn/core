@@ -137,4 +137,20 @@ describe Transactions::Admin::Contract::Localpool::UpdateThirdParty, order: :def
     expect(resource.share_register_with_group).to be true
   end
 
+  context 'without a register meta option' do
+    before do
+      rmo = resource.object.register_meta_option
+      resource.object.register_meta_option = nil
+      resource.object.save
+      rmo.destroy
+    end
+
+    it 'should update' do
+      expect(result_valid_3).to be_success
+      contract.reload
+      expect(resource.share_register_publicly).to be false
+      expect(resource.share_register_with_group).to be true
+    end
+  end
+
 end
