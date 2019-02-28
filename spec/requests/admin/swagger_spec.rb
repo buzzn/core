@@ -60,6 +60,10 @@ describe Admin, :swagger, :request_helper, order: :defined do
     localpool
   end
 
+  entity!(:localpool_3pc) do
+    localpool
+  end
+
   entity!(:localpool_lpc) do
     localpool3
   end
@@ -85,6 +89,12 @@ describe Admin, :swagger, :request_helper, order: :defined do
   entity!(:localpool_processing_contract_json) do
     {
       'type' => 'contract_localpool_processing',
+    }
+  end
+
+  entity!(:localpool_third_party_contract_json) do
+    {
+      'type' => 'contract_localpool_third_party',
     }
   end
 
@@ -251,6 +261,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
   post '/localpools/{localpool_pta.id}/contracts', $admin, {}, localpool_power_taker_contract_assign_json do
     description 'adds a power taker contract (assign) to the localpool'
     schema Schemas::Transactions::Admin::Contract::Localpool::PowerTaker::CreateWithAssign
+  end
+
+  post '/localpools/{localpool_3pc.id}/contracts', $admin, {}, localpool_third_party_contract_json do
+    description 'adds a third party contract to the localpool'
+    schema Schemas::Transactions::Admin::Contract::Localpool::ThirdParty::Create
   end
 
   get '/localpools/{localpool.id}/contracts/{contract.id}' do

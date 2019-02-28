@@ -12867,6 +12867,127 @@ paths:
       responses:
         201:
           description: created
+  "/localpools/{localpoolpc_id}/contracts":
+    post:
+      description: adds a third party contract to the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpoolpc_id
+        in: path
+        required: true
+        type: string
+      - name: type
+        in: formData
+        required: true
+        type: string
+        enum:
+        - contract_localpool_third_party
+      - name: signing_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: begin_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: termination_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: last_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: share_register_with_group
+        in: formData
+        required: false
+        type: boolean
+      - name: share_register_publicly
+        in: formData
+        required: false
+        type: boolean
+      - name: third_party_billing_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: third_party_renter_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: register_meta.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: register_meta.name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: register_meta.label
+        in: formData
+        required: false
+        type: string
+        enum:
+        - CONSUMPTION
+        - CONSUMPTION_COMMON
+        - DEMARCATION_PV
+        - DEMARCATION_CHP
+        - DEMARCATION_WIND
+        - DEMARCATION_WATER
+        - PRODUCTION_PV
+        - PRODUCTION_CHP
+        - PRODUCTION_WIND
+        - PRODUCTION_WATER
+        - GRID_CONSUMPTION
+        - GRID_FEEDING
+        - GRID_CONSUMPTION_CORRECTED
+        - GRID_FEEDING_CORRECTED
+        - OTHER
+      - name: register_meta.observer_enabled
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.observer_min_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: register_meta.observer_max_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: register_meta.observer_offline_monitoring
+        in: formData
+        required: false
+        type: boolean
+      - name: register_meta.market_location_id
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 11
+        minLength: 11
+      - name: register_meta
+        in: formData
+        required: true
+        type: hash
+      responses:
+        201:
+          description: created
   "/organizations":
     get:
       description: return all organizations
