@@ -17,7 +17,11 @@ class Transactions::Admin::Contract::Localpool::UpdateBase < Transactions::Base
     unless params[:share_register_with_group].nil?
       params_register_meta_options[:share_with_group] = params.delete(:share_register_with_group)
     end
-    resource.object.register_meta_option.update(params_register_meta_options)
+    if resource.object.register_meta_option.nil?
+      resource.object.register_meta_option.create(params_register_meta_options)
+    else
+      resource.object.register_meta_option.update(params_register_meta_options)
+    end
   end
 
 end
