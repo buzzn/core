@@ -40,6 +40,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
                         'localpool_processing_contracts',
                         'metering_point_operator_contracts',
                         'localpool_power_taker_contracts',
+                        'localpool_third_party_contracts',
                         'localpool_gap_contracts',
                         'registers',
                         'persons',
