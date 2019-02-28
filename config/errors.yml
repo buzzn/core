@@ -57,3 +57,4 @@ en:
     all_registers_installed?: 'all registers must have a device_setup or change_meter_2 reading or similar'
     begun_at?: 'localpool not active on begin_date'
     items_present: 'size cannot be less than 1'
+    register_belongs_to_group: 'not all registers of that market location belong to that group'

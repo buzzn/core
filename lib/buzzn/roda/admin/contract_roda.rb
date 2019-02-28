@@ -6,6 +6,7 @@ module Admin
     include Import.args[:env,
                         document: 'transactions.admin.contract.document',
                         create_processing: 'transactions.admin.contract.localpool.create_processing',
+                        create_third_party: 'transactions.admin.contract.localpool.create_third_party',
                         update_processing: 'transactions.admin.contract.localpool.update_processing',
                         assign_tariffs: 'transactions.admin.contract.localpool.assign_tariffs',
                         create_power_taker_assign: 'transactions.admin.contract.localpool.create_power_taker_assign',
@@ -29,6 +30,7 @@ module Admin
       localpool = shared[LocalpoolRoda::PARENT]
       contracts = localpool.contracts
       localpool_processing_contracts = localpool.localpool_processing_contracts
+      localpool_third_party_contracts = localpool.localpool_third_party_contracts
       localpool_power_taker_contracts = localpool.localpool_power_taker_contracts
       metering_point_operator_contracts = localpool.metering_point_operator_contracts
 
@@ -138,6 +140,8 @@ module Admin
           localpool_processing_contracts
         when 'contract_localpool_power_taker'
           localpool_power_taker_contracts
+        when 'contract_localpool_third_party'
+          localpool_third_party_contracts
         when 'contract_metering_point_operator'
           metering_point_operator_contracts
         else
@@ -151,6 +155,8 @@ module Admin
           create_processing.(resource: localpool_processing_contracts, params: r.params, localpool: localpool)
         when 'contract_metering_point_operator'
           create_metering_point_operator.(resource: metering_point_operator_contracts, params: r.params, localpool: localpool)
+        when 'contract_localpool_third_party'
+          create_third_party.(resource: localpool_third_party_contracts, params: r.params, localpool: localpool)
         when 'contract_localpool_power_taker'
           # we have 3 cases here:
           # assign with an id
