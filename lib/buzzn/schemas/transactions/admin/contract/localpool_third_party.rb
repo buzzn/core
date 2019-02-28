@@ -1,4 +1,4 @@
-require_relative '../localpool'
+require_relative 'localpool'
 
 module Schemas::Transactions::Admin::Contract::Localpool::ThirdParty
 end
