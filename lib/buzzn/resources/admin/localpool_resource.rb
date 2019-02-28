@@ -98,6 +98,9 @@ module Admin
       if allowed?(permissions.localpool_power_taker_contracts.create)
         allowed[:create_localpool_power_taker_contract] = create_localpool_power_taker_contract.success? || create_localpool_power_taker_contract.errors
       end
+      if allowed?(permissions.localpool_third_party_contracts.create)
+        allowed[:create_localpool_third_party_contract] = create_localpool_third_party_contract.success? || create_localpool_third_party_contract.errors
+      end
       if allowed?(permissions.billing_cycles.create)
         allowed[:create_billing_cycle] = create_billing_cycle.success? || create_billing_cycle.errors
       end
@@ -117,6 +120,11 @@ module Admin
     def create_localpool_power_taker_contract
       subject = Schemas::Support::ActiveRecordValidator.new(self.object)
       Schemas::PreConditions::Localpool::CreateLocalpoolPowerTakerContract.call(subject)
+    end
+
+    def create_localpool_third_party_contract
+      subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+      Schemas::PreConditions::Localpool::CreateLocalpoolThirdPartyContract.call(subject)
     end
 
     def create_billing_cycle
