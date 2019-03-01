@@ -50,6 +50,7 @@ html
       .no-margin {margin: 0;}
       .no-padding {padding: 0;}
       .pl {padding-left: 0.6rem;}
+      .pl-x2 {padding-left: 1.2rem;}
       .pt {padding-top: 10rem;}
       .clear {clear: both;}
       .no-border {border-color: transparent;}
@@ -119,22 +120,23 @@ html
           p USt-IdNr: #{sales_tax_number}
         - if tax_number
           p Steuernummer: #{tax_number}
-      p.is-small.clear #{contractor.shortname} • #{contractor.street} • #{contractor.zip} #{contractor.city}
-      - if no_contact
-        p #{powertaker.name}<br>
-          #{powertaker.street}<br>
-          #{powertaker.zip} #{powertaker.city}
-      - else
-        p #{powertaker.name}<br>
-          #{powertaker.title} #{powertaker.first_name} #{powertaker.last_name}<br>
-          #{powertaker.street}<br>
-          #{powertaker.zip} #{powertaker.city}
-      -if no_contact
-        p
-          i #{org_email}
-      -else
-        p
-          i #{powertaker.email}
+      .pl-x2
+        p.is-small.clear #{contractor.shortname} • #{contractor.street} • #{contractor.zip} #{contractor.city}
+        - if no_contact
+          p #{powertaker.name}<br>
+            #{powertaker.street}<br>
+            #{powertaker.zip} #{powertaker.city}
+        - else
+          p #{powertaker.name}<br>
+            #{powertaker.title} #{powertaker.first_name} #{powertaker.last_name}<br>
+            #{powertaker.street}<br>
+            #{powertaker.zip} #{powertaker.city}
+        -if no_contact
+          p
+            i #{org_email}
+        -else
+          p
+            i #{powertaker.email}
       p.is-pull-right #{contractor.city}, den #{Date.today.strftime("%d.%m.%Y")}
       h2.clear Lokale Energiegruppe #{localpool.name}: Stromrechnung #{billing_year}<br>
         Rechnungsnummer: #{billing.number}
