@@ -156,6 +156,24 @@ Vielen Dank, dass Sie People Power unterstützen, die Energiewende von unten.
 Energiegeladene Grüße,
 
 Ihr BUZZN Team
+
+--
+
+Philipp Oßwald
+BUZZN – Teile Energie mit Deiner Gruppe.
+
+T: 089-416171410
+F: 089-416171499
+team@buzzn.net
+www.buzzn.net
+
+BUZZN GmbH
+Combinat 56
+Adams-Lehmann-Straße 56
+80797 München
+Registergericht: Amtsgericht München
+Registernummer: HRB 186043
+Geschäftsführer: Justus Schütze
 )
       document = resource.object.documents.order(:created_at).last
       mail_service.deliver_billing_later(resource.object.id, :from => billing_email_from,
