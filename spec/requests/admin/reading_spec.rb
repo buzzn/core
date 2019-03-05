@@ -277,7 +277,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
         DELETE "/localpools/#{localpool.id}/meters/#{meter.id}/registers/#{register.id}/readings/#{reading.id}", $admin
 
         expect(response).to have_http_status(403)
-        #expect(Reading::Single.count).to eq count
+        expect(Reading::Single.count).to eq count + 1
       end
     end
   end
