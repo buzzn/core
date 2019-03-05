@@ -50,7 +50,8 @@ class Admin::ReadingRoda < BaseRoda
       end
 
       r.delete! do
-        delete.(resource: reading)
+        r.response.status = 403
+        # delete.(resource: reading)
       end
     end
   end
