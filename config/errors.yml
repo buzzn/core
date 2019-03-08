@@ -58,3 +58,4 @@ en:
     begun_at?: 'localpool not active on begin_date'
     items_present: 'size cannot be less than 1'
     register_belongs_to_group: 'not all registers of that market location belong to that group'
+    no_calculated_billing?: 'reading is used in at least one calculated billing'
