@@ -18,4 +18,9 @@ class ReadingResource < Buzzn::Resource::Entity
 
   def type; 'reading'; end
 
+  def deletable
+    subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+    super && Schemas::PreConditions::Reading::Delete.call(subject).success?
+  end
+
 end

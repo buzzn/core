@@ -52,6 +52,8 @@ module Reading
 
     belongs_to :register, class_name: 'Register::Base'
     has_one :meter, class_name: 'Meter::Base', through: :register
+    has_many :billing_items_as_begin, class_name: 'BillingItem', foreign_key: :begin_reading_id
+    has_many :billing_items_as_end,   class_name: 'BillingItem', foreign_key: :end_reading_id
 
     scope :in_year, ->(year) { where('date >= ? AND date < ?', Date.new(year), Date.new(year + 1)) }
     scope :between, ->(begin_date, end_date) { where('date >= ? AND date < ?', begin_date, end_date) }
@@ -95,6 +97,11 @@ module Reading
 
     def inspect
       attributes.slice('date', 'raw_value', 'reason', 'comment', 'id').merge(value: value)
+    end
+
+    # FIXME speed up -> join
+    def billing_items
+      BillingItem.where(:id => (self.billing_items_as_begin.pluck(:id) + self.billing_items_as_end.pluck(:id)).uniq)
     end
 
   end
