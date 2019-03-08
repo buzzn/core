@@ -31,7 +31,7 @@ describe 'Schemas::Invariants::Register::Meta' do
       end
 
       it 'fails' do
-        is_expected.to eql ({:observer=>["must be greater than or equal to 5"]})
+        is_expected.to eql({:observer=>["must be greater than or equal to 5"]})
       end
 
     end
