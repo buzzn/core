@@ -27,7 +27,7 @@ describe Transactions::Admin::Contract::Base::Payment::Create, order: :defined d
     end
 
     it 'fails' do
-      expect{result}.to raise_error Buzzn::ValidationError, '{:updated_at=>["is missing"]}'
+      expect {result}.to raise_error Buzzn::ValidationError, '{:updated_at=>["is missing"]}'
     end
   end
 

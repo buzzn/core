@@ -2,7 +2,7 @@ require_relative 'generator'
 require_relative 'serializers'
 
 module Pdf
-  class LocalPoolProcessingContract < Generator
+  class LocalpoolProcessingContract < Generator
 
     include Serializers
 
@@ -28,28 +28,6 @@ module Pdf
         localgroup_local_supplier: contract.localpool.distribution_system_operator,
         localgroup_additional_power_supplier: contract.localpool.electricity_supplier,
         title_text: title
-      }
-    end
-
-    def build_powergiver(customer)
-      {
-        name: name(customer),
-        partner_name: partner_name(customer),
-        contact: build_contact(customer),
-        address: build_address(customer.address),
-        fax: customer.fax,
-        phone: customer.phone,
-        email: customer.email
-      }
-    end
-
-    def build_contact(customer)
-      {
-        name: name(contact_person(customer)),
-        address: build_address(contact_person(customer).address),
-        fax: contact_person(customer).fax,
-        phone: contact_person(customer).phone,
-        email: contact_person(customer).email
       }
     end
 

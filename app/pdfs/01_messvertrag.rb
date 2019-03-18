@@ -2,7 +2,7 @@ require_relative 'generator'
 require_relative 'serializers'
 
 module Pdf
-  class MeteringPointOperator < Generator
+  class MeteringPointOperatorContract < Generator
 
     include Serializers
 

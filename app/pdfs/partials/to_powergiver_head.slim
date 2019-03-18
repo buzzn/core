@@ -1,0 +1,22 @@
+div.is-small.col-3rd.is-pull-right.no-margin
+        p #{powergiver.org_name}<br>
+          Energiegruppe #{localpool.name}<br>
+          #{powergiver.contact.name}<br>
+          #{powergiver.address.street}<br>
+          #{powergiver.address.zip} #{powergiver.address.city}
+        p T:  #{powergiver.phone}<br>
+          #{(powergiver.fax.nil? || powergiver.fax.empty?) ? "" : "F: #{powergiver.fax}"}
+        p Email: #{powergiver.email}
+
+p.is-smaller.clear #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+
+- if powertaker.contact.nil?
+  p #{powertaker.name}<br>
+    #{powertaker.address.street}<br>
+    #{powertaker.address.zip} #{powertaker.address.city}
+- else
+  p #{powertaker.org_name}<br>
+    #{powertaker.contact.title} #{powertaker.contact.first_name} #{powertaker.contact.last_name}<br>
+    #{powertaker.address.street}<br>
+    #{powertaker.address.zip} #{powertaker.address.city}
+  i #{powertaker.contact_email}

@@ -44,6 +44,7 @@ module Contract
       allowed = {}
       if permissions.respond_to?(:billings) && allowed?(permissions.billings.create)
         allowed[:create_billing] = create_billing.success? || create_billing.errors
+        allowed[:document] = allowed_documents
       end
       allowed
     end

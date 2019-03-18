@@ -1,4 +1,5 @@
 require 'slim'
+require 'slim/include'
 require 'wicked_pdf'
 
 require_relative '../services'
@@ -43,6 +44,7 @@ class Services::PdfHtmlGenerator
     else
       raise "can not handle #{name_or_template.class}"
     end
+    Slim::Engine.set_options include_dirs: [Dir.pwd, '.', 'app/pdfs/partials']
     Slim::Template.new { template.source }.render(struct)
   end
 

@@ -355,7 +355,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   post '/localpools/{localpool.id}/contracts/{contract.id}/documents/generate', $admin do
     description 'documents the contract by producing a PDF'
-    schema Schemas::Support.Form
+    schema Schemas::Transactions::Admin::Contract::Document
   end
 
   delete '/localpools/{localpool.id}/contracts/{contract.id}/documents/{document.id}' do

@@ -18,6 +18,10 @@ module Schemas::PreConditions::Contract
         .and(mtype?(Person).then(schema(Schemas::PreConditions::Person)))
     end
 
+    required(:localpool).schema do
+      required(:address).filled
+    end
+
     required(:tax_number).filled?
 
   end

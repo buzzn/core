@@ -5,6 +5,8 @@ require_relative 'generator'
 module Pdf
   class Invoice < Generator
 
+    include Serializers
+
     def initialize(billing)
       super
       @billing = billing
@@ -112,34 +114,6 @@ module Pdf
       end
     end
 
-    def addressing(person_or_organization)
-      case person_or_organization
-      when Person
-        prefix = case person_or_organization.prefix
-                 when 'female'
-                   'Sehr geehrte Frau'
-                 when 'male'
-                   'Sehr geehrter Herr'
-                 else
-                   'Hallo'
-                 end
-        if prefix == 'Hallo'
-          "#{prefix} #{person_or_organization.first_name} #{person_or_organization.last_name}"
-        else
-          "#{prefix} #{person_or_organization.title} #{person_or_organization.last_name}"
-        end
-      when Organization
-      when Organization::General
-        if person_or_organization.contact
-          addressing(person_or_organization.contact)
-        else
-          'Sehr geehrte Damen und Herren'
-        end
-      else
-        raise "can not handle #{person_or_organization.class}"
-      end
-    end
-
     def last_tariff
       @tariff ||= @billing.items.last.tariff
     end
@@ -150,12 +124,6 @@ module Pdf
 
     def to_date(date)
       date.strftime('%d.%m.%Y')
-    end
-
-    def german_div(cents, prec: 2)
-      # round cents to precision after divison
-      onesr = (cents/100).round(prec)
-      sprintf("%s,%s", onesr.truncate, (onesr.remainder(1)*10).abs.to_s.delete('.').ljust(prec, '0').first(prec))
     end
 
     def build_contractor
@@ -196,7 +164,7 @@ module Pdf
 
     def build_powertaker
       data = {
-        addressing: addressing(powertaker),
+        addressing: addressing_full(powertaker),
       }
       if contact(powertaker).nil?
         data[:name] = powertaker.name
