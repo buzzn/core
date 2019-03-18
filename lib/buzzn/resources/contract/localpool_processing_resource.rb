@@ -16,7 +16,7 @@ module Contract
     def allowed_actions
       allowed = {}
       if allowed?(permissions.document)
-        allowed[:document_localpool_processing_contract] = document_localpool_processing_contract.success? || document_localpool_processing_contract.errors
+        allowed[:document] = allowed_documents
       end
       allowed
     end

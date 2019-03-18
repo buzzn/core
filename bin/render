@@ -49,6 +49,9 @@ generator =
   when /02_abwicklungsvertrag.slim$/
     contract = Contract::LocalpoolProcessing.first
     Pdf::LocalPoolProcessingContract.new(contract)
+  when /07_LSN_a02.slim$/
+    contract = Contract::LocalpoolPowerTaker.first
+    Pdf::LsnA2.new(contract)
   when /invoice.slim$/
     #billing = Billing.where(:status => :calculated).first
     id ||= (Billing.count*rand).round

@@ -16,7 +16,7 @@ module Contract
     def allowed_actions
       allowed = {}
       if allowed?(permissions.document)
-        allowed[:document_metering_point_operator_contract] = document_metering_point_operator_contract.success? || document_metering_point_operator_contract.errors
+        allowed[:document] = allowed_documents
       end
       allowed
     end

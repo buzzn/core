@@ -6221,6 +6221,8 @@ paths:
   "/localpools/{localpool_id}/contracts/{contract_id}/documents/generate":
     post:
       description: documents the contract by producing a PDF
+      consumes:
+      - application/x-www-form-urlencoded
       produces:
       - application/json
       parameters:
@@ -6232,6 +6234,11 @@ paths:
         in: path
         required: true
         type: string
+      - name: template
+        in: formData
+        required: true
+        type: string
+        format: ''
       responses:
         201:
           description: created

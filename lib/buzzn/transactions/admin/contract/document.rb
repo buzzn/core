@@ -5,6 +5,9 @@ require_relative '../../../schemas/pre_conditions/contract/document_metering_poi
 class Transactions::Admin::Contract::Document < Transactions::Base
 
   check :authorize, with: :'operations.authorization.document'
+  validate :schema
+  add :generator_names
+  tee :check_generator_name
   tee :contract_schema
   around :db_transaction
   add :generator
@@ -12,7 +15,11 @@ class Transactions::Admin::Contract::Document < Transactions::Base
   add :contract_document
   map :result
 
-  def contract_schema(resource:, **)
+  def schema
+    Schemas::Transactions::Admin::Contract::Document
+  end
+
+  def contract_schema(resource:, params:, **)
     subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
     case resource
     when Contract::LocalpoolProcessingResource
@@ -27,15 +34,25 @@ class Transactions::Admin::Contract::Document < Transactions::Base
     end
   end
 
-  def generator(resource:, params:)
-    resource.pdf_generator.new(resource)
+  def generator_names(resource:, params:)
+    resource.object.pdf_generators.map { |g| [g.name.split("::").last.underscore, g] }.to_h
   end
 
-  def generate_document(resource:, params:, generator:)
+  def check_generator_name(generator_names:, params:, **)
+    unless generator_names.include?(params[:template])
+      raise Buzzn::ValidationError.new(template: 'no a valid template')
+    end
+  end
+
+  def generator(generator_names:, params:, resource:)
+    generator_names[params[:template]].new(resource.object)
+  end
+
+  def generate_document(resource:, params:, generator:, **)
     generator.create_pdf_document
   end
 
-  def contract_document(resource:, params:, generator:, generate_document:)
+  def contract_document(resource:, params:, generator:, generate_document:, **)
     doc = generate_document.document
     # check if it already exists
     unless resource.object.documents.where(:id => doc.id).any?

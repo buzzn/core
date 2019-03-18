@@ -2,7 +2,7 @@ require 'buzzn/schemas/invariants/register/base'
 
 describe 'Schemas::Invariants::Register::Meta' do
 
-  entity(:meta) { create(:meta) }
+  let(:meta) { create(:meta) }
   subject { meta.invariant.errors }
 
   context 'valid' do

@@ -6,8 +6,10 @@ module Contract
     CONTRACT_NUMBER_BASE = 90000
     CONTRACT_NUMBER_RANGE = 10000
 
-    def pdf_generator
-      Pdf::MeteringPointOperator
+    def pdf_generators
+      [
+        Pdf::MeteringPointOperatorContract
+      ]
     end
 
   end

@@ -52,7 +52,10 @@ describe Admin::LocalpoolRoda, :request_helper do
                                    'register_meta' => {
                                      'registers' => ['all registers must have a device_setup or change_meter_2 reading or similar']
                                    }
-                                 }
+                                 },
+                                 'document' => {
+                                   'lsn_a2' => true
+                                 },
                                },
           'share_register_with_group' => true,
           'share_register_publicly' => true,
@@ -207,8 +210,10 @@ describe Admin::LocalpoolRoda, :request_helper do
           'updatable'=>true,
           'deletable'=>false,
           'documentable'=>true,
-          'allowed_actions'=>{
-            'document_metering_point_operator_contract' => true
+          'allowed_actions'=> {
+            'document' => {
+              'metering_point_operator_contract' => true
+            },
           },
           'metering_point_operator_name'=>contract.metering_point_operator_name,
           'localpool' => {
@@ -1041,9 +1046,46 @@ describe Admin::LocalpoolRoda, :request_helper do
                 expect(response).to have_http_status(405)
               end
 
-              it '201' do
-                POST path, $admin
-                expect(response).to have_http_status(201)
+              context 'valid params' do
+
+                let(:params) do
+                  { template: send(contract).pdf_generators.first.name.split("::").last.underscore }
+                end
+
+                it '201' do
+                  POST path, $admin, params
+                  expect(response).to have_http_status(201)
+                end
+              end
+
+              context 'invalid params' do
+
+                context 'missing' do
+
+                  let(:params) do
+                    {}
+                  end
+
+                  it '422' do
+                    POST path, $admin, params
+                    expect(response).to have_http_status(422)
+                  end
+
+                end
+
+                context 'wrong' do
+
+                  let(:params) do
+                    { template: 'haxhax' }
+                  end
+
+                  it '422' do
+                    POST path, $admin, params
+                    expect(response).to have_http_status(422)
+                  end
+
+                end
+
               end
 
             end

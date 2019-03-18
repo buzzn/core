@@ -1,0 +1,16 @@
+p.is-pull-right #{powergiver.address.city}, den #{today.strftime("%d.%m.%Y")}
+h2.clear Stromnehmer-Auftragsbestätigung <br/>Lokale Energiegruppe #{localpool.name}
+table.no-border
+  tr
+    td.no-border.no-padding Vertragsnummer:
+    td.no-border.no-padding #{contract.full_contract_number}
+  tr
+    td.no-border.no-padding Bezugsstelle:
+    td.no-border.no-padding #{localpool.address.street}, #{contract.market_location_name}
+
+  tr
+    td.no-border.no-padding Zählernummer:
+    td.no-border.no-padding #{contract.meters.map{|x| x.product_serialnumber }.join(', ')}
+  tr
+    td.no-border.no-padding Jahresverbrauch (kWh):
+    td.no-border.no-padding #{contract.forecast_kwh_pa} kWh

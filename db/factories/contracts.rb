@@ -120,7 +120,7 @@ FactoryGirl.define do
     after(:create) do |contract, _evaluator|
       # using Transactions::Admin::Contract::Document.call(resource: res, params: {})
       # is not trivial due to security_context
-      generator = contract.pdf_generator.new(contract)
+      generator = contract.pdf_generators.first.new(contract)
       doc = generator.create_pdf_document.document
       contract.documents << doc
     end

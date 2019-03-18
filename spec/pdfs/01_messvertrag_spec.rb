@@ -1,4 +1,4 @@
-describe Pdf::MeteringPointOperator, :pdfs_helper do
+describe Pdf::MeteringPointOperatorContract, :pdfs_helper do
 
   before(:all) do
     Kernel.srand 0
@@ -12,7 +12,7 @@ describe Pdf::MeteringPointOperator, :pdfs_helper do
   entity(:organization) { create(:organization, :with_contact, :with_address, :with_legal_representation, name: 'some-orga-name') }
 
   let(:name) { subject.send(:template_name) }
-  subject { Pdf::MeteringPointOperator.new(contract) }
+  subject { Pdf::MeteringPointOperatorContract.new(contract) }
 
   context 'person customer' do
     before { localpool.owner = person }
