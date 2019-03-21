@@ -9332,6 +9332,13 @@ paths:
         required: false
         type: string
         format: ''
+      - name: metering_location_id
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 33
+        minLength: 33
       - name: ownership
         in: formData
         required: false

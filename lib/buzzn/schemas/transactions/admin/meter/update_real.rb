@@ -11,6 +11,7 @@ Schemas::Transactions::Admin::Meter::UpdateReal = Schemas::Support.Form(Schemas:
   optional(:manufacturer_name).maybe(included_in?: ::Meter::Real.manufacturer_names.values)
   optional(:manufacturer_description).maybe(:str?)
   optional(:location_description).maybe(:str?)
+  optional(:metering_location_id).maybe(:str?, size?: 33)
   optional(:ownership).maybe(included_in?: ::Meter::Real.ownerships.values)
   optional(:build_year).maybe(:int?, gt?: 1950, lt?: 2050)
   optional(:sent_data_dso).maybe(:date?)
