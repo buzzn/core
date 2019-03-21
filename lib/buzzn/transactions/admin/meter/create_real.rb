@@ -1,7 +1,7 @@
 require_relative '../../../schemas/transactions/admin/meter/create_real'
 require_relative '../meter'
 
-class Transactions::Admin::Meter::CreateReal < Transactions::Base
+class Transactions::Admin::Meter::CreateReal < Transactions::Admin::Meter
 
   validate :schema
   tee :registers_schema
@@ -34,14 +34,6 @@ class Transactions::Admin::Meter::CreateReal < Transactions::Base
 
     unless validation_errors[:registers].empty?
       raise Buzzn::ValidationError.new(validation_errors)
-    end
-  end
-
-  def create_or_find_metering_point_id(params:, **)
-    metering_location_id = params.delete(:metering_location_id)
-    if metering_location_id
-      params[:metering_location] = Meter::MeteringLocation.find_by_metering_location_id(metering_location_id) ||
-                                   Meter::MeteringLocation.create(metering_location_id: metering_location_id)
     end
   end
 
