@@ -116,7 +116,7 @@ module Pdf::Serializers
   def build_contact(customer)
     {
       name: name(contact_person(customer)),
-      title: contact_person(customer).first_name,
+      title: contact_person(customer).title,
       first_name: contact_person(customer).first_name,
       last_name: contact_person(customer).last_name,
 
