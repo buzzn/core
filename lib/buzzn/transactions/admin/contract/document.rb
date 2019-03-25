@@ -8,9 +8,9 @@ class Transactions::Admin::Contract::Document < Transactions::Base
   validate :schema
   add :generator_names
   tee :check_generator_name
+  add :generator
   tee :contract_schema
   around :db_transaction
-  add :generator
   add :generate_document
   add :contract_document
   map :result
@@ -19,13 +19,18 @@ class Transactions::Admin::Contract::Document < Transactions::Base
     Schemas::Transactions::Admin::Contract::Document
   end
 
-  def contract_schema(resource:, params:, **)
+  def contract_schema(resource:, params:, generator:, **)
     subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
     case resource
     when Contract::LocalpoolProcessingResource
       result = Schemas::PreConditions::Contract::DocumentLocalpoolProcessingContract.call(subject)
     when Contract::MeteringPointOperatorResource
       result = Schemas::PreConditions::Contract::DocumentMeteringPointOperatorContract.call(subject)
+    when Contract::LocalpoolPowerTakerResource
+      case generator
+      when 'lsn_a2'
+        result = Schemas::PreConditions::Contract::DocumentLocalpoolPowerTakerContractConfirmationA02.call(subject)
+      end
     end
     unless result.nil?
       unless result.success?

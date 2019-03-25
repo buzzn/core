@@ -54,5 +54,10 @@ module Contract
       Schemas::PreConditions::Contract::CreateBilling.call(subject)
     end
 
+    def document_lsn_a2
+      subject = Schemas::Support::ActiveRecordValidator.new(self.object)
+      Schemas::PreConditions::Contract::DocumentLocalpoolPowerTakerContractConfirmationA02.call(subject)
+    end
+
   end
 end
