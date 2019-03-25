@@ -3658,7 +3658,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - de
         - en
       - name: legal_representation.title
@@ -3666,7 +3666,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -4013,7 +4013,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - de
         - en
       - name: contact.title
@@ -4021,7 +4021,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -4718,7 +4718,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - de
         - en
       - name: legal_representation.title
@@ -4726,7 +4726,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -5073,7 +5073,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - de
         - en
       - name: contact.title
@@ -5081,7 +5081,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -7227,7 +7227,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - de
         - en
       - name: legal_representation.title
@@ -7235,7 +7235,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -7582,7 +7582,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - de
         - en
       - name: contact.title
@@ -7590,7 +7590,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -7951,7 +7951,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - de
         - en
       - name: title
@@ -7959,7 +7959,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -9325,6 +9325,13 @@ paths:
         required: false
         type: string
         format: ''
+      - name: metering_location_id
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 33
+        minLength: 33
       - name: ownership
         in: formData
         required: false
@@ -9421,18 +9428,6 @@ paths:
         enum:
         - Z04
         - Z05
-      - name: location_description
-        in: formData
-        required: false
-        type: string
-        format: ''
-      - name: metering_location_id
-        in: formData
-        required: false
-        type: string
-        format: ''
-        maxLength: 33
-        minLength: 33
       responses:
         200:
           description: patched
@@ -9594,7 +9589,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - de
         - en
       - name: title
@@ -9602,7 +9597,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -9972,7 +9967,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - de
         - en
       - name: title
@@ -9980,7 +9975,7 @@ paths:
         required: false
         type: string
         enum:
-        -
+        - 
         - Prof.
         - Dr.
         - Prof. Dr.
