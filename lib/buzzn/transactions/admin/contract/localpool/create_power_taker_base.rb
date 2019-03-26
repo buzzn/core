@@ -62,6 +62,10 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
     params[:register_meta_option] = Register::MetaOption.create(params_register_meta)
   end
 
+  def create_tax_data(params:, **)
+    params[:tax_data] = Contract::TaxData.new(creditor_identification: params.delete(:creditor_identification))
+  end
+
   def create_contract(params:, resource:, **)
     Contract::LocalpoolPowerTakerResource.new(
       *super(resource, params)

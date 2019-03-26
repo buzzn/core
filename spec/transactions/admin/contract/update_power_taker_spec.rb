@@ -66,6 +66,12 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
     }
   end
 
+  let(:with_tax_data) do
+    {
+      :creditor_identification => 'DE123124555'
+    }
+  end
+
   let(:invalid_input_2) do
     contract.reload
     base_input.merge(with_register_meta_input).merge(:updated_at => resource.updated_at.as_json)
@@ -86,6 +92,12 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
     contract.reload
     base_input.merge(with_register_meta_and_updated_input)
               .merge(with_privacy_options)
+              .merge(:updated_at => resource.updated_at.as_json)
+  end
+
+  let(:valid_input_4) do
+    contract.reload
+    base_input.merge(with_tax_data)
               .merge(:updated_at => resource.updated_at.as_json)
   end
 
@@ -114,6 +126,11 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
                                                                     resource: resource)
   end
 
+  let(:result_valid_4) do
+    Transactions::Admin::Contract::Localpool::UpdatePowerTaker.new.(params: valid_input_4,
+                                                                    resource: resource)
+  end
+
   it 'should not update' do
     expect {result_invalid}.to raise_error(Buzzn::ValidationError, '{:updated_at=>["is missing"]}')
   end
@@ -137,6 +154,12 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
     contract.reload
     expect(resource.share_register_publicly).to be false
     expect(resource.share_register_with_group).to be true
+  end
+
+  it 'should update' do
+    expect(result_valid_4).to be_success
+    contract.reload
+    expect(resource.creditor_identification).to eql 'DE123124555'
   end
 
 end

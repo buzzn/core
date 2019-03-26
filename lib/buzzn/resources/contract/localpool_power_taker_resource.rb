@@ -26,7 +26,8 @@ module Contract
                 :allowed_actions,
                 :share_register_with_group,
                 :share_register_publicly,
-                :energy_consumption_before_kwh_pa
+                :energy_consumption_before_kwh_pa,
+                :creditor_identification
 
     has_one :register_meta, Register::MetaResource
     has_many :billings, Admin::BillingResource
