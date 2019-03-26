@@ -13,6 +13,7 @@ module Schemas::Transactions
     required(:begin_date).maybe(:date?)
     optional(:share_register_with_group).filled(:bool?)
     optional(:share_register_publicly).filled(:bool?)
+    optional(:creditor_identification).filled(:str?, max_size?: 64)
     required(:register_meta) do
       schema(Admin::Register::CreateMetaLoose)
     end

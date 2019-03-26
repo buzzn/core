@@ -9,6 +9,25 @@ class Transactions::Admin::Contract::Localpool::UpdateBase < Transactions::Base
     super(params: params.delete(:register_meta), resource: resource.register_meta)
   end
 
+  def update_tax_data(params:, resource:, **)
+    tax_data = if resource.tax_data.nil?
+                 Contract::TaxData.new
+               else
+                 resource.object.tax_data
+               end
+    if params[:tax_number]
+      tax_data.tax_number = params.delete(:tax_number)
+    end
+    if params[:creditor_identification]
+      tax_data.creditor_identification = params.delete(:creditor_identification)
+    end
+    if params[:sales_tax_number]
+      tax_data.sales_tax_number = params.delete(:sales_tax_number)
+    end
+    tax_data.save
+    params[:tax_data] = tax_data
+  end
+
   def update_register_meta_options(params:, resource:, **)
     params_register_meta_options = {}
     unless params[:share_register_publicly].nil?

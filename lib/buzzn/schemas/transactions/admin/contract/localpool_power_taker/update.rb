@@ -35,6 +35,8 @@ module Schemas::Transactions
 
     optional(:share_register_with_group).value(:bool?)
     optional(:share_register_publicly).value(:bool?)
+
+    optional(:creditor_identification).filled(:str?, max_size?: 64)
   end
 
 end

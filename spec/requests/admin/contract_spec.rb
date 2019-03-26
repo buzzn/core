@@ -60,6 +60,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'share_register_with_group' => true,
           'share_register_publicly' => true,
           'energy_consumption_before_kwh_pa' => nil,
+          'creditor_identification' => nil,
           'localpool' => {
             'id'=>contract.localpool.id,
             'type'=>'group_localpool',

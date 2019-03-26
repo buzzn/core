@@ -7,6 +7,15 @@ module Contract
     #self.abstract_class = true
 
     belongs_to :localpool, class_name: 'Group::Localpool'
+    has_one :tax_data, class_name: 'Contract::TaxData', foreign_key: :contract_id
+    delegate :subject_to_tax,
+             :sales_tax_number,
+             :tax_number,
+             :tax_rate,
+             :creditor_identification,
+             :retailer,
+             :provider_permission,
+             to: :tax_data, allow_nil: true
 
     # abstract
 

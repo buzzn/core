@@ -10,6 +10,7 @@ module Transactions::Admin::Contract::Localpool
     around :db_transaction
     tee :update_register_meta, with: :'operations.action.update'
     tee :update_register_meta_options
+    tee :update_tax_data
     map :update_localpool_power_taker_contract, with: :'operations.action.update'
 
     def schema

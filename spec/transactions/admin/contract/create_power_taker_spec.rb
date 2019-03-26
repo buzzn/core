@@ -26,6 +26,7 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order
       begin_date: Date.today.as_json,
       share_register_publicly: false,
       share_register_with_group: true,
+      creditor_identification: 'DE1223123323',
       register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
   end
 
@@ -46,6 +47,7 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order
       begin_date: Date.today.as_json,
       share_register_publicly: false,
       share_register_with_group: true,
+      creditor_identification: 'DE1223123323',
       register_meta: { id: register_meta.id } }
   end
 

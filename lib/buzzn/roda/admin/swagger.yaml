@@ -6488,6 +6488,12 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: creditor_identification
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       responses:
         200:
           description: patched
@@ -11157,6 +11163,12 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: creditor_identification
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: register_meta.id
         in: formData
         required: false
@@ -11380,6 +11392,12 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: creditor_identification
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: register_meta.id
         in: formData
         required: false
@@ -12602,6 +12620,12 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: creditor_identification
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: register_meta.id
         in: formData
         required: false
