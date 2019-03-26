@@ -429,6 +429,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         {
           'tax_number' => '777388834',
           'sales_tax_number' => 'DE21355324',
+          'creditor_identification' => 'DEXXX23XXX',
           'updated_at' => contract.updated_at
         }
       end
@@ -486,6 +487,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             contract.tax_data.reload
             expect(contract.tax_data.tax_number).to eq update_both_tax_numbers_json['tax_number']
             expect(contract.tax_data.sales_tax_number).to eq update_both_tax_numbers_json['sales_tax_number']
+            expect(contract.tax_data.creditor_identification).to eq update_both_tax_numbers_json['creditor_identification']
           end
 
         end
