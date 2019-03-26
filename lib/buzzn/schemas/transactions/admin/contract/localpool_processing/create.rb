@@ -5,4 +5,5 @@ Schemas::Transactions::Admin::Contract::Localpool::Processing::Create = Schemas:
   required(:begin_date).filled(:date?)
   optional(:tax_number).filled(:str?, max_size?: 64)
   optional(:sales_tax_number).filled(:str?, max_size?: 64)
+  optional(:creditor_identification).filled(:str?, max_size?: 64)
 end

@@ -35,7 +35,9 @@ class Transactions::Admin::Contract::Localpool::CreateProcessing < Transactions:
   end
 
   def create_nested(params:, resource:, **)
-    params[:tax_data] = Contract::TaxData.new(tax_number: params.delete(:tax_number), sales_tax_number: params.delete(:sales_tax_number))
+    params[:tax_data] = Contract::TaxData.new(tax_number: params.delete(:tax_number),
+                                              sales_tax_number: params.delete(:sales_tax_number),
+                                              creditor_identification: params.delete(:creditor_identification))
   end
 
   def create_contract(params:, resource:, **)

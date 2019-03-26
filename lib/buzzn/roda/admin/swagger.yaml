@@ -8520,6 +8520,12 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: creditor_identification
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
       - name: signing_date
         in: formData
         required: false
@@ -10738,6 +10744,12 @@ paths:
         format: ''
         maxLength: 64
       - name: sales_tax_number
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: creditor_identification
         in: formData
         required: false
         type: string
