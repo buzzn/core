@@ -31,6 +31,13 @@ class Beekeeper::Minipool::Kontodaten < Beekeeper::Minipool::BaseRecord
     }
   end
 
+  def sepa_attrs
+    {
+      mandate_reference: sepa_mandref,
+      creditor_identification: sepa_glaeubiger_id
+    }
+  end
+
   private
 
   def direct_debit

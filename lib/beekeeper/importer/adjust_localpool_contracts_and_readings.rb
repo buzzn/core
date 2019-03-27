@@ -34,7 +34,6 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
           next unless r.readings.before(date).any? && r.readings.after(date).any? && r.readings.where(:date => date).empty?
           value = r.readings.before(date).order(:date).last.value
           reading = r.readings.create!(date: date,
-                                       value: value,
                                        raw_value: value,
                                        reason: :regular_reading,
                                        comment: 'Import 2019',
@@ -114,7 +113,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
   end
 
   def handle_two_readings(readings, register)
-    if readings.first.value == readings.last.value
+    if readings.first.raw_value == readings.last.raw_value
       readings.first.delete
       logger.info("Destroyed reading for #{readings.first.date} since both readings have the same value.")
     else
@@ -129,7 +128,7 @@ class Beekeeper::Importer::AdjustLocalpoolContractsAndReadings
       when '90067/18'
         readings.first.delete # this one has a value of 13.000
         # this one has 12.700 -- must be a bug/manual entry error, technically it's not possible for a reading to go down
-        readings.last.update_column(:value, 13_000)
+        readings.last.update_column(:raw_value, 13_000)
       when '90067/6'
         # [INFO] Readings: date: 2018-01-14, 2122400.0, contract_change // date: 2018-01-15, 2132100.0, contract_change
         # 2nd reading has a slightly higher reading than the first one. Just delete the first one.
