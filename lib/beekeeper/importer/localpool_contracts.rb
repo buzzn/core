@@ -41,6 +41,11 @@ class Beekeeper::Importer::LocalpoolContracts
       if konto && !konto.converted_attributes[:iban].empty?
         customer.bank_accounts.create(konto.converted_attributes)
       end
+      tax_data = if konto
+                   Contract::TaxData.new(creditor_identification: konto.sepa_attrs[:creditor_identification])
+                 else
+                   nil
+                 end
     rescue Buzzn::RecordNotFound => e
       logger.error("Couldn't create bank account #{konto.attributes} for #{contract}", extra_data: e.message)
     end
@@ -48,10 +53,12 @@ class Beekeeper::Importer::LocalpoolContracts
       localpool:       localpool,
       register_meta:   register.meta,
       register_meta_option: register_meta_option,
+      tax_data:        tax_data,
       customer:        customer,
       contractor:      localpool.owner,
       contractor_bank_account: localpool.owner.bank_accounts.first,
-      customer_bank_account: customer.bank_accounts.first
+      customer_bank_account: customer.bank_accounts.first,
+      mandate_reference: konto.sepa_attrs[:mandate_reference]
     )
     contract = Contract::LocalpoolPowerTaker.create!(contract_attributes)
     contract.tariffs = tariffs
