@@ -160,7 +160,7 @@ describe Contract::BaseResource do
     end
 
     it 'retrieve' do
-      attributes = ['begin_date', 'end_date', 'tax_number', 'sales_tax_number', 'allowed_actions'] + base_attributes
+      attributes = ['begin_date', 'end_date', 'tax_number', 'sales_tax_number', 'allowed_actions', 'creditor_identification'] + base_attributes
       attrs = resources.retrieve(localpool_processing.id).to_h
       expect(attrs['id']).to eq localpool_processing.id
       expect(attrs['type']).to eq 'contract_localpool_processing'

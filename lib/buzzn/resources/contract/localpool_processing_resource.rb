@@ -8,7 +8,8 @@ module Contract
     attributes :begin_date,
                :tax_number,
                :sales_tax_number,
-               :allowed_actions
+               :allowed_actions,
+               :creditor_identification
 
     has_one :contractor
     has_one :customer
