@@ -173,7 +173,7 @@ module Pdf::Serializers
     when Organization
     when Organization::General
       if person_or_organization.contact
-        addressing(person_or_organization.contact)
+        addressing_full(person_or_organization.contact)
       else
         'Sehr geehrte Damen und Herren'
       end
