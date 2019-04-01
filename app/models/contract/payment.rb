@@ -41,7 +41,7 @@ module Contract
       if billing_config.nil?
         raise 'please set Types::BillingConfig'
       end
-      self.price_cents_before_taxes * (1.00/billing_config.vat)
+      self.price_cents_after_taxes * (1.00/billing_config.vat)
     end
 
   end
