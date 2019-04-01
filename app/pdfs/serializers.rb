@@ -89,10 +89,10 @@ module Pdf::Serializers
 
   def build_bank_account(bank_account)
     {
-      holder: bank_account.holder,
-      iban: bank_account.iban,
-      bic: bank_account.bic,
-      bank_name: bank_account.bank_name,
+      holder: some_or(bank_account&.holder, '-'),
+      iban: some_or(bank_account&.iban, '-'),
+      bic: some_or(bank_account&.bic, '-'),
+      bank_name: some_or(bank_account&.bank_name, '-'),
     }
   end
 
