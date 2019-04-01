@@ -32,16 +32,16 @@ module Contract
     belongs_to :contract, class_name: 'Contract::Base', foreign_key: :contract_id
     has_many :billings, foreign_key: :adjusted_payment_id
 
-    def price_cents_before_taxes
+    def price_cents_after_taxes
       BigDecimal(self.price_cents, 4)
     end
 
-    def price_cents_after_taxes
+    def price_cents_before_taxes
       billing_config = CoreConfig.load(Types::BillingConfig)
       if billing_config.nil?
         raise 'please set Types::BillingConfig'
       end
-      self.price_cents_before_taxes * billing_config.vat
+      self.price_cents_before_taxes * (1.00/billing_config.vat)
     end
 
   end
