@@ -28,7 +28,11 @@ class Document < ActiveRecord::Base
 
   def read
     encrypted = storage.files.get(self.path).body
-    Crypto::Decryptor.new(self.encryption_details).process(encrypted)
+    if self.encryption_details.present?
+      Crypto::Decryptor.new(self.encryption_details).process(encrypted)
+    else
+      ''
+    end
   end
 
   def path
@@ -57,7 +61,10 @@ class Document < ActiveRecord::Base
   def destroy
     # deduplication, only delete if last reference
     unless Document.where(:sha256_encrypted => self.sha256_encrypted).count > 1
-      storage.files.get(self.path).destroy
+      f = storage.files.get(self.path)
+      unless f.nil?
+        f.destroy
+      end
     end
     super
   end

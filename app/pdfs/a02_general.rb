@@ -28,7 +28,8 @@ module Pdf
         contract: build_contract,
         today: Date.today,
         payment: build_payment(@contract.current_payment),
-        tariff: build_tariff(@contract.current_tariff)
+        tariff: build_tariff(@contract.current_tariff),
+        lpc_creditor_identification: some_or(contract.localpool.localpool_processing_contract.creditor_identification, '-')
       }
     end
 
@@ -43,8 +44,8 @@ module Pdf
         old_supplier_name: some_or(@contract.old_supplier_name, '-'),
         old_customer_number: some_or(@contract.old_customer_number, '-'),
         old_account_number: some_or(@contract.old_account_number, '-'),
-        mandate_reference: some_or(@contract.mandate_reference, '-'),
-        customer_bank_account: build_bank_account(@contract.customer_bank_account)
+        mandate_reference: some_or(@contract.mandate_reference, @contract.full_contract_number),
+        customer_bank_account: build_bank_account(@contract.customer_bank_account),
       }
     end
 
