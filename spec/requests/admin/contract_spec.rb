@@ -54,7 +54,10 @@ describe Admin::LocalpoolRoda, :request_helper do
                                    }
                                  },
                                  'document' => {
-                                   'lsn_a2' => true
+                                   'lsn_a2' => {
+                                     'current_tariff' => ['must be filled'],
+                                     'current_payment' => ['must be filled']
+                                   }
                                  },
                                },
           'share_register_with_group' => true,
