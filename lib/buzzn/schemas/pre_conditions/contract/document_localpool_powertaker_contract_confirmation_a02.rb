@@ -22,6 +22,9 @@ module Schemas::PreConditions::Contract
       required(:address).filled
     end
 
+    required(:current_tariff).filled
+    required(:current_payment).filled
+
   end
 
 end
