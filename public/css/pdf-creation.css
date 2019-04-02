@@ -55,15 +55,17 @@ div.alwaysbreak {page-break-before: always;}
 .is-responsive {max-width:100%;height:auto;}
 .is-verticalalign-top td{vertical-align: top;}
 .is-mandatory::before{content:"*";color:red}
+.is-like-paragraph { margin: 1.14rem 1.14rem; }
 /*has*/
 .has-dotted-underline{border-bottom: .0625rem dotted black;}
 .has-space-above{margin-top: 2rem;}
 .has-td-fix-height td{height: 3rem;}
 .has-alternate-rows tr:nth-child(odd){background-color: #eeeeee}
+.has-left-padding{padding: 0rem 1rem;}
 /*no*/
 .no-margin {margin: 0;}
 .no-padding {padding: 0;}
-.no-border {border-color: transparent;}
+.no-border {border-color: transparent; border: 0px; }
 /*custom elements*/
 .input_list {list-style-type: none;}
 .input_list li {margin-top: 11px;}

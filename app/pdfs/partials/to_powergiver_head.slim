@@ -8,7 +8,7 @@ div.is-small.col-3rd.is-pull-right.no-margin
           #{(powergiver.fax.nil? || powergiver.fax.empty?) ? "" : "F: #{powergiver.fax}"}
         p Email: #{powergiver.email}
 
-p.is-smaller.clear #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+p.is-small.clear #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
 
 - if powertaker.contact.nil?
   p #{powertaker.name}<br>
@@ -19,4 +19,5 @@ p.is-smaller.clear #{powergiver.shortname} • #{powergiver.address.street} • 
     #{powertaker.contact.title} #{powertaker.contact.first_name} #{powertaker.contact.last_name}<br>
     #{powertaker.address.street}<br>
     #{powertaker.address.zip} #{powertaker.address.city}
-  i #{powertaker.contact_email}
+  p
+    i #{powertaker.contact_email}
