@@ -8,16 +8,21 @@ div.is-small.col-3rd.is-pull-right.no-margin
           #{(powergiver.fax.nil? || powergiver.fax.empty?) ? "" : "F: #{powergiver.fax}"}
         p Email: #{powergiver.email}
 
-p.is-small.clear #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+div.letter-boxed
+  p.is-small #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
 
-- if powertaker.contact.nil?
-  p #{powertaker.name}<br>
-    #{powertaker.address.street}<br>
-    #{powertaker.address.zip} #{powertaker.address.city}
-- else
-  p #{powertaker.org_name}<br>
-    #{powertaker.contact.title} #{powertaker.contact.first_name} #{powertaker.contact.last_name}<br>
-    #{powertaker.address.street}<br>
-    #{powertaker.address.zip} #{powertaker.address.city}
-  p
-    i #{powertaker.contact_email}
+  - if powertaker.contact.nil?
+    p #{powertaker.name}<br>
+      #{powertaker.address.street}<br>
+      #{powertaker.address.zip} #{powertaker.address.city}
+  - else
+    p #{powertaker.org_name}<br>
+      #{powertaker.contact.title} #{powertaker.contact.first_name} #{powertaker.contact.last_name}<br>
+      #{powertaker.address.street}<br>
+      #{powertaker.address.zip} #{powertaker.address.city}
+      <br>
+      <br>
+      <br>
+    p
+      i #{powertaker.contact_email}
+div.clear

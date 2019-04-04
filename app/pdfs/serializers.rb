@@ -1,3 +1,4 @@
+# coding: utf-8
 module Pdf::Serializers
 
   def partner_name(customer)
@@ -93,7 +94,9 @@ module Pdf::Serializers
       iban: some_or(bank_account&.iban, '-'),
       bic: some_or(bank_account&.bic, '-'),
       bank_name: some_or(bank_account&.bank_name, '-'),
-    }
+    }.tap do |h|
+      h[:iban_obfuscated] = h[:iban].size > 7 ? h[:iban][0..4] + h[:iban][-3..-1].rjust(h[:iban].size - 7, '⚡') : h[:iban]
+    end
   end
 
   def build_partner(partner)
