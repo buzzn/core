@@ -9305,10 +9305,12 @@ paths:
         in: formData
         required: false
         type: string
-        format: alphanumeric
+        format: ''
+        maxLength: 128
+        minLength: 4
       - name: direction_number
         in: formData
-        required: true
+        required: false
         type: string
         enum:
         - ERZ
@@ -10780,7 +10782,9 @@ paths:
         in: formData
         required: true
         type: string
-        format: alphanumeric
+        format: ''
+        maxLength: 128
+        minLength: 4
       - name: direction_number
         in: formData
         required: true

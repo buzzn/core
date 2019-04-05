@@ -55,28 +55,10 @@ describe Transactions::Admin::Meter::CreateReal do
     params
   end
 
-  let(:meter_create_params_invalid_product_serial) do
-    params = meter_params.dup
-    params['registers'] = registers_params
-    params['product_serialnumber'] = 'h4x0r!!\\??#!/bin/bash'
-    params
-  end
-
   let(:meter_assign_params) do
     params = meter_params.dup
     params['registers'] = [{ :id => existing_grid_consumption_register.id }]
     params
-  end
-
-  context 'invalid data' do
-    let(:result_meter) do
-      Transactions::Admin::Meter::CreateReal.new.(resource: resource,
-                                                  params: meter_create_params_invalid_product_serial)
-    end
-
-    it 'fails' do
-      expect {result_meter}.to raise_error Buzzn::ValidationError
-    end
   end
 
   context 'create register' do
