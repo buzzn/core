@@ -23,7 +23,8 @@ module Meter
                :edifact_cycle_interval,
                :edifact_data_logging,
                :sent_data_dso,
-               :metering_location_id
+               :metering_location_id,
+               :legacy_buzznid
 
     def metering_location_id
       metering_location&.metering_location_id

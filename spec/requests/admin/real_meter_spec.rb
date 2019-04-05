@@ -51,7 +51,8 @@ describe Admin::LocalpoolRoda, :request_helper do
         'edifact_cycle_interval'=>meter.attributes['edifact_cycle_interval'],
         'edifact_data_logging'=>meter.attributes['edifact_data_logging'],
         'sent_data_dso'=>meter.sent_data_dso.to_s,
-        'metering_location_id'=>meter.metering_location_id
+        'metering_location_id'=>meter.metering_location_id,
+        'legacy_buzznid'=>meter.legacy_buzznid
       }
     end
 
@@ -141,7 +142,8 @@ describe Admin::LocalpoolRoda, :request_helper do
           'edifact_cycle_interval'=>'QUARTERLY',
           'edifact_data_logging'=>'Z04',
           'sent_data_dso'=>'2010-01-01',
-          'metering_location_id'=>nil
+          'metering_location_id'=>nil,
+          'legacy_buzznid'=>meter.legacy_buzznid
         }
       end
 
