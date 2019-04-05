@@ -1,78 +1,78 @@
 h3 Persönliche Angaben
-table.is-full-width.is-small.has-alternate-rows
+table.is-full-width.is-small.has-alternate-rows.two-columns-even
   tr
     td Anrede
-    td.offset-half #{powertaker.contact.addressing}
+    td #{powertaker.contact.addressing}
   tr
     td Name
-    td.offset-half #{powertaker.contact.title} #{powertaker.contact.first_name} #{powertaker.contact.last_name}
+    td #{powertaker.contact.title} #{powertaker.contact.first_name} #{powertaker.contact.last_name}
   tr
     td Telefon
-    td.offset-half #{powertaker.phone}
+    td #{powertaker.phone}
   tr
     td E-Mail
-    td.offset-half #{powertaker.email}
+    td #{powertaker.email}
 h3 Bezugsstelle
-table.is-full-width.is-small.has-alternate-rows
+table.is-full-width.is-small.has-alternate-rows.two-columns-even
   tr
     td Adresse
-    td.offset-half #{localpool.address.street}, #{localpool.address.zip} #{localpool.address.city}
+    td #{localpool.address.street}, #{localpool.address.zip} #{localpool.address.city}
   tr
     td Adresszusatz
-    td.offset-half #{contract.market_location_name}
+    td #{contract.market_location_name}
   tr
     td Ziehen Sie neu ein?
-    td.offset-half #{move_in ? 'ja' : 'nein'}
+    td #{move_in ? 'ja' : 'nein'}
   tr
     td Datum der Erstbelieferung
-    td.offset-half #{contract.begin_date}
+    td #{contract.begin_date}
   tr
     td Vorlieferant
-    td.offset-half #{contract.old_supplier_name}
+    td #{contract.old_supplier_name}
   tr
     td Kundennummer Vorlieferant
-    td.offset-half #{contract.old_customer_number}
+    td #{contract.old_customer_number}
   tr
     td Vertragskontonummer Vorlieferant
-    td.offset-half #{contract.old_account_number}
+    td #{contract.old_account_number}
   tr
     td Stromverbrauch Prognose
-    td.offset-half #{contract.forecast_kwh_pa} kWh
+    td #{contract.forecast_kwh_pa} kWh
   tr
     td Monatlicher Abschlag (Strom)
-    td.offset-half #{payment.brutto} € (brutto)
+    td #{payment.brutto} € (brutto)
   tr
     td Zählpunktbezeichnung
-    td.offset-half #{contract.meters.map{|x| x.location_description}.join(', ')}
+    td #{contract.meters.map{|x| x.location_description}.join(', ')}
   tr
     td Zählernummer
-    td.offset-half #{contract.meters.map{|x| x.product_serialnumber }.join(', ')}
+    td #{contract.meters.map{|x| x.product_serialnumber }.join(', ')}
 h3 Preise, Abrechnung & Bezahlung
-table.is-full-width.is-small.has-alternate-rows
+table.is-full-width.is-small.has-alternate-rows.two-columns-even
   tr
     td Grundpreis brutto (Grundpreis netto)
-    td.offset-half #{tariff.baseprice_euro_brutto} €/Monat (#{tariff.baseprice_euro_netto} €/Monat)
+    td #{tariff.baseprice_euro_brutto} €/Monat (#{tariff.baseprice_euro_netto} €/Monat)
   tr
     td Bezugspreis brutto (Bezugspreis netto)
-    td.offset-half #{tariff.energyprice_cents_brutto} Cent/kWh (#{tariff.energyprice_cents_netto} Cent/kWh)
+    td #{tariff.energyprice_cents_brutto} Cent/kWh (#{tariff.energyprice_cents_netto} Cent/kWh)
   tr
     td Kontoinhaber
-    td.offset-half #{contract.customer_bank_account.holder}
+    td #{contract.customer_bank_account.holder}
   tr
     td IBAN*
-    td.offset-half #{contract.customer_bank_account.iban_obfuscated}
+    td #{contract.customer_bank_account.iban_obfuscated}
   tr
     td BIC
-    td.offset-half #{contract.customer_bank_account.bic}
+    td #{contract.customer_bank_account.bic}
   tr
     td Name der Bank
-    td.offset-half #{contract.customer_bank_account.bank_name}
+    td #{contract.customer_bank_account.bank_name}
   tr
     td Gläubiger-Identifikationsnummer
-    td.offset-half #{lpc_creditor_identification}
+    td #{lpc_creditor_identification}
   tr
     td SEPA Mandatsreferenz
-    td.offset-half #{contract.mandate_reference}
+    td #{contract.mandate_reference}
 
 p.is-small * Ihre Bankverbindung wird aus Datenschutzgründen unvollständig angezeigt.
 h3 Widerrufsrecht
