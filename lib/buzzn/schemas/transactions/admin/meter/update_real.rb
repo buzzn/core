@@ -3,9 +3,9 @@ require_relative '../../../constraints/meter/base'
 require_relative '../../../../../../app/models/meter/real'
 
 Schemas::Transactions::Admin::Meter::UpdateReal = Schemas::Support.Form(Schemas::Transactions::Update) do
-  optional(:product_serialnumber).filled(:alphanumeric?, max_size?: 128, min_size?: 4)
+  optional(:product_serialnumber).filled(:str?, max_size?: 128, min_size?: 4)
 
-  required(:direction_number).maybe(included_in?: ::Meter::Real.direction_numbers.values)
+  optional(:direction_number).maybe(included_in?: ::Meter::Real.direction_numbers.values)
   optional(:datasource).maybe(included_in?: ::Meter::Real.datasources.values)
   optional(:product_name).maybe(:str?, max_size?: 64)
   optional(:manufacturer_name).maybe(included_in?: ::Meter::Real.manufacturer_names.values)
