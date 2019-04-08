@@ -80,12 +80,15 @@ module Pdf::Serializers
     }
   end
 
-  def build_powergiver(powergiver)
+  def build_powergiver(powergiver, contract)
     build_partner(powergiver)
   end
 
-  def build_powertaker(powertaker)
-    build_partner(powertaker)
+  def build_powertaker(powertaker, contract)
+    build_partner(powertaker).tap do |h|
+      x = contract.customer_bank_account && contract.customer_bank_account.direct_debit
+      h[:has_bank_and_direct_debit] = x.nil? ? false : x
+    end
   end
 
   def build_bank_account(bank_account)

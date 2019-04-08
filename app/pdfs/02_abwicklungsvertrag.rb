@@ -22,7 +22,7 @@ module Pdf
     def build_struct
       {
         version: template.version,
-        powergiver: build_powergiver(contract.customer),
+        powergiver: build_powergiver(contract.customer, contract),
         powertaker: build_powertaker(contract.localpool),
         number: contract.full_contract_number,
         localgroup_local_supplier: contract.localpool.distribution_system_operator,
@@ -31,6 +31,7 @@ module Pdf
       }
     end
 
+    # TODO rename, collision/overwrite from Serializers
     def build_powertaker(localpool)
       {
         address: build_address(localpool.address),

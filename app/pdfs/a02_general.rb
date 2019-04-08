@@ -23,20 +23,24 @@ module Pdf
     def build_struct
       {
         localpool: build_localpool(contract.localpool),
-        powergiver: build_powergiver(@contract.contractor),
-        powertaker: build_powertaker(@contract.customer),
+        powergiver: build_powergiver(@contract.contractor, @contract),
+        powertaker: build_powertaker(@contract.customer, @contract),
         contract: build_contract,
         today: Date.today,
         payment: build_payment(@contract.current_payment),
         tariff: build_tariff(@contract.current_tariff),
         lpc_creditor_identification: some_or(contract.localpool.localpool_processing_contract.creditor_identification, '-')
-      }
+      }.tap do |h|
+        h[:powergiver][:bank_account] = build_bank_account(@contract.contractor_bank_account)
+        h[:powergiver][:tax_number] = @contract.localpool.localpool_processing_contract.tax_number
+        h[:powergiver][:sales_tax_number] = @contract.localpool.localpool_processing_contract.sales_tax_number
+      end
     end
 
     def build_contract
       {
         begin_date: german_date(@contract.begin_date),
-        contractor: build_powergiver(@contract.contractor),
+        contractor: build_powergiver(@contract.contractor, @contract),
         full_contract_number: @contract.full_contract_number,
         market_location_name: @contract.register_meta.name,
         meters: build_meters,

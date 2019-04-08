@@ -1,4 +1,4 @@
-div.is-small.col-3rd.is-pull-right.no-margin
+div.is-smaller.col-3rd.is-pull-right.no-margin
         p #{powergiver.org_name}<br>
           Energiegruppe #{localpool.name}<br>
           #{powergiver.contact.title} #{powergiver.contact.name}<br>
@@ -6,7 +6,19 @@ div.is-small.col-3rd.is-pull-right.no-margin
           #{powergiver.address.zip} #{powergiver.address.city}
         p T:  #{powergiver.phone}<br>
           #{(powergiver.fax.nil? || powergiver.fax.empty?) ? "" : "F: #{powergiver.fax}"}
-        p Email: #{powergiver.email}
+          Email: #{powergiver.email}
+        p
+          b Bankverbindung<br>
+          | #{powergiver.bank_account.holder}<br>
+          | #{powergiver.bank_account.iban}<br>
+          | #{powergiver.bank_account.bic}<br>
+          | #{powergiver.bank_account.bank_name}
+        p
+          - unless powergiver.sales_tax_number.nil?
+            | USt-IdNr: #{powergiver.sales_tax_number}<br>
+          - unless powergiver.tax_number.nil?
+            | Steuernummer: #{powergiver.tax_number}
+
 
 div.letter-boxed
   p.is-small #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
