@@ -22,6 +22,8 @@ module Schemas::PreConditions::Contract
       required(:address).filled
     end
 
+    required(:contractor_bank_account).filled
+
     required(:current_tariff).filled
     required(:current_payment).filled
 
