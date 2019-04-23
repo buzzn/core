@@ -82,7 +82,7 @@ class Beekeeper::Minipool::MsbZählwerkDaten < Beekeeper::Minipool::BaseRecord
     #  r
     #end
 
-    uniq_readings.collect { |r| Reading::Single.new(r.converted_attributes) }
+    uniq_readings.collect { |r| [Reading::Single.new(r.converted_attributes), r.zaehlernummer] }
   end
 
   private

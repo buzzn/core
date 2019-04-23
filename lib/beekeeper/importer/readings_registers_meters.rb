@@ -19,20 +19,28 @@ class Beekeeper::Importer::ReadingsRegistersMeters
     max_sequence_number = record.msb_zählwerk_daten.map(&:converted_attributes).map{|x| x[:meter_attributes][:sequence_number] }.max
     meters_on_date = {}
     for_each_zaehlwerk(record) do |zaehlwerk, sorted_readings|
-      first_hash = sorted_readings.empty? ? 'first' : sorted_readings.first.date.iso8601
+      first_hash = sorted_readings.empty? ? 'first' : sorted_readings.first.first.date.iso8601
       meter = meters_on_date["#{zaehlwerk.buzznid}-#{first_hash}"]
       register = create_register(zaehlwerk, localpool, max_sequence_number, nil, meter)
       meters_on_date["#{zaehlwerk.buzznid}-#{first_hash}"] = register.meter
       puts "* Zählwerk: #{zaehlwerk.buzznid}"
       puts '-' * 50
-      sorted_readings.each do |reading|
+      sorted_readings.each do |reading, zaehlernummer|
         if reading.reason == 'device_change_2'
           @builder.clear_registry
           meter = meters_on_date["#{zaehlwerk.buzznid}-#{reading.date.iso8601}"]
           register = create_register(zaehlwerk, localpool, max_sequence_number, register.meta, meter)
           meters_on_date["#{zaehlwerk.buzznid}-#{reading.date.iso8601}"] = register.meter
         end
-        puts "#{reading.date.iso8601} #{reading.reason_code.rjust(5, ' ')} #{reading.raw_value.to_s.rjust(10, ' ')} register: ##{register.id} meta: ##{register.meta.id}"
+        if reading.reason != 'regular_reading'
+          if zaehlernummer.strip != register.meter.product_serialnumber.strip && register.meter.is_a?(Meter::Real)
+            puts "Setting product serialnumber from #{register.meter.product_serialnumber} to #{zaehlernummer}"
+            register.meter.product_serialnumber=zaehlernummer
+            register.meter.save
+          end
+        end
+
+        puts "#{reading.date.iso8601} #{reading.reason_code.rjust(5, ' ')} #{reading.raw_value.to_s.rjust(10, ' ')} register: ##{register.id} meta: ##{register.meta.id} M~R: #{register.meter.product_serialnumber}~#{zaehlernummer}"
         register.readings << reading
       end
       puts '-' * 50
@@ -48,7 +56,7 @@ class Beekeeper::Importer::ReadingsRegistersMeters
     record.msb_zählwerk_daten.map do |zaehlwerk|
       yield [
         zaehlwerk,
-        zaehlwerk.converted_attributes[:readings].sort_by { |r| "#{r.date.iso8601}-#{r.reason_code}" }
+        zaehlwerk.converted_attributes[:readings].sort_by { |r| "#{r.first.date.iso8601}-#{r.first.reason_code}" }
       ] # 468454000
     end
   end
