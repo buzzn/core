@@ -29,7 +29,6 @@ in stdenv.mkDerivation {
     pkgs.postgresql
     pkgs.mysql
     pkgs.heroku
-    pgloader
   ];
   dontStrip = true;
   dontPatchELF = true;
