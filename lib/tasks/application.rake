@@ -1,4 +1,5 @@
 namespace :application do
-  desc 'Initialize a new or completely reset an existing application'
-  task :init => %w(log:clear tmp:clear carrierwave:delete_uploads db:reset)
+  desc 'Initializes the application using example data'
+  task init: %i(db:reset db:seed:setup_data db:seed:buzzn_operator config:set zip_to_price:set_config zip_to_price:import)
+
 end
