@@ -15,6 +15,10 @@ module Transactions::Admin::Localpool::CreateOrganizationBase
     super(params: params, method: :contact)
   end
 
+  def create_legal_representation_address(params:, resource:)
+    super(params: params[:legal_representation] || {})
+  end
+
   def create_legal_representation(params:, resource:)
     super(params: params, method: :legal_representation)
   end
