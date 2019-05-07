@@ -12,6 +12,7 @@ module Transactions::Admin::Localpool
     tee :create_address, with: :'operations.action.create_address'
     tee :create_contact_address, with: :'operations.action.create_address'
     tee :create_contact, with: :'operations.action.create_person'
+    tee :create_legal_representation_address, with: :'operations.action.create_address'
     tee :create_legal_representation, with: :'operations.action.create_person'
     add :new_organization, with: :'operations.action.create_item'
     map :assign_gap_contract_customer # from super-class
