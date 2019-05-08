@@ -7,8 +7,6 @@ module Group
     PersonOrganizationRelation.generate(self, 'owner')
     PersonOrganizationRelation.generate(self, 'gap_contract_customer')
 
-    belongs_to :grid_consumption_register, class_name: 'Register::Input'
-    belongs_to :grid_feeding_register, class_name: 'Register::Output'
     belongs_to :distribution_system_operator, class_name: 'Organization::Market'
     belongs_to :transmission_system_operator, class_name: 'Organization::Market'
     belongs_to :electricity_supplier, class_name: 'Organization::Market'
