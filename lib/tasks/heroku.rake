@@ -32,16 +32,7 @@ namespace :heroku do
 
     desc 'Run the beekeeper import and push the result to staging'
     task staging:    %i(is_staging
-                        db:reset
-                        heroku:pull_db:staging
-                        db:seed:setup_data
-                        db:seed:buzzn_operator
-                        config:set
-                        db:seed:example_data
-                        import
-                        db:dump:transfer
-                        zip_to_price:import
-                        zip_to_price:set_config) do
+                        application:init) do
       push_local_db_to_heroku(:staging)
     end
 
