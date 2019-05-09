@@ -31,14 +31,18 @@ FactoryGirl.define do
 
     trait :transmission_system_operator do
       initialize_with { Organization::Market.new }
-      # TODO setup market_function
       with_address
+      after(:create) do |orga|
+        FactoryGirl.create(:organization_market_function, function: :transmission_system_operator, organization: orga)
+      end
     end
 
     trait :distribution_system_operator do
       initialize_with { Organization::Market.new }
-      # TODO setup market_function
       with_address
+      after(:create) do |orga|
+        FactoryGirl.create(:organization_market_function, function: :distribution_system_operator, organization: orga)
+      end
     end
 
     trait :electricity_supplier do
