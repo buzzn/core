@@ -55,6 +55,12 @@ describe Transactions::Admin::Meter::CreateReal do
     params
   end
 
+  let(:meter_create_params_with_one_empty) do
+    params = meter_params.dup
+    params['registers'] = registers_params.append({})
+    params
+  end
+
   let(:meter_assign_params) do
     params = meter_params.dup
     params['registers'] = [{ :id => existing_grid_consumption_register.id }]
@@ -93,6 +99,24 @@ describe Transactions::Admin::Meter::CreateReal do
       res = result_meter.value!
       expect(res.registers.count).to eql 1
       expect(res.metering_location_id).to eql metering_location_id
+    end
+
+  end
+
+  context 'assign emtpy register' do
+
+    let(:result_meter) do
+      Transactions::Admin::Meter::CreateReal.new.(resource: resource,
+                                                  params: meter_create_params_with_one_empty)
+    end
+
+    it 'creates' do
+      expect(result_meter).to be_success
+      expect(result_meter.value!).to be_a Meter::RealResource
+      res = result_meter.value!
+      expect(res.registers.count).to eql 2
+      expect(res.object.registers.first.meta).not_to be_nil
+      expect(res.object.registers.second.meta).to be_nil
     end
 
   end
