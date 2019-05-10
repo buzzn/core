@@ -532,4 +532,50 @@ describe Transactions::Admin::Billing::Update do
 
   end
 
+  context 'closed' do
+    context '-> void' do
+      let(:update_params) do
+        {
+          status: 'void',
+          updated_at: billing.updated_at.to_json
+        }
+      end
+
+      let(:update_result) do
+        Transactions::Admin::Billing::Update.new.(resource: billingr,
+                                                  params: update_params)
+      end
+
+      let(:calculate_result) do
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+      end
+
+      let(:closed_result) do
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'closed', updated_at: billing.updated_at.to_json})
+      end
+
+      before do
+        localpool.billing_detail.automatic_abschlag_adjust = true
+        localpool.billing_detail.save
+        localpool.reload
+      end
+
+      it 'works' do
+        balance_before = accounting_service.balance(billing.contract)
+        expect(calculate_result).to be_success
+        billing.reload
+        balance_middle = accounting_service.balance(billing.contract)
+        expect(closed_result).to be_success
+        expect(update_result).to be_success
+        billing.reload
+        balance_after = accounting_service.balance(billing.contract)
+        expect(billing.status).to eql 'void'
+        expect(billing.items.count).to eql 0
+        expect(billing.adjusted_payment).to be_nil
+        expect(balance_middle).not_to eql balance_before
+        expect(balance_before).to eql balance_after
+      end
+    end
+  end
+
 end

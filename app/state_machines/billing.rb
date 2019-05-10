@@ -26,7 +26,7 @@ class StateMachine::Billing
     when :void
       [:void]
     when :closed
-      [:closed]
+      [:closed, :void]
     end
   end
 
@@ -154,7 +154,19 @@ class StateMachine::Billing
     when :void
       nil
     when :closed
-      nil
+      case to
+      when :void
+        [
+          {
+            action: :reverse,
+            at: :post
+          },
+          {
+            action: :void,
+            at: :post
+          }
+        ]
+      end
     end
   end
 
