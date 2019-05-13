@@ -217,6 +217,10 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'return all organizations'
   end
 
+  get '/organizations-market' do
+    description 'return all market organizations'
+  end
+
   get '/localpools' do
     description 'return all localpools'
   end
