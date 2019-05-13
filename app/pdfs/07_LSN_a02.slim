@@ -20,7 +20,7 @@ html
         p wir freuen uns sehr, Ihnen mitteilen zu können, dass Sie ab dem #{contract.begin_date} als Stromnehmer aus der Lokalen Energiegruppe #{localpool.name} mit hausgemachtem Strom versorgt werden. Damit leisten Sie einen aktiven Beitrag zum Aufbau einer ökologischen, sozialen und direkten Energieversorgung von Mensch zu Mensch innerhalb der Hausgemeinschaft.
         p Anhand Ihres vorliegenden Jahresverbrauchs wurde Ihr Abschlag wie folgt berechnet: <br>
           #{payment.netto} € (netto) + #{payment.taxes} € (19% MwSt.) = <b>#{payment.brutto} € (brutto)</b>.
-        - if powergiver.has_bank_and_direct_debit == true
+        - if powertaker.has_bank_and_direct_debit
           p Der Betrag wird zum Anfang eines jeden Monats von Ihrem Konto abgebucht. Bei Änderung Ihrer Bankverbindung informieren Sie uns bitte rechtzeitig.
         - else
           p Bitte überweisen Sie den Betrag zu jedem Monatsersten, unter Angabe der Vertragsnummer, auf das oben angegebene Konto.
