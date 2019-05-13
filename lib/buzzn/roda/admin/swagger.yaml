@@ -13249,6 +13249,14 @@ paths:
       responses:
         200:
           description: success
+  "/organizations-market":
+    get:
+      description: return all market organizations
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success
   "/persons":
     get:
       description: return all persons
