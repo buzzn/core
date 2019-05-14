@@ -8927,6 +8927,56 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/distribution-system-operator":
+    patch:
+      description: assigns a the DSO
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: organization_id
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/electricity-supplier":
+    patch:
+      description: assigns a the ES
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: organization_id
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/gap-contract-customer-bank-account":
     patch:
       description: assigns a bank account of the gap contract customer
@@ -10701,6 +10751,31 @@ paths:
       responses:
         204:
           description: deleted
+  "/localpools/{localpool_id}/transmission-system-operator":
+    patch:
+      description: assigns a the TSO
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: organization_id
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_lpc_id}/contracts":
     post:
       description: adds a processing contract to the localpool
@@ -13169,6 +13244,14 @@ paths:
   "/organizations":
     get:
       description: return all organizations
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success
+  "/organizations-market":
+    get:
+      description: return all market organizations
       produces:
       - application/json
       responses:

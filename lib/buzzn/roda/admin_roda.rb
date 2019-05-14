@@ -44,7 +44,7 @@ module Admin
         end
       end
 
-      r.get! 'organization_markets' do
+      r.get! 'organizations-market' do
         admin.organization_markets
       end
     end
