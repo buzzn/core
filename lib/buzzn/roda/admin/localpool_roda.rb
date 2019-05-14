@@ -20,6 +20,7 @@ module Admin
                         assign_gap_contract_tariffs: 'transactions.admin.localpool.assign_gap_contract_tariffs',
                         update_nested_organization: 'transactions.admin.generic.update_nested_organization',
                         update_organization_owner: 'transactions.admin.localpool.update_organization_owner',
+                        assign_organization_market: 'transactions.admin.localpool.assign_organization_market',
                         bubbles: 'transactions.bubbles',
                         delete: 'transactions.delete'
                        ]
@@ -175,6 +176,24 @@ module Admin
 
         r.on 'register-metas' do
           r.run RegisterMetaRoda
+        end
+
+        r.on 'distribution-system-operator' do
+          r.patch! do
+            assign_organization_market.(resource: localpool, params: r.params, function: :distribution_system_operator)
+          end
+        end
+
+        r.on 'transmission-system-operator' do
+          r.patch! do
+            assign_organization_market.(resource: localpool, params: r.params, function: :transmission_system_operator)
+          end
+        end
+
+        r.on 'electricity-supplier' do
+          r.patch! do
+            assign_organization_market.(resource: localpool, params: r.params, function: :electricity_supplier)
+          end
         end
       end
 

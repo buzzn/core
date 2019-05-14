@@ -23,17 +23,17 @@ describe Admin::Roda, :request_helper do
     {'error' => 'This session has expired, please login again.'}
   end
 
-  context 'organization_markets' do
+  context 'organizations-market' do
 
     it '401' do
-      GET '/test/organization_markets', $admin
+      GET '/test/organizations-market', $admin
       expect(response).to have_http_status(200)
 
-      GET '/test/organization_markets', nil
+      GET '/test/organizations-market', nil
       expect(response).to have_http_status(401)
 
       Timecop.travel(Time.now + 30 * 60) do
-        GET '/test/organization_markets', $admin
+        GET '/test/organizations-market', $admin
 
         expect(response).to have_http_status(401)
         expect(json).to eq(expired_json)
@@ -41,7 +41,7 @@ describe Admin::Roda, :request_helper do
     end
 
     it '200' do
-      GET '/test/organization_markets', $admin
+      GET '/test/organizations-market', $admin
 
       expect(response).to have_http_status(200)
       expect(json['array'].size).to eq(Organization::Market.count)
@@ -51,7 +51,7 @@ describe Admin::Roda, :request_helper do
     end
 
     it '200 with market_functions' do
-      GET '/test/organization_markets?include=market_functions', $admin
+      GET '/test/organizations-market?include=market_functions', $admin
 
       expect(response).to have_http_status(200)
       expect(json['array'].size).to eq(Organization::Market.count)

@@ -217,6 +217,10 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'return all organizations'
   end
 
+  get '/organizations-market' do
+    description 'return all market organizations'
+  end
+
   get '/localpools' do
     description 'return all localpools'
   end
@@ -729,6 +733,22 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Admin::Contract::Localpool::GapContracts::Create
   end
 
+  # organizations
+
+  patch '/localpools/{localpool.id}/distribution-system-operator' do
+    description 'assigns a the DSO'
+    schema Schemas::Transactions::Admin::Localpool::AssignOrganizationMarket
+  end
+
+  patch '/localpools/{localpool.id}/transmission-system-operator' do
+    description 'assigns a the TSO'
+    schema Schemas::Transactions::Admin::Localpool::AssignOrganizationMarket
+  end
+
+  patch '/localpools/{localpool.id}/electricity-supplier' do
+    description 'assigns a the ES'
+    schema Schemas::Transactions::Admin::Localpool::AssignOrganizationMarket
+  end
   # devices
 
   get '/localpools/{localpool.id}/devices' do
