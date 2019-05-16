@@ -39,7 +39,7 @@ describe Transactions::Admin::Contract::Document do
 
     context 'valid' do
 
-      ['lsn_a2'].each do |t|
+      ['lsn_a1', 'lsn_a2'].each do |t|
         context "template #{t}" do
           let(:params) { { template: t } }
 

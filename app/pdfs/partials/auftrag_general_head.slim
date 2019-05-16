@@ -8,10 +8,11 @@ div.is-like-paragraph
     tr
       td.no-border.no-padding Bezugsstelle:
       td.no-border.has-left-padding #{localpool.address.street}, #{contract.market_location_name}
-
-    tr
-      td.no-border.no-padding Zählernummer:
-      td.no-border.has-left-padding #{contract.meters.map{|x| x.product_serialnumber }.join(', ')}
-    tr
-      td.no-border.no-padding Jahresverbrauch (kWh):
-      td.no-border.has-left-padding #{contract.forecast_kwh_pa} kWh
+    - unless contract.meters.empty?
+      tr
+        td.no-border.no-padding Zählernummer:
+        td.no-border.has-left-padding #{contract.meters.map{|x| x.product_serialnumber }.join(', ')}
+    - unless contract.forecast_kwh_pa.nil?
+      tr
+        td.no-border.no-padding Jahresverbrauch (kWh):
+        td.no-border.has-left-padding #{contract.forecast_kwh_pa} kWh

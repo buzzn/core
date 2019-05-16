@@ -5,6 +5,7 @@ module Contract
 
     def pdf_generators
       [
+        Pdf::LsnA1,
         Pdf::LsnA2
       ]
     end

@@ -23,9 +23,10 @@ table.is-full-width.is-small.has-alternate-rows.two-columns-even
   tr
     td Ziehen Sie neu ein?
     td #{move_in ? 'ja' : 'nein'}
-  tr
-    td Datum der Erstbelieferung
-    td #{contract.begin_date}
+  - unless is_pre_contract
+    tr
+      td Datum der Erstbelieferung
+      td #{contract.begin_date}
   tr
     td Vorlieferant
     td #{contract.old_supplier_name}
@@ -38,15 +39,17 @@ table.is-full-width.is-small.has-alternate-rows.two-columns-even
   tr
     td Stromverbrauch Prognose
     td #{contract.forecast_kwh_pa} kWh
-  tr
-    td Monatlicher Abschlag (Strom)
-    td #{payment.brutto} € (brutto)
-  tr
-    td Zählpunktbezeichnung
-    td #{contract.meters.map{|x| x.location_description}.join(', ')}
-  tr
-    td Zählernummer
-    td #{contract.meters.map{|x| x.product_serialnumber }.join(', ')}
+  - unless payment.disabled
+    tr
+      td Monatlicher Abschlag (Strom)
+      td #{payment.brutto} € (brutto)
+  - unless contract.meters.empty?
+    tr
+      td Zählpunktbezeichnung
+      td #{contract.meters.map{|x| x.location_description}.join(', ')}
+    tr
+      td Zählernummer
+      td #{contract.meters.map{|x| x.product_serialnumber }.join(', ')}
 h3 Preise, Abrechnung & Bezahlung
 table.is-full-width.is-small.has-alternate-rows.two-columns-even
   tr

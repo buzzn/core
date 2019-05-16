@@ -28,6 +28,8 @@ class Transactions::Admin::Contract::Document < Transactions::Base
       result = Schemas::PreConditions::Contract::DocumentMeteringPointOperatorContract.call(subject)
     when Contract::LocalpoolPowerTakerResource
       case generator
+      when 'lsn_a1'
+        result = Schemas::PreConditions::Contract::DocumentLocalpoolPowerTakerContractConfirmationA01.call(subject)
       when 'lsn_a2'
         result = Schemas::PreConditions::Contract::DocumentLocalpoolPowerTakerContractConfirmationA02.call(subject)
       end

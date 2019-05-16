@@ -3,7 +3,7 @@ require_relative 'generator'
 require_relative 'serializers'
 
 module Pdf
-  class A02General < Generator
+  class A0xGeneral < Generator
 
     include Serializers
 
@@ -29,7 +29,10 @@ module Pdf
         today: Date.today,
         payment: build_payment(@contract.current_payment),
         tariff: build_tariff(@contract.current_tariff),
-        lpc_creditor_identification: some_or(contract.localpool.localpool_processing_contract.creditor_identification, '-')
+        lpc_creditor_identification: some_or(contract.localpool.localpool_processing_contract.creditor_identification, '-'),
+        # if the contract is not yet fully finished, don't print some
+        # information, even though it is already set
+        is_pre_contract: false
       }.tap do |h|
         h[:powergiver][:bank_account] = build_bank_account(@contract.contractor_bank_account)
         h[:powergiver][:tax_number] = @contract.localpool.localpool_processing_contract.tax_number
