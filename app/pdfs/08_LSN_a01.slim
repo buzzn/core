@@ -1,0 +1,50 @@
+doctype html
+html
+  head
+    title = '#{title_text}'
+    meta charset='utf-8'
+    link href='#{Dir.pwd}/public/css/pdf-creation.css' rel='stylesheet'
+    link href='#{Dir.pwd}/public/css/pdf-creation-new.css' rel='stylesheet'
+    link href='#{Dir.pwd}/public/css/bc-chart.css' rel='stylesheet'
+    script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
+    script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
+    script src='#{Dir.pwd}/public/scripts/bc-chart.js'
+
+  body
+    div.wrapper
+
+      include to_powergiver_head
+      div.has-letter-box-above
+        include auftrag_general_head
+        p #{powertaker.contact.addressing_full},
+        p Ihr Auftrag, Strom aus unserem Haus zu beziehen, ist hier eingegangen. Vielen Dank! Wir freuen uns, dass Sie sich für die Teilnahme an der Lokalen Energiegruppe entschieden haben. Mit Ihnen werden weitere Parteien ihren Strom umweltfreundlich und günstig direkt über die Lokale Energiegruppe beziehen.
+        p Jetzt werden alle Vorbereitungen für die Umstellung getroffen, die Stromerzeugungsanlage wird eingebaut und wir regeln mit dem Netzbetreiber Ihren nahtlosen Wechsel in die Lokale Energiegruppe. Vorerst müssen Sie erst einmal nichts tun außer zu warten.
+        p Sobald alle notwendigen Schritte erledigt sind, bekommen Sie eine Auftragsbestätigung mit dem genauen Bezugsbeginn zugesendet. Damit kommt dann der Vertrag zur Strombelieferung zustande.
+        p Haben Sie noch Fragen? Dann stehen wir Ihnen unter den oben genannten Kontaktdaten zur Verfügung.
+        p Mit freundlichen Grüßen,<br><br>
+          #{powergiver.contact.name}
+        p PS: Auf der nächsten Seite finden Sie zur Kontrolle eine Zusammenfassung Ihrer Angaben sowie Informationen zu Ihrem Widerrufsrecht.
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+        p.pagination.is-small.no-margin
+          | Seite&nbsp;
+          span.page-number 1&nbsp;
+          | von&nbsp;
+          span.page-total-number 2
+    div.alwaysbreak
+    div.wrapper
+      include auftrag_general_summary
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+        p.pagination.is-small.no-margin
+          | Seite&nbsp;
+          span.page-number 2&nbsp;
+          | von&nbsp;
+          span.page-total-number 2
+

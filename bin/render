@@ -54,6 +54,11 @@ generator =
     contract = Contract::LocalpoolPowerTaker.find(id)
     puts "rendering contract #{id}"
     Pdf::LsnA2.new(contract)
+  when /08_LSN_a01.slim$/
+    id ||= Contract::LocalpoolPowerTaker.pluck(:id).sample
+    contract = Contract::LocalpoolPowerTaker.find(id)
+    puts "rendering contract #{id}"
+    Pdf::LsnA1.new(contract)
   when /invoice.slim$/
     id ||= (Billing.count*rand).round
     puts "rendering Billing #{id}"
