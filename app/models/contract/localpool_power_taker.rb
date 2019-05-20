@@ -22,7 +22,12 @@ module Contract
     end
 
     def current_payment
-      payments.current == [] ? nil : payments.current
+      x = payments.current == [] ? nil : payments.current
+      if x.is_a? Contract::Payment::ActiveRecord_AssociationRelation
+        x.first
+      else
+        x
+      end
     end
 
     def current_tariff

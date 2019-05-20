@@ -4,9 +4,13 @@ div.is-smaller.col-3rd.is-pull-right.no-margin
           #{powergiver.contact.title} #{powergiver.contact.name}<br>
           #{powergiver.address.street}<br>
           #{powergiver.address.zip} #{powergiver.address.city}
-        p T:  #{powergiver.phone}<br>
-          #{(powergiver.fax.nil? || powergiver.fax.empty?) ? "" : "F: #{powergiver.fax}"}
-          Email: #{powergiver.email}
+        - unless (powergiver.fax.nil? || powergiver.fax.empty?)
+          p T: #{powergiver.phone}<br>
+            F: #{powergiver.fax}<br>
+            Email: #{powergiver.email}
+        - else
+          p T: #{powergiver.phone}<br>
+            Email: #{powergiver.email}
         p
           b Bankverbindung<br>
           | #{powergiver.bank_account.holder}<br>
