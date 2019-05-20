@@ -47,9 +47,6 @@ table.is-full-width.is-small.has-alternate-rows.two-columns-even
     tr
       td Zählpunktbezeichnung
       td #{contract.meters.map{|x| x.location_description}.join(', ')}
-    tr
-      td Zählernummer
-      td #{contract.meters.map{|x| x.product_serialnumber }.join(', ')}
 h3 Preise, Abrechnung & Bezahlung
 table.is-full-width.is-small.has-alternate-rows.two-columns-even
   tr
