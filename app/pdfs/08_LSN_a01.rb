@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative 'a0x_general'
 
 module Pdf
@@ -5,9 +6,14 @@ module Pdf
 
     protected
 
+    def title
+      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Auftragseingangsbestätigung-#{contract.localpool.slug}-#{contract.contract_number}-#{contract.contract_number_addition}"
+    end
+
     def build_struct
       super.tap do |h|
         h[:is_pre_contract] = true
+        h[:document_name] = 'Auftragseingangsbestätigung'
       end
     end
 

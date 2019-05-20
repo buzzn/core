@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative 'a0x_general'
 
 module Pdf
@@ -7,7 +8,12 @@ module Pdf
 
     def build_struct
       super.tap do |h|
+        h[:document_name] = 'Auftragsbestätigung'
       end
+    end
+
+    def title
+      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Auftragsbestätigung-#{contract.localpool.slug}-#{contract.contract_number}-#{contract.contract_number_addition}"
     end
 
     def template_name
