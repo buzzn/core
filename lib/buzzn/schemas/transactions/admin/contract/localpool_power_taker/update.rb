@@ -27,7 +27,7 @@ module Schemas::Transactions
     optional(:old_customer_number).maybe(:str?)
     optional(:old_account_number).maybe(:str?)
 
-    optional(:energy_consumption_before_kwh_pa).value(:int?, gt?: 0)
+    optional(:energy_consumption_before_kwh_pa).maybe(:int?, gt?: 0)
 
     optional(:register_meta) do
       schema(Admin::Register::UpdateMeta)
@@ -36,7 +36,7 @@ module Schemas::Transactions
     optional(:share_register_with_group).value(:bool?)
     optional(:share_register_publicly).value(:bool?)
 
-    optional(:creditor_identification).filled(:str?, max_size?: 64)
+    optional(:creditor_identification).maybe(:str?, max_size?: 64)
   end
 
 end

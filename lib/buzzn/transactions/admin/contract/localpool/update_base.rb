@@ -15,15 +15,9 @@ class Transactions::Admin::Contract::Localpool::UpdateBase < Transactions::Base
                else
                  resource.object.tax_data
                end
-    if params[:tax_number]
-      tax_data.tax_number = params.delete(:tax_number)
-    end
-    if params[:creditor_identification]
-      tax_data.creditor_identification = params.delete(:creditor_identification)
-    end
-    if params[:sales_tax_number]
-      tax_data.sales_tax_number = params.delete(:sales_tax_number)
-    end
+    tax_data.tax_number = params.delete(:tax_number)
+    tax_data.creditor_identification = params.delete(:creditor_identification)
+    tax_data.sales_tax_number = params.delete(:sales_tax_number)
     tax_data.save
     params[:tax_data] = tax_data
   end
