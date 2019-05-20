@@ -11,7 +11,7 @@ div.is-like-paragraph
     - unless contract.meters.empty? || is_pre_contract
       tr
         td.no-border.no-padding Zählernummer:
-        td.no-border.has-left-padding #{contract.meters.map{|x| x.product_serialnumber }.join(', ')}
+        td.no-border.has-left-padding #{contract.meter_product_serial_numbers}
     - unless contract.forecast_kwh_pa.nil?
       tr
         td.no-border.no-padding Jahresverbrauch (kWh):

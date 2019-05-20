@@ -46,7 +46,11 @@ table.is-full-width.is-small.has-alternate-rows.two-columns-even
   - unless contract.meters.empty?
     tr
       td Zählpunktbezeichnung
-      td #{contract.meters.map{|x| x.location_description}.join(', ')}
+      td #{contract.meter_location_descriptions}
+    - unless is_pre_contract
+      tr
+        td Zählernummer
+        td #{contract.meter_product_serial_numbers}
 h3 Preise, Abrechnung & Bezahlung
 table.is-full-width.is-small.has-alternate-rows.two-columns-even
   tr
