@@ -487,6 +487,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'returns the register of a meter for the given IDs'
   end
 
+  patch '/localpools/{localpool.id}/meters/{meter.id}/registers/{register.id}' do
+    description 'update a real register'
+    schema Schemas::Transactions::Admin::Register::UpdateReal
+  end
+
   # register_meta
 
   get '/localpools/{localpool.id}/register-metas' do
