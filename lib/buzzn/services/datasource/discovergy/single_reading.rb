@@ -85,8 +85,7 @@ class Services::Datasource::Discovergy::SingleReading
   end
 
   def builder(registers, virtual)
-    consumption_registers = registers.select { |register| register.meta.label.consumption? }
-    Builders::Discovergy::SingleReadingsBuilder.new(registers: consumption_registers, virtual: virtual)
+    Builders::Discovergy::SingleReadingsBuilder.new(registers: registers, virtual: virtual)
   end
 
   # Discovergy requires an UNIX timestamp in ms
