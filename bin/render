@@ -44,8 +44,10 @@ require './config/buzzn'
 generator =
   case file
   when /01_messvertrag.slim$/
-    contract = Contract::MeteringPointOperator.first
-    Pdf::MeteringPointOperator.new(contract)
+    id ||= Contract::MeteringPointOperator.pluck(:id).sample
+    contract = Contract::MeteringPointOperator.find(id)
+    puts "rendering contract #{id}"
+    Pdf::MeteringPointOperatorContract.new(contract)
   when /02_abwicklungsvertrag.slim$/
     contract = Contract::LocalpoolProcessing.first
     Pdf::LocalPoolProcessingContract.new(contract)
