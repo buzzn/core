@@ -5,5 +5,5 @@ Schemas::Transactions::Admin::Register::UpdateReal = Schemas::Support.Form(Schem
   # reassign (id is present)
   # create a new Register::Meta (rest is present) which is then assigned
   # nil it
-  required(:meta).schema(Schemas::Transactions::Admin::Register::CreateMetaLoose)
+  optional(:meta).schema(Schemas::Transactions::Admin::Register::CreateMetaLoose)
 end
