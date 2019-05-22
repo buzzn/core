@@ -39,7 +39,9 @@ class Transactions::Admin::Register::UpdateReal < Transactions::Base
                metap[:market_location] = Register::MarketLocation.find_by_market_location_id(market_location_id) ||
                                          Register::MarketLocation.create(market_location_id: market_location_id)
              end
-             Register::Meta.create(metap)
+             rm = Register::Meta.create(metap)
+             rm.save
+             rm
            else
              begin
                Register::Meta.find(metap[:id])
