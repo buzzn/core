@@ -24,7 +24,7 @@ html{line-height:1.4}
         p.is-text-center und
         div.is-text-center
           | #{customer.name} <br>
-          | #{address.street}, #{address.zip} #{address.city}<br>
+          | #{customer.address.street}, #{customer.address.zip} #{customer.address.city}<br>
           - if customer.name != customer.partner_name
             | vertreten durch #{customer.partner_name}<br>
           | Telefon: #{customer.partner.phone}<br>
