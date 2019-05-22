@@ -29,7 +29,7 @@ module Schemas
         end
 
         required(:readings).filled { grow_in_time? }
-        required(:meta_for_invariant).schema(Meta)
+        optional(:meta_for_invariant).filled?.and(schema(Meta))
 
       end
 
