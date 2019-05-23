@@ -99,7 +99,7 @@ module Register
     # HACK for nested invariant
 
     def meta_for_invariant
-      Schemas::Support::ActiveRecordValidator.new(meta)
+      meta.nil? ? nil : Schemas::Support::ActiveRecordValidator.new(meta)
     end
 
   end
