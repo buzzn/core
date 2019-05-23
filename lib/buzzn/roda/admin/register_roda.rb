@@ -1,5 +1,6 @@
 require_relative '../admin_roda'
 require_relative '../../transactions/admin/register/update_virtual'
+require_relative '../../transactions/admin/register/update_real'
 
 class Admin::RegisterRoda < BaseRoda
 
@@ -28,6 +29,10 @@ class Admin::RegisterRoda < BaseRoda
         case register.object
         when Register::Virtual
           Transactions::Admin::Register::UpdateVirtual.(
+            resource: register, params: r.params
+          )
+        when Register::Real
+          Transactions::Admin::Register::UpdateReal.(
             resource: register, params: r.params
           )
         else

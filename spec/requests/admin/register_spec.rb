@@ -5,20 +5,20 @@ describe Admin::LocalpoolRoda, :request_helper do
     TestAdminLocalpoolRoda # this defines the active application for this test
   end
 
-  entity(:group) { create(:group, :localpool) }
+  let(:group) { create(:group, :localpool) }
 
-  entity(:meter) { create(:meter, :real, group: group) }
+  let(:meter) { create(:meter, :real, group: group) }
 
-  entity!(:real_register) do
+  let!(:real_register) do
     register = meter.registers.first
     create(:contract, :localpool_processing, localpool: group)
     create(:contract, :localpool_powertaker, register_meta: register.meta, localpool: group)
     register
   end
 
-  entity!(:register) { create(:register, :output, meter: meter) }
+  let!(:register) { create(:register, :output, meter: meter) }
 
-  entity!(:virtual_register) { create(:meter, :virtual, group: group).register }
+  let!(:virtual_register) { create(:meter, :virtual, group: group).register }
 
   context 'meters' do
     context 'registers' do
@@ -33,6 +33,79 @@ describe Admin::LocalpoolRoda, :request_helper do
   end
 
   context 'registers' do
+    context 'PATCH' do
+      let(:register_first) do
+        create(:register, :real, meta: nil)
+      end
+      let(:register_second) do
+        create(:register, :real)
+      end
+      let(:meter) do
+        create(:meter, :real, group: group, registers: [register_first, register_second])
+      end
+
+      context 'creation' do
+        let(:grid_consumption_register) { build(:meta, :grid_consumption) }
+        let(:market_location_id) do
+          'DE133713371'
+        end
+        let(:grid_consumption_register_params) do
+          params = grid_consumption_register.attributes
+          params = params.delete_if {|k, v| k.ends_with?('id')}
+          params = params.delete_if {|k, v| v.nil? }
+          params.delete('updated_at')
+          params.delete('created_at')
+          params['market_location_id'] = market_location_id
+          params
+        end
+        let(:params) do
+          {
+            updated_at: register_first.updated_at.to_json,
+            meta: grid_consumption_register_params
+          }
+        end
+
+        it '403' do
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register_first.id}", nil, params
+          expect(response).to have_http_status(403)
+        end
+
+        it '201' do
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register_first.id}", $admin, params
+          expect(response).to have_http_status(200)
+          register_first.reload
+          expect(register_first.meta).not_to be_nil
+          expect(register_first.meta.name).to eql grid_consumption_register_params['name']
+        end
+
+      end
+
+      context 'assignment' do
+        let(:register_meta) { create(:meta) }
+        let(:params) do
+          {
+            updated_at: register_first.updated_at.to_json,
+            meta: {
+              id: register_meta.id
+            }
+          }
+        end
+
+        it '403' do
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register_first.id}", nil, params
+          expect(response).to have_http_status(403)
+        end
+
+        it '201' do
+          PATCH "/localpools/#{group.id}/meters/#{meter.id}/registers/#{register_first.id}", $admin, params
+          expect(response).to have_http_status(200)
+          register_first.reload
+          expect(register_first.meta.id).to eql register_meta.id
+        end
+      end
+
+    end
+
     context 'GET' do
 
       let(:real_register_json) do

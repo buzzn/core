@@ -19,7 +19,9 @@ class Transactions::Admin::Meter::CreateReal < Transactions::Admin::Meter
   def registers_schema(params:, **)
     validation_errors = { :registers => [] }
     params[:registers].each_with_index do |r, index|
-      if r[:id].nil?
+      if r.empty?
+        next
+      elsif r[:id].nil?
         schema = Schemas::Transactions::Admin::Register::CreateMeta
       else
         schema = Schemas::Transactions::Assign
@@ -49,21 +51,22 @@ class Transactions::Admin::Meter::CreateReal < Transactions::Admin::Meter
 
   def create_registers(params:, create_meter:, **)
     params[:registers].each_with_index do |r, index|
-      if r[:id].nil?
-        market_location_id = r.delete(:market_location_id)
-        unless market_location_id.nil?
-          r[:market_location] = Register::MarketLocation.find_by_market_location_id(market_location_id) ||
-                                Register::MarketLocation.create(market_location_id: market_location_id)
-        end
-        meta = Register::Meta.create(r)
-      else
-        begin
-          meta = Register::Meta.find(r[:id])
-        rescue ActiveRecord::RecordNotFound
-          raise Buzzn::ValidationError.new(registers: { index: [:id => 'object does not exist'] })
-        end
-      end
-
+      meta = if r.empty?
+               nil
+             elsif r[:id].nil?
+               market_location_id = r.delete(:market_location_id)
+               unless market_location_id.nil?
+                 r[:market_location] = Register::MarketLocation.find_by_market_location_id(market_location_id) ||
+                                       Register::MarketLocation.create(market_location_id: market_location_id)
+               end
+               Register::Meta.create(r)
+             else
+               begin
+                 Register::Meta.find(r[:id])
+               rescue ActiveRecord::RecordNotFound
+                 raise Buzzn::ValidationError.new(registers: { index: [:id => 'object does not exist'] })
+               end
+             end
       Register::Real.create(meter: create_meter.object,
                             meta: meta)
     end
