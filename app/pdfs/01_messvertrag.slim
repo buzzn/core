@@ -160,10 +160,11 @@ html{line-height:1.4}
         strong #{address.street}, #{address.zip} #{address.city}
       p beauftrage ich,
       p.is-indented
-        strong #{customer.name}
-      - if customer.name != customer.partner_name
-        <br>vertreten durch #{customer.partner_name}
-      div #{address.street}, #{address.zip} #{address.city}
+        strong #{customer.name}<br>
+          #{customer.address.street}<br>
+          #{customer.address.zip} #{customer.address.city}<br>
+        - if customer.name != customer.partner_name
+          <br>vertreten durch #{customer.partner_name}<br>
       p hiermit
       p.is-indented
         strong BUZZN GmbH<br>
