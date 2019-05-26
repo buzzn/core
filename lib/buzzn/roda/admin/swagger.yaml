@@ -10755,6 +10755,31 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/reports/eeg":
+    post:
+      description: returns the eeg report for the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: begin_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: last_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_id}/tariffs":
     get:
       description: returns all the tariffs of the localpool

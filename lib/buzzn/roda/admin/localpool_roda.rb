@@ -178,6 +178,10 @@ module Admin
           r.run RegisterMetaRoda
         end
 
+        r.on 'reports' do
+          r.run ReportRoda
+        end
+
         r.on 'distribution-system-operator' do
           r.patch! do
             assign_organization_market.(resource: localpool, params: r.params, function: :distribution_system_operator)
