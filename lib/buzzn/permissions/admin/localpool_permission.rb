@@ -477,4 +477,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       end
     end
   end
+
+  reports do
+    eeg do
+      create :managers
+    end
+  end
 end

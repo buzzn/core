@@ -778,6 +778,13 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'deletes a device of the localpool'
   end
 
+  # reports
+
+  post '/localpools/{localpool.id}/reports/eeg' do
+    description 'returns the eeg report for the localpool'
+    schema Schemas::Transactions::Admin::Report::CreateEegReport
+  end
+
   # swagger
 
   it 'GET /swagger.json' do
