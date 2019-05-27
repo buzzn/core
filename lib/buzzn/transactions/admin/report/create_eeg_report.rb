@@ -106,7 +106,6 @@ class Transactions::Admin::Report::CreateEegReport < Transactions::Base
           puts "skipped register #{register.id}, not installed"
           next
         end
-        byebug.byebug
         if register.installed_at.date > end_date
           puts "skipped register #{register.id}"
           next
