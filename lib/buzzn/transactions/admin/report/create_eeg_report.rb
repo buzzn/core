@@ -97,12 +97,21 @@ class Transactions::Admin::Report::CreateEegReport < Transactions::Base
     # figure out ranges
     metas.each do |meta|
       meta.registers.each do |register|
-        if (register.installed_at.nil? || register.installed_at.date > date_range.last) && (register.decomissioned_at.nil? || register.decomissioned_at.date < date_range.first)
+        if register.installed_at.nil?
           warnings.push(
             reason: 'skipped register',
             register_id: register.id,
             meter_id: register.meter.id
           )
+          puts "skipped register #{register.id}, not installed"
+          next
+        end
+        byebug.byebug
+        if register.installed_at.date > end_date
+          puts "skipped register #{register.id}"
+          next
+        end
+        if !register.decomissioned_at.nil? && register.decomissioned_at.date <= begin_date
           puts "skipped register #{register.id}"
           next
         end
