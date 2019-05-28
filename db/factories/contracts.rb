@@ -6,7 +6,7 @@ FactoryGirl.define do
     end
     localpool                     { FactoryGirl.build(:group, :localpool) }
     signing_date                  { (begin_date || Date.today) - 3.weeks }
-    begin_date                    { localpool.start_date + 23.days }
+    begin_date                    { localpool.start_date }
     termination_date              { end_date.present? ? end_date - 3.months : nil }
     power_of_attorney             true
 

@@ -45,8 +45,12 @@ module Group
     end
 
     def localpool_processing_contract
-      self.localpool_processing_contracts.each do |lpc|
-        next if [Contract::Base::TERMINATED, Contract::Base::ENDED].include? lpc.status
+      active_localpool_processing_contract(Date.today)
+    end
+
+    def active_localpool_processing_contract(at)
+      self.localpool_processing_contracts.to_a.each do |lpc|
+        next if [Contract::Base::TERMINATED, Contract::Base::ENDED].include? lpc.status(at)
         return lpc
       end
       nil
