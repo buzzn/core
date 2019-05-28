@@ -19,8 +19,8 @@ module Pdf
       billing_config = CoreConfig.load(Types::BillingConfig)
       {
         title_text: @billing.full_invoice_number,
-        sales_tax_number: contract.localpool.localpool_processing_contract.sales_tax_number,
-        tax_number: contract.localpool.localpool_processing_contract.tax_number,
+        sales_tax_number: processing_contract.sales_tax_number,
+        tax_number: processing_contract.tax_number,
         issues_vat: contract.localpool.billing_detail.issues_vat,
         contractor: build_contractor,
         powertaker: build_powertaker,
@@ -68,6 +68,10 @@ module Pdf
 
     def billing_year
       @billing.billing_cycle&.begin_date&.year || @billing.begin_date&.year
+    end
+
+    def processing_contract
+      @processing_contract ||= contract.localpool.active_localpool_processing_contract(@billing.begin_date)
     end
 
     def consumption(year)

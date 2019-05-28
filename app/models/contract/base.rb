@@ -61,11 +61,6 @@ module Contract
 
     STATUS.each { |s| delegate "#{s}?", to: :status } # adds status query methods like contract.active?
 
-    scope :power_givers,             -> { where(type: 'PowerGiver') }
-    scope :power_takers,             -> { where(type: 'PowerTaker') }
-    scope :localpool_power_takers,   -> { where(type: 'LocalpoolPowerTaker') }
-    scope :localpool_processing,     -> { where(type: 'LocalpoolProcessing') }
-    scope :metering_point_operators, -> { where(type: 'MeteringPointOperator') }
     scope :other_suppliers,          -> { where(type: 'OtherSupplier') }
     scope :for_localpool,            -> { where(type: %w(Contract::LocalpoolPowerTaker Contract::LocalpoolGap Contract::LocalpoolThirdParty))}
     scope :localpool_power_takers_and_other_suppliers, -> {where('type in (?)', %w(LocalpoolPowerTaker OtherSupplier))}
@@ -99,11 +94,11 @@ module Contract
       at ||= Date.today
       status = if end_date && end_date <= at
                  ENDED
-      elsif termination_date
+      elsif termination_date && termination_date <= at
         TERMINATED
       elsif begin_date && begin_date <= at
         ACTIVE
-      elsif signing_date
+      elsif signing_date && signing_date <= at
         SIGNED
       else
         ONBOARDING
