@@ -221,6 +221,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'return all market organizations'
   end
 
+  post '/organizations-market' do
+    description 'create a new market organization'
+    schema Schemas::Transactions::Organization::CreateMarketWithNested
+  end
+
   get '/localpools' do
     description 'return all localpools'
   end
