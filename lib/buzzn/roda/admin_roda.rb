@@ -3,6 +3,9 @@ require_relative 'base_roda'
 module Admin
   class Roda < ::BaseRoda
 
+    include Import.args[:env,
+                        'transactions.admin.organization.create_organization_market']
+
     plugin :run_handler
 
     route do |r|
@@ -44,8 +47,16 @@ module Admin
         end
       end
 
-      r.get! 'organizations-market' do
-        admin.organization_markets
+      r.on 'organizations-market' do
+        r.get! do
+          admin.organization_markets
+        end
+
+        r.post! do
+          create_organization_market.(resource: admin.organization_markets, params: r.params)
+        end
+
+        r.others!
       end
     end
 
