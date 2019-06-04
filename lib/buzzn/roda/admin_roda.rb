@@ -4,8 +4,9 @@ module Admin
   class Roda < ::BaseRoda
 
     include Import.args[:env,
-                        'transactions.admin.organization.create_organization_market',
-                        'transactions.admin.organization.update_organization_market']
+                        create_organization_market: 'transactions.admin.organization.create_organization_market',
+                        update_organization_market: 'transactions.admin.organization.update_organization_market',
+                        create_market_function:     'transactions.admin.market_function.create']
 
     plugin :run_handler
 
@@ -62,6 +63,16 @@ module Admin
 
           r.patch! do
             update_organization_market.(resource: organization_market, params: r.params)
+          end
+
+          r.on 'market-functions' do
+
+            r.post! do
+              create_market_function.(resource: organization_market.market_functions, params: r.params, organization: organization_market.object)
+            end
+
+            r.others!
+
           end
 
           r.others!

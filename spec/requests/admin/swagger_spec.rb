@@ -206,7 +206,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
   end
 
   entity!(:organization_market) do
-    create(:organization, :distribution_system_operator)
+    create(:organization, :market)
   end
 
   swagger do |s|
@@ -235,6 +235,13 @@ describe Admin, :swagger, :request_helper, order: :defined do
   patch '/organizations-market/{organization_market.id}' do
     description 'create a new market organization'
     schema Schemas::Transactions::Organization.update_for(organization_market)
+  end
+
+  # organizations-market -> market-functions
+
+  post '/organizations-market/{organization_market.id}/market-functions' do
+    description 'create a new function for that organization'
+    schema Schemas::Transactions::MarketFunction.create_for(organization_market)
   end
 
   get '/localpools' do
