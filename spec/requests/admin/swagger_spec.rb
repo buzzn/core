@@ -205,6 +205,10 @@ describe Admin, :swagger, :request_helper, order: :defined do
               contract: localpool_power_taker_contract)
   end
 
+  entity!(:organization_market) do
+    create(:organization, :distribution_system_operator)
+  end
+
   swagger do |s|
     s.basePath = '/api/admin'
   end
@@ -217,6 +221,8 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'return all organizations'
   end
 
+  # organization-market
+
   get '/organizations-market' do
     description 'return all market organizations'
   end
@@ -224,6 +230,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
   post '/organizations-market' do
     description 'create a new market organization'
     schema Schemas::Transactions::Organization::CreateMarketWithNested
+  end
+
+  patch '/organizations-market/{organization_market.id}' do
+    description 'create a new market organization'
+    schema Schemas::Transactions::Organization.update_for(organization_market)
   end
 
   get '/localpools' do
