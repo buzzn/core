@@ -13709,19 +13709,6 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: functions.function
-        in: formData
-        required: true
-        type: string
-        enum:
-        - distribution_system_operator
-        - electricity_supplier
-        - metering_point_operator
-        - metering_service_provider
-        - other
-        - power_giver
-        - power_taker
-        - transmission_system_operator
       - name: functions.contact_person.prefix
         in: formData
         required: true
@@ -14347,6 +14334,19 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: functions.function
+        in: formData
+        required: true
+        type: string
+        enum:
+        - distribution_system_operator
+        - electricity_supplier
+        - metering_point_operator
+        - metering_service_provider
+        - other
+        - power_giver
+        - power_taker
+        - transmission_system_operator
       - name: functions
         in: formData
         required: true
@@ -14408,32 +14408,27 @@ paths:
         type: string
         format: ''
         maxLength: 64
-      - name: address.updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
       - name: address.street
         in: formData
-        required: false
+        required: true
         type: string
         format: ''
         maxLength: 64
       - name: address.zip
         in: formData
-        required: false
+        required: true
         type: string
         format: ''
         maxLength: 16
       - name: address.city
         in: formData
-        required: false
+        required: true
         type: string
         format: ''
         maxLength: 64
       - name: address.country
         in: formData
-        required: false
+        required: true
         type: string
         enum:
         - AD
@@ -14698,6 +14693,671 @@ paths:
       responses:
         200:
           description: patched
+  "/organizations-market/{organization_market_id}/market-functions":
+    post:
+      description: create a new function for that organization
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: organization_market_id
+        in: path
+        required: true
+        type: string
+      - name: market_partner_id
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: edifact_email
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact_person.prefix
+        in: formData
+        required: true
+        type: string
+        enum:
+        - F
+        - M
+      - name: contact_person.first_name
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact_person.last_name
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact_person.email
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact_person.preferred_language
+        in: formData
+        required: true
+        type: string
+        enum:
+        - de
+        - en
+      - name: contact_person.title
+        in: formData
+        required: false
+        type: string
+        enum:
+        - Prof.
+        - Dr.
+        - Prof. Dr.
+      - name: contact_person.phone
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact_person.fax
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact_person.address.street
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact_person.address.zip
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 16
+      - name: contact_person.address.city
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact_person.address.country
+        in: formData
+        required: true
+        type: string
+        enum:
+        - AD
+        - AE
+        - AF
+        - AG
+        - AI
+        - AL
+        - AM
+        - AO
+        - AQ
+        - AR
+        - AS
+        - AT
+        - AU
+        - AW
+        - AX
+        - AZ
+        - BA
+        - BB
+        - BD
+        - BE
+        - BF
+        - BG
+        - BH
+        - BI
+        - BJ
+        - BL
+        - BM
+        - BN
+        - BO
+        - BQ
+        - BR
+        - BS
+        - BT
+        - BV
+        - BW
+        - BY
+        - BZ
+        - CA
+        - CC
+        - CD
+        - CF
+        - CG
+        - CH
+        - CI
+        - CK
+        - CL
+        - CM
+        - CN
+        - CO
+        - CR
+        - CU
+        - CV
+        - CW
+        - CX
+        - CY
+        - CZ
+        - DE
+        - DJ
+        - DK
+        - DM
+        - DO
+        - DZ
+        - EC
+        - EE
+        - EG
+        - EH
+        - ER
+        - ES
+        - ET
+        - FI
+        - FJ
+        - FK
+        - FM
+        - FO
+        - FR
+        - GA
+        - GB
+        - GD
+        - GE
+        - GF
+        - GG
+        - GH
+        - GI
+        - GL
+        - GM
+        - GN
+        - GP
+        - GQ
+        - GR
+        - GS
+        - GT
+        - GU
+        - GW
+        - GY
+        - HK
+        - HM
+        - HN
+        - HR
+        - HT
+        - HU
+        - ID
+        - IE
+        - IL
+        - IM
+        - IN
+        - IO
+        - IQ
+        - IR
+        - IS
+        - IT
+        - JE
+        - JM
+        - JO
+        - JP
+        - KE
+        - KG
+        - KH
+        - KI
+        - KM
+        - KN
+        - KP
+        - KR
+        - KW
+        - KY
+        - KZ
+        - LA
+        - LB
+        - LC
+        - LI
+        - LK
+        - LR
+        - LS
+        - LT
+        - LU
+        - LV
+        - LY
+        - MA
+        - MC
+        - MD
+        - ME
+        - MF
+        - MG
+        - MH
+        - MK
+        - ML
+        - MM
+        - MN
+        - MO
+        - MP
+        - MQ
+        - MR
+        - MS
+        - MT
+        - MU
+        - MV
+        - MW
+        - MX
+        - MY
+        - MZ
+        - NA
+        - NC
+        - NE
+        - NF
+        - NG
+        - NI
+        - NL
+        - 'NO'
+        - NP
+        - NR
+        - NU
+        - NZ
+        - OM
+        - PA
+        - PE
+        - PF
+        - PG
+        - PH
+        - PK
+        - PL
+        - PM
+        - PN
+        - PR
+        - PS
+        - PT
+        - PW
+        - PY
+        - QA
+        - RE
+        - RO
+        - RS
+        - RU
+        - RW
+        - SA
+        - SB
+        - SC
+        - SD
+        - SE
+        - SG
+        - SH
+        - SI
+        - SJ
+        - SK
+        - SL
+        - SM
+        - SN
+        - SO
+        - SR
+        - SS
+        - ST
+        - SV
+        - SX
+        - SY
+        - SZ
+        - TC
+        - TD
+        - TF
+        - TG
+        - TH
+        - TJ
+        - TK
+        - TL
+        - TM
+        - TN
+        - TO
+        - TR
+        - TT
+        - TV
+        - TW
+        - TZ
+        - UA
+        - UG
+        - UM
+        - US
+        - UY
+        - UZ
+        - VA
+        - VC
+        - VE
+        - VG
+        - VI
+        - VN
+        - VU
+        - WF
+        - WS
+        - YE
+        - YT
+        - ZA
+        - ZM
+        - ZW
+      - name: contact_person.address.addition
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact_person.address
+        in: formData
+        required: false
+        type: hash
+      - name: contact_person.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contact_person
+        in: formData
+        required: false
+        type: hash
+      - name: address.street
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: address.zip
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 16
+      - name: address.city
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: address.country
+        in: formData
+        required: true
+        type: string
+        enum:
+        - AD
+        - AE
+        - AF
+        - AG
+        - AI
+        - AL
+        - AM
+        - AO
+        - AQ
+        - AR
+        - AS
+        - AT
+        - AU
+        - AW
+        - AX
+        - AZ
+        - BA
+        - BB
+        - BD
+        - BE
+        - BF
+        - BG
+        - BH
+        - BI
+        - BJ
+        - BL
+        - BM
+        - BN
+        - BO
+        - BQ
+        - BR
+        - BS
+        - BT
+        - BV
+        - BW
+        - BY
+        - BZ
+        - CA
+        - CC
+        - CD
+        - CF
+        - CG
+        - CH
+        - CI
+        - CK
+        - CL
+        - CM
+        - CN
+        - CO
+        - CR
+        - CU
+        - CV
+        - CW
+        - CX
+        - CY
+        - CZ
+        - DE
+        - DJ
+        - DK
+        - DM
+        - DO
+        - DZ
+        - EC
+        - EE
+        - EG
+        - EH
+        - ER
+        - ES
+        - ET
+        - FI
+        - FJ
+        - FK
+        - FM
+        - FO
+        - FR
+        - GA
+        - GB
+        - GD
+        - GE
+        - GF
+        - GG
+        - GH
+        - GI
+        - GL
+        - GM
+        - GN
+        - GP
+        - GQ
+        - GR
+        - GS
+        - GT
+        - GU
+        - GW
+        - GY
+        - HK
+        - HM
+        - HN
+        - HR
+        - HT
+        - HU
+        - ID
+        - IE
+        - IL
+        - IM
+        - IN
+        - IO
+        - IQ
+        - IR
+        - IS
+        - IT
+        - JE
+        - JM
+        - JO
+        - JP
+        - KE
+        - KG
+        - KH
+        - KI
+        - KM
+        - KN
+        - KP
+        - KR
+        - KW
+        - KY
+        - KZ
+        - LA
+        - LB
+        - LC
+        - LI
+        - LK
+        - LR
+        - LS
+        - LT
+        - LU
+        - LV
+        - LY
+        - MA
+        - MC
+        - MD
+        - ME
+        - MF
+        - MG
+        - MH
+        - MK
+        - ML
+        - MM
+        - MN
+        - MO
+        - MP
+        - MQ
+        - MR
+        - MS
+        - MT
+        - MU
+        - MV
+        - MW
+        - MX
+        - MY
+        - MZ
+        - NA
+        - NC
+        - NE
+        - NF
+        - NG
+        - NI
+        - NL
+        - 'NO'
+        - NP
+        - NR
+        - NU
+        - NZ
+        - OM
+        - PA
+        - PE
+        - PF
+        - PG
+        - PH
+        - PK
+        - PL
+        - PM
+        - PN
+        - PR
+        - PS
+        - PT
+        - PW
+        - PY
+        - QA
+        - RE
+        - RO
+        - RS
+        - RU
+        - RW
+        - SA
+        - SB
+        - SC
+        - SD
+        - SE
+        - SG
+        - SH
+        - SI
+        - SJ
+        - SK
+        - SL
+        - SM
+        - SN
+        - SO
+        - SR
+        - SS
+        - ST
+        - SV
+        - SX
+        - SY
+        - SZ
+        - TC
+        - TD
+        - TF
+        - TG
+        - TH
+        - TJ
+        - TK
+        - TL
+        - TM
+        - TN
+        - TO
+        - TR
+        - TT
+        - TV
+        - TW
+        - TZ
+        - UA
+        - UG
+        - UM
+        - US
+        - UY
+        - UZ
+        - VA
+        - VC
+        - VE
+        - VG
+        - VI
+        - VN
+        - VU
+        - WF
+        - WS
+        - YE
+        - YT
+        - ZA
+        - ZM
+        - ZW
+      - name: address.addition
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: address
+        in: formData
+        required: false
+        type: hash
+      - name: function
+        in: formData
+        required: true
+        type: string
+        enum:
+        - distribution_system_operator
+        - electricity_supplier
+        - metering_point_operator
+        - metering_service_provider
+        - other
+        - power_giver
+        - power_taker
+        - transmission_system_operator
+      responses:
+        201:
+          description: created
   "/persons":
     get:
       description: return all persons
