@@ -1,4 +1,5 @@
 require './app/models/organization/general.rb'
+require './app/models/organization/market.rb'
 require_relative '../organization'
 require_relative '../address/create'
 require_relative '../address/update'
@@ -19,6 +20,15 @@ module Schemas::Transactions
       optional(:additional_legal_representation).maybe(:str?, max_size?: 256)
     end
 
+    UpdateMarket = Schemas::Support.Form(Schemas::Transactions::Update) do
+      optional(:name).filled(:str?, max_size?: 64, min_size?: 4)
+      optional(:description).maybe(:str?, max_size?: 256)
+      optional(:email).maybe(:str?, :email?, max_size?: 64)
+      optional(:phone).maybe(:str?, :phone_number?, max_size?: 64)
+      optional(:fax).maybe(:str?, :phone_number?, max_size?: 64)
+      optional(:website).maybe(:str?, :url?, max_size?: 64)
+    end
+
     class << self
 
       def update_for(resource)
@@ -26,7 +36,13 @@ module Schemas::Transactions
         if schema = cache[key]
           schema
         else
-          cache[key] = accept(SchemaVisitor.new(Update), resource)
+          visitor = case resource
+                    when ::Organization::GeneralResource, ::Organization::General
+                      SchemaVisitor.new(Update)
+                    when ::Organization::MarketResource, ::Organization::Market
+                      SchemaVisitor.new(UpdateMarket)
+                    end
+          cache[key] = accept(visitor, resource)
         end
       end
 
@@ -37,11 +53,16 @@ module Schemas::Transactions
       end
 
       def accept(visitor, resource)
-        visitor.address(!resource.address.nil?)
-        visitor.legal(!resource.legal_representation.nil?)
-        visitor.legal_address(!resource&.legal_representation&.address.nil?)
-        visitor.contact(!resource&.contact.nil?)
-        visitor.contact_address(!resource&.contact&.address.nil?)
+        case resource
+        when ::Organization::GeneralResource, ::Organization::General
+          visitor.address(!resource.address.nil?)
+          visitor.legal(!resource.legal_representation.nil?)
+          visitor.legal_address(!resource&.legal_representation&.address.nil?)
+          visitor.contact(!resource&.contact.nil?)
+          visitor.contact_address(!resource&.contact&.address.nil?)
+        when ::Organization::MarketResource, ::Organization::Market
+          visitor.address(!resource.address.nil?)
+        end
         visitor.result
       end
 
