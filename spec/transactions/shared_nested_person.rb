@@ -13,9 +13,11 @@ shared_examples 'create with person without address' do |transaction, expected_c
 
   let(:person) { {prefix: 'M', first_name: 'Frank', last_name: 'Zappa', preferred_language: 'de'} }
 
+  let(:eextra_args) { (defined? extra_args).nil? ? {} : extra_args }
+
   let(:result) do
-    transaction.(params: params.merge(method => person),
-                 resource: resource).value!
+    transaction.({params: params.merge(method => person),
+                  resource: resource}.merge(eextra_args)).value!
   end
 
   it { expect(result.send(method)).to be_a PersonResource }
@@ -30,9 +32,11 @@ shared_examples 'create with person with address' do |transaction, expected_clas
 
   let(:person) { {prefix: 'M', first_name: 'Frank', last_name: 'Zappa', preferred_language: 'de', address: address} }
 
+  let(:eextra_args) { (defined? extra_args).nil? ? {} : extra_args }
+
   let(:result) do
-    transaction.(params: params.merge(method => person),
-                 resource: resource).value!
+    transaction.({params: params.merge(method => person),
+                  resource: resource}.merge(eextra_args)).value!
   end
 
   it { expect(result.send(method)).to be_a PersonResource }
@@ -49,9 +53,11 @@ shared_examples 'update without person' do |transaction, method, params|
     o.reload
   end
 
+  let(:eextra_args) { (defined? extra_args).nil? ? {} : extra_args }
+
   let(:result) do
-    transaction.(params: params.merge(updated_at: object.updated_at.as_json),
-                 resource: resource).value!
+    transaction.({params: params.merge(updated_at: object.updated_at.as_json),
+                  resource: resource}.merge(eextra_args)).value!
   end
 
   it { expect(result).to be_a resource.class }
@@ -63,16 +69,16 @@ shared_examples 'update without person' do |transaction, method, params|
   context 'create person' do
 
     let(:result2) do
-      transaction.(params: {
-                     updated_at: object.reload.updated_at.as_json,
-                     method => {
-                       prefix: 'M',
-                       first_name: 'Elvis',
-                       last_name: 'Presely',
-                       preferred_language: 'de'
-                     }
-                   },
-                   resource: resource).value!
+      transaction.({params: {
+        updated_at: object.reload.updated_at.as_json,
+        method => {
+          prefix: 'M',
+          first_name: 'Elvis',
+          last_name: 'Presely',
+          preferred_language: 'de'
+        }
+      },
+                    resource: resource}.merge(eextra_args)).value!
     end
 
     it { expect(result2).to be_a resource.class }
@@ -84,6 +90,8 @@ end
 
 shared_examples 'update with person without address' do |transaction, method, params|
 
+  let(:eextra_args) { (defined? extra_args).nil? ? {} : extra_args }
+
   let(:object) do
     o = resource.object
     o.update!(method => create(:person))
@@ -91,8 +99,8 @@ shared_examples 'update with person without address' do |transaction, method, pa
   end
 
   let!(:result) do
-    transaction.(params: params.merge(updated_at: object.updated_at.as_json),
-                 resource: resource).value!
+    transaction.({params: params.merge(updated_at: object.updated_at.as_json),
+                  resource: resource}.merge(eextra_args)).value!
   end
 
   it { expect(result).to be_a resource.class }
@@ -104,15 +112,15 @@ shared_examples 'update with person without address' do |transaction, method, pa
   context 'update person' do
 
     let(:result2) do
-      transaction.(params: {
-                     updated_at: object.reload.updated_at.as_json,
-                     method => {
-                       first_name: 'Jimi',
-                       last_name: 'Hendrix',
-                       updated_at: object.send(method).updated_at.as_json
-                     }
-                   },
-                   resource: resource).value!
+      transaction.({params: {
+        updated_at: object.reload.updated_at.as_json,
+        method => {
+          first_name: 'Jimi',
+          last_name: 'Hendrix',
+          updated_at: object.send(method).updated_at.as_json
+        }
+      },
+                    resource: resource}.merge(eextra_args)).value!
     end
 
     it { expect(result2).to be_a resource.class }
@@ -126,6 +134,8 @@ end
 
 shared_examples 'update with person with address' do |transaction, method, params|
 
+  let(:eextra_args) { (defined? extra_args).nil? ? {} : extra_args }
+
   let(:object) do
     o = resource.object
     o.update!(method => create(:person))
@@ -135,8 +145,8 @@ shared_examples 'update with person with address' do |transaction, method, param
   let!(:address) { object.address }
 
   let!(:result) do
-    transaction.(params: params.merge(updated_at: object.updated_at.as_json),
-                 resource: resource).value!
+    transaction.({params: params.merge(updated_at: object.updated_at.as_json),
+                  resource: resource}.merge(eextra_args)).value!
   end
 
   it { expect(result).to be_a resource.class }
@@ -154,19 +164,19 @@ shared_examples 'update with person with address' do |transaction, method, param
     end
 
     let(:result2) do
-      transaction.(params: {
-                     updated_at: object.reload.updated_at.as_json,
-                     method => {
-                       first_name: 'Jimi',
-                       last_name: 'Hendrix',
-                       updated_at: object.send(method).reload.updated_at.as_json,
-                       address: {
-                         street: 'paint it black',
-                         updated_at: address2.reload.updated_at.as_json
-                       }
-                     }
-                   },
-                   resource: resource).value!
+      transaction.({params: {
+        updated_at: object.reload.updated_at.as_json,
+        method => {
+          first_name: 'Jimi',
+          last_name: 'Hendrix',
+          updated_at: object.send(method).reload.updated_at.as_json,
+          address: {
+            street: 'paint it black',
+            updated_at: address2.reload.updated_at.as_json
+          }
+        }
+      },
+                    resource: resource}.merge(eextra_args)).value!
     end
 
     it { expect(result2).to be_a resource.class }
@@ -183,19 +193,19 @@ shared_examples 'update with person with address' do |transaction, method, param
     let!(:address3) { object.send(method).update!(address: nil) }
 
     let(:result3) do
-      transaction.(params: {
-                     updated_at: object.reload.updated_at.as_json,
-                     method => {
-                       first_name: 'Bill',
-                       last_name: 'Gates',
-                       updated_at: object.send(method).reload.updated_at.as_json,
-                       address: {
-                         street: 'wallstreet', zip: '666',
-                         city: 'atlantis', country: 'IT'
-                       }
-                     }
-                   },
-                   resource: resource).value!
+      transaction.({params: {
+        updated_at: object.reload.updated_at.as_json,
+        method => {
+          first_name: 'Bill',
+          last_name: 'Gates',
+          updated_at: object.send(method).reload.updated_at.as_json,
+          address: {
+            street: 'wallstreet', zip: '666',
+            city: 'atlantis', country: 'IT'
+          }
+        }
+      },
+                    resource: resource}.merge(eextra_args)).value!
     end
 
     it { expect(result3).to be_a resource.class }

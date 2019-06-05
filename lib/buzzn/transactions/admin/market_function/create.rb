@@ -1,8 +1,9 @@
 require_relative '../market_function'
 require_relative '../../../schemas/transactions/market_function/create'
+require_relative 'base'
 
 module Transactions::Admin::MarketFunction
-  class Create < Transactions::Base
+  class Create < Base
 
     validate :schema
     authorize :allowed_roles

@@ -13,9 +13,11 @@ shared_examples 'create with address' do |transaction, expected_class, params|
 
   let(:address) { {street: 'wallstreet', zip: '666', city: 'atlantis', country: 'IT'} }
 
+  let(:eextra_args) { (defined? extra_args).nil? ? {} : extra_args }
+
   let(:result) do
-    transaction.(params: params.merge(address: address),
-                 resource: resource).value!
+    transaction.({params: params.merge(address: address),
+                  resource: resource}.merge(eextra_args)).value!
   end
 
   it { expect(result).to be_a expected_class }
@@ -31,9 +33,11 @@ shared_examples 'update with address' do |transaction, params|
     o.reload
   end
 
+  let(:eextra_args) { (defined? extra_args).nil? ? {} : extra_args }
+
   let(:result) do
-    transaction.(params: params.merge(updated_at: object.updated_at.as_json),
-                 resource: resource).value!
+    transaction.({params: params.merge(updated_at: object.updated_at.as_json),
+                  resource: resource}.merge(eextra_args)).value!
   end
 
   it { expect(result).to be_a resource.class }
@@ -45,14 +49,14 @@ shared_examples 'update with address' do |transaction, params|
   context 'update address' do
 
     let(:result2) do
-      transaction.(params: {
-                     updated_at: object.reload.updated_at.as_json,
-                     address: {
-                       street: 'behind the black door',
-                       updated_at: object.address.updated_at.as_json
-                     }
-                   },
-                   resource: resource).value!
+      transaction.({ params: {
+        updated_at: object.reload.updated_at.as_json,
+        address: {
+          street: 'behind the black door',
+          updated_at: object.address.updated_at.as_json
+        }
+      },
+                     resource: resource}.merge(eextra_args)).value!
     end
 
     it { expect(result2).to be_a resource.class }
@@ -71,9 +75,11 @@ shared_examples 'update without address' do |transaction, params|
     o.reload
   end
 
+  let(:eextra_args) { (defined? extra_args).nil? ? {} : extra_args }
+
   let(:result) do
-    transaction.(params: params.merge(updated_at: object.updated_at.as_json),
-                 resource: resource).value!
+    transaction.({params: params.merge(updated_at: object.updated_at.as_json),
+                  resource: resource}.merge(eextra_args)).value!
   end
 
   it { expect(result).to be_a resource.class }
@@ -85,14 +91,14 @@ shared_examples 'update without address' do |transaction, params|
   context 'create address' do
 
     let(:result2) do
-      transaction.(params: {
-                     updated_at: object.reload.updated_at.as_json,
-                     address: {
-                       street: 'wallstreet', zip: '666',
-                       city: 'atlantis', country: 'IT',
-                     }
-                   },
-                   resource: resource).value!
+      transaction.({params: {
+        updated_at: object.reload.updated_at.as_json,
+        address: {
+          street: 'wallstreet', zip: '666',
+          city: 'atlantis', country: 'IT',
+        }
+      },
+                    resource: resource}.merge(eextra_args)).value!
     end
 
     it { expect(result2).to be_a resource.class }
