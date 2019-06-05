@@ -92,7 +92,7 @@ AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
       update :operators
       retrieve :managers
 
-      contact do
+      contact_person do
         retrieve :managers
         update :operators
         address do

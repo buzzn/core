@@ -75,6 +75,21 @@ describe Transactions::Admin::Organization::CreateOrganizationMarket do
         expect {result}.to raise_error Buzzn::ValidationError
       end
     end
+
+    context 'already existing market_partner_id' do
+      let!(:another_market_function) { create(:organization_market_function, :market_partner_id => function_empty[:market_partner_id]) }
+      let(:params) do
+        {
+          name: name,
+          functions: [ function_empty ]
+        }
+      end
+
+      it 'fails' do
+        expect {result}.to raise_error Buzzn::ValidationError
+      end
+
+    end
   end
 
   context 'valid data' do
