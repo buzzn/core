@@ -89,8 +89,9 @@ AdminResource::Permission = Buzzn::Permission.new(AdminResource) do
 
     market_functions do
       create :operators
-      update :operators
       retrieve :managers
+      update :operators
+      delete :operators
 
       contact_person do
         retrieve :managers
