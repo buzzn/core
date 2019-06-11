@@ -217,6 +217,13 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       delete :none
     end
 
+    comments do
+      create :owners
+      retrieve :owners
+      update :owners
+      delete :owners
+    end
+
     balance_sheet do
       create :none
       retrieve :owners
