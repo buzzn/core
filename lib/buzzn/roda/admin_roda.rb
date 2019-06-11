@@ -6,7 +6,10 @@ module Admin
     include Import.args[:env,
                         create_organization_market: 'transactions.admin.organization.create_organization_market',
                         update_organization_market: 'transactions.admin.organization.update_organization_market',
-                        create_market_function:     'transactions.admin.market_function.create']
+                        create_market_function:     'transactions.admin.market_function.create',
+                        update_market_function:     'transactions.admin.market_function.update',
+                        delete_market_function:     'transactions.admin.market_function.delete',
+                       ]
 
     plugin :run_handler
 
@@ -69,6 +72,20 @@ module Admin
 
             r.post! do
               create_market_function.(resource: organization_market.market_functions, params: r.params, organization: organization_market.object)
+            end
+
+            r.on :mfid do |mfid|
+              market_function = organization_market.market_functions.retrieve(mfid)
+
+              r.patch! do
+                update_market_function.(resource: market_function, params: r.params, organization: organization_market.object)
+              end
+
+              r.delete! do
+                delete_market_function.(resource: market_function, params: r.params, organization: organization_market.object)
+              end
+
+              r.others!
             end
 
             r.others!
