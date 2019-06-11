@@ -125,6 +125,11 @@ module Admin
           r.run BillingRoda
         end
 
+        r.on 'comments' do
+          shared[:comments] = contract.comments
+          r.run CommentRoda
+        end
+
         r.on 'accounting' do
           shared[:contract] = contract
           r.run AccountingRoda

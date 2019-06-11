@@ -6135,6 +6135,133 @@ paths:
       responses:
         200:
           description: success
+  "/localpools/{localpool_id}/contracts/{contract_id}/comments":
+    get:
+      description: retrieve comments of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: add a comment to the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      - name: content
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 65536
+      - name: author
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 192
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/contracts/{contract_id}/comments/{comment_id}":
+    get:
+      description: retrieve a comment of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: delete a comment
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: update a comment of the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: content
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 65536
+      - name: author
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 192
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/contracts/{contract_id}/contractor":
     get:
       description: returns the contractor of the contract

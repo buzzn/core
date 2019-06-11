@@ -217,6 +217,12 @@ describe Admin, :swagger, :request_helper, order: :defined do
     organization_market2.market_functions.first
   end
 
+  entity!(:comment) do
+    c = create(:comment)
+    contract.comments << c
+    c
+  end
+
   swagger do |s|
     s.basePath = '/api/admin'
   end
@@ -480,6 +486,30 @@ describe Admin, :swagger, :request_helper, order: :defined do
 
   delete '/localpools/{localpool.id}/contracts/{localpool_power_taker_contract.id}/payments/{payment_1.id}' do
     description 'delete a payment entry'
+  end
+
+  # contract -> comments
+
+  get '/localpools/{localpool.id}/contracts/{contract.id}/comments' do
+    description 'retrieve comments of the contract'
+  end
+
+  post '/localpools/{localpool.id}/contracts/{contract.id}/comments' do
+    schema Schemas::Transactions::Admin::Comment::Create
+    description 'add a comment to the contract'
+  end
+
+  get '/localpools/{localpool.id}/contracts/{contract.id}/comments/{comment.id}' do
+    description 'retrieve a comment of the contract'
+  end
+
+  patch '/localpools/{localpool.id}/contracts/{contract.id}/comments/{comment.id}' do
+    schema Schemas::Transactions::Admin::Comment::Update
+    description 'update a comment of the contract'
+  end
+
+  delete '/localpools/{localpool.id}/contracts/{contract.id}/comments/{comment.id}' do
+    description 'delete a comment'
   end
 
   # meters
