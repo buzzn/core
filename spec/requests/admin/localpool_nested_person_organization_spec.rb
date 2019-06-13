@@ -46,7 +46,9 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
                         'persons',
                         'tariffs',
                         'billing_cycles',
-                        'devices'],
+                        'devices',
+                        'comments'
+                       ],
       'incompleteness' => {
         'grid_feeding_register' => ['must be filled'],
         'grid_consumption_register' => ['must be filled'],
