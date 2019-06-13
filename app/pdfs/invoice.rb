@@ -39,7 +39,6 @@ module Pdf
         billing_year: billing_year,
         consumption_last_year: consumption(billing_year.nil? || @billing.billing_cycle.nil? ? nil : billing_year-1),
         consumption_year: consumption(billing_year) || 0,
-        abschlag: build_abschlag,
         meter: build_meter,
         waste_de: build_waste_de,
         ratios_de: build_ratios_de,
@@ -49,6 +48,7 @@ module Pdf
       }.tap do |h|
         h[:labels1] = build_labels1(h[:consumption_last_year])
         h[:billing_type] = h[:billing_ends_contract] ? 'Schlussabrechnung' : 'Turnusabrechnung'
+        h[:abschlag] = build_abschlag(h)
       end
     end
 
@@ -282,7 +282,7 @@ module Pdf
       }
     end
 
-    def build_abschlag
+    def build_abschlag(billing_hash)
       payment = @billing.adjusted_payment || @billing.contract.current_payment
       abschlag = {
         was_changed: !@billing.adjusted_payment.nil?,
@@ -290,8 +290,9 @@ module Pdf
       }.merge(build_payment(payment))
       return abschlag if payment.nil?
 
+      vat = billing_hash[:vat]
       has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
-      payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro]} €"
+      payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro_netto]} € netto, #{abschlag[:amount_euro]} € brutto inkl. #{abschlag[:amount_euro_vat]} € USt (#{vat} %)"
       abschlag_begin_date = to_date(abschlag[:begin_date])
       # negative means it's disabled for this powertaker
       if abschlag[:disabled]
@@ -321,7 +322,9 @@ module Pdf
         {
           energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
           cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
-          amount_euro: german_div(BigDecimal(payment.price_cents, 4)),
+          amount_euro: german_div(payment.price_cents_after_taxes),
+          amount_euro_netto: german_div(payment.price_cents_before_taxes),
+          amount_euro_vat: german_div(payment.price_cents_after_taxes-payment.price_cents_before_taxes),
           disabled: payment.price_cents.negative?,
           begin_date: payment.begin_date
         }
