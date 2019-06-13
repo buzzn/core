@@ -199,6 +199,11 @@ module Admin
             assign_organization_market.(resource: localpool, params: r.params, function: :electricity_supplier)
           end
         end
+
+        r.on 'comments' do
+          shared[:comments] = localpool.comments
+          r.run CommentRoda
+        end
       end
 
       rodauth.check_session_expiration
