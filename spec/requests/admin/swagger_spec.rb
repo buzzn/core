@@ -223,6 +223,12 @@ describe Admin, :swagger, :request_helper, order: :defined do
     c
   end
 
+  entity!(:comment_2) do
+    c = create(:comment)
+    localpool.comments << c
+    c
+  end
+
   swagger do |s|
     s.basePath = '/api/admin'
   end
@@ -509,6 +515,30 @@ describe Admin, :swagger, :request_helper, order: :defined do
   end
 
   delete '/localpools/{localpool.id}/contracts/{contract.id}/comments/{comment.id}' do
+    description 'delete a comment'
+  end
+
+  # comments
+
+  get '/localpools/{localpool.id}/comments' do
+    description 'retrieve comments of the localpool'
+  end
+
+  post '/localpools/{localpool.id}/comments' do
+    schema Schemas::Transactions::Admin::Comment::Create
+    description 'add a comment to the contract'
+  end
+
+  get '/localpools/{localpool.id}/comments/{comment_2.id}' do
+    description 'retrieve a comment of the contract'
+  end
+
+  patch '/localpools/{localpool.id}/comments/{comment_2.id}' do
+    schema Schemas::Transactions::Admin::Comment::Update
+    description 'update a comment of the contract'
+  end
+
+  delete '/localpools/{localpool.id}/comments/{comment_2.id}' do
     description 'delete a comment'
   end
 
