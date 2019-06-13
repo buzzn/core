@@ -119,7 +119,8 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
         'persons',
         'tariffs',
         'billing_cycles',
-        'devices'
+        'devices',
+        'comments'
       ],
       'incompleteness' => serialized_incompleteness(localpool),
       'bank_account' => serialized_bank_account(localpool.bank_account),
@@ -252,7 +253,8 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
           'persons',
           'tariffs',
           'billing_cycles',
-          'devices'
+          'devices',
+          'comments'
         ],
         'incompleteness' => serialized_incompleteness(nil),
         'bank_account' => nil,
@@ -354,7 +356,8 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
           'persons',
           'tariffs',
           'billing_cycles',
-          'devices'
+          'devices',
+          'comments'
         ],
         'incompleteness' => serialized_incompleteness(localpool),
         'bank_account' => nil,

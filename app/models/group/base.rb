@@ -24,6 +24,8 @@ module Group
     has_many :registers, class_name: 'Register::Base', through: :meters
     has_many :register_metas_by_registers, class_name: 'Register::Meta', through: :registers, foreign_key: :register_meta_id, source: :meta
 
+    has_and_belongs_to_many :comments, foreign_key: :group_id, join_table: 'comments_groups', class_name: 'Comment'
+
     def register_metas
       register_metas_by_registers
     end

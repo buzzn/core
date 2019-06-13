@@ -44,7 +44,6 @@ module Contract
     has_and_belongs_to_many :documents, foreign_key: :contract_id
     has_and_belongs_to_many :comments, foreign_key: :contract_id, join_table: 'comments_contracts', class_name: 'Comment'
 
-
     belongs_to :contractor_bank_account, class_name: 'BankAccount'
     belongs_to :customer_bank_account, class_name: 'BankAccount'
     belongs_to :register_meta, class_name: 'Register::Meta', foreign_key: :register_meta_id
