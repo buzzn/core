@@ -246,7 +246,7 @@ html
           <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{current_tariff.baseprice_euros_per_month_brutto} €/Monat,</strong> (#{current_tariff.baseprice_euros_per_month_netto} €/Monat)<br>
           <strong>Bezugspreis,</strong> (Bezugspreis netto): <strong>#{current_tariff.energyprice_cents_per_kwh_brutto} Cent/kWh,</strong> (#{current_tariff.energyprice_cents_per_kwh_netto} Cent/kWh)
 
-        p #{abschlag.satz}
+        p == abschlag.satz
 
         p Der Vertrag läuft auf unbestimmte Zeit. Er kann mit einer Frist von einem Monat zum Monatsende in Textform gekündigt werden.
         p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine Email oder einen Anruf.
