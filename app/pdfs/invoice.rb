@@ -29,7 +29,7 @@ module Pdf
         localpool: build_localpool,
         billing: build_billing,
         items: build_billing_items,
-        vat: ((BigDecimal(billing_config.vat, 4) - 1.0) * 100).round,
+        vat: contract.localpool.billing_detail.issues_vat ? ((BigDecimal(billing_config.vat, 4) - 1.0) * 100).round : 0,
         billing_ends_contract: contract.end_date.nil? ? false : @billing.end_date == contract.end_date,
         contract: {
           number: contract.full_contract_number,
@@ -193,6 +193,20 @@ module Pdf
       data
     end
 
+    def calculate_taxes(amount_brutto)
+      billing_config = CoreConfig.load(Types::BillingConfig)
+      issues_vat = contract.localpool.billing_detail.issues_vat
+      vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
+      amount_netto = vat > 0 ? 1/vat * amount_brutto : amount_brutto
+      amount_taxes = amount_brutto - amount_netto
+      {
+        amount_before_taxes: amount_netto,
+        amount_after_taxes: amount_brutto,
+        amount_taxes: amount_taxes,
+        vat: vat
+      }
+    end
+
     def build_billing
       {
         date: @billing.last_date,
@@ -204,12 +218,19 @@ module Pdf
         netto =   @billing.total_amount_before_taxes.round(0)
         brutto =  @billing.total_amount_after_taxes.round(0)
         balance_at = BigDecimal(@billing.balance_before) / 10
+
+        balance_at_before_taxes = calculate_taxes(balance_at)[:amount_before_taxes]
+        balance_at_after_taxes = calculate_taxes(balance_at)[:amount_after_taxes]
+        balance_at_taxes = calculate_taxes(balance_at)[:amount_taxes]
+
         to_pay_cents = balance_at - brutto
         has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
         hash[:netto] = german_div(netto)
         hash[:brutto] = german_div(brutto)
         hash[:vat_amount] = german_div(brutto-netto)
-        hash[:balance_at_invoice] = german_div(balance_at)
+        hash[:balance_at_before_taxes] = german_div(balance_at_before_taxes)
+        hash[:balance_at_after_taxes] = german_div(balance_at_after_taxes)
+        hash[:balance_at_taxes] = german_div(balance_at_taxes)
         hash[:to_pay] = german_div(to_pay_cents.abs)
         hash[:forderung]  = to_pay_cents.positive? ? 'Erstattung' : 'Forderung'
         hash[:rueck_nach] = to_pay_cents.positive? ? 'Rück' : 'Nach'
