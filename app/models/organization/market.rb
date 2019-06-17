@@ -7,11 +7,23 @@ module Organization
     has_many :market_functions, dependent: :destroy, class_name: 'Organization::MarketFunction', foreign_key: :organization_id
     has_many :energy_classifications, foreign_key: :organization_id, class_name: 'Organization::EnergyClassification'
 
+    has_many :localpools_as_dso, class_name: 'Group::Localpool', foreign_key: :distribution_system_operator_id
+    has_many :localpools_as_tso, class_name: 'Group::Localpool', foreign_key: :transmission_system_operator_id
+    has_many :localpools_as_es, class_name: 'Group::Localpool', foreign_key: :electricity_supplier_id
+
     # make a scope for each possible market function
     MarketFunction.functions.each_key do |function|
       send :scope, "#{function}s", -> {
         where(id: MarketFunction.send(function).select(:organization_id))
       }
+    end
+
+    def groups_with_function
+      res = {}
+      res[:electricity_supplier] = localpools_as_es
+      res[:distribution_system_operator] = localpools_as_dso
+      res[:transmission_system_operator] = localpools_as_tso
+      res
     end
 
     def in_market_function(function)
