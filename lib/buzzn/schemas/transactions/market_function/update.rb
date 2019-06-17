@@ -48,9 +48,9 @@ module Schemas::Transactions::MarketFunction
                  end
                end
       functions = organization.market_functions.collect { |x| x.function }
-      possible_functions = ::Organization::MarketFunction.functions.values - functions
+      possible_functions = (::Organization::MarketFunction.functions.values - functions) << resource.function
       schema = Schemas::Support.Form(schema) do
-        optional(:function).value(included_in?: possible_functions)
+        optional(:function).value(included_in?: possible_functions.uniq)
       end
       schema
     end
