@@ -205,6 +205,18 @@ describe Admin, :swagger, :request_helper, order: :defined do
               contract: localpool_power_taker_contract)
   end
 
+  entity!(:organization_market) do
+    create(:organization, :market)
+  end
+
+  entity!(:organization_market2) do
+    create(:organization, :electricity_supplier)
+  end
+
+  entity!(:market_function) do
+    organization_market2.market_functions.first
+  end
+
   swagger do |s|
     s.basePath = '/api/admin'
   end
@@ -217,8 +229,36 @@ describe Admin, :swagger, :request_helper, order: :defined do
     description 'return all organizations'
   end
 
+  # organization-market
+
   get '/organizations-market' do
     description 'return all market organizations'
+  end
+
+  post '/organizations-market' do
+    description 'create a new market organization'
+    schema Schemas::Transactions::Organization::CreateMarketWithNested
+  end
+
+  patch '/organizations-market/{organization_market.id}' do
+    description 'create a new market organization'
+    schema Schemas::Transactions::Organization.update_for(organization_market)
+  end
+
+  # organizations-market -> market-functions
+
+  post '/organizations-market/{organization_market.id}/market-functions' do
+    description 'create a new function for that organization'
+    schema Schemas::Transactions::MarketFunction.create_for(organization_market)
+  end
+
+  patch '/organizations-market/{organization_market2.id}/market-functions/{market_function.id}' do
+    schema Schemas::Transactions::MarketFunction.update_for(market_function, organization_market)
+    'updates a market function'
+  end
+
+  delete '/organizations-market/{organization_market.id}/market-functions/{market_function.id}' do
+    'deletes a market function'
   end
 
   get '/localpools' do

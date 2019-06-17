@@ -13,11 +13,12 @@ class AdminResource < Buzzn::Resource::Base
     org_ids = general.objects.pluck(:id) + object.organizations.pluck(:id)
     org_ids.uniq!
     all = Organization::General.where(:id => org_ids)
-    Organization::GeneralResource.send(:to_collection, all, general.security_context)
+    Organization::GeneralResource.send(:to_collection, all, security_context.send(:organizations))
   end
 
   def organization_markets
-    Organization::MarketResource.all(current_user)
+    all = Organization::Market.all
+    Organization::MarketResource.send(:to_collection, all, security_context.send(:organization_markets))
   end
 
   def initialize(user)
