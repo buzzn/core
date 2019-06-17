@@ -13,8 +13,19 @@ describe Transactions::Admin::MarketFunction::Update do
   end
 
   context 'function' do
-    let(:org) { create(:organization, :electricity_supplier) }
-    let(:resource) { admin_resource.organization_markets.retrieve(org.id).market_functions.retrieve(org.market_functions.first.id) }
+    let(:org) do
+      create(:organization, :electricity_supplier, :transmission_system_operator)
+    end
+
+    let(:es_mf) do
+      org.market_functions.where(:function => 'electricity_supplier').first
+    end
+
+    let(:tso_mf) do
+      org.market_functions.where(:function => 'transmission_system_operator').first
+    end
+
+
 
     let(:invalid_params_1) do
       {
@@ -30,6 +41,13 @@ describe Transactions::Admin::MarketFunction::Update do
       }
     end
 
+    let(:valid_params_2) do
+      {
+        updated_at: resource.object.updated_at.to_json,
+        function: 'electricity_supplier'
+      }
+    end
+
     context 'already assigned as one' do
       let(:localpool) { create(:group, :localpool) }
       before do
@@ -38,6 +56,10 @@ describe Transactions::Admin::MarketFunction::Update do
       end
 
       let(:params) { valid_params_1 }
+
+      let(:resource) do
+        admin_resource.organization_markets.retrieve(org.id).market_functions.retrieve(es_mf.id)
+      end
 
       it 'fails' do
         expect{result}.to raise_error Buzzn::ValidationError, "{:function=>[\"organization already serves as #{resource.function} for [#{localpool.id}]\"]}"
@@ -49,6 +71,10 @@ describe Transactions::Admin::MarketFunction::Update do
 
       let(:params) { invalid_params_1 }
 
+      let(:resource) do
+        admin_resource.organization_markets.retrieve(org.id).market_functions.retrieve(tso_mf.id)
+      end
+
       it 'fails' do
         expect{result}.to raise_error Buzzn::ValidationError, '{:function=>["must be one of: distribution_system_operator, metering_point_operator, metering_service_provider, other, power_giver, power_taker, transmission_system_operator"]}'
       end
@@ -57,13 +83,38 @@ describe Transactions::Admin::MarketFunction::Update do
 
     context 'valid' do
 
-      let(:params) { valid_params_1 }
+      context 'change' do
 
-      it 'works' do
-        expect(result).to be_success
-        mf = resource.object
-        mf.reload
-        expect(mf.function).to eql 'distribution_system_operator'
+        let(:params) { valid_params_1 }
+
+        let(:resource) do
+          admin_resource.organization_markets.retrieve(org.id).market_functions.retrieve(es_mf.id)
+        end
+
+        it 'works' do
+          expect(result).to be_success
+          mf = resource.object
+          mf.reload
+          expect(mf.function).to eql 'distribution_system_operator'
+        end
+
+      end
+
+      context 'no change' do
+
+        let(:params) { valid_params_2 }
+
+        let(:resource) do
+          admin_resource.organization_markets.retrieve(org.id).market_functions.retrieve(es_mf.id)
+        end
+
+        it 'works' do
+          expect(result).to be_success
+          mf = resource.object
+          mf.reload
+          expect(mf.function).to eql 'electricity_supplier'
+        end
+
       end
 
     end
