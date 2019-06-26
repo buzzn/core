@@ -4,6 +4,7 @@ module Admin
     model Comment
 
     attribute :content,
+              :author,
               :updatable,
               :deletable
 
