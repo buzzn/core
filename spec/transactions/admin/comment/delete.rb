@@ -14,6 +14,29 @@ describe Transactions::Admin::Comment::Update do
     Transactions::Admin::Comment::Delete.new.(resource: resource)
   end
 
+  context 'meter' do
+
+    before do
+      meter.comments << comment
+    end
+
+    let(:meter) do
+      create(:meter, :real, group: localpool)
+    end
+
+    let(:resource) do
+      Admin::LocalpoolResource.all(operator).retrieve(localpool.id).meters.retrieve(meter.id).comments.retrieve(comment.id)
+    end
+
+    it 'deletes' do
+      old_count = meter.comments.count
+      expect(result).to be_success
+      meter.reload
+      expect(meter.comments.count).to eql old_count-1
+    end
+
+  end
+
   context 'localpool' do
     before do
       localpool.comments << comment

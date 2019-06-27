@@ -393,6 +393,13 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
       delete :managers
     end
 
+    comments do
+      create :managers
+      retrieve :managers
+      update :managers
+      delete :managers
+    end
+
     registers do
       retrieve :managers
       update :managers

@@ -44,4 +44,22 @@ describe Transactions::Admin::Comment::Create do
     end
   end
 
+  context 'meter' do
+
+    let(:meter) do
+      create(:meter, :real, group: localpool)
+    end
+
+    let(:resource) do
+      Admin::LocalpoolResource.all(operator).retrieve(localpool.id).meters.retrieve(meter.id).comments
+    end
+
+    it 'creates' do
+      expect(result).to be_success
+      res = result.value!
+      expect(res).to be_a Admin::CommentResource
+    end
+
+  end
+
 end
