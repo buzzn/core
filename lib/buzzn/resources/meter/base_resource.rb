@@ -1,5 +1,6 @@
 module Meter
   class BaseResource < Buzzn::Resource::Entity
+    require_relative '../admin/comment_resource'
 
     abstract
 
@@ -11,6 +12,7 @@ module Meter
     attributes :updatable, :deletable
 
     has_many :registers
+    has_many :comments, Admin::CommentResource
 
   end
 end

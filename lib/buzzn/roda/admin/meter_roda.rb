@@ -51,6 +51,11 @@ module Admin
           raise "can not handle model: #{meter.class.model}"
         end
 
+        r.on 'comments' do
+          shared[:comments] = meter.comments
+          r.run CommentRoda
+        end
+
         r.on 'registers' do
           shared[RegisterRoda::CHILDREN] = meter.registers
           r.run RegisterRoda

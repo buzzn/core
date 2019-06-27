@@ -1,10 +1,13 @@
 class GroupResource < Buzzn::Resource::Entity
+  require_relative 'admin/comment_resource'
 
   model Group::Base
 
   attributes  :name,
               :slug,
               :description
+
+  has_many :comments, Admin::CommentResource
 
   def type
     case object

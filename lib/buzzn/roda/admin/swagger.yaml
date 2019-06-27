@@ -6105,6 +6105,113 @@ paths:
       responses:
         200:
           description: success
+  "/localpools/{localpool_id}/comments":
+    get:
+      description: retrieve comments of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: add a comment to the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: content
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 65536
+      - name: author
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 192
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/comments/{comment_id}":
+    get:
+      description: retrieve a comment of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: delete a comment
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: update a comment of the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: content
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 65536
+      - name: author
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 192
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/contracts":
     get:
       description: returns all the contracts of the localpool
@@ -6135,6 +6242,133 @@ paths:
       responses:
         200:
           description: success
+  "/localpools/{localpool_id}/contracts/{contract_id}/comments":
+    get:
+      description: retrieve comments of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: add a comment to the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      - name: content
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 65536
+      - name: author
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 192
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/contracts/{contract_id}/comments/{comment_id}":
+    get:
+      description: retrieve a comment of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: delete a comment
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: update a comment of the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: content
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 65536
+      - name: author
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 192
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/contracts/{contract_id}/contractor":
     get:
       description: returns the contractor of the contract
@@ -9070,6 +9304,133 @@ paths:
       responses:
         200:
           description: success
+  "/localpools/{localpool_id}/meters/{meter_id}/comments":
+    get:
+      description: retrieve comments of the meter
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: add a comment to the meter
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: content
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 65536
+      - name: author
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 192
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/meters/{meter_id}/comments/{comment_id}":
+    get:
+      description: retrieve a comment of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: delete a comment
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: update a comment of the contract
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: comment_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: content
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 65536
+      - name: author
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 192
+      responses:
+        200:
+          description: patched
   "/localpools/{localpool_id}/meters/{meter_id}/registers":
     get:
       description: returns all registers of a meter for the given IDs
@@ -15098,6 +15459,12 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: additional_legal_representation
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
       - name: address.street
         in: formData
         required: true
@@ -15377,6 +15744,692 @@ paths:
         format: ''
         maxLength: 64
       - name: address
+        in: formData
+        required: false
+        type: hash
+      - name: legal_representation.prefix
+        in: formData
+        required: false
+        type: string
+        enum:
+        - F
+        - M
+      - name: legal_representation.first_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legal_representation.last_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legal_representation.email
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legal_representation.preferred_language
+        in: formData
+        required: false
+        type: string
+        enum:
+        - de
+        - en
+      - name: legal_representation.title
+        in: formData
+        required: false
+        type: string
+        enum:
+        - Prof.
+        - Dr.
+        - Prof. Dr.
+      - name: legal_representation.phone
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legal_representation.fax
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legal_representation.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: legal_representation.address.street
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legal_representation.address.zip
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 16
+      - name: legal_representation.address.city
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legal_representation.address.country
+        in: formData
+        required: true
+        type: string
+        enum:
+        - AD
+        - AE
+        - AF
+        - AG
+        - AI
+        - AL
+        - AM
+        - AO
+        - AQ
+        - AR
+        - AS
+        - AT
+        - AU
+        - AW
+        - AX
+        - AZ
+        - BA
+        - BB
+        - BD
+        - BE
+        - BF
+        - BG
+        - BH
+        - BI
+        - BJ
+        - BL
+        - BM
+        - BN
+        - BO
+        - BQ
+        - BR
+        - BS
+        - BT
+        - BV
+        - BW
+        - BY
+        - BZ
+        - CA
+        - CC
+        - CD
+        - CF
+        - CG
+        - CH
+        - CI
+        - CK
+        - CL
+        - CM
+        - CN
+        - CO
+        - CR
+        - CU
+        - CV
+        - CW
+        - CX
+        - CY
+        - CZ
+        - DE
+        - DJ
+        - DK
+        - DM
+        - DO
+        - DZ
+        - EC
+        - EE
+        - EG
+        - EH
+        - ER
+        - ES
+        - ET
+        - FI
+        - FJ
+        - FK
+        - FM
+        - FO
+        - FR
+        - GA
+        - GB
+        - GD
+        - GE
+        - GF
+        - GG
+        - GH
+        - GI
+        - GL
+        - GM
+        - GN
+        - GP
+        - GQ
+        - GR
+        - GS
+        - GT
+        - GU
+        - GW
+        - GY
+        - HK
+        - HM
+        - HN
+        - HR
+        - HT
+        - HU
+        - ID
+        - IE
+        - IL
+        - IM
+        - IN
+        - IO
+        - IQ
+        - IR
+        - IS
+        - IT
+        - JE
+        - JM
+        - JO
+        - JP
+        - KE
+        - KG
+        - KH
+        - KI
+        - KM
+        - KN
+        - KP
+        - KR
+        - KW
+        - KY
+        - KZ
+        - LA
+        - LB
+        - LC
+        - LI
+        - LK
+        - LR
+        - LS
+        - LT
+        - LU
+        - LV
+        - LY
+        - MA
+        - MC
+        - MD
+        - ME
+        - MF
+        - MG
+        - MH
+        - MK
+        - ML
+        - MM
+        - MN
+        - MO
+        - MP
+        - MQ
+        - MR
+        - MS
+        - MT
+        - MU
+        - MV
+        - MW
+        - MX
+        - MY
+        - MZ
+        - NA
+        - NC
+        - NE
+        - NF
+        - NG
+        - NI
+        - NL
+        - 'NO'
+        - NP
+        - NR
+        - NU
+        - NZ
+        - OM
+        - PA
+        - PE
+        - PF
+        - PG
+        - PH
+        - PK
+        - PL
+        - PM
+        - PN
+        - PR
+        - PS
+        - PT
+        - PW
+        - PY
+        - QA
+        - RE
+        - RO
+        - RS
+        - RU
+        - RW
+        - SA
+        - SB
+        - SC
+        - SD
+        - SE
+        - SG
+        - SH
+        - SI
+        - SJ
+        - SK
+        - SL
+        - SM
+        - SN
+        - SO
+        - SR
+        - SS
+        - ST
+        - SV
+        - SX
+        - SY
+        - SZ
+        - TC
+        - TD
+        - TF
+        - TG
+        - TH
+        - TJ
+        - TK
+        - TL
+        - TM
+        - TN
+        - TO
+        - TR
+        - TT
+        - TV
+        - TW
+        - TZ
+        - UA
+        - UG
+        - UM
+        - US
+        - UY
+        - UZ
+        - VA
+        - VC
+        - VE
+        - VG
+        - VI
+        - VN
+        - VU
+        - WF
+        - WS
+        - YE
+        - YT
+        - ZA
+        - ZM
+        - ZW
+      - name: legal_representation.address.addition
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: legal_representation.address
+        in: formData
+        required: false
+        type: hash
+      - name: legal_representation
+        in: formData
+        required: false
+        type: hash
+      - name: contact.prefix
+        in: formData
+        required: false
+        type: string
+        enum:
+        - F
+        - M
+      - name: contact.first_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact.last_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact.email
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact.preferred_language
+        in: formData
+        required: false
+        type: string
+        enum:
+        - de
+        - en
+      - name: contact.title
+        in: formData
+        required: false
+        type: string
+        enum:
+        - Prof.
+        - Dr.
+        - Prof. Dr.
+      - name: contact.phone
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact.fax
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact.id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contact.address.street
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact.address.zip
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 16
+      - name: contact.address.city
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact.address.country
+        in: formData
+        required: true
+        type: string
+        enum:
+        - AD
+        - AE
+        - AF
+        - AG
+        - AI
+        - AL
+        - AM
+        - AO
+        - AQ
+        - AR
+        - AS
+        - AT
+        - AU
+        - AW
+        - AX
+        - AZ
+        - BA
+        - BB
+        - BD
+        - BE
+        - BF
+        - BG
+        - BH
+        - BI
+        - BJ
+        - BL
+        - BM
+        - BN
+        - BO
+        - BQ
+        - BR
+        - BS
+        - BT
+        - BV
+        - BW
+        - BY
+        - BZ
+        - CA
+        - CC
+        - CD
+        - CF
+        - CG
+        - CH
+        - CI
+        - CK
+        - CL
+        - CM
+        - CN
+        - CO
+        - CR
+        - CU
+        - CV
+        - CW
+        - CX
+        - CY
+        - CZ
+        - DE
+        - DJ
+        - DK
+        - DM
+        - DO
+        - DZ
+        - EC
+        - EE
+        - EG
+        - EH
+        - ER
+        - ES
+        - ET
+        - FI
+        - FJ
+        - FK
+        - FM
+        - FO
+        - FR
+        - GA
+        - GB
+        - GD
+        - GE
+        - GF
+        - GG
+        - GH
+        - GI
+        - GL
+        - GM
+        - GN
+        - GP
+        - GQ
+        - GR
+        - GS
+        - GT
+        - GU
+        - GW
+        - GY
+        - HK
+        - HM
+        - HN
+        - HR
+        - HT
+        - HU
+        - ID
+        - IE
+        - IL
+        - IM
+        - IN
+        - IO
+        - IQ
+        - IR
+        - IS
+        - IT
+        - JE
+        - JM
+        - JO
+        - JP
+        - KE
+        - KG
+        - KH
+        - KI
+        - KM
+        - KN
+        - KP
+        - KR
+        - KW
+        - KY
+        - KZ
+        - LA
+        - LB
+        - LC
+        - LI
+        - LK
+        - LR
+        - LS
+        - LT
+        - LU
+        - LV
+        - LY
+        - MA
+        - MC
+        - MD
+        - ME
+        - MF
+        - MG
+        - MH
+        - MK
+        - ML
+        - MM
+        - MN
+        - MO
+        - MP
+        - MQ
+        - MR
+        - MS
+        - MT
+        - MU
+        - MV
+        - MW
+        - MX
+        - MY
+        - MZ
+        - NA
+        - NC
+        - NE
+        - NF
+        - NG
+        - NI
+        - NL
+        - 'NO'
+        - NP
+        - NR
+        - NU
+        - NZ
+        - OM
+        - PA
+        - PE
+        - PF
+        - PG
+        - PH
+        - PK
+        - PL
+        - PM
+        - PN
+        - PR
+        - PS
+        - PT
+        - PW
+        - PY
+        - QA
+        - RE
+        - RO
+        - RS
+        - RU
+        - RW
+        - SA
+        - SB
+        - SC
+        - SD
+        - SE
+        - SG
+        - SH
+        - SI
+        - SJ
+        - SK
+        - SL
+        - SM
+        - SN
+        - SO
+        - SR
+        - SS
+        - ST
+        - SV
+        - SX
+        - SY
+        - SZ
+        - TC
+        - TD
+        - TF
+        - TG
+        - TH
+        - TJ
+        - TK
+        - TL
+        - TM
+        - TN
+        - TO
+        - TR
+        - TT
+        - TV
+        - TW
+        - TZ
+        - UA
+        - UG
+        - UM
+        - US
+        - UY
+        - UZ
+        - VA
+        - VC
+        - VE
+        - VG
+        - VI
+        - VN
+        - VU
+        - WF
+        - WS
+        - YE
+        - YT
+        - ZA
+        - ZM
+        - ZW
+      - name: contact.address.addition
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: contact.address
+        in: formData
+        required: false
+        type: hash
+      - name: contact
         in: formData
         required: false
         type: hash
