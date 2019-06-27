@@ -1,5 +1,6 @@
 require_relative '../market_function'
 require_relative '../../delete'
+require_relative 'base'
 
 module Transactions::Admin::MarketFunction
   class Delete < Base
