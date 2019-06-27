@@ -1,3 +1,4 @@
+# coding: utf-8
 # == Schema Information
 #
 # Table name: minipooldb.msb_gerät
@@ -71,6 +72,23 @@ class Beekeeper::Minipool::MsbGerät < Beekeeper::Minipool::BaseRecord
   self.primary_key = 'vertragsnummer'
 
   include Beekeeper::ImportWarnings
+
+  #  berechnetbeschreibungkurz :string(45)       not null
+  #  berechnetbeschreibunglang :string(1000)     not null
+  #  berechnetformelklar       :string(1000)     not null
+  #  berechnetformelexcel      :string(1000)     not null
+
+
+  def berechnet_comment
+    "berechnetbeschreibungkurz: #{berechnetbeschreibungkurz}\n" +
+      "berechnetbeschreibunglang: #{berechnetbeschreibunglang}\n" +
+      "berechnetformelklar: #{berechnetformelklar}\n" +
+      "berechnetformelexcel: #{berechnetformelexcel}\n"
+  end
+
+  def berechnet_any?
+    !berechnetbeschreibungkurz.empty? || !berechnetbeschreibunglang.empty? || !berechnetformelklar.empty? || !berechnetformelexcel.empty?
+  end
 
   def converted_attributes
     @converted_attributes ||= {

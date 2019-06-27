@@ -14,4 +14,12 @@ class Beekeeper::Minipool::Kommentare < Beekeeper::Minipool::BaseRecord
 
   self.table_name = 'minipooldb.kommentare'
 
+  def converted_attributes
+    {
+      author: autor,
+      content: kommentar,
+      created_at: datum
+    }
+  end
+
 end
