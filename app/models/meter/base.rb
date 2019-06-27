@@ -13,6 +13,7 @@ module Meter
     belongs_to :broker, class_name: 'Broker::Base'
 
     has_many :registers, class_name: 'Register::Base', foreign_key: :meter_id
+    has_and_belongs_to_many :comments, foreign_key: :meter_id, join_table: 'comments_meters', class_name: 'Comment'
 
     before_destroy do
       # TODO need to figure out what to do with the sequence_number
