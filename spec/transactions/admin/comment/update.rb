@@ -10,6 +10,33 @@ describe Transactions::Admin::Comment::Update do
     }
   end
 
+  let(:result) do
+    Transactions::Admin::Comment::Update.new.(params: params, resource: resource)
+  end
+
+  context 'meter' do
+
+    before do
+      meter.comments << comment
+    end
+
+    let(:meter) do
+      create(:meter, :real, group: localpool)
+    end
+
+    let(:resource) do
+      Admin::LocalpoolResource.all(operator).retrieve(localpool.id).meters.retrieve(meter.id).comments.retrieve(comment.id)
+    end
+
+    it 'updates' do
+      expect(result).to be_success
+      res = result.value!
+      resource.object.reload
+      expect(resource.object.content).to eql 'changed'
+    end
+
+  end
+
   context 'localpool' do
 
     before do
@@ -18,10 +45,6 @@ describe Transactions::Admin::Comment::Update do
 
     let(:resource) do
       Admin::LocalpoolResource.all(operator).retrieve(localpool.id).comments.retrieve(comment.id)
-    end
-
-    let(:result) do
-      Transactions::Admin::Comment::Update.new.(params: params, resource: resource)
     end
 
     it 'updates' do
@@ -46,10 +69,6 @@ describe Transactions::Admin::Comment::Update do
 
       let(:contract) do
         create(:contract, ctype, localpool: localpool)
-      end
-
-      let(:result) do
-        Transactions::Admin::Comment::Update.new.(params: params, resource: resource)
       end
 
       it 'updates' do
