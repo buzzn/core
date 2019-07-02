@@ -30,12 +30,13 @@ module Transactions::Admin::Contract::Base::Payment
 
     def calculate_price(params:, fetch_tariff:, **)
       unless fetch_tariff.nil?
-        params[:price_cents] = case params[:cycle]
-                               when 'monthly'
-                                 fetch_tariff.cents_per_days(30, params[:energy_consumption_kwh_pa] / 365.0)
-                               when 'yearly'
-                                 fetch_tariff.cents_per_days(365, params[:energy_consumption_kwh_pa] / 365.0)
-                               end
+        price_cents = case params[:cycle]
+                      when 'monthly'
+                        fetch_tariff.cents_per_days_after_taxes(30, params[:energy_consumption_kwh_pa] / 365.0)
+                      when 'yearly'
+                        fetch_tariff.cents_per_days_after_taxes(365, params[:energy_consumption_kwh_pa] / 365.0)
+                      end
+        params[:price_cents] = (price_cents/100.00).round*100
       end
     end
 

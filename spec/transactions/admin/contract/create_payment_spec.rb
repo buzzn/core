@@ -1,8 +1,14 @@
+# coding: utf-8
 describe Transactions::Admin::Contract::Base::Payment::Create, order: :defined do
+
+  before do
+    require './lib/buzzn/types/billing_config'
+    CoreConfig.store Types::BillingConfig.new(vat: 1.19)
+  end
 
   let(:localpool) { create(:group, :localpool) }
   let(:operator) { create(:account, :buzzn_operator) }
-  let(:tariff)   { create(:tariff, group: localpool, energyprice_cents_per_kwh: 20, baseprice_cents_per_month: 300) }
+  let(:tariff)   { create(:tariff, group: localpool, energyprice_cents_per_kwh: 25, baseprice_cents_per_month: 300) }
 
   let(:contract) { create(:contract, :localpool_powertaker, localpool: localpool, tariffs: [tariff]) }
 
@@ -59,7 +65,7 @@ describe Transactions::Admin::Contract::Base::Payment::Create, order: :defined d
       {
         begin_date: Date.new(2018, 9, 23),
         cycle: 'monthly',
-        energy_consumption_kwh_pa: 1000,
+        energy_consumption_kwh_pa: 1300,
         tariff_id: tariff.id
       }
     end
@@ -75,9 +81,9 @@ describe Transactions::Admin::Contract::Base::Payment::Create, order: :defined d
       expect(contract.payments.count).to eql 1
       payment = contract.payments.first
       expect(payment.tariff).to eql tariff
-      days = 30
-      expect(payment.price_cents).to eql (days*(1000/365.00)*20+     # kwh
-                                          days*(300 * 12)/365).round # base
+      expected = 3500
+      expect(payment.price_cents).to eql expected
+      expect(payment.price_cents_after_taxes).to eql expected
     end
 
   end
