@@ -1,7 +1,7 @@
 require_relative 'shared_entities'
 require 'buzzn/transactions/admin/billing_cycle/generate_report'
 
-describe Transactions::Admin::BillingCycle::GenerateReport do
+describe Transactions::Admin::BillingCycle::GenerateReport, order: :defined do
 
   include_context 'billing cycle entities'
 
