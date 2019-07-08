@@ -82,7 +82,7 @@ module Contract
                     raise ArgumentError.new("timestamp not a Time or Fixnum or Date: #{timestamp.class}")
                   end
       where('begin_date <= ?', timestamp)
-        .where('end_date > ? OR end_date IS NULL', timestamp + 1.second)
+        .where('end_date > ? OR end_date IS NULL', timestamp)
     end
 
     scope :without_third_party, -> { where.not(type: 'Contract::LocalpoolThirdParty') }

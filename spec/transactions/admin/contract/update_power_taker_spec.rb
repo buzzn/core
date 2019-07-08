@@ -72,6 +72,14 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
     }
   end
 
+  let(:overlap_input) do
+    {
+      'signing_date': localpool.start_date,
+      'begin_date': localpool.start_date+5,
+      'updated_at': resource.updated_at.as_json
+    }
+  end
+
   let(:invalid_input_2) do
     contract.reload
     base_input.merge(with_register_meta_input).merge(:updated_at => resource.updated_at.as_json)
@@ -131,6 +139,11 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
                                                                     resource: resource)
   end
 
+  let(:result_overlap_1) do
+    Transactions::Admin::Contract::Localpool::UpdatePowerTaker.new.(params: overlap_input,
+                                                                    resource: resource)
+  end
+
   it 'should not update' do
     expect {result_invalid}.to raise_error(Buzzn::ValidationError, '{:updated_at=>["is missing"]}')
   end
@@ -160,6 +173,26 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
     expect(result_valid_4).to be_success
     contract.reload
     expect(resource.creditor_identification).to eql 'DE123124555'
+  end
+
+  context 'already present contract' do
+
+    context 'overlap' do
+      let!(:other_contract) { create(:contract, :localpool_powertaker, begin_date: localpool.start_date, termination_date: localpool.start_date+10, end_date: localpool.start_date+23, register_meta: contract.register_meta)}
+
+      it 'does not create with invalid dates' do
+        expect {result_overlap_1}.to raise_error(Buzzn::ValidationError, '{:no_other_contract_in_range=>["there is already another contract in that time range present"]}')
+      end
+    end
+
+    context 'no overlap' do
+      let!(:other_contract) { create(:contract, :localpool_powertaker, begin_date: localpool.start_date, termination_date: localpool.start_date+10, end_date: localpool.start_date+23, register_meta: contract.register_meta)}
+
+      it 'does not create with invalid dates' do
+        expect(result_valid).to be_success
+      end
+    end
+
   end
 
 end
