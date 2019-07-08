@@ -20,10 +20,11 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order
 
   let(:power_taker_person) { create(:person) }
   let(:power_taker_org) { create(:organization) }
+  let(:today) { Date.today }
 
   let(:assign_request_person) do
     { customer: { id: power_taker_person.id, type: 'person' },
-      begin_date: Date.today.as_json,
+      begin_date: today.as_json,
       share_register_publicly: false,
       share_register_with_group: true,
       creditor_identification: 'DE1223123323',
@@ -32,7 +33,7 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order
 
   let(:invalid_assign_request_person) do
     { customer: { id: 13371337, type: 'person' },
-      begin_date: Date.today.as_json,
+      begin_date: today.as_json,
       share_register_publicly: false,
       share_register_with_group: true,
       register_meta: { name: 'Secret Room', label: 'CONSUMPTION'} }
@@ -44,7 +45,7 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order
 
   let(:assign_request_org) do
     { customer: { id: power_taker_org.id, type: 'organization' },
-      begin_date: Date.today.as_json,
+      begin_date: today.as_json,
       share_register_publicly: false,
       share_register_with_group: true,
       creditor_identification: 'DE1223123323',
@@ -96,6 +97,26 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order
     it 'does not assign an invalid id' do
       localpool.reload
       expect {result_invalid}.to raise_error(Buzzn::ValidationError, '{:customer=>{:id=>"object does not exist"}}')
+    end
+
+    context 'already present contract' do
+
+      context 'overlap' do
+        let!(:other_contract) { create(:contract, :localpool_powertaker, begin_date: today-10.days, termination_date: today-3.days, end_date: today+1.day, register_meta: register_meta)}
+
+        it 'does not create with invalid dates' do
+          expect {result_valid_org}.to raise_error(Buzzn::ValidationError, '{:no_other_contract_in_range=>["there is already another contract in that time range present"]}')
+        end
+      end
+
+      context 'no overlap' do
+        let!(:other_contract) { create(:contract, :localpool_powertaker, begin_date: today-10.days, termination_date: today-3.days, end_date: today, register_meta: register_meta)}
+
+        it 'does not create with invalid dates' do
+          expect(result_valid_org).to be_success
+        end
+      end
+
     end
 
     context 'person' do
