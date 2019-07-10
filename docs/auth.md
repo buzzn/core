@@ -27,7 +27,7 @@ curl -F token=df909e0106ec0434f3ccf014b8c91b4f70bff78464d64359d17b17c8dd6dc1f3 -
 
 
 # oauth2 via Ruby
-
+Todo: This section is outdated and will not work anymore. An update is required.
 #### access-token via auhorization code grant flow
 ```ruby
 #https://github.com/doorkeeper-gem/doorkeeper/wiki/Testing-your-provider-with-OAuth2-gem
