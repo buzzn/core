@@ -8,7 +8,6 @@ class Transactions::Admin::Meter::UpdateReal < Transactions::Admin::Meter
   check :authorize, with: :'operations.authorization.update'
   tee :create_or_find_metering_point_id
   tee :assign, with: :'operations.action.assign'
-  check :check_discovergy, with: :'operations.discovergy'
   map :save, with: :'operations.action.save'
 
   def schema
