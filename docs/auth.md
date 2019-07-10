@@ -1,30 +1,16 @@
-# oauth2 via curl
+# login via curl
 
-#### login via password grant flow
+#### Getting authorization key
 ```bash
-curl -X POST https://app.buzzn.net/oauth/token -d 'grant_type=password&username=ffaerber@gmail.com&password=xxxxxxxx&scope=full'
+curl -v --request POST --url http://localhost:3000/api/me/login --header 'content-type: application/json' --data '{"login":"USER","password":"PASSWORD"}' 2>| grep Authorization
 ```
-
-### get current user
+Gets the authorization key.
+### Using authorization key
+Attach the authorization key to the request's header. For example
 ```bash
-curl -H "Authorization: Bearer 694b92807b02e5b69026e74afd8015fc94a96e0802a92f74e56e188a408f291e" https://app.buzzn.net/api/v1/users/me
+ curl --request GET --url 'http://localhost:3000/api/admin/localpools?=&include=localpool_processing_contracts' --header 'authorization: AUTHORIZATION_KEZ'
 ```
-
-### get login token info
-```bash
-curl -H "Authorization: Bearer 179ba33b239314fc5121b0f5e6c522f3e067403ee8d8f6541b1e114778371f31" https://app.buzzn.net/oauth/token/info
-```
-
-### refresh expired token
-```bash
-curl -F grant_type=refresh_token -F refresh_token=0231fe0325bb11cc7d0c3b5b03c5beb7653bba1db0ffc4147bdb6d6f343d8bdc -X POST https://app.buzzn.net/oauth/token
-```
-
-### revoke token
-```bash
-curl -F token=df909e0106ec0434f3ccf014b8c91b4f70bff78464d64359d17b17c8dd6dc1f3 -H "Authorization: Bearer df909e0106ec0434f3ccf014b8c91b4f70bff78464d64359d17b17c8dd6dc1f3" -X POST https://app.buzzn.net/oauth/revoke
-```
-
+gets all localpool processing contracts.
 
 # oauth2 via Ruby
 Todo: This section is outdated and will not work anymore. An update is required.
