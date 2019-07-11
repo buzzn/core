@@ -29,6 +29,7 @@ in stdenv.mkDerivation {
     pkgs.postgresql
     pkgs.mysql
     pkgs.heroku
+    pkgs.inotify-tools
   ];
   dontStrip = true;
   dontPatchELF = true;
