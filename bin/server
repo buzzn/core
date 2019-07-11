@@ -1,2 +1,11 @@
 #!/usr/bin/env bash
-bundle exec puma $@
+set -m
+bundle exec puma $@ &
+BUNDLE_PUMA_PID=$!
+while true; do
+    inotifywait -rq -e modify ./
+    kill -SIGUSR1 $BUNDLE_PUMA_PID
+done &
+WATCHER_PID=$!
+fg %1
+kill $WATCHER_PID
