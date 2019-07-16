@@ -34,6 +34,7 @@ class Services::Datasource::Discovergy::OptimizedGroup
     group.registers.each do |r|
       next unless r.meter.discovergy?
       next if r.is_a?(Register::Substitute)
+      next unless r.decomissioned_at.nil?
       if r.production? || r.meta.grid_consumption?
         plus << discovergy_id(r.meter)
       elsif r.consumption? || r.meta.grid_feeding?
@@ -53,7 +54,7 @@ class Services::Datasource::Discovergy::OptimizedGroup
   end
 
   def update(group)
-    delete(group)
+    #delete(group)
     create(group)
   end
 
@@ -82,7 +83,7 @@ class Services::Datasource::Discovergy::OptimizedGroup
   private
 
   def discovergy_meter(group)
-    ::Meter::Discovergy.where(group: group).first
+    group.meters_discovergy.order(:created_at).last
   end
 
   def process(query)

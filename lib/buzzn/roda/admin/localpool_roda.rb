@@ -21,6 +21,7 @@ module Admin
                         update_nested_organization: 'transactions.admin.generic.update_nested_organization',
                         update_organization_owner: 'transactions.admin.localpool.update_organization_owner',
                         assign_organization_market: 'transactions.admin.localpool.assign_organization_market',
+                        create_or_update_meter_discovergy: 'transactions.admin.localpool.create_or_update_meter_discovergy',
                         bubbles: 'transactions.bubbles',
                         delete: 'transactions.delete'
                        ]
@@ -55,6 +56,9 @@ module Admin
         end
 
         r.on 'meters' do
+          r.post! 'update-discovergy' do
+            create_or_update_meter_discovergy.(resource: localpool, params: r.params)
+          end
           r.run MeterRoda
         end
 
