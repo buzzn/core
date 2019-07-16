@@ -3,7 +3,7 @@ set -m
 bundle exec puma $@ &
 BUNDLE_PUMA_PID=$!
 while true; do
-    inotifywait -rq -e modify ./
+    inotifywait -rq -e modify --exclude .byebug_history ./
     kill -SIGUSR1 $BUNDLE_PUMA_PID
 done &
 WATCHER_PID=$!
