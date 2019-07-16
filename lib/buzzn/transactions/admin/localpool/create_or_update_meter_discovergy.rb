@@ -3,9 +3,9 @@ require_relative '../localpool'
 class Transactions::Admin::Localpool::CreateOrUpdateMeterDiscovergy < Transactions::Base
 
   authorize :allowed_roles
-  around :db_transaction
   add :optimized_group_srv
   add :change_is_necessary
+  around :db_transaction
   add :update
   map :wrap_up
 
@@ -29,9 +29,13 @@ class Transactions::Admin::Localpool::CreateOrUpdateMeterDiscovergy < Transactio
 
   def wrap_up(resource:, **)
     resource.object.reload
-    Meter::DiscovergyResource.new(
-      resource.object.meters_discovergy.order(:created_at).last
-    )
+    unless resource.object.meters_discovergy.order(:created_at).last.nil?
+      Meter::DiscovergyResource.new(
+        resource.object.meters_discovergy.order(:created_at).last
+      )
+    else
+      raise Buzzn::RecordNotFound
+    end
   end
 
 end

@@ -11547,6 +11547,19 @@ paths:
       responses:
         201:
           description: created
+  "/localpools/{localpool_meter_real_id}/meters/update-discovergy":
+    post:
+      description: updates or create a optimized meter for the group
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_meter_real_id
+        in: path
+        required: true
+        type: string
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_mpo_id}/contracts":
     post:
       description: adds a metering point operator contract to the localpool
