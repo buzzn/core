@@ -5,7 +5,6 @@ class Transactions::Admin::Localpool::CreateOrUpdateMeterDiscovergy < Transactio
   authorize :allowed_roles
   add :optimized_group_srv
   add :change_is_necessary
-  around :db_transaction
   add :update
   map :wrap_up
 
@@ -25,16 +24,17 @@ class Transactions::Admin::Localpool::CreateOrUpdateMeterDiscovergy < Transactio
     if change_is_necessary
       optimized_group_srv.update(resource.object)
     end
+    resource.object.meters_discovergy.order(:created_at).last
   end
 
-  def wrap_up(resource:, **)
+  def wrap_up(resource:, update:, **)
     resource.object.reload
-    unless resource.object.meters_discovergy.order(:created_at).last.nil?
+    if update.nil?
+      raise Buzzn::RecordNotFound
+    else
       Meter::DiscovergyResource.new(
         resource.object.meters_discovergy.order(:created_at).last
       )
-    else
-      raise Buzzn::RecordNotFound
     end
   end
 
