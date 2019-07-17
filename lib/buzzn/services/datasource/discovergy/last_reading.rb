@@ -24,7 +24,7 @@ class Services::Datasource::Discovergy::LastReading
   private
 
   def collection(group, builder, *fields)
-    if meter = Meter::Discovergy.where(group: group).first
+    if meter = group.meters_discovergy.order(:created_at).last
       api_call(meter, fields, true, builder)
     end
   end
@@ -36,7 +36,7 @@ class Services::Datasource::Discovergy::LastReading
       api_call(register.meter, fields, false, builder)
     when Register::Substitute
       builder = Builders::Discovergy::SubstituteTickerBuilder.new(registers: register.group.registers, register: register, unit: unit)
-      meter = register.group.meters.where(type: Meter::Discovergy).first
+      meter = register.group.meters_discovergy.order(:created_at).last
       return nil unless meter
       api_call(meter, fields, true, builder)
     else

@@ -563,6 +563,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Admin::Meter::CreateReal
   end
 
+  post '/localpools/{localpool_meter_real.id}/meters/update-discovergy' do
+    description 'updates or create a optimized meter for the group'
+    schema Schemas::Support.Form
+  end
+
   patch '/localpools/{localpool.id}/meters/{real_meter.id}' do
     description 'updates the real meter for the given IDs'
     schema Schemas::Transactions::Admin::Meter::UpdateReal

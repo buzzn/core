@@ -7,7 +7,7 @@ class Services::Datasource::Discovergy::Charts
   include Import['services.datasource.discovergy.api']
 
   def daily(group)
-    if meter = Meter::Discovergy.where(group: group).first
+    if meter = group.meters_discovergy.order(:created_at).last
       query = Types::Discovergy::Readings::Get.new(meter: meter,
                                                    fields: [:energy, :energyOut],
                                                    each:   true,
