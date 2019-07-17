@@ -28,12 +28,15 @@ class Services::Datasource::Discovergy::OptimizedGroup
     "EASYMETER_#{meter.product_serialnumber}"
   end
 
+  def reject_register(r)
+    !r.meter.discovergy? || r.is_a?(Register::Substitute) || !r.decomissioned_at.nil?
+  end
+
   def create(group)
     plus = []
     minus = []
     group.registers.each do |r|
-      next unless r.meter.discovergy?
-      next if r.is_a?(Register::Substitute)
+      next if reject_register(r)
       if r.production? || r.meta.grid_consumption?
         plus << discovergy_id(r.meter)
       elsif r.consumption? || r.meta.grid_feeding?
@@ -53,7 +56,7 @@ class Services::Datasource::Discovergy::OptimizedGroup
   end
 
   def update(group)
-    delete(group)
+    #delete(group)
     create(group)
   end
 
@@ -75,14 +78,13 @@ class Services::Datasource::Discovergy::OptimizedGroup
   end
 
   def local(group)
-    meters = group.meters.where(id: Register::Base.grid_production_consumption.where('meter_id = meters.id').where.not(type: Register::Substitute).select(:meter_id))
-    meters.select { |meter| meter.discovergy? }
+    group.registers.to_a.reject {|r| reject_register(r)}.collect {|x| x.meter}.uniq
   end
 
   private
 
   def discovergy_meter(group)
-    ::Meter::Discovergy.where(group: group).first
+    group.meters_discovergy.order(:created_at).last
   end
 
   def process(query)

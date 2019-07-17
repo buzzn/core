@@ -21,6 +21,7 @@ module Group
     has_many :meters, class_name: 'Meter::Base', foreign_key: :group_id
     has_many :meters_real, class_name: 'Meter::Real', foreign_key: :group_id
     has_many :meters_virtual, class_name: 'Meter::Virtual', foreign_key: :group_id
+    has_many :meters_discovergy, class_name: 'Meter::Discovergy', foreign_key: :group_id
     has_many :registers, class_name: 'Register::Base', through: :meters
     has_many :register_metas_by_registers, class_name: 'Register::Meta', through: :registers, foreign_key: :register_meta_id, source: :meta
 

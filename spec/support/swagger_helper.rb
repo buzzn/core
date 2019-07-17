@@ -193,7 +193,7 @@ module SwaggerHelper
         self.current = ops
         real_path = eval "\"#{swagger.basePath}#{path.gsub(/\{/, '#{').sub(/\/$/, '')}\""
         send(method.to_s.upcase, real_path, user, params)
-        expect([200, 201, 204, 422, 401, 403]).to include response.status
+        expect([200, 201, 204, 422, 401, 403, 404]).to include response.status
         instance_eval &block
         if [:post, :patch, :put].include?(method) || response.status == 422
           expect_missing(ops, options[:consumes], params)
