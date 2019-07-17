@@ -9,7 +9,7 @@ class Services::Datasource::Discovergy::SingleReading
                  cache: 'services.cache']
 
   def all(group, date)
-    meter = Meter::Discovergy.find_by(group: group)
+    meter = group.meters_discovergy.order(:created_at).last
     return unless meter
     api.request(
       query(meter, date, true),
