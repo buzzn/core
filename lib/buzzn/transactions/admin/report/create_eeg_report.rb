@@ -4,20 +4,39 @@ require_relative '../../../schemas/transactions/admin/report/create_eeg_report'
 class Transactions::Admin::Report::CreateEegReport < Transactions::Base
 
   validate :schema
-  authorize :allowed_roles
+#  authorize :allowed_roles
   tee :end_date, with: :'operations.end_date'
   add :warnings
   add :date_range
   add :register_metas
   add :calculate_production
+  add :calculate_production_pv
+  add :calculate_production_chp
   add :calculate_grid_feeding
+  add :calculate_consumption
+  add :calculate_consumption_common
+  add :calculate_production_usage_ratio
   add :calculate_grid_consumption
   add :contracts_with_range
   add :contracts_with_range_and_readings
   add :calculate_grid_consumption_corrected
   add :calculate_grid_feeding_corrected
+  add :calculate_grid_feeding_corrected_usage_ratio
+  add :calculate_grid_feeding_chp
+  add :calculate_grid_feeding_pv
   add :calculate_veeg
   add :calculate_veeg_reduced
+  add :count_consumption_points_full
+  add :calculate_average_per_meter_full
+  add :count_consumption_points_reduced
+  add :calculate_average_per_meter_reduced
+  add :calculate_consumption_own_production_wh
+  add :calculate_consumption_grid_wh
+  add :calculate_consumption_prodcution_ratio
+  add :count_contracts_third_party
+  add :calculate_consumption_third_party_average
+  add :calculate_baseprice_per_year_ct
+  add :calculate_energyprice_cents_per_kwh_before_taxes
   map :build_result
 
   include Import['services.reading_service']
@@ -36,23 +55,60 @@ class Transactions::Admin::Report::CreateEegReport < Transactions::Base
 
   def build_result(contracts_with_range_and_readings:,
                    calculate_production:,
+                   calculate_production_pv:,
+                   calculate_production_chp:,
+                   calculate_production_usage_ratio:,
                    calculate_grid_feeding:,
+                   calculate_consumption:,
+                   calculate_consumption_common:,
                    calculate_grid_consumption:,
                    calculate_grid_consumption_corrected:,
                    calculate_grid_feeding_corrected:,
+                   calculate_grid_feeding_chp:,
+                   calculate_grid_feeding_pv:,
                    calculate_veeg:,
                    calculate_veeg_reduced:,
+                   count_consumption_points_full:,
+                   calculate_average_per_meter_full:,
+                   count_consumption_points_reduced:,
+                   calculate_average_per_meter_reduced:,
+                   calculate_consumption_own_production_wh:,
+                   calculate_consumption_grid_wh:,
+                   calculate_consumption_prodcution_ratio:,
+                   count_contracts_third_party:,
+                   calculate_consumption_third_party_average:,
+                   calculate_baseprice_per_year_ct:,
+                   calculate_energyprice_cents_per_kwh_before_taxes:,
                    warnings:,
                    **)
     {
       warnings: warnings,
-      production_wh:       calculate_production,
-      grid_feeding_wh:     calculate_grid_feeding,
-      grid_consumption_wh: calculate_grid_consumption,
+      production_wh:          calculate_production,
+      production_pv_wh:       calculate_production_pv,
+      production_chp_wh:      calculate_production_chp,
+      production_usage_ratio: calculate_production_usage_ratio,
+      grid_feeding_wh:        calculate_grid_feeding,
+      consumption_wh:         calculate_consumption,
+      consumption_common_wh:  calculate_consumption_common,
+      grid_consumption_wh:    calculate_grid_consumption,
       grid_consumption_corrected_wh: calculate_grid_consumption_corrected,
       grid_feeding_corrected_wh: calculate_grid_feeding_corrected,
+      grid_feeding_chp_wh: calculate_grid_feeding_chp,
+      grid_feeding_pv_wh: calculate_grid_feeding_pv,
       veeg_wh: calculate_veeg,
       veeg_reduced_wh: calculate_veeg_reduced,
+      consumption_points_full: count_consumption_points_full,
+      consumption_average_per_meter_full: calculate_average_per_meter_full,
+      consumption_points_reduced: count_consumption_points_reduced,
+      consumption_average_per_meter_reduced: calculate_average_per_meter_reduced,
+      consumption_own_production_wh: calculate_consumption_own_production_wh,
+      consumption_grid_wh: calculate_consumption_grid_wh,
+      consumption_prodcution_ratio: calculate_consumption_prodcution_ratio,
+      consumption_third_party_wh: contracts_with_range_and_readings[:third_party_wh],
+      contracts_third_party: count_contracts_third_party,
+      consumption_third_party_average: calculate_consumption_third_party_average,
+      baseprice_per_year_ct: calculate_baseprice_per_year_ct,
+      energyprice_cents_per_kwh_before_taxes: calculate_energyprice_cents_per_kwh_before_taxes
     }.merge(contracts_with_range_and_readings)
   end
 
@@ -75,6 +131,35 @@ class Transactions::Admin::Report::CreateEegReport < Transactions::Base
     else
       calculate_grid_feeding-(calculate_grid_consumption-contracts_with_range_and_readings[:third_party_wh])
     end
+  end
+
+  def calculate_grid_feeding(register_metas:, date_range:, warnings:, **)
+    calculate_system(register_metas: register_metas, date_range: date_range,
+                     label: :grid_feeding, warnings: warnings).round(2).to_f
+  end
+
+  def calculate_grid_feeding_pv(calculate_production_pv:,
+                                register_metas:, date_range:, warnings:, **)
+    calculate_production_pv-calculate_system(register_metas: register_metas,
+                                             date_range: date_range,
+                                             label: :demarcation_pv,
+                                             warnings: warnings).round(2).to_f
+  end
+
+  def calculate_grid_feeding_chp(calculate_production_chp:,
+                                 register_metas:,
+                                 date_range:,
+                                 warnings:, **)
+    calculate_production_chp-calculate_system(register_metas: register_metas,
+                                              date_range: date_range,
+                                              label: :demarcation_chp,
+                                              warnings: warnings).round(2).to_f
+  end
+
+  def calculate_grid_feeding_corrected_usage_ratio(calculate_consumption_common:,
+                                                   calculate_production:,
+                                                   **)
+    "asdf"
   end
 
   def date_range(params:, resource:, **)
@@ -168,8 +253,124 @@ class Transactions::Admin::Report::CreateEegReport < Transactions::Base
     calculate_system(register_metas: register_metas, date_range: date_range, label: :production, warnings: warnings).round(2).to_f
   end
 
-  def calculate_grid_feeding(register_metas:, date_range:, warnings:, **)
-    calculate_system(register_metas: register_metas, date_range: date_range, label: :grid_feeding, warnings: warnings).round(2).to_f
+  def calculate_production_pv(register_metas:, date_range:, warnings:, **)
+    calculate_system(register_metas: register_metas,
+                     date_range: date_range,
+                     label: :production_pv,
+                     warnings: warnings).round(2).to_f
+  end
+
+  def calculate_production_chp(register_metas:, date_range:, warnings:, **)
+    calculate_system(register_metas: register_metas,
+                     date_range: date_range,
+                     label: :production_chp,
+                     warnings: warnings).round(2).to_f
+  end
+
+  def calculate_production_usage_ratio(calculate_consumption_common:,
+                                       calculate_production:,
+                                       date_range:, warnings:, **)
+    if calculate_production.zero?
+      return 0
+    end
+
+    0 + calculate_consumption_common * 100 / calculate_production
+  end
+
+  # Returns the overall electricity consumption.
+  #
+  # @param register_metas [Array<Meta>] the metas to read from.
+  # @param date_range [date_range]  Time period to take into account.
+  # @param warnings [Array] Warnings occourred.
+  def calculate_consumption(register_metas:, date_range:, warnings:, **)
+    calculate_system(register_metas: register_metas,
+                     date_range: date_range,
+                     label: :consumption,
+                     warnings: warnings).round(2).to_f
+  end
+
+  # Returns the group's electricity consumption.
+  #
+  # @param register_metas [Array<Meta>] the metas to read from.
+  # @param date_range [date_range]  Time period to take into account.
+  # @param warnings [Array] Warnings occourred.
+  def calculate_consumption_common(register_metas:, date_range:, warnings:, **)
+    calculate_system(register_metas: register_metas,
+                     date_range: date_range,
+                     label: :consumption_common,
+                     warnings: warnings).round(2).to_f
+  end
+
+  # Counts the consumtion points of all contracts with full taxation.
+  #
+  # @param contracts_with_range [Array<Hash>] All the contracts to inspect.
+  # @return [number] The number of consumption points.
+  def count_consumption_points_full(contracts_with_range:, **)
+    contracts_with_range.map {|c| c[:contract]}
+                        .select {|c| c.renewable_energy_law_taxation == 'full'}
+                        .map(&:register_meta)
+                        .flat_map(&:registers)
+                        .count {|r| r.kind == :consumption}
+  end
+
+  # @param count_consumption_points_reduced [number] Number of non tax reduced consumption points.
+  # @param calculate_veeg_reduced [number] Used amount of non tax reduced electricity
+  # @return [number] the average consumption per meter for all non tax reduced contracts.
+  def calculate_average_per_meter_full(count_consumption_points_full:,
+                                       calculate_veeg:,
+                                       **)
+    calculate_veeg / count_consumption_points_full
+  end
+
+  # Counts the consumtion points of all contracts with reduced taxation.
+  #
+  # @param contracts_with_range [Array<Hash>] All the contracts to inspect.
+  # @return [number] The number of consumption points.
+  def count_consumption_points_reduced(contracts_with_range:, **)
+    contracts_with_range.map {|c| c[:contract]}
+                        .select {|c| c.renewable_energy_law_taxation == 'reduced'}
+                        .map(&:register_meta)
+                        .flat_map(&:registers)
+                        .count {|r| r.kind == :consumption}
+  end
+
+  # @param count_consumption_points_reduced [number] Number of tax reduced consumption points.
+  # @param calculate_veeg_reduced [number] Used amount of tax reduced electricity
+  # @return [number] the average consumption per meter for all reduced taxed contracts.
+  def calculate_average_per_meter_reduced(
+        count_consumption_points_reduced:,
+        calculate_veeg_reduced:,
+        **
+  )
+    if count_consumption_points_reduced.zero?
+      return 0
+    end
+    calculate_veeg_reduced / count_consumption_points_reduced
+  end
+
+  # @param calculate_grid_feeding [number] Amount of grid fed electricity.
+  # @param calculate_production [number] Amount of produced electricity.
+  # @return [number] The calculated consumption of the own produced power.
+  def calculate_consumption_own_production_wh(calculate_grid_feeding:, calculate_production:, **)
+    calculate_production - calculate_grid_feeding
+  end
+
+  # @param [number] calculate_consumption
+  # @return [number] The calculated consumption of grid power.
+  def calculate_consumption_grid_wh(calculate_consumption:,
+                                    calculate_consumption_own_production_wh:,
+                                    **
+  )
+    calculate_consumption - calculate_consumption_own_production_wh
+  end
+
+  # @param calculate_consumption [number] Amount of electricity consumption.
+  # @param calculate_grid_consumption [number] Amount of electricity consumpted through grid.
+  # @return [number] the ratio of electricity produced and consumpted in percent.
+  def  calculate_consumption_prodcution_ratio(calculate_consumption:,
+                                              calculate_grid_consumption:,
+                                              **)
+    (1.0 - calculate_grid_consumption / calculate_consumption) * 100
   end
 
   def calculate_grid_consumption(register_metas:, date_range:, warnings:, **)
@@ -203,6 +404,54 @@ class Transactions::Admin::Report::CreateEegReport < Transactions::Base
                                          })
       end
     end
+  end
+
+  # @param [Array<Contract>] All contracts to take into account.
+  # @returns [number] The number of all third party contracts. TODO docu: what is a third party contract?
+  def count_contracts_third_party(contracts_with_range:, **)
+    contracts_with_range.select {|r| r[:contract].is_a? Contract::LocalpoolThirdParty}.count
+  end
+
+  # @param [number] count_contracts_third_party Number of third party contracts.
+  # @param [number] contracts_with_range_and_readings Accumulated consumption of
+  #                 third party contracts.
+  # @return [number] Average consumption of third party contract.
+  def calculate_consumption_third_party_average(count_contracts_third_party:,
+                                                contracts_with_range_and_readings:,
+                                                **)
+    if count_contracts_third_party.zero?
+      return 0;
+    end
+
+    contracts_with_range_and_readings[:third_party_wh] / count_contracts_third_party
+  end
+
+  # @param  [Array] The contracts in taken into account.
+  #
+  # @return Accumulated price in cents.
+  def calculate_baseprice_per_year_ct(contracts_with_range:, **)
+    baseprices = contracts_with_range.map {|c| c[:contract]}
+                                     .flat_map(&:tariffs)
+                                     .map(&:baseprice_cents_per_month_before_taxes).uniq
+
+    if baseprices.count != 1
+      raise 'Platform can not yet handle groups with more or less than one baseprice.'
+    end
+
+    baseprices.first * 12
+  end
+
+  # Das muss alle tarife zeigen und alle mitglieder die den haben
+  def calculate_energyprice_cents_per_kwh_before_taxes(contracts_with_range:, **)
+    energyprices = contracts_with_range.map {|c| c[:contract]}
+                                       .flat_map(&:tariffs)
+                                       .map(&:energyprice_cents_per_kwh_before_taxes).uniq
+
+    if energyprices.count !=1
+      raise 'Platform yet only handle groups which have exactly one tarif.'
+    end
+
+    energyprices.first
   end
 
   def contracts_with_range_and_readings(contracts_with_range:, **)
