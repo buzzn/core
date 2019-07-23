@@ -8,3 +8,14 @@ def create_buzzn_operator(first_name:, last_name:, email:, password:)
   password_hash = BCrypt::Password.create(password)
   Account::PasswordHash.create(account: account, password_hash: password_hash)
 end
+
+def create_accounts_from_file(filename)
+  file = File.read filename
+  users = JSON.parse(file)
+  users = Buzzn::Utils::Helpers.symbolize_keys_recursive(users)
+  users[:operators].each do |user|
+    create_buzzn_operator(
+      user
+    )
+  end
+end
