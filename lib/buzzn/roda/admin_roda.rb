@@ -9,6 +9,7 @@ module Admin
                         create_market_function:     'transactions.admin.market_function.create',
                         update_market_function:     'transactions.admin.market_function.update',
                         delete_market_function:     'transactions.admin.market_function.delete',
+                        report_data:                'transactions.admin.report.report_data',
                        ]
 
     plugin :run_handler

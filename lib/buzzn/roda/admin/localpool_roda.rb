@@ -111,6 +111,10 @@ module Admin
           r.run BillingCycleRoda
         end
 
+        r.on 'annual-report' do
+          r.run AnnualReportRoda
+        end
+
         r.on 'devices' do
           r.run Admin::DeviceRoda
         end
