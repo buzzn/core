@@ -95,6 +95,10 @@ module Admin
           bank_account_assign.(resource: localpool, params: r.params, attribute: :gap_contract_customer_bank_account, person_or_org: :gap_contract_customer)
         end
 
+        r.on 'group-member-export' do
+          r.run GroupMemberExportRoda
+        end
+
         r.on 'billing-cycles' do
           r.run BillingCycleRoda
         end
