@@ -66,16 +66,9 @@ namespace :db do
     end
 
     desc 'Create the buzzn operator accounts'
-    task buzzn_operators: :environment do
+    task :buzzn_operators, [:target] => [:environment] do |t, args|
       require_relative '../../db/support/create_buzzn_operator'
-      file = File.read 'db/users.json'
-      users = JSON.parse(file)
-      users = Buzzn::Utils::Helpers.symbolize_keys_recursive(users)
-      users[:operators].each do |user|
-        create_buzzn_operator(
-          user
-        )
-      end
+      create_accounts_from_file("db/users.#{args.target}.json")
     end
 
     desc 'Create a generic buzzn operator account'

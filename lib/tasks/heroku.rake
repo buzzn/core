@@ -31,22 +31,25 @@ namespace :heroku do
     task import: %i(beekeeper:import beekeeper:person_images:attach)
 
     desc 'Run the beekeeper import and push the result to staging'
-    task staging:    %i(is_staging
-                        application:init) do
+    task :staging do
+      Rake::Task['heroku:update_db:is_staging'].invoke
+      Rake::Task['application:init'].invoke
+      Rake::Task['db:seed:buzzn_operators'].invoke 'staging'
       push_local_db_to_heroku(:staging)
     end
 
     desc 'Run the beekeeper import and push the result to production'
-    task production: %i(is_production
-                        db:reset
-                        heroku:pull_db:production
-                        db:seed:setup_data
-                        db:seed:buzzn_operators
-                        config:set
-                        import
-                        db:dump:transfer
-                        zip_to_price:import
-                        zip_to_price:set_config) do
+    task :production do
+      Rake::Task['heroku:update_db:is_production'].invoke
+      Rake::Task['db:reset']
+      Rake::Task['heroku:pull_db:production']
+      Rake::Task['db:seed:setup_data']
+      Rake::Task['db:seed:buzzn_operators'].invoke 'production'
+      Rake::Task['config:set']
+      Rake::Task['import']
+      Rake::Task['db:dump:transfer']
+      Rake::Task['zip_to_price:import']
+      Rake::Task['zip_to_price:set_config']
       push_local_db_to_heroku(:production)
     end
 
