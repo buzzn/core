@@ -498,6 +498,12 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     end
   end
 
+  exchange do
+    group do
+      create :managers
+    end
+  end
+
   comments do
     create :managers
     retrieve :managers
