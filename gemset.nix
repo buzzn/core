@@ -717,12 +717,14 @@
     version = "3.2016.0521";
   };
   mini_magick = {
+    groups = ["default"];
+    platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1a59k5l29vj060yscaqk370rg5vyr132kbw6x3zar7khzjqjqd8p";
+      sha256 = "0qy09qrd5bwh8mkbj514n5vcw9ni73218h9s3zmvbpmdwrnzi8j4";
       type = "gem";
     };
-    version = "4.5.1";
+    version = "4.9.5";
   };
   mini_mime = {
     source = {

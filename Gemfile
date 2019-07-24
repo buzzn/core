@@ -65,7 +65,7 @@ gem 'clockwork'
 gem 'mail'
 gem 'multipart-post'
 gem 'ffaker' # using ffaker instead of faker because it has German fakers.
-gem 'mini_magick'
+gem "mini_magick", ">= 4.9.4"
 gem 'carrierwave'
 gem 'faraday'
 gem 'jbuilder'
