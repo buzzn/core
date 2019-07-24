@@ -57,7 +57,7 @@ describe Builders::Discovergy::BubbleBuilder do
 
       context 'consumption' do
         before { meter.registers.first.meta.consumption! }
-        it { expect(result.collect(&:value)).to eq(expected_values + [21]) }
+        it { expect(result.collect(&:value)).to eq(expected_values + [7029]) }
       end
       context 'production' do
         before { meter.registers.first.meta.production_pv! }
