@@ -59,9 +59,9 @@ class Builders::Discovergy::AbstractBuilder
 
   def adjust(val, register)
     if consumption?(register)
-      [0, -val].max
-    elsif production?(register)
       [0, val].max
+    elsif production?(register)
+      [0, -val].max
     else
       raise "Not implemented for #{register} with label #{register.label}"
     end
