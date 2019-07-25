@@ -99,6 +99,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   # Exports the given group.
   def export_group(params:, resource:, **)
     @target = StringIO.new
+    @target.set_encoding(Encoding::UTF_8)
     resource.persons.each {|u| export_person(u) }
     @target.string
   end
