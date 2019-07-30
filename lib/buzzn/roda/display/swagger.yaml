@@ -1,0 +1,68 @@
+---
+swagger: '2.0'
+info:
+  title: Display API
+  description: Swagger for Display Internal API
+  version: '1'
+basePath: "/api/display"
+paths:
+  "/groups":
+    get:
+      description: return all public groups
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}":
+    get:
+      description: returns the group
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/bubbles":
+    get:
+      description: returns the bubbles of the group
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/charts":
+    get:
+      description: returns the daily charts of the group
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/groups/{group_id}/mentors":
+    get:
+      description: returns the mentors of the group
+      produces:
+      - application/json
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success

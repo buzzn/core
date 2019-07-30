@@ -1,0 +1,142 @@
+#
+# This was auto-generated after installation of rubocop. It contains exceptions for the all
+# existing rubocop offenses. The idea is to fix them step by step and remove the exceptions.
+#
+inherit_from: .rubocop_todo.yml
+
+#
+# Common configuration
+#
+AllCops:
+  TargetRubyVersion: 2.3
+  # Exclude:
+  # - "bin/**/*"
+
+#
+# List of *disabled* rules
+#
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# allow multi-line -> {} blocks.
+Style/Lambda:
+  Enabled: false
+
+Bundler/OrderedGems:
+  Enabled: false
+
+Naming/MethodName:
+  # there are methods named PATCH(), def Schema(), ...
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
+
+# Separating numbers by underscores to make them more readable (10_123_555 instead of 10123555) is nice but
+# sometimes not desired; disabling this cop.
+Style/NumericLiterals:
+  Enabled: false
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/RedundantSelf:
+  Enabled: false
+
+#
+# List of enabled rules
+#
+Style/StringLiterals:
+  Enabled: true
+
+# no obsolete encoding: utf-8 comments
+Style/Encoding:
+  Enabled: true
+
+# check for debugger statements left in code
+Lint/Debugger:
+  Enabled: true
+
+# check for extra whitespace
+Layout/ExtraSpacing:
+  Enabled: true
+
+# ['format', 'arrays', 'like', 'this'], [ 'not', 'like', 'this' ]
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: true
+
+# where Ruby has aliases for collection methods, ensure we use the ones we agreed on
+Style/CollectionMethods:
+  # Mapping from undesired method to desired_method
+  # e.g. to use `detect` over `find`:
+  PreferredMethods:
+    map: 'collect'
+    map!: 'collect!'
+    inject: 'reduce'
+    detect: 'find'
+    find_all: 'select'
+
+# check for trailing whitespace
+Layout/TrailingWhitespace:
+  Enabled: true
+
+# use { } for one-line blocks, do/end for multiline
+Style/BlockDelimiters:
+  EnforcedStyle: line_count_based
+
+# omit the { } for if the last method argument is a hash
+Style/BracesAroundHashParameters:
+  EnforcedStyle: context_dependent
+
+# don't use === in Ruby, it means different things on different types, and may not be what you want.
+# Use object.is_a? instead. https://stackoverflow.com/questions/3422223/vs-in-ruby
+Style/CaseEquality:
+  Enabled: true
+
+# ensure the ternary operator ('foo' ? 'yes' : 'no') is only used for single line expressions
+Style/MultilineTernaryOperator:
+  Enabled: true
+
+# ensures consistent spacing at the top and bottom of a class/module
+Layout/EmptyLinesAroundClassBody:
+  EnforcedStyle: empty_lines_except_namespace
+
+# ensures consistent spacing at the top and bottom of a class/module
+Layout/EmptyLinesAroundModuleBody:
+  EnforcedStyle: empty_lines_except_namespace
+
+# ensure there's exactly 1 empty line between method definitions
+Layout/EmptyLineBetweenDefs:
+  Enabled: true
+
+# check and remove more than 1 empty line
+Layout/EmptyLines:
+  Enabled: true
+
+# ensure the "private" access modifier is indented consistenlty
+Layout/AccessModifierIndentation:
+  EnforcedStyle: indent
+
+# method definitions should have parentheses:
+# def foo(bar, baz) - GOOD
+# def foo bar, baz - NOT GOOD
+Style/MethodDefParentheses:
+  Enabled: true
+
+# def foo(bar, baz) - GOOD
+# def foo(bar,baz) - NOT GOOD
+Layout/SpaceAfterComma:
+  Enabled: true
+
+# ensure case statements are indented consistenlty
+Layout/CaseIndentation:
+  Enabled: true
+
+# check for correct indentation width
+Layout/IndentationWidth:
+  Enabled: true
+
+# Instead of Fixnum and Bignum, always use Integer. They have been unified in Ruby 2.4 (and Integer has been available
+# in earlier versions as well)
+Lint/UnifiedInteger:
+  Enabled: true

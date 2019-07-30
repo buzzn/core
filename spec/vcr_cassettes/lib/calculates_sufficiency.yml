@@ -1,0 +1,313 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/consumer_token?client=buzzn+app+test
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Wed, 01 Mar 2017 10:19:18 GMT
+      content-type:
+      - application/json
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: ASCII-8BIT
+      string: '{"key":"k97jpqnhun92q0b2gi5t95p9h","secret":"t5fsd7dd0ugnsmoq4nqn825m53","owner":"buzzn
+        app test","attributes":{},"principal":null}'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:01 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/request_token
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Content-Length:
+      - '0'
+      Authorization:
+      - OAuth oauth_callback="oob", oauth_consumer_key="k97jpqnhun92q0b2gi5t95p9h",
+        oauth_nonce="JaQmsVYiBPizLX5X27d4eHQrElo2KEK1ltOsfA0A", oauth_signature="RW6ij8PAh3v6aMVrgo6dAR%2FxKHw%3D",
+        oauth_signature_method="HMAC-SHA1", oauth_timestamp="1467446701", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Wed, 01 Mar 2017 10:19:18 GMT
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '126'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_token=816c9e7a5006456cbb39c1fdf1d847ff&oauth_token_secret=c790635994bc4d1682942f04963c3157&oauth_callback_confirmed=true
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/oauth1/authorize?email=me%40example.de&oauth_token=816c9e7a5006456cbb39c1fdf1d847ff&password=blablubla
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Content-Type:
+      - text/plain
+  response:
+    status:
+      code: 200
+      message:
+    headers:
+      server:
+      - nginx/1.10.0
+      date:
+      - Wed, 01 Mar 2017 10:19:19 GMT
+      content-type:
+      - application/x-www-form-urlencoded
+      content-length:
+      - '47'
+      connection:
+      - keep-alive
+      access-control-allow-origin:
+      - "*"
+      access-control-allow-methods:
+      - GET, POST, DELETE, PUT
+      access-control-allow-headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_verifier=af123a22d511492197a4b96002f5a05b
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+- request:
+    method: post
+    uri: https://api.discovergy.com/public/v1/oauth1/access_token
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Content-Length:
+      - '0'
+      Authorization:
+      - OAuth oauth_consumer_key="k97jpqnhun92q0b2gi5t95p9h", oauth_nonce="GDM5bOj7myzm3gqw22LT5tXy4Jjf9WWBUFnmIqZzQ",
+        oauth_signature="5kXeNtsDEQKZ7GUQDtqCvUUp9OQ%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446702", oauth_token="816c9e7a5006456cbb39c1fdf1d847ff",
+        oauth_verifier="af123a22d511492197a4b96002f5a05b", oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Wed, 01 Mar 2017 10:19:19 GMT
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '96'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+    body:
+      encoding: UTF-8
+      string: oauth_token=1d2023d1e459487ba8470ebc00ecee3d&oauth_token_secret=f19feaabd9b948c5b4e56bcfca64a816
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1475618400000&meterId=EASYMETER_60051559&resolution=fifteen_minutes&to=1475704800000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Authorization:
+      - OAuth oauth_consumer_key="k97jpqnhun92q0b2gi5t95p9h", oauth_nonce="JZkQEXsZ0X0InP8VvWNThv2LYAR2DFk2rtRAJ0Tjc",
+        oauth_signature="zB4EcsTW9sett%2F1LiapP7yJhW2A%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446702", oauth_token="1d2023d1e459487ba8470ebc00ecee3d",
+        oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Wed, 01 Mar 2017 10:19:19 GMT
+      Content-Type:
+      - text/html;charset=iso-8859-1
+      Content-Length:
+      - '336'
+      Connection:
+      - keep-alive
+      Www-Authenticate:
+      - OAuth realm="default"
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: '[{"time":1480606200000,"values":{"energy":22968322444644}},{"time":1480607100000,"values":{"energy":22970988922089}},{"time":1480608000000,"values":{"energy":22973229616478}}]'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1475618400000&meterId=EASYMETER_60051560&resolution=fifteen_minutes&to=1475704800000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Authorization:
+      - OAuth oauth_consumer_key="k97jpqnhun92q0b2gi5t95p9h", oauth_nonce="JZkQEXsZ0X0InP8VvWNThv2LYAR2DFk2rtRAJ0Tjc",
+        oauth_signature="zB4EcsTW9sett%2F1LiapP7yJhW2A%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446702", oauth_token="1d2023d1e459487ba8470ebc00ecee3d",
+        oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Wed, 01 Mar 2017 10:19:19 GMT
+      Content-Type:
+      - text/html;charset=iso-8859-1
+      Content-Length:
+      - '336'
+      Connection:
+      - keep-alive
+      Www-Authenticate:
+      - OAuth realm="default"
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: '[{"time":1480606200000,"values":{"energy":22968322444644}},{"time":1480607100000,"values":{"energy":22970988922089}},{"time":1480608000000,"values":{"energy":22973229616478}}]'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+- request:
+    method: get
+    uri: https://api.discovergy.com/public/v1/readings?each=false&fields=energy&from=1475618400000&meterId=EASYMETER_60051599&resolution=fifteen_minutes&to=1475704800000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - OAuth gem v0.5.1
+      Authorization:
+      - OAuth oauth_consumer_key="k97jpqnhun92q0b2gi5t95p9h", oauth_nonce="JZkQEXsZ0X0InP8VvWNThv2LYAR2DFk2rtRAJ0Tjc",
+        oauth_signature="zB4EcsTW9sett%2F1LiapP7yJhW2A%3D", oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp="1467446702", oauth_token="1d2023d1e459487ba8470ebc00ecee3d",
+        oauth_version="1.0"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.0
+      Date:
+      - Wed, 01 Mar 2017 10:19:19 GMT
+      Content-Type:
+      - text/html;charset=iso-8859-1
+      Content-Length:
+      - '336'
+      Connection:
+      - keep-alive
+      Www-Authenticate:
+      - OAuth realm="default"
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, DELETE, PUT
+      Access-Control-Allow-Headers:
+      - X-Requested-With, Content-Type
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
+    body:
+      encoding: UTF-8
+      string: '[{"time":1480606200000,"values":{"energy":22968322444644}},{"time":1480607100000,"values":{"energy":22970988922089}},{"time":1480608000000,"values":{"energy":22973229616478}}]'
+    http_version:
+  recorded_at: Sat, 02 Jul 2016 08:05:02 GMT
+recorded_with: VCR 3.0.3

@@ -1,0 +1,1320 @@
+---
+swagger: '2.0'
+info:
+  title: Admin API
+  description: Swagger for Admin Internal API
+  version: '1'
+basePath: "/api/admin"
+paths:
+  "/localpools":
+    get:
+      description: return all localpools
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success
+    post:
+      description: creates localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: name
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+        minLength: 4
+      - name: description
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      - name: start_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: show_object
+        in: formData
+        required: false
+        type: boolean
+      - name: show_production
+        in: formData
+        required: false
+        type: boolean
+      - name: show_energy
+        in: formData
+        required: false
+        type: boolean
+      - name: show_contact
+        in: formData
+        required: false
+        type: boolean
+      - name: show_display_app
+        in: formData
+        required: false
+        type: boolean
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}":
+    get:
+      description: returns the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    patch:
+      description: updates the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: description
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      - name: start_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: show_object
+        in: formData
+        required: false
+        type: boolean
+      - name: show_production
+        in: formData
+        required: false
+        type: boolean
+      - name: show_energy
+        in: formData
+        required: false
+        type: boolean
+      - name: show_contact
+        in: formData
+        required: false
+        type: boolean
+      - name: show_display_app
+        in: formData
+        required: false
+        type: boolean
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/billing-cycles":
+    get:
+      description: returns all the billing-cycles of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: creates a billing-cycles for the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: name
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: last_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/billing-cycles/{billing_cycle_id}":
+    get:
+      description: returns the billing-cycles of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: billing_cycle_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: deletes the billing-cycles of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: billing_cycle_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: updates the billing-cycles of the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: billing_cycle_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: last_date
+        in: formData
+        required: false
+        type: string
+        format: date
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/bubbles":
+    get:
+      description: returns the bubbles of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/charts":
+    get:
+      description: returns the charts of the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: duration
+        in: formData
+        required: true
+        type: string
+        enum:
+        - year
+        - month
+        - day
+        - hour
+      - name: timestamp
+        in: formData
+        required: false
+        type: string
+        format: date-time
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/contracts":
+    get:
+      description: returns all the contracts of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/contracts/{contract_id}":
+    get:
+      description: returns the contract for the given ID
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/contracts/{contract_id}/contractor":
+    get:
+      description: returns the contractor of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/contracts/{contract_id}/customer":
+    get:
+      description: returns the customer of the contract
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: contract_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/localpool-processing-contract":
+    get:
+      description: returns the localpool-processing-contract of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/managers":
+    get:
+      description: returns all the managers of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/metering-point-operator-contract":
+    get:
+      description: returns the metering-point-operator-contract of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/meters":
+    get:
+      description: returns all the meters of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/meters/{meter_id}":
+    get:
+      description: returns the meters for the given ID
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/meters/{meter_id}/registers":
+    get:
+      description: returns all registers of a meter for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}":
+    get:
+      description: returns the register of a meter for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings":
+    get:
+      description: returns all readings of a register for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: create reading for the register
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: raw_value
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      - name: value
+        in: formData
+        required: true
+        type: integer
+        format: int64
+      - name: unit
+        in: formData
+        required: true
+        type: string
+        enum:
+        - Wh
+        - W
+        - m³
+      - name: reason
+        in: formData
+        required: true
+        type: string
+        enum:
+        - IOM
+        - COM1
+        - COM2
+        - ROM
+        - PMR
+        - COT
+        - COS
+        - CMP
+        - COB
+      - name: read_by
+        in: formData
+        required: true
+        type: string
+        enum:
+        - BN
+        - SN
+        - SG
+        - VNB
+      - name: quality
+        in: formData
+        required: true
+        type: string
+        enum:
+        - '20'
+        - '67'
+        - '79'
+        - '187'
+        - '220'
+        - '201'
+      - name: source
+        in: formData
+        required: true
+        type: string
+        enum:
+        - SM
+        - MAN
+      - name: status
+        in: formData
+        required: true
+        type: string
+        enum:
+        - Z83
+        - Z84
+        - Z86
+      - name: comment
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 256
+      - name: date
+        in: formData
+        required: false
+        type: string
+        format: date
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/meters/{meter_id}/registers/{register_id}/readings/{reading_id}":
+    get:
+      description: returns the reading of a register for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: reading_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: deletes the reading of a register for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: meter_id
+        in: path
+        required: true
+        type: string
+      - name: register_id
+        in: path
+        required: true
+        type: string
+      - name: reading_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+  "/localpools/{localpool_id}/meters/{real_meter_id}":
+    patch:
+      description: updates the real meter for the given IDs
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: real_meter_id
+        in: path
+        required: true
+        type: string
+      - name: product_serialnumber
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+        minLength: 4
+      - name: product_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: manufacturer_name
+        in: formData
+        required: false
+        type: string
+        enum:
+        - easy_meter
+        - other
+      - name: manufacturer_description
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: location_description
+        in: formData
+        required: false
+        type: string
+        format: ''
+      - name: ownership
+        in: formData
+        required: false
+        type: string
+        enum:
+        - BUZZN
+        - FOREIGN_OWNERSHIP
+        - CUSTOMER
+        - LEASED
+        - BOUGHT
+      - name: build_year
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        maximum: 2050
+        exclusiveMaximum: true
+        minimum: 1950
+        exclusiveMinimum: true
+      - name: sent_data_dso
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: converter_constant
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: calibrated_until
+        in: formData
+        required: false
+        type: string
+        format: date
+      - name: direction_number
+        in: formData
+        required: false
+        type: string
+        enum:
+        - ERZ
+        - ZRZ
+      - name: edifact_metering_type
+        in: formData
+        required: false
+        type: string
+        enum:
+        - AHZ
+        - WSZ
+        - LAZ
+        - MAZ
+        - EHZ
+        - IVA
+      - name: edifact_meter_size
+        in: formData
+        required: false
+        type: string
+        enum:
+        - Z01
+        - Z02
+        - Z03
+      - name: edifact_measurement_method
+        in: formData
+        required: false
+        type: string
+        enum:
+        - AMR
+        - MMR
+      - name: edifact_tariff
+        in: formData
+        required: false
+        type: string
+        enum:
+        - ETZ
+        - ZTZ
+        - NTZ
+      - name: edifact_mounting_method
+        in: formData
+        required: false
+        type: string
+        enum:
+        - BKE
+        - DPA
+        - HS
+      - name: edifact_voltage_level
+        in: formData
+        required: false
+        type: string
+        enum:
+        - E06
+        - E05
+        - E04
+        - E03
+      - name: edifact_cycle_interval
+        in: formData
+        required: false
+        type: string
+        enum:
+        - MONTHLY
+        - QUARTERLY
+        - HALF_YEARLY
+        - YEARLY
+      - name: edifact_data_logging
+        in: formData
+        required: false
+        type: string
+        enum:
+        - Z04
+        - Z05
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/meters/{real_meter_id}/registers/{real_register_id}":
+    patch:
+      description: update the real register of a meter for the given IDs
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: real_meter_id
+        in: path
+        required: true
+        type: string
+      - name: real_register_id
+        in: path
+        required: true
+        type: string
+      - name: label
+        in: formData
+        required: false
+        type: string
+        enum:
+        - CONSUMPTION
+        - CONSUMPTION_COMMON
+        - DEMARCATION_PV
+        - DEMARCATION_CHP
+        - DEMARCATION_WIND
+        - DEMARCATION_WATER
+        - PRODUCTION_PV
+        - PRODUCTION_CHP
+        - PRODUCTION_WIND
+        - PRODUCTION_WATER
+        - GRID_CONSUMPTION
+        - GRID_FEEDING
+        - GRID_CONSUMPTION_CORRECTED
+        - GRID_FEEDING_CORRECTED
+        - OTHER
+      - name: metering_point_id
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: observer_enabled
+        in: formData
+        required: false
+        type: boolean
+      - name: observer_min_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: observer_max_threshold
+        in: formData
+        required: false
+        type: integer
+        format: int64
+        minimum: 0
+      - name: observer_offline_monitoring
+        in: formData
+        required: false
+        type: boolean
+      - name: name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/meters/{virtual_meter_id}/formula-parts":
+    get:
+      description: get formula-parts of virtual meter for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: virtual_meter_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/meters/{virtual_meter_id}/formula-parts/{formula_part_id}":
+    get:
+      description: get formula-part of virtual meter for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: virtual_meter_id
+        in: path
+        required: true
+        type: string
+      - name: formula_part_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    patch:
+      description: update formula-part of virtual meter for the given IDs
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: virtual_meter_id
+        in: path
+        required: true
+        type: string
+      - name: formula_part_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: operator
+        in: formData
+        required: false
+        type: string
+        enum:
+        - "+"
+        - "-"
+      - name: register_id
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/organizations":
+    get:
+      description: returns all the organizations of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/organizations/{organization_id}":
+    get:
+      description: returns the organization of the localpool for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/organizations/{organization_id}/bank-accounts":
+    get:
+      description: returns all bank-accounts of the organization for the given ID
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/organizations/{organization_id}/bank-accounts/{bank_account_id}":
+    get:
+      description: returns the bank-accounts of the organization for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: delete the bank-accounts of the organization for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: updates the bank-accounts of the organization for the given IDs
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: organization_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: holder
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: iban
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 32
+      - name: bank_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/persons":
+    get:
+      description: returns all the persons of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/persons/{person_id}":
+    get:
+      description: returns the person of the localpool for the given ID
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/persons/{person_id}/bank-accounts":
+    get:
+      description: returns all bank-accounts of the person for the given ID
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/persons/{person_id}/bank-accounts/{bank_account_id}":
+    get:
+      description: returns the bank-accounts of the person for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: delete the bank-accounts of the person for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+    patch:
+      description: updates the bank-accounts of the person for the given IDs
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: person_id
+        in: path
+        required: true
+        type: string
+      - name: bank_account_id
+        in: path
+        required: true
+        type: string
+      - name: updated_at
+        in: formData
+        required: true
+        type: string
+        format: date-time
+      - name: holder
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      - name: iban
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 32
+      - name: bank_name
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 64
+      responses:
+        200:
+          description: patched
+  "/localpools/{localpool_id}/power-taker-contracts":
+    get:
+      description: returns all the power-taker-contracts of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+  "/localpools/{localpool_id}/tariffs":
+    get:
+      description: returns all the tariffs of the localpool
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    post:
+      description: create tariff for the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: name
+        in: formData
+        required: true
+        type: string
+        format: ''
+        maxLength: 64
+      - name: begin_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: energyprice_cents_per_kwh
+        in: formData
+        required: true
+        type: number
+        format: float
+        minimum: 0
+        exclusiveMinimum: true
+      - name: baseprice_cents_per_month
+        in: formData
+        required: true
+        type: number
+        format: float
+        minimum: 0
+        exclusiveMinimum: true
+      responses:
+        201:
+          description: created
+  "/localpools/{localpool_id}/tariffs/{tariff_id}":
+    get:
+      description: returns the tariff of the localpool for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: tariff_id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+    delete:
+      description: deletes the tariff of the localpool for the given IDs
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: tariff_id
+        in: path
+        required: true
+        type: string
+      responses:
+        204:
+          description: deleted
+  "/organizations":
+    get:
+      description: return all organizations
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success
+  "/persons":
+    get:
+      description: return all persons
+      produces:
+      - application/json
+      responses:
+        200:
+          description: success

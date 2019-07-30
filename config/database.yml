@@ -1,0 +1,30 @@
+default: &default
+  # the DB host, credentials etc. are taken from the env var DATABASE_URL.
+  encoding: unicode
+  pool: <%= ENV["DB_POOL"] || ENV['RAILS_MAX_THREADS'] || 5 %>
+  checkout_timeout: 0.5
+
+development:
+  <<: *default
+  database: buzzn_development
+
+buzzndb:
+  <<: *default
+  database: buzzndb
+
+minipooldb:
+  <<: *default
+  database: minipooldb
+
+test:
+  <<: *default
+  pool: 1
+  database: buzzn_test
+
+staging:
+  <<: *default
+  database: buzzn_staging
+
+production:
+  <<: *default
+  database: buzzn_production

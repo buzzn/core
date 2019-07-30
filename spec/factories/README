@@ -1,0 +1,1 @@
+The factories are in db/factories since they are used to create seed/sample data as well, not only for the specs.
