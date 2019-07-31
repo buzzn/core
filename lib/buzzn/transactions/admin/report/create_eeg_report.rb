@@ -206,7 +206,7 @@ class Transactions::Admin::Report::CreateEegReport < Transactions::Base
   end
 
   def contracts_with_range_and_readings(contracts_with_range:, **)
-    errors = {}
+    errors = []
     ret = {
       third_party_wh: 0,
       reduced_wh: 0,
@@ -220,6 +220,9 @@ class Transactions::Admin::Report::CreateEegReport < Transactions::Base
         end_date = attrs[:end_date]
         register_begin_date = [begin_date, register.installed_at&.date || begin_date].max
         register_end_date   = [end_date,   register.decomissioned_at&.date || end_date].min
+        if register_end_date <= register_begin_date || register_begin_date >= register_end_date
+          next
+        end
         begin_reading = begin
                           reading_service.get(register, register_begin_date, :precision => 2.days).to_a.max_by(&:value)
                         rescue Buzzn::DataSourceError
@@ -267,7 +270,7 @@ class Transactions::Admin::Report::CreateEegReport < Transactions::Base
       end
     end
     unless errors.empty?
-      raise Buzzn::ValidationError.new(errors)
+      raise Buzzn::ValidationError.new(contracts: errors)
     end
     ret[:third_party_wh] = ret[:third_party_wh].round(2).to_f
     ret[:reduced_wh] = ret[:reduced_wh].round(2).to_f
