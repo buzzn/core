@@ -16,14 +16,15 @@ module Admin
       r.get do
         export = group_member_dtvf_export.(resource: localpool,
                                            params: r.params)
-        filename = Buzzn::Utils::File
-                     .sanitize_filename("group_members_DTVF.csv")
+        filename = Buzzn::Utils::File.sanitize_filename(
+          'group_members_DTVF.csv'
+        )
         r.response.headers['Content-Type'] = 'text/csv'
-        r.response
-          .headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
+        r.response.headers['Content-Disposition'] =
+          "inline; filename=\"#{filename}\""
         r.response.write(export.value!)
       end
     end
+
   end
 end
-
