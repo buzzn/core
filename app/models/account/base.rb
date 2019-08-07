@@ -3,7 +3,16 @@ module Account
 
     self.table_name = :accounts
 
-    belongs_to :person
+    belongs_to :person, dependent: :destroy
+
+    before_destroy :destroy_related
+
+    # Sequel foreign_key does not work
+    def destroy_related
+      Account::PasswordHash.all.to_a.keep_if { |x| x.account == self }.collect { |x| x.destroy }
+      Account::PasswordResetKey.all.to_a.keep_if { |x| x.account == self }.collect { |x| x.destroy }
+      Account::LoginChangeKey.all.to_a.keep_if { |x| x.account == self }.collect { |x| x.destroy }
+    end
 
     def unbound_rolenames
       @unbound_rolenames ||= person.roles.where(resource_id: nil).collect { |r| r.attributes['name'] }
