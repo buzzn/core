@@ -14,6 +14,8 @@ class Person < ActiveRecord::Base
   has_many :bank_accounts, foreign_key: :owner_person_id
   has_many :contracts, class_name: 'Contract::Base', foreign_key: 'customer_person_id'
 
+  before_destroy :has_contracts?
+
   mount_uploader :image, PersonImageUploader
 
   enum prefix: {
@@ -31,6 +33,10 @@ class Person < ActiveRecord::Base
          german:  'de',
          english: 'en'
        }
+
+  def has_contracts?
+    self.contracts.any?
+  end
 
   def self.search_attributes
     [:first_name, :last_name, :email]
