@@ -32,7 +32,7 @@ module Builders::Discovergy
       substitute = substitute_register(response)
       if substitute&.production?
         method(:build_sum_with_production_substitute)
-      elsif substitute&.consumption? || virtual?
+      elsif substitute&.consumption? # || virtual?
         method(:build_sum_with_consumption_substitute)
       else
         method(:build_sum)
