@@ -26,9 +26,9 @@ class Builders::Discovergy::AbstractBuilder
 
   def two_way_meter_value(values, register)
     if production?(register)
-      values['energy']
-    elsif consumption?(register)
       values['energyOut']
+    elsif consumption?(register)
+      values['energy']
     else
       raise "unknown direction: #{register.direction}"
     end
