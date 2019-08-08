@@ -43,6 +43,10 @@ module Meter
       self[:converter_constant] || 1
     end
 
+    def decomissioned?
+      self.registers.to_a.keep_if { |x| !x.decomissioned_at.nil? }.any?
+    end
+
     private
 
     def maybe_create_sequence_number
