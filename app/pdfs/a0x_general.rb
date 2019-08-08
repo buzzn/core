@@ -60,7 +60,9 @@ module Pdf
     end
 
     def build_meters
-      @contract.register_meta.registers.collect { |x| x.meter }.uniq.collect do |meter|
+      @contract.register_meta.registers.collect { |x| x.meter }
+               .uniq
+               .keep_if { |x| !x.decomissioned? }.collect do |meter|
         {
           product_serialnumber: meter.product_serialnumber,
           location_description: meter.location_description
