@@ -68,7 +68,7 @@ describe Builders::Discovergy::SubstituteTickerBuilder do
 
     it do
       result = builder.build(response)
-      expect(result.value).to eq 936019
+      expect(result.value).to eq 97303533
     end
   end
 end
