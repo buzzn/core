@@ -73,7 +73,7 @@ class Transactions::Admin::Report::CreateEegReport < Transactions::Base
     if (calculate_grid_consumption-contracts_with_range_and_readings[:third_party_wh]).positive?
       calculate_grid_feeding
     else
-      calculate_grid_feeding-(calculate_grid_consumption+contracts_with_range_and_readings[:third_party_wh])
+      calculate_grid_feeding-(calculate_grid_consumption-contracts_with_range_and_readings[:third_party_wh])
     end
   end
 
