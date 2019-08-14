@@ -59,6 +59,10 @@ module Group
       end
     end
 
+    def base_slug
+      Buzzn::Slug.new(self.name)
+    end
+
     private
 
       def destroy_content
@@ -70,15 +74,13 @@ module Group
 
       def check_slug
         if self.slug.nil?
-          baseslug = Buzzn::Slug.new(self.name)
+          self.slug = self.base_slug
 
-          self.slug = baseslug
-
-          count = Slug.get_next('localpool', baseslug)
+          count = Slug.get_next('localpool', base_slug)
           if count.positive? || self.class.where(:slug => self.slug).any?
             self.slug = Buzzn::Slug.new(self.name, count)
           end
-          Slug.commit('localpool', baseslug, self.slug)
+          Slug.commit('localpool', base_slug, self.slug)
         end
       end
 
