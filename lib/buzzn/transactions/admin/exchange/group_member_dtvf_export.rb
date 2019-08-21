@@ -80,10 +80,11 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
 
     prefix = ''
     suffix = ''
-
-    if target.starts_with?('+49')
-      prefix = target.sub(/\+49 ?([0-9]*).*/, '+49 \1')
-      suffix = target.sub(/\+49 ?([0-9]*)(.*)/, '\2')
+    target = target.sub(/-/, ' ')
+    target = target.sub(%r{\/}, ' ')
+    if target.starts_with?('+')
+      prefix = target.sub(/\+([0-9]+) ?([0-9]*).*/, '+\1 \2')
+      suffix = target.sub(/\+[0-9]+ ?([0-9]*)(.*)/, '\2')
     elsif target.start_with?('0')
       prefix = target.sub(/0 ?([0-9]*).*/, '+49 \1')
       suffix = target.sub(/0 ?([0-9]*)(.*)/, '\2')
@@ -91,7 +92,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       raise 'Can not convert phone number ' + target
     end
 
-    suffix = suffix.gsub(/[\- ]/, '')
+    suffix = suffix.delete(' ')
 
     prefix + ' ' + suffix
   end
