@@ -22,7 +22,7 @@ table.is-full-width.is-small.has-alternate-rows.two-columns-even
     td #{contract.market_location_name}
   tr
     td Ziehen Sie neu ein?
-    td #{move_in ? 'ja' : 'nein'}
+    td #{contract.move_in ? 'ja' : 'nein'}
   - unless is_pre_contract
     tr
       td Datum der Erstbelieferung

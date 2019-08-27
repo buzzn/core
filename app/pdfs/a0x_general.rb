@@ -53,6 +53,7 @@ module Pdf
         old_account_number: some_or(@contract.old_account_number, '-'),
         mandate_reference: some_or(@contract.mandate_reference, @contract.full_contract_number),
         customer_bank_account: build_bank_account(@contract.customer_bank_account),
+        move_in: @contract.move_in,
       }.tap do |h|
         h[:meter_product_serial_numbers] = h[:meters].map {|x| x[:product_serialnumber]}.uniq.join(', ')
         h[:meter_location_descriptions] = h[:meters].map {|x| x[:location_description]}.uniq.join(', ')
