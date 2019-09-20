@@ -29,7 +29,8 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   end
 
   def result(warnings:, header:, export_group:, **)
-    header + export_group
+    # The dtvf importer used by iswarwatt does not support utf8 encoding.
+    (header + export_group).encode(Encoding.find('ISO-8859-1'))
   end
 
   # Skips fields, which will not be filled.
@@ -105,7 +106,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
     if person.contracts.size.positive?
       column("#{person.contracts.first.contract_number}/#{person.contracts.first.contract_number_addition}")
     else
-      skip
+      return
     end
     skip(2)
     column(person.last_name)
@@ -151,7 +152,6 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   # Exports the given group.
   def export_group(params:, resource:, **)
     @target = StringIO.new
-    @target.set_encoding(Encoding::UTF_8)
     resource.persons.each {|u| export_person(u) }
     @target.string
   end
