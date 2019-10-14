@@ -48,9 +48,15 @@ module Pdf::Serializers
     when Person
       person_or_organization
     when Organization::GeneralResource
+      if person_or_organization.legal_representation.nil?
+          raise "Legal Person not filled for #{person_or_organization.name}"
+      end
       person_or_organization.legal_representation
     when Organization::Base
-      person_or_organization.legal_representation
+      if person_or_organization.legal_representation.nil?
+        raise "Legal Person not filled for #{person_or_organization.name}"
+       end
+       person_or_organization.legal_representation
     else
       raise "can not handle #{person_or_organization.class}"
     end

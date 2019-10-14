@@ -58,9 +58,10 @@ describe Admin::LocalpoolRoda, :request_helper do
                                      'current_tariff' => ['must be filled']
                                    },
                                    'lsn_a2' => {
-                                     'current_tariff' => ['must be filled'],
-                                     'current_payment' => ['must be filled']
-                                   }
+                                    'current_tariff' => ['must be filled'],
+                                    'current_payment' => ['must be filled']
+                                   },
+                                   'tariff_change_letter' => true
                                  },
                                },
           'share_register_with_group' => true,
