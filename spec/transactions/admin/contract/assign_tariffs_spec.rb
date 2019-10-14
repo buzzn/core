@@ -75,7 +75,7 @@ describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defin
     it 'assigns' do
       expect(result).to be_success
       contract.reload
-      expect(contract.tariffs.pluck(:id)).to eql [tariff_1.id, tariff_2.id]
+      expect(contract.tariffs.pluck(:id)).to eql [tariff_2.id, tariff_1.id]
     end
 
   end
