@@ -1,0 +1,58 @@
+doctype html
+html
+  head
+    title = '#{title_text}'
+    meta charset='utf-8'
+    link href='#{Dir.pwd}/public/css/pdf-creation.css' rel='stylesheet'
+    link href='#{Dir.pwd}/public/css/pdf-creation-new.css' rel='stylesheet'
+    link href='#{Dir.pwd}/public/css/bc-chart.css' rel='stylesheet'
+    script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
+    script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
+    script src='#{Dir.pwd}/public/scripts/bc-chart.js'
+  body
+    div.wrapper
+
+      include to_powergiver_head
+      div.has-letter-box-above
+        include auftrag_general_head
+        p #{powertaker.contact.addressing_full},
+        p Fridays for Future kann nur alle paar Wochen zum Klimastreik aufrufen. Mit einer Energiegruppe streikt man jeden Tag für das Klima. Energiegruppen sind ein Werkzeug zur Förderung einer dezentralen und klimaverträglichen Stromerzeugung. Wir sind davon überzeugt, dass Energiegruppen die Power haben, langfristig alle fossilen Großkraftwerke als CO2-Fabriken stillzulegen.
+        p Mit Ihrem Strombezug aus unserer Lokalen Energiegruppe “Am Kindergarten 16” unterstützen Sie unsere gemeinsame Vision einer umweltfreundlichen und sozial vernetzten Energiewende von unten nicht nur ideell, sondern ganz konkret mit Ihrem „Stromgeld“:
+        p Dieses sorgt nämlich dafür, dass wir nach Abzug sämtlicher externer Kosten (Netzentgelte, gesetzliche Abgaben, Steuern und Umlagen) unsere hauseigene Stromproduktion wirtschaftlich betreiben und bei Bedarf mit Zusatzstrom absichern können.
+        p Nun haben sich diese externen Kosten, auf die wir leider keinen Einfluss haben, zuletzt per Saldo wieder ungünstig, d. h. preissteigernd, entwickelt.
+        p Um unsere lokale Stromproduktion weiter stabil am Laufen zu halten und Ihnen gleichzeitig einen attraktiven Strompreis anbieten zu können, wollen wir mit Wirkung zum 01.01.2020 folgende Preisanpassung durchführen:
+        ul.is-styled-list
+          li Der Arbeitspreis steigt von derzeit #{tariff.energyprice_cents_brutto} Cent/kWh auf #{upcoming_tariff.energyprice_cents_brutto}  Cent/kWh.
+          li Der Grundpreis steigt von derzeit #{tariff.baseprice_euro_brutto} € pro Monat auf #{upcoming_tariff.baseprice_euro_brutto} €/Monat.
+          li Alle Angaben brutto, also inkl. aller Abgaben, Steuern und Umlagen.
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+        p.pagination.is-small.no-margin
+          | Seite&nbsp;
+          span.page-number 1&nbsp;
+          | von&nbsp;
+          span.page-total-number 2
+    div.alwaysbreak
+    div.wrapper
+      p Sollten Sie mit der Preisanpassung nicht einverstanden sein, steht Ihnen gemäß unseren AGB ein Sonderkündigungsrecht zum 31.12.2019 zu. Sie haben dann das Recht, den Vertrag ohne Einhaltung einer Kündigungsfrist auf diesen Zeitpunkt zu kündigen.
+      p Wenn Sie mit der Strompreisanpassung einverstanden sind, müssen Sie nichts tun. Ihren Abschlag passen wir entsprechend der Änderung ab Januar 2020 automatisch an. 
+      p Bei Fragen oder Feedback stehe ich Ihnen gerne persönlich zur Verfügung.
+      p Vielen Dank für Ihre Unterstützung unserer gemeinsamen Sache, der Energiewende von unten!
+      p Energiegeladene Grüße,
+      p Philipp Oßwald
+      p="(im Auftrag Ihres Stromgebers #{powergiver.name})"
+ 
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+        p.pagination.is-small.no-margin
+          | Seite&nbsp;
+          span.page-number 2&nbsp;
+          | von&nbsp;
+          span.page-total-number 2
+
