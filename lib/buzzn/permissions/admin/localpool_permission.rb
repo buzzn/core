@@ -444,9 +444,9 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
   end
 
   tariffs do
-    create :operators
+    create :managers
     retrieve :all
-    delete :operators
+    delete :managers
   end
 
   contexted_gap_contract_tariffs do
