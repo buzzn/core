@@ -174,9 +174,9 @@ describe "#{Buzzn::Permission} - #{Admin::LocalpoolResource}" do
     it 'delete' do
       expect(Admin::LocalpoolResource.all(buzzn_operator).retrieve(localpool2.id).tariffs.retrieve(tariff.id).deletable?).to be true
 
-      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.retrieve(tariff.id).deletable?).to be false
+      expect(Admin::LocalpoolResource.all(localpool_owner).retrieve(localpool2.id).tariffs.retrieve(tariff.id).deletable?).to be true
 
-      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.retrieve(tariff.id).deletable?).to be false
+      expect(Admin::LocalpoolResource.all(localpool_manager).retrieve(localpool2.id).tariffs.retrieve(tariff.id).deletable?).to be true
     end
   end
 
