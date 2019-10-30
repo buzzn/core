@@ -6,7 +6,7 @@ module Pdf
     protected
 
     def title
-      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Strompreiserhöhung-#{contract.localpool.base_slug}-#{contract.contract_number}-#{contract.contract_number_addition}"
+      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Strompreisanpassung-#{contract.localpool.base_slug}-#{contract.contract_number}-#{contract.contract_number_addition}"
     end
 
     def build_struct
