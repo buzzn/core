@@ -23,7 +23,8 @@ module Admin
                         assign_organization_market: 'transactions.admin.localpool.assign_organization_market',
                         create_or_update_meter_discovergy: 'transactions.admin.localpool.create_or_update_meter_discovergy',
                         bubbles: 'transactions.bubbles',
-                        delete: 'transactions.delete'
+                        delete: 'transactions.delete',
+                        document: 'transactions.admin.contract.document'
                        ]
 
     PARENT = :localpool
@@ -53,6 +54,10 @@ module Admin
 
         r.on 'contracts' do
           r.run ContractRoda
+        end
+
+        r.post! 'bulk-generate-power-taker-documents' do
+          localpool.localpool_power_taker_contracts.to_a.select(&:active?).each { |contract| document.(resource: contract, params: r.params) }
         end
 
         r.on 'meters' do
