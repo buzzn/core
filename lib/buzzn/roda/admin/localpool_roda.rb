@@ -24,7 +24,8 @@ module Admin
                         create_or_update_meter_discovergy: 'transactions.admin.localpool.create_or_update_meter_discovergy',
                         bubbles: 'transactions.bubbles',
                         delete: 'transactions.delete',
-                        document: 'transactions.admin.contract.document'
+                        document: 'transactions.admin.contract.document',
+                        mail_service: 'services.mail_service'
                        ]
 
     PARENT = :localpool
@@ -57,7 +58,64 @@ module Admin
         end
 
         r.post! 'bulk-generate-power-taker-documents' do
-          localpool.localpool_power_taker_contracts.to_a.select(&:active?).each { |contract| document.(resource: contract, params: r.params) }
+          missed = []
+
+          localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract|
+            begin 
+              document.(resource: contract, params: r.params)
+            rescue StandardError => e
+              missed.push("Error in Contract: #{contract.contract_number} due to #{e.message}")
+            end
+          end
+          'Errors during creation: ' + missed.join(',\n')
+        end
+
+        r.post! 'bulk-generate-send-power-taker-documents' do
+          missed = []
+          localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract|
+            begin
+              text = <<TARIFF_Mail
+Sehr geehrte Stromnehmerin, sehr geehrter Stromnehmer,
+
+in Ihrer Lokalen Energiegruppe ändern sich zum 01.01.2020 die Strompreise. 
+
+Bitte beachten Sie den Anhang.
+
+Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
+
+Vielen Dank, dass Sie People Power unterstützen, die Energiewende von unten!
+
+Energiegeladene Grüße,
+
+Ihr BUZZN Team
+(im Auftrag Ihres Lokalen Stromgebers)
+
+T: 089-416171410
+F: 089-416171499
+team@buzzn.net
+www.buzzn.net
+
+BUZZN GmbH
+Combinat 56
+Adams-Lehmann-Straße 56
+80797 München
+Registergericht: Amtsgericht München
+Registernummer: HRB 186043
+Geschäftsführer: Justus Schütze
+TARIFF_Mail
+              tariff_letter = document.(resource: contract, params: r.params)
+              mail_service.deliver_document_later(tariff_letter.success.id, :from => "team@buzzn.net",
+                :to => contract.customer.email,
+                :subject => 'Strompreisanpassung zum 01.01.2020',
+                :text => text,
+                :bcc => 'team@localpool.de',
+                :document_id => tariff_letter.success.id)
+            rescue StandardError => e
+              missed.push("Error in Contract: #{contract.contract_number} due to #{e.message}")
+            end
+          end
+
+          'Errors during creation: ' + missed.join(',\n')
         end
 
         r.on 'meters' do
