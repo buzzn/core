@@ -57,7 +57,16 @@ module Admin
         end
 
         r.post! 'bulk-generate-power-taker-documents' do
-          localpool.localpool_power_taker_contracts.to_a.select(&:active?).each { |contract| document.(resource: contract, params: r.params) }
+          missed = []
+          localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract| 
+            begin
+              document.(resource: contract, params: r.params)
+            rescue Exception => e
+              missed.push("Error in Contract: #{contract.contract_number} due to #{e.message}")
+            end
+          end
+
+          'Errors during creation: ' + missed.join(',\n')
         end
 
         r.on 'meters' do
