@@ -62,16 +62,18 @@ module Admin
           localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract| 
             begin
               text = %Q(Sehr geehrte Stromnehmerin, sehr geehrter Stromnehmer,
-
 in Ihrer Lokalen Energiegruppe ändern sich zum 01.01.2020 die Strompreise. 
+
 Bitte beachten Sie den Anhang. 
+
 Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
 
 Vielen Dank, dass Sie People Power unterstützen, die Energiewende von unten!
 
 Energiegeladene Grüße,
+
 Ihr BUZZN Team
-(im Auftrag Ihres Lokalen Stromgebers)Vielen Dank, dass Sie People Power unterstützen, die Energiewende von unten!
+(im Auftrag Ihres Lokalen Stromgebers)
 
 --
 
