@@ -62,6 +62,7 @@ module Admin
           localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract| 
             begin
               text = %Q(Guten Tag,
+
 im Auftrag Ihres Lokalen Stromgebers "#{contract.contractor.name}" übermitteln wir Ihnen die Strompreisanpassung für den 1.1.2020
 
 
