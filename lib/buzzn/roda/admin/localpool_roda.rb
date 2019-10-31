@@ -59,12 +59,27 @@ module Admin
 
         r.post! 'bulk-generate-power-taker-documents' do
           missed = []
-          localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract| 
+
+          localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract|
+            begin 
+              document.(resource: contract, params: r.params)
+            rescue StandardError => e
+              missed.push("Error in Contract: #{contract.contract_number} due to #{e.message}")
+            end
+          end
+          'Errors during creation: ' + missed.join(',\n')
+        end
+
+        r.post! 'bulk-genertae-send-power-taker-documents' do
+          missed = []
+          localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract|
             begin
-              text = %Q(Sehr geehrte Stromnehmerin, sehr geehrter Stromnehmer,
+              text = <<TARIFF_Mail
+Sehr geehrte Stromnehmerin, sehr geehrter Stromnehmer,
+
 in Ihrer Lokalen Energiegruppe ändern sich zum 01.01.2020 die Strompreise. 
 
-Bitte beachten Sie den Anhang. 
+Bitte beachten Sie den Anhang.
 
 Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
 
@@ -92,14 +107,14 @@ Adams-Lehmann-Straße 56
 Registergericht: Amtsgericht München
 Registernummer: HRB 186043
 Geschäftsführer: Justus Schütze
-)
-              sowas = document.(resource: contract, params: r.params)
-              mail_service.deliver_document_later(sowas.success.id, :from => "team@buzzn.net",
+TARIFF_Mail
+              tariff_letter = document.(resource: contract, params: r.params)
+              mail_service.deliver_document_later(tariff_letter.success.id, :from => "team@buzzn.net",
                 :to => contract.customer.email,
                 :subject => 'Strompreisanpassung zum 01.01.2020',
                 :text => text,
-                :bcc => "team@localpool.de",
-                :document_id => sowas.success.id)
+                :bcc => 'team@localpool.de',
+                :documandschreibenent_id => tariff_letter.success.id)
             rescue StandardError => e
               missed.push("Error in Contract: #{contract.contract_number} due to #{e.message}")
             end
