@@ -48,12 +48,7 @@ class Services::MailService
   end
 
   def deliver_document(document_id, message)
-    document = Document.find(document_id)
     deliver(message)
-    if document.status == 'queued'
-      document.status = 'delivered'
-      document.save
-    end
   end
 
   def deliver_later(message = {})
