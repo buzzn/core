@@ -24,7 +24,8 @@ module Admin
                         create_or_update_meter_discovergy: 'transactions.admin.localpool.create_or_update_meter_discovergy',
                         bubbles: 'transactions.bubbles',
                         delete: 'transactions.delete',
-                        document: 'transactions.admin.contract.document'
+                        document: 'transactions.admin.contract.document',
+                        mail_service: 'services.mail_service'
                        ]
 
     PARENT = :localpool
@@ -60,8 +61,44 @@ module Admin
           missed = []
           localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract| 
             begin
-              document.(resource: contract, params: r.params)
-            rescue Exception => e
+              text = %Q(Guten Tag,
+
+                im Auftrag Ihres Lokalen Stromgebers "#{contract.contractor.name}" übermitteln wir Ihnen die Strompreisanpassung für den 1.1.2020
+                
+                Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
+                
+                Vielen Dank, dass Sie People Power unterstützen, die Energiewende von unten.
+                
+                Energiegeladene Grüße,
+                
+                Ihr BUZZN Team
+                
+                --
+                
+                Philipp Oßwald
+                BUZZN – Teile Energie mit Deiner Gruppe.
+                
+                T: 089-416171410
+                F: 089-416171499
+                team@buzzn.net
+                www.buzzn.net
+                
+                BUZZN GmbH
+                Combinat 56
+                Adams-Lehmann-Straße 56
+                80797 München
+                Registergericht: Amtsgericht München
+                Registernummer: HRB 186043
+                Geschäftsführer: Justus Schütze
+                )
+              sowas = document.(resource: contract, params: r.params)
+              mail_service.deliver_document_later(sowas.success.id, :from => "team@buzzn.com",
+                :to => contract.customer.email,
+                :subject => "Strompreisanpassung zum 1.1.2020",
+                :text => text,
+                :bcc => "info@localpool.de",
+                :document_id => sowas.success.id)
+            rescue StandardError => e
               missed.push("Error in Contract: #{contract.contract_number} due to #{e.message}")
             end
           end
