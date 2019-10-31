@@ -92,11 +92,11 @@ module Admin
                 Geschäftsführer: Justus Schütze
                 )
               sowas = document.(resource: contract, params: r.params)
-              mail_service.deliver_document_later(sowas.success.id, :from => "team@buzzn.com",
+              mail_service.deliver_document_later(sowas.success.id, :from => "team@buzzn.net",
                 :to => contract.customer.email,
                 :subject => "Strompreisanpassung zum 1.1.2020",
                 :text => text,
-                :bcc => "info@localpool.de",
+                :bcc => "team@localpool.de",
                 :document_id => sowas.success.id)
             rescue StandardError => e
               missed.push("Error in Contract: #{contract.contract_number} due to #{e.message}")
