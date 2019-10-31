@@ -22,7 +22,6 @@ class Services::MailService
 
   def deliver(message = {})
     message = check_message_params(message)
-
     case mail_backend
     when 'smtp'
       # not implemented yet
@@ -48,14 +47,30 @@ class Services::MailService
     end
   end
 
+  def deliver_document(document_id, message)
+    document = Document.find(document_id)
+    deliver(message)
+    if document.status == 'queued'
+      document.status = 'delivered'
+      document.save
+    end
+  end
+
   def deliver_later(message = {})
     message = check_message_params(message)
-    Buzzn::Workers::MailWorker.perform_async(message)
+    puts 'delivering'
+    puts message
+    Buzzn::Workers::MailWorker.perform_async(message)    
   end
 
   def deliver_billing_later(billing_id, message = {})
     message = check_message_params(message)
     Buzzn::Workers::BillingMailWorker.perform_async(billing_id, message)
+  end
+
+  def deliver_document_later(document_id, message = {})
+    message = check_message_params(message)
+    Buzzn::Workers::DocumentMailWorker.perform_async(document_id, message)
   end
 
   private
