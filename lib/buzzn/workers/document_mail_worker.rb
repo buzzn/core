@@ -8,7 +8,7 @@ module Buzzn
       include Sidekiq::Worker
 
       def perform(document_id, message = {})
-        mail_service.deliver_Document(document_id, message)
+        mail_service.deliver_document(document_id, message)
       end
 
     end
