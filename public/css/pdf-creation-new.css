@@ -1,5 +1,6 @@
 body {font-size: 0.8rem; font-family: 'Asap', sans-serif; font-weight: 400}
 p { margin: 1.14rem; }
+h2.text { margin: 1.14rem; }
 
 .is-huge {font-size: 1.3rem;}
 .is-larger {font-size: 1.1rem;}

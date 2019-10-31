@@ -87,24 +87,10 @@ Vielen Dank, dass Sie People Power unterstützen, die Energiewende von unten!
 
 Energiegeladene Grüße,
 
-Ihr BUZZN Team
-(im Auftrag Ihres Lokalen Stromgebers)
-
-T: 089-416171410
-F: 089-416171499
-team@buzzn.net
-www.buzzn.net
-
-BUZZN GmbH
-Combinat 56
-Adams-Lehmann-Straße 56
-80797 München
-Registergericht: Amtsgericht München
-Registernummer: HRB 186043
-Geschäftsführer: Justus Schütze
+Ihr Isarwatt Team
 TARIFF_Mail
               tariff_letter = document.(resource: contract, params: r.params)
-              mail_service.deliver_document_later(tariff_letter.success.id, :from => "team@buzzn.net",
+              mail_service.deliver_document_later(tariff_letter.success.id, :from => "strom@isarwatt.de",
                 :to => contract.customer.email,
                 :subject => 'Strompreisanpassung zum 01.01.2020',
                 :text => text,
