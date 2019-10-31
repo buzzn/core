@@ -61,18 +61,15 @@ module Admin
           missed = []
           localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract| 
             begin
-              text = %Q(Guten Tag,
+              text = %Q(Sehr geehrte Stromnehmerin, sehr geehrter Stromnehmer,
 
-im Auftrag Ihres Lokalen Stromgebers "#{contract.contractor.name}" übermitteln wir Ihnen die Strompreisanpassung für den 1.1.2020
-
-
+in Ihrer Lokalen Energiegruppe ändern sich zum 01.01.2020 die Strompreise. 
+Bitte beachten Sie den Anhang. 
 Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
 
-Vielen Dank, dass Sie People Power unterstützen, die Energiewende von unten.
-
 Energiegeladene Grüße,
-
 Ihr BUZZN Team
+(im Auftrag Ihres Lokalen Stromgebers)
 
 --
 
@@ -95,7 +92,7 @@ Geschäftsführer: Justus Schütze
               sowas = document.(resource: contract, params: r.params)
               mail_service.deliver_document_later(sowas.success.id, :from => "team@buzzn.net",
                 :to => contract.customer.email,
-                :subject => "Strompreisanpassung zum 1.1.2020",
+                :subject => 'Strompreisanpassung zum 01.01.2020',
                 :text => text,
                 :bcc => "team@localpool.de",
                 :document_id => sowas.success.id)
