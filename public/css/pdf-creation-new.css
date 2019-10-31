@@ -9,6 +9,6 @@ p { margin: 1.14rem; }
 .is-smaller {font-size: 0.55rem;}
 .is-bold {font-weight: 700}
 
-.letter-boxed { position: absolute; top: 7rem; left: 2.3rem; }
+.letter-boxed { position: absolute; top: 7rem; }
 .has-letter-box-above { position: absolute; top: 17rem; }
 .two-columns-even td { width: 50%; }
