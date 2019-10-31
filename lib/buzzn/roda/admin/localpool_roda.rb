@@ -70,7 +70,7 @@ module Admin
           'Errors during creation: ' + missed.join(',\n')
         end
 
-        r.post! 'bulk-genertae-send-power-taker-documents' do
+        r.post! 'bulk-generate-send-power-taker-documents' do
           missed = []
           localpool.localpool_power_taker_contracts.to_a.select(&:active?).each do |contract|
             begin
@@ -89,11 +89,6 @@ Energiegeladene Grüße,
 
 Ihr BUZZN Team
 (im Auftrag Ihres Lokalen Stromgebers)
-
---
-
-Philipp Oßwald
-BUZZN – Teile Energie mit Deiner Gruppe.
 
 T: 089-416171410
 F: 089-416171499
@@ -114,7 +109,7 @@ TARIFF_Mail
                 :subject => 'Strompreisanpassung zum 01.01.2020',
                 :text => text,
                 :bcc => 'team@localpool.de',
-                :documandschreibenent_id => tariff_letter.success.id)
+                :document_id => tariff_letter.success.id)
             rescue StandardError => e
               missed.push("Error in Contract: #{contract.contract_number} due to #{e.message}")
             end
