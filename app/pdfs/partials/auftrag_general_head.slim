@@ -1,6 +1,6 @@
 p.is-pull-right #{powergiver.address.city}, den #{today.strftime("%d.%m.%Y")}
 div.is-like-paragraph
-  h2.clear Stromnehmer-#{document_name} <br/>Lokale Energiegruppe #{localpool.name}
+  h2.clear Lokale Energiegruppe #{localpool.name} <br/> #{document_name} 
   table.no-border
     tr
       td.no-border.no-padding Vertragsnummer:
@@ -12,7 +12,3 @@ div.is-like-paragraph
       tr
         td.no-border.no-padding Zählernummer:
         td.no-border.has-left-padding #{contract.meter_product_serial_numbers}
-    - unless contract.forecast_kwh_pa.nil?
-      tr
-        td.no-border.no-padding Jahresverbrauch (kWh):
-        td.no-border.has-left-padding #{contract.forecast_kwh_pa} kWh
