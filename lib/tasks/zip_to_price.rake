@@ -16,14 +16,14 @@ namespace :zip_to_price do
     CoreConfig.store Types::ZipPriceConfig.new(
       kwkg_aufschlag: 0.226,
       ab_la_v: 0.007,
-      strom_nev: 0.305,  # §19 StromNEV-Umlage
+      strom_nev: 0.358,
       stromsteuer: 2.050,
       eeg_umlage:  6.756,
-      offshore_haftung: 0.416, # Offshore Netzumlage
-      deckungs_beitrag: 2.50, # Buzzn Bonus + Marge
-      energie_preis: 5.00,  #  Stromgestehungskosten (SGK)
-      vat: 1.19, # tax
-      yearly_euro_intern: 41.64 # Grundpreise: Kosten von Schaebisch Hall + Marge
+      offshore_haftung: 0.416,              # Offshore-Umlage
+      deckungs_beitrag: 1.5,                # Marge
+      energie_preis: 6.00,                  # Stromgestehungskosten + Buzzn_Bonus
+      vat: 1.19,                            # Umsatzsteuer
+      yearly_euro_intern: (1 + 2.47) * 12   # (Grundpreis_Schwaebisch_Hall + Marge) * 12
     )
   end
 
