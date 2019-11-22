@@ -77,7 +77,7 @@ module Admin
               text = <<TARIFF_Mail
 Sehr geehrte Stromnehmerin, sehr geehrter Stromnehmer,
 
-in Ihrer Lokalen Energiegruppe ändern sich zum 01.01.2020 die Strompreise. 
+in Ihrer Lokalen Energiegruppe ändern sich zum 01.02.2020 die Strompreise. 
 
 Bitte beachten Sie den Anhang.
 

@@ -21,7 +21,7 @@ module Pdf
 
       super.tap do |h|
         h[:is_pre_contract] = true
-        h[:document_name] = 'Strompreisanpassung zum 01.01.2020'
+        h[:document_name] = 'Strompreisanpassung zum 01.02.2020'
         h[:upcoming_tariff] = build_tariff(upcoming)
       end
     end
