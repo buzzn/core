@@ -6,7 +6,7 @@ module Pdf
     protected
 
     def title
-      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Auftragseingangsbestätigung-#{contract.localpool.base_slug}-#{contract.contract_number}-#{contract.contract_number_addition}"
+      "Strompreisanpassung zum 1.2.2020"
     end
 
     def build_struct
@@ -21,7 +21,7 @@ module Pdf
 
       super.tap do |h|
         h[:is_pre_contract] = true
-        h[:document_name] = 'Auftragseingangsbestätigung'
+        h[:document_name] = 'Strompreisanpassung zum 01.02.2020'
         h[:upcoming_tariff] = build_tariff(upcoming)
       end
     end
