@@ -6,7 +6,7 @@ module Pdf
     protected
 
     def title
-      "Strompreisanpassung zum 1.1.2020"
+      "Strompreisanpassung zum 1.2.2020"
     end
 
     def build_struct
