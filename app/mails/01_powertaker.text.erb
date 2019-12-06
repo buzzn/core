@@ -72,16 +72,12 @@ Rechnungsadresse
 <%= "Name:   #{address.person.billing_address.name}" %>
 <%= "Straße: #{address.person.billing_address.street} #{address.person.billing_address.house_num}" %>
 <%= "Ort:    #{address.person.billing_address.zip} #{address.person.billing_address.city}" %>
-<% else -%>
-Wie Lieferadresse.
 <% end -%>
 <% elsif calculator.customer_type == 'organization' -%>
 <% if address.organization.billing_address.another_address -%>
 <%= "Name:   #{address.organization.billing_address.name}" %>
 <%= "Straße: #{address.organization.billing_address.street} #{address.organization.billing_address.house_num}" %>
 <%= "Ort:    #{address.organization.billing_address.zip} #{address.organization.billing_address.city}" %>
-<% else -%>
-Wie Lieferadresse.
 <% end -%>
 <% end -%>
 
