@@ -99,6 +99,10 @@ module Admin
           r.run GroupMemberExportRoda
         end
 
+        r.on 'annual-reading' do
+          r.run ManualReadingDocumentsRoda
+        end
+
         r.on 'billing-cycles' do
           r.run BillingCycleRoda
         end

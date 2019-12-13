@@ -87,6 +87,11 @@ module Admin
       end
     end
 
+    # Returns all meters but the ones which have been replaced by newer ones.
+    def active_meters
+      meters.reject{|x| x.object.decomissioned?}
+    end
+
     def allowed_actions
       allowed = {}
       if allowed?(permissions.metering_point_operator_contracts.create)
