@@ -35,6 +35,10 @@ module Admin
 
       localpools = LocalpoolResource.all(current_user)
 
+      r.on 'enter' do
+        r.run EnterManualReadingRoda
+      end
+
       r.on :id do |id|
 
         shared[PARENT] = localpool = localpools.retrieve(id)
