@@ -16,8 +16,12 @@ module Pdf
 
     protected
 
+    def document_name
+      ""
+    end
+
     def title
-      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Auftragseingangsbestätigung-#{contract.localpool.base_slug}-#{contract.contract_number}-#{contract.contract_number_addition}-#{contract.customer.last_name}-#{contract.customer.first_name}"
+      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-#{document_name}-#{contract.localpool.base_slug}-#{contract.contract_number}-#{contract.contract_number_addition}-#{contract.customer.last_name}-#{contract.customer.first_name}"
     end
 
     def build_struct

@@ -6,10 +6,14 @@ module Pdf
 
     protected
 
+    def document_name
+      'Auftragseingangsbestätigung'
+    end
+
     def build_struct
       super.tap do |h|
         h[:is_pre_contract] = true
-        h[:document_name] = 'Auftragseingangsbestätigung'
+        h[:document_name] = document_name
       end
     end
 
