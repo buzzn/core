@@ -6,14 +6,14 @@ module Pdf
 
     protected
 
-    def build_struct
-      super.tap do |h|
-        h[:document_name] = 'Auftragsbestätigung'
-      end
+    def document_name
+      'Auftragsbestätigung'
     end
 
-    def title
-      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Auftragsbestätigung-#{contract.localpool.base_slug}-#{contract.contract_number}-#{contract.contract_number_addition}"
+    def build_struct
+      super.tap do |h|
+        h[:document_name] = document_name
+      end
     end
 
     def template_name
