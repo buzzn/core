@@ -222,6 +222,9 @@ module Pdf
         balance_at_before_taxes = calculate_taxes(balance_at)[:amount_before_taxes]
         balance_at_after_taxes = calculate_taxes(balance_at)[:amount_after_taxes]
         balance_at_taxes = calculate_taxes(balance_at)[:amount_taxes]
+        forderung_net = netto - balance_at_before_taxes
+        forderung_tax = (brutto-netto) - balance_at_taxes
+
 
         to_pay_cents = balance_at - brutto
         has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
@@ -232,6 +235,8 @@ module Pdf
         hash[:balance_at_after_taxes] = german_div(balance_at_after_taxes)
         hash[:balance_at_taxes] = german_div(balance_at_taxes)
         hash[:to_pay] = german_div(to_pay_cents.abs)
+        hash[:forderung_net] = german_div(forderung_net)
+        hash[:forderung_tax] = german_div(forderung_tax)
         hash[:forderung]  = to_pay_cents.positive? ? 'Erstattung' : 'Forderung'
         hash[:rueck_nach] = to_pay_cents.positive? ? 'Rück' : 'Nach'
         hash[:satz_forderung] = if has_bank_and_direct_debit
