@@ -229,7 +229,8 @@ html
               strong #{billing.forderung}
             td #{billing.forderung_net}
             td #{billing.forderung_tax}
-            td.is-text-right colspan=2
+            td #{vat} %
+            td.is-text-right
               strong #{billing.to_pay} €
       p Aus der #{billing_type} ergibt sich eine <strong>#{billing.rueck_nach}zahlung</strong> von <strong>#{billing.to_pay} €.</strong>
       p #{billing.satz_forderung}
