@@ -57,9 +57,9 @@ module Register
     end
 
     def obis
-      if meta&.label&.consumption? || meta&.label == :grid_consumption
+      if meta&.label&.consumption? || meta&.label&.grid_consumption?
         '1-1:1.8.0'
-      elsif meta&.label&.production? || meta&.label == :grid_feeding
+      elsif meta&.label&.production? || meta&.label&.grid_feeding?
         '1-1:2.8.0'
       else
         nil
