@@ -115,6 +115,10 @@ module Admin
           r.run AnnualReportRoda
         end
 
+        r.on 'electricity-labelling' do
+          r.run ElectricityLabellingRoda
+        end
+
         r.on 'devices' do
           r.run Admin::DeviceRoda
         end

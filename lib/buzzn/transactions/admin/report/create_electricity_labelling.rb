@@ -7,9 +7,9 @@ require_relative '../../../transactions'
 require 'bigdecimal'
 
 # Creates an annual report as an excel sheet of a given group.
-class Transactions::Admin::Report::CreateAnnualReport < Transactions::Admin::Report::ReportData
+class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Admin::Report::ReportData
 
-  validate :schema
+  #validate :schema
   authorize :allowed_roles
   tee :end_date, with: :'operations.end_date'
   add :date_range
@@ -39,17 +39,94 @@ class Transactions::Admin::Report::CreateAnnualReport < Transactions::Admin::Rep
                    veeg_reduced:,
                    warnings:,
                    **)
+    fossils = energy_mix[:nuclear] +
+      energy_mix[:coal] +
+      energy_mix[:natural_gas] +
+      energy_mix[:other_fossil] +
+      energy_mix[:other_renewable] / 100 * :autacry_in_percent * :additional_supply_ratio
     {
       warnings: warnings,
-      production_wh:       production,
-      grid_feeding_wh:     grid_feeding,
-      grid_consumption_wh: grid_consumption,
-      grid_consumption_corrected_wh: grid_consumption_corrected,
-      grid_feeding_corrected_wh: grid_feeding_corrected,
-      veeg_wh: veeg,
-      veeg_reduced_wh: veeg_reduced,
+      nuclear: energy_mix[:nuclear] / fossils,
+      coal: energy_mix[:coal]  / fossils,
+      natural_gas: energy_mix[:natural_gas]  / fossils,
+      other_fossil: energy_mix[:other_fossil]  / fossils,
+      other_renewable: energy_mix[:other_renewable] / fossils
     }.merge(contracts_with_range_and_readings)
   end
+
+  def register_metas_active(register_metas:, **)
+    # A register is considered active if it has at least
+    # one register not decomissioned
+    register_metas.select { |m| m.registers.any? { |r| !r.decomissioned? } }
+  end
+
+  def production_pv_consumend_in_group_kWh(register_metas_active:, date_range:, warnings:, **)
+    if register_metas.map(&:label).any?(:demarcation_pv)
+      return system(register_metas_active, date_range, :grid_consumption, warnings) -
+             system(register_metas_active, date_range, :production_pv, warnings) -
+             system(register_metas_active, date_range, :demarcation_pv, warnings)
+    end
+
+    system(register_metas_active, date_range, :grid_consumption, warnings) -
+      system(register_metas_active, date_range, :production_pv, warnings)
+  end
+
+  def production_chp_consumend_in_group_kWh(register_metas_active:, date_range:, warnings:, **)
+    if register_metas.map(&:label).any?(:demarcation_chp)
+      return system(register_metas_active, date_range, :grid_consumption, warnings) -
+             system(register_metas_active, date_range, :production_chp, warnings) -
+             system(register_metas_active, date_range, :demarcation_chp, warnings)
+    end
+
+    system(register_metas_active, date_range, :grid_consumption, warnings) -
+      system(register_metas_active, date_range, :production_chp, warnings)
+  end
+
+  def production_water_consumend_in_group_kWh(register_metas_active:, date_range:, warnings:, **)
+    if register_metas.map(&:label).any?(:demarcation_water)
+      return system(register_metas_active, date_range, :grid_consumption, warnings) -
+             system(register_metas_active, date_range, :production_water, warnings) -
+             system(register_metas_active, date_range, :demarcation_water, warnings)
+    end
+
+    system(register_metas_active, date_range, :grid_consumption, warnings) -
+      system(register_metas_active, date_range, :production_water, warnings)
+  end
+
+  def production_wind_consumend_in_group_kWh(register_metas_active:, date_range:, warnings:, **)
+    if register_metas.map(&:label).any?(:demarcation_wind)
+      return system(register_metas_active, date_range, :grid_consumption, warnings) -
+             system(register_metas_active, date_range, :production_wind, warnings) -
+             system(register_metas_active, date_range, :demarcation_wind, warnings)
+    end
+
+    system(register_metas_active, date_range, :grid_consumption, warnings) -
+      system(register_metas_active, date_range, :production_wind, warnings)
+  end
+
+  def production_consumend_in_group_kWh(
+    production_pv_consumend_in_group_kWh:,
+    production_chp_consumend_in_group_kWh:, 
+    production_wind_consumend_in_group_kWh:,
+    production_water_consumend_in_group_kWh:, 
+    **
+  )
+    production_pv_consumend_in_group_kWh +
+      production_chp_consumend_in_group_kWh +
+      production_wind_consumend_in_group_kWh +
+      production_water_consumend_in_group_kWh
+  end
+
+  def autacry_in_percent(consumption:, production_consumend_in_group_kWh:, **)
+    (production_consumend_in_group_kWh / consumption) * 100
+  end
+
+  def additional_supply_ratio(autacry_in_percent:, **)
+    BigDecimal('100') - autacry_in_percent
+  end
+
+#  demarcation_pv demarcation_chp demarcation_wind demarcation_water
+ # production_pv production_chp production_wind production_water
 
   # @param consumption_own_production_wh [number] Amount of electricity
   # consumed which has been produced within the group.
