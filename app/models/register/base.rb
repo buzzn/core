@@ -80,6 +80,10 @@ module Register
       self.readings.installed.order(:date).first
     end
 
+    def decomissioned?
+      self.readings.decomissioned.order(:date).last.nil?
+    end
+
     def decomissioned_at
       self.readings.decomissioned.order(:date).last
     end
