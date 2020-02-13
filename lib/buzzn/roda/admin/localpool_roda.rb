@@ -32,7 +32,6 @@ module Admin
     plugin :aggregation
 
     route do |r|
-
       localpools = LocalpoolResource.all(current_user)
 
       r.on 'enter' do
@@ -109,14 +108,6 @@ module Admin
 
         r.on 'billing-cycles' do
           r.run BillingCycleRoda
-        end
-
-        r.on 'annual-report' do
-          r.run AnnualReportRoda
-        end
-
-        r.on 'electricity-labelling' do
-          r.run ElectricityLabellingRoda
         end
 
         r.on 'devices' do
@@ -204,6 +195,14 @@ module Admin
 
         r.on 'reports' do
           r.run ReportRoda
+        end
+
+        r.on 'annual-report' do
+          r.run AnnualReportRoda
+        end
+
+        r.on 'electricity-labelling' do
+          r.run ElectricityLabellingRoda
         end
 
         r.on 'distribution-system-operator' do

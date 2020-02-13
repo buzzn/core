@@ -1,4 +1,5 @@
 require_relative '../report'
+require('time')
 
 # Holds all the data used by the reports.
 class Transactions::Admin::Report::ReportData < Transactions::Base
@@ -45,6 +46,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
   end
 
   def warnings(**)
+    byebug
     []
   end
 
@@ -99,13 +101,17 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
   end
 
   def date_range(params:, resource:, **)
-    if params[:end_date] <= params[:begin_date]
+    byebug
+    begin_date = Time.parse(params['begin_date'])
+    end_date = Time.parse(params['last_date'])
+    if end_date <= begin_date
       raise Buzzn::ValidationError.new(begin_date: ['must be before end_date'])
     end
-    params.delete(:begin_date)...params.delete(:end_date)
+    begin_date...end_date
   end
 
   def register_metas(resource:, **)
+    byebug
     resource.object.register_metas_by_registers.uniq # uniq is critically important here!
   end
 
@@ -179,9 +185,9 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
         end
       end
     end
-    unless errors.empty?
-      raise Buzzn::ValidationError.new(errors)
-    end
+   # unless errors.empty?
+   #   raise Buzzn::ValidationError.new(errors)
+   # end
     sum
   end
 
