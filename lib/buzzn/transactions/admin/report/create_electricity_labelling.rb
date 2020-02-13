@@ -5,6 +5,7 @@ require_relative '../../../schemas/transactions/admin/report/create_electricity_
 require_relative '../../../transactions'
 
 require 'bigdecimal'
+require 'time'
 
 # Creates an annual report as an excel sheet of a given group.
 class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Admin::Report::ReportData
@@ -12,8 +13,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   #validate :schema
   authorize :allowed_roles
   tee :end_date, with: :'operations.end_date'
+  add :warnings
   add :date_range
-  add :register_metas
+  #add :register_metas
   add :production
   add :grid_feeding
   add :grid_consumption
@@ -23,13 +25,28 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   add :grid_feeding_corrected
   add :veeg
   add :veeg_reduced
+  add :consumption
+  add :energy_mix
+  add :register_metas_active
+  add :production_pv_consumend_in_group_kWh
+  add :production_chp_consumend_in_group_kWh 
+  add :production_wind_consumend_in_group_kWh
+  add :production_water_consumend_in_group_kWh
+  add :production_consumend_in_group_kWh
+  add :autacry_in_percent
+  add :additional_supply_ratio
   map :build_result
+
+  def warnings(**)
+    []
+  end
 
   def schema
     Schemas::Transactions::Admin::Report::CreateElectricityLabelling
   end
 
-  def build_result(contracts_with_range_and_readings:,
+  def build_result(resource:,
+                   contracts_with_range_and_readings:,
                    production:,
                    grid_feeding:,
                    grid_consumption:,
@@ -38,18 +55,23 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                    veeg:,
                    veeg_reduced:,
                    warnings:,
+                   energy_mix:,
+                   autacry_in_percent:,
+                   additional_supply_ratio:,
                    **)
+    energy_mix = energy_mix[:germany]
+
     fossils = energy_mix[:nuclear] +
-      energy_mix[:coal] +
-      energy_mix[:natural_gas] +
-      energy_mix[:other_fossil] +
-      energy_mix[:other_renewable] / 100 * :autacry_in_percent * :additional_supply_ratio
+              energy_mix[:coal] +
+              energy_mix[:natural_gas] +
+              energy_mix[:other_fossil] +
+              energy_mix[:other_renewable] / 100 * autacry_in_percent * additional_supply_ratio
     {
       warnings: warnings,
       nuclear: energy_mix[:nuclear] / fossils,
-      coal: energy_mix[:coal]  / fossils,
-      natural_gas: energy_mix[:natural_gas]  / fossils,
-      other_fossil: energy_mix[:other_fossil]  / fossils,
+      coal: energy_mix[:coal] / fossils,
+      natural_gas: energy_mix[:natural_gas] / fossils,
+      other_fossil: energy_mix[:other_fossil] / fossils,
       other_renewable: energy_mix[:other_renewable] / fossils
     }.merge(contracts_with_range_and_readings)
   end
@@ -106,9 +128,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
   def production_consumend_in_group_kWh(
     production_pv_consumend_in_group_kWh:,
-    production_chp_consumend_in_group_kWh:, 
+    production_chp_consumend_in_group_kWh:,
     production_wind_consumend_in_group_kWh:,
-    production_water_consumend_in_group_kWh:, 
+    production_water_consumend_in_group_kWh:,
     **
   )
     production_pv_consumend_in_group_kWh +
@@ -125,12 +147,12 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     BigDecimal('100') - autacry_in_percent
   end
 
-#  demarcation_pv demarcation_chp demarcation_wind demarcation_water
- # production_pv production_chp production_wind production_water
+  #  demarcation_pv demarcation_chp demarcation_wind demarcation_water
+  # production_pv production_chp production_wind production_water
 
   # @param consumption_own_production_wh [number] Amount of electricity
   # consumed which has been produced within the group.
-  # @param grid_consumption [number] 
+  # @param grid_consumption [number]
   def lsn_consumption(consumption_own_production_wh:, grid_consumption:)
     consumption_own_production_wh + grid_consumption
   end

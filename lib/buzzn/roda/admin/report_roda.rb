@@ -1,9 +1,11 @@
 require_relative '../admin_roda'
 
+
 class Admin::ReportRoda < BaseRoda
 
   include Import.args[:env,
-                      create_eeg_report: 'transactions.admin.report.create_eeg_report'
+                      create_eeg_report: 
+                      'transactions.admin.report.create_eeg_report'
                      ]
 
   plugin :shared_vars
@@ -14,6 +16,8 @@ class Admin::ReportRoda < BaseRoda
 
     r.on 'eeg' do
       r.post! do
+        puts r.params
+        byebug
         create_eeg_report.(resource: localpool, params: r.params)
       end
     end

@@ -74,7 +74,7 @@ class Transactions::Admin::Report::CreateAnnualReport < Transactions::Admin::Rep
     []
   end
 
-  def period(params:, resource:, **)
+  def period(params:, **)
     #if params[:end] <= params[:begin]
     #  raise Buzzn::ValidationError.new(begin: ['must be before end'])
     #end
