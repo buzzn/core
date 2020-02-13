@@ -46,7 +46,6 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
   end
 
   def warnings(**)
-    byebug
     []
   end
 
@@ -100,8 +99,8 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
     'grid_feeding_corrected_usage_ratio'
   end
 
-  def date_range(params:, resource:, **)
-    byebug
+
+  def date_range(params:, **)
     begin_date = Time.parse(params['begin_date'])
     end_date = Time.parse(params['last_date'])
     if end_date <= begin_date
@@ -111,7 +110,6 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
   end
 
   def register_metas(resource:, **)
-    byebug
     resource.object.register_metas_by_registers.uniq # uniq is critically important here!
   end
 
@@ -185,9 +183,9 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
         end
       end
     end
-   # unless errors.empty?
-   #   raise Buzzn::ValidationError.new(errors)
-   # end
+    unless errors.empty?
+      raise Buzzn::ValidationError.new(errors)
+    end
     sum
   end
 
@@ -209,14 +207,14 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
            warnings: warnings).round(2).to_f
   end
 
-  def production_usage_ratio(consumption_common:,
+  def production_usage_ratio(consumption:,
                              production:,
                              date_range:, warnings:, **)
     if production.zero?
       return 0
     end
+    consumption / production * 100
 
-    0 + consumption_common * 100 / production
   end
 
   # Returns the overall electricity consumption.
@@ -231,7 +229,8 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
            warnings: warnings).round(2).to_f
   end
 
-  # Returns the group's electricity consumption.
+  # Returns the group's electricity consumption of common power consuming
+  # devices such as light in the hallway.
   #
   # @param register_metas [Array<Meta>] the metas to read from.
   # @param date_range [date_range]  Time period to take into account.
@@ -317,7 +316,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
     system(register_metas: register_metas, date_range: date_range, label: :grid_consumption, warnings: warnings).round(2).to_f
   end
 
-  def contracts_with_range(params:, resource:, register_metas:, date_range:, **)
+  def contracts_with_range(params:, register_metas:, date_range:, **)
     ret = []
     register_metas.each do |register_meta|
       register_meta.contracts.each do |contract|

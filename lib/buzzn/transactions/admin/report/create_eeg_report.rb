@@ -1,4 +1,4 @@
-require_relative '../report'
+require_relative 'report_data'
 require_relative '../../../schemas/transactions/admin/report/create_eeg_report'
 
 class Transactions::Admin::Report::CreateEegReport < Transactions::Admin::Report::ReportData
