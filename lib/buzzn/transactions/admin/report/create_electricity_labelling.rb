@@ -17,7 +17,12 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
   add :register_metas
 
+  add :contracts_with_range
   add :register_metas_active
+  add :contracts_with_range_and_readings
+  add :grid_feeding
+  add :grid_consumption
+  add :grid_feeding_corrected
 
   add :production_pv_consumend_in_group_kWh
   add :production_chp_consumend_in_group_kWh
@@ -36,6 +41,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   add :co2_emmision_g_per_kwh_coal
   add :co2_emmision_g_per_kwh_gas
   add :co2_emmision_g_per_kwh_other
+
+  add :technologies
+
   add :energy_mix
   map :build_result
 
@@ -56,6 +64,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                    renewable_eeg:,
                    renewable_through_eeg:,
                    non_eeg:,
+                   technologies:,
                    co2_emmision_g_per_kwh_coal:,
                    co2_emmision_g_per_kwh_gas:,
                    co2_emmision_g_per_kwh_other:,
@@ -82,7 +91,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       gas_ratio: gas_ratio,                                             # E71
       other_fossil: other_fossil,                                       # E72
       other_renewable: current_energy_mix[:other_renewable] / fossils,  # E73
-
+      chp: production_chp_consumend_in_group_kWh,
+      pv: production_pv_consumend_in_group_kWh,
+      water: production_water_consumend_in_group_kWh,
       # E74 ... Own power
       natural_gas_bh: production_chp_consumend_in_group_kWh / own_power_fraction,          # E75
       other_renewable_pv: production_pv_consumend_in_group_kWh / own_power_fraction,       # E76
@@ -99,7 +110,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       gas_report: 1,                                                              # E83
       sun_report: 1,                                                              # E84
       electricitySupplier: 1,                                                     # E85
-      tech: 1,                                                                    # E86
+      tech: technologies,                                                         # E86
       natural_gas: current_energy_mix[:natural_gas] / fossils
     }
   end
@@ -110,51 +121,53 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     register_metas.select { |m| m.registers.any? { |r| !r.decomissioned? } }
   end
 
+  def technologies(register_metas_active:, **)
+    #byebug
+    puts register_metas_active.size
+    "all of them"
+  end
+
   # E18
-  def production_chp_consumend_in_group_kWh(register_metas_active:, date_range:, warnings:, **)
+  def production_chp_consumend_in_group_kWh(register_metas_active:, date_range:,grid_feeding_corrected:, warnings:, **)
     if register_metas_active.map(&:label).any? {|x| x == :demarcation_chp}
-      return system(register_metas: register_metas_active, date_range: date_range, label: :grid_consumption, warnings: warnings) -
-             system(register_metas: register_metas_active, date_range: date_range, label: :production_chp, warnings: warnings) -
+      return system(register_metas: register_metas_active, date_range: date_range, label: :production_chp, warnings: warnings) -
+             grid_feeding_corrected -
              system(register_metas: register_metas_active, date_range: date_range, label: :demarcation_chp, warnings: warnings)
     end
 
-    system(register_metas: register_metas_active, date_range: date_range, label: :grid_consumption, warnings: warnings) -
-      system(register_metas: register_metas_active, date_range: date_range, label: :production_chp, warnings: warnings)
+    system(register_metas: register_metas_active, date_range: date_range, label: :production_chp, warnings: warnings) - grid_feeding_corrected
   end
 
   # E19
-  def production_pv_consumend_in_group_kWh(register_metas_active:, date_range:, warnings:, **)
+  def production_pv_consumend_in_group_kWh(register_metas_active:, date_range:, grid_feeding_corrected:, warnings:, **)
     if register_metas_active.map(&:label).any? {|x| x == :demarcation_pv}
-      return system(register_metas: register_metas_active, date_range: date_range, label: :grid_consumption, warnings: warnings) -
-             system(register_metas: register_metas_active, date_range: date_range, label: :production_pv, warnings: warnings) -
+      return system(register_metas: register_metas_active, date_range: date_range, label: :production_pv, warnings: warnings) -
+             grid_feeding_corrected -
              system(register_metas: register_metas_active, date_range: date_range, label: :demarcation_pv, warnings: warnings)
     end
 
-    system(register_metas: register_metas_active, date_range: date_range, label: :grid_consumption, warnings: warnings) -
-      system(register_metas: register_metas_active, date_range: date_range, label: :production_pv, warnings: warnings)
+    system(register_metas: register_metas_active, date_range: date_range, label: :production_pv, warnings: warnings) - grid_feeding_corrected
   end
 
   # E20
-  def production_water_consumend_in_group_kWh(register_metas_active:, date_range:, warnings:, **)
+  def production_water_consumend_in_group_kWh(register_metas_active:, date_range:, grid_feeding_corrected:, warnings:, **)
     if register_metas_active.map(&:label).any? {|x| x == :demarcation_water}
-      return system(register_metas: register_metas_active, date_range: date_range, label: :grid_consumption, warnings: warnings) -
-             system(register_metas: register_metas_active, date_range: date_range, label: :production_water, warnings: warnings) -
+      return system(register_metas: register_metas_active, date_range: date_range, label: :production_water, warnings: warnings) -
+             grid_feeding_corrected -
              system(register_metas: register_metas_active, date_range: date_range, label: :demarcation_water, warnings: warnings)
     end
 
-    system(register_metas: register_metas_active, date_range: date_range, label: :grid_consumption, warnings: warnings) -
-      system(register_metas: register_metas_active, date_range: date_range, label: :production_water, warnings: warnings)
+    system(register_metas: register_metas_active, date_range: date_range, label: :grid_consumption, warnings: warnings) - grid_feeding_corrected
   end
 
-  def production_wind_consumend_in_group_kWh(register_metas_active:, date_range:, warnings:, **)
+  def production_wind_consumend_in_group_kWh(register_metas_active:, date_range:, grid_feeding_corrected:, warnings:, **)
     if register_metas_active.map(&:label).any? {|x| x == :demarcation_wind}
-      return system(register_metas: register_metas_active, date_range: date_range, label: :grid_consumption, warnings: warnings) -
-             system(register_metas: register_metas_active, date_range: date_range, label: :production_wind, warnings: warnings) -
+      return system(register_metas: register_metas_active, date_range: date_range, label: :production_wind, warnings: warnings) -
+             grid_feeding_corrected -
              system(register_metas: register_metas_active, date_range: date_range, label: :demarcation_wind, warnings: warnings)
     end
 
-    system(register_metas: register_metas_active, date_range: date_range, label: :grid_consumption, warnings: warnings) -
-      system(register_metas: register_metas_active, date_range: date_range, label: :production_wind, warnings: warnings)
+    system(register_metas: register_metas_active, date_range: date_range, label: :grid_consumption, warnings: warnings) -grid_feeding_corrected
   end
 
   def production_consumend_in_group_kWh(
@@ -171,8 +184,14 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   end
 
   # E65
-  def autacry_in_percent(consumption:, production_consumend_in_group_kWh:, **)
-    (production_consumend_in_group_kWh / consumption) * 100
+  def autacry_in_percent(consumption:, production_consumend_in_group_kWh:, warnings:, **)
+    autacry = production_consumend_in_group_kWh / consumption * 100
+    if autacry > 100
+      warnings.concat ["Group had an overall higher prodaction than consumption"]
+      return 100
+    end
+
+    autacry
   end
 
   # E66
