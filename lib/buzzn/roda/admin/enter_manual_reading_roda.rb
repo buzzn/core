@@ -50,7 +50,7 @@ module Admin
 
         reading_errors = []
         # Skip headline, roll over all the data rows
-        (2...sheet.count-1).each do |i|
+        (2...sheet.count).each do |i|
           register_number = sheet[i][3].value
           register_addition = value_or_empty sheet[i][5]
           paid_abatement = value_or_empty sheet[i][10]
