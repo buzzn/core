@@ -207,6 +207,20 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
            warnings: warnings).round(2).to_f
   end
 
+  def production_water(register_metas:, date_range:, warnings:, **)
+    system(register_metas: register_metas,
+           date_range: date_range,
+           label: :production_water,
+           warnings: warnings).round(2).to_f
+  end
+
+  def production_wind(register_metas:, date_range:, warnings:, **)
+    system(register_metas: register_metas,
+           date_range: date_range,
+           label: :production_wind,
+           warnings: warnings).round(2).to_f
+  end
+
   def production_usage_ratio(consumption:,
                              production:,
                              date_range:, warnings:, **)
