@@ -8,6 +8,9 @@ require 'time'
 
 # Creates an annual report as an excel sheet of a given group.
 class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Admin::Report::ReportData
+  include Import.args[
+    update: 'transactions.admin.localpool.update'
+  ]
 
   #validate :schema
   authorize :allowed_roles
@@ -57,6 +60,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   end
 
   def build_result(warnings:,
+                   resource:,
                    energy_mix:,
                    autacry_in_percent:,
                    additional_supply_ratio:,
@@ -92,16 +96,16 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     other_renewable = current_energy_mix[:other_renewable] / fossils * 100
 
     own_power_fraction = production_consumend_in_group_kWh * autacry_in_percent / non_eeg / BigDecimal('100')
-    {
+    stats = {
       warnings: warnings,
 
       # E68 ... Other power
-      nuclearRatio: nuclear_ratio,                                     # E69
-      coalRatio: coal_ratio,                                            # E70
-      gasRatio: gas_ratio,                                             # E71
-      otherFossilesRatio: other_fossil,                                       # E72
-      otherRenewableRatio: other_renewable,                                 # E73
-      renewablesEegRatio: renewable_eeg / consumption * BigDecimal('100'),                # E78
+      nuclearRatio: nuclear_ratio,                                         # E69
+      coalRatio: coal_ratio,                                               # E70
+      gasRatio: gas_ratio,                                                 # E71
+      otherFossilesRatio: other_fossil,                                    # E72
+      otherRenewableRatio: other_renewable,                                # E73
+      renewablesEegRatio: renewable_eeg / consumption * BigDecimal('100'), # E78
 
       #chp: production_chp_consumend_in_group_kWh,
       #pv: production_pv_consumend_in_group_kWh,
@@ -112,18 +116,21 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       #other_renewable_water: production_water_consumend_in_group_kWh / own_power_fraction, # E77
 
       co2EmissionGrammPerKwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal # E93
-                                + gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas
-                                + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other),
+                               + gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas
+                               + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other),
       nuclearWasteMiligrammPerKwh: nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001'), # E79
       renterPowerEeg: 0,
-      selfSufficiencyReport: (production_consumend_in_group_kWh / consumption * BigDecimal('100')), # E103
-      utilizationReport: consumption / production * BigDecimal('100'), # E104
+      selfSufficiencyReport: (production_consumend_in_group_kWh / consumption * BigDecimal('100')),                          # E103
+      utilizationReport: consumption / production * BigDecimal('100'),                                                       # E104
       gasReport: BigDecimal('100') * production_chp / (production_pv + production_chp + production_wind + production_water), # E83
-      sunReport: BigDecimal('100') * production_pv / (production_pv + production_chp + production_wind + production_water), # E84
-      electricitySupplier: 1,                                                      # E85
-      tech: technologies,                                                         # E86
+      sunReport: BigDecimal('100') * production_pv / (production_pv + production_chp + production_wind + production_water),  # E84
+      electricitySupplier: 1, # E85
+      tech: technologies,     # E86
       #natural_gas: current_energy_mix[:natural_gas] / fossils
     }
+
+    update.(resource: resource, params: {fake_stats: stats})
+    stats
   end
 
   def register_metas_active(register_metas:, **)
