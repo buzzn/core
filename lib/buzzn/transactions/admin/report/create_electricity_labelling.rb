@@ -96,32 +96,33 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       warnings: warnings,
 
       # E68 ... Other power
-      nuclear_ratio: nuclear_ratio,                                     # E69
-      coal_ratio: coal_ratio,                                           # E70
-      gas_ratio: gas_ratio,                                             # E71
-      other_fossil: other_fossil,                                       # E72
-      other_renewable: other_renewable,                                 # E73
-      chp: production_chp_consumend_in_group_kWh,
-      pv: production_pv_consumend_in_group_kWh,
-      water: production_water_consumend_in_group_kWh,
-      # E74 ... Own power
-      natural_gas_bh: production_chp_consumend_in_group_kWh / own_power_fraction,          # E75
-      other_renewable_pv: production_pv_consumend_in_group_kWh / own_power_fraction,       # E76
-      other_renewable_water: production_water_consumend_in_group_kWh / own_power_fraction, # E77
-      renewable_eeg_ratio: renewable_eeg / consumption * BigDecimal('100'),                # E78
+      nuclearRatio: nuclear_ratio,                                     # E69
+      coalRatio: coal_ratio,                                            # E70
+      gasRatio: gas_ratio,                                             # E71
+      otherFossilesRatio: other_fossil,                                       # E72
+      otherRenewableRatio: other_renewable,                                 # E73
+      renewablesEegRatio: renewable_eeg / consumption * BigDecimal('100'),                # E78
 
-      co2_emissions_g_per_kwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal # E93
+      #chp: production_chp_consumend_in_group_kWh,
+      #pv: production_pv_consumend_in_group_kWh,
+      #water: production_water_consumend_in_group_kWh,
+      # E74 ... Own power
+      #natural_gas_bh: production_chp_consumend_in_group_kWh / own_power_fraction,          # E75
+      #other_renewable_pv: production_pv_consumend_in_group_kWh / own_power_fraction,       # E76
+      #other_renewable_water: production_water_consumend_in_group_kWh / own_power_fraction, # E77
+
+      co2EmissionGrammPerKwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal # E93
                                 + gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas
                                 + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other),
-      nuclearwaste_miligramm_per_kwh: nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001'), # E79
-      renter_power_eeg: 0,
-      self_sufficiency_report: (production_consumend_in_group_kWh / consumption * BigDecimal('100')), # E103
-      utilization_report: consumption / production * BigDecimal('100'), # E104
-      gas_report: BigDecimal('100') * production_chp / (production_pv + production_chp + production_wind + production_water), # E83
-      sun_report: BigDecimal('100') * production_pv / (production_pv + production_chp + production_wind + production_water), # E84
-      electricitySupplier: 1,                                                     # E85
+      nuclearWasteMiligrammPerKwh: nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001'), # E79
+      renterPowerEeg: 0,
+      selfSufficiencyReport: (production_consumend_in_group_kWh / consumption * BigDecimal('100')), # E103
+      utilizationReport: consumption / production * BigDecimal('100'), # E104
+      gasReport: BigDecimal('100') * production_chp / (production_pv + production_chp + production_wind + production_water), # E83
+      sunReport: BigDecimal('100') * production_pv / (production_pv + production_chp + production_wind + production_water), # E84
+      electricitySupplier: 1,                                                      # E85
       tech: technologies,                                                         # E86
-      natural_gas: current_energy_mix[:natural_gas] / fossils
+      #natural_gas: current_energy_mix[:natural_gas] / fossils
     }
   end
 
