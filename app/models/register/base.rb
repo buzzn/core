@@ -70,7 +70,7 @@ module Register
       meta&.kind
     end
 
-    [:consumption, :production, :grid_consumption, :grid_feeding, :system].each do |method|
+    [:consumption, :production, :demarcation, :grid_consumption, :grid_feeding, :system].each do |method|
       define_method("#{method}?") do
         kind == method
       end
@@ -81,7 +81,7 @@ module Register
     end
 
     def decomissioned?
-      self.readings.decomissioned.order(:date).last.nil?
+      !self.readings.decomissioned.order(:date).last.nil?
     end
 
     def decomissioned_at
