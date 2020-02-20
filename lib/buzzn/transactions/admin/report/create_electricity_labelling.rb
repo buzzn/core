@@ -8,6 +8,7 @@ require 'time'
 
 # Creates an annual report as an excel sheet of a given group.
 class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Admin::Report::ReportData
+
   #validate :schema
   authorize :allowed_roles
   tee :end_date, with: :'operations.end_date'
@@ -42,6 +43,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   add :autacry_in_percent
   add :additional_supply_ratio
 
+  add :renter_power
+
   add :co2_emmision_g_per_kwh_coal
   add :co2_emmision_g_per_kwh_gas
   add :co2_emmision_g_per_kwh_other
@@ -69,6 +72,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                    renewable_eeg:,
                    renewable_through_eeg:,
                    non_eeg:,
+                   renter_power:,
                    technologies:,
                    co2_emmision_g_per_kwh_coal:,
                    co2_emmision_g_per_kwh_gas:,
@@ -100,11 +104,11 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       otherFossilesRatio: other_fossil,                                    # E72
       otherRenewableRatio: other_renewable,                                # E73
       renewablesEegRatio: renewable_eeg / consumption * BigDecimal('100'), # E78
-      co2EmissionGrammPerKwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal # E93
+      co2EmissionGrammPerKwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal
                                + gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas
-                               + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other),
+                               + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other),      # E93
       nuclearWasteMiligrammPerKwh: nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001'), # E79
-      renterPowerEeg: 0,
+      renterPowerEeg: renter_power,
       selfSufficiencyReport: (production_consumend_in_group_kWh / consumption * BigDecimal('100')),                          # E103
       utilizationReport: consumption / production * BigDecimal('100'),                                                       # E104
       gasReport: BigDecimal('100') * production_chp / (production_pv + production_chp + production_wind + production_water), # E83
@@ -115,7 +119,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
     stats.each {|k, v| resource.fake_stats[k] = v}
     resource.save
-    stats.merge({
+    stats.merge(
       warnings: warnings,
       chp: production_chp_consumend_in_group_kWh,
       pv: production_pv_consumend_in_group_kWh,
@@ -125,7 +129,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       other_renewable_pv: production_pv_consumend_in_group_kWh / own_power_fraction,       # E76
       other_renewable_water: production_water_consumend_in_group_kWh / own_power_fraction, # E77
       natural_gas: current_energy_mix[:natural_gas] / fossils
-    })
+    )
   end
 
   def register_metas_active(register_metas:, **)
@@ -334,6 +338,11 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   # E78
   def renewable_through_eeg(renewable_eeg:, consumption:, **)
     renewable_eeg / consumption * BigDecimal('100')
+  end
+
+  # E79
+  def renter_power(production_pv_consumend_in_group_kWh:, consumption:, **)
+    production_pv_consumend_in_group_kWh / consumption * BigDecimal('100')
   end
 
   # E67
