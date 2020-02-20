@@ -8,10 +8,6 @@ require 'time'
 
 # Creates an annual report as an excel sheet of a given group.
 class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Admin::Report::ReportData
-  include Import.args[
-    update: 'transactions.admin.localpool.update'
-  ]
-
   #validate :schema
   authorize :allowed_roles
   tee :end_date, with: :'operations.end_date'
@@ -97,8 +93,6 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
     own_power_fraction = production_consumend_in_group_kWh * autacry_in_percent / non_eeg / BigDecimal('100')
     stats = {
-      warnings: warnings,
-
       # E68 ... Other power
       nuclearRatio: nuclear_ratio,                                         # E69
       coalRatio: coal_ratio,                                               # E70
@@ -106,15 +100,6 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       otherFossilesRatio: other_fossil,                                    # E72
       otherRenewableRatio: other_renewable,                                # E73
       renewablesEegRatio: renewable_eeg / consumption * BigDecimal('100'), # E78
-
-      #chp: production_chp_consumend_in_group_kWh,
-      #pv: production_pv_consumend_in_group_kWh,
-      #water: production_water_consumend_in_group_kWh,
-      # E74 ... Own power
-      #natural_gas_bh: production_chp_consumend_in_group_kWh / own_power_fraction,          # E75
-      #other_renewable_pv: production_pv_consumend_in_group_kWh / own_power_fraction,       # E76
-      #other_renewable_water: production_water_consumend_in_group_kWh / own_power_fraction, # E77
-
       co2EmissionGrammPerKwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal # E93
                                + gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas
                                + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other),
@@ -126,11 +111,21 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       sunReport: BigDecimal('100') * production_pv / (production_pv + production_chp + production_wind + production_water),  # E84
       electricitySupplier: 1, # E85
       tech: technologies,     # E86
-      #natural_gas: current_energy_mix[:natural_gas] / fossils
     }
 
-    update.(resource: resource, params: {fake_stats: stats})
-    stats
+    stats.each {|k, v| resource.fake_stats[k] = v}
+    resource.save
+    stats.merge({
+      warnings: warnings,
+      chp: production_chp_consumend_in_group_kWh,
+      pv: production_pv_consumend_in_group_kWh,
+      water: production_water_consumend_in_group_kWh,
+      # E74 ... Own power
+      natural_gas_bh: production_chp_consumend_in_group_kWh / own_power_fraction,          # E75
+      other_renewable_pv: production_pv_consumend_in_group_kWh / own_power_fraction,       # E76
+      other_renewable_water: production_water_consumend_in_group_kWh / own_power_fraction, # E77
+      natural_gas: current_energy_mix[:natural_gas] / fossils
+    })
   end
 
   def register_metas_active(register_metas:, **)
