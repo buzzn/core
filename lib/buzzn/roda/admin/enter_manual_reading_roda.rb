@@ -27,7 +27,8 @@ module Admin
         date_of_reading = sheet[0][5].value
 
         unless date_of_reading.is_a? DateTime
-          throw "No Date found for Date of reading, found value #{date_of_reading}"
+          date_of_reading = DateTime.new(2019, 12, 31)
+          #throw "No Date found for Date of reading, found value #{date_of_reading}"
         end
 
         name_of_group = sheet[0][0].value
@@ -127,7 +128,12 @@ module Admin
             reading_errors.append "Can not create reading for register #{register_number} due to #{e.message}."
           end
         end
-        r.response.write(reading_errors)
+        r.response.write({
+          id: target_pools.first.id,
+          name: name_of_group,
+          date: date_of_reading,
+          errors: reading_errors
+        }.to_json)
       end
     end
 
