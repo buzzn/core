@@ -36,6 +36,13 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
   add :production
   add :consumption
+  add :grid_consumption_corrected
+  add :veeg
+  add :veeg_reduced
+  add :full_levy_ct_per_kWh
+  add :reduced_levy_ct_per_kWh
+  add :paid_levy_by_local_power_giver
+  add :eeg_quotient
   add :renewable_eeg
   add :renewable_through_eeg
   add :non_eeg
@@ -71,7 +78,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                    production:,                                # E25
                    renewable_eeg:,
                    renewable_through_eeg:,
-                   non_eeg:,
+                   non_eeg:,                                   # E67
                    renter_power:,
                    technologies:,
                    co2_emmision_g_per_kwh_coal:,
@@ -82,20 +89,20 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                    production_wind:,
                    production_water:,
                    **)
-    current_energy_mix = energy_mix[:germany]
-    fossils = (current_energy_mix[:nuclear] +
+    current_energy_mix = energy_mix[:buzzn]
+    fossils = BigDecimal('1') / (current_energy_mix[:nuclear] +
               current_energy_mix[:coal] +
               current_energy_mix[:natural_gas] +
               current_energy_mix[:other_fossil] +
-              current_energy_mix[:other_renewable]) / BigDecimal('100') * autacry_in_percent * additional_supply_ratio
+              current_energy_mix[:other_renewable]) * BigDecimal('100') * additional_supply_ratio / BigDecimal('100') * non_eeg / BigDecimal('100')
 
-    coal_ratio = current_energy_mix[:coal] / fossils * 100
-    gas_ratio = current_energy_mix[:natural_gas] / fossils * 100
-    other_fossil = current_energy_mix[:other_fossil] / fossils * 100
-    nuclear_ratio = current_energy_mix[:nuclear] / fossils * 100
-    other_renewable = current_energy_mix[:other_renewable] / fossils * 100
+    coal_ratio = current_energy_mix[:coal] * fossils
+    gas_ratio = current_energy_mix[:natural_gas] * fossils
+    other_fossil = current_energy_mix[:other_fossil] * fossils
+    nuclear_ratio = current_energy_mix[:nuclear] * fossils
+    other_renewable = current_energy_mix[:other_renewable] * fossils
 
-    own_power_fraction = production_consumend_in_group_kWh * autacry_in_percent / non_eeg / BigDecimal('100')
+    own_power_fraction = BigDecimal('1') / production_consumend_in_group_kWh * 100 * autacry_in_percent / 100 * non_eeg / 100
     stats = {
       # E68 ... Other power
       nuclearRatio: nuclear_ratio,                                         # E69
@@ -103,7 +110,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       gasRatio: gas_ratio,                                                 # E71
       otherFossilesRatio: other_fossil,                                    # E72
       otherRenewableRatio: other_renewable,                                # E73
-      renewablesEegRatio: renewable_eeg / consumption * BigDecimal('100'), # E78
+      renewablesEegRatio: renewable_through_eeg,                           # E78
       co2EmissionGrammPerKwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal
                                + gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas
                                + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other),      # E93
@@ -113,22 +120,34 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       utilizationReport: consumption / production * BigDecimal('100'),                                                       # E104
       gasReport: BigDecimal('100') * production_chp / (production_pv + production_chp + production_wind + production_water), # E83
       sunReport: BigDecimal('100') * production_pv / (production_pv + production_chp + production_wind + production_water),  # E84
+      waterReport: BigDecimal('100') * production_water / (production_pv + production_chp + production_wind + production_water), # E84
+      windReport: BigDecimal('100') * production_wind / (production_pv + production_chp + production_wind + production_water), # E84
       electricitySupplier: 1, # E85
       tech: technologies,     # E86
     }
 
     stats.each {|k, v| resource.fake_stats[k] = v}
     resource.save
-    stats.merge(
+    stats.merge!(
       warnings: warnings,
       chp: production_chp_consumend_in_group_kWh,
       pv: production_pv_consumend_in_group_kWh,
       water: production_water_consumend_in_group_kWh,
       # E74 ... Own power
-      natural_gas_bh: production_chp_consumend_in_group_kWh / own_power_fraction,          # E75
-      other_renewable_pv: production_pv_consumend_in_group_kWh / own_power_fraction,       # E76
-      other_renewable_water: production_water_consumend_in_group_kWh / own_power_fraction, # E77
-      natural_gas: current_energy_mix[:natural_gas] / fossils
+      natural_gas_bh: production_chp_consumend_in_group_kWh * own_power_fraction,          # E75
+      other_renewable_pv: production_pv_consumend_in_group_kWh * own_power_fraction,       # E76
+      other_renewable_water: production_water_consumend_in_group_kWh * own_power_fraction, # E77
+      own_power_fraction: own_power_fraction,
+      natural_gas: current_energy_mix[:natural_gas] / fossils,
+      autacry_in_percent: autacry_in_percent,
+      additional_supply_ratio: additional_supply_ratio,
+      non_eeg: non_eeg,
+      production_consumend_in_group_kWh:production_consumend_in_group_kWh
+    )
+
+    checksum = (stats[:other_renewable_pv] + nuclear_ratio + coal_ratio + gas_ratio + other_fossil + other_renewable + stats[:natural_gas_bh] + stats[:other_renewable_water] + renewable_through_eeg )
+    stats.merge(
+      checksum: checksum
     )
   end
 
@@ -331,8 +350,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   end
 
   # E34
-  def renewable_eeg(**)
-    BigDecimal('73032')
+  def renewable_eeg(paid_levy_by_local_power_giver:, eeg_quotient:, **)
+    paid_levy_by_local_power_giver * eeg_quotient
   end
 
   # E78
@@ -342,7 +361,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
   # E79
   def renter_power(production_pv_consumend_in_group_kWh:, consumption:, **)
-    production_pv_consumend_in_group_kWh / consumption * BigDecimal('100')
+    #production_pv_consumend_in_group_kWh / consumption * BigDecimal('100')
+    0
   end
 
   # E67
@@ -374,9 +394,11 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
   # E32
   # @return [BigDecimal] The levy paid by the local power giver.
-  def paid_levy_by_local_power_giver(full_levy_ct_per_kWh:, veeg:,
-                                     reduced_levy_ct_per_kWh:, veeg_reduced:, **)
-    (full_levy * veeg + reduced_levy * veeg_reduced) / BigDecimal('100') # %
+  def paid_levy_by_local_power_giver(full_levy_ct_per_kWh:,
+                                     veeg:,
+                                     reduced_levy_ct_per_kWh:,
+                                     veeg_reduced:, **)
+    (full_levy_ct_per_kWh * veeg / BigDecimal('100') + reduced_levy_ct_per_kWh * veeg_reduced / BigDecimal('100')) # %
   end
 
   # E33
