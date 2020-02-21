@@ -96,13 +96,14 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
               current_energy_mix[:other_fossil] +
               current_energy_mix[:other_renewable]) * BigDecimal('100') * additional_supply_ratio / BigDecimal('100') * non_eeg / BigDecimal('100')
 
+    own_power_fraction = BigDecimal('1') / production_consumend_in_group_kWh * 100 * autacry_in_percent / 100 * non_eeg / 100
+
     coal_ratio = current_energy_mix[:coal] * fossils
-    gas_ratio = current_energy_mix[:natural_gas] * fossils
+    gas_ratio = current_energy_mix[:natural_gas] * fossils + production_chp_consumend_in_group_kWh * own_power_fraction
     other_fossil = current_energy_mix[:other_fossil] * fossils
     nuclear_ratio = current_energy_mix[:nuclear] * fossils
     other_renewable = current_energy_mix[:other_renewable] * fossils
 
-    own_power_fraction = BigDecimal('1') / production_consumend_in_group_kWh * 100 * autacry_in_percent / 100 * non_eeg / 100
     stats = {
       # E68 ... Other power
       nuclearRatio: nuclear_ratio,                                         # E69
@@ -116,15 +117,24 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                                + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other),      # E93
       nuclearWasteMiligrammPerKwh: nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001'), # E79
       renterPowerEeg: renter_power,
-      selfSufficiencyReport: (production_consumend_in_group_kWh / consumption * BigDecimal('100')),                          # E103
-      utilizationReport: consumption / production * BigDecimal('100'),                                                       # E104
-      gasReport: BigDecimal('100') * production_chp / (production_pv + production_chp + production_wind + production_water), # E83
-      sunReport: BigDecimal('100') * production_pv / (production_pv + production_chp + production_wind + production_water),  # E84
+      selfSufficiencyReport: (production_consumend_in_group_kWh / consumption * BigDecimal('100')),                              # E103
+      utilizationReport: consumption / production * BigDecimal('100'),                                                           # E104
+      gasReport: BigDecimal('100') * production_chp / (production_pv + production_chp + production_wind + production_water),     # E83
+      sunReport: BigDecimal('100') * production_pv / (production_pv + production_chp + production_wind + production_water),      # E84
       waterReport: BigDecimal('100') * production_water / (production_pv + production_chp + production_wind + production_water), # E84
       windReport: BigDecimal('100') * production_wind / (production_pv + production_chp + production_wind + production_water), # E84
       electricitySupplier: 1, # E85
       tech: technologies,     # E86
     }
+
+    checksum = (
+      nuclear_ratio
+      + coal_ratio
+      + gas_ratio
+      + other_fossil
+      + other_renewable
+      + renewable_through_eeg)
+    stats[:coalRatio] = coalRatio - (checksum - 100)
 
     stats.each {|k, v| resource.fake_stats[k] = v}
     resource.save
@@ -145,7 +155,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       production_consumend_in_group_kWh:production_consumend_in_group_kWh
     )
 
-    checksum = (stats[:other_renewable_pv] + nuclear_ratio + coal_ratio + gas_ratio + other_fossil + other_renewable + stats[:natural_gas_bh] + stats[:other_renewable_water] + renewable_through_eeg )
+    checksum = (nuclear_ratio + coal_ratio + gas_ratio + other_fossil + other_renewable + renewable_through_eeg )
     stats.merge(
       checksum: checksum
     )
