@@ -57,6 +57,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   add :co2_emmision_g_per_kwh_other
 
   add :technologies
+  add :utilization_report
+  add :self_sufficiency_report
 
   add :energy_mix
   map :build_result
@@ -88,6 +90,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                    production_chp:,
                    production_wind:,
                    production_water:,
+                   utilization_report:,
+                   self_sufficiency_report:,
                    **)
     current_energy_mix = energy_mix[:buzzn]
     fossils = BigDecimal('1') / (current_energy_mix[:nuclear] +
@@ -117,8 +121,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                                + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other),      # E93
       nuclearWasteMiligrammPerKwh: nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001'), # E79
       renterPowerEeg: renter_power,
-      selfSufficiencyReport: (production_consumend_in_group_kWh / consumption * BigDecimal('100')),                              # E103
-      utilizationReport: consumption / production * BigDecimal('100'),                                                           # E104
+      selfSufficiencyReport: self_sufficiency_report,                                                                            # E103
+      utilizationReport: utilization_report,                                                                                     # E104
       gasReport: BigDecimal('100') * production_chp / (production_pv + production_chp + production_wind + production_water),     # E83
       sunReport: BigDecimal('100') * production_pv / (production_pv + production_chp + production_wind + production_water),      # E84
       waterReport: BigDecimal('100') * production_water / (production_pv + production_chp + production_wind + production_water), # E84
@@ -127,18 +131,18 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       tech: technologies,     # E86
     }
 
-    checksum = (
-      nuclear_ratio
-      + coal_ratio
-      + gas_ratio
-      + other_fossil
-      + other_renewable
-      + renewable_through_eeg)
-    stats[:coalRatio] = coalRatio - (checksum - 100)
+    stats.each do |k, v|
+      if v.is_a? BigDecimal
+        stats[k] = v.round(1)
+        resource.fake_stats[k] = v.round(1).to_f
+      end
+    end
 
-    stats.each {|k, v| resource.fake_stats[k] = v}
+    checksum = (stats[:nuclearRatio] + stats[:coalRatio] + stats[:gasRatio] + stats[:otherFossilesRatio] + stats[:otherRenewableRatio] + stats[:renewablesEegRatio])
+    stats[:coalRatio] -= checksum - 100
+
     resource.save
-    stats.merge!(
+    stats.merge(
       warnings: warnings,
       chp: production_chp_consumend_in_group_kWh,
       pv: production_pv_consumend_in_group_kWh,
@@ -152,13 +156,25 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       autacry_in_percent: autacry_in_percent,
       additional_supply_ratio: additional_supply_ratio,
       non_eeg: non_eeg,
-      production_consumend_in_group_kWh:production_consumend_in_group_kWh
+      production_consumend_in_group_kWh: production_consumend_in_group_kWh,
+      consumption: "#{consumption}",
+      production: " #{production}"
     )
+  end
 
-    checksum = (nuclear_ratio + coal_ratio + gas_ratio + other_fossil + other_renewable + renewable_through_eeg )
-    stats.merge(
-      checksum: checksum
-    )
+  def self_sufficiency_report(production_consumend_in_group_kWh:, consumption:, **) 
+    if production_consumend_in_group_kWh / consumption * BigDecimal('100') > 100
+      return BigDecimal('100')
+    end
+
+    production_consumend_in_group_kWh / consumption * BigDecimal('100')
+  end
+  def utilization_report(consumption:, production:, **)
+    if consumption / production * BigDecimal('100') > 100
+      return BigDecimal('100')
+    end
+
+    consumption / production * BigDecimal('100')
   end
 
   def register_metas_active(register_metas:, **)
@@ -372,7 +388,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   # E79
   def renter_power(production_pv_consumend_in_group_kWh:, consumption:, **)
     #production_pv_consumend_in_group_kWh / consumption * BigDecimal('100')
-    0
+    BigDecimal('0')
   end
 
   # E67
