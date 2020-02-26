@@ -24,15 +24,15 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   add :grid_consumption
   add :grid_feeding_corrected
 
-  add :production_pv_consumend_in_group_kWh
-  add :production_chp_consumend_in_group_kWh
-  add :production_wind_consumend_in_group_kWh
-  add :production_water_consumend_in_group_kWh
-
   add :production_pv
   add :production_chp
   add :production_wind
   add :production_water
+
+  add :production_pv_consumend_in_group_kWh
+  add :production_chp_consumend_in_group_kWh
+  add :production_wind_consumend_in_group_kWh
+  add :production_water_consumend_in_group_kWh
 
   add :production
   add :consumption
@@ -103,7 +103,6 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
               current_energy_mix[:other_fossil] +
               current_energy_mix[:other_renewable]) * BigDecimal('100') * additional_supply_ratio / BigDecimal('100') * non_eeg / BigDecimal('100')
 
-
     own_power_fraction = BigDecimal('1') / production_consumend_in_group_kWh * 100 * autacry_in_percent / 100 * non_eeg / 100
 
     coal_ratio = current_energy_mix[:coal] * fossils
@@ -111,24 +110,23 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     other_fossil = current_energy_mix[:other_fossil] * fossils
     nuclear_ratio = current_energy_mix[:nuclear] * fossils
     other_renewable = current_energy_mix[:other_renewable] * fossils
-
     stats = {
       # E68 ... Other power
       nuclearRatio: nuclear_ratio.round(1),                                         # E69
       coalRatio: coal_ratio.round(1),                                               # E70
       gasRatio: gas_ratio.round(1),                                                 # E71
       otherFossilesRatio: other_fossil.round(1),                                    # E72
-      otherRenewablesRatio: other_renewable.round(1),                                # E73
-      renewablesEegRatio: renewable_through_eeg.round(1),                           # E78
+      otherRenewablesRatio: other_renewable.round(1), # E73
+      renewablesEegRatio: renewable_through_eeg.round(1), # E78
       co2EmissionGrammPerKwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal
                                + gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas
-                               + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other).round(1),      # E93
+                               + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other).round(1), # E93
       nuclearWasteMiligrammPerKwh: (nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001')).round(4), # E79
       renterPowerEeg: renter_power.round(1),
       selfSufficiencyReport: self_sufficiency_report.round(1),                                                                            # E103
       utilizationReport: utilization_report.round(1),                                                                                     # E104
       electricitySupplier: electricity_supplier, # E85
-      tech: technologies,     # E86
+      tech: technologies, # E86
     }
 
     if production.positive?
@@ -214,14 +212,16 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     resource:,
     **
   )
-    technologies = {chp: 'PHKW', wind: 'Windkraftwerk', water: 'Wasserkraft', pv: 'photovoltaik'}
+    technologies = {chp: 'Blockheizkraftwerk', wind: 'Windkraftwerk', water: 'Wasserkraft', pv: 'Fotovoltaik'}
     resource.power_sources.map {|s| technologies[s.to_sym]}.join ','
   end
 
   # E18
+  # Gets the production of the chp consumed within the group.
   def production_chp_consumend_in_group_kWh(
     register_metas_active:,
     date_range:,
+    production_chp:,
     grid_feeding_corrected:,
     warnings:,
     **
@@ -231,7 +231,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
 
     if register_metas_active.map(&:label).any? {|x| x == :demarcation_chp}
-      system(
+      return production_chp - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation_chp,
@@ -240,36 +240,32 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
 
     if register_metas_active.select(&:demarcation?).size > 1
-      system(
-        register_metas: register_metas_active,
-        date_range: date_range,
-        label: :production_chp,
-        warnings: warnings
-      )
-      - system(
+      return grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation,
         warnings: warnings
       )
     end
-    system(register_metas: register_metas_active, date_range: date_range, label: :production_chp, warnings: warnings)
+
+    production_chp - grid_feeding_corrected
   end
 
-  # E19
+  # Gets the production of the pv consumed within the group.
   def production_pv_consumend_in_group_kWh(
-   register_metas_active:,
-   date_range:,
-   grid_feeding_corrected:,
-   warnings:,
-   **
+    register_metas_active:,
+    date_range:,
+    production_pv:,
+    grid_feeding_corrected:,
+    warnings:,
+    **
   )
     if register_metas_active.select(&:production_pv?).none?
       return BigDecimal('0')
     end
 
     if register_metas_active.map(&:label).any? {|x| x == :demarcation_pv}
-      return system(
+      return production_pv - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation_pv,
@@ -278,66 +274,22 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
 
     if register_metas_active.select(&:demarcation?).size > 1
-      system(
+      return grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
-        label: :production_pv,
-        warnings: warnings
-      ) -
-        system(
-          register_metas: register_metas_active,
-          date_range: date_range,
-          label: :demarcation,
-          warnings: warnings
-        )
-    end
-
-    system(register_metas: register_metas_active, date_range: date_range, label: :production_pv, warnings: warnings)
-  end
-
-  # E20
-  def production_wind_consumend_in_group_kWh(
-   register_metas_active:,
-   date_range:,
-   grid_feeding_corrected:,
-   warnings:,
-   **
-  )
-    if register_metas_active.select(&:production_wind?).none?
-      return BigDecimal('0')
-    end
-
-    if register_metas_active.map(&:label).any? {|x| x == :demarcation_wind}
-      return system(
-        register_metas: register_metas_active,
-        date_range: date_range,
-        label: :demarcation_wind,
+        label: :demarcation,
         warnings: warnings
       )
     end
 
-    if register_metas_active.select(&:demarcation?).size > 1
-      system(
-        register_metas: register_metas_active,
-        date_range: date_range,
-        label: :production_wind,
-        warnings: warnings
-      ) -
-        system(
-          register_metas: register_metas_active,
-          date_range: date_range,
-          label: :demarcation,
-          warnings: warnings
-        )
-    end
-
-    system(register_metas: register_metas_active, date_range: date_range, label: :production_wind, warnings: warnings)
+    production_pv - grid_feeding_corrected
   end
 
-  # E21
+  # Gets the production of the water consumed within the group.
   def production_water_consumend_in_group_kWh(
    register_metas_active:,
    date_range:,
+   production_water:,
    grid_feeding_corrected:,
    warnings:,
    **
@@ -347,7 +299,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
 
     if register_metas_active.map(&:label).any? {|x| x == :demarcation_water}
-      return system(
+      return production_water - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation_water,
@@ -356,21 +308,49 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
 
     if register_metas_active.select(&:demarcation?).size > 1
-      system(
+      return grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
-        label: :production_water,
+        label: :demarcation,
         warnings: warnings
-      ) -
-        system(
-          register_metas: register_metas_active,
-          date_range: date_range,
-          label: :demarcation,
-          warnings: warnings
-        )
+      )
     end
 
-    system(register_metas: register_metas_active, date_range: date_range, label: :production_water, warnings: warnings)
+    production_water - grid_feeding_corrected
+  end
+
+  # Gets the production of the wind consumed within the group.
+  def production_wind_consumend_in_group_kWh(
+    register_metas_active:,
+    date_range:,
+    production_wind:,
+    grid_feeding_corrected:,
+    warnings:,
+    **
+  )
+    if register_metas_active.select(&:production_wind?).none?
+      return BigDecimal('0')
+    end
+
+    if register_metas_active.map(&:label).any? {|x| x == :demarcation_wind}
+      return production_wind - system(
+        register_metas: register_metas_active,
+        date_range: date_range,
+        label: :demarcation_wind,
+        warnings: warnings
+      )
+    end
+
+    if register_metas_active.select(&:demarcation?).size > 1
+      return grid_feeding_corrected - system(
+        register_metas: register_metas_active,
+        date_range: date_range,
+        label: :demarcation,
+        warnings: warnings
+      )
+    end
+
+    production_wind - grid_feeding_corrected
   end
 
   def production_consumend_in_group_kWh(
