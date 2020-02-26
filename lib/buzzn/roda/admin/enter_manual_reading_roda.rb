@@ -157,7 +157,7 @@ module Admin
       end
 
       begin
-        result = create_electricity_labelling.(resource: target_pools.first, params: {'begin_date'=> '2019-01-01T00:00:00.882Z', 'last_date'=> '2020-01-10T00:01:00.000Z'})
+        result = create_electricity_labelling.(resource: target_pools.first, params: {'begin_date'=> '2019-01-01T00:00:00.882Z', 'last_date'=> '2020-01-01T00:01:00.000Z'})
         return {
           errors: reading_errors,
           fakeStats: result.value
