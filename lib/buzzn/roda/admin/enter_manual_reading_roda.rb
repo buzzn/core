@@ -12,9 +12,9 @@ module Admin
 
     plugin :shared_vars
 
-    def value_or_empty(cell)
+    def value_or_empty(cell, empty='')
       if cell.nil?
-        ''
+        empty
       else
         cell.value
       end
@@ -63,6 +63,8 @@ module Admin
         paid_abatement = value_or_empty sheet[i][10]
         contract_number = value_or_empty sheet[i][0]
 
+        reading_comment = value_or_empty(sheet[i][12], 'Yearly reading imported from excel sheet')
+
         # And the meters here
         if meters_by_serial[register_number].registers.size > 1
           target_meter = meters_by_serial[register_number]
@@ -91,10 +93,10 @@ module Admin
 
         #fill_paid_abatement(paid_abatement, contract_number)
         contract = register.contracts.select {|c| c.full_contract_number == contract_number}.first
-        if ['X', ''].include? paid_abatement
+        if ['X', ''].include? paid_abatement or paid_abatement.nil?
           # Skip
         elsif !paid_abatement.is_a? Numeric
-          reading_errors.append "Register #{register_number}: Requested paiment '#{paid_abatement}' is not a number. "
+          reading_errors.append "Register #{register_number}: Requested paiment '#{paid_abatement}' is not a number."
         elsif contract.nil?
           reading_errors.append "No contract found for #{register_number}."
         else
@@ -123,10 +125,15 @@ module Admin
             reading[:quality] = '220'
             reading[:unit] = 'Wh'
             reading[:source] = 'MAN'
-            reading[:comment] = 'Yearly reading imported from excel sheet'
+            reading[:comment] = reading_comment
             reading[:date] = date_of_reading
             reading[:raw_value] = sheet[i][9].value * 1000
-            create.(resource: register, params: reading)
+
+            if sheet[i][9].value.is_a? Fixnum
+              create.(resource: register, params: reading)
+            else
+              reading_errors.append "Can not create reading for register #{register_number} due '#{sheet[i][9].value}' is not a number"
+            end
           end
         rescue ActiveRecord::RecordNotUnique
           reading_errors.append "There is already a reading for register #{register_number}. Skipping..."
