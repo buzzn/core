@@ -12,7 +12,7 @@ module Admin
 
     plugin :shared_vars
 
-    def value_or_empty(cell, empty='')
+    def value_or_empty(cell, empty = '')
       if cell.nil?
         empty
       else
@@ -93,7 +93,7 @@ module Admin
 
         #fill_paid_abatement(paid_abatement, contract_number)
         contract = register.contracts.select {|c| c.full_contract_number == contract_number}.first
-        if ['X', ''].include? paid_abatement or paid_abatement.nil?
+        if ['X', ''].include?(paid_abatement) || paid_abatement.nil?
           # Skip
         elsif !paid_abatement.is_a? Numeric
           reading_errors.append "Register #{register_number}: Requested paiment '#{paid_abatement}' is not a number."
@@ -117,6 +117,20 @@ module Admin
         end
 
         begin
+          if register.readings.size.zero?
+            create.(resource: register, params: {
+                      reason: 'PMR',
+                      read_by: 'SG',
+                      quality: '220',
+                      unit: 'Wh',
+                      source: 'MAN',
+                      comment: 'Geräteeinbau',
+                      raw_value: 0,
+                      status: 'Z86',
+                      date: localpool.start_date
+                    })
+          end
+
           unless sheet[i][9].value == ''
             reading = {}
             reading[:status] = 'Z86'
@@ -129,7 +143,7 @@ module Admin
             reading[:date] = date_of_reading
             reading[:raw_value] = sheet[i][9].value * 1000
 
-            if sheet[i][9].value.is_a? Fixnum
+            if sheet[i][9].value.is_a? Integer
               create.(resource: register, params: reading)
             else
               reading_errors.append "Can not create reading for register #{register_number} due '#{sheet[i][9].value}' is not a number"
@@ -163,5 +177,6 @@ module Admin
         read_sheet(shared[:localpool], r.params['file'][:tempfile]).to_json
       end
     end
+
   end
 end
