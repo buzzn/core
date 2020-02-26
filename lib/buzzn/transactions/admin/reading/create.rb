@@ -3,7 +3,7 @@ require_relative '../../../schemas/transactions/admin/reading/create'
 
 class Transactions::Admin::Reading::Create < Transactions::Base
 
-  validate :schema
+  #validate :schema
   authorize :allowed_roles
   around :db_transaction
   map :create_reading, with: :'operations.action.create_item'
