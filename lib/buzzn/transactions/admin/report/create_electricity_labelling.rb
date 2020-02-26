@@ -60,6 +60,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   add :utilization_report
   add :self_sufficiency_report
 
+  add :electricity_supplier
+
   add :energy_mix
   map :build_result
 
@@ -92,6 +94,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                    production_water:,
                    utilization_report:,
                    self_sufficiency_report:,
+                   electricity_supplier:,
                    **)
     current_energy_mix = energy_mix[:buzzn]
     fossils = BigDecimal('1') / (current_energy_mix[:nuclear] +
@@ -120,11 +123,11 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       co2EmissionGrammPerKwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal
                                + gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas
                                + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other).round(1),      # E93
-      nuclearWasteMiligrammPerKwh: nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001'), # E79
+      nuclearWasteMiligrammPerKwh: (nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001')).round(4), # E79
       renterPowerEeg: renter_power.round(1),
       selfSufficiencyReport: self_sufficiency_report.round(1),                                                                            # E103
       utilizationReport: utilization_report.round(1),                                                                                     # E104
-      electricitySupplier: 1, # E85
+      electricitySupplier: electricity_supplier, # E85
       tech: technologies,     # E86
     }
 
@@ -175,6 +178,14 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       consumption: consumption.to_s,
       production: " #{production}"
     )
+  end
+
+  def electricity_supplier(resource:, **)
+    if resource.electricity_supplier.nil?
+      'Buzzn GmbH'
+    else
+      resource.electricity_supplier.name
+    end
   end
 
   def self_sufficiency_report(production_consumend_in_group_kWh:, consumption:, **)
