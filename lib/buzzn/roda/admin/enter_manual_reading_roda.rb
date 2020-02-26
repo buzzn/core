@@ -134,11 +134,20 @@ module Admin
           reading_errors.append "Can not create reading for register #{register_number} due to #{e.message}."
         end
       end
-      result = create_electricity_labelling.(resource: target_pools.first, params: {'begin_date'=> '2019-01-01T00:00:00.882Z', 'last_date'=> '2020-01-10T00:01:00.000Z'})
-      {
-        errors: reading_errors,
-        fakeStats: result.value
-      }
+
+      begin
+        result = create_electricity_labelling.(resource: target_pools.first, params: {'begin_date'=> '2019-01-01T00:00:00.882Z', 'last_date'=> '2020-01-10T00:01:00.000Z'})
+        return {
+          errors: reading_errors,
+          fakeStats: result.value
+        }
+      rescue Exception => e
+        reading_errors.append "Could not generate new fake stats due to #{e.message}"
+
+        return {
+          errors: reading_errors
+        }
+      end
     end
 
     route do |r|
