@@ -1,4 +1,4 @@
-# coding: utf-8
+
 require_relative '../billing'
 require_relative '../../../schemas/transactions/admin/billing/update'
 
@@ -121,13 +121,11 @@ class Transactions::Admin::Billing::Update < Transactions::Base
         end
       end
     when :void
-      billing.items.each do |item|
-        item.destroy
-      end
+      billing.items.each(&:destroy)
     when :document
       generator = Pdf::Invoice.new(resource.object)
       generator.disable_cache
-      filename="Stromrechnung_#{resource.object.full_invoice_number.gsub('/','-')}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}.pdf"
+      filename="Stromrechnung_#{resource.object.full_invoice_number.tr('/', '-')}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}.pdf"
       document = generator.create_pdf_document(nil, filename).document
       unless resource.object.documents.where(:id => document.id).any?
         resource.object.documents << document
@@ -137,17 +135,20 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       email = if billing_email_testmode == '1'
                 'dev@buzzn.net'
               else
-                customer.contact_email
+                [customer.contact_email,
+                 resource.object.localpool.owner.email,
+                 resource.object.localpool.owner.contact.email,
+                 resource.object.localpool.owner.contact_email].reject(&:nil?).first
               end
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new(customer: 'email invalid')
       end
-      subject = 'Ihre Stromrechnung 2018'
+      subject = 'Ihre Stromrechnung 2019'
       contractor_name = resource.object.contract.contractor.name
-      text = %Q(Guten Tag,
+      text = %(Guten Tag,
 
 im Auftrag Ihres Lokalen Stromgebers "#{contractor_name}" übermitteln wir Ihnen im
-Anhang Ihre Stromrechnung 2018.
+Anhang Ihre Stromrechnung 2019.
 
 Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
 
@@ -183,7 +184,6 @@ Geschäftsführer: Justus Schütze
                                                              :bcc => billing_email_bcc,
                                                              :document_id => document.id)
     end
-
   end
 
   def execute_pre_transistion(resource:, params:, actions:)
