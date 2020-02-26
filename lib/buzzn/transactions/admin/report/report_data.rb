@@ -162,6 +162,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
                   date: register_begin_date,
                   register_id: register.id,
                   meter_id: register.meter.id,
+                  serialnumber: register.meter.product_serialnumber,
                   register_meta_id: meta.id
                 }
               ]
@@ -174,6 +175,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
                   reason: 'end_reading missing',
                   date: register_end_date,
                   register_id: register.id,
+                  serialnumber: register.meter.product_serialnumber,
                   meter_id: register.meter.id,
                   register_meta_id: meta.id
                 }
