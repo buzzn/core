@@ -124,19 +124,30 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
       meta.registers.each do |register|
         if register.installed_at.nil?
           warnings.push(
-            reason: 'skipped register',
+            reason: "skipped register #{register.id}, no installation date set or not installed",
+            label: register.meta.label,
             register_id: register.id,
-            meter_id: register.meter.id
+            meter_id: register.meter.id,
+            product_serialnumber: register.meter.product_serialnumber
           )
-          puts "skipped register #{register.id}, not installed"
           next
         end
         if register.installed_at.date > end_date
-          puts "skipped register #{register.id}"
+          warnings.push(
+            reason: "skipped register #{register.id}, because it was installed after reading range #{end_date}",
+            register_id: register.id,
+            meter_id: register.meter.id,
+            product_serialnumber: register.meter.product_serialnumber
+          )
           next
         end
         if !register.decomissioned_at.nil? && register.decomissioned_at.date <= begin_date
-          puts "skipped register #{register.id}"
+          warnings.push(
+            reason: "skipped register #{register.id}, because it was decomissioned before reading range #{begin_date}",
+            register_id: register.id,
+            meter_id: register.meter.id,
+            product_serialnumber: register.meter.product_serialnumber
+          )
           next
         end
         register_begin_date = [begin_date, register.installed_at&.date || begin_date].max
@@ -203,10 +214,11 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
   end
 
   def production_chp(register_metas:, date_range:, warnings:, **)
-    system(register_metas: register_metas,
+    result = system(register_metas: register_metas,
            date_range: date_range,
            label: :production_chp,
            warnings: warnings).round(2).to_f
+    result
   end
 
   def production_water(register_metas:, date_range:, warnings:, **)

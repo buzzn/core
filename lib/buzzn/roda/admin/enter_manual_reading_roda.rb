@@ -24,10 +24,10 @@ module Admin
       workbook = RubyXL::Parser.parse_buffer(file)
       sheet = workbook[0]
 
-      date_of_reading = sheet[0][5].value
+      date_of_reading = DateTime.new(2019, 12, 31)
 
-      unless date_of_reading.is_a? DateTime
-        date_of_reading = DateTime.new(2019, 12, 31) # todo adjust to a usfull default date
+      if !sheet[0][5].value.nil? && (sheet[0][5].value.is_a? DateTime)
+        date_of_reading = sheet[0][5].value # todo adjust to a usfull default date
       end
 
       name_of_group = sheet[0][0].value
@@ -159,7 +159,7 @@ module Admin
       begin
         result = create_electricity_labelling.(resource: target_pools.first, params: {'begin_date'=> '2019-01-01T00:00:00.882Z', 'last_date'=> '2020-01-01T00:01:00.000Z'})
         return {
-          errors: reading_errors,
+          errors: reading_errors.concat(result.value[:warnings].map{|w| w.to_s}),
           fakeStats: result.value
         }
       rescue Exception => e
