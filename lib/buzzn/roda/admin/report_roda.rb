@@ -17,7 +17,6 @@ class Admin::ReportRoda < BaseRoda
     r.on 'eeg' do
       r.post! do
         puts r.params
-        byebug
         create_eeg_report.(resource: localpool, params: r.params)
       end
     end

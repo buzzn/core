@@ -14,9 +14,9 @@ class Admin::ElectricityLabellingRoda < BaseRoda
 
     localpool = shared[:localpool]
 
-      r.post! do
+    r.post! do
       create_electricity_labelling.(resource: localpool, params: r.params)
-      end
     end
-  
+  end
+
   end
