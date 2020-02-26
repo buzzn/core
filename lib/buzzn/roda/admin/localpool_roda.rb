@@ -34,10 +34,6 @@ module Admin
     route do |r|
       localpools = LocalpoolResource.all(current_user)
 
-      r.on 'enter' do
-        r.run EnterManualReadingRoda
-      end
-
       r.on :id do |id|
 
         shared[PARENT] = localpool = localpools.retrieve(id)
@@ -100,6 +96,10 @@ module Admin
 
         r.on 'group-members-export' do
           r.run GroupMemberExportRoda
+        end
+
+        r.on 'add-manual-readings' do
+          r.run EnterManualReadingRoda
         end
 
         r.on 'annual-reading' do

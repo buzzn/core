@@ -100,6 +100,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
               current_energy_mix[:other_fossil] +
               current_energy_mix[:other_renewable]) * BigDecimal('100') * additional_supply_ratio / BigDecimal('100') * non_eeg / BigDecimal('100')
 
+
     own_power_fraction = BigDecimal('1') / production_consumend_in_group_kWh * 100 * autacry_in_percent / 100 * non_eeg / 100
 
     coal_ratio = current_energy_mix[:coal] * fossils
@@ -110,36 +111,50 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
     stats = {
       # E68 ... Other power
-      nuclearRatio: nuclear_ratio,                                         # E69
-      coalRatio: coal_ratio,                                               # E70
-      gasRatio: gas_ratio,                                                 # E71
-      otherFossilesRatio: other_fossil,                                    # E72
-      otherRenewableRatio: other_renewable,                                # E73
-      renewablesEegRatio: renewable_through_eeg,                           # E78
+      nuclearRatio: nuclear_ratio.round(1),                                         # E69
+      coalRatio: coal_ratio.round(1),                                               # E70
+      gasRatio: gas_ratio.round(1),                                                 # E71
+      otherFossilesRatio: other_fossil.round(1),                                    # E72
+      otherRenewablesRatio: other_renewable.round(1),                                # E73
+      renewablesEegRatio: renewable_through_eeg.round(1),                           # E78
       co2EmissionGrammPerKwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal
                                + gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas
-                               + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other),      # E93
+                               + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other).round(1),      # E93
       nuclearWasteMiligrammPerKwh: nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001'), # E79
-      renterPowerEeg: renter_power,
-      selfSufficiencyReport: self_sufficiency_report,                                                                            # E103
-      utilizationReport: utilization_report,                                                                                     # E104
-      gasReport: BigDecimal('100') * production_chp / (production_pv + production_chp + production_wind + production_water),     # E83
-      sunReport: BigDecimal('100') * production_pv / (production_pv + production_chp + production_wind + production_water),      # E84
-      waterReport: BigDecimal('100') * production_water / (production_pv + production_chp + production_wind + production_water), # E84
-      windReport: BigDecimal('100') * production_wind / (production_pv + production_chp + production_wind + production_water), # E84
+      renterPowerEeg: renter_power.round(1),
+      selfSufficiencyReport: self_sufficiency_report.round(1),                                                                            # E103
+      utilizationReport: utilization_report.round(1),                                                                                     # E104
       electricitySupplier: 1, # E85
       tech: technologies,     # E86
     }
 
-    stats.each do |k, v|
-      if v.is_a? BigDecimal
-        stats[k] = v.round(1)
-        resource.fake_stats[k] = v.round(1).to_f
-      end
+    if production.positive?
+      stats.merge!(
+        gasReport: BigDecimal('100') * production_chp / production, # E83
+        sunReport: BigDecimal('100') * production_pv / production,      # E84
+        waterReport: BigDecimal('100') * production_water / production, # E84
+        windReport: BigDecimal('100') * production_wind / production, # E84
+      )
+    else
+      stats.merge!(
+        gasReport: 0,
+        sunReport: 0,
+        waterReport: 0,
+        windReport: 0
+      )
     end
 
-    checksum = (stats[:nuclearRatio] + stats[:coalRatio] + stats[:gasRatio] + stats[:otherFossilesRatio] + stats[:otherRenewableRatio] + stats[:renewablesEegRatio])
+    # The rounding meant, the ratios will not be 100% anymore, so we cheat here, don't tell anyone.
+    checksum = (stats[:nuclearRatio] + stats[:coalRatio] + stats[:gasRatio] + stats[:otherFossilesRatio] + stats[:otherRenewablesRatio] + stats[:renewablesEegRatio])
     stats[:coalRatio] -= checksum - 100
+
+    resource.fake_stats.each do |k, v|
+      resource.fake_stats.delete(k)
+    end
+
+    stats.each do |k, v|
+      resource.fake_stats[k] = v
+    end
 
     resource.save
     stats.merge(
@@ -157,18 +172,19 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       additional_supply_ratio: additional_supply_ratio,
       non_eeg: non_eeg,
       production_consumend_in_group_kWh: production_consumend_in_group_kWh,
-      consumption: "#{consumption}",
+      consumption: consumption.to_s,
       production: " #{production}"
     )
   end
 
-  def self_sufficiency_report(production_consumend_in_group_kWh:, consumption:, **) 
+  def self_sufficiency_report(production_consumend_in_group_kWh:, consumption:, **)
     if production_consumend_in_group_kWh / consumption * BigDecimal('100') > 100
       return BigDecimal('100')
     end
 
     production_consumend_in_group_kWh / consumption * BigDecimal('100')
   end
+
   def utilization_report(consumption:, production:, **)
     if consumption / production * BigDecimal('100') > 100
       return BigDecimal('100')
@@ -204,7 +220,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
 
     if register_metas_active.map(&:label).any? {|x| x == :demarcation_chp}
-      return system(
+      system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation_chp,
@@ -218,15 +234,14 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
         date_range: date_range,
         label: :production_chp,
         warnings: warnings
-      ) -
-        system(
-          register_metas: register_metas_active,
-          date_range: date_range,
-          label: :demarcation,
-          warnings: warnings
-        )
+      )
+      - system(
+        register_metas: register_metas_active,
+        date_range: date_range,
+        label: :demarcation,
+        warnings: warnings
+      )
     end
-
     system(register_metas: register_metas_active, date_range: date_range, label: :production_chp, warnings: warnings)
   end
 
