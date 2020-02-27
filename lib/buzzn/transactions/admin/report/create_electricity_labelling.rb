@@ -146,7 +146,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
 
     # The rounding meant, the ratios will not be 100% anymore, so we cheat here, don't tell anyone.
-    checksum = (stats[:nuclearRatio] + stats[:coalRatio] + stats[:gasRatio] + stats[:otherFossilesRatio] + stats[:otherRenewablesRatio] + stats[:renewablesEegRatio])
+    checksum = (stats[:nuclearRatio] + stats[:coalRatio] + stats[:gasRatio]
+                + stats[:otherFossilesRatio] + stats[:otherRenewablesRatio] + stats[:renewablesEegRatio] + stats[:renterPowerEeg])
+
     stats[:coalRatio] -= checksum - 100
 
     resource.fake_stats.each do |k, v|
