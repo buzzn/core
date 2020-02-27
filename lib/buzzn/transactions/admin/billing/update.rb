@@ -136,9 +136,9 @@ class Transactions::Admin::Billing::Update < Transactions::Base
                 'dev@buzzn.net'
               else
                 [customer.contact_email,
-                 resource.object.localpool.owner.email,
                  resource.object.localpool.owner.contact.email,
-                 resource.object.localpool.owner.contact_email].reject(&:nil?).first
+                 resource.object.localpool.owner.contact_email,
+                 resource.object.localpool.owner.email].reject(&:nil?).first
               end
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new(customer: 'email invalid')
@@ -177,12 +177,23 @@ Registernummer: HRB 186043
 Geschäftsführer: Justus Schütze
 )
       document = resource.object.documents.order(:created_at).last
-      mail_service.deliver_billing_later(resource.object.id, :from => billing_email_from,
-                                                             :to => email,
-                                                             :subject => subject,
-                                                             :text => text,
-                                                             :bcc => billing_email_bcc,
-                                                             :document_id => document.id)
+
+      mail_params = {:from => billing_email_from,
+                     :to => email,
+                     :subject => subject,
+                     :text => text,
+                     :bcc => billing_email_bcc,
+                     :document_id => document.id}
+
+      replay_to = [resource.object.localpool.owner.contact.email,
+                   resource.object.localpool.owner.contact_email,
+                   resource.object.localpool.owner.email].reject(&:nil?).first
+
+      unless customer.contact_email.nil? && !replay_to.nil?
+        mail_params[:replay_to] = replay_to
+      end
+
+      mail_service.deliver_billing_later(resource.object.id, mail_params)
     end
   end
 

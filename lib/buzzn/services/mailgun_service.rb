@@ -16,6 +16,9 @@ class Services::MailgunService
     if message.key?(:bcc) && !message[:bcc].empty?
       form_data['bcc'] = message[:bcc]
     end
+    if message.key?(:reply_to) && !message[:reply_to].empty?
+      form_data['reply_to'] = message[:reply_to]
+    end
     if message.key?(:html) && !message[:html].empty?
       form_data['html'] = message[:html]
     end
