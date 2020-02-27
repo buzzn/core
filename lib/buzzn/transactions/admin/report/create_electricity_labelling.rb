@@ -41,6 +41,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   add :veeg_reduced
   add :full_levy_ct_per_kWh
   add :reduced_levy_ct_per_kWh
+  add :consumption_eeg_full
+  add :consumption_eeg_reduced
   add :paid_levy_by_local_power_giver
   add :eeg_quotient
   add :renewable_eeg
@@ -146,10 +148,10 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
 
     # The rounding meant, the ratios will not be 100% anymore, so we cheat here, don't tell anyone.
-    checksum = (stats[:nuclearRatio] + stats[:coalRatio] + stats[:gasRatio]
-                + stats[:otherFossilesRatio] + stats[:otherRenewablesRatio] + stats[:renewablesEegRatio] + stats[:renterPowerEeg])
+    checksum = (stats[:nuclearRatio] + stats[:coalRatio] + stats[:gasRatio] +
+      stats[:otherFossilesRatio] + stats[:otherRenewablesRatio] + stats[:renewablesEegRatio] + stats[:renterPowerEeg])
 
-    stats[:coalRatio] -= checksum - 100
+      stats[:coalRatio] -= checksum - 100
 
     resource.fake_stats.each do |k, v|
       resource.fake_stats.delete(k)
@@ -422,17 +424,23 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   end
 
   # E30
-  def consumption_eeg_full(**)
-    BigDecimal('1.9') # todo
+  def consumption_eeg_full(contracts_with_range_and_readings:, **)
+    contracts_with_range_and_readings[:normal_wh]
+  end
+
+  # E31
+  def consumption_eeg_reduced(contracts_with_range_and_readings:, **)
+    contracts_with_range_and_readings[:reduced_wh]
   end
 
   # E32
   # @return [BigDecimal] The levy paid by the local power giver.
   def paid_levy_by_local_power_giver(full_levy_ct_per_kWh:,
-                                     veeg:,
+                                     consumption_eeg_full:,
+                                     consumption_eeg_reduced:,
                                      reduced_levy_ct_per_kWh:,
-                                     veeg_reduced:, **)
-    (full_levy_ct_per_kWh * veeg / BigDecimal('100') + reduced_levy_ct_per_kWh * veeg_reduced / BigDecimal('100')) # %
+                                     **)
+    (full_levy_ct_per_kWh * consumption_eeg_full / BigDecimal('100') + reduced_levy_ct_per_kWh * consumption_eeg_reduced / BigDecimal('100'))
   end
 
   # E33
