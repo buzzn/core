@@ -143,7 +143,7 @@ module Admin
             reading[:date] = date_of_reading
             reading[:raw_value] = sheet[i][9].value * 1000
 
-            if sheet[i][9].value.is_a? Integer
+            if sheet[i][9].value.is_a? Numeric
               create.(resource: register, params: reading)
             else
               reading_errors.append "Can not create reading for register #{register_number} due '#{sheet[i][9].value}' is not a number"
