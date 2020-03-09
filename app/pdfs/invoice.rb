@@ -235,8 +235,8 @@ module Pdf
         hash[:balance_at_after_taxes] = german_div(balance_at_after_taxes)
         hash[:balance_at_taxes] = german_div(balance_at_taxes)
         hash[:to_pay] = german_div(to_pay_cents.abs)
-        hash[:forderung_net] = german_div(forderung_net)
-        hash[:forderung_tax] = german_div(forderung_tax)
+        hash[:forderung_net] = german_div(forderung_net.abs)
+        hash[:forderung_tax] = german_div(forderung_tax.abs)
         hash[:forderung]  = to_pay_cents.positive? ? 'Erstattung' : 'Forderung'
         hash[:rueck_nach] = to_pay_cents.positive? ? 'Rück' : 'Nach'
         hash[:satz_forderung] = if has_bank_and_direct_debit
