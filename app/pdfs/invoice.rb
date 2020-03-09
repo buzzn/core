@@ -318,7 +318,7 @@ module Pdf
 
       vat = billing_hash[:vat]
       has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
-      payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro_netto]} € netto +  #{abschlag[:amount_euro_vat]} € USt (#{vat} %) = <strong>#{abschlag[:amount_euro]} € brutto</strong>."
+      payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro_netto]} € netto +  #{abschlag[:amount_euro_vat]} € USt (#{vat} %) = <strong>#{abschlag[:amount_euro]} € brutto</strong>"
       abschlag_begin_date = to_date(abschlag[:begin_date])
       # negative means it's disabled for this powertaker
       if abschlag[:disabled]
