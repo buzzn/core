@@ -97,6 +97,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                    utilization_report:,
                    self_sufficiency_report:,
                    electricity_supplier:,
+                   consumption_eeg_reduced:,
+                   consumption_eeg_full:,
                    **)
     current_energy_mix = energy_mix[:buzzn]
     fossils = BigDecimal('1') / (current_energy_mix[:nuclear] +
@@ -112,6 +114,11 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     other_fossil = current_energy_mix[:other_fossil] * fossils
     nuclear_ratio = current_energy_mix[:nuclear] * fossils
     other_renewable = current_energy_mix[:other_renewable] * fossils
+
+    co2_emission_gramm_per_kwh = (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal +
+      gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas +
+      other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other).round(1) # E93
+
     stats = {
       # E68 ... Other power
       nuclearRatio: nuclear_ratio.round(1),                                         # E69
@@ -120,9 +127,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       otherFossilesRatio: other_fossil.round(1),                                    # E72
       otherRenewablesRatio: other_renewable.round(1), # E73
       renewablesEegRatio: renewable_through_eeg.round(1), # E78
-      co2EmissionGrammPerKwh: (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal
-                               + gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas
-                               + other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other).round(1), # E93
+      co2EmissionGrammPerKwh: co2_emission_gramm_per_kwh,
       nuclearWasteMiligrammPerKwh: (nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001')).round(4), # E79
       renterPowerEeg: renter_power.round(1),
       selfSufficiencyReport: self_sufficiency_report.round(1),                                                                            # E103
@@ -151,7 +156,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     checksum = (stats[:nuclearRatio] + stats[:coalRatio] + stats[:gasRatio] +
       stats[:otherFossilesRatio] + stats[:otherRenewablesRatio] + stats[:renewablesEegRatio] + stats[:renterPowerEeg])
 
-      stats[:coalRatio] -= checksum - 100
+    stats[:coalRatio] -= checksum - 100
 
     resource.fake_stats.each do |k, v|
       resource.fake_stats.delete(k)
@@ -178,7 +183,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       non_eeg: non_eeg,
       production_consumend_in_group_kWh: production_consumend_in_group_kWh,
       consumption: consumption.to_s,
-      production: " #{production}"
+      production: " #{production}",
+      consumption_eeg_reduced: consumption_eeg_reduced.to_i,
+      consumption_eeg_full: consumption_eeg_full.to_i
     )
   end
 
@@ -457,7 +464,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   end
 
   def co2_emmision_g_per_kwh_other(**)
-    BigDecimal('859')
+    BigDecimal('850')
   end
 
   def energy_mix(**)
