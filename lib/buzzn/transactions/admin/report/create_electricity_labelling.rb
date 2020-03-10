@@ -35,7 +35,6 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   add :production_water_consumend_in_group_kWh
 
   add :production
-  add :consumption
   add :grid_consumption_corrected
   add :veeg
   add :veeg_reduced
@@ -43,6 +42,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   add :reduced_levy_ct_per_kWh
   add :consumption_eeg_full
   add :consumption_eeg_reduced
+  add :consumption_without_third_party
   add :paid_levy_by_local_power_giver
   add :eeg_quotient
   add :renewable_eeg
@@ -80,7 +80,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                    production_pv_consumend_in_group_kWh:,      # E19
                    production_water_consumend_in_group_kWh:,   # E20
                    production_consumend_in_group_kWh:,         # E21
-                   consumption:,                               # E15
+                   consumption_without_third_party:,                               # E15
                    production:,                                # E25
                    renewable_eeg:,
                    renewable_through_eeg:,
@@ -108,6 +108,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
               current_energy_mix[:other_renewable]) * BigDecimal('100') * additional_supply_ratio / BigDecimal('100') * non_eeg / BigDecimal('100')
 
     own_power_fraction = BigDecimal('1') / production_consumend_in_group_kWh * 100 * autacry_in_percent / 100 * non_eeg / 100
+
 
     coal_ratio = current_energy_mix[:coal] * fossils
     gas_ratio = current_energy_mix[:natural_gas] * fossils + production_chp_consumend_in_group_kWh * own_power_fraction
@@ -167,7 +168,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
 
     resource.save
-    stats.merge(
+    stats.merge!(
       warnings: warnings,
       chp: production_chp_consumend_in_group_kWh,
       pv: production_pv_consumend_in_group_kWh,
@@ -182,8 +183,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       additional_supply_ratio: additional_supply_ratio,
       non_eeg: non_eeg,
       production_consumend_in_group_kWh: production_consumend_in_group_kWh,
-      consumption: consumption.to_s,
-      production: " #{production}",
+      consumption_without_third_party: consumption_without_third_party.to_f,
+      production: production.to_f,
       consumption_eeg_reduced: consumption_eeg_reduced.to_i,
       consumption_eeg_full: consumption_eeg_full.to_i
     )
@@ -197,20 +198,20 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
   end
 
-  def self_sufficiency_report(production_consumend_in_group_kWh:, consumption:, **)
-    if production_consumend_in_group_kWh / consumption * BigDecimal('100') > 100
+  def self_sufficiency_report(production_consumend_in_group_kWh:, consumption_without_third_party:, **)
+    if production_consumend_in_group_kWh / consumption_without_third_party * BigDecimal('100') > 100
       return BigDecimal('100')
     end
 
-    production_consumend_in_group_kWh / consumption * BigDecimal('100')
+    production_consumend_in_group_kWh / consumption_without_third_party * BigDecimal('100')
   end
 
-  def utilization_report(consumption:, production:, **)
-    if consumption / production * BigDecimal('100') > 100
+  def utilization_report(consumption_without_third_party:, production:, **)
+    if consumption_without_third_party / production * BigDecimal('100') > 100
       return BigDecimal('100')
     end
 
-    consumption / production * BigDecimal('100')
+    consumption_without_third_party / production * BigDecimal('100')
   end
 
   def register_metas_active(register_metas:, **)
@@ -378,8 +379,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   end
 
   # E65
-  def autacry_in_percent(consumption:, production_consumend_in_group_kWh:, warnings:, **)
-    autacry = production_consumend_in_group_kWh / consumption * 100
+  def autacry_in_percent(consumption_without_third_party:, production_consumend_in_group_kWh:, warnings:, **)
+    autacry = production_consumend_in_group_kWh / consumption_without_third_party * 100
     if autacry > 100
       warnings.concat ['Group had an overall higher prodaction than consumption']
       return 100
@@ -398,13 +399,13 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   end
 
   # E78
-  def renewable_through_eeg(renewable_eeg:, consumption:, **)
-    renewable_eeg / consumption * BigDecimal('100')
+  def renewable_through_eeg(renewable_eeg:, consumption_without_third_party:, **)
+    renewable_eeg / consumption_without_third_party * BigDecimal('100')
   end
 
   # E79
-  def renter_power(production_pv_consumend_in_group_kWh:, consumption:, **)
-    #production_pv_consumend_in_group_kWh / consumption * BigDecimal('100')
+  def renter_power(production_pv_consumend_in_group_kWh:, consumption_without_third_party:, **)
+    #production_pv_consumend_in_group_kWh / consumption_without_third_party * BigDecimal('100')
     BigDecimal('0')
   end
 
@@ -430,14 +431,19 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     BigDecimal('2.7168')
   end
 
-  # E30
+  # E13, E30
   def consumption_eeg_full(contracts_with_range_and_readings:, **)
     contracts_with_range_and_readings[:normal_wh]
   end
 
-  # E31
+  # E14, E31
   def consumption_eeg_reduced(contracts_with_range_and_readings:, **)
     contracts_with_range_and_readings[:reduced_wh]
+  end
+
+  # E15
+  def consumption_without_third_party(consumption_eeg_full:, consumption_eeg_reduced:, **)
+    consumption_eeg_full + consumption_eeg_reduced
   end
 
   # E32
