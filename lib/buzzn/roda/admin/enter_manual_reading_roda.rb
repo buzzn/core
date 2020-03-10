@@ -93,6 +93,12 @@ module Admin
 
         #fill_paid_abatement(paid_abatement, contract_number)
         contract = register.contracts.select {|c| c.full_contract_number == contract_number}.first
+
+        # It happens that the register is not attached to any contract, but the contract we are after is in the pools contracts.
+        if contract.nil?
+          contract = target_pools.first.contracts.select {|x| x.full_contract_number == contract_number}.first
+        end
+
         if ['X', ''].include?(paid_abatement) || paid_abatement.nil?
           # Skip
         elsif !paid_abatement.is_a? Numeric
@@ -158,9 +164,19 @@ module Admin
 
       begin
         result = create_electricity_labelling.(resource: target_pools.first, params: {'begin_date'=> '2019-01-01T00:00:00.882Z', 'last_date'=> '2020-01-01T00:01:00.000Z'})
+
+        warnings = []
+        unless result.value[:warnings].nil?
+          warnings.concat(result.value[:warnings].map(&:to_s))
+        end
+
+        consumption_eeg_reduced = (result.value[:consumption_eeg_reduced]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
+        consumption_eeg_full = (result.value[:consumption_eeg_full]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
+
         return {
-          errors: reading_errors.concat(result.value[:warnings].map{|w| w.to_s}),
-          fakeStats: result.value
+          errors: ["LSN als Letztverbraucher #{consumption_eeg_full}kWh", "LSG als Letztverbraucher #{consumption_eeg_reduced}kWh"].concat(reading_errors),
+          fakeStats: result.value,
+          warnings: warnings
         }
       rescue Exception => e
         reading_errors.append "Could not generate new fake stats due to #{e.message}"
