@@ -101,8 +101,8 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
 
 
   def date_range(params:, **)
-    begin_date = Time.parse(params['begin_date'])
-    end_date = Time.parse(params['last_date'])
+    begin_date = params[:begin_date]
+    end_date = params[:end_date]
     if end_date <= begin_date
       raise Buzzn::ValidationError.new(begin_date: ['must be before end_date'])
     end
