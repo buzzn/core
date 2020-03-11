@@ -65,6 +65,11 @@ module Admin
 
         reading_comment = value_or_empty(sheet[i][12], 'Yearly reading imported from excel sheet')
 
+        if meters_by_serial[register_number].nil?
+          reading_errors.append "Unknown register number '#{register_number}' for contract #{contract_number}"
+          next
+        end
+
         # And the meters here
         if meters_by_serial[register_number].registers.size > 1
           target_meter = meters_by_serial[register_number]
@@ -188,7 +193,6 @@ module Admin
         }
       rescue Exception => e
         reading_errors.append "Could not generate new fake stats due to #{e.message}"
-        byebug
         return {
           errors: reading_errors
         }
