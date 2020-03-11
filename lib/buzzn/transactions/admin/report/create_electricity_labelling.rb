@@ -224,8 +224,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     resource:,
     **
   )
-    technologies = {chp: 'Blockheizkraftwerk', wind: 'Windkraftwerk', water: 'Wasserkraft', pv: 'Fotovoltaik'}
-    resource.power_sources.map {|s| technologies[s.to_sym]}.join ','
+    technologies = {chp: 'Kraft-Wärme-Kopplung mit Blockheizkraftwerk', wind: 'Windkraftwerk', water: 'Wasserkraft', pv: 'Photovoltaik'}
+    resource.power_sources.map {|s| technologies[s.to_sym]}.join ' ##'
   end
 
   # E18
