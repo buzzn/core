@@ -134,12 +134,12 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
         register_begin_date = [begin_date, register.installed_at&.date || begin_date].max
         register_end_date   = [end_date, register.decomissioned_at&.date || end_date].min
         begin_reading = begin
-                          reading_service.get(register, register_begin_date, :precision => 2.days).to_a.max_by(&:value)
+                          reading_service.get(register, register_begin_date, :precision => 5.days).to_a.max_by(&:value)
                         rescue Buzzn::DataSourceError
                           nil
                         end
         end_reading = begin
-                        reading_service.get(register, register_end_date, :precision => 2.days).to_a.max_by(&:value)
+                        reading_service.get(register, register_end_date, :precision => 5.days).to_a.max_by(&:value)
                       rescue Buzzn::DataSourceError
                         nil
                       end
@@ -429,7 +429,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
           next
         end
         begin_reading = begin
-                          reading_service.get(register, register_begin_date, :precision => 2.days).to_a.max_by(&:value)
+                          reading_service.get(register, register_begin_date, :precision => 5.days).to_a.max_by(&:value)
                         rescue Buzzn::DataSourceError
                           errors.push(
                             contract_id: contract.id,
@@ -444,7 +444,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
                           nil
                         end
         end_reading = begin
-                        reading_service.get(register, register_end_date, :precision => 2.days).to_a.max_by(&:value)
+                        reading_service.get(register, register_end_date, :precision => 5.days).to_a.max_by(&:value)
                       rescue Buzzn::DataSourceError
                         errors.push(
                           contract_id: contract.id,
