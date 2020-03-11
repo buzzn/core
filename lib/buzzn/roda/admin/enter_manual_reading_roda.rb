@@ -163,7 +163,9 @@ module Admin
       end
 
       begin
-        result = create_electricity_labelling.(resource: target_pools.first, params: {'begin_date'=> '2019-01-01T00:00:00.882Z', 'last_date'=> '2020-01-01T00:01:00.000Z'})
+        result = create_electricity_labelling.(resource: target_pools.first,
+                                               params: {begin_date: Time.parse('2019-01-01T00:00:00.882Z'),
+                                                        last_date: Time.parse('2020-01-01T00:01:00.000Z')})
 
         warnings = []
         unless result.value[:warnings].nil?
@@ -180,14 +182,13 @@ module Admin
                    "LSG als Letztverbraucher #{consumption_eeg_reduced}kWh",
                    "Verbrauchsmenge gesamt #{consumption_without_third_party}kWh",
                    "Upstream 3: Produktion gesamt #{production}",
-                   "Summe: Upstream 1: Produktion, die in LEG verbraucht wurde #{production_consumend_in_group_kWh}"
-                  ].concat(reading_errors),
+                   "Summe: Upstream 1: Produktion, die in LEG verbraucht wurde #{production_consumend_in_group_kWh}"].concat(reading_errors),
           fakeStats: result.value,
           warnings: warnings
         }
       rescue Exception => e
         reading_errors.append "Could not generate new fake stats due to #{e.message}"
-
+        byebug
         return {
           errors: reading_errors
         }
