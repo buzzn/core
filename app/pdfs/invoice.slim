@@ -138,7 +138,7 @@ html
           p
             i #{powertaker.email}
       p.is-pull-right #{contractor.city}, den #{Date.today.strftime("%d.%m.%Y")}
-      h2.clear Lokale Energiegruppe #{localpool.name}: Stromrechnung #{billing_year}<br>
+      h2.clear Lokale Energiegruppe #{localpool.name}: #{billing_type} #{billing_year}<br>
         Rechnungsnummer: #{billing.number}
       table.no-border
         tr
@@ -155,7 +155,7 @@ html
           td.no-border.no-padding.pl #{billing_year}
 
       p #{powertaker.addressing},
-      p vielen Dank, dass Sie aus der Energiegruppe #{localpool.name} Strom beziehen. Dies ist Ihre Stromrechnung #{billing_year}:
+      p vielen Dank, dass Sie aus der Energiegruppe #{localpool.name} Strom bezogen haben. Dies ist Ihre Stromrechnung #{billing_year}:
       div
         h2 Bezugsmenge
         - items.each do |item|

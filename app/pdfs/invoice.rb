@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require_relative 'generator'
 
 module Pdf
@@ -28,7 +26,7 @@ module Pdf
         org_email: powertaker.email,
         localpool: build_localpool,
         billing: build_billing,
-        items: build_billing_items,
+        items: build_billing_items.sort {|x, y| Time.parse(x[:last_date]) <=> Time.parse(y[:last_date]) }.reverse,
         vat: contract.localpool.billing_detail.issues_vat ? ((BigDecimal(billing_config.vat, 4) - 1.0) * 100).round : 0,
         billing_ends_contract: contract.end_date.nil? ? false : @billing.end_date == contract.end_date,
         contract: {
@@ -76,7 +74,7 @@ module Pdf
 
     def consumption(year)
       return nil unless year
-      collected = @billing.billing_cycle ? @billing.contract.billings.to_a.keep_if { |x| x.billing_cycle }.keep_if { |x| x.billing_cycle.begin_date.year == year }.map { |x| [x.total_consumed_energy_kwh, x.total_days] } : [[@billing.total_consumed_energy_kwh, @billing.total_days]]
+      collected = @billing.billing_cycle ? @billing.contract.billings.to_a.keep_if(&:billing_cycle).keep_if { |x| x.billing_cycle.begin_date.year == year }.map { |x| [x.total_consumed_energy_kwh, x.total_days] } : [[@billing.total_consumed_energy_kwh, @billing.total_days]]
       return nil if collected.flatten.include?(nil)
       summed = collected.inject { |x, n| [x[0] + n[0], x[1] + n[1]] }
       return nil unless summed
@@ -224,7 +222,6 @@ module Pdf
         balance_at_taxes = calculate_taxes(balance_at)[:amount_taxes]
         forderung_net = netto - balance_at_before_taxes
         forderung_tax = (brutto-netto) - balance_at_taxes
-
 
         to_pay_cents = balance_at - brutto
         has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
