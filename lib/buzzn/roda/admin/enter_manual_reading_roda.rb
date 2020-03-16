@@ -104,8 +104,17 @@ module Admin
           contract = target_pools.first.contracts.select {|x| x.full_contract_number == contract_number}.first
         end
 
-        if ['X', ''].include?(paid_abatement) || paid_abatement.nil?
-          # Skip
+        if ['X', 'x'].include?(paid_abatement)
+          # X means skip this one
+        elsif paid_abatement.nil? || paid_abatement == '' ||  paid_abatement == '0'
+          # No value means just balance the account
+          paiment_missing = contract.balance_sheet.total * -1
+          book.(resource: contract.accounting_entries, params:
+            {
+              :comment => 'Ausgleich',
+              :amount => paiment_missing, # paiment expects value in ct.
+              :booked_by => current_user
+            })
         elsif !paid_abatement.is_a? Numeric
           reading_errors.append "Register #{register_number}: Requested paiment '#{paid_abatement}' is not a number."
         elsif contract.nil?
