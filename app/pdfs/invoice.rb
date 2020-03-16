@@ -46,6 +46,7 @@ module Pdf
       }.tap do |h|
         h[:labels1] = build_labels1(h[:consumption_last_year])
         h[:billing_type] = h[:billing_ends_contract] ? 'Schlussabrechnung' : 'Turnusabrechnung'
+        h[:tense] = h[:billing_ends_contract] ? 'bezogen haben' : 'beziehen'
         h[:abschlag] = build_abschlag(h)
       end
     end
