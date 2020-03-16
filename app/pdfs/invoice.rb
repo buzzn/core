@@ -366,7 +366,7 @@ module Pdf
 
     def build_waste_de
       {
-        nuclear_waste_miligramm_per_kwh: @de_stats[:nuclear_waste_miligramm_per_kwh] / 1000.00,
+        nuclear_waste_miligramm_per_kwh: sprintf("%.4f", (@de_stats[:nuclear_waste_miligramm_per_kwh] / 1000.00)),
         co2_emission_gramm_per_kwh: @de_stats[:co2_emission_gramm_per_kwh]
       }
     end
@@ -377,7 +377,7 @@ module Pdf
 
     def build_waste_local
       {
-        nuclear_waste_miligramm_per_kwh: localpool.fake_stats["nuclearWasteMiligrammPerKwh"],
+        nuclear_waste_miligramm_per_kwh: sprintf("%.4f", localpool.fake_stats["nuclearWasteMiligrammPerKwh"]),
         co2_emission_gramm_per_kwh:      localpool.fake_stats['co2EmissionGrammPerKwh'].to_i
       }
     end
