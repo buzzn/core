@@ -143,9 +143,29 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new(customer: 'email invalid')
       end
-      subject = 'Ihre Stromrechnung 2019'
+      subject = "#{resource.object.localpool} - Ihre Stromrechnung 2019"
+
+      receiver_person = nil
+      if resource.object.contract.contractor.is_a? Person
+        receiver_person = resource.object.contract.contractor
+      elsif resource.object.contract.contractor.is_a? Organization::Base
+        receiver_person = resource.object.contract.contractor.contact
+      end
+
+      if receiver_person.nil?
+        anrede = 'Lieber Strohmnehmer'
+      else
+        if receiver_person.prefix == 'male'
+          anrede = "Hallo Herr #{receiver_person.name}"
+        elsif receiver_person.prefix == 'female'
+          anrede = "Hallo Frau #{receiver_person.name}"
+        else
+          anrede = "Hallo Frau/Herr #{receiver_person.name}"
+        end
+      end
+
       contractor_name = resource.object.contract.contractor.name
-      text = %(Guten Tag,
+      text = %(#{anrede},
 
 im Auftrag Ihres Lokalen Stromgebers "#{contractor_name}" übermitteln wir Ihnen im
 Anhang Ihre Stromrechnung 2019.
@@ -157,24 +177,6 @@ Vielen Dank, dass Sie People Power unterstützen, die Energiewende von unten.
 Energiegeladene Grüße,
 
 Ihr BUZZN Team
-
---
-
-Philipp Oßwald
-BUZZN – Teile Energie mit Deiner Gruppe.
-
-T: 089-416171410
-F: 089-416171499
-team@buzzn.net
-www.buzzn.net
-
-BUZZN GmbH
-Combinat 56
-Adams-Lehmann-Straße 56
-80797 München
-Registergericht: Amtsgericht München
-Registernummer: HRB 186043
-Geschäftsführer: Justus Schütze
 )
       document = resource.object.documents.order(:created_at).last
 
