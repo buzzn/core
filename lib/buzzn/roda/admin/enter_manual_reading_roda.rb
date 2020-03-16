@@ -127,10 +127,9 @@ module Admin
               :amount => paiment_missing, # paiment expects value in ct.
               :booked_by => current_user
             })
-
           book.(resource: contract.accounting_entries, params:
             {
-              :comment => "Bezahlte Abschläge #{date_of_reading}",
+              :comment => "Bezahlte Abschläge #{date_of_reading.year}",
               :amount => paid_abatement * 1000, # paiment expects value in 1/10 ct.
               :booked_by => current_user
             })
