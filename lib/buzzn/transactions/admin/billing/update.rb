@@ -131,36 +131,35 @@ class Transactions::Admin::Billing::Update < Transactions::Base
         resource.object.documents << document
       end
     when :queue
-      customer = resource.object.contract.customer
+      receiver_person = nil
+      if resource.object.contract.customer.is_a? Person
+        receiver_person = resource.object.contract.customer
+      elsif resource.object.contract.customer.is_a? Organization::Base
+        receiver_person = resource.object.contract.customer.contact
+      end
       email = if billing_email_testmode == '1'
                 'dev@buzzn.net'
               else
-                [customer.contact_email,
-                 resource.object.localpool.owner.contact.email,
+                [receiver_person&.email,
+                 receiver_person&.contact_email,
+                 resource.object.localpool.owner.contact&.email,
                  resource.object.localpool.owner.contact_email,
                  resource.object.localpool.owner.email].reject(&:nil?).first
               end
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new(customer: 'email invalid')
       end
-      subject = "#{resource.object.localpool} - Ihre Stromrechnung 2019"
-
-      receiver_person = nil
-      if resource.object.contract.contractor.is_a? Person
-        receiver_person = resource.object.contract.contractor
-      elsif resource.object.contract.contractor.is_a? Organization::Base
-        receiver_person = resource.object.contract.contractor.contact
-      end
+      subject = "#{resource.object.localpool.name} - Ihre Stromrechnung 2019"
 
       if receiver_person.nil?
-        anrede = 'Lieber Strohmnehmer'
+        anrede = 'Sehr geehrte Damen und Herren'
       else
         if receiver_person.prefix == 'male'
-          anrede = "Hallo Herr #{receiver_person.name}"
+          anrede = "Sehr geehrter Herr #{receiver_person.last_name}"
         elsif receiver_person.prefix == 'female'
-          anrede = "Hallo Frau #{receiver_person.name}"
+          anrede = "Sehr geehrte Frau #{receiver_person.last_name}"
         else
-          anrede = "Hallo Frau/Herr #{receiver_person.name}"
+          anrede = "Guten Tag Frau/Herr #{receiver_person.last_name}"
         end
       end
 
@@ -178,6 +177,7 @@ Energiegeladene Grüße,
 
 Ihr BUZZN Team
 )
+
       document = resource.object.documents.order(:created_at).last
 
       mail_params = {:from => billing_email_from,
@@ -187,11 +187,11 @@ Ihr BUZZN Team
                      :bcc => billing_email_bcc,
                      :document_id => document.id}
 
-      replay_to = [resource.object.localpool.owner.contact.email,
+      replay_to = [resource.object.localpool.owner.contact&.email,
                    resource.object.localpool.owner.contact_email,
                    resource.object.localpool.owner.email].reject(&:nil?).first
 
-      unless customer.contact_email.nil? && !replay_to.nil?
+      unless replay_to.nil? && !replay_to.nil?
         mail_params[:replay_to] = replay_to
       end
 
