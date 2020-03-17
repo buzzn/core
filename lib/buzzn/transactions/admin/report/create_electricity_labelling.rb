@@ -139,10 +139,10 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
     if production.positive?
       stats.merge!(
-        gasReport: BigDecimal('100') * production_chp / production, # E83
-        sunReport: BigDecimal('100') * production_pv / production,      # E84
-        waterReport: BigDecimal('100') * production_water / production, # E84
-        windReport: BigDecimal('100') * production_wind / production, # E84
+        gasReport: (BigDecimal('100') * production_chp / production).to_i, # E83
+        sunReport: (BigDecimal('100') * production_pv / production).to_i,  # E84
+        waterReport: (BigDecimal('100') * production_water / production).to_i, # E84
+        windReport: (BigDecimal('100') * production_wind / production).to_i # E84
       )
     else
       stats.merge!(
