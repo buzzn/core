@@ -149,7 +149,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new(customer: 'email invalid')
       end
-      subject = "#{resource.object.localpool.name} - Ihre Stromrechnung 2019"
+      subject = "Lokale Energiegruppe #{resource.object.localpool.name} - Ihre Stromrechnung 2019"
 
       if receiver_person.nil?
         anrede = 'Sehr geehrte Damen und Herren'
