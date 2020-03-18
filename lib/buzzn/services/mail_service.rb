@@ -7,7 +7,7 @@ require 'net/http'
 class Services::MailService
 
   REQUIRED_MESSAGE_KEYS=[:from, :to, :subject, :text]
-  OPTIONAL_MESSAGE_KEYS=[:bcc, :replay_to, :html, :document_id, :document_name, :document_mime]
+  OPTIONAL_MESSAGE_KEYS=[:bcc, :reply_to, :html, :document_id, :document_name, :document_mime]
 
   include Import['config.mail_backend',
                  'config.mailgun_api_key',

@@ -187,12 +187,12 @@ Ihr BUZZN Team
                      :bcc => billing_email_bcc,
                      :document_id => document.id}
 
-      replay_to = [resource.object.localpool.owner.contact&.email,
+      reply_to = [resource.object.localpool.owner.contact&.email,
                    resource.object.localpool.owner.contact_email,
                    resource.object.localpool.owner.email].reject(&:nil?).first
 
-      unless replay_to.nil? && !replay_to.nil?
-        mail_params[:replay_to] = replay_to
+      unless reply_to.nil? && !reply_to.nil?
+        mail_params[:reply_to] = reply_to
       end
 
       mail_service.deliver_billing_later(resource.object.id, mail_params)
