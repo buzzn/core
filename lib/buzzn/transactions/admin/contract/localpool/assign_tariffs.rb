@@ -27,13 +27,15 @@ class Transactions::Admin::Contract::Localpool::AssignTariffs < Transactions::Ba
     end
   end
 
+
   def assign_tariffs(params:, resource:, fetched_tariffs:, **)
     # validate that we are not deleting some tariff that is already used
     # in a BillingItem
     # FIXME move to invariant
-    used_tariffs = resource.object.billing_items.map(&:tariff).sort.uniq
+    used_tariffs = resource.object.billing_items.collect { |x| x.tariff }.uniq
     # check whether the already used tariffs are still included in the assignment
-    unless (fetched_tariffs & used_tariffs).sort.uniq == used_tariffs
+
+    unless (fetched_tariffs & used_tariffs).sort == used_tariffs.sort
       raise Buzzn::ValidationError.new(tariffs: ['tariffs are already used in billings'])
     end
     # check whether a tariff would be valid for an already billed item
