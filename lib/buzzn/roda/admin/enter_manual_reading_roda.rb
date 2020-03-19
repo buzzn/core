@@ -111,9 +111,14 @@ module Admin
           contract = target_pools.first.contracts.select {|x| x.full_contract_number == contract_number}.first
         end
 
+        if contract.nil?
+          reading_errors.append "No contract found for '#{register_number}'"
+          next
+        end
+
         if ['X', 'x'].include?(paid_abatement)
           # X means skip this one
-        elsif paid_abatement.nil? || paid_abatement == '' ||  paid_abatement == '0'
+        elsif paid_abatement.nil? || paid_abatement == '' || paid_abatement == ' ' || paid_abatement == '0'
           # No value means just balance the account
           paiment_missing = contract.balance_sheet.total * -1
           book.(resource: contract.accounting_entries, params:
