@@ -69,7 +69,7 @@ module Admin
           reading_errors.append "Unknown register number '#{register_number}' for contract #{contract_number}"
           next
         end
-
+        skip_abatement = false
         # And the meters here
         if meters_by_serial[register_number].registers.size > 1
           target_meter = meters_by_serial[register_number]
@@ -77,10 +77,13 @@ module Admin
           target_registers = []
           if register_addition == 'Produktion'
             target_registers = target_meter.registers.select {|reg| reg.register_meta.label.start_with?('PRODUCTION')}
+            skip_abatement = true
           elsif register_addition == 'ÜGZ Bezug'
             target_registers = target_meter.registers.select {|reg| reg.register_meta.label == 'GRID_FEEDING'}
+            skip_abatement = true
           elsif register_addition == 'ÜGZ Einspeisung'
             target_registers = target_meter.registers.select {|reg| reg.register_meta.label == 'GRID_CONSUMPTION'}
+            skip_abatement = true
           end
 
           if target_registers.empty?
@@ -94,6 +97,10 @@ module Admin
           end
         else
           register = meters_by_serial[register_number].registers.first
+        end
+
+        if skip_abatement
+          next
         end
 
         #fill_paid_abatement(paid_abatement, contract_number)
