@@ -79,7 +79,12 @@ module Pdf
       return nil if collected.flatten.include?(nil)
       summed = collected.inject { |x, n| [x[0] + n[0], x[1] + n[1]] }
       return nil unless summed
-      summed[0] * 365 / summed[1]
+
+      consumption_result = summed[0] * 365 / summed[1]
+      if consumption_result.nan?
+        return nil
+      end
+      consumption_result
     end
 
     def contractor_address
