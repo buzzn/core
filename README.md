@@ -6,6 +6,8 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
 
 <!-- MarkdownTOC autolink=true -->
 
+- [buzzn/core](#buzzncore)
+- [Table of contents](#table-of-contents)
 - [Application Architecture](#application-architecture)
 - [Bin-Scripts](#bin-scripts)
 - [Useful rake tasks](#useful-rake-tasks)
@@ -13,20 +15,24 @@ buzzn/core is the central server-side application of buzzn. It contains the busi
   - [Overview](#overview)
   - [Common testing workflow - after checking out a remote branch](#common-testing-workflow---after-checking-out-a-remote-branch)
   - [Common testing workflow - to run one test file](#common-testing-workflow---to-run-one-test-file)
-  - [Loading setup and example data \("seeds"\)](#loading-setup-and-example-data-seeds)
+  - [Loading setup and example data ("seeds")](#loading-setup-and-example-data-%22seeds%22)
 - [Beekeeper import](#beekeeper-import)
   - [How to run it](#how-to-run-it)
 - [How to deploy](#how-to-deploy)
+  - [Maintenance Mode](#maintenance-mode)
   - [Deploy staging](#deploy-staging)
   - [Deploy production](#deploy-production)
 - [How to set up a development environment](#how-to-set-up-a-development-environment)
-  - [Setup Ruby \(using rbenv\)](#setup-ruby-using-rbenv)
+  - [Setup Ruby (using rbenv)](#setup-ruby-using-rbenv)
   - [Install required software](#install-required-software)
   - [Set up the project](#set-up-the-project)
   - [Start server in development mode](#start-server-in-development-mode)
   - [Reset and start test environment](#reset-and-start-test-environment)
   - [Set up rubocop](#set-up-rubocop)
-- [Misc admin info \(may be outdated\)](#misc-admin-info-may-be-outdated)
+    - [How to auto-corrrect rule offenses](#how-to-auto-corrrect-rule-offenses)
+    - [How to disable checking a rule locally](#how-to-disable-checking-a-rule-locally)
+    - [How to run rubocop before every push automatically](#how-to-run-rubocop-before-every-push-automatically)
+- [Misc admin info (may be outdated)](#misc-admin-info-may-be-outdated)
   - [Start sidekiq message queue](#start-sidekiq-message-queue)
   - [Stop sidekiq](#stop-sidekiq)
   - [Find missing Indexes](#find-missing-indexes)
@@ -163,21 +169,38 @@ _Note on the previous, docker-based system and deployment: the Dockerfiles and r
     use homebrew on a Mac
 
 ## Set up the project
-
-### Legacy way
-    git clone https://github.com/buzzn/core.git
+  - Grab the source `git clone https://github.com/buzzn/core.git`
+  - Get dependencies
+    ```bash
     cd core
     gem install bundler
     bundle install
-    rake application:init
+    ```
+  - Create a `.env.development`
+    ```bash
+    # Please keep the variables ordered alphabetically.
+    # This file is for overrides of the .env file when running in development.
+    ASSET_HOST=http://localhost:3000
+    DEFAULT_ACCOUNT_PASSWORD=Example123
+    DISPLAY_URL=http://localhost:2999
+    SESSION_INACTIVITY_TIMEOUT=31536000 # 1 yearPOSTGRES_HOST=localhost
+    POSTGRES_USER=postgres
+    POSTGRES_PASSWORD=secret
+    POSTGRES_BASE=postgres://$POSTGRES_USER@$POSTGRES_HOST
+    DATABASE_URL=$POSTGRES_BASE/buzzn_developmentREDIS_HOST=localhost
+    REDIS_CACHE_URL=redis://$REDIS_HOST:6379/0
+    REDIS_SIDEKIQ_URL=redis://$REDIS_HOST:6379/1
 
-### Using Nix
-* [Download and install Nix](https://nixos.org/nix/)
-```
-    git clone https://github.com/buzzn/core.git
-    cd core
-    nix-shell
-```
+    MAIL_BACKEND=stdout
+    DISCOVERGY_LOGIN=YOUR_DISCOVERGY_LOGIN_NAME
+    DISCOVERGY_PASSWORD=YOUR_DISCOVERGY_PASSWORD
+    ```
+  - Start postgres and and create a database and a user according to the entries of the previous `.env.development`
+    ```bash
+    createdb -U postgres -h localhost buzzn_development
+    pg_restore -h localhost -d buzzn_development -U postgres ./some_data.dump # Import some data if you already have any
+    ```
+  - Start redis
 
 ## Start server in development mode
     bin/server
