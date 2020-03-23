@@ -147,10 +147,10 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
       # Make sure that the sum of all reports is 100 %, add the round error to the largest value
       techs = [:gasReport, :sunReport, :waterReport, :windReport]
-      sum_techs = techs.map{|x| stats[x]}.sum
+      sum_techs = techs.map {|x| stats[x]}.sum
 
       largest = :gasReport
-      largest_value = techs[largest]
+      largest_value = stats[largest]
       techs.each do |t|
         if stats[t] > largest_value
           largest = t

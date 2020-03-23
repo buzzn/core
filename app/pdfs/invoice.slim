@@ -448,7 +448,7 @@ html
         ];
         // footer HTML required
         var footer = '<footer class="is-small"><div class="footer-logo">powered by <img src="#{Dir.pwd}/public/assets/images/logo.png" /></div><span>#{contractor.shortname} • #{contractor.street} • #{contractor.zip} #{contractor.city}</span><p class="pagination is-small">Seite <span class="page-number">#</span> von <span class="page-total-number">#</span></p></footer>';
-        bcChart('#chart-one', labels1, [#{consumption_year.round}, #{consumption_last_year ? "#{consumption_last_year.round} ," : ''} 1598, 2766, 4608]);
+        bcChart('#chart-one', labels1, [#{consumption_year.round}, #{!consumption_last_year.nil? ? "#{consumption_last_year.round} ," : ''} 1598, 2766, 4608]);
         bcChart('#chart-two', labels2, data2d,'Deutschland');
         bcChart('#chart-three', labels3, data2l,'Lokale Energiegruppe #{localpool.name}');
         // page breaks require the presence of at least one .wrapper container
