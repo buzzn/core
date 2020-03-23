@@ -144,6 +144,21 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
         waterReport: (BigDecimal('100') * production_water / production).to_i, # E84
         windReport: (BigDecimal('100') * production_wind / production).to_i # E84
       )
+
+      # Make sure that the sum of all reports is 100 %, add the round error to the largest value
+      techs = [:gasReport, :sunReport, :waterReport, :windReport]
+      sum_techs = techs.map{|x| stats[x]}.sum
+
+      largest = :gasReport
+      largest_value = techs[largest]
+      techs.each do |t|
+        if stats[t] > largest_value
+          largest = t
+          largest_value = stats[t]
+        end
+      end
+
+      stats[largest] = 100 - sum_techs + largest_value
     else
       stats.merge!(
         gasReport: 0,
