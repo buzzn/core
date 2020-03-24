@@ -221,12 +221,16 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     production_consumend_in_group_kWh / consumption_without_third_party * BigDecimal('100')
   end
 
-  def utilization_report(consumption_without_third_party:, production:, **)
-    if consumption_without_third_party / production * BigDecimal('100') > 100
+  def utilization_report(production_consumend_in_group_kWh:, production:, **)
+    if production.zero?
+      return BigDecimal('0')
+    end
+
+    if production_consumend_in_group_kWh  / production * BigDecimal('100') > 100
       return BigDecimal('100')
     end
 
-    consumption_without_third_party / production * BigDecimal('100')
+    production_consumend_in_group_kWh  / production * BigDecimal('100')
   end
 
   def register_metas_active(register_metas:, **)
