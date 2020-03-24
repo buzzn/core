@@ -58,10 +58,15 @@ module Admin
 
       # Skip headline, roll over all the data rows
       (2...sheet.count).each do |i|
-        register_number = sheet[i][3].value
+        register_number = sheet[i][3]&.value&.to_s
         register_addition = value_or_empty sheet[i][5]
         paid_abatement = value_or_empty sheet[i][10]
         contract_number = value_or_empty sheet[i][0]
+
+        if register_number.nil?
+          reading_errors.append "Unknown register number in line #{i}"
+          next
+        end
 
         reading_comment = value_or_empty(sheet[i][12], 'Yearly reading imported from excel sheet')
 
@@ -112,7 +117,7 @@ module Admin
         end
 
         if contract.nil?
-          reading_errors.append "No contract found for '#{register_number}'"
+          reading_errors.append "The register '#{register_number}' has no conntract applied."
           next
         end
 
@@ -162,7 +167,7 @@ module Admin
                     })
           end
 
-          unless sheet[i][9].value == ''
+          unless sheet[i][9].value == '' || sheet[i][9].value.nil?
             reading = {}
             reading[:status] = 'Z86'
             reading[:reason] = 'PMR'
@@ -172,9 +177,10 @@ module Admin
             reading[:source] = 'MAN'
             reading[:comment] = reading_comment
             reading[:date] = date_of_reading
-            reading[:raw_value] = sheet[i][9].value * 1000
 
+            reading_errors.append "Can not create reading for register #{register_number} due there is no proper value provided."
             if sheet[i][9].value.is_a? Numeric
+              reading[:raw_value] = BigDecimal(sheet[i][9].value) * 1000
               create.(resource: register, params: reading)
             else
               reading_errors.append "Can not create reading for register #{register_number} due '#{sheet[i][9].value}' is not a number"
@@ -183,6 +189,7 @@ module Admin
         rescue ActiveRecord::RecordNotUnique
           reading_errors.append "There is already a reading for register #{register_number}. Skipping..."
         rescue StandardError => e
+          puts e.backtrace
           reading_errors.append "Can not create reading for register #{register_number} due to #{e.message}."
         end
       end
