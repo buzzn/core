@@ -178,9 +178,8 @@ module Admin
             reading[:comment] = reading_comment
             reading[:date] = date_of_reading
 
-            reading_errors.append "Can not create reading for register #{register_number} due there is no proper value provided."
             if sheet[i][9].value.is_a? Numeric
-              reading[:raw_value] = BigDecimal(sheet[i][9].value) * 1000
+              reading[:raw_value] = BigDecimal(sheet[i][9].value.to_i) * 1000
               create.(resource: register, params: reading)
             else
               reading_errors.append "Can not create reading for register #{register_number} due '#{sheet[i][9].value}' is not a number"
@@ -200,8 +199,8 @@ module Admin
                                                         last_date: Time.parse('2020-01-01T00:01:00.000Z')})
 
         warnings = []
-        unless result.value[:warnings].nil?
-          warnings.concat(result.value[:warnings].map(&:to_s))
+        unless result.value![:warnings].nil?
+          warnings.concat(result.value![:warnings].map(&:to_s))
         end
 
         consumption_eeg_reduced = (result.value[:consumption_eeg_reduced]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
