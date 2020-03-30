@@ -80,7 +80,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
                    production_pv_consumend_in_group_kWh:,      # E19
                    production_water_consumend_in_group_kWh:,   # E20
                    production_consumend_in_group_kWh:,         # E21
-                   consumption_without_third_party:,                               # E15
+                   consumption_without_third_party:,           # E15
                    production:,                                # E25
                    renewable_eeg:,
                    renewable_through_eeg:,
@@ -108,7 +108,6 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
               current_energy_mix[:other_renewable]) * BigDecimal('100') * additional_supply_ratio / BigDecimal('100') * non_eeg / BigDecimal('100')
 
     own_power_fraction = BigDecimal('1') / production_consumend_in_group_kWh * 100 * autacry_in_percent / 100 * non_eeg / 100
-
 
     coal_ratio = current_energy_mix[:coal] * fossils
     gas_ratio = current_energy_mix[:natural_gas] * fossils + production_chp_consumend_in_group_kWh * own_power_fraction
@@ -174,14 +173,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
     stats[:coalRatio] -= checksum - 100
 
-    resource.fake_stats.each do |k, v|
-      resource.fake_stats.delete(k)
-    end
-
-    stats.each do |k, v|
-      resource.fake_stats[k] = v
-    end
-
+    resource.object.fake_stats = stats
     resource.save
     stats.merge!(
       warnings: warnings,
@@ -226,11 +218,11 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    if production_consumend_in_group_kWh  / production * BigDecimal('100') > 100
+    if production_consumend_in_group_kWh / production * BigDecimal('100') > 100
       return BigDecimal('100')
     end
 
-    production_consumend_in_group_kWh  / production * BigDecimal('100')
+    production_consumend_in_group_kWh / production * BigDecimal('100')
   end
 
   def register_metas_active(register_metas:, **)
