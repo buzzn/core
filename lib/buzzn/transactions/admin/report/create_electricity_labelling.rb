@@ -114,10 +114,13 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     other_fossil = current_energy_mix[:other_fossil] * fossils
     nuclear_ratio = current_energy_mix[:nuclear] * fossils
     other_renewable = current_energy_mix[:other_renewable] * fossils
+    other_renewable_pv = production_pv_consumend_in_group_kWh * own_power_fraction       # E76
+    other_renewable_water = production_water_consumend_in_group_kWh * own_power_fraction # E77
 
     co2_emission_gramm_per_kwh = (coal_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_coal +
       gas_ratio / BigDecimal('100') * co2_emmision_g_per_kwh_gas +
       other_fossil / BigDecimal('100') * co2_emmision_g_per_kwh_other).round(1) # E93
+
 
     stats = {
       # E68 ... Other power
@@ -125,7 +128,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       coalRatio: coal_ratio.round(1),                                               # E70
       gasRatio: gas_ratio.round(1),                                                 # E71
       otherFossilesRatio: other_fossil.round(1),                                    # E72
-      otherRenewablesRatio: other_renewable.round(1), # E73
+      otherRenewablesRatio: (other_renewable + other_renewable_pv + other_renewable_water).round(1), # E73
       renewablesEegRatio: renewable_through_eeg.round(1), # E78
       co2EmissionGrammPerKwh: co2_emission_gramm_per_kwh,
       nuclearWasteMiligrammPerKwh: (nuclear_ratio / current_energy_mix[:nuclear] * BigDecimal('0.0001')).round(4), # E79
@@ -181,9 +184,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       pv: production_pv_consumend_in_group_kWh,
       water: production_water_consumend_in_group_kWh,
       # E74 ... Own power
-      natural_gas_bh: production_chp_consumend_in_group_kWh * own_power_fraction,          # E75
-      other_renewable_pv: production_pv_consumend_in_group_kWh * own_power_fraction,       # E76
-      other_renewable_water: production_water_consumend_in_group_kWh * own_power_fraction, # E77
+      natural_gas_bh: production_chp_consumend_in_group_kWh * own_power_fraction, # E75
+      other_renewable_pv: other_renewable_pv,       # E76
+      other_renewable_water: other_renewable_water, # E77
       own_power_fraction: own_power_fraction,
       natural_gas: current_energy_mix[:natural_gas] / fossils,
       autacry_in_percent: autacry_in_percent,

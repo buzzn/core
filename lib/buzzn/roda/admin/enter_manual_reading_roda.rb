@@ -76,7 +76,6 @@ module Admin
         reading_comment = value_or_empty(sheet[i][12], 'Yearly reading imported from excel sheet')
 
         if meters_by_serial[register_number].nil?
-          byebug
           reading_errors.append "Unknown register number '#{register_number}' for contract #{contract_number}"
           next
         end
