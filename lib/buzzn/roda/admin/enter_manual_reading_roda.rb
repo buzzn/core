@@ -58,19 +58,25 @@ module Admin
 
       # Skip headline, roll over all the data rows
       (2...sheet.count).each do |i|
+        if sheet[i].nil?
+          reading_errors.append "Coul not find any register number in line #{i+1}"
+          next
+        end
+
         register_number = sheet[i][3]&.value&.to_s
         register_addition = value_or_empty sheet[i][5]
         paid_abatement = value_or_empty sheet[i][10]
         contract_number = value_or_empty sheet[i][0]
 
         if register_number.nil?
-          reading_errors.append "Unknown register number in line #{i}"
+          reading_errors.append "Unknown register number in line #{i+1}"
           next
         end
 
         reading_comment = value_or_empty(sheet[i][12], 'Yearly reading imported from excel sheet')
 
         if meters_by_serial[register_number].nil?
+          byebug
           reading_errors.append "Unknown register number '#{register_number}' for contract #{contract_number}"
           next
         end
@@ -84,10 +90,10 @@ module Admin
             target_registers = target_meter.registers.select {|reg| reg.register_meta.label.start_with?('PRODUCTION')}
             skip_abatement = true
           elsif register_addition == 'ÜGZ Bezug'
-            target_registers = target_meter.registers.select {|reg| reg.register_meta.label == 'GRID_FEEDING'}
+            target_registers = target_meter.registers.select {|reg| reg.register_meta.label == 'GRID_CONSUMPTION'}
             skip_abatement = true
           elsif register_addition == 'ÜGZ Einspeisung'
-            target_registers = target_meter.registers.select {|reg| reg.register_meta.label == 'GRID_CONSUMPTION'}
+            target_registers = target_meter.registers.select {|reg| reg.register_meta.label == 'GRID_FEEDING'}
             skip_abatement = true
           end
 
@@ -104,53 +110,51 @@ module Admin
           register = meters_by_serial[register_number].registers.first
         end
 
-        if skip_abatement
-          next
-        end
+        unless skip_abatement
+          #fill_paid_abatement(paid_abatement, contract_number)
+          contract = register.contracts.select {|c| c.full_contract_number == contract_number}.first
 
-        #fill_paid_abatement(paid_abatement, contract_number)
-        contract = register.contracts.select {|c| c.full_contract_number == contract_number}.first
+          # It happens that the register is not attached to any contract, but the contract we are after is in the pools contracts.
+          if contract.nil?
+            contract = target_pools.first.contracts.select {|x| x.full_contract_number == contract_number}.first
+          end
 
-        # It happens that the register is not attached to any contract, but the contract we are after is in the pools contracts.
-        if contract.nil?
-          contract = target_pools.first.contracts.select {|x| x.full_contract_number == contract_number}.first
-        end
+          if contract.nil?
+            reading_errors.append "The register '#{register_number}' has no conntract applied."
+            next
+          end
 
-        if contract.nil?
-          reading_errors.append "The register '#{register_number}' has no conntract applied."
-          next
-        end
-
-        if ['X', 'x'].include?(paid_abatement)
-          # X means skip this one
-        elsif paid_abatement.nil? || paid_abatement == '' || paid_abatement == ' ' || paid_abatement == '0'
-          # No value means just balance the account
-          paiment_missing = contract.balance_sheet.total * -1
-          book.(resource: contract.accounting_entries, params:
-            {
-              :comment => 'Ausgleich',
-              :amount => paiment_missing, # paiment expects value in ct.
-              :booked_by => current_user
-            })
-        elsif !paid_abatement.is_a? Numeric
-          reading_errors.append "Register #{register_number}: Requested paiment '#{paid_abatement}' is not a number."
-        elsif contract.nil?
-          reading_errors.append "No contract found for #{register_number}."
-        else
-          paiment_missing = contract.balance_sheet.total * -1
-          book.(resource: contract.accounting_entries, params:
-            {
-              :comment => 'Ausgleich',
-              :amount => paiment_missing, # paiment expects value in ct.
-              :booked_by => current_user
-            })
-          book.(resource: contract.accounting_entries, params:
-            {
-              :comment => "Bezahlte Abschläge #{date_of_reading.year}",
-              :amount => paid_abatement * 1000, # paiment expects value in 1/10 ct.
-              :booked_by => current_user
-            })
-        end
+          if ['X', 'x'].include?(paid_abatement)
+            # X means skip this one
+          elsif paid_abatement.nil? || paid_abatement == '' || paid_abatement == ' ' || paid_abatement == '0'
+            # No value means just balance the account
+            paiment_missing = contract.balance_sheet.total * -1
+            book.(resource: contract.accounting_entries, params:
+              {
+                :comment => 'Ausgleich',
+                :amount => paiment_missing, # paiment expects value in ct.
+                :booked_by => current_user
+              })
+          elsif !paid_abatement.is_a? Numeric
+            reading_errors.append "Register #{register_number}: Requested paiment '#{paid_abatement}' is not a number."
+          elsif contract.nil?
+            reading_errors.append "No contract found for #{register_number}."
+          else
+            paiment_missing = contract.balance_sheet.total * -1
+            book.(resource: contract.accounting_entries, params:
+              {
+                :comment => 'Ausgleich',
+                :amount => paiment_missing, # paiment expects value in ct.
+                :booked_by => current_user
+              })
+            book.(resource: contract.accounting_entries, params:
+              {
+                :comment => "Bezahlte Abschläge #{date_of_reading.year}",
+                :amount => paid_abatement * 1000, # paiment expects value in 1/10 ct.
+                :booked_by => current_user
+              })
+          end
+      end
 
         begin
           if register.readings.size.zero?
