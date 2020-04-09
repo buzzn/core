@@ -109,7 +109,7 @@ module Admin
           register = meters_by_serial[register_number].registers.first
         end
 
-        unless skip_abatement
+        if register.consumption?
           #fill_paid_abatement(paid_abatement, contract_number)
           contract = register.contracts.select {|c| c.full_contract_number == contract_number}.first
 
@@ -153,7 +153,7 @@ module Admin
                 :booked_by => current_user
               })
           end
-      end
+        end
 
         begin
           if register.readings.size.zero?
