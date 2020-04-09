@@ -158,7 +158,7 @@ module Admin
         begin
           if register.readings.size.zero?
             create.(resource: register, params: {
-                      reason: 'PMR',
+                      reason: 'IOM',
                       read_by: 'SG',
                       quality: '220',
                       unit: 'Wh',
