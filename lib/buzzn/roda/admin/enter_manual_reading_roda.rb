@@ -109,6 +109,11 @@ module Admin
           register = meters_by_serial[register_number].registers.first
         end
 
+        if register.nil?
+          reading_errors.append "Register #{register_number} not found in group."
+          next
+        end
+
         if register.consumption?
           #fill_paid_abatement(paid_abatement, contract_number)
           contract = register.contracts.select {|c| c.full_contract_number == contract_number}.first
