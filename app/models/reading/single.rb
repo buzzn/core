@@ -88,7 +88,7 @@ module Reading
     # persisted readings are referenced in billings and must not be changed.
     # but we allow the deletion unless there is a foreignkey reference on it
     def readonly?
-      !(new_record? || !changed?)
+      false
     end
 
     def value
