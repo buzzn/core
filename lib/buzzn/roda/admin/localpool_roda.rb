@@ -106,6 +106,10 @@ module Admin
           r.run ManualReadingDocumentsRoda
         end
 
+        r.on 'readings-table' do
+          r.run ReadingsTableRoda
+        end
+
         r.on 'billing-cycles' do
           r.run BillingCycleRoda
         end
