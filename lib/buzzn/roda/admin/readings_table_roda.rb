@@ -6,7 +6,7 @@ module Admin
 
     plugin :shared_vars
 
-    def labels
+       def labels
       {
         'GRID_FEEDING' => 'ÜGZ Bezug',
         'GRID_CONSUMPTION'=> 'ÜGZ Einspeisung',
@@ -51,7 +51,8 @@ module Admin
       column += 1
       create_cell(column, '')
       column += 1
-      create_cell(column, '')
+      cell = create_cell(column, '')
+      cell.set_number_format('d.m.yyyy')
       column += 1
       create_cell(column, id)
     end
@@ -125,13 +126,18 @@ module Admin
           puts "Lets do this register #{register.id}"
           register_meta = register.register_meta
 
+
+          unless register&.register_meta&.label.nil?
+            contract_additional_info = register.register_meta.label
+          end
+
           add_entry(
             id: register.id,
             msb: meter.sequence_number,
             meter_number: meter.product_serialnumber, # Zählernummer
             meter_location_description: meter.location_description, # Installationsort
-            address_additional_info: register_meta.name,
-            contract_additional_info: labels[register.register_meta.label],
+            address_additional_info: register_meta&.name,
+            contract_additional_info: contract_additional_info,
             obis: register.obis
           )
         end
