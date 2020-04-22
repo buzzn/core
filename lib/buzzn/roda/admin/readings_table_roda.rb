@@ -6,7 +6,9 @@ module Admin
 
     plugin :shared_vars
 
-       def labels
+    include Import.args[:env, create: 'transactions.admin.reading.create']
+
+    def labels
       {
         'GRID_FEEDING' => 'ÜGZ Bezug',
         'GRID_CONSUMPTION'=> 'ÜGZ Einspeisung',
@@ -100,7 +102,7 @@ module Admin
       column += 1
       create_cell(column, 'Obis', bold: true)
       column += 1
-      create_cell(column, 'Zählerstand	', bold: true)
+      create_cell(column, 'Zählerstand in kWh', bold: true)
       @sheet.change_column_width(column, 20)
       column += 1
       create_cell(column, 'Ablesedatum', bold: true)
@@ -119,11 +121,8 @@ module Admin
       @line = 0
       create_table_head(localpool)
 
-      puts "create this for #{localpool.active_meters.size} meters"
-
       localpool.active_meters.each do |meter|
         meter.registers.each do |register|
-          puts "Lets do this register #{register.id}"
           register_meta = register.register_meta
 
 
@@ -151,6 +150,100 @@ module Admin
       "#{date_string}_Energiegruppe #{localpool.name}.xlsx"
     end
 
+    def read_sheet(localpool, file)
+      workbook = RubyXL::Parser.parse_buffer(file)
+      sheet = workbook[0]
+
+      result = {errors: [], warnings: []}
+
+      register_by_id = {}
+
+      localpool.meters.flat_map(&:registers).each do |r|
+        register_by_id[r.id] = r
+      end
+
+      # Skip headline, roll over all the data rows
+      (2...sheet.count).each do |i|
+        linum = i + 1
+        if sheet[i].nil?
+          result[:errors].append "There is no reading in row #{linum}"
+          next
+        end
+
+        register_id = sheet[i][8]&.value
+        date_of_reading =  sheet[i][7]&.value
+        reading_value = sheet[i][6]&.value
+
+        if register_id.nil?
+          result[:errors].append "Buzzn-Register-Id is missing in row #{linum}"
+          next
+        end
+
+        if date_of_reading.nil?
+          result[:errors].append "Date not found in #{linum}"
+          next
+        end
+
+        unless date_of_reading.is_a? Date
+          result[:errors].append "'#{date_of_reading.to_s}' is not a valid date in #{linum}"
+          next
+        end
+
+        target_register = register_by_id[register_id]
+        if target_register.nil?
+          byebug
+          result[:errors].append "Buzzn-Register-Id '#{register_id}' not found in group #{localpool.name} in row #{linum}"
+          next
+        end
+
+        if reading_value.nil?
+          result[:errors].append "No reading value found in row #{linum}"
+          next
+        end
+
+        unless reading_value.is_a? Numeric
+          result[:errors].append "Reading '#{reading_value}' is not formated as a number in row #{linum}"
+          next
+        end
+
+        if target_register.readings.size.zero?
+          create.(resource: target_register,
+            params: {
+              reason: 'IOM',
+              read_by: 'SG',
+              quality: '220',
+              unit: 'Wh',
+              source: 'MAN',
+              comment: 'Geräteeinbau',
+              raw_value: 0,
+              status: 'Z86',
+              date: localpool.start_date
+              })
+        end
+
+        reading = {}
+        reading[:status] = 'Z86'
+        reading[:reason] = 'COT'
+        reading[:read_by] = 'SG'
+        reading[:quality] = '220'
+        reading[:unit] = 'Wh'
+        reading[:source] = 'MAN'
+        reading[:comment] = ''
+        reading[:date] = date_of_reading
+        reading[:raw_value] = BigDecimal(reading_value) * 1000
+
+        begin
+          create.(resource: target_register, params: reading)
+        rescue ActiveRecord::RecordNotUnique => e
+          result[:errors].append "Error in line #{linum}: There is already a reading for the date."
+        rescue Exception => e
+          result[:errors].append "Error creating reading for register in #{linum}: #{e.class.name} #{e.message}"
+        end
+      end
+
+      result
+    end
+
     route do |r|
       localpool = shared[:localpool]
       r.get! do
@@ -161,10 +254,8 @@ module Admin
       end
 
       r.post! do
-        {
-          errors: ['This feature is not implemented yet!'],
-          warnings: ['This feature is not implemented yet!']
-        }
+        r.response.headers['Content-Type'] = 'application/json'
+        read_sheet(shared[:localpool], r.params['file'][:tempfile]).to_json
       end
     end
   end
