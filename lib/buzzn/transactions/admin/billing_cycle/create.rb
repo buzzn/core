@@ -40,24 +40,28 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
   def create_billings(params:, resource:, date_range:, create_billing_cycle:)
     register_metas = resource.object.register_metas_by_registers.uniq # uniq is critically important here!
     errors = {}
-    register_metas.each do |register_meta|
-      register_meta.contracts.each do |contract|
-        if contract.begin_date >= date_range.last || (!contract.end_date.nil? && contract.end_date <= date_range.last) || contract.is_a?(Contract::LocalpoolThirdParty)
-          next
-        end
+    register_metas.
+    flat_map(&:contracts). # Take all groups contracts
+    reject{|c| c.is_a?(Contract::LocalpoolThirdParty)}. # No Third party contracts
+    reject{|contract|
+      contract.begin_date >= date_range.last || # Skip those, which begin after the requested period
+      (!contract.end_date.nil? &&               # Skip if there is an end date
+        contract.end_date <= date_range.first)  # and it is before our period
+    }.each do |contract|
         contract_billing_date_range = contract.minmax_date_range(date_range)
         attrs = {
           begin_date: contract_billing_date_range.first,
           last_date:  contract_billing_date_range.last - 1.day, # last_date!
         }
-        #if contract.full_contract_number == "60028/43"
-        #  byebug.byebug
-        #end
+
+        if ((!contract.active?) && !contract.is_a?(Contract::LocalpoolGap))
+          next
+        end
         begin
-          Transactions::Admin::Billing::Create.new.(resource: resource.contracts.retrieve(contract.id).billings,
-                                                    params: attrs,
-                                                    contract: contract,
-                                                    billing_cycle: create_billing_cycle)
+        Transactions::Admin::Billing::Create.new.(resource: resource.contracts.retrieve(contract.id).billings,
+                                                  params: attrs,
+                                                  contract: contract,
+                                                  billing_cycle: create_billing_cycle)
         rescue Buzzn::ValidationError => e
           unless e.errors == {:register_meta => ['no register installed in date range'] }
             errors['create_billings'] = [] if errors['create_billings'].nil?
@@ -65,7 +69,6 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
           end
         end
       end
-    end
     unless errors.empty?
       raise Buzzn::ValidationError.new(errors)
     end
