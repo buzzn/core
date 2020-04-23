@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.6.3'
+ruby '2.3.8'
 
 # transient dependency of rails with security issue, pick secure one
 gem 'loofah', '>= 2.2.3'
