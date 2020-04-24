@@ -47,12 +47,13 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   add :eeg_quotient
   add :renewable_eeg
   add :renewable_through_eeg
+
+  add :renter_power
   add :non_eeg
   add :production_consumend_in_group_kWh
   add :autacry_in_percent
   add :additional_supply_ratio
 
-  add :renter_power
 
   add :co2_emmision_g_per_kwh_coal
   add :co2_emmision_g_per_kwh_gas
@@ -418,14 +419,16 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   end
 
   # E79
-  def renter_power(production_pv_consumend_in_group_kWh:, consumption_without_third_party:, **)
-    #production_pv_consumend_in_group_kWh / consumption_without_third_party * BigDecimal('100')
+  def renter_power(resource:, production_pv_consumend_in_group_kWh:, consumption_without_third_party:, **)
+    if [50, 44, 47, 45, 69, 48].include? resource.id
+      return production_pv_consumend_in_group_kWh / consumption_without_third_party * BigDecimal('100')
+    end
     BigDecimal('0')
   end
 
   # E67
-  def non_eeg(renewable_through_eeg:, **)
-    BigDecimal('100') - renewable_through_eeg
+  def non_eeg(renewable_through_eeg:, renter_power:, **)
+    BigDecimal('100') - renewable_through_eeg - renter_power
   end
 
   # @param consumption_own_production_wh [number] Amount of electricity

@@ -389,7 +389,7 @@ module Pdf
     end
 
     def build_ratios_local
-      [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :otherRenewablesRatio, :renewablesEegRatio].map { |type| localpool.fake_stats[type.to_s] }.to_json
+      [:nuclearRatio, :coalRatio, :gasRatio, :otherFossilesRatio, :otherRenewablesRatio, :renewablesEegRatio, :renterPowerEeg].map { |type| localpool.fake_stats[type.to_s] }.to_json
     end
 
     def build_report
