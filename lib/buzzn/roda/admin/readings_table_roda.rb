@@ -164,15 +164,18 @@ module Admin
 
       # Skip headline, roll over all the data rows
       (2...sheet.count).each do |i|
-        linum = i + 1
         if sheet[i].nil?
-          result[:errors].append "There is no reading in row #{linum}"
           next
         end
 
+        linum = i + 1
         register_id = sheet[i][8]&.value
         date_of_reading =  sheet[i][7]&.value
         reading_value = sheet[i][6]&.value
+
+        if register_id.nil? && date_of_reading.nil? && reading_value .nil?
+          next
+        end
 
         if register_id.nil?
           result[:errors].append "Buzzn-Register-Id is missing in row #{linum}"
@@ -191,7 +194,6 @@ module Admin
 
         target_register = register_by_id[register_id]
         if target_register.nil?
-          byebug
           result[:errors].append "Buzzn-Register-Id '#{register_id}' not found in group #{localpool.name} in row #{linum}"
           next
         end
@@ -255,7 +257,7 @@ module Admin
 
       r.post! do
         r.response.headers['Content-Type'] = 'application/json'
-        read_sheet(shared[:localpool], r.params['file'][:tempfile]).to_json
+        read_sheet(shared[:localpool], r.body).to_json
       end
     end
   end
