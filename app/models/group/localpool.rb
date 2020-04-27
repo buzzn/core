@@ -27,10 +27,11 @@ module Group
     has_many :localpool_power_taker_contracts, class_name: 'Contract::LocalpoolPowerTaker', foreign_key: :localpool_id
     has_many :localpool_third_party_contracts, class_name: 'Contract::LocalpoolThirdParty', foreign_key: :localpool_id
     has_many :localpool_gap_contracts, class_name: 'Contract::LocalpoolGap', foreign_key: :localpool_id
+    has_many :localpool_contracts, class_name: 'Contract::Base', foreign_key: :localpool_id
 
-    has_many :register_metas_by_contracts, class_name: 'Register::Meta', through: :localpool_power_taker_contracts, foreign_key: :register_meta_id, source: :register_meta
+    has_many :register_metas_by_contracts, class_name: 'Register::Meta', through: :localpool_contracts, foreign_key: :register_meta_id, source: :register_meta
 
-    has_and_belongs_to_many :documents, class_name: 'Document', join_table: 'groups_documents', foreign_key: :group_id
+    has_and_belongs_to_many :documents, cass_name: 'Document', join_table: 'groups_documents', foreign_key: :group_id
 
     def register_metas
       Register::Meta.where(:id => (self.register_metas_by_contracts.pluck(:id) + self.register_metas_by_registers.pluck(:id)).uniq)
