@@ -44,7 +44,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   # @param [number] target to write the next field into.
   def jump_field(target)
     if @skiped > target
-      raise "Already at #{@skiped} but field #{target} was requested." \
+      raise Buzzn::ValidationError.new "Already at #{@skiped} but field #{target} was requested." \
             'Can not jump fields backwards.'
     end
 
@@ -72,9 +72,10 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
 
   # Converts a phone number into the format:
   #   +[countrycode][space][citycode][space][number]
-  # @param [String] target phone number to convert.
+  # @param [person] target_person The person whos phone number to convert.
   # @return [String] the convererted number.
-  def format_phone_number(target)
+  def format_phone_number(target_person)
+    target = target_person.phone
     if target.nil? || target.empty?
       return ''
     end
@@ -90,7 +91,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       prefix = target.sub(/0 ?([0-9]*).*/, '+49 \1')
       suffix = target.sub(/0 ?([0-9]*)(.*)/, '\2')
     else
-      raise 'Can not convert phone number ' + target
+      raise Buzzn::ValidationError.new "#{target_person.first_name} #{target_person.last_name}'s phone number'#{target}' does not match required format. Sample (+49 89 1234567890)"
     end
 
     suffix = suffix.delete(' ')
@@ -130,7 +131,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
     column('1') # Kennz. Korrespondenzadresse
     column(person.address.updated_at)
     skip
-    column(format_phone_number(person.phone))
+    column(format_phone_number(person))
     skip(3)
     column(person.email)
     skip(3)
