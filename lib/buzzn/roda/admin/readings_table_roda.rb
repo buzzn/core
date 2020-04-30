@@ -257,7 +257,7 @@ module Admin
 
       r.post! do
         r.response.headers['Content-Type'] = 'application/json'
-        read_sheet(shared[:localpool], r.body).to_json
+        read_sheet(shared[:localpool], r.params['file'][:tempfile]).to_json
       end
     end
   end
