@@ -108,6 +108,15 @@ module Contract
       ActiveSupport::StringInquirer.new(status)
     end
 
+    def contact
+      if customer.is_a? Person
+        return customer
+      elsif customer.is_a? Organization::Base
+        return customer.contact
+      end
+    end
+
+
     def balance_sheet
       Accounting::BalanceSheet.new(self)
     end

@@ -43,7 +43,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::CalculatedDocumented.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new(result.errors)
+            raise Buzzn::ValidationError.new({"Incorrect data for #{resource.object}": result.errors})
           end
         end
       end
@@ -54,13 +54,13 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::DocumentedDocumented.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new(result.errors)
+            raise Buzzn::ValidationError.new({"subject": "Incorrect data for contract #{resource.object.contract.mandate_reference}", errors: result.errors})
           end
         when :queued
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::DocumentedQueued.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new(result.errors)
+            raise Buzzn::ValidationError.new({"subject": "Incorrect data for contract#{resource.object.contract.mandate_reference}", errors: result.errors})
           end
         end
       end
@@ -131,20 +131,13 @@ class Transactions::Admin::Billing::Update < Transactions::Base
         resource.object.documents << document
       end
     when :queue
-      receiver_person = nil
-      if resource.object.contract.customer.is_a? Person
-        receiver_person = resource.object.contract.customer
-      elsif resource.object.contract.customer.is_a? Organization::Base
-        receiver_person = resource.object.contract.customer.contact
-      end
+      receiver_person = resource.object.contract.contact
       email = if billing_email_testmode == '1'
                 'dev@buzzn.net'
               else
-                [receiver_person&.email,
-                 receiver_person&.contact_email,
-                 resource.object.localpool.owner.contact&.email,
-                 resource.object.localpool.owner.contact_email,
-                 resource.object.localpool.owner.email].reject(&:nil?).first
+                [receiver_person.email,
+                 resource.object.localpool.owner.contact.email,
+                ].reject(&:nil?).first
               end
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new(customer: 'email invalid')
@@ -163,10 +156,9 @@ class Transactions::Admin::Billing::Update < Transactions::Base
         end
       end
 
-      contractor_name = resource.object.contract.contractor.name
       text = %(#{anrede},
 
-im Auftrag Ihres Lokalen Stromgebers "#{contractor_name}" übermitteln wir Ihnen im
+im Auftrag Ihres Lokalen Stromgebers "#{receiver_person.name}" übermitteln wir Ihnen im
 Anhang Ihre Stromrechnung 2019.
 
 Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
@@ -187,11 +179,9 @@ Ihr BUZZN Team
                      :bcc => billing_email_bcc,
                      :document_id => document.id}
 
-      reply_to = [resource.object.localpool.owner.contact&.email,
-                   resource.object.localpool.owner.contact_email,
-                   resource.object.localpool.owner.email].reject(&:nil?).first
+      reply_to = resource.object.localpool.owner.email
 
-      unless reply_to.nil? && !reply_to.nil?
+      unless reply_to.nil?
         mail_params[:reply_to] = reply_to
       end
 

@@ -170,5 +170,12 @@ module Group
       end
     end
 
+    def contact
+      if owner.is_a? Person
+        return owner
+      elsif owner.is_a? Organization::Base
+        return owner.contact
+      end
+    end
   end
 end
