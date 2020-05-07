@@ -257,12 +257,11 @@ module Admin
 
       r.post! do
         r.response.headers['Content-Type'] = 'application/json'
-        table_file = r.params.fetch('file', nil)&.fetch(:tempfile, nil)
-        if table_file.nil?
-          raise Buzzn::ValidationError.new("No file provided")
+        begin
+          read_sheet(shared[:localpool], r.body).to_json
+        rescue Exception => e
+          r.response.write({"errors": [e.message]})
         end
-
-        read_sheet(shared[:localpool], table_file).to_json
       end
     end
   end
