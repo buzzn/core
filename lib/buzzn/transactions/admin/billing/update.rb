@@ -136,7 +136,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
                 'dev@buzzn.net'
               else
                 [receiver_person.email,
-                 resource.object.localpool.owner.contact.email,
+                 resource.object.localpool.contact.email,
                 ].reject(&:nil?).first
               end
       if email.nil? || email.empty?
