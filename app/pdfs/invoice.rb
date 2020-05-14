@@ -202,7 +202,7 @@ module Pdf
       issues_vat = contract.localpool.billing_detail.issues_vat
       vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
       amount_netto = vat > 0 ? 1/vat * amount_brutto : amount_brutto
-      amount_taxes = amount_brutto - amount_netto
+      amount_taxes = vat > 0 ? amount_brutto - amount_netto: 0
       {
         amount_before_taxes: amount_netto,
         amount_after_taxes: amount_brutto,
@@ -212,6 +212,9 @@ module Pdf
     end
 
     def build_billing
+      billing_config = CoreConfig.load(Types::BillingConfig)
+      issues_vat = contract.localpool.billing_detail.issues_vat
+      vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
       {
         date: @billing.last_date,
         number: @billing.full_invoice_number,
@@ -219,8 +222,8 @@ module Pdf
         energyprice: german_div(BigDecimal(last_tariff.energyprice_cents_per_kwh, 4)),
         consumed_energy_kwh: @billing.items.first.consumed_energy_kwh,
       }.tap do |hash|
-        netto =   @billing.total_amount_before_taxes.round(0)
-        brutto =  @billing.total_amount_after_taxes.round(0)
+        netto  = @billing.total_amount_before_taxes.round(0)
+        brutto = @billing.total_amount_after_taxes.round(0)
         balance_at = BigDecimal(@billing.balance_before) / 10
 
         balance_at_before_taxes = calculate_taxes(balance_at)[:amount_before_taxes]

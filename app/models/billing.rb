@@ -93,7 +93,10 @@ class Billing < ActiveRecord::Base
     if billing_config.nil?
       raise 'please set Types::BillingConfig'
     end
-    total_amount_before_taxes * billing_config.vat
+
+    issues_vat = contract.localpool.billing_detail.issues_vat
+    vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
+    vat > 0? total_amount_before_taxes * vat : total_amount_before_taxes
   end
 
   def total_consumed_energy_kwh
