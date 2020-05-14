@@ -131,6 +131,15 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
           )
           next
         end
+        if register.installed_at.nil? || register.installed_at.date >= end_date
+          warnings.push(
+            reason: "skipped register #{register.id}, because it was installed after reading range #{end_date}",
+            register_id: register.id,
+            meter_id: register.meter.id,
+            product_serialnumber: register.meter.product_serialnumber
+          )
+          next
+        end
         register_begin_date = [begin_date, register.installed_at&.date || begin_date].max
         register_end_date   = [end_date, register.decomissioned_at&.date || end_date].min
         begin_reading = begin
@@ -160,6 +169,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
               ]
             )
           end
+          byebug
           if end_reading.nil?
             errors.push(
               errors: [
