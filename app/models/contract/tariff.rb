@@ -57,7 +57,10 @@ module Contract
       if billing_config.nil?
         raise 'please set Types::BillingConfig'
       end
-      self.energyprice_cents_per_kwh_before_taxes * billing_config.vat
+
+      issues_vat = group.billing_detail.issues_vat
+      vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
+      vat > 0? energyprice_cents_per_kwh_before_taxes * vat : energyprice_cents_per_kwh_before_taxes
     end
 
     def baseprice_cents_per_month_after_taxes
