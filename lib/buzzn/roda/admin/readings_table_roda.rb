@@ -232,12 +232,12 @@ module Admin
         reading[:source] = 'MAN'
         reading[:comment] = ''
         reading[:date] = date_of_reading
-        reading[:raw_value] = BigDecimal(reading_value) * 1000
+        reading[:raw_value] = BigDecimal(reading_value.to_s) * 1000
 
         begin
           create.(resource: target_register, params: reading)
         rescue ActiveRecord::RecordNotUnique => e
-          result[:errors].append "Error in line #{linum}: There is already a reading for the date."
+          result[:warnings].append "Obmitting Row #{linum}: There is already a reading for the date."
         rescue Exception => e
           result[:errors].append "Error creating reading for register in #{linum}: #{e.class.name} #{e.message}"
         end
@@ -260,7 +260,8 @@ module Admin
         begin
           read_sheet(shared[:localpool], r.body).to_json
         rescue Exception => e
-          r.response.write({"errors": [e.message]})
+          puts e.backtrace
+          r.response.write({"errors": [e.message]}.to_json)
         end
       end
     end
