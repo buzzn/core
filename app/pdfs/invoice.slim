@@ -292,6 +292,11 @@ html
             p.is-larger Erdgas #{energy_report.gas_report} %
           - unless energy_report.sun_report.to_i.zero?
             p.is-larger Sonne #{energy_report.sun_report} %
+          - unless energy_report.water_report.to_i.zero?
+            p.is-larger Wasser #{energy_report.water_report} %
+          - unless energy_report.wind_report.to_i.zero?
+            p.is-larger Wind #{energy_report.wind_report} %
+
         div.col-3rd.card.pork
           p
             | Netzverluste <span class='is-medium'>(wie hoch waren die Übertragungsverluste für den Strom?)</span>

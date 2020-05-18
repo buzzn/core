@@ -396,7 +396,7 @@ module Pdf
     end
 
     def build_report
-      Hash[[:selfSufficiencyReport, :utilizationReport, :gasReport, :sunReport, :electricitySupplier, :tech].collect { |k| [k.to_s.underscore, localpool.fake_stats[k.to_s]]}].tap do |h|
+      Hash[[:selfSufficiencyReport, :utilizationReport, :gasReport, :sunReport, :waterReport, :windReport, :electricitySupplier, :tech].collect { |k| [k.to_s.underscore, localpool.fake_stats[k.to_s]]}].tap do |h|
         h['tech'] = h['tech'].gsub('##', '<br />') if h['tech']
       end
     end
