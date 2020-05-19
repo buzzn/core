@@ -169,7 +169,6 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
               ]
             )
           end
-          byebug
           if end_reading.nil?
             errors.push(
               errors: [
