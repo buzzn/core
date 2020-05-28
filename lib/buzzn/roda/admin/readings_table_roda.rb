@@ -150,6 +150,10 @@ module Admin
       "#{date_string}_Energiegruppe #{localpool.name}.xlsx"
     end
 
+    def empty?(target)
+      target.nil? || target.strip.empty?
+    end
+
     def read_sheet(localpool, file)
       workbook = RubyXL::Parser.parse_buffer(file)
       sheet = workbook[0]
@@ -173,7 +177,7 @@ module Admin
         date_of_reading =  sheet[i][7]&.value
         reading_value = sheet[i][6]&.value
 
-        if register_id.nil? && date_of_reading.nil? && reading_value .nil?
+        if empty?(date_of_reading) && empty?(reading_value)
           next
         end
 
