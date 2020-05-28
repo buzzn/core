@@ -99,7 +99,6 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
     'grid_feeding_corrected_usage_ratio'
   end
 
-
   def date_range(params:, **)
     begin_date = params[:begin_date]
     end_date = params[:end_date]
@@ -152,14 +151,16 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
                       rescue Buzzn::DataSourceError
                         nil
                       end
+        puts 'looooos'
         if !begin_reading.nil? && !end_reading.nil?
           sum += BigDecimal(end_reading.value) - BigDecimal(begin_reading.value)
         else
           if begin_reading.nil?
+            puts 'begin misssing'
             errors.push(
               errors: [
                 {
-                  reason: 'begin_reading missing',
+                  reason: "#{register.meter.product_serialnumber} lacks reading on #{register_begin_date}",
                   date: register_begin_date,
                   register_id: register.id,
                   meter_id: register.meter.id,
@@ -173,7 +174,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
             errors.push(
               errors: [
                 {
-                  reason: 'end_reading missing',
+                  reason: "#{register.meter.product_serialnumber} lacks reading on #{register_end_date}",
                   date: register_end_date,
                   register_id: register.id,
                   serialnumber: register.meter.product_serialnumber,
@@ -187,7 +188,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
       end
     end
     unless errors.empty?
-      raise Buzzn::ValidationError.new(errors)
+      raise Buzzn::ValidationError.new(errors: errors)
     end
     sum
   end
@@ -231,7 +232,6 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
       return 0
     end
     consumption / production * 100
-
   end
 
   # Returns the overall electricity consumption.
@@ -275,8 +275,8 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
   # @param veeg_reduced [number] Used amount of non tax reduced electricity
   # @return [number] the average consumption per meter for all non tax reduced contracts.
   def consumption_average_per_meter_full(total_consumption_points_full:,
-                             veeg:,
-                             **)
+                                         veeg:,
+                                         **)
     veeg / total_consumption_points_full
   end
 
@@ -298,7 +298,8 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
   def consumption_average_per_meter_reduced(
         total_consumption_points_reduced:,
         veeg_reduced:,
-        **)
+        **
+  )
     if total_consumption_points_reduced.zero?
       return 0
     end
@@ -353,12 +354,11 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
   def validate_contracts(contracts_with_range:, **)
     contracts_with_range.each do |attrs|
       contract = attrs[:contract]
-      if contract.register_meta.registers.to_a.keep_if { |register| register.installed_at.date < date_range.last && (register.decomissioned_at.nil? || register.decomissioned_at.date > date_range.first) }.empty?
-        raise Buzzn::ValidationError.new(:contract => {
-                                           :id => contract.id,
-                                           :register_meta => ['no register installed in date range']
-                                         })
-      end
+      next unless contract.register_meta.registers.to_a.keep_if { |register| register.installed_at.date < date_range.last && (register.decomissioned_at.nil? || register.decomissioned_at.date > date_range.first) }.empty?
+      raise Buzzn::ValidationError.new(:contract => {
+                                         :id => contract.id,
+                                         :register_meta => ['no register installed in date range']
+                                       })
     end
   end
 
@@ -444,9 +444,10 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
                             contract_id: contract.id,
                             errors: [
                               {
-                                reason: 'begin_reading missing',
+                                reason: "#{register.meter.product_serialnumber} lacks reading on #{register_begin_date}",
                                 date: register_begin_date,
-                                register_id: register.id
+                                register_id: register.id,
+                                meter_id: register.meter.id
                               }
                             ]
                           )
@@ -459,14 +460,42 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
                           contract_id: contract.id,
                           errors: [
                             {
-                              reason: 'begin_reading missing',
+                              reason: "#{register.meter.product_serialnumber} lacks reading on #{register_begin_date}",
                               date: register_begin_date,
-                              register_id: register.id
+                              register_id: register.id,
+                              meter_id: register.meter.id
                             }
                           ]
                         )
                         nil
                       end
+
+        if begin_reading.nil?
+          errors.push(
+            contract_id: contract.id,
+            errors: [
+              {
+                reason:  "#{register.meter.product_serialnumber} lacks reading on #{register_begin_date}",
+                date: register_begin_date,
+                register_id: register.id,
+                meter_id: register.meter.id
+              }
+            ]
+          )
+        end
+        if end_reading.nil?
+          errors.push(
+            contract_id: contract.id,
+            errors: [
+              {
+                reason: "#{register.meter.product_serialnumber} lacks reading on #{register_end_date}",
+                date: register_end_date,
+                register_id: register.id,
+                meter_id: register.meter.id
+              }
+            ]
+          )
+        end
         if !begin_reading.nil? && !end_reading.nil?
           sum += BigDecimal(end_reading.value) - BigDecimal(begin_reading.value)
         end
@@ -484,7 +513,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
       end
     end
     unless errors.empty?
-      raise Buzzn::ValidationError.new(contracts: errors)
+      raise Buzzn::ValidationError.new(errors)
     end
     ret[:third_party_wh] = ret[:third_party_wh].round(2).to_f
     ret[:reduced_wh] = ret[:reduced_wh].round(2).to_f
