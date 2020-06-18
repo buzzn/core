@@ -407,6 +407,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
 
       register_meta '/register_metas'
 
+      meter do
+        crud :managers
+      end
+
       readings do
         create :managers
         retrieve :managers_contract

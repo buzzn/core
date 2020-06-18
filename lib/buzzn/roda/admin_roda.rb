@@ -31,6 +31,10 @@ module Admin
 
       admin = AdminResource.new(current_user)
 
+      r.on 'users-export' do
+        r.run UserExportRoda
+      end
+
       r.on 'persons' do
 
         r.get! do
