@@ -3658,7 +3658,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: legal_representation.title
@@ -3666,7 +3666,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -4013,7 +4013,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: contact.title
@@ -4021,7 +4021,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -4718,7 +4718,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: legal_representation.title
@@ -4726,7 +4726,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -5073,7 +5073,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: contact.title
@@ -5081,7 +5081,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -5987,6 +5987,31 @@ paths:
       responses:
         200:
           description: patched
+  "/localpools/{localpool_id}/annual_report":
+    post:
+      description: returns the annual report for the localpool
+      consumes:
+      - application/x-www-form-urlencoded
+      produces:
+      - application/json
+      parameters:
+      - name: localpool_id
+        in: path
+        required: true
+        type: string
+      - name: begin_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      - name: last_date
+        in: formData
+        required: true
+        type: string
+        format: date
+      responses:
+        201:
+          description: created
   "/localpools/{localpool_id}/billing-cycles":
     get:
       description: returns all the billing-cycles of the localpool
@@ -6089,6 +6114,22 @@ paths:
         required: false
         type: string
         format: date
+      - name: localpool.contact
+        in: formData
+        required: true
+        type: hash
+      - name: localpool
+        in: formData
+        required: true
+        type: hash
+      - name: contract.contact
+        in: formData
+        required: true
+        type: hash
+      - name: contract
+        in: formData
+        required: true
+        type: hash
       responses:
         200:
           description: patched
@@ -7474,7 +7515,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: legal_representation.title
@@ -7482,7 +7523,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -7829,7 +7870,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: contact.title
@@ -7837,7 +7878,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -8198,7 +8239,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: title
@@ -8206,7 +8247,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -10110,7 +10151,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: title
@@ -10118,7 +10159,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -10488,7 +10529,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: title
@@ -10496,7 +10537,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -11102,6 +11143,11 @@ paths:
         type: integer
         format: int64
         minimum: 0
+      - name: obis
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: observer_offline_monitoring
         in: formData
         required: false
@@ -11182,14 +11228,12 @@ paths:
         type: number
         format: float
         minimum: 0
-        exclusiveMinimum: true
       - name: baseprice_cents_per_month
         in: formData
         required: true
         type: number
         format: float
         minimum: 0
-        exclusiveMinimum: true
       responses:
         201:
           description: created
@@ -15087,7 +15131,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: contact_person.title
@@ -15095,7 +15139,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
