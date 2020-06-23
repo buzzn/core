@@ -2,12 +2,21 @@ require_relative '../operations'
 
 class Operations::Overlappings
 
-  def call(params:, contract:, **)
-    !contract.register_meter.registers.any |r| do
-        if r.contracts.any{|c| params[:last_date] > c.begin && params[:last_date] < c.end}
-            raise Buzzn::ValidationError.new(datasource: 'new date cannot be set: overlapping contract dates')
+  def call(resource:, params:, **)
+    unless params[:last_date].nil?
+      resource.register_meta.registers.each  do |r| 
+        if r.contracts.any?
+          r.contracts.each do |c|  
+            unless c.begin_date.nil? || c.end_date.nil?
+              if params[:last_date] > c.begin_date && params[:last_date] < c.end_date
+                  raise Buzzn::ValidationError.new('{no_other_contract_in_range=>["there is already another contract in that time range present"]}')
+              end
+            end
+          end
         end
+      end
     end
+    true
   end
 
 end

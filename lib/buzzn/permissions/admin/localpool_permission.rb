@@ -84,6 +84,7 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
 
         registers do
           retrieve :managers_self
+
         end
 
       end
@@ -292,6 +293,9 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
         delete :none
         meter do
           retrieve :managers_contract
+        end
+        contracts do
+          retrieve :managers_self
         end
         readings do
           retrieve :managers_contract
