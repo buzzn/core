@@ -10,7 +10,7 @@ module Schemas::Transactions
   Admin::Contract::Localpool::PowerTaker::CUSTOMER_TYPES = ['person', 'organization']
 
   Admin::Contract::Localpool::PowerTaker::CreateBase = Schemas::Support.Form(Schemas::Transactions::Admin::Contract::Common) do
-    required(:begin_date).maybe(:date?)
+    optional(:begin_date).maybe(:date?)
     optional(:share_register_with_group).filled(:bool?)
     optional(:share_register_publicly).filled(:bool?)
     optional(:creditor_identification).filled(:str?, max_size?: 64)
