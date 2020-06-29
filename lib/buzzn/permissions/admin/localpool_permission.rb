@@ -84,7 +84,6 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
 
         registers do
           retrieve :managers_self
-
         end
 
       end
