@@ -7,7 +7,7 @@ module Me
 
     plugin :rodauth, csrf: false, json: :only do
 
-      enable :login, :logout, :change_password, :change_login, :session_expiration, :reset_password, :verify_login_change, :jwt
+      enable :login, :logout, :change_password, :change_login, :session_expiration, :reset_password, :verify_login_change, :jwt, :jwt_refresh
 
       db Buzzn::DB
 

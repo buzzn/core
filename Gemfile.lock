@@ -292,7 +292,7 @@ GEM
     remote_lock (1.1.0)
     roda (2.25.0)
       rack
-    rodauth (1.11.0)
+    rodauth (2.1.0)
       roda (>= 2.6.0)
       sequel (>= 4)
     rspec (3.7.0)
