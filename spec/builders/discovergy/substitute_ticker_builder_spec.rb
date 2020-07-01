@@ -45,7 +45,7 @@ describe Builders::Discovergy::SubstituteTickerBuilder do
       result = builder.build(response)
       # these are real numbers and timestamps are not uniform, i.e. some
       # small value close to zero is (maybe) OK
-      expect(result.value).to eq 7029
+      expect(result.value).to eq 21
     end
 
     it 'no grid-feeding and no grid-consumption' do
@@ -60,7 +60,7 @@ describe Builders::Discovergy::SubstituteTickerBuilder do
       res = response.dup
       res['EASYMETER_60099324'] = {'time' => 1519218309318, 'values' => {'power' => -val}}
       result = builder.build(res)
-      expect(result.value).to eq 21
+      expect(result.value).to eq 7029
     end
   end
   context 'watt-hour' do
@@ -68,7 +68,7 @@ describe Builders::Discovergy::SubstituteTickerBuilder do
 
     it do
       result = builder.build(response)
-      expect(result.value).to eq 97303533
+      expect(result.value).to eq 936019
     end
   end
 end
