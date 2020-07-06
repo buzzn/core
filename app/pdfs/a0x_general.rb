@@ -56,7 +56,7 @@ module Pdf
         move_in: @contract.move_in,
       }.tap do |h|
         h[:meter_product_serial_numbers] = h[:meters].map {|x| x[:product_serialnumber]}.uniq.join(', ')
-        h[:meter_location_descriptions] = h[:meters].map {|x| x[:location_description]}.uniq.join(', ')
+        h[:meter_location_descriptions] = contract.register_meta&.market_location&.market_location_id || ''
       end
     end
 
