@@ -15,7 +15,13 @@ describe Me::Roda, :skip_nested, :request_helper do
   end
 
   after :all do
-    [Account::PasswordHash, Account::PasswordResetKey, Account::LoginChangeKey, Account::Base].each do |model|
+
+    Account::AccountJWTResetKey.where(account_id: user).delete_all
+
+    [Account::PasswordHash,
+     Account::PasswordResetKey,
+     Account::LoginChangeKey,
+     Account::Base].each do |model|
       model.where(id: user).delete_all
     end
   end
@@ -142,28 +148,19 @@ describe Me::Roda, :skip_nested, :request_helper do
     it '422' do
       POST '/api/me/change-login', user,
            password: 'some.password',
-           login: 'someone@buzzn.net',
-           'login-confirm': 'someone@buzzn.net'
-      expect(response).to have_http_status(422)
-      expect(json).to eq invalid_password_json
-
-      POST '/api/me/change-login', user,
-           login: 'someone@buzzn.net',
-           'login-confirm': 'someone@buzzn.net'
-      expect(response).to have_http_status(422)
-      expect(json).to eq invalid_password_json
-
-      POST '/api/me/change-login', user,
-           password: user.password,
-           'login-confirm': 'someone@buzzn.net'
-      expect(response).to have_http_status(422)
-      expect(json).to eq invalid_login_json
-
-      POST '/api/me/change-login', user,
-           password: user.password,
            login: 'someone@buzzn.net'
       expect(response).to have_http_status(422)
-      expect(json).to eq no_matching_logins_json
+      expect(json).to eq invalid_password_json
+
+      POST '/api/me/change-login', user,
+           login: 'someone@buzzn.net'
+      expect(response).to have_http_status(422)
+      expect(json).to eq invalid_password_json
+
+      POST '/api/me/change-login', user,
+           password: user.password
+      expect(response).to have_http_status(422)
+      expect(json).to eq invalid_login_json
     end
   end
 
@@ -208,13 +205,13 @@ describe Me::Roda, :skip_nested, :request_helper do
       expect(response).to have_http_status(200)
     end
 
-    it '401' do
+    it '422' do
       POST '/api/me/reset-password-request', nil,
            login: 'some@email'
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(422)
 
       POST '/api/me/reset-password-request', nil
-      expect(response).to have_http_status(401)
+      expect(response).to have_http_status(422)
     end
   end
 

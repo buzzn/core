@@ -40,13 +40,11 @@ describe Me::Roda, :request_helper do
         expect(response.body).to eq 'pong'
       end
 
-      it '401' do
+      it '403' do
         GET '/ping', $user
-        Timecop.travel(Time.now + 30 * 60) do
+        Timecop.travel(Time.now + 30 * 6000) do
           GET '/ping', $user
-
-          expect(response).to have_http_status(401)
-          expect(json).to eq(expired_json)
+          expect(response).to have_http_status(403)
         end
       end
     end
@@ -54,13 +52,11 @@ describe Me::Roda, :request_helper do
 
   context 'GET' do
 
-    it '401' do
+    it '403' do
       GET '', $user
       Timecop.travel(Time.now + 30 * 60) do
         GET '', $user
-
-        expect(response).to have_http_status(401)
-        expect(json).to eq(expired_json)
+        expect(response).to have_http_status(403)
       end
     end
 
@@ -110,12 +106,12 @@ describe Me::Roda, :request_helper do
       }
     end
 
-    it '401' do
+    it '403' do
       GET '', $user
       Timecop.travel(Time.now + 30 * 60) do
         PATCH '', $user
 
-        expect(response).to have_http_status(401)
+        expect(response).to have_http_status(403)
       end
     end
 

@@ -37,12 +37,15 @@ class BaseRoda < CommonRoda
 
     db Buzzn::DB
 
+    session_expiration_error_flash 'This session has expired, please login again.'
+    session_expiration_error_status 403
+    json_response_error_status 403
+
     session_expiration_redirect nil
     session_inactivity_timeout Import.global('config.session_inactivity_timeout').to_i
     max_session_lifetime 86400 # 1 day
 
     jwt_secret Import.global('config.jwt_secret')
-    json_response_error_status 401
   end
 
 end

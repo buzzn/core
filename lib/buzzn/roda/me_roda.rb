@@ -15,8 +15,10 @@ module Me
       session_expiration_redirect nil
       session_inactivity_timeout Import.global('config.session_inactivity_timeout').to_i
       max_session_lifetime 86400 # 1 day
+      session_expiration_error_status 403
+      json_response_error_status 403
+
       jwt_secret Import.global('config.jwt_secret')
-      json_response_error_status 401
 
       set_error_flash do |message|
         if request.path =~ /\/login\Z/
@@ -62,12 +64,10 @@ module Me
 
       r.get! 'ping' do
         if (rodauth.session[rodauth.session_last_activity_session_key] + rodauth.session_inactivity_timeout) < Buzzn::Utils::Chronos.now.to_i
-
           logger.info Time.at(rodauth.session[rodauth.session_last_activity_session_key])
           logger.info Time.at(rodauth.session[rodauth.session_last_activity_session_key] + rodauth.session_inactivity_timeout)
           logger.info Time.at(Buzzn::Utils::Chronos.now.to_i)
-
-          r.response.status = 401
+          r.response.status = 403
           {'error' => 'This session has expired, please login again.' }
         else
           r.response['Content-Type'] = 'text/plain'

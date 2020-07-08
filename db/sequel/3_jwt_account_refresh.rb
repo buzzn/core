@@ -19,6 +19,8 @@ Sequel.migration do
       DateTime :deadline, deadline_opts[1]
       index :account_id, :name=>:account_jwt_rk_account_id_idx
     end
+
+    add_column :account_password_reset_keys, "email_last_sent", DateTime, :null => false, :default => Sequel::CURRENT_TIMESTAMP
   end
   down do
     drop_table(:account_jwt_refresh_keys)
