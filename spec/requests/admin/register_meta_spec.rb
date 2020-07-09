@@ -119,7 +119,7 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
           'id'=>register_meta.id,
           'type'=> 'register_meta',
           'name'=> 'SmallCell',
-          'kind'=> 'system',
+          'kind'=> 'demarcation',
           'label'=>'DEMARCATION_PV',
           'market_location_id' => 'DE133713371',
           'observer_enabled'=>true,
