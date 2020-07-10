@@ -95,8 +95,6 @@ describe Admin::BillingCycleRoda, :request_helper do
     let(:expected_error_json) do
       {
         'updated_at'=>['is missing'],
-        'contract'=>['is missing'],
-        'localpool'=>['is missing'],
         'name'=>['size cannot be greater than 64'],
         'last_date'=>['must be a date']
       }
