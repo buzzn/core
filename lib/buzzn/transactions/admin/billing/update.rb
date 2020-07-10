@@ -43,7 +43,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::CalculatedDocumented.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new({"Incorrect data for #{resource.object}": result.errors})
+            raise Buzzn::ValidationError.new(result.errors)
           end
         end
       end
@@ -54,13 +54,13 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::DocumentedDocumented.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new({"subject": "Incorrect data for contract #{resource.object.contract.mandate_reference}", errors: result.errors})
+            raise Buzzn::ValidationError.new(result.errors)
           end
         when :queued
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::DocumentedQueued.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new({"subject": "Incorrect data for contract#{resource.object.contract.mandate_reference}", errors: result.errors})
+            raise Buzzn::ValidationError.new(result.errors)
           end
         end
       end
