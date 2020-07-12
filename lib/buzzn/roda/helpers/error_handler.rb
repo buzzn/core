@@ -28,6 +28,8 @@ module Buzzn
           else
             logger.error{ "#{e.message}\n\t" + e.backtrace.join("\n\t")}
           end
+          # return an empty string
+          ""
         end
       end
 
