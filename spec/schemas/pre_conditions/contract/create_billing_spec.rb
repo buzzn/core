@@ -3,12 +3,9 @@ describe 'Schemas::Invariants::Contract::CreateBilling', order: :defined do
   let(:localpool) { create(:group, :localpool) }
   let(:meter) { create(:meter, :real) }
   let(:register_meta) { create(:meta) }
-  let(:lpc) do
-    create(:contract, :localpool_processing,
-           customer: localpool.owner,
-           register_meta: register_meta,
-           contractor: Organization::Market.buzzn,
-           localpool: localpool)
+  let(:lppt) do
+    create(:contract, :is_localpool_powertaker_contract,
+           register_meta: register_meta)
   end
 
   context 'tariff' do
@@ -16,7 +13,7 @@ describe 'Schemas::Invariants::Contract::CreateBilling', order: :defined do
     let(:tariff) { create(:tariff, group: localpool) }
 
     subject do
-      subject = Schemas::Support::ActiveRecordValidator.new(lpc)
+      subject = Schemas::Support::ActiveRecordValidator.new(lppt)
       Schemas::PreConditions::Contract::CreateBilling.call(subject).errors[:tariffs]
     end
 
@@ -26,8 +23,8 @@ describe 'Schemas::Invariants::Contract::CreateBilling', order: :defined do
 
     context 'with' do
       before do
-        lpc.tariffs << tariff
-        lpc.save
+        lppt.tariffs << tariff
+        lppt.save
       end
       it { is_expected.to be_nil }
     end
@@ -37,7 +34,7 @@ describe 'Schemas::Invariants::Contract::CreateBilling', order: :defined do
   context 'register_meta' do
 
     subject do
-      subject = Schemas::Support::ActiveRecordValidator.new(lpc)
+      subject = Schemas::Support::ActiveRecordValidator.new(lppt)
       Schemas::PreConditions::Contract::CreateBilling.call(subject).errors[:register_meta]
     end
 
