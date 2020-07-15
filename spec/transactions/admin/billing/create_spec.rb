@@ -85,9 +85,9 @@ describe Transactions::Admin::Billing::Create do
       contract.tariffs.reload
     end
 
-    context 'without a connected meter' do
+    context 'with a non remote-readable meter' do
 
-      context 'without a billing item' do
+      context 'without readings' do
         it 'creates' do
           res = result
           expect(res).to be_success
@@ -165,7 +165,7 @@ describe Transactions::Admin::Billing::Create do
 
     end
 
-    context 'with a connected meter' do
+    context 'with a remote-readable meter' do
 
       it 'creates' do
         mock_series_start = create_series(begin_date, 2000, 15.minutes,    10*1000*1000, 50*1000*1000, 4)
@@ -199,7 +199,7 @@ describe Transactions::Admin::Billing::Create do
       contract.tariffs.reload
     end
 
-    context 'without a connected meter' do
+    context 'with a non remote-readable connected meter' do
 
       it 'creates' do
         res = result
@@ -216,7 +216,7 @@ describe Transactions::Admin::Billing::Create do
 
     end
 
-    context 'with a connected meter' do
+    context 'with a remote-readable meter' do
 
       it 'creates' do
         mock_series_start  = create_series(begin_date,         2000, 15.minutes,    10*1000*1000, 50*1000*1000, 4)
