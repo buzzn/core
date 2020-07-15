@@ -920,7 +920,7 @@ describe Admin, :swagger, :request_helper, order: :defined do
     schema Schemas::Transactions::Admin::Report::CreateEegReport
   end
 
-  post '/localpools/{localpool.id}/annual_report' do
+  post '/localpools/{localpool.id}/annual-report' do
     description 'returns the annual report for the localpool'
     schema Schemas::Transactions::Admin::Report::CreateAnnualReport
   end
