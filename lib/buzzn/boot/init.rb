@@ -51,7 +51,7 @@ module Buzzn
           preload_singletons
 
           eager_load_some
-          Rails.logger = @logger
+          Object.const_defined?("Rails") && Rails.logger = @logger
         end
 
         private
