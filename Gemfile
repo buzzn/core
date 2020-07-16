@@ -112,4 +112,5 @@ group :test do
   gem 'pry-rescue'
   gem 'pry-stack_explorer'
   gem 'timecop'
+  gem 'ruby-prof'
 end

@@ -324,6 +324,7 @@ GEM
       rexml
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    ruby-prof (1.4.1)
     ruby-progressbar (1.10.1)
     ruby-swagger (0.1.1)
       addressable
@@ -443,6 +444,7 @@ DEPENDENCIES
   rodauth
   rspec_nested_transactions
   rubocop
+  ruby-prof
   ruby-swagger
   rubyXL
   ruby_regex
@@ -459,7 +461,7 @@ DEPENDENCIES
   wkhtmltopdf-binary-edge (~> 0.12.4.0)
 
 RUBY VERSION
-   ruby 2.6.3p62
+   ruby 2.6.6p146
 
 BUNDLED WITH
    1.17.3

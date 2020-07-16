@@ -1,5 +1,6 @@
 require 'sequel'
 require 'rack/cors'
+require 'ruby-prof'
 
 require_relative 'common_roda'
 require_relative 'plugins/terminal_verbs'
@@ -25,12 +26,26 @@ class CoreRoda < CommonRoda
   # adds /heartbeat endpoint
   plugin :heartbeat
 
+  plugin :hooks
+
+  before do
+    @profile = RubyProf::Profile.new
+    @profile.start
+    @ruby_prof_dir = "profiling/#{Time.now.to_i}_#{request.path.gsub('/', '-slash-')}"
+    # TODO: json about request
+  end
+  
+  after do |res|
+    profile_result = @profile.stop
+    FileUtils.mkdir_p @ruby_prof_dir
+    ::RubyProf::CallTreePrinter.new(profile_result).print(path: @ruby_prof_dir, profile: 'profile')
+  end
+
   route do |r|
 
-    object_space_metric.non_blocking_sample
     logger.info(r.inspect)
 
-    ActiveRecord::Base.connection_pool.with_connection do
+    res = ActiveRecord::Base.connection_pool.with_connection do
       r.on 'api' do
         r.on 'display' do
           r.run Display::Roda
