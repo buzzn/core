@@ -58,7 +58,7 @@ gem 'concurrent-ruby-ext'
 # Backend
 gem 'puma'
 gem 'roda'
-gem 'activerecord', '< 5'
+gem 'activerecord', '< 6'
 gem 'redis'
 gem 'rack-cors', require: 'rack/cors'
 gem 'clockwork'
@@ -75,7 +75,7 @@ gem 'dotenv'
 gem 'smarter_csv'
 gem 'sentry-raven' # the Sentry exception notification service
 gem 'rake'
-gem 'rails', '< 5'
+gem 'rails', '< 6'
 gem 'rubyzip', '>= 1.0.0'
 
 # excel
