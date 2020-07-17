@@ -6,7 +6,7 @@ class Types::CacheItem
 
   option :json, Types::Strict::String
   option :digest, Types::Strict::String
-  option :time_to_live, Types::Strict::Int
+  option :time_to_live, Types::Strict::Integer
 
   attr_reader :expires_at
 
