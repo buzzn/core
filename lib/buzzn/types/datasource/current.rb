@@ -3,7 +3,7 @@ require 'buzzn/utils/chronos'
 
 class Types::Datasource::Current < Types::Datasource::Unit
 
-  option :value, Types::Strict::Int
+  option :value, Types::Strict::Integer
 
   option :register
 

@@ -50,6 +50,19 @@ module Schemas::Support
 
     attr_reader :model
 
+    # ActiveRecordValidator is supposed to provide the model's attributes as Enumerable.
+    # This is needed since some upgrade of dry-types
+    include Enumerable
+
+    # Returns an array of pairs(Arrays) containing the model's attributes
+    # where each value is mapped to it's key.
+    # Example: [["key1", "value1"], ["key2", "value2"], ...]
+    def each
+      attributes.each do |k|
+        yield [k, self.get(k)]
+      end
+    end
+
     def initialize(model)
       @model = model
     end

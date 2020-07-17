@@ -8,8 +8,8 @@ module Types::Discovergy
 
   class Readings < Types::Discovergy::LastReading
 
-    option :from, Types::Strict::Int
-    option :to, Types::Strict::Int, optional: true
+    option :from, Types::Strict::Integer
+    option :to, Types::Strict::Integer, optional: true
     option :resolution, Resolution, optional: true
     option :disaggregation, Types::Strict::Bool, optional: true
 
