@@ -6,6 +6,7 @@ module Transactions::Admin::Contract::Localpool
 
     validate :schema
     check :authorize, with: :'operations.authorization.update'
+    check :overlappings, with: :'operations.overlappings'
     tee :set_end_date, with: :'operations.end_date'
     around :db_transaction
     tee :update_register_meta, with: :'operations.action.update'

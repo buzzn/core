@@ -386,7 +386,7 @@ module Pdf
 
     def build_waste_local
       {
-        nuclear_waste_miligramm_per_kwh: sprintf("%.4f", localpool.fake_stats["nuclearWasteMiligrammPerKwh"]),
+        nuclear_waste_miligramm_per_kwh: sprintf("%.4f", localpool.fake_stats["nuclearWasteMiligrammPerKwh"] || 0.0),
         co2_emission_gramm_per_kwh:      localpool.fake_stats['co2EmissionGrammPerKwh'].to_i
       }
     end

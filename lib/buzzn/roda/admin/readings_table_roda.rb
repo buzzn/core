@@ -146,7 +146,7 @@ module Admin
     end
 
     def create_filename(localpool)
-      date_string = Time.now.strftime('%Y-%m-%d')
+      date_string = Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d')
       "#{date_string}_Energiegruppe #{localpool.name}.xlsx"
     end
 

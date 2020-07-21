@@ -11,7 +11,7 @@ module Types
 
     option :price
     option :type, type: MeterTypes
-    option :annual_kwh, Types::Strict::Int
+    option :annual_kwh, Types::Strict::Integer
 
     def config
       @config ||= CoreConfig.load(Types::ZipPriceConfig)

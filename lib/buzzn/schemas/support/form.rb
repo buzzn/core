@@ -4,7 +4,7 @@ require_relative 'predicates'
 module Schemas::Support
 
   ERRORS = 'config/errors.yml'
-  Form = Dry::Validation.Form(build: false) do
+  Form = Dry::Validation.Params(build: false) do
     configure do
 
       config.messages_file = ERRORS

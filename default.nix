@@ -1,7 +1,7 @@
 {}:
 let
   pkgs = import <nixpkgs> {};
-  ruby = (pkgs.ruby_2_3.override { useRailsExpress = false; });
+  ruby = (pkgs.ruby_2_6.override { useRailsExpress = false; });
   stdenv = pkgs.stdenv;
   bundler = pkgs.bundler.override { inherit ruby; };
   bundix = pkgs.bundix.override { inherit bundler; };
@@ -20,7 +20,7 @@ in stdenv.mkDerivation {
   buildInputs = [
     wkhtmltopdf
     bundix
-    # bundler # enable for native bundle
+    #bundler # enable for native bundle
     gems
     gems.wrappedRuby
     gems.bundler

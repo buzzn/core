@@ -5,7 +5,9 @@ require_relative '../services'
 class Services::MessageEncryptor < ActiveSupport::MessageEncryptor
 
   def self.new
-    super(Import.global('config.secret_key_base'))
+    # https://github.com/rails/rails/issues/25448#issuecomment-441832416
+    secret = Import.global('config.secret_key_base')
+    super(secret[0..31], secret)
   end
 
 end

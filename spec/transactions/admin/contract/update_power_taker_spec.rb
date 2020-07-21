@@ -80,6 +80,14 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
     }
   end
 
+  let(:overlap_input_2) do
+    {
+      'signing_date': localpool.start_date,
+      'last_date': localpool.start_date+11,
+      'updated_at': resource.updated_at.as_json
+    }
+  end
+
   let(:invalid_input_2) do
     contract.reload
     base_input.merge(with_register_meta_input).merge(:updated_at => resource.updated_at.as_json)
@@ -144,6 +152,11 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
                                                                     resource: resource)
   end
 
+  let(:result_overlap_2) do
+    Transactions::Admin::Contract::Localpool::UpdatePowerTaker.new.(params: overlap_input_2,
+                                                                    resource: resource)
+  end
+
   it 'should not update' do
     expect {result_invalid}.to raise_error(Buzzn::ValidationError, '{:updated_at=>["is missing"]}')
   end
@@ -180,6 +193,10 @@ describe Transactions::Admin::Contract::Localpool::UpdatePowerTaker, order: :def
     context 'overlap' do
       let!(:other_contract) { create(:contract, :localpool_powertaker, begin_date: localpool.start_date, termination_date: localpool.start_date+10, end_date: localpool.start_date+23, register_meta: contract.register_meta)}
 
+      it 'does not create with invalid dates' do
+        expect {result_overlap_2}.to raise_error(Buzzn::ValidationError, '{:no_other_contract_in_range=>["there is already another contract in that time range present"]}')
+      end
+    
       it 'does not create with invalid dates' do
         expect {result_overlap_1}.to raise_error(Buzzn::ValidationError, '{:no_other_contract_in_range=>["there is already another contract in that time range present"]}')
       end

@@ -7,7 +7,7 @@ module Types
 
     option :zip, Types::Strict::String
     option :type, MeterTypes
-    option :annual_kwh, Types::Strict::Int
+    option :annual_kwh, Types::Strict::Integer
 
     alias :init :initialize
     def initialize(**kwargs)

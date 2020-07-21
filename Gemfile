@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.3.8'
+ruby '2.6.6'
 
 # transient dependency of rails with security issue, pick secure one
 gem 'loofah', '>= 2.2.3'
@@ -15,7 +15,7 @@ gem 'dry-transaction'
 gem 'dry-struct'
 gem 'dry-initializer'
 gem 'dry-dependency-injection'
-gem 'dry-types', '~> 0.12.3'
+gem 'dry-types'
 
 # pdf
 gem 'slim'

@@ -185,12 +185,16 @@ module Admin
           end
         else
           r.response.status = 400
+          # FIXME empty response, convert to raise Buzzn::InvalidFooError
+          ""
         end
       end
 
       # without a type
       r.post! do
         r.response.status = 400
+        # FIXME empty response, convert to raise Buzzn::InvalidFooError
+        ""
       end
 
     end

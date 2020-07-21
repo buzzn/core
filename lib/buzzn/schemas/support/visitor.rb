@@ -32,7 +32,7 @@ class Schemas::Support::Visitor
       when Dry::Logic::Operations::Implication
         visit_rule(rule.rules[1..-1], result, name, &block)
       when Dry::Logic::Rule::Predicate
-        type = rule.predicate.to_s.gsub(/.*#|\?>$/, '')
+        type = rule.predicate.to_s.gsub(/.*#|\?>$/, '').split(".").last
         case type
         when 'filled'
           nil # nothing to do here

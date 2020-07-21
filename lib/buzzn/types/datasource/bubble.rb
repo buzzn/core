@@ -4,7 +4,7 @@ class Types::Datasource::Bubble
 
   extend Dry::Initializer
 
-  option :value, Types::Strict::Int
+  option :value, Types::Strict::Integer
 
   option :register
 

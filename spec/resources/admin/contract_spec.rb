@@ -58,7 +58,8 @@ describe Contract::BaseResource do
 
   it 'constraints' do
     resources.each do |contract|
-      expect(Schemas::Constraints::Contract::Base.call(contract)).to be_success
+      result = Schemas::Support::ActiveRecordValidator.new(contract.object).validate(Schemas::Constraints::Contract::Base)
+      expect(result).to be_success
     end
   end
 
@@ -67,16 +68,16 @@ describe Contract::BaseResource do
     it 'valid' do
       resources.each do |contract|
         contract.object.update termination_date: nil, end_date: nil
-        expect(contract).to have_valid_invariants Schemas::Invariants::Contract::Base
+        expect(contract.object).to have_valid_invariants Schemas::Invariants::Contract::Base
 
         contract.object.update begin_date: Date.today
-        expect(contract).to have_valid_invariants Schemas::Invariants::Contract::Base
+        expect(contract.object).to have_valid_invariants Schemas::Invariants::Contract::Base
 
         contract.object.update termination_date: Date.today
-        expect(contract).to have_valid_invariants Schemas::Invariants::Contract::Base
+        expect(contract.object).to have_valid_invariants Schemas::Invariants::Contract::Base
 
         contract.object.update end_date: Date.today
-        expect(contract).to have_valid_invariants Schemas::Invariants::Contract::Base
+        expect(contract.object).to have_valid_invariants Schemas::Invariants::Contract::Base
       end
     end
 
@@ -85,7 +86,8 @@ describe Contract::BaseResource do
         resources.each do |contract|
           contract.object.update begin_date: nil, termination_date: nil, end_date: Date.today
           expect(contract).not_to have_valid_invariants Schemas::Invariants::Contract::Base
-          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq(:begin_date=>['must be filled'], :termination_date=>['must be filled'])
+          result = Schemas::Support::ActiveRecordValidator.new(contract.object).validate(Schemas::Invariants::Contract::Base)
+          expect(result.messages).to eq(:begin_date=>['must be filled'], :termination_date=>['must be filled'])
         end
       end
 
@@ -93,7 +95,8 @@ describe Contract::BaseResource do
         resources.each do |contract|
           contract.object.update begin_date: nil, termination_date: Date.today, end_date: Date.today
           expect(contract).not_to have_valid_invariants Schemas::Invariants::Contract::Base
-          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq(:begin_date=>['must be filled'])
+          result = Schemas::Support::ActiveRecordValidator.new(contract.object).validate(Schemas::Invariants::Contract::Base)
+          expect(result.messages).to eq(:begin_date=>['must be filled'])
         end
       end
 
@@ -101,7 +104,8 @@ describe Contract::BaseResource do
         resources.each do |contract|
           contract.object.update begin_date: Date.today, termination_date: nil, end_date: Date.today
           expect(contract).not_to have_valid_invariants Schemas::Invariants::Contract::Base
-          expect(Schemas::Invariants::Contract::Base.call(contract).messages).to eq(:termination_date=>['must be filled'])
+          result = Schemas::Support::ActiveRecordValidator.new(contract.object).validate(Schemas::Invariants::Contract::Base)
+          expect(result.messages).to eq(:termination_date=>['must be filled'])
         end
       end
     end

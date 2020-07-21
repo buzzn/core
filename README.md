@@ -244,7 +244,7 @@ Install the [overcommit gem](https://github.com/brigade/overcommit); it'll then 
 ## Start sidekiq message queue
     redis-server
     remark: probably necessary to reinit database (rake db:init) to let sidekiq run properly
-    rake sidekiq:start
+    bundle exec sidekiq -r ./config/sidekiq.rb
 
 The (very useful) Sidekiq Admin interface currently isn't set up. See [Sidekiq's documentation on standalone installation](https://github.com/mperham/sidekiq/wiki/Monitoring#standalone) for how to enable it.
 

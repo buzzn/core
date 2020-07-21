@@ -16,11 +16,11 @@ namespace :heroku do
 
   namespace :pull_db do
 
-    task staging: %i(db:dump:reset) do
+    task staging: %i(db:dump:drop) do
       pull_heroku_to_local_dump(:staging, Import.global('config.database_dump_url'))
     end
 
-    task production: %i(db:dump:reset) do
+    task production: %i(db:dump:drop) do
       pull_heroku_to_local_dump(:production, Import.global('config.database_dump_url'))
     end
 

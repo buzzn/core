@@ -225,7 +225,7 @@ describe Transactions::Admin::Billing::Create do
 
     let(:billing1_begin) { Date.new(2019, 1, 16) }
     let(:billing1_end)   { tariff2_begin }
-    let(:billing2_begin) { tariff2_begin + 2.days }
+    let(:billing2_begin) { tariff2_begin + 1.days } # 2.3.2019
     let(:billing2_end)   { Date.new(2019, 4, 15) }
 
     let(:tariff1) { create(:tariff, group: localpool, begin_date: tariff1_begin) }

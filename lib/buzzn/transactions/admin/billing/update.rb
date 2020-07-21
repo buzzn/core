@@ -43,7 +43,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::CalculatedDocumented.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new({"Incorrect data for #{resource.object}": result.errors})
+            raise Buzzn::ValidationError.new(result.errors)
           end
         end
       end
@@ -54,13 +54,13 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::DocumentedDocumented.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new({"subject": "Incorrect data for contract #{resource.object.contract.mandate_reference}", errors: result.errors})
+            raise Buzzn::ValidationError.new(result.errors)
           end
         when :queued
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::DocumentedQueued.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new({"subject": "Incorrect data for contract#{resource.object.contract.mandate_reference}", errors: result.errors})
+            raise Buzzn::ValidationError.new(result.errors)
           end
         end
       end
@@ -82,6 +82,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       raise Buzzn::ValidationError.new(billing.invariant.errors)
     end
 
+    receiver_person = resource.object.contract.contact
     case action
     when :calculate
       total_amount = resource.object.total_amount_after_taxes
@@ -125,13 +126,12 @@ class Transactions::Admin::Billing::Update < Transactions::Base
     when :document
       generator = Pdf::Invoice.new(resource.object)
       generator.disable_cache
-      filename="Stromrechnung_#{resource.object.full_invoice_number.tr('/', '-')}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}.pdf"
+      filename="Stromrechnung_#{resource.object.full_invoice_number.tr('/', '-')}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}_#{receiver_person.last_name}.pdf"
       document = generator.create_pdf_document(nil, filename).document
       unless resource.object.documents.where(:id => document.id).any?
         resource.object.documents << document
       end
     when :queue
-      receiver_person = resource.object.contract.contact
       email = if billing_email_testmode == '1'
                 'dev@buzzn.net'
               else
