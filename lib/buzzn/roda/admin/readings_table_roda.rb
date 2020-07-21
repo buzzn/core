@@ -151,7 +151,15 @@ module Admin
     end
 
     def empty?(target)
-      target.nil? || target.strip.empty?
+      if target.nil?
+        return true
+      end
+
+      if target.is_a? String
+        return  target.strip&.empty?
+      end
+
+      return false
     end
 
     def read_sheet(localpool, file)
