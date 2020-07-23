@@ -31,7 +31,7 @@ module Schemas
 
         required(:localpool).filled
         required(:tariffs).maybe
-        optional(:begin_date).maybe
+        optional(:begin_date).maybe(:date?)
 
         rule(tariffs: [:localpool, :tariffs]) do |localpool, tariffs|
           localpool.localpool_tariffs?(tariffs).and(tariffs.unique_begin_date?)
