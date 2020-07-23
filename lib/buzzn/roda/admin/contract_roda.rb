@@ -180,7 +180,11 @@ module Admin
             elsif r.params['customer']['type'] == 'organization'
               create_power_taker_with_organization.(resource: localpool_power_taker_contracts, params: r.params, localpool: localpool)
             else # default to person
-              create_power_taker_with_person.(resource: localpool_power_taker_contracts, params: r.params, localpool: localpool)
+              begin
+                create_power_taker_with_person.(resource: localpool_power_taker_contracts, params: r.params, localpool: localpool)
+              rescue => exception
+              end
+              
             end
           end
         else

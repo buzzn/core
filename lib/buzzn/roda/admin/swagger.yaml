@@ -11883,7 +11883,7 @@ paths:
         format: date
       - name: begin_date
         in: formData
-        required: true
+        required: false
         type: string
         format: date
       - name: termination_date
@@ -13111,7 +13111,7 @@ paths:
         format: date
       - name: begin_date
         in: formData
-        required: true
+        required: false
         type: string
         format: date
       - name: termination_date
