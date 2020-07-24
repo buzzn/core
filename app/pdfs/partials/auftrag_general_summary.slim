@@ -54,16 +54,16 @@ table.is-full-width.is-small.has-alternate-rows.two-columns-even
 h3 Preise, Abrechnung & Bezahlung
 table.is-full-width.is-small.has-alternate-rows.two-columns-even
   tr
-    td Grundpreis brutto (Grundpreis netto)
+    td Grundpreis brutto&ast; (Grundpreis netto)
     td #{tariff.baseprice_euro_brutto} €/Monat (#{tariff.baseprice_euro_netto} €/Monat)
   tr
-    td Bezugspreis brutto (Bezugspreis netto)
+    td Bezugspreis brutto&ast; (Bezugspreis netto)
     td #{tariff.energyprice_cents_brutto} Cent/kWh (#{tariff.energyprice_cents_netto} Cent/kWh)
   tr
     td Kontoinhaber
     td #{contract.customer_bank_account.holder}
   tr
-    td IBAN*
+    td IBAN&ast;&ast;
     td #{contract.customer_bank_account.iban_obfuscated}
   tr
     td BIC
@@ -78,7 +78,8 @@ table.is-full-width.is-small.has-alternate-rows.two-columns-even
     td SEPA Mandatsreferenz
     td #{contract.mandate_reference}
 
-p.is-small * Ihre Bankverbindung wird aus Datenschutzgründen unvollständig angezeigt.
+p.is-small &ast; Brutto-Preis inkl. 19% MwSt.; die Korrektur ihres Tarifs auf den abgesenkten Steuersatz von 16 Prozent für das zweite Halbjahr 2020 erfolgt mit der nächsten fälligen Abrechnung<br>&ast;&ast; Ihre Bankverbindung wird aus Datenschutzgründen unvollständig angezeigt.
+
 h3 Widerrufsrecht
 p.is-small Der Lokale Stromnehmer (LSN) kann seine Vertragserklärung innerhalb von 14 Tagen ohne Angabe von Gründen in Textform (z. B. Brief, Telefax, E-Mail) widerrufen. Die Frist beginnt nach Erhalt der Widerrufsbelehrung in Textform, jedoch nicht vor Eingang der ersten Stromlieferung und auch nicht vor Erfüllung der Informationspflichten des Lokalen Stromgebers (LSG) gemäß Artikel 246 § 2 in Verbindung mit § 1 Abs. 1 und 2 EGBGB sowie – bei Vertragsschluss im elektronischen Rechtsverkehr – der Pflichten des LSG gemäß § 312g Abs. 1 Satz 1 BGB in Verbindung mit Artikel 246 § 3 EGBGB. Zur Wahrung der Widerrufsfrist genügt die rechtzeitige Absendung des Widerrufs.
 p.is-small Der Widerruf ist zu richten an #{contract.contractor.name}, - Lokale Energiegruppe #{localpool.name} - #{contract.contractor.address.street}, #{contract.contractor.address.zip} #{contract.contractor.address.city}, Telefon: #{contract.contractor.phone}, Fax: #{contract.contractor.fax}, E Mail: #{contract.contractor.email}.
