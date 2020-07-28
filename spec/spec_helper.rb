@@ -106,7 +106,9 @@ RSpec.configure do |config|
 
   end
 
+  # <b>DEPRECATED:</b> Please use <tt>let</tt> instead.
   def entity(key, &block)
+    warn "[DEPRECATION] `entity` is deprecated.  Please use `let` instead."
     unless self.kind_of?(InstanceMethods)
       self.send(:extend, ClassMethods)
       self.send(:include, InstanceMethods)
@@ -119,7 +121,9 @@ RSpec.configure do |config|
     self.entity_blocks[key.to_sym] = block
   end
 
+  # <b>DEPRECATED:</b> Please use <tt>let</tt> instead.
   def entity!(key, &block)
+    warn "[DEPRECATION] `entity` is deprecated.  Please use `let` instead."
     entity(key, &block)
     self.forced_entities << key.to_sym
   end
