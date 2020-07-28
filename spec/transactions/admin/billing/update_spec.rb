@@ -53,6 +53,7 @@ describe Transactions::Admin::Billing::Update do
     {
       begin_date: billing1_begin,
       last_date:  billing1_end,
+      invoice_number: '2020-60015/1'
     }
   end
 
@@ -269,7 +270,7 @@ describe Transactions::Admin::Billing::Update do
 
           it 'fails' do
             expect {update_result}.to raise_error(Buzzn::ValidationError,
-                                                  '{:completeness=>["billing_items are not complete and state is not open"]}')
+                                                  '{:completeness=>["billing_items for billing with invoice number 2020-60015/1 are not complete and state is not open"]}')
             billing.reload
             expect(billing.status).to eql 'open'
           end

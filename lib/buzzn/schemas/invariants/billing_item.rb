@@ -16,7 +16,7 @@ module Schemas
           reading.register == register.model
         end
 
-        def inside_period?(date_range, thing)
+        def inside_period?(item, date_range, thing)
           thing.begin_date <= date_range.first && (!thing.respond_to?(:end_date) || thing.end_date.nil? || thing.end_date >= date_range.last)
         end
 
@@ -35,7 +35,8 @@ module Schemas
       required(:end_reading).maybe
 
       rule(tariff: [:tariff, :contract, :date_range]) do |tariff, contract, date_range|
-        tariff.in_contract_tariffs?(contract).and(tariff.inside_period?(date_range))
+        item = 'tariff'
+        tariff.in_contract_tariffs?(contract).and(tariff.inside_period?(item, date_range))
       end
 
       rule(register: [:register, :contract, :date_range]) do |register, contract, date_range|
@@ -43,7 +44,8 @@ module Schemas
       end
 
       rule(contract: [:contract, :billing, :date_range]) do |contract, billing, date_range|
-        contract.inside_period?(date_range)
+        item = 'contract'
+        contract.inside_period?(item, date_range)
       end
 
       rule(begin_reading: [:register, :begin_reading]) do |register, begin_reading|

@@ -67,7 +67,7 @@ describe 'Schemas::Invariants::Contract::Localpool', order: :defined do
           tariff.update_column(:group_id, other_localpool.id)
           localpool.tariffs.reload
         end
-        it { is_expected.to eq(['all tariff.group must match contract.localpool']) }
+        it { is_expected.to eq(['tariffs must match group tariffs']) }
       end
     end
   end

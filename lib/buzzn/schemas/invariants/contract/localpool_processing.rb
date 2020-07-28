@@ -14,7 +14,8 @@ module Schemas
         required(:begin_date).filled
 
         rule(customer: [:customer, :localpool]) do |customer, localpool|
-          customer.localpool_owner?(localpool)
+          person = 'customer'
+          customer.localpool_owner?(localpool, person)
         end
 
         rule(tariffs: [:tariffs, :begin_date]) do |tariffs, begin_date|

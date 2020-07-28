@@ -99,7 +99,7 @@ describe Admin::LocalpoolResource do
             pool.object.meters << input_register.meter
           end
           it 'is incomplete' do
-            expect(pool.incompleteness[:grid_consumption_register]).to eq ['missing metering_point_id']
+            expect(pool.incompleteness[:grid_consumption_register]).to eq ['missing metering point id']
           end
         end
 
@@ -135,7 +135,7 @@ describe Admin::LocalpoolResource do
             pool.object.meters << output_register.meter
           end
           it 'is incomplete' do
-            expect(pool.incompleteness[:grid_feeding_register]).to eq ['missing metering_point_id']
+            expect(pool.incompleteness[:grid_feeding_register]).to eq ['missing metering point id']
           end
         end
 

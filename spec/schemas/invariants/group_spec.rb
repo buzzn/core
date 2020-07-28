@@ -124,7 +124,7 @@ describe 'Schemas::Invariants::Group::Localpool' do
         2.times { make_register(localpool, label: label) }
         expect(tested_register).not_to be_nil # assert precondition
       end
-      it { is_expected.to eq(['must not have more than register with this label']) }
+      it { is_expected.to eq(['must not have more than one register with this label']) }
     end
   end
 

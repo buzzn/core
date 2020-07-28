@@ -102,7 +102,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     end
 
     describe 'contractor' do
-      it_behaves_like 'invariants of contracting party', :contractor, :powertaker, 'must be the localpool owner'
+      it_behaves_like 'invariants of contracting party', :contractor, :powertaker, 'contractor must be the group owner'
     end
   end
 
@@ -112,7 +112,7 @@ describe 'Schemas::Invariants::Contract::Localpool' do
     end
 
     describe 'customer' do
-      it_behaves_like 'invariants of contracting party', :customer, :processing, 'must be the localpool owner'
+      it_behaves_like 'invariants of contracting party', :customer, :processing, 'customer must be the group owner'
     end
 
     describe 'contractor' do

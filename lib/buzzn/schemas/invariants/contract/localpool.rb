@@ -16,7 +16,7 @@ module Schemas
             first_tariff.nil? || first_tariff.begin_date <= begin_date
           end
 
-          def localpool_owner?(localpool, contracting_party)
+          def localpool_owner?(person, localpool, contracting_party)
             localpool.nil? || localpool.owner == contracting_party.model
           end
 

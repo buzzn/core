@@ -14,7 +14,7 @@ describe 'Schemas::Invariants::BillingCycle' do
     context 'before begin_date' do
       before { cycle.end_date = cycle.begin_date }
       it { expect(cycle.begin_date).to be > cycle.last_date }
-      it { is_expected.to eq(['must be after begin_date']) }
+      it { is_expected.to eq(['last date must be after begin date 2011-01-01']) }
     end
     context 'equals begin_date' do
       before { cycle.end_date = cycle.begin_date + 1.day }
@@ -27,7 +27,7 @@ describe 'Schemas::Invariants::BillingCycle' do
     end
     context 'after today' do
       before { cycle.end_date = Date.today + 1.day }
-      it { is_expected.to eq(['must not be in the future']) }
+      it { is_expected.to eq(['last date must not be in the future']) }
     end
   end
 end

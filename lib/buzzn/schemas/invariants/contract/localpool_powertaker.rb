@@ -12,7 +12,8 @@ module Schemas
         optional(:id).filled
 
         rule(contractor: [:contractor, :localpool]) do |contractor, localpool|
-          contractor.localpool_owner?(localpool)
+          person = 'contractor'
+          contractor.localpool_owner?(localpool, person)
         end
 
         rule(tariffs: [:tariffs, :begin_date]) do |tariffs, begin_date|

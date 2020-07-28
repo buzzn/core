@@ -38,7 +38,7 @@ describe 'Schemas::Invariants::Reading::Single' do
         let!(:previous_item2) { create(:reading, register: register, date: today+1, raw_value: 555) }
         it do
           item.reload
-          is_expected.to eql ['reading must be lower than following']
+          is_expected.to eql ['reading must be lower than following reading']
         end
       end
 
@@ -46,7 +46,7 @@ describe 'Schemas::Invariants::Reading::Single' do
         let!(:previous_item) { create(:reading, register: register, date: today-1, raw_value: 999) }
         it do
           item.reload
-          is_expected.to eql ['reading must be higher than previous']
+          is_expected.to eql ['reading must be higher than previous reading']
         end
       end
     end

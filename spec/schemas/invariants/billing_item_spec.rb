@@ -21,11 +21,11 @@ describe 'Schemas::Invariants::BillingItem' do
 
     context 'ends before billing item' do
       before { item.contract.update(end_date: item.end_date - 1.day) }
-      it { is_expected.to eq(['must inside period']) }
+      it { is_expected.to eq(['contract must be inside time period']) }
 
       context 'begins after billing item' do
         before { item.contract.update(end_date: item.end_date, begin_date: item.begin_date + 1.day) }
-        it { is_expected.to eq(['must inside period']) }
+        it { is_expected.to eq(['contract must be inside time period']) }
 
         context 'inside billing item' do
           before { item.contract.update(end_date: item.end_date + 1.day, begin_date: item.begin_date - 1.day) }
@@ -50,7 +50,7 @@ describe 'Schemas::Invariants::BillingItem' do
 
     context 'alien' do
       before { item.update(tariff: create(:tariff)) }
-      it { is_expected.to eq(['must be in contract tariffs']) }
+      it { is_expected.to eq(['tariff must be in contract tariffs']) }
 
       context 'filled' do
         let!(:tariff) do
@@ -73,7 +73,7 @@ describe 'Schemas::Invariants::BillingItem' do
     context 'not from contract' do
       before { item.update(register: register) }
 
-      it { is_expected.to eq(['must belong to contract']) }
+      it { is_expected.to eq(['register must belong to contract']) }
 
       context 'from contract' do
         before { item.update(register: billing.contract.register_meta.register) }
@@ -134,7 +134,7 @@ describe 'Schemas::Invariants::BillingItem' do
       end
 
       it 'produces an error' do
-        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist'])
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist in this time range'])
       end
 
     end
@@ -149,7 +149,7 @@ describe 'Schemas::Invariants::BillingItem' do
       end
 
       it 'produces an error' do
-        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist'])
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist in this time range'])
       end
 
     end
@@ -164,7 +164,7 @@ describe 'Schemas::Invariants::BillingItem' do
       end
 
       it 'produces an error' do
-        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist'])
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist in this time range'])
       end
 
     end
@@ -179,7 +179,7 @@ describe 'Schemas::Invariants::BillingItem' do
       end
 
       it 'produces an error' do
-        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist'])
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist in this time range'])
       end
 
     end
@@ -194,7 +194,7 @@ describe 'Schemas::Invariants::BillingItem' do
       end
 
       it 'produces an error' do
-        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist'])
+        expect(another_item.invariant.errors[:no_other_billings_in_range]).to eq(['other billing items already exist in this time range'])
       end
 
     end

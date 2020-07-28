@@ -41,7 +41,6 @@ module Schemas
         end
 
         def are_complete_and_not_open?(status, items)
-          # check whether items are complete
           items.all.to_a.keep_if { |item| Schemas::Completeness::Admin::BillingItem.call(Schemas::Support::ActiveRecordValidator.new(item)).errors.empty? }.count == items.count || status == 'open'
         end
 
@@ -56,8 +55,13 @@ module Schemas
         billing_cycle.filled?.then(billing_cycle.match_group?(localpool))
       end
 
-      rule(completeness: [:items, :status]) do |billing_items, status|
-        billing_items.are_complete_and_not_open?(status)
+      #rule(completeness: [:items, :status, :localpool]) do |billing_items, status, localpool|
+       # billing_items.are_complete_and_not_open?(status, localpool)
+      #end
+
+      validate(completeness: [:items, :status, :invoice_number]) do |billing_items, status, invoice_number|
+        #contact = billing_items[0].billing.contract.contact.last_name
+        are_complete_and_not_open?(status, billing_items)
       end
 
       rule(items: [:items, :status]) do |billing_items, status|

@@ -28,7 +28,7 @@ describe 'Schemas::Invariants::Billing' do
           contract.update(localpool: create(:group, :localpool))
           billing.contract.reload
         end
-        it { is_expected.to eq(['BUG: group and deep nested group must match']) }
+        it { is_expected.to eq(['group and deep nested group must match']) }
       end
     end
   end
@@ -37,7 +37,7 @@ describe 'Schemas::Invariants::Billing' do
 
     subject { billing.invariant.errors[:items_present] }
     context 'not void' do
-      it { is_expected.to eq(['size cannot be less than 1']) }
+      it { is_expected.to eq(['there must be at least one billing item present']) }
     end
 
     context 'void' do
@@ -56,10 +56,10 @@ describe 'Schemas::Invariants::Billing' do
         billing.reload
         item
       end
-      it { is_expected.to eq(["must be after #{billing.begin_date}"]) }
+      it { is_expected.to eq(["all billing items must begin after #{billing.begin_date}"]) }
       context 'covers begin' do
         before { billing.items.first.update(begin_date: billing.begin_date) }
-        it { is_expected.to eq(["must be before #{billing.end_date}"]) }
+        it { is_expected.to eq(["all billing items must end before #{billing.end_date}"]) }
 
         context 'covers end' do
           before { billing.items.first.update(end_date: billing.end_date) }

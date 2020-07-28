@@ -22,7 +22,7 @@ describe 'Schemas::Invariants::Register::Base' do
       context 'not monoton increasing' do
         before { reading.update_columns(date: Date.new(2016, 12, 1)) }
 
-        it { is_expected.to eq(['must grow in time']) }
+        it { is_expected.to eq(['readings must grow in time']) }
       end
     end
   end
