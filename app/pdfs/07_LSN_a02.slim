@@ -19,7 +19,7 @@ html
         p #{powertaker.contact.addressing_full},
         p wir freuen uns sehr, Ihnen mitteilen zu können, dass Sie ab dem #{contract.begin_date} als Stromnehmer aus der Lokalen Energiegruppe #{localpool.name} mit hausgemachtem Strom versorgt werden. Damit leisten Sie einen aktiven Beitrag zum Aufbau einer ökologischen, sozialen und direkten Energieversorgung von Mensch zu Mensch innerhalb der Hausgemeinschaft.
         p Anhand Ihres vorliegenden Jahresverbrauchs wurde Ihr Abschlag wie folgt berechnet: <br>
-          #{payment.netto} € (netto) + #{payment.taxes} € (19% MwSt.) = <b>#{payment.brutto} € (brutto)</b>.
+          #{payment.netto} € (netto) + #{payment.taxes} € (19% MwSt.) = <b>#{payment.brutto} € (brutto*)</b>.
         - if powertaker.has_bank_and_direct_debit
           p Der Betrag wird zum Anfang eines jeden Monats von Ihrem Konto abgebucht. Bei Änderung Ihrer Bankverbindung informieren Sie uns bitte rechtzeitig.
         - else
@@ -30,6 +30,10 @@ html
         p Mit freundlichen Grüßen,<br><br>
           #{powergiver.contact.name}
         p PS: Auf der nächsten Seite finden Sie zur Kontrolle eine Zusammenfassung Ihrer Angaben sowie Informationen zu Ihrem Widerrufsrecht.
+        p.is-small * Ihren Abschlag weisen wir, in Einklang mit steuerrechtlichen Regelungen, vorläufig mit dem nicht reduzierten
+                  Steuersatz von 19 Prozent aus. Den abgesenkten Mehrwertsteuersatz für das zweite Halbjahr 2020 werden wir
+                  in Ihrer nächsten Abrechnung berücksichtigen und berichtigen. Leistungen zwischen 1. Juli und 31. Dezember
+                  2020 werden dann mit der geltenden Mehrwertsteuer von 16 Prozent abgerechnet, Leistungen nach dem 31. Dezember 2020 mit 19 Prozent.
       footer.is-small
         .footer-logo
           | powered by
