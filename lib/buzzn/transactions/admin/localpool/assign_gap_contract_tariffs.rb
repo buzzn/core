@@ -21,11 +21,11 @@ module Transactions::Admin::Localpool
         tariffs = Contract::Tariff.find(params[:tariff_ids])
         tariffs.each do |tariff|
           if tariff.group != resource.object
-            raise Buzzn::ValidationError.new(tariffs: ['one or more tariffs do not belong to this group'])
+            raise Buzzn::ValidationError.new({tariffs: ["one or more tariffs do not belong to this group"]}, resource.object)
           end
         end
       rescue ActiveRecord::RecordNotFound
-        raise Buzzn::ValidationError.new(tariffs: ['one or more tariffs do not exist'])
+        raise Buzzn::ValidationError.new({tariffs: ["one or more tariffs do not exist"]}, resource.object)
       end
     end
 

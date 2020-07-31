@@ -149,9 +149,9 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       context 'PATCH' do
 
         let(:wrong_json) do
-          {
+          { 'errors'=>{
             'updated_at'=>['is missing'],
-            'operator'=>['must be one of: +, -']
+            'operator'=>['must be one of: +, -']}
           }
         end
 

@@ -105,6 +105,9 @@ module SwaggerHelper
       ops.consumes = consumes
     end
 
+    expected_errors = {}
+    expected_errors['errors'] = expected
+
     params_process = ->(prefix: '', p: {}) do
       p.each do |k, v|
         name = k.to_s
@@ -128,7 +131,7 @@ module SwaggerHelper
     end
 
     Schemas::Support::Visitor.visit(@schema, &process_rule)
-    expect(expected).to eq json unless expected.blank? || !params.blank?
+    expect(json).to eq expected_errors unless expected.blank? || !params.blank?
   end
 
   module ClassMethods

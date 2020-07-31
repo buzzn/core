@@ -29,10 +29,10 @@ describe Website::ZipToPriceRoda, :request_helper do
   context 'POST' do
 
     let(:wrong_json) do
-      {
+      { 'errors'=>{
         'type'=>['must be one of: single, double, smart'],
         'zip'=>['size cannot be greater than 5'],
-        'annual_kwh'=>['must be an integer']
+        'annual_kwh'=>['must be an integer']}
       }
     end
 

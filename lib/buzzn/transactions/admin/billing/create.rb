@@ -21,25 +21,25 @@ class Transactions::Admin::Billing::Create < Transactions::Base
 
   def validate_contract(contract:, **)
     unless contract.is_a? Contract::LocalpoolPowerTaker
-      raise Buzzn::ValidationError.new('not a valid contract')
+      raise Buzzn::ValidationError.new({contract: ["not a valid contract"]}, contract)
     end
     # validate
     subject = Schemas::Support::ActiveRecordValidator.new(contract)
     result = Schemas::PreConditions::Contract::CreateBilling.call(subject)
     unless result.success?
-      raise Buzzn::ValidationError.new(result.errors)
+      raise Buzzn::ValidationError.new(result.errors, contract)
     end
   end
 
   def validate_dates(params:, contract:, **)
     if params[:last_date] < params[:begin_date]
-      raise Buzzn::ValidationError.new(:last_date => ['must be after begin_date'])
+      raise Buzzn::ValidationError.new({last_date: ["must be after begin date"]}, contract)
     end
     if params[:begin_date] < contract.begin_date
-      raise Buzzn::ValidationError.new(:begin_date => ['must be after contract[\'begin_date\']'])
+      raise Buzzn::ValidationError.new({begin_date: ["must be after contract[\"begin_date\"]"]}, contract)
     end
     if contract.tariffs.at(params[:begin_date]).empty?
-      raise Buzzn::ValidationError.new(:contract => ['tariffs must cover begin_date'])
+      raise Buzzn::ValidationError.new({contract: ["tariffs must cover begin date"]}, contract)
     end
   end
 
@@ -49,7 +49,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
 
   def validate_registers(params:, contract:, date_range:, **)
     if contract.register_meta.registers.to_a.keep_if { |register| register.installed_at.date < date_range.last && (register.decomissioned_at.nil? || register.decomissioned_at.date > date_range.first) }.empty?
-      raise Buzzn::ValidationError.new(:register_meta => ['no register installed in date range'])
+      raise Buzzn::ValidationError.new({register_meta: ["no register installed in date range"]}, contract)
     end
   end
 
@@ -64,7 +64,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     billing_data[:items].each do |item|
       errors = item.invariant.errors.except(:billing, :contract)
       unless errors.empty?
-        raise Buzzn::ValidationError.new(:items => errors)
+        raise Buzzn::ValidationError.new(errors, resource.object)
       end
     end
 

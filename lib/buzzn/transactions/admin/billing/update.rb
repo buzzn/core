@@ -30,7 +30,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
   def check_status(resource:, params:)
     if !params[:status].nil? && !resource.object.allowed_transitions.map(&:to_s).include?(params[:status])
       # not allowed
-      raise Buzzn::ValidationError.new(status: "transition from #{resource.object.status} to #{params[:status]} is not possible")
+      raise Buzzn::ValidationError.new({status: ["transition from #{resource.object.status} to #{params[:status]} is not possible"]}, resource.object)
     end
   end
 
@@ -43,7 +43,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::CalculatedDocumented.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new(result.errors)
+            raise Buzzn::ValidationError.new(result.errors, resource.object)
           end
         end
       end
@@ -54,13 +54,13 @@ class Transactions::Admin::Billing::Update < Transactions::Base
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::DocumentedDocumented.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new(result.errors)
+            raise Buzzn::ValidationError.new(result.errors, resource.object)
           end
         when :queued
           subject = Schemas::Support::ActiveRecordValidator.new(resource.object)
           result = Schemas::PreConditions::Billing::Update::DocumentedQueued.call(subject)
           unless result.success?
-            raise Buzzn::ValidationError.new(result.errors)
+            raise Buzzn::ValidationError.new(result.errors, resource.object)
           end
         end
       end
@@ -79,7 +79,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
 
     # transition may only continue if invariant are clean
     unless billing.invariant.errors.empty?
-      raise Buzzn::ValidationError.new(billing.invariant.errors)
+      raise Buzzn::ValidationError.new(billing.invariant.errors, resource.object)
     end
 
     receiver_person = resource.object.contract.contact
@@ -140,7 +140,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
                 ].reject(&:nil?).first
               end
       if email.nil? || email.empty?
-        raise Buzzn::ValidationError.new(customer: 'email invalid')
+        raise Buzzn::ValidationError.new({customer: ['email invalid']}, resource.object)
       end
       subject = "Lokale Energiegruppe #{resource.object.localpool.name} - Ihre Stromrechnung 2019"
 

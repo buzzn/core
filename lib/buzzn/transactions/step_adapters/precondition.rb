@@ -14,7 +14,7 @@ module Transactions::StepAdapters
       if result.success?
         Success(kwargs.merge(resource: resource))
       else
-        raise Buzzn::ValidationError.new(result.errors)
+        raise Buzzn::ValidationError.new(result.errors, resource.object)
         # TODO better use this and handle on roda - see transactions/base
         #Failure(result.errors)
       end

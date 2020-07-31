@@ -52,13 +52,27 @@ module Buzzn
   class GeneralError < StandardError
 
     attr_reader :errors
+    attr_reader :target
 
-    def initialize(errors)
+    def initialize(errors, target=nil)
       @errors = errors
+      @target = target
     end
 
     def message
       @errors.inspect
+    end
+
+    def json
+      unless @target.nil?
+        unless @target.id.nil?
+          {target: @target.class.name, id: @target.id, errors: @errors}.to_json
+        else
+          {target: @target.class.name, errors: @errors}.to_json
+        end
+      else
+        {errors: @errors}.to_json
+      end
     end
 
   end

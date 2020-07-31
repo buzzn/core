@@ -93,8 +93,7 @@ describe Admin::LocalpoolRoda, :request_helper do
       entity(:real_meter) { create(:meter, :real, group: group) }
 
       let(:wrong_json) do
-        {
-          'updated_at'=>['is missing'],
+        { 'errors'=>{'updated_at'=>['is missing'],
           'product_serialnumber'=>['size cannot be greater than 128'],
           'direction_number'=>['must be one of: ERZ, ZRZ'],
           'datasource'=>['must be one of: standard_profile, discovergy, virtual'],
@@ -110,7 +109,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'edifact_mounting_method'=>['must be one of: BKE, DPA, HS'],
           'edifact_voltage_level'=>['must be one of: E06, E05, E04, E03'],
           'edifact_cycle_interval'=>['must be one of: MONTHLY, QUARTERLY, HALF_YEARLY, YEARLY'],
-          'edifact_data_logging'=>['must be one of: Z04, Z05'],
+          'edifact_data_logging'=>['must be one of: Z04, Z05']}
         }
       end
 

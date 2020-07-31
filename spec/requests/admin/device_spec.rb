@@ -27,12 +27,11 @@ describe Admin::LocalpoolRoda, :request_helper do
     end
 
     let(:wrong_json) do
-      {
-        'primary_energy'=>['must be one of: bio_mass, bio_gas, natural_gas, fluid_gas, fuel_oil, wood, veg_oil, sun, wind, water, other'],
+      { 'errors'=>{'primary_energy'=>['must be one of: bio_mass, bio_gas, natural_gas, fluid_gas, fuel_oil, wood, veg_oil, sun, wind, water, other'],
         'commissioning'=>['must be a date'],
         'manufacturer' => ['size cannot be greater than 64'],
         'kw_peak'=>['must be a float'],
-        'kwh_per_annum'=>['must be a float']
+        'kwh_per_annum'=>['must be a float']}
       }
     end
 
@@ -53,7 +52,7 @@ describe Admin::LocalpoolRoda, :request_helper do
     end
 
     context 'POST' do
-
+      
       it_behaves_like 'create', Device,
                       path: :path,
                       wrong: :wrong,

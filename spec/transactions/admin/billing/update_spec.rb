@@ -354,7 +354,7 @@ describe Transactions::Admin::Billing::Update do
 
           it 'fails' do
             expect {update_result}.to raise_error(Buzzn::ValidationError,
-                                                  "{:status=>\"transition from open to #{transition} is not possible\"}")
+                                                  "{:status=>[\"transition from open to #{transition} is not possible\"]}")
             billing.reload
             expect(billing.status).to eql 'open'
 

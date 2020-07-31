@@ -17,7 +17,7 @@ class Transactions::Admin::BillingItem::Update < Transactions::Base
 
   def check_valid(resource:, params:)
     if resource.status != 'open'
-      raise Buzzn::ValidationError.new(:billing => ['billing is locked'])
+      raise Buzzn::ValidationError.new({billing: ["billing is locked"]}, resource.object)
     end
   end
 
@@ -26,7 +26,7 @@ class Transactions::Admin::BillingItem::Update < Transactions::Base
       begin
         begin_reading = Reading::Single.find(params.delete(:begin_reading_id))
       rescue ActiveRecord::RecordNotFound
-        raise Buzzn::ValidationError.new(:begin_reading => ['invalid id'])
+        raise Buzzn::ValidationError.new({begin_reading: ['invalid id']})
       end
       params[:begin_reading] = begin_reading
     end

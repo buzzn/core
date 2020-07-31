@@ -70,7 +70,7 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
         end
       end
     unless errors.empty?
-      raise Buzzn::ValidationError.new(errors)
+      raise Buzzn::ValidationError.new(errors, resource.object)
     end
   end
 

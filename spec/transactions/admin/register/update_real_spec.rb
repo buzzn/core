@@ -111,7 +111,7 @@ describe Transactions::Admin::Register::UpdateReal, order: :defined do
       let(:result) {Transactions::Admin::Register::UpdateReal.new.(resource: register_second_resource, params: params)}
 
       it 'fails' do
-        expect {result}.to raise_error Buzzn::ValidationError, '{:meta=>[{:id=>"old register_meta would orphan"}]}'
+        expect {result}.to raise_error Buzzn::ValidationError, '{:meta=>["old register meta would orphan"]}'
       end
 
       context('no orphan') do
@@ -147,7 +147,7 @@ describe Transactions::Admin::Register::UpdateReal, order: :defined do
       let(:result) {Transactions::Admin::Register::UpdateReal.new.(resource: register_second_resource, params: params)}
 
       it 'fails' do
-        expect {result}.to raise_error Buzzn::ValidationError, '{:meta=>[{:id=>"old register_meta would orphan"}]}'
+        expect {result}.to raise_error Buzzn::ValidationError, '{:meta=>["old register meta would orphan"]}'
       end
 
       context('no orphan') do
@@ -177,7 +177,7 @@ describe Transactions::Admin::Register::UpdateReal, order: :defined do
       let(:result) {Transactions::Admin::Register::UpdateReal.new.(resource: register_second_resource, params: params)}
 
       it 'fails' do
-        expect {result}.to raise_error Buzzn::ValidationError, '{:meta=>[{:id=>"old register_meta would orphan"}]}'
+        expect {result}.to raise_error Buzzn::ValidationError, '{:meta=>["old register meta would orphan"]}'
       end
 
       context('no orphan') do

@@ -21,7 +21,7 @@ module Transactions::Admin::Contract::Localpool
       subject = Schemas::Support::ActiveRecordValidator.new(localpool.object)
       result = Schemas::PreConditions::Localpool::CreateLocalpoolGapContract.call(subject)
       unless result.success?
-        raise Buzzn::ValidationError.new('localpool': result.errors)
+        raise Buzzn::ValidationError.new(result.errors, localpool.object)
       end
     end
 
@@ -33,7 +33,7 @@ module Transactions::Admin::Contract::Localpool
 
     def validate_dates(localpool:, params:, **)
       if params[:begin_date] < localpool.start_date
-        raise Buzzn::ValidationError.new('begin_date': 'must be after localpool.start_date')
+        raise Buzzn::ValidationError.new({begin_date: ["begin date must be after group start date #{localpool.start_date}"]}, localpool.object)
       end
     end
 
@@ -42,7 +42,7 @@ module Transactions::Admin::Contract::Localpool
         install_decomissioned = (register_meta.registers.collect { |r| [r.installed_at&.date, r.decomissioned_at&.date] })
         # TODO move to PreCondition
         if install_decomissioned.select { |r| r[0].nil? }.any?
-          raise Buzzn::ValidationError.new('register_meta': { :name => register_meta.name, :error => 'All registers must have an IOM or similar'})
+          raise Buzzn::ValidationError.new({register_meta: ["register #{register_meta.name} must have an IOM or similar"]}, localpool.object) 
         end
         install_decomissioned_sorted = install_decomissioned.sort_by { |x| x[0] }
         installed_at     = install_decomissioned_sorted.first[0]

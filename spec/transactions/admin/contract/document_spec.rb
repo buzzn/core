@@ -12,7 +12,7 @@ shared_examples 'incorrect templates' do
     let(:params) { { template: 'haxhax' } }
 
     it 'fails' do
-      expect {result}.to raise_error Buzzn::ValidationError, '{:template=>"no a valid template"}'
+      expect {result}.to raise_error(Buzzn::ValidationError, '{:template=>["not a valid template"]}')
     end
   end
 

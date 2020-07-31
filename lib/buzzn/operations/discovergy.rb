@@ -11,10 +11,10 @@ class Operations::Discovergy
       begin
         connected = meters.connected?(meter)
       rescue Buzzn::DataSourceError
-        raise Buzzn::ValidationError.new(datasource: 'discovergy: invalid id')
+        raise Buzzn::ValidationError.new({datasource: ['discovergy: invalid id']}, meter)
       end
       unless connected
-        raise Buzzn::ValidationError.new(datasource: 'meter must be connected with discovergy')
+        raise Buzzn::ValidationError.new({datasource: ['meter must be connected with discovergy']}, meter)
       end
     end
     true

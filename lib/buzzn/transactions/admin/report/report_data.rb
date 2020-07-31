@@ -103,7 +103,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
     begin_date = params[:begin_date]
     end_date = params[:end_date]
     if end_date <= begin_date
-      raise Buzzn::ValidationError.new(begin_date: ['must be before end_date'])
+      raise Buzzn::ValidationError.new(begin_date: ['begin date must be before end date'])
     end
     begin_date...end_date
   end
@@ -188,7 +188,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
       end
     end
     unless errors.empty?
-      raise Buzzn::ValidationError.new(errors: errors)
+      raise Buzzn::ValidationError.new(errors)
     end
     sum
   end
@@ -355,10 +355,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
     contracts_with_range.each do |attrs|
       contract = attrs[:contract]
       next unless contract.register_meta.registers.to_a.keep_if { |register| register.installed_at.date < date_range.last && (register.decomissioned_at.nil? || register.decomissioned_at.date > date_range.first) }.empty?
-      raise Buzzn::ValidationError.new(:contract => {
-                                         :id => contract.id,
-                                         :register_meta => ['no register installed in date range']
-                                       })
+      raise Buzzn::ValidationError.new({contract: ["no register installed in date range"]}, contract)
     end
   end
 

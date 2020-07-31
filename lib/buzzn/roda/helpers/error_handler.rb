@@ -22,7 +22,8 @@ module Buzzn
             logger.debug{ e.errors.inspect }
             errors = e.errors.to_json
             response['Content-Type'] = 'application/json'
-            response.write(errors)
+            response.write(
+              e.json)
           when Buzzn::PermissionDenied, Buzzn::RecordNotFound, Buzzn::StaleEntity
             logger.info{ e.message }
           else

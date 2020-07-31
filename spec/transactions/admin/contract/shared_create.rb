@@ -52,7 +52,7 @@ shared_examples 'with existing contract on same register' do |transaction|
   end
 
   it 'does not create' do
-    expect {result}.to raise_error(Buzzn::ValidationError, "{:register_meta=>[{:error=>\"other_contract_active_at_begin\", :contract_id=>#{other_contract.id}}]}")
+    expect {result}.to raise_error(Buzzn::ValidationError, "{:register_meta=>[\"other contract with id #{other_contract.id} active at begin\"]}")
   end
 
 end

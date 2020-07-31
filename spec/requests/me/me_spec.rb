@@ -79,7 +79,7 @@ describe Me::Roda, :request_helper do
   context 'PATCH' do
 
     let(:wrong_json) do
-      {
+      { 'errors'=>{
         'updated_at'=>['is missing'],
         'prefix'=>['must be one of: F, M'],
         'first_name'=>['size cannot be greater than 64'],
@@ -87,7 +87,7 @@ describe Me::Roda, :request_helper do
         'preferred_language'=>['must be one of: , de, en'],
         'title'=>['must be one of: , Prof., Dr., Prof. Dr.'],
         'phone'=>['must be a valid phone-number'],
-        'fax'=>['size cannot be greater than 64'],
+        'fax'=>['size cannot be greater than 64']}
       }
     end
 

@@ -6,7 +6,7 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
     subject = Schemas::Support::ActiveRecordValidator.new(localpool.object)
     result = Schemas::PreConditions::Localpool::CreateLocalpoolPowerTakerContract.call(subject)
     unless result.success?
-      raise Buzzn::ValidationError.new('localpool': result.errors)
+      raise Buzzn::ValidationError.new(result.errors, localpool.object)
     end
   end
 
@@ -25,7 +25,7 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
     end
 
     unless validation_errors[:register_meta].nil?
-      raise Buzzn::ValidationError.new(validation_errors)
+      raise Buzzn::ValidationError.new(validation_errors, localpool.object)
     end
   end
 
@@ -41,12 +41,12 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
       begin_date = params[:begin_date]
       register_meta.contracts.each do |contract|
         if contract.status(begin_date) == Contract::Base::ACTIVE
-          raise Buzzn::ValidationError.new(register_meta: [:error => 'other_contract_active_at_begin', :contract_id => contract.id])
+          raise Buzzn::ValidationError.new({register_meta: ["other contract with id #{contract.id} active at begin"]}, contract)
         end
       end
       params[:register_meta] = register_meta
     rescue ActiveRecord::RecordNotFound
-      raise Buzzn::ValidationError.new(register_meta: [ :id => 'object does not exist'])
+      raise Buzzn::ValidationError.new({register_meta: [ :id => 'object does not exist']}, contract)
     end
   end
 

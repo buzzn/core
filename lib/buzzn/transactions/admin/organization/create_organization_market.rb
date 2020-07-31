@@ -23,7 +23,7 @@ module Transactions::Admin::Organization
 
     def functions(params:, **)
       params[:market_functions] = params.delete(:functions).each_with_index.map do |functionp, idx|
-        raise Buzzn::ValidationError, {:functions => { idx => {:market_partner_id => ["#{functionp[:market_partner_id]} already exists"] }}} if Organization::MarketFunction.where(:market_partner_id => functionp[:market_partner_id]).any?
+        raise Buzzn::ValidationError.new({market_partner_id: ["#{functionp[:market_partner_id]} already exists"]}) if Organization::MarketFunction.where(:market_partner_id => functionp[:market_partner_id]).any?
         create_address.(params: functionp)
         create_address.(params: functionp[:contact_person] || {})
         create_person.(params: functionp, method: :contact_person)

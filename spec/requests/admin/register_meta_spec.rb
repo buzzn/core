@@ -130,13 +130,13 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
       end
 
       let(:wrong_json) do
-        {
+        { 'errors'=>{
           'updated_at'=>['is missing'],
           'label'=>['must be one of: CONSUMPTION, CONSUMPTION_COMMON, DEMARCATION_PV, DEMARCATION_CHP, DEMARCATION_WIND, DEMARCATION_WATER, PRODUCTION_PV, PRODUCTION_CHP, PRODUCTION_WIND, PRODUCTION_WATER, GRID_CONSUMPTION, GRID_FEEDING, GRID_CONSUMPTION_CORRECTED, GRID_FEEDING_CORRECTED, OTHER'],
           'observer_enabled'=>['must be boolean'],
           'observer_min_threshold'=>['must be an integer'],
           'observer_max_threshold'=>['must be an integer'],
-          'observer_offline_monitoring'=>['must be boolean'],
+          'observer_offline_monitoring'=>['must be boolean']}
         }
       end
 

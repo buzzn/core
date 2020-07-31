@@ -64,7 +64,7 @@ class Transactions::Admin::Meter::CreateReal < Transactions::Admin::Meter
                begin
                  Register::Meta.find(r[:id])
                rescue ActiveRecord::RecordNotFound
-                 raise Buzzn::ValidationError.new(registers: { index: [:id => 'object does not exist'] })
+                raise Buzzn::ValidationError.new({registers: ["index does not exist"]})
                end
              end
       Register::Real.create(meter: create_meter.object,

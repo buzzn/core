@@ -44,8 +44,8 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   # @param [number] target to write the next field into.
   def jump_field(target)
     if @skiped > target
-      raise Buzzn::ValidationError.new "Already at #{@skiped} but field #{target} was requested." \
-            'Can not jump fields backwards.'
+      raise Buzzn::ValidationError.new({field: ["Already at #{@skiped} but field #{target} was requested." \
+            'Can not jump fields backwards.']})
     end
 
     skip(target - @skiped)
@@ -91,7 +91,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       prefix = target.sub(/0 ?([0-9]*).*/, '+49 \1')
       suffix = target.sub(/0 ?([0-9]*)(.*)/, '\2')
     else
-      raise Buzzn::ValidationError.new "#{target_person.first_name} #{target_person.last_name}'s phone number'#{target}' does not match required format. Sample (+49 89 1234567890)"
+      raise Buzzn::ValidationError.new({phone_number: ["#{target_person.first_name} #{target_person.last_name}'s phone number'#{target}' does not match required format. Sample (+49 89 1234567890)"]}, target_person)
     end
 
     suffix = suffix.delete(' ')

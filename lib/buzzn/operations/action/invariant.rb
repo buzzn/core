@@ -8,7 +8,7 @@ class Operations::Action::Invariant
     result = invariant(object)
     unless result.success?
       object.reload
-      raise Buzzn::ValidationError.new(result.errors)
+      raise Buzzn::ValidationError.new(result.errors, object)
     end
   end
 

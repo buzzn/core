@@ -25,7 +25,7 @@ module Transactions::Admin::Contract::Localpool
       subject = Schemas::Support::ActiveRecordValidator.new(localpool.object)
       result = Schemas::PreConditions::Localpool::CreateLocalpoolGapContract.call(subject)
       unless result.success?
-        raise Buzzn::ValidationError.new('localpool': result.errors)
+        raise Buzzn::ValidationError.new(result.errors, localpool.object)
       end
     end
 

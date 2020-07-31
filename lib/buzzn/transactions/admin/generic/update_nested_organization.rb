@@ -55,7 +55,7 @@ module Transactions::Admin::Generic
       end
 
       if schema_second_pass_validations.size.positive?
-        raise Buzzn::ValidationError.new(schema_second_pass_validations)
+        raise Buzzn::ValidationError.new(schema_second_pass_validations, resource.object)
       end
     end
 

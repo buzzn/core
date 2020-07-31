@@ -96,7 +96,7 @@ describe Transactions::Admin::Contract::Localpool::CreatePowerTakerAssign, order
 
     it 'does not assign an invalid id' do
       localpool.reload
-      expect {result_invalid}.to raise_error(Buzzn::ValidationError, '{:customer=>{:id=>"object does not exist"}}')
+      expect {result_invalid}.to raise_error(Buzzn::ValidationError, '{:customer=>["customer does not exist"]}')
     end
 
     context 'already present contract' do

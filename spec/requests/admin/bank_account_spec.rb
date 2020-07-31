@@ -64,11 +64,7 @@ describe Admin::BankAccountRoda, :request_helper do
       let(:bank_account_json) { serialized_bank_account(bank_account) }
 
       let(:wrong_json) do
-        {
-          'holder'=>['size cannot be greater than 64'],
-          'iban'=>['must be a string'],
-          'bank_name'=>['size cannot be greater than 64']
-        }
+        {"errors"=>{"holder"=>["size cannot be greater than 64"], "iban"=>["must be a string"], "bank_name"=>["size cannot be greater than 64"]}}
       end
 
       context 'POST' do
@@ -93,12 +89,7 @@ describe Admin::BankAccountRoda, :request_helper do
         end
 
         let(:wrong_json) do
-          {
-            'updated_at'=>['is missing'],
-            'holder'=>['size cannot be greater than 64'],
-            'iban'=>['must be a valid iban'],
-            'bank_name'=>['size cannot be greater than 64']
-          }
+          {"errors"=>{"updated_at"=>["is missing"], "holder"=>["size cannot be greater than 64"], "iban"=>["must be a valid iban"], "bank_name"=>["size cannot be greater than 64"]}}
         end
 
         it '401' do

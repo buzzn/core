@@ -62,7 +62,7 @@ describe Transactions::Admin::Contract::Localpool::CreateGapContract, order: :de
       end
 
       it 'does not create' do
-        expect {result}.to raise_error(Buzzn::ValidationError, '{:localpool=>{:gap_contract_customer=>["must be filled"]}}')
+        expect {result}.to raise_error(Buzzn::ValidationError, '{:gap_contract_customer=>["must be filled"]}')
       end
 
     end

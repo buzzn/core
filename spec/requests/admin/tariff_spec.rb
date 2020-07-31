@@ -54,11 +54,11 @@ describe Admin::LocalpoolRoda, :request_helper do
     context 'POST' do
 
       let(:wrong_json) do
-        {
+        { 'errors'=>{
           'name'=>['size cannot be greater than 64'],
           'begin_date'=>['must be a date'],
           'energyprice_cents_per_kwh'=>['must be a float'],
-          'baseprice_cents_per_month'=>['must be a float']
+          'baseprice_cents_per_month'=>['must be a float']}
         }
       end
 
