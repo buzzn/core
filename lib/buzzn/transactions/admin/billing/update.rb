@@ -126,7 +126,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
     when :document
       generator = Pdf::Invoice.new(resource.object)
       generator.disable_cache
-      filename="Stromrechnung_#{resource.object.full_invoice_number.tr('/', '-')}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}_#{receiver_person.last_name}.pdf"
+      filename="Stromrechnung_#{resource.object.full_invoice_number.tr('/', '-')}_#{Buzzn::Utils::Chronos.now.strftime('%Y%m%d_%H%M%S')}_#{receiver_person&.last_name}.pdf"
       document = generator.create_pdf_document(nil, filename).document
       unless resource.object.documents.where(:id => document.id).any?
         resource.object.documents << document
