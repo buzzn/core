@@ -13,7 +13,6 @@ module Contract
     validates :old_supplier_name, presence: false
     validates :old_customer_number, presence: false
     validates :old_account_number, presence: false
-    validates :begin_date, presence: false
 
     before_validation :calculate_price
 
@@ -22,17 +21,12 @@ module Contract
       if old_supplier_name.nil? &&
          old_customer_number.nil? &&
          old_account_number.nil?
-        errors.add(:begin_date, IS_MISSING) unless begin_date
       elsif old_supplier_name.nil? ||
          old_customer_number.nil? ||
             old_account_number.nil?
         errors.add(:old_supplier_name, IS_MISSING) unless old_supplier_name
         errors.add(:old_customer_number, IS_MISSING) unless old_customer_number
         errors.add(:old_account_number, IS_MISSING) unless old_account_number
-      end
-
-      if onboarding?
-        errors.add(:begin_date, IS_MISSING) unless begin_date
       end
     end
 
