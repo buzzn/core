@@ -11784,7 +11784,7 @@ paths:
         maxLength: 64
       - name: register_meta.label
         in: formData
-        required: treu
+        required: true
         type: string
         enum:
         - CONSUMPTION
