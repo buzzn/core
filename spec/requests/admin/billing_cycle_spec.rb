@@ -16,7 +16,7 @@ describe Admin::BillingCycleRoda, :request_helper do
     entity(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
 
     let(:expected_json) do
-      {
+      {   
         'id'=>billing_cycle.id,
         'type'=>'billing_cycle',
         'created_at'=>billing_cycle.created_at.as_json,
@@ -49,9 +49,9 @@ describe Admin::BillingCycleRoda, :request_helper do
     end
 
     let(:expected_errors) do
-      {
+      { 'errors'=>{
         'name'=>['size cannot be greater than 64'],
-        'last_date'=>['must be a date']
+        'last_date'=>['must be a date']}
       }
     end
 
@@ -93,10 +93,10 @@ describe Admin::BillingCycleRoda, :request_helper do
 
     let(:path) { "/localpools/#{localpool.id}/billing-cycles/#{billing_cycle.id}" }
     let(:expected_error_json) do
-      {
+      { 'errors'=>{
         'updated_at'=>['is missing'],
         'name'=>['size cannot be greater than 64'],
-        'last_date'=>['must be a date']
+        'last_date'=>['must be a date']}
       }
     end
 

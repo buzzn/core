@@ -613,7 +613,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             it 'creates a metering point operator contract' do
               POST path, $admin, missing_everything_json
               expect(response).to have_http_status(422)
-              expect(json['begin_date']).to eq [ "is missing" ]
+              expect(json['errors']['begin_date']).to eq [ "is missing" ]
             end
 
           end
@@ -631,7 +631,7 @@ describe Admin::LocalpoolRoda, :request_helper do
               expect(response).to have_http_status(201)
               POST path, $admin, with_begin_date_json
               expect(response).to have_http_status(422)
-              expect(json['only_active_contract']).to eql [ "another contract is already active" ]
+              expect(json['errors']['only_active_contract']).to eql [ "another contract is already active" ]
 
             end
 
@@ -664,7 +664,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             it 'fails with 422 for incomplete data: everything' do
               POST path, $admin, missing_everything_json
               expect(response).to have_http_status(422)
-              expect(json['begin_date']).to eq ['is missing']
+              expect(json['errors']['begin_date']).to eq ['is missing']
             end
 
           end
