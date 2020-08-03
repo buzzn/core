@@ -21,21 +21,24 @@ module Schemas
           end
 
           def begun_at?(begin_date, localpool)
-            localpool.start_date <= begin_date
+            unless begin_date.nil?
+             localpool.start_date <= begin_date
+            end
+            true
           end
 
         end
 
         required(:localpool).filled
         required(:tariffs).maybe
-        required(:begin_date).filled
+        optional(:begin_date).maybe(:date?)
 
         rule(tariffs: [:localpool, :tariffs]) do |localpool, tariffs|
           localpool.localpool_tariffs?(tariffs).and(tariffs.unique_begin_date?)
         end
 
         rule(begin_date: [:localpool, :begin_date]) do |localpool, begin_date|
-          localpool.begun_at?(begin_date)
+            localpool.begun_at?(begin_date)
         end
 
       end
