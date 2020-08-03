@@ -41,7 +41,7 @@ module Transactions::Admin::Contract::Localpool
       localpool.object.register_metas.to_a.keep_if { |x| x.consumption? }.collect do |register_meta|
         install_decomissioned = (register_meta.registers.collect { |r| [r.installed_at&.date, r.decomissioned_at&.date] })
         # TODO move to PreCondition
-        if install_decomissioned.select { |r| r[0].nil? }.any?
+        if install_decomissioned.select { |r| r[0].nil? }.any? || install_decomissioned.empty?
           raise Buzzn::ValidationError.new({register_meta: ["register #{register_meta.name} must have an IOM or similar"]}, localpool.object) 
         end
         install_decomissioned_sorted = install_decomissioned.sort_by { |x| x[0] }

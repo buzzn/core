@@ -11778,13 +11778,13 @@ paths:
         format: int64
       - name: register_meta.name
         in: formData
-        required: false
+        required: true
         type: string
         format: ''
         maxLength: 64
       - name: register_meta.label
         in: formData
-        required: false
+        required: treu
         type: string
         enum:
         - CONSUMPTION
@@ -12007,13 +12007,13 @@ paths:
         format: int64
       - name: register_meta.name
         in: formData
-        required: false
+        required: true
         type: string
         format: ''
         maxLength: 64
       - name: register_meta.label
         in: formData
-        required: false
+        required: true
         type: string
         enum:
         - CONSUMPTION
@@ -13235,13 +13235,13 @@ paths:
         format: int64
       - name: register_meta.name
         in: formData
-        required: false
+        required: true
         type: string
         format: ''
         maxLength: 64
       - name: register_meta.label
         in: formData
-        required: false
+        required: true
         type: string
         enum:
         - CONSUMPTION
