@@ -25,7 +25,7 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
     end
 
     unless validation_errors[:register_meta].nil?
-      raise Buzzn::ValidationError.new(validation_errors, localpool.object)
+      raise Buzzn::ValidationError.new(validation_errors)
     end
   end
 
