@@ -355,7 +355,7 @@ class Transactions::Admin::Report::ReportData < Transactions::Base
     contracts_with_range.each do |attrs|
       contract = attrs[:contract]
       next unless contract.register_meta.registers.to_a.keep_if { |register| register.installed_at.date < date_range.last && (register.decomissioned_at.nil? || register.decomissioned_at.date > date_range.first) }.empty?
-      raise Buzzn::ValidationError.new({contract: ["no register installed in date range"]}, contract)
+      raise Buzzn::ValidationError.new({contract: ['no register installed in date range']}, contract)
     end
   end
 

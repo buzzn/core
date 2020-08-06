@@ -19,11 +19,11 @@ class Transactions::Admin::Contract::Localpool::AssignTariffs < Transactions::Ba
       tariffs = Contract::Tariff.find(params[:tariff_ids])
       tariffs.each do |tariff|
         if tariff.group != resource.object.localpool
-          raise Buzzn::ValidationError.new({tariffs: ["one or more tariffs do not belong to this group"]}, resource.object)
+          raise Buzzn::ValidationError.new({tariffs: ['one or more tariffs do not belong to this group']}, resource.object)
         end
       end
     rescue ActiveRecord::RecordNotFound
-      raise Buzzn::ValidationError.new({tariffs: ["one or more tariffs do not exist"]}, resource.object)
+      raise Buzzn::ValidationError.new({tariffs: ['one or more tariffs do not exist']}, resource.object)
     end
   end
 
@@ -36,7 +36,7 @@ class Transactions::Admin::Contract::Localpool::AssignTariffs < Transactions::Ba
     # check whether the already used tariffs are still included in the assignment
 
     unless (fetched_tariffs & used_tariffs).sort == used_tariffs.sort
-      raise Buzzn::ValidationError.new({tariffs: ["tariffs are already used in billings"]}, resource.object)
+      raise Buzzn::ValidationError.new({tariffs: ['tariffs are already used in billings']}, resource.object)
     end
     # check whether a tariff would be valid for an already billed item
     new_tariffs = fetched_tariffs - resource.object.tariffs

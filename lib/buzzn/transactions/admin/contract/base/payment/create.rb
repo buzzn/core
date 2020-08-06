@@ -24,7 +24,7 @@ module Transactions::Admin::Contract::Base::Payment
           nil
         end
       rescue ActiveRecord::RecordNotFound
-        raise Buzzn::ValidationError.new({tariff: ["tariff does not exist"]})
+        raise Buzzn::ValidationError.new({tariff: ['tariff does not exist']})
       end
     end
 

@@ -21,7 +21,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
 
   def validate_contract(contract:, **)
     unless contract.is_a? Contract::LocalpoolPowerTaker
-      raise Buzzn::ValidationError.new({contract: ["not a valid contract"]}, contract)
+      raise Buzzn::ValidationError.new({contract: ['not a valid contract']}, contract)
     end
     # validate
     subject = Schemas::Support::ActiveRecordValidator.new(contract)
@@ -33,13 +33,13 @@ class Transactions::Admin::Billing::Create < Transactions::Base
 
   def validate_dates(params:, contract:, **)
     if params[:last_date] < params[:begin_date]
-      raise Buzzn::ValidationError.new({last_date: ["must be after begin date"]}, contract)
+      raise Buzzn::ValidationError.new({last_date: ['must be after begin date']}, contract)
     end
     if params[:begin_date] < contract.begin_date
       raise Buzzn::ValidationError.new({begin_date: ["must be after contract[\"begin_date\"]"]}, contract)
     end
     if contract.tariffs.at(params[:begin_date]).empty?
-      raise Buzzn::ValidationError.new({contract: ["tariffs must cover begin date"]}, contract)
+      raise Buzzn::ValidationError.new({contract: ['tariffs must cover begin date']}, contract)
     end
   end
 
@@ -49,7 +49,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
 
   def validate_registers(params:, contract:, date_range:, **)
     if contract.register_meta.registers.to_a.keep_if { |register| register.installed_at.date < date_range.last && (register.decomissioned_at.nil? || register.decomissioned_at.date > date_range.first) }.empty?
-      raise Buzzn::ValidationError.new({register_meta: ["no register installed in date range"]}, contract)
+      raise Buzzn::ValidationError.new({register_meta: ['no register installed in date range']}, contract)
     end
   end
 

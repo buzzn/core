@@ -67,7 +67,7 @@ shared_examples 'update' do |object_name, path:, wrong:, params:, errors:, expec
   let(:errors_json) do
     case errors
     when Hash
-      {"errors"=> errors}
+      {'errors'=> errors}
     else
       send(errors)
     end
@@ -234,7 +234,7 @@ shared_examples 'create' do |model_clazz, path:, wrong:, params:, errors:, expec
   let(:errors_json) do
     case errors
     when Hash
-      {"errors"=> errors}
+      {'errors'=> errors}
     else
       send(errors)
     end

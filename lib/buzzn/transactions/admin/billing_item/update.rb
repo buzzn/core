@@ -17,7 +17,7 @@ class Transactions::Admin::BillingItem::Update < Transactions::Base
 
   def check_valid(resource:, params:)
     if resource.status != 'open'
-      raise Buzzn::ValidationError.new({billing: ["billing is locked"]}, resource.object)
+      raise Buzzn::ValidationError.new({billing: ['billing is locked']}, resource.object)
     end
   end
 

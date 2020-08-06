@@ -15,7 +15,7 @@ class Transactions::Admin::BankAccount::Assign < Transactions::Base
   def check_bank_account(params:, resource:, person_or_org:, attribute:)
     person_or_org = resource.object.send(person_or_org)
     if person_or_org.nil?
-      raise Buzzn::ValidationError.new({"#{person_or_org}": ["must be assigned first"]}, resource.object)
+      raise Buzzn::ValidationError.new({"#{person_or_org}": ['must be assigned first']}, resource.object)
     end
 
     begin

@@ -46,12 +46,12 @@ class Transactions::Admin::Register::UpdateReal < Transactions::Base
              begin
                Register::Meta.find(metap[:id])
              rescue ActiveRecord::RecordNotFound
-              raise Buzzn::ValidationError.new({meta: ["meta does not exist"]}, resource.object)
+              raise Buzzn::ValidationError.new({meta: ['meta does not exist']}, resource.object)
              end
            end
     if resource.object.meta != meta
       if !resource.object.meta.nil? && resource.object.meta.contracts.empty? && resource.object.meta.registers.count == 1
-        raise Buzzn::ValidationError.new({meta: ["old register meta would orphan"]}, resource.object)
+        raise Buzzn::ValidationError.new({meta: ['old register meta would orphan']}, resource.object)
       end
     end
     params[:meta] = meta

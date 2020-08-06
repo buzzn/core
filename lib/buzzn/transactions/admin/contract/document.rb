@@ -47,7 +47,7 @@ class Transactions::Admin::Contract::Document < Transactions::Base
 
   def check_generator_name(generator_names:, params:, **)
     unless generator_names.include?(params[:template])
-      raise Buzzn::ValidationError.new({template: ["not a valid template"]})
+      raise Buzzn::ValidationError.new({template: ['not a valid template']})
     end
   end
 

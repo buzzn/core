@@ -198,9 +198,9 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
   context 'POST' do
 
     let(:wrong_json) do
-      {"errors"=>{"name"=>["size cannot be greater than 64"], 
-        "description"=>["size cannot be greater than 256"], 
-        "start_date"=>["must be a date"]}}
+      {'errors'=>{'name'=>['size cannot be greater than 64'], 
+        'description'=>['size cannot be greater than 256'], 
+        'start_date'=>['must be a date']}}
     end
 
     it '401' do
@@ -313,15 +313,15 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
 
     # make rubocop happy
     let(:wrong_json) do
-      {"errors"=>{"updated_at"=>["is missing"], 
-        "name"=>["size cannot be greater than 64"], 
-        "description"=>["size cannot be greater than 256"], 
-        "start_date"=>["must be a date"], 
-        "show_object"=>["must be boolean"], 
-        "show_production"=>["must be boolean"], 
-        "show_energy"=>["must be boolean"], 
-        "show_contact"=>["must be boolean"], 
-        "show_display_app"=>["must be boolean"]}}
+      {'errors'=>{'updated_at'=>['is missing'], 
+        'name'=>['size cannot be greater than 64'], 
+        'description'=>['size cannot be greater than 256'], 
+        'start_date'=>['must be a date'], 
+        'show_object'=>['must be boolean'], 
+        'show_production'=>['must be boolean'], 
+        'show_energy'=>['must be boolean'], 
+        'show_contact'=>['must be boolean'], 
+        'show_display_app'=>['must be boolean']}}
     end
 
     let(:updated_json) do

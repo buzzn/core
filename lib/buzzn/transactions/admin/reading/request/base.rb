@@ -17,7 +17,7 @@ class Transactions::Admin::Reading::Request::Base < Transactions::Base
 
   def check_resource(resource:, **)
     unless resource.is_a? Register::RealResource
-      raise Buzzn::ValidationError.new({resource: ["not a valid resource"]}, resource.object)
+      raise Buzzn::ValidationError.new({resource: ['not a valid resource']}, resource.object)
     end
   end
 
@@ -30,7 +30,7 @@ class Transactions::Admin::Reading::Request::Base < Transactions::Base
     end
     readings = reading_service.get(resource.object, time, :precision => 2.days, fetch: true, create: set_create)
     if readings.nil?
-      raise Buzzn::RemoteNotFound.new({register: ["reading could not be fetched"]}, resource.object)
+      raise Buzzn::RemoteNotFound.new({register: ['reading could not be fetched']}, resource.object)
     end
     readings.first
   end

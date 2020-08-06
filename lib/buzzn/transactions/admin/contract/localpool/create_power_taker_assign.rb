@@ -29,7 +29,7 @@ module Transactions::Admin::Contract::Localpool
                               Person.find(params[:customer][:id])
                             end
       rescue ActiveRecord::RecordNotFound
-        raise Buzzn::ValidationError.new({customer: ["customer does not exist"]})
+        raise Buzzn::ValidationError.new({customer: ['customer does not exist']})
       end
     end
 

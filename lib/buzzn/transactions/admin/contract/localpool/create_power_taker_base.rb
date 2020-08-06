@@ -46,7 +46,7 @@ class Transactions::Admin::Contract::Localpool::CreatePowerTakerBase < Transacti
       end
       params[:register_meta] = register_meta
     rescue ActiveRecord::RecordNotFound
-      raise Buzzn::ValidationError.new({register_meta: [ :id => 'object does not exist']}, contract)
+      raise Buzzn::ValidationError.new({register_meta: ['id does not exist']}, contract)
     end
   end
 

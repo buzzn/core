@@ -11,11 +11,11 @@ class Operations::Overlappings
               unless c.begin_date.nil? 
                 if c.end_date.nil?
                   if params[:last_date] > c.begin_date
-                    raise Buzzn::ValidationError.new({no_other_contract_in_range: ["there is already another contract in that time range present"]}, resource.object)
+                    raise Buzzn::ValidationError.new({no_other_contract_in_range: ['there is already another contract in that time range present']}, resource.object)
                   end
                 else
                   if params[:last_date] > c.begin_date && params[:last_date] < c.end_date
-                    raise Buzzn::ValidationError.new({no_other_contract_in_range: ["there is already another contract in that time range present"]}, resource.object)
+                    raise Buzzn::ValidationError.new({no_other_contract_in_range: ['there is already another contract in that time range present']}, resource.object)
                   end
                 end
               end
