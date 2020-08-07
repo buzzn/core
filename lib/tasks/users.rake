@@ -1,4 +1,5 @@
 namespace :users do
+  require 'io/console'
 
   desc 'List all users'
   task list: :environment do
