@@ -9,8 +9,8 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   validate :schema
   authorize :allowed_roles
 
-  add :warnings
-  add :header
+  add :file_header
+  add :exported_columns
   map :export_group
 
   def schema
@@ -21,31 +21,12 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
     permission_context.exchange.group.create
   end
 
-  def warnings
-    []
-  end
-
-  def result(warnings:, header:, export_group:, **)
+  # Converts the result into a datev readable charset.
+  # According to https://apps.datev.de/dnlexka/document/1001008
+  # The charset has to be ansii.
+  def result(file_header:, export_group:, **)
     # The dtvf importer used by iswarwatt does not support utf8 encoding.
-    (header + export_group).encode(Encoding.find('ISO-8859-1'))
-  end
-
-  # Skips fields, which will not be filled.
-  # @param [number] Count of skipped fields, default 1.
-  def skip(count = 1)
-    @target << ';' * count
-    @skiped += count
-  end
-
-  # Skips untils a specified field is reached.
-  # @param [number] target to write the next field into.
-  def jump_field(target)
-    if @skiped > target
-      raise Buzzn::ValidationError.new({field: ["Already at #{@skiped} but field #{target} was requested." \
-            'Can not jump fields backwards.']})
-    end
-
-    skip(target - @skiped)
+    (file_header + export_group).encode(Encoding.find('WINDOWS-1252'))
   end
 
   # Converts a phone number into the format:
@@ -83,7 +64,29 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
            contract.contract_number_addition)
   end
 
-  def columns_table
+  # Creates the file header fitting to the datev importer.
+  def file_header
+    <<~HEADER
+      DTVF;700;16;Debitoren/Kreditoren;5;2,01907E+16;;RE;info;;557718;38017;20190101;5;;;;;;0;;;;;;74252;4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    HEADER
+  end
+
+  # Exports the given group.
+  def export_group(params:, resource:, file_header:, exported_columns:, **)
+    target = StringIO.new
+    target << file_header
+    target << exported_columns.join(';')
+    resource.contracts.select {|c| c.is_a? Contract::LocalpoolPowerTakerResource}
+      .map {|u| export_contract(u) }
+      .each{|r| target << "\n" << r.join(';')}
+    target.string
+  end
+
+  # Creates an array of exported fields. This needs to match the fields exported by progress_person.
+  # Caution: Some of the fields are duplicates, example Leerfeld. Thus it is
+  # not possible to create a hash for each person to export.
+  # @return An array of all columns meant to export.
+  def exported_columns
     [
       'Konto',
       'Name (Adressattyp Unternehmen)',
@@ -342,7 +345,9 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
     ]
   end
 
-  def table(contract)
+  # Exports the given contract.
+  # @return An array of all the fields meant to be exported. The order must match the exported_columns.
+  def export_contract(contract)
     person = contract.contact
     [
       account_number(contract), # Konto
@@ -601,22 +606,4 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       '' # Letzte Frist
     ]
     end
-
-  def header
-    <<~HEADER
-      DTVF;700;16;Debitoren/Kreditoren;5;2,01907E+16;;RE;info;;557718;38017;20190101;5;;;;;;0;;;;;;74252;4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    HEADER
-  end
-
-  # Exports the given group.
-  def export_group(params:, resource:, header:, **)
-    target = StringIO.new
-    target << header
-    target << columns_table().join(';')
-    resource.contracts.select {|c| c.is_a? Contract::LocalpoolPowerTakerResource}
-      .map {|u| table(u) }
-      .each{|r| target << "\n" << r.join(';')}
-    target.string
-  end
-
 end
