@@ -25,9 +25,10 @@ module Admin
       sheet = workbook[0]
 
       date_of_reading = DateTime.new(2019, 12, 31)
-
-      if !sheet[0][5].value.nil? && (sheet[0][5].value.is_a? DateTime)
-        date_of_reading = sheet[0][5].value # todo adjust to a usfull default date
+      unless sheet[0][5].nil?
+        if !sheet[0][5].value.nil? && (sheet[0][5].value.is_a? DateTime)
+          date_of_reading = sheet[0][5].value # todo adjust to a usfull default date
+        end
       end
 
       name_of_group = sheet[0][0].value
@@ -211,18 +212,18 @@ module Admin
           warnings.concat(result.value![:warnings].map(&:to_s))
         end
 
-        consumption_eeg_reduced = (result.value[:consumption_eeg_reduced]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
-        consumption_eeg_full = (result.value[:consumption_eeg_full]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
-        consumption_without_third_party = (result.value[:consumption_without_third_party]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
-        production = (result.value[:production]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
-        production_consumend_in_group_kWh = (result.value[:production_consumend_in_group_kWh]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
+        consumption_eeg_reduced = (result.value![:consumption_eeg_reduced]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
+        consumption_eeg_full = (result.value![:consumption_eeg_full]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
+        consumption_without_third_party = (result.value![:consumption_without_third_party]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
+        production = (result.value![:production]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
+        production_consumend_in_group_kWh = (result.value![:production_consumend_in_group_kWh]/1000).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1\'').reverse
         return {
           errors: ["LSN als Letztverbraucher #{consumption_eeg_full}kWh",
                    "LSG als Letztverbraucher #{consumption_eeg_reduced}kWh",
                    "Verbrauchsmenge gesamt #{consumption_without_third_party}kWh",
                    "Upstream 3: Produktion gesamt #{production}",
                    "Summe: Upstream 1: Produktion, die in LEG verbraucht wurde #{production_consumend_in_group_kWh}"].concat(reading_errors),
-          fakeStats: result.value,
+          fakeStats: result.value!,
           warnings: warnings
         }
       rescue Exception => e

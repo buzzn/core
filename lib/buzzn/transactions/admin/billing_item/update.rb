@@ -37,7 +37,7 @@ class Transactions::Admin::BillingItem::Update < Transactions::Base
       begin
         end_reading = Reading::Single.find(params.delete(:end_reading_id))
       rescue ActiveRecord::RecordNotFound
-        raise Buzzn::ValidationError.new(:end_reading => ['invalid id'])
+        raise Buzzn::ValidationError.new({end_reading: ['invalid id']})
       end
       params[:end_reading] = end_reading
     end
