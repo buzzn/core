@@ -32,7 +32,7 @@ Naming/MethodName:
   # there are methods named PATCH(), def Schema(), ...
   Enabled: false
 
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: false
 
 # Separating numbers by underscores to make them more readable (10_123_555 instead of 10123555) is nice but
@@ -86,10 +86,6 @@ Layout/TrailingWhitespace:
 # use { } for one-line blocks, do/end for multiline
 Style/BlockDelimiters:
   EnforcedStyle: line_count_based
-
-# omit the { } for if the last method argument is a hash
-Style/BracesAroundHashParameters:
-  EnforcedStyle: context_dependent
 
 # don't use === in Ruby, it means different things on different types, and may not be what you want.
 # Use object.is_a? instead. https://stackoverflow.com/questions/3422223/vs-in-ruby

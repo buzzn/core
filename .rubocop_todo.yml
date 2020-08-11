@@ -8,7 +8,7 @@
 
 # Offense count: 6
 # Cop supports --auto-correct.
-Layout/AlignArray:
+Layout/ArrayAlignment:
   Exclude:
     - 'app/models/device.rb'
     - 'app/models/register/base.rb'
@@ -19,7 +19,7 @@ Layout/AlignArray:
 # SupportedHashRocketStyles: key, separator, table
 # SupportedColonStyles: key, separator, table
 # SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
-Layout/AlignHash:
+Layout/HashAlignment:
   Exclude:
     - 'db/example_data/persons.rb'
     - 'db/support/create_buzzn_operator.rb'
@@ -31,7 +31,7 @@ Layout/AlignHash:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.
 # SupportedStyles: with_first_parameter, with_fixed_indentation
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   Exclude:
     - 'db/example_data/contracts.rb'
     - 'db/example_data/localpools.rb'
@@ -126,7 +126,7 @@ Layout/FirstParameterIndentation:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.
 # SupportedStyles: special_inside_parentheses, consistent, align_brackets
-Layout/IndentArray:
+Layout/FirstArrayElementIndentation:
   Exclude:
     - 'db/example_data/contracts.rb'
 
@@ -134,7 +134,7 @@ Layout/IndentArray:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.
 # SupportedStyles: special_inside_parentheses, consistent, align_braces
-Layout/IndentHash:
+Layout/FirstHashElementIndentation:
   Exclude:
     - 'app/models/contract/base.rb'
     - 'app/models/contract/payment.rb'
@@ -365,7 +365,7 @@ Lint/AssignmentInCondition:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleAlignWith.
 # SupportedStylesAlignWith: either, start_of_block, start_of_line
-Lint/BlockAlignment:
+Layout/BlockAlignment:
   Exclude:
     - 'spec/factories/factories_spec.rb'
     - 'spec/requests/admin/localpool_spec.rb'
@@ -390,7 +390,7 @@ Lint/EmptyWhen:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleAlignWith, AutoCorrect.
 # SupportedStylesAlignWith: keyword, variable, start_of_line
-Lint/EndAlignment:
+Layout/EndAlignment:
   Exclude:
     - 'app/models/contract/base.rb'
     - 'lib/beekeeper/importer/log_localpool_todos.rb'
@@ -427,7 +427,7 @@ Lint/UnderscorePrefixedVariableName:
 
 # Offense count: 2
 # Cop supports --auto-correct.
-Lint/UnneededSplatExpansion:
+Lint/RedundantSplatExpansion:
   Exclude:
     - 'lib/buzzn/types/datasource/unit.rb'
     - 'lib/buzzn/types/discovergy/readings.rb'
@@ -569,65 +569,16 @@ Naming/VariableNumber:
     - 'lib/buzzn/utils/chronos.rb'
     - 'spec/buzzn/utils/chronos_spec.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Performance/CaseWhenSplat:
-  Exclude:
-    - 'lib/buzzn/localpool/total_accounted_energy.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Performance/CompareWithBlock:
-  Exclude:
-    - 'spec/support/swagger_helper.rb'
-
 # Offense count: 5
 # Cop supports --auto-correct.
 # Configuration parameters: AutoCorrect.
-Performance/HashEachMethods:
+Style/HashEachMethods:
   Exclude:
     - 'app/models/organization.rb'
     - 'lib/beekeeper/models/minipool/msb_zählwerk_daten.rb'
     - 'lib/buzzn/core/number.rb'
     - 'lib/buzzn/logger.rb'
     - 'lib/buzzn/permission.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Performance/RangeInclude:
-  Exclude:
-    - 'script/beekeeper_import/find_missing_readings.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-Performance/RedundantBlockCall:
-  Exclude:
-    - 'lib/buzzn/resource/collection.rb'
-    - 'lib/buzzn/schemas/support/visitor.rb'
-    - 'lib/buzzn/services/datasource/registry.rb'
-    - 'spec/support/swagger_helper.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Performance/RedundantMatch:
-  Exclude:
-    - 'script/find_invalid_db_entries.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
-Performance/StringReplacement:
-  Exclude:
-    - 'app/models/address.rb'
-    - 'lib/buzzn/logger.rb'
-    - 'lib/buzzn/slug.rb'
-    - 'spec/support/swagger_helper.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect.
-Performance/TimesMap:
-  Exclude:
-    - 'app/models/filterable.rb'
 
 # Offense count: 1
 Security/Eval:
@@ -809,7 +760,17 @@ Style/InverseMethods:
     - 'script/find_invalid_db_entries.rb'
 
 # Offense count: 8
-Style/MethodMissing:
+Style/MethodMissingSuper:
+  Exclude:
+    - 'lib/buzzn/interval.rb'
+    - 'lib/buzzn/permission.rb'
+    - 'lib/buzzn/resource/base.rb'
+    - 'lib/buzzn/utils/number.rb'
+    - 'spec/services/data_source_mocks.rb'
+    - 'spec/spec_helper.rb'
+
+# Offense count: 8
+Style/MissingRespondToMissing:
   Exclude:
     - 'lib/buzzn/interval.rb'
     - 'lib/buzzn/permission.rb'
@@ -1082,7 +1043,10 @@ Style/TrailingCommaInArguments:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleForMultiline.
 # SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+Style/TrailingCommaInHashLiteral:
   Enabled: false
 
 # Offense count: 2
@@ -1094,7 +1058,7 @@ Style/UnlessElse:
 
 # Offense count: 2
 # Cop supports --auto-correct.
-Style/UnneededInterpolation:
+Style/RedundantInterpolation:
   Exclude:
     - 'lib/buzzn/core/number.rb'
     - 'spec/support/swagger_helper.rb'
@@ -1118,5 +1082,5 @@ Style/ZeroLengthPredicate:
 # Offense count: 1622
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
-Metrics/LineLength:
+Layout/LineLength:
   Max: 1297
