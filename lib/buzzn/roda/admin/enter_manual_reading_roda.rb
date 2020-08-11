@@ -29,6 +29,9 @@ module Admin
         if !sheet[0][5].value.nil? && (sheet[0][5].value.is_a? DateTime)
           date_of_reading = sheet[0][5].value # todo adjust to a usfull default date
         end
+      else
+        reading_errors.append "Date of reading is missing in the table"
+        return {errors: reading_errors}
       end
 
       name_of_group = sheet[0][0].value
