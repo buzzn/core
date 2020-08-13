@@ -20,7 +20,7 @@ describe Transactions::Admin::BillingCycle::GenerateReport, order: :defined do
 
     before do
       require './lib/buzzn/types/billing_config'
-      CoreConfig.store Types::BillingConfig.new(vat: 1.19)
+      CoreConfig.store Types::BillingConfig.new(vat: 1.19, vat2: 1.16)
     end
 
     let(:user) { operator }

@@ -4,7 +4,7 @@ describe Transactions::Admin::Billing::Update do
 
   before do
     require './lib/buzzn/types/billing_config'
-    CoreConfig.store Types::BillingConfig.new(vat: 1.19)
+    CoreConfig.store Types::BillingConfig.new(vat: 1.19, vat2: 1.16)
   end
 
   let!(:localpool) { create(:group, :localpool, fake_stats: { foo: 'bar' }) }
