@@ -22,7 +22,7 @@ describe Transactions::Admin::Contract::Document do
 
   before do
     require './lib/buzzn/types/billing_config'
-    CoreConfig.store Types::BillingConfig.new(vat: 1.19)
+    CoreConfig.store Types::BillingConfig.new(vat: 1.19, vat2: 1.16)
   end
 
   let!(:localpool) { create(:group, :localpool, :with_address) }

@@ -28,6 +28,7 @@ module Pdf
         billing: build_billing,
         items: build_billing_items.sort {|x, y| Time.parse(x[:last_date]) <=> Time.parse(y[:last_date]) },
         vat: contract.localpool.billing_detail.issues_vat ? ((BigDecimal(billing_config.vat, 4) - 1.0) * 100).round : 0,
+        vat2: nil,
         billing_ends_contract: contract.end_date.nil? ? false : @billing.end_date == contract.end_date,
         contract: {
           number: contract.full_contract_number,
