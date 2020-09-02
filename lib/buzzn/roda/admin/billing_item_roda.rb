@@ -4,7 +4,8 @@ class Admin::BillingItemRoda < BaseRoda
 
   plugin :shared_vars
   include Import.args[:env,
-                      'transactions.admin.billing_item.update',
+                      update:'transactions.admin.billing_item.update',
+                      calculate: 'transactions.admin.billing_item.calculate',
                       ]
 
   route do |r|
@@ -15,6 +16,12 @@ class Admin::BillingItemRoda < BaseRoda
 
       r.patch! do
         update.(resource: item, params: r.params)
+      end
+
+      r.on 'calculate' do
+        r.patch! do
+          calculate.(resource: item, params: r.params)
+        end
       end
 
       r.others!
