@@ -201,6 +201,14 @@ describe Transactions::Admin::Billing::Create do
 
     context 'with a non remote-readable connected meter' do
 
+      let!(:begin_reading) do
+        create(:reading, :setup, raw_value: 10, register: meter.registers.first, date: begin_date)
+      end
+  
+      let!(:end_reading) do
+        create(:reading, :setup, raw_value: 110, register: meter.registers.first, date: begin_date + 90 + 1)
+      end
+
       it 'creates' do
         res = result
         expect(res).to be_success
@@ -208,10 +216,10 @@ describe Transactions::Admin::Billing::Create do
         expect(value).to be_a Admin::BillingResource
         object = value.object
         expect(object.items.count).to eql 2
-        expect(object.items[0].begin_reading).to be_nil
-        expect(object.items[0].end_reading).to be_nil
-        expect(object.items[1].begin_reading).to be_nil
-        expect(object.items[1].end_reading).to be_nil
+        expect(object.items[0].begin_reading.raw_value).to eql 10 
+        expect(object.items[0].end_reading.raw_value).to eql 24
+        expect(object.items[1].begin_reading.raw_value).to eql 24
+        expect(object.items[1].end_reading.raw_value).to eql 110
       end
 
     end

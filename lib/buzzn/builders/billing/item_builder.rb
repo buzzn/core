@@ -55,10 +55,10 @@ module Builders::Billing
           readings = reading_service.get(register, date, :precision => 2.days)
           if readings.nil?
             unless start_date_billing.nil? || end_date_billing.nil?
-              reading_start_date_billing = reading_service.get(register, start_date_billing, :precision => 0.days)
-              reading_end_date_billing = reading_service.get(register, end_date_billing, :precision => 0.days)
+              reading_start_date_billing = reading_service.get(register, start_date_billing, :precision => 2.days)
+              reading_end_date_billing = reading_service.get(register, end_date_billing, :precision => 2.days)
               unless reading_start_date_billing.nil? || reading_end_date_billing.nil?
-                consumption_total = reading_start_date_billing.to_a.max_by(&:value).raw_value  - reading_end_date_billing.to_a.max_by(&:value).raw_value
+                consumption_total = reading_end_date_billing.to_a.max_by(&:value).raw_value  - reading_start_date_billing.to_a.max_by(&:value).raw_value
                 consumption = (date - start_date_billing)/(end_date_billing - start_date_billing) * consumption_total
                 attrs = {
                   raw_value: consumption,
