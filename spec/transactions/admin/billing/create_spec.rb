@@ -217,8 +217,8 @@ describe Transactions::Admin::Billing::Create do
         object = value.object
         expect(object.items.count).to eql 2
         expect(object.items[0].begin_reading.raw_value).to eql 10 
-        expect(object.items[0].end_reading.raw_value).to eql 24
-        expect(object.items[1].begin_reading.raw_value).to eql 24
+        expect(object.items[0].end_reading.raw_value).to eql 34
+        expect(object.items[1].begin_reading.raw_value).to eql 34
         expect(object.items[1].end_reading.raw_value).to eql 110
       end
 

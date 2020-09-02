@@ -61,7 +61,7 @@ module Builders::Billing
                 consumption_total = reading_end_date_billing.to_a.max_by(&:value).raw_value  - reading_start_date_billing.to_a.max_by(&:value).raw_value
                 consumption = (date - start_date_billing)/(end_date_billing - start_date_billing) * consumption_total
                 attrs = {
-                  raw_value: consumption,
+                  raw_value: reading_start_date_billing.to_a.max_by(&:value).raw_value + consumption,
                   date: date
                 }
                 readings = [register.readings.create(attrs)]
