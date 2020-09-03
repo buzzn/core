@@ -12,7 +12,7 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
   map :persist, with: :'operations.action.update'
 
   def schema
-    Schemas::Transactions::Admin::BillingItem::Update
+    Schemas::Transactions::Admin::BillingItem::Calculate
   end
 
   def check_valid(resource:, params:)
@@ -22,53 +22,54 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
   end
 
   def calculate_begin_reading(resource:, params:, **)
-    reading_service = Import.global('services.reading_service')
     unless params[:begin_reading_id].nil?
-        if params[:raw_value].nil? && params[:calculate] == True
+        if params[:raw_value].nil? 
             start_date_billing = resource.billing.begin_date
             end_date_billing = resource.billing.end_date
-            date = params[:date]
-            unless start_date_billing.nil? || end_date_billing.nil?
-                begin
-                    reading_start_date_billing = reading_service.get(register, start_date_billing, :precision => 2.days)
-                    reading_end_date_billing = reading_service.get(register, end_date_billing, :precision => 2.days)
-                rescue Buzzn::DataSourceError
-                    raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
-                end
-                unless reading_start_date_billing.nil? || reading_end_date_billing.nil?
-                consumption_total = reading_end_date_billing.to_a.max_by(&:value).raw_value  - reading_start_date_billing.to_a.max_by(&:value).raw_value
-                consumption = (date - start_date_billing)/(end_date_billing - start_date_billing) * consumption_total
-                reading = reading_start_date_billing.to_a.max_by(&:value).raw_value + consumption
-                params[:begin_reading] = reading
-                end
+            register = resource.register.object
+            date = params[:begin_date]
+            unless start_date_billing.nil? || end_date_billing.nil? || date.nil? || register.nil? 
+                  params[:begin_reading] = calculate_reading(start_date_billing, end_date_billing, date, register)
             end
         end
       end
   end
 
   def calculate_end_reading(resource:, params:, **)
-    reading_service = Import.global('services.reading_service')
     unless params[:end_reading_id].nil?
-        if params[:raw_value].nil? && params[:calculate] == True
+        if params[:raw_value].nil? 
             start_date_billing = resource.billing.begin_date
             end_date_billing = resource.billing.end_date
-            date = params[:date]
-            unless start_date_billing.nil? || end_date_billing.nil?
-                begin
-                    reading_start_date_billing = reading_service.get(register, start_date_billing, :precision => 2.days)
-                    reading_end_date_billing = reading_service.get(register, end_date_billing, :precision => 2.days)
-                rescue Buzzn::DataSourceError
-                    raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
-                end
-                unless reading_start_date_billing.nil? || reading_end_date_billing.nil?
-                consumption_total = reading_end_date_billing.to_a.max_by(&:value).raw_value  - reading_start_date_billing.to_a.max_by(&:value).raw_value
-                consumption = (date - start_date_billing)/(end_date_billing - start_date_billing) * consumption_total
-                reading = reading_start_date_billing.to_a.max_by(&:value).raw_value + consumption
-                params[:end_reading] = reading
-                end
+            register = resource.register.object
+            date = params[:end_date]
+            unless start_date_billing.nil? || end_date_billing.nil? || date.nil? || register.nil?
+                  params[:end_reading] = calculate_reading(start_date_billing, end_date_billing, date, register)
             end
         end
       end
+  end
+
+  def calculate_reading(start_date_billing, end_date_billing, date, register)
+    reading_service = Import.global('services.reading_service')
+    begin
+        reading_start_date_billing = reading_service.get(register, start_date_billing, :precision => 2.days)
+        reading_end_date_billing = reading_service.get(register, end_date_billing, :precision => 2.days)
+    rescue Buzzn::DataSourceError
+        raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
     end
+    if reading_start_date_billing.nil? || reading_end_date_billing.nil?
+      raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
+    else
+      consumption_total = reading_end_date_billing.to_a.max_by(&:value).raw_value  - reading_start_date_billing.to_a.max_by(&:value).raw_value
+      consumption = (date - start_date_billing)/(end_date_billing - start_date_billing) * consumption_total
+      reading_value = reading_start_date_billing.to_a.max_by(&:value).raw_value + consumption
+      attrs = {
+        raw_value: reading_value.to_i,
+        date: date,
+        register: register
+      }
+      readings = Reading::Single.new(attrs)
+    end
+  end 
 end
 
