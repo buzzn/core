@@ -9,9 +9,19 @@ describe Transactions::Admin::BillingCycle::GenerateZip do
 
   let(:input) { {name: 'foo', last_date: '2018-12-31'} }
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
+  end
+
+
   let(:create_result) do
     Transactions::Admin::BillingCycle::Create.new.(params: input,
-                                                   resource: localpool_resource)
+                                                   resource: localpool_resource, 
+                                                   vats:[vat])
   end
 
   let(:operator) { create(:person, :with_account, :with_self_role, roles: { Role::BUZZN_OPERATOR => nil }) }
@@ -53,14 +63,14 @@ describe Transactions::Admin::BillingCycle::GenerateZip do
         status: 'calculated',
         updated_at: billingr.object.updated_at.to_json
       }
-      res = Transactions::Admin::Billing::Update.new.(resource: billingr, params: update_params)
+      res = Transactions::Admin::Billing::Update.new.(resource: billingr, params: update_params, vat:vat)
       expect(res).to be_success
       billingr.object.reload
       update_params = {
         status: 'documented',
         updated_at: billingr.object.updated_at.to_json
       }
-      res = Transactions::Admin::Billing::Update.new.(resource: billingr, params: update_params)
+      res = Transactions::Admin::Billing::Update.new.(resource: billingr, params: update_params, vat:vat)
       expect(res).to be_success
       # prep done, generate zip
       billing_cycler.object.reload

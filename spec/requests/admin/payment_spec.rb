@@ -2,6 +2,10 @@ require_relative 'test_admin_localpool_roda'
 
 describe Admin::AccountingRoda, :request_helper, order: :defined do
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
   def app
     TestAdminLocalpoolRoda # this defines the active application for this test
   end

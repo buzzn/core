@@ -2,11 +2,6 @@ require 'buzzn/transactions/admin/billing/update'
 
 describe Transactions::Admin::Billing::Update do
 
-  before do
-    require './lib/buzzn/types/billing_config'
-    CoreConfig.store Types::BillingConfig.new(vat: 1.19, vat2: 1.16)
-  end
-
   let!(:localpool) { create(:group, :localpool, fake_stats: { foo: 'bar' }) }
   let(:operator) { create(:account, :buzzn_operator) }
   let!(:localpoolr) { Admin::LocalpoolResource.all(operator).retrieve(localpool.id) }
@@ -16,6 +11,14 @@ describe Transactions::Admin::Billing::Update do
            customer: localpool.owner,
            contractor: Organization::Market.buzzn,
            localpool: localpool)
+  end
+
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
   end
 
   let(:meter) do
@@ -86,6 +89,7 @@ describe Transactions::Admin::Billing::Update do
     end_reading
     result = Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                        params: params,
+                                                       vats: [vat],
                                                        contract: contract,
                                                        billing_cycle: nil)
     result.value!.object
@@ -108,7 +112,8 @@ describe Transactions::Admin::Billing::Update do
 
         let(:update_result) do
           Transactions::Admin::Billing::Update.new.(resource: billingr,
-                                                    params: update_params)
+                                                    params: update_params, 
+                                                    vat:vat)
         end
 
         it 'works' do
@@ -128,7 +133,7 @@ describe Transactions::Admin::Billing::Update do
 
         let(:update_result) do
           Transactions::Admin::Billing::Update.new.(resource: billingr,
-                                                    params: update_params)
+                                                    params: update_params, vat:vat)
         end
 
         it 'works' do
@@ -150,7 +155,8 @@ describe Transactions::Admin::Billing::Update do
 
         let(:update_result) do
           Transactions::Admin::Billing::Update.new.(resource: billingr,
-                                                    params: update_params)
+                                                    params: update_params,
+                                                    vat: vat)
         end
 
         context 'payment' do
@@ -272,7 +278,8 @@ describe Transactions::Admin::Billing::Update do
             result = Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                                params: params,
                                                                contract: contract,
-                                                               billing_cycle: nil)
+                                                               billing_cycle: nil,
+                                                               vats:[vat])
             result.value!.object
           end
 
@@ -387,7 +394,8 @@ describe Transactions::Admin::Billing::Update do
 
       let(:update_result) do
         Transactions::Admin::Billing::Update.new.(resource: billingr,
-                                                  params: update_params)
+                                                  params: update_params,
+                                                  vat: [vat])
       end
 
       context 'without a payment' do
@@ -396,7 +404,7 @@ describe Transactions::Admin::Billing::Update do
           localpool.billing_detail.automatic_abschlag_adjust = false
           localpool.billing_detail.save
           localpool.reload
-          Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+          Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json}, vat:vat)
           billing.reload
         end
 
@@ -414,7 +422,7 @@ describe Transactions::Admin::Billing::Update do
           localpool.fake_stats = nil
           localpool.save
           localpool.reload
-          Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+          Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json}, vat:vat)
           billing.reload
         end
 
@@ -432,7 +440,7 @@ describe Transactions::Admin::Billing::Update do
           localpool.billing_detail.automatic_abschlag_adjust = true
           localpool.billing_detail.save
           localpool.reload
-          Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+          Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json}, vat:vat)
           billing.reload
         end
 
@@ -457,11 +465,12 @@ describe Transactions::Admin::Billing::Update do
 
       let(:update_result) do
         Transactions::Admin::Billing::Update.new.(resource: billingr,
-                                                  params: update_params)
+                                                  params: update_params, 
+                                                  vat:vat)
       end
 
       let(:calculate_result) do
-        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json}, vat:vat)
       end
 
       before do
@@ -502,16 +511,17 @@ describe Transactions::Admin::Billing::Update do
 
       let(:update_result) do
         Transactions::Admin::Billing::Update.new.(resource: billingr,
-                                                  params: update_params)
+                                                  params: update_params,
+                                                  vat:vat)
       end
 
       before do
         localpool.billing_detail.automatic_abschlag_adjust = true
         localpool.billing_detail.save
         localpool.reload
-        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json}, vat:vat)
         billing.reload
-        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'documented', updated_at: billing.updated_at.to_json})
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'documented', updated_at: billing.updated_at.to_json}, vat:vat)
         billing.reload
       end
 
@@ -552,15 +562,16 @@ describe Transactions::Admin::Billing::Update do
 
       let(:update_result) do
         Transactions::Admin::Billing::Update.new.(resource: billingr,
-                                                  params: update_params)
+                                                  params: update_params, 
+                                                  vat:vat)
       end
 
       let(:calculate_result) do
-        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json})
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'calculated', updated_at: billing.updated_at.to_json}, vat:vat)
       end
 
       let(:closed_result) do
-        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'closed', updated_at: billing.updated_at.to_json})
+        Transactions::Admin::Billing::Update.new.(resource: billingr, params: {status: 'closed', updated_at: billing.updated_at.to_json}, vat:vat)
       end
 
       before do

@@ -23,6 +23,7 @@ class Admin::BillingRoda < BaseRoda
       create.(resource: billings,
               params: r.params,
               contract: parent_contract,
+              vats: Vat.all(),
               billing_cycle: nil)
     end
 

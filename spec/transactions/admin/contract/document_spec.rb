@@ -20,11 +20,6 @@ end
 
 describe Transactions::Admin::Contract::Document do
 
-  before do
-    require './lib/buzzn/types/billing_config'
-    CoreConfig.store Types::BillingConfig.new(vat: 1.19, vat2: 1.16)
-  end
-
   let!(:localpool) { create(:group, :localpool, :with_address) }
   let(:operator) { create(:account, :buzzn_operator) }
   let!(:localpoolr) { Admin::LocalpoolResource.all(operator).retrieve(localpool.id) }

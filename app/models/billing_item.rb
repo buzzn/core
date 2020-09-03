@@ -19,6 +19,7 @@ class BillingItem < ActiveRecord::Base
 
   has_one :contract, through: :billing
   has_one :meter, through: :register, foreign_key: :meter_id
+  belongs_to :vat, foreign_key: :vat
 
   enum contract_type: %i(power_taker third_party gap).each_with_object({}).each { |k, map| map[k] = k.to_s }
 
@@ -65,7 +66,7 @@ class BillingItem < ActiveRecord::Base
   # FIXME: move to tariff
   def baseprice_cents_per_day_after_taxes
     return unless tariff
-    (tariff.baseprice_cents_per_month_after_taxes * 12) / 365
+    (tariff.baseprice_cents_per_month_before_taxes * vat.amount * 12) / 365
   end
 
   def baseprice_cents_before_taxes
@@ -75,7 +76,7 @@ class BillingItem < ActiveRecord::Base
 
   def baseprice_cents_after_taxes
     return unless length_in_days && baseprice_cents_per_day_after_taxes
-    (length_in_days * baseprice_cents_per_day_after_taxes).round(0)
+    (length_in_days * baseprice_cents_per_day_before_taxes * vat.amount).round(0)
   end
 
   def price_cents_before_taxes
@@ -95,7 +96,7 @@ class BillingItem < ActiveRecord::Base
 
   def energyprice_cents_after_taxes
     return unless consumed_energy_kwh && tariff
-    (consumed_energy_kwh * tariff.energyprice_cents_per_kwh_after_taxes).round(0)
+    (consumed_energy_kwh * tariff.energyprice_cents_per_kwh_before_taxes * vat.amount).round(0)
   end
 
 end

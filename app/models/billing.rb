@@ -3,8 +3,6 @@ require_relative 'concerns/with_date_range'
 require_relative 'concerns/date_range_scope'
 require_relative '../state_machines/billing'
 
-require 'buzzn/types/billing_config'
-
 class Billing < ActiveRecord::Base
 
   include LastDate
@@ -89,14 +87,18 @@ class Billing < ActiveRecord::Base
   end
 
   def total_amount_after_taxes
-    billing_config = CoreConfig.load(Types::BillingConfig)
-    if billing_config.nil?
-      raise 'please set Types::BillingConfig'
+    unless contract.localpool.billing_detail.issues_vat
+      return total_amount_before_taxes
     end
 
-    issues_vat = contract.localpool.billing_detail.issues_vat
-    vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
-    vat > 0? total_amount_before_taxes * vat : total_amount_before_taxes
+    amount = BigDecimal(0)
+      items.each do |item|
+        if item.energyprice_cents_after_taxes.nil? || item.baseprice_cents_after_taxes.nil?
+          return nil
+        end
+        amount += item.energyprice_cents_after_taxes + item.baseprice_cents_after_taxes
+      end
+      amount
   end
 
   def total_consumed_energy_kwh

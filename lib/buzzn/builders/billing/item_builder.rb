@@ -5,7 +5,7 @@ module Builders::Billing
 
     class << self
 
-      def from_contract(contract, register, max_date_range, tariff, fail_silent: true)
+      def from_contract(contract, register, max_date_range, tariff, vat, fail_silent: true)
         date_range = date_range(contract, max_date_range)
         attrs = {
           contract_type:   contract_type(contract),
@@ -13,7 +13,8 @@ module Builders::Billing
           tariff:          tariff,
           begin_reading:   reading_close_to(register, date_range.first, fail_silent: fail_silent),
           end_reading:     reading_close_to(register, date_range.last,  fail_silent: fail_silent),
-          register:        register
+          register:        register,
+          vat:             vat
         }
         BillingItem.new(attrs)
       end

@@ -11,8 +11,8 @@ describe Admin::BillingItemResource do
   entity!(:billing_item) do
     create(:billing_item,
            billing: billing,
-           tariff: billing.contract.tariffs.first)
-
+           tariff: billing.contract.tariffs.first,
+           vat: create(:vat, amount: 0.19, begin_date: Date.new(1990, 1, 1)))
   end
 
   let(:billing_item_resource) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).billing_cycles.first.billings.first.items.first }

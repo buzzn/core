@@ -28,20 +28,8 @@ module Contract
       BigDecimal(kwh, 4) * BigDecimal(self.energyprice_cents_per_kwh, 4) + (BigDecimal(self.baseprice_cents_per_month, 4) * 12) / 365
     end
 
-    def cents_per_day_after_taxes(kwh)
-      billing_config = CoreConfig.load(Types::BillingConfig)
-      if billing_config.nil?
-        raise 'please set Types::BillingConfig'
-      end
-      cents_per_day(kwh) * billing_config.vat
-    end
-
     def cents_per_days(days, kwh_per_day)
       days * cents_per_day(kwh_per_day)
-    end
-
-    def cents_per_days_after_taxes(days, kwh_per_day)
-      days * cents_per_day_after_taxes(kwh_per_day)
     end
 
     def energyprice_cents_per_kwh_before_taxes
@@ -50,28 +38,6 @@ module Contract
 
     def baseprice_cents_per_month_before_taxes
       BigDecimal(self.baseprice_cents_per_month, 4).round(4)
-    end
-
-    def energyprice_cents_per_kwh_after_taxes
-      billing_config = CoreConfig.load(Types::BillingConfig)
-      if billing_config.nil?
-        raise 'please set Types::BillingConfig'
-      end
-
-      issues_vat = group.billing_detail.issues_vat
-      vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
-      vat > 0? energyprice_cents_per_kwh_before_taxes * vat : energyprice_cents_per_kwh_before_taxes
-    end
-
-    def baseprice_cents_per_month_after_taxes
-      billing_config = CoreConfig.load(Types::BillingConfig)
-      if billing_config.nil?
-        raise 'please set Types::BillingConfig'
-      end
-
-      issues_vat = group.billing_detail.issues_vat
-      vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
-      vat > 0? baseprice_cents_per_month_before_taxes * vat : baseprice_cents_per_month_before_taxes
     end
 
   end

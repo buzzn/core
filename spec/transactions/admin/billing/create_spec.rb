@@ -39,6 +39,18 @@ describe Transactions::Admin::Billing::Create do
     create(:tariff, group: localpool, begin_date: contract.begin_date + 32)
   end
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
+  end
+
+  let(:vats) do
+    [Vat.find(Date.new(2000, 01, 01))]
+  end
+
   let(:contract) do
     create(:contract, :localpool_powertaker,
            customer: person,
@@ -52,8 +64,8 @@ describe Transactions::Admin::Billing::Create do
   end
 
   let(:begin_date) { contract.begin_date + 10 }
-  let(:last_date)   { begin_date + 90 }
-  let(:end_date)   { begin_date + 90 + 1 }
+  let(:last_date) { begin_date + 90 }
+  let(:end_date) { begin_date + 90 + 1 }
 
   let(:params) do
     {
@@ -70,8 +82,10 @@ describe Transactions::Admin::Billing::Create do
   let(:result) do
     Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                               params: params,
+                                              vats: [vat],
                                               contract: contract,
-                                              billing_cycle: nil)
+                                              billing_cycle: nil,
+                                              vats: vats)
   end
 
   let!(:install_reading) do
@@ -102,7 +116,9 @@ describe Transactions::Admin::Billing::Create do
 
       context 'with a billing item in the middle' do
         let(:another_billing) { create(:billing, contract: contract) }
-        let!(:another_billing_item) { create(:billing_item, begin_date: begin_date + 3, end_date: begin_date + 5, register: meter.registers.first, billing: another_billing) }
+        let!(:another_billing_item) do
+          create(:billing_item, begin_date: begin_date + 3, end_date: begin_date + 5, register: meter.registers.first, billing: another_billing, vat: vat)
+        end
 
         it 'creates' do
           contract.register_meta.reload
@@ -125,7 +141,9 @@ describe Transactions::Admin::Billing::Create do
 
       context 'with a billing item at the beginning' do
         let(:another_billing) { create(:billing, contract: contract) }
-        let!(:another_billing_item) { create(:billing_item, begin_date: begin_date - 3, end_date: begin_date + 2, register: meter.registers.first, billing: another_billing) }
+        let!(:another_billing_item) do
+          create(:billing_item, begin_date: begin_date - 3, end_date: begin_date + 2, register: meter.registers.first, billing: another_billing, vat: vat)
+        end
 
         it 'creates' do
           contract.register_meta.reload
@@ -145,7 +163,7 @@ describe Transactions::Admin::Billing::Create do
 
       context 'with a billing item at the end' do
         let(:another_billing) { create(:billing, contract: contract) }
-        let!(:another_billing_item) { create(:billing_item, begin_date: end_date - 3, end_date: end_date + 2, register: meter.registers.first, billing: another_billing) }
+        let!(:another_billing_item) { create(:billing_item, begin_date: end_date - 3, end_date: end_date + 2, register: meter.registers.first, billing: another_billing, vat: vat) }
 
         it 'creates' do
           contract.register_meta.reload
@@ -168,8 +186,8 @@ describe Transactions::Admin::Billing::Create do
     context 'with a remote-readable meter' do
 
       it 'creates' do
-        mock_series_start = create_series(begin_date, 2000, 15.minutes,    10*1000*1000, 50*1000*1000, 4)
-        mock_series_end   = create_series(last_date,   2000, 15.minutes, 1000*1000*1000, 50*1000*1000, 4)
+        mock_series_start = create_series(begin_date, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+        mock_series_end   = create_series(last_date, 2000, 15.minutes, 1000*1000*1000, 50*1000*1000, 4)
         single_reading.next_api_request_single(contract.register_meta.register, begin_date, mock_series_start)
         single_reading.next_api_request_single(contract.register_meta.register, end_date, mock_series_end)
 
@@ -219,9 +237,9 @@ describe Transactions::Admin::Billing::Create do
     context 'with a remote-readable meter' do
 
       it 'creates' do
-        mock_series_start  = create_series(begin_date,         2000, 15.minutes,    10*1000*1000, 50*1000*1000, 4)
-        mock_series_middle = create_series(tariff2.begin_date, 2000, 15.minutes,   500*1000*1000, 50*1000*1000, 4)
-        mock_series_end    = create_series(last_date,          2000, 15.minutes,  1000*1000*1000, 50*1000*1000, 4)
+        mock_series_start  = create_series(begin_date,         2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+        mock_series_middle = create_series(tariff2.begin_date, 2000, 15.minutes, 500*1000*1000, 50*1000*1000, 4)
+        mock_series_end    = create_series(last_date,          2000, 15.minutes, 1000*1000*1000, 50*1000*1000, 4)
         single_reading.next_api_request_single(contract.register_meta.register, begin_date, mock_series_start)
         single_reading.next_api_request_single(contract.register_meta.register, tariff2.begin_date, mock_series_middle)
         single_reading.next_api_request_single(contract.register_meta.register, end_date, mock_series_end)
@@ -260,6 +278,35 @@ describe Transactions::Admin::Billing::Create do
 
   end
 
+  context 'with two vfat tarrifs' do
+    let!(:vat2) do
+      create(:vat, amount: 0.16, begin_date: (begin_date+15))
+    end
 
+    before do
+      contract.tariffs << tariff1
+      contract.tariffs.reload
+    end
 
+    after do
+      vat2.destroy
+    end
+
+    it 'splits a billing item at the vat begin date', :thisone => true do
+      res = Transactions::Admin::Billing::Create.new.(resource: billingsr,
+                                                      params: params,
+                                                      vats: [vat, vat2],
+                                                      contract: contract,
+                                                      billing_cycle: nil)
+      expect(res).to be_success
+      value = res.value!
+      expect(value).to be_a Admin::BillingResource
+      object = value.object
+      expect(object.items.count).to eql 2
+      expect(object.items[0].begin_date).to eql vat2.begin_date
+      expect(object.items[0].end_date).to eql end_date
+      expect(object.items[1].begin_date).to eql begin_date
+      expect(object.items[1].end_date).to eql vat2.begin_date
+    end
+  end
 end

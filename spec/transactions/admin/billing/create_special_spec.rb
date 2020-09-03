@@ -1,4 +1,11 @@
 describe Transactions::Admin::Billing::Create do
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vats) do
+    [Vat.find(Date.new(2000, 01, 01))]
+  end
 
   # common for all cases
   let!(:localpool) { create(:group, :localpool) }
@@ -75,14 +82,16 @@ describe Transactions::Admin::Billing::Create do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
                                                 contract: contract,
-                                                billing_cycle: nil)
+                                                billing_cycle: nil,
+                                                vats: vats)
     end
 
     let(:result_billing_2) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_2,
                                                 contract: contract,
-                                                billing_cycle: nil)
+                                                billing_cycle: nil,
+                                                vats: vats)
     end
 
     it 'creates two correct billings' do
@@ -180,14 +189,16 @@ describe Transactions::Admin::Billing::Create do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
                                                 contract: contract,
-                                                billing_cycle: nil)
+                                                billing_cycle: nil,
+                                                vats: vats)
     end
 
     let(:result_billing_2) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_2,
                                                 contract: contract,
-                                                billing_cycle: nil)
+                                                billing_cycle: nil,
+                                                vats: vats)
     end
 
     it 'creates two correct billings' do
@@ -276,14 +287,16 @@ describe Transactions::Admin::Billing::Create do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
                                                 contract: contract,
-                                                billing_cycle: nil)
+                                                billing_cycle: nil,
+                                                vats: vats)
     end
 
     let(:result_billing_2) do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_2,
                                                 contract: contract,
-                                                billing_cycle: nil)
+                                                billing_cycle: nil,
+                                                vats: vats)
     end
 
     it 'creates two correct billings' do
@@ -365,7 +378,8 @@ describe Transactions::Admin::Billing::Create do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
                                                 contract: contract,
-                                                billing_cycle: nil)
+                                                billing_cycle: nil,
+                                                vats: vats)
     end
 
     it 'creates a correct billing' do
@@ -438,7 +452,8 @@ describe Transactions::Admin::Billing::Create do
       Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                 params: params_billing_1,
                                                 contract: contract,
-                                                billing_cycle: nil)
+                                                billing_cycle: nil,
+                                                vats: vats)
     end
 
     it 'creates a correct billing' do
