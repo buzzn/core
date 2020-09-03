@@ -17,7 +17,34 @@ module Service
       @object = object
     end
 
-    def from_contract(begin_date:, end_date:)
+    def blow_ranges_vat(ranges, vats)
+      result = []
+      vats  = vats.clone
+      vat = vats.pop;
+      while ranges.any?
+        range = ranges[0]
+        while vats.any? && vat.begin_date <= range[:begin_date] do
+          vat = vats.pop
+        end
+
+        if vat.begin_date >= range[:end_date]  || vat.begin_date <= range[:begin_date]
+          result.push(ranges.pop)
+          next;
+        else
+          head = range.clone
+          head[:end_date] = vat.begin_date
+          range[:begin_date] = vat.begin_date
+          result.push(head)
+        end
+      end
+
+      result.reverse
+    end
+
+    def from_contract(begin_date:, end_date:, vats:)
+      # We need the active vat to be the last.
+      vats  = vats.to_a.sort_by(&:begin_date).reverse
+
       contract = @object
       result = {}.tap do |h|
         h[:begin_date] = begin_date
@@ -48,6 +75,12 @@ module Service
             ranges << range
           end
         end
+
+        ranges = blow_ranges_vat(
+          ranges.sort_by {|r| r[:begin_date]},
+          vats
+        )
+
         # split even further, split with already existing BillingItems
         existing_billing_items = register.billing_items.in_date_range(register_begin_date..register_end_date)
         existing_billing_items.each do |item|
@@ -60,7 +93,7 @@ module Service
               next
             end
             #   [ range ]
-            # [ item ]
+            # [ item ]m
             if item.begin_date <= range[:begin_date] && item.end_date > range[:begin_date] && item.end_date <= range[:end_date]
               ranges[idx][:begin_date] = item.end_date
               next
@@ -82,10 +115,13 @@ module Service
         end
 
         ranges.each do |range|
-          result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, register, range[:begin_date]..range[:end_date], range[:tariff], :fail_silent => true)
+          # The current vat is the most recent, which has been valid before the billing item range.
+          vat = vats.filter{|v| v.begin_date <= range[:begin_date]}.last
+          result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, register, range[:begin_date]..range[:end_date], range[:tariff], vat, :fail_silent => true)
         end
       end
       result
     end
+
   end
 end

@@ -7,6 +7,7 @@ class Transactions::Admin::Billing::Create < Transactions::Base
   check :authorize, with: :'operations.authorization.create'
   tee :validate_contract
   tee :validate_dates
+  tee :validate_vats
   tee :set_end_date, with: :'operations.end_date'
   add :date_range
   tee :validate_registers
@@ -28,6 +29,12 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     result = Schemas::PreConditions::Contract::CreateBilling.call(subject)
     unless result.success?
       raise Buzzn::ValidationError.new(result.errors, contract)
+    end
+  end
+
+  def validate_vats(params:, vats:, **)
+    unless vats.any?{|v| v.begin_date <= params[:begin_date]}
+      raise Buzzn::ValidationError.new({begin_date: ['must hava a valid vat']})
     end
   end
 
@@ -58,15 +65,15 @@ class Transactions::Admin::Billing::Create < Transactions::Base
     params[:status] = :open
   end
 
-  def billing_item(params:, contract:, resource:, date_range:, **)
-    billing_data = Service::BillingData.data(contract, begin_date: date_range.first, end_date: date_range.last)
+  # Creates the billing items for the given contract within the given range.
+  def billing_item(params:, contract:, resource:, date_range:, vats:, **)
+    billing_data = Service::BillingData.data(contract, begin_date: date_range.first, end_date: date_range.last, vats: vats)
     billing_data[:items].each do |item|
       errors = item.invariant.errors.except(:billing, :contract)
       unless errors.empty?
         raise Buzzn::ValidationError.new(errors)
       end
     end
-
     params[:items] = billing_data[:items]
     params[:begin_date] = billing_data[:begin_date]
     params[:end_date] = billing_data[:end_date]

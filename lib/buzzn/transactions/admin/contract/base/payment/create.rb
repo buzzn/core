@@ -6,6 +6,7 @@ module Transactions::Admin::Contract::Base::Payment
     validate :schema
     check :authorize, with: 'operations.authorization.create'
     add :fetch_tariff
+    add :current_vat
     tee :calculate_price
     around :db_transaction
     map :create_payment, with: 'operations.action.create_item'
@@ -28,13 +29,17 @@ module Transactions::Admin::Contract::Base::Payment
       end
     end
 
+    def current_vat(**)
+      Vat.current.amount
+    end
+
     def calculate_price(params:, fetch_tariff:, **)
       unless fetch_tariff.nil?
         price_cents = case params[:cycle]
                       when 'monthly'
-                        fetch_tariff.cents_per_days_after_taxes(30, params[:energy_consumption_kwh_pa] / 365.0)
+                        fetch_tariff.cents_per_days(30, params[:energy_consumption_kwh_pa] / 365.0) * current_vat
                       when 'yearly'
-                        fetch_tariff.cents_per_days_after_taxes(365, params[:energy_consumption_kwh_pa] / 365.0)
+                        fetch_tariff.cents_per_days(365, params[:energy_consumption_kwh_pa] / 365.0)* current_vat
                       end
         params[:price_cents] = (price_cents/100.00).round*100
       end

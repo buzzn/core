@@ -2,6 +2,14 @@ require 'buzzn/schemas/invariants/billing'
 
 describe 'Schemas::Invariants::BillingItem' do
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
+  end
+
   let(:localpool) { create(:group, :localpool) }
   let(:contract) { create(:contract, :localpool_powertaker, localpool: localpool) }
   let(:billing) { create(:billing, contract: contract) }
@@ -10,7 +18,7 @@ describe 'Schemas::Invariants::BillingItem' do
   let(:reading_2) { create(:reading, register: register, date: item.end_date) }
 
   let!(:item) do
-    create(:billing_item, billing: billing, date_range: (billing.begin_date + 1.day)...(billing.end_date - 1.day))
+    create(:billing_item, billing: billing, date_range: (billing.begin_date + 1.day)...(billing.end_date - 1.day), vat: vat)
   end
 
   context 'contract' do
@@ -130,7 +138,7 @@ describe 'Schemas::Invariants::BillingItem' do
     context 'overlaps partly I' do
 
       let!(:another_item) do
-        build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.begin_date + 10.day))
+        build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.begin_date + 10.day), vat: vat)
       end
 
       it 'produces an error' do
@@ -145,7 +153,7 @@ describe 'Schemas::Invariants::BillingItem' do
     context 'overlaps partly II' do
 
       let!(:another_item) do
-        build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.end_date - 1.day))
+        build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.end_date - 1.day), vat: vat)
       end
 
       it 'produces an error' do
@@ -175,7 +183,7 @@ describe 'Schemas::Invariants::BillingItem' do
     context 'overlaps partly III' do
 
       let!(:another_item) do
-        build(:billing_item, billing: billing, date_range: (billing.begin_date + 10.day)...(billing.end_date + 10.day))
+        build(:billing_item, billing: billing, date_range: (billing.begin_date + 10.day)...(billing.end_date + 10.day), vat: vat)
       end
 
       it 'produces an error' do
@@ -190,7 +198,7 @@ describe 'Schemas::Invariants::BillingItem' do
     context 'overlaps completely' do
 
       let!(:another_item) do
-        build(:billing_item, billing: billing, date_range: (billing.begin_date + 1.day)...(billing.end_date - 1.day))
+        build(:billing_item, billing: billing, date_range: (billing.begin_date + 1.day)...(billing.end_date - 1.day), vat: vat)
       end
 
       it 'produces an error' do
@@ -204,7 +212,7 @@ describe 'Schemas::Invariants::BillingItem' do
 
     context 'does not overlap I' do
       let!(:another_item) do
-        build(:billing_item, billing: billing, date_range: (billing.end_date)...(billing.end_date + 10.day))
+        build(:billing_item, billing: billing, date_range: (billing.end_date)...(billing.end_date + 10.day), vat: vat)
       end
 
       it 'does not produce error' do
@@ -217,7 +225,7 @@ describe 'Schemas::Invariants::BillingItem' do
 
     context 'does not overlap I' do
       let!(:another_item) do
-        build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.begin_date))
+        build(:billing_item, billing: billing, date_range: (billing.begin_date - 10.day)...(billing.begin_date), vat: vat)
       end
 
       it 'does not produce error' do

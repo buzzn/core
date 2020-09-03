@@ -20,7 +20,7 @@ module Admin
       localpool = shared[LocalpoolRoda::PARENT]
 
       r.post! do
-        create.(resource: localpool, params: r.params)
+        create.(resource: localpool, params: r.params, vats: Vat.all)
       end
 
       billing_cycles = localpool.billing_cycles

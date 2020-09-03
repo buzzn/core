@@ -74,9 +74,7 @@ module Pdf
     def build_tariff(tariff)
       {
         baseprice_euro_netto: german_div(tariff.baseprice_cents_per_month_before_taxes),
-        baseprice_euro_brutto: german_div(tariff.baseprice_cents_per_month_after_taxes),
         energyprice_cents_netto: german_div(tariff.energyprice_cents_per_kwh_before_taxes*100),
-        energyprice_cents_brutto: german_div(tariff.energyprice_cents_per_kwh_after_taxes*100),
       }
     end
 

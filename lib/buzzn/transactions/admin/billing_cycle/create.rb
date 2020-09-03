@@ -26,18 +26,18 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
     permission_context.billing_cycles.create
   end
 
-  def date_range(params:, resource:)
+  def date_range(params:, resource:, vats:)
     begin_date = resource.next_billing_cycle_begin_date
     begin_date...params.delete(:end_date)
   end
 
-  def create_billing_cycle(params:, resource:, date_range:)
+  def create_billing_cycle(params:, resource:, date_range:, vats:)
     params[:date_range] = date_range
     params[:localpool]  = resource.object
     BillingCycle.create!(params)
   end
 
-  def create_billings(params:, resource:, date_range:, create_billing_cycle:)
+  def create_billings(params:, resource:, date_range:, create_billing_cycle:, vats:)
     register_metas = resource.object.register_metas_by_registers.uniq # uniq is critically important here!
     errors = {}
     register_metas.
@@ -61,7 +61,8 @@ class Transactions::Admin::BillingCycle::Create < Transactions::Base
         Transactions::Admin::Billing::Create.new.(resource: resource.contracts.retrieve(contract.id).billings,
                                                   params: attrs,
                                                   contract: contract,
-                                                  billing_cycle: create_billing_cycle)
+                                                  billing_cycle: create_billing_cycle,
+                                                  vats: vats)
         rescue Buzzn::ValidationError => e
           unless e.errors == {:register_meta => ['no register installed in date range'] }
             errors['create_billings'] = [] if errors['create_billings'].nil?

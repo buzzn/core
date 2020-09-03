@@ -2,8 +2,16 @@ describe 'Builders::Billing::ItemBuilder' do
 
   describe 'from_contract' do
 
+    before(:all) do
+      create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+    end
+
+    let(:vat) do
+      Vat.find(Date.new(2000, 01, 01))
+    end
+
     let(:date_range) { Date.new(2018, 1, 1)...Date.new(2019, 1, 1) }
-    let(:item) { Builders::Billing::ItemBuilder.from_contract(contract, register, date_range, contract.tariffs.first) }
+    let(:item) { Builders::Billing::ItemBuilder.from_contract(contract, register, date_range, contract.tariffs.first, vat) }
 
     describe 'date_range' do
       context 'when contract starts before date_range and hasn\'t ended' do

@@ -2,6 +2,14 @@ require 'buzzn/schemas/invariants/billing'
 
 describe 'Schemas::Invariants::Billing' do
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
+  end
+
   let(:localpool) { create(:group, :localpool) }
   let(:contract) { create(:contract, :localpool_powertaker, localpool: localpool) }
   let(:billing) { create(:billing, contract: contract) }
@@ -52,7 +60,7 @@ describe 'Schemas::Invariants::Billing' do
     context 'with one billing item' do
       subject { billing.invariant.errors[:items] }
       let!(:item) do
-        item = create(:billing_item, billing: billing, begin_date: billing.begin_date - 2.day, end_date: billing.end_date + 1.day)
+        item = create(:billing_item, billing: billing, begin_date: billing.begin_date - 2.day, end_date: billing.end_date + 1.day, vat: vat)
         billing.reload
         item
       end

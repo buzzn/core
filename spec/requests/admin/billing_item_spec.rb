@@ -6,20 +6,28 @@ describe Admin::BillingItemRoda, :request_helper do
     TestAdminLocalpoolRoda
   end
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
 
-  entity(:localpool) { create(:group, :localpool) }
-  entity(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
-  entity(:contract) { create(:contract, :localpool_powertaker, :with_tariff, localpool: localpool) }
-  entity(:billing) do
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
+  end
+
+  let(:localpool) { create(:group, :localpool) }
+  let(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
+  let(:contract) { create(:contract, :localpool_powertaker, :with_tariff, localpool: localpool) }
+  let(:billing) do
     billing = create(:billing, contract: contract)
     billing_cycle.billings << billing
     billing
   end
 
-  entity!(:billing_item) do
+  let!(:billing_item) do
     create(:billing_item,
            billing: billing,
-           tariff: billing.contract.tariffs.first)
+           tariff: billing.contract.tariffs.first,
+           vat: vat)
 
   end
 

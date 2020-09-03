@@ -5,6 +5,14 @@ describe Transactions::Admin::BillingCycle::Create do
 
   include_context 'billing cycle entities'
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
+  end
+
   let(:member)   { create(:person, :with_account, :with_self_role, roles: { Role::GROUP_MEMBER => localpool }) }
   let(:operator) { create(:person, :with_account, :with_self_role, roles: { Role::BUZZN_OPERATOR => nil }) }
 
@@ -26,7 +34,7 @@ describe Transactions::Admin::BillingCycle::Create do
 
     it 'does not leave orphaned objects when failing' do
       before_count = localpool.billing_cycles.count
-      expect { subject.call(params: future_input, resource: localpool_resource) }.to raise_error Buzzn::ValidationError
+      expect { subject.call(params: future_input, resource: localpool_resource, vats: [vat]) }.to raise_error Buzzn::ValidationError
       expect(localpool.billing_cycles.count).to eq before_count
     end
 
@@ -54,7 +62,7 @@ describe Transactions::Admin::BillingCycle::Create do
       end
 
       it 'succeeds' do
-        result = subject.call(params: input, resource: localpool_resource)
+        result = subject.call(params: input, resource: localpool_resource, vats: [vat])
         expect(result).to be_success
         expect(result.value!).to be_a Admin::BillingCycleResource
         expect(result.value!.object).to eq(localpool.billing_cycles.first)
@@ -65,16 +73,16 @@ describe Transactions::Admin::BillingCycle::Create do
       context 'second call' do
 
         it 'fails' do
-          result = subject.call(params: input, resource: localpool_resource)
+          result = subject.call(params: input, resource: localpool_resource, vats: [vat])
           expect(result).to be_success
-          expect { subject.call(params: input, resource: localpool_resource) }.to raise_error Buzzn::ValidationError
+          expect { subject.call(params: input, resource: localpool_resource, vats: [vat]) }.to raise_error Buzzn::ValidationError
         end
 
         context 'when last date is different' do
           let(:new_input) { input.merge(last_date: Date.today - 1.day) }
 
           it 'succeeds' do
-            result = subject.call(params: new_input, resource: localpool_resource)
+            result = subject.call(params: new_input, resource: localpool_resource, vats: [vat])
             expect(result).to be_success
             expect(result.value!).to be_a Admin::BillingCycleResource
             billing_cycle_model = result.value!.object
@@ -94,7 +102,7 @@ describe Transactions::Admin::BillingCycle::Create do
     after      { BillingCycle.destroy_all }
 
     it 'works', :skip do
-      result = subject.call(params: input, resource: resource)
+      result = subject.call(params: input, resource: resource, vats: [vat])
       expect(result).to be_success
       billing_cycle = result.value!.object
       billings      = result.value!.object.billings

@@ -27,14 +27,14 @@ class Transactions::Admin::Billing::Update < Transactions::Base
     Schemas::Transactions::Admin::Billing::Update
   end
 
-  def check_status(resource:, params:)
+  def check_status(resource:, params:, **)
     if !params[:status].nil? && !resource.object.allowed_transitions.map(&:to_s).include?(params[:status])
       # not allowed
       raise Buzzn::ValidationError.new({status: ["transition from #{resource.object.status} to #{params[:status]} is not possible"]}, resource.object)
     end
   end
 
-  def check_precondition(resource:, params:)
+  def check_precondition(resource:, params:, **)
     case resource.object.status.to_sym
     when :calculated
       unless params[:status].nil?
@@ -67,12 +67,12 @@ class Transactions::Admin::Billing::Update < Transactions::Base
     end
   end
 
-  def actions(resource:, params:)
+  def actions(resource:, params:, vat:)
     billing = resource.object
     billing.transition_to(params.delete(:status))
   end
 
-  def handle_action(resource:, params:, action:)
+  def handle_action(resource:, params:, action:, vat:)
     user = resource.security_context.current_user
     billing = resource.object
     contract = billing.contract
@@ -95,7 +95,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
         # FIXME adjust somehow to settings
         next_month = resource.object.end_date.at_beginning_of_month + 6.months # Todo move this to settings begin date ob billing_detail
         tariff = resource.object.contract.tariffs.at(next_month).order(:begin_date).last
-        estimated_cents_per_month = tariff.cents_per_days_after_taxes(30.42, resource.object.daily_kwh_estimate)
+        estimated_cents_per_month = tariff.cents_per_days(30.42, resource.object.daily_kwh_estimate) * (1+vat.amount)
         if last_payment.nil? ||
            # if begin_date is in the future we skip as it was manually adjusted
            # if price_cents is 0 we will also skip it
@@ -189,15 +189,15 @@ Ihr BUZZN Team
     end
   end
 
-  def execute_pre_transistion(resource:, params:, actions:)
+  def execute_pre_transistion(resource:, params:, actions:, vat:)
     if actions.is_a?(Array)
-      actions.select { |a| a[:at] == :pre }.collect { |a| handle_action(resource: resource, params: params, action: a[:action]) }
+      actions.select { |a| a[:at] == :pre }.collect { |a| handle_action(resource: resource, params: params, action: a[:action], vat: vat) }
     end
   end
 
-  def execute_post_transistion(resource:, params:, actions:, **)
+  def execute_post_transistion(resource:, params:, actions:, vat:, **)
     if actions.is_a?(Array)
-      actions.select { |a| a[:at] == :post }.collect { |a| handle_action(resource: resource, params: params, action: a[:action]) }
+      actions.select { |a| a[:at] == :post }.collect { |a| handle_action(resource: resource, params: params, action: a[:action], vat: vat) }
     end
   end
 

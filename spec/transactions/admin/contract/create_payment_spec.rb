@@ -1,11 +1,6 @@
 # coding: utf-8
 describe Transactions::Admin::Contract::Base::Payment::Create, order: :defined do
 
-  before do
-    require './lib/buzzn/types/billing_config'
-    CoreConfig.store Types::BillingConfig.new(vat: 1.19, vat2: 1.16)
-  end
-
   let(:localpool) { create(:group, :localpool) }
   let(:operator) { create(:account, :buzzn_operator) }
   let(:tariff)   { create(:tariff, group: localpool, energyprice_cents_per_kwh: 25, baseprice_cents_per_month: 300) }
@@ -18,6 +13,10 @@ describe Transactions::Admin::Contract::Base::Payment::Create, order: :defined d
     contract.reload
     localpool.reload
     localpoolr.localpool_power_taker_contracts.first.payments
+  end
+
+  before(:all) do
+    create(:vat, amount: 1.19, begin_date: Date.new(2000, 1, 1))
   end
 
   context 'invalid data' do

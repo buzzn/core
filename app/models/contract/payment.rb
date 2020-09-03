@@ -37,11 +37,7 @@ module Contract
     end
 
     def price_cents_before_taxes
-      billing_config = CoreConfig.load(Types::BillingConfig)
-      if billing_config.nil?
-        raise 'please set Types::BillingConfig'
-      end
-      self.price_cents_after_taxes * (1.00/billing_config.vat)
+      self.price_cents_after_taxes * (1.00/Vat.current.amount)
     end
 
   end

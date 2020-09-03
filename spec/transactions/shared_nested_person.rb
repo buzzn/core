@@ -78,12 +78,14 @@ shared_examples 'update without person' do |transaction, method, params|
           preferred_language: 'de'
         }
       },
-                    resource: resource}.merge(eextra_args)).value!
+                    resource: resource}.merge(eextra_args))
     end
 
-    it { expect(result2).to be_a resource.class }
-    it { expect(result2.send(method).first_name).to eq 'Elvis' }
-    it { expect(result2.send(method)).to be_a PersonResource }
+    it { expect(result2.value!).to be_a resource.class }
+    it { expect(result2).to be_success }
+    it { expect(result2.value!.send(method)).to be_a PersonResource }
+    it { expect(result2.value!.send(method).first_name).to eq 'Elvis' }
+    
 
   end
 end

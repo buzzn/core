@@ -1,4 +1,11 @@
 describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defined do
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
+  end
 
   let(:localpool) { create(:group, :localpool) }
   let(:operator) { create(:account, :buzzn_operator) }
@@ -127,7 +134,7 @@ describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defin
     it 'does not remove tariff_1 from the contract' do
       expect(result_first).to be_success
       billing = create(:billing, contract: contract)
-      billing_item = create(:billing_item, billing: billing, tariff: tariff_1)
+      billing_item = create(:billing_item, billing: billing, tariff: tariff_1, vat: vat)
       resource.object.reload
       expect {result_second}.to raise_error(Buzzn::ValidationError, '{:tariffs=>["tariffs are already used in billings"]}')
     end
@@ -164,7 +171,7 @@ describe Transactions::Admin::Contract::Localpool::AssignTariffs , order: :defin
     it 'does not assign tariff_4 to the contract' do
       expect(result_first).to be_success
       billing = create(:billing, contract: contract)
-      billing_item = create(:billing_item, billing: billing, tariff: tariff_1, begin_date: tariff_1.begin_date, end_date: today+28)
+      billing_item = create(:billing_item, billing: billing, tariff: tariff_1, begin_date: tariff_1.begin_date, end_date: today+28, vat: vat)
       resource.object.reload
       expect {result_second}.to raise_error(Buzzn::ValidationError, {:tariffs=>["tariff id #{tariff_4.id} is active for an already present billing item"]}.to_s)
     end

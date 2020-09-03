@@ -1,5 +1,13 @@
 describe Admin::BillingResource do
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
+  end
+
   entity(:admin) { create(:account, :buzzn_operator) }
   entity(:localpool) { create(:group, :localpool) }
   entity(:contract) do
@@ -8,10 +16,11 @@ describe Admin::BillingResource do
   entity(:billing) do
     create(:billing, contract: contract)
   end
-  entity!(:billing_item) do
+  let!(:billing_item) do
     create(:billing_item,
            billing: billing,
-           tariff: billing.contract.tariffs.first)
+           tariff: billing.contract.tariffs.first,
+           vat: vat)
 
   end
 

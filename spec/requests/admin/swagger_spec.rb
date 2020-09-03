@@ -6,6 +6,14 @@ describe Admin, :swagger, :request_helper, order: :defined do
     CoreRoda
   end
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
+  end
+
   login_path '/api/me/login'
 
   entity!(:person) { create(:person, :with_account) }
@@ -193,10 +201,11 @@ describe Admin, :swagger, :request_helper, order: :defined do
     document
   end
 
-  entity!(:billing_item_1) do
+  let!(:billing_item_1) do
     create(:billing_item,
            billing: billing_1,
-           tariff: billing_1.contract.tariffs.first)
+           tariff: billing_1.contract.tariffs.first,
+           vat: vat)
 
   end
 

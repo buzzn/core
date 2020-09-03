@@ -14,7 +14,6 @@ module Pdf
     protected
 
     def build_struct
-      billing_config = CoreConfig.load(Types::BillingConfig)
       {
         title_text: @billing.full_invoice_number,
         sales_tax_number: processing_contract.sales_tax_number,
@@ -27,14 +26,12 @@ module Pdf
         localpool: build_localpool,
         billing: build_billing,
         items: build_billing_items.sort {|x, y| Time.parse(x[:last_date]) <=> Time.parse(y[:last_date]) },
-        vat: contract.localpool.billing_detail.issues_vat ? ((BigDecimal(billing_config.vat, 4) - 1.0) * 100).round : 0,
-        vat2: nil,
         billing_ends_contract: contract.end_date.nil? ? false : @billing.end_date == contract.end_date,
         contract: {
           number: contract.full_contract_number,
           market_location_name: contract.register_meta.name,
         },
-        current_tariff: build_current_tariff,
+        current_tariff: build_current_tariff(Vat.current),
         billing_year: billing_year,
         consumption_last_year: consumption(billing_year.nil? || @billing.billing_cycle.nil? ? nil : billing_year-1),
         consumption_year: consumption(billing_year) || 0,
@@ -198,10 +195,9 @@ module Pdf
       data
     end
 
-    def calculate_taxes(amount_brutto)
-      billing_config = CoreConfig.load(Types::BillingConfig)
+    def calculate_taxes(amount_brutto, vat)
       issues_vat = contract.localpool.billing_detail.issues_vat
-      vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
+      vat = issues_vat ? BigDecimal(vat, 4) : 0
       amount_netto = vat > 0 ? 1/vat * amount_brutto : amount_brutto
       amount_taxes = vat > 0 ? amount_brutto - amount_netto: 0
       {
@@ -213,9 +209,8 @@ module Pdf
     end
 
     def build_billing
-      billing_config = CoreConfig.load(Types::BillingConfig)
       issues_vat = contract.localpool.billing_detail.issues_vat
-      vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
+      vat = Vat.current.amount
       {
         date: @billing.last_date,
         number: @billing.full_invoice_number,
@@ -227,9 +222,9 @@ module Pdf
         brutto = @billing.total_amount_after_taxes.round(0)
         balance_at = BigDecimal(@billing.balance_before) / 10
 
-        balance_at_before_taxes = calculate_taxes(balance_at)[:amount_before_taxes]
-        balance_at_after_taxes = calculate_taxes(balance_at)[:amount_after_taxes]
-        balance_at_taxes = calculate_taxes(balance_at)[:amount_taxes]
+        balance_at_before_taxes = calculate_taxes(balance_at, vat)[:amount_before_taxes]
+        balance_at_after_taxes = calculate_taxes(balance_at, vat)[:amount_after_taxes]
+        balance_at_taxes = calculate_taxes(balance_at, vat)[:amount_taxes]
         forderung_net = netto - balance_at_before_taxes
         forderung_tax = (brutto-netto) - balance_at_taxes
 
@@ -297,21 +292,22 @@ module Pdf
             h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_before_taxes*100, prec: 4)
             h[:energy_price_euros]         = german_div(item.energyprice_cents_before_taxes.round(0))
           else # brutto
+            #byebug
             h[:base_price_cents_per_day]   = german_div(item.baseprice_cents_per_day_after_taxes*100, prec: 4)
-            h[:base_price_euros]           = german_div(item.baseprice_cents_after_taxes)
-            h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_after_taxes*100, prec: 4)
-            h[:energy_price_euros]         = german_div(item.energyprice_cents_after_taxes.round(0))
+            h[:base_price_euros]           = german_div(item.baseprice_cents_before_taxes*item.vat.amount)
+            h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_before_taxes*item.vat.amount*100, prec: 4)
+            h[:energy_price_euros]         = german_div(item.energyprice_cents_before_taxes.round(0) * item.vat.amount)
           end
         end
       end
     end
 
-    def build_current_tariff
+    def build_current_tariff(vat)
       {
         energyprice_cents_per_kwh_netto:  german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes*100),
         baseprice_euros_per_month_netto:  german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes),
-        energyprice_cents_per_kwh_brutto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_after_taxes*100),
-        baseprice_euros_per_month_brutto: german_div(@contract.current_tariff.baseprice_cents_per_month_after_taxes),
+        energyprice_cents_per_kwh_brutto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes*vat.amount*100),
+        baseprice_euros_per_month_brutto: german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes*vat.amount),
       }
     end
 
