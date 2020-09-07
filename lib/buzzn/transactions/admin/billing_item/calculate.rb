@@ -22,7 +22,7 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
   end
 
   def calculate_begin_reading(resource:, params:, **)
-    unless params[:begin_reading_id].nil?
+    unless params[:begin_date].nil?
         if params[:raw_value].nil? 
             start_date_billing = resource.billing.begin_date
             end_date_billing = resource.billing.end_date
@@ -32,11 +32,11 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
                   params[:begin_reading] = calculate_reading(start_date_billing, end_date_billing, date, register)
             end
         end
-      end
+    end
   end
 
   def calculate_end_reading(resource:, params:, **)
-    unless params[:end_reading_id].nil?
+    unless params[:end_date].nil?
         if params[:raw_value].nil? 
             start_date_billing = resource.billing.begin_date
             end_date_billing = resource.billing.end_date
@@ -46,7 +46,7 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
                   params[:end_reading] = calculate_reading(start_date_billing, end_date_billing, date, register)
             end
         end
-      end
+    end
   end
 
   def calculate_reading(start_date_billing, end_date_billing, date, register)

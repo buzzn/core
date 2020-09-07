@@ -21,21 +21,11 @@ describe Transactions::Admin::BillingItem::Calculate do
   end
 
   let(:billing_item_resource) { Admin::LocalpoolResource.all(admin).retrieve(localpool.id).contracts.retrieve(billing.contract.id).billings.first.items.first }
-  
-    let(:begin_reading) do
-      create(:reading, raw_value: 0, register: billing.contract.register_meta.registers.first, date: billing_item.begin_date)
-    end
-  
-    let(:end_reading) do
-      create(:reading, raw_value: 0, register: billing.contract.register_meta.registers.first, date: billing_item.end_date)
-    end
 
     let(:params) do
       {
         end_date: billing_item.end_date,
         begin_date: billing_item.begin_date,
-        begin_reading_id: begin_reading.id,
-        end_reading_id: end_reading.id,
         updated_at: billing_item.updated_at.to_json
       }
     end
@@ -47,7 +37,7 @@ describe Transactions::Admin::BillingItem::Calculate do
 
     context 'without a billing begin reading and end reading' do
   
-        it 'does not creates' do
+        it 'does not create' do
           expect {result}.to raise_error(Buzzn::ValidationError, '{:reading=>["billing must have a begin and end reading"]}')
         end
   
