@@ -76,13 +76,13 @@ module Service
               next
             end
           end
-          ranges.delete_if { |r| (r[:end_date]-r[:begin_date]).zero? } 
+          ranges.delete_if { |r| (r[:end_date]-r[:begin_date]).zero? }
           result[:begin_date] = ranges.collect { |r| r[:begin_date] }.min || result[:begin_date]
           result[:end_date]   = ranges.collect { |r| r[:end_date]   }.max || result[:end_date]
         end
 
         ranges.each do |range|
-          result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, register, range[:begin_date]..range[:end_date], range[:tariff], :start_date_billing => begin_date, :end_date_billing => end_date, :fail_silent => true)
+          result[:items] << Builders::Billing::ItemBuilder.from_contract(contract, register, range[:begin_date]..range[:end_date], range[:tariff], :fail_silent => true)
         end
       end
       result
