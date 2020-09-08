@@ -24,7 +24,25 @@ class Transactions::Admin::Meter::CreateReal < Transactions::Admin::Meter
       elsif r[:id].nil?
         schema = Schemas::Transactions::Admin::Register::CreateMeta
       else
-        schema = Schemas::Transactions::Assign
+        begin
+          given_register = Register::Meta.find(r[:id])
+          name = r[:name]
+          label = r[:label]
+          unless name.nil? || label.nil?
+            if given_register.name == name && given_register.label.casecmp?(label)
+              schema = Schemas::Transactions::Assign
+            else
+              r = {"name":name,"label":label}
+              schema = Schemas::Transactions::Admin::Register::CreateMeta
+            end
+          else
+            schema = Schemas::Transactions::Assign
+          end
+        rescue ActiveRecord::RecordNotFound
+          raise Buzzn::ValidationError.new({registers: ['index does not exist']})
+        end
+        
+        
       end
       result = schema.call(r)
       if result.success?
