@@ -68,7 +68,10 @@ module Contract
       if billing_config.nil?
         raise 'please set Types::BillingConfig'
       end
-      self.baseprice_cents_per_month_before_taxes * billing_config.vat
+
+      issues_vat = group.billing_detail.issues_vat
+      vat = issues_vat ? BigDecimal(billing_config.vat, 4) : 0
+      vat > 0? baseprice_cents_per_month_before_taxes * vat : baseprice_cents_per_month_before_taxes
     end
 
   end
