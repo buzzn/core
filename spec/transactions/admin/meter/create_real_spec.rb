@@ -67,6 +67,25 @@ describe Transactions::Admin::Meter::CreateReal do
     params
   end
 
+  let(:meter_create_params_with_id_but_name_change) do
+    params = meter_params.dup
+    params['registers'] = [{ :id => existing_grid_consumption_register.id, 
+      :name => existing_grid_consumption_register.name + " 2", :label => existing_grid_consumption_register.label.upcase }]
+    params
+  end
+
+  let(:meter_create_params_with_id_but_label_change) do
+    params = meter_params.dup
+    if existing_grid_consumption_register.label == 'consumption'
+      label = 'GRID_CONSUMPTION'
+    else
+      label = 'CONSUMPTION'
+    end
+    params['registers'] = [{ :id => existing_grid_consumption_register.id, 
+      :name => existing_grid_consumption_register.name, :label => label}]
+    params
+  end
+
   context 'create register' do
 
     let(:result_meter) do
@@ -82,6 +101,52 @@ describe Transactions::Admin::Meter::CreateReal do
       expect(res.metering_location_id).to eql metering_location_id
       expect(res.registers.first.meta.market_location).not_to be_nil
       expect(res.registers.first.meta.market_location.market_location_id).to eql market_location_id
+    end
+
+  end
+
+  context 'create register for name change' do
+
+    let(:result_meter) do
+      Transactions::Admin::Meter::CreateReal.new.(resource: resource,
+                                                  params: meter_create_params_with_id_but_name_change)
+    end
+
+    it 'creates' do
+      expect(result_meter).to be_success
+      expect(result_meter.value!).to be_a Meter::RealResource
+      res = result_meter.value!
+      expect(res.registers.count).to eql 1
+      expect(res.metering_location_id).to eql metering_location_id
+      expect(res.registers.objects[0].register_meta_id).not_to eq (
+      meter_create_params_with_id_but_name_change['registers'][0][:id])
+      expect(Register::Meta.find(res.registers.objects[0].register_meta_id).name).to eql ( 
+      meter_create_params_with_id_but_name_change['registers'][0][:name])
+      expect(Register::Meta.find(res.registers.objects[0].register_meta_id).label).to eql (
+      meter_create_params_with_id_but_name_change['registers'][0][:label].downcase)
+    end
+
+  end
+
+  context 'create register for label change' do
+
+    let(:result_meter) do
+      Transactions::Admin::Meter::CreateReal.new.(resource: resource,
+                                                  params: meter_create_params_with_id_but_label_change)
+    end
+
+    it 'creates' do
+      expect(result_meter).to be_success
+      expect(result_meter.value!).to be_a Meter::RealResource
+      res = result_meter.value!
+      expect(res.registers.count).to eql 1
+      expect(res.metering_location_id).to eql metering_location_id
+      expect(res.registers.objects[0].register_meta_id).not_to eq (
+        meter_create_params_with_id_but_label_change['registers'][0][:id])
+      expect(Register::Meta.find(res.registers.objects[0].register_meta_id).name).to eql (
+        meter_create_params_with_id_but_label_change['registers'][0][:name])
+      expect(Register::Meta.find(res.registers.objects[0].register_meta_id).label).to eql (
+        meter_create_params_with_id_but_label_change['registers'][0][:label].downcase)
     end
 
   end
