@@ -38,7 +38,7 @@ describe Transactions::Admin::Contract::Document do
     it_behaves_like 'incorrect templates'
 
     context 'valid' do
-
+      
       ['lsn_a1', 'lsn_a2'].each do |t|
         context "template #{t}" do
           let(:params) { { template: t } }
@@ -93,6 +93,31 @@ describe Transactions::Admin::Contract::Document do
       end
 
     end
+
+  end
+
+  context 'calculate energyprice and baseprice' do
+
+    let(:contract) { create(:contract, :localpool_powertaker, :with_tariff, localpool: localpool) }
+    let(:resource) { localpoolr.localpool_power_taker_contracts.retrieve(contract.id) }
+    
+    context 'without issues_vat' do
+
+      it 'calculates' do
+        expect(contract.tariffs[0].energyprice_cents_per_kwh_after_taxes).to eq contract.tariffs[0].energyprice_cents_per_kwh_before_taxes
+        expect(contract.tariffs[0].baseprice_cents_per_month_after_taxes).to eq contract.tariffs[0].baseprice_cents_per_month_before_taxes
+      end
+    end
+
+    context 'with issues_vat' do
+
+      it 'calculates' do
+        localpool.billing_detail.issues_vat = true
+        expect(contract.tariffs[0].energyprice_cents_per_kwh_after_taxes).to eq (contract.tariffs[0].energyprice_cents_per_kwh_before_taxes*1.19)
+        expect(contract.tariffs[0].baseprice_cents_per_month_after_taxes).to eq (contract.tariffs[0].baseprice_cents_per_month_before_taxes*1.19)
+      end
+    end
+
 
   end
 
