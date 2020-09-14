@@ -30,7 +30,7 @@ describe Transactions::Admin::Billing::Update do
   let(:tariff1_begin)  { Date.new(2019, 1, 1)  }
   let(:tariff2_begin)  { Date.new(2019, 3, 1)  }
   let(:billing1_begin) { Date.new(2019, 1, 18) }
-  let(:billing1_end)   { Date.new(2019, 2, 25) }
+  let(:billing1_end)   { Date.new(2019, 3, 25) }
 
   let(:tariff1) do
     create(:tariff, group: localpool, begin_date: tariff1_begin, energyprice_cents_per_kwh: 10, baseprice_cents_per_month: 300)
@@ -66,16 +66,23 @@ describe Transactions::Admin::Billing::Update do
   end
 
   let(:begin_reading) do
-    create(:reading, :regular, raw_value: 10, register: meter.registers.first, date: billing1_begin)
+    create(:reading, :regular, raw_value: 10 * 1000, register: meter.registers.first, date: billing1_begin)
+  end
+
+  let(:change_reading) do
+    create(:reading, :regular, raw_value: (10+100) * 1000, register: meter.registers.first, date: tariff2_begin)
   end
 
   let(:end_reading) do
-    create(:reading, :regular, raw_value: 10+1000, register: meter.registers.first, date: billing1_end)
+    create(:reading, :regular, raw_value: (10+300) * 1000, register: meter.registers.first, date: billing1_end)
   end
+
+  
 
   let(:billing) do
     install_reading
     begin_reading
+    change_reading
     end_reading
     result = Transactions::Admin::Billing::Create.new.(resource: billingsr,
                                                        params: params,
@@ -176,7 +183,7 @@ describe Transactions::Admin::Billing::Update do
             end
 
             context 'no previous payment' do
-              it 'does not generate a new payment' do
+              it 'generates a new payment' do
                 expect(contract.payments.count).to eql 0
                 expect(localpool.billing_detail.automatic_abschlag_adjust).to eql true
                 expect(update_result).to be_success
@@ -185,6 +192,7 @@ describe Transactions::Admin::Billing::Update do
                 expect(contract.payments.count).to eql 1
                 expect(billing.adjusted_payment).not_to be_nil
                 expect(billing.adjusted_payment.tariff).not_to be_nil
+                expect(billing.adjusted_payment.price_cents).to eq 2000
               end
             end
 
@@ -208,7 +216,7 @@ describe Transactions::Admin::Billing::Update do
 
               context 'under threshold' do
                 before do
-                  previous_payment.price_cents = 300
+                  previous_payment.price_cents = 2000
                   previous_payment.save
                 end
                 it 'does update' do
