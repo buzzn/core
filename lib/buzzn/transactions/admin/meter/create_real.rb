@@ -24,7 +24,32 @@ class Transactions::Admin::Meter::CreateReal < Transactions::Admin::Meter
       elsif r[:id].nil?
         schema = Schemas::Transactions::Admin::Register::CreateMeta
       else
-        schema = Schemas::Transactions::Assign
+        #if an id is given try to assign the existing meta with the given id 
+        #unless the given name or label are different from the existing meta's name or label
+        begin
+          given_register = Register::Meta.find(r[:id])
+          name = r[:name]
+          label = r[:label]
+          unless name.nil? || label.nil?
+          #if no name or label is given, the existing meta with the given id should be assigned
+            if given_register.name == name && given_register.label.casecmp?(label) 
+              #if the given name and the given label are the same as the name and label of the existing meta with the given id, 
+              #the existing meta should be assigned
+              schema = Schemas::Transactions::Assign
+            else
+              #if the given name or the given label are different from the name or label of the existing meta with the given id, 
+              #a new meta should be created
+              r = {"name":name,"label":label}
+              schema = Schemas::Transactions::Admin::Register::CreateMeta
+            end
+          else
+            schema = Schemas::Transactions::Assign
+          end
+        rescue ActiveRecord::RecordNotFound
+          raise Buzzn::ValidationError.new({registers: ['index does not exist']})
+        end
+        
+        
       end
       result = schema.call(r)
       if result.success?
