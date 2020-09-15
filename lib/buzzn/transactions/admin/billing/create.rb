@@ -60,11 +60,10 @@ class Transactions::Admin::Billing::Create < Transactions::Base
 
   def billing_item(params:, contract:, resource:, date_range:, **)
     billing_data = Service::BillingData.data(contract, begin_date: date_range.first, end_date: date_range.last)
-
     billing_data[:items].each do |item|
       errors = item.invariant.errors.except(:billing, :contract)
       unless errors.empty?
-        raise Buzzn::ValidationError.new(errors, resource.object)
+        raise Buzzn::ValidationError.new(errors)
       end
     end
 
