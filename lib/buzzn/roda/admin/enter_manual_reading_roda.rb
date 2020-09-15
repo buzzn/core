@@ -63,7 +63,7 @@ module Admin
       # Skip headline, roll over all the data rows
       (2...sheet.count).each do |i|
         if sheet[i].nil?
-          reading_errors.append "Coul not find any register number in line #{i+1}"
+          reading_errors.append "Could not find any register number in line #{i+1}"
           next
         end
 
