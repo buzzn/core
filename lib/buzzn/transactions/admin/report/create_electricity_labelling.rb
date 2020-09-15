@@ -257,7 +257,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    if register_metas_active.map(&:label).any? {|x| x == :demarcation_chp}
+    if register_metas_active.map(&:label).any? {|x| x == 'demarcation_chp'}
       return production_chp - system(
         register_metas: register_metas_active,
         date_range: date_range,
@@ -291,7 +291,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    if register_metas_active.map(&:label).any? {|x| x == :demarcation_pv}
+    if register_metas_active.map(&:label).any? {|x| x == 'demarcation_pv'}
       return production_pv - system(
         register_metas: register_metas_active,
         date_range: date_range,
