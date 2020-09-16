@@ -266,13 +266,13 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       )
     end
 
-    if register_metas_active.select(&:demarcation?).size > 1
-      return grid_feeding_corrected - system(
+    if register_metas_active.select(&:demarcation?).any?
+      return production_chp - (grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation,
         warnings: warnings
-      )
+      ))
     end
 
     production_chp - grid_feeding_corrected
@@ -300,13 +300,13 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       )
     end
 
-    if register_metas_active.select(&:demarcation?).size > 1
-      return grid_feeding_corrected - system(
+    if register_metas_active.select(&:demarcation?).any?
+      return production_pv -( grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation,
         warnings: warnings
-      )
+      ))
     end
 
     production_pv - grid_feeding_corrected
@@ -325,7 +325,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    if register_metas_active.map(&:label).any? {|x| x == :demarcation_water}
+    if register_metas_active.map(&:label).any? {|x| x == 'demarcation_water'}
       return production_water - system(
         register_metas: register_metas_active,
         date_range: date_range,
@@ -334,13 +334,13 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       )
     end
 
-    if register_metas_active.select(&:demarcation?).size > 1
-      return grid_feeding_corrected - system(
+    if register_metas_active.select(&:demarcation?).any?
+      return production_water - (grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation,
         warnings: warnings
-      )
+      ))
     end
 
     production_water - grid_feeding_corrected
@@ -359,7 +359,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    if register_metas_active.map(&:label).any? {|x| x == :demarcation_wind}
+    if register_metas_active.map(&:label).any? {|x| x == 'demarcation_wind'}
       return production_wind - system(
         register_metas: register_metas_active,
         date_range: date_range,
@@ -368,19 +368,19 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       )
     end
 
-    if register_metas_active.select(&:demarcation?).size > 1
-      return grid_feeding_corrected - system(
+    if register_metas_active.select(&:demarcation?).any?
+      return production_wind - (grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation,
         warnings: warnings
-      )
+      ))
     end
 
     production_wind - grid_feeding_corrected
   end
 
-  def production_consumend_in_group_kWh(
+  def production_consumend_in_group_kWh_by_productions(
     production_pv_consumend_in_group_kWh:,
     production_chp_consumend_in_group_kWh:,
     production_wind_consumend_in_group_kWh:,
@@ -392,7 +392,19 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       production_wind_consumend_in_group_kWh +
       production_water_consumend_in_group_kWh
   end
-
+  
+  def production_consumend_in_group_kWh(
+    production_chp:,
+    production_pv:,
+    production_water:,
+    production_wind:,
+    grid_feeding_corrected:,
+    **
+  )
+   (production_chp + production_pv + production_water + production_wind) - grid_feeding_corrected
+    
+  end
+  
   # E65
   def autacry_in_percent(consumption_without_third_party:, production_consumend_in_group_kWh:, warnings:, **)
     autacry = production_consumend_in_group_kWh / consumption_without_third_party * 100
