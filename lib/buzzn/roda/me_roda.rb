@@ -7,7 +7,7 @@ module Me
 
     plugin :rodauth, csrf: false, json: :only do
 
-      enable :login, :logout, :change_password, :change_login, :session_expiration, :reset_password, :verify_login_change, :jwt
+      enable :login, :logout, :change_password, :change_login, :session_expiration, :reset_password, :verify_login_change, :jwt, :jwt_refresh, :active_sessions
 
       db Buzzn::DB
 
@@ -16,7 +16,18 @@ module Me
       session_inactivity_timeout Import.global('config.session_inactivity_timeout').to_i
       max_session_lifetime 86400 # 1 day
       jwt_secret Import.global('config.jwt_secret')
+      hmac_secret Import.global('config.jwt_secret')
       json_response_error_status 401
+      inactive_session_error_status 423
+      jwt_refresh_invalid_token_message({error: "some message"}.to_json)
+      session_expiration_error_status 402
+      active_sessions_error_flash ({error: "some message"}.to_json)
+
+      no_longer_active_session do
+        response.status = 401
+        request.halt [response.status, {'Content-Type' => 'application/json'},
+          [{error: "The session has expired"}.to_json]]
+      end
 
       set_error_flash do |message|
         if request.path =~ /\/login\Z/
@@ -67,7 +78,7 @@ module Me
           logger.info Time.at(rodauth.session[rodauth.session_last_activity_session_key] + rodauth.session_inactivity_timeout)
           logger.info Time.at(Buzzn::Utils::Chronos.now.to_i)
 
-          r.response.status = 401
+          r.response.status = 423
           {'error' => 'This session has expired, please login again.' }
         else
           r.response['Content-Type'] = 'text/plain'
