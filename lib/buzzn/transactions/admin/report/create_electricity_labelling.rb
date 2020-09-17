@@ -257,7 +257,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    #chp consumption can be calculated by subtracting the chp demarcation from the pv production
+    #chp consumption can be calculated by subtracting the chp demarcation from the chp production
 
     if register_metas_active.map(&:label).any? {|x| x == 'demarcation_chp'}
       return production_chp - system(
@@ -374,7 +374,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    #wind consumption can be calculated by subtracting the wind demarcation from the pv production
+    #wind consumption can be calculated by subtracting the wind demarcation from the wind production
 
     if register_metas_active.map(&:label).any? {|x| x == 'demarcation_wind'}
       return production_wind - system(
