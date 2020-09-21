@@ -19,6 +19,7 @@ module Admin
                         bank_account_assign: 'transactions.admin.bank_account.assign',
                         update_nested_person: 'transactions.admin.generic.update_nested_person',
                         update_nested_organization: 'transactions.admin.generic.update_nested_organization',
+                        delete_gap_contract: 'transactions.admin.contract.localpool.delete_gap_contract'
                        ]
 
     plugin :shared_vars
@@ -55,6 +56,16 @@ module Admin
             update_metering_point_operator.(resource: contract, params: r.params)
           else
             r.response.status = 400
+          end
+        end
+
+        r.delete! do
+          case contract
+          when Contract::LocalpoolGapContractResource
+            delete_gap_contract.(resource: contract) 
+          else
+            r.response.status = 400
+            raise Buzzn::ValidationError.new(contract: ['must be gap contract'])
           end
         end
 

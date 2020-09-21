@@ -1,4 +1,4 @@
-#require_relative '../contract'
+require_relative '../../contract'
 require_relative '../../../delete'
 
 class Transactions::Admin::Contract::Localpool::DeleteGapContract < Transactions::Base
