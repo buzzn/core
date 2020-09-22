@@ -9,7 +9,6 @@ describe Transactions::Admin::Billing::Create do
   let!(:localpool) { create(:group, :localpool) }
   let(:operator) { create(:account, :buzzn_operator) }
   let!(:localpoolr) { Admin::LocalpoolResource.all(operator).retrieve(localpool.id) }
-
   let(:lpc) do
     create(:contract, :localpool_processing,
            customer: localpool.owner,
@@ -44,11 +43,11 @@ describe Transactions::Admin::Billing::Create do
   end
 
   let(:vat) do
-    Vat.find(Date.new(2000, 01, 01))
+    Vat.find(Date.new(2000, 0o1, 0o1))
   end
 
   let(:vats) do
-    [Vat.find(Date.new(2000, 01, 01))]
+    [Vat.find(Date.new(2000, 0o1, 0o1))]
   end
 
   let(:contract) do
@@ -286,10 +285,11 @@ describe Transactions::Admin::Billing::Create do
     before do
       contract.tariffs << tariff1
       contract.tariffs.reload
-    end
 
-    after do
-      vat2.destroy
+      mock_series_start = create_series(begin_date, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+      mock_series_end   = create_series(last_date, 2000, 15.minutes, 1000*1000*1000, 50*1000*1000, 4)
+      single_reading.next_api_request_single(contract.register_meta.register, begin_date, mock_series_start)
+      single_reading.next_api_request_single(contract.register_meta.register, end_date, mock_series_end)
     end
 
     it 'splits a billing item at the vat begin date', :thisone => true do
@@ -305,8 +305,52 @@ describe Transactions::Admin::Billing::Create do
       expect(object.items.count).to eql 2
       expect(object.items[0].begin_date).to eql vat2.begin_date
       expect(object.items[0].end_date).to eql end_date
+      expect(object.items[0].vat).to eql vat2
       expect(object.items[1].begin_date).to eql begin_date
       expect(object.items[1].end_date).to eql vat2.begin_date
+      expect(object.items[1].vat).to eql vat
+    end
+  end
+
+  context 'vat' do
+
+    before do
+      contract.tariffs << tariff1
+      contract.tariffs.reload
+    end
+
+    it 'lsg has to pay vat' do
+      localpoolr.billing_detail.object.issues_vat = true
+      localpoolr.billing_detail.object.save
+      mock_series_start = create_series(begin_date, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+      mock_series_end   = create_series(last_date, 2000, 15.minutes, 1000*1000*1000, 50*1000*1000, 4)
+      single_reading.next_api_request_single(contract.register_meta.register, begin_date, mock_series_start)
+      single_reading.next_api_request_single(contract.register_meta.register, end_date, mock_series_end)
+
+      res = result
+      expect(res).to be_success
+      value = res.value!
+      expect(value).to be_a Admin::BillingResource
+      object = value.object
+      expect(object.items.count).to eql 1
+      expect((object.total_amount_before_taxes * vat.amount).round(0)).to eql(object.total_amount_after_taxes)
+    end
+
+    it 'lsg has not to pay vat' do
+      localpoolr.billing_detail.object.issues_vat = false
+      localpoolr.billing_detail.object.save
+      mock_series_start = create_series(begin_date, 2000, 15.minutes, 10*1000*1000, 50*1000*1000, 4)
+      mock_series_end   = create_series(last_date, 2000, 15.minutes, 1000*1000*1000, 50*1000*1000, 4)
+      single_reading.next_api_request_single(contract.register_meta.register, begin_date, mock_series_start)
+      single_reading.next_api_request_single(contract.register_meta.register, end_date, mock_series_end)
+
+      res = result
+      expect(res).to be_success
+      value = res.value!
+      expect(value).to be_a Admin::BillingResource
+      object = value.object
+      expect(object.items.count).to eql 1
+      expect(object.total_amount_before_taxes).to eql(object.total_amount_after_taxes)
     end
   end
 end
