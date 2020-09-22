@@ -90,7 +90,6 @@ class Billing < ActiveRecord::Base
     unless contract.localpool.billing_detail.issues_vat
       return total_amount_before_taxes
     end
-
     amount = BigDecimal(0)
       items.each do |item|
         if item.energyprice_cents_after_taxes.nil? || item.baseprice_cents_after_taxes.nil?

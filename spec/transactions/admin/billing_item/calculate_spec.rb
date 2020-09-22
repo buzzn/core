@@ -3,6 +3,15 @@ describe Transactions::Admin::BillingItem::Calculate do
     Import.global('services.redis_cache').flushall
   end
 
+
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+  end
+
+  let(:vat) do
+    Vat.find(Date.new(2000, 01, 01))
+  end
+
   let(:admin) { create(:account, :buzzn_operator) }
   let(:localpool) { create(:group, :localpool) }
   let(:billing_cycle) { create(:billing_cycle, localpool: localpool) }
@@ -16,7 +25,8 @@ describe Transactions::Admin::BillingItem::Calculate do
            billing: billing,
            tariff: billing.contract.tariffs.first,
            begin_date: billing.begin_date + 31,
-           end_date: billing.end_date - 10)
+           end_date: billing.end_date - 10,
+          vat: vat)
 
   end
 

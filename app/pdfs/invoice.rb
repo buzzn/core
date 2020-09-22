@@ -73,8 +73,10 @@ module Pdf
 
     def consumption(year)
       return nil unless year
+
       collected = @billing.billing_cycle ? @billing.contract.billings.to_a.keep_if(&:billing_cycle).keep_if { |x| x.billing_cycle.begin_date.year == year }.map { |x| [x.total_consumed_energy_kwh, x.total_days] } : [[@billing.total_consumed_energy_kwh, @billing.total_days]]
       return nil if collected.flatten.include?(nil)
+
       summed = collected.inject { |x, n| [x[0] + n[0], x[1] + n[1]] }
       return nil unless summed
 
@@ -82,6 +84,7 @@ module Pdf
       if consumption_result.nan?
         return nil
       end
+
       consumption_result
     end
 
@@ -229,9 +232,10 @@ module Pdf
         forderung_tax = (brutto-netto) - balance_at_taxes
 
         to_pay_cents = balance_at - brutto
-        has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
+        has_bank_and_direct_debit = @billing.contract.customer_bank_account&.direct_debit
         hash[:netto] = german_div(netto)
         hash[:brutto] = german_div(brutto)
+        hash[:vat] = @billing.items.map(&:vat).map(&:amount).compact.uniq.map {|v| v*100-100}.map(&:to_i).map {|v| "#{v}%"}.join ', '
         hash[:vat_amount] = german_div(brutto-netto)
         hash[:balance_at_before_taxes] = german_div(balance_at_before_taxes)
         hash[:balance_at_after_taxes] = german_div(balance_at_after_taxes)
@@ -286,17 +290,26 @@ module Pdf
           if rounded_consumed-h[:consumed_energy_kwh] != 0
             raise 'Unexpected'
           end
+
           if localpool.billing_detail.issues_vat
             h[:base_price_cents_per_day]   = german_div(item.baseprice_cents_per_day_before_taxes*100, prec: 4)
             h[:base_price_euros]           = german_div(item.baseprice_cents_before_taxes)
             h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_before_taxes*100, prec: 4)
             h[:energy_price_euros]         = german_div(item.energyprice_cents_before_taxes.round(0))
+            h[:price_cents_after_taxes]    = german_div(item.price_cents_after_taxes.round(0))
+            h[:price_cents_before_taxes]   = german_div(item.price_cents_before_taxes.round(0))
+            h[:vat_amount]                 = german_div(item.price_cents_after_taxes.round(0) - item.price_cents_before_taxes.round(0))
+            h[:vat]                        = ((item.vat.amount - 1) * 100).to_i.to_s + "%"
           else # brutto
             #byebug
             h[:base_price_cents_per_day]   = german_div(item.baseprice_cents_per_day_after_taxes*100, prec: 4)
             h[:base_price_euros]           = german_div(item.baseprice_cents_before_taxes*item.vat.amount)
             h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_before_taxes*item.vat.amount*100, prec: 4)
             h[:energy_price_euros]         = german_div(item.energyprice_cents_before_taxes.round(0) * item.vat.amount)
+            h[:price_cents_after_taxes]    = german_div(item.price_cents_before_taxes.round(0))
+            h[:price_cents_before_taxes]   = german_div(item.price_cents_before_taxes.round(0))
+            h[:vat_amount]                 = "0%"
+            h[:vat]                        = german_div(0)
           end
         end
       end
@@ -304,8 +317,8 @@ module Pdf
 
     def build_current_tariff(vat)
       {
-        energyprice_cents_per_kwh_netto:  german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes*100),
-        baseprice_euros_per_month_netto:  german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes),
+        energyprice_cents_per_kwh_netto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes*100),
+        baseprice_euros_per_month_netto: german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes),
         energyprice_cents_per_kwh_brutto: german_div(@contract.current_tariff.energyprice_cents_per_kwh_before_taxes*vat.amount*100),
         baseprice_euros_per_month_brutto: german_div(@contract.current_tariff.baseprice_cents_per_month_before_taxes*vat.amount),
       }
@@ -320,14 +333,14 @@ module Pdf
       return abschlag if payment.nil?
 
       vat = billing_hash[:vat]
-      has_bank_and_direct_debit = @billing.contract.customer_bank_account && @billing.contract.customer_bank_account.direct_debit
+      has_bank_and_direct_debit = @billing.contract.customer_bank_account&.direct_debit
       payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro_netto]} € netto +  #{abschlag[:amount_euro_vat]} € USt (#{vat} %) = <strong>#{abschlag[:amount_euro]} € brutto&ast;&ast;</strong>"
       abschlag_begin_date = to_date(abschlag[:begin_date])
       # negative means it's disabled for this powertaker
-      if abschlag[:disabled]
-        abschlag[:satz] = ''
-      else
-        abschlag[:satz] = if has_bank_and_direct_debit
+      abschlag[:satz] = if abschlag[:disabled]
+                          ''
+                        else
+                          if has_bank_and_direct_debit
                             every_month = 'jeden Monat von Ihrem Konto eingezogen'
                             if abschlag[:was_changed]
                               "Ihr neuer #{payment_amounts_to}. Er wird ab dem #{abschlag_begin_date} #{every_month}."
@@ -340,14 +353,18 @@ module Pdf
                             else
                               "Ihr #{payment_amounts_to}. Bitte überweisen Sie den Abschlag wie gewohnt auf das oben angegebene Konto"
                             end
-                          end
-      end
+                                            end
+                        end
       abschlag
     end
 
     def build_payment(payment)
       payment = payment.respond_to?(:first) ? payment.first : payment
-      unless payment.nil?
+      if payment.nil?
+        {
+          disabled: true
+        }
+      else
         {
           energy_consumption_kwh_pa: payment.energy_consumption_kwh_pa,
           cycle: payment.cycle == 'monthly' ? 'Monat' : 'Jahr',
@@ -356,10 +373,6 @@ module Pdf
           amount_euro_vat: german_div(payment.price_cents_after_taxes-payment.price_cents_before_taxes),
           disabled: payment.price_cents.negative?,
           begin_date: payment.begin_date
-        }
-      else
-        {
-          disabled: true
         }
       end
     end
@@ -372,7 +385,7 @@ module Pdf
 
     def build_waste_de
       {
-        nuclear_waste_miligramm_per_kwh: sprintf("%.4f", (@de_stats[:nuclear_waste_miligramm_per_kwh] / 1000.00)),
+        nuclear_waste_miligramm_per_kwh: format('%.4f', (@de_stats[:nuclear_waste_miligramm_per_kwh] / 1000.00)),
         co2_emission_gramm_per_kwh: @de_stats[:co2_emission_gramm_per_kwh]
       }
     end
@@ -383,8 +396,8 @@ module Pdf
 
     def build_waste_local
       {
-        nuclear_waste_miligramm_per_kwh: sprintf("%.4f", localpool.fake_stats["nuclearWasteMiligrammPerKwh"] || 0.0),
-        co2_emission_gramm_per_kwh:      localpool.fake_stats['co2EmissionGrammPerKwh'].to_i
+        nuclear_waste_miligramm_per_kwh: format('%.4f', localpool.fake_stats['nuclearWasteMiligrammPerKwh'] || 0.0),
+        co2_emission_gramm_per_kwh: localpool.fake_stats['co2EmissionGrammPerKwh'].to_i
       }
     end
 

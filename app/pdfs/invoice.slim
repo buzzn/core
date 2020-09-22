@@ -54,6 +54,7 @@ html
       .pt {padding-top: 10rem;}
       .clear {clear: both;}
       .no-border {border-color: transparent;}
+      .border-top {border-top: 1px solid #999}
       .narrow {padding: 0 1rem;}
       .full-width {width: 100%;}
       .padding-left-hack {padding-left: 3rem;}
@@ -211,26 +212,35 @@ html
             th Umsatzsteuer
             th Steuersatz
             th.is-text-right Bruttobetrag
+          - items.map.with_index.each do |item, i|
             tr
-              td.no-border
-                strong Rechnungsbetrag
-              td.no-border #{billing.netto}
-              td.no-border #{billing.vat_amount}
-              td.no-border #{vat} %
-              td.no-border.is-text-right #{billing.brutto}
-            tr
-              td Guthaben zur Rechnungsstellung
-              td #{billing.balance_at_before_taxes}
-              td #{billing.balance_at_taxes}
-              td #{vat} %
-              td.is-text-right #{billing.balance_at_after_taxes}
+            - if i < items.size - 1
+              td.no-border Position #{i+1}
+              td.no-border #{item.price_cents_before_taxes} €
+              td.no-border #{item.vat_amount} €
+              td.no-border #{item.vat}
+              td.no-border.is-text-right #{item.price_cents_after_taxes} €
+            - else
+              td Position #{i+1}
+              td #{item.price_cents_before_taxes} €
+              td #{item.vat_amount} €
+              td #{item.vat}
+              td.is-text-right #{item.price_cents_after_taxes} €
+          tr
+             td.no-border colspan=4
+               strong Rechnungsbetrag gesamt
+             td.no-border.is-text-right
+                strong #{billing.brutto} €
+          tr
+            td Guthaben zur Rechnungsstellung
+            td #{billing.balance_at_before_taxes} €
+            td #{billing.balance_at_taxes} €
+            td 19%
+            td.is-text-right #{billing.balance_at_after_taxes} €
           tr
             td
               strong #{billing.forderung}
-            td #{billing.forderung_net}
-            td #{billing.forderung_tax}
-            td #{vat} %
-            td.is-text-right
+            td.is-text-right colspan=4
               strong #{billing.to_pay} €
       p Aus der #{billing_type} ergibt sich eine <strong>#{billing.rueck_nach}zahlung</strong> von <strong>#{billing.to_pay} €.</strong>
       p #{billing.satz_forderung}

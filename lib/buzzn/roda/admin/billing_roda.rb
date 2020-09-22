@@ -35,7 +35,7 @@ class Admin::BillingRoda < BaseRoda
       end
 
       r.patch! do
-        update.(resource: billing, params: r.params)
+        update.(resource: billing, params: r.params, vat: Vat.current)
       end
 
       r.delete! do
