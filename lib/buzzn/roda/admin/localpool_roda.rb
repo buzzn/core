@@ -10,6 +10,7 @@ module Admin
                         update: 'transactions.admin.localpool.update',
                         assign_owner: 'transactions.admin.localpool.assign_owner',
                         assign_gap_contract_customer: 'transactions.admin.localpool.assign_gap_contract_customer',
+                        unassign_gap_contract_customer: 'transactions.admin.localpool.unassign_gap_contract_customer',
                         create_person_owner: 'transactions.admin.localpool.create_person_owner',
                         create_person_gap_contract_customer: 'transactions.admin.localpool.create_person_gap_contract_customer',
                         create_gap_contracts: 'transactions.admin.contract.localpool.create_gap_contracts',
@@ -173,6 +174,10 @@ module Admin
             assign_gap_contract_customer.(resource: localpool,
                                           new_customer: new_customer)
           end
+
+          r.delete! do
+            unassign_gap_contract_customer.(resource: localpool)
+          end
         end
 
         r.on 'organization-gap-contract-customer' do
@@ -189,6 +194,10 @@ module Admin
             new_customer = AdminResource.new(current_user).organizations.retrieve(id)
             assign_gap_contract_customer.(resource: localpool,
                                           new_customer: new_customer)
+          end
+
+          r.delete! do
+            unassign_gap_contract_customer.(resource: localpool)
           end
 
         end
