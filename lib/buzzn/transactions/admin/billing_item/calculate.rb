@@ -25,39 +25,40 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
 
   def calculate_begin_reading(resource:, params:, **)
     unless params[:begin_date].nil?
-        if params[:raw_value].nil? 
-            start_date_billing = resource.billing.begin_date
-            end_date_billing = resource.billing.end_date
-            register = resource.register.object
-            date = params[:begin_date]
-            unless start_date_billing.nil? || end_date_billing.nil? || date.nil? || register.nil? 
-                  params[:begin_reading] = calculate_reading(start_date_billing, end_date_billing, date, register)
-            end
+      if params[:raw_value].nil?
+        start_date_billing = resource.billing.begin_date
+        end_date_billing = resource.billing.end_date
+        register = resource.register.object
+        date = params[:begin_date]
+        unless start_date_billing.nil? || end_date_billing.nil? || date.nil? || register.nil?
+          params[:begin_reading] = calculate_reading(start_date_billing, end_date_billing, date, resource.register)
         end
+      end
     end
   end
 
   def calculate_end_reading(resource:, params:, **)
     unless params[:end_date].nil?
-        if params[:raw_value].nil? 
-            start_date_billing = resource.billing.begin_date
-            end_date_billing = resource.billing.end_date
-            register = resource.register.object
-            date = params[:end_date]
-            unless start_date_billing.nil? || end_date_billing.nil? || date.nil? || register.nil?
-                  params[:end_reading] = calculate_reading(start_date_billing, end_date_billing, date, register)
-            end
+      if params[:raw_value].nil?
+        start_date_billing = resource.billing.begin_date
+        end_date_billing = resource.billing.end_date
+        register = resource.register.object
+        date = params[:end_date]
+        unless start_date_billing.nil? || end_date_billing.nil? || date.nil? || register.nil?
+          params[:end_reading] = calculate_reading(start_date_billing, end_date_billing, date, resource.register)
         end
+      end
     end
   end
 
-  def calculate_reading(start_date_billing, end_date_billing, date, register)
+  def calculate_reading(start_date_billing, end_date_billing, date, resource)
     reading_service = Import.global('services.reading_service')
+    register = resource.object
     begin
-        reading_start_date_billing = reading_service.get(register, start_date_billing, :precision => 2.days)
-        reading_end_date_billing = reading_service.get(register, end_date_billing, :precision => 2.days)
+      reading_start_date_billing = reading_service.get(register, start_date_billing, :precision => 2.days)
+      reading_end_date_billing = reading_service.get(register, end_date_billing, :precision => 2.days)
     rescue Buzzn::DataSourceError
-        raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
+      raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
     end
     if reading_start_date_billing.nil? || reading_end_date_billing.nil?
       raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
@@ -68,10 +69,19 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
       attrs = {
         raw_value: reading_value.to_i,
         date: date,
-        register: register
+        status: "Z86",
+        reason: "PMR",
+        read_by: "SG",
+        quality: "220",
+        unit: "Wh",
+        source: "MAN"
       }
-      readings = Reading::Single.new(attrs)
+      begin
+        reading = Transactions::Admin::Reading::Create.new.(resource: resource, params: attrs)
+        reading.value!.object
+      rescue => e
+        raise Buzzn::ValidationError.new({register: ['there exists already a reading for this register at this date and for this reason']}, register)
+      end
     end
-  end 
+  end
 end
-
