@@ -2,7 +2,7 @@ require_relative '../billing_item'
 require_relative '../../../schemas/transactions/admin/billing_item/update'
 
 #If a begin_reading or an end_reading of a billing_item is missing, it can be calculated. 
-#Therefor the share of total consumption is calculated according to the number of days that have passed by the time of the required reading. 
+#Therefor the share of total consumption is calculated according to the number of days that have passed by the time of the required reading.
 class Transactions::Admin::BillingItem::Calculate < Transactions::Base
 
   validate :schema
@@ -72,7 +72,7 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
           date: date,
           status: 'Z86',
           reason: 'PMR',
-          read_by: 'BUZZN',
+          read_by: 'BN',
           quality: '67',
           unit: 'Wh',
           source: 'MAN'
