@@ -257,7 +257,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    if register_metas_active.map(&:label).any? {|x| x == :demarcation_chp}
+    #chp consumption can be calculated by subtracting the chp demarcation from the chp production
+
+    if register_metas_active.map(&:label).any? {|x| x == 'demarcation_chp'}
       return production_chp - system(
         register_metas: register_metas_active,
         date_range: date_range,
@@ -266,13 +268,16 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       )
     end
 
-    if register_metas_active.select(&:demarcation?).size > 1
-      return grid_feeding_corrected - system(
+    #If no chp demarcation meter is installed, the chp demarcation can be calculated by 
+    #subtracting the value of the existing demarcation meters from grid_feeding_corrected.
+    #Warning: This only works if there are at least n-1 demarcation meters, where n is the number of production units.
+    if register_metas_active.select(&:demarcation?).any?
+      return production_chp - (grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation,
         warnings: warnings
-      )
+      ))
     end
 
     production_chp - grid_feeding_corrected
@@ -291,7 +296,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    if register_metas_active.map(&:label).any? {|x| x == :demarcation_pv}
+    #pv consumption can be calculated by subtracting the pv demarcation from the pv production
+
+    if register_metas_active.map(&:label).any? {|x| x == 'demarcation_pv'}
       return production_pv - system(
         register_metas: register_metas_active,
         date_range: date_range,
@@ -300,13 +307,16 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       )
     end
 
-    if register_metas_active.select(&:demarcation?).size > 1
-      return grid_feeding_corrected - system(
+    #If no pv demarcation meter is installed, the pv demarcation can be calculated by 
+    #subtracting the value of the existing demarcation meters from grid_feeding_corrected.
+    #Warning: This only works if there are at least n-1 demarcation meters, where n is the number of production units.
+    if register_metas_active.select(&:demarcation?).any?
+      return production_pv -( grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation,
         warnings: warnings
-      )
+      ))
     end
 
     production_pv - grid_feeding_corrected
@@ -325,7 +335,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    if register_metas_active.map(&:label).any? {|x| x == :demarcation_water}
+    #water consumption can be calculated by subtracting the water demarcation from the water production
+
+    if register_metas_active.map(&:label).any? {|x| x == 'demarcation_water'}
       return production_water - system(
         register_metas: register_metas_active,
         date_range: date_range,
@@ -334,13 +346,16 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       )
     end
 
-    if register_metas_active.select(&:demarcation?).size > 1
-      return grid_feeding_corrected - system(
+    #If no water demarcation meter is installed, the water demarcation can be calculated by 
+    #subtracting the value of the existing demarcation meters from grid_feeding_corrected.
+    #Warning: This only works if there are at least n-1 demarcation meters, where n is the number of production units.
+    if register_metas_active.select(&:demarcation?).any?
+      return production_water - (grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation,
         warnings: warnings
-      )
+      ))
     end
 
     production_water - grid_feeding_corrected
@@ -359,7 +374,9 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    if register_metas_active.map(&:label).any? {|x| x == :demarcation_wind}
+    #wind consumption can be calculated by subtracting the wind demarcation from the wind production
+
+    if register_metas_active.map(&:label).any? {|x| x == 'demarcation_wind'}
       return production_wind - system(
         register_metas: register_metas_active,
         date_range: date_range,
@@ -368,19 +385,22 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       )
     end
 
-    if register_metas_active.select(&:demarcation?).size > 1
-      return grid_feeding_corrected - system(
+    #If no wind demarcation meter is installed, the wind demarcation can be calculated by 
+    #subtracting the value of the existing demarcation meters from grid_feeding_corrected.
+    #Warning: This only works if there are at least n-1 demarcation meters, where n is the number of production units.
+    if register_metas_active.select(&:demarcation?).any?
+      return production_wind - (grid_feeding_corrected - system(
         register_metas: register_metas_active,
         date_range: date_range,
         label: :demarcation,
         warnings: warnings
-      )
+      ))
     end
 
     production_wind - grid_feeding_corrected
   end
 
-  def production_consumend_in_group_kWh(
+  def production_consumend_in_group_kWh_by_productions(
     production_pv_consumend_in_group_kWh:,
     production_chp_consumend_in_group_kWh:,
     production_wind_consumend_in_group_kWh:,
@@ -392,7 +412,19 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       production_wind_consumend_in_group_kWh +
       production_water_consumend_in_group_kWh
   end
-
+  
+  def production_consumend_in_group_kWh(
+    production_chp:,
+    production_pv:,
+    production_water:,
+    production_wind:,
+    grid_feeding_corrected:,
+    **
+  )
+   (production_chp + production_pv + production_water + production_wind) - grid_feeding_corrected
+    
+  end
+  
   # E65
   def autacry_in_percent(consumption_without_third_party:, production_consumend_in_group_kWh:, warnings:, **)
     autacry = production_consumend_in_group_kWh / consumption_without_third_party * 100
