@@ -54,34 +54,38 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
   def calculate_reading(start_date_billing, end_date_billing, date, resource)
     reading_service = Import.global('services.reading_service')
     register = resource.object
-    begin
-      reading_start_date_billing = reading_service.get(register, start_date_billing, :precision => 2.days)
-      reading_end_date_billing = reading_service.get(register, end_date_billing, :precision => 2.days)
-    rescue Buzzn::DataSourceError
-      raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
-    end
-    if reading_start_date_billing.nil? || reading_end_date_billing.nil?
-      raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
-    else
-      consumption_total = reading_end_date_billing.to_a.max_by(&:value).raw_value  - reading_start_date_billing.to_a.max_by(&:value).raw_value
-      consumption = (date - start_date_billing)/(end_date_billing - start_date_billing) * consumption_total
-      reading_value = reading_start_date_billing.to_a.max_by(&:value).raw_value + consumption
-      attrs = {
-        raw_value: reading_value.to_i,
-        date: date,
-        status: "Z86",
-        reason: "PMR",
-        read_by: "SG",
-        quality: "220",
-        unit: "Wh",
-        source: "MAN"
-      }
+    if register.readings.find_by(date: date).nil?
       begin
-        reading = Transactions::Admin::Reading::Create.new.(resource: resource, params: attrs)
-        reading.value!.object
-      rescue => e
-        raise Buzzn::ValidationError.new({register: ['there exists already a reading for this register at this date and for this reason']}, register)
+        reading_start_date_billing = reading_service.get(register, start_date_billing, :precision => 2.days)
+        reading_end_date_billing = reading_service.get(register, end_date_billing, :precision => 2.days)
+      rescue Buzzn::DataSourceError
+        raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
       end
+      if reading_start_date_billing.nil? || reading_end_date_billing.nil?
+        raise Buzzn::ValidationError.new({reading: ['billing must have a begin and end reading']})
+      else
+        consumption_total = reading_end_date_billing.to_a.max_by(&:value).raw_value - reading_start_date_billing.to_a.max_by(&:value).raw_value
+        consumption = (date - start_date_billing)/(end_date_billing - start_date_billing) * consumption_total
+        reading_value = reading_start_date_billing.to_a.max_by(&:value).raw_value + consumption
+        attrs = {
+          raw_value: reading_value.to_i,
+          date: date,
+          status: 'Z86',
+          reason: 'PMR',
+          read_by: 'BUZZN',
+          quality: '67',
+          unit: 'Wh',
+          source: 'MAN'
+        }
+        begin
+          reading = Transactions::Admin::Reading::Create.new.(resource: resource, params: attrs)
+          reading.value!.object
+        rescue => e
+          raise Buzzn::ValidationError.new({register: ['there exists already a reading for this register at this date and for this reason']}, register)
+        end
+      end
+    else
+      register.readings.find_by(date: date)
     end
   end
 end
