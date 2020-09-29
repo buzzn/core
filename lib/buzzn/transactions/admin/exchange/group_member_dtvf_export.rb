@@ -9,6 +9,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   validate :schema
   authorize :allowed_roles
 
+  #precondition :precondition
   add :file_header
   add :exported_columns
   map :export_group
@@ -20,6 +21,10 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   def allowed_roles(permission_context:)
     permission_context.exchange.group.create
   end
+
+  #def precondition
+   # Schemas::PreConditions::GroupMemberDtvfExport::Export
+  #end
 
   # Converts the result into a datev readable charset.
   # According to https://apps.datev.de/dnlexka/document/1001008
@@ -349,6 +354,9 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   # @return An array of all the fields meant to be exported. The order must match the exported_columns.
   def export_contract(contract)
     person = contract.contact
+    if person.nil?
+      raise Buzzn::ValidationError.new({contract: ["the contract with the id #{contract.id} has no contact"]}, contract)
+    end
     [
       account_number(contract), # Konto
       person.last_name, # Name (Adressattyp Unternehmen)

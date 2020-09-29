@@ -58,4 +58,4 @@ en:
     completeness: 'billing_items for billing with invoice number %{invoice_number} are not complete and state is not open' 
     active_localpool_processing_contract_at_begin?: 'there must be a processing contract for the group activ on begin date %{begin_date}' 
     no_billing_for_gap_contract_to_be_deleted?: 'this contract can not be deleted because it has at least one billing'
-    #contract_to_be_deleted_gap_contract?: 'this contract can not be deleted because it is not a gap contract'
+    contracts_have_contact?: 'the contract does not have a contact'
