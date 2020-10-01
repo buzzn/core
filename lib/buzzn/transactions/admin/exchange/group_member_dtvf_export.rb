@@ -348,7 +348,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
 #    last_name_organisation
     [
       account_number(contract), # Konto
-      (contract.customer.instance_of? Organization::GeneralResource)? person.last_name : '', # Name (Adressattyp Unternehmen)
+      (contract.customer.instance_of? Organization::GeneralResource)? contract.customer.name : '', # Name (Adressattyp Unternehmen)
       '', # Unternehmensgegenstand
       (contract.customer.instance_of? PersonResource)? person.last_name : '', # Name (Adressattyp natürl. Person)
       (contract.customer.instance_of? PersonResource)? person.first_name : '', # Vorname (Adressattyp natürl. Person)
@@ -492,7 +492,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       '', # Indiv. Feld 7
       '', # Indiv. Feld 8
       '', # Indiv. Feld 9
-      '', # Indiv. Feld 10
+      contract.register_meta.registers.reject{|r| r.decomissioned?}.first&.meter&.product_serialnumber, # Indiv. Feld 10
       '', # Indiv. Feld 11
       '', # Indiv. Feld 12
       '', # Indiv. Feld 13
