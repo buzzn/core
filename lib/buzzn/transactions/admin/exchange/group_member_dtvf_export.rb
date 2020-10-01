@@ -21,14 +21,6 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
     permission_context.exchange.group.create
   end
 
-  # Converts the result into a datev readable charset.
-  # According to https://apps.datev.de/dnlexka/document/1001008
-  # The charset has to be ansii.
-  def result(file_header:, export_group:, **)
-    # The dtvf importer used by iswarwatt does not support utf8 encoding.
-    (file_header + export_group).encode(Encoding.find('WINDOWS-1252'))
-  end
-
   # Converts a phone number into the format:
   #   +[countrycode][space][citycode][space][number]
   # @param [person] target_person The person whos phone number to convert.
@@ -74,6 +66,10 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   # Exports the given group.
   def export_group(params:, resource:, file_header:, exported_columns:, **)
     target = StringIO.new
+    # Converts the result into a datev readable charset.
+    # According to https://apps.datev.de/dnlexka/document/1001008
+    # The charset has to be ansii.
+    target.set_encoding(Encoding.find('WINDOWS-1252'))
     target << file_header
     target << exported_columns.join(';')
     resource.contracts.select {|c| c.is_a? Contract::LocalpoolPowerTakerResource}
@@ -349,14 +345,15 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   # @return An array of all the fields meant to be exported. The order must match the exported_columns.
   def export_contract(contract)
     person = contract.contact
+#    last_name_organisation
     [
       account_number(contract), # Konto
-      person.last_name, # Name (Adressattyp Unternehmen)
+      (contract.customer.instance_of? Organization::GeneralResource)? person.last_name : '', # Name (Adressattyp Unternehmen)
       '', # Unternehmensgegenstand
-      person.last_name, # Name (Adressattyp natürl. Person)
-      person.first_name, # Vorname (Adressattyp natürl. Person)
+      (contract.customer.instance_of? PersonResource)? person.last_name : '', # Name (Adressattyp natürl. Person)
+      (contract.customer.instance_of? PersonResource)? person.first_name : '', # Vorname (Adressattyp natürl. Person)
       '', # Name (Adressattyp keine Angabe)
-      '', # Adressattyp
+      (contract.customer.instance_of? PersonResource)? '1' : '2', # Adressattyp
       '', # Kurzbezeichnung
       person.address.country, # EU-Land
       '', # EU-UStID
@@ -448,7 +445,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       '', # Leerfeld
       '', # Briefanrede
       '', # Grußformel
-      '', # Kunden-/Lief.-Nr.
+      contract.full_contract_number, # Kunden-/Lief.-Nr.
       '', # Steuernummer
       '', # Sprache
       '', # Ansprechpartner
@@ -571,16 +568,16 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       '', # Bankverb 10 Gültig bis
       '', # Nummer Fremdsystem
       '', # Insolvent
-      person.contracts.to_a[1]&.mandate_reference, # SEPA-Mandatsreferenz 2
-      person.contracts.to_a[2]&.mandate_reference, # SEPA-Mandatsreferenz 3
-      person.contracts.to_a[0]&.mandate_reference, # SEPA-Mandatsreferenz 1
-      person.contracts.to_a[3]&.mandate_reference, # SEPA-Mandatsreferenz 4
-      person.contracts.to_a[4]&.mandate_reference, # SEPA-Mandatsreferenz 5
-      person.contracts.to_a[5]&.mandate_reference, # SEPA-Mandatsreferenz 6
-      person.contracts.to_a[6]&.mandate_reference, # SEPA-Mandatsreferenz 7
-      person.contracts.to_a[7]&.mandate_reference, # SEPA-Mandatsreferenz 8
-      person.contracts.to_a[8]&.mandate_reference, # SEPA-Mandatsreferenz 9
-      person.contracts.to_a[9]&.mandate_reference, # SEPA-Mandatsreferenz 10
+      contract.full_contract_number, # SEPA-Mandatsreferenz 2
+      '', # SEPA-Mandatsreferenz 3
+      '', # SEPA-Mandatsreferenz 1
+      '', # SEPA-Mandatsreferenz 4
+      '', # SEPA-Mandatsreferenz 5
+      '', # SEPA-Mandatsreferenz 6
+      '', # SEPA-Mandatsreferenz 7
+      '', # SEPA-Mandatsreferenz 8
+      '', # SEPA-Mandatsreferenz 9
+      '', # SEPA-Mandatsreferenz 10
       '', # Verknüpftes OPOS-Konto
       '', # Mahnsperre bis
       '', # Lastschriftsperre bis
