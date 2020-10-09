@@ -34,12 +34,12 @@ describe Transactions::Admin::Exchange::GroupMemberDtvfExport do
     # There is some other test, which creates a localpool with various contracts
     expect(localpool.contracts.size).to be(4)
     expect(lines[0]).to start_with 'DTVF;700;16;Debitoren/Kreditoren;5;2,01907E+16;;RE;info;;557718;38017;20190101;5;;;;;;0;;;;;;74252;4;;;;'
-    expect(lines[1]).to start_with 'Konto;Name (Adressattyp Unternehmen);Unternehmensgegenstand;Name (Adressattyp natürl. Person);Vorname (Adressattyp natürl. Person);'
+    expect(lines[1]).to start_with 'Konto;Name (Adressattyp Unternehmen);Unternehmensgegenstand;Name (Adressattyp'
 
     #  Sometimes the contracts get mixed up, which makes it hard to check.
     contract_lines = [lines[2], lines[3]].sort
-    expect(contract_lines[0]).to start_with "600#{c1.contract_number_addition};#{c1.contact.last_name};;#{c1.contact.last_name};#{c1.contact.first_name};;;;germany;;Frau;;;;;#{c1.contact.address.street}"
-    expect(contract_lines[1]).to start_with "600#{c2.contract_number_addition};#{c2.contact.last_name};;#{c2.contact.last_name};#{c2.contact.first_name};;;;germany;;Frau;;;;;#{c2.contact.address.street}"
-
+    expect(contract_lines[0]).to start_with "600#{c1.contract_number_addition};;;#{c1.contact.last_name};#{c1.contact.first_name};;1;;germany;;Frau;;;;;#{c1.contact.address.street}"
+    expect(contract_lines[1]).to start_with "600#{c2.contract_number_addition};;;#{c2.contact.last_name};#{c2.contact.first_name};;1;;germany;;Frau;;;;;#{c2.contact.address.street}"
   end
+
 end

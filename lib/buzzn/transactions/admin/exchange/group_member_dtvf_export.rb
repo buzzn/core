@@ -73,8 +73,9 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
     target << file_header
     target << exported_columns.join(';')
     resource.contracts.select {|c| c.is_a? Contract::LocalpoolPowerTakerResource}
-      .map {|u| export_contract(u) }
-      .each{|r| target << "\n" << r.join(';')}
+            .select(&:active?)
+            .map {|u| export_contract(u) }
+            .each {|r| target << "\n" << r.join(';')}
     target.string
   end
 
@@ -345,10 +346,9 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   # @return An array of all the fields meant to be exported. The order must match the exported_columns.
   def export_contract(contract)
     person = contract.contact
-#    last_name_organisation
     [
       account_number(contract), # Konto
-      (contract.customer.instance_of? Organization::GeneralResource)? person.last_name : '', # Name (Adressattyp Unternehmen)
+      (contract.customer.instance_of? Organization::GeneralResource)? contract.customer.name : '', # Name (Adressattyp Unternehmen)
       '', # Unternehmensgegenstand
       (contract.customer.instance_of? PersonResource)? person.last_name : '', # Name (Adressattyp natürl. Person)
       (contract.customer.instance_of? PersonResource)? person.first_name : '', # Vorname (Adressattyp natürl. Person)
@@ -492,7 +492,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       '', # Indiv. Feld 7
       '', # Indiv. Feld 8
       '', # Indiv. Feld 9
-      '', # Indiv. Feld 10
+      contract.register_meta.registers.reject(&:decomissioned?).first&.meter&.product_serialnumber, # Indiv. Feld 10
       '', # Indiv. Feld 11
       '', # Indiv. Feld 12
       '', # Indiv. Feld 13
@@ -603,4 +603,5 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       '' # Letzte Frist
     ]
     end
+
 end

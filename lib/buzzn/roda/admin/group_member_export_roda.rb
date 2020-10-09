@@ -19,6 +19,7 @@ module Admin
         filename = Buzzn::Utils::File.sanitize_filename(
           'group_members_DTVF.csv'
         )
+        r.response.headers['Content-Type'] = 'text/csv;charset=ISO-8859'
         r.response.headers['Content-Disposition'] =
           "inline; filename=\"#{filename}\""
         r.response.write(export.value!)
