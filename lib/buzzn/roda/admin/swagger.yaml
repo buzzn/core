@@ -9626,8 +9626,8 @@ paths:
       - name: raw_value
         in: formData
         required: true
-        type: integer
-        format: int64
+        type: number
+        format: float
       - name: unit
         in: formData
         required: true
