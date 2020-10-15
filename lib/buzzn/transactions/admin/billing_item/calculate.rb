@@ -25,6 +25,10 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
 
   def calculate_begin_reading(resource:, params:, **)
     unless params[:begin_date].nil?
+      puts params[:begin_date]
+      puts params[:begin_date]&.class
+      puts params[:updated_at]
+      puts params[:updated_at]&.class
         if params[:raw_value].nil? 
             start_date_billing = resource.billing.begin_date
             end_date_billing = resource.billing.end_date
