@@ -10824,6 +10824,35 @@ paths:
         in: formData
         required: false
         type: hash
+      - name: emailBackendHost
+        in: formData
+        required: false
+        type: string
+        maxLength: 128
+      - name: emailBackendPort
+        in: formData
+        required: false
+        type: int
+      - name: emailBackendUser
+        in: formData
+        required: false
+        type: string
+        maxLength: 128
+      - name: emailBackendPassword
+        in: formData
+        required: false
+        type: string
+        maxLength: 128
+      - name: emailBackendEncryption
+        in: formData
+        required: false
+        type: string
+        maxLength: 16
+        enum:
+          - NONE
+          - SSL/TLS
+          - STARTTLS
+
       responses:
         200:
           description: patched
