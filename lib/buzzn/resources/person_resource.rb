@@ -13,7 +13,11 @@ class PersonResource < Buzzn::Resource::Entity
               :email,
               :preferred_language,
               :image,
-              :customer_number
+              :customer_number,
+              :email_backend_host,
+              :email_backend_port,
+              :email_backend_user,
+              :email_backend_encryption
 
   attributes :updatable, :deletable
 
