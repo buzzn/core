@@ -15,6 +15,11 @@ module Schemas::Transactions::Person
     optional(:title).value(included_in?: [nil] + ::Person.titles.values)
     optional(:phone).maybe(:filled?, :str?, :phone_number?, max_size?: 64)
     optional(:fax).maybe(:filled?, :str?, :phone_number?, max_size?: 64)
+    optional(:email_backend_host).maybe(:filled?, :str?, max_size?: 128)
+    optional(:email_backend_port).maybe(:filled?, :int?)
+    optional(:email_backend_user).maybe(:filled?, :str?, max_size?: 128)
+    optional(:email_backend_password).maybe(:filled?, :str?, max_size?: 128)
+    optional(:email_backend_encryption).maybe(:filled?, :str?, max_size?: 16)
   end
 
   AssignOrUpdate = Schemas::Support.Form(Schemas::Transactions::UpdateOptional) do
@@ -27,6 +32,11 @@ module Schemas::Transactions::Person
     optional(:title).value(included_in?: [nil] + ::Person.titles.values)
     optional(:phone).maybe(:filled?, :str?, :phone_number?, max_size?: 64)
     optional(:fax).maybe(:filled?, :str?, :phone_number?, max_size?: 64)
+    optional(:email_backend_host).maybe(:filled?, :str?, max_size?: 128)
+    optional(:email_backend_port).maybe(:filled?, :int?)
+    optional(:email_backend_user).maybe(:filled?, :str?, max_size?: 128)
+    optional(:email_backend_password).maybe(:filled?, :str?, max_size?: 128)
+    optional(:email_backend_encryption).maybe(:filled?, :str?, max_size?: 16)
   end
 
   Assign = Schemas::Support.Form do
