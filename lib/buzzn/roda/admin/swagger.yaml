@@ -10852,6 +10852,10 @@ paths:
           - NONE
           - SSL/TLS
           - STARTTLS
+      - name: emailBackendActive
+        in: formData
+        required: false
+        type: boolean
 
       responses:
         200:
