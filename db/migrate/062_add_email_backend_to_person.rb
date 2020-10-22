@@ -7,6 +7,7 @@ class AddEmailBackendToPerson < ActiveRecord::Migration
     add_column :persons, :email_backend_user, :string, :limit => 128
     add_column :persons, :email_backend_password, :string, :limit => 128
     add_column :persons, :email_backend_encryption, :string, :limit => 16
+    add_column :persons, :email_backend_active, :boolean, :default => false
   end
 
   def down
@@ -15,6 +16,7 @@ class AddEmailBackendToPerson < ActiveRecord::Migration
     remove_column :persons, :email_backend_user
     remove_column :persons, :email_backend_password
     remove_column :persons, :email_backend_encryption
+    remove_column :persons, :email_backend_active
   end
 
 end

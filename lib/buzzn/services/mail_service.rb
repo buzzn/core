@@ -6,14 +6,15 @@ require 'net/http'
 
 class Services::MailService
 
-  REQUIRED_MESSAGE_KEYS=[:from, :to, :subject, :text]
+  REQUIRED_MESSAGE_KEYS=[:to, :subject, :text, :from_person_id]
   OPTIONAL_MESSAGE_KEYS=[:bcc, :reply_to, :html, :document_id, :document_name, :document_mime]
 
   include Import['config.mail_backend',
                  'config.mailgun_api_key',
                  'config.mailgun_domain',
                  'services.mailgun_service',
-                 'services.mail_stdout_service']
+                 'services.mail_stdout_service',
+                 'services.smtp_service']
 
   def initialize(**)
     super
@@ -25,8 +26,8 @@ class Services::MailService
 
     case mail_backend
     when 'smtp'
-      # not implemented yet
-      nil
+      smtp_service.deliver(message)
+
     when 'mailgun'
       if mailgun_api_key == '11111111111111111111111111111111-11111111-11111111'
         @logger.info('development mailgun api_key: using stdout backend')
@@ -46,6 +47,30 @@ class Services::MailService
       billing.status = 'delivered'
       billing.save
     end
+  end
+
+  def deliver_test_mail(contact)
+    salute = if contact.prefix == 'male'
+               "Sehr geehrter Herr #{contact.last_name},"
+             elsif contact.prefix == 'female'
+               "Sehr geehrte Frau #{contact.last_name},"
+             else
+               'Verehrter Strohmnehmer/in,'
+             end
+
+    message = <<~MSG
+      #{salute}
+
+      wenn Sie diese Email lesen können, scheint ihr Mail-Account richtig in der Platform eingetragen zu sein.
+
+      Bitte bestätigen Sie diesen Umstand in dem Sie diesen Link anklicken: http://de.buzzn.net/activate/#{contact.id}
+
+      Energiegeladene Grüße
+
+      Die Platform
+    MSG
+
+    deliver({text:  message, subject: 'Buzzn Platform test email', to: contact.email, from_person_id: contact.id})
   end
 
   def deliver_later(message = {})
