@@ -17,7 +17,8 @@ class PersonResource < Buzzn::Resource::Entity
               :email_backend_host,
               :email_backend_port,
               :email_backend_user,
-              :email_backend_encryption
+              :email_backend_encryption,
+              :email_backend_active
 
   attributes :updatable, :deletable
 
