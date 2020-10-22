@@ -23,7 +23,8 @@ module Admin
                         assign_organization_market: 'transactions.admin.localpool.assign_organization_market',
                         create_or_update_meter_discovergy: 'transactions.admin.localpool.create_or_update_meter_discovergy',
                         bubbles: 'transactions.bubbles',
-                        delete: 'transactions.delete'
+                        delete: 'transactions.delete',
+                        mail_service: 'services.mail_service'
                        ]
 
     PARENT = :localpool
@@ -40,6 +41,10 @@ module Admin
 
         r.get! 'bubbles' do
           aggregated(bubbles.(localpool).value!)
+        end
+
+        r.get 'send-testmail' do
+          mail_service.deliver_test_mail(localpool.contact)
         end
 
         r.patch! do
