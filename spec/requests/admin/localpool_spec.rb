@@ -453,6 +453,11 @@ describe Admin::LocalpoolRoda, :request_helper, order: :defined do
            'preferred_language'=>manager.attributes['preferred_language'],
            'image'=>manager.image.medium.url,
            'customer_number' => nil,
+           'email_backend_host' => nil,
+           'email_backend_port' => nil,
+           'email_backend_user' => nil,
+           'email_backend_encryption' => nil,
+           'email_backend_active' => false,
            'updatable'=>true,
            'deletable'=>true,
            'bank_accounts'=> { 'array'=>[] } }]

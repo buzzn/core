@@ -177,6 +177,7 @@ Ihr BUZZN Team
                      :subject => subject,
                      :text => text,
                      :bcc => billing_email_bcc,
+                     :from_person_id => receiver_person.id,
                      :document_id => document.id}
 
       reply_to = resource.object.localpool.owner.email
