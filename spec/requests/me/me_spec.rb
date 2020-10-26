@@ -26,6 +26,11 @@ describe Me::Roda, :request_helper do
       'preferred_language'=>person.attributes['preferred_language'],
       'image'=>person.image.medium.url,
       'customer_number' => nil,
+      'email_backend_host' => nil,
+      'email_backend_port' => nil,
+      'email_backend_user' => nil,
+      'email_backend_encryption' => nil,
+      'email_backend_active' => false,
       'updatable'=>true,
       'deletable'=>false,
     }
@@ -105,6 +110,11 @@ describe Me::Roda, :request_helper do
         'preferred_language'=>'de',
         'image'=>person.image.medium.url,
         'customer_number' => nil,
+        'email_backend_host' => nil,
+        'email_backend_port' => nil,
+        'email_backend_user' => nil,
+        'email_backend_encryption' => nil,
+        'email_backend_active' => false,
         'updatable'=>true,
         'deletable'=>false
       }
