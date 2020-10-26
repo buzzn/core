@@ -204,6 +204,7 @@ describe Admin::LocalpoolRoda, :request_helper do
 
       let(:metering_point_operator_contract_json) do
         contract = metering_point_operator_contract
+        puts ":"
         {
           'id'=>contract.id,
           'type'=>'contract_metering_point_operator',
