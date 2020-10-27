@@ -25,6 +25,11 @@ describe Transactions::Admin::Contract::Document do
   let!(:localpoolr) { Admin::LocalpoolResource.all(operator).retrieve(localpool.id) }
   let(:result) { Transactions::Admin::Contract::Document.new.(params: params, resource: resource) }
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+    create(:vat, amount: 0.16, begin_date: Date.new(2020, 7, 1))
+  end
+
   context 'localpool power taker' do
 
     let(:contract) { create(:contract, :localpool_powertaker, :with_tariff, localpool: localpool) }

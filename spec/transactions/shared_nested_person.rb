@@ -85,8 +85,6 @@ shared_examples 'update without person' do |transaction, method, params|
     it { expect(result2).to be_success }
     it { expect(result2.value!.send(method)).to be_a PersonResource }
     it { expect(result2.value!.send(method).first_name).to eq 'Elvis' }
-    
-
   end
 end
 

@@ -1064,7 +1064,7 @@ describe Admin::LocalpoolRoda, :request_helper do
                   { template: send(contract).pdf_generators.first.name.split("::").last.underscore }
                 end
 
-                it '201' do
+                it '201', :thisone => true do
                   POST path, $admin, params
                   expect(response).to have_http_status(201)
                 end

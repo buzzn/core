@@ -9,9 +9,10 @@ module Pdf
 
     attr_reader :contract
 
-    def initialize(contract)
+    def initialize(contract, vat)
       super
       @contract = contract
+      @vat = vat
     end
 
     protected
@@ -73,8 +74,10 @@ module Pdf
 
     def build_tariff(tariff)
       {
-        baseprice_euro_netto: german_div(tariff.baseprice_cents_per_month_before_taxes),
+        baseprice_euro_brutto: german_div(tariff.baseprice_cents_per_month_before_taxes * 100 * @vat.amount),
+        baseprice_euro_netto: german_div(tariff.baseprice_cents_per_month_before_taxes * 100 * @vat.amount),
         energyprice_cents_netto: german_div(tariff.energyprice_cents_per_kwh_before_taxes*100),
+        energyprice_cents_brutto: german_div(tariff.energyprice_cents_per_kwh_before_taxes*100),
       }
     end
 

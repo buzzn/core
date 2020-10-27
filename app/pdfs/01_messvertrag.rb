@@ -8,7 +8,7 @@ module Pdf
 
     attr_reader :contract
 
-    def initialize(contract)
+    def initialize(contract, *)
       super
       @contract = contract
     end
