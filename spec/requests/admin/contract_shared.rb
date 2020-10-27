@@ -4,6 +4,11 @@ shared_context 'contract entities', :shared_context => :metadata do
 
   let(:person2) { create(:person, :with_bank_account) }
 
+  before(:all) do
+    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+    create(:vat, amount: 0.16, begin_date: Date.new(2020, 7, 1))
+  end
+
   let(:organization) do
     org = create(:organization, :with_address, :with_legal_representation)
     org.contact = person

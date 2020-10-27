@@ -43,7 +43,7 @@ module Pdf
 
     include Import.reader['services.pdf_html_generator']
 
-    def initialize(root_object, **)
+    def initialize(root_object, *)
       @logger = Buzzn::Logger.new(self)
       @root = root_object
       @builder = Builders::StructBuilder.new(PdfStruct)
