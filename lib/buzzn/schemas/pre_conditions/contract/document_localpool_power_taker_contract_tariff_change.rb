@@ -9,7 +9,7 @@ module Schemas::PreConditions::Contract
   DocumentLocalpoolPowerTakerContractTariffChange = Schemas::Support.Schema do
 
     configure do
-      def upcomping_tariff_present?(localpool)
+      def upcoming_tariff_present?(localpool)
         localpool.tariffs.select {|t| t.begin_date > Date.today}.any?
       end
     end
@@ -33,7 +33,7 @@ module Schemas::PreConditions::Contract
     required(:current_tariff).filled
     required(:current_payment).filled
 
-    required(:localpool, &:upcomping_tariff_present?)
+    required(:localpool, &:upcoming_tariff_present?)
 
   end
 
