@@ -69,6 +69,10 @@ module Admin
           r.run OrganizationRoda
         end
 
+        r.on 'documents' do
+          localpool.power_taker_documents
+        end
+
         r.on 'tariffs' do
           r.run TariffRoda
         end
