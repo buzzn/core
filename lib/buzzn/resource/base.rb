@@ -8,6 +8,10 @@ module Buzzn::Resource
 
     attr_reader :object, :security_context
 
+    def inspect
+      "#{self.class.name}: #{self.attributes}"
+    end
+
     class << self
 
       def attribute_names

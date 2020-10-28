@@ -56,6 +56,10 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
     crud :managers
   end
 
+  power_taker_documents do
+    crud :managers
+  end
+
   billing_detail do
     create :managers
     retrieve :managers

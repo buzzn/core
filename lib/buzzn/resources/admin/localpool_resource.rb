@@ -13,6 +13,7 @@ require_relative '../billing_detail_resource'
 require_relative 'billing_cycle_resource'
 require_relative 'device_resource'
 require_relative '../../schemas/completeness/admin/localpool'
+require_relative '../document_resource'
 
 module Admin
   class LocalpoolResource < GroupResource
@@ -53,6 +54,7 @@ module Admin
     has_many :localpool_power_taker_contracts, Contract::LocalpoolPowerTakerResource
     has_many :localpool_third_party_contracts, Contract::LocalpoolThirdPartyResource
     has_many :localpool_gap_contracts, Contract::LocalpoolGapContractResource
+    has_many :power_taker_documents, DocumentResource
 
     has_many :registers
     has_many :register_metas
