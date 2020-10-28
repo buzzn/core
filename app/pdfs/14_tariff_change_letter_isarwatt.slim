@@ -1,0 +1,70 @@
+doctype html
+html
+  head
+    title = '#{title_text}'
+    meta charset='utf-8'
+    link href='#{Dir.pwd}/public/css/pdf-creation.css' rel='stylesheet'
+    link href='#{Dir.pwd}/public/css/pdf-creation-new.css' rel='stylesheet'
+    link href='#{Dir.pwd}/public/css/bc-chart.css' rel='stylesheet'
+    script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
+    script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
+    script src='#{Dir.pwd}/public/scripts/bc-chart.js'
+  body
+    div.wrapper
+
+      include to_powergiver_head
+      div.has-letter-box-above
+        include auftrag_general_head
+        p #{powertaker.contact.addressing_full},
+
+        p gemeinsam mit Ihnen und unseren Mitgliedern blicken wir auf ein erfolgreiches Jahr 2019 zurück. Mit Ihrer Unterstützung konnten wir in diesem Jahr Erzeugungskapazitäten von über 300 Kilowatt aus Photovoltaik und 54 Kilowatt aus hocheffizienten Blockheizkraftwerken in Betrieb nehmen. So können wir Sie auch in den nächsten Jahren weiter mit genossenschaftlicher, regional erzeugter Energie versorgen. Nur gemeinsam mit Ihnen ist es überhaupt möglich solche Projekte zu verwirklichen. An dieser Stelle bedanken wir uns herzlich bei Ihnen für das entgegengebrachte Vertrauen.
+        h2.text Preiserhöhung: Warum und wie hoch?
+        p Wir legen großen Wert auf Fairness und Transparenz bei der Vertrags- und Preisgestaltung. Um auch in den nächsten Jahren kostendeckend genossenschaftlichen Strom für Sie produzieren zu können, sind wir gezwungen, gestiegene externe Kosten (die auch gewöhnliche Stromkunden tragen müssen) teilweise an Sie als Endverbraucher weiterzugeben.
+        p
+          | Insbesondere zwei Bestandteile der Stromkosten sind gestiegen: Die
+          b EEG-Umlage
+          | und die
+          b Netzentgelte.
+        p
+          b Dies führt dazu, dass wir mit Wirkung vom 01.01.2020 den Arbeitspreis um 0,92 Ct/kWh auf 26,80 Ct/kWh und den Grundpreis um 0,20 €/Monat auf 3,95 €/Monat erhöhen werden (beide Preise inklusive aller Abgaben, Steuern und Umlagen).
+        h2.text Hintergrund: Netzentgelte und EEG-Umlage
+        p Netzentgelte werden von den Betreibern erhoben, um den Betrieb und Ausbau unseres Stromnetzes zu finanzieren. Der stetige Zubau an erneuerbaren Energien stellt unser Netz allerdings vor große Herausforderungen. Besonders der Zubau von On- und Offshore-Windenergie im Norden Deutschlands führt dazu, dass neue Stromautobahnen zu den südlichen Bundesländern gebaut werden müssen. Das ist notwendig, um die Versorgung in den sonnenarmen Wintermonaten auch nach dem Abschalten von Atom- und Kohlekraftwerken sicherzustellen.
+
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+        p.pagination.is-small.no-margin
+          | Seite&nbsp;
+          span.page-number 1&nbsp;
+          | von&nbsp;
+          span.page-total-number 2
+    div.alwaysbreak
+    div.wrapper
+      p Mit Isarwatt-Mieterstrom setzen wir auf lokale und regionale Versorgung und verfolgen somit einen anderen Ansatz als große Stromkonzerne, die hauptsächlich zentralisierte Großanlagen errichten. Nichtsdestotrotz sind auch wir gezwungen Netzentgelte zu bezahlen, weil wir Strom aus dem Netz zukaufen müssen, um den Strombedarf in den Häusern zu 100 % decken zu können.
+      p
+        | Auch die EEG-Umlage wird im Jahr 2020 ansteigen und bewegt sich auf konstant hohem Niveau. Hier werden wir als Mieterstrom-Anbieter vom Gesetzgeber doppelt benachteiligt: Mieterstrom ist das einzige Modell mit einer
+        b hundertprozentigen Umlagepflicht
+        | auf vor Ort verbrauchten Strom. Mieterstrom ist immer eine Mischung aus lokal am Haus produzierten Strom sowie Netzbezug. Auch beim Zukauf aus dem Netz sind wir verpflichtet die
+        b volle EEG-Umlage
+        | zu bezahlen.
+      p
+        | Mehr zu diesem Thema finden Sie in unserem Blog „Neues von der Isarwatt“ auf unserer neugestalteten Website.
+        a href="http://www.isarwatt.de/blog" www.isarwatt.de/blog
+      p Wir freuen uns, wenn Sie auch künftig Isarwatt-Strom beziehen und damit die Idee einer genossenschaftlichen Energiewende von unten weiterhin unterstützen. Wir setzen natürlich auf eine weitere Zusammenarbeit mit Ihnen, möchten Sie aber auch auf Ihr Recht zur außerordentlichen Kündigung aufgrund der Preisanpassung gemäß unserer AGB hinweisen. Wenn Sie von diesem Recht Gebrauch machen möchten, müssten Sie uns die Kündigung bis spätestens 31.12.2019 in Textform (Brief oder E-Mail) zukommen lassen.
+      h2.text Fragen oder Feedback?
+      p Haben Sie noch Fragen oder sonstiges Feedback? Dann freuen wir uns über eine E-Mail an strom@isarwatt.de oder einen Anruf unter 089 – 9018 3931. Wir danken für Ihre bisherige Unterstützung und freuen uns, wenn Sie weiter Isarwatt-Strom aus der Energiegruppe #{localpool.name} beziehen. Für eine genossenschaftlichen Energiewende von unten!
+      p Energiegeladene Grüße,
+      p Anton Hilger
+
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+        p.pagination.is-small.no-margin
+          | Seite&nbsp;
+          span.page-number 2&nbsp;
+          | von&nbsp;
+          span.page-total-number 2
