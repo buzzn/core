@@ -82,7 +82,7 @@ module Pdf
       return pdf_document if pdf_document && !disable_cache
       pdf ||= to_pdf #generate pdf outside of transaction
       filename ||= self.pdf_filename
-      document = Document.new(filename: filename)
+      document = Document.new(filename: filename, purpose: document_purpose())
       PdfDocument.transaction do
         document.data = pdf
         document.save
@@ -115,6 +115,13 @@ module Pdf
 
     def struct
       @struct ||= @builder.build(data)
+    end
+
+    # Dear reader. I was in a rush creating this
+    # As every year the deadline caught as by surprise.
+    # Justus was still around.
+    def document_purpose
+      :unknown
     end
 
   end

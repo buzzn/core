@@ -20,6 +20,14 @@ class Document < ActiveRecord::Base
 
   before_validation :check_and_store_data
 
+  enum purpose: {
+    billing: 'billing',
+    lsn_a01: 'lsn_a01',
+    lsn_a02: 'lsn_a02',
+    tariff_change_letter: 'tariff_change_letter',
+    unknown: 'unknown'
+  }
+
   def check_and_store_data
     if sha256_of_data(self.data) != self.sha256
       self.store
