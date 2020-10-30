@@ -12,12 +12,11 @@ class Services::SmtpService
       person_sender = Person.joins(:roles).where("roles.name = 'BUZZN_OPERATOR' and email_backend_active = true").first
     end
 
-    if  person_sender.nil?
+    if person_sender.nil?
       raise Buzzn::ValidationError.new({person: ['has no active backend']}, person_sender)
     end
 
     form_data = {
-      'from' => person_sender.email,
       'to' => message[:to],
       'subject' => message[:subject],
       'body' => message[:text],
@@ -39,11 +38,11 @@ class Services::SmtpService
                        :content => document.read)
     end
 
-    res = Net::SMTP.start(person_sender.email_backend_host,
-                    person_sender.email_backend_port,
-                    person_sender.email_backend_host,
-                    person_sender.email_backend_user,
-                    person_sender.email_backend_password) do |smtp|
+    conection = Net::SMTP.new(person_sender.email_backend_host, person_sender.email_backend_port)
+    conection.enable_starttls_auto
+    res = conection.start(person_sender.email_backend_host,
+                          person_sender.email_backend_user,
+                          person_sender.email_backend_password, :login) do |smtp|
       smtp.send_message(to_send.to_s, person_sender.email, message[:to])
     end
 
