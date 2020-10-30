@@ -38,6 +38,8 @@ class Services::SmtpService
                        :content => document.read)
     end
 
+    puts person_sender.email
+
     conection = Net::SMTP.new(person_sender.email_backend_host, person_sender.email_backend_port)
     conection.enable_starttls_auto
     res = conection.start(person_sender.email_backend_host,
