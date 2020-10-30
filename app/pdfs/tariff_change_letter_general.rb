@@ -19,6 +19,17 @@ module Pdf
       end
     end
 
+    def example_sentence(consumption, old, new_one)
+      old_price = old.baseprice_cents_per_month_after_taxes * 12 + consumption * old.energyprice_cents_per_kwh_after_taxes
+      new_price = new_one.baseprice_cents_per_month_after_taxes * 12 + consumption * new_one.energyprice_cents_per_kwh_after_taxes
+
+      if old_price < new_price
+        "Bei einem Jahresverbraucht von #{consumption} kWh bedeutet diese Preisanpassung eine Steigerung von #{german_div(old_price)} € auf #{german_div(new_price)} € pro Jahr."
+      else
+        "Bei einem Jahresverbraucht von #{consumption} kWh bedeutet diese Preisanpassung eine Senkung von #{german_div(old_price)} € auf #{german_div(new_price)} € pro Jahr."
+      end
+    end
+
     def build_struct
       now = Date.today
       @upcoming = nil
@@ -30,6 +41,7 @@ module Pdf
       end
       super.tap do |h|
         h[:tariff_begin] = @upcoming.begin_date.strftime('%d.%m.%Y')
+        h[:example_sentence] = example_sentence(@contract.current_payment.energy_consumption_kwh_pa, @contract.current_tariff, @upcoming)
         h[:is_pre_contract] = true
         h[:document_name] = 'Strompreisanpassung zum ' + @upcoming.begin_date.strftime('%d.%m.%Y')
         h[:upcoming_tariff] = build_tariff(@upcoming)
