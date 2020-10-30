@@ -67,7 +67,6 @@ class Services::MailService
 
       Die Platform im Namen von
       #{contact.name}
-      #{contact.email_backend_signature}
     MSG
 
     deliver({text:  message, subject: 'Buzzn Platform test email', to: contact.email, from_person_id: contact.id})

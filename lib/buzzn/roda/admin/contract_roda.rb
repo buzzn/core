@@ -122,6 +122,7 @@ module Admin
             case contract
             when Contract::LocalpoolPowerTakerResource
               assign_tariffs.(resource: contract, params: r.params)
+
             else
               r.response.status = 400
             end

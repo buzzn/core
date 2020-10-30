@@ -74,7 +74,6 @@ class Services::DeliverTarrifChangeLetterService
 
       Mit freundlichen Grüßen,
       #{sender.name}
-      #{sender.email_backend_signature}
     MSG
 
     mail_service.deliver_later({:to => contact.email,
