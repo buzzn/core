@@ -73,15 +73,14 @@ class Services::DeliverTarrifChangeLetterService
       mit dieser Email erhalten Sie das Preisanpassungsschreiben der Energiegruppe #{localpool.name}.
 
       Mit freundlichen Grüßen,
-      #{sender.first_name} #{sender.name}
+      #{sender.name}
       #{sender.email_backend_signature}
     MSG
 
-    mail_service.deliver_later({:from => 'team@buzzn.net',
-                                :to => contact.email,
+    mail_service.deliver_later({:to => contact.email,
                                 :from_person_id => localpool.owner.contact.id,
                                 :bcc => 'team@localpool.de',
-                                :subject => "Preisanpassungsschreiben Energiegruppe #{localpool.name}",
+                                :subject => "Preisanpassung Energiegruppe #{localpool.name}",
                                 :text => message,
                                 :document_id => target.id})
   end
