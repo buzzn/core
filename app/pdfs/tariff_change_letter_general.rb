@@ -6,7 +6,7 @@ module Pdf
     protected
 
     def title
-      'Strompreisanpassung zum 1.1.2021'
+      'Strompreisanpassung zum ' +  @upcoming.begin_date.strftime('%d.%m.%Y')
     end
 
     def preis_sentence(subject, previous, next_one, currency)
@@ -21,19 +21,20 @@ module Pdf
 
     def build_struct
       now = Date.today
-      upcoming = nil
+      @upcoming = nil
       Service::Tariffs.data(@contract.tariffs).each do |tariff|
         if tariff.begin_date >= now
-          upcoming = tariff.tariff
+          @upcoming = tariff.tariff
           break
         end
       end
       super.tap do |h|
+        h[:tariff_begin] = @upcoming.begin_date.strftime('%d.%m.%Y')
         h[:is_pre_contract] = true
-        h[:document_name] = 'Strompreisanpassung zum 01.02.2021'
-        h[:upcoming_tariff] = build_tariff(upcoming)
-        h[:baseprice_sentence] = preis_sentence('Grundpreis', @contract.current_tariff.baseprice_cents_per_month_after_taxes, upcoming.baseprice_cents_per_month_after_taxes, 'Euro/Monat')
-        h[:energyprice_sentence] = preis_sentence('Arbeitspreis', @contract.current_tariff.energyprice_cents_per_kwh_after_taxes, upcoming.energyprice_cents_per_kwh_after_taxes, 'Cent/kWh')
+        h[:document_name] = 'Strompreisanpassung zum ' + @upcoming.begin_date.strftime('%d.%m.%Y')
+        h[:upcoming_tariff] = build_tariff(@upcoming)
+        h[:baseprice_sentence] = preis_sentence('Grundpreis', @contract.current_tariff.baseprice_cents_per_month_after_taxes, @upcoming.baseprice_cents_per_month_after_taxes, 'Euro/Monat')
+        h[:energyprice_sentence] = preis_sentence('Arbeitspreis', @contract.current_tariff.energyprice_cents_per_kwh_after_taxes, @upcoming.energyprice_cents_per_kwh_after_taxes, 'Cent/kWh')
       end
     end
 

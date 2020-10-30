@@ -8,7 +8,11 @@ div.is-like-paragraph
     tr
       td.no-border.no-padding Bezugsstelle:
       td.no-border.has-left-padding #{localpool.address.street}, #{contract.market_location_name}
-    - unless contract.meters.empty? || is_pre_contract
+    - unless contract.meter_product_serial_numbers.empty?
       tr
         td.no-border.no-padding Zählernummer:
         td.no-border.has-left-padding #{contract.meter_product_serial_numbers}
+    - unless payment.energy_consumption_kwh_pa == 0 || payment.energy_consumption_kwh_pa.nil?
+      tr
+        td.no-border.no-padding Jahresverbrauch:
+        td.no-border.has-left-padding #{payment.energy_consumption_kwh_pa} kWh
