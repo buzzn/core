@@ -78,7 +78,7 @@ class Services::DeliverTarrifChangeLetterService
     MSG
 
     mail_service.deliver_later({:to => contact.email,
-                                :from_person_id => localpool.owner.contact.id,
+                                :from_person_id => localpool.contact.id,
                                 :bcc => 'team@localpool.de',
                                 :subject => "Preisanpassung Energiegruppe #{localpool.name}",
                                 :text => message,
