@@ -32,15 +32,12 @@ class Services::SmtpService
       form_data['html'] = message[:html]
     end
 
+    to_send = Mail.new(form_data)
     if message.key?(:document_id) && !message[:document_id].nil?
       document = Document.find(message[:document_id])
-      attachment_name = message[:document_name] || document.filename || 'attachment.pdf'
-      attachment_mime = message[:document_mime] || document.mime || 'application/pdf'
-      io = StringIO.new(document.read)
-      form_data['attachment'] = ::UploadIO.new(io, attachment_mime, attachment_name)
+      to_send.add_file(:filename => message[:document_name] || document.filename || 'attachment.pdf',
+                       :content => document.read)
     end
-
-    to_send = Mail.new(form_data)
 
     res = Net::SMTP.start(person_sender.email_backend_host,
                     person_sender.email_backend_port,
