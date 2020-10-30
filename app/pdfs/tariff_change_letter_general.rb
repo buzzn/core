@@ -22,7 +22,7 @@ module Pdf
     def build_struct
       now = Date.today
       upcoming = nil
-      Service::Tariffs.data(@contract.localpool.tariffs).each do |tariff|
+      Service::Tariffs.data(@contract.tariffs).each do |tariff|
         if tariff.begin_date >= now
           upcoming = tariff.tariff
           break
