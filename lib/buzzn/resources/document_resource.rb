@@ -6,7 +6,8 @@ class DocumentResource < Buzzn::Resource::Entity
              :size,
              :mime,
              :sha256,
-             :purpose
+             :purpose,
+             :last_sent
 
   attributes :deletable
   attributes :created_at
