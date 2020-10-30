@@ -15,7 +15,7 @@ module Pdf
       elsif previous > next_one
         "Der #{subject} sinkt von derzeit #{german_div(previous)} #{currency} auf #{german_div(next_one)}  #{currency}."
       else
-        "Der #{subject} bleibt bei #{next_one}  #{currency}."
+        "Der #{subject} bleibt bei #{german_div(next_one)} #{currency}."
       end
     end
 
@@ -24,9 +24,9 @@ module Pdf
       new_price = new_one.baseprice_cents_per_month_after_taxes * 12 + consumption * new_one.energyprice_cents_per_kwh_after_taxes
 
       if old_price < new_price
-        "Bei einem Jahresverbraucht von #{consumption} kWh bedeutet diese Preisanpassung eine Steigerung von #{german_div(old_price)} € auf #{german_div(new_price)} € pro Jahr."
+        "Bei einem Jahresverbraucht von #{consumption} kWh bedeutet diese Preisanpassung eine Steigerung von #{german_div(old_price)}€ auf #{german_div(new_price)}€ pro Jahr."
       else
-        "Bei einem Jahresverbraucht von #{consumption} kWh bedeutet diese Preisanpassung eine Senkung von #{german_div(old_price)} € auf #{german_div(new_price)} € pro Jahr."
+        "Bei einem Jahresverbraucht von #{consumption} kWh bedeutet diese Preisanpassung eine Senkung von #{german_div(old_price)}€ auf #{german_div(new_price)}€ pro Jahr."
       end
     end
 
@@ -45,7 +45,7 @@ module Pdf
         h[:is_pre_contract] = true
         h[:document_name] = 'Strompreisanpassung zum ' + @upcoming.begin_date.strftime('%d.%m.%Y')
         h[:upcoming_tariff] = build_tariff(@upcoming)
-        h[:baseprice_sentence] = preis_sentence('Grundpreis', @contract.current_tariff.baseprice_cents_per_month_after_taxes, @upcoming.baseprice_cents_per_month_after_taxes, 'Euro/Monat')
+        h[:baseprice_sentence] = preis_sentence('Grundpreis', @contract.current_tariff.baseprice_cents_per_month_after_taxes, @upcoming.baseprice_cents_per_month_after_taxes, '€/Monat')
         h[:energyprice_sentence] = preis_sentence('Arbeitspreis', @contract.current_tariff.energyprice_cents_per_kwh_after_taxes, @upcoming.energyprice_cents_per_kwh_after_taxes, 'Cent/kWh')
       end
     end
