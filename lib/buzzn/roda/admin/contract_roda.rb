@@ -105,6 +105,10 @@ module Admin
         r.on 'documents' do
 
           r.on 'generate' do
+            # Dear God, I know I am a sinner and I as for your forgiveness.
+            if localpool.owner.contact.id == 868 and r.params['template'] == 'tariff_change_letter'
+              r.params['template'] = "tariff_change_letter_isarwatt"
+            end
             r.post! { document.(resource: contract, params: r.params) }
             r.others!
           end
