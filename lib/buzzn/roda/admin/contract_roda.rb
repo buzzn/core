@@ -19,7 +19,6 @@ module Admin
                         bank_account_assign: 'transactions.admin.bank_account.assign',
                         update_nested_person: 'transactions.admin.generic.update_nested_person',
                         update_nested_organization: 'transactions.admin.generic.update_nested_organization',
-                        delete_gap_contract: 'transactions.admin.contract.localpool.delete_gap_contract',
                         deliver_tarrif_change_letter_service: 'services.deliver_tarrif_change_letter_service'
                        ]
 
