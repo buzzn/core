@@ -19,7 +19,8 @@ module Admin
                         bank_account_assign: 'transactions.admin.bank_account.assign',
                         update_nested_person: 'transactions.admin.generic.update_nested_person',
                         update_nested_organization: 'transactions.admin.generic.update_nested_organization',
-                        delete_gap_contract: 'transactions.admin.contract.localpool.delete_gap_contract'
+                        delete_gap_contract: 'transactions.admin.contract.localpool.delete_gap_contract',
+                        deliver_tarrif_change_letter_service: 'services.deliver_tarrif_change_letter_service'
                        ]
 
     plugin :shared_vars
@@ -71,6 +72,15 @@ module Admin
 
         r.get! 'contractor' do
           contract.contractor!
+        end
+
+        r.on 'send-tariff-change-letter' do
+          r.on :id do |document_id|
+            r.get! do
+              deliver_tarrif_change_letter_service.deliver_tariff_change_letter(localpool, contract, document_id)
+              "Send tariff change letter to #{contract.contact.name}"
+            end
+          end
         end
 
         r.get!('contractor') { contract.contractor! }

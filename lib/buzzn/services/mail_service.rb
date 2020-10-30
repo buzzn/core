@@ -67,7 +67,9 @@ class Services::MailService
 
       Energiegeladene Grüße
 
-      Die Platform
+      Die Platform im Namen von
+      #{contact.first_name} #{contact.name}
+      #{contact.email_backend_signature}
     MSG
 
     deliver({text:  message, subject: 'Buzzn Platform test email', to: contact.email, from_person_id: contact.id})

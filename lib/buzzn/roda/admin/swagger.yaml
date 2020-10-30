@@ -10898,6 +10898,10 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: emailBackendSignature
+        in: formData
+        required: false
+        type: string
 
       responses:
         200:
