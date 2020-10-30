@@ -45,6 +45,7 @@ module Admin
 
         r.get 'send-testmail' do
           mail_service.deliver_test_mail(localpool.contact)
+          "Testmail has been sent to #{localpool.contact.email}"
         end
 
         r.patch! do

@@ -7,15 +7,12 @@ require 'stringio'
 class Services::SmtpService
 
   def deliver(message = {})
-    person_sender = Person.find([:from_person_id])
+    person_sender = Person.find(message[:from_person_id])
 
     unless person_sender.email_backend_active?
       person_sender = Person.joins(:roles).where("roles.name = 'BUZZN_OPERATOR' and email_backend_active = true").first
     end
 
-    unless person_sender.email_backend_working
-      person_sender = Persin.find()
-    end
     form_data = {
       'from' => person_sender.email,
       'to' => message[:to],
