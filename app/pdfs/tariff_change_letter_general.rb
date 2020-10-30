@@ -15,7 +15,7 @@ module Pdf
       elsif previous > next_one
         "Der #{subject} sinkt von derzeit #{german_div(previous)} #{currency} auf #{german_div(next_one)}  #{currency}."
       else
-        "Der #{subject} bleibt bei #{german_div(next_one)} #{currency}."
+        "Der #{subject} bleibt bei #{german_div(next_one * 100)} #{currency}."
       end
     end
 
