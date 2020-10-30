@@ -9,9 +9,9 @@ module Pdf
 
     def preis_sentence(subject, previous, next_one, currency)
       if previous < next_one
-        "erhöhen wir den #{subject} von derzeit #{german_div(previous)} #{currency}/Monat auf #{german_div(next_one)} #{currency}/Monat."
+        "erhöhen wir den #{subject} von derzeit #{german_div(previous)} #{currency} auf #{german_div(next_one)} #{currency}."
       elsif previous > next_one
-        "senken wir den #{subject} von derzeit #{german_div(previous)} #{currency}/Monat auf #{german_div(next_one)} #{currency}."
+        "senken wir den #{subject} von derzeit #{german_div(previous)} #{currency} auf #{german_div(next_one)} #{currency}."
       else
         "Der #{subject} bleibt bei #{next_one}  #{currency}."
       end
