@@ -8,7 +8,6 @@ class Services::SmtpService
 
   def deliver(message = {})
     person_sender = Person.find(message[:from_person_id])
-
     unless person_sender.email_backend_active?
       person_sender = Person.joins(:roles).where("roles.name = 'BUZZN_OPERATOR' and email_backend_active = true").first
     end
@@ -42,12 +41,12 @@ class Services::SmtpService
     end
 
     to_send = Mail.new(form_data)
+
     res = Net::SMTP.start(person_sender.email_backend_host,
                     person_sender.email_backend_port,
                     person_sender.email_backend_host,
                     person_sender.email_backend_user,
-                    person_sender.email_backend_password,
-                    :login) do |smtp|
+                    person_sender.email_backend_password) do |smtp|
       smtp.send_message(to_send.to_s, person_sender.email, message[:to])
     end
 
