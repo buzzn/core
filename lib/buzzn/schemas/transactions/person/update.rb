@@ -20,7 +20,7 @@ module Schemas::Transactions::Person
     optional(:email_backend_user).maybe(:filled?, :str?, max_size?: 128)
     optional(:email_backend_password).maybe(:filled?, :str?, max_size?: 128)
     optional(:email_backend_encryption).maybe(:filled?, :str?, max_size?: 16)
-    optional(:email_backend_encryption).maybe(:filled?, :str?)
+    optional(:email_backend_active).maybe(:filled?, :bool?)
   end
 
   AssignOrUpdate = Schemas::Support.Form(Schemas::Transactions::UpdateOptional) do
@@ -38,7 +38,7 @@ module Schemas::Transactions::Person
     optional(:email_backend_user).maybe(:filled?, :str?, max_size?: 128)
     optional(:email_backend_password).maybe(:filled?, :str?, max_size?: 128)
     optional(:email_backend_encryption).maybe(:filled?, :str?, max_size?: 16)
-    optional(:email_backend_encryption).maybe(:filled?, :str?)
+    optional(:email_backend_active).maybe(:filled?, :bool?)
   end
 
   Assign = Schemas::Support.Form do
