@@ -38,10 +38,13 @@ class Services::SmtpService
                        :content => document.read)
     end
 
-    puts person_sender.email
-
     conection = Net::SMTP.new(person_sender.email_backend_host, person_sender.email_backend_port)
-    conection.enable_starttls_auto
+
+    if person_sender.email_backend_encryption == "SSL/TLS"
+      conection.enable_ssl
+    elsif person_sender.email_backend_encryption == "STARTTLS"
+      conection.enable_starttls
+    end
     res = conection.start(person_sender.email_backend_host,
                           person_sender.email_backend_user,
                           person_sender.email_backend_password, :login) do |smtp|

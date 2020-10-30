@@ -63,12 +63,10 @@ class Services::MailService
 
       wenn Sie diese Email lesen können, scheint ihr Mail-Account richtig in der Platform eingetragen zu sein.
 
-      Bitte bestätigen Sie diesen Umstand in dem Sie diesen Link anklicken: http://de.buzzn.net/activate/#{contact.id}
-
       Energiegeladene Grüße
 
       Die Platform im Namen von
-      #{contact.first_name} #{contact.name}
+      #{contact.name}
       #{contact.email_backend_signature}
     MSG
 
