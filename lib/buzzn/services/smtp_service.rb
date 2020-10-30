@@ -13,6 +13,10 @@ class Services::SmtpService
       person_sender = Person.joins(:roles).where("roles.name = 'BUZZN_OPERATOR' and email_backend_active = true").first
     end
 
+    if  person_sender.nil?
+      raise Buzzn::ValidationError.new({person: ['has no active backend']}, person_sender)
+    end
+
     form_data = {
       'from' => person_sender.email,
       'to' => message[:to],
