@@ -44,8 +44,13 @@ module Admin
         end
 
         r.get 'send-testmail' do
-          mail_service.deliver_test_mail(localpool.contact)
-          {message: "Testmail has been sent", receiver: localpool.contact.email}
+          begin
+            mail_service.deliver_test_mail(localpool.contact)
+          rescue Exception => e
+            r.response.status = 400
+            return {error: e.message}
+          end
+          {message: 'Testmail has been sent', receiver: localpool.contact.email}
         end
 
         r.patch! do
