@@ -38,6 +38,12 @@ class Services::MailService
     when 'stdout'
       mail_stdout_service.deliver(message)
     end
+
+    if message.key?(:document_id) && !message[:document_id].nil?
+      document = Document.find(message[:document_id])
+      document.last_sent = Date.today
+      document.save
+    end
   end
 
   def deliver_billing(billing_id, message)
