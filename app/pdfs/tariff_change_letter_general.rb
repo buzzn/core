@@ -24,9 +24,9 @@ module Pdf
       new_price = new_one.baseprice_cents_per_month_after_taxes * 12 + consumption * new_one.energyprice_cents_per_kwh_after_taxes
 
       if old_price < new_price
-        "Bei einem Jahresverbraucht von #{consumption} kWh bedeutet diese Preisanpassung eine Steigerung von #{german_div(old_price)}€ auf #{german_div(new_price)}€ pro Jahr."
+        "Bei einem Jahresverbrauch von #{consumption} kWh bedeutet diese Preisanpassung eine Steigerung von #{german_div(old_price)}€ auf #{german_div(new_price)}€ pro Jahr."
       else
-        "Bei einem Jahresverbraucht von #{consumption} kWh bedeutet diese Preisanpassung eine Senkung von #{german_div(old_price)}€ auf #{german_div(new_price)}€ pro Jahr."
+        "Bei einem Jahresverbrauch von #{consumption} kWh bedeutet diese Preisanpassung eine Senkung von #{german_div(old_price)}€ auf #{german_div(new_price)}€ pro Jahr."
       end
     end
 
