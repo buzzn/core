@@ -67,7 +67,7 @@ module Admin
           r.on :id do |document_id|
             r.get! do
               deliver_tarrif_change_letter_service.deliver_tariff_change_letter(localpool, contract, document_id)
-              "Send tariff change letter to #{contract.contact.name}"
+              {message: "Sent tariff change letter #{contract.contact.name}"}
             end
           end
         end
