@@ -8,7 +8,7 @@ class Services::DeliverTarrifChangeLetterService
   end
 
   def deliver_tariff_change_letter(localpool, contract, document_id)
-    if contract.email.nil?
+    if contract.contact.email.nil?
       deliver_tariff_change_letter_powergiver(localpool, contract, document_id)
     else
       deliver_tariff_change_letter_powertaker(localpool, contract, document_id)
