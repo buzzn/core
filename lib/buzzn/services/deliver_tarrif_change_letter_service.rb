@@ -70,10 +70,13 @@ class Services::DeliverTarrifChangeLetterService
     message = <<~MSG
       #{salute},
 
-      mit dieser Email erhalten Sie das Preisanpassungsschreiben der Energiegruppe #{localpool.name}.
+      im Auftrag Ihres Stromgebers #{localpool.owner.name} senden wir Ihnen ein Preisanpassungsschreiben für die Lokale Energiegruppe #{localpool.name}.
 
-      Mit freundlichen Grüßen,
-      #{sender.name}
+      Bitte beachten Sie den Anhang.
+
+      Bei Fragen oder sonstigem Feedback stehe ich Ihnen gerne zur Verfügung.
+
+      Energiegeladene Grüße,
     MSG
 
     mail_service.deliver_later({:to => contact.email,

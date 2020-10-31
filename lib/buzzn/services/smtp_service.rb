@@ -19,7 +19,7 @@ class Services::SmtpService
     form_data = {
       'to' => message[:to],
       'subject' => message[:subject],
-      'body' => message[:text] + "\n" +person_sender.email_backend_signature.gsub('##', "\n"),
+      'body' => message[:text] + person_sender.email_backend_signature.gsub('##', "\n"),
     }
     if message.key?(:bcc) && !message[:bcc].empty?
       form_data['bcc'] = message[:bcc]
