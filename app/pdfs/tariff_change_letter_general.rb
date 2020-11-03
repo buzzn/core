@@ -6,7 +6,7 @@ module Pdf
     protected
 
     def title
-      'Strompreisanpassung zum ' +  @upcoming.begin_date.strftime('%d.%m.%Y')
+      "#{Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d-%H-%M-%S')}-Strompreisanpassung-#{contract.localpool.base_slug}-#{contract.contract_number}-#{contract.contract_number_addition}-#{contract.contact.last_name}"
     end
 
     def preis_sentence(subject, previous, next_one, currency)
