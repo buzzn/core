@@ -20,8 +20,8 @@ module Pdf
     end
 
     def example_sentence(consumption, old, new_one)
-      old_price = old.baseprice_cents_per_month_after_taxes * 12 + consumption * old.energyprice_cents_per_kwh_after_taxes
-      new_price = new_one.baseprice_cents_per_month_after_taxes * 12 + consumption * new_one.energyprice_cents_per_kwh_after_taxes
+      old_price = old.baseprice_cents_per_month * @vat.amount * 12 + consumption * old.energyprice_cents_per_kwh * @vat.amount
+      new_price = new_one.baseprice_cents_per_month * @vat.amount * 12 + consumption * new_one.energyprice_cents_per_kwh * @vat.amount
 
       if old_price < new_price
         "Bei Ihrem Jahresverbrauch von #{consumption} kWh bedeutet diese Preisanpassung eine Steigerung von #{german_div(old_price)} € auf #{german_div(new_price)} € pro Jahr."
@@ -45,8 +45,8 @@ module Pdf
         h[:is_pre_contract] = true
         h[:document_name] = 'Strompreisanpassung zum ' + @upcoming.begin_date.strftime('%d.%m.%Y')
         h[:upcoming_tariff] = build_tariff(@upcoming)
-        h[:baseprice_sentence] = preis_sentence('Grundpreis', @contract.current_tariff.baseprice_cents_per_month_after_taxes, @upcoming.baseprice_cents_per_month_after_taxes, '€/Monat')
-        h[:energyprice_sentence] = preis_sentence('Arbeitspreis', 100*@contract.current_tariff.energyprice_cents_per_kwh_after_taxes, 100*@upcoming.energyprice_cents_per_kwh_after_taxes, 'Cent/kWh')
+        h[:baseprice_sentence] = preis_sentence('Grundpreis', @contract.current_tariff.baseprice_cents_per_month * @vat.amount, @upcoming.baseprice_cents_per_month * @vat.amount, '€/Monat')
+        h[:energyprice_sentence] = preis_sentence('Arbeitspreis', 100*@contract.current_tariff.energyprice_cents_per_kwh * @vat.amount, 100*@upcoming.energyprice_cents_per_kwh * @vat.amount, 'Cent/kWh')
       end
     end
 
