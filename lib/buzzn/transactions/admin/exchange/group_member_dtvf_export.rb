@@ -26,7 +26,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   # @param [person] target_person The person whos phone number to convert.
   # @return [String] the convererted number.
   def format_phone_number(target_person)
-    target = target_person.phone
+    target = target_person&.phone
     if target.nil? || target.empty?
       return ''
     end
@@ -42,7 +42,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       prefix = target.sub(/0 ?([0-9]*).*/, '+49 \1')
       suffix = target.sub(/0 ?([0-9]*)(.*)/, '\2')
     else
-      raise Buzzn::ValidationError.new({phone_number: ["#{target_person.first_name} #{target_person.last_name}'s phone number'#{target}' does not match required format. Sample (+49 89 1234567890)"]}, target_person)
+      raise Buzzn::ValidationError.new({phone_number: ["#{target_person&.first_name} #{target_person&.last_name}'s phone number'#{target}' does not match required format. Sample (+49 89 1234567890)"]}, target_person)
     end
 
     suffix = suffix.delete(' ')
@@ -79,7 +79,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
     target.string
   end
 
-  # Creates an array of exported fields. This needs to match the fields exported by progress_person.
+  # Creates an array of exported fields. This needs to match the fields exported by progress_person&.
   # Caution: Some of the fields are duplicates, example Leerfeld. Thus it is
   # not possible to create a hash for each person to export.
   # @return An array of all columns meant to export.
@@ -350,40 +350,40 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       account_number(contract), # Konto
       (contract.customer.instance_of? Organization::GeneralResource)? contract.customer.name : '', # Name (Adressattyp Unternehmen)
       '', # Unternehmensgegenstand
-      (contract.customer.instance_of? PersonResource)? person.last_name : '', # Name (Adressattyp natürl. Person)
-      (contract.customer.instance_of? PersonResource)? person.first_name : '', # Vorname (Adressattyp natürl. Person)
+      (contract.customer.instance_of? PersonResource)? person&.last_name : '', # Name (Adressattyp natürl. Person)
+      (contract.customer.instance_of? PersonResource)? person&.first_name : '', # Vorname (Adressattyp natürl. Person)
       '', # Name (Adressattyp keine Angabe)
       (contract.customer.instance_of? PersonResource)? '1' : '2', # Adressattyp
       '', # Kurzbezeichnung
-      person.address.country, # EU-Land
+      person&.address&.country, # EU-Land
       '', # EU-UStID
-      person.prefix == 'M' ? 'Herr' : 'Frau', # Anrede
-      person.title, # Titel/Akad. Grad
+      person&.prefix == 'M' ? 'Herr' : 'Frau', # Anrede
+      person&.title, # Titel/Akad. Grad
       '', # Adelstitel
       '', # Namensvorsatz
       '', # Adressart
-      person.address.street, # Straße
+      person&.address&.street, # Straße
       '', # Postfach
-      person.address.zip, # Postleitzahl
-      person.address.city, # Ort
-      person.address.country, # Land
+      person&.address&.zip, # Postleitzahl
+      person&.address&.city, # Ort
+      person&.address&.country, # Land
       '', # Versandzusatz
       '', # Adresszusatz
       '', # Abweichende Anrede
       '', # Abw. Zustellbezeichnung 1
       '', # Abw. Zustellbezeichnung 2
       '', # Kennz. Korrespondenzadresse
-      person.address.updated_at, # Adresse Gültig von
+      person&.address&.updated_at, # Adresse Gültig von
       '', # Adresse Gültig bis
       format_phone_number(person), # Telefon
       '', # Bemerkung (Telefon)
       '', # Telefon GL
       '', # Bemerkung (Telefon GL)
-      person.email, # E-Mail
+      person&.email, # E-Mail
       '', # Bemerkung (E-Mail)
       '', # Internet
       '', # Bemerkung (Internet)
-      person.fax, # Fax
+      person&.fax, # Fax
       '', # Bemerkung (Fax)
       '', # Sonstige
       '', # Bemerkung (Sonstige)
@@ -391,56 +391,56 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       '', # Bankbezeichnung 1
       '', # Bank-Kontonummer 1
       '', # Länderkennzeichen 1
-      person.bank_accounts.to_a[0]&.iban, # IBAN-Nr. 1
+      person&.bank_accounts.to_a[0]&.iban, # IBAN-Nr. 1
       '', # Leerfeld
       '', # SWIFT-Code 1
-      person.bank_accounts.to_a[0]&.holder, # Abw. Kontoinhaber 1
+      person&.bank_accounts.to_a[0]&.holder, # Abw. Kontoinhaber 1
       '', # Kennz. Hauptbankverb. 1
-      person.bank_accounts.to_a[0]&.updated_at, # Bankverb 1 Gültig von
+      person&.bank_accounts.to_a[0]&.updated_at, # Bankverb 1 Gültig von
       '', # Bankverb 1 Gültig bis
       '', # Bankleitzahl 2
       '', # Bankbezeichnung 2
       '', # Bank-Kontonummer 2
       '', # Länderkennzeichen 2
-      person.bank_accounts.to_a[1]&.iban, # IBAN-Nr. 2
+      person&.bank_accounts.to_a[1]&.iban, # IBAN-Nr. 2
       '', # Leerfeld
       '', # SWIFT-Code 2
-      person.bank_accounts.to_a[1]&.holder, # Abw. Kontoinhaber 2
+      person&.bank_accounts.to_a[1]&.holder, # Abw. Kontoinhaber 2
       '', # Kennz. Hauptbankverb. 2
-      person.bank_accounts.to_a[1]&.updated_at, # Bankverb 2 Gültig von
+      person&.bank_accounts.to_a[1]&.updated_at, # Bankverb 2 Gültig von
       '', # Bankverb 2 Gültig bis
       '', # Bankleitzahl 3
       '', # Bankbezeichnung 3
       '', # Bank-Kontonummer 3
       '', # Länderkennzeichen 3
-      person.bank_accounts.to_a[2]&.iban, # IBAN-Nr. 3
+      person&.bank_accounts.to_a[2]&.iban, # IBAN-Nr. 3
       '', # Leerfeld
       '', # SWIFT-Code 3
-      person.bank_accounts.to_a[2]&.holder, # Abw. Kontoinhaber 3
+      person&.bank_accounts.to_a[2]&.holder, # Abw. Kontoinhaber 3
       '', # Kennz. Hauptbankverb. 3
-      person.bank_accounts.to_a[2]&.updated_at, # Bankverb 3 Gültig von
+      person&.bank_accounts.to_a[2]&.updated_at, # Bankverb 3 Gültig von
       '', # Bankverb 3 Gültig bis
       '', # Bankleitzahl 4
       '', # Bankbezeichnung 4
       '', # Bank-Kontonummer 4
       '', # Länderkennzeichen 4
-      person.bank_accounts.to_a[3]&.iban, # IBAN-Nr. 4
+      person&.bank_accounts.to_a[3]&.iban, # IBAN-Nr. 4
       '', # Leerfeld
       '', # SWIFT-Code 4
-      person.bank_accounts.to_a[3]&.holder, # Abw. Kontoinhaber 4
+      person&.bank_accounts.to_a[3]&.holder, # Abw. Kontoinhaber 4
       '', # Kennz. Hauptbankverb. 4
-      person.bank_accounts.to_a[3]&.updated_at, # Bankverb 4 Gültig von
+      person&.bank_accounts.to_a[3]&.updated_at, # Bankverb 4 Gültig von
       '', # Bankverb 4 Gültig bis
       '', # Bankleitzahl 5
       '', # Bankbezeichnung 5
       '', # Bank-Kontonummer 5
       '', # Länderkennzeichen 5
-      person.bank_accounts.to_a[4]&.iban, # IBAN-Nr. 5
+      person&.bank_accounts.to_a[4]&.iban, # IBAN-Nr. 5
       '', # Leerfeld
       '', # SWIFT-Code 5
-      person.bank_accounts.to_a[4]&.holder, # Abw. Kontoinhaber 5
+      person&.bank_accounts.to_a[4]&.holder, # Abw. Kontoinhaber 5
       '', # Kennz. Hauptbankverb. 5
-      person.bank_accounts.to_a[4]&.updated_at, # Bankverb 5 Gültig von
+      person&.bank_accounts.to_a[4]&.updated_at, # Bankverb 5 Gültig von
       '', # Bankverb 5 Gültig bis
       '', # Leerfeld
       '', # Briefanrede
@@ -515,56 +515,56 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       '', # Bankbezeichnung 6
       '', # Bank-Kontonummer 6
       '', # Länderkennzeichen 6
-      person.bank_accounts.to_a[5]&.iban, # IBAN-Nr. 6
+      person&.bank_accounts.to_a[5]&.iban, # IBAN-Nr. 6
       '', # Leerfeld
       '', # SWIFT-Code 6
-      person.bank_accounts.to_a[5]&.holder, # Abw. Kontoinhaber 6
+      person&.bank_accounts.to_a[5]&.holder, # Abw. Kontoinhaber 6
       '', # Kennz. Hauptbankverb. 6
-      person.bank_accounts.to_a[5]&.updated_at, # Bankverb 6 Gültig von
+      person&.bank_accounts.to_a[5]&.updated_at, # Bankverb 6 Gültig von
       '', # Bankverb 6 Gültig bis
       '', # Bankleitzahl 7
       '', # Bankbezeichnung 7
       '', # Bank-Kontonummer 7
       '', # Länderkennzeichen 7
-      person.bank_accounts.to_a[6]&.iban, # IBAN-Nr. 7
+      person&.bank_accounts.to_a[6]&.iban, # IBAN-Nr. 7
       '', # Leerfeld
       '', # SWIFT-Code 7
-      person.bank_accounts.to_a[6]&.holder, # Abw. Kontoinhaber 7
+      person&.bank_accounts.to_a[6]&.holder, # Abw. Kontoinhaber 7
       '', # Kennz. Hauptbankverb. 7
-      person.bank_accounts.to_a[6]&.updated_at, # Bankverb 7 Gültig von
+      person&.bank_accounts.to_a[6]&.updated_at, # Bankverb 7 Gültig von
       '', # Bankverb 7 Gültig bis
       '', # Bankleitzahl 8
       '', # Bankbezeichnung 8
       '', # Bank-Kontonummer 8
       '', # Länderkennzeichen 8
-      person.bank_accounts.to_a[7]&.iban, # IBAN-Nr. 8
+      person&.bank_accounts.to_a[7]&.iban, # IBAN-Nr. 8
       '', # Leerfeld
       '', # SWIFT-Code 8
-      person.bank_accounts.to_a[7]&.holder, # Abw. Kontoinhaber 8
+      person&.bank_accounts.to_a[7]&.holder, # Abw. Kontoinhaber 8
       '', # Kennz. Hauptbankverb. 8
-      person.bank_accounts.to_a[7]&.updated_at, # Bankverb 8 Gültig von
+      person&.bank_accounts.to_a[7]&.updated_at, # Bankverb 8 Gültig von
       '', # Bankverb 8 Gültig bis
       '', # Bankleitzahl 9
       '', # Bankbezeichnung 9
       '', # Bank-Kontonummer 9
       '', # Länderkennzeichen 9
-      person.bank_accounts.to_a[8]&.iban, # IBAN-Nr. 9
+      person&.bank_accounts.to_a[8]&.iban, # IBAN-Nr. 9
       '', # Leerfeld
       '', # SWIFT-Code 9
-      person.bank_accounts.to_a[8]&.holder, # Abw. Kontoinhaber 9
+      person&.bank_accounts.to_a[8]&.holder, # Abw. Kontoinhaber 9
       '', # Kennz. Hauptbankverb. 9
-      person.bank_accounts.to_a[8]&.updated_at, # Bankverb 9 Gültig von
+      person&.bank_accounts.to_a[8]&.updated_at, # Bankverb 9 Gültig von
       '', # Bankverb 9 Gültig bis
       '', # Bankleitzahl 10
       '', # Bankbezeichnung 10
       '', # Bank-Kontonummer 10
       '', # Länderkennzeichen 10
-      person.bank_accounts.to_a[9]&.iban, # IBAN-Nr. 10
+      person&.bank_accounts.to_a[9]&.iban, # IBAN-Nr. 10
       '', # Leerfeld
       '', # SWIFT-Code 10
-      person.bank_accounts.to_a[9]&.holder, # Abw. Kontoinhaber 10
+      person&.bank_accounts.to_a[9]&.holder, # Abw. Kontoinhaber 10
       '', # Kennz. Hauptbankverb. 10
-      person.bank_accounts.to_a[9]&.updated_at, # Bankverb 10 Gültig von
+      person&.bank_accounts.to_a[9]&.updated_at, # Bankverb 10 Gültig von
       '', # Bankverb 10 Gültig bis
       '', # Nummer Fremdsystem
       '', # Insolvent
@@ -602,6 +602,6 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
       '', # Mahnfrist 3
       '' # Letzte Frist
     ]
-    end
+  end
 
 end
