@@ -7,7 +7,7 @@ module Contract
       [
         Pdf::LsnA1,
         Pdf::LsnA2,
-        Pdf::TariffChangeLetter
+        contractor.id == 40 ? Pdf::TariffChangeLetterIsarwatt : Pdf::TariffChangeLetter
       ]
     end
 

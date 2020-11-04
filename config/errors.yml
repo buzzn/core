@@ -59,3 +59,5 @@ en:
     active_localpool_processing_contract_at_begin?: 'there must be a processing contract for the group activ on begin date %{begin_date}' 
     no_billing_for_gap_contract_to_be_deleted?: 'this contract can not be deleted because it has at least one billing'
     #contract_to_be_deleted_gap_contract?: 'this contract can not be deleted because it is not a gap contract'
+    upcoming_tariff_present?:  'There is no upcoming tariff present in the group which can be communicated to the powertakers.'
+

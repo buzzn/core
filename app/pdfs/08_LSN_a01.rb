@@ -17,5 +17,8 @@ module Pdf
       '08_LSN_a01.slim'
     end
 
+    def document_purpose
+      'lsn_a01'
+    end
   end
 end

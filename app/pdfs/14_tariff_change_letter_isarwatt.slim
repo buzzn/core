@@ -1,0 +1,52 @@
+doctype html
+html
+  head
+    title = '#{title_text}'
+    meta charset='utf-8'
+    link href='#{Dir.pwd}/public/css/pdf-creation.css' rel='stylesheet'
+    link href='#{Dir.pwd}/public/css/pdf-creation-new.css' rel='stylesheet'
+    link href='#{Dir.pwd}/public/css/bc-chart.css' rel='stylesheet'
+    script src='#{Dir.pwd}/public/scripts/jquery-3.3.1.slim.min.js'
+    script src='#{Dir.pwd}/public/scripts/pdf-creation.js'
+    script src='#{Dir.pwd}/public/scripts/bc-chart.js'
+  body
+    div.wrapper
+
+      include to_powergiver_head
+      div.has-letter-box-above
+        include auftrag_general_head
+        p #{powertaker.contact.addressing_full},
+
+        p gemeinsam blicken wir auf ein bewegtes Jahr 2020 zurück. Die Auswirkungen der Corona-Pandemie sind überall in unserem täglichen Leben spürbar und stellen uns alle vor Herausforderungen. Wichtige Themen wie der Klimaschutz oder die Energiewende sind in den Hintergrund gerückt, dabei sind sie unverändert relevant.
+        p Erfreulicherweise konnten wir 2020 aber auch Erfolge feiern: Bis zum Ende des Jahres werden acht neue Mieterstromprojekte mit zusammengerechnet fast 1.000 Kilowatt (ein Megawatt) unser Sonnenstrom-Portfolio erweitern. Damit sind wir der größte Mieterstrom-Anbieter Münchens. Diese Zahlen machen uns stolz und bestärken uns darin, uns weiter für eine genossenschaftliche, regionale Energiewende reinzuhängen. Nur mit Ihnen gemeinsam ist es überhaupt möglich, eine solche Anzahl an Projekten zu verwirklichen. Herzlichen Dank für Ihr entgegengebrachtes Vertrauen.
+        h2 Wir erhöhen den Grundpreis und investieren für Sie!
+        p Nachhaltigkeit, Transparenz, Fairness sind die Werte, die als Genossenschaft ein elementarer Teil unserer Identität sind.
+        p Ab dem 01.01.2021 #{baseprice_sentence} (inkl. aller Abgaben, Steuern und Umlagen). Der Arbeitspreis bleibt konstant und wird in diesen schwierigen Zeiten nicht verändert.
+        p Denn: Wir möchten im nächsten Jahr genauso viele nachhaltige Projekte aus genossenschaftlicher Hand für Sie verwirklichen. Und wir investieren zusammen mit unserem Partner BUZZN in Software, die unsere Arbeitsschritte digitalisiert und beschleunigt. Die Turnusabrechnung 2020 wird damit deutlich reibungsloser ablaufen, obwohl 2020 erstmals mehr als 1.000 Isarwatt-Kunden abgerechnet werden. Auch den Stromauftragsprozess für Neukunden bieten wir künftig digital an.
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+        p.pagination.is-small.no-margin
+          | Seite&nbsp;
+          span.page-number 1&nbsp;
+          | von&nbsp;
+          span.page-total-number 2
+    div.alwaysbreak
+    div.wrapper
+      h2 Fragen oder Feedback?
+      p Wir freuen uns, wenn Sie auch künftig Isarwatt-Strom beziehen und damit die Idee einer genossenschaftlichen Energiewende von unten weiterhin unterstützen. Haben Sie noch Fragen oder sonstiges Feedback? Dann freuen wir uns über eine E-Mail an strom@isarwatt.de oder einen Anruf unter 089 – 9018 3931. Wir danken für Ihre bisherige Unterstützung und freuen uns, wenn Sie weiter Isarwatt-Strom aus der Energiegruppe #{localpool.name} beziehen. Für eine genossenschaftlichen Energiewende von unten!
+      p Energiegeladene Grüße,
+      p Ihr Isarwatt Strom Team
+
+      footer.is-small
+        .footer-logo
+          | powered by
+          img src="#{Dir.pwd}/public/assets/images/logo.png"
+        span #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+        p.pagination.is-small.no-margin
+          | Seite&nbsp;
+          span.page-number 2&nbsp;
+          | von&nbsp;
+          span.page-total-number 2

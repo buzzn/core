@@ -19,7 +19,8 @@ module Admin
                         bank_account_assign: 'transactions.admin.bank_account.assign',
                         update_nested_person: 'transactions.admin.generic.update_nested_person',
                         update_nested_organization: 'transactions.admin.generic.update_nested_organization',
-                        delete_gap_contract: 'transactions.admin.contract.localpool.delete_gap_contract'
+                        delete_gap_contract: 'transactions.admin.contract.localpool.delete_gap_contract',
+                        deliver_tarrif_change_letter_service: 'services.deliver_tarrif_change_letter_service'
                        ]
 
     plugin :shared_vars
@@ -73,6 +74,15 @@ module Admin
           contract.contractor!
         end
 
+        r.on 'send-tariff-change-letter' do
+          r.on :id do |document_id|
+            r.get! do
+              deliver_tarrif_change_letter_service.deliver_tariff_change_letter(localpool, contract, document_id)
+              {message: "Sent tariff change letter #{contract.contact.name}"}
+            end
+          end
+        end
+
         r.get!('contractor') { contract.contractor! }
 
         r.get!('customer') { contract.customer! }
@@ -106,6 +116,10 @@ module Admin
         r.on 'documents' do
 
           r.on 'generate' do
+            # Dear God, I know I am a sinner and I as for your forgiveness.
+            if localpool.contact.id == 868 and r.params['template'] == 'tariff_change_letter'
+              r.params['template'] = "tariff_change_letter_isarwatt"
+            end
             r.post! { document.(resource: contract, params: r.params) }
             r.others!
           end
@@ -119,6 +133,7 @@ module Admin
             case contract
             when Contract::LocalpoolPowerTakerResource
               assign_tariffs.(resource: contract, params: r.params)
+
             else
               r.response.status = 400
             end

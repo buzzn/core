@@ -32,6 +32,10 @@ class Transactions::Admin::Contract::Document < Transactions::Base
         result = Schemas::PreConditions::Contract::DocumentLocalpoolPowerTakerContractConfirmationA01.call(subject)
       when 'lsn_a2'
         result = Schemas::PreConditions::Contract::DocumentLocalpoolPowerTakerContractConfirmationA02.call(subject)
+      when Pdf::TariffChangeLetter
+        result = Schemas::PreConditions::Contract::DocumentLocalpoolPowerTakerContractTariffChange.call(subject)
+      when Pdf::TariffChangeLetterIsarwatt
+        result = Schemas::PreConditions::Contract::DocumentLocalpoolPowerTakerContractTariffChange.call(subject)
       end
     end
     unless result.nil?

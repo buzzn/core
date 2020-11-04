@@ -44,7 +44,13 @@ module Admin
         end
 
         r.get 'send-testmail' do
-          mail_service.deliver_test_mail(localpool.contact)
+          begin
+            mail_service.deliver_test_mail(localpool.contact)
+          rescue Exception => e
+            r.response.status = 400
+            return {errors: [e.message]}
+          end
+          {message: 'Testmail has been sent', receiver: localpool.contact.email}
         end
 
         r.patch! do
@@ -72,6 +78,10 @@ module Admin
 
         r.on 'organizations' do
           r.run OrganizationRoda
+        end
+
+        r.on 'documents' do
+          localpool.power_taker_documents
         end
 
         r.on 'tariffs' do

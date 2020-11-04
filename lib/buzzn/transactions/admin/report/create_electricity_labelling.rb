@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative '../report'
 require_relative './report_data.rb'
 require_relative '../../../schemas/transactions/admin/report/create_electricity_labelling'
@@ -258,7 +259,6 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
     end
 
     #chp consumption can be calculated by subtracting the chp demarcation from the chp production
-
     if register_metas_active.map(&:label).any? {|x| x == 'demarcation_chp'}
       return production_chp - system(
         register_metas: register_metas_active,
@@ -374,8 +374,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
       return BigDecimal('0')
     end
 
-    #wind consumption can be calculated by subtracting the wind demarcation from the wind production
-
+    #wind consumption can be calculated by subtracting the wind demarcation from the pv production
     if register_metas_active.map(&:label).any? {|x| x == 'demarcation_wind'}
       return production_wind - system(
         register_metas: register_metas_active,

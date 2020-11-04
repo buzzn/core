@@ -31,6 +31,7 @@ describe Me::Roda, :request_helper do
       'email_backend_user' => nil,
       'email_backend_encryption' => nil,
       'email_backend_active' => false,
+      'email_backend_signature' => nil,
       'updatable'=>true,
       'deletable'=>false,
     }
@@ -115,6 +116,7 @@ describe Me::Roda, :request_helper do
         'email_backend_user' => nil,
         'email_backend_encryption' => nil,
         'email_backend_active' => false,
+        'email_backend_signature' => nil,
         'updatable'=>true,
         'deletable'=>false
       }

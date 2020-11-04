@@ -43,6 +43,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'email_backend_user' => nil,
         'email_backend_encryption' => nil,
         'email_backend_active' => false,
+        'email_backend_signature' => nil,
         'updatable'=>true,
         'deletable'=>false,
         'bank_accounts'=>{
@@ -99,6 +100,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'email_backend_user' => nil,
           'email_backend_encryption' => nil,
           'email_backend_active' => false,
+          'email_backend_signature' => nil,
           'updatable'=>true,
           'deletable'=>false,
           'bank_accounts'=> {
@@ -144,6 +146,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'email_backend_user' => nil,
           'email_backend_encryption' => nil,
           'email_backend_active' => false,
+          'email_backend_signature' => nil,
           'updatable'=>true,
           'deletable'=>false,
           'bank_accounts'=> {
@@ -189,6 +192,7 @@ describe Admin::LocalpoolRoda, :request_helper do
           'email_backend_user' => nil,
           'email_backend_encryption' => nil,
           'email_backend_active' => false,
+          'email_backend_signature' => nil,
           'updatable'=>true,
           'deletable'=>false,
           'bank_accounts'=>{

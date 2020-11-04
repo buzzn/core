@@ -7050,48 +7050,6 @@ paths:
       responses:
         200:
           description: patched
-  "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/billings/{billing_id}/items/{billing_item_id}/calculate":
-    patch:
-      description: Calculates an in between reading. Need two dates where for both is a reading present at the register.
-      consumes:
-      - application/x-www-form-urlencoded
-      produces:
-      - application/json
-      parameters:
-      - name: localpool_id
-        in: path
-        required: true
-        type: string
-      - name: localpool_power_taker_contract_id
-        in: path
-        required: true
-        type: string
-      - name: billing_id
-        in: path
-        required: true
-        type: string
-      - name: billing_item_id
-        in: path
-        required: true
-        type: string
-      - name: updated_at
-        in: formData
-        required: true
-        type: string
-        format: date-time
-      - name: begin_date
-        in: formData
-        required: false
-        type: string
-        format: date-time
-      - name:  end_date
-        in: formData
-        required: false
-        type: string
-        format: date-time
-      responses:
-        200:
-          description: patched
   "/localpools/{localpool_id}/contracts/{localpool_power_taker_contract_id}/contractor-bank-account":
     patch:
       description: assigns a bank account of the contractor to the contract
@@ -9668,8 +9626,8 @@ paths:
       - name: raw_value
         in: formData
         required: true
-        type: number
-        format: float
+        type: integer
+        format: int64
       - name: unit
         in: formData
         required: true
@@ -10898,6 +10856,10 @@ paths:
         in: formData
         required: false
         type: boolean
+      - name: emailBackendSignature
+        in: formData
+        required: false
+        type: string
 
       responses:
         200:

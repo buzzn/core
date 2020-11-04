@@ -42,6 +42,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
                         'localpool_power_taker_contracts',
                         'localpool_third_party_contracts',
                         'localpool_gap_contracts',
+                        'power_taker_documents',
                         'registers',
                         'persons',
                         'tariffs',
@@ -104,6 +105,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       'email_backend_user' => nil,
       'email_backend_encryption' => nil,
       'email_backend_active' => false,
+      'email_backend_signature' => nil,
       'updatable'=>true,
       'deletable'=>false,
       'address' => address_json.dup,
@@ -242,6 +244,7 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
                       'email_backend_user' => nil,
                       'email_backend_encryption' => nil,
                       'email_backend_active' => false,
+                      'email_backend_signature' => nil,
                       'updatable' => true,
                       'deletable' => false
                     }

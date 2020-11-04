@@ -37,6 +37,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         'localpool_power_taker_contracts',
         'localpool_third_party_contracts',
         'localpool_gap_contracts',
+        'power_taker_documents',
         'registers',
         'persons',
         'tariffs',
