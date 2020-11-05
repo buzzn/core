@@ -101,8 +101,8 @@ Admin::LocalpoolResource::Permission = Buzzn::Permission.new(Admin::LocalpoolRes
 
   owner do
     retrieve :managers
-    create :operators
-    update :operators
+    create :managers
+    update :managers
     contact '/persons'
     legal_representation '/persons'
     address do
