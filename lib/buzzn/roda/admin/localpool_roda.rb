@@ -47,8 +47,11 @@ module Admin
         r.get 'send-testmail' do
           begin
             mail_service.deliver_test_mail(localpool.contact)
-          rescue Exception => e
-            r.response.status = 400
+          rescue Net::SMTPAuthenticationError
+            r.response.status = 422
+            return {errors: ['Authentication unsuccessful. Check credentials.']}
+          rescue StandardError => e
+            r.response.status = 422
             return {errors: [e.message]}
           end
           {message: 'Testmail has been sent', receiver: localpool.contact.email}
