@@ -215,13 +215,13 @@ html
           - items.map.with_index.each do |item, i|
             tr
             - if i < items.size - 1
-              td.no-border Position #{i+1}
+              td.no-border #{i+1}. Zeitraum
               td.no-border #{item.price_cents_before_taxes} €
               td.no-border #{item.vat_amount} €
               td.no-border #{item.vat}
               td.no-border.is-text-right #{item.price_cents_after_taxes} €
             - else
-              td Position #{i+1}
+              td #{i+1}. Zeitraum
               td #{item.price_cents_before_taxes} €
               td #{item.vat_amount} €
               td #{item.vat}
