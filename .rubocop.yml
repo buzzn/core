@@ -79,6 +79,15 @@ Style/CollectionMethods:
     detect: 'find'
     find_all: 'select'
 
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
 # check for trailing whitespace
 Layout/TrailingWhitespace:
   Enabled: true
