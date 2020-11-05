@@ -25,12 +25,11 @@ class Transactions::Admin::BillingCycle::GenerateReport < Transactions::Base
       'Beginn',
       'Ende',
       'Bezugsmenge in kWh',
-      'Rechnungsbetrag (netto) in Euro',
-      'Rechnungsbetrag (brutto) in Euro',
-      'Guthaben vor Rechnungsstellung',
-      'Bezahlte Abschläge',
-      'Restforderung/Guthaben',
-      'Abschläge neu? in Euro',
+      'Rechnungsbetrag (netto) in €',
+      'Rechnungsbetrag (brutto) in €',
+      'Guthaben vor Rechnungserstellung (brutto) in €',
+      'Restforderung(-)/Guthaben(+) (brutto) in €',
+      'Abschläge neu? (brutto) in €',
       'Fällig ab'
     ]
     header_row.each_with_index do |e, idx|
@@ -58,12 +57,11 @@ class Transactions::Admin::BillingCycle::GenerateReport < Transactions::Base
       cell.set_number_format('####.00')
       cell = sheet.add_cell(1+idx, 9,  (BigDecimal(billing.balance_before) / 10 / 100).round(2))
       cell.set_number_format('####.00')
-      sheet.add_cell(1+idx, 10, '')
-      cell = sheet.add_cell(1+idx, 11, (BigDecimal(billing.balance_at) / 10 / 100).round(2))
+      cell = sheet.add_cell(1+idx, 10, (BigDecimal(billing.balance_at) / 10 / 100).round(2))
       cell.set_number_format('####.00')
-      cell = sheet.add_cell(1+idx, 12, billing.adjusted_payment.nil? ? '-' : BigDecimal(billing.adjusted_payment.price_cents, 4) / 100)
+      cell = sheet.add_cell(1+idx, 11, billing.adjusted_payment.nil? ? '-' : BigDecimal(billing.adjusted_payment.price_cents, 4) / 100)
       cell.set_number_format('####.00')
-      sheet.add_cell(1+idx, 13, billing.adjusted_payment.nil? ? '-' : billing.adjusted_payment.begin_date.strftime('%d.%m.%Y'))
+      sheet.add_cell(1+idx, 12, billing.adjusted_payment.nil? ? '-' : billing.adjusted_payment.begin_date.strftime('%d.%m.%Y'))
     end
     workbook.stream
   end
