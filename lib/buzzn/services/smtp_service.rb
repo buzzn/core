@@ -17,9 +17,11 @@ class Services::SmtpService
     end
 
     form_data = {
-      'to' => message[:to],
-      'subject' => message[:subject],
-      'body' => message[:text] + person_sender.email_backend_signature.gsub('##', "\n"),
+      to: message[:to],
+      subject: message[:subject],
+      bcc: message[:bcc],
+      body: message[:text] + person_sender.email_backend_signature.gsub('##', "\n"),
+      from: "#{person_sender.name} <#{person_sender.email}>"
     }
     if message.key?(:bcc) && !message[:bcc].empty?
       form_data['bcc'] = message[:bcc]
@@ -40,15 +42,16 @@ class Services::SmtpService
 
     conection = Net::SMTP.new(person_sender.email_backend_host, person_sender.email_backend_port)
 
-    if person_sender.email_backend_encryption == "SSL/TLS"
+    if person_sender.email_backend_encryption == 'SSL/TLS'
       conection.enable_ssl
-    elsif person_sender.email_backend_encryption == "STARTTLS"
+    elsif person_sender.email_backend_encryption == 'STARTTLS'
       conection.enable_starttls
     end
+
     res = conection.start(person_sender.email_backend_host,
                           person_sender.email_backend_user,
                           person_sender.email_backend_password, :login) do |smtp|
-      smtp.send_message(to_send.to_s, person_sender.email, message[:to])
+      smtp.send_message(to_send.to_s, person_sender.email, [message[:to]].concat(to_send.bcc))
     end
 
     unless res.success?
