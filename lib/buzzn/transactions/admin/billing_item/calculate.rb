@@ -6,7 +6,7 @@ require_relative '../../../schemas/transactions/admin/billing_item/update'
 class Transactions::Admin::BillingItem::Calculate < Transactions::Base
 
   validate :schema
-  check :authorize, with: :'operations.authorization.update'
+ # check :authorize, with: :'operations.authorization.update'
   tee :check_valid
   tee :calculate_begin_reading
   tee :calculate_end_reading
@@ -31,7 +31,7 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
         register = resource.register.object
         date = params[:begin_date]
         unless start_date_billing.nil? || end_date_billing.nil? || date.nil? || register.nil?
-          params[:begin_reading] = calculate_reading(start_date_billing, end_date_billing, date, resource.register)
+          params[:begin_reading] = calculate_reading(start_date_billing, end_date_billing, date, resource.register, resource.billing)
         end
       end
     end
@@ -45,13 +45,13 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
         register = resource.register.object
         date = params[:end_date]
         unless start_date_billing.nil? || end_date_billing.nil? || date.nil? || register.nil?
-          params[:end_reading] = calculate_reading(start_date_billing, end_date_billing, date, resource.register)
+          params[:end_reading] = calculate_reading(start_date_billing, end_date_billing, date, resource.register, resource.billing)
         end
       end
     end
   end
 
-  def calculate_reading(start_date_billing, end_date_billing, date, resource)
+  def calculate_reading(start_date_billing, end_date_billing, date, resource, billing)
     reading_service = Import.global('services.reading_service')
     register = resource.object
     if register.readings.find_by(date: date).nil?
@@ -80,6 +80,18 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
         begin
           reading = Transactions::Admin::Reading::Create.new.(resource: resource, params: attrs)
           reading.value!.object
+
+          where_begin = billing.items.select{|b| b.begin_date == date}.first
+          unless where_begin.nil?
+            #where_begin.begin_reading_id = reading.value!.id
+            #where_begin.save
+          end
+
+          where_end = billing.items.select{|b| b.end_date == date}.first
+          unless where_end.nil?
+            #where_end.end_reading_id = reading.value!.id
+            #where_end.save
+          end
         rescue => e
           raise Buzzn::ValidationError.new({register: ['there exists already a reading for this register at this date and for this reason']}, register)
         end
