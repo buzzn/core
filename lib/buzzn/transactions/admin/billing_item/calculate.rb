@@ -32,6 +32,8 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
         date = params[:begin_date]
         unless start_date_billing.nil? || end_date_billing.nil? || date.nil? || register.nil?
           params[:begin_reading] = calculate_reading(start_date_billing, end_date_billing, date, resource.register)
+          #update end_reding von vorherigem billing_item
+          #update.(resource: previous_item, params: r.params)
         end
       end
     end
@@ -54,7 +56,7 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
   def calculate_reading(start_date_billing, end_date_billing, date, resource)
     reading_service = Import.global('services.reading_service')
     register = resource.object
-    if register.readings.find_by(date: date).nil?
+    if reading_service.get(register, date, :precision => 4.days).nil?
       begin
         reading_start_date_billing = reading_service.get(register, start_date_billing, :precision => 2.days)
         reading_end_date_billing = reading_service.get(register, end_date_billing, :precision => 2.days)
@@ -85,7 +87,11 @@ class Transactions::Admin::BillingItem::Calculate < Transactions::Base
         end
       end
     else
-      register.readings.find_by(date: date)
+      if register.readings.find_by(date: date).nil?
+        reading_service.get(register, date, :precision => 4.days).to_a.max_by(&:value)
+      else
+        register.readings.find_by(date: date)
+      end
     end
   end
 end
