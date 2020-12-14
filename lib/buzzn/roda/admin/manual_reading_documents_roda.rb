@@ -95,7 +95,7 @@ module Admin
       column += 1
       create_cell(column, '')
       column += 1
-      create_cell(column, '')
+      create_cell(column, '31.12.2020')
       column += 1
       create_cell(column, '')
       column += 1
@@ -136,7 +136,7 @@ module Admin
       @sheet.change_column_width(column, 12)
       column += 1
       create_cell(column, 'Adresszusatz', bold: true)
-      @sheet.change_column_width(column, 20)
+      @sheet.change_column_width(column, 30)
       column += 1
       create_cell(column, 'Zählerstand	', bold: true)
       @sheet.change_column_width(column, 20)
@@ -223,7 +223,7 @@ module Admin
 
     def create_filename(localpool)
       date_string = Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d')
-      "#{date_string}_Energiegruppe #{localpool.name} - Zähler und Abschläge 2019.xlsx"
+      "#{date_string}_Energiegruppe #{localpool.name} - Zaehler und Abschlaege 2020.xlsx"
     end
 
     route do |r|
