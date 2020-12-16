@@ -25,7 +25,10 @@ div.is-smaller.col-3rd.is-pull-right.no-margin
 
 
 div.letter-boxed
-  p.is-small #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
+  - if "#{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}".length > 70
+    p.is-small #{powergiver.shortname} • #{powergiver.address.street} • <br /> #{powergiver.address.zip} #{powergiver.address.city}
+  - else
+    p.is-small #{powergiver.shortname} • #{powergiver.address.street} • #{powergiver.address.zip} #{powergiver.address.city}
 
   - if powertaker.contact.nil?
     p #{powertaker.name}<br>
