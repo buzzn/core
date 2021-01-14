@@ -301,7 +301,6 @@ module Pdf
             h[:vat_amount]                 = german_div(item.price_cents_after_taxes.round(0) - item.price_cents_before_taxes.round(0))
             h[:vat]                        = ((item.vat.amount - 1) * 100).to_i.to_s + "%"
           else # brutto
-            #byebug
             h[:base_price_cents_per_day]   = german_div(item.baseprice_cents_per_day_after_taxes*100, prec: 4)
             h[:base_price_euros]           = german_div(item.baseprice_cents_before_taxes*item.vat.amount)
             h[:energy_price_cents_per_kwh] = german_div(item.tariff.energyprice_cents_per_kwh_before_taxes*item.vat.amount*100, prec: 4)
@@ -334,7 +333,7 @@ module Pdf
 
       vat = billing_hash[:vat]
       has_bank_and_direct_debit = @billing.contract.customer_bank_account&.direct_debit
-      payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro_netto]} € netto +  #{abschlag[:amount_euro_vat]} € USt (#{vat} %) = <strong>#{abschlag[:amount_euro]} € brutto&ast;&ast;</strong>"
+      payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro_netto]} € netto +  #{abschlag[:amount_euro_vat]} € USt (#{((Vat.current.amount - 1)*100).to_i} %) = <strong>#{abschlag[:amount_euro]} € brutto&ast;&ast;</strong>"
       abschlag_begin_date = to_date(abschlag[:begin_date])
       # negative means it's disabled for this powertaker
       abschlag[:satz] = if abschlag[:disabled]
