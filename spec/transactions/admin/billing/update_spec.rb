@@ -14,7 +14,7 @@ describe Transactions::Admin::Billing::Update do
   end
 
   before(:all) do
-    create(:vat, amount: 0.19, begin_date: Date.new(2000, 1, 1))
+    create(:vat, amount: 1.19, begin_date: Date.new(2000, 1, 1))
   end
 
   let(:vat) do
