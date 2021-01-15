@@ -471,12 +471,12 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
   # E28
   def full_levy_ct_per_kWh(**)
-    BigDecimal('6.7920')
+    BigDecimal('6.5')
   end
 
   # E29
   def reduced_levy_ct_per_kWh(**)
-    BigDecimal('2.7168')
+    BigDecimal('2.7168') #2.6
   end
 
   # E13, E30
@@ -506,7 +506,7 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
 
   # E33
   def eeg_quotient(**)
-    BigDecimal('8.188')
+    BigDecimal('9.421')
   end
 
   def co2_emmision_g_per_kwh_coal(**)
@@ -524,24 +524,24 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   def energy_mix(**)
     {
       germany: {
-        nuclear: BigDecimal('12.7'),
-        coal: BigDecimal('38.1'),
-        natural_gas: BigDecimal('10.2'),
-        other_fossil: BigDecimal('2.4'),
-        other_renewable: BigDecimal('3.5'),
-        renewable_eeg: BigDecimal('33.1'),
-        co2_emissions_g_per_kwh: BigDecimal('244'),
-        radioactive_waste_g_per_kwh: BigDecimal('0.0001')
+        nuclear: BigDecimal('13.5'),
+        coal: BigDecimal('29.0'),
+        natural_gas: BigDecimal('11.9'),
+        other_fossil: BigDecimal('1.3'),
+        other_renewable: BigDecimal('3.9'),
+        renewable_eeg: BigDecimal('40.4'),
+        co2_emissions_g_per_kwh: BigDecimal('352'),
+        radioactive_waste_g_per_kwh: BigDecimal('0.0004')
       },
       buzzn: {
-        nuclear: BigDecimal('4.1'),
-        coal: BigDecimal('11.9'),
-        natural_gas: BigDecimal('27.7'),
-        other_fossil: BigDecimal('0.6'),
-        other_renewable: BigDecimal('0.1'),
-        renewable_eeg: BigDecimal('55.6'),
-        co2_emissions_g_per_kwh: BigDecimal('244'),
-        radioactive_waste_g_per_kwh: BigDecimal('0.0001')
+        nuclear: BigDecimal('0.0'),
+        coal: BigDecimal('0.0'),
+        natural_gas: BigDecimal('18.3'),
+        other_fossil: BigDecimal('0.0'),
+        other_renewable: BigDecimal('21.4'),
+        renewable_eeg: BigDecimal('60.3'),
+        co2_emissions_g_per_kwh: BigDecimal('91'),
+        radioactive_waste_g_per_kwh: BigDecimal('0.0')
       }
       # others to come
     }
