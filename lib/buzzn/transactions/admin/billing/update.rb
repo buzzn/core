@@ -89,13 +89,13 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       # accounting is in decacents; 10dc = 1c
       total_amount_dc = (total_amount * 10).round(0)
       params[:accounting_entry] = accounting_service.book(user, contract, -1 * total_amount_dc.round, comment: "Billing #{resource.full_invoice_number}")
-
+      
       if resource.object.localpool.billing_detail.automatic_abschlag_adjust
         last_payment = resource.object.contract.payments.order(:begin_date).last
         # FIXME adjust somehow to settings
-        next_month = resource.object.end_date.at_beginning_of_month + 6.months # Todo move this to settings begin date ob billing_detail
+        next_month = resource.object.end_date.at_beginning_of_month + 3.months # Todo move this to settings begin date ob billing_detail
         tariff = resource.object.contract.tariffs.at(next_month).order(:begin_date).last
-        estimated_cents_per_month = tariff.cents_per_days(30.42, resource.object.daily_kwh_estimate) * (1+vat.amount)
+        estimated_cents_per_month = tariff.cents_per_days(30.42, resource.object.daily_kwh_estimate) * vat.amount
         if last_payment.nil? ||
            # if begin_date is in the future we skip as it was manually adjusted
            # if price_cents is 0 we will also skip it
@@ -142,7 +142,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new({customer: ['email invalid']}, resource.object)
       end
-      subject = "Lokale Energiegruppe #{resource.object.localpool.name} - Ihre Stromrechnung 2019"
+      subject = "Lokale Energiegruppe #{resource.object.localpool.name} - Ihre Stromrechnung #{Buzzn::Utils::Chronos.now.prev_year.strftime('%Y')}"
 
       if receiver_person.nil?
         anrede = 'Sehr geehrte Damen und Herren'
@@ -159,7 +159,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       text = %(#{anrede},
 
 im Auftrag Ihres Lokalen Stromgebers "#{receiver_person.name}" übermitteln wir Ihnen im
-Anhang Ihre Stromrechnung 2019.
+Anhang Ihre Stromrechnung #{Buzzn::Utils::Chronos.now.prev_year.strftime('%Y')}.
 
 Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
 
