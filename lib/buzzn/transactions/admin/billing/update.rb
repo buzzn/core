@@ -142,7 +142,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       if email.nil? || email.empty?
         raise Buzzn::ValidationError.new({customer: ['email invalid']}, resource.object)
       end
-      subject = "Lokale Energiegruppe #{resource.object.localpool.name} - Ihre Stromrechnung 2019"
+      subject = "Lokale Energiegruppe #{resource.object.localpool.name} - Ihre Stromrechnung #{Buzzn::Utils::Chronos.now.prev_year.strftime('%Y')}"
 
       if receiver_person.nil?
         anrede = 'Sehr geehrte Damen und Herren'
@@ -159,7 +159,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       text = %(#{anrede},
 
 im Auftrag Ihres Lokalen Stromgebers "#{receiver_person.name}" übermitteln wir Ihnen im
-Anhang Ihre Stromrechnung 2019.
+Anhang Ihre Stromrechnung #{Buzzn::Utils::Chronos.now.prev_year.strftime('%Y')}.
 
 Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
 
