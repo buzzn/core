@@ -235,7 +235,10 @@ html
             td Guthaben zur Rechnungsstellung
             td #{billing.balance_at_before_taxes} €
             td #{billing.balance_at_taxes} €
-            td 19%
+            - if issue_vat
+              td #{billing.vat}
+            - else
+              td 0%
             td.is-text-right #{billing.balance_at_after_taxes} €
           tr
             td
