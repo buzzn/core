@@ -48,3 +48,7 @@ uploads
 db/csv/2018-10-26_GetAG_ET.csv
 db/csv/2018-10-26_GetAG_DT.csv
 setup_env.sh
+
+# Ignore files from development
+/*.patch
+/*.dump
