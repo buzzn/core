@@ -27,7 +27,7 @@ class Services::SmtpService
       form_data['bcc'] = message[:bcc]
     end
     if message.key?(:reply_to) && !message[:reply_to].empty?
-      form_data['h:Reply-To'] = message[:reply_to]
+      form_data['reply-to'] = message[:reply_to]
     end
     if message.key?(:html) && !message[:html].empty?
       form_data['html'] = message[:html]
