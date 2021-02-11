@@ -73,11 +73,12 @@ module Pdf
     end
 
     def build_tariff(tariff)
+      vat = Vat.current.amount
       {
-        baseprice_euro_brutto: german_div(tariff.baseprice_cents_per_month_before_taxes * @vat.amount),
-        baseprice_euro_netto: german_div(tariff.baseprice_cents_per_month_before_taxes * @vat.amount),
+        baseprice_euro_brutto: german_div(tariff.baseprice_cents_per_month_before_taxes * vat),
+        baseprice_euro_netto: german_div(tariff.baseprice_cents_per_month_before_taxes),
         energyprice_cents_netto: german_div(tariff.energyprice_cents_per_kwh_before_taxes*100),
-        energyprice_cents_brutto: german_div(tariff.energyprice_cents_per_kwh_before_taxes*100),
+        energyprice_cents_brutto: german_div(tariff.energyprice_cents_per_kwh_before_taxes*100 * vat),
       }
     end
 
