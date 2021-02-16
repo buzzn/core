@@ -133,6 +133,43 @@ class Billing < ActiveRecord::Base
     total/days
   end
 
+  def consumed_energy_kwh_in_date_range(date_range)
+    total = BigDecimal(0)
+    items.in_date_range(date_range).each do |item|
+      # not all items are calculatable, return nil
+      if item.consumed_energy_kwh.nil?
+        return nil
+      end
+      total += item.consumed_energy_kwh
+    end
+    total
+  end
+
+  def amount_before_taxes_in_date_range(date_range)
+    amount = BigDecimal(0)
+    items.in_date_range(date_range).each do |item|
+      if item.energyprice_cents_before_taxes.nil? || item.baseprice_cents_before_taxes.nil?
+        return nil
+      end
+      amount += item.energyprice_cents_before_taxes + item.baseprice_cents_before_taxes
+    end
+    amount
+  end
+
+  def amount_after_taxes_in_date_range(date_range)
+    unless contract.localpool.billing_detail.issues_vat
+      return amount_before_taxes_in_date_range(date_range)
+    end
+    amount = BigDecimal(0)
+      items.in_date_range(date_range).each do |item|
+        if item.energyprice_cents_after_taxes.nil? || item.baseprice_cents_after_taxes.nil?
+          return nil
+        end
+        amount += item.energyprice_cents_after_taxes + item.baseprice_cents_after_taxes
+      end
+      amount
+  end
+  
   # in decacents
   def balance_at
     accounting_service = Import.global('services.accounting')
