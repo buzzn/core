@@ -16,18 +16,25 @@ class Services::SmtpService
       raise Buzzn::ValidationError.new({person: ['has no active backend']}, person_sender)
     end
 
+    if person_sender.email_backend_signature.nil?
+      body_message = ''
+    else
+      body_message = person_sender.email_backend_signature.gsub('##', "\n")
+    end
+
     form_data = {
       to: message[:to],
       subject: message[:subject],
       bcc: message[:bcc],
-      body: message[:text] + person_sender.email_backend_signature.gsub('##', "\n"),
+      body: message[:text] + body_message,
       from: "#{person_sender.name} <#{person_sender.email}>"
     }
+
     if message.key?(:bcc) && !message[:bcc].empty?
       form_data['bcc'] = message[:bcc]
     end
     if message.key?(:reply_to) && !message[:reply_to].empty?
-      form_data['h:Reply-To'] = message[:reply_to]
+      form_data['reply-to'] = message[:reply_to]
     end
     if message.key?(:html) && !message[:html].empty?
       form_data['html'] = message[:html]
