@@ -340,7 +340,7 @@ module Pdf
                           ''
                         else
                           if has_bank_and_direct_debit
-                            every_month = 'jeden Monat von Ihrem Konto eingezogen'
+                            every_month = 'am Anfang eines jeden Monats von Ihrem Konto eingezogen'
                             if abschlag[:was_changed]
                               "Ihr neuer #{payment_amounts_to}. Er wird ab dem #{abschlag_begin_date} #{every_month}."
                             else
