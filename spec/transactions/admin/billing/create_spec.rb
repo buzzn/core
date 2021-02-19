@@ -303,12 +303,12 @@ describe Transactions::Admin::Billing::Create do
       expect(value).to be_a Admin::BillingResource
       object = value.object
       expect(object.items.count).to eql 2
-      expect(object.items[0].begin_date).to eql vat2.begin_date
-      expect(object.items[0].end_date).to eql end_date
-      expect(object.items[0].vat).to eql vat2
-      expect(object.items[1].begin_date).to eql begin_date
-      expect(object.items[1].end_date).to eql vat2.begin_date
-      expect(object.items[1].vat).to eql vat
+      expect(object.items[0].begin_date).to eql begin_date
+      expect(object.items[0].end_date).to eql vat2.begin_date
+      expect(object.items[0].vat).to eql vat
+      expect(object.items[1].begin_date).to eql vat2.begin_date
+      expect(object.items[1].end_date).to eql end_date
+      expect(object.items[1].vat).to eql vat2 
     end
   end
 
