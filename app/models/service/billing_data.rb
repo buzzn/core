@@ -26,7 +26,7 @@ module Service
         vat = vats.pop while vats.any? && vat.begin_date <= range[:begin_date]
 
         if vat.begin_date >= range[:end_date] || vat.begin_date <= range[:begin_date]
-          result.push(ranges.pop)
+          result.push(ranges.shift)
           next
         else
           head = range.clone
@@ -36,7 +36,7 @@ module Service
         end
       end
 
-      result.reverse
+      result
     end
 
     def from_contract(begin_date:, end_date:, vats:)
