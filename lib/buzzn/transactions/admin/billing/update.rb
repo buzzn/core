@@ -158,7 +158,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
 
       text = %(#{anrede},
 
-im Auftrag Ihres Lokalen Stromgebers "#{receiver_person.name}" übermitteln wir Ihnen im
+im Auftrag Ihres Lokalen Stromgebers "#{resource.object.localpool.owner.name}" übermitteln wir Ihnen im
 Anhang Ihre Stromrechnung #{Buzzn::Utils::Chronos.now.prev_year.strftime('%Y')}.
 
 Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
