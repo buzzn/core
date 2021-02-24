@@ -326,7 +326,10 @@ html
         div.col-3rd.card.peach
           p
             | <strong>Technologie</strong> <span class='is-medium'>(mit welchen Verfahren wurde der Eigenstrom erzeugt?)</span>
-          p.is-larger #{{energy_report.tech}}
+          - if contractor.name == 'Isarwatt eG'
+            p.is-larger #{energy_report.tech}
+          - else
+            p.is-medium #{energy_report.tech}
       div.row
         div.col-3rd.card.cornflower
           p
@@ -339,7 +342,10 @@ html
         div.col-3rd.card.salmon
           p
             | <strong>Eigentumsverhältnisse</strong> <span class='is-medium'>(wem gehört die Stromerzeugungsanlage?)</span>
-          p.is-larger #{contractor.shortname}
+          - if contractor.name == 'Isarwatt eG'
+            p.is-larger #{contractor.shortname}
+          - else
+            p.is-medium #{contractor.shortname}
       div.clear
       br
       br
