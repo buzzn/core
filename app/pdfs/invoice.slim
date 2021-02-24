@@ -263,8 +263,8 @@ html
       - unless billing_ends_contract
         h2 Ihre Vertragskonditionen
         p Die aktuellen Preise für Ihren Vertrag in der Energiegruppe #{localpool.name} betragen:<br>
-          <strong>Grundpreis&ast;,</strong> (Grundpreis netto): <strong>#{current_tariff.baseprice_euros_per_month_brutto} €/Monat,</strong> (#{current_tariff.baseprice_euros_per_month_netto} €/Monat)<br>
-          <strong>Arbeitspreis&ast;,</strong> (Arbeitspreis netto): <strong>#{current_tariff.energyprice_cents_per_kwh_brutto} Cent/kWh,</strong> (#{current_tariff.energyprice_cents_per_kwh_netto} Cent/kWh)
+          <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{current_tariff.baseprice_euros_per_month_brutto} €/Monat,</strong> (#{current_tariff.baseprice_euros_per_month_netto} €/Monat)<br>
+          <strong>Arbeitspreis,</strong> (Arbeitspreis netto): <strong>#{current_tariff.energyprice_cents_per_kwh_brutto} Cent/kWh,</strong> (#{current_tariff.energyprice_cents_per_kwh_netto} Cent/kWh)
 
         p == abschlag.satz
 
@@ -272,7 +272,8 @@ html
         p Haben Sie Fragen zur Abrechnung? Dann freuen wir uns über eine E-Mail oder einen Anruf.
         p Mit freundlichen Grüßen,
         p #{contractor.name == 'Isarwatt eG' ? 'Ihr Isarwatt Team' : contractor.contact}
-        p.is-small &ast; Brutto-Preis inkl. 19 % USt; die Korrektur ihres Tarifs auf den abgesenkten Steuersatz von 16 Prozent für das zweite Halbjahr 2020 erfolgt mit der nächsten fälligen Abrechnung <br> &ast;&ast; Ihren Abschlag weisen wir, in Einklang mit steuerrechtlichen Regelungen, vorläufig mit dem nicht reduzierten Steuersatz von 19 Prozent aus. Den abgesenkten Umsatzsteuersatz für das zweite Halbjahr 2020 werden wir in Ihrer nächsten Abrechnung berücksichtigen und berichtigen. Leistungen zwischen 1. Juli und 31. Dezember 2020 werden dann mit der geltenden Umsatzsteuer von 16 Prozent abgerechnet, Leistungen nach dem 31. Dezember 2020 mit 19 Prozent.
+        /p.is-small &ast; Brutto-Preis inkl. 19 % USt; die Korrektur ihres Tarifs auf den abgesenkten Steuersatz von 16 Prozent für das zweite Halbjahr 2020 erfolgt mit der nächsten fälligen Abrechnung
+        p.is-small &ast; Ihren Abschlag weisen wir, in Einklang mit steuerrechtlichen Regelungen, vorläufig mit dem nicht reduzierten Steuersatz von 19 Prozent aus. Den abgesenkten Umsatzsteuersatz für das zweite Halbjahr 2020 werden wir in Ihrer nächsten Abrechnung berücksichtigen und berichtigen. Leistungen zwischen 1. Juli und 31. Dezember 2020 werden dann mit der geltenden Umsatzsteuer von 16 Prozent abgerechnet, Leistungen nach dem 31. Dezember 2020 mit 19 Prozent.
         br
         br
         br
@@ -291,7 +292,6 @@ html
     div.wrapper
       div.log
       h2 Energiereport
-      p Die echte Energiewende ist demokratisch, dezentral und direkt von Mensch zu Mensch.
       p Nachfolgend einige Fakten und Kennzahlen zu Ihrer Energiegruppe #{localpool.name} für das Jahr #{billing_year}:
       div.row
         div.col-3rd.card.sand
@@ -331,7 +331,7 @@ html
         div.col-3rd.card.cornflower
           p
             | <strong>Reststrom</strong> <span class='is-medium'>(von welchem Lieferant stammt der Reststrom über das öffentliche Netz?)</span>
-          p.is-larger #{energy_report.electricity_supplier}
+          p.is-larger #{energy_report.electricity_supplier=='Buzzn GmbH' ? 'BUZZN GmbH' : energy_report.electricity_supplier}
         div.col-3rd.card.glass
           / p
           /   | Autarkiegrad <span class='is-small'> (wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
@@ -346,10 +346,10 @@ html
       br
       br
       br
-      div.log.pt
-      - if contractor.name == 'Isarwatt eG'
+      /div.log.pt
+      /- if contractor.name == 'Isarwatt eG'
         p
-      - else
+      /- else
         h2 Kritische Anmerkungen zur Stromkennzeichnung
         p Das deutsche Energiewirtschaftsgesetz verpflichtet jeden Stromlieferanten, den Letztverbrauchern die Herkunft seines Stroms über eine Kennzeichnung nachzuweisen. Dies soll mehr Transparenz und bewusstere Kaufentscheidungen in Richtung „Ökostrom“ bewirken.
         p Die gesetzliche Stromkennzeichnung steht jedoch in der Kritik, manche nennen sie sogar eine Farce. Sie gibt zwar teilweise Auskunft darüber, aus welcher Primärenergie der Strom produziert wurde. Andere wichtige Informationen sind jedoch nicht enthalten, zum Beispiel:
@@ -364,11 +364,6 @@ html
         p Wenn Sie sonst noch eine Frage oder Anmerkung haben, senden Sie uns bitte eine Nachricht an <a href="mailto:team@buzzn.net">team@buzzn.net</a>. Vielen Dank!
     div.wrapper
       div.log
-      - if contractor.name == 'Isarwatt eG'
-        p
-      - else
-        div.user-message
-          | Bei genauem Hinschauen kann diese gesetzlich vorgeschriebene Stromkennzeichnung zu Verwirrung, Kopfschütteln oder Empörung führen.
       h2 Stromkennzeichnung #{billing_year ? billing_year-1 : ""}
       p
         | (Stromkennzeichnung gemäß § 42 Energiewirtschaftsgesetz vom 7. Juli 2005, geändert 2017)
