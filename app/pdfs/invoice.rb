@@ -247,9 +247,9 @@ module Pdf
         hash[:rueck_nach] = to_pay_cents.positive? ? 'Rück' : 'Nach'
         hash[:satz_forderung] = if has_bank_and_direct_debit
                                   if to_pay_cents.positive?
-                                    'Der Betrag wird in Kürze auf ihrem Bankkonto gutgeschrieben.'
+                                    'Der Betrag wird in Kürze auf Ihrem Bankkonto gutgeschrieben.'
                                   elsif to_pay_cents.negative?
-                                    'Der Betrag wird in Kürze von ihrem Bankkonto eingezogen.'
+                                    'Der Betrag wird in Kürze von Ihrem Bankkonto eingezogen.'
                                   else
                                     ''
                                   end
@@ -333,7 +333,7 @@ module Pdf
 
       vat = billing_hash[:vat]
       has_bank_and_direct_debit = @billing.contract.customer_bank_account&.direct_debit
-      payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro_netto]} € netto +  #{abschlag[:amount_euro_vat]} € USt (#{((Vat.current.amount - 1)*100).to_i} %) = <strong>#{abschlag[:amount_euro]} € brutto&ast;&ast;</strong>"
+      payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro_netto]} € netto +  #{abschlag[:amount_euro_vat]} € USt (#{((Vat.current.amount - 1)*100).to_i} %) = <strong>#{abschlag[:amount_euro]} € brutto&ast;</strong>"
       abschlag_begin_date = to_date(abschlag[:begin_date])
       # negative means it's disabled for this powertaker
       abschlag[:satz] = if abschlag[:disabled]
