@@ -155,7 +155,7 @@ html
           td.no-border.no-padding.pl #{localpool.street}, #{contract.market_location_name}
         tr
           td.no-border.no-padding Stromzählernummer:
-          td.no-border.no-padding.pl #{items.map{|x| x.meter_serial_number }.join(', ')}
+          td.no-border.no-padding.pl #{items.map{|x| x.meter_serial_number }.uniq.join(', ')}
         tr
           td.no-border.no-padding Abrechnungsjahr
           td.no-border.no-padding.pl #{billing_year}
