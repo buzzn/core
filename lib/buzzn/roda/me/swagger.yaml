@@ -56,7 +56,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: title
@@ -64,7 +64,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -80,6 +80,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       responses:
         200:
           description: patched
