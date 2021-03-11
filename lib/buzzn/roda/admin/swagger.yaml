@@ -3658,7 +3658,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: legal_representation.title
@@ -3666,7 +3666,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -3682,6 +3682,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: legal_representation.email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: legal_representation.email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: legal_representation.email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: legal_representation.email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: legal_representation.email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: legal_representation.email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: legal_representation.email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: legal_representation.address.updated_at
         in: formData
         required: false
@@ -4013,7 +4051,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: contact.title
@@ -4021,7 +4059,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -4037,6 +4075,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: contact.email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact.email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contact.email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact.email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact.email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: contact.email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: contact.email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: contact.address.updated_at
         in: formData
         required: false
@@ -4718,7 +4794,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: legal_representation.title
@@ -4726,7 +4802,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -4742,6 +4818,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: legal_representation.email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: legal_representation.email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: legal_representation.email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: legal_representation.email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: legal_representation.email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: legal_representation.email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: legal_representation.email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: legal_representation.address.updated_at
         in: formData
         required: false
@@ -5073,7 +5187,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: contact.title
@@ -5081,7 +5195,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -5097,6 +5211,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: contact.email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact.email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contact.email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact.email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact.email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: contact.email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: contact.email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: contact.address.updated_at
         in: formData
         required: false
@@ -7499,7 +7651,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: legal_representation.title
@@ -7507,7 +7659,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -7523,6 +7675,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: legal_representation.email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: legal_representation.email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: legal_representation.email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: legal_representation.email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: legal_representation.email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: legal_representation.email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: legal_representation.email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: legal_representation.address.updated_at
         in: formData
         required: false
@@ -7854,7 +8044,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: contact.title
@@ -7862,7 +8052,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -7878,6 +8068,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: contact.email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact.email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contact.email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact.email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact.email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: contact.email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: contact.email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: contact.address.updated_at
         in: formData
         required: false
@@ -8223,7 +8451,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: title
@@ -8231,7 +8459,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -8247,6 +8475,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: address.updated_at
         in: formData
         required: false
@@ -9626,8 +9892,8 @@ paths:
       - name: raw_value
         in: formData
         required: true
-        type: number
-        format: float
+        type: integer
+        format: int64
       - name: unit
         in: formData
         required: true
@@ -9895,8 +10161,6 @@ paths:
         format: int64
         maximum: 2050
         exclusiveMaximum: true
-        minimum: 1950
-        exclusiveMinimum: true
       - name: sent_data_dso
         in: formData
         required: false
@@ -10135,7 +10399,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: title
@@ -10143,7 +10407,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -10159,6 +10423,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: address.updated_at
         in: formData
         required: false
@@ -10513,7 +10815,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: title
@@ -10521,7 +10823,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -10537,6 +10839,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: address.updated_at
         in: formData
         required: false
@@ -10824,43 +11164,6 @@ paths:
         in: formData
         required: false
         type: hash
-      - name: emailBackendHost
-        in: formData
-        required: false
-        type: string
-        maxLength: 128
-      - name: emailBackendPort
-        in: formData
-        required: false
-        type: int
-      - name: emailBackendUser
-        in: formData
-        required: false
-        type: string
-        maxLength: 128
-      - name: emailBackendPassword
-        in: formData
-        required: false
-        type: string
-        maxLength: 128
-      - name: emailBackendEncryption
-        in: formData
-        required: false
-        type: string
-        maxLength: 16
-        enum:
-          - NONE
-          - SSL/TLS
-          - STARTTLS
-      - name: emailBackendActive
-        in: formData
-        required: false
-        type: boolean
-      - name: emailBackendSignature
-        in: formData
-        required: false
-        type: string
-
       responses:
         200:
           description: patched
@@ -11450,8 +11753,6 @@ paths:
         format: int64
         maximum: 2050
         exclusiveMaximum: true
-        minimum: 1950
-        exclusiveMinimum: true
       - name: sent_data_dso
         in: formData
         required: false
@@ -11815,13 +12116,13 @@ paths:
         format: int64
       - name: register_meta.name
         in: formData
-        required: true
+        required: false
         type: string
         format: ''
         maxLength: 64
       - name: register_meta.label
         in: formData
-        required: true
+        required: false
         type: string
         enum:
         - CONSUMPTION
@@ -12044,13 +12345,13 @@ paths:
         format: int64
       - name: register_meta.name
         in: formData
-        required: true
+        required: false
         type: string
         format: ''
         maxLength: 64
       - name: register_meta.label
         in: formData
-        required: true
+        required: false
         type: string
         enum:
         - CONSUMPTION
@@ -13272,13 +13573,13 @@ paths:
         format: int64
       - name: register_meta.name
         in: formData
-        required: true
+        required: false
         type: string
         format: ''
         maxLength: 64
       - name: register_meta.label
         in: formData
-        required: true
+        required: false
         type: string
         enum:
         - CONSUMPTION
@@ -15147,7 +15448,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - de
         - en
       - name: contact_person.title
@@ -15155,7 +15456,7 @@ paths:
         required: false
         type: string
         enum:
-        - 
+        -
         - Prof.
         - Dr.
         - Prof. Dr.
@@ -15171,6 +15472,44 @@ paths:
         type: string
         format: ''
         maxLength: 64
+      - name: contact_person.email_backend_host
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact_person.email_backend_port
+        in: formData
+        required: false
+        type: integer
+        format: int64
+      - name: contact_person.email_backend_user
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact_person.email_backend_password
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 128
+      - name: contact_person.email_backend_encryption
+        in: formData
+        required: false
+        type: string
+        format: ''
+        maxLength: 16
+      - name: contact_person.email_backend_active
+        in: formData
+        required: false
+        type: boolean
+      - name: contact_person.email_backend_signature
+        in: formData
+        required: false
+        type: string
+        format: ''
       - name: contact_person.address.updated_at
         in: formData
         required: false
