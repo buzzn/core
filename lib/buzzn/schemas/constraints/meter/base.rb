@@ -10,7 +10,7 @@ Schemas::Constraints::Meter::Base = Schemas::Support.Form(Schemas::Constraints::
   optional(:manufacturer_description).maybe(:str?)
   optional(:location_description).maybe(:str?)
   optional(:ownership).maybe(included_in?: Meter::Real.ownerships.values)
-  optional(:build_year).maybe(:int?, gt?: 1950, lt?: 2050)
+  optional(:build_year).maybe(:int?, lt?: 2050)
   optional(:sent_data_dso).maybe(:date?)
   optional(:converter_constant).maybe(:int?)
   optional(:calibrated_until).maybe(:date?)
