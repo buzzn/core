@@ -71,7 +71,6 @@ module Admin
         r.on 'report' do
           r.get! do
             report = return_report.(params: r.params)
-            byebug
             filename = Buzzn::Utils::File.sanitize_filename("#{localpool.name}_#{billing_cycle.name}_report.xlsx")
             r.response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
