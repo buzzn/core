@@ -23,13 +23,22 @@ class Transactions::Admin::Localpool::GapContractCustomerBase < Transactions::Ba
     #because of foreign_key constraints the gap contract customer must be unassigned from the gap contract before it can be deleted
     resource.object.gap_contract_customer = nil
     resource.object.save!
-    gap_contract_customer.delete
+    ActiveRecord::Base.connection.execute 'SAVEPOINT unassign'
+    begin
+      gap_contract_customer.delete
+    rescue ActiveRecord::InvalidForeignKey => e
+      ActiveRecord::Base.connection.execute 'ROLLBACK to unassign'
+    end
     #in case the gap contract customer is an organisation, 
     #the gap_contract customer contact and the gap contract customer legal representation 
     #can only be deleted after the contact has been deleted, due to foreign_key_constraints
     unless gap_contract_customer_contact.nil? || gap_contract_customer_legal_representation.nil?
-      gap_contract_customer_contact.delete
-      gap_contract_customer_legal_representation.delete
+      begin
+        gap_contract_customer_contact.delete
+        gap_contract_customer_legal_representation.delete
+      rescue ActiveRecord::InvalidForeignKey => e
+        ActiveRecord::Base.connection.execute 'ROLLBACK to unassign'
+      end
     end
     resource.object
   end
