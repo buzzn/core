@@ -29,7 +29,6 @@ class Transactions::Admin::Localpool::GapContractCustomerBase < Transactions::Ba
     rescue ActiveRecord::InvalidForeignKey => e
       ActiveRecord::Base.connection.execute 'ROLLBACK to unassign'
     end
-    # test
     #in case the gap contract customer is an organisation, 
     #the gap_contract customer contact and the gap contract customer legal representation 
     #can only be deleted after the contact has been deleted, due to foreign_key_constraints
