@@ -24,7 +24,7 @@ module Admin
       workbook = RubyXL::Parser.parse_buffer(file)
       sheet = workbook[0]
 
-      date_of_reading = DateTime.new(2019, 12, 31)
+      date_of_reading = DateTime.new(Date.today.year - 1, 12, 31)
       unless sheet[0][5].nil?
         if !sheet[0][5].value.nil? && (sheet[0][5].value.is_a? DateTime)
           date_of_reading = sheet[0][5].value # todo adjust to a usfull default date
@@ -207,8 +207,8 @@ module Admin
 
       begin
         result = create_electricity_labelling.(resource: target_pools.first,
-                                               params: {begin_date: Time.parse('2019-01-01T00:00:00.882Z'),
-                                                        last_date: Time.parse('2020-01-01T00:01:00.000Z')})
+                                               params: {begin_date: Time.parse("#{date_of_reading.year}-01-01T00:00:00.882Z"),
+                                                        last_date: Time.parse("#{date_of_reading.year + 1}-01-01T00:01:00.000Z")})
 
         warnings = []
         unless result.value![:warnings].nil?
