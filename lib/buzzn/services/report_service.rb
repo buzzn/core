@@ -22,9 +22,11 @@ class Services::ReportService
 
   def generate_report(billing_cycle_id, job_id)
     billing_cyle = BillingCycle.find(billing_cycle_id)
-    workbook = RubyXL::Workbook.new
-    sheet = workbook.worksheets[0]
-    sheet.sheet_name="Report #{billing_cyle.last_date.year}"
+    target = StringIO.new
+    # Converts the result into a datev readable charset.
+    # According to https://apps.datev.de/dnlexka/document/1001008
+    # The charset has to be ansii.
+    target.set_encoding(Encoding.find('WINDOWS-1252'))
     header_row = [
       'Vertragsnummer',
       'Mieternummer',
@@ -41,69 +43,39 @@ class Services::ReportService
       'Abschläge neu? (brutto) in €',
       'Fällig ab'
     ]
-    header_row.each_with_index do |e, idx|
-      sheet.add_cell(0, idx, e)
-    end
-
-    sheet.change_row_fill(0, 'bfbfbf')
-    i = 1
+    target << header_row.join(';')
     billing_cyle.billings.reject { |x| %w(open void).include?(x.status) }.each_with_index do |billing, idx|
-      sheet.add_cell(i+idx, 0, billing.contract.full_contract_number)
-      sheet.add_cell(i+idx, 1, '')
-      sheet.add_cell(i+idx, 2, billing.contract.register_meta.name)
-      sheet.add_cell(i+idx, 3, billing.contract.customer.name)
-
-      cell = sheet.add_cell(i+idx, 4, billing.begin_date.strftime('%d.%m.%Y'))
-      cell.set_number_format('dd.mm.yy')
-
-      cell = sheet.add_cell(i+idx, 5, Date.new(2020, 6, 30).strftime('%d.%m.%Y'))
-      cell.set_number_format('dd.mm.yy')
-
-      sheet.add_cell(i+idx, 6, billing.consumed_energy_kwh_in_date_range(billing.begin_date...Date.new(2020, 6, 30)).round(0))
-      cell = sheet.add_cell(i+idx, 7, (billing.amount_before_taxes_in_date_range(billing.begin_date...Date.new(2020, 6, 30)).round(0) / 100).round(2))
-      cell.set_number_format('####.00')
-      cell = sheet.add_cell(i+idx, 8, ((billing.amount_after_taxes_in_date_range(billing.begin_date...Date.new(2020, 6, 30)).round(0) / 100).round(2) - (billing.amount_before_taxes_in_date_range(billing.begin_date...Date.new(2020, 6, 30)).round(0) / 100).round(2)))
-      cell.set_number_format('####.00')
-      cell = sheet.add_cell(i+idx, 9, (billing.amount_after_taxes_in_date_range(billing.begin_date...Date.new(2020, 6, 30)).round(0) / 100).round(2))
-      cell.set_number_format('####.00')
-      cell = sheet.add_cell(i+idx, 10, '')
-      cell.set_number_format('####.00')
-      cell = sheet.add_cell(i+idx, 11, '')
-      cell.set_number_format('####.00')
-      cell = sheet.add_cell(i+idx, 12, '')
-      cell.set_number_format('####.00')
-      sheet.add_cell(i+idx, 13, '')
-
-      i = i+1
-      sheet.add_cell(i+idx, 0, billing.contract.full_contract_number)
-      sheet.add_cell(i+idx, 1, '')
-      sheet.add_cell(i+idx, 2, billing.contract.register_meta.name)
-      sheet.add_cell(i+idx, 3, billing.contract.customer.name)
-
-      cell = sheet.add_cell(i+idx, 4, Date.new(2020, 7, 1).strftime('%d.%m.%Y'))
-      cell.set_number_format('dd.mm.yy')
-
-      cell = sheet.add_cell(i+idx, 5, billing.last_date.strftime('%d.%m.%Y'))
-      cell.set_number_format('dd.mm.yy')
-
-      sheet.add_cell(i+idx, 6, billing.consumed_energy_kwh_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0))
-      cell = sheet.add_cell(i+idx, 7, (billing.amount_before_taxes_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0) / 100).round(2))
-      cell.set_number_format('####.00')
-      cell = sheet.add_cell(i+idx, 8, (billing.amount_after_taxes_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0) / 100).round(2) - (billing.amount_before_taxes_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0) / 100).round(2))
-      cell.set_number_format('####.00')
-      cell = sheet.add_cell(i+idx, 9, (billing.amount_after_taxes_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0) / 100).round(2))
-      cell.set_number_format('####.00')
-      cell = sheet.add_cell(i+idx, 10, (BigDecimal(billing.balance_before) / 10 / 100).round(2))
-      cell.set_number_format('####.00')
-      cell = sheet.add_cell(i+idx, 11, (BigDecimal(billing.balance_at) / 10 / 100).round(2))
-      cell.set_number_format('####.00')
-      cell = sheet.add_cell(i+idx, 12, billing.adjusted_payment.nil? ? '-' : BigDecimal(billing.adjusted_payment.price_cents, 4) / 100)
-      cell.set_number_format('####.00')
-      sheet.add_cell(i+idx, 13, billing.adjusted_payment.nil? ? '-' : billing.adjusted_payment.begin_date.strftime('%d.%m.%Y'))
-
+      target << "\n"
+      target << format('6%i%.3i', billing.contract.contract_number % 100, billing.contract.contract_number_addition) << ';'
+      target << '' << ';'
+      target << billing.contract.register_meta.name << ';'
+      target << billing.contract.customer.name << ';'
+      target << billing.begin_date.strftime('%d.%m.%Y') << ';'
+      target << Date.new(2020, 6, 30).strftime('%d.%m.%Y') << ';'
+      target << billing.consumed_energy_kwh_in_date_range(billing.begin_date...Date.new(2020, 6, 30)).round(0) << ';'
+      target << (billing.amount_before_taxes_in_date_range(billing.begin_date...Date.new(2020, 6, 30)).round(0) / 100).round(2) << ';'
+      target << ((billing.amount_after_taxes_in_date_range(billing.begin_date...Date.new(2020, 6, 30)).round(0) / 100).round(2) - (billing.amount_before_taxes_in_date_range(billing.begin_date...Date.new(2020, 6, 30)).round(0) / 100).round(2)) << ';'
+      target << (billing.amount_after_taxes_in_date_range(billing.begin_date...Date.new(2020, 6, 30)).round(0) / 100).round(2) << ';'
+      target << '' << ';'
+      target << '' << ';'
+      target << '' << ';'
+      target << ''
+      target << "\n"
+      target << format('6%i%.3i', billing.contract.contract_number % 100, billing.contract.contract_number_addition) << ';'
+      target << '' << ';'
+      target << billing.contract.register_meta.name << ';'
+      target << billing.contract.customer.name << ';'
+      target << Date.new(2020, 7, 1).strftime('%d.%m.%Y') << ';'
+      target << billing.last_date.strftime('%d.%m.%Y') << ';'
+      target << billing.consumed_energy_kwh_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0) << ';'
+      target << (billing.amount_before_taxes_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0) / 100).round(2) << ';'
+      target << (billing.amount_after_taxes_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0) / 100).round(2) - (billing.amount_before_taxes_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0) / 100).round(2) << ';'
+      target << (billing.amount_after_taxes_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0) / 100).round(2) << ';'
+      target << (BigDecimal(billing.balance_before) / 10 / 100).round(2) << ';'
+      target << (BigDecimal(billing.balance_at) / 10 / 100).round(2) << ';'
+      target << (billing.adjusted_payment.nil? ? '-' : BigDecimal(billing.adjusted_payment.price_cents, 4) / 100) << ';'
+      target << (billing.adjusted_payment.nil? ? '-' : billing.adjusted_payment.begin_date.strftime('%d.%m.%Y')) 
     end
-    #workbook.stream
-    local_file_path = File.join(File.dirname(File.expand_path(__FILE__)), "../../../db/reports/#{job_id}.xlsx")
-    workbook.write(local_file_path)
+    ReportDocument.store(job_id, target.string)
   end
 end

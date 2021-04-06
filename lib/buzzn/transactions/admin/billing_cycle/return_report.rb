@@ -10,22 +10,11 @@ class Transactions::Admin::BillingCycle::ReturnReport < Transactions::Base
   map :wrap_up
 
   def return_report_file(params:)
-    local_file_path = File.join(File.dirname(File.expand_path(__FILE__)), "../../../../../db/reports/#{params['id']}.xlsx")
-    if File.exist?(local_file_path)
-        workbook = RubyXL::Parser.parse(local_file_path)
-        workbook.stream
-    else
-        raise Buzzn::ValidationError.new("The report has not yet been completely generated.")
-    end
+    ReportDocument.load_document(params['id'])
   end
 
   def delete_report(return_report_file:, params:)
-    local_file_path = File.join(File.dirname(File.expand_path(__FILE__)), "../../../../../db/reports/#{params['id']}.xlsx")
-    if File.exist?(local_file_path)
-        File.delete(local_file_path)
-    else
-        raise Buzzn::ValidationError.new("The report could not be deleted")
-    end
+    ReportDocument.delete_document(params['id'])
   end
 
   def wrap_up(return_report_file:, **)

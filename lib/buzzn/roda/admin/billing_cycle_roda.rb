@@ -71,10 +71,10 @@ module Admin
         r.on 'report' do
           r.get! do
             report = return_report.(params: r.params)
-            filename = Buzzn::Utils::File.sanitize_filename("#{localpool.name}_#{billing_cycle.name}_report.xlsx")
-            r.response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            filename = Buzzn::Utils::File.sanitize_filename("#{localpool.name}_#{billing_cycle.name}_report.csv")
+            r.response.headers['Content-Type'] = 'text/csv;charset=ISO-8859'
             r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
-            r.response.write(report.value!.string)
+            r.response.write(report.value!.encode('WINDOWS-1252', 'UTF-8'))
           end
         end
 
