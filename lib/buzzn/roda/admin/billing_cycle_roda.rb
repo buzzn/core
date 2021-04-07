@@ -69,7 +69,7 @@ module Admin
         end
 
         r.on 'report' do
-          r.get! do
+          r.post! do
             report = return_report.(params: r.params)
             filename = Buzzn::Utils::File.sanitize_filename("#{localpool.name}_#{billing_cycle.name}_report.csv")
             r.response.headers['Content-Type'] = 'text/csv;charset=ISO-8859'
