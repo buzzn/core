@@ -1,1 +1,0 @@
-We use sidekiq to create billing_cycle reports. These reports are temporarily saved in this folder. When they are returned, they are automatically deleted. 
