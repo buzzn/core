@@ -63,6 +63,7 @@ html
       .card {padding: 0.5rem 1rem; min-height: 6rem; position: relative;}
       .card p:last-child {position: absolute; bottom: 0.375rem;}
       .card-width-hack { width: 89%; }
+      .energy-report td {padding: 1em; border:10px solid white}
       .clear {clear: both;}
       .logo {position: absolute; left: 20px}
       .footer-logo {width: auto; float: right;}
@@ -290,62 +291,65 @@ html
       p.is-small Quelle: Statistisches Bundesamt<br>
         Sofern kein volles Jahr Strom bezogen wurde, wird die Strommenge auf ein ganzes Jahr hochgerechnet
     div.wrapper
+      ////// Energy Report (start) /////
       div.log
       h2 Energiereport
       p Nachfolgend einige Fakten und Kennzahlen zu Ihrer Energiegruppe #{localpool.name} für das Jahr #{billing_year}:
-      div.row
-        div.col-3rd.card.sand
-          p
-            | <strong>Autarkiegrad</strong> <span class='is-medium'>(wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
-          p.is-larger #{energy_report.self_sufficiency_report} %
-        div.col-3rd.card.mint
-          p
-            | <strong>Lokalität</strong> <span class='is-medium'>(wie groß ist die Entfernung zwischen Stromerzeugungsanlage[n] und  Verbrauchsstellen?)</span>
-          p.is-larger O km
-        div.col-3rd.card.custard
-          p
-            | <strong>Nutzungsgrad</strong> <span class='is-medium'>(wieviel des lokal produzierten Stroms wurde vor Ort verbraucht?)</span>
-          p.is-larger #{energy_report.utilization_report} %
-      div.row
-        div.col-3rd.card.sky
-          p
-            | <strong>Primärenergie</strong> <span class='is-medium'>(aus welchen Quellen wurde der Eigenstrom erzeugt?)</span>
-          - unless energy_report.gas_report.to_i.zero?
-            p.is-larger Erdgas #{energy_report.gas_report} %
-          - unless energy_report.sun_report.to_i.zero?
-            p.is-larger Sonne #{energy_report.sun_report} %
-          - unless energy_report.water_report.to_i.zero?
-            p.is-larger Wasser #{energy_report.water_report} %
-          - unless energy_report.wind_report.to_i.zero?
-            p.is-larger Wind #{energy_report.wind_report} %
+      table.no-border.energy-report
+        tr
+          td.sand
+            p
+              | <strong>Autarkiegrad</strong> <span class='is-medium'>(wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
+            p.is-larger #{energy_report.self_sufficiency_report} %
+          td.mint
+            p
+              | <strong>Lokalität</strong> <span class='is-medium'>(wie groß ist die Entfernung zwischen Stromerzeugungsanlage[n] und  Verbrauchsstellen?)</span>
+            p.is-larger O km
+          td.custard
+            p
+              | <strong>Nutzungsgrad</strong> <span class='is-medium'>(wieviel des lokal produzierten Stroms wurde vor Ort verbraucht?)</span>
+            p.is-larger #{energy_report.utilization_report} %
+        tr
+          td.sky
+            p
+              | <strong>Primärenergie</strong> <span class='is-medium'>(aus welchen Quellen wurde der Eigenstrom erzeugt?)</span>
+            - unless energy_report.gas_report.to_i.zero?
+              p.is-larger Erdgas #{energy_report.gas_report} %
+            - unless energy_report.sun_report.to_i.zero?
+              p.is-larger Sonne #{energy_report.sun_report} %
+            - unless energy_report.water_report.to_i.zero?
+              p.is-larger Wasser #{energy_report.water_report} %
+            - unless energy_report.wind_report.to_i.zero?
+              p.is-larger Wind #{energy_report.wind_report} %
 
-        div.col-3rd.card.pork
-          p
-            | <strong>Netzverluste</strong> <span class='is-medium'>(wie hoch waren die Übertragungsverluste für den Strom?)</span>
-          p.is-larger < 1 %
-        div.col-3rd.card.peach
-          p
-            | <strong>Technologie</strong> <span class='is-medium'>(mit welchen Verfahren wurde der Eigenstrom erzeugt?)</span>
-          - if contractor.name == 'Isarwatt eG'
-            p.is-larger #{energy_report.tech}
-          - else
-            p.is-medium #{energy_report.tech}
-      div.row
-        div.col-3rd.card.cornflower
-          p
-            | <strong>Reststrom</strong> <span class='is-medium'>(von welchem Lieferant stammt der Reststrom über das öffentliche Netz?)</span>
-          p.is-larger #{energy_report.electricity_supplier=='Buzzn GmbH' ? 'BUZZN GmbH' : energy_report.electricity_supplier}
-        div.col-3rd.card.glass
-          / p
-          /   | Autarkiegrad <span class='is-small'> (wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
-          / p.is-large 24 %
-        div.col-3rd.card.salmon
-          p
-            | <strong>Eigentumsverhältnisse</strong> <span class='is-medium'>(wem gehört die Stromerzeugungsanlage?)</span>
-          - if contractor.name == 'Isarwatt eG'
-            p.is-larger #{contractor.shortname}
-          - else
-            p.is-medium #{contractor.shortname}
+          td.pork
+            p
+              | <strong>Netzverluste</strong> <span class='is-medium'>(wie hoch waren die Übertragungsverluste für den Strom?)</span>
+            p.is-larger < 1 %
+          td.peach
+            p
+              | <strong>Technologie</strong> <span class='is-medium'>(mit welchen Verfahren wurde der Eigenstrom erzeugt?)</span>
+            - if contractor.name == 'Isarwatt eG'
+              p.is-larger #{energy_report.tech}
+            - else
+              p.is-medium #{energy_report.tech}
+        tr
+          td.cornflower
+            p
+              | <strong>Reststrom</strong> <span class='is-medium'>(von welchem Lieferant stammt der Reststrom über das öffentliche Netz?)</span>
+            p.is-larger #{energy_report.electricity_supplier=='Buzzn GmbH' ? 'BUZZN GmbH' : energy_report.electricity_supplier}
+          td.glass
+            / p
+            /   | Autarkiegrad <span class='is-small'> (wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
+            / p.is-large 24 %
+          td.salmon
+            p
+              | <strong>Eigentumsverhältnisse</strong> <span class='is-medium'>(wem gehört die Stromerzeugungsanlage?)</span>
+            - if contractor.name == 'Isarwatt eG'
+              p.is-larger #{contractor.shortname}
+            - else
+              p.is-medium #{contractor.shortname}
+      ////// Energy Report (end) /////
       div.clear
       br
       br
