@@ -29,6 +29,10 @@ module Admin
         r.run LocalpoolRoda
       end
 
+      r.on 'global_report' do
+        r.run GlobalReportRoda
+      end
+
       admin = AdminResource.new(current_user)
 
       r.on 'persons' do
