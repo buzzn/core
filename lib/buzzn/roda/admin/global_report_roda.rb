@@ -5,17 +5,17 @@ module Admin
   class GlobalReportRoda < BaseRoda
 
     include Import.args[:env,
-                        generate_meter_report: 'transactions.admin.global_report.generate_meter_report',
-                        return_report: 'transactions.admin.global_report.return_report'
+                        'transactions.admin.global_report.generate_meter_report',
+                        'transactions.admin.global_report.return_report',
                       ]
 
-    plugin :shared_vars
+    #plugin :shared_vars
 
     route do |r|
 
         r.on 'meter_report_id' do
           r.get! do
-            generate_meter_report
+            generate_meter_report.()
           end
         end
 
