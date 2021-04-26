@@ -46,7 +46,7 @@ class Services::ReportService
     target << header_row.join(';')
     billing_cyle.billings.reject { |x| %w(open void).include?(x.status) }.each_with_index do |billing, idx|
       target << "\n"
-      target << format('6%i%.3i', billing.contract.contract_number % 100, billing.contract.contract_number_addition) << ';'
+      target << format('6%.2i%.3i', billing.contract.contract_number % 100, billing.contract.contract_number_addition) << ';'
       target << '' << ';'
       target << billing.contract.register_meta.name << ';'
       target << billing.contract.customer.name << ';'
@@ -61,7 +61,7 @@ class Services::ReportService
       target << '' << ';'
       target << ''
       target << "\n"
-      target << format('6%i%.3i', billing.contract.contract_number % 100, billing.contract.contract_number_addition) << ';'
+      target << format('6%.2i%.3i', billing.contract.contract_number % 100, billing.contract.contract_number_addition) << ';'
       target << '' << ';'
       target << billing.contract.register_meta.name << ';'
       target << billing.contract.customer.name << ';'
