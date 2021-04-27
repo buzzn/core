@@ -1,11 +1,5 @@
 require_relative '../services'
 require_relative '../workers/report_worker'
-require 'rubyXL'
-require 'rubyXL/convenience_methods/cell'
-require 'rubyXL/convenience_methods/color'
-require 'rubyXL/convenience_methods/font'
-require 'rubyXL/convenience_methods/workbook'
-require 'rubyXL/convenience_methods/worksheet'
 
 require 'net/http'
 
@@ -78,7 +72,7 @@ class Services::MeterReportService
         target << meter.edifact_mounting_method << ';'
         target << meter.edifact_tariff << ';'
         target << meter.edifact_voltage_level << ';'
-        target << meter.comments[0] #array
+        target << meter.comments.map {|c| c.author + ': ' + c.content}.join('|')
       end
     end
     ReportDocument.store(job_id, target.string)
