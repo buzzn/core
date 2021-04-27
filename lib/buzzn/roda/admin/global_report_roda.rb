@@ -22,7 +22,7 @@ module Admin
         r.on 'report' do
           r.post! do
             report = return_report.(params: r.params)
-            filename = Buzzn::Utils::File.sanitize_filename('report.csv')
+            filename = Buzzn::Utils::File.sanitize_filename('meter_report.csv')
             r.response.headers['Content-Type'] = 'text/csv;charset=ISO-8859'
             r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
             r.response.write(report.value!)
