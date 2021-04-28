@@ -55,7 +55,7 @@ class Services::MeterReportService
         target << meter.product_name << ';'
         target << meter.ownership << ';'
         target << meter.build_year << ';'
-        target << meter.calibrated_until.nil? ? '' : meter.calibrated_until.strftime('%d.%m.%Y') << ';'
+        target << (meter.calibrated_until.nil? ? '' : meter.calibrated_until.strftime('%d.%m.%Y')) << ';'
         target << meter.converter_constant << ';'
         target << meter.location_description << ';'
         target << meter.metering_location_id << ';'
@@ -72,7 +72,7 @@ class Services::MeterReportService
         target << meter.edifact_mounting_method << ';'
         target << meter.edifact_tariff << ';'
         target << meter.edifact_voltage_level << ';'
-        target << meter.comments.map {|c| c.author + ': ' + c.content}.join('|')
+        target << (meter.comments.map {|c| c.author + ': ' + c.content.gsub(/\n/, ' ')}.join(','))
       end
     end
     ReportDocument.store(job_id, target.string)
