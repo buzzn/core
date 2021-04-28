@@ -95,7 +95,7 @@ module Admin
       column += 1
       create_cell(column, '')
       column += 1
-      create_cell(column, '31.12.2020')
+      create_cell(column, "31.12.#{Date.today.year}")
       column += 1
       create_cell(column, '')
       column += 1
