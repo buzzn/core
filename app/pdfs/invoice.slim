@@ -374,7 +374,13 @@ html
         p Wenn Sie sonst noch eine Frage oder Anmerkung haben, senden Sie uns bitte eine Nachricht an <a href="mailto:team@buzzn.net">team@buzzn.net</a>. Vielen Dank!
     div.wrapper
       div.log
-      h2 Stromkennzeichnung #{billing_year ? billing_year-1 : ""}
+      - if billing_year
+        - if billing_year == 2021
+          h2 Stromkennzeichnung 2019
+        - else
+          h2 Stromkennzeichnung #{billing_year-1}
+      - else
+          h2 Stromkennzeichnung
       p
         | (Stromkennzeichnung gemäß § 42 Energiewirtschaftsgesetz vom 7. Juli 2005, geändert 2017)
       div.row.narrow
