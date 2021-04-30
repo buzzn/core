@@ -93,7 +93,7 @@ class Transactions::Admin::Billing::Update < Transactions::Base
       if resource.object.localpool.billing_detail.automatic_abschlag_adjust
         last_payment = resource.object.contract.payments.order(:begin_date).last
         # FIXME adjust somehow to settings
-        next_month = resource.object.end_date.at_beginning_of_month + 4.months # Todo move this to settings begin date ob billing_detail
+        next_month = resource.object.end_date.at_beginning_of_month + 5.months # Todo move this to settings begin date ob billing_detail
         tariff = resource.object.contract.tariffs.at(next_month).order(:begin_date).last
         estimated_cents_per_month = tariff.cents_per_days(30.42, resource.object.daily_kwh_estimate) * vat.amount
         if last_payment.nil? ||
