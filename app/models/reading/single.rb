@@ -10,7 +10,7 @@ module Reading
        device_change_1:         'COM1', # "change of meter 1"
        device_change_2:         'COM2', # "change of meter 2"
        device_removal:          'ROM',  # "removal of meter"
-       regular_reading:         'PMR',  # ?
+       regular_reading:         'PMR',  # "periodic meter reading"
        midway_reading:          'COT',  # "change of terms"
        contract_change:         'COS',  # "change of service"
        device_parameter_change: 'CMP',  # "changed meter parameters"
