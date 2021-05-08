@@ -12,7 +12,7 @@ div.is-like-paragraph
       tr
         td.no-border.no-padding Zählernummer:
         td.no-border.has-left-padding #{contract.meter_product_serial_numbers}
-    - unless payment.energy_consumption_kwh_pa == 0 || payment.energy_consumption_kwh_pa.nil?
+    - unless contract.forecast_kwh_pa == 0 || contract.forecast_kwh_pa.nil?
       tr
         td.no-border.no-padding Jahresverbrauch:
-        td.no-border.has-left-padding #{payment.energy_consumption_kwh_pa} kWh
+        td.no-border.has-left-padding #{contract.forecast_kwh_pa} kWh
