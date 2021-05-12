@@ -234,6 +234,10 @@ module Pdf
 
         to_pay_cents = balance_at - brutto
         has_bank_and_direct_debit = @billing.contract.customer_bank_account&.direct_debit
+        # gap contracts should always have direct_debit
+        if @billing.contract.type == 'Contract::LocalpoolGap'
+          has_bank_and_direct_debit = true
+        end
         hash[:netto] = german_div(netto)
         hash[:brutto] = german_div(brutto)
         hash[:vat] = @billing.items.map(&:vat).map(&:amount).compact.uniq.map {|v| v*100-100}.map(&:to_i).map {|v| "#{v}%"}.join ', '
@@ -334,6 +338,10 @@ module Pdf
 
       vat = billing_hash[:vat]
       has_bank_and_direct_debit = @billing.contract.customer_bank_account&.direct_debit
+      # gap contracts should always have direct_debit
+      if @billing.contract.type == 'Contract::LocalpoolGap'
+        has_bank_and_direct_debit = true
+      end
       payment_amounts_to = "Abschlag beträgt #{abschlag[:amount_euro_netto]} € netto +  #{abschlag[:amount_euro_vat]} € USt (#{((Vat.current.amount - 1)*100).to_i} %) = <strong>#{abschlag[:amount_euro]} € brutto</strong>"
       abschlag_begin_date = to_date(abschlag[:begin_date])
       # negative means it's disabled for this powertaker
