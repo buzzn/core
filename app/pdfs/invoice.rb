@@ -33,7 +33,7 @@ module Pdf
         },
         current_tariff: build_current_tariff(Vat.current),
         billing_year: billing_year,
-        energy_classification_year: @de_stats.year,
+        # energy_classification_year: @de_stats.year,
         consumption_last_year: consumption(billing_year.nil? || @billing.billing_cycle.nil? ? nil : billing_year-1),
         consumption_year: consumption(billing_year) || 0,
         meter: build_meter,
