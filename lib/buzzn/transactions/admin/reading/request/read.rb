@@ -14,6 +14,7 @@ module Transactions::Admin::Reading::Request
     end
 
     def wrap_up(params:, resource:, fetch_reading:, **)
+      Import.global('services.redis_cache').flushall
       ReadingResource.new(fetch_reading)
     end
 
