@@ -105,12 +105,14 @@ html
   body
     div.wrapper.tall
       div.log
-      - if contractor.name
-        div.logo
-          - group_logo = contractor.name.downcase.split().join("_")
-          <img src="https://s3-eu-west-1.amazonaws.com/admin.buzzn.io/assets/group_logos/#{group_logo}.png" width="100px" height="100px" />
-      - else
-          p 
+      - group_logo_names = ["isarwatt_eg", "fichtner_wasserkraft_gmbh_&_co_kg"]
+      - for group_logo in group_logo_names
+        - if contractor.name.downcase.split().join("_") == group_logo
+          div.logo
+            <img src="#{Dir.pwd}/public/assets/images/#{group_logo}.png" width="100px" height="100px" />
+        - else
+            p 
+      - end
       div.is-medium.col-3rd.is-pull-right.no-margin
         p #{contractor.name}<br>
           Energiegruppe #{localpool.name}<br>
