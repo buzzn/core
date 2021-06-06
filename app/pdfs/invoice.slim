@@ -65,7 +65,7 @@ html
       .card-width-hack { width: 89%; }
       .energy-report td {padding: 1em; border:10px solid white}
       .clear {clear: both;}
-      .logo {position: absolute; left: 20px}
+      .logo {position: absolute; left: 20px; border: 2px solid white}
       .footer-logo {width: auto; float: right;}
       .footer-logo img {width: 2.5rem; height: auto;}
 
@@ -105,14 +105,10 @@ html
   body
     div.wrapper.tall
       div.log
-      - group_logo_names = ["isarwatt_eg", "fichtner_wasserkraft_gmbh_&_co_kg"]
       div.logo
-        - for group_logo in group_logo_names
-          - if contractor.name.downcase.split().join("_") == group_logo
-            /  Current version of pdf generator doesn't work with https. Therefore, http should be used instead
-            <img src="http://s3-eu-west-1.amazonaws.com/admin.buzzn.io/assets/group_logos/#{group_logo}.png" width="100px" height="100px" />
-          - else
-            p
+        /  Current version of pdf generator doesn't work with https. Therefore, http should be used instead
+        - contractor_logo_name = contractor.name.downcase.split().join("_")
+        <img id="contractor_logo" src="http://s3-eu-west-1.amazonaws.com/admin.buzzn.io/assets/group_logos/#{contractor_logo_name}.png" onerror="fixImage()" width="100px" height="100px" />
       div.is-medium.col-3rd.is-pull-right.no-margin
         p #{contractor.name}<br>
           Energiegruppe #{localpool.name}<br>
@@ -466,6 +462,10 @@ html
             a href="mailto:info@schlichtungsstelle-energie.de" info@schlichtungsstelle-energie.de
       p Informationen zu Anbietern von wirksamen Maßnahmen zur Energieeffizienzverbesserung und Energieeinsparung sowie ihren Angeboten finden Sie auf einer bei der Bundesstelle für Energieeffizienz (BfEE) öffentlich geführten Anbieterliste unter <a href="http://www.bfee-online.de"> www.bfee-online.de</a>
     javascript:
+      // Remove logo if image is unreachable
+      function fixImage() {
+        $('#contractor_logo').hide();
+      };
       // initiate charts & page break
       $(function(){
         var data2d = #{{ratios_de}};
