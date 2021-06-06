@@ -107,12 +107,12 @@ html
       div.log
       - group_logo_names = ["isarwatt_eg", "fichtner_wasserkraft_gmbh_&_co_kg"]
       div.logo
-        - if contractor.name != "testOrga"
-          - for group_logo in group_logo_names
-            - if contractor.name.downcase.split().join("_") == group_logo
-                <img src="#{Dir.pwd}/public/assets/images/#{group_logo}.png" width="100px" height="100px" />
-        - else
-          <img src="http://s3-eu-west-1.amazonaws.com/develop-admin.buzzn.io/assets/0118d0d5cec348ac3a5acf3a73227957.png" width="100px" height="100px" />
+        - for group_logo in group_logo_names
+          - if contractor.name.downcase.split().join("_") == group_logo
+            /  Current version of pdf generator doesn't work with https. Therefore, http should be used instead
+            <img src="http://s3-eu-west-1.amazonaws.com/admin.buzzn.io/assets/group_logos/#{group_logo}.png" width="100px" height="100px" />
+          - else
+            p
       div.is-medium.col-3rd.is-pull-right.no-margin
         p #{contractor.name}<br>
           Energiegruppe #{localpool.name}<br>
