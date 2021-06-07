@@ -6,6 +6,7 @@ class Operations::EndDate
     if params.key?(:last_date)
       if params[:last_date].nil?
         params.delete(:last_date)
+        params[:end_date] = 'nil'
       else
         params[:end_date] = params.delete(:last_date) + 1.day
       end
