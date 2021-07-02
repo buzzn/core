@@ -7,4 +7,5 @@ Schemas::Transactions::Admin::BillingDetail::Update = Schemas::Support.Form(Sche
   optional(:automatic_abschlag_adjust).filled(:bool?)
   optional(:automatic_abschlag_threshold_cents).filled(:float?).value(gteq?: 0)
   optional(:issues_vat).filled(:bool?)
+  optional(:leg_single).filled(:bool?)
 end
