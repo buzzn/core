@@ -450,8 +450,8 @@ class Transactions::Admin::Report::CreateElectricityLabelling < Transactions::Ad
   end
 
   # E79
-  def renter_power(resource:, production_pv_consumend_in_group_kWh:, consumption_without_third_party:, **)
-    if [50, 44, 47, 45, 69, 48].include? resource.id
+  def renter_power(mieterstromzuschlag:, resource:, production_pv_consumend_in_group_kWh:, consumption_without_third_party:, **)
+    if mieterstromzuschlag
       return production_pv_consumend_in_group_kWh / consumption_without_third_party * BigDecimal('100')
     end
     BigDecimal('0')

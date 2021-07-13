@@ -16,6 +16,7 @@ module Schemas::Transactions::Admin::Localpool
     end
 
     optional(:name).filled(:str?, max_size?: 64)
+    optional(:mieterstromzuschlag).filled(:bool?)
     optional(:description).maybe(:filled?, :str?, max_size?: 256)
     optional(:fake_stats).maybe(:filled?, :valid_json?)
     optional(:start_date).maybe(:filled?, :date?)

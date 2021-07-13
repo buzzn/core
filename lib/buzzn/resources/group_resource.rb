@@ -5,7 +5,8 @@ class GroupResource < Buzzn::Resource::Entity
 
   attributes  :name,
               :slug,
-              :description
+              :description,
+              :mieterstromzuschlag
 
   has_many :comments, Admin::CommentResource
 

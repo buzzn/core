@@ -2,6 +2,7 @@ require_relative '../constraints'
 
 Schemas::Constraints::Group = Schemas::Support.Form do
   required(:name).filled(:str?, max_size?: 64, min_size?: 4)
+  optional(:mieterstromzuschlag).filled(:bool?)
   optional(:description).maybe(:str?, max_size?: 256)
   optional(:start_date).maybe(:date?)
   optional(:show_object).maybe(:bool?)
