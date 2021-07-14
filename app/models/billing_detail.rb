@@ -5,6 +5,7 @@ class BillingDetail < ActiveRecord::Base
   def self.defaults
     {
       issues_vat: false,
+      leg_single: false,
       reduced_power_amount: 0,
       reduced_power_factor: 0,
       automatic_abschlag_adjust: false,
