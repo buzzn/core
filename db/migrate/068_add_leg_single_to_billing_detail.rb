@@ -1,7 +1,7 @@
 class AddLegSingleToBillingDetail < ActiveRecord::Migration
 
     def up
-      add_column :billing_details, :leg_single, :boolean
+      add_column :billing_details, :leg_single, :boolean, :default => false
     end
   
     def down
