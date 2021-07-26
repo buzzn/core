@@ -19,6 +19,8 @@ class Services::MeterReportService
     header_row = [
       'Lokale Energiegruppe',
       'Marktlokation',
+      'Isarwatt?',
+      'Zählerart',
       'Herstellername',
       'Produktname',
       'Besitzstatus',
@@ -60,6 +62,8 @@ class Services::MeterReportService
           target << "\n"
           target << group.name.gsub(';', ',') << ';'
           target << register_meta.name.gsub(';', ',') << ';'
+          target << (group.owner_organization_id == 40 ? 'yes' : 'no') << ';'
+          target << register_meta.label << ';'
           target << meter.manufacturer_name << ';'
           target << meter.product_name << ';'
           target << meter.ownership << ';'
@@ -107,7 +111,7 @@ class Services::MeterReportService
   def removal_reading?(readings)
     if readings.nil? || readings == []
       false
-    elsif readings.select { |reading| reading['reason'] == 'ROM'}.length.positive?
+    elsif readings.select { |reading| (reading['reason'] == 'ROM' || reading['reason'] == 'COM1')}.length.positive?
       true
     else
       false
