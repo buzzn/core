@@ -25,7 +25,6 @@ describe Admin::LocalpoolRoda, :request_helper, :order => :defined do
       'name'=>localpool.name,
       'slug'=>localpool.slug,
       'description'=>localpool.description,
-      'mieterstromzuschlag'=>false,
       'start_date' => localpool.start_date.as_json,
       'show_object' => nil,
       'show_production' => nil,
