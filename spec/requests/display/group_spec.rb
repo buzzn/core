@@ -25,6 +25,7 @@ describe Display::GroupRoda, :request_helper do
         'name'=>group.name,
         'slug'=>group.slug,
         'description'=>group.description,
+        'mieterstromzuschlag'=>false,
         'mentors'=> {
           'array' => group.mentors.collect do |manager|
             {
@@ -57,6 +58,7 @@ describe Display::GroupRoda, :request_helper do
           'name'=>group.name,
           'slug'=>group.slug,
           'description'=>group.description,
+          'mieterstromzuschlag'=>false,
           'mentors'=> {
             'array' => group.mentors.collect do |manager|
               {

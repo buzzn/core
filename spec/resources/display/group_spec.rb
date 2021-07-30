@@ -38,7 +38,8 @@ describe Display::GroupResource do
                        'created_at',
                        'name',
                        'slug',
-                       'description'] end
+                       'description',
+                       'mieterstromzuschlag'] end
 
   it 'retrieve' do
     [tribe, localpool].each do |grp|

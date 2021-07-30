@@ -76,6 +76,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'name'=>contract.localpool.name,
             'slug'=>contract.localpool.slug,
             'description'=>contract.localpool.description,
+            'mieterstromzuschlag'=>false,
           },
           'tariffs'=>{
             'array'=>contract.tariffs.collect do |tariff|
@@ -234,6 +235,7 @@ describe Admin::LocalpoolRoda, :request_helper do
             'name'=>contract.localpool.name,
             'slug'=>contract.localpool.slug,
             'description'=>contract.localpool.description,
+            'mieterstromzuschlag'=>false,
           },
           'tariffs'=>{
             'array'=> contract.tariffs.collect do |tariff|
@@ -377,7 +379,7 @@ describe Admin::LocalpoolRoda, :request_helper do
         context "as #{type}" do
 
           let(:contract) { send "#{type}_contract" }
-
+        
           let(:contract_json) { send "#{type}_contract_json" }
 
           it "200 for #{type}" do
