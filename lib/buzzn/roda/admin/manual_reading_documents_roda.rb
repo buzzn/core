@@ -200,6 +200,26 @@ module Admin
       end
 
       localpool.active_meters.reject {|m| m.is_a?(Meter::VirtualResource)}
+               .reject {|m| m.registers.all? {|register| register.contracts.any? {|c| c.status == 'active'}}}
+               .reject {|m| m.registers.all? {|register| register.contracts.to_a.empty?}}
+               .each do |meter|
+        meter.registers.each do |register|
+          if register.register_meta.nil?
+            next
+          end
+
+          add_entry(
+            contract_additional_info: 'Leerstand',
+            msb: meter.sequence_number,
+            meter_number: meter.product_serialnumber, # Zählernummer
+            meter_location_description: meter.location_description, # Installationsort
+            address_additional_info: register.register_meta.name,
+            paid_requested: false
+          )
+        end
+      end
+
+      localpool.active_meters.reject {|m| m.is_a?(Meter::VirtualResource)}
                .select {|m| m.registers.all? {|register| register.contracts.to_a.empty?}}
                .each do |meter|
         meter.registers.each do |register|
