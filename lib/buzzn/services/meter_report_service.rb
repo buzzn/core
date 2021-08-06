@@ -20,6 +20,8 @@ class Services::MeterReportService
       'Lokale Energiegruppe',
       'Marktlokation',
       'Isarwatt?',
+      'Drittbeliefert?',
+      'Vertrag?',
       'Zählerart',
       'Herstellername',
       'Produktname',
@@ -55,6 +57,7 @@ class Services::MeterReportService
       else
         register = Register::Base.find(meter.register_ids.first)
         register_meta = Register::Meta.find(register.register_meta_id)
+        contract_type = register_meta.contracts == [] ? nil : register_meta.contracts.order(:begin_date).last.type
         readings = register.readings
         if removal_reading?(readings)
         else
@@ -63,6 +66,8 @@ class Services::MeterReportService
           target << group.name.gsub(';', ',') << ';'
           target << register_meta.name.gsub(';', ',') << ';'
           target << (group.owner_organization_id == 40 ? 'yes' : 'no') << ';'
+          target << (contract_type == 'Contract::LocalpoolThirdParty' ? 'yes' : 'no') << ';'
+          target << (register_meta.contracts == [] ? 'no' : 'yes') << ';'
           target << register_meta.label << ';'
           target << meter.manufacturer_name << ';'
           target << meter.product_name << ';'
