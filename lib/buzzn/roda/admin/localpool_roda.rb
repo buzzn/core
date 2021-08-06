@@ -115,8 +115,12 @@ module Admin
         end
 
         r.on 'tariff-change-letters' do
-          r.post! do
-            create_tariff_change_letters.(resource: localpool)
+          r.get! do
+            zip = create_tariff_change_letters.(resource: localpool)
+            filename = Buzzn::Utils::File.sanitize_filename("#{localpool.name}_Preisanpassungsschreiben.zip")
+            r.response.headers['Content-Type'] = 'application/zip'
+            r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
+            r.response.write(zip.value!.string)
           end
         end
 
