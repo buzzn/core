@@ -144,8 +144,13 @@ html
           p
             i #{powertaker.email}
       p.is-pull-right #{contractor.city}, den #{Date.today.strftime("%d.%m.%Y")}
-      h2.clear Lokale Energiegruppe #{localpool.name}: Strom #{billing_type} #{billing_year}<br>
-        Rechnungsnummer: #{billing.number}
+
+      - if leg_single 
+        h2.clear Direktstromlieferung LEG Single: Strom #{billing_type} #{billing_year}<br>
+          Rechnungsnummer: #{billing.number}
+      - else
+        h2.clear Lokale Energiegruppe #{localpool.name}: Strom #{billing_type} #{billing_year}<br>
+          Rechnungsnummer: #{billing.number}
       table.no-border
         tr
           td.no-border.no-padding Vertragsnummer:
@@ -161,7 +166,10 @@ html
           td.no-border.no-padding.pl #{billing_year}
 
       p #{powertaker.addressing},
-      p vielen Dank, dass Sie aus der Energiegruppe #{localpool.name} Strom #{tense}. Dies ist Ihre Stromrechnung #{billing_year}:
+      - if leg_single
+        p vielen Dank, dass Sie LEG Single Strom #{tense}. Dies ist Ihre Stromrechnung #{billing_year}:
+      - else 
+        p vielen Dank, dass Sie aus der Energiegruppe #{localpool.name} Strom #{tense}. Dies ist Ihre Stromrechnung #{billing_year}:
       div
         h2 Bezugsmenge
         - items.each do |item|
@@ -262,9 +270,12 @@ html
       div.log
       - unless billing_ends_contract
         h2 Ihre Vertragskonditionen
-        p Die aktuellen Preise für Ihren Vertrag in der Energiegruppe #{localpool.name} betragen:<br>
-          <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{current_tariff.baseprice_euros_per_month_brutto} €/Monat,</strong> (#{current_tariff.baseprice_euros_per_month_netto} €/Monat)<br>
-          <strong>Arbeitspreis,</strong> (Arbeitspreis netto): <strong>#{current_tariff.energyprice_cents_per_kwh_brutto} Cent/kWh,</strong> (#{current_tariff.energyprice_cents_per_kwh_netto} Cent/kWh)
+        - if leg_single 
+          p Die aktuellen Preise für Ihren Vertrag LEG Single betragen:<br>
+        - else
+          p Die aktuellen Preise für Ihren Vertrag in der Energiegruppe #{localpool.name} betragen:<br>
+            <strong>Grundpreis,</strong> (Grundpreis netto): <strong>#{current_tariff.baseprice_euros_per_month_brutto} €/Monat,</strong> (#{current_tariff.baseprice_euros_per_month_netto} €/Monat)<br>
+            <strong>Arbeitspreis,</strong> (Arbeitspreis netto): <strong>#{current_tariff.energyprice_cents_per_kwh_brutto} Cent/kWh,</strong> (#{current_tariff.energyprice_cents_per_kwh_netto} Cent/kWh)
 
         p == abschlag.satz
 
@@ -279,16 +290,17 @@ html
         br
         br
         br
-      h2 Verbrauchsvergleich
-      - if contractor.name == 'Isarwatt eG'
-        p Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist.
-      - else
-        p Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist. Dieser Vergleich, den Sie der Grafik entnehmen können, hinkt natürlich, da er die äußeren Gegebenheiten eines Haushaltes, zum Beispiel elektrische Warmwasserbereitung, nicht berücksichtigt.
-      / chart goes here
-      div#chart-one.bc-chart.horizontal.is-small
-        div.bc-chart-container
-      p.is-small Quelle: Statistisches Bundesamt<br>
-        Sofern kein volles Jahr Strom bezogen wurde, wird die Strommenge auf ein ganzes Jahr hochgerechnet
+      - if leg_single == false
+        h2 Verbrauchsvergleich
+        - if contractor.name == 'Isarwatt eG'
+          p Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist.
+        - else
+          p Der Gesetzgeber verpflichtet uns, darzustellen, wie hoch Ihr Jahresbezug im Vergleich zu einem Referenzwert ist. Dieser Vergleich, den Sie der Grafik entnehmen können, hinkt natürlich, da er die äußeren Gegebenheiten eines Haushaltes, zum Beispiel elektrische Warmwasserbereitung, nicht berücksichtigt.
+        / chart goes here
+        div#chart-one.bc-chart.horizontal.is-small
+          div.bc-chart-container
+        p.is-small Quelle: Statistisches Bundesamt<br>
+          Sofern kein volles Jahr Strom bezogen wurde, wird die Strommenge auf ein ganzes Jahr hochgerechnet
     div.wrapper
       ////// Energy Report (start) /////
       div.log
@@ -296,18 +308,22 @@ html
       p Nachfolgend einige Fakten und Kennzahlen zu Ihrer Energiegruppe #{localpool.name} für das Jahr #{billing_year}:
       table.no-border.energy-report
         tr
-          td.sand
-            p
-              | <strong>Autarkiegrad</strong> <span class='is-medium'>(wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
-            p.is-larger #{energy_report.self_sufficiency_report} %
+          - if leg_single == false
+            td.sand
+              p
+                | <strong>Autarkiegrad</strong> <span class='is-medium'>(wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
+              p.is-larger #{energy_report.self_sufficiency_report} %
+          - else 
+            td
           td.mint
             p
               | <strong>Lokalität</strong> <span class='is-medium'>(wie groß ist die Entfernung zwischen Stromerzeugungsanlage[n] und  Verbrauchsstellen?)</span>
             p.is-larger O km
-          td.custard
-            p
-              | <strong>Nutzungsgrad</strong> <span class='is-medium'>(wieviel des lokal produzierten Stroms wurde vor Ort verbraucht?)</span>
-            p.is-larger #{energy_report.utilization_report} %
+          - if leg_single == false
+            td.custard
+              p
+                | <strong>Nutzungsgrad</strong> <span class='is-medium'>(wieviel des lokal produzierten Stroms wurde vor Ort verbraucht?)</span>
+              p.is-larger #{energy_report.utilization_report} %
         tr
           td.sky
             p
@@ -333,10 +349,11 @@ html
             - else
               p.is-medium #{energy_report.tech}
         tr
-          td.cornflower
-            p
-              | <strong>Reststrom</strong> <span class='is-medium'>(von welchem Lieferant stammt der Reststrom über das öffentliche Netz?)</span>
-            p.is-larger #{energy_report.electricity_supplier=='Buzzn GmbH' ? 'BUZZN GmbH' : energy_report.electricity_supplier}
+          - if leg_single == false
+            td.cornflower
+              p
+                | <strong>Reststrom</strong> <span class='is-medium'>(von welchem Lieferant stammt der Reststrom über das öffentliche Netz?)</span>
+              p.is-larger #{energy_report.electricity_supplier=='Buzzn GmbH' ? 'BUZZN GmbH' : energy_report.electricity_supplier}
           td.glass
             / p
             /   | Autarkiegrad <span class='is-small'> (wieviel des insgesamt verbrauchten Stroms wurde vor Ort produziert?)</span>
@@ -385,6 +402,12 @@ html
           div.bc-chart-container.col-half
           div.bc-legend-container.col-half
       div.clear
+      div.col-2nd.is-pull-right.no-margin
+        - if leg_single
+          p Entspricht bei nicht zertifizierten PV Anlagen dem ENTSO-E Energieträgermix
+          p Mit Zertifizierung 100% Sonstige erneuerbare Energien
+      div.clear
+          
       h2 Umweltauswirkungen je Kilowattstunde
       div.narrow
         table.no-border.full-width
