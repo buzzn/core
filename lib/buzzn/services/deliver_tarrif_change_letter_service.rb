@@ -51,12 +51,6 @@ class Services::DeliverTarrifChangeLetterService
   def deliver_tariff_change_letter_powertaker(localpool, contract, document_id)
     target = Document.find(document_id)
 
-    sender = if localpool.owner.is_a?(Organization::GeneralResource)
-               localpool.owner.contact
-             else
-               localpool.owner
-             end
-
     contact = contract.contact
 
     salute = "Hallo #{contact.first_name} #{contact.last_name}"
@@ -79,7 +73,8 @@ class Services::DeliverTarrifChangeLetterService
       Energiegeladene Grüße,
     MSG
 
-    mail_service.deliver_later({:to => contact.email,
+    mail_service.deliver_later({:from => 'team@buzzn.net',
+                                :to => contact.email,
                                 :from_person_id => localpool.contact.id,
                                 :bcc => 'team@localpool.de',
                                 :subject => "Preisanpassung Energiegruppe #{localpool.name}",

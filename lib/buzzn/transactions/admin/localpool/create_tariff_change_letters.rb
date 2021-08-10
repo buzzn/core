@@ -3,7 +3,6 @@ require_relative '../localpool'
 
 class Transactions::Admin::Localpool::CreateTariffChangeLetters < Transactions::Base
 
-  #check :authorize, with: :'operations.authorization.document'
   add :create_tariff_change_letters
   map :wrap_up
 
