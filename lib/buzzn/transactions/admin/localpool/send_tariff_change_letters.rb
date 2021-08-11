@@ -23,13 +23,21 @@ class Transactions::Admin::Localpool::SendTariffChangeLetters < Transactions::Ba
           document = Contract::Base.find(contract.id).documents.where(purpose: 'tariff_change_letter').order(:created_at).last
           if document.nil? || document.created_at < (today - 7)
             error = Buzzn::ValidationError.new({send_tariff_change_letter: ['The tariff change letter for this contract is older than a week or not existent.']}, resource.object)
-            errors['send_tariff_change_letter'] = {contract_id: contract.id, contract_number: contract.full_contract_number, errors: error.errors}
+            if errors['send_tariff_change_letter'].nil?
+              errors['send_tariff_change_letter'] = [{contract_id: contract.id, contract_number: contract.full_contract_number, errors: error.errors}]
+            else
+              errors['send_tariff_change_letter'] << {contract_id: contract.id, contract_number: contract.full_contract_number, errors: error.errors}
+            end
           else
             begin
                 contract_resource = resource.contracts.retrieve(contract.id)
                 deliver_tariff_change_service.deliver_tariff_change_letter(resource, contract_resource, document.id)
             rescue Buzzn::ValidationError => e
+              if errors['send_tariff_change_letter'].nil?
+                errors['send_tariff_change_letter'] = [{contract_id: contract.id, contract_number: contract.full_contract_number, errors: e.errors}]
+              else
                 errors['send_tariff_change_letter'] << {contract_id: contract.id, contract_number: contract.full_contract_number, errors: e.errors}
+              end
             end
           end
         end

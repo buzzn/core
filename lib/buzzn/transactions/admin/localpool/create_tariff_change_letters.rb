@@ -33,7 +33,11 @@ class Transactions::Admin::Localpool::CreateTariffChangeLetters < Transactions::
               zos << document.read
             end
           rescue Buzzn::ValidationError => e
-            errors['create_tariff_change_letter'] << {contract_id: contract.id, contract_number: contract.full_contract_number, errors: e.errors}
+            if errors['create_tariff_change_letter'].nil?
+              errors['create_tariff_change_letter'] = {contract_id: contract.id, contract_number: contract.full_contract_number, errors: e.errors}
+            else
+              errors['create_tariff_change_letter'] << {contract_id: contract.id, contract_number: contract.full_contract_number, errors: e.errors}
+            end
           end
         end
       else
