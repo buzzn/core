@@ -7,6 +7,7 @@ module Admin
     include Import.args[:env,
                         'transactions.admin.global_report.generate_meter_report',
                         'transactions.admin.global_report.return_report',
+                        'transactions.admin.global_report.generate_powertaker_report'
                       ]
 
     #plugin :shared_vars
@@ -26,6 +27,12 @@ module Admin
             r.response.headers['Content-Type'] = 'text/csv;charset=ISO-8859'
             r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
             r.response.write(report.value!)
+          end
+        end
+
+        r.on 'powertaker_report_id' do
+          r.get! do
+            generate_powertaker_report.()
           end
         end
 
