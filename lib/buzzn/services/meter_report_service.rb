@@ -23,6 +23,7 @@ class Services::MeterReportService
       'Drittbeliefert?',
       'Vertrag?',
       'Zählerart',
+      'Generation',
       'Herstellername',
       'Produktname',
       'Besitzstatus',
@@ -69,6 +70,7 @@ class Services::MeterReportService
           target << (contract_type == 'Contract::LocalpoolThirdParty' ? 'yes' : 'no') << ';'
           target << (register_meta.contracts == [] ? 'no' : 'yes') << ';'
           target << register_meta.label << ';'
+          target << (group.generation.nil? ? '' : group.generation) << ';'
           target << meter.manufacturer_name << ';'
           target << meter.product_name << ';'
           target << meter.ownership << ';'
