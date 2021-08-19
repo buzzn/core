@@ -12,8 +12,8 @@ module Admin
 
     def labels
       {
-        'GRID_FEEDING' => 'ÜGZ Bezug',
-        'GRID_CONSUMPTION'=> 'ÜGZ Einspeisung',
+        'GRID_FEEDING' => 'ÜGZ Einspeisung',
+        'GRID_CONSUMPTION'=> 'ÜGZ Bezug',
         'PRODUCTION_WATER'=> 'Produktion',
         'PRODUCTION_PV'=> 'Produktion'
       }
