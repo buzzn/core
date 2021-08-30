@@ -23,6 +23,8 @@ module Admin
                         update_organization_owner: 'transactions.admin.localpool.update_organization_owner',
                         assign_organization_market: 'transactions.admin.localpool.assign_organization_market',
                         create_or_update_meter_discovergy: 'transactions.admin.localpool.create_or_update_meter_discovergy',
+                        create_tariff_change_letters: 'transactions.admin.localpool.create_tariff_change_letters',
+                        send_tariff_change_letters: 'transactions.admin.localpool.send_tariff_change_letters',
                         bubbles: 'transactions.bubbles',
                         delete: 'transactions.delete',
                         mail_service: 'services.mail_service'
@@ -111,6 +113,22 @@ module Admin
 
         r.patch!('gap-contract-customer-bank-account') do
           bank_account_assign.(resource: localpool, params: r.params, attribute: :gap_contract_customer_bank_account, person_or_org: :gap_contract_customer)
+        end
+
+        r.on 'tariff-change-letters' do
+          r.get! do
+            zip = create_tariff_change_letters.(resource: localpool)
+            filename = Buzzn::Utils::File.sanitize_filename("#{localpool.name}_Preisanpassungsschreiben.zip")
+            r.response.headers['Content-Type'] = 'application/zip'
+            r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
+            r.response.write(zip.value!.string)
+          end
+        end
+
+        r.on 'send-tariff-change-letters' do
+          r.get! do
+            send_tariff_change_letters.(resource: localpool)
+          end
         end
 
         r.on 'group-members-export' do
