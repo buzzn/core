@@ -37,7 +37,7 @@ html
           span.page-total-number 2
     div.alwaysbreak
     div.wrapper
-      p Sollten Sie mit der Preisanpassung nicht einverstanden sein, steht Ihnen gemäß unseren AGB ein Sonderkündigungsrecht zum #{(tariff_begin.to_date + 1).strftime("%d.%m.%Y")} zu. Sie haben dann das Recht, den Vertrag ohne Einhaltung einer Kündigungsfrist auf diesen Zeitpunkt zu kündigen.
+      p Sollten Sie mit der Preisanpassung nicht einverstanden sein, steht Ihnen gemäß unseren AGB ein Sonderkündigungsrecht zum #{(tariff_begin.to_date - 1).strftime("%d.%m.%Y")} zu. Sie haben dann das Recht, den Vertrag ohne Einhaltung einer Kündigungsfrist auf diesen Zeitpunkt zu kündigen.
       p Wenn Sie mit der Strompreisanpassung einverstanden sind, müssen Sie nichts tun. Ihren Abschlag passen wir mit der nächsten Turnusabrechnung an.
       p Bei Fragen oder Feedback stehe ich Ihnen gerne persönlich zur Verfügung.
       p Vielen Dank für Ihre Unterstützung unserer gemeinsamen Sache, der Energiewende von unten!
