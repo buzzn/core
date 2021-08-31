@@ -9,13 +9,14 @@ class Groups < ActiveRecord::Base
 
         CSV.parse(data.gsub(/\r\n?/, "\n"), col_sep: ';', headers: true) do |row|
             gen = row['Generation']
-            group = Group::Localpool.find(Hash[row.to_a]['ID'])
 
-            if group.nil?
-                # logger.info "id not found: #{row}"
-                group.not_found("id not found: '#{row}'")
-            else
+            begin
+                group = Group::Localpool.find(Hash[row.to_a]['ID'])
+            rescue ActiveRecord::RecordNotFound => e
+                logger.error("Group with id #{Hash[row.to_a]['ID']} not found")
+            end
 
+            unless group.nil?
                 if row['Generation'].nil?
                     not_found("generation for group #{row['ID']}")
                 elsif row['Generation'].match?(/\A-?\d+\Z/) == false
