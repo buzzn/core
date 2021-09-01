@@ -35,7 +35,7 @@ class Services::PowertakerReportService
       'Startdatum',
       'Kündigungsdatum',
       'Endtermin',
-      'Zahlung'
+      'Zahlung in €'
     ]
     target << header_row.join(';')
     Contract::Base.all.to_a.each do |contract|
@@ -68,7 +68,7 @@ class Services::PowertakerReportService
       target << (contract.begin_date.nil? ? '' : contract.begin_date.strftime('%d.%m.%Y')) << ';'
       target << (contract.termination_date.nil? ? '' : contract.termination_date.strftime('%d.%m.%Y')) << ';'
       target << (contract.end_date.nil? ? '' : contract.end_date.strftime('%d.%m.%Y')) << ';'
-      target << (contract.payments.nil? || contract.payments == [] ? '' : contract.payments.order(:begin_date).last.cycle)
+      target << (contract.payments.nil? || contract.payments == [] ? '' : (contract.payments.order(:begin_date).last.price_cents.to_f / 100).to_s.gsub('.', ','))
     end
     ReportDocument.store(job_id, target.string)
   end
