@@ -13,16 +13,17 @@ class Groups < ActiveRecord::Base
             begin
                 group = Group::Localpool.find(Hash[row.to_a]['ID'])
             rescue ActiveRecord::RecordNotFound => e
-                logger.error("Group with id #{Hash[row.to_a]['ID']} not found")
+                logger.error("group #{Hash[row.to_a]['ID']} NOT FOUND")
             end
 
             unless group.nil?
-                if row['Generation'].nil?
-                    not_found("generation for group #{row['ID']}")
-                elsif row['Generation'].match?(/\A-?\d+\Z/) == false
-                    logger.info "generation for group #{row['ID']} = 0 as not numeric"
+                if gen.nil?
+                    logger.error "generation for group #{row['ID']} NOT FOUND"
+                elsif gen.match?(/\A-?\d+\Z/) == false
+                    gen = nil
+                    logger.error "generation for group #{row['ID']} NOT NUMERIC"
                 elsif "#{group.generation}" != gen
-                    logger.info "generation for group #{row['ID']} changed from #{group.generation} to #{gen}"
+                    logger.info "generation for group #{row['ID']} changed from #{group.generation.nil? ? 'nil' : group.generation} to #{gen}"
                 end
                 check.push(row['ID'])
                 group.update(generation: gen)
@@ -44,7 +45,4 @@ class Groups < ActiveRecord::Base
 
     def self.logger; @_logger ||= Buzzn::Logger.new(self); end
 
-    def self.not_found(msg)
-        raise Buzzn::RecordNotFound.new(self, msg)
-    end
 end
