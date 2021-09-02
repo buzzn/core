@@ -27,7 +27,9 @@ module Admin
                         send_tariff_change_letters: 'transactions.admin.localpool.send_tariff_change_letters',
                         bubbles: 'transactions.bubbles',
                         delete: 'transactions.delete',
-                        mail_service: 'services.mail_service'
+                        mail_service: 'services.mail_service',
+                        generate_historical_readings_export: 'transactions.admin.localpool.generate_historical_readings_export',
+                        return_export: 'transactions.admin.localpool.return_historical_readings_export'
                        ]
 
     PARENT = :localpool
@@ -128,6 +130,22 @@ module Admin
         r.on 'send-tariff-change-letters' do
           r.get! do
             send_tariff_change_letters.(resource: localpool)
+          end
+        end
+
+        r.on 'historical_readings_export_id' do
+          r.get! do
+            generate_historical_readings_export.(resource: localpool, params: r.params)
+          end
+        end
+
+        r.on 'historical_readings_export' do
+          r.post! do
+            filename = "Energiegruppe #{localpool.name} - Zaehler und Abschlaege.csv"
+            file = return_export.(params: r.params)
+            r.response.headers['Content-Type'] = 'text/csv;charset=ISO-8859'
+            r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
+            r.response.write(file.value!)
           end
         end
 

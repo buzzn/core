@@ -1,5 +1,6 @@
 require_relative '../services'
 require_relative '../workers/report_worker'
+require_relative '../workers/historical_export_worker'
 require 'rubyXL'
 require 'rubyXL/convenience_methods/cell'
 require 'rubyXL/convenience_methods/color'
@@ -78,4 +79,147 @@ class Services::ReportService
     end
     ReportDocument.store(job_id, target.string)
   end
+
+  def generate_export_async(localpool_id)
+    Buzzn::Workers::HistoricalExportWorker.perform_async(localpool_id)
+  end
+
+  def labels
+    {
+      'GRID_FEEDING' => 'ÜGZ Einspeisung',
+      'GRID_CONSUMPTION'=> 'ÜGZ Bezug',
+      'PRODUCTION_WATER'=> 'Produktion',
+      'PRODUCTION_PV'=> 'Produktion'
+    }
+  end
+
+  def generate_historical_export(localpool_id, job_id)
+    localpool = Group::Localpool.find(localpool_id)
+    active_meters = localpool.meters.reject{|x| x.decomissioned?}
+    target = StringIO.new
+    target.set_encoding(Encoding.find('UTF-8'))
+    header_row1 = [
+      localpool.name,
+      '',
+      '',
+      'Datum der Ablesung',
+      '',
+      "31.12.#{Date.today.year}"
+    ]
+    target << header_row1.join(';')
+    target << "\n"
+    header_row2 = [
+      'Vertragsnummer',
+      'MSB-id',
+      'Mieternummer',
+      'Zählernummer',
+      'Installationsort',
+      'Zusatz',
+      'Vorname',
+      'Nachname',
+      'Adresszusatz',
+      'Zählerstand',
+      'bezahlte Abschläge in €',
+      'Rechnungsnummer'
+    ]
+    target << header_row2.join(';')
+
+    active_meters.each do |meter|
+      meter.registers.select {|rm| rm.contracts.any? {|c| c.status == 'active'}}.each do |register|
+        register_meta_id = register.register_meta_id
+        register_meta = Register::Meta.find(register_meta_id)
+        paid_requested = true
+        billnumber_requested = true
+
+        # We filtered those which do have a valid contract before, so there must be exactly one!
+        contract = register_meta.contracts.select {|c| c.status == 'active'}[0]
+        if contract.is_a?(Contract::LocalpoolPowerTakerResource)
+          contract_additional_info = 'Bezug'
+        elsif contract.is_a?(Contract::LocalpoolThirdPartyResource)
+          contract_additional_info = 'Drittbeliefert'
+          paid_requested = false
+          billnumber_requested = false
+        end
+
+        unless contract.customer.nil?
+          if contract.customer.is_a? PersonResource
+            first_name = contract.customer.first_name
+            last_name = contract.customer.last_name
+          else
+            last_name = contract.customer.name
+          end
+        end
+
+        target << "\n"
+        target << contract.full_contract_number << ';'
+        target << meter.sequence_number << ';'
+        target << contract.third_party_renter_number << ';'
+        target << meter.product_serialnumber << ';'
+        target << meter.location_description << ';'
+        target << contract_additional_info << ';'
+        target << first_name << ';'
+        target << last_name << ';'
+        target << register_meta.name << ';'
+        target << '' << ';'
+        target << (paid_requested ? '' : 'X') << ';'
+        target << (billnumber_requested ? '' : 'X')
+      end
+    end
+
+    active_meters.reject {|m| m.is_a?(Meter::VirtualResource)}
+              .reject {|m| m.registers.all? {|register| register.contracts.any? {|c| c.status == 'active'}}}
+              .reject {|m| m.registers.all? {|register| register.contracts.to_a.empty?}}
+              .each do |meter|
+      meter.registers.each do |register|
+        if register.register_meta_id.nil?
+          next
+        else
+          register_meta = Register::Meta.find(register.register_meta_id)
+        end
+
+        target << "\n"
+        target << '' << ';'
+        target << meter.sequence_number << ';'
+        target << '' << ';'
+        target << meter.product_serialnumber << ';'
+        target << meter.location_description << ';'
+        target << 'Leerstand' << ';'
+        target << '' << ';'
+        target << '' << ';'
+        target << register_meta.name << ';'
+        target << '' << ';'
+        target << 'X' << ';'
+        target << ''
+      end
+    end
+
+    active_meters.reject {|m| m.is_a?(Meter::VirtualResource)}
+              .select {|m| m.registers.all? {|register| register.contracts.to_a.empty?}}
+              .each do |meter|
+      meter.registers.each do |register|
+        if register.register_meta_id.nil?
+          next
+        else
+          register_meta = Register::Meta.find(register.register_meta_id)
+        end
+
+        target << "\n"
+        target << '' << ';'
+        target << meter.sequence_number << ';'
+        target << '' << ';'
+        target << meter.product_serialnumber << ';'
+        target << meter.location_description << ';'
+        target << labels[register_meta.label] << ';'
+        target << '' << ';'
+        target << '' << ';'
+        target << register_meta.name << ';'
+        target << '' << ';'
+        target << 'X' << ';'
+        target << ''
+
+      end
+    end
+    ReportDocument.store(job_id, target.string)
+  end
+
 end

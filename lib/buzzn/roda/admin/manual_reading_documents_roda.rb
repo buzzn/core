@@ -243,7 +243,7 @@ module Admin
 
     def create_filename(localpool)
       date_string = Buzzn::Utils::Chronos.now.strftime('%Y-%m-%d')
-      "#{date_string}_Energiegruppe #{localpool.name} - Zaehler und Abschlaege 2020.xlsx"
+      "#{date_string}_Energiegruppe #{localpool.name} - Zaehler und Abschlaege 2021.xlsx"
     end
 
     route do |r|
