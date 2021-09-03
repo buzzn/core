@@ -98,6 +98,8 @@ class Services::ReportService
   def generate_historical_export(localpool_id, job_id)
     localpool = Group::Localpool.find(localpool_id)
     active_meters = localpool.meters.reject{|x| x.decomissioned?}
+    date_pmr_2019 = DateTime.parse("31-12-2019")
+    date_pmr_2020 = DateTime.parse("31-12-2020")
     target = StringIO.new
     target.set_encoding(Encoding.find('UTF-8'))
     header_row1 = [
@@ -122,7 +124,14 @@ class Services::ReportService
       'Adresszusatz',
       'Zählerstand',
       'bezahlte Abschläge in €',
-      'Rechnungsnummer'
+      'Rechnungsnummer',
+      'Zählereinbau',
+      'Zählertyp',
+      'Zählerstand Einbau',
+      'Zählerstand Turnusabrechnung 2019',
+      'Ablesedatum Turnusabrechnung 2019',
+      'Zählerstand Turnusabrechnung 2020',
+      'Ablesedatum Turnusabrechnung 2020'
     ]
     target << header_row2.join(';')
 
@@ -152,6 +161,8 @@ class Services::ReportService
           end
         end
 
+        readings = register.readings
+
         target << "\n"
         target << contract.full_contract_number << ';'
         target << meter.sequence_number << ';'
@@ -164,7 +175,14 @@ class Services::ReportService
         target << register_meta.name << ';'
         target << '' << ';'
         target << (paid_requested ? '' : 'X') << ';'
-        target << (billnumber_requested ? '' : 'X')
+        target << (billnumber_requested ? '' : 'X') << ';'
+        target << (find_first_reading_date(readings).nil? ? '' : find_first_reading_date(readings)) << ';'
+        target << '' << ';' # to do Zaehlertyp
+        target << (find_first_reading_value(readings).nil? ? '' : find_first_reading_value(readings)) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).date.strftime('%d.%m.%Y')) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).date.strftime('%d.%m.%Y')) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value) << ';'
       end
     end
 
@@ -179,6 +197,8 @@ class Services::ReportService
           register_meta = Register::Meta.find(register.register_meta_id)
         end
 
+        readings = register.readings
+
         target << "\n"
         target << '' << ';'
         target << meter.sequence_number << ';'
@@ -191,7 +211,14 @@ class Services::ReportService
         target << register_meta.name << ';'
         target << '' << ';'
         target << 'X' << ';'
-        target << ''
+        target << '' << ';'
+        target << (find_first_reading_date(readings).nil? ? '' : find_first_reading_date(readings)) << ';'
+        target << '' << ';' # to do Zaehlertyp
+        target << (find_first_reading_value(readings).nil? ? '' : find_first_reading_value(readings)) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).date.strftime('%d.%m.%Y')) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).date.strftime('%d.%m.%Y')) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value) << ';'
       end
     end
 
@@ -205,6 +232,8 @@ class Services::ReportService
           register_meta = Register::Meta.find(register.register_meta_id)
         end
 
+        readings = register.reading
+
         target << "\n"
         target << '' << ';'
         target << meter.sequence_number << ';'
@@ -217,11 +246,47 @@ class Services::ReportService
         target << register_meta.name << ';'
         target << '' << ';'
         target << 'X' << ';'
-        target << ''
+        target << ''<< ';'
+        target << (find_first_reading_date(readings).nil? ? '' : find_first_reading_date(readings)) << ';'
+        target << '' << ';' # to do Zaehlertyp
+        target << (find_first_reading_value(readings).nil? ? '' : find_first_reading_value(readings)) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).date.strftime('%d.%m.%Y')) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).date.strftime('%d.%m.%Y')) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value) << ';'
 
       end
     end
     ReportDocument.store(job_id, target.string)
   end
 
+end
+
+def find_first_reading_date(readings)
+  unless readings.nil? || readings == []
+    first_readings = readings.select { |reading| (reading['reason'] == 'IOM' || reading['reason'] == 'COM2' || reading['reason'] == 'COB')}
+    if first_readings.length == 1
+      first_readings.first['date'].strftime('%d.%m.%Y')
+    else
+      'Es existiert mehr als eine Ablesung, die das Merkmal Zählereinbau trägt'
+    end
+  end
+end
+
+def find_first_reading_value(readings)
+  unless readings.nil? || readings == []
+    first_readings = readings.select { |reading| (reading['reason'] == 'IOM' || reading['reason'] == 'COM2' || reading['reason'] == 'COB')}
+    if first_readings.length == 1
+      first_readings.first.raw_value
+    end
+  end
+end
+
+def find_periodic_reading(readings, date)
+  unless readings.nil? || readings == []
+    periodic_readings = readings.select { |reading| (reading['reason'] == 'PMR' && reading['date'] == date)}
+    if periodic_readings.length == 1
+      periodic_readings.first
+    end
+  end
 end
