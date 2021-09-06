@@ -45,6 +45,8 @@ class Services::ReportService
     ]
     target << header_row.join(';')
     billing_cyle.billings.reject { |x| %w(open void).include?(x.status) }.each_with_index do |billing, idx|
+      payment = billing.adjusted_payment || billing.contract.current_payment
+      billing_ends_contract = billing.contract.end_date.nil? ? false : billing.end_date == billing.contract.end_date
       target << "\n"
       target << format('6%.2i%.3i', billing.contract.contract_number % 100, billing.contract.contract_number_addition) << ';'
       target << '' << ';'
@@ -73,8 +75,8 @@ class Services::ReportService
       target << (billing.amount_after_taxes_in_date_range(Date.new(2020, 7, 1)...billing.end_date).round(0) / 100).round(2) << ';'
       target << (BigDecimal(billing.balance_before) / 10 / 100).round(2) << ';'
       target << (BigDecimal(billing.balance_at) / 10 / 100).round(2) << ';'
-      target << (billing.adjusted_payment.nil? ? '-' : BigDecimal(billing.adjusted_payment.price_cents, 4) / 100) << ';'
-      target << (billing.adjusted_payment.nil? ? '-' : billing.adjusted_payment.begin_date.strftime('%d.%m.%Y')) 
+      target << (billing_ends_contract ? '-' : BigDecimal(payment.price_cents, 4) / 100) << ';'
+      target << (billing_ends_contract ? '-' : payment.begin_date.strftime('%d.%m.%Y'))
     end
     ReportDocument.store(job_id, target.string)
   end
