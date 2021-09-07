@@ -59,7 +59,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   # Creates the file header fitting to the datev importer.
   def file_header
     <<~HEADER
-      DTVF;700;16;Debitoren/Kreditoren;5;2,01907E+16;;RE;info;;557718;38017;20190101;5;;;;;;0;;;;;;74252;4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      DTVF;;700;16;Debitoren/Kreditoren;5;2,01907E+16;;RE;info;;557718;38017;20190101;5;;;;;;0;;;;;;74252;4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     HEADER
   end
 
@@ -86,6 +86,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
   def exported_columns
     [
       'Konto',
+      'Vertragsbeginn',
       'Name (Adressattyp Unternehmen)',
       'Unternehmensgegenstand',
       'Name (Adressattyp natürl. Person)',
@@ -348,6 +349,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
     person = contract.contact
     [
       account_number(contract), # Konto
+      contract.begin_date.strftime('%d.%m.%Y'), # Vertragsbeginn
       (contract.customer.instance_of? Organization::GeneralResource)? contract.customer.name : '', # Name (Adressattyp Unternehmen)
       '', # Unternehmensgegenstand
       (contract.customer.instance_of? PersonResource)? person&.last_name : '', # Name (Adressattyp natürl. Person)
