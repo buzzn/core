@@ -349,7 +349,7 @@ class Transactions::Admin::Exchange::GroupMemberDtvfExport < Transactions::Base
     person = contract.contact
     [
       account_number(contract), # Konto
-      contract.begin_date.strftime('%d.%m.%Y'), # Vertragsbeginn
+      (contract.begin_date.nil? ? '' : contract.begin_date.strftime('%d.%m.%Y')), # Vertragsbeginn
       (contract.customer.instance_of? Organization::GeneralResource)? contract.customer.name : '', # Name (Adressattyp Unternehmen)
       '', # Unternehmensgegenstand
       (contract.customer.instance_of? PersonResource)? person&.last_name : '', # Name (Adressattyp natürl. Person)
