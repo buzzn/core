@@ -123,8 +123,8 @@ class Services::ReportService
       'Zählerstand',
       'bezahlte Abschläge in €',
       'Rechnungsnummer',
-      'Zählereinbau',
       'Zählertyp',
+      'Zählereinbau',
       'Zählerstand Einbau',
       'Zählerstand Turnusabrechnung 2019',
       'Ablesedatum Turnusabrechnung 2019',
@@ -174,8 +174,8 @@ class Services::ReportService
         target << '' << ';'
         target << (paid_requested ? '' : 'X') << ';'
         target << (billnumber_requested ? '' : 'X') << ';'
+        target << (meter.edifact_measurement_method.nil? ? '' : meter.edifact_measurement_method) << ';' # Zaehlertyp
         target << (find_first_reading_date(readings).nil? ? '' : find_first_reading_date(readings)) << ';'
-        target << '' << ';' # to do Zaehlertyp
         target << (find_first_reading_value(readings).nil? ? '' : find_first_reading_value(readings)) << ';'
         target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).date.strftime('%d.%m.%Y')) << ';'
         target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value) << ';'
@@ -210,8 +210,8 @@ class Services::ReportService
         target << '' << ';'
         target << 'X' << ';'
         target << '' << ';'
+        target << (meter.edifact_measurement_method.nil? ? '' : meter.edifact_measurement_method) << ';' # Zaehlertyp
         target << (find_first_reading_date(readings).nil? ? '' : find_first_reading_date(readings)) << ';'
-        target << '' << ';' # to do Zaehlertyp
         target << (find_first_reading_value(readings).nil? ? '' : find_first_reading_value(readings)) << ';'
         target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).date.strftime('%d.%m.%Y')) << ';'
         target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value) << ';'
@@ -230,7 +230,7 @@ class Services::ReportService
           register_meta = Register::Meta.find(register.register_meta_id)
         end
 
-        readings = register.reading
+        readings = register.readings
 
         target << "\n"
         target << '' << ';'
@@ -245,8 +245,8 @@ class Services::ReportService
         target << '' << ';'
         target << 'X' << ';'
         target << ''<< ';'
+        target << (meter.edifact_measurement_method.nil? ? '' : meter.edifact_measurement_method) << ';' # Zaehlertyp
         target << (find_first_reading_date(readings).nil? ? '' : find_first_reading_date(readings)) << ';'
-        target << '' << ';' # to do Zaehlertyp
         target << (find_first_reading_value(readings).nil? ? '' : find_first_reading_value(readings)) << ';'
         target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).date.strftime('%d.%m.%Y')) << ';'
         target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value) << ';'
