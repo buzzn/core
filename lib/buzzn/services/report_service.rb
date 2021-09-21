@@ -1,5 +1,8 @@
 require_relative '../services'
 require_relative '../workers/report_worker'
+require_relative '../workers/third_party_export_worker'
+# require_relative '../workers/third_party_export_worker'
+
 require 'rubyXL'
 require 'rubyXL/convenience_methods/cell'
 require 'rubyXL/convenience_methods/color'
@@ -21,6 +24,9 @@ class Services::ReportService
   end
 
   def generate_report(billing_cycle_id, job_id)
+    ##
+    
+    ##
     billing_cyle = BillingCycle.find(billing_cycle_id)
     target = StringIO.new
     # Converts the result into a datev readable charset.
@@ -77,6 +83,42 @@ class Services::ReportService
       target << (BigDecimal(billing.balance_at) / 10 / 100).round(2) << ';'
       target << (billing_ends_contract ? '-' : BigDecimal(payment.price_cents, 4) / 100) << ';'
       target << (billing_ends_contract ? '-' : payment.begin_date.strftime('%d.%m.%Y'))
+    end
+    ReportDocument.store(job_id, target.string)
+  end
+
+  def generate_export_async(localpool_id)
+    Buzzn::Workers::ThirdPartyExportWorker.perform_async(localpool_id)
+  end
+
+  def generate_third_party_export(localpool_id, job_id)
+    target = StringIO.new
+    target.set_encoding(Encoding.find('UTF-8'))
+
+    header_row = [
+        'Lokale Energiegruppe',
+        'Vertragsnummer',
+        'Zählernummer',
+        'Vertragsbeginn',
+        'Zählerstand Beginn',
+        'Vertragsende',
+        'Zählerstand Ende',
+        'akutell drittbeliefert?',
+        'Melo und Malo' # Zähleridentifikation
+    ]
+    target << header_row.join(';')
+    Contract::Base.where(:localpool_id => localpool_id, :type => 'Contract::LocalpoolThirdParty').each do |third_party_contract|
+      Register::Base.find(third_party_contract.register_meta_id)
+      target << "\n"
+      target << Group::Localpool.find(localpool_id).name.gsub(';', ',') << ';'
+      target << '' << ';' # Vertragsnummer
+      target << '' << ';' # Zählernummer
+      target << '' << ';' # Vertragsbeginn
+      target << '' << ';' # Zählerstand Beginn
+      target << '' << ';' # Vertragsende
+      target << '' << ';' # Zählerstand Ende
+      target << '' << ';' # aktuell drittbeliefert?
+      target << '' # Melo und Malo ??
     end
     ReportDocument.store(job_id, target.string)
   end

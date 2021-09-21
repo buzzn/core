@@ -27,7 +27,11 @@ module Admin
                         send_tariff_change_letters: 'transactions.admin.localpool.send_tariff_change_letters',
                         bubbles: 'transactions.bubbles',
                         delete: 'transactions.delete',
-                        mail_service: 'services.mail_service'
+                        mail_service: 'services.mail_service',
+                        generate_third_party_export: 'transactions.admin.localpool.generate_third_party_export',
+                        return_export: 'transactions.admin.localpool.return_third_party_export'
+                        # generate_third_party_export: 'transactions.admin.localpool.generate_third_party_export',
+                        # return_third_party_export: 'transactions.admin.localpool.return_third_party_export'
                        ]
 
     PARENT = :localpool
@@ -249,6 +253,39 @@ module Admin
         r.on 'annual-report' do
           r.run AnnualReportRoda
         end
+
+
+        r.on 'third_party_export_id' do
+          r.get! do
+            generate_third_party_export.(resource: localpool, params: r.params)
+          end
+        end
+
+        r.on 'third_party_export' do
+          r.post! do
+            filename = "Energiegruppe #{localpool.name} - Export Drittbelieferte.csv"
+            file = return_export.(params: r.params)
+            r.response.headers['Content-Type'] = 'text/csv;charset=ISO-8859'
+            r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
+            r.response.write(file.value!)
+          end
+        end
+
+        # r.on 'third_party_export_id' do
+        #   r.get! do
+        #     generate_third_party_export.(resource: localpool, params: r.params)
+        #   end
+        # end
+
+        # r.on 'third_party_export' do
+        #   r.post! do
+        #     file = return_third_party_export.(params: r.params)
+        #     filename = Buzzn::Utils::File.sanitize_filename("Energiegruppe #{localpool.name} - Export Drittbelieferte.csv")
+        #     r.response.headers['Content-Type'] = 'text/csv;charset=ISO-8859'
+        #     r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
+        #     r.response.write(report.value!)
+        #   end
+        # end
 
         r.on 'electricity-labelling' do
           r.run ElectricityLabellingRoda
