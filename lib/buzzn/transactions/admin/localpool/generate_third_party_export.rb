@@ -10,7 +10,7 @@ class Transactions::Admin::Localpool::GenerateThirdPartyExport < Transactions::B
   ]
 
   def generate_export_file(resource:, params:)
-    report_service.generate_export_async(resource.object.id)
+    report_service.generate_third_party_export_async(resource.object.id)
   end
 
   def wrap_up(generate_export_file:, **)
