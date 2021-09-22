@@ -24,9 +24,6 @@ class Services::ReportService
   end
 
   def generate_report(billing_cycle_id, job_id)
-    ##
-    
-    ##
     billing_cyle = BillingCycle.find(billing_cycle_id)
     target = StringIO.new
     # Converts the result into a datev readable charset.
@@ -267,36 +264,6 @@ class Services::ReportService
   end
 
 
-  def find_first_reading_date(readings)
-    unless readings.nil? || readings == []
-      first_readings = readings.select { |reading| (reading['reason'] == 'IOM' || reading['reason'] == 'COM2' || reading['reason'] == 'COB')}
-      if first_readings.length == 1
-        first_readings.first['date'].strftime('%d.%m.%Y')
-      else
-        'Es existiert mehr als eine Ablesung, die das Merkmal Zählereinbau trägt'
-      end
-    end
-  end
-
-  def find_first_reading_value(readings)
-    unless readings.nil? || readings == []
-      first_readings = readings.select { |reading| (reading['reason'] == 'IOM' || reading['reason'] == 'COM2' || reading['reason'] == 'COB')}
-      if first_readings.length == 1
-        first_readings.first.raw_value
-      end
-    end
-  end
-
-  def find_periodic_reading(readings, date)
-    unless readings.nil? || readings == []
-      periodic_readings = readings.select { |reading| (reading['reason'] == 'PMR' && reading['date'] == date)}
-      if periodic_readings.length == 1
-        periodic_readings.first
-      end
-    end
-  end
-
-
   def generate_third_party_export_async(localpool_id)
     Buzzn::Workers::ThirdPartyExportWorker.perform_async(localpool_id)
   end
@@ -307,6 +274,7 @@ class Services::ReportService
 
     header_row = [
         'Lokale Energiegruppe',
+        'Marktlokation',
         'Vertragsnummer',
         'Zählernummer',
         'Vertragsbeginn',
@@ -314,22 +282,65 @@ class Services::ReportService
         'Vertragsende',
         'Zählerstand Ende',
         'akutell drittbeliefert?',
-        'Melo und Malo' # Zähleridentifikation
+        'Melo und Malo' # http://localhost:2999/groups/33/billing/257?malo=981&bar=6681&contract=1285
     ]
     target << header_row.join(';')
-    Contract::Base.where(:localpool_id => localpool_id, :type => 'Contract::LocalpoolThirdParty').each do |third_party_contract|
-      Register::Base.find(third_party_contract.register_meta_id)
-      target << "\n"
-      target << Group::Localpool.find(localpool_id).name.gsub(';', ',') << ';'
-      target << '' << ';' # Vertragsnummer
-      target << '' << ';' # Zählernummer
-      target << '' << ';' # Vertragsbeginn
-      target << '' << ';' # Zählerstand Beginn
-      target << '' << ';' # Vertragsende
-      target << '' << ';' # Zählerstand Ende
-      target << '' << ';' # aktuell drittbeliefert?
-      target << '' # Melo und Malo ??
+    third_party_contract = Contract::Base.where(:localpool_id => localpool_id, :type => 'Contract::LocalpoolThirdParty')
+
+    unless third_party_contract == []
+      third_party_contract.each do |third_party|
+        
+        register_meta_id = Register::Base.find(third_party.register_meta_id)
+        register_meta_id.each do |register_meta|
+          
+          meter_id = register_meta.meter_id.each do |meter|
+
+            target << "\n"
+            target << Group::Localpool.find(localpool_id).name.gsub(';', ',') << ';'                                        # Energiegruppe
+            target << register_meta.name.gsub(';', ',') << ';'                                                              # Marktlokation
+            target << format('6%.2i%.3i', third_party.contract_number % 100, third_party.contract_number_addition) << ';'   # Vertragsnummer
+            target << '' << ';'                                                                                             # Zählernummer - product_serialnumber
+            target << (third_party.begin_date.nil? ? '' : third_party.begin_date.strftime('%d.%m.%Y')) << ';'               # Vertragsbeginn
+            target << '' << ';'                                                                                             # Zählerstand Beginn
+            target << (third_party.end_date.nil? ? '' : third_party.end_date.strftime('%d.%m.%Y')) << ';'                   # Vertragsende (end or termination?)
+            target << '' << ';'                                                                                             # Zählerstand Ende
+            target << '' << ';'                                                                                             # aktuell drittbeliefert?
+            target << ''                                                                                                    # Melo und Malo ??
+
+          end
+        end
+      end
     end
     ReportDocument.store(job_id, target.string)
+  end
+
+end
+
+def find_first_reading_date(readings)
+  unless readings.nil? || readings == []
+    first_readings = readings.select { |reading| (reading['reason'] == 'IOM' || reading['reason'] == 'COM2' || reading['reason'] == 'COB')}
+    if first_readings.length == 1
+      first_readings.first['date'].strftime('%d.%m.%Y')
+    else
+      'Es existiert mehr als eine Ablesung, die das Merkmal Zählereinbau trägt'
+    end
+  end
+end
+
+def find_first_reading_value(readings)
+  unless readings.nil? || readings == []
+    first_readings = readings.select { |reading| (reading['reason'] == 'IOM' || reading['reason'] == 'COM2' || reading['reason'] == 'COB')}
+    if first_readings.length == 1
+      first_readings.first.raw_value
+    end
+  end
+end
+
+def find_periodic_reading(readings, date)
+  unless readings.nil? || readings == []
+    periodic_readings = readings.select { |reading| (reading['reason'] == 'PMR' && reading['date'] == date)}
+    if periodic_readings.length == 1
+      periodic_readings.first
+    end
   end
 end
