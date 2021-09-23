@@ -127,10 +127,10 @@ class Services::ReportService
       'Rechnungsnummer',
       'Zählertyp',
       'Zählereinbau',
-      'Zählerstand Einbau',
-      'Zählerstand Turnusabrechnung 2019',
+      'Zählerstand Einbau (in kWh)',
+      'Zählerstand Turnusabrechnung 2019 (in kWh)',
       'Ablesedatum Turnusabrechnung 2019',
-      'Zählerstand Turnusabrechnung 2020',
+      'Zählerstand Turnusabrechnung 2020 (in kWh)',
       'Ablesedatum Turnusabrechnung 2020'
     ]
     target << header_row2.join(';')
