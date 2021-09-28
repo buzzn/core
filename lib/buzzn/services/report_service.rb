@@ -278,35 +278,42 @@ class Services::ReportService
         'Vertragsnummer',
         'Zählernummer',
         'Vertragsbeginn',
-        'Zählerstand Beginn',
-        'Vertragsende',
-        'Zählerstand Ende',
-        'akutell drittbeliefert?',
-        'Melo und Malo' # http://localhost:2999/groups/33/billing/257?malo=981&bar=6681&contract=1285
+        'Vertragsende',             
+        'Zählerstand Beginn (kWh)',
+        'Zählerstand Ende (kWh)',
+        'akutell drittbeliefert?',  
+        'Melo ID',
+        'Malo ID'
     ]
     target << header_row.join(';')
     third_party_contract = Contract::Base.where(:localpool_id => localpool_id, :type => 'Contract::LocalpoolThirdParty')
+    group_name = Group::Localpool.find(localpool_id).name.gsub(';', ',')
 
     unless third_party_contract == []
       third_party_contract.each do |third_party|
-        
-        register_meta_id = Register::Base.find(third_party.register_meta_id)
-        register_meta_id.each do |register_meta|
-          
-          meter_id = register_meta.meter_id.each do |meter|
+        register_meta = third_party.register_meta
 
-            target << "\n"
-            target << Group::Localpool.find(localpool_id).name.gsub(';', ',') << ';'                                        # Energiegruppe
-            target << register_meta.name.gsub(';', ',') << ';'                                                              # Marktlokation
-            target << format('6%.2i%.3i', third_party.contract_number % 100, third_party.contract_number_addition) << ';'   # Vertragsnummer
-            target << '' << ';'                                                                                             # Zählernummer - product_serialnumber
-            target << (third_party.begin_date.nil? ? '' : third_party.begin_date.strftime('%d.%m.%Y')) << ';'               # Vertragsbeginn
-            target << '' << ';'                                                                                             # Zählerstand Beginn
-            target << (third_party.end_date.nil? ? '' : third_party.end_date.strftime('%d.%m.%Y')) << ';'                   # Vertragsende (end or termination?)
-            target << '' << ';'                                                                                             # Zählerstand Ende
-            target << '' << ';'                                                                                             # aktuell drittbeliefert?
-            target << ''                                                                                                    # Melo und Malo ??
+        unless register_meta.nil?
+          registers = register_meta.registers
+          registers.reject {|r| find_first_reading(r.readings).nil?}
+            .select {|r| third_party.end_date.nil? || find_first_reading(r.readings).date < third_party.end_date}
+            .each do |register|
 
+              meter = register.meter
+              readings = register.readings
+
+              target << "\n"
+              target << (group_name.nil? ? '' : group_name) << ';'                                                            # Energiegruppe
+              target << (register_meta.name.nil? ? '' : register_meta.name.gsub(';', ',')) << ';'                             # Marktlokation
+              target << "#{third_party.contract_number}/#{third_party.contract_number_addition}" << ';'                       # Vertragsnummer
+              target << (meter.product_serialnumber.nil? ? '' : meter.product_serialnumber) << ';'                            # Zählernummer - product_serialnumber
+              target << (third_party.begin_date.nil? ? '' : third_party.begin_date.strftime('%d.%m.%Y')) << ';'               # Vertragsbeginn
+              target << (third_party.end_date.nil? ? '' : third_party.end_date.strftime('%d.%m.%Y')) << ';'                   # Vertragsende (end or termination?)
+              target << (find_first_reading(readings).nil? ? '' : find_first_reading(readings).raw_value/1000) << ';'         # Zählerstand Beginn
+              target << (find_last_reading(readings).nil? ? '' : find_last_reading(readings).raw_value/1000) << ';'           # Zählerstand Ende
+              target << (third_party.end_date.nil? || third_party.end_date > Date.today ? 'ja' : 'nein') << ';'               # aktuell drittbeliefert?
+              target << (meter.metering_location_id.nil? ? '' : meter.metering_location_id) << ';'                            # Melo = metering_location_id
+              target << (register_meta.market_location_id.nil? ? '' : register_meta.market_location_id)                       # Malo = register_meta_id (market_location)
           end
         end
       end
@@ -315,6 +322,25 @@ class Services::ReportService
   end
 
 end
+
+def find_first_reading(readings)
+  unless readings.nil? || readings == []
+    first_readings = readings.select { |reading| (reading['reason'] == 'IOM' || reading['reason'] == 'COM2' || reading['reason'] == 'COB' || reading['reason'] == 'COS')}
+    if first_readings.length == 1
+      first_readings.first
+    end
+  end
+end
+
+def find_last_reading(readings)
+  unless readings.nil? || readings == []
+    last_readings = readings.select { |reading| (reading['reason'] == 'COM1' || reading['reason'] == 'ROM') }
+    if last_readings.length == 1
+      last_readings.last
+    end
+  end
+end
+
 
 def find_first_reading_date(readings)
   unless readings.nil? || readings == []
