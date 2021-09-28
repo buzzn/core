@@ -31,7 +31,7 @@ module Admin
                         generate_historical_readings_export: 'transactions.admin.localpool.generate_historical_readings_export',
                         return_export: 'transactions.admin.localpool.return_historical_readings_export',
                         generate_third_party_export: 'transactions.admin.localpool.generate_third_party_export',
-                        return_export: 'transactions.admin.localpool.return_third_party_export'
+                        return_third_party_export: 'transactions.admin.localpool.return_third_party_export'
                        ]
 
     PARENT = :localpool
@@ -280,7 +280,7 @@ module Admin
         r.on 'third_party_export' do
           r.post! do
             filename = "Energiegruppe #{localpool.name} - Export Drittbelieferte.csv"
-            file = return_export.(params: r.params)
+            file = return_third_party_export.(params: r.params)
             r.response.headers['Content-Type'] = 'text/csv;charset=ISO-8859'
             r.response.headers['Content-Disposition'] = "inline; filename=\"#{filename}\""
             r.response.write(file.value!)

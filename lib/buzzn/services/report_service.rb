@@ -268,6 +268,14 @@ class Services::ReportService
   end
 
   def generate_third_party_export(localpool_id, job_id)
+    date_pmr_2020 = DateTime.parse("31-12-2020")
+    date_pmr_2019 = DateTime.parse("31-12-2019")
+    date_pmr_2018 = DateTime.parse("31-12-2018")
+    date_pmr_2017 = DateTime.parse("31-12-2017")
+    date_pmr_2016 = DateTime.parse("31-12-2016")
+    date_pmr_2015 = DateTime.parse("31-12-2015")
+    date_pmr_2014 = DateTime.parse("31-12-2014")
+
     target = StringIO.new
     target.set_encoding(Encoding.find('UTF-8'))
 
@@ -282,7 +290,14 @@ class Services::ReportService
         'Zählerstand Ende (kWh)',
         'akutell drittbeliefert?',  
         'Melo ID',
-        'Malo ID'
+        'Malo ID',
+        'T01 2020',
+        'T01 2019',
+        'T01 2018',
+        'T01 2017',
+        'T01 2016',
+        'T01 2015',
+        'T01 2014'
     ]
     target << header_row.join(';')
     third_party_contract = Contract::Base.where(:localpool_id => localpool_id, :type => 'Contract::LocalpoolThirdParty')
@@ -294,8 +309,7 @@ class Services::ReportService
 
         unless register_meta.nil?
           registers = register_meta.registers
-          registers.reject {|r| find_first_reading(r.readings).nil?}
-            .select {|r| third_party.end_date.nil? || find_first_reading(r.readings).date < third_party.end_date}
+          registers.select {|r| third_party.end_date.nil? || r.readings.order(:date).first.date < third_party.end_date}
             .each do |register|
 
               meter = register.meter
@@ -308,11 +322,19 @@ class Services::ReportService
               target << (meter.product_serialnumber.nil? ? '' : meter.product_serialnumber) << ';'                            # Zählernummer - product_serialnumber
               target << (third_party.begin_date.nil? ? '' : third_party.begin_date.strftime('%d.%m.%Y')) << ';'               # Vertragsbeginn
               target << (third_party.end_date.nil? ? '' : third_party.end_date.strftime('%d.%m.%Y')) << ';'                   # Vertragsende (end or termination?)
-              target << (find_first_reading(readings).nil? ? '' : find_first_reading(readings).raw_value/1000) << ';'         # Zählerstand Beginn
-              target << (find_last_reading(readings).nil? ? '' : find_last_reading(readings).raw_value/1000) << ';'           # Zählerstand Ende
+              target << (find_first_reading(readings, third_party.begin_date).nil? ? '' : find_first_reading(readings, third_party.begin_date).raw_value/1000) << ';'  # Zählerstand Beginn
+              target << (find_last_reading(readings, third_party.end_date).nil? ? '' : find_last_reading(readings, third_party.end_date).raw_value/1000) << ';'        # Zählerstand Ende
               target << (third_party.end_date.nil? || third_party.end_date > Date.today ? 'ja' : 'nein') << ';'               # aktuell drittbeliefert?
-              target << (meter.metering_location_id.nil? ? '' : meter.metering_location_id) << ';'                            # Melo = metering_location_id
-              target << (register_meta.market_location_id.nil? ? '' : register_meta.market_location_id)                       # Malo = register_meta_id (market_location)
+              target << (meter.metering_location_id.nil? ? '' : meter.metering_location_id) << ';'                            # Melo - metering_location_id
+              target << (register_meta.market_location_id.nil? ? '' : register_meta.market_location_id)                       # Malo - market_location_id
+              target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value/ 1000) << ';'
+              target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value/ 1000) << ';'
+              target << (find_periodic_reading(readings, date_pmr_2018).nil? ? '' : find_periodic_reading(readings, date_pmr_2018).value/ 1000) << ';'
+              target << (find_periodic_reading(readings, date_pmr_2017).nil? ? '' : find_periodic_reading(readings, date_pmr_2017).value/ 1000) << ';'
+              target << (find_periodic_reading(readings, date_pmr_2016).nil? ? '' : find_periodic_reading(readings, date_pmr_2016).value/ 1000) << ';'
+              target << (find_periodic_reading(readings, date_pmr_2015).nil? ? '' : find_periodic_reading(readings, date_pmr_2015).value/ 1000) << ';'
+              target << (find_periodic_reading(readings, date_pmr_2014).nil? ? '' : find_periodic_reading(readings, date_pmr_2014).value/ 1000)
+
           end
         end
       end
@@ -322,18 +344,18 @@ class Services::ReportService
 
 end
 
-def find_first_reading(readings)
+def find_first_reading(readings, date)
   unless readings.nil? || readings == []
-    first_readings = readings.select { |reading| (reading['reason'] == 'IOM' || reading['reason'] == 'COM2' || reading['reason'] == 'COB' || reading['reason'] == 'COS')}
+    first_readings = readings.select { |reading| ((reading['reason'] == 'IOM' || reading['reason'] == 'COM2' || reading['reason'] == 'COB' || reading['reason'] == 'COS') && reading['date'] == date)}
     if first_readings.length == 1
       first_readings.first
     end
   end
 end
 
-def find_last_reading(readings)
+def find_last_reading(readings, date)
   unless readings.nil? || readings == []
-    last_readings = readings.select { |reading| (reading['reason'] == 'COM1' || reading['reason'] == 'ROM') }
+    last_readings = readings.select { |reading| ((reading['reason'] == 'COM1' || reading['reason'] == 'ROM') && reading['date'] == date)}
     if last_readings.length == 1
       last_readings.last
     end
