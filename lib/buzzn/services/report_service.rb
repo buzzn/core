@@ -130,10 +130,10 @@ class Services::ReportService
       'Rechnungsnummer',
       'Zählertyp',
       'Zählereinbau',
-      'Zählerstand Einbau',
-      'Zählerstand Turnusabrechnung 2019',
+      'Zählerstand Einbau (in kWh)',
+      'Zählerstand Turnusabrechnung 2019 (in kWh)',
       'Ablesedatum Turnusabrechnung 2019',
-      'Zählerstand Turnusabrechnung 2020',
+      'Zählerstand Turnusabrechnung 2020 (in kWh)',
       'Ablesedatum Turnusabrechnung 2020'
     ]
     target << header_row2.join(';')
@@ -147,16 +147,16 @@ class Services::ReportService
 
         # We filtered those which do have a valid contract before, so there must be exactly one!
         contract = register_meta.contracts.select {|c| c.status == 'active'}[0]
-        if contract.is_a?(Contract::LocalpoolPowerTakerResource)
+        if contract.is_a?(Contract::LocalpoolPowerTaker)
           contract_additional_info = 'Bezug'
-        elsif contract.is_a?(Contract::LocalpoolThirdPartyResource)
+        elsif contract.is_a?(Contract::LocalpoolThirdParty)
           contract_additional_info = 'Drittbeliefert'
           paid_requested = false
           billnumber_requested = false
         end
 
         unless contract.customer.nil?
-          if contract.customer.is_a? PersonResource
+          if contract.customer.is_a? Person
             first_name = contract.customer.first_name
             last_name = contract.customer.last_name
           else
@@ -182,14 +182,14 @@ class Services::ReportService
         target << (meter.edifact_measurement_method.nil? ? '' : meter.edifact_measurement_method) << ';' # Zaehlertyp
         target << (find_first_reading_date(readings).nil? ? '' : find_first_reading_date(readings)) << ';'
         target << (find_first_reading_value(readings).nil? ? '' : find_first_reading_value(readings)) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value / 1000) << ';'
         target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).date.strftime('%d.%m.%Y')) << ';'
-        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value/ 1000) << ';'
         target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).date.strftime('%d.%m.%Y')) << ';'
-        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value) << ';'
       end
     end
 
-    active_meters.reject {|m| m.is_a?(Meter::VirtualResource)}
+    active_meters.reject {|m| m.is_a?(Meter::Virtual)}
               .reject {|m| m.registers.all? {|register| register.contracts.any? {|c| c.status == 'active'}}}
               .reject {|m| m.registers.all? {|register| register.contracts.to_a.empty?}}
               .each do |meter|
@@ -218,14 +218,14 @@ class Services::ReportService
         target << (meter.edifact_measurement_method.nil? ? '' : meter.edifact_measurement_method) << ';' # Zaehlertyp
         target << (find_first_reading_date(readings).nil? ? '' : find_first_reading_date(readings)) << ';'
         target << (find_first_reading_value(readings).nil? ? '' : find_first_reading_value(readings)) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value/ 1000) << ';'
         target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).date.strftime('%d.%m.%Y')) << ';'
-        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value/ 1000) << ';'
         target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).date.strftime('%d.%m.%Y')) << ';'
-        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value) << ';'
       end
     end
 
-    active_meters.reject {|m| m.is_a?(Meter::VirtualResource)}
+    active_meters.reject {|m| m.is_a?(Meter::Virtual)}
               .select {|m| m.registers.all? {|register| register.contracts.to_a.empty?}}
               .each do |meter|
       meter.registers.each do |register|
@@ -243,7 +243,7 @@ class Services::ReportService
         target << '' << ';'
         target << meter.product_serialnumber << ';'
         target << meter.location_description << ';'
-        target << labels[register_meta.label] << ';'
+        target << labels[register_meta.label.upcase] << ';'
         target << '' << ';'
         target << '' << ';'
         target << register_meta.name << ';'
@@ -253,11 +253,10 @@ class Services::ReportService
         target << (meter.edifact_measurement_method.nil? ? '' : meter.edifact_measurement_method) << ';' # Zaehlertyp
         target << (find_first_reading_date(readings).nil? ? '' : find_first_reading_date(readings)) << ';'
         target << (find_first_reading_value(readings).nil? ? '' : find_first_reading_value(readings)) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value/ 1000) << ';'
         target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).date.strftime('%d.%m.%Y')) << ';'
-        target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value) << ';'
+        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value/ 1000) << ';'
         target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).date.strftime('%d.%m.%Y')) << ';'
-        target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value) << ';'
-
       end
     end
     ReportDocument.store(job_id, target.string)
@@ -357,7 +356,7 @@ def find_first_reading_value(readings)
   unless readings.nil? || readings == []
     first_readings = readings.select { |reading| (reading['reason'] == 'IOM' || reading['reason'] == 'COM2' || reading['reason'] == 'COB')}
     if first_readings.length == 1
-      first_readings.first.raw_value
+      first_readings.first.raw_value / 1000
     end
   end
 end

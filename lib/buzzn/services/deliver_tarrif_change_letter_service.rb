@@ -68,7 +68,7 @@ class Services::DeliverTarrifChangeLetterService
 
       Bitte beachten Sie den Anhang.
 
-      Bei Fragen oder sonstigem Feedback stehe ich Ihnen gerne zur Verfügung.
+      Bei Fragen oder sonstigem Feedback stehen wir Ihnen gerne zur Verfügung.
 
       Energiegeladene Grüße,
     MSG
