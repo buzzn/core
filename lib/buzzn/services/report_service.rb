@@ -326,7 +326,7 @@ class Services::ReportService
               target << (find_last_reading(readings, third_party.end_date).nil? ? '' : find_last_reading(readings, third_party.end_date).raw_value/1000) << ';'        # Zählerstand Ende
               target << (third_party.end_date.nil? || third_party.end_date > Date.today ? 'ja' : 'nein') << ';'               # aktuell drittbeliefert?
               target << (meter.metering_location_id.nil? ? '' : meter.metering_location_id) << ';'                            # Melo - metering_location_id
-              target << (register_meta.market_location_id.nil? ? '' : register_meta.market_location_id)                       # Malo - market_location_id
+              target << (register_meta.market_location_id.nil? ? '' : register_meta.market_location_id) << ';'                # Malo - market_location_id
               target << (find_periodic_reading(readings, date_pmr_2020).nil? ? '' : find_periodic_reading(readings, date_pmr_2020).value/ 1000) << ';'
               target << (find_periodic_reading(readings, date_pmr_2019).nil? ? '' : find_periodic_reading(readings, date_pmr_2019).value/ 1000) << ';'
               target << (find_periodic_reading(readings, date_pmr_2018).nil? ? '' : find_periodic_reading(readings, date_pmr_2018).value/ 1000) << ';'
