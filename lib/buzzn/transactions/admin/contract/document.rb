@@ -56,10 +56,7 @@ class Transactions::Admin::Contract::Document < Transactions::Base
   end
 
   def generator(generator_names:, params:, resource:)
-    #  TODO replace by `Vat.current` there is a requirement to have here the previous,
-    # vat in the timespan between July and Dezember 2020
-    # Dont ask why.
-    generator_names[params[:template]].new(resource.object, Vat.all[-2])
+    generator_names[params[:template]].new(resource.object, Vat.current)
   end
 
   def generate_document(resource:, params:, generator:, **)
