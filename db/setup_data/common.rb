@@ -13,25 +13,25 @@ end
 energy_classifications = {
   buzzn: Organization::EnergyClassification.create!(
     tariff_name:                      'Buzzn GmbH',
-    nuclear_ratio:                    2.1,
-    coal_ratio:                       5.9,
-    gas_ratio:                        40.9,
-    other_fossiles_ratio:             4.5,
-    renewables_eeg_ratio:             46.5,
-    other_renewables_ratio:           0.1,
-    co2_emission_gramm_per_kwh:       131,
-    nuclear_waste_miligramm_per_kwh:  0.03
+    nuclear_ratio:                    0,
+    coal_ratio:                       0,
+    gas_ratio:                        38.8,
+    other_fossiles_ratio:             0,
+    renewables_eeg_ratio:             27.5,
+    other_renewables_ratio:           33.7,
+    co2_emission_gramm_per_kwh:       91,
+    nuclear_waste_miligramm_per_kwh:  0
   ),
   germany: Organization::EnergyClassification.create!(
     tariff_name:                       'Energy Mix Germany',
-    nuclear_ratio:                     12.7,
-    coal_ratio:                        38.1,
-    gas_ratio:                         10.2,
-    other_fossiles_ratio:              2.4,
-    renewables_eeg_ratio:              33.1,
-    other_renewables_ratio:            3.5,
-    co2_emission_gramm_per_kwh:        434,
-    nuclear_waste_miligramm_per_kwh:   0.4
+    nuclear_ratio:                     12.4,
+    coal_ratio:                        24,
+    gas_ratio:                         13.3,
+    other_fossiles_ratio:              1.3,
+    renewables_eeg_ratio:              44.9,
+    other_renewables_ratio:            4.1,
+    co2_emission_gramm_per_kwh:        310,
+    nuclear_waste_miligramm_per_kwh:   0.3
   )
 }
 
