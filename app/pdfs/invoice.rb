@@ -19,6 +19,7 @@ module Pdf
         sales_tax_number: processing_contract.sales_tax_number,
         tax_number: processing_contract.tax_number,
         issues_vat: contract.localpool.billing_detail.issues_vat,
+        leg_single: contract.localpool.billing_detail.leg_single == nil ? false : contract.localpool.billing_detail.leg_single,
         contractor: build_contractor,
         powertaker: build_powertaker,
         no_contact: contact(powertaker).nil?,
@@ -214,6 +215,7 @@ module Pdf
 
     def build_billing
       issues_vat = contract.localpool.billing_detail.issues_vat
+      leg_single = contract.localpool.billing_detail.leg_single == nil ? false : contract.localpool.billing_detail.leg_single
       vat = Vat.current.amount
       {
         date: @billing.last_date,
