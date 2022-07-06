@@ -3,7 +3,7 @@ ruby '2.6.6'
 
 # transient dependency of rails with security issue, pick secure one
 gem 'loofah', '>= 2.2.3'
-gem 'rails-html-sanitizer', '~> 1.0.4'
+gem 'rails-html-sanitizer', '~> 1.4.3'
 gem 'sprockets', '~> 3.7.2'
 gem 'rack', '>= 1.6.11'
 
